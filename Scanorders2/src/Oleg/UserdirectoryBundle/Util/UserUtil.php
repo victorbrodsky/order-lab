@@ -233,6 +233,10 @@ class UserUtil {
         $logger->setEvent($options['event']);
         $logger->setServerresponse($options['serverresponse']);
 
+        //set Event Type
+        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
+        $logger->setEventType($eventtype);
+
         //exit();
 
         $em->persist($logger);

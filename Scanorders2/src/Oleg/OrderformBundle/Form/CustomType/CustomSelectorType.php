@@ -15,21 +15,21 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
-use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\ServiceTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\UserServicesTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\ResearchTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\SetTitleTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\PrincipalTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\UserTransformer;
-//use Oleg\OrderformBundle\Form\DataTransformer\DepartmentTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccountTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
+
+//use Oleg\OrderformBundle\Form\DataTransformer\ServiceTransformer;
+//use Oleg\OrderformBundle\Form\DataTransformer\UserServicesTransformer;
+//use Oleg\OrderformBundle\Form\DataTransformer\ResearchTransformer;
+//use Oleg\OrderformBundle\Form\DataTransformer\SetTitleTransformer;
+//use Oleg\OrderformBundle\Form\DataTransformer\UserTransformer;
+
+use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 
 class CustomSelectorType extends AbstractType {
 
@@ -73,48 +73,6 @@ class CustomSelectorType extends AbstractType {
             case "sourceOrgan":
                 $transformer = new SourceOrganTransformer($this->om, $username);
                 break;
-//            case "service":
-//                $transformer = new ServiceTransformer($this->om, $this->serviceContainer, $username);
-//                break;
-//            case "userServices":
-//                $transformer = new UserServicesTransformer($this->om, $this->serviceContainer, $username);
-//                break;
-            case "accessiontype":
-                $transformer = new AccessionTypeTransformer($this->om, $username);
-                break;
-            case "mrntype":
-                $transformer = new MrnTypeTransformer($this->om, $username);
-                break;
-            case "scanRegion":
-                $transformer = new StringTransformer($this->om, $username);
-                break;
-            case "slideDelivery":
-                $transformer = new StringTransformer($this->om, $username);
-                break;
-            case "returnSlide":
-                $transformer = new StringTransformer($this->om, $username);
-                break; 
-            case "partname":
-                $transformer = new StringTransformer($this->om, $username);
-                break; 
-            case "blockname":
-                $transformer = new StringTransformer($this->om, $username);
-                break;
-            case "projectTitle":
-                $transformer = new StringTransformer($this->om, $username);
-                break;
-            case "setTitles":
-                $transformer = new StringTransformer($this->om, $username);
-                break;
-            case "courseTitle":
-                $transformer = new StringTransformer($this->om, $username);
-                break;
-            case "lessonTitles":
-                $transformer = new StringTransformer($this->om, $username);
-                break;
-            case "urgency":
-                $transformer = new StringTransformer($this->om, $username);
-                break;
             case "optionalUserEducational":
                 $transformer = new PrincipalTransformer($this->om, $username, 'DirectorList');
                 break;
@@ -124,18 +82,33 @@ class CustomSelectorType extends AbstractType {
             case "account":
                 $transformer = new AccountTransformer($this->om, $username);
                 break;
-            case "institution":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Institution');
+            case "accessiontype":
+                $transformer = new AccessionTypeTransformer($this->om, $username);
                 break;
-            case "department":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Department');
+            case "mrntype":
+                $transformer = new MrnTypeTransformer($this->om, $username);
                 break;
-            case "division":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Division');
+
+//            case "service":
+//                $transformer = new ServiceTransformer($this->om, $this->serviceContainer, $username);
+//                break;
+//            case "userServices":
+//                $transformer = new UserServicesTransformer($this->om, $this->serviceContainer, $username);
+//                break;
+
+            case "scanRegion":
+            case "slideDelivery":
+            case "returnSlide":
+            case "partname":
+            case "blockname":
+            case "projectTitle":
+            case "setTitles":
+            case "courseTitle":
+            case "lessonTitles":
+            case "urgency":
+                $transformer = new StringTransformer($this->om, $username);
                 break;
-            case "service":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Service');
-                break;
+
             default:
                 $transformer = new StringTransformer($this->om, $username);
         }

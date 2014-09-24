@@ -71,7 +71,7 @@ class BaseTitleType extends AbstractType
 
 
         //institution. User should be able to add institution to administrative or appointment titles
-        $builder->add('institution', 'custom_selector', array(
+        $builder->add('institution', 'employees_custom_selector', array(
             'label' => 'Institution:',
             'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
             'required' => false,
@@ -79,7 +79,7 @@ class BaseTitleType extends AbstractType
         ));
 
         //department. User should be able to add institution to administrative or appointment titles
-        $builder->add('department', 'custom_selector', array(
+        $builder->add('department', 'employees_custom_selector', array(
             'label' => "Department:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-department', 'type' => 'hidden'),
@@ -87,7 +87,7 @@ class BaseTitleType extends AbstractType
         ));
 
         //division. User should be able to add institution to administrative or appointment titles
-        $builder->add('division', 'custom_selector', array(
+        $builder->add('division', 'employees_custom_selector', array(
             'label' => "Division:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-division', 'type' => 'hidden'),
@@ -95,7 +95,7 @@ class BaseTitleType extends AbstractType
         ));
 
         //service. User should be able to add institution to administrative or appointment titles
-        $builder->add('service', 'custom_selector', array(
+        $builder->add('service', 'employees_custom_selector', array(
             'label' => "Service:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-service', 'type' => 'hidden'),

@@ -85,8 +85,9 @@ class History
     private $vieweddate;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="ProgressCommentsEventTypeList")
+     * @ORM\JoinColumn(name="eventtype_id", referencedColumnName="id", nullable=true)
+     **/
     private $eventtype;
 
 

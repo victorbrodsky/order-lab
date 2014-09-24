@@ -103,15 +103,15 @@ security:
 
      #make all /employees accessible only limited special roles
      - { path: ^/employees/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
-#     - { path: ^/employees/admin, role: [ROLE_USERDIRECTORY_ADMIN] }
 
      - { path: ^/employees/event-log, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/employees/user-directory, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/employees/event-log, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/employees/admin/list, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/employees/admin/genall, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/employees/users/generate, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/employees/admin/, role: ROLE_USERDIRECTORY_ADMIN }
-
+     - { path: ^/employees/site-settings/, role: ROLE_ADMIN }
 
 
      ############################## SCAN SITE SETTINGS ##############################
@@ -126,10 +126,9 @@ security:
      - { path: ^/scan/admin/genall, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
-     - { path: ^/scan/user-directory, role: ROLE_SCANORDER_PROCESSOR }
-     - { path: ^/scan/site-settings/show/, role: ROLE_SCANORDER_SUBMITTER }
-     - { path: ^/scan/site-settings/edit/, role: ROLE_SCANORDER_ADMIN }
+     - { path: ^/scan/site-settings/, role: ROLE_ADMIN }
 
+     - { path: ^/scan/user-directory, role: ROLE_SCANORDER_PROCESSOR }
      - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
      - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
      - { path: ^/scan/settings/, role: ROLE_SCANORDER_PROCESSOR }

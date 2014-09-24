@@ -124,7 +124,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //        $container->setParameter('maintenanceloginmsg',$maintenanceloginmsg);
 //        $container->setParameter('maintenancelogoutmsg',$maintenancelogoutmsg);
         //echo "maint=".$this->container->getParameter('maintenance')."<br>";
-
+        //echo "department_url=".$department_url."<br>";
+        //echo "container department_url=".$this->container->getParameter('department_url')."<br>";
 
     }//if param
 

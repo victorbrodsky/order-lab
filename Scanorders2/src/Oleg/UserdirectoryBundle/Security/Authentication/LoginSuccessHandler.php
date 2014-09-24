@@ -55,7 +55,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //exit;
 
         if( $this->security->isGranted('ROLE_USERDIRECTORY_BANNED') ) {
-            $options['event'] = 'Banned User Login Attempt';
+            $options['eventtype'] = 'Banned User Login Attempt';
+            $options['event'] = 'Banned user login attempt to Employee Directory site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
@@ -69,13 +70,15 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         }
 
         if( $this->security->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') ) {
-            $options['event'] = 'Unapproved User Login Attempt';
+            $options['eventtype'] = 'Unapproved User Login Attempt';
+            $options['event'] = 'Unapproved user login attempt to Employee Directory site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
         }
 
-        $options['event'] = "Successful Login";
+        $options['eventtype'] = "Successful Login";
+        $options['event'] = 'Successful login to Employee Directory site';
         $response = new RedirectResponse($this->router->generate($this->siteName.'_home'));
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
@@ -95,7 +98,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $userUtil = new UserUtil();
 
         $options['sitename'] = $this->siteName;
-        $options['event'] = "Bad Credentials";
+        $options['eventtype'] = "Bad Credentials";
+        $options['event'] = 'Bad credentials provided on login for Employee Directory site';
         $options['serverresponse'] = $exception->getMessage();
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);

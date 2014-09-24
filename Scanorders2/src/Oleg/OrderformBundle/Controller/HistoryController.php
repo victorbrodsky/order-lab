@@ -340,7 +340,7 @@ class HistoryController extends Controller
 
         foreach( $entities as $entity ) {
 
-            if( $entity->getEventtype() != 'Comment Added' ) {
+            if( $entity->getEventType()->getName() != 'Comment Added' ) {
                 continue;
             }
 
@@ -426,7 +426,6 @@ class HistoryController extends Controller
         if( 1 ) {
             //add a new record in history
             $history = new History();
-            $history->setEventtype('Progress & Comments Viewed');
             $history->setOrderinfo($orderinfo);
             $history->setProvider($user);
             $history->setCurrentid($id);
@@ -439,6 +438,9 @@ class HistoryController extends Controller
             $history->setRoles($user->getRoles());
             //$history->setViewed($user);
             //$history->setVieweddate( new \DateTime() );
+
+            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Progress & Comments Viewed');
+            $history->setEventtype($eventtype);
 
             $em->persist($history);
             $em->flush();
@@ -496,7 +498,6 @@ class HistoryController extends Controller
             $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
             $history = new History();
-            $history->setEventtype('Comment Added');
             $history->setOrderinfo($orderinfo);
             $history->setProvider($user);
             $history->setCurrentid($id);
@@ -507,6 +508,9 @@ class HistoryController extends Controller
             $history->setNote($text_value);
             $history->setSelectednote($selectednote);
             $history->setRoles($user->getRoles());
+
+            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Comment Added');
+            $history->setEventtype($eventtype);
 
             //echo "ok";
             $em->persist($history);

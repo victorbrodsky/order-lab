@@ -692,6 +692,9 @@ class ScanOrderController extends Controller {
             $logger->setHeight($request->get('display_height'));
             $logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
 
+            $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Search');
+            $logger->setEventType($eventtype);
+
             $em->persist($logger);
             $em->flush();
         }
@@ -741,6 +744,9 @@ class ScanOrderController extends Controller {
             $logger->setHeight($request->get('display_height'));
             //$logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
             $logger->setEvent( implode("<br>",$resArr) );
+
+            $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Search');
+            $logger->setEventType($eventtype);
 
             $em->persist($logger);
             $em->flush();
@@ -1062,6 +1068,7 @@ class ScanOrderController extends Controller {
         $dql->innerJoin("orderinfo.type", "formtype");
 
         $dql->leftJoin("orderinfo.history", "history"); //history might not exist, so use leftJoin
+        $dql->leftJoin("history.eventtype", "eventtype");
         $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
         $dql->leftJoin("orderinfo.educational", "educational");
@@ -1251,7 +1258,7 @@ class ScanOrderController extends Controller {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= "history.provider=".$user->getId()." AND history.eventtype='Amended Order Submission'";
+                $crituser .= "history.provider=".$user->getId()." AND eventtype.name='Amended Order Submission'";
             }
 
             //"All ".$service->getName()." Orders"; => $service is service's id

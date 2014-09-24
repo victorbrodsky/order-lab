@@ -17,9 +17,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
     protected $user;
     protected $router;
+    protected $container;
 
     //process orderinfo and all entities
-    public function processOrderInfoEntity( $entity, $user, $type=null, $router = null ) {
+    public function processOrderInfoEntity( $entity, $user, $type, $router, $container ) {
 
         gc_enable();
         $em = $this->_em;
@@ -27,6 +28,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         $this->user = $user;
         $this->router = $router;
+        $this->container = $container;
 
         //replace duplicate entities to filter the similar entities.
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->replaceDuplicateProcedures( $entity, $entity );
@@ -148,7 +150,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($this->user->getId());
 
             //clone orderinfo object by id
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $message = $orderUtil->changeStatus($originalId, 'Supersede', $user, $newId);
 
             //now entity is a cloned order object
@@ -175,7 +177,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $history->setCurrentstatus($entity->getStatus());
 
         if( $originalStatus == 'Amended' ) {
-            $history->setEventtype('Amended Order Submission');
+            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Amended Order Submission');
+            $history->setEventtype($eventtype);
             //get url link
             $supersedeId = $entity->getId(); //use id because superseded order and amended order have swaped ids
             $url = $this->router->generate( 'multy_show', array('id' => $supersedeId) );
@@ -186,9 +189,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $systemUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
             $history->setProvider( $systemUser );
             $history->setNote('Auto-Saved Draft; Submit this order to Process');
-            $history->setEventtype('Auto-saved at the time of auto-logout');
+            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Auto-saved at the time of auto-logout');
+            $history->setEventtype($eventtype);
         } else {
-            $history->setEventtype('Initial Order Submission');
+            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Order Submission');
+            $history->setEventtype($eventtype);
             $history->setChangedate($entity->getOrderdate());
         }
 

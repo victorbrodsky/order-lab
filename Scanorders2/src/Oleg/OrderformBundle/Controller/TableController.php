@@ -384,7 +384,8 @@ class TableController extends Controller {
             $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
             $dql = $repository->createQueryBuilder("h");
             $dql->innerJoin("h.orderinfo", "orderinfo");
-            $dql->where("h.currentid = :oid AND (h.eventtype = 'Initial Order Submission' OR h.eventtype = 'Status Changed' OR h.eventtype = 'Amended Order Submission')");
+            $dql->leftJoin("h.eventtype", "eventtype");
+            $dql->where("h.currentid = :oid AND (eventtype.name = 'Initial Order Submission' OR eventtype.name = 'Status Changed' OR eventtype.name = 'Amended Order Submission')");
             $dql->orderBy('h.changedate','DESC');
             $dql->setParameter('oid',$orderinfo->getOid());
             $history = $dql->getQuery()->getResult();
@@ -624,7 +625,7 @@ class TableController extends Controller {
         $orderUtil = $this->get('scanorder_utility');
         $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
+        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router'), $this->container );
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/json');

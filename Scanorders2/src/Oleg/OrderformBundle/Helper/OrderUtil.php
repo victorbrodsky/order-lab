@@ -10,7 +10,6 @@
 namespace Oleg\OrderformBundle\Helper;
 
 
-
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;
@@ -81,6 +80,8 @@ class OrderUtil {
 
     public function changeStatus( $id, $status, $user, $swapId=null ) {
 
+        //exit('change status');
+
         $em = $this->em;
 
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
@@ -89,8 +90,8 @@ class OrderUtil {
             throw new \Exception( 'Unable to find OrderInfo entity by id'.$id );
         }
 
-        $userUtil = new UserUtil();
-        if( !$userUtil->isUserAllowOrderActions($entity, $user, array('changestatus')) ) {
+        $securityUtil = $this->container->get('order_security_utility');
+        if( !$securityUtil->isUserAllowOrderActions($entity, $user, array('changestatus')) ) {
             $res = array();
             $res['result'] = 'nopermission';
             return $res;
@@ -113,7 +114,8 @@ class OrderUtil {
 
         //record history
         $history = new History();
-        $history->setEventtype('Status Changed');
+        $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Status Changed');
+        $history->setEventtype($eventtype);
         $history->setOrderinfo($entity);
         $history->setCurrentid($entity->getOid());
         $history->setCurrentstatus($entity->getStatus());
@@ -417,6 +419,7 @@ class OrderUtil {
         //$dql->groupBy('history');
         //$dql->innerJoin("history.provider", "history-provider");
         $dql->innerJoin("history.orderinfo", "orderinfo");
+        $dql->leftJoin("history.eventtype", "eventtype");
         $dql->innerJoin("orderinfo.provider", "provider");
         $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
@@ -452,7 +455,7 @@ class OrderUtil {
             return "";
         }
 
-        $criteriastr = "history.eventtype='Comment Added' ";
+        $criteriastr = "eventtype.name='Comment Added' ";
 
         if( $flag != 'all_comments' ) {
             $criteriastr = $criteriastr . "AND history.viewed is NULL ";

@@ -56,7 +56,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //exit;
 
         if( $this->security->isGranted('ROLE_SCANORDER_BANNED') ) {
-            $options['event'] = 'Banned User Login Attempt';
+            $options['eventtype'] = 'Banned User Login Attempt';
+            $options['event'] = 'Banned user login attempt to Scan Order site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
@@ -71,7 +72,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         if( $this->security->isGranted('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') ) {
 
-            $options['event'] = 'Unapproved User Login Attempt';
+            $options['eventtype'] = 'Unapproved User Login Attempt';
+            $options['event'] = 'Unapproved user login attempt to Scan Order site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             //exit("onAuthenticationSuccess: Success: redirect to _access_request_new");
@@ -80,76 +82,88 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         }
         //exit('ok');
 
-        //if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
-        if( $this->security->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-
-            //echo "ROLE SCANORDER PROCESSOR <br>";
-            //exit();
-
-            //$response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
-            $response = new RedirectResponse($this->router->generate('scan-order-home'));
-            $options['event'] = "Successful Login";
-
-        }
-        elseif(
-            $this->security->isGranted('ROLE_SCANORDER_SUBMITTER') ||
-            $this->security->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
-        ) {
-
-
-            if( 1 ) {
-                //redirect all users to the home page
-                $response = new RedirectResponse($this->router->generate('scan-order-home'));
-                $options['event'] = "Successful Login";
-
-            } else {
-                //redirect non-processor users to the previously requested page before authentication
-                $indexLastRoute = '_security.aperio_ldap_firewall.target_path';   //'last_route';
-                $lastRoute = $request->getSession()->get($indexLastRoute);
-                //exit("lastRoute=".$lastRoute."<br>");
-
-                $loginpos = strpos($lastRoute, '/login');
-                $nopermpos = strpos($lastRoute, '/no-permission');
-                $nocheck = strpos($lastRoute, '/check/');
-                //setloginvisit
-
-                if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false && $nocheck === false ) {
-                    //$referer_url = $this->router->generate( $lastRoute );
-                    $referer_url = $lastRoute;
-                } else {
-                    $referer_url = $this->router->generate('scan-order-home');
-                }
-
-                //echo("referer_url=".$referer_url);
-                //exit('<br>not processor');
-
-                $response = new RedirectResponse($referer_url);
-
-                $options['event'] = "Successful Login";
-
-            }
-
-        }
-        else {
-
-            //echo "user role not ok!";
-            //exit();
-            $response = new RedirectResponse( $this->router->generate($this->siteName.'_logout') );
-            $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/ordering provider submitter";
-            
-        }
-
-//        $lastRouteArr = $request->getSession()->get('last_route_arr');
-//        echo "<br>lastRouteArr:<br>";
-//        print_r($lastRouteArr);
-//        $request->getSession()->set('last_route_arr', array());
-//        echo "Session:<br>";
-//        print_r($request->getSession());
-//        exit("<br>");
+        $options['eventtype'] = "Successful Login";
+        $options['event'] = 'Successful login to Scan Order site';
+        $response = new RedirectResponse($this->router->generate('scan-order-home'));
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
         return $response;
+
+//        //if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
+//        if( $this->security->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+//
+//            //echo "ROLE SCANORDER PROCESSOR <br>";
+//            //exit();
+//
+//            //$response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
+//            $response = new RedirectResponse($this->router->generate('scan-order-home'));
+//            $options['eventtype'] = "Successful Login";
+//            $options['event'] = 'Successful login as Scan Processor to Scan Order site';
+//
+//        }
+//        elseif(
+//            $this->security->isGranted('ROLE_SCANORDER_SUBMITTER') ||
+//            $this->security->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+//        ) {
+//
+//
+//            if( 1 ) {
+//                //redirect all users to the home page
+//                $response = new RedirectResponse($this->router->generate('scan-order-home'));
+//                $options['eventtype'] = "Successful Login";
+//                $options['event'] = 'Successful login to Scan Order site';
+//
+//            } else {
+//                //redirect non-processor users to the previously requested page before authentication
+//                $indexLastRoute = '_security.aperio_ldap_firewall.target_path';   //'last_route';
+//                $lastRoute = $request->getSession()->get($indexLastRoute);
+//                //exit("lastRoute=".$lastRoute."<br>");
+//
+//                $loginpos = strpos($lastRoute, '/login');
+//                $nopermpos = strpos($lastRoute, '/no-permission');
+//                $nocheck = strpos($lastRoute, '/check/');
+//                //setloginvisit
+//
+//                if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false && $nocheck === false ) {
+//                    //$referer_url = $this->router->generate( $lastRoute );
+//                    $referer_url = $lastRoute;
+//                } else {
+//                    $referer_url = $this->router->generate('scan-order-home');
+//                }
+//
+//                //echo("referer_url=".$referer_url);
+//                //exit('<br>not processor');
+//
+//                $response = new RedirectResponse($referer_url);
+//
+//                $options['eventtype'] = "Successful Login";
+//                $options['event'] = 'Successful login to Scan Order site';
+//
+//            }
+//
+//        }
+//        else {
+//
+//            //echo "user role not ok!";
+//            //exit();
+//            $response = new RedirectResponse( $this->router->generate($this->siteName.'_logout') );
+//            $options['eventtype'] = "Unsuccessful Login Attempt";
+//            $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/ordering provider submitter";
+//
+//        }
+//
+////        $lastRouteArr = $request->getSession()->get('last_route_arr');
+////        echo "<br>lastRouteArr:<br>";
+////        print_r($lastRouteArr);
+////        $request->getSession()->set('last_route_arr', array());
+////        echo "Session:<br>";
+////        print_r($request->getSession());
+////        exit("<br>");
+//
+//        $userUtil->setLoginAttempt($request,$this->security,$em,$options);
+//
+//        return $response;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
@@ -163,7 +177,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $userUtil = new UserUtil();
 
         $options['sitename'] = $this->siteName;
-        $options['event'] = "Bad Credentials";
+        $options['eventtype'] = "Bad Credentials";
+        $options['event'] = 'Bad credentials provided on login for Scan Order site';
         $options['serverresponse'] = $exception->getMessage();
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);

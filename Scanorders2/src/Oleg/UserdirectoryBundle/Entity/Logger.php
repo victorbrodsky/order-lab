@@ -70,6 +70,12 @@ class Logger
     private $height;
 
     /**
+     * @ORM\ManyToOne(targetEntity="EventTypeList")
+     * @ORM\JoinColumn(name="eventType_id", referencedColumnName="id", nullable=true)
+     **/
+    private $eventType;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $event;
@@ -79,35 +85,6 @@ class Logger
      */
     private $serverresponse;
 
-
-//    /////////// event type "edit" /////////////////
-//
-//    //Which user's information was edited
-//    /**
-//     * @ORM\ManyToOne(targetEntity="User")
-//     * @ORM\JoinColumn(name="subjectuser_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $subjectuser;
-//
-//    //Which field value(s) changed
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $editfieldname;
-//
-//    //What was the old value
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $editfieldoldvalue;
-//
-//    //What was the new value
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $editfieldnewvalue;
-//
-//    /////////// EOF event type "edit" /////////////////
 
 
     public function __construct($siteName) {
@@ -175,6 +152,22 @@ class Logger
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * @param mixed $eventType
+     */
+    public function setEventType($eventType)
+    {
+        $this->eventType = $eventType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEventType()
+    {
+        return $this->eventType;
     }
 
     /**

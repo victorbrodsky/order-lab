@@ -21,6 +21,7 @@ use Oleg\UserdirectoryBundle\Entity\Service;
 use Oleg\UserdirectoryBundle\Entity\States;
 use Oleg\UserdirectoryBundle\Entity\BoardCertifiedSpecialties;
 use Oleg\UserdirectoryBundle\Entity\EmploymentTerminationType;
+use Oleg\UserdirectoryBundle\Entity\EventTypeList;
 
 
 /**
@@ -75,6 +76,8 @@ class AdminController extends Controller
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
         $count_roles = $this->generateRoles();
         $count_terminationTypes = $this->generateTerminationTypes();
+        $count_eventTypeList = $this->generateEventTypeList();
+
 
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
@@ -92,7 +95,8 @@ class AdminController extends Controller
             'Users='.$count_users.', '.
             'States='.$count_states.', '.
             'Board Specialties='.$count_boardSpecialties.', '.
-            'Employment Types of Termination='.$count_terminationTypes.'. '.
+            'Employment Types of Termination='.$count_terminationTypes.', '.
+            'Event Log Types ='.$count_eventTypeList.', '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -695,6 +699,45 @@ class AdminController extends Controller
 
         return round($count/10);
 
+    }
+
+    public function generateEventTypeList() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Login Page Visit',
+            'Successful Login',
+            'Bad Credentials',
+            'Unsuccessful Login Attempt',
+            'Unapproved User Login Attempt',
+            'Banned User Login Attempt',
+            'User Created',
+            'User Updated',
+            'Search'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new EventTypeList();
+            $this->setDefaultList($entity,$count,$username,null);
+            $entity->setName( trim($value) );
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
     }
 
 }

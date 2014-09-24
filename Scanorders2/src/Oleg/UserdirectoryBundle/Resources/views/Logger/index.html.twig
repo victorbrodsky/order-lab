@@ -15,7 +15,8 @@
                 <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'logger.event') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'logger.eventType') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Event', 'logger.event') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'AD Server Response', 'logger.serverresponse') }}</th>
                 {#<th>Actions</th>#}
             </tr>
@@ -57,6 +58,7 @@
                         {% endif %}
                     {% endfor %}
                 </td>
+                <td>{{ entity.eventType }}</td>
                 <td>{{ entity.event|raw }}</td>
                 <td>
                     <div class="textarea_widget">

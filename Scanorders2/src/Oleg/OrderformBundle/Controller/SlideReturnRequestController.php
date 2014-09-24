@@ -277,14 +277,18 @@ class SlideReturnRequestController extends Controller
             //record history
             $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             $history = new History();
-            $history->setEventtype('Initial Slide Return Request Submission');
             $history->setOrderinfo($orderinfo);
             $history->setCurrentid($orderinfo->getOid());
             $history->setCurrentstatus($orderinfo->getStatus());
             $history->setProvider($user);
             $history->setRoles($user->getRoles());
+
             $notemsg = 'Slide Return Request has been made for '.count($slides) . ' slide(s):<br>'.implode("<br>",$slideReturnRequest->getSlideDescription($user));
             $history->setNote($notemsg);
+
+            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Slide Return Request Submission');
+            $history->setEventtype($eventtype);
+
             $em->persist($history);
             $em->flush();
 
@@ -524,7 +528,6 @@ class SlideReturnRequestController extends Controller
 
             $slides = $entity->getSlide();
             $history = new History();
-            $history->setEventtype('Slide Return Request Status Changed');
             $history->setOrderinfo($orderinfo);
             $history->setCurrentid($orderinfo->getOid());
             $history->setCurrentstatus($orderinfo->getStatus());
@@ -532,6 +535,8 @@ class SlideReturnRequestController extends Controller
             $history->setRoles($user->getRoles());
             $notemsg = 'Status Changed to "'.ucfirst($status).'" for Slide Return Request ' . $entity->getId() . ' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $entity->getSlideDescription($user));
             $history->setNote($notemsg);
+            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Status Changed');
+            $history->setEventtype($eventtype);
             $em->persist($history);
             $em->flush();
 
@@ -651,7 +656,6 @@ class SlideReturnRequestController extends Controller
                 $user = $this->get('security.context')->getToken()->getUser();
                 $slides = $slideReturnRequest->getSlide();
                 $history = new History();
-                $history->setEventtype('Slide Return Request Comment Added');
                 $history->setOrderinfo($orderinfo);
                 $history->setCurrentid($orderinfo->getOid());
                 $history->setCurrentstatus($orderinfo->getStatus());
@@ -663,6 +667,9 @@ class SlideReturnRequestController extends Controller
                 $commentFull = $user . " on " . $dateStr. ": " . $text_value;
                 $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
                 $history->setNote($notemsg."<br>".$commentFull);
+
+                $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Comment Added');
+                $history->setEventtype($eventtype);
 
                 $em->persist($history);
                 $em->flush();

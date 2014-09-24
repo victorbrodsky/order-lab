@@ -52,37 +52,30 @@ fos_user:
 
 services:
 
-#    #Custom selector fields
-#    order_form.type.stain_selector:
-#        class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
-#        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
-#        tags:
-#            - { name: form.type, alias: custom_selector }
-#
-#    #Custom selector fields with data
-#    order_form.type.custom_data_selector:
-#        class: Oleg\OrderformBundle\Form\CustomType\CustomDataSelectorType
-#        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
-#        tags:
-#            - { name: form.type, alias: custom_data_selector }
-#
-#    #Redirect admin to index
-#    authentication_handler:
-#        class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler
-#        arguments:  [@router, @security.context, @doctrine.orm.entity_manager]
+    oleg.listener.maintenance:
+        class: Oleg\UserdirectoryBundle\Services\MaintenanceListener
+        arguments: ["@service_container","@doctrine.orm.entity_manager","@security.context"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    #Custom selector fields
+    oleg.type.employees_custom_selector:
+        class: Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType
+        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
+        tags:
+            - { name: form.type, alias: employees_custom_selector }
+
+    #idle time out handler (can pass %session_max_idle_time%. Now use DB)
+    oleg.handler.session_idle:
+        class: Oleg\UserdirectoryBundle\Services\SessionIdleHandler
+        arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     #Override Ldap Manager
     oleg.security.ldap_manager:
         class: Oleg\UserdirectoryBundle\Security\Authentication\LdapManager
         arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%, %default_time_zone%, @doctrine.orm.entity_manager ]
-
-#    #idle time out handler (can pass %session_max_idle_time%. Now use DB)
-#    oleg.handler.session_idle:
-#        class: Oleg\OrderformBundle\Helper\SessionIdleHandler
-#        arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
-#        tags:
-#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
 
     #Redirect admin to index
     employees_authentication_handler:
@@ -95,7 +88,6 @@ services:
         arguments: ["@twig", "@security.context", %default_time_zone%]
         tags:
               - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
 
     #user security util
     user_security_utility:

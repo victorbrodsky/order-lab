@@ -7,12 +7,14 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
-use Oleg\UserdirectoryBundle\Entity\User;
+
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
+
+use Oleg\UserdirectoryBundle\Entity\User;
 
 class GenericTreeTransformer implements DataTransformerInterface
 {

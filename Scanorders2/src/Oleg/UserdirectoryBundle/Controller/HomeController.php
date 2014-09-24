@@ -18,7 +18,7 @@ class HomeController extends Controller {
     }
 
     /**
-     * @Route("/maintanencemode", name="maintenance_scanorder")
+     * @Route("/maintanencemode", name="main_maintenance")
      */
     public function maintanenceModeAction() {
 

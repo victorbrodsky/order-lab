@@ -209,11 +209,12 @@ class UtilController extends Controller {
                 ->setParameter('ssn', $ssn)
                 ->getQuery();
 
-            $user = $query->getSingleResult();
+            $users = $query->getResult();
         }
 
         $output = array();
-        if( $user ) {
+        if( $users && count($users) > 0 ) {
+            $user = $users[0];
             $element = array('id'=>$user->getId(), 'firstName'=>$user->getFirstName(), 'lastName'=>$user->getLastName() );
             $output[] = $element;
         }
@@ -235,6 +236,7 @@ class UtilController extends Controller {
         }
 
         $ein = trim( $request->get('number') );
+
         $em = $this->getDoctrine()->getManager();
 
         $user = null;
@@ -248,11 +250,12 @@ class UtilController extends Controller {
                 ->setParameter('employeeId', $ein)
                 ->getQuery();
 
-            $user = $query->getSingleResult();
+            $users = $query->getResult();
         }
 
         $output = array();
-        if( $user ) {
+        if( $users && count($users) > 0 ) {
+            $user = $users[0];
             $element = array('id'=>$user->getId(), 'firstName'=>$user->getFirstName(), 'lastName'=>$user->getLastName() );
             $output[] = $element;
         }

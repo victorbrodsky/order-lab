@@ -2,17 +2,6 @@ parameters:
 
   scan.sitename: scan
 
-#  maintenance:
-#  maintenanceenddate:
-#  maintenanceloginmsg:
-#  maintenancelogoutmsg:
-
-
-#framework:
-#    session:
-#        cookie_lifetime: 20
-#        gc_maxlifetime: 10
-
 
 services:
 
@@ -23,24 +12,10 @@ services:
         tags:
             - { name: form.type, alias: custom_selector }
 
-    #Custom selector fields with data
-    order_form.type.custom_data_selector:
-        class: Oleg\OrderformBundle\Form\CustomType\CustomDataSelectorType
-        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
-        tags:
-            - { name: form.type, alias: custom_data_selector }
-
     #Redirect admin to index
     authentication_handler:
         class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler
         arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
-
-    #idle time out handler (can pass %session_max_idle_time%. Now use DB)
-    oleg.handler.session_idle:
-        class: Oleg\OrderformBundle\Helper\SessionIdleHandler
-        arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     #aperio authentication
     aperio.security.authentication.provider:
@@ -51,12 +26,6 @@ services:
     aperio.security.authentication.listener:
         class: Oleg\OrderformBundle\Security\Firewall\AperioListener
         arguments: ["@security.context", "@security.authentication.manager", "aperio_ldap_firewall"]
-
-    scanorder.listener.maintenance:
-        class: Oleg\OrderformBundle\Services\MaintenanceListener
-        arguments: ["@service_container","@doctrine.orm.entity_manager","@security.context"]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     #security utility
     order_security_utility:

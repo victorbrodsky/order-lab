@@ -2,15 +2,20 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
-use FOS\UserBundle\Model\User as BaseUser;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\AttributeOverrides;
 use Doctrine\ORM\Mapping\AttributeOverride;
 
+use FOS\UserBundle\Model\User as BaseUser;
+
 //Use FOSUser bundle: https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md
 //User is a reserved keyword in SQL so you cannot use it as table name
+
+//TODO: unique username + usertype
 
 /**
  * @ORM\Entity
@@ -20,10 +25,13 @@ use Doctrine\ORM\Mapping\AttributeOverride;
  *      @ORM\Index( name="displayName_idx", columns={"displayName"} )
  *  }
  * )
- * @ORM\AttributeOverrides({ @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) )
+ * @ORM\AttributeOverrides({
+ *      @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) ),
+ *      @ORM\AttributeOverride( name="username", column=@ORM\Column(type="string", name="username", unique=false) ), @ORM\AttributeOverride( name="usernameCanonical", column=@ORM\Column(type="string", name="username_canonical", unique=false) )
  * })
  * )
  *
+ * @UniqueEntity({"username_canonical", "email_canonical"})
  */
 class User extends BaseUser
 {
@@ -93,7 +101,6 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="EmploymentStatus", mappedBy="user", cascade={"persist"})
      */
     private $employmentStatus;
-
 
 
     function __construct()

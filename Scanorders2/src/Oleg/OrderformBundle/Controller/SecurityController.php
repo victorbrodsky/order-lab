@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use Oleg\OrderformBundle\Helper\SessionIdleHandler;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -82,7 +81,8 @@ class SecurityController extends Controller
         $em = $this->getDoctrine()->getManager();
         $userUtil = new UserUtil();
         $options['sitename'] = $this->container->getParameter('scan.sitename');
-        $options['event'] = "Login Page Visit";
+        $options['eventtype'] = "Login Page Visit";
+        $options['event'] = "Scan Order login page visit";
         $options['serverresponse'] = "";
         $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
 

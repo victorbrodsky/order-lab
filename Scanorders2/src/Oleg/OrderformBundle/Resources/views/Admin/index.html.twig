@@ -166,6 +166,20 @@
 
     <hr>
 
+    <h3 class="text-info">Progress and Comments Event Types</h3>
+    <p>
+        <a href="{{ path('progresscommentseventtypes-list') }}">List of Progress and Comments Event Types</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Event Log Types</h3>
+    <p>
+        <a href="{{ path('scanloggereventtypes-list') }}">List of Event Log Types</a>
+    </p>
+
+    <hr>
+
 
     <h3 class="text-info">Accounts</h3>
     <p>
@@ -183,6 +197,8 @@
     <p>
         <a href="{{ path('scanners-list') }}">List of Scanners</a>
     </p>
+
+
 
     {% if environment is not defined %}
         {% set environment = 'dev' %}

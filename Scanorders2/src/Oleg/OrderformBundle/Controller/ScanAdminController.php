@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,6 +27,7 @@ use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
 use Oleg\OrderformBundle\Entity\Urgency;
 use Oleg\OrderformBundle\Entity\ScannerList;
+use Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Controller\AdminController;
@@ -96,6 +98,7 @@ class ScanAdminController extends AdminController
         $count_comments = $this->generateProcessorComments();
         $count_urgency = $this->generateUrgency();
         $count_scanners = $this->generateScanners();
+        $count_progressCommentsEventType = $this->generateProgressCommentsEventType();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
@@ -119,6 +122,7 @@ class ScanAdminController extends AdminController
             'Processor Comments='.$count_comments.', '.
             'Urgency='.$count_urgency.' '.
             'Scanners='.$count_scanners.' '.
+            'Progress and Comments EventTypes='.$count_progressCommentsEventType.' '.
             'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -881,6 +885,44 @@ class ScanAdminController extends AdminController
         foreach( $types as $type ) {
 
             $listEntity = new ScannerList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return $count;
+    }
+
+    public function generateProgressCommentsEventType() {
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Initial Order Submission',
+            'Amended Order Submission',
+            'Auto-saved at the time of auto-logout',
+            'Status Changed',
+            'Data Reviewed',
+            'Progress & Comments Viewed',
+            'Comment Added',
+            'Initial Slide Return Request Submission',
+            'Slide Return Request Status Changed',
+            'Slide Return Request Comment Added'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new ProgressCommentsEventTypeList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

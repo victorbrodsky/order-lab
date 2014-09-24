@@ -6,7 +6,7 @@
  * Time: 4:20 PM
  */
 
-namespace Oleg\OrderformBundle\Services;
+namespace Oleg\UserdirectoryBundle\Services;
 
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -42,15 +42,15 @@ class MaintenanceListener {
 
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
-        if( strpos($controller,'Oleg\OrderformBundle') !== false ) {
+        if( strpos($controller,'Oleg\UserdirectoryBundle') !== false || strpos($controller,'Oleg\OrderformBundle') !== false ) {
             // fire custom event e.g. My.db.lookup
-            //echo "OlegOrderformBundle controller! <br>";
+            //echo "Sites controller! <br>";
         } else {
             //echo "other controller! <br>";
             return;
         }
 
-        $maintenanceRoute = 'maintenance_scanorder';
+        $maintenanceRoute = 'main_maintenance';
         $scanRoute = 'main_common_home';
 
         $debug = in_array($this->container->get('kernel')->getEnvironment(), array('test', 'dev'));
@@ -101,10 +101,6 @@ class MaintenanceListener {
                 $event->setResponse($response);
             }
 
-//            $engine = $this->container->get('templating');
-//            $content = $engine->render('OlegOrderformBundle:Default:maintenance.html.twig', array('param'=>null));
-//            $event->setResponse(new Response($content, 503));
-//            $event->stopPropagation();
         }
 
     }
