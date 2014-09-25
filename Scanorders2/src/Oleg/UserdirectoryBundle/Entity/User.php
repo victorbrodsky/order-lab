@@ -14,24 +14,25 @@ use FOS\UserBundle\Model\User as BaseUser;
 
 //Use FOSUser bundle: https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md
 //User is a reserved keyword in SQL so you cannot use it as table name
-
-//TODO: unique username + usertype
+//Generate unique username (post): primaryPublicUserId + "_" + keytype + "_" _ id
 
 /**
  * @ORM\Entity
+ * @UniqueEntity(
+ *     fields={"keytype", "primaryPublicUserId"},
+ *     errorPath="primaryPublicUserId",
+ *     message="The primary public user Id is already in use on that type."
+ * )
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="user_fosuser",
  *  indexes={
+ *      @ORM\Index( name="keytype_idx", columns={"keytype"} ),
+ *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} ),
  *      @ORM\Index( name="username_idx", columns={"username"} ),
  *      @ORM\Index( name="displayName_idx", columns={"displayName"} )
  *  }
  * )
- * @ORM\AttributeOverrides({
- *      @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) ),
- *      @ORM\AttributeOverride( name="username", column=@ORM\Column(type="string", name="username", unique=false) ), @ORM\AttributeOverride( name="usernameCanonical", column=@ORM\Column(type="string", name="username_canonical", unique=false) )
- * })
- * )
- *
- * @UniqueEntity({"username_canonical", "email_canonical"})
+ * @ORM\AttributeOverrides({ @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) ) })
  */
 class User extends BaseUser
 {
@@ -41,6 +42,19 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * Primary Public User ID Type
+     *
+     * @ORM\ManyToOne(targetEntity="UsernameType", inversedBy="users")
+     * @ORM\JoinColumn(name="keytype", referencedColumnName="id", nullable=true)
+     */
+    protected $keytype;
+
+    /**
+     * @ORM\Column(name="primaryPublicUserId", type="string")
+     */
+    private $primaryPublicUserId;
 
     /**
      * @ORM\Column(name="firstName", type="string", nullable=true)
@@ -133,6 +147,56 @@ class User extends BaseUser
         $homeLocation->setRemovable(false);
 
         parent::__construct();
+    }
+
+
+    /**
+     * @param mixed $keytype
+     */
+    public function setKeytype($keytype)
+    {
+        $this->keytype = $keytype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getKeytype()
+    {
+        return $this->keytype;
+    }
+
+    /**
+     * @param mixed $primaryPublicUserId
+     */
+    public function setPrimaryPublicUserId($primaryPublicUserId)
+    {
+        $this->primaryPublicUserId = $primaryPublicUserId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimaryPublicUserId()
+    {
+        return $this->primaryPublicUserId;
+    }
+
+//    /**
+//     * @ORM\PrrrrePersist
+//     */
+    public function setUniqueUsername() {
+        $this->setUsername($this->createUniqueUsername());
+    }
+    public function createUniqueUsername() {
+        $username = $this->getPrimaryPublicUserId()."_".$this->getKeytype()->getName();
+        $usernamestr = preg_replace('/\s+/', '_', $username);
+        return $usernamestr;
+    }
+    public function createUniqueUsernameByKeyKeytype($keytype,$key) {
+        $username = $key."_".$keytype->getName();
+        $usernamestr = preg_replace('/\s+/', '_', $username);
+        return $usernamestr;
     }
 
     /**
@@ -247,11 +311,19 @@ class User extends BaseUser
     }
 
     public function __toString() {
-        if( $this->displayName && $this->displayName != "" ) {
-            return $this->username." - ".$this->displayName;
+        return $this->getUserNameStr();
+    }
+
+    public function getUserNameStr() {
+        if( $this->getDisplayName() ) {
+            return $this->getPrimaryUserid()." - ".$this->displayName;
         } else {
-            return $this->username;
+            return $this->getPrimaryUserid();
         }
+    }
+
+    public function getPrimaryUserid() {
+        return $this->primaryPublicUserId."(".$this->getKeytype()->getName().")";
     }
 
     public function getMainLocation() {

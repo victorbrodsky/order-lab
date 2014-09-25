@@ -30,6 +30,7 @@ class ListController extends Controller
      * @Route("/board-certifications/", name="boardcertifications-list")
      * @Route("/employment_terminations/", name="employmentterminations-list")
      * @Route("/event-log-event-types/", name="loggereventtypes-list")
+     * @Route("/primary-public-userid-types/", name="usernametypes-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -99,6 +100,7 @@ class ListController extends Controller
      * @Route("/board-certifications/", name="boardcertifications_create")
      * @Route("/employment_terminations/", name="employmentterminations_create")
      * @Route("/event-log-event-types/", name="loggereventtypes_create")
+     * @Route("/primary-public-userid-types/", name="usernametypes_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -190,6 +192,7 @@ class ListController extends Controller
      * @Route("/board-certifications/new", name="boardcertifications_new")
      * @Route("/employment_terminations/new", name="employmentterminations_new")
      * @Route("/event-log-event-types/new", name="loggereventtypes_new")
+     * @Route("/primary-public-userid-types/new", name="usernametypes_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -243,6 +246,7 @@ class ListController extends Controller
      * @Route("/board-certifications/{id}", name="boardcertifications_show")
      * @Route("/employment_terminations/{id}", name="employmentterminations_show")
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_show")
+     * @Route("/primary-public-userid-types/{id}", name="usernametypes_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -288,6 +292,7 @@ class ListController extends Controller
      * @Route("/board-certifications/{id}/edit", name="boardcertifications_edit")
      * @Route("/employment_terminations/{id}/edit", name="employmentterminations_edit")
      * @Route("/event-log-event-types/{id}/edit", name="loggereventtypes_edit")
+     * @Route("/primary-public-userid-types/{id}/edit", name="usernametypes_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -374,6 +379,7 @@ class ListController extends Controller
      * @Route("/board-certifications/{id}", name="boardcertifications_update")
      * @Route("/employment_terminations/{id}", name="employmentterminations_update")
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_update")
+     * @Route("/primary-public-userid-types/{id}", name="usernametypes_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -478,6 +484,10 @@ class ListController extends Controller
             $className = "EventTypeList";
             $displayName = "Event Log Types";
             break;
+        case "usernametypes":
+            $className = "UsernameType";
+            $displayName = "Primary Public User ID Types";
+            break;
         default:
             $className = null;
             $displayName = null;
@@ -505,6 +515,7 @@ class ListController extends Controller
      * @Route("/board-certifications/{id}", name="boardcertifications_delete")
      * @Route("/employment_terminations/{id}", name="employmentterminations_delete")
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_delete")
+     * @Route("/primary-public-userid-types/{id}", name="usernametypes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

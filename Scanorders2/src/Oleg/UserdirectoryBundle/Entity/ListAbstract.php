@@ -157,7 +157,7 @@ abstract class ListAbstract
      * @param \Oleg\UserdirectoryBundle\Entity\User $creator
      * @return List
      */
-    public function setCreator(\Oleg\UserdirectoryBundle\Entity\User $creator)
+    public function setCreator(\Oleg\UserdirectoryBundle\Entity\User $creator=null)
     {
         $this->creator = $creator;
 

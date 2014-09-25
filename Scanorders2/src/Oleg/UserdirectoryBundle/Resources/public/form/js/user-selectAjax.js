@@ -10,6 +10,7 @@ var asyncflag = true;
 var combobox_width = '100%'; //'element'
 var urlBase = $("#baseurl").val();
 var cicle = $("#formcicle").val();
+//var user_keytype = $("#user_keytype").val();
 var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
 var orderinfoid = $(".orderinfo-id").val();

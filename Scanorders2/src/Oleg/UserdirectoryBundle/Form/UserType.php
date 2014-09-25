@@ -11,6 +11,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -41,8 +42,32 @@ class UserType extends AbstractType
             $read_only = true;
         }
 
-        $builder->add('username', null, array(
-            'label' => 'User Name (CWID):',
+//        $builder->add('keytype', null, array(
+//            'label' => 'Primary Public User ID Type:',
+//            'read_only' => $read_only,
+//            'attr' => array('class'=>'form-control form-control-modif')
+//        ));
+        $builder->add('keytype', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:UsernameType',
+            'read_only' => $read_only,
+            'property' => 'name',
+            'label'=>'Primary Public User ID Type:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
+
+        $builder->add('primaryPublicUserId', null, array(
+            'label' => 'Primary Public User ID:',
             'read_only' => $read_only,
             'attr' => array('class'=>'form-control form-control-modif')
         ));

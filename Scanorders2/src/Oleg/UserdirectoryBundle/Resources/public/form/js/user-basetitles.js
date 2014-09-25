@@ -29,6 +29,7 @@ function addBaseTitle(btn,classname) {
     //console.log(newForm);
 
     initBaseAdd();
+    processEmploymentStatusRemoveButtons(btn);
 
     //init institution for administrative and appointnment titles
     getComboboxInstitution(newForm);
@@ -86,4 +87,6 @@ function removeBaseTitle(btn,classname) {
     var btnEl = $(btn);
     var element = btnEl.closest('.'+classname);
     element.remove();
+
+    processEmploymentStatusRemoveButtons(btn);
 }

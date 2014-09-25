@@ -106,8 +106,12 @@ class UserTransformer implements DataTransformerInterface
             $user = $userManager->createUser();
 
             $clearName = preg_replace('/\s+/', '', $name);
+           
+            $userkeytype = getDefaultUsernameType($this->em);			
+			
+            $user->setKeytype($userkeytype);
+            $user->setPrimaryPublicUserId($clearName);
 
-            $user->setUsername($clearName);
             $user->setDisplayName($name);
             $user->setEmail('');
             $user->setEnabled(true);

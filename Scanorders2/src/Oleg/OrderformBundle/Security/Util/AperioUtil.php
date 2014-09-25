@@ -50,7 +50,11 @@ class AperioUtil {
 
                 $user = $userManager->createUser();
 
-                $user->setUsername($token->getUsername());
+                $userkeytype = getDefaultUsernameType($em);
+                $user->setKeytype($userkeytype);
+
+                $user->setPrimaryPublicUserId($token->getUsername());
+
                 $user->setEmail($AuthResult['E_Mail']);
                 $user->setEnabled(1);
                 $user->setCreatedby('aperio');
@@ -105,11 +109,7 @@ class AperioUtil {
                 //TODO: Remove: for testing at home;
                 if( !$this->ldap ) {
                     echo "Aperio Auth Tesing: Remove it !!!";
-                    $user->setUsername("testuser4");
-                    $user->addRole('ROLE_SCANORDER_ADMIN');
-                }
-
-                if( $token->getUsername() == "oli2002" || $token->getUsername() == "vib9020" ) {
+                    $user->setPrimaryPublicUserId("testuser4");
                     $user->addRole('ROLE_SCANORDER_ADMIN');
                 }
 

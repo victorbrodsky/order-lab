@@ -29,6 +29,8 @@ $(document).ready(function() {
 
     getComboboxInstitution();
 
+    processEmploymentStatusRemoveButtons();
+
 });
 
 

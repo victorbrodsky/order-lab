@@ -14,6 +14,7 @@ var urlBase = $("#baseurl").val();
 //var urlCommon = urlBase+"util/";
 //var type = $("#formtype").val();
 var cicle = $("#formcicle").val();
+//var user_keytype = $("#user_keytype").val();
 var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
 var proxyuser_name = $("#proxyuser_name").val();
