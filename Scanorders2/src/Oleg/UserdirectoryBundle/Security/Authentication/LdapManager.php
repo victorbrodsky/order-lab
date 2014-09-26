@@ -7,6 +7,13 @@
  * To change this template use File | Settings | File Templates.
  */
 
+//Note: findUserBy: $entries = $this->driver->search($this->params['baseDn'], $filter, $this->ldapAttributes); causes login delay
+//Note: execution order: findUserByUsername, findUserBy, hydrate, bind
+//If user already exists in DB then LdapManager->findUserByUsername is not used.
+//Therefore: first user is checked by fosuser bundle if it exists in DB, then it check in LDAP. => user is got from DB or new user is created by LDAP
+//Then user is authenticated by LDAP bind
+//So to overwrite username different from LDAP, login page username should be split by two fields: user keytype and username
+
 namespace Oleg\UserdirectoryBundle\Security\Authentication;
 
 use FR3D\LdapBundle\Ldap\LdapManager as BaseLdapManager;
@@ -21,90 +28,110 @@ class LdapManager extends BaseLdapManager
 
     private $timezone;
     private $em;
+    private $container;
 
-    public function __construct( LdapDriverInterface $driver, $userManager, array $params, $timezone = null, $em = null ) {
+    public function __construct( LdapDriverInterface $driver, $userManager, array $params, $container, $em ) {
 
         //print_r($params);
         //exit("constractor ldap <br>");
 
         parent::__construct($driver,$userManager,$params);
 
-        $this->timezone = $timezone;
+        $this->timezone = $container->getParameter('default_time_zone');
         $this->em = $em;
+        $this->container = $container;
     }
+
 
     protected function hydrate(UserInterface $user, array $entry)
     {
 
-        //exit("UserdirectoryBundle using ldap! <br>");
-        //echo "UserdirectoryBundle user name=".$user->getUsername()."<br>";
-
-        $userUtil = new UserUtil();
-
-        $userkeytype = $userUtil->getDefaultUsernameType($this->em);
-
-        if( $userkeytype == null ) {
-            echo "keytype null <br>";
-            //generate user keytypes
-            $userUtil->generateUsernameTypes($this->em,null);
-            $userkeytype = $userUtil->getDefaultUsernameType($this->em);
-        }
-
-        //$user->setKeytype($userkeytype);
-        //$user->setPrimaryPublicUserId($entry['cn'][0]);
-
-        print_r($entry);
-
-        //$uniqueUserName = $user->createUniqueUsername();
-        $originalCN = $entry['cn'][0];
-
-        $uniqueUserName = $user->createUniqueUsernameByKeyKeytype($userkeytype,$originalCN);
-
-        echo "<br>uniqueUserName=".$uniqueUserName."<br>";
-
-        $entry['cn'][0] = $uniqueUserName;
-
-        echo "<br><br>";
-
-        print_r($entry);
-
-        //exit();
-
         parent::hydrate($user, $entry);
 
+//        echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
+//        echo "user's username=".$user->getUsername()." <br>";
+//        echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
+//        print_r($user->getRoles());
+        //exit();
+
+        //$user->setPrimaryPublicUserId($user->getUsername());
+        //$userkeytype = $this->getDefaultUserKeytypeSafe();
+        //$uniqueUserName = $user->createUniqueUsernameByKeyKeytype($userkeytype,$user->getPrimaryPublicUserId());
+
+//        $found_user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($user->getUsername());
+//        if( $found_user ) {
+//
+//            //$found_user->setKeytype($userkeytype);
+//            //$found_user = $this->modifyUsernameWithDefaultKeytype($found_user);
+//
+//            echo "<br>found user: user's keytype=".$found_user->getKeytype()." <br>";
+//            echo "user's username=".$found_user->getUsername()." <br>";
+//            echo "user's primaryPublicUserId=".$found_user->getPrimaryPublicUserId()." <br>";
+//            print_r($found_user->getRoles());
+//
+//            echo "<br>return: replace found user! <br>";
+//            //exit();
+//            return $found_user;
+//        }
+
+
         //echo "UserdirectoryBundle user name=".$user->getUsername()."<br>";
         //exit("UserdirectoryBundle using ldap! <br>");
-
-
-        $user->setCreatedby('ldap');
-        $user->getPreferences()->setTimezone($this->timezone);
-
-        //assign default keytype
-        //$user->setKeytype($userkeytype);
-        //replace username
-        //$user->setPrimaryPublicUserId($user->getUsername());
-        //$user->setUniqueUsername();
-        $user->setUsername($uniqueUserName);
-        $user->setKeytype($userkeytype);
-        $user->setPrimaryPublicUserId($originalCN);
+//
+//        //assign default keytype
+//        //$user->setKeytype($userkeytype);
+//        //replace username
+//        //$user->setPrimaryPublicUserId($user->getUsername());
+//        //$user->setUniqueUsername();
+//        $user->setUsername($uniqueUserName);
+//        $user->setKeytype($userkeytype);
+//        $user->setPrimaryPublicUserId($originalCN);
 
         //echo "user's keytype=".$user->getKeytype()." <br>";
         //echo "user's username=".$user->getUsername()." <br>";
         //exit();
+
+        $user->setCreatedby('ldap');
+        $user->getPreferences()->setTimezone($this->timezone);
+
+        $user->setPrimaryPublicUserId($user->getUsername());
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userkeytype = $userSecUtil->getDefaultUserKeytypeSafe();
+        $user->setKeytype($userkeytype);
+        //$user = $this->modifyUsernameWithDefaultKeytype($user);
 
         //TODO: remove this on production!
         if( $user->getPrimaryPublicUserId() == "oli2002" || $user->getPrimaryPublicUserId() == "vib9020" ) {
             $user->addRole('ROLE_ADMIN');
         }
 
-        echo "<br><br>user's keytype=".$user->getKeytype()." <br>";
-        echo "user's username=".$user->getUsername()." <br>";
-        echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
-        print_r($user->getRoles());
+//        echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
+//        echo "user's username=".$user->getUsername()." <br>";
+//        echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
+//        print_r($user->getRoles());
         //exit();
 
     }
 
-
+//    public function modifyUsernameWithDefaultKeytype($user) {
+//        $userkeytype = $this->getDefaultUserKeytypeSafe();
+//        $user->setKeytype($userkeytype);
+//        $uniqueUserName = $user->createUniqueUsernameByKeyKeytype($userkeytype,$user->getUsername());
+//        $user->setUsername($uniqueUserName);
+//        return $user;
+//    }
+//
+//    public function getDefaultUserKeytypeSafe() {
+//        $userUtil = new UserUtil();
+//        $userkeytype = $userUtil->getDefaultUsernameType($this->em);
+//        if( $userkeytype == null ) {
+//            //echo "keytype null <br>";
+//            //generate user keytypes
+//            $userUtil->generateUsernameTypes($this->em,null);
+//            $userkeytype = $userUtil->getDefaultUsernameType($this->em);
+//        }
+//        return $userkeytype;
+//    }
 
 }

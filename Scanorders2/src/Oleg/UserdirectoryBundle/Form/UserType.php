@@ -38,23 +38,25 @@ class UserType extends AbstractType
     {
 
         $read_only = false;
+        //$readonlyAttr = 'false';
         if( !$this->roleAdmin ) {
             $read_only = true;
+            //$readonlyAttr = 'true';
         }
+        //echo "read_only=".$read_only."<br>";
 
-//        $builder->add('keytype', null, array(
-//            'label' => 'Primary Public User ID Type:',
-//            'read_only' => $read_only,
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
+        $attr = array('class'=>'combobox combobox-width user-keytype-field');
+        if( $read_only ) {
+            $attr['readonly'] = 'readonly';
+        }
         $builder->add('keytype', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
             'read_only' => $read_only,
             'property' => 'name',
-            'label'=>'Primary Public User ID Type:',
-            'required'=> false,
+            'label' => 'Primary Public User ID Type:',
+            'required' => false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => $attr,    //array('class'=>'combobox combobox-width user-keytype-field','readonly'=>$readonlyAttr ),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
@@ -66,11 +68,20 @@ class UserType extends AbstractType
                 },
         ));
 
+//        if( $this->roleAdmin ) {
+//            $builder->add('username', null, array(
+//                'label' => 'Unique Username:',
+//                'read_only' => true,
+//                'attr' => array('class'=>'form-control form-control-modif')
+//            ));
+//        }
+
         $builder->add('primaryPublicUserId', null, array(
             'label' => 'Primary Public User ID:',
             'read_only' => $read_only,
             'attr' => array('class'=>'form-control form-control-modif')
         ));
+
         $builder->add('firstName', null, array(
             'label' => 'First Name:',
             'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'

@@ -146,4 +146,24 @@ class UserSecurityUtil {
         return $logger;
     }
 
+
+    public function modifyUsernameWithDefaultKeytype($user) {
+        $userkeytype = $this->getDefaultUserKeytypeSafe();
+        $user->setKeytype($userkeytype);
+        $uniqueUserName = $user->createUniqueUsernameByKeyKeytype($userkeytype,$user->getUsername());
+        $user->setUsername($uniqueUserName);
+        return $user;
+    }
+
+    public function getDefaultUserKeytypeSafe() {
+        $userUtil = new UserUtil();
+        $userkeytype = $userUtil->getDefaultUsernameType($this->em);
+        if( $userkeytype == null ) {
+            //generate user keytypes
+            $userUtil->generateUsernameTypes($this->em,null);
+            $userkeytype = $userUtil->getDefaultUsernameType($this->em);
+        }
+        return $userkeytype;
+    }
+
 }

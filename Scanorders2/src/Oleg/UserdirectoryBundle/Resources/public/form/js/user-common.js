@@ -4,9 +4,33 @@
 
 
 var _sitename = "";
+var asyncflag = true;
+var combobox_width = '100%'; //'element'
+
+var urlBase = $("#baseurl").val();
+var cicle = $("#formcicle").val();
+var user_name = $("#user_name").val();
+var user_id = $("#user_id").val();
 
 
+function regularCombobox() {
 
+    var selectboxes = $("select.combobox");
+
+    selectboxes.each( function() {
+        $(this).select2({
+            width: combobox_width,
+            dropdownAutoWidth: true,
+            placeholder: "Select an option",
+            allowClear: true,
+            selectOnBlur: false
+            //containerCssClass: 'combobox-width'
+        });
+        if( $(this).attr("readonly") ) {
+            $(this).select2("readonly", true);
+        }
+    });
+}
 
 function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
@@ -48,6 +72,10 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
             return {id:term, text:term};
         }
     });
+
+    if( $(target).attr("readonly") ) {
+        $(this).select2("readonly", true);
+    }
 }
 
 

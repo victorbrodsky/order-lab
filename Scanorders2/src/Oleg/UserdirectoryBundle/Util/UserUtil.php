@@ -37,30 +37,6 @@ class UserUtil {
         $serviceCount = 0;
 
         ////////////// add system user /////////////////
-//        $adminemail = $this->getSiteSetting($em,'siteEmail');
-//        $systemuser = new User();
-//        $userkeytypes = $this->em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(array(),array('orderinlist' => 'ASC'),1);   //limit result by 1
-//        $userkeytype = $userkeytypes->first();
-//        $systemuser->setKeytype($userkeytype);
-//        $systemuser->setPrimaryPublicUserId('system');
-//        //$systemuser->setUsernameCanonical('system');
-//        $systemuser->setEmail($adminemail);
-//        //$systemuser->setEmailCanonical($adminemail);
-//        $systemuser->setPassword("");
-//        $systemuser->setCreatedby('system');
-//        $systemuser->addRole('ROLE_SCANORDER_PROCESSOR');
-//        $systemuser->getPreferences()->setTimezone($default_time_zone);
-//        $systemuser->setEnabled(true);
-//        $systemuser->setLocked(true); //system is locked, so no one can logged in with this account
-//        $systemuser->setExpired(false);
-//        $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
-//        if( !$found_user ) {
-//            $em->persist($systemuser);
-//            $em->flush();
-//            $count++;
-//        } else {
-//            $systemuser = $found_user;
-//        }
         $systemuser = $this->createSystemUser($em,$default_time_zone);
         ////////////// end of add system user /////////////////
 
@@ -102,8 +78,8 @@ class UserUtil {
             $user->setPrimaryPublicUserId($username);
             $user->setEmail($email);
             $user->setEmailCanonical($email);
-            //$user->setUsername($username);
-            //$user->setUsernameCanonical($username);
+            $user->setUsername($username);
+            $user->setUsernameCanonical($username);
             $user->setFirstName($firstName);
             $user->setLastName($lastName);
             $user->setDisplayName($firstName." ".$lastName);
@@ -378,9 +354,10 @@ class UserUtil {
         $systemuser = new User();
         $systemuser->setKeytype($userkeytype);
         $systemuser->setPrimaryPublicUserId('system');
-        //$systemuser->setUsernameCanonical('system');
+        $systemuser->setUsername('system');
+        $systemuser->setUsernameCanonical('system');
         $systemuser->setEmail($adminemail);
-        //$systemuser->setEmailCanonical($adminemail);
+        $systemuser->setEmailCanonical($adminemail);
         $systemuser->setPassword("");
         $systemuser->setCreatedby('system');
         $systemuser->addRole('ROLE_SCANORDER_PROCESSOR');

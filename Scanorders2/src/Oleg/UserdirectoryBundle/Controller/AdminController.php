@@ -67,7 +67,6 @@ class AdminController extends Controller
     public function generateAllAction()
     {
         $userutil = new UserUtil();
-
         $user = $this->get('security.context')->getToken()->getUser();
 
         $max_exec_time = ini_get('max_execution_time');
@@ -81,7 +80,6 @@ class AdminController extends Controller
         $count_terminationTypes = $this->generateTerminationTypes();
         $count_eventTypeList = $this->generateEventTypeList();
         $count_usernameTypeList = $userutil->generateUsernameTypes($this->getDoctrine()->getManager(),$user); //$this->generateUsernameTypes();
-
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 

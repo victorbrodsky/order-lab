@@ -6,36 +6,21 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var asyncflag = true;
-var combobox_width = '100%'; //'element'
-var urlBase = $("#baseurl").val();
-var cicle = $("#formcicle").val();
-//var user_keytype = $("#user_keytype").val();
-var user_name = $("#user_name").val();
-var user_id = $("#user_id").val();
-var orderinfoid = $(".orderinfo-id").val();
 
-var _projectTitle = new Array();
-var _courseTitle = new Array();
+//var urlBase = $("#baseurl").val();
+//var cicle = $("#formcicle").val();
+////var user_keytype = $("#user_keytype").val();
+//var user_name = $("#user_name").val();
+//var user_id = $("#user_id").val();
+//var orderinfoid = $(".orderinfo-id").val();
+//var _projectTitle = new Array();
+//var _courseTitle = new Array();
 
 var _institution = new Array();
 
 
 //var userpathserviceflag = false;
 
-
-function regularCombobox() {
-    //select.combobox
-    $("select.combobox").select2({
-        width: combobox_width,
-        dropdownAutoWidth: true,
-        placeholder: "Select an option",
-        allowClear: true,
-        selectOnBlur: false
-        //readonly: true
-        //containerCssClass: 'combobox-width'
-    });
-}
 
 //#############  institution  ##############//
 function getComboboxInstitution(holder) {

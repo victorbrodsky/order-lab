@@ -54,6 +54,7 @@
 
 {% macro location( field, cicle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
     {% else %}
@@ -83,11 +84,14 @@
             {{ formmacros.field(formfield.name,"","readonly") }}
         {% endif %}
 
-        {{ formmacros.field(formfield.phone) }}
-        {{ formmacros.field(formfield.pager) }}
-        {{ formmacros.field(formfield.mobile) }}
+        {#{{ formmacros.field(formfield.phone) }}#}
+        {{ userform.emailPhoneField(formfield.phone,cicle,'phone',"") }}
+        {#{{ formmacros.field(formfield.pager) }}#}
+        {{ userform.emailPhoneField(formfield.pager,cicle,'phone',"") }}
+        {#{{ formmacros.field(formfield.mobile) }}#}
+        {{ userform.emailPhoneField(formfield.mobile,cicle,'phone',"") }}
         {{ formmacros.field(formfield.fax) }}
-        {{ formmacros.field(formfield.email) }}
+        {{ userform.emailPhoneField(formfield.email,cicle,'email',"") }}
 
         {% if prototype == "prototype" or formfield.vars.value and
             (formfield.vars.value.removable == true or formfield.vars.value.removable != true and formfield.vars.value.name != "Home")
@@ -96,7 +100,9 @@
             {% if cicle == 'show_user' %}
                 {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL %}
                     {{ formmacros.simplefield( "Assistant's Preferred Phone Number:", formfield.vars.value.assistant.preferredPhone, "", "disabled" ) }}
-                    {{ formmacros.simplefield( "Assistant's Preferred Email:", formfield.vars.value.assistant.email, "", "disabled" ) }}
+                    {#{{ formmacros.simplefield( "Assistant's Preferred Email:", formfield.vars.value.assistant.email, "", "disabled" ) }}#}
+                    {{ userform.emailPhoneField(formfield.vars.value.assistant.email,cicle,'email',"Assistant's Preferred Email:") }}
+
                 {% endif %}
             {% endif %}
         {% else %}
@@ -215,6 +221,45 @@
     <a href="{{ path('employees_showuser_notstrict', { 'id': 'user_replacement_id' }) }}">{{ 'user_replacement_username' }}</a><br>
 {% endmacro %}
 
+{% macro emailPhoneField(field,cicle,type,label) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if label == "" %}
+        {% set value = field.vars.value %}
+    {% else %}
+        {% set value = field %}
+    {% endif %}
+
+    {% if cicle == 'show_user' %}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {% if label == "" %}
+                    {{ form_label(field) }}
+                {% else %}
+                    <strong>{{ label }}</strong>
+                {% endif %}
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class="form-control form-control-modif" disabled>
+                    {% if type == "email" %}
+                        <a href="mailto:{{ value }}" target="_top">{{ value }}</a>
+                    {% else %}
+                        {#{% set valueclean = value|replace({'%+%': "", '% %': "", '%)%': "", '%(%': "", '%-%': ""}) %}#}
+                        <a href="tel:{{ value|replace({'%+%': "", '% %': "", '%)%': "", '%(%': "", '%-%': ""}) }}" target="_top">{{ value }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </p>
+        {% if label == "" %}
+            {% do field.setRendered %}
+        {% endif %}
+    {% else %}
+        {{ formmacros.field(field) }}
+    {% endif %}
+{% endmacro %}
+
 {% import _self as userform %}
 
 {% block content %}
@@ -241,8 +286,8 @@
     ></div>
 
         <input type="hidden" id="user_id" value="{{ user_id }}" />
-        {#<input type="hidden" id="user_keytype" value="{{ form.vars.value.keytype }}" />#}
-        <input type="hidden" id="user_name" value="{{ form.vars.value.getUserNameStr() }}" />
+        <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
+        {#<input type="hidden" id="user_name" value="{{ form.vars.value.getUserNameStr() }}" />#}
         <input type="hidden" id="formcicle" value="{{ cicle }}" />
         <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
@@ -263,13 +308,19 @@
                     {{ formmacros.field(form.keytype) }}
                     {{ formmacros.field(form.primaryPublicUserId) }}
 
+                    {% if form.username is defined %}
+                        {{ formmacros.field(form.username) }}
+                    {% endif %}
+
                     {{ formmacros.field(form.displayName) }}
                     {{ formmacros.field(form.firstName) }}
                     {{ formmacros.field(form.middleName) }}
                     {{ formmacros.field(form.lastName) }}
 
-                    {{ formmacros.field(form.email) }}
-                    {{ formmacros.field(form.preferredPhone) }}
+                    {{ userform.emailPhoneField(form.email,cicle,'email',"") }}
+
+                    {#{{ formmacros.field(form.preferredPhone) }}#}
+                    {{ userform.emailPhoneField(form.preferredPhone,cicle,'phone',"") }}
 
                     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}

@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 //include_once '..\conf\Spectrum.ini';
 //include_once '\Skeleton.php';
@@ -50,10 +51,12 @@ class AperioUtil {
 
                 $user = $userManager->createUser();
 
-                $userkeytype = getDefaultUsernameType($em);
-                $user->setKeytype($userkeytype);
+                $userUtil = new UserUtil();
+                $userkeytype = $userUtil->getDefaultUsernameType($em);
 
+                $user->setKeytype($userkeytype);
                 $user->setPrimaryPublicUserId($token->getUsername());
+                $user->setUsername($token->getUsername());
 
                 $user->setEmail($AuthResult['E_Mail']);
                 $user->setEnabled(1);
@@ -341,6 +344,7 @@ class AperioUtil {
             return true;
         }
         //echo "error_reporting=".error_reporting().", code=".$code." ,message=".$message."<br>";
+        //exit();
         throw new \Exception("Error exception: code=".$code." ,message=".$message.", file=".$file.", line=".$line);
     }
 

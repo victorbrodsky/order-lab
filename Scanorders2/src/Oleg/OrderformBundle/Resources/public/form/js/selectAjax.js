@@ -7,7 +7,7 @@
  */
 
 var asyncflag = true;
-var combobox_width = '100%'; //'element'
+//var combobox_width = '100%'; //'element'
 //var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 //var urlCommon = "http://collage.med.cornell.edu/order/util/";
 var urlBase = $("#baseurl").val();
@@ -38,18 +38,18 @@ var _account = new Array();
 var _urgency = new Array();
 
 
-function regularCombobox() {
-    //resolve
-    $("select.combobox").select2({
-        width: combobox_width,
-        dropdownAutoWidth: true,
-        placeholder: "Select an option or type in a new value",
-        allowClear: true,
-        selectOnBlur: false
-        //readonly: true
-        //containerCssClass: 'combobox-width'
-    });
-}
+//function regularCombobox() {
+//    //resolve
+//    $("select.combobox").select2({
+//        width: combobox_width,
+//        dropdownAutoWidth: true,
+//        placeholder: "Select an option or type in a new value",
+//        allowClear: true,
+//        selectOnBlur: false
+//        //readonly: true
+//        //containerCssClass: 'combobox-width'
+//    });
+//}
 
 function setResearchEducational() {
     //preselect with current user

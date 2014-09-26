@@ -259,6 +259,10 @@ class UserController extends Controller
         $user->setEnabled(true);
         $user->setCreatedby('manual');
 
+        $userSecUtil = $this->get('user_security_utility');
+        $userkeytype = $userSecUtil->getDefaultUserKeytypeSafe();
+        $user->setKeytype($userkeytype);
+
         $this->addEmptyCollections($user);
 
         //Roles
