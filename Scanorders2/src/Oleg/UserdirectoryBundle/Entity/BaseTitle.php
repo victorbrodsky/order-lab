@@ -33,6 +33,11 @@ class BaseTitle extends BaseUserAttributes
     protected $endDate;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $effort;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Institution")
      */
     protected $institution;
@@ -196,6 +201,22 @@ class BaseTitle extends BaseUserAttributes
     public function getService()
     {
         return $this->service;
+    }
+
+    /**
+     * @param mixed $effort
+     */
+    public function setEffort($effort)
+    {
+        $this->effort = $effort;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEffort()
+    {
+        return $this->effort;
     }
 
 

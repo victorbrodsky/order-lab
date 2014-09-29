@@ -18,8 +18,40 @@
 
 var _institution = new Array();
 
+var _identifiers = new Array();
 
 //var userpathserviceflag = false;
+
+
+
+function setElementToId( target, dataarr, setId ) {
+    if( dataarr == undefined || dataarr.length == 0 ) {
+        return;
+    }
+
+    if( typeof setId === "undefined" ) {
+        var firstObj = dataarr[0];
+        var setId = firstObj.id;
+    }
+
+    //console.log("setId="+setId+", target="+target);
+    $(target).select2('val', setId);
+
+    return setId;
+}
+
+function getDataIdByText(arr,text) {
+    var id = null;
+    for(var k in arr) {
+        if( arr[k].text == text ) {
+            id = arr[k].id;
+            break;
+        }
+    }
+    return id;
+}
+
+
 
 
 //#############  institution  ##############//
@@ -65,30 +97,33 @@ function getComboboxInstitution(holder) {
 }
 
 
+function getComboboxIdentifier(holder) {
 
-function setElementToId( target, dataarr, setId ) {
-    if( dataarr == undefined || dataarr.length == 0 ) {
+    var targetid = ".ajax-combobox-identifierkeytype";
+
+    if( $(targetid).length == 0 ) {
         return;
     }
 
-    if( typeof setId === "undefined" ) {
-        var firstObj = dataarr[0];
-        var setId = firstObj.id;
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
     }
 
-    //console.log("setId="+setId+", target="+target);
-    $(target).select2('val', setId);
+    var url = getCommonBaseUrl("util/common/"+"identifierkeytype","employees"); //always use "employees" to get institution
 
-    return setId;
-}
+    //console.log('cicle='+cicle);
 
-function getDataIdByText(arr,text) {
-    var id = null;
-    for(var k in arr) {
-        if( arr[k].text == text ) {
-            id = arr[k].id;
-            break;
-        }
+    if( _identifiers.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _identifiers = data;
+            populateSelectCombobox( targetid, _identifiers, "Select an option or type in a new value", false );
+        });
+    } else {
+        populateSelectCombobox( targetid, _identifiers, "Select an option or type in a new value", false );
     }
-    return id;
+
 }

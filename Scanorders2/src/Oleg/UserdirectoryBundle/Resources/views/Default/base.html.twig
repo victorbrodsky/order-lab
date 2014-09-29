@@ -114,7 +114,6 @@
             {% endfor %}
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
-            <input type="hidden" id="user-preferences-tooltip" value="{{ app.security.getToken().getUser().getPreferences().getTooltip() }}" />
 
         </div>
 

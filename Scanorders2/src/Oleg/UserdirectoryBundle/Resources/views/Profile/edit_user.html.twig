@@ -44,6 +44,7 @@
 
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
+        {{ formmacros.field(formfield.effort) }}
         {{ formmacros.field(formfield.institution) }}
         {{ formmacros.field(formfield.department) }}
         {{ formmacros.field(formfield.division) }}
@@ -114,6 +115,19 @@
         {{ formmacros.field(formfield.city) }}
         {{ formmacros.field(formfield.state) }}
         {{ formmacros.field(formfield.zip) }}
+
+        {% if prototype == "prototype" or formfield.vars.value and
+            (formfield.vars.value.removable == true or formfield.vars.value.removable != true and formfield.vars.value.name != "Home")
+        %}
+            {{ formmacros.field(formfield.buildingName) }}
+            {{ formmacros.field(formfield.buildingAbbr) }}
+            {{ formmacros.field(formfield.floor) }}
+        {% else %}
+            {% do formfield.buildingName.setRendered %}
+            {% do formfield.buildingAbbr.setRendered %}
+            {% do formfield.floor.setRendered %}
+        {% endif %}
+
         {{ formmacros.field(formfield.associatedCode) }}
 
     </div>
@@ -245,8 +259,8 @@
                     {% if type == "email" %}
                         <a href="mailto:{{ value }}" target="_top">{{ value }}</a>
                     {% else %}
-                        {#{% set valueclean = value|replace({'%+%': "", '% %': "", '%)%': "", '%(%': "", '%-%': ""}) %}#}
-                        <a href="tel:{{ value|replace({'%+%': "", '% %': "", '%)%': "", '%(%': "", '%-%': ""}) }}" target="_top">{{ value }}</a>
+                        {% set valueclean = value|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+                        <a href="tel:{{ valueclean }}" target="_top">{{ value }}</a>
                     {% endif %}
                 </div>
             </div>
@@ -258,6 +272,30 @@
     {% else %}
         {{ formmacros.field(field) }}
     {% endif %}
+{% endmacro %}
+
+
+{% macro identifier( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.keytype) }}
+        {{ formmacros.field(formfield.field) }}
+
+    </div>
 {% endmacro %}
 
 {% import _self as userform %}
@@ -283,6 +321,7 @@
          data-prototype-user-codenyph = "{{ userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype')|e }}"
          data-prototype-user-employmentstatus = "{{ userform.employmentStatuses(form.employmentStatus,cicle,'user-employmentStatus','prototype')|e }}"
          data-userurllink = "{{ userform.userUrlLink()|e }}"
+         data-prototype-user-identifiers = "{{ userform.identifier(form.credentials.identifiers,cicle,'user-identifiers','prototype')|e }}"
     ></div>
 
         <input type="hidden" id="user_id" value="{{ user_id }}" />
@@ -352,7 +391,7 @@
                     {% endif %}
 
                     {{ formmacros.field(form.preferences.timezone) }}
-                    {{ formmacros.checkbox(form.preferences.tooltip) }}
+                    {#{{ formmacros.checkbox(form.preferences.tooltip) }}#}
 
                 </div>
             </div>
@@ -498,8 +537,16 @@
                                 <div class="panel-body">
                                     <div class="user-identifiers-holder">
 
-                                        {{ formmacros.field(form.credentials.employeeId) }}
-                                        {{ formmacros.field(form.credentials.nationalProviderIdentifier) }}
+                                        {#{{ formmacros.field(form.credentials.employeeId) }}#}
+                                        {#{{ formmacros.field(form.credentials.nationalProviderIdentifier) }}#}
+                                        <div class="user-employmentStatus-holder">
+                                            {% for identifier in form.credentials.identifiers %}
+                                                {{ userform.identifier(identifier,cicle,'user-identifiers','noprototype') }}
+                                            {% endfor %}
+                                            {% if cicle != 'show_user' %}
+                                                <button class="btn btn-default btn-add-minimumone-collection" onClick="addBaseTitle(this,'user-identifiers')" type='button'>Add Identifier</button>
+                                            {% endif %}
+                                        </div>
 
                                     </div>
                                 </div>

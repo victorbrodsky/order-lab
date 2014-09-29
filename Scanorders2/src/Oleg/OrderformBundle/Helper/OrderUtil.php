@@ -574,7 +574,6 @@ class OrderUtil {
         $flashBag = $this->container->get('session')->getFlashBag();
 
         $emailUtil = new EmailUtil();
-        $emailUtil->initEmail($this->em);
 
         if( $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ) {
 
@@ -586,7 +585,7 @@ class OrderUtil {
             $webUserUrl = "<a href=".$userUrl.">profile</a>";
 
             $msg =  'Please contact the System Administrator by emailing '.$sysemail.' and request to add to your '.$webUserUrl.
-                    ' the name of the Institution that employs you (such as "Weill Cornell Medical College").'.
+                    ' the name of the Institution that employs you (such as "Weill Cornell Medical College"). '.
                     'You will not be able to place orders until the system administrator completes this step.';
 
             //send Email
@@ -600,7 +599,7 @@ class OrderUtil {
                         "Virtual Keeper of O R D E R: ".$homeUrl."\r\n".
                         "Weill Cornell Medical College";
 
-            $emailUtil->sendEmail($sysemail, $subject, $message);
+            $emailUtil->sendEmail($sysemail, $subject, $message, $this->em);
 
         }
         $flashBag->add(

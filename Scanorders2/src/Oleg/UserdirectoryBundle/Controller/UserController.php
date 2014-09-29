@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -43,7 +44,7 @@ class UserController extends Controller
     public function indexUserPreviousAction(Request $request)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+            return $this->redirect($this->generateUrl('employees-order-nopermission'));
         }
 
         $filter = trim( $request->get('filter') );
@@ -252,6 +253,12 @@ class UserController extends Controller
     public function newUserAction(Request $request)
     {
 
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
         //$user = new User();
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
@@ -265,10 +272,25 @@ class UserController extends Controller
 
         $this->addEmptyCollections($user);
 
+        //add EIN identifier to credentials
+        $identEin = new Identifier();
+        $identKeytypeEin = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("WCMC Employee Identification Number (EIN)");
+        if( $identKeytypeEin ) {
+            $identEin->setKeytype($identKeytypeEin);
+        }
+        $user->getCredentials()->addIdentifier($identEin);
+
+        //add EIN identifier to credentials
+        $identNpi = new Identifier();
+        $identKeytypeNpi = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("National Provider Identifier (NPI)");
+        if( $identKeytypeNpi ) {
+            $identNpi->setKeytype($identKeytypeNpi);
+        }
+        $user->getCredentials()->addIdentifier($identNpi);
+
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        //$form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array('disabled' => false));
         $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $user, array('disabled' => false));
 
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
@@ -294,6 +316,10 @@ class UserController extends Controller
     }
     public function createUser($request) {
 
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         //$user = new User();
@@ -308,21 +334,35 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $user, array('disabled' => false));
+        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')), $user, array('disabled' => false));
 
         $form->handleRequest($request);
-
-        if( $user->getFirstName() == "" ) {
-            $error = new FormError("First Name is empty");
-            $form->get('firstName')->addError($error);
-        }
 
         if( $user->getLastName() == "" ) {
             $error = new FormError("Last Name is empty");
             $form->get('lastName')->addError($error);
         }
 
+        if( $user->getFirstName() == "" ) {
+            $error = new FormError("First Name is empty");
+            $form->get('firstName')->addError($error);
+        }
+
+        if( $user->getKeytype() == "" ) {
+            $error = new FormError("Primary Public User ID Type is empty");
+            $form->get('keytype')->addError($error);
+        }
+
+        if( $user->getPrimaryPublicUserId() == "" ) {
+            $error = new FormError("Primary Public User ID is empty");
+            $form->get('primaryPublicUserId')->addError($error);
+        }
+
         if ($form->isValid()) {
+
+            //TODO: set username the same as primaryPublicUserId for now. Change ldap authentication to use setUniqueUsername
+            //$user->setUniqueUsername();
+            $user->setUsername( $user->getPrimaryPublicUserId() );
 
             $em->persist($user);
             $em->flush();
@@ -359,7 +399,7 @@ class UserController extends Controller
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         return $this->showUser($id,$this->container->getParameter('employees.sitename'));
@@ -411,7 +451,7 @@ class UserController extends Controller
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         return $this->editUser($id, $this->container->getParameter('employees.sitename'));
@@ -478,6 +518,11 @@ class UserController extends Controller
             $entity->addEmploymentStatus($employmentStatus);
         }
 
+        //Identifier EIN
+//        if( count($entity->getCredentials()->getIdentifiers()) == 0 ) {
+//            $entity->getCredentials()->addIdentifier( new Identifier() );
+//        }
+
     }
 
 
@@ -495,7 +540,7 @@ class UserController extends Controller
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         return $this->updateUser( $request, $id, $this->container->getParameter('employees.sitename') );
@@ -583,7 +628,7 @@ class UserController extends Controller
         if( $form->isValid() ) {
 
             //check if roles were changed and user is not admin
-            if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+            if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
                 $currRoles = $entity->getRoles();
                 if( count($originalRoles) != count($currRoles) ) {
                     $this->setSessionForbiddenNote("Change Roles");
@@ -813,7 +858,7 @@ class UserController extends Controller
                 'notice',
                 'You do not have permission to visit this page'
             );
-            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+            return $this->redirect($this->generateUrl('employees-order-nopermission'));
         }
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
@@ -836,20 +881,6 @@ class UserController extends Controller
     }
 
 
-//    public function getUserChiefServices() {
-//        $servArr = array();
-//        $em = $this->getDoctrine()->getManager();
-//        $services = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
-//        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-//            foreach( $services as $service ) {
-//                $servArr[$service->getName()] = $service->getAlias();
-//            }
-//        }
-//        return $servArr;
-//    }
-
-
-
     /**
      * @Route("/lockunlock/change/{id}/{status}", name="employees_lockunlock_change", requirements={"id" = "\d+"})
      * @Method("GET")
@@ -858,7 +889,7 @@ class UserController extends Controller
     public function lockUnlockChangeAction($id, $status) {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         $this->lockUnlock($id, $status, $this->container->getParameter('employees.sitename'));

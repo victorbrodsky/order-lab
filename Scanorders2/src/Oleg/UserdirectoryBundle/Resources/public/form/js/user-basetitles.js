@@ -34,6 +34,8 @@ function addBaseTitle(btn,classname) {
     //init institution for administrative and appointnment titles
     getComboboxInstitution(newForm);
 
+    getComboboxIdentifier(newForm);
+
 }
 
 function initBaseAdd() {

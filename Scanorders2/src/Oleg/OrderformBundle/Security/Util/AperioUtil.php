@@ -80,7 +80,7 @@ class AperioUtil {
                         $perSiteSettings->setAuthor($systemUser);
                         $perSiteSettings->setUser($user);
                         $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
-                        //$user->addPerSiteSettings($perSiteSettings);
+                        $em->persist($perSiteSettings);
                     }
                 }
                 ////////// EOF assign Institution //////////

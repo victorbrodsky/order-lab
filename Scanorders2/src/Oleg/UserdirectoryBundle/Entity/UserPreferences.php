@@ -35,14 +35,14 @@ class UserPreferences {
      */
     protected $timezone;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $tooltip;
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    protected $tooltip;
 
-    public function __construct() {
-        $this->tooltip = 1;
-    }
+//    public function __construct() {
+//        $this->tooltip = 1;
+//    }
 
     /**
      * @param mixed $id
@@ -76,21 +76,21 @@ class UserPreferences {
         return $this->user;
     }
 
-    /**
-     * @param mixed $tooltip
-     */
-    public function setTooltip($tooltip)
-    {
-        $this->tooltip = $tooltip;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTooltip()
-    {
-        return $this->tooltip;
-    }
+//    /**
+//     * @param mixed $tooltip
+//     */
+//    public function setTooltip($tooltip)
+//    {
+//        $this->tooltip = $tooltip;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getTooltip()
+//    {
+//        return $this->tooltip;
+//    }
 
     /**
      * @param mixed $timezone

@@ -9,8 +9,9 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
  * @author Cina
  */
 class EmailUtil {
-    
-    public function sendEmail( $email, $subject, $message ) {
+
+
+    public function sendEmail( $email, $subject, $message, $em ) {
 
         if( !$email || $email == "" ) {
             return false;
@@ -19,6 +20,8 @@ class EmailUtil {
         if( !$message || $message == "" ) {
             return false;
         }
+
+        $this->initEmail($em);
 
         // Send
         mail($email, $subject, $message);
@@ -30,6 +33,8 @@ class EmailUtil {
         $userutil = new UserUtil();
         $adminemail = $userutil->getSiteSetting($em,'siteEmail');
         $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
+
+        //exit("smtp=".$smtp);
 
         ini_set( 'sendmail_from', $adminemail );
         ini_set( "SMTP", $smtp );

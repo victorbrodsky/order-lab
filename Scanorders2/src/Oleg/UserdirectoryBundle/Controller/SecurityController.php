@@ -174,7 +174,17 @@ class SecurityController extends Controller
     //////////////// EOF Idle Time Out ////////////////////
 
 
-
+    /**
+     * @Route("/no-permission", name="employees-order-nopermission")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
+     */
+    public function actionNoPermission( Request $request )
+    {
+        return array(
+            //'returnpage' => '',
+        );
+    }
 
 
 //    /**

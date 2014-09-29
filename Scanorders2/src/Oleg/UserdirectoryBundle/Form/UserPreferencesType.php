@@ -47,11 +47,11 @@ class UserPreferencesType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width')
         ));
 
-        $builder->add('tooltip', 'checkbox', array(
-            'required' => false,
-            'label' => 'Show tool tips for locked fields:',
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-        ));
+//        $builder->add('tooltip', 'checkbox', array(
+//            'required' => false,
+//            'label' => 'Show tool tips for locked fields:',
+//            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//        ));
 
 
     }

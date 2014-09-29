@@ -67,6 +67,21 @@ class Location extends BaseUserAttributes
     private $zip;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $buildingName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $buildingAbbr;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $floor;
+
+    /**
      * Associated NYPH Code
      *
      * @ORM\Column(type="string", nullable=true)
@@ -302,6 +317,54 @@ class Location extends BaseUserAttributes
     public function getZip()
     {
         return $this->zip;
+    }
+
+    /**
+     * @param mixed $buildingAbbr
+     */
+    public function setBuildingAbbr($buildingAbbr)
+    {
+        $this->buildingAbbr = $buildingAbbr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuildingAbbr()
+    {
+        return $this->buildingAbbr;
+    }
+
+    /**
+     * @param mixed $buildingName
+     */
+    public function setBuildingName($buildingName)
+    {
+        $this->buildingName = $buildingName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuildingName()
+    {
+        return $this->buildingName;
+    }
+
+    /**
+     * @param mixed $floor
+     */
+    public function setFloor($floor)
+    {
+        $this->floor = $floor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFloor()
+    {
+        return $this->floor;
     }
 
     /**

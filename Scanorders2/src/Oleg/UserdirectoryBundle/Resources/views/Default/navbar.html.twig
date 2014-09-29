@@ -94,7 +94,7 @@
                     <li id="nav-bar-user" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ path(employees_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameStr() }})</a></li>
+                            <li><a href="{{ path(employees_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
                             <li><a href="{{ path(employees_sitename~'_logout') }}">Log Out</a></li>
                         </ul>
                     </li>

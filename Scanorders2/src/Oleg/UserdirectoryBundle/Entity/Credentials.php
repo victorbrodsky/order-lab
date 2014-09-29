@@ -14,11 +14,6 @@ class Credentials extends BaseUserAttributes
 {
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $employeeId;
-
-    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $dob;
@@ -27,11 +22,6 @@ class Credentials extends BaseUserAttributes
      * @ORM\Column(type="string", nullable=true)
      */
     private $ssn;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $nationalProviderIdentifier;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -84,6 +74,13 @@ class Credentials extends BaseUserAttributes
      */
     private $codeNYPH;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Identifier", mappedBy="credentials", cascade={"persist"})
+     */
+    private $identifiers;
+//    private employeeId;
+//    private nationalProviderIdentifier;
+
 
 
     public function __construct() {
@@ -93,6 +90,7 @@ class Credentials extends BaseUserAttributes
         $this->stateLicense = new ArrayCollection();
         $this->boardCertification = new ArrayCollection();
         $this->codeNYPH = new ArrayCollection();
+        $this->identifiers = new ArrayCollection();
 
         $this->setType(self::TYPE_RESTRICTED);
 
@@ -104,6 +102,7 @@ class Credentials extends BaseUserAttributes
 
         //create new Code NYPH
         $this->addCodeNYPH( new CodeNYPH() );
+
     }
 
     /**
@@ -154,37 +153,37 @@ class Credentials extends BaseUserAttributes
         return $this->dob;
     }
 
-    /**
-     * @param mixed $employeeId
-     */
-    public function setEmployeeId($employeeId)
-    {
-        $this->employeeId = $employeeId;
-    }
+//    /**
+//     * @param mixed $employeeId
+//     */
+//    public function setEmployeeId($employeeId)
+//    {
+//        $this->employeeId = $employeeId;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getEmployeeId()
+//    {
+//        return $this->employeeId;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getEmployeeId()
-    {
-        return $this->employeeId;
-    }
-
-    /**
-     * @param mixed $nationalProviderIdentifier
-     */
-    public function setNationalProviderIdentifier($nationalProviderIdentifier)
-    {
-        $this->nationalProviderIdentifier = $nationalProviderIdentifier;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNationalProviderIdentifier()
-    {
-        return $this->nationalProviderIdentifier;
-    }
+//    /**
+//     * @param mixed $nationalProviderIdentifier
+//     */
+//    public function setNationalProviderIdentifier($nationalProviderIdentifier)
+//    {
+//        $this->nationalProviderIdentifier = $nationalProviderIdentifier;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getNationalProviderIdentifier()
+//    {
+//        return $this->nationalProviderIdentifier;
+//    }
 
     /**
      * @param mixed $numberCLIA
@@ -356,6 +355,33 @@ class Credentials extends BaseUserAttributes
     {
         $this->codeNYPH->removeElement($codeNYPH);
     }
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdentifiers()
+    {
+        return $this->identifiers;
+    }
+    public function addIdentifier( $identifier )
+    {
+        if( !$identifier )
+            return;
+
+        if( !$this->identifiers->contains($identifier) ) {
+            $identifier->setCredentials($this);
+            $this->identifiers->add($identifier);
+        }
+
+    }
+    public function removeIdentifier($identifier)
+    {
+        $this->identifiers->removeElement($identifier);
+    }
+
+
+
 
     public function __toString() {
         return "Credentials";

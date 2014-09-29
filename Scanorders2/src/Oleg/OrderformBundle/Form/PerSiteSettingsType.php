@@ -66,6 +66,11 @@ class PerSiteSettingsType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width')
         ));
 
+        $builder->add('tooltip', 'checkbox', array(
+            'required' => false,
+            'label' => 'Show tool tips for locked fields:',
+            'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+        ));
 
     }
 

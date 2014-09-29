@@ -224,9 +224,8 @@ class AccessRequestController extends Controller
         }
 
         $text = 'Your access request was successfully submitted and and will be reviewed.'.$emailStr;
-
         $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitename, $text );
+        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitename, $text, $em );
 
         return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
     }
@@ -242,7 +241,7 @@ class AccessRequestController extends Controller
     public function accessRequestIndexAction()
     {
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         return $this->accessRequestIndexList($this->container->getParameter('employees.sitename'));
@@ -292,7 +291,7 @@ class AccessRequestController extends Controller
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();

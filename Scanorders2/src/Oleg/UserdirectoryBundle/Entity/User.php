@@ -103,16 +103,19 @@ class User extends BaseUser
 
     /**
      * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist"})
+     * @ORM\OrderBy({"endDate" = "ASC"})
      */
     private $administrativeTitles;
 
     /**
      * @ORM\OneToMany(targetEntity="AppointmentTitle", mappedBy="user", cascade={"persist"})
+     * @ORM\OrderBy({"endDate" = "ASC"})
      */
     private $appointmentTitles;
 
     /**
      * @ORM\OneToMany(targetEntity="EmploymentStatus", mappedBy="user", cascade={"persist"})
+     * @ORM\OrderBy({"terminationDate" = "ASC"})
      */
     private $employmentStatus;
 
@@ -126,7 +129,7 @@ class User extends BaseUser
 
         //create preferences
         $userPref = new UserPreferences();
-        $userPref->setTooltip(true);
+        //$userPref->setTooltip(true);
         $userPref->setTimezone('America/New_York');
         $userPref->setUser($this);
         $this->setPreferences($userPref);
@@ -320,6 +323,10 @@ class User extends BaseUser
         } else {
             return $this->getPrimaryUserid();
         }
+    }
+
+    public function getUserNameShortStr() {
+        return $this->primaryPublicUserId;
     }
 
     public function getPrimaryUserid() {

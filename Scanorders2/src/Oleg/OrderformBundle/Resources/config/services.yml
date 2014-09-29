@@ -3,6 +3,12 @@ parameters:
   scan.sitename: scan
 
 
+twig:
+    globals:
+        order_security_utility: "@order_security_utility"
+        scan_sitename: %scan.sitename%
+
+
 services:
 
     #Custom selector fields

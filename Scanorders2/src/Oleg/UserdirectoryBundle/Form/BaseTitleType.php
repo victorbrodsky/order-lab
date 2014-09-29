@@ -117,6 +117,13 @@ class BaseTitleType extends AbstractType
             ));
         }
 
+        $builder->add( 'effort', 'text', array(
+            'label'=>'Percent Effort:',
+            'required'=>false,
+            //'attr' => array('class' => 'form-control', "data-inputmask-regex"=>"[0-9]")
+            'attr' => array('class' => 'form-control', "data-inputmask"=>"'mask': '999'")
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

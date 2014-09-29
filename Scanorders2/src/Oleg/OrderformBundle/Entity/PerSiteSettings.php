@@ -60,6 +60,11 @@ class PerSiteSettings extends BaseUserAttributes
      */
     protected $user;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $tooltip;
+
 
     public function __construct() {
 
@@ -69,6 +74,7 @@ class PerSiteSettings extends BaseUserAttributes
         $this->scanOrdersServicesScope = new ArrayCollection();
         $this->chiefServices = new ArrayCollection();
         $this->setType(self::TYPE_RESTRICTED);
+        $this->tooltip = 1;
 
     }
 
@@ -164,6 +170,21 @@ class PerSiteSettings extends BaseUserAttributes
         $this->chiefServices->removeElement($chiefService);
     }
 
+    /**
+     * @param mixed $tooltip
+     */
+    public function setTooltip($tooltip)
+    {
+        $this->tooltip = $tooltip;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTooltip()
+    {
+        return $this->tooltip;
+    }
 
 
 

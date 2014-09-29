@@ -59,6 +59,9 @@ class CustomSelectorType extends AbstractType {
             case "service":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Service');
                 break;
+            case "identifierkeytype":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'IdentifierTypeList');
+                break;
             default:
                 $transformer = new StringTransformer($this->om, $username);
         }

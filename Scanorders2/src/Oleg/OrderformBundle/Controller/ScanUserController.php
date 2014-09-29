@@ -239,7 +239,7 @@ class ScanUserController extends UserController
      */
     public function lockUnlockChangeAction($id, $status) {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 

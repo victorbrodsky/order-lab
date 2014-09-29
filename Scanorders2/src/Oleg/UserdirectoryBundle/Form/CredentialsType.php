@@ -35,10 +35,10 @@ class CredentialsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('employeeId', null, array(
-            'label' => 'WCMC Employee Identification Number (EIN):',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
+//        $builder->add('employeeId', null, array(
+//            'label' => 'WCMC Employee Identification Number (EIN):',
+//            'attr' => array('class'=>'form-control form-control-modif')
+//        ));
 
         $builder->add('dob', 'date', array(
             'label' => 'Date of Birth:',
@@ -53,10 +53,10 @@ class CredentialsType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
-        $builder->add('nationalProviderIdentifier', null, array(
-            'label' => 'National Provider Identifier (NPI):',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
+//        $builder->add('nationalProviderIdentifier', null, array(
+//            'label' => 'National Provider Identifier (NPI):',
+//            'attr' => array('class'=>'form-control form-control-modif')
+//        ));
 
         $builder->add('numberCLIA', null, array(
             'label' => 'Clinical Laboratory Improvement Amendments (CLIA) Number:',
@@ -126,6 +126,17 @@ class CredentialsType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__boardcertification__',
+        ));
+
+        $builder->add('identifiers', 'collection', array(
+            'type' => new IdentifierType(),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__identifiers__',
         ));
 
     }

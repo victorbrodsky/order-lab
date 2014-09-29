@@ -89,6 +89,21 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('buildingName',null,array(
+            'label'=>'Building Name:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('buildingAbbr',null,array(
+            'label'=>'Building Abbreviation:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('floor',null,array(
+            'label'=>'Floor:',
+            'attr' => array('class'=>'form-control')
+        ));
+
         $builder->add('associatedCode',null,array(
             'label'=>'Associated NYPH Code:',
             'attr' => array('class'=>'form-control')

@@ -33,7 +33,7 @@
             <tr>
         {% endif %}
 
-            <td><a href="{{ path(sitename~'_showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td><a href="{{ path(sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.createdate|date('Y-m-d H:i') }}</td>
             <td>{{ entity.getStatusStr|capitalize }}</td>
             {#<td>#}

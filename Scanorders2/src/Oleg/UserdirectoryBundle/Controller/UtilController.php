@@ -120,8 +120,6 @@ class UtilController extends Controller {
      */
     public function getInstitutionAction() {
 
-        $whereServicesList = "";
-
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
@@ -144,6 +142,35 @@ class UtilController extends Controller {
         return $response;
     }
 
+
+    /**
+     * @Route("/common/identifierkeytype", name="employees_get_identifierkeytype")
+     * @Method("GET")
+     */
+    public function getIdentifierKeytypeAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:IdentifierTypeList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
     //search if $needle exists in array $products
     public function in_complex_array($needle,$products,$indexstr='text') {
         foreach( $products as $product ) {
@@ -164,7 +191,7 @@ class UtilController extends Controller {
     public function checkCwidAction(Request $request) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         $cwid = trim( $request->get('number') );
@@ -192,7 +219,7 @@ class UtilController extends Controller {
     public function checkSsnAction(Request $request) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         $ssn = trim( $request->get('number') );
@@ -226,13 +253,14 @@ class UtilController extends Controller {
     }
 
     /**
+     * Identifier (i.e. EIN)
      * @Route("/ein", name="employees_check_ein")
      * @Method("GET")
      */
     public function checkEinAction(Request $request) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
         $ein = trim( $request->get('number') );
@@ -266,5 +294,34 @@ class UtilController extends Controller {
         return $response;
     }
 
+
+    /**
+     * @Route("/usertype-userid", name="employees_check_usertype-userid")
+     * @Method("GET")
+     */
+    public function checkUsertypeUseridAction(Request $request) {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        }
+
+        $userType = trim( $request->get('userType') );
+        $userId = trim( $request->get('userId') );
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneBy(array('keytype'=>$userType,'primaryPublicUserId'=>$userId));
+
+        $output = array();
+        if( $user ) {
+            $element = array('id'=>$user->getId(), 'firstName'=>$user->getFirstName(), 'lastName'=>$user->getLastName() );
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
 
 }

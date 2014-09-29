@@ -29,7 +29,10 @@ $(document).ready(function() {
 
     getComboboxInstitution();
 
+    getComboboxIdentifier();
+
     processEmploymentStatusRemoveButtons();
+
 
 });
 
