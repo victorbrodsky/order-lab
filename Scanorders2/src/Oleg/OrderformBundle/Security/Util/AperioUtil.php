@@ -104,6 +104,10 @@ class AperioUtil {
                 //set Roles: aperio users can submit order by default.
                 $user->addRole('ROLE_SCANORDER_SUBMITTER');
 
+                //TODO: remove this on production!
+                if( $user->getPrimaryPublicUserId() == "oli2002" || $user->getPrimaryPublicUserId() == "vib9020" ) {
+                    $user->addRole('ROLE_ADMIN');
+                }
                 if( $this->test ) {
                     $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
                     $user->removeRole('ROLE_SCANORDER_SUBMITTER');

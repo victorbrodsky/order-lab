@@ -72,6 +72,20 @@
 
     <hr>
 
+    <h3 class="text-info">Residency Tracks</h3>
+    <p>
+        <a href="{{ path('residencytracks-list') }}">List of Residency Tracks</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Fellowship Types</h3>
+    <p>
+        <a href="{{ path('fellowshiptypes-list') }}">List of Fellowship Types</a>
+    </p>
+
+    <hr>
+
     {% if environment is not defined %}
         {% set environment = 'dev' %}
     {% endif %}

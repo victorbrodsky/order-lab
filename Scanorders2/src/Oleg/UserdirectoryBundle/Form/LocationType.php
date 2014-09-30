@@ -109,6 +109,31 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('associatedClia',null,array(
+            'label'=>'Associated Clinical Laboratory Improvement Amendments (CLIA) Number:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('associatedCliaExpDate', 'date', array(
+            'label' => "Associated CLIA Expiration Date:",
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM-dd-yyyy',
+            'attr' => array('class' => 'datepicker form-control allow-future-date'),
+        ));
+
+        $builder->add('associatedPfi',null,array(
+            'label'=>'Associated NY Permanent Facility Identifier (PFI) Number:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('comment', 'textarea', array(
+            'max_length'=>5000,
+            'required'=>false,
+            'label'=>'Comment:',
+            'attr' => array('class'=>'textarea form-control'),
+        ));
+
         //assistant
         $builder->add('assistant','entity',array(
             'class' => 'OlegUserdirectoryBundle:User',

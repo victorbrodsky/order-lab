@@ -89,6 +89,26 @@ class Location extends BaseUserAttributes
     private $associatedCode;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $associatedClia;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $associatedCliaExpDate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $associatedPfi;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="assistant", referencedColumnName="id")
      */
@@ -142,6 +162,72 @@ class Location extends BaseUserAttributes
     {
         return $this->associatedCode;
     }
+
+    /**
+     * @param mixed $associatedClia
+     */
+    public function setAssociatedClia($associatedClia)
+    {
+        $this->associatedClia = $associatedClia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAssociatedClia()
+    {
+        return $this->associatedClia;
+    }
+
+    /**
+     * @param mixed $associatedCliaExpDate
+     */
+    public function setAssociatedCliaExpDate($associatedCliaExpDate)
+    {
+        $this->associatedCliaExpDate = $associatedCliaExpDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAssociatedCliaExpDate()
+    {
+        return $this->associatedCliaExpDate;
+    }
+
+    /**
+     * @param mixed $associatedPfi
+     */
+    public function setAssociatedPfi($associatedPfi)
+    {
+        $this->associatedPfi = $associatedPfi;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAssociatedPfi()
+    {
+        return $this->associatedPfi;
+    }
+
+    /**
+     * @param mixed $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+
 
     /**
      * @param mixed $city

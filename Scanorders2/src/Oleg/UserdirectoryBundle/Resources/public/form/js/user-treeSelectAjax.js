@@ -2,28 +2,6 @@
  * Created by oli2002 on 9/17/14.
  */
 
-function initTreeSelect() {
-
-    $('.ajax-combobox-institution').on('change', function(e){
-        getComboboxTreeByPid($(this),'ajax-combobox-department');
-    });
-//    $('.ajax-combobox-institution').on("select2-selecting", function(e) {
-//        //console.log("selecting...");
-//    });
-//    $('.ajax-combobox-institution').on("select2-loaded", function(e) {
-//        //console.log("loaded...");
-//    });
-
-    $('.ajax-combobox-department').on('change', function(e){
-        //console.log('change!!!', e);
-        getComboboxTreeByPid($(this),'ajax-combobox-division');
-    });
-
-    $('.ajax-combobox-division').on('change', function(e){
-        getComboboxTreeByPid($(this),'ajax-combobox-service');
-    });
-
-}
 
 function getComboboxTreeByPid( parentElement, fieldClass, parentId ) {
 
@@ -32,6 +10,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId ) {
     var holder = parentElement.closest('.user-collection-holder');
 
     var targetId = '#' + holder.find("."+fieldClass).not("*[id^='s2id_']").attr('id');
+    //console.log( "targetId="+targetId );
 
     if( typeof parentId === "undefined" ) {
         parentId = parentElement.select2('val');
@@ -42,7 +21,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId ) {
 
         var fieldName = fieldClass.replace("ajax-combobox-", "");
         //console.log( "fieldName="+fieldName+", parentid="+parentId );
-        var url = getCommonBaseUrl("util/common/"+fieldName,"employees"); //always use "employees" to get department, division and service
+        var url = getCommonBaseUrl("util/common/"+fieldName,"employees"); //always use "employees" to get children
         url = url + "?pid="+parentId;
         $.ajax({
             url: url,
@@ -65,7 +44,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId ) {
     }
 }
 
-function populateInstitutionTree(target, institutionData, placeholder, multipleFlag) {
+function populateParentChildTree(target, data, placeholder, multipleFlag, childClass) {
 
     var targetElements = $(target);
 
@@ -73,12 +52,10 @@ function populateInstitutionTree(target, institutionData, placeholder, multipleF
 
         var selectId = '#'+$(this).attr('id');
 
-        populateSelectCombobox( selectId, institutionData, placeholder, multipleFlag );
+        populateSelectCombobox( selectId, data, placeholder, multipleFlag );
 
-        //set default to "Weill Cornell Medical College"
-        //setDeafultData(selectId,institutionData,"Weill Cornell Medical College");
-
-        getComboboxTreeByPid($(this),'ajax-combobox-department');
+        //children
+        getComboboxTreeByPid($(this),childClass);
 
     });
 
@@ -127,6 +104,33 @@ function clearChildren(holder,fieldClass) {
 
 }
 
+
+
+
+
+
+
+////////////////// mixed functions ////////////////////
+function initTreeSelect() {
+
+    $('.ajax-combobox-institution').on('change', function(e){
+        getComboboxTreeByPid($(this),'ajax-combobox-department');
+    });
+
+    $('.ajax-combobox-department').on('change', function(e){
+        getComboboxTreeByPid($(this),'ajax-combobox-division');
+    });
+
+    $('.ajax-combobox-division').on('change', function(e){
+        getComboboxTreeByPid($(this),'ajax-combobox-service');
+    });
+
+    //comments type and subtypes
+    $('.ajax-combobox-commenttype').on('change', function(e){
+        getComboboxTreeByPid($(this),'ajax-combobox-commentsubtype');
+    });
+}
+
 function getChildrenTargetClass(fieldClass) {
     var childrenTargetClass = null;
 
@@ -140,10 +144,19 @@ function getChildrenTargetClass(fieldClass) {
         childrenTargetClass = "ajax-combobox-service";
     }
 
+    //comments type and subtypes
+    if( fieldClass == "ajax-combobox-commenttype" ) {
+        childrenTargetClass = "ajax-combobox-commentsubtype";
+    }
+
     return childrenTargetClass;
 }
+////////////////// EOF mixed functions ////////////////////
 
 
+
+
+///////////////// Institution Tree ///////////////////
 function setInstitutionTreeChildren(holder) {
 
     if( typeof holder == 'undefined' ) {
@@ -152,16 +165,31 @@ function setInstitutionTreeChildren(holder) {
 
     //department
     populateSelectCombobox( holder.find(".ajax-combobox-department"), null, "Select an option or type in a new value", false );
-    //$(".ajax-combobox-department").select2("readonly", true);
 
     //division
     populateSelectCombobox( holder.find(".ajax-combobox-division"), null, "Select an option or type in a new value", false );
-    //$(".ajax-combobox-division").select2("readonly", true);
 
     //service
     populateSelectCombobox( holder.find(".ajax-combobox-service"), null, "Select an option or type in a new value", false );
-    //$(".ajax-combobox-service").select2("readonly", true);
 
 }
+///////////////// EOF Institution Tree ///////////////////
+
+
+
+
+
+///////////////// Comments Types Tree ///////////////////
+function setCommentTypeTreeChildren(holder) {
+
+    if( typeof holder == 'undefined' ) {
+        holder = $('body');
+    }
+
+    //subTypes
+    populateSelectCombobox( holder.find(".ajax-combobox-commentsubtype"), null, "Select an option or type in a new value", false );
+}
+///////////////// EOF Comments Types ///////////////////
+
 
 

@@ -32,6 +32,8 @@ class ListController extends Controller
      * @Route("/event-log-event-types/", name="loggereventtypes-list")
      * @Route("/primary-public-userid-types/", name="usernametypes-list")
      * @Route("/identifier-types/", name="identifiers-list")
+     * @Route("/residency-tracks/", name="residencytracks-list")
+     * @Route("/fellowship-types/", name="fellowshiptypes-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -103,6 +105,8 @@ class ListController extends Controller
      * @Route("/event-log-event-types/", name="loggereventtypes_create")
      * @Route("/primary-public-userid-types/", name="usernametypes_create")
      * @Route("/identifier-types/", name="identifiers_create")
+     * @Route("/residency-tracks/", name="residencytracks_create")
+     * @Route("/fellowship-types/", name="fellowshiptypes_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -196,6 +200,8 @@ class ListController extends Controller
      * @Route("/event-log-event-types/new", name="loggereventtypes_new")
      * @Route("/primary-public-userid-types/new", name="usernametypes_new")
      * @Route("/identifier-types/new", name="identifiers_new")
+     * @Route("/residency-tracks/new", name="residencytracks_new")
+     * @Route("/fellowship-types/new", name="fellowshiptypes_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -251,6 +257,8 @@ class ListController extends Controller
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_show")
      * @Route("/primary-public-userid-types/{id}", name="usernametypes_show")
      * @Route("/identifier-types/{id}", name="identifiers_show")
+     * @Route("/residency-tracks/{id}", name="residencytracks_show")
+     * @Route("/fellowship-types/{id}", name="fellowshiptypes_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -298,6 +306,8 @@ class ListController extends Controller
      * @Route("/event-log-event-types/{id}/edit", name="loggereventtypes_edit")
      * @Route("/primary-public-userid-types/{id}/edit", name="usernametypes_edit")
      * @Route("/identifier-types/{id}/edit", name="identifiers_edit")
+     * @Route("/residency-tracks/{id}/edit", name="residencytracks_edit")
+     * @Route("/fellowship-types/{id}/edit", name="fellowshiptypes_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -386,6 +396,8 @@ class ListController extends Controller
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_update")
      * @Route("/primary-public-userid-types/{id}", name="usernametypes_update")
      * @Route("/identifier-types/{id}", name="identifiers_update")
+     * @Route("/residency-tracks/{id}", name="residencytracks_update")
+     * @Route("/fellowship-types/{id}", name="fellowshiptypes_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -498,7 +510,15 @@ class ListController extends Controller
             $className = "IdentifierTypeList";
             $displayName = "Identifier Types";
             break;
-        default:
+        case "residencytracks":
+            $className = "ResidencyTrackList";
+            $displayName = "Residency Tracks";
+            break;
+        case "fellowshiptypes":
+            $className = "FellowshipTypeList";
+            $displayName = "Fellowship Types";
+            break;
+            default:
             $className = null;
             $displayName = null;
         }
@@ -527,6 +547,8 @@ class ListController extends Controller
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_delete")
      * @Route("/primary-public-userid-types/{id}", name="usernametypes_delete")
      * @Route("/identifier-types/{id}", name="identifiers_delete")
+     * @Route("/residency-tracks/{id}", name="residencytracks_delete")
+     * @Route("/fellowship-types/{id}", name="fellowshiptypes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

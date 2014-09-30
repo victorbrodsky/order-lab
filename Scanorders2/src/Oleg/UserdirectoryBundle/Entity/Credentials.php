@@ -78,12 +78,25 @@ class Credentials extends BaseUserAttributes
      * @ORM\OneToMany(targetEntity="Identifier", mappedBy="credentials", cascade={"persist"})
      */
     private $identifiers;
-//    private employeeId;
-//    private nationalProviderIdentifier;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="credentials", cascade={"persist"})
+     */
+    private $privateComments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PublicComment", mappedBy="credentials", cascade={"persist"})
+     */
+    private $publicComments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AdminComment", mappedBy="credentials", cascade={"persist"})
+     */
+    private $adminComments;
 
 
 
-    public function __construct() {
+    public function __construct($user) {
 
         parent::__construct();
 
@@ -91,6 +104,9 @@ class Credentials extends BaseUserAttributes
         $this->boardCertification = new ArrayCollection();
         $this->codeNYPH = new ArrayCollection();
         $this->identifiers = new ArrayCollection();
+        $this->privateComments = new ArrayCollection();
+        $this->publicComments = new ArrayCollection();
+        $this->adminComments = new ArrayCollection();
 
         $this->setType(self::TYPE_RESTRICTED);
 
@@ -152,38 +168,6 @@ class Credentials extends BaseUserAttributes
     {
         return $this->dob;
     }
-
-//    /**
-//     * @param mixed $employeeId
-//     */
-//    public function setEmployeeId($employeeId)
-//    {
-//        $this->employeeId = $employeeId;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getEmployeeId()
-//    {
-//        return $this->employeeId;
-//    }
-
-//    /**
-//     * @param mixed $nationalProviderIdentifier
-//     */
-//    public function setNationalProviderIdentifier($nationalProviderIdentifier)
-//    {
-//        $this->nationalProviderIdentifier = $nationalProviderIdentifier;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getNationalProviderIdentifier()
-//    {
-//        return $this->nationalProviderIdentifier;
-//    }
 
     /**
      * @param mixed $numberCLIA
@@ -381,6 +365,73 @@ class Credentials extends BaseUserAttributes
     }
 
 
+    /**
+     * @return mixed
+     */
+    public function getPrivateComments()
+    {
+        return $this->privateComments;
+    }
+    public function addPrivateComment( $comment )
+    {
+        if( !$comment )
+            return;
+
+        if( !$this->privateComments->contains($comment) ) {
+            $comment->setCredentials($this);
+            $this->privateComments->add($comment);
+        }
+    }
+    public function removePrivateComment($comment)
+    {
+        $this->privateComments->removeElement($comment);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getPublicComments()
+    {
+        return $this->publicComments;
+    }
+    public function addPublicComment( $comment )
+    {
+        if( !$comment )
+            return;
+
+        if( !$this->publicComments->contains($comment) ) {
+            $comment->setCredentials($this);
+            $this->publicComments->add($comment);
+        }
+    }
+    public function removePublicComment($comment)
+    {
+        $this->publicComments->removeElement($comment);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getAdminComments()
+    {
+        return $this->adminComments;
+    }
+    public function addAdminComment( $comment )
+    {
+        if( !$comment )
+            return;
+
+        if( !$this->adminComments->contains($comment) ) {
+            $comment->setCredentials($this);
+            $this->adminComments->add($comment);
+        }
+    }
+    public function removeAdminComment($comment)
+    {
+        $this->adminComments->removeElement($comment);
+    }
 
 
     public function __toString() {

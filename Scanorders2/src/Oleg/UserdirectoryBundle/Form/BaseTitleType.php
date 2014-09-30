@@ -25,13 +25,13 @@ class BaseTitleType extends AbstractType
         $builder->add('id','hidden',array('label'=>false));
 
         $builder->add( 'name', 'text', array(
-            'label'=>$this->params['label'].':',   //'Admnistrative Title:',
+            'label'=>$this->params['label'].' Title:',   //'Admnistrative Title:',
             'required'=>false,
             'attr' => array('class' => 'form-control')
         ));
 
         $builder->add('startDate', 'date', array(
-            'label' => $this->params['label']." Start Date:",
+            'label' => $this->params['label']." Title Start Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
@@ -39,7 +39,7 @@ class BaseTitleType extends AbstractType
         ));
 
         $builder->add('endDate', 'date', array(
-            'label' => $this->params['label']." End Date:",
+            'label' => $this->params['label']." Title End Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
@@ -64,7 +64,7 @@ class BaseTitleType extends AbstractType
                 '0'   => 'Primary',
                 '1' => 'Secondary'
             ),
-            'label' => "Type:",
+            'label' => $this->params['label']." Type:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
         ));
@@ -102,7 +102,13 @@ class BaseTitleType extends AbstractType
             'classtype' => 'service'
         ));
 
-        //position for AppointmentTitle (Academic Appointment Title)
+        $builder->add( 'effort', 'text', array(
+            'label'=>'Percent Effort:',
+            'required'=>false,
+            'attr' => array('class' => 'form-control', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false")
+        ));
+
+        //position, residencyTrack, fellowshipType for AppointmentTitle (Academic Appointment Title)
         if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle" ) {
             $builder->add('position', 'choice', array(
                 'choices'   => array(
@@ -113,16 +119,35 @@ class BaseTitleType extends AbstractType
                 ),
                 'label' => "Position Type:",
                 'required' => false,
-                'attr' => array('class' => 'combobox combobox-width'),
+                'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeListener(this)'),
+            ));
+
+            $builder->add( 'residencyTrack', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:ResidencyTrackList',
+                'property' => 'name',
+                'label'=>'Residency Track:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
+            ));
+
+
+            $builder->add('fellowshipType', 'employees_custom_selector', array(
+                'label' => "Fellowship Type:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshiptype', 'type' => 'hidden'),
+                'classtype' => 'fellowshiptype'
             ));
         }
-
-        $builder->add( 'effort', 'text', array(
-            'label'=>'Percent Effort:',
-            'required'=>false,
-            //'attr' => array('class' => 'form-control', "data-inputmask-regex"=>"[0-9]")
-            'attr' => array('class' => 'form-control', "data-inputmask"=>"'mask': '999'")
-        ));
 
     }
 

@@ -31,3 +31,34 @@ function processEmploymentStatusRemoveButtons(btn) {
     }
 
 }
+
+
+//In the section "Academic Appointment Title(s)", if "Resident" is selected in the "Position Type" dropdown menu,
+// unfold a second drop down under it with a field called "Residency Track:" and show three choices: "AP", "CP", and "AP/CP".
+function positionTypeListener(element) {
+    var fieldEl = $(element);
+    //console.log(fieldEl);
+
+    var holder = fieldEl.closest('.user-collection-holder');
+    //console.log(holder);
+
+    if( !holder.hasClass('user-appointmentTitles') ) {
+        return;
+    }
+
+    //printF(fieldEl,'field el:');
+
+    var value = fieldEl.select2('val');
+    //console.log('value='+value);
+
+    holder.find('.appointmenttitle-residencytrack-field').hide();
+    holder.find('.appointmenttitle-fellowshiptype-field').hide();
+
+    if( value == 'Resident' ) {
+        holder.find('.appointmenttitle-residencytrack-field').show();
+    }
+
+    if( value == 'Fellow' ) {
+        holder.find('.appointmenttitle-fellowshiptype-field').show();
+    }
+}

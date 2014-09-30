@@ -28,23 +28,26 @@ function addBaseTitle(btn,classname) {
     //printF(newForm,"added el:");
     //console.log(newForm);
 
-    initBaseAdd();
+    initBaseAdd(newForm);
     processEmploymentStatusRemoveButtons(btn);
-
-    //init institution for administrative and appointnment titles
-    getComboboxInstitution(newForm);
-
-    getComboboxIdentifier(newForm);
 
 }
 
-function initBaseAdd() {
+function initBaseAdd(newForm) {
     expandTextarea();
     regularCombobox();
     initDatepicker();
     //tooltip
     $(".element-with-tooltip").tooltip();
     initTreeSelect();
+
+    fieldInputMask(newForm);
+
+    //init comboboxes
+    getComboboxInstitution(newForm);   //init institution for administrative and appointnment titles
+    getComboboxCommentType(newForm);
+    getComboboxIdentifier(newForm);
+    getComboboxFellowshipType(newForm);
 }
 
 //get input field only

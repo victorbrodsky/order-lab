@@ -23,19 +23,33 @@ class UserType extends AbstractType
 
     protected $cicle;
     protected $roleAdmin;
-    protected $user;
+    protected $subjectUser;
     protected $roles;
+    protected $sc;
 
-    public function __construct( $cicle = null, $user, $roles, $roleAdmin = false )
+    public function __construct( $cicle, $subjectUser, $roles, $sc )
     {
         $this->cicle = $cicle;
-        $this->user = $user;
-        $this->roleAdmin = $roleAdmin;
+        $this->subjectUser = $subjectUser;
         $this->roles = $roles;
+        $this->sc = $sc;
+
+        if( $cicle == 'create' ) {
+            $this->roleAdmin = $sc->isGranted('ROLE_USERDIRECTORY_EDITOR');
+        } else {
+            $this->roleAdmin = $sc->isGranted('ROLE_ADMIN');
+        }
+
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $currentUser = false;
+        $user = $this->sc->getToken()->getUser();
+        if( $user->getId() == $this->subjectUser->getId() ) {
+            $currentUser = true;
+        }
 
         $read_only = false;
         //$readonlyAttr = 'false';
@@ -99,12 +113,16 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('displayName', null, array(
-            'label' => 'Preferred Display Name:',
+            'label' => 'Preferred Full Name for Display:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('preferredPhone', null, array(
             'label' => 'Preferred Phone Number:',
             'attr' => array('class'=>'form-control form-control-modif phone-mask')
+        ));
+        $builder->add('initials', null, array(
+            'label' => 'Abbreviated name/Initials used by lab staff for deliveries:',
+            'attr' => array('class'=>'form-control form-control-modif')
         ));
 
         $builder->add('preferences', new UserPreferencesType(), array(
@@ -137,7 +155,7 @@ class UserType extends AbstractType
 
 
         //Administrative Titles
-        $params = array('read_only'=>$read_only,'label'=>'Administrative Title','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype');
+        $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype');
         $builder->add('administrativeTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,
@@ -149,7 +167,7 @@ class UserType extends AbstractType
             'prototype_name' => '__administrativetitles__',
         ));
 
-        $params = array('read_only'=>$read_only,'label'=>'Appointment Title','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype');
+        $params = array('read_only'=>$read_only,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype');
         $builder->add('appointmentTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,
@@ -186,8 +204,8 @@ class UserType extends AbstractType
         ));
 
 
-
-        $builder->add('credentials', new CredentialsType(), array(
+        $params = array('read_only'=>$read_only,'currentUser'=>$currentUser);
+        $builder->add('credentials', new CredentialsType($params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
             'label' => false,
             'required' => false,

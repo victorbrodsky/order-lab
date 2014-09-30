@@ -68,6 +68,7 @@ class UtilController extends Controller {
      * @Route("/common/department", name="get-departments-by-parent")
      * @Route("/common/division", name="get-divisions-by-parent")
      * @Route("/common/service", name="get-services-by-parent")
+     * @Route("/common/commentsubtype", name="get-commentsubtype-by-parent")
      * @Method("GET")
      */
     public function getDepartmentAction() {
@@ -90,6 +91,9 @@ class UtilController extends Controller {
         if( $routeName == "get-services-by-parent") {
             $className = 'Service';
         }
+        if( $routeName == "get-commentsubtype-by-parent") {
+            $className = 'CommentSubTypeList';
+        }
 
         if( $className != "" && is_numeric($pid) ) {
             //echo "className=".$className."<br>";
@@ -99,9 +103,7 @@ class UtilController extends Controller {
                 ->select("list.id as id, list.name as text")
                 ->orderBy("list.orderinlist","ASC");
 
-            $user = $this->get('security.context')->getToken()->getUser();
-
-            $query->where("parent = :pid AND (list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user))")->setParameters(array('user'=>$user,'pid'=>$pid));
+            $query->where("parent = :pid AND (list.type = :typedef OR list.type = :typeadd)")->setParameters(array('typedef' => 'default','typeadd' => 'user-added','pid'=>$pid));
 
             $output = $query->getQuery()->getResult();
         } else {
@@ -122,17 +124,36 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->get('request');
-        $opt = trim( $request->get('opt') );
-
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
-        $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+    /**
+     * @Route("/common/commenttype", name="employees_get_commenttype")
+     * @Method("GET")
+     */
+    public function getCommenttypeAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:CommentTypeList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
         $output = $query->getQuery()->getResult();
 
@@ -151,8 +172,6 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->get('request');
-
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:IdentifierTypeList', 'list')
             ->select("list.id as id, list.name as text")
@@ -160,7 +179,32 @@ class UtilController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/common/fellowshiptype", name="employees_get_fellowshiptype")
+     * @Method("GET")
+     */
+    public function getFellowshipTypeAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:FellowshipTypeList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
         $output = $query->getQuery()->getResult();
 

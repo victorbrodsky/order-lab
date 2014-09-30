@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,7 +25,8 @@ use Oleg\UserdirectoryBundle\Entity\BoardCertifiedSpecialties;
 use Oleg\UserdirectoryBundle\Entity\EmploymentTerminationType;
 use Oleg\UserdirectoryBundle\Entity\EventTypeList;
 use Oleg\UserdirectoryBundle\Entity\IdentifierTypeList;
-
+use Oleg\UserdirectoryBundle\Entity\FellowshipTypeList;
+use Oleg\UserdirectoryBundle\Entity\ResidencyTrackList;
 
 /**
  * @Route("/admin")
@@ -83,6 +85,8 @@ class AdminController extends Controller
         $count_eventTypeList = $this->generateEventTypeList();
         $count_usernameTypeList = $userutil->generateUsernameTypes($this->getDoctrine()->getManager(),$user);
         $count_identifierTypeList = $this->generateIdentifierTypeList();
+        $count_fellowshipTypeList = $this->generateFellowshipTypeList();
+        $count_residencyTrackList = $this->generateResidencyTrackList();
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
@@ -103,6 +107,8 @@ class AdminController extends Controller
             'Event Log Types ='.$count_eventTypeList.', '.
             'Username Types ='.$count_usernameTypeList.', '.
             'Identifier Types ='.$count_identifierTypeList.', '.
+            'Residency Tracks ='.$count_residencyTrackList.', '.
+            'Fellowship Types ='.$count_fellowshipTypeList.', '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -780,5 +786,90 @@ class AdminController extends Controller
 
         return round($count/10);
     }
+
+
+    public function generateFellowshipTypeList() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:FellowshipTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "Blood banking/Transfusion medicine",
+            "Chemistry",
+            "Dermatopathology",
+            "Forensic pathology",
+            "Genitourinary pathology",
+            "Hematopathology",
+            "Molecular genetic pathology",
+            "Pathology informatics",
+            "Pulmonary/Mediastinal pathology",
+            "Soft tissue/Bone pathology",
+            "Breast pathology",
+            "Cytopathology",
+            "Diagnostic immunology",
+            "Gastrointestinal pathology",
+            "Gynecologic pathology",
+            "Medical microbiology",
+            "Neuropathology",
+            "Pediatric pathology",
+            "Renal pathology",
+            "Surgical/Oncologic pathology"
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new FellowshipTypeList();
+            $this->setDefaultList($entity,$count,$username,null);
+            $entity->setName( trim($value) );
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
+    public function generateResidencyTrackList() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencyTrackList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'AP',
+            'CP',
+            'AP/CP'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new ResidencyTrackList();
+            $this->setDefaultList($entity,$count,$username,null);
+            $entity->setName( trim($value) );
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
 
 }

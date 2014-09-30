@@ -62,6 +62,15 @@ class CustomSelectorType extends AbstractType {
             case "identifierkeytype":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'IdentifierTypeList');
                 break;
+            case "fellowshiptype":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipTypeList');
+                break;
+            case "commentType":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'CommentTypeList');
+                break;
+            case "commentSubType":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'CommentSubTypeList');
+                break;
             default:
                 $transformer = new StringTransformer($this->om, $username);
         }

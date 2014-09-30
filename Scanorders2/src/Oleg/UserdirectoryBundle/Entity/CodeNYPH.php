@@ -25,6 +25,16 @@ class CodeNYPH
     protected $field;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $startDate;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $endDate;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="codeNYPH")
      * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
@@ -62,6 +72,37 @@ class CodeNYPH
         return $this->field;
     }
 
+    /**
+     * @param mixed $endDate
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param mixed $startDate
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
 
     /**
      * @param mixed $credentials

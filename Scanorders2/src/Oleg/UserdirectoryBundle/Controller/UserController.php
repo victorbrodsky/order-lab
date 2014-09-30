@@ -2,7 +2,6 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,6 +28,10 @@ use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
 use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
 use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
+use Oleg\UserdirectoryBundle\Entity\AdminComment;
+use Oleg\UserdirectoryBundle\Entity\Identifier;
+use Oleg\UserdirectoryBundle\Entity\PrivateComment;
+use Oleg\UserdirectoryBundle\Entity\PublicComment;
 
 
 
@@ -291,7 +294,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $user, array('disabled' => false));
+        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')), $user, array('disabled' => false));
 
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
@@ -334,7 +337,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')), $user, array('disabled' => false));
+        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')), $user, array('disabled' => false));
 
         $form->handleRequest($request);
 
@@ -397,8 +400,8 @@ class UserController extends Controller
      */
     public function showUserAction($id)
     {
-        $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        //$secUtil = $this->get('user_security_utility');
+        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
@@ -426,7 +429,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array('disabled' => true));
+        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')), $entity, array('disabled' => true));
 
 //        if (!is_object($user) || !$user instanceof UserInterface) {
 //            throw new AccessDeniedException('This user does not have access to this section.');
@@ -474,7 +477,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')), $entity, array(
             'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -517,6 +520,22 @@ class UserController extends Controller
             $employmentStatus = new EmploymentStatus($user);
             $entity->addEmploymentStatus($employmentStatus);
         }
+
+        //create new comments
+        if( count($entity->getCredentials()->getPublicComments()) == 0 ) {
+            $entity->getCredentials()->addPublicComment( new PublicComment($user) );
+        }
+        if( $entity->getId() && $entity->getId() == $user->getId() ) {
+            if( count($entity->getCredentials()->getPrivateComments()) == 0 ) {
+                $entity->getCredentials()->addPrivateComment( new PrivateComment($user) );
+            }
+        }
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            if( count($entity->getCredentials()->getAdminComments()) == 0 ) {
+                $entity->getCredentials()->addAdminComment( new AdminComment($user) );
+            }
+        }
+
 
         //Identifier EIN
 //        if( count($entity->getCredentials()->getIdentifiers()) == 0 ) {
@@ -612,12 +631,25 @@ class UserController extends Controller
             $originalEmplStatus->add($item);
         }
 
+        $originalPublicComments = new ArrayCollection();
+        foreach( $entity->getCredentials()->getPublicComments() as $subitem) {
+            $originalPublicComments->add($subitem);
+        }
+        $originalPrivateComments = new ArrayCollection();
+        foreach( $entity->getCredentials()->getPrivateComments() as $subitem) {
+            $originalPrivateComments->add($subitem);
+        }
+        $originalAdminComments = new ArrayCollection();
+        foreach( $entity->getCredentials()->getAdminComments() as $subitem) {
+            $originalAdminComments->add($subitem);
+        }
+
         //echo "count=".count($originalAdminTitles)."<br>";
 
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')), $entity, array(
             'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -684,6 +716,19 @@ class UserController extends Controller
             if( $removedEmplStatus ) {
                 $removedCollections[] = $removedEmplStatus;
             }
+
+            $removedInfo = $this->removeCollection($originalPublicComments,$entity->getCredentials()->getPublicComments());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+            $removedInfo = $this->removeCollection($originalPrivateComments,$entity->getCredentials()->getPrivateComments());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+            $removedInfo = $this->removeCollection($originalAdminComments,$entity->getCredentials()->getAdminComments());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
             /////////////// EOF Process Removed Collections ///////////////
 
             //set Edit event log for removed collection and changed fields or added collection
@@ -697,6 +742,9 @@ class UserController extends Controller
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForInstitutionTree($entity);
+
+            //set parents for institution tree for Administrative and Academical Titles
+            $this->setParentsForCommentTypeTree($entity);
 
             //$em->persist($entity);
             $em->flush();
@@ -756,6 +804,31 @@ class UserController extends Controller
 
         if( $institution && $department )
             $institution->addDepartment($department);
+    }
+
+    public function setParentsForCommentTypeTree($entity) {
+
+        $credentials = $entity->getCredentials();
+
+        foreach( $credentials->getPublicComments() as $comment) {
+            $this->processCommentType($comment);
+        }
+
+        foreach( $credentials->getPrivateComments() as $comment) {
+            $this->processCommentType($comment);
+        }
+
+        foreach( $credentials->getAdminComments() as $comment) {
+            $this->processCommentType($comment);
+        }
+
+    }
+    public function processCommentType($comment) {
+        $type = $comment->getCommentType();
+        $subtype = $comment->getCommentSubType();
+
+        if( $type && $subtype )
+            $type->addCommentSubType($subtype);
     }
 
 
@@ -968,6 +1041,24 @@ class UserController extends Controller
         foreach( $credentials->getBoardCertification() as $subentity ) {
             $changeset = $uow->getEntityChangeSet($subentity);
             $text = "("."boardCertification ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+        //credentials: publicComments
+        foreach( $credentials->getPublicComments() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."publicComments ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+        //credentials: privateComments
+        foreach( $credentials->getPrivateComments() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."privateComments ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+        //credentials: adminComments
+        foreach( $credentials->getAdminComments() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."adminComments ".$this->getEntityId($subentity).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 

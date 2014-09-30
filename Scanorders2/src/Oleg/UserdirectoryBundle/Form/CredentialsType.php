@@ -19,26 +19,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class CredentialsType extends AbstractType
 {
 
-//    protected $cicle;
-//    protected $roleAdmin;
-//    protected $user;
-//    protected $roles;
-//
-//    public function __construct()
-//    {
-//        $this->cicle = $cicle;
-//        $this->user = $user;
-//        $this->roleAdmin = $roleAdmin;
-//        $this->roles = $roles;
-//    }
+    protected $params;
+
+    public function __construct( $params )
+    {
+        $this->params = $params;
+    }
+
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-//        $builder->add('employeeId', null, array(
-//            'label' => 'WCMC Employee Identification Number (EIN):',
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
 
         $builder->add('dob', 'date', array(
             'label' => 'Date of Birth:',
@@ -52,11 +42,6 @@ class CredentialsType extends AbstractType
             'label' => 'Social Security Number:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
-
-//        $builder->add('nationalProviderIdentifier', null, array(
-//            'label' => 'National Provider Identifier (NPI):',
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
 
         $builder->add('numberCLIA', null, array(
             'label' => 'Clinical Laboratory Improvement Amendments (CLIA) Number:',
@@ -138,6 +123,50 @@ class CredentialsType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__identifiers__',
         ));
+
+
+        //$this->params['read_only'] == false => admin
+
+        $params = array('read_only'=>$this->params['read_only'],'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments');
+        $builder->add('publicComments', 'collection', array(
+            'type' => new BaseCommentsType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__publiccomments__',
+        ));
+
+        if( $this->params['read_only'] == false || $this->params['currentUser'] ) {
+            $params = array('read_only'=>$this->params['read_only'],'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments');
+            $builder->add('privateComments', 'collection', array(
+                'type' => new BaseCommentsType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__privatecomments__',
+            ));
+        }
+
+
+        if( $this->params['read_only'] == false ) {
+            $params = array('read_only'=>$this->params['read_only'],'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments');
+            $builder->add('adminComments', 'collection', array(
+                'type' => new BaseCommentsType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__admincomments__',
+            ));
+        }
 
     }
 

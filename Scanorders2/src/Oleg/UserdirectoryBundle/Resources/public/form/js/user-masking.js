@@ -40,6 +40,15 @@ function fieldInputMask( holder ) {
         }
     });
 
+    //only digits and periods. Use for percent
+    $.extend($.inputmask.defaults.definitions, {
+        "o": {
+            "validator": "[0-9.]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
     $.extend($.inputmask.defaults, {
         "onincomplete": function(result){
             makeErrorField($(this),false);
@@ -69,6 +78,7 @@ function fieldInputMask( holder ) {
     $('.phone-mask').inputmask("mask", {
         "mask": "[n]", "repeat": 50, "greedy": false
     });
+
 
     //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 

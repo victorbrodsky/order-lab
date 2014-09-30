@@ -6,22 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-
-//var urlBase = $("#baseurl").val();
-//var cicle = $("#formcicle").val();
-////var user_keytype = $("#user_keytype").val();
-//var user_name = $("#user_name").val();
-//var user_id = $("#user_id").val();
-//var orderinfoid = $(".orderinfo-id").val();
-//var _projectTitle = new Array();
-//var _courseTitle = new Array();
-
 var _institution = new Array();
-
+var _commenttype = new Array();
 var _identifiers = new Array();
-
-//var userpathserviceflag = false;
-
+var _fellowshiptype = new Array();
 
 
 function setElementToId( target, dataarr, setId ) {
@@ -67,6 +55,9 @@ function getComboboxInstitution(holder) {
 
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
     }
 
     var url = getCommonBaseUrl("util/common/"+"institution","employees"); //always use "employees" to get institution
@@ -80,18 +71,44 @@ function getComboboxInstitution(holder) {
             async: asyncflag
         }).success(function(data) {
             _institution = data;
-            //populateSelectCombobox( targetid, _institution, "Select an option or type in a new value", false );
-            populateInstitutionTree( targetid, _institution, "Select an option or type in a new value", false );
-//            if( cicle == "new"  ) {
-//                setElementToId( targetid, _institution );
-//            }
+            populateParentChildTree( targetid, _institution, "Select an option or type in a new value", false, 'ajax-combobox-department' );
         });
     } else {
-        //populateSelectCombobox( targetid, _institution, "Select an option or type in a new value", false );
-        populateInstitutionTree( targetid, _institution, "Select an option or type in a new value", false );
-//        if( cicle == "new"  ) {
-//            setElementToId( targetid, _institution );
-//        }
+        populateParentChildTree( targetid, _institution, "Select an option or type in a new value", false, 'ajax-combobox-department' );
+    }
+
+}
+
+function getComboboxCommentType(holder) {
+
+    setCommentTypeTreeChildren(holder);
+
+    var targetid = ".ajax-combobox-commenttype";
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
+    }
+
+    var url = getCommonBaseUrl("util/common/"+"commenttype","employees"); //always use "employees" to get commenttype
+
+    if( _commenttype.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _commenttype = data;
+            populateParentChildTree( targetid, _commenttype, "Select an option or type in a new value", false, 'ajax-combobox-commentsubtype' );
+        });
+    } else {
+        populateParentChildTree( targetid, _commenttype, "Select an option or type in a new value", false, 'ajax-combobox-commentsubtype' );
     }
 
 }
@@ -107,9 +124,12 @@ function getComboboxIdentifier(holder) {
 
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
     }
 
-    var url = getCommonBaseUrl("util/common/"+"identifierkeytype","employees"); //always use "employees" to get institution
+    var url = getCommonBaseUrl("util/common/"+"identifierkeytype","employees");
 
     //console.log('cicle='+cicle);
 
@@ -127,3 +147,37 @@ function getComboboxIdentifier(holder) {
     }
 
 }
+
+function getComboboxFellowshipType(holder) {
+
+    var targetid = ".ajax-combobox-fellowshiptype";
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
+    }
+
+    var url = getCommonBaseUrl("util/common/"+"fellowshiptype","employees");
+
+    if( _fellowshiptype.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _fellowshiptype = data;
+            populateSelectCombobox( targetid, _fellowshiptype, "Select an option or type in a new value", false );
+        });
+    } else {
+        populateSelectCombobox( targetid, _fellowshiptype, "Select an option or type in a new value", false );
+    }
+
+}
+
+

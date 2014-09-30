@@ -82,6 +82,11 @@ class User extends BaseUser
     private $preferredPhone;
 
     /**
+     * @ORM\Column(name="initials", type="string", nullable=true)
+     */
+    private $initials;
+
+    /**
      * @ORM\Column(name="createdby", type="string", nullable=true)
      */
     private $createdby;
@@ -296,6 +301,23 @@ class User extends BaseUser
     {
         return $this->preferredPhone;
     }
+
+    /**
+     * @param mixed $initials
+     */
+    public function setInitials($initials)
+    {
+        $this->initials = $initials;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInitials()
+    {
+        return $this->initials;
+    }
+
 
     /**
      * @param mixed $createdby

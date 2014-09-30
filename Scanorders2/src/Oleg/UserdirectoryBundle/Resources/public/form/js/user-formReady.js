@@ -28,8 +28,11 @@ $(document).ready(function() {
     initTreeSelect();
 
     getComboboxInstitution();
+    getComboboxCommentType();
 
     getComboboxIdentifier();
+
+    getComboboxFellowshipType();
 
     processEmploymentStatusRemoveButtons();
 

@@ -44,8 +44,8 @@ class ScanUserController extends UserController
      */
     public function showUserAction($id)
     {
-        $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USER') ) {
+        //$secUtil = $this->get('user_security_utility');
+        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {    //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 

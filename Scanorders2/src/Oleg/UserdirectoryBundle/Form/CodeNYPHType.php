@@ -15,10 +15,25 @@ class CodeNYPHType extends AbstractType
 
 
         $builder->add('field', null, array(
-            'label' => 'Preferred NYPH Code:',
+            'label' => 'NYPH Code:',
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('startDate', 'date', array(
+            'label' => "Start Date:",
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM-dd-yyyy',
+            'attr' => array('class' => 'datepicker form-control allow-future-date'),
+        ));
+
+        $builder->add('endDate', 'date', array(
+            'label' => "End Date:",
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM-dd-yyyy',
+            'attr' => array('class' => 'datepicker form-control allow-future-date'),
+        ));
 
     }
 
