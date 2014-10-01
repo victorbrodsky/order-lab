@@ -32,10 +32,16 @@ function processEmploymentStatusRemoveButtons(btn) {
 
 }
 
+//on user load take care of hidden wells
+function positionTypeListener() {
+    $('.appointmenttitle-position-field').not("*[id^='s2id_']").each(function(e) {
+        positionTypeAction(this);
+    });
+}
 
 //In the section "Academic Appointment Title(s)", if "Resident" is selected in the "Position Type" dropdown menu,
 // unfold a second drop down under it with a field called "Residency Track:" and show three choices: "AP", "CP", and "AP/CP".
-function positionTypeListener(element) {
+function positionTypeAction(element) {
     var fieldEl = $(element);
     //console.log(fieldEl);
 

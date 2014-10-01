@@ -191,18 +191,33 @@ class UserType extends AbstractType
             'prototype_name' => '__locations__',
         ));
 
-        $params = array('read_only'=>$read_only);
-        $builder->add('employmentStatus', 'collection', array(
-            'type' => new EmploymentStatusType($params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__employmentstatus__',
-        ));
+        if( $this->roleAdmin ) {
+            $params = array('read_only'=>$read_only);
+            $builder->add('employmentStatus', 'collection', array(
+                'type' => new EmploymentStatusType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__employmentstatus__',
+            ));
+        }
 
+        if( $this->roleAdmin ) {
+            $params = array('read_only'=>$read_only);
+            $builder->add('researchLabs', 'collection', array(
+                'type' => new ResearchLabType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__researchlabs__',
+            ));
+        }
 
         $params = array('read_only'=>$read_only,'currentUser'=>$currentUser);
         $builder->add('credentials', new CredentialsType($params), array(

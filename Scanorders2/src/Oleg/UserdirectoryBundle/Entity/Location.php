@@ -49,7 +49,12 @@ class Location extends BaseUserAttributes
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $street;
+    private $street1;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $street2;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -374,19 +379,35 @@ class Location extends BaseUserAttributes
     }
 
     /**
-     * @param mixed $street
+     * @param mixed $street1
      */
-    public function setStreet($street)
+    public function setStreet1($street1)
     {
-        $this->street = $street;
+        $this->street1 = $street1;
     }
 
     /**
      * @return mixed
      */
-    public function getStreet()
+    public function getStreet1()
     {
-        return $this->street;
+        return $this->street1;
+    }
+
+    /**
+     * @param mixed $street2
+     */
+    public function setStreet2($street2)
+    {
+        $this->street2 = $street2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStreet2()
+    {
+        return $this->street2;
     }
 
     /**

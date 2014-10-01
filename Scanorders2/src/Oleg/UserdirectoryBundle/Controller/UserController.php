@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
@@ -32,6 +33,8 @@ use Oleg\UserdirectoryBundle\Entity\AdminComment;
 use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Oleg\UserdirectoryBundle\Entity\PrivateComment;
 use Oleg\UserdirectoryBundle\Entity\PublicComment;
+use Oleg\UserdirectoryBundle\Entity\AccessRequest;
+use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
 
 
 
@@ -39,12 +42,72 @@ class UserController extends Controller
 {
 
     /**
+     * Show home page
+     *
+     * @Route("/", name="employees_home")
+     * @Template("OlegUserdirectoryBundle:Default:home.html.twig")
+     */
+    public function indexAction( Request $request ) {
+
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('login') );
+        }
+
+        //$form = $this->createForm(new SearchType(),null);
+
+        //$form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
+        //$search = $form->get('search')->getData();
+
+        //check for active access requests
+        $accessreqs = $this->getActiveAccessReq();
+
+        $search = trim( $request->get('search') );
+
+        //echo "search=".$search."<br>";
+
+        $pagination = null;
+        $roles = null;
+
+        if( $search != "" ) {
+            $res = $this->indexUser( null, true, true, $search );
+            $pagination = $res['entities'];
+            $roles = $res['roles'];
+        }
+
+        return array(
+            'accessreqs' => count($accessreqs),
+            'entities' => $pagination,
+            'roles' => $roles,
+            'search' => $search
+        );
+    }
+
+    //check for active access requests
+    public function getActiveAccessReq() {
+        if( !$this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+            return null;
+        }
+        $userSecUtil = $this->get('user_security_utility');
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('employees.sitename'),AccessRequest::STATUS_ACTIVE);
+        return $accessreqs;
+    }
+
+
+
+
+
+
+
+    /**
      * @Route("/user-directory", name="employees_listusers")
      * @Route("/user-directory/previous", name="employees_listusers_previous")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */
-    public function indexUserPreviousAction(Request $request)
+    public function indexUserAction(Request $request)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect($this->generateUrl('employees-order-nopermission'));
@@ -65,7 +128,7 @@ class UserController extends Controller
     }
 
 
-    public function indexUser( $filter=null, $current = true ) {
+    public function indexUser( $filter=null, $current=true, $limitFlag=true, $search=null ) {
 
         //$userManager = $this->container->get('fos_user.user_manager');
         //$users = $userManager->findUsers();
@@ -90,6 +153,9 @@ class UserController extends Controller
         $dql->leftJoin("appointmentTitles.division", "appointmentDivision");
         $dql->leftJoin("appointmentTitles.service", "appointmentService");
 
+        $dql->leftJoin("user.locations", "locations");
+        $dql->leftJoin("user.credentials", "credentials");
+
         //$dql->leftJoin("user.institutions", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
 
@@ -99,8 +165,6 @@ class UserController extends Controller
             $dql->orderBy("employmentStatus.terminationDate","DESC");
             $dql->addOrderBy("user.lastName","ASC");
         }
-
-        $criteriastr = "";
 
         //employmentStatus
         $timecriteriastr = "";
@@ -120,6 +184,150 @@ class UserController extends Controller
             $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
             //$timecriteriastr .= " AND ";
             //$timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL)";
+        }
+
+
+        //filter
+        $criteriastr = $this->getCriteriaStrByFilter( $dql, $filter );
+
+        //search
+        $criteriastr .= $this->getCriteriaStrBySearch( $dql, $search );
+
+        $totalcriteriastr = $timecriteriastr;
+
+        if( $criteriastr != "" ) {
+            $totalcriteriastr = "(" . $totalcriteriastr . ") AND " .  $criteriastr;
+        }
+
+        $dql->where($totalcriteriastr);
+
+        //echo "dql=".$dql."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
+
+        if( $limitFlag ) {
+            $limit = 1000;
+            $paginator  = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $query,
+                $this->get('request')->query->get('page', 1), /*page number*/
+                $limit/*limit per page*/
+            );
+        } else {
+            $pagination = $query->getResult();
+        }
+
+        return array(
+            'entities' => $pagination,
+            'roles' => $rolesArr
+        );
+    }
+
+
+    public function getCriteriaStrBySearch( $dql, $search ) {
+
+        $criteriastr = "";
+
+        if( !$search || $search == "" ) {
+            return $criteriastr;
+        }
+
+        //last name
+        $criteriastr .= "user.lastName LIKE '%".$search."%' OR ";
+
+        //first name
+        $criteriastr .= "user.firstName LIKE '%".$search."%' OR ";
+
+        //Middle Name
+        $criteriastr .= "user.middleName LIKE '%".$search."%' OR ";
+
+        //Preferred Full Name for Display
+        $criteriastr .= "user.displayName LIKE '%".$search."%' OR ";
+
+        //Abbreviated Name/Initials field
+        $criteriastr .= "user.initials LIKE '%".$search."%' OR ";
+
+        //preferred email
+        $criteriastr .= "user.email LIKE '%".$search."%' OR ";
+
+        //email in locations
+        $criteriastr .= "locations.email LIKE '%".$search."%' OR ";
+
+        //User ID/CWID
+        $criteriastr .= "user.primaryPublicUserId LIKE '%".$search."%' OR ";
+
+        //administrative title
+        //institution
+        $criteriastr .= "administrativeInstitution.name LIKE '%".$search."%' OR ";
+
+        //department
+        $criteriastr .= "administrativeDepartment.name LIKE '%".$search."%' OR ";
+
+        //division
+        $criteriastr .= "administrativeDivision.name LIKE '%".$search."%' OR ";
+
+        //service
+        $criteriastr .= "administrativeService.name LIKE '%".$search."%' OR ";
+
+        //academic appointment title
+        //institution
+        $criteriastr .= "appointmentInstitution.name LIKE '%".$search."%' OR ";
+
+        //department
+        $criteriastr .= "appointmentDepartment.name LIKE '%".$search."%' OR ";
+
+        //division
+        $criteriastr .= "appointmentDivision.name LIKE '%".$search."%' OR ";
+
+        //service
+        $criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
+
+        //WCMC Employee Identification Number (EIN)
+        //NPI
+        $dql->leftJoin("credentials.identifiers", "identifiers");
+        $criteriastr .= "identifiers.field LIKE '%".$search."%' OR ";
+
+        //NYPH Code
+        $dql->leftJoin("credentials.codeNYPH", "codeNYPH");
+        $criteriastr .= "codeNYPH.field LIKE '%".$search."%' OR ";
+
+        //Associated NYPH Code in Locations
+        $criteriastr .= "locations.associatedCode LIKE '%".$search."%' OR ";
+
+        //License Number
+
+        //Specialty (in Board Certifications)
+        $dql->leftJoin("credentials.boardCertification", "boardCertification");
+        $dql->leftJoin("boardCertification.specialty", "specialty");
+        $criteriastr .= "specialty.name LIKE '%".$search."%' OR ";
+
+        //Position Type
+        $criteriastr .= "appointmentTitles.position LIKE '%".$search."%'";
+
+
+        if( $criteriastr != "" ) {
+            $criteriastr = " (" . $criteriastr . ")";
+        }
+
+        return $criteriastr;
+    }
+
+    private function getCleanCriteriaStr($criteriastr,$fieldName) {
+        if( $criteriastr != "" ) {
+            $criteriastr = " OR " . $criteriastr;
+        }
+        return $criteriastr;
+    }
+
+    public function getCriteriaStrByFilter( $dql, $filter ) {
+
+        $criteriastr = "";
+
+        //Pending Administrative Review
+        if( $filter && $filter == "Pending Administrative Review" ) {
+            $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+            $criteriastr .= "(administrativeTitles.status = ".$pendingStatus." OR appointmentTitles.status = ".$pendingStatus." OR locations.status = ".$pendingStatus.")";
         }
 
         //WCMC + Pathology
@@ -192,15 +400,6 @@ class UserController extends Controller
             $criteriastr .= "(appointmentDivision.name = 'Laboratory Medicine')";
         }
 
-        //As Faculty + Residents == Academic Appointment Title exists + position=Resident
-        if( $filter && $filter == "All WCMC Pathology Residents" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Resident')";
-        }
-
         //As Faculty + Residents == Academic Appointment Title exists + position=Fellow
         if( $filter && $filter == "All WCMC Pathology Fellows" ) {
             $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
@@ -210,6 +409,77 @@ class UserController extends Controller
             $criteriastr .= "(appointmentTitles.position = 'Fellow')";
         }
 
+        //As Faculty + Residents == Academic Appointment Title exists + position=Resident
+        if( $filter && $filter == "All WCMC Pathology Residents" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+        }
+
+        //the same as "All WCMC Pathology Residents" except they have "AP/CP" in their "Residency Type" field.
+        if( $filter && $filter == "All WCMC AP/CP Residents" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
+            $criteriastr .= " AND ";
+            $criteriastr .= "(residencyTrack.name = 'AP/CP')";
+        }
+
+        //the same as "All WCMC Pathology Residents" except they have "AP" or "AP/CP" in their "Residency Type" field.
+        if( $filter && $filter == "All WCMC AP Residents" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
+            $criteriastr .= " AND ";
+            $criteriastr .= "(residencyTrack.name = 'AP' OR residencyTrack.name = 'AP/CP')";
+        }
+
+        //the same as "All WCMC Pathology Residents" except they have "AP" in their "Residency Type" field.
+        if( $filter && $filter == "All WCMC AP Only Residents" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
+            $criteriastr .= " AND ";
+            $criteriastr .= "(residencyTrack.name = 'AP')";
+        }
+
+        //the same as "All WCMC Pathology Residents" except they have "CP" or "AP/CP" in their "Residency Type" field.
+        if( $filter && $filter == "All WCMC CP Residents" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
+            $criteriastr .= " AND ";
+            $criteriastr .= "(residencyTrack.name = 'CP' OR residencyTrack.name = 'AP/CP')";
+        }
+
+        //the same as "All WCMC Pathology Residents" except they have "CP" in their "Residency Type" field.
+        if( $filter && $filter == "All WCMC CP Only Residents" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
+            $criteriastr .= " AND ";
+            $criteriastr .= "(residencyTrack.name = 'CP')";
+        }
+
+
+
         if( $filter && $filter != "" && $criteriastr == "" ) {
             $criteriastr = "1 = 0";
             $this->get('session')->getFlashBag()->add(
@@ -218,32 +488,23 @@ class UserController extends Controller
             );
         }
 
-        $totalcriteriastr = $timecriteriastr;
-
-        if( $criteriastr != "" ) {
-            $totalcriteriastr = "(" . $totalcriteriastr . ") AND " .  $criteriastr;
-        }
-
-        $dql->where($totalcriteriastr);
-
-        //echo "dql=".$dql."<br>";
-
-        $limit = 1000;
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
-        );
-
-        return array(
-            'entities' => $pagination,
-            'roles' => $rolesArr
-        );
+        return $criteriastr;
     }
 
+    public function pendingAdminReviewAction() {
+        $pending = null;
+
+        $limitFlag = false;
+
+        $res = $this->indexUser( 'Pending Administrative Review', true, $limitFlag );
+
+        $pending = count($res['entities']);
+
+        $response = new Response();
+        $response->setContent($pending);
+
+        return $response;
+    }
 
 
 
@@ -525,7 +786,9 @@ class UserController extends Controller
         if( count($entity->getCredentials()->getPublicComments()) == 0 ) {
             $entity->getCredentials()->addPublicComment( new PublicComment($user) );
         }
-        if( $entity->getId() && $entity->getId() == $user->getId() ) {
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
+            $entity->getId() && $entity->getId() == $user->getId()
+        ) {
             if( count($entity->getCredentials()->getPrivateComments()) == 0 ) {
                 $entity->getCredentials()->addPrivateComment( new PrivateComment($user) );
             }

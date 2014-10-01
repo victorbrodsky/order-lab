@@ -24,16 +24,30 @@ class ScanUserController extends UserController
 
     /**
      * @Route("/user-directory", name="scan_listusers")
+     * @Route("/user-directory/previous", name="scan_listusers_previous")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Admin:users.html.twig")
      */
     public function indexUserAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {
             return $this->redirect($this->generateUrl('scan-order-nopermission'));
         }
 
-        return $this->indexUser();
+        //return $this->indexUser();
+
+        $filter = trim( $request->get('filter') );
+
+        $current = true;
+        $routeName = $request->get('_route');
+        if( $routeName == "scan_listusers_previous" ) {
+            $current = false;
+        }
+
+        $res = $this->indexUser($filter,$current);
+        $res['filter'] = $filter;
+
+        return $res;
     }
 
 

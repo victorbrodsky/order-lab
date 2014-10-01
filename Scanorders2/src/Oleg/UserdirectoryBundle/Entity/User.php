@@ -124,6 +124,12 @@ class User extends BaseUser
      */
     private $employmentStatus;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ResearchLab", mappedBy="user", cascade={"persist"})
+     * @ORM\OrderBy({"dissolvedDate" = "ASC"})
+     */
+    private $researchLabs;
+
 
     function __construct()
     {
@@ -131,6 +137,7 @@ class User extends BaseUser
         $this->administrativeTitles = new ArrayCollection();
         $this->appointmentTitles = new ArrayCollection();
         $this->employmentStatus = new ArrayCollection();
+        $this->researchLabs = new ArrayCollection();
 
         //create preferences
         $userPref = new UserPreferences();
@@ -565,7 +572,41 @@ class User extends BaseUser
     }
 
 
+    /**
+     * Add researchLabs
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLabs
+     * @return User
+     */
+    public function addResearchLab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab)
+    {
+        if( !$this->researchLabs->contains($researchLab) ) {
+            $this->researchLabs->add($researchLab);
+            $researchLab->setUser($this);
+        }
 
+        return $this;
+    }
+
+    /**
+     * Remove researchLab
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab
+     */
+    public function removeResearchLab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab)
+    {
+        $this->researchLabs->removeElement($researchLab);
+    }
+
+    /**
+     * Get researchLabs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getResearchLabs()
+    {
+        return $this->researchLabs;
+    }
 
 
     //get all services from administrative and appointment titles.

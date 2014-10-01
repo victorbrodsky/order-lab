@@ -25,11 +25,6 @@ class EmploymentStatusType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-
-//        $builder->add('id','hidden',array(
-//            'label'=>false,
-//        ));
-
         $builder->add('hireDate',null,array(
             'label'=>"Date of Hire:",
             'widget' => 'single_text',

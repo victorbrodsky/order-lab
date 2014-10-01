@@ -214,6 +214,31 @@ class UtilController extends Controller {
         return $response;
     }
 
+    /**
+     * @Route("/common/researchlabtitle", name="employees_get_researchlabtitle")
+     * @Method("GET")
+     */
+    public function getResearchLabTitleAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:ResearchLabTitleList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
     //search if $needle exists in array $products
     public function in_complex_array($needle,$products,$indexstr='text') {

@@ -30,7 +30,7 @@ class BaseCommentsType extends AbstractType
         ));
 
         $builder->add('commentSubType', 'employees_custom_selector', array(
-            'label' => "Comment Type:",
+            'label' => "Comment Name:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-commentsubtype', 'type' => 'hidden'),
             'classtype' => 'commentSubType'

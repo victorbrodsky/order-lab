@@ -34,6 +34,7 @@ class ListController extends Controller
      * @Route("/identifier-types/", name="identifiers-list")
      * @Route("/residency-tracks/", name="residencytracks-list")
      * @Route("/fellowship-types/", name="fellowshiptypes-list")
+     * @Route("/research-lab-titles/", name="researchlabtitles-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -55,7 +56,7 @@ class ListController extends Controller
         $dql->select('ent');
         $dql->groupBy('ent');
 
-        $dql->innerJoin("ent.creator", "creator");
+        $dql->leftJoin("ent.creator", "creator");
         $dql->leftJoin("ent.updatedby", "updatedby");
 
         $dql->addGroupBy('creator.username');
@@ -74,7 +75,7 @@ class ListController extends Controller
         }
         //$dql->orderBy("ent.createdate","DESC");
 
-        //echo "dql=".$dql."<br>";
+        echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $limit = 30;
@@ -107,6 +108,7 @@ class ListController extends Controller
      * @Route("/identifier-types/", name="identifiers_create")
      * @Route("/residency-tracks/", name="residencytracks_create")
      * @Route("/fellowship-types/", name="fellowshiptypes_create")
+     * @Route("/research-lab-titles/", name="researchlabtitles_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -202,6 +204,7 @@ class ListController extends Controller
      * @Route("/identifier-types/new", name="identifiers_new")
      * @Route("/residency-tracks/new", name="residencytracks_new")
      * @Route("/fellowship-types/new", name="fellowshiptypes_new")
+     * @Route("/research-lab-titles/new", name="researchlabtitles_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -259,6 +262,7 @@ class ListController extends Controller
      * @Route("/identifier-types/{id}", name="identifiers_show")
      * @Route("/residency-tracks/{id}", name="residencytracks_show")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_show")
+     * @Route("/research-lab-titles/{id}", name="researchlabtitles_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -308,6 +312,7 @@ class ListController extends Controller
      * @Route("/identifier-types/{id}/edit", name="identifiers_edit")
      * @Route("/residency-tracks/{id}/edit", name="residencytracks_edit")
      * @Route("/fellowship-types/{id}/edit", name="fellowshiptypes_edit")
+     * @Route("/research-lab-titles/{id}/edit", name="researchlabtitles_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -398,6 +403,7 @@ class ListController extends Controller
      * @Route("/identifier-types/{id}", name="identifiers_update")
      * @Route("/residency-tracks/{id}", name="residencytracks_update")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_update")
+     * @Route("/research-lab-titles/{id}", name="researchlabtitles_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -518,7 +524,11 @@ class ListController extends Controller
             $className = "FellowshipTypeList";
             $displayName = "Fellowship Types";
             break;
-            default:
+        case "researchlabtitles":
+            $className = "ResearchLabTitleList";
+            $displayName = "Research Lab Titles";
+            break;
+        default:
             $className = null;
             $displayName = null;
         }
@@ -549,6 +559,7 @@ class ListController extends Controller
      * @Route("/identifier-types/{id}", name="identifiers_delete")
      * @Route("/residency-tracks/{id}", name="residencytracks_delete")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_delete")
+     * @Route("/research-lab-titles/{id}", name="researchlabtitles_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

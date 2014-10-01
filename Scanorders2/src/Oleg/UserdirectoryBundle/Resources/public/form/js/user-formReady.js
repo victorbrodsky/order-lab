@@ -29,13 +29,13 @@ $(document).ready(function() {
 
     getComboboxInstitution();
     getComboboxCommentType();
-
     getComboboxIdentifier();
-
     getComboboxFellowshipType();
+    getComboboxResearchLabs
 
     processEmploymentStatusRemoveButtons();
 
+    positionTypeListener();
 
 });
 

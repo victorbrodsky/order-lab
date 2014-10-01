@@ -69,8 +69,13 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('street',null,array(
-            'label'=>'Street Address:',
+        $builder->add('street1',null,array(
+            'label'=>'Street Address [Line 1]:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('street2',null,array(
+            'label'=>'Street Address [Line 2]:',
             'attr' => array('class'=>'form-control')
         ));
 

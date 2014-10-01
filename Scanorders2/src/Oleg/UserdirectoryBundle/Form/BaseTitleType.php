@@ -119,7 +119,7 @@ class BaseTitleType extends AbstractType
                 ),
                 'label' => "Position Type:",
                 'required' => false,
-                'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeListener(this)'),
+                'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeAction(this)'),
             ));
 
             $builder->add( 'residencyTrack', 'entity', array(

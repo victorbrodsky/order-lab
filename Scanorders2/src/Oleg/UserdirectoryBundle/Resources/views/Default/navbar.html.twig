@@ -12,13 +12,26 @@
         <li><a href="{{ path(pathlink,{'filter': 'All WCMC Anatomic Pathology Faculty'}) }}">All WCMC Anatomic Pathology Faculty</a></li>
         <li><a href="{{ path(pathlink,{'filter': 'All WCMC Laboratory Medicine Faculty'}) }}">All WCMC Laboratory Medicine Faculty</a></li>
         <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Residents'}) }}">All WCMC Pathology Residents</a></li>
+
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC AP/CP Residents'}) }}">All WCMC AP/CP Residents</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC AP Residents'}) }}">All WCMC AP Residents</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC AP Only Residents'}) }}">All WCMC AP Only Residents</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC CP Residents'}) }}">All WCMC CP Residents</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC CP Only Residents'}) }}">All WCMC CP Only Residents</a></li>
+
         <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Fellows'}) }}">All WCMC Pathology Fellows</a></li>
+
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Principal Investigators of Research Labs'}) }}">All WCMC Pathology Principal Investigators of Research Labs</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Faculty in Research Labs'}) }}">All WCMC Pathology Faculty in Research Labs</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC or NYP Pathology Staff in Research Labs'}) }}">All WCMC or NYP Pathology Staff in Research Labs</a></li>
     </ul>
 {% endmacro %}
 
 {% import _self as usernavbar %}
 
 {% block navbar %}
+
+    {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
 
     <nav class="navbar navbar-default" role="navigation">
 
@@ -44,17 +57,22 @@
 
                     <li id="nav-bar-userhome" class="hidden-xs divider-vertical"><a href="{{ path(employees_sitename~'_home') }}">Home</a></li>
 
-                    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
-
-                        <li id="nav-bar-userlist" class="dropdown">
+                    <li id="nav-bar-userlist" class="dropdown">
+                        {% if pendingadminreview is defined and pendingadminreview > 0 %}
+                            <a id="incoming-orders-menu-title" href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a><!--
+                                        --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="Pending Administrative Review" data-toggle="tooltip" data-placement="bottom" href="{{ path(employees_sitename~'_listusers',{'filter': 'Pending Administrative Review'}) }}"><span class="badge">{{ pendingadminreview }}</span></a>
+                        {% else %}
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a>
-                            {{ usernavbar.listUsers(employees_sitename~'_listusers') }}
-                        </li>
+                        {% endif %}
+                        {{ usernavbar.listUsers(employees_sitename~'_listusers') }}
+                    </li>
 
-                        <li id="nav-bar-userlist-previous" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Previous<b class="caret"></b></a>
-                            {{ usernavbar.listUsers(employees_sitename~'_listusers_previous') }}
-                        </li>
+                    <li id="nav-bar-userlist-previous" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Previous<b class="caret"></b></a>
+                        {{ usernavbar.listUsers(employees_sitename~'_listusers_previous') }}
+                    </li>
+
+                    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 
                         <li id="nav-bar-adduser" class="hidden-xs divider-vertical"><a href="{{ path(employees_sitename~'_new_user') }}">Add Employee</a></li>
 

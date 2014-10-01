@@ -90,7 +90,7 @@ class UserUtil {
             $user->setPassword("");
             $user->setCreatedby('excel');
             $user->getPreferences()->setTimezone($default_time_zone);
-            $user->getPreferences()->setTooltip(true);
+            //$user->getPreferences()->setTooltip(true);
 
             //phone, fax, office are stored in Location object
             //$mainLocation  = $em->getRepository('OlegUserdirectoryBundle:Location')->findOneByName('Main Office');

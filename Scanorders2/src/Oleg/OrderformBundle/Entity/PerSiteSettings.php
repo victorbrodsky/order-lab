@@ -74,7 +74,7 @@ class PerSiteSettings extends BaseUserAttributes
         $this->scanOrdersServicesScope = new ArrayCollection();
         $this->chiefServices = new ArrayCollection();
         $this->setType(self::TYPE_RESTRICTED);
-        $this->tooltip = 1;
+        $this->tooltip = true;
 
     }
 

@@ -153,7 +153,6 @@ class CredentialsType extends AbstractType
             ));
         }
 
-
         if( $this->params['read_only'] == false ) {
             $params = array('read_only'=>$this->params['read_only'],'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments');
             $builder->add('adminComments', 'collection', array(
