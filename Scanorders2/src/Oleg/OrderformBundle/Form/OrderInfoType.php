@@ -236,18 +236,49 @@ class OrderInfoType extends AbstractType
             'empty_value' => false,
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $this->params['institutions'],
-            'attr' => array('class' => 'combobox combobox-width combobox-institution')
+            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
         ));
 
-        $builder->add('service', 'entity', array(
-            'label' => 'Service:',
-            'required'=> false,
-            'multiple' => false,
-            'class' => 'OlegUserdirectoryBundle:Service',
-            'choices' => $this->params['services'],
-            'attr' => array('class' => 'combobox combobox-width')
-        ));
 
+
+        if( $this->params['cicle'] != 'show' ) {
+            //department. User should be able to add institution to administrative or appointment titles
+            $builder->add('department', 'employees_custom_selector', array(
+                'label' => "Department:",
+                "mapped" => false,
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
+                'classtype' => 'department'
+            ));
+
+            //division. User should be able to add institution to administrative or appointment titles
+            $builder->add('division', 'employees_custom_selector', array(
+                'label' => "Division:",
+                "mapped" => false,
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
+                'classtype' => 'division'
+            ));
+        }
+
+        if( $this->params['cicle'] != 'show' && $this->params['cicle'] != 'amend' ) {
+            //service. User should be able to add institution to administrative or appointment titles
+            $builder->add('service', 'employees_custom_selector', array(
+                'label' => "Service:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-service combobox-without-add', 'type' => 'hidden'),
+                'classtype' => 'service'
+            ));
+        } else {
+            $builder->add('service', 'entity', array(
+                'label' => 'Service:',
+                'required'=> false,
+                'multiple' => false,
+                'class' => 'OlegUserdirectoryBundle:Service',
+                'choices' => $this->params['services'],
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
         
     }
 

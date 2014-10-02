@@ -3,7 +3,7 @@
  */
 
 
-function getComboboxTreeByPid( parentElement, fieldClass, parentId ) {
+function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) {
 
     //console.log( "onchange=" + fieldClass );
 
@@ -12,7 +12,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId ) {
     var targetId = '#' + holder.find("."+fieldClass).not("*[id^='s2id_']").attr('id');
     //console.log( "targetId="+targetId );
 
-    if( typeof parentId === "undefined" ) {
+    if( typeof parentId === "undefined" || parentId == null ) {
         parentId = parentElement.select2('val');
     }
     //console.log( "parentId="+parentId );
@@ -34,13 +34,16 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId ) {
         });
 
     } else {
-        //console.log( "clear combobox, targetId="+targetId);
 
-        //clear combobox
-        populateSelectCombobox( targetId, null, "Select an option or type in a new value" );
-        $(targetId).select2("readonly", true);
+        if( clearFlag || typeof clearFlag === "undefined" ) {
+            //console.log( "clear combobox, targetId="+targetId);
 
-        clearChildren(holder,fieldClass);
+            //clear combobox
+            populateSelectCombobox( targetId, null, "Select an option or type in a new value" );
+            $(targetId).select2("readonly", true);
+
+            clearChildren(holder,fieldClass);
+        }
     }
 }
 
@@ -106,28 +109,32 @@ function clearChildren(holder,fieldClass) {
 
 
 
-
+function initInstitutionManually() {
+    $('.ajax-combobox-institution-preset').each(function(e){
+        getComboboxTreeByPid($(this),'ajax-combobox-department');
+    });
+}
 
 
 
 ////////////////// mixed functions ////////////////////
-function initTreeSelect() {
+function initTreeSelect(clearFlag) {
 
     $('.ajax-combobox-institution').on('change', function(e){
-        getComboboxTreeByPid($(this),'ajax-combobox-department');
+        getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
     });
 
     $('.ajax-combobox-department').on('change', function(e){
-        getComboboxTreeByPid($(this),'ajax-combobox-division');
+        getComboboxTreeByPid($(this),'ajax-combobox-division',null,clearFlag);
     });
 
     $('.ajax-combobox-division').on('change', function(e){
-        getComboboxTreeByPid($(this),'ajax-combobox-service');
+        getComboboxTreeByPid($(this),'ajax-combobox-service',null,clearFlag);
     });
 
     //comments type and subtypes
     $('.ajax-combobox-commenttype').on('change', function(e){
-        getComboboxTreeByPid($(this),'ajax-combobox-commentsubtype');
+        getComboboxTreeByPid($(this),'ajax-combobox-commentsubtype',null,clearFlag);
     });
 }
 

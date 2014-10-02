@@ -55,6 +55,17 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         data = new Array();
     }
 
+    var createSearchChoice = function(term, data) {
+        //if( term.match(/^[0-9]+$/) != null ) {
+        //    //console.log("term is digit");
+        //}
+        return {id:term, text:term};
+    };
+
+    if( $(target).hasClass('combobox-without-add') ) {
+        createSearchChoice = null;
+    }
+
     $(target).select2({
         placeholder: placeholder,
         allowClear: allowClear,
@@ -65,12 +76,7 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         quietMillis: 100,
         multiple: multiple,
         data: data,
-        createSearchChoice:function(term, data) {
-            //if( term.match(/^[0-9]+$/) != null ) {
-            //    //console.log("term is digit");
-            //}
-            return {id:term, text:term};
-        }
+        createSearchChoice:createSearchChoice
     });
 
     if( $(target).attr("readonly") ) {

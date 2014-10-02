@@ -130,6 +130,21 @@ class User extends BaseUser
      */
     private $researchLabs;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist"})
+     */
+    private $privateComments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PublicComment", mappedBy="user", cascade={"persist"})
+     */
+    private $publicComments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AdminComment", mappedBy="user", cascade={"persist"})
+     */
+    private $adminComments;
+
 
     function __construct()
     {
@@ -138,6 +153,10 @@ class User extends BaseUser
         $this->appointmentTitles = new ArrayCollection();
         $this->employmentStatus = new ArrayCollection();
         $this->researchLabs = new ArrayCollection();
+
+        $this->privateComments = new ArrayCollection();
+        $this->publicComments = new ArrayCollection();
+        $this->adminComments = new ArrayCollection();
 
         //create preferences
         $userPref = new UserPreferences();
@@ -570,6 +589,77 @@ class User extends BaseUser
     {
         return $this->employmentStatus;
     }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getPrivateComments()
+    {
+        return $this->privateComments;
+    }
+    public function addPrivateComment( $comment )
+    {
+        if( !$comment )
+            return;
+
+        if( !$this->privateComments->contains($comment) ) {
+            $comment->setUser($this);
+            $this->privateComments->add($comment);
+        }
+    }
+    public function removePrivateComment($comment)
+    {
+        $this->privateComments->removeElement($comment);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getPublicComments()
+    {
+        return $this->publicComments;
+    }
+    public function addPublicComment( $comment )
+    {
+        if( !$comment )
+            return;
+
+        if( !$this->publicComments->contains($comment) ) {
+            $comment->setUser($this);
+            $this->publicComments->add($comment);
+        }
+    }
+    public function removePublicComment($comment)
+    {
+        $this->publicComments->removeElement($comment);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getAdminComments()
+    {
+        return $this->adminComments;
+    }
+    public function addAdminComment( $comment )
+    {
+        if( !$comment )
+            return;
+
+        if( !$this->adminComments->contains($comment) ) {
+            $comment->setUser($this);
+            $this->adminComments->add($comment);
+        }
+    }
+    public function removeAdminComment($comment)
+    {
+        $this->adminComments->removeElement($comment);
+    }
+
 
 
     /**

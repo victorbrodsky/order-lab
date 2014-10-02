@@ -12,10 +12,10 @@ class PrivateComment extends BaseComment
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="privateComments")
-     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="privateComments")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $credentials;
+    protected $user;
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -24,21 +24,20 @@ class PrivateComment extends BaseComment
     }
 
     /**
-     * @param mixed $credentials
+     * @param mixed $user
      */
-    public function setCredentials($credentials)
+    public function setUser($user)
     {
-        $this->credentials = $credentials;
+        $this->user = $user;
     }
 
     /**
      * @return mixed
      */
-    public function getCredentials()
+    public function getUser()
     {
-        return $this->credentials;
+        return $this->user;
     }
-
 
 
     public function __toString() {

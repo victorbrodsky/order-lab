@@ -6,7 +6,7 @@
         <div class="col-xs-6" align="right">
             {{ form_label(value) }}
         </div>
-        <div class="col-xs-6" align="left" style="width: 50px;">
+        <div class="col-xs-6 text-center" align="left" style="width: 50px;">
             {{ form_widget(value) }}
         </div>
     </div>
@@ -140,9 +140,17 @@
 
     {{ formmacros.field(form.proxyuser) }}
 
-    {{ formmacros.field(form.institution) }}
+    <div class="user-collection-holder">
+        {{ formmacros.field(form.institution) }}
 
-    {{ formmacros.field(form.service) }}
+        {#not mapped#}
+        {% if form.department is defined %}
+            {{ formmacros.field(form.department) }}
+            {{ formmacros.field(form.division) }}
+        {% endif %}
+
+        {{ formmacros.field(form.service) }}
+    </div>
 
     {{ formmacros.field(form.scanner) }}
 

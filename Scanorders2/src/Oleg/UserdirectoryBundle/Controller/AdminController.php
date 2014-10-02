@@ -79,7 +79,9 @@ class AdminController extends Controller
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
         $count_institution = $this->generateInstitutions();         //must be first
+
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
+
         $count_roles = $this->generateRoles();
         $count_terminationTypes = $this->generateTerminationTypes();
         $count_eventTypeList = $this->generateEventTypeList();
@@ -276,6 +278,7 @@ class AdminController extends Controller
     }
 
 
+    //https://bitbucket.org/weillcornellpathology/scanorder/issue/221/multiple-office-locations-and-phone
     public function generateInstitutions() {
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -415,6 +418,7 @@ class AdminController extends Controller
             'departments'=>$wcmcDep
         );
 
+        //http://nyp.org/services/index.html
         $nyhDep = array(
             'Allergy, Immunology and Pulmonology' => null,
             'Anesthesiology' => null,

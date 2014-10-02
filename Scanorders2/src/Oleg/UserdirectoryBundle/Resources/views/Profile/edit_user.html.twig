@@ -380,7 +380,7 @@
         {% endif %}
 
         {{ formmacros.field(formfield.researchLabTitle) }}
-        {{ formmacros.field(formfield.researchPI) }}
+        {{ formmacros.checkbox(formfield.researchPI) }}
         {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.dissolvedDate,'allow-future-date') }}
         {{ formmacros.field(formfield.comment) }}
@@ -408,14 +408,14 @@
     {% set employmentStatusPrototype = null %}
     {% set researchLabsPrototype = null %}
        
-    {% if form.credentials.publicComments is defined %}
-        {% set publicCommentsPrototype = userform.comments(form.credentials.publicComments,cicle,'user-publiccomments','prototype') %}
+    {% if form.publicComments is defined %}
+        {% set publicCommentsPrototype = userform.comments(form.publicComments,cicle,'user-publiccomments','prototype') %}
     {% endif %}
-    {% if form.credentials.privateComments is defined %}
-        {% set privateCommentsPrototype = userform.comments(form.credentials.privateComments,cicle,'user-privatecomments','prototype') %}
+    {% if form.privateComments is defined %}
+        {% set privateCommentsPrototype = userform.comments(form.privateComments,cicle,'user-privatecomments','prototype') %}
     {% endif %}
-    {% if form.credentials.adminComments is defined %}
-        {% set adminCommentsPrototype = userform.comments(form.credentials.adminComments,cicle,'user-admincomments','prototype') %}
+    {% if form.adminComments is defined %}
+        {% set adminCommentsPrototype = userform.comments(form.adminComments,cicle,'user-admincomments','prototype') %}
     {% endif %}
     {% if form.employmentStatus is defined %}
         {% set employmentStatusPrototype = userform.employmentStatuses(form.employmentStatus,cicle,'user-employmentStatus','prototype') %}
@@ -594,7 +594,7 @@
                             {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
                         {% endfor %}
                         {% if cicle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Appointment Title</button>
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>
                         {% endif %}
                     </div>
 
@@ -642,12 +642,12 @@
                 <div id="ResearchLabs" class="panel-collapse collapse in">
                     <div class="panel-body">
 
-                        <div class="user-researchLabs-holder">
+                        <div class="user-researchlabs-holder">
                             {% for researchLab in form.researchLabs %}
-                                {{ userform.researchLabs(researchLabs,cicle,'user-researchLabs','noprototype') }}
+                                {{ userform.researchLabs(researchLab,cicle,'user-researchlabs','noprototype') }}
                             {% endfor %}
                             {% if cicle != 'show_user' %}
-                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-researchLabs')" type='button'>Add Research Lab</button>
+                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-researchlabs')" type='button'>Add Research Lab</button>
                             {% endif %}
                         </div>
 
@@ -910,7 +910,7 @@
                         <div id="publicComment" class="panel-collapse collapse in">
                             <div class="panel-body">
                                 <div class="user-publiccomments-holder">
-                                    {% for publicComment in form.credentials.publicComments %}
+                                    {% for publicComment in form.publicComments %}
                                         {{ userform.comments(publicComment,cicle,'user-publiccomments','noprototype') }}
                                     {% endfor %}
                                     {% if cicle != 'show_user' %}
@@ -923,19 +923,19 @@
 
 
                     {#Private Comments#}
-                    {% if form.credentials.privateComments is defined %}
+                    {% if form.privateComments is defined %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" href="#privatecomment">
-                                        Private Comment(s) [Not publicly visible, but visible to the user]
+                                        Private Comment(s) [Not publicly visible, but visible to and editable by the user]
                                     </a>
                                 </h4>
                             </div>
                             <div id="privatecomment" class="panel-collapse collapse in">
                                 <div class="panel-body">
                                     <div class="user-privatecomments-holder">
-                                        {% for privateComment in form.credentials.privateComments %}
+                                        {% for privateComment in form.privateComments %}
                                             {{ userform.comments(privateComment,cicle,'user-privatecomments','noprototype') }}
                                         {% endfor %}
                                         {% if cicle != 'show_user' %}
@@ -948,8 +948,34 @@
                     {% endif %}
 
 
+                    {#Confidential Comments#}
+                    {% if form.adminComments is defined %}
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#Confidential">
+                                        Confidential Comment(s) [Not publicly visible, but visible to the user]
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="Confidential" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="user-confidentialcomments-holder">
+                                        {#{% for adminComment in form.adminComments %}#}
+                                            {#{{ userform.comments(adminComment,cicle,'user-admincomments','noprototype') }}#}
+                                        {#{% endfor %}#}
+                                        {#{% if cicle != 'show_user' %}#}
+                                            {#<button class="btn btn-default" onClick="addBaseTitle(this,'user-admincomments')" type='button'>Add Public Comment</button>#}
+                                        {#{% endif %}#}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+
                     {#Admin Comments#}
-                    {% if form.credentials.adminComments is defined %}
+                    {% if form.adminComments is defined %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -961,7 +987,7 @@
                             <div id="admincomment" class="panel-collapse collapse in">
                                 <div class="panel-body">
                                     <div class="user-admincomments-holder">
-                                        {% for adminComment in form.credentials.adminComments %}
+                                        {% for adminComment in form.adminComments %}
                                             {{ userform.comments(adminComment,cicle,'user-admincomments','noprototype') }}
                                         {% endfor %}
                                         {% if cicle != 'show_user' %}

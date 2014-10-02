@@ -445,48 +445,6 @@ class ScanUtilController extends Controller {
         return $response;
     }
 
-//    //TODO: test it according to new Service!
-//    /**
-//     * @Route("/userpathservice", name="get-userpathservice")
-//     * @Method("POST")
-//     */
-//    public function getUserPathServiceAction() {
-//
-//        $output = array();
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $request = $this->get('request');
-//        $username   = $request->get('username');
-//        //echo "username=".$username."<br>";
-//
-//        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername(trim($username));
-//        //echo $user;
-//
-//        //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find(15);
-//        if( $user ) {
-//            //echo "user found!";
-//            $services = $user->getServices();
-//            //echo "count=".count($services);
-//
-//            //$count=0;
-//            foreach( $services as $service) {
-//                $temp = array('id'=>$service->getId(), 'text'=>$service->getName());
-//                $output[] = $temp;
-//                //$count++;
-//            }
-//
-//        } else {
-//            //echo "no user found!";
-//        }
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
-
-
     /**
      * @Route("/partname", name="get-partname")
      * @Method("GET")
@@ -933,65 +891,42 @@ class ScanUtilController extends Controller {
 
 
 
-//    /**
-//     * @Route("/department", name="get-department")
-//     * @Method("GET")
-//     */
-//    public function getDepartmentAction() {
-//
-//        $whereServicesList = "";
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $request = $this->get('request');
-//        $opt = trim( $request->get('opt') );
-//
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegUserdirectoryBundle:Department', 'list')
-//            ->select("list.id as id, list.name as text")
-//            ->orderBy("list.orderinlist","ASC");
-//
-//        $user = $this->get('security.context')->getToken()->getUser();
-//
-//        $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
-//
-//        $output = $query->getQuery()->getResult();
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
+    /**
+     * @Route("/default-service", name="get-default-service")
+     * @Method("GET")
+     */
+    public function getDepartmentAction() {
 
-//    /**
-//     * @Route("/institution", name="scan_get_institution")
-//     * @Method("GET")
-//     */
-//    public function getInstitutionAction() {
-//
-//        $whereServicesList = "";
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $request = $this->get('request');
-//        $opt = trim( $request->get('opt') );
-//
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegUserdirectoryBundle:Institution', 'list')
-//            ->select("list.id as id, list.name as text")
-//            ->orderBy("list.orderinlist","ASC");
-//
-//        $user = $this->get('security.context')->getToken()->getUser();
-//
-//        $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
-//
-//        $output = $query->getQuery()->getResult();
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
+        $request = $this->get('request');
+        $instid = trim( $request->get('instid') );
+
+        $inst = null;
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //get current user default service
+        $secUtil = $this->get('order_security_utility');
+        $service = $secUtil->getUserDefaultService($user);
+
+        if( $service ) {
+            $division = $service->getParent();
+            $department = $division->getParent();
+            $inst = $department->getParent();
+        }
+
+        $output = array();
+
+        if( $inst && $inst->getId() == $instid ) {
+            $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
 
     /**

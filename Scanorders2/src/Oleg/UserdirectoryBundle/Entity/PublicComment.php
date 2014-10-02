@@ -12,28 +12,27 @@ class PublicComment extends BaseComment
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="publicComments")
-     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="publicComments")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $credentials;
+    protected $user;
 
 
     /**
-     * @param mixed $credentials
+     * @param mixed $user
      */
-    public function setCredentials($credentials)
+    public function setUser($user)
     {
-        $this->credentials = $credentials;
+        $this->user = $user;
     }
 
     /**
      * @return mixed
      */
-    public function getCredentials()
+    public function getUser()
     {
-        return $this->credentials;
+        return $this->user;
     }
-
 
 
     public function __toString() {

@@ -48,6 +48,7 @@ function initBaseAdd(newForm) {
     getComboboxCommentType(newForm);
     getComboboxIdentifier(newForm);
     getComboboxFellowshipType(newForm);
+    getComboboxResearchLabs(newForm);
 }
 
 //get input field only

@@ -75,7 +75,7 @@ class ListController extends Controller
         }
         //$dql->orderBy("ent.createdate","DESC");
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $limit = 30;
@@ -137,6 +137,9 @@ class ListController extends Controller
 
             //the date from the form does not contain time, so set createdate with date and time.
             $entity->setCreatedate(new \DateTime());
+
+            $user = $this->get('security.context')->getToken()->getUser();
+            $entity->setCreator($user);
 
             $em->persist($entity);
             $em->flush();

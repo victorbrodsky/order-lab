@@ -21,7 +21,7 @@ class CredentialsType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function __construct( $params=null )
     {
         $this->params = $params;
     }
@@ -123,49 +123,6 @@ class CredentialsType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__identifiers__',
         ));
-
-
-        //$this->params['read_only'] == false => admin
-
-        $params = array('read_only'=>$this->params['read_only'],'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments');
-        $builder->add('publicComments', 'collection', array(
-            'type' => new BaseCommentsType($params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__publiccomments__',
-        ));
-
-        if( $this->params['read_only'] == false || $this->params['currentUser'] ) {
-            $params = array('read_only'=>$this->params['read_only'],'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments');
-            $builder->add('privateComments', 'collection', array(
-                'type' => new BaseCommentsType($params),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__privatecomments__',
-            ));
-        }
-
-        if( $this->params['read_only'] == false ) {
-            $params = array('read_only'=>$this->params['read_only'],'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments');
-            $builder->add('adminComments', 'collection', array(
-                'type' => new BaseCommentsType($params),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__admincomments__',
-            ));
-        }
 
     }
 

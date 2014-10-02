@@ -242,8 +242,15 @@ class SecurityUtil extends UserSecurityUtil {
     }
 
     public function getTooltip($user) {
+        $tooltip = true;
         $siteSettings = $this->getUserPerSiteSettings($user);
-        return $siteSettings->getTooltip();
+        if( $siteSettings ) {
+            $tooltip = $siteSettings->getTooltip();
+        } else {
+            //echo 'siteSettings not exists';
+            //exit();
+        }
+        return $tooltip;
     }
 
 }

@@ -93,58 +93,33 @@ function customCombobox() {
         getProjectTitle(new Array("0","0","0","0","0","0"));
         getCourseTitle(new Array("0","0","0","0","0","0"));
 
-        //getComboboxService(new Array("0","0","0","0","0","0"));
-        //getComboboxDepartment(new Array("0","0","0","0","0","0"));
-        //getComboboxInstitution(new Array("0","0","0","0","0","0"));
         getComboboxAccount(new Array("0","0","0","0","0","0"));
     }
 
-//    if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
-//        getComboboxService(new Array("0","0","0","0","0","0"));
-//    }
 }
 
-//function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
-//
-//    //console.log("target="+target);
-//
-//    //clear the value
-//    $(target).select2('val','');
-//
-//    if( placeholder ) {
-//        var allowClear = true;
-//    } else {
-//        var allowClear = false;
-//    }
-//
-//    if( multipleFlag ) {
-//        var multiple = true;
-//    } else {
-//        var multiple = false;
-//    }
-//
-//    if( !data ) {
-//        data = new Array();
-//    }
-//
-//    $(target).select2({
-//        placeholder: placeholder,
-//        allowClear: allowClear,
-//        width: combobox_width,
-//        dropdownAutoWidth: true,
-//        selectOnBlur: false,
-//        dataType: 'json',
-//        quietMillis: 100,
-//        multiple: multiple,
-//        data: data,
-//        createSearchChoice:function(term, data) {
-//            //if( term.match(/^[0-9]+$/) != null ) {
-//            //    //console.log("term is digit");
-//            //}
-//            return {id:term, text:term};
-//        }
-//    });
-//}
+function initDefaultServiceManually() {
+
+    var targetid = ".ajax-combobox-service";
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    var url = getCommonBaseUrl("util/"+"default-service");
+
+    var instid = $('.combobox-institution').select2('val');
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: {instid: instid},
+        timeout: _ajaxTimeout,
+        async: asyncflag
+    }).success(function(data) {
+        populateSelectCombobox( targetid, data, "Select an option or type in a new value" );
+    });
+}
 
 
 //#############  stains  ##############//

@@ -3,35 +3,6 @@
 
 <head>
 
-    {#timeout after 1800 seconds#}
-    {#<meta http-equiv="refresh" content = "1800; url={{ path('logout') }}">#}
-
-    {% if security is not defined %}
-        {% set security = 'true' %}
-    {% endif %}
-
-    {#{% if not is_granted('ROLE_USER') and security == 'true' %}#}
-        {#<meta http-equiv="refresh" content="0; URL={{ path('login') }}">#}
-    {#{% endif %}#}
-
-    <!-- Latest compiled and minified CSS -->
-    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">#}
-    <!-- Optional theme -->
-    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">#}
-    {#<!-- Latest compiled and minified JavaScript -->#}
-    {#<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>#}
-
-    {#{% stylesheets#}
-        {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/form/css/form.css' filter='cssrewrite'#}
-    {#%}#}
-        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
-    {#'bundles/olegorderform/form/css/form.css'#}
-    {#make sure to run if use 'bundles/...' path: "php app/console assets:install ../.."#}
-
-    {#'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'#}
-
     {% stylesheets
         'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
         'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
@@ -180,6 +151,8 @@
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
 
                 '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
                 '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'

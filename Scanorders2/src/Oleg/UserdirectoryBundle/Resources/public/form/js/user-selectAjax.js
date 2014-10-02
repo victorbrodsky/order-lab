@@ -199,8 +199,6 @@ function getComboboxResearchLabs(holder) {
 
     var url = getCommonBaseUrl("util/common/"+"researchlabtitle","employees");
 
-    //console.log('cicle='+cicle);
-
     if( _researchlabs.length == 0 ) {
         $.ajax({
             url: url,

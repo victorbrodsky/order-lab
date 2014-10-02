@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Entity\ResearchLab;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -324,6 +325,8 @@ class UserController extends Controller
 
         $criteriastr = "";
 
+        $curdate = date("Y-m-d", time());
+
         //Pending Administrative Review
         if( $filter && $filter == "Pending Administrative Review" ) {
             $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
@@ -478,6 +481,59 @@ class UserController extends Controller
             $criteriastr .= "(residencyTrack.name = 'CP')";
         }
 
+        // the same as "All WCMC Pathology Faculty" except they have at least one non-empty "Research Lab Title:" + a checkmark in
+        //"Principal Investigator of this Lab:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
+        if( $filter && $filter == "All WCMC Pathology Principal Investigators of Research Labs" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty' OR appointmentTitles.position = 'Research Faculty')";
+
+            $dql->innerJoin("user.researchLabs", "researchLabs");
+
+            //a checkmark in "Principal Investigator of this Lab:"
+            $criteriastr .= " AND ";
+            $criteriastr .= "(researchLabs.researchPI = 1)";
+
+            //with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
+            $criteriastr .= " AND ";
+            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
+        }
+
+        // "All WCMC Pathology Faculty in Research Labs" - the same as "All WCMC Pathology Faculty"
+        //except they have at least one non-empty "Research Lab Title:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
+        if( $filter && $filter == "All WCMC Pathology Faculty in Research Labs" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty' OR appointmentTitles.position = 'Research Faculty')";
+
+            $dql->innerJoin("user.researchLabs", "researchLabs");
+
+            //with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
+            $criteriastr .= " AND ";
+            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
+        }
+
+
+        // "All WCMC or NYP Pathology Staff in Research Labs" - the same as "All WCMC Pathology Staff" OR "All NYP Pathology Staff"
+        //except they have at least one non-empty "Research Lab Title:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
+        if( $filter && $filter == "All WCMC or NYP Pathology Staff in Research Labs" ) {
+            $criteriastr .= "(appointmentInstitution IS NULL AND appointmentDepartment IS NULL)";
+            $criteriastr .= " AND (";
+            $criteriastr .= "administrativeInstitution.name = 'Weill Cornell Medical College' AND administrativeDepartment.name = 'Pathology and Laboratory Medicine'";
+            $criteriastr .= " OR ";
+            $criteriastr .= "administrativeInstitution.name = 'New York Hospital' AND administrativeDepartment.name = 'Pathology'";
+            $criteriastr .= ") ";
+
+            $dql->innerJoin("user.researchLabs", "researchLabs");
+
+            //with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
+            $criteriastr .= " AND ";
+            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
+        }
 
 
         if( $filter && $filter != "" && $criteriastr == "" ) {
@@ -783,22 +839,25 @@ class UserController extends Controller
         }
 
         //create new comments
-        if( count($entity->getCredentials()->getPublicComments()) == 0 ) {
-            $entity->getCredentials()->addPublicComment( new PublicComment($user) );
+        if( count($entity->getPublicComments()) == 0 ) {
+            $entity->addPublicComment( new PublicComment($user) );
         }
         if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
             $entity->getId() && $entity->getId() == $user->getId()
         ) {
-            if( count($entity->getCredentials()->getPrivateComments()) == 0 ) {
-                $entity->getCredentials()->addPrivateComment( new PrivateComment($user) );
+            if( count($entity->getPrivateComments()) == 0 ) {
+                $entity->addPrivateComment( new PrivateComment($user) );
             }
         }
         if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            if( count($entity->getCredentials()->getAdminComments()) == 0 ) {
-                $entity->getCredentials()->addAdminComment( new AdminComment($user) );
+            if( count($entity->getAdminComments()) == 0 ) {
+                $entity->addAdminComment( new AdminComment($user) );
             }
         }
 
+        if( count($entity->getResearchLabs()) == 0 ) {
+            $entity->addResearchLab(new ResearchLab($user));
+        }
 
         //Identifier EIN
 //        if( count($entity->getCredentials()->getIdentifiers()) == 0 ) {
@@ -895,16 +954,21 @@ class UserController extends Controller
         }
 
         $originalPublicComments = new ArrayCollection();
-        foreach( $entity->getCredentials()->getPublicComments() as $subitem) {
+        foreach( $entity->getPublicComments() as $subitem) {
             $originalPublicComments->add($subitem);
         }
         $originalPrivateComments = new ArrayCollection();
-        foreach( $entity->getCredentials()->getPrivateComments() as $subitem) {
+        foreach( $entity->getPrivateComments() as $subitem) {
             $originalPrivateComments->add($subitem);
         }
         $originalAdminComments = new ArrayCollection();
-        foreach( $entity->getCredentials()->getAdminComments() as $subitem) {
+        foreach( $entity->getAdminComments() as $subitem) {
             $originalAdminComments->add($subitem);
+        }
+
+        $originalResLabs = new ArrayCollection();
+        foreach( $entity->getResearchLabs() as $lab) {
+            $originalResLabs->add($lab);
         }
 
         //echo "count=".count($originalAdminTitles)."<br>";
@@ -980,15 +1044,20 @@ class UserController extends Controller
                 $removedCollections[] = $removedEmplStatus;
             }
 
-            $removedInfo = $this->removeCollection($originalPublicComments,$entity->getCredentials()->getPublicComments());
+            $removedInfo = $this->removeCollection($originalPublicComments,$entity->getPublicComments());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
-            $removedInfo = $this->removeCollection($originalPrivateComments,$entity->getCredentials()->getPrivateComments());
+            $removedInfo = $this->removeCollection($originalPrivateComments,$entity->getPrivateComments());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
-            $removedInfo = $this->removeCollection($originalAdminComments,$entity->getCredentials()->getAdminComments());
+            $removedInfo = $this->removeCollection($originalAdminComments,$entity->getAdminComments());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalResLabs,$entity->getResearchLabs());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
@@ -1071,17 +1140,15 @@ class UserController extends Controller
 
     public function setParentsForCommentTypeTree($entity) {
 
-        $credentials = $entity->getCredentials();
-
-        foreach( $credentials->getPublicComments() as $comment) {
+        foreach( $entity->getPublicComments() as $comment) {
             $this->processCommentType($comment);
         }
 
-        foreach( $credentials->getPrivateComments() as $comment) {
+        foreach( $entity->getPrivateComments() as $comment) {
             $this->processCommentType($comment);
         }
 
-        foreach( $credentials->getAdminComments() as $comment) {
+        foreach( $entity->getAdminComments() as $comment) {
             $this->processCommentType($comment);
         }
 
@@ -1306,20 +1373,21 @@ class UserController extends Controller
             $text = "("."boardCertification ".$this->getEntityId($subentity).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
-        //credentials: publicComments
-        foreach( $credentials->getPublicComments() as $subentity ) {
+
+        //publicComments
+        foreach( $subjectuser->getPublicComments() as $subentity ) {
             $changeset = $uow->getEntityChangeSet($subentity);
             $text = "("."publicComments ".$this->getEntityId($subentity).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
-        //credentials: privateComments
-        foreach( $credentials->getPrivateComments() as $subentity ) {
+        //privateComments
+        foreach( $subjectuser->getPrivateComments() as $subentity ) {
             $changeset = $uow->getEntityChangeSet($subentity);
             $text = "("."privateComments ".$this->getEntityId($subentity).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
-        //credentials: adminComments
-        foreach( $credentials->getAdminComments() as $subentity ) {
+        //adminComments
+        foreach( $subjectuser->getAdminComments() as $subentity ) {
             $changeset = $uow->getEntityChangeSet($subentity);
             $text = "("."adminComments ".$this->getEntityId($subentity).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
@@ -1350,6 +1418,13 @@ class UserController extends Controller
         foreach( $subjectuser->getEmploymentStatus() as $item ) {
             $changeset = $uow->getEntityChangeSet($item);
             $text = "("."Employment Status ".$this->getEntityId($item).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Research Labs
+        foreach( $subjectuser->getResearchLabs() as $item ) {
+            $changeset = $uow->getEntityChangeSet($item);
+            $text = "("."Research Lab ".$this->getEntityId($item).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 

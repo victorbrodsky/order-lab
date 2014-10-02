@@ -11,10 +11,12 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Oleg\OrderformBundle\Entity\PerSiteSettings;
+use Oleg\OrderformBundle\Security\Util\AperioUtil;
+
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Oleg\UserdirectoryBundle\Entity\UsernameType;
 
 class UserUtil {
@@ -108,20 +110,11 @@ class UserUtil {
             $user->addRole('ROLE_SCANORDER_SUBMITTER');
 
             //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
+            //TODO: this should be located on scanorder site
             $aperioUtil = new AperioUtil();
-
             $userid = $aperioUtil->getUserIdByUserName($username);
-
             $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
-
             $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
-
-            //echo "username=(".$username.")\n";
-            //echo "userid=(".$userid.")\n";
-            //if( $username == 'oli2002' ) {
-                //print_r($aperioRoles);
-                //exit('aperio util');
-            //}
             //************** end of  Aperio group roles **************//
 
             foreach( $services as $service ) {
@@ -168,6 +161,23 @@ class UserUtil {
                 $em->persist($user);
                 $em->flush();
                 $count++;
+
+
+                //**************** create PerSiteSettings for this user **************//
+                //TODO: this should be located on scanorder site
+                $perSiteSettings = new PerSiteSettings($systemuser);
+                $perSiteSettings->setUser($user);
+                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+                if( count($params) != 1 ) {
+                    throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+                }
+                $param = $params[0];
+                $institution = $param->getAutoAssignInstitution();
+                $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
+                $em->persist($perSiteSettings);
+                $em->flush();
+                //**************** EOF create PerSiteSettings for this user **************//
+
             }
 
         }//for each user

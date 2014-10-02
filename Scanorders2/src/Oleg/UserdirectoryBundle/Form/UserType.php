@@ -219,12 +219,52 @@ class UserType extends AbstractType
             ));
         }
 
-        $params = array('read_only'=>$read_only,'currentUser'=>$currentUser);
-        $builder->add('credentials', new CredentialsType($params), array(
+        $builder->add('credentials', new CredentialsType(), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
             'label' => false,
             'required' => false,
         ));
+
+
+        $params = array('read_only'=>$read_only,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments');
+        $builder->add('publicComments', 'collection', array(
+            'type' => new BaseCommentsType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__publiccomments__',
+        ));
+
+        if( $this->roleAdmin || $currentUser ) {
+            $params = array('read_only'=>$read_only,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments');
+            $builder->add('privateComments', 'collection', array(
+                'type' => new BaseCommentsType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__privatecomments__',
+            ));
+        }
+
+        if( $this->roleAdmin ) {
+            $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments');
+            $builder->add('adminComments', 'collection', array(
+                'type' => new BaseCommentsType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__admincomments__',
+            ));
+        }
 
     }
 

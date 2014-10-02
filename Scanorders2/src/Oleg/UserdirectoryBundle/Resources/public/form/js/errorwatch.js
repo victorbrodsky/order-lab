@@ -4,14 +4,21 @@ function isIE () {
     return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
 }
 
-window.onerror=function(msg, url, linenumber){
+window.onerror = function( msg, url, linenumber ){
 
     if( isIE() ) {
-
+        //
     } else {
-        alert(  'Internal system error. Please reload the page by clicking "OK" button.\n' +
-            'Please e-mail us at slidescan@med.cornell.edu if the problem persists.\n\n'+
-            'Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber   );
+
+        var newline = "";   //"\n";
+
+          alert(    'Internal system error. Please reload the page by clicking "OK" button. ' + newline +
+                    'Please e-mail us at slidescan@med.cornell.edu if the problem persists. ' + newline +
+                    //'Error message: ' + msg + newline +
+                    'URL: ' + url + newline +
+                    'Line Number: ' + linenumber
+          );
+
         //location.reload();
     }
 

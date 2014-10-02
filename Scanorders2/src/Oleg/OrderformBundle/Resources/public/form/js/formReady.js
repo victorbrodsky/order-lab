@@ -73,6 +73,12 @@ $(document).ready(function() {
 
     initDatetimepicker();
 
+    //set institutional tree
+    initTreeSelect(false);
+    initInstitutionManually();
+    setInstitutionTreeChildren();
+    initDefaultServiceManually();
+
 });
 
 

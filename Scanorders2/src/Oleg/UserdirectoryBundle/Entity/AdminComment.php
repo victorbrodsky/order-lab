@@ -12,10 +12,10 @@ class AdminComment extends BaseComment
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="adminComments")
-     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="adminComments")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $credentials;
+    protected $user;
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -23,20 +23,21 @@ class AdminComment extends BaseComment
         $this->setType(self::TYPE_RESTRICTED);
     }
 
+
     /**
-     * @param mixed $credentials
+     * @param mixed $user
      */
-    public function setCredentials($credentials)
+    public function setUser($user)
     {
-        $this->credentials = $credentials;
+        $this->user = $user;
     }
 
     /**
      * @return mixed
      */
-    public function getCredentials()
+    public function getUser()
     {
-        return $this->credentials;
+        return $this->user;
     }
 
 
