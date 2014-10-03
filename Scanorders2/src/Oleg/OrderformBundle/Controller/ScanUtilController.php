@@ -899,6 +899,7 @@ class ScanUtilController extends Controller {
 
         $request = $this->get('request');
         $instid = trim( $request->get('instid') );
+        $orderid = trim( $request->get('orderid') );
 
         $inst = null;
 
@@ -919,6 +920,16 @@ class ScanUtilController extends Controller {
         if( $inst && $inst->getId() == $instid ) {
             $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
             $output[] = $element;
+        }
+
+        //add order's service
+        if( $orderid ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderid);
+            $service = $orderinfo->getService();
+            if( $service ) {
+                $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
+                $output[] = $element;
+            }
         }
 
         $response = new Response();

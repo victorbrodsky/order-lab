@@ -74,7 +74,7 @@ $(document).ready(function() {
     initDatetimepicker();
 
     //set institutional tree
-    initTreeSelect(false);
+    initTreeSelect();   //clearFlag: false
     initInstitutionManually();
     setInstitutionTreeChildren();
     initDefaultServiceManually();

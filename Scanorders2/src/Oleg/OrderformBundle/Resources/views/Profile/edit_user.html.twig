@@ -52,44 +52,48 @@
 
 
     {#Research Projects#}
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#researchprojects">
-                    Research Projects
-                </a>
-            </h4>
-        </div>
-        <div id="researchprojects" class="panel-collapse collapse in">
-            <div class="panel-body">
+    {% if projects|length > 0 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#researchprojects">
+                        Research Projects
+                    </a>
+                </h4>
+            </div>
+            <div id="researchprojects" class="panel-collapse collapse in">
+                <div class="panel-body">
 
-                {% for project in projects %}
-                    {{ project }} <br>
-                {% endfor %}
+                    {% for project in projects %}
+                        {{ project }} <br>
+                    {% endfor %}
 
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
     {#Educational Courses#}
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#educationalcourses">
-                    Educational Courses
-                </a>
-            </h4>
-        </div>
-        <div id="educationalcourses" class="panel-collapse collapse in">
-            <div class="panel-body">
+    {% if courses|length > 0 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#educationalcourses">
+                        Educational Courses
+                    </a>
+                </h4>
+            </div>
+            <div id="educationalcourses" class="panel-collapse collapse in">
+                <div class="panel-body">
 
-                {% for course in courses %}
-                    {{ course }} <br>
-                {% endfor %}
+                    {% for course in courses %}
+                        {{ course }} <br>
+                    {% endfor %}
 
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
 
 {% endblock %}

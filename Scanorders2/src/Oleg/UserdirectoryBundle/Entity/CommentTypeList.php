@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(name="user_commentTypeList")
  */
 class CommentTypeList extends ListAbstract
@@ -100,6 +100,9 @@ class CommentTypeList extends ListAbstract
             $commentSubType->setParent($this);
             $this->commentSubTypes->add($commentSubType);
         }
+    }
+    public function addCommentSubTypeList($commentSubType) {
+        $this->addCommentSubType($commentSubType);
     }
     /**
      * Remove commentSubTypeList

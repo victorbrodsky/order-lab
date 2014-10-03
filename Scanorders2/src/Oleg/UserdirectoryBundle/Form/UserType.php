@@ -219,14 +219,20 @@ class UserType extends AbstractType
             ));
         }
 
-        $builder->add('credentials', new CredentialsType(), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
-            'label' => false,
-            'required' => false,
-        ));
+        if( $this->roleAdmin || $currentUser ) {
+            $builder->add('credentials', new CredentialsType(), array(
+                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
+                'label' => false,
+                'required' => false,
+            ));
+        }
 
+        $readOnlyComment = true;
+        if( $currentUser || $read_only == false ) {
+            $readOnlyComment = false;
+        }
 
-        $params = array('read_only'=>$read_only,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments');
+        $params = array('read_only'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments');
         $builder->add('publicComments', 'collection', array(
             'type' => new BaseCommentsType($params),
             'label' => false,
@@ -239,7 +245,7 @@ class UserType extends AbstractType
         ));
 
         if( $this->roleAdmin || $currentUser ) {
-            $params = array('read_only'=>$read_only,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments');
+            $params = array('read_only'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments');
             $builder->add('privateComments', 'collection', array(
                 'type' => new BaseCommentsType($params),
                 'label' => false,
@@ -263,6 +269,20 @@ class UserType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__admincomments__',
+            ));
+        }
+
+        if( $this->roleAdmin || ($currentUser && $this->cicle == 'show') ) {
+            $params = array('read_only'=>$read_only,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments');
+            $builder->add('confidentialComments', 'collection', array(
+                'type' => new BaseCommentsType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__confidentialcomments__',
             ));
         }
 

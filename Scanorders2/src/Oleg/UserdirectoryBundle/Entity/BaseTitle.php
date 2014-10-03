@@ -38,22 +38,22 @@ class BaseTitle extends BaseUserAttributes
     protected $effort;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution")
+     * @ORM\ManyToOne(targetEntity="Institution",cascade={"persist"})
      */
     protected $institution;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Department")
+     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
      */
     protected $department;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Division")
+     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
      */
     protected $division;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Service")
+     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
      */
     protected $service;
 

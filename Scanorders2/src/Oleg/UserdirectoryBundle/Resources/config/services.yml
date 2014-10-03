@@ -93,3 +93,4 @@ services:
     user_security_utility:
         class: Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+

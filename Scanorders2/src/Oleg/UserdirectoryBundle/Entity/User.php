@@ -141,6 +141,11 @@ class User extends BaseUser
     private $publicComments;
 
     /**
+     * @ORM\OneToMany(targetEntity="ConfidentialComment", mappedBy="user", cascade={"persist"})
+     */
+    private $confidentialComments;
+
+    /**
      * @ORM\OneToMany(targetEntity="AdminComment", mappedBy="user", cascade={"persist"})
      */
     private $adminComments;
@@ -156,6 +161,7 @@ class User extends BaseUser
 
         $this->privateComments = new ArrayCollection();
         $this->publicComments = new ArrayCollection();
+        $this->confidentialComments = new ArrayCollection();
         $this->adminComments = new ArrayCollection();
 
         //create preferences
@@ -658,6 +664,29 @@ class User extends BaseUser
     public function removeAdminComment($comment)
     {
         $this->adminComments->removeElement($comment);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getConfidentialComments()
+    {
+        return $this->confidentialComments;
+    }
+    public function addConfidentialComment( $comment )
+    {
+        if( !$comment )
+            return;
+
+        if( !$this->confidentialComments->contains($comment) ) {
+            $comment->setUser($this);
+            $this->confidentialComments->add($comment);
+        }
+    }
+    public function removeConfidentialComment($comment)
+    {
+        $this->confidentialComments->removeElement($comment);
     }
 
 

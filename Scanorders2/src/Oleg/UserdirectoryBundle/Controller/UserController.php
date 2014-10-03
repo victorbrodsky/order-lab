@@ -2,7 +2,8 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Entity\ResearchLab;
+
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -36,6 +37,8 @@ use Oleg\UserdirectoryBundle\Entity\PrivateComment;
 use Oleg\UserdirectoryBundle\Entity\PublicComment;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
+use Oleg\UserdirectoryBundle\Entity\ConfidentialComment;
+use Oleg\UserdirectoryBundle\Entity\ResearchLab;
 
 
 
@@ -550,6 +553,12 @@ class UserController extends Controller
     public function pendingAdminReviewAction() {
         $pending = null;
 
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            $response = new Response();
+            $response->setContent($pending);
+            return $response;
+        }
+
         $limitFlag = false;
 
         $res = $this->indexUser( 'Pending Administrative Review', true, $limitFlag );
@@ -855,6 +864,12 @@ class UserController extends Controller
             }
         }
 
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            if( count($entity->getConfidentialComments()) == 0 ) {
+                $entity->addConfidentialComment( new ConfidentialComment($user) );
+            }
+        }
+
         if( count($entity->getResearchLabs()) == 0 ) {
             $entity->addResearchLab(new ResearchLab($user));
         }
@@ -965,6 +980,10 @@ class UserController extends Controller
         foreach( $entity->getAdminComments() as $subitem) {
             $originalAdminComments->add($subitem);
         }
+        $originalConfidentialComments = new ArrayCollection();
+        foreach( $entity->getConfidentialComments() as $subitem) {
+            $originalConfidentialComments->add($subitem);
+        }
 
         $originalResLabs = new ArrayCollection();
         foreach( $entity->getResearchLabs() as $lab) {
@@ -1056,6 +1075,10 @@ class UserController extends Controller
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
+            $removedInfo = $this->removeCollection($originalConfidentialComments,$entity->getConfidentialComments());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
 
             $removedInfo = $this->removeCollection($originalResLabs,$entity->getResearchLabs());
             if( $removedInfo ) {
@@ -1078,6 +1101,9 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
 
+            //set parents for institution tree for Administrative and Academical Titles
+            $this->updateInfo($entity);
+
             //$em->persist($entity);
             $em->flush();
 
@@ -1096,6 +1122,45 @@ class UserController extends Controller
         );
     }
 
+    public function updateInfo($subjectUser) {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //Administartive and Appointment Titles and Comments update info set when parent are processed
+        //So, set author info for the rest: EmploymentStatus, Location, Credentials, ResearchLab
+        foreach( $subjectUser->getEmploymentStatus() as $entity ) {
+            $this->setUpdateInfo($entity);
+        }
+
+        foreach( $subjectUser->getLocations() as $entity ) {
+            $this->setUpdateInfo($entity);
+        }
+
+        //credentials
+        $this->setUpdateInfo($subjectUser->getCredentials());
+
+        foreach( $subjectUser->getResearchLabs() as $entity ) {
+            $this->setUpdateInfo($entity);
+        }
+
+    }
+    public function setUpdateInfo($entity) {
+
+        //echo "ent=".$entity."<br>";
+
+        if( !$entity ) {
+            return;
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        //set author and roles if not set
+        if( !$entity->getAuthor() ) {
+            $entity->setAuthor($user);
+        } else {
+            $entity->setUpdateAuthor($user);
+            $entity->setUpdateAuthorRoles($user->getRoles());
+        }
+    }
+
     public function createUserEditEvent($sitename,$event,$user,$request) {
         $userSecUtil = $this->get('user_security_utility');
         $eventLog = $userSecUtil->constructEventLog($sitename,$user,$request);
@@ -1111,6 +1176,7 @@ class UserController extends Controller
         $em->flush();
     }
 
+
     public function setParentsForInstitutionTree($entity) {
 
         foreach( $entity->getAdministrativeTitles() as $title) {
@@ -1118,24 +1184,30 @@ class UserController extends Controller
         }
 
         foreach( $entity->getAppointmentTitles() as $title) {
+            echo "<br>################### AppTitle: ###################<br>";
             $this->processTitle($title);
         }
 
     }
     public function processTitle($title) {
+
         $institution = $title->getInstitution();
         $department = $title->getDepartment();
         $division = $title->getDivision();
         $service = $title->getService();
 
-        if( $division && $service )
-            $division->addService($service);
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
-        if( $department && $division )
-            $department->addDivision($division);
+        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$title,$institution,$department);
 
-        if( $institution && $department )
-            $institution->addDepartment($department);
+        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$title,$department,$division);
+
+        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$title,$division,$service);
+
+        //set author if not set
+        $this->setUpdateInfo($title);
+
     }
 
     public function setParentsForCommentTypeTree($entity) {
@@ -1143,6 +1215,7 @@ class UserController extends Controller
         foreach( $entity->getPublicComments() as $comment) {
             $this->processCommentType($comment);
         }
+        //exit('pc');
 
         foreach( $entity->getPrivateComments() as $comment) {
             $this->processCommentType($comment);
@@ -1152,13 +1225,27 @@ class UserController extends Controller
             $this->processCommentType($comment);
         }
 
+        foreach( $entity->getConfidentialComments() as $comment) {
+            $this->processCommentType($comment);
+        }
+
     }
     public function processCommentType($comment) {
-        $type = $comment->getCommentType();
-        $subtype = $comment->getCommentSubType();
 
-        if( $type && $subtype )
-            $type->addCommentSubType($subtype);
+        $type = $comment->getCommentType();
+        //echo "type name=".$type->getName()."<br>";
+
+        $subtype = $comment->getCommentSubType();
+        //echo "subtype name=".$subtype->getName()."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentTypeList')->checkAndSetParent($user,$comment,$type,$subtype);
+
+        //set author if not set
+        $this->setUpdateInfo($comment);
+
     }
 
 
@@ -1390,6 +1477,12 @@ class UserController extends Controller
         foreach( $subjectuser->getAdminComments() as $subentity ) {
             $changeset = $uow->getEntityChangeSet($subentity);
             $text = "("."adminComments ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+        //confidentialComments
+        foreach( $subjectuser->getConfidentialComments() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."confidentialComments ".$this->getEntityId($subentity).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 

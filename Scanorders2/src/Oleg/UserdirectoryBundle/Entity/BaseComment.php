@@ -14,49 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
  */
-abstract class BaseComment {
+abstract class BaseComment extends BaseUserAttributes {
 
-    const TYPE_PUBLIC = 0;          //access by anybody
-    const TYPE_PRIVATE = 1;         //access by user
-    const TYPE_RESTRICTED = 2;      //access by admin
-
-    const STATUS_UNVERIFIED = 0;    //unverified (not trusted)
-    const STATUS_VERIFIED = 1;      //verified by admin
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="author", referencedColumnName="id")
-     */
-    protected $author;
-
-    /**
-     * type: public, private, restricted
-     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
-     */
-    protected $type;
-
-    /**
-     * status: valid, invalid
-     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
-     */
-    protected $status;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $createdate;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -74,60 +34,6 @@ abstract class BaseComment {
     private $commentSubType;
 
 
-    public function __construct($author=null) {
-        $this->setAuthor($author);
-        $this->setType(self::TYPE_PUBLIC);
-        $this->setStatus(self::STATUS_UNVERIFIED);
-    }
-
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $author
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function setCreatedate()
-    {
-        $this->createdate = new \DateTime();
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedate()
-    {
-        return $this->createdate;
-    }
 
     /**
      * @param mixed $comment
@@ -151,6 +57,10 @@ abstract class BaseComment {
     public function setCommentSubType($commentSubType)
     {
         $this->commentSubType = $commentSubType;
+    }
+    public function setCommentSubTypeList($commentSubType)
+    {
+        $this->setCommentSubType($commentSubType);
     }
 
     /**
@@ -179,67 +89,6 @@ abstract class BaseComment {
 
 
 
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        //echo "before set type=".$this->getType()."<br>";
-
-        if( $type == $this->getType() ) {
-            //echo "return set type=".$this->getType()."<br>";
-            return;
-        }
-
-        if( $this->getType() == self::TYPE_RESTRICTED ) {
-            throw new \Exception( 'Can not change type for restricted entity. type='.$type );
-        } else {
-            $this->type = $type;
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param mixed $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-
-    public function getStatusStr()
-    {
-        return $this->getStatusStrByStatus($this->getStatus());
-    }
-
-    public function getStatusStrByStatus($status)
-    {
-        $str = $status;
-
-        if( $status == self::STATUS_UNVERIFIED )
-            $str = "Pending Administrative Review";
-
-        if( $status == self::STATUS_VERIFIED )
-            $str = "Verified by Administration";
-
-        return $str;
-    }
 
 
 }

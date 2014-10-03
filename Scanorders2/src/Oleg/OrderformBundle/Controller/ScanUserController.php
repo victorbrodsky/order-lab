@@ -277,64 +277,6 @@ class ScanUserController extends UserController
 
 ////////////////////////// Below Controller methods for scan site-settings only. Currently not used. ///////////////////////////////////////
 
-//    /**
-//     * @Route("/site-settings/create/user/{id}", name="scan_order_settings_create", requirements={"id" = "\d+"})
-//     * @Method("POST")
-//     * @Template("OlegOrderformBundle:Admin:site-settings.html.twig")
-//     */
-//    public function createScanSettingsAction( Request $request, $id )
-//    {
-//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-//            return $this->redirect($this->generateUrl('scan-order-nopermission'));
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $entity = new PerSiteSettings();
-//
-//        $form = $this->createForm(new PerSiteSettingsType(), $entity, array(
-//            'action' => $this->generateUrl('_create'),
-//            'method' => 'POST',
-//        ));
-//
-//        $form->handleRequest($request);
-//
-//        if ($form->isValid()) {
-//            $em->persist($entity);
-//            $em->flush();
-//            return $this->redirect($this->generateUrl('scan_order_settings_show'),array('id' => $id));
-//        }
-//
-//        return array(
-//            'entity' => $entity,
-//            'form' => $form->createView(),
-//            'cicle' => 'show',
-//            'userid' => $id,
-//        );
-//    }
-
-//    /**
-//     * Creates a form to create an entity.
-//     * @param $entity The entity
-//     * @return \Symfony\Component\Form\Form The form
-//     */
-//    private function createCreateForm()
-//    {
-//
-//        $entity = new PerSiteSettings();
-//
-//        $newForm = new PerSiteSettingsType();
-//
-//        $form = $this->createForm($newForm, $entity, array(
-//            'action' => $this->generateUrl('_create'),
-//            'method' => 'POST',
-//        ));
-//
-//        $form->add('submit', 'submit', array('label' => 'Create','attr'=>array('class'=>'btn btn-warning')));
-//
-//        return $form;
-//    }
-
     /**
      * @Route("/site-settings/show/user/{id}", name="scan_order_settings_show", requirements={"id" = "\d+"})
      * @Method("GET")

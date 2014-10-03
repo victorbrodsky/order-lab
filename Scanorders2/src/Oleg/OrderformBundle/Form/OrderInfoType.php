@@ -261,22 +261,23 @@ class OrderInfoType extends AbstractType
             ));
         }
 
-        if( $this->params['cicle'] != 'show' && $this->params['cicle'] != 'amend' ) {
+        if( $this->params['cicle'] == 'show' ) {
+            //echo "entity service";
+            $builder->add('service', 'entity', array(
+                'label' => 'Service:',
+                'required'=> false,
+                'multiple' => false,
+                'class' => 'OlegUserdirectoryBundle:Service',
+                //'choices' => $this->params['services'],
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        } else {
             //service. User should be able to add institution to administrative or appointment titles
             $builder->add('service', 'employees_custom_selector', array(
                 'label' => "Service:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-service combobox-without-add', 'type' => 'hidden'),
                 'classtype' => 'service'
-            ));
-        } else {
-            $builder->add('service', 'entity', array(
-                'label' => 'Service:',
-                'required'=> false,
-                'multiple' => false,
-                'class' => 'OlegUserdirectoryBundle:Service',
-                'choices' => $this->params['services'],
-                'attr' => array('class' => 'combobox combobox-width')
             ));
         }
         

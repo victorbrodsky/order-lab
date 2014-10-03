@@ -113,7 +113,7 @@ function initDefaultServiceManually() {
     $.ajax({
         url: url,
         type: 'GET',
-        data: {instid: instid},
+        data: {instid: instid, orderid: orderinfoid},
         timeout: _ajaxTimeout,
         async: asyncflag
     }).success(function(data) {

@@ -347,12 +347,22 @@
         {% set formfield = field %}
     {% endif %}
 
-    <div class="well user-collection-holder {{ classname }}">
+    {% if formfield.vars.value and formfield.vars.value.status == 0 and classname == 'user-privatecomments' %}
+        {% set wellclass = "user-alert-warning" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
+        {% endif %}
+
+        {% if formfield.status is defined %}
+            {{ formmacros.field(formfield.status) }}
         {% endif %}
 
         {{ formmacros.field(formfield.commentType) }}
@@ -394,6 +404,10 @@
 {% block content %}
 
 
+    <h4 class="text-info" align="center">Profile: {{ form.vars.value.getUserNameStr() }}</h4>
+
+    <br>
+
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll()" >Collapse All</button>
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
@@ -407,6 +421,10 @@
     {% set adminCommentsPrototype = null %}
     {% set employmentStatusPrototype = null %}
     {% set researchLabsPrototype = null %}
+    {% set statelicensePrototype = null %}
+    {% set boardcertificationPrototype = null %}
+    {% set identifiersPrototype = null %}
+    {% set codeNYPHPrototype = null %}
        
     {% if form.publicComments is defined %}
         {% set publicCommentsPrototype = userform.comments(form.publicComments,cicle,'user-publiccomments','prototype') %}
@@ -424,6 +442,19 @@
         {% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cicle,'user-researchlabs','prototype') %}
     {% endif %}
 
+    {% if form.credentials is defined and form.credentials.stateLicense is defined %}
+        {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cicle,'user-statelicense','prototype') %}
+    {% endif %}
+    {% if form.credentials is defined and form.credentials.boardCertification is defined %}
+        {% set boardcertificationPrototype = userform.boardCertifications(form.credentials.boardCertification,cicle,'user-boardcertification','prototype') %}
+    {% endif %}
+    {% if form.credentials is defined and form.credentials.identifiers is defined %}
+        {% set identifiersPrototype = userform.identifier(form.credentials.identifiers,cicle,'user-identifiers','prototype') %}
+    {% endif %}
+    {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
+        {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype') %}
+    {% endif %}
+
     {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_ADMIN#}
     {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_ADMIN') %}
         {% set userEditor = true %}
@@ -436,12 +467,12 @@
          data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype')|e }}"
          data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype')|e }}"
          data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype')|e }}"
-         data-prototype-user-statelicense = "{{ userform.stateLicenses(form.credentials.stateLicense,cicle,'user-statelicense','prototype')|e }}"
-         data-prototype-user-boardcertification = "{{ userform.boardCertifications(form.credentials.boardCertification,cicle,'user-boardcertification','prototype')|e }}"
-         data-prototype-user-codenyph = "{{ userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype')|e }}"
+         data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
+         data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
+         data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
          data-prototype-user-employmentstatus = "{{ employmentStatusPrototype|e }}"
          data-userurllink = "{{ userform.userUrlLink()|e }}"
-         data-prototype-user-identifiers = "{{ userform.identifier(form.credentials.identifiers,cicle,'user-identifiers','prototype')|e }}"
+         data-prototype-user-identifiers = "{{ identifiersPrototype|e }}"
          data-prototype-user-publiccomments = "{{ publicCommentsPrototype|e }}"
          data-prototype-user-privatecomments = "{{ privateCommentsPrototype|e }}"
          data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
@@ -657,7 +688,7 @@
         {% endif %}
 
         {#Credentials#}
-        {% if userEditor == true and form.credentials is defined %}
+        {% if form.credentials is defined %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -949,7 +980,7 @@
 
 
                     {#Confidential Comments#}
-                    {% if form.adminComments is defined %}
+                    {% if form.confidentialComments is defined %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -961,12 +992,12 @@
                             <div id="Confidential" class="panel-collapse collapse in">
                                 <div class="panel-body">
                                     <div class="user-confidentialcomments-holder">
-                                        {#{% for adminComment in form.adminComments %}#}
-                                            {#{{ userform.comments(adminComment,cicle,'user-admincomments','noprototype') }}#}
-                                        {#{% endfor %}#}
-                                        {#{% if cicle != 'show_user' %}#}
-                                            {#<button class="btn btn-default" onClick="addBaseTitle(this,'user-admincomments')" type='button'>Add Public Comment</button>#}
-                                        {#{% endif %}#}
+                                        {% for confidentialComment in form.confidentialComments %}
+                                            {{ userform.comments(confidentialComment,cicle,'user-confidentialcomment','noprototype') }}
+                                        {% endfor %}
+                                        {% if cicle != 'show_user' %}
+                                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-confidentialcomment')" type='button'>Add Confidential Comment</button>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

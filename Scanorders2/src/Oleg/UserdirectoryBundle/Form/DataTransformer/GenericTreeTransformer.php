@@ -28,7 +28,7 @@ class GenericTreeTransformer implements DataTransformerInterface
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null, $className)
+    public function __construct(ObjectManager $em=null, $user=null, $className=null)
     {
         $this->em = $em;
         $this->user = $user;
@@ -109,18 +109,13 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $this->user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
             }
 
-            $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$this->className;
-            $newEntity = new $fullClassName();
-            $newEntity->setName($name);
-            $newEntity->setCreatedate(new \DateTime());
-            $newEntity->setType('user-added');
-            $newEntity->setCreator($this->user);
+            $newEntity = $this->createNewEntity($name,$this->className,$this->user);
 
-            //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:'.$this->className.' c');
-            $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
-            $newEntity->setOrderinlist($nextorder);
-            
+            if( method_exists($newEntity,'getParent')  ) {
+                //don't flush this entity because it has parent and parent can not be set here
+                return $newEntity;
+            }
+
             $this->em->persist($newEntity);
             $this->em->flush($newEntity);
 
@@ -132,5 +127,21 @@ class GenericTreeTransformer implements DataTransformerInterface
 
     }
 
+
+    public function createNewEntity($name,$className,$creator) {
+        $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
+        $newEntity = new $fullClassName();
+        $newEntity->setName($name);
+        $newEntity->setCreatedate(new \DateTime());
+        $newEntity->setType('user-added');
+        $newEntity->setCreator($creator);
+
+        //get max orderinlist
+        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:'.$className.' c');
+        $nextorder = $query->getSingleResult()['maxorderinlist']+10;
+        $newEntity->setOrderinlist($nextorder);
+
+        return $newEntity;
+    }
 
 }
