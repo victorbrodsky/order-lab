@@ -69,13 +69,13 @@ class UtilController extends Controller {
      * @Route("/common/division", name="get-divisions-by-parent")
      * @Route("/common/service", name="get-services-by-parent")
      * @Route("/common/commentsubtype", name="get-commentsubtype-by-parent")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      */
-    public function getDepartmentAction() {
+    public function getDepartmentAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->get('request');
+        $id = trim( $request->get('id') );
         $pid = trim( $request->get('pid') );
 
         $routeName = $request->get('_route');
@@ -110,6 +110,17 @@ class UtilController extends Controller {
             $output = array();
         }
 
+        //add current element by id
+        if( $id ) {
+            $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$className)->findOneById($id);
+            if( $entity ) {
+                if( array_key_exists($entity->getId(), $output) === false ) {
+                    $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
+                    $output[] = $element;
+                }
+            }
+        }
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));
@@ -118,9 +129,11 @@ class UtilController extends Controller {
 
     /**
      * @Route("/common/institution", name="employees_get_institution")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      */
-    public function getInstitutionAction() {
+    public function getInstitutionAction(Request $request) {
+
+        $id = trim( $request->get('id') );
 
         $em = $this->getDoctrine()->getManager();
 
@@ -132,6 +145,17 @@ class UtilController extends Controller {
         $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
         $output = $query->getQuery()->getResult();
+
+        //add current element by id
+        if( $id ) {
+            $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Institution')->findOneById($id);
+            if( $entity ) {
+                if( array_key_exists($entity->getId(), $output) === false ) {
+                    $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
+                    $output[] = $element;
+                }
+            }
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

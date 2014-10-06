@@ -239,8 +239,6 @@ class OrderInfoType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
         ));
 
-
-
         if( $this->params['cicle'] != 'show' ) {
             //department. User should be able to add institution to administrative or appointment titles
             $builder->add('department', 'employees_custom_selector', array(

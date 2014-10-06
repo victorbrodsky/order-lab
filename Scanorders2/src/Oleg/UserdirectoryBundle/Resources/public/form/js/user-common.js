@@ -37,7 +37,10 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     //console.log("target="+target);
 
     //clear the value
-    $(target).select2('val','');
+    var value = $(target).select2('val');
+    if( !value || value == "" ) {
+        $(target).select2('val','');
+    }
 
     if( placeholder ) {
         var allowClear = true;
@@ -348,3 +351,10 @@ function inArrayCheck( arr, needle ) {
     }
     return -1;
 }
+
+function isInt(value) {
+    return !isNaN(value) &&
+        parseInt(Number(value)) == value &&
+        !isNaN(parseInt(value, 10));
+}
+

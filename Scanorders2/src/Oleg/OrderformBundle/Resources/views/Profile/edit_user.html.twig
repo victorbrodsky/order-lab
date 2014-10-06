@@ -19,10 +19,14 @@
         <div id="persiteusersettings" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                {{ formmacros.field(form_scansettings.defaultService) }}
-                {{ formmacros.checkbox(form_scansettings.tooltip) }}
+                <div class="user-collection-holder">
+                    {{ formmacros.field(form_scansettings.defaultInstitution) }}
+                    {{ formmacros.field(form_scansettings.defaultDepartment) }}
+                    {{ formmacros.field(form_scansettings.defaultDivision) }}
+                    {{ formmacros.field(form_scansettings.defaultService) }}
+                </div>
 
-                {#TODO: add default institution, department, division#}
+                {{ formmacros.checkbox(form_scansettings.tooltip) }}
 
             </div>
         </div>
@@ -96,4 +100,24 @@
     {% endif %}
 
 
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    {#{% javascripts#}
+        {#'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script language="Javascript">
+        $(document).ready(function() {
+            //set institutional tree
+            initTreeSelect();
+            initInstitutionManually();
+            setInstitutionTreeChildren();
+            //initDefaultServiceManually();
+        });
+    </script>
 {% endblock %}

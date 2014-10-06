@@ -361,6 +361,7 @@
             </div>
         {% endif %}
 
+        <p>
         {% if formfield.status is defined %}
             {{ formmacros.field(formfield.status) }}
         {% endif %}
@@ -368,6 +369,7 @@
         {{ formmacros.field(formfield.commentType) }}
         {{ formmacros.field(formfield.commentSubType) }}
         {{ formmacros.field(formfield.comment) }}
+        </p>
 
     </div>
 {% endmacro %}

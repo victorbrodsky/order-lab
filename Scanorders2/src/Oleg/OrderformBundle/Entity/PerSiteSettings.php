@@ -48,6 +48,26 @@ class PerSiteSettings extends BaseUserAttributes
      **/
     private $chiefServices;
 
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
+     **/
+    private $defaultInstitution;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Department")
+     * @ORM\JoinColumn(name="department_id", referencedColumnName="id")
+     **/
+    private $defaultDepartment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Division")
+     * @ORM\JoinColumn(name="division_id", referencedColumnName="id")
+     **/
+    private $defaultDivision;
+
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
      * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
@@ -111,6 +131,55 @@ class PerSiteSettings extends BaseUserAttributes
     {
         return $this->defaultService;
     }
+
+    /**
+     * @param mixed $defaultDepartment
+     */
+    public function setDefaultDepartment($defaultDepartment)
+    {
+        $this->defaultDepartment = $defaultDepartment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultDepartment()
+    {
+        return $this->defaultDepartment;
+    }
+
+    /**
+     * @param mixed $defaultDivision
+     */
+    public function setDefaultDivision($defaultDivision)
+    {
+        $this->defaultDivision = $defaultDivision;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultDivision()
+    {
+        return $this->defaultDivision;
+    }
+
+    /**
+     * @param mixed $defaultInstitution
+     */
+    public function setDefaultInstitution($defaultInstitution)
+    {
+        $this->defaultInstitution = $defaultInstitution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultInstitution()
+    {
+        return $this->defaultInstitution;
+    }
+
 
     //permittedInstitutionalPHIScope
     public function getPermittedInstitutionalPHIScope()
@@ -185,6 +254,7 @@ class PerSiteSettings extends BaseUserAttributes
     {
         return $this->tooltip;
     }
+
 
 
 
