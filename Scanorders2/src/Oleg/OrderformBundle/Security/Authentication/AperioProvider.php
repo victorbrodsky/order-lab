@@ -34,7 +34,7 @@ class AperioProvider implements AuthenticationProviderInterface {
     {
         //exit("using Aperio Authentication Provider!!!");
 
-        $aperioUtil = new AperioUtil( $this->timezone );
+        $aperioUtil = new AperioUtil();
 
         $user = $aperioUtil->aperioAuthenticateToken( $token, $this->serviceContainer, $this->em );
 

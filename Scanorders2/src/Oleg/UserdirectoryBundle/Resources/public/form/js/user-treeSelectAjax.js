@@ -20,12 +20,12 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
     }
 
     var targetId = '#' + targetEl.attr('id');
-    console.log( "targetId="+targetId );
+    //console.log( "targetId="+targetId );
 
     if( typeof parentId === "undefined" || parentId == null ) {
         parentId = parentElement.select2('val');
     }
-    console.log( "parentId="+parentId );
+    //console.log( "parentId="+parentId );
 
     if( typeof clearFlag === "undefined" ) {
         clearFlag = true;
@@ -33,7 +33,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
 
     if( clearFlag ) {
         //clear combobox
-        console.log( "clear combobox, targetId="+targetId);
+        //console.log( "clear combobox, targetId="+targetId);
         populateSelectCombobox( targetId, null, "Select an option or type in a new value" );
         $(targetId).select2("readonly", true);
         clearChildren(holder,fieldClass);
@@ -42,21 +42,23 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
     if( parentId ) {
 
         var fieldName = fieldClass.replace("ajax-combobox-", "");
-        console.log( "fieldName="+fieldName+", parentid="+parentId );
+        //console.log( "fieldName="+fieldName+", parentid="+parentId );
         var url = getCommonBaseUrl("util/common/"+fieldName,"employees"); //always use "employees" to get children
 
-        url = url + "?pid="+parentId;
+        //url = url + "?pid="+parentId;
 
-        var curid = targetEl.select2('val');
-        console.log("curid="+curid);
-        if( isInt(curid) ) {
-            url = url + "&id="+curid;
-        }
+        var curid = null;
+        //use curid to add current object. However, it causes the problems by showing not correct children list
+        //var curid = targetEl.select2('val');
+        //console.log("curid="+curid);
+        //if( isInt(curid) ) {
+        //    url = url + "&id="+curid;
+        //}
 
         $.ajax({
             url: url,
-            //type: 'POST',
-            //data: {id: curid, pid: parentId},
+            type: 'POST',
+            data: {id: curid, pid: parentId},
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
@@ -92,7 +94,7 @@ function populateParentChildTree(target, data, placeholder, multipleFlag, childC
         populateSelectCombobox( selectId, data, placeholder, multipleFlag );
 
         //children
-        console.log('################################# populate Parent Child Tree childClass='+childClass);
+        //console.log('################################# populate Parent Child Tree childClass='+childClass);
         getComboboxTreeByPid($(this),childClass,null,true);
 
     });
@@ -118,7 +120,7 @@ function loadChildren(parentElement,holder,fieldClass) {
     var parentId = parentElement.select2('val');
 
     if( childrenTargetClass && parentId ) {
-        console.log( "################################# load Children="+childrenTargetClass );
+        //console.log( "################################# load Children="+childrenTargetClass );
         getComboboxTreeByPid(parentElement,childrenTargetClass,null,true);
     }
 
@@ -144,7 +146,7 @@ function clearChildren(holder,fieldClass) {
 
 }
 
-
+//This function executes twice (?)
 var _initInstitutionManuallyCount = 0;
 function initInstitutionManually() {
     if( _initInstitutionManuallyCount > 0 ) {
@@ -153,8 +155,8 @@ function initInstitutionManually() {
     _initInstitutionManuallyCount = 1;
 
     $('.ajax-combobox-institution-preset').each(function(e){
-        console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! init inst manually" );
-        var clearFlag = false; //don't clear children and default service
+        //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! init inst manually" );
+        var clearFlag = true; //don't clear children and default service
         getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
     });
 }
@@ -164,19 +166,19 @@ function initInstitutionManually() {
 ////////////////// mixed functions ////////////////////
 function initTreeSelect(clearFlag) {
 
-    console.log( "init Tree Select" );
+    //console.log( "init Tree Select" );
 
     if( typeof clearFlag === "undefined" ) {
         clearFlag == true;
     }
 
     $('.ajax-combobox-institution,.ajax-combobox-institution-preset').on('change', function(e){
-        console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! institution on change" );
+        //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! institution on change" );
         getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
     });
 
     $('.ajax-combobox-department').on('change', function(e){
-        console.log( "department on change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
+        //console.log( "department on change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
         getComboboxTreeByPid($(this),'ajax-combobox-division',null,clearFlag);
     });
 
@@ -218,7 +220,7 @@ function getChildrenTargetClass(fieldClass) {
 ///////////////// Institution Tree ///////////////////
 function setInstitutionTreeChildren(holder) {
 
-    console.log( "set Institution Tree Children" );
+    //console.log( "set Institution Tree Children" );
 
     if( typeof holder == 'undefined' ) {
         holder = $('body');

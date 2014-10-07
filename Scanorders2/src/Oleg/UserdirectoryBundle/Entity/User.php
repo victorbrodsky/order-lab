@@ -229,14 +229,21 @@ class User extends BaseUser
         $this->setUsername($this->createUniqueUsername());
     }
     public function createUniqueUsername() {
-        $username = $this->getPrimaryPublicUserId()."_".$this->getKeytype()->getName();
-        $usernamestr = preg_replace('/\s+/', '_', $username);
+        $username = $this->getPrimaryPublicUserId()."_".$this->getKeytype()->getAbbreviation();
+        $usernamestr = preg_replace('/\s+/', '-', $username);
         return $usernamestr;
     }
     public function createUniqueUsernameByKeyKeytype($keytype,$key) {
-        $username = $key."_".$keytype->getName();
+        $username = $key."_".$keytype->getAbbreviation();
         $usernamestr = preg_replace('/\s+/', '_', $username);
         return $usernamestr;
+    }
+    public function createCleanUsername($username) {
+        $usernameArr = explode("_",$username);
+        return $usernameArr[0];
+    }
+    public function getCleanUsername() {
+        return $this->createCleanUsername( $this->getUsername() );
     }
 
     /**

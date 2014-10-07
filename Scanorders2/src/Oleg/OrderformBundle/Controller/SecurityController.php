@@ -161,7 +161,7 @@ class SecurityController extends Controller
             //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             $aperioUtil = new AperioUtil();
 
-            $username = $user->getUsername()."";
+            $username = $user->getCleanUsername()."";
 
             //echo "username=".$username. " => ";
 

@@ -110,10 +110,19 @@ function initDefaultServiceManually() {
 
     var instid = $('.combobox-institution').select2('val');
 
+    //use curid to add current object.
+    var curid = null;
+    var curValue = $(targetid).select2('val');
+    //console.log("curValue="+curValue);
+    if( isInt(curValue) ) {
+        curid = curValue;
+    }
+
     $.ajax({
         url: url,
         type: 'GET',
-        data: {instid: instid, orderid: orderinfoid},
+        //data: {id: curid, instid: instid, orderid: orderinfoid},
+        data: {id: curid, instid: instid},
         timeout: _ajaxTimeout,
         async: asyncflag
     }).success(function(data) {

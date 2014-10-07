@@ -10,8 +10,10 @@
 namespace Oleg\UserdirectoryBundle\Security\Util;
 
 
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Entity\Logger;
 
@@ -164,6 +166,11 @@ class UserSecurityUtil {
             $userkeytype = $userUtil->getDefaultUsernameType($this->em);
         }
         return $userkeytype;
+    }
+
+    public function createCleanUsername($username) {
+        $user = new User();
+        return $user->createCleanUsername($username);
     }
 
 

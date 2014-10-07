@@ -7,6 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
+//Note: this ldap extends FR3D\LdapBundle\Security\Authentication\LdapAuthenticationProvider
 //Note: findUserBy: $entries = $this->driver->search($this->params['baseDn'], $filter, $this->ldapAttributes); causes login delay
 //Note: execution order: findUserByUsername, findUserBy, hydrate, bind
 //If user already exists in DB then LdapManager->findUserByUsername is not used.
@@ -21,7 +22,7 @@ use FR3D\LdapBundle\Model\LdapUserInterface;
 use FR3D\LdapBundle\Driver\LdapDriverInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\UserdirectoryBundle\Entity\User;
 
 class LdapManager extends BaseLdapManager
 {
@@ -29,6 +30,7 @@ class LdapManager extends BaseLdapManager
     private $timezone;
     private $em;
     private $container;
+
 
     public function __construct( LdapDriverInterface $driver, $userManager, array $params, $container, $em ) {
 
@@ -43,63 +45,19 @@ class LdapManager extends BaseLdapManager
     }
 
 
-    protected function hydrate(UserInterface $user, array $entry)
-    {
+    protected function hydrate(UserInterface $user, array $entry) {
 
         parent::hydrate($user, $entry);
-
-//        echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
-//        echo "user's username=".$user->getUsername()." <br>";
-//        echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
-//        print_r($user->getRoles());
-        //exit();
-
-        //$user->setPrimaryPublicUserId($user->getUsername());
-        //$userkeytype = $this->getDefaultUserKeytypeSafe();
-        //$uniqueUserName = $user->createUniqueUsernameByKeyKeytype($userkeytype,$user->getPrimaryPublicUserId());
-
-//        $found_user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($user->getUsername());
-//        if( $found_user ) {
-//
-//            //$found_user->setKeytype($userkeytype);
-//            //$found_user = $this->modifyUsernameWithDefaultKeytype($found_user);
-//
-//            echo "<br>found user: user's keytype=".$found_user->getKeytype()." <br>";
-//            echo "user's username=".$found_user->getUsername()." <br>";
-//            echo "user's primaryPublicUserId=".$found_user->getPrimaryPublicUserId()." <br>";
-//            print_r($found_user->getRoles());
-//
-//            echo "<br>return: replace found user! <br>";
-//            //exit();
-//            return $found_user;
-//        }
-
-
-        //echo "UserdirectoryBundle user name=".$user->getUsername()."<br>";
-        //exit("UserdirectoryBundle using ldap! <br>");
-//
-//        //assign default keytype
-//        //$user->setKeytype($userkeytype);
-//        //replace username
-//        //$user->setPrimaryPublicUserId($user->getUsername());
-//        //$user->setUniqueUsername();
-//        $user->setUsername($uniqueUserName);
-//        $user->setKeytype($userkeytype);
-//        $user->setPrimaryPublicUserId($originalCN);
-
-        //echo "user's keytype=".$user->getKeytype()." <br>";
-        //echo "user's username=".$user->getUsername()." <br>";
-        //exit();
 
         $user->setCreatedby('ldap');
         $user->getPreferences()->setTimezone($this->timezone);
 
-        $user->setPrimaryPublicUserId($user->getUsername());
-
+        //modify user: set keytype and primary public user id
+        $usernameClean = $user->getUsername();
         $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getDefaultUserKeytypeSafe();
         $user->setKeytype($userkeytype);
-        //$user = $this->modifyUsernameWithDefaultKeytype($user);
+        $user->setPrimaryPublicUserId($usernameClean);
 
         //TODO: remove this on production!
         if( $user->getPrimaryPublicUserId() == "oli2002" || $user->getPrimaryPublicUserId() == "vib9020" ) {
@@ -110,28 +68,47 @@ class LdapManager extends BaseLdapManager
 //        echo "user's username=".$user->getUsername()." <br>";
 //        echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
 //        print_r($user->getRoles());
-        //exit();
+        //exit('exit hydrate');
 
     }
 
-//    public function modifyUsernameWithDefaultKeytype($user) {
-//        $userkeytype = $this->getDefaultUserKeytypeSafe();
-//        $user->setKeytype($userkeytype);
-//        $uniqueUserName = $user->createUniqueUsernameByKeyKeytype($userkeytype,$user->getUsername());
-//        $user->setUsername($uniqueUserName);
-//        return $user;
-//    }
-//
-//    public function getDefaultUserKeytypeSafe() {
-//        $userUtil = new UserUtil();
-//        $userkeytype = $userUtil->getDefaultUsernameType($this->em);
-//        if( $userkeytype == null ) {
-//            //echo "keytype null <br>";
-//            //generate user keytypes
-//            $userUtil->generateUsernameTypes($this->em,null);
-//            $userkeytype = $userUtil->getDefaultUsernameType($this->em);
-//        }
-//        return $userkeytype;
-//    }
+
+
+
+
+
+    public function findUserByUsername($username)
+    {
+        //clean username
+        $userSecUtil = $this->container->get('user_security_utility');
+        $usernameClean = $userSecUtil->createCleanUsername($username);
+
+        return parent::findUserByUsername($usernameClean);
+    }
+
+
+    public function bind(UserInterface $user, $password)
+    {
+
+//        echo "before: user's username=".$user->getUsername()." <br>";
+
+        //always clean username before bind, use primaryPublicUserId
+        $user->setUsername( $user->getPrimaryPublicUserId() );
+
+        $bindRes = parent::bind($user, $password);
+
+        if( $bindRes ) {
+            //replace only username
+            $user->setUniqueUsername();
+        }
+
+//        echo "after: user's username=".$user->getUsername()." <br>";
+//        echo "<br>bindRes=".$bindRes."<br>";
+//        //exit('exit bind');
+
+        return $bindRes;
+    }
+
+
 
 }

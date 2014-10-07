@@ -13,7 +13,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
+
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\UserdirectoryBundle\Entity\User;
 
 //include_once '..\conf\Spectrum.ini';
 //include_once '\Skeleton.php';
@@ -23,10 +25,9 @@ class AperioUtil {
 
     private $ldap = true;
     private $test = false;
-    private $timezone;
 
-    public function __construct( $timezone = null ) {
-        $this->timezone = $timezone;
+    public function __construct() {
+        //
     }
 
     public function aperioAuthenticateToken( TokenInterface $token, $serviceContainer, $em ) {
@@ -34,7 +35,10 @@ class AperioUtil {
         //echo "Aperio Authenticator: user name=".$token->getUsername().", Credentials=".$token->getCredentials()."<br>";
         //exit("using Aperio Authenticator: authenticate Token");
 
-        $AuthResult = $this->AperioAuth( $token->getUsername(), $token->getCredentials() );
+        $userSecUtil = $serviceContainer->get('user_security_utility');
+        $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
+
+        $AuthResult = $this->AperioAuth( $usernameClean, $token->getCredentials() );
 
         //print_r($AuthResult);
         //exit();
@@ -43,11 +47,13 @@ class AperioUtil {
             //echo "<br>Aperio got UserId!<br>";
 
             $userManager = $serviceContainer->get('fos_user.user_manager');
+
             $user = $userManager->findUserByUsername($token->getUsername());
 
             if( !$user ) {
 
                 //echo "No user found. Create a new User<br>";
+                $default_time_zone = $serviceContainer->getParameter('default_time_zone');
 
                 $user = $userManager->createUser();
 
@@ -55,13 +61,13 @@ class AperioUtil {
                 $userkeytype = $userUtil->getDefaultUsernameType($em);
 
                 $user->setKeytype($userkeytype);
-                $user->setPrimaryPublicUserId($token->getUsername());
-                $user->setUsername($token->getUsername());
+                $user->setPrimaryPublicUserId($usernameClean);
+                $user->setUniqueUsername();
 
                 $user->setEmail($AuthResult['E_Mail']);
                 $user->setEnabled(1);
                 $user->setCreatedby('aperio');
-                $user->getPreferences()->setTimezone($this->timezone);
+                $user->getPreferences()->setTimezone($default_time_zone);
 
                 $perSiteSettings = null;
 

@@ -17,6 +17,22 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 class SecurityController extends Controller
 {
 
+//    /**
+//     * @Route("/login_check", name="employees_login_check")
+//     * @Method("POST")
+//     * @Template("OlegUserdirectoryBundle:Security:login.html.twig")
+//     */
+//    public function loginCheckAction( Request $request )
+//    {
+//
+//        $username = $request->get('_username');
+//        $password = $request->get('_password');
+//
+//        echo "username=".$username.", password=".$password."<br>";
+//
+//        exit("my login check!");
+//    }
+
     /**
      * @Route("/login", name="employees_login")
      * @Method("GET")
@@ -43,11 +59,24 @@ class SecurityController extends Controller
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(array('type' => array('default', 'user-added')));
+
+        if( !$usernametypes || count($usernametypes) == 0 ) {
+            $usernametypes = array();
+            $option = array('abbreviation'=>'wcmc-cwid', 'name'=>'WCMC CWID');
+            $usernametypes[] = $option;
+        }
+
+        $lastUsername = $session->get(SecurityContext::LAST_USERNAME);
+        $lastUsernameArr = explode("_", $lastUsername);
+        $lastUsername = $lastUsernameArr[0];
+
         return $this->render(
             'OlegUserdirectoryBundle:Security:login.html.twig',
             array(
-                // last username entered by the user
-                'last_username' => $session->get(SecurityContext::LAST_USERNAME),
+                'usernametypes' => $usernametypes,
+                'last_username' => $lastUsername,   // last username entered by the user
                 'error'         => $error,
             )
         );

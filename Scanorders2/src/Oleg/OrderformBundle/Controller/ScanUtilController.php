@@ -899,7 +899,8 @@ class ScanUtilController extends Controller {
 
         $request = $this->get('request');
         $instid = trim( $request->get('instid') );
-        $orderid = trim( $request->get('orderid') );
+//        $orderid = trim( $request->get('orderid') );
+        $id = trim( $request->get('id') );
 
         $inst = null;
 
@@ -922,13 +923,24 @@ class ScanUtilController extends Controller {
             $output[] = $element;
         }
 
-        //add order's service
-        if( $orderid ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderid);
-            $service = $orderinfo->getService();
-            if( $service ) {
-                $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
-                $output[] = $element;
+//        //add order's service
+//        if( $orderid ) {
+//            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderid);
+//            $service = $orderinfo->getService();
+//            if( $service ) {
+//                $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
+//                $output[] = $element;
+//            }
+//        }
+
+        //add current element by id
+        if( $id ) {
+            $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Service')->findOneById($id);
+            if( $entity ) {
+                if( array_key_exists($entity->getId(), $output) === false ) {
+                    $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
+                    $output[] = $element;
+                }
             }
         }
 

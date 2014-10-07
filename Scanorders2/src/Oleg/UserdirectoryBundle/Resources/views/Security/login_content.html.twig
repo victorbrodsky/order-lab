@@ -23,25 +23,35 @@
     </p>
 {% endif %}
 
-    
-<form class="form-signin" action="{{ path('employees_login_check') }}" method="post">
 
-    <input type="hidden" name="display_height" id="display_height" value="" />
-    <input type="hidden" name="display_width" id="display_width" value="" />
+<input type="hidden" name="display_height" id="display_height" value="" />
+<input type="hidden" name="display_width" id="display_width" value="" />
+
+<form id="login-form" class="form-signin" action="{{ path('employees_login_check') }}" method="post">
 
     <div class="row">
     <div class="col-xs-12">
 
         <p>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username" autofocus>
+            {#usernametype#}
+            <select id="usernametypeid_show" class="combobox">
+                {% for  usernametype in usernametypes %}
+                    <option value="{{ usernametype.abbreviation }}">{{ usernametype.name }}</option>
+                {% endfor %}
+            </select>
 
-        <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
+            {#display username field and hidden real fields using by security#}
+            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username Hidden" style="display:none;">
+            <input type="text" id="display-username" value="{{ last_username }}" class="form-control" placeholder="Username" autofocus>
+
+            <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
+
         </p>
 
     </div>
     </div>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" >Log In</button>
 
 </form>
 

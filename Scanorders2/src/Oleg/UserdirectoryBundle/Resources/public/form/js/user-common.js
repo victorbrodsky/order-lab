@@ -132,6 +132,11 @@ function getCommonBaseUrl(link,sitename) {
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
     }
+
+    if( sitename == "employees" ) {
+        sitename = "pathology-employees";
+    }
+
     //console.log('sitename='+sitename);
 
     var prefix = sitename;  //"scan";

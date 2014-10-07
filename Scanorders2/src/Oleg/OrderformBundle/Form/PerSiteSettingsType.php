@@ -77,14 +77,12 @@ class PerSiteSettingsType extends AbstractType
 
 
         $builder->add( 'defaultInstitution', 'entity', array(
-            "mapped" => false,
             'class' => 'OlegUserdirectoryBundle:Institution',
             'property' => 'name',
             'label'=>'Default Institution:',
             'required'=> false,
-            'multiple' => false,
-            'empty_value' => false,
-            //'attr' => array('class'=>'combobox combobox-width combobox-institution'),
+            //'multiple' => false,
+            //'empty_value' => false,
             'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')

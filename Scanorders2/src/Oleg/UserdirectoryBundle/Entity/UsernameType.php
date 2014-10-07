@@ -30,6 +30,11 @@ class UsernameType extends ListAbstract
      */
     protected $users;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $abbreviation;
+
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
@@ -105,5 +110,23 @@ class UsernameType extends ListAbstract
     {
         return $this->users;
     }
+
+    /**
+     * @param mixed $abbreviation
+     */
+    public function setAbbreviation($abbreviation)
+    {
+        $this->abbreviation = $abbreviation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAbbreviation()
+    {
+        return $this->abbreviation;
+    }
+
+
 
 }
