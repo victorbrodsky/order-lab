@@ -27,7 +27,7 @@
 
             {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
 
-            <h2 class="alert alert-info well-lg safary-fix" align="center">{{ app.security.getToken().getUser().getUsername() }}: Access Request Confirmation</h2>
+            <h2 class="alert alert-info well-lg safary-fix" align="center">{{ app.security.getToken().getUser().getUserNameStr() }}: Access Request Confirmation</h2>
 
             <br>
 

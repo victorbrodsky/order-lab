@@ -14,7 +14,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
 //used by user type
-class PrincipalTransformer implements DataTransformerInterface
+class UserListTransformer implements DataTransformerInterface
 {
 
     /**
@@ -133,7 +133,7 @@ class PrincipalTransformer implements DataTransformerInterface
             $textArr = explode(",", $text);
             foreach( $textArr as $principal ) {
                 //echo "principal text=".$principal."<br>";
-                $newListArr = $this->addSingleService( $newListArr, $principal );
+                $newListArr = $this->addSingleUser( $newListArr, $principal );
             }
 
             //echo "reverseTransform: return count:".count($newListArr)."<br>";
@@ -141,24 +141,24 @@ class PrincipalTransformer implements DataTransformerInterface
 
         } else {
 
-            $newListArr = $this->addSingleService( $newListArr, $text );
+            $newListArr = $this->addSingleUser( $newListArr, $text );
             return $newListArr;
 
         }
 
     }
 
-    public function addSingleService( $newListArr, $service ) {
+    public function addSingleUser( $newListArr, $username ) {
 
-        if( is_numeric ( $service ) ) {    //number => most probably it is id
+        if( is_numeric ( $username ) ) {    //number => most probably it is id
 
-            //echo "principal=".$service." => numeric => most probably it is id<br>";
+            //echo "principal=".$username." => numeric => most probably it is id<br>";
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($service);
+            $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($username);
 
             if( null === $entity ) {
 
-                $newList = $this->createNew($service); //create a new record in db
+                $newList = $this->createNew($username); //create a new record in db
 
                 $newListArr->add($newList);
 
@@ -174,9 +174,9 @@ class PrincipalTransformer implements DataTransformerInterface
 
         } else {    //text => most probably it is new name or multiple ids
 
-            //echo "principal=".$service." => text => most probably it is new name or multiple ids<br>";
+            //echo "principal=".$username." => text => most probably it is new name or multiple ids<br>";
 
-            $newList = $this->createNew($service); //create a new record in db
+            $newList = $this->createNew($username); //create a new record in db
 
             if( $newList ) {
                 //echo "newList=".$newList."<br>";
@@ -188,6 +188,7 @@ class PrincipalTransformer implements DataTransformerInterface
         }
     }
 
+    //name is entered by a user username
     public function createNew( $name ) {
 
         //echo "create: name=".$name."<br>";
@@ -217,6 +218,7 @@ class PrincipalTransformer implements DataTransformerInterface
             $this->em->flush($newEntity);
 
             return $newEntity;
+
         } else {
 
             //update if the user object is not set, maybe we have it now
@@ -234,6 +236,9 @@ class PrincipalTransformer implements DataTransformerInterface
 
     }
 
+    //$name is entered by a user username. $name can be a guessed username
+    //Use primaryPublicUserId as cwid
+    //TODO: make it more flexible to find a user
     public function getUserByUserstr( $name ) {
 
         //echo "get cwid name=".$name."<br>";
@@ -247,7 +252,7 @@ class PrincipalTransformer implements DataTransformerInterface
 
         if( $cwid ) {
             //echo "cwid=".$cwid."<br>";
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($cwid);
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
         } else {
             $user = NULL;
         }

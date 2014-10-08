@@ -60,7 +60,10 @@ class LdapManager extends BaseLdapManager
         $user->setPrimaryPublicUserId($usernameClean);
 
         //TODO: remove this on production!
-        if( $user->getPrimaryPublicUserId() == "oli2002" || $user->getPrimaryPublicUserId() == "vib9020" ) {
+        if(     $user->getPrimaryPublicUserId() == "oli2002"
+            ||  $user->getPrimaryPublicUserId() == "vib9020"
+            ||  $user->getPrimaryPublicUserId() == "svc_aperio_spectrum"
+        ) {
             $user->addRole('ROLE_ADMIN');
         }
 

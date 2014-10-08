@@ -1,4 +1,4 @@
-<h2 class="alert alert-info well-lg safary-fix" align="center">Employee Directory</h2>
+<h2 class="alert alert-info well-lg safary-fix" align="center">{{ title }}</h2>
 
 <br>
 
@@ -27,7 +27,8 @@
 <input type="hidden" name="display_height" id="display_height" value="" />
 <input type="hidden" name="display_width" id="display_width" value="" />
 
-<form id="login-form" class="form-signin" action="{{ path('employees_login_check') }}" method="post">
+
+<form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">
 
     <div class="row">
     <div class="col-xs-12">
@@ -41,8 +42,8 @@
             </select>
 
             {#display username field and hidden real fields using by security#}
-            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username Hidden" style="display:none;">
-            <input type="text" id="display-username" value="{{ last_username }}" class="form-control" placeholder="Username" autofocus>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username Hidden" style="display:none;">
+            <input type="text" id="display-username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username" autofocus>
 
             <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
 
@@ -60,7 +61,10 @@
     <p>
     <p>
         Please use your
-        <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> to log in.
+        <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>
+        or your
+        <a href="http://c.med.cornell.edu/">Aperio eSlide Manager</a> account
+        to log in.
     </p>
     </p>
 </div>

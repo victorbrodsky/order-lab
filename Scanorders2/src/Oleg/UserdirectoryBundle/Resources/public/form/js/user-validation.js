@@ -54,7 +54,8 @@ function validateUser(origuserid) {
     //check usertype + userid combination
     var user = checkUsertypeUserid(userType,primaryPublicUserId);
     var userid = user.id;
-    if( userid && (actionFlag == 'new' || userid != origuserid && actionFlag == 'update') ) {
+    //it is not possible to edit usertype and userid, thereofore check this combination only for a new user
+    if( userid && actionFlag == 'new' ) {
 
         $('#userinfo').collapse('show');
         $('#oleg_userdirectorybundle_user_primaryPublicUserId').parent().addClass("has-error");

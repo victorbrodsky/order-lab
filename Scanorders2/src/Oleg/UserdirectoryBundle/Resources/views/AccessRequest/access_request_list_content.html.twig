@@ -10,7 +10,8 @@
             {#<th>{{ knp_pagination_sortable(entities, 'Service(s)', 'pathologyServices.name') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Full Name', 'user.displayName') }}</th>
             {#<th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.title') }}</th>#}
-            <th>{{ knp_pagination_sortable(entities, 'User Name', 'user.username') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'User ID Type', 'keytype.name') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'User ID', 'user.primaryPublicUserId') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.phone') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
@@ -43,7 +44,8 @@
             {#</td>#}
             <td>{{ entity.user.displayName }}</td>
             {#<td>{{ entity.title }}</td>#}
-            <td>{{ entity.user.username }}</td>
+            <td>{{ entity.user.keytype }}</td>
+            <td>{{ entity.user.primaryPublicUserId }}</td>
             <td>{{ entity.user.email }}</td>
             <td >{{ entity.user.preferredPhone }}</td>
             <td>

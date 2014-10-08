@@ -108,13 +108,13 @@ class User extends BaseUser
 
     /**
      * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"endDate" = "ASC"})
+     * @ORM\OrderBy({"orderinlist" = "ASC", "endDate" = "ASC"})
      */
     private $administrativeTitles;
 
     /**
      * @ORM\OneToMany(targetEntity="AppointmentTitle", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"endDate" = "ASC"})
+     * @ORM\OrderBy({"orderinlist" = "ASC", "endDate" = "ASC"})
      */
     private $appointmentTitles;
 
@@ -220,30 +220,6 @@ class User extends BaseUser
     public function getPrimaryPublicUserId()
     {
         return $this->primaryPublicUserId;
-    }
-
-//    /**
-//     * @ORM\PrrrrePersist
-//     */
-    public function setUniqueUsername() {
-        $this->setUsername($this->createUniqueUsername());
-    }
-    public function createUniqueUsername() {
-        $username = $this->getPrimaryPublicUserId()."_".$this->getKeytype()->getAbbreviation();
-        $usernamestr = preg_replace('/\s+/', '-', $username);
-        return $usernamestr;
-    }
-    public function createUniqueUsernameByKeyKeytype($keytype,$key) {
-        $username = $key."_".$keytype->getAbbreviation();
-        $usernamestr = preg_replace('/\s+/', '_', $username);
-        return $usernamestr;
-    }
-    public function createCleanUsername($username) {
-        $usernameArr = explode("_",$username);
-        return $usernameArr[0];
-    }
-    public function getCleanUsername() {
-        return $this->createCleanUsername( $this->getUsername() );
     }
 
     /**
@@ -374,25 +350,6 @@ class User extends BaseUser
         return $this->createdby;
     }
 
-    public function __toString() {
-        return $this->getUserNameStr();
-    }
-
-    public function getUserNameStr() {
-        if( $this->getDisplayName() ) {
-            return $this->getPrimaryUserid()." - ".$this->displayName;
-        } else {
-            return $this->getPrimaryUserid();
-        }
-    }
-
-    public function getUserNameShortStr() {
-        return $this->primaryPublicUserId;
-    }
-
-    public function getPrimaryUserid() {
-        return $this->primaryPublicUserId."(".$this->getKeytype()->getName().")";
-    }
 
     public function getMainLocation() {
         return $this->getLocations()->get(0);
@@ -735,6 +692,12 @@ class User extends BaseUser
     }
 
 
+
+
+    public function __toString() {
+        return $this->getUserNameStr();
+    }
+
     //get all services from administrative and appointment titles.
     public function getServices() {
         $services = new ArrayCollection();
@@ -779,6 +742,47 @@ class User extends BaseUser
         }
 
         return $roles;
+    }
+
+
+    //Username utilities methods
+    public function setUniqueUsername() {
+        $this->setUsername($this->createUniqueUsername());
+    }
+
+    public function createUniqueUsername() {
+        return $this->createUniqueUsernameByKeyKeytype($this->getKeytype(),$this->getPrimaryPublicUserId());
+    }
+
+    public function createUniqueUsernameByKeyKeytype($keytype,$key) {
+        $username = $key."_@_".$keytype->getAbbreviation();
+        $usernamestr = preg_replace('/\s+/', '-', $username);   //replace all whitespaces by '-'
+        return $usernamestr;
+    }
+
+    public function createCleanUsername($username) {
+        $usernameArr = explode("_@_",$username);
+        return $usernameArr[0];
+    }
+
+    public function getCleanUsername() {
+        return $this->createCleanUsername( $this->getUsername() );
+    }
+
+    public function getUserNameStr() {
+        if( $this->getDisplayName() ) {
+            return $this->getPrimaryUseridKeytypeStr()." - ".$this->displayName;
+        } else {
+            return $this->getPrimaryUseridKeytypeStr();
+        }
+    }
+
+    public function getUserNameShortStr() {
+        return $this->primaryPublicUserId;
+    }
+
+    public function getPrimaryUseridKeytypeStr() {
+        return $this->primaryPublicUserId."(".$this->getKeytype()->getName().")";
     }
 
 }

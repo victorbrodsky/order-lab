@@ -12,7 +12,13 @@
             <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
 
-        <title>Employee Directory</title>
+        {% if sitename == employees_sitename %}
+            {% set title = "Employee Directory" %}
+        {% else %}
+            {% set title = "Scan Orders" %}
+        {% endif %}
+
+        <title>{{ title }}</title>
 
         {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}
 
@@ -32,7 +38,7 @@
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
-            {% include 'OlegUserdirectoryBundle::Security/login_content.html.twig' %}
+            {% include 'OlegUserdirectoryBundle::Security/login_content.html.twig' with {'sitename': sitename, 'title': title} %}
 
             {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 
@@ -96,7 +102,7 @@
                     return;
                 }
 
-                var fullusername = username + "_" + usertypeAbbreviation;
+                var fullusername = username + "_@_" + usertypeAbbreviation;
 
                 //console.log("usertypeAbbreviation="+usertypeAbbreviation+", fullusername="+fullusername);
 

@@ -77,6 +77,25 @@ abstract class BaseUserAttributes {
     protected $updatedate;
 
 
+    /**
+     * Indicates the order in the list
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $orderinlist;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $pgystart;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $pgylevel;
+
+
     public function __construct($author=null) {
         $this->setAuthor($author);
         $this->setType(self::TYPE_PUBLIC);
@@ -173,6 +192,54 @@ abstract class BaseUserAttributes {
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @param mixed $orderinlist
+     */
+    public function setOrderinlist($orderinlist)
+    {
+        $this->orderinlist = $orderinlist;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderinlist()
+    {
+        return $this->orderinlist;
+    }
+
+    /**
+     * @param \DateTime $pgylevel
+     */
+    public function setPgylevel($pgylevel)
+    {
+        $this->pgylevel = $pgylevel;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPgylevel()
+    {
+        return $this->pgylevel;
+    }
+
+    /**
+     * @param \DateTime $pgystart
+     */
+    public function setPgystart($pgystart)
+    {
+        $this->pgystart = $pgystart;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPgystart()
+    {
+        return $this->pgystart;
     }
 
     /**

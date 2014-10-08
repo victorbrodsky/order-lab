@@ -19,15 +19,10 @@ use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\PrincipalTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\UserListTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccountTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 
-//use Oleg\OrderformBundle\Form\DataTransformer\ServiceTransformer;
-//use Oleg\OrderformBundle\Form\DataTransformer\UserServicesTransformer;
-//use Oleg\OrderformBundle\Form\DataTransformer\ResearchTransformer;
-//use Oleg\OrderformBundle\Form\DataTransformer\SetTitleTransformer;
-//use Oleg\OrderformBundle\Form\DataTransformer\UserTransformer;
 
 use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 
@@ -74,10 +69,10 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new SourceOrganTransformer($this->om, $username);
                 break;
             case "optionalUserEducational":
-                $transformer = new PrincipalTransformer($this->om, $username, 'DirectorList');
+                $transformer = new UserListTransformer($this->om, $username, 'DirectorList');
                 break;
             case "optionalUserResearch":
-                $transformer = new PrincipalTransformer($this->om, $username, 'PIList');
+                $transformer = new UserListTransformer($this->om, $username, 'PIList');
                 break;
             case "account":
                 $transformer = new AccountTransformer($this->om, $username);

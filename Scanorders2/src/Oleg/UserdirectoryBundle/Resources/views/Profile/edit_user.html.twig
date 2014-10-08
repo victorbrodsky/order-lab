@@ -13,6 +13,7 @@
 
 {% macro baseTitle( field, cicle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
     {% else %}
@@ -34,8 +35,19 @@
 
         {{ formmacros.field(formfield.id) }}
         {{ formmacros.field(formfield.status) }}
+        {{ formmacros.field(formfield.orderinlist) }}
         {{ formmacros.field(formfield.priority) }}
         {{ formmacros.field(formfield.name) }}
+
+        {% if formfield.boss is defined %}
+            {{ formmacros.field(formfield.boss) }}
+            {% if cicle == 'show_user' %}
+                {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL %}
+                    {{ userform.emailPhoneField(formfield.vars.value.boss.preferredPhone,cicle,'phone',"Super's Preferred Phone Number:") }}
+                    {{ userform.emailPhoneField(formfield.vars.value.boss.email,cicle,'email',"Super's Preferred Email:") }}
+                {% endif %}
+            {% endif %}
+        {% endif %}
 
         {#position type#}
         <p>
@@ -55,6 +67,25 @@
             </div>
         {% endif %}
         </p>
+
+        {#pgy#}
+        {% if formfield.pgystart is defined and formfield.pgylevel is defined %}
+            <p>
+                <div class="well">
+                    {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
+                    {{ formmacros.field(formfield.pgylevel) }}
+                    {{ formmacros.field(formfield.pgylevelexpected) }}
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <strong></strong>
+                        </div>
+                        <div class="col-xs-6" align="left">
+                            <button type="button" onclick="updatePgy(this)">Update the academic year and PGY level to current</button>
+                        </div>
+                    </div>
+                </div>
+            </p>
+        {% endif %}
 
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
@@ -124,10 +155,10 @@
             {{ formmacros.field(formfield.assistant) }}
             {% if cicle == 'show_user' %}
                 {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL %}
-                    {{ formmacros.simplefield( "Assistant's Preferred Phone Number:", formfield.vars.value.assistant.preferredPhone, "", "disabled" ) }}
-                    {#{{ formmacros.simplefield( "Assistant's Preferred Email:", formfield.vars.value.assistant.email, "", "disabled" ) }}#}
-                    {{ userform.emailPhoneField(formfield.vars.value.assistant.email,cicle,'email',"Assistant's Preferred Email:") }}
+                    {#{{ formmacros.simplefield( "Assistant's Preferred Phone Number:", formfield.vars.value.assistant.preferredPhone, "", "disabled" ) }}#}
 
+                    {{ userform.emailPhoneField(formfield.vars.value.assistant.preferredPhone,cicle,'phone',"Assistant's Preferred Phone Number:") }}
+                    {{ userform.emailPhoneField(formfield.vars.value.assistant.email,cicle,'email',"Assistant's Preferred Email:") }}
                 {% endif %}
             {% endif %}
         {% else %}
@@ -524,12 +555,12 @@
         </div>
 
 
-        {#User Preferences#}
+        {#Global User Preferences#}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" href="#userprefrences">
-                        User Preferences
+                        Global User Preferences
                     </a>
                 </h4>
             </div>

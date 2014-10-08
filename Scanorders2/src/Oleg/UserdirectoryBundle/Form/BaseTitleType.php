@@ -108,8 +108,16 @@ class BaseTitleType extends AbstractType
             'attr' => array('class' => 'form-control', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false")
         ));
 
-        //position, residencyTrack, fellowshipType for AppointmentTitle (Academic Appointment Title)
+
+        $builder->add('orderinlist',null,array(
+            'label'=>'Order:',
+            'required' => false,
+            'attr' => array('class'=>'form-control')
+        ));
+
+        //position, residencyTrack, fellowshipType, pgy for AppointmentTitle (Academic Appointment Title)
         if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle" ) {
+
             $builder->add('position', 'choice', array(
                 'choices'   => array(
                     'Resident'   => 'Resident',
@@ -140,13 +148,48 @@ class BaseTitleType extends AbstractType
                     },
             ));
 
-
             $builder->add('fellowshipType', 'employees_custom_selector', array(
                 'label' => "Fellowship Type:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshiptype', 'type' => 'hidden'),
                 'classtype' => 'fellowshiptype'
             ));
+
+            $builder->add('pgystart', 'date', array(
+                'label' => "During academic year that started on:",
+                'widget' => 'single_text',
+                'required' => false,
+                'format' => 'MM-dd-yyyy',
+                'attr' => array('class' => 'datepicker form-control patientdob-mask pgystart-field', 'style'=>'margin-top: 0;'),
+            ));
+
+            $builder->add('pgylevel',null,array(
+                'label'=>'The Post Graduate Year (PGY) level was:',
+                'required' => false,
+                'attr' => array('class'=>'form-control pgylevel-field')
+            ));
+
+            $builder->add('pgylevelexpected','integer',array(
+                'label' => 'Expected Current Post Graduate Year (PGY) level:',
+                'mapped' => false,
+                'required' => false,
+                'disabled' => true,
+                'attr' => array('class'=>'form-control pgylevelexpected-field')
+            ));
+
+        }
+
+
+        //boss
+        if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle" ) {
+
+            $builder->add('boss','entity',array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label'=>"Reports to:",
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false
+            ));
+
         }
 
     }

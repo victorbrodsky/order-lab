@@ -34,6 +34,7 @@ class UserType extends AbstractType
         $this->roles = $roles;
         $this->sc = $sc;
 
+        //echo "cicle=".$cicle."<br>";
         if( $cicle == 'create' ) {
             $this->roleAdmin = $sc->isGranted('ROLE_USERDIRECTORY_EDITOR');
         } else {
@@ -65,7 +66,7 @@ class UserType extends AbstractType
         }
         $builder->add('keytype', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
-            'read_only' => $read_only,
+            'read_only' => ($this->cicle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'property' => 'name',
             'label' => 'Primary Public User ID Type:',
             'required' => false,
@@ -92,7 +93,7 @@ class UserType extends AbstractType
 
         $builder->add('primaryPublicUserId', null, array(
             'label' => 'Primary Public User ID:',
-            'read_only' => $read_only,
+            'read_only' => ($this->cicle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 

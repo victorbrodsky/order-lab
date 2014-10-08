@@ -39,11 +39,11 @@ security:
         fr3d_ldapbundle:
             id: fr3d_ldap.security.user.provider
 
-    #        in_memory:
-    #            memory:
-    #                users:
-    #                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-    #                    admin: { password: adminpass123, roles: [ 'ROLE_SCANORDER_ADMIN' ] }
+#        in_memory:
+#            memory:
+#                users:
+#                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+#                    admin: { password: adminpass123, roles: [ 'ROLE_ADMIN' ] }
 
     firewalls:
 

@@ -39,17 +39,8 @@ class CheckController extends Controller {
                 continue;
             }
 
-            $providerStr = "";
-            //echo "provider count=".count($field->getProvider()).", provider name=".$field->getProvider()->getUsername().", ";
-
             $provider = $field->getProvider();
-            if( $provider ) {
-                if( $provider->getDisplayName() != "" ) {
-                    $providerStr = $providerStr." ".$provider->getDisplayName();
-                } else {
-                    $providerStr = $providerStr." ".$provider->getUsername();
-                }
-            }
+            $providerStr = $provider->getUserNameStr();
 
             //echo "providerStr=".$providerStr.", ";
 

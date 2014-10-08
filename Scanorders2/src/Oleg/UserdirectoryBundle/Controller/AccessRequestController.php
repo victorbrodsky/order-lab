@@ -260,6 +260,7 @@ class AccessRequestController extends Controller
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         $dql->innerJoin('accreq.user','user');
+        $dql->innerJoin('user.keytype','keytype');
         $dql->where("accreq.siteName = '" . $sitename . "'" );
         //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
         $dql->orderBy("accreq.status","DESC");

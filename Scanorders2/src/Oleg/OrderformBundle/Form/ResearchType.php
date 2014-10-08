@@ -52,6 +52,7 @@ class ResearchType extends AbstractType
             ));
 
             //$addlabel = " (as entered by user)";
+            //TODO: add mask: comma is not allowed
             $builder->add('principalWrappers', 'custom_selector', array(
                 'label' => 'Principal Investigator(s):',
                 'attr' => array('class' => 'combobox combobox-width combobox-optionaluser-research', 'type' => 'hidden'),

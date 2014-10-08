@@ -332,3 +332,7 @@
 }
 /*end of nav bar*/
 
+/*16px in CSSvia command below - that is the threshold to prevent the iPhone / iPad from auto-zooming in the whole page on the form field when you try to type something in*/
+.limit-font-size {
+    font-size: 16px;
+}

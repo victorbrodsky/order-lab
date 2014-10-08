@@ -57,6 +57,12 @@ class BaseTitle extends BaseUserAttributes
      */
     protected $service;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="boss", referencedColumnName="id")
+     */
+    protected $boss;
+
 
 //    function __construct()
 //    {
@@ -217,6 +223,22 @@ class BaseTitle extends BaseUserAttributes
     public function getEffort()
     {
         return $this->effort;
+    }
+
+    /**
+     * @param mixed $boss
+     */
+    public function setBoss($boss)
+    {
+        $this->boss = $boss;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBoss()
+    {
+        return $this->boss;
     }
 
 

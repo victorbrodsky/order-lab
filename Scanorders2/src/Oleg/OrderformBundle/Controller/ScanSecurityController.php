@@ -1,6 +1,7 @@
 <?php
 namespace Oleg\OrderformBundle\Controller;
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,9 +15,10 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
+use Oleg\UserdirectoryBundle\Controller\SecurityController;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
-class SecurityController extends Controller
+class ScanSecurityController extends SecurityController
 {
 
     /**
@@ -25,35 +27,19 @@ class SecurityController extends Controller
      * @Template()
      */
     public function loginAction( Request $request ) {
+        $sitename = $this->container->getParameter('scan.sitename');
 
-        if(
-            $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-        ){
-            return $this->redirect( $this->generateUrl('scan-order-home') );
-        }
+        $formArr = $this->loginPage($sitename);
 
-        $request = $this->get('request_stack')->getCurrentRequest();
-        $session = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
 
-        // get the login error if there is one
-        if( $request->attributes->has(SecurityContext::AUTHENTICATION_ERROR) ) {
-            $error = $request->attributes->get(
-                SecurityContext::AUTHENTICATION_ERROR
-            );
-        } else {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
-        }
+        $formArr['usernametypes'] = $usernametypes;
 
         return $this->render(
-            'OlegOrderformBundle:Security:login.html.twig',
-            array(
-                // last username entered by the user
-                'last_username' => $session->get(SecurityContext::LAST_USERNAME),
-                'error'         => $error,
-            )
+            'OlegUserdirectoryBundle:Security:login.html.twig',
+            $formArr
         );
-
     }
 
 
