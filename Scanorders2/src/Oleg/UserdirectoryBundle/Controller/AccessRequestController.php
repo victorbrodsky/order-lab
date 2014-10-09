@@ -223,9 +223,25 @@ class AccessRequestController extends Controller
             $emailStr = "\r\nConfirmation email was sent to ".$email;
         }
 
-        $text = 'Your access request was successfully submitted and and will be reviewed.'.$emailStr;
+        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+            $sitenameFull = "Employee Directory";
+        }
+        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+            $sitenameFull = "Scan Orders";
+        }
+
         $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitename, $text, $em );
+
+        $siteurl = $this->generateUrl( $sitename.'_home', array(), true );
+
+        $emailBody = 'Your access request for the ' .
+            //'<a href="'.$siteurl.'">'.$sitenameFull.'</a>' .
+            $sitenameFull . ': ' . $siteurl . ' ' .
+            ' was successfully submitted and and will be reviewed.'.$emailStr;
+
+        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitenameFull, $emailBody, $em );
+
+        $text = 'Your access request was successfully submitted and and will be reviewed.'.$emailStr;
 
         return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
     }

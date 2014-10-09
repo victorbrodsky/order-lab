@@ -54,8 +54,8 @@ security:
             fr3d_ldap:  ~
             context: scan_auth
             form_login:
-                 always_use_default_target_path: false
-                 use_referer: true
+#                 always_use_default_target_path: false
+#                 use_referer: true
                  success_handler: authentication_handler
                  failure_handler: authentication_handler
                  check_path: /scan/login_check
@@ -71,14 +71,14 @@ security:
             fr3d_ldap:  ~
             context: scan_auth
             form_login:
-#                always_use_default_target_path: false
+#                always_use_default_target_path: true
 #                use_referer: true
                 success_handler: employees_authentication_handler
                 failure_handler: employees_authentication_handler
                 check_path: /pathology-employees/login_check
                 login_path: /pathology-employees/login
                 # login success redirecting options (read further below)
-                default_target_path: /pathology-employees/
+#                default_target_path: /pathology-employees/
 #                target_path_parameter: _target_path
             logout:
                 path:   /pathology-employees/logout

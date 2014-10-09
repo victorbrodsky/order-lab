@@ -58,7 +58,7 @@ class MultiScanOrderController extends Controller {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER')
         ) {
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -73,13 +73,13 @@ class MultiScanOrderController extends Controller {
         if( !$userSiteSettings ) {
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
 
         $request = $this->container->get('request');
@@ -278,7 +278,7 @@ class MultiScanOrderController extends Controller {
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -290,13 +290,13 @@ class MultiScanOrderController extends Controller {
         if( !$userSiteSettings ) {
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
 
         $entity = new OrderInfo();
@@ -438,13 +438,13 @@ class MultiScanOrderController extends Controller {
         if( !$userSiteSettings ) {
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
 
         //INNER JOIN orderinfo.block block

@@ -90,7 +90,7 @@ class AdminController extends Controller
         $count_fellowshipTypeList = $this->generateFellowshipTypeList();
         $count_residencyTrackList = $this->generateResidencyTrackList();
 
-        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
+        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
         $count_states = $this->generateStates();
 

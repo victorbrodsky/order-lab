@@ -40,12 +40,16 @@
         {{ formmacros.field(formfield.name) }}
 
         {% if formfield.boss is defined %}
-            {{ formmacros.field(formfield.boss) }}
-            {% if cicle == 'show_user' %}
-                {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL %}
-                    {{ userform.emailPhoneField(formfield.vars.value.boss.preferredPhone,cicle,'phone',"Super's Preferred Phone Number:") }}
-                    {{ userform.emailPhoneField(formfield.vars.value.boss.email,cicle,'email',"Super's Preferred Email:") }}
+            {% if formfield.vars.value and formfield.vars.value.boss != "" or cicle == 'create_user' or cicle == 'edit_user' %}
+                {{ formmacros.field(formfield.boss) }}
+                {% if cicle == 'show_user' %}
+                    {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL %}
+                        {{ userform.emailPhoneField(formfield.vars.value.boss.preferredPhone,cicle,'phone',"Super's Preferred Phone Number:") }}
+                        {{ userform.emailPhoneField(formfield.vars.value.boss.email,cicle,'email',"Super's Preferred Email:") }}
+                    {% endif %}
                 {% endif %}
+            {% else %}
+                {% do formfield.boss.setRendered %}
             {% endif %}
         {% endif %}
 
@@ -68,23 +72,31 @@
         {% endif %}
         </p>
 
+
         {#pgy#}
         {% if formfield.pgystart is defined and formfield.pgylevel is defined %}
-            <p>
-                <div class="well">
-                    {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
-                    {{ formmacros.field(formfield.pgylevel) }}
-                    {{ formmacros.field(formfield.pgylevelexpected) }}
-                    <div class="row">
-                        <div class="col-xs-6" align="right">
-                            <strong></strong>
-                        </div>
-                        <div class="col-xs-6" align="left">
-                            <button type="button" onclick="updatePgy(this)">Update the academic year and PGY level to current</button>
+            {#On the user profile page, always hide the entire PGY well if the Position Type is not equal to either Resident or Fellow#}
+            {% if formfield.position is defined and formfield.vars.value and (formfield.vars.value.position == "Resident" or formfield.vars.value.position == "Fellow") or cicle == 'create_user' or cicle == 'edit_user' %}
+                <p>
+                    <div class="well">
+                        {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
+                        {{ formmacros.field(formfield.pgylevel) }}
+                        {{ formmacros.field(formfield.pgylevelexpected) }}
+                        <div class="row">
+                            <div class="col-xs-6" align="right">
+                                <strong></strong>
+                            </div>
+                            <div class="col-xs-6" align="left">
+                                <button type="button" class="update-pgy-btn" onclick="updatePgy(this)">Update the academic year and PGY level to current</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </p>
+                </p>
+            {% else %}
+                {% do formfield.pgystart.setRendered %}
+                {% do formfield.pgylevel.setRendered %}
+                {% do formfield.pgylevelexpected.setRendered %}
+            {% endif %}
         {% endif %}
 
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
@@ -378,31 +390,42 @@
         {% set formfield = field %}
     {% endif %}
 
-    {% if formfield.vars.value and formfield.vars.value.status == 0 and classname == 'user-privatecomments' %}
-        {% set wellclass = "user-alert-warning" %}
+    {% if formfield.comment.vars.value != "" or cicle != 'show_user' %}
+
+        {% if formfield.vars.value and formfield.vars.value.status == 0 and classname == 'user-privatecomments' %}
+            {% set wellclass = "user-alert-warning" %}
+        {% else %}
+            {% set wellclass = "" %}
+        {% endif %}
+
+        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+            {% if cicle != 'show_user' %}
+                <div class="text-right">
+                    <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            {% endif %}
+
+            <p>
+            {% if formfield.status is defined %}
+                {{ formmacros.field(formfield.status) }}
+            {% endif %}
+
+            {{ formmacros.field(formfield.commentType) }}
+            {{ formmacros.field(formfield.commentSubType) }}
+            {{ formmacros.field(formfield.comment) }}
+            </p>
+
+        </div>
+
     {% else %}
-        {% set wellclass = "" %}
+
+        {% do formfield.commentType.setRendered %}
+        {% do formfield.commentSubType.setRendered %}
+        {% do formfield.comment.setRendered %}
+
     {% endif %}
 
-    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
-
-        {% if cicle != 'show_user' %}
-            <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
-        {% endif %}
-
-        <p>
-        {% if formfield.status is defined %}
-            {{ formmacros.field(formfield.status) }}
-        {% endif %}
-
-        {{ formmacros.field(formfield.commentType) }}
-        {{ formmacros.field(formfield.commentSubType) }}
-        {{ formmacros.field(formfield.comment) }}
-        </p>
-
-    </div>
 {% endmacro %}
 
 {% macro researchLabs( field, cicle, classname, prototype ) %}
@@ -950,6 +973,40 @@
         {% endif %}
         {#EOF credentials#}
 
+        {#On the user profile page always hide all Comments (including the whole Comments section) if they are empty.#}
+        {% set showPublicComments = false %}
+        {% set showPrivateComments = false %}
+        {% set showConfComments = false %}
+        {% set showAdminComments = false %}
+
+        {% for publicComment in form.publicComments %}
+            {% if publicComment.comment.vars.value != "" or cicle != 'show_user' %}
+                {% set showPublicComments = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% for privateComment in form.privateComments %}
+            {% if privateComment.comment.vars.value != "" or cicle != 'show_user' %}
+                {% set showPrivateComments = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% for confidentialComment in form.confidentialComments %}
+            {% if confidentialComment.comment.vars.value != "" or cicle != 'show_user' %}
+                {% set showConfComments = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% for adminComment in form.adminComments %}
+            {% if adminComment.comment.vars.value != "" or cicle != 'show_user' %}
+                {% set showAdminComments = true %}
+            {% endif %}
+        {% endfor %}
+
+    {#showPublicComments:{{ showPublicComments }}#}
+    {#showPrivateComments:{{ showPrivateComments }}#}
+
+    {% if showPublicComments or showPrivateComments or showConfComments or showAdminComments %}
         {#Comments#}
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -963,31 +1020,33 @@
                 <div class="panel-body">
 
                     {#Public Comments#}
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" href="#publicComment">
-                                    Public Comment(s)
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="publicComment" class="panel-collapse collapse in">
-                            <div class="panel-body">
-                                <div class="user-publiccomments-holder">
-                                    {% for publicComment in form.publicComments %}
-                                        {{ userform.comments(publicComment,cicle,'user-publiccomments','noprototype') }}
-                                    {% endfor %}
-                                    {% if cicle != 'show_user' %}
-                                        <button class="btn btn-default" onClick="addBaseTitle(this,'user-publiccomments')" type='button'>Add Public Comment</button>
-                                    {% endif %}
+                    {% if showPublicComments %}
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#publicComment">
+                                        Public Comment(s)
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="publicComment" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="user-publiccomments-holder">
+                                        {% for publicComment in form.publicComments %}
+                                            {{ userform.comments(publicComment,cicle,'user-publiccomments','noprototype') }}
+                                        {% endfor %}
+                                        {% if cicle != 'show_user' %}
+                                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-publiccomments')" type='button'>Add Public Comment</button>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
 
 
                     {#Private Comments#}
-                    {% if form.privateComments is defined %}
+                    {% if form.privateComments is defined and showPrivateComments %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -1013,7 +1072,7 @@
 
 
                     {#Confidential Comments#}
-                    {% if form.confidentialComments is defined %}
+                    {% if form.confidentialComments is defined and showConfComments %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -1039,7 +1098,7 @@
 
 
                     {#Admin Comments#}
-                    {% if form.adminComments is defined %}
+                    {% if form.adminComments is defined and showAdminComments %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -1067,6 +1126,7 @@
             </div>
         </div>
         {#EOF Comments#}
+    {% endif %}
 
 
         <br>

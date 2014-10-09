@@ -38,6 +38,8 @@ $(document).ready(function() {
 
     positionTypeListener();
 
+    initUpdateExpectedPgy();
+
 });
 
 

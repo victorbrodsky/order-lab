@@ -69,11 +69,32 @@ function positionTypeAction(element) {
     }
 }
 
-function updatePgy(element) {
 
-    var fieldEl = $(element);
+function initUpdateExpectedPgy() {
+    $('.update-pgy-btn').each( function() {
 
-    var holder = fieldEl.closest('.user-collection-holder');
+        var expectedPgyLevel = calculateExpectedPgy( $(this) );
+
+        if( expectedPgyLevel != null ) {
+
+            var holder = $(this).closest('.user-collection-holder');
+            //console.log(holder);
+
+            if( !holder.hasClass('user-appointmentTitles') ) {
+                return;
+            }
+
+            //console.log( 'pgylevel='+pgylevel+', curYear='+curYear);
+            holder.find('.pgylevelexpected-field').val(expectedPgyLevel);
+        }
+    });
+}
+
+function updatePgy(btn) {
+
+    var btnEl = $(btn);
+
+    var holder = btnEl.closest('.user-collection-holder');
     //console.log(holder);
 
     if( !holder.hasClass('user-appointmentTitles') ) {
@@ -97,7 +118,6 @@ function updatePgy(element) {
     }
 
     var today = new Date();
-    //console.log( 'today='+today);
     var curYear = today.getFullYear();
 
     //B- If only the date has value - the button updates the year of the date to current (does not change month of date)
@@ -122,20 +142,14 @@ function updatePgy(element) {
     if( pgystart != "" && pgylevel != "" ) {
 
         var pgyDate = new Date(pgystart);
-        var pgyYear = pgyDate.getFullYear();
 
-        var diffYear = getYearByDiff(null,pgystart);
-        //diffYear = Math.abs(diffYear);
-        //console.log( 'diffYear='+diffYear);
+        var expectedPgyLevel = calculateExpectedPgy(btnEl);
 
-        if( diffYear >= 1 ) {
+        if( expectedPgyLevel != null ) {
 
-            //console.log( 'pgylevel='+pgylevel+', curYear='+curYear+', pgyYear='+pgyYear);
-
-            //add the result to the current PGY level value
-            var newPgyLevel = parseInt(pgylevel) + ( parseInt(curYear)-parseInt(pgyYear) );
-            holder.find('.pgylevel-field').val(newPgyLevel);
-            holder.find('.pgylevelexpected-field').val(newPgyLevel);
+            //console.log( 'pgylevel='+pgylevel+', curYear='+curYear);
+            holder.find('.pgylevel-field').val(expectedPgyLevel);
+            holder.find('.pgylevelexpected-field').val(expectedPgyLevel);
 
             //updates the year of the field with current (2011->2014)
             pgyDate.setFullYear(curYear);
@@ -145,6 +159,57 @@ function updatePgy(element) {
 
     }
 
+}
+
+function calculateExpectedPgy(btnEl) {
+
+    var newPgyLevel = null;
+
+    var holder = btnEl.closest('.user-collection-holder');
+    //console.log(holder);
+
+    if( holder.length == 0 || !holder.hasClass('user-appointmentTitles') ) {
+        return newPgyLevel;
+    }
+
+    var pgystart = holder.find('.pgystart-field').val();
+    var pgylevel = holder.find('.pgylevel-field').val();
+
+    if( pgylevel != "" ) {
+        newPgyLevel = pgylevel;
+    }
+
+    //During academic year that started on: [July 1st 2011]
+    //The Post Graduate Year (PGY) level was: [1]
+    //Expected Current Post Graduate Year (PGY) level: [4] (not a true fleld in the database, not editble)
+    //
+    //D- If both the date and the PGY have value and the academic year is not current
+    // (meaning the current date is later than listed date +1 year (in the example above, if current date is later than July 1st 2012) ,
+    // the function takes the current year (for example 2014), subtracts the year in the date field (let's say 2011), and add the result to the current PGY level value
+    // (let's say 1, replacing it with 4), then updates the year of the field with current (2011->2014).
+    if( pgystart != "" && pgylevel != "" ) {
+
+        var today = new Date();
+        var curYear = today.getFullYear();
+
+        var pgyDate = new Date(pgystart);
+        var pgyYear = pgyDate.getFullYear();
+
+        var diffYear = getYearByDiff(null,pgystart);
+
+        //console.log( 'diffYear='+diffYear);
+
+        if( diffYear >= 1 ) {
+
+            //add the result to the current PGY level value
+            newPgyLevel = parseInt(pgylevel) + ( parseInt(curYear)-parseInt(pgyYear) );
+        }
+
+    }
+
+    //console.log( 'res: newPgyLevel='+newPgyLevel);
+
+    return newPgyLevel;
 }
 
 

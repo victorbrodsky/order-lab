@@ -79,9 +79,23 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $options['eventtype'] = "Successful Login";
         $options['event'] = 'Successful login to Employee Directory site';
-        $response = new RedirectResponse($this->router->generate($this->siteName.'_home'));
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
+
+        $response = new RedirectResponse($this->router->generate($this->siteName.'_home'));
+
+//        $referer = $request->get('_referer');
+//        echo "referer=".$referer."<br>";
+//
+//        $referer = $request->headers->get('Referer');
+//        echo "referer=".$referer."<br>";
+//
+//        $referer = $request->getSession()->get('_security.target_path');
+//        echo "referer=".$referer."<br>";
+//
+//        exit();
+//
+//        $response = new RedirectResponse($request->headers->get('Referer'));
 
         return $response;
     }

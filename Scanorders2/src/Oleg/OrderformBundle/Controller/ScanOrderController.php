@@ -31,7 +31,7 @@ class ScanOrderController extends Controller {
     /**
      * Lists all OrderInfo entities.
      *
-     * @Route("/", name="scan-order-home")
+     * @Route("/", name="scan_home")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Default:home.html.twig")
      */

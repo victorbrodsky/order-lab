@@ -148,29 +148,58 @@ class UserSecurityUtil {
         return $logger;
     }
 
-
-    public function modifyUsernameWithDefaultKeytype($user) {
-        $userkeytype = $this->getDefaultUserKeytypeSafe();
-        $user->setKeytype($userkeytype);
-        $uniqueUserName = $user->createUniqueUsernameByKeyKeytype($userkeytype,$user->getUsername());
-        $user->setUsername($uniqueUserName);
-        return $user;
-    }
-
-    public function getDefaultUserKeytypeSafe() {
+//    public function getDefaultUserKeytypeSafe() {
+//        $userUtil = new UserUtil();
+//        $userkeytype = $userUtil->getDefaultUsernameType($this->em);
+//        if( $userkeytype == null ) {
+//            //generate user keytypes
+//            $userUtil->generateUsernameTypes($this->em,null);
+//            $userkeytype = $userUtil->getDefaultUsernameType($this->em);
+//        }
+//        return $userkeytype;
+//    }
+    public function getDefaultUsernameType() {
         $userUtil = new UserUtil();
         $userkeytype = $userUtil->getDefaultUsernameType($this->em);
-        if( $userkeytype == null ) {
-            //generate user keytypes
-            $userUtil->generateUsernameTypes($this->em,null);
-            $userkeytype = $userUtil->getDefaultUsernameType($this->em);
-        }
         return $userkeytype;
+    }
+
+
+    public function getUsernameType($abbreviation=null) {
+        $userkeytype = null;
+        if( $abbreviation ) {
+            $userkeytype = $this->em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneBy(
+                array(
+                    'type' => array('default', 'user-added'),
+                    'abbreviation' => array($abbreviation)
+                ),
+                array('orderinlist' => 'ASC')
+            );
+
+            return $userkeytype;
+        } else {
+            $userkeytypes = $this->em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
+                array('type' => array('default', 'user-added')),
+                array('orderinlist' => 'ASC')
+            );
+
+            //echo "userkeytypes=".$userkeytypes."<br>";
+            //print_r($userkeytypes);
+            if( $userkeytypes && count($userkeytypes) > 0 ) {
+                $userkeytype = $userkeytypes[0];
+            }
+            return $userkeytypes;
+        }
     }
 
     public function createCleanUsername($username) {
         $user = new User();
         return $user->createCleanUsername($username);
+    }
+
+    public function getUsernamePrefix($username) {
+        $user = new User();
+        return $user->getUsernamePrefix($username);
     }
 
 

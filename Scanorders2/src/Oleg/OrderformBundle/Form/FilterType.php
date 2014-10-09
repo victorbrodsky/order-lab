@@ -31,7 +31,7 @@ class FilterType extends AbstractType
             'max_length'=>200,
             'required'=>false,
             'label'=>'Search:',
-            'attr' => array('class'=>'form-control form-control-modif'),
+            'attr' => array('class'=>'form-control form-control-modif limit-font-size'),
         ));
 
         $builder->add('service', 'choice', array(

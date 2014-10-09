@@ -11,10 +11,10 @@ namespace Oleg\OrderformBundle\Security\Util;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Entity\User;
 
 //include_once '..\conf\Spectrum.ini';
@@ -26,6 +26,8 @@ class AperioUtil {
     private $ldap = true;
     private $test = false;
 
+    private $supportedUsertypes = array('aperio','wcmc-cwid');
+
     public function __construct() {
         //
     }
@@ -36,6 +38,15 @@ class AperioUtil {
         //exit("using Aperio Authenticator: authenticate Token");
 
         $userSecUtil = $serviceContainer->get('user_security_utility');
+
+        //don't authenticate users without WCMC CWID keytype
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
+        //echo "usernamePrefix=".$usernamePrefix."<br>";
+
+        if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
+            throw new BadCredentialsException('The usertype '.$usernamePrefix.' can not be authenticated by ldap.');
+        }
+
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
         $AuthResult = $this->AperioAuth( $usernameClean, $token->getCredentials() );
@@ -57,8 +68,8 @@ class AperioUtil {
 
                 $user = $userManager->createUser();
 
-                $userUtil = new UserUtil();
-                $userkeytype = $userUtil->getDefaultUsernameType($em);
+                $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+                //echo "keytype=".$userkeytype."<br>";
 
                 $user->setKeytype($userkeytype);
                 $user->setPrimaryPublicUserId($usernameClean);

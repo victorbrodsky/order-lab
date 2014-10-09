@@ -113,9 +113,11 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             if( method_exists($newEntity,'getParent')  ) {
                 //don't flush this entity because it has parent and parent can not be set here
+                $this->em->persist($newEntity);
                 return $newEntity;
             }
 
+            //echo "persist and flush <br>";
             $this->em->persist($newEntity);
             $this->em->flush($newEntity);
 

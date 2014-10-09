@@ -21,6 +21,7 @@ use FR3D\LdapBundle\Ldap\LdapManager as BaseLdapManager;
 use FR3D\LdapBundle\Model\LdapUserInterface;
 use FR3D\LdapBundle\Driver\LdapDriverInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 use Oleg\UserdirectoryBundle\Entity\User;
 
@@ -30,6 +31,9 @@ class LdapManager extends BaseLdapManager
     private $timezone;
     private $em;
     private $container;
+
+    private $supportedUsertypes = array('wcmc-cwid');
+    private $usernamePrefix;
 
 
     public function __construct( LdapDriverInterface $driver, $userManager, array $params, $container, $em ) {
@@ -45,6 +49,27 @@ class LdapManager extends BaseLdapManager
     }
 
 
+
+
+    public function findUserByUsername($username)
+    {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //don't authenticate users without WCMC CWID keytype
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
+        if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
+            throw new BadCredentialsException('The usertype '.$usernamePrefix.' can not be authenticated by ldap.');
+        }
+
+        $this->usernamePrefix = $usernamePrefix;
+
+        //clean username
+        $usernameClean = $userSecUtil->createCleanUsername($username);
+
+        return parent::findUserByUsername($usernameClean);
+    }
+
     protected function hydrate(UserInterface $user, array $entry) {
 
         parent::hydrate($user, $entry);
@@ -55,7 +80,7 @@ class LdapManager extends BaseLdapManager
         //modify user: set keytype and primary public user id
         $usernameClean = $user->getUsername();
         $userSecUtil = $this->container->get('user_security_utility');
-        $userkeytype = $userSecUtil->getDefaultUserKeytypeSafe();
+        $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
         $user->setKeytype($userkeytype);
         $user->setPrimaryPublicUserId($usernameClean);
 
@@ -75,21 +100,6 @@ class LdapManager extends BaseLdapManager
 
     }
 
-
-
-
-
-
-    public function findUserByUsername($username)
-    {
-        //clean username
-        $userSecUtil = $this->container->get('user_security_utility');
-        $usernameClean = $userSecUtil->createCleanUsername($username);
-
-        return parent::findUserByUsername($usernameClean);
-    }
-
-
     public function bind(UserInterface $user, $password)
     {
 
@@ -97,6 +107,11 @@ class LdapManager extends BaseLdapManager
 
         //always clean username before bind, use primaryPublicUserId
         $user->setUsername( $user->getPrimaryPublicUserId() );
+
+//        //don't authenticate users without WCMC CWID keytype
+//        if( $user->getKeytype()->getAbbreviation() != $this->supportedUsertype ) {
+//            throw new BadCredentialsException('The usertype '.$user->getKeytype()->getAbbreviation().' can not be authenticated by ldap.');
+//        }
 
         $bindRes = parent::bind($user, $password);
 

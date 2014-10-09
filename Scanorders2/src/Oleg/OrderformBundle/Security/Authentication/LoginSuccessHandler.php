@@ -84,7 +84,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $options['eventtype'] = "Successful Login";
         $options['event'] = 'Successful login to Scan Order site';
-        $response = new RedirectResponse($this->router->generate('scan-order-home'));
+        $response = new RedirectResponse($this->router->generate('scan_home'));
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
@@ -97,7 +97,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 //            //exit();
 //
 //            //$response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
-//            $response = new RedirectResponse($this->router->generate('scan-order-home'));
+//            $response = new RedirectResponse($this->router->generate('scan_home'));
 //            $options['eventtype'] = "Successful Login";
 //            $options['event'] = 'Successful login as Scan Processor to Scan Order site';
 //
@@ -110,7 +110,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 //
 //            if( 1 ) {
 //                //redirect all users to the home page
-//                $response = new RedirectResponse($this->router->generate('scan-order-home'));
+//                $response = new RedirectResponse($this->router->generate('scan_home'));
 //                $options['eventtype'] = "Successful Login";
 //                $options['event'] = 'Successful login to Scan Order site';
 //
@@ -129,7 +129,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 //                    //$referer_url = $this->router->generate( $lastRoute );
 //                    $referer_url = $lastRoute;
 //                } else {
-//                    $referer_url = $this->router->generate('scan-order-home');
+//                    $referer_url = $this->router->generate('scan_home');
 //                }
 //
 //                //echo("referer_url=".$referer_url);

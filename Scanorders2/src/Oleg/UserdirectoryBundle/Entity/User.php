@@ -29,7 +29,10 @@ use FOS\UserBundle\Model\User as BaseUser;
  *      @ORM\Index( name="keytype_idx", columns={"keytype"} ),
  *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} ),
  *      @ORM\Index( name="username_idx", columns={"username"} ),
- *      @ORM\Index( name="displayName_idx", columns={"displayName"} )
+ *      @ORM\Index( name="displayName_idx", columns={"displayName"} ),
+ *      @ORM\Index( name="firstName_idx", columns={"firstName"} ),
+ *      @ORM\Index( name="lastName_idx", columns={"lastName"} ),
+ *      @ORM\Index( name="email_idx", columns={"email"} )
  *  }
  * )
  * @ORM\AttributeOverrides({ @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) ) })
@@ -763,6 +766,11 @@ class User extends BaseUser
     public function createCleanUsername($username) {
         $usernameArr = explode("_@_",$username);
         return $usernameArr[0];
+    }
+
+    public function getUsernamePrefix($username) {
+        $usernameArr = explode("_@_",$username);
+        return $usernameArr[1];
     }
 
     public function getCleanUsername() {

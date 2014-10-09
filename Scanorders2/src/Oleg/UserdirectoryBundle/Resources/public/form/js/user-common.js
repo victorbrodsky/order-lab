@@ -106,12 +106,18 @@ function trimWithCheck(val) {
 //convert enter to tab behavior: pressing enter will focus the next input field
 function initConvertEnterToTab() {
     $('body').on('keydown', 'input, select', function(e) {
+
+        if( $(this).hasClass('submit-on-enter-field') ) {
+            //console.log('submit-on-enter-field !');
+            return;
+        }
+
         var self = $(this)
             , form = self.parents('form:eq(0)')
             , focusable
             , next
             ;
-        if (e.keyCode == 13) {
+        if( e.keyCode == 13 ) {
             //focusable = form.find('input,a,select,button,textarea').filter(':visible');
             focusable = form.find('input,select').filter(':visible').not("[readonly]").not("[disabled]");
             next = focusable.eq(focusable.index(this)+1);

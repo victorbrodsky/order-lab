@@ -239,27 +239,34 @@ class UserController extends Controller
 
         //last name
         $criteriastr .= "user.lastName LIKE '%".$search."%' OR ";
+        //$criteriastr .= "user.lastName='".$search."' OR ";
 
         //first name
         $criteriastr .= "user.firstName LIKE '%".$search."%' OR ";
+        //$criteriastr .= "user.firstName='".$search."' OR ";
 
         //Middle Name
         $criteriastr .= "user.middleName LIKE '%".$search."%' OR ";
+        //$criteriastr .= "user.middleName='".$search."' OR ";
 
         //Preferred Full Name for Display
         $criteriastr .= "user.displayName LIKE '%".$search."%' OR ";
 
         //Abbreviated Name/Initials field
-        $criteriastr .= "user.initials LIKE '%".$search."%' OR ";
+        //$criteriastr .= "user.initials LIKE '%".$search."%' OR ";
+        $criteriastr .= "user.initials='".$search."' OR ";
 
         //preferred email
         $criteriastr .= "user.email LIKE '%".$search."%' OR ";
+        //$criteriastr .= "user.email='".$search."' OR ";
 
         //email in locations
         $criteriastr .= "locations.email LIKE '%".$search."%' OR ";
+        //$criteriastr .= "locations.email='".$search."' OR ";
 
         //User ID/CWID
-        $criteriastr .= "user.primaryPublicUserId LIKE '%".$search."%' OR ";
+        //$criteriastr .= "user.primaryPublicUserId LIKE '%".$search."%' OR ";
+        $criteriastr .= "user.primaryPublicUserId='".$search."' OR ";
 
         //administrative title
         //institution
@@ -290,14 +297,17 @@ class UserController extends Controller
         //WCMC Employee Identification Number (EIN)
         //NPI
         $dql->leftJoin("credentials.identifiers", "identifiers");
-        $criteriastr .= "identifiers.field LIKE '%".$search."%' OR ";
+        //$criteriastr .= "identifiers.field LIKE '%".$search."%' OR ";
+        $criteriastr .= "identifiers.field='".$search."' OR ";
 
         //NYPH Code
         $dql->leftJoin("credentials.codeNYPH", "codeNYPH");
-        $criteriastr .= "codeNYPH.field LIKE '%".$search."%' OR ";
+        //$criteriastr .= "codeNYPH.field LIKE '%".$search."%' OR ";
+        $criteriastr .= "codeNYPH.field='".$search."' OR ";
 
         //Associated NYPH Code in Locations
-        $criteriastr .= "locations.associatedCode LIKE '%".$search."%' OR ";
+        //$criteriastr .= "locations.associatedCode LIKE '%".$search."%' OR ";
+        $criteriastr .= "locations.associatedCode='".$search."' OR ";
 
         //License Number
 
@@ -596,7 +606,7 @@ class UserController extends Controller
         $user->setCreatedby('manual');
 
         $userSecUtil = $this->get('user_security_utility');
-        $userkeytype = $userSecUtil->getDefaultUserKeytypeSafe();
+        $userkeytype = $userSecUtil->getDefaultUsernameType();
         $user->setKeytype($userkeytype);
 
         $this->addEmptyCollections($user);
@@ -689,9 +699,8 @@ class UserController extends Controller
 
         if ($form->isValid()) {
 
-            //TODO: set username the same as primaryPublicUserId for now. Change ldap authentication to use setUniqueUsername
-            //$user->setUniqueUsername();
-            $user->setUsername( $user->getPrimaryPublicUserId() );
+            //set unique username
+            $user->setUniqueUsername();
 
             $em->persist($user);
             $em->flush();
@@ -1233,10 +1242,10 @@ class UserController extends Controller
     public function processCommentType($comment) {
 
         $type = $comment->getCommentType();
-        //echo "type name=".$type->getName()."<br>";
+//        echo "type name=".$type->getName()."<br>";
 
         $subtype = $comment->getCommentSubType();
-        //echo "subtype name=".$subtype->getName()."<br>";
+//        echo "subtype name=".$subtype->getName()."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
@@ -1354,7 +1363,7 @@ class UserController extends Controller
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
         $userutil = new UserUtil();
-        $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
+        $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
         //exit();
         return $this->redirect($this->generateUrl('employees_listusers'));

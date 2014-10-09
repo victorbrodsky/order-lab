@@ -99,8 +99,6 @@ class ScanAdminController extends AdminController
         $count_urgency = $this->generateUrgency();
         $count_scanners = $this->generateScanners();
         $count_progressCommentsEventType = $this->generateProgressCommentsEventType();
-        $userutil = new UserUtil();
-        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -123,7 +121,6 @@ class ScanAdminController extends AdminController
             'Urgency='.$count_urgency.' '.
             'Scanners='.$count_scanners.' '.
             'Progress and Comments EventTypes='.$count_progressCommentsEventType.' '.
-            'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
 

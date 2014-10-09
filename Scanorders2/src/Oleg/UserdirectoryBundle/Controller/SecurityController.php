@@ -70,7 +70,7 @@ class SecurityController extends Controller
         if(
         $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ){
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
 
         $request = $this->get('request_stack')->getCurrentRequest();

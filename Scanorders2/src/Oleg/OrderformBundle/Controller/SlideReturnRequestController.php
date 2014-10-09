@@ -43,13 +43,13 @@ class SlideReturnRequestController extends Controller
         if( !$userSiteSettings ) {
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+            return $this->redirect( $this->generateUrl('scan_home') );
         }
 
         $slideReturnRequest  = new SlideReturnRequest();
