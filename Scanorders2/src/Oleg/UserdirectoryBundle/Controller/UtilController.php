@@ -77,6 +77,8 @@ class UtilController extends Controller {
 
         $id = trim( $request->get('id') );
         $pid = trim( $request->get('pid') );
+        //echo "pid=".$pid."<br>";
+        //echo "id=".$id."<br>";
 
         $routeName = $request->get('_route');
 
@@ -95,18 +97,22 @@ class UtilController extends Controller {
             $className = 'CommentSubTypeList';
         }
 
+        //echo "className=".$className."<br>";
+
         if( $className != "" && is_numeric($pid) ) {
             //echo "className=".$className."<br>";
             $query = $em->createQueryBuilder()
                 ->from('OlegUserdirectoryBundle:'.$className, 'list')
                 ->innerJoin("list.parent", "parent")
                 ->select("list.id as id, list.name as text")
+                //->select("list.name as id, list.name as text")
                 ->orderBy("list.orderinlist","ASC");
 
             $query->where("parent = :pid AND (list.type = :typedef OR list.type = :typeadd)")->setParameters(array('typedef' => 'default','typeadd' => 'user-added','pid'=>$pid));
 
             $output = $query->getQuery()->getResult();
         } else {
+            //echo "pid is not numeric=".$pid."<br>";
             $output = array();
         }
 
@@ -116,10 +122,13 @@ class UtilController extends Controller {
             if( $entity ) {
                 if( array_key_exists($entity->getId(), $output) === false ) {
                     $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
+                    //$element = array('id'=>$entity->getName()."", 'text'=>$entity->getName()."");
                     $output[] = $element;
                 }
             }
         }
+
+        //print_r($output);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -140,6 +149,7 @@ class UtilController extends Controller {
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
+            //->select("list.name as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
         $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
@@ -152,6 +162,7 @@ class UtilController extends Controller {
             if( $entity ) {
                 if( array_key_exists($entity->getId(), $output) === false ) {
                     $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
+                    //$element = array('id'=>$entity->getName()."", 'text'=>$entity->getName()."");
                     $output[] = $element;
                 }
             }

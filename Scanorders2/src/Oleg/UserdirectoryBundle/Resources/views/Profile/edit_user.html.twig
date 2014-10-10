@@ -411,8 +411,12 @@
                 {{ formmacros.field(formfield.status) }}
             {% endif %}
 
-            {{ formmacros.field(formfield.commentType) }}
-            {{ formmacros.field(formfield.commentSubType) }}
+            {{ formmacros.field(formfield.commentType.name) }}
+
+            {% for commentSubType in formfield.commentType.commentSubTypes %}
+                {{ formmacros.field(commentSubType.name) }}
+            {% endfor %}
+
             {{ formmacros.field(formfield.comment) }}
             </p>
 
@@ -421,8 +425,11 @@
     {% else %}
 
         {% do formfield.commentType.setRendered %}
-        {% do formfield.commentSubType.setRendered %}
         {% do formfield.comment.setRendered %}
+
+        {% if formfield.status is defined %}
+            {% do formfield.status.setRendered %}
+        {% endif %}
 
     {% endif %}
 
@@ -973,6 +980,8 @@
         {% endif %}
         {#EOF credentials#}
 
+
+        {#Comments#}
         {#On the user profile page always hide all Comments (including the whole Comments section) if they are empty.#}
         {% set showPublicComments = false %}
         {% set showPrivateComments = false %}
@@ -1003,130 +1012,139 @@
             {% endif %}
         {% endfor %}
 
-    {#showPublicComments:{{ showPublicComments }}#}
-    {#showPrivateComments:{{ showPrivateComments }}#}
+        {% if showPublicComments == false %}
+            {% do form.publicComments.setRendered %}
+        {% endif %}
+        {% if showPrivateComments == false %}
+            {% do form.privateComments.setRendered %}
+        {% endif %}
+        {% if showConfComments == false %}
+            {% do form.confidentialComments.setRendered %}
+        {% endif %}
+        {% if showAdminComments == false %}
+            {% do form.adminComments.setRendered %}
+        {% endif %}
 
-    {% if showPublicComments or showPrivateComments or showConfComments or showAdminComments %}
-        {#Comments#}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#Comments">
-                        Comments
-                    </a>
-                </h4>
-            </div>
-            <div id="Comments" class="panel-collapse collapse in">
-                <div class="panel-body">
+        {% if showPublicComments or showPrivateComments or showConfComments or showAdminComments %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#Comments">
+                            Comments
+                        </a>
+                    </h4>
+                </div>
+                <div id="Comments" class="panel-collapse collapse in">
+                    <div class="panel-body">
 
-                    {#Public Comments#}
-                    {% if showPublicComments %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#publicComment">
-                                        Public Comment(s)
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="publicComment" class="panel-collapse collapse in">
-                                <div class="panel-body">
-                                    <div class="user-publiccomments-holder">
-                                        {% for publicComment in form.publicComments %}
-                                            {{ userform.comments(publicComment,cicle,'user-publiccomments','noprototype') }}
-                                        {% endfor %}
-                                        {% if cicle != 'show_user' %}
-                                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-publiccomments')" type='button'>Add Public Comment</button>
-                                        {% endif %}
+                        {#Public Comments#}
+                        {% if showPublicComments %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#publicComment">
+                                            Public Comment(s)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="publicComment" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="user-publiccomments-holder">
+                                            {% for publicComment in form.publicComments %}
+                                                {{ userform.comments(publicComment,cicle,'user-publiccomments','noprototype') }}
+                                            {% endfor %}
+                                            {% if cicle != 'show_user' %}
+                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-publiccomments')" type='button'>Add Public Comment</button>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
 
 
-                    {#Private Comments#}
-                    {% if form.privateComments is defined and showPrivateComments %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#privatecomment">
-                                        Private Comment(s) [Not publicly visible, but visible to and editable by the user]
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="privatecomment" class="panel-collapse collapse in">
-                                <div class="panel-body">
-                                    <div class="user-privatecomments-holder">
-                                        {% for privateComment in form.privateComments %}
-                                            {{ userform.comments(privateComment,cicle,'user-privatecomments','noprototype') }}
-                                        {% endfor %}
-                                        {% if cicle != 'show_user' %}
-                                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-privatecomments')" type='button'>Add Private Comment</button>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+                        {#&#123;&#35;Private Comments&#35;&#125;#}
+                        {#{% if form.privateComments is defined and showPrivateComments %}#}
+                            {#<div class="panel panel-info">#}
+                                {#<div class="panel-heading">#}
+                                    {#<h4 class="panel-title">#}
+                                        {#<a data-toggle="collapse" href="#privatecomment">#}
+                                            {#Private Comment(s) [Not publicly visible, but visible to and editable by the user]#}
+                                        {#</a>#}
+                                    {#</h4>#}
+                                {#</div>#}
+                                {#<div id="privatecomment" class="panel-collapse collapse in">#}
+                                    {#<div class="panel-body">#}
+                                        {#<div class="user-privatecomments-holder">#}
+                                            {#{% for privateComment in form.privateComments %}#}
+                                                {#{{ userform.comments(privateComment,cicle,'user-privatecomments','noprototype') }}#}
+                                            {#{% endfor %}#}
+                                            {#{% if cicle != 'show_user' %}#}
+                                                {#<button class="btn btn-default" onClick="addBaseTitle(this,'user-privatecomments')" type='button'>Add Private Comment</button>#}
+                                            {#{% endif %}#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#{% endif %}#}
 
 
-                    {#Confidential Comments#}
-                    {% if form.confidentialComments is defined and showConfComments %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#Confidential">
-                                        Confidential Comment(s) [Not publicly visible, but visible to the user]
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="Confidential" class="panel-collapse collapse in">
-                                <div class="panel-body">
-                                    <div class="user-confidentialcomments-holder">
-                                        {% for confidentialComment in form.confidentialComments %}
-                                            {{ userform.comments(confidentialComment,cicle,'user-confidentialcomment','noprototype') }}
-                                        {% endfor %}
-                                        {% if cicle != 'show_user' %}
-                                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-confidentialcomment')" type='button'>Add Confidential Comment</button>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+                        {#&#123;&#35;Confidential Comments&#35;&#125;#}
+                        {#{% if form.confidentialComments is defined and showConfComments %}#}
+                            {#<div class="panel panel-info">#}
+                                {#<div class="panel-heading">#}
+                                    {#<h4 class="panel-title">#}
+                                        {#<a data-toggle="collapse" href="#Confidential">#}
+                                            {#Confidential Comment(s) [Not publicly visible, but visible to the user]#}
+                                        {#</a>#}
+                                    {#</h4>#}
+                                {#</div>#}
+                                {#<div id="Confidential" class="panel-collapse collapse in">#}
+                                    {#<div class="panel-body">#}
+                                        {#<div class="user-confidentialcomments-holder">#}
+                                            {#{% for confidentialComment in form.confidentialComments %}#}
+                                                {#{{ userform.comments(confidentialComment,cicle,'user-confidentialcomment','noprototype') }}#}
+                                            {#{% endfor %}#}
+                                            {#{% if cicle != 'show_user' %}#}
+                                                {#<button class="btn btn-default" onClick="addBaseTitle(this,'user-confidentialcomment')" type='button'>Add Confidential Comment</button>#}
+                                            {#{% endif %}#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#{% endif %}#}
 
 
-                    {#Admin Comments#}
-                    {% if form.adminComments is defined and showAdminComments %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#admincomment">
-                                        Administrative Comment(s) [visible only to Editors and Administrators]
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="admincomment" class="panel-collapse collapse in">
-                                <div class="panel-body">
-                                    <div class="user-admincomments-holder">
-                                        {% for adminComment in form.adminComments %}
-                                            {{ userform.comments(adminComment,cicle,'user-admincomments','noprototype') }}
-                                        {% endfor %}
-                                        {% if cicle != 'show_user' %}
-                                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-admincomments')" type='button'>Add Public Comment</button>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+                        {#&#123;&#35;Admin Comments&#35;&#125;#}
+                        {#{% if form.adminComments is defined and showAdminComments %}#}
+                            {#<div class="panel panel-info">#}
+                                {#<div class="panel-heading">#}
+                                    {#<h4 class="panel-title">#}
+                                        {#<a data-toggle="collapse" href="#admincomment">#}
+                                            {#Administrative Comment(s) [visible only to Editors and Administrators]#}
+                                        {#</a>#}
+                                    {#</h4>#}
+                                {#</div>#}
+                                {#<div id="admincomment" class="panel-collapse collapse in">#}
+                                    {#<div class="panel-body">#}
+                                        {#<div class="user-admincomments-holder">#}
+                                            {#{% for adminComment in form.adminComments %}#}
+                                                {#{{ userform.comments(adminComment,cicle,'user-admincomments','noprototype') }}#}
+                                            {#{% endfor %}#}
+                                            {#{% if cicle != 'show_user' %}#}
+                                                {#<button class="btn btn-default" onClick="addBaseTitle(this,'user-admincomments')" type='button'>Add Administrative Comment</button>#}
+                                            {#{% endif %}#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#{% endif %}#}
 
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
         {#EOF Comments#}
-    {% endif %}
 
 
         <br>

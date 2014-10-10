@@ -24,14 +24,35 @@ abstract class BaseComment extends BaseUserAttributes {
     private $comment;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CommentTypeList")
+     * @ORM\ManyToOne(targetEntity="CommentTypeList", cascade={"persist"})
      **/
     private $commentType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CommentSubTypeList")
+     * @ORM\ManyToOne(targetEntity="CommentSubTypeList", cascade={"persist"})
      **/
     private $commentSubType;
+
+
+
+
+    public function __construct($author=null) {
+        parent::__construct($author);
+
+        //create one commentSubType
+        //echo "create commentSubType!!!!!!!!!!!!!!!!!! ";
+        //exit();
+        $this->commentSubType = new CommentSubTypeList();
+        $this->commentSubType->setCreator($author);
+        $this->commentSubType->setType('user-added');
+
+        $this->commentType = new CommentTypeList();
+        $this->commentType->setCreator($author);
+        $this->commentType->setType('user-added');
+
+        $this->commentType->addCommentSubType($this->commentSubType);
+
+    }
 
 
 
@@ -77,6 +98,10 @@ abstract class BaseComment extends BaseUserAttributes {
     public function setCommentType($commentType)
     {
         $this->commentType = $commentType;
+    }
+    public function setCommentTypeList($commentType)
+    {
+        $this->setCommentType($commentType);
     }
 
     /**

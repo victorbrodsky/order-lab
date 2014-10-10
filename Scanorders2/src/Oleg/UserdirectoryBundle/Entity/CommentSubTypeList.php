@@ -103,5 +103,9 @@ class CommentSubTypeList extends ListAbstract
         return $this->parent;
     }
 
+    //no children
+    public function getChildren() {
+        return array();
+    }
 
 }

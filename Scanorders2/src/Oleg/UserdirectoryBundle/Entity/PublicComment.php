@@ -35,6 +35,8 @@ class PublicComment extends BaseComment
     }
 
 
+
+
     public function __toString() {
         return "Public Comment";
     }

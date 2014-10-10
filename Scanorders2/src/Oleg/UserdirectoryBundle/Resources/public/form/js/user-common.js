@@ -32,15 +32,22 @@ function regularCombobox() {
     });
 }
 
+//target - class or id of the target element
 function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
     //console.log("target="+target);
 
-    //clear the value
-    var value = $(target).select2('val');
-    if( !value || value == "" ) {
-        $(target).select2('val','');
-    }
+    //clear the value if it is not set (What is the point to do so if it is empty?!)
+//    var value = $(target).val();
+//    console.log("target="+target+", value1="+value);
+//    if( !value || value == "" ) {
+//        var value2 = $(target).select2('val');
+//        console.log("target="+target+", value2="+value2);
+//        if( !value2 || value2 == "" ) {
+//            console.log('clear value!');
+//            $(target).select2('val','');
+//        }
+//    }
 
     if( placeholder ) {
         var allowClear = true;

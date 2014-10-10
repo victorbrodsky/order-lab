@@ -5,11 +5,11 @@
 
 function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) {
 
-    //console.log( "onchange=" + fieldClass );
+    console.log( "onchange=" + fieldClass );
 
     var holder = parentElement.closest('.user-collection-holder');
     if( typeof holder === "undefined" || holder.length == 0 ) {
-        console.log( "holder is not found!" );
+        console.log( "holder is not found! class="+fieldClass );
         return;
     }
 
@@ -25,7 +25,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
     if( typeof parentId === "undefined" || parentId == null ) {
         parentId = parentElement.select2('val');
     }
-    //console.log( "parentId="+parentId );
+    console.log( "parentId="+parentId );
 
     if( typeof clearFlag === "undefined" ) {
         clearFlag = true;
@@ -166,7 +166,7 @@ function initInstitutionManually() {
 ////////////////// mixed functions ////////////////////
 function initTreeSelect(clearFlag) {
 
-    //console.log( "init Tree Select" );
+    console.log( "init Tree Select" );
 
     if( typeof clearFlag === "undefined" ) {
         clearFlag == true;
@@ -242,7 +242,7 @@ function setInstitutionTreeChildren(holder) {
 
 
 
-///////////////// Comments Types Tree ///////////////////
+///////////////// Comments Types Tree - initialize the children to null ///////////////////
 function setCommentTypeTreeChildren(holder) {
 
     if( typeof holder == 'undefined' ) {
@@ -250,7 +250,7 @@ function setCommentTypeTreeChildren(holder) {
     }
 
     //subTypes
-    populateSelectCombobox( holder.find(".ajax-combobox-commentsubtype"), null, "Select an option or type in a new value", false );
+    populateSelectCombobox( ".ajax-combobox-commentsubtype", null, "Select an option or type in a new value", false );
 }
 ///////////////// EOF Comments Types ///////////////////
 

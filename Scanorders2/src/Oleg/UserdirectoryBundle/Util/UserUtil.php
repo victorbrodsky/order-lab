@@ -318,7 +318,12 @@ class UserUtil {
         return $res;
     }
 
-    public function generateUsernameTypes($em,$user) {
+    public function generateUsernameTypes($em,$user=null) {
+
+        if( $user == null ) {
+            $user = $this->createSystemUser($em,null,null);
+        }
+
         $entities = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findAll();
 
         if( $entities ) {

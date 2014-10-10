@@ -24,6 +24,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 class LdapManager extends BaseLdapManager
 {
@@ -81,6 +82,18 @@ class LdapManager extends BaseLdapManager
         $usernameClean = $user->getUsername();
         $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
+
+        //first time login when DB is clean
+        //echo "userkeytype=".$userkeytype."<br>";
+        if( !$userkeytype ) {
+            $userutil = new UserUtil();
+            $count_usernameTypeList = $userutil->generateUsernameTypes($this->em);
+            //echo "generated user types=".$count_usernameTypeList."<br>";
+            $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
+            //echo "userkeytype=".$userkeytype."<br>";
+            //exit();
+        }
+
         $user->setKeytype($userkeytype);
         $user->setPrimaryPublicUserId($usernameClean);
 
@@ -127,6 +140,13 @@ class LdapManager extends BaseLdapManager
         return $bindRes;
     }
 
+
+//    public function makesureKeytypeExist() {
+//        //generate keytypes
+//        $userutil = new UserUtil();
+//        $count_usernameTypeList = $userutil->generateUsernameTypes($this->em);
+//        echo "generated user types=".$count_usernameTypeList."<br>";
+//    }
 
 
 }

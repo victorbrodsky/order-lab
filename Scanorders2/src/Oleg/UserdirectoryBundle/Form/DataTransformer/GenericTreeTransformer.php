@@ -39,18 +39,33 @@ class GenericTreeTransformer implements DataTransformerInterface
         return $this->em;
     }
 
+
     /**
-     * Transforms an object to a string.
+     * Transforms an object or name string to id.
      *
      * @param  Issue|null $issue
      * @return string
      */
     public function transform($entity)
     {
+
+        if( null === $entity || $entity == "" ) {
+            return "";
+        }
+
         //echo "data transformer entity=".$entity."<br>";
+
+        if( is_int($entity) ) {
+            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($entity);
+            //echo "findOneById entity=".$entity."<br>";
+        } else {
+            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($entity);
+        }
+
         if( null === $entity ) {
             return "";
         }
+
         return $entity->getId();
     }
 
@@ -97,12 +112,14 @@ class GenericTreeTransformer implements DataTransformerInterface
 
     public function createNew($name) {
 
+        echo "enter create new name=".$name."<br>";
+
         //check if it is already exists in db
         $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name);
         
         if( null === $entity ) {
 
-            //echo "create new<br>";
+            echo "create new with name=".$name."<br>";
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
@@ -113,11 +130,12 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             if( method_exists($newEntity,'getParent')  ) {
                 //don't flush this entity because it has parent and parent can not be set here
-                $this->em->persist($newEntity);
+                echo "this entity has parent => don't create <br>";
+                //$this->em->persist($newEntity);
                 return $newEntity;
             }
 
-            //echo "persist and flush <br>";
+            echo "persist and flush !!!!!!!!!!!!!!!! <br>";
             $this->em->persist($newEntity);
             $this->em->flush($newEntity);
 
@@ -133,17 +151,29 @@ class GenericTreeTransformer implements DataTransformerInterface
     public function createNewEntity($name,$className,$creator) {
         $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
         $newEntity = new $fullClassName();
+
         $newEntity->setName($name);
-        $newEntity->setCreatedate(new \DateTime());
-        $newEntity->setType('user-added');
         $newEntity->setCreator($creator);
+
+        $newEntity = $this->populateEntity($newEntity);
+
+        return $newEntity;
+    }
+
+    public function populateEntity($entity) {
+
+        $fullClassName = new \ReflectionClass($entity);
+        $className = $fullClassName->getShortName();
+
+        $entity->setCreatedate(new \DateTime());
+        $entity->setType('user-added');
 
         //get max orderinlist
         $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:'.$className.' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
-        $newEntity->setOrderinlist($nextorder);
+        $entity->setOrderinlist($nextorder);
 
-        return $newEntity;
+        return $entity;
     }
 
 }

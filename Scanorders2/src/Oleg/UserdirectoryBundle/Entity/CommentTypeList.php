@@ -123,4 +123,18 @@ class CommentTypeList extends ListAbstract
         return $this->commentSubTypes;
     }
 
+    public function getChildren()
+    {
+        return $this->getCommentSubTypes();
+    }
+    public function addChild($child)
+    {
+        return $this->addCommentSubType($child);
+    }
+    public function removeChild($child)
+    {
+        return $this->removeCommentSubType($child);
+    }
+
+
 }

@@ -23,28 +23,6 @@ class BaseCommentsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $attr = array('class' => 'ajax-combobox-commenttype', 'type' => 'hidden');
-        if( $this->params['read_only'] ) {
-            $attr['readonly'] = 'readonly';
-        }
-        $builder->add('commentType', 'employees_custom_selector', array(
-            'label' => 'Comment Category:',
-            'attr' => $attr,
-            'required' => false,
-            'classtype' => 'commentType'
-        ));
-
-        $attr = array('class' => 'combobox combobox-width ajax-combobox-commentsubtype', 'type' => 'hidden');
-        if( $this->params['read_only'] ) {
-            $attr['readonly'] = 'readonly';
-        }
-        $builder->add('commentSubType', 'employees_custom_selector', array(
-            'label' => "Comment Name:",
-            'required' => false,
-            'attr' => $attr,
-            'classtype' => 'commentSubType'
-        ));
-
         $builder->add( 'comment', 'textarea', array(
             'label'=>'Comment:',
             'read_only' => $this->params['read_only'],
@@ -65,6 +43,24 @@ class BaseCommentsType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width'),
             ));
         }
+
+
+        //comment's category (type)
+//        $builder->add('commentType', 'collection', array(
+//            'type' => new CommentTypeType($this->params),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__commenttype__',
+//        ));
+        $builder->add('commentType', new CommentTypeType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentTypeList',
+            'label' => false,
+            'required' => false
+        ));
 
     }
 
