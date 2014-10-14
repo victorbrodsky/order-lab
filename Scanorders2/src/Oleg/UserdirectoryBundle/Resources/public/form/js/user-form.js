@@ -261,6 +261,7 @@ function getYearByDiff(date1,date2) {
 }
 
 
+Dropzone.autoDiscover = false;
 function initFileUpload() {
 //    // "myAwesomeDropzone" is the camelized version of the HTML element's ID
 //    Dropzone.options.myAwesomeDropzone = {
@@ -276,8 +277,12 @@ function initFileUpload() {
 
     $(".dropzone").dropzone({
         addRemoveLinks: true,
-        thumbnailHeight: '50px',
         maxFiles: 1
     });
+
+
+//    var myDropzone = window.Dropzone;
+//    myDropzone.addRemoveLinks = true;
+//    myDropzone.maxFiles = 1;
 
 }
