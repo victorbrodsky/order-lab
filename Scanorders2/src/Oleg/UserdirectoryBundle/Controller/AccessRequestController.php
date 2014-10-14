@@ -103,13 +103,20 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
+        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+            $sitenameFull = "Employee Directory";
+        }
+        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+            $sitenameFull = "Scan Orders";
+        }
+
         // Case 1: user has active accreq
         if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_ACTIVE ) {
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
 
-            $text = "You have requested access on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
+            $text = "You have requested access to ".$sitenameFull." on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
             //$this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
@@ -122,7 +129,7 @@ class AccessRequestController extends Controller
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
-            $text = 'You have requested access on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
+            $text = 'You have requested access to '.$sitenameFull.' on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
 
             return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
         }
@@ -155,7 +162,8 @@ class AccessRequestController extends Controller
 
         return array(
             'userid' => $id,
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'sitenamefull'=>$sitenameFull
         );
     }
 
@@ -194,6 +202,13 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
+        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+            $sitenameFull = "Employee Directory";
+        }
+        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+            $sitenameFull = "Scan Orders";
+        }
+
         //echo "sitename=".$sitename."<br>";
 
         if( $userAccessReq ) {
@@ -201,7 +216,7 @@ class AccessRequestController extends Controller
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
 
-            $text = "You have requested access on " . $dateStr . ". " .
+            $text = "You have requested access to ".$sitenameFull." on " . $dateStr . ". " .
                 "The status of your request is " . $userAccessReq->getStatusStr() . "." .
                 "Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
@@ -221,13 +236,6 @@ class AccessRequestController extends Controller
         $emailStr = "";
         if( $email && $email != "" ) {
             $emailStr = "\r\nConfirmation email was sent to ".$email;
-        }
-
-        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-            $sitenameFull = "Employee Directory";
-        }
-        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-            $sitenameFull = "Scan Orders";
         }
 
         $emailUtil = new EmailUtil();

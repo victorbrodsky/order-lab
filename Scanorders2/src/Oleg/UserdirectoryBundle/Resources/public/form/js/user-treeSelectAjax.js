@@ -5,7 +5,7 @@
 
 function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) {
 
-    console.log( "onchange=" + fieldClass );
+    //console.log( "onchange=" + fieldClass );
 
     var holder = parentElement.closest('.user-collection-holder');
     if( typeof holder === "undefined" || holder.length == 0 ) {
@@ -26,7 +26,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
     if( typeof parentId === "undefined" || parentId == null ) {
         parentId = parentElement.select2('val');
     }
-    console.log( "parentId="+parentId );
+    //console.log( "parentId="+parentId );
 
     if( typeof clearFlag === "undefined" ) {
         clearFlag = true;
@@ -167,7 +167,7 @@ function initInstitutionManually() {
 ////////////////// mixed functions ////////////////////
 function initTreeSelect(clearFlag) {
 
-    console.log( "init Tree Select" );
+    //console.log( "init Tree Select" );
 
     if( typeof clearFlag === "undefined" ) {
         clearFlag == true;

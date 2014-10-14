@@ -62,7 +62,7 @@ class GenericTreeTransformer implements DataTransformerInterface
             //echo "findOneById entity=".$entity."<br>";
         }
 //        else {
-//            echo "transform by name=".$entity." ????????????????<br>";
+//            //echo "transform by name=".$entity." ????????????????<br>";
 //            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($entity);
 //        }
 
@@ -111,7 +111,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             } else {
 
-                echo "found:".$entity->getName()."<br>";
+                //echo "found:".$entity->getName()."<br>";
                 //exit('use found object <br>');
                 return $entity; //use found object
 
@@ -120,7 +120,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         } else {    //text => most probably it is new name
 
             //exit('text is a new record name');
-            echo "text is a new record name=".$text."<br>";
+            //echo "text is a new record name=".$text."<br>";
             return $this->createNew($text); //create a new record in db
 
         }
@@ -129,7 +129,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
     public function createNew($name) {
 
-        echo "enter create new name=".$name."<br>";
+        //echo "enter create new name=".$name."<br>";
         //exit('create new !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
         //check if it is already exists in db
@@ -137,7 +137,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         
         if( null === $entity ) {
 
-            echo "create new with name=".$name."<br>";
+            //echo "create new with name=".$name."<br>";
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
@@ -148,13 +148,13 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             if( method_exists($newEntity,'getParent')  ) {
                 //don't flush this entity because it has parent and parent can not be set here
-                echo "this entity has parent => don't create <br>";
-                echo "name=".$newEntity->getName()."<br>";
+                //echo "this entity has parent => don't create <br>";
+                //echo "name=".$newEntity->getName()."<br>";
                 //$this->em->persist($newEntity);
                 return $newEntity;
             }
 
-            echo "persist and flush !!!!!!!!!!!!!!!! <br>";
+            //echo "persist and flush !!!!!!!!!!!!!!!! <br>";
             $this->em->persist($newEntity);
             $this->em->flush($newEntity);
 

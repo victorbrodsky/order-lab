@@ -109,28 +109,41 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('suit',null,array(
+            'label'=>'Suit:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('mailbox',null,array(
+            'label'=>'Mailbox:',
+            'attr' => array('class'=>'form-control')
+        ));
+
         $builder->add('associatedCode',null,array(
             'label'=>'Associated NYPH Code:',
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('associatedClia',null,array(
-            'label'=>'Associated Clinical Laboratory Improvement Amendments (CLIA) Number:',
-            'attr' => array('class'=>'form-control')
-        ));
+        //In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.
+        if( $this->params['admin'] || $this->params['currentUser'] ) {
+            $builder->add('associatedClia',null,array(
+                'label'=>'Associated Clinical Laboratory Improvement Amendments (CLIA) Number:',
+                'attr' => array('class'=>'form-control')
+            ));
 
-        $builder->add('associatedCliaExpDate', 'date', array(
-            'label' => "Associated CLIA Expiration Date:",
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control allow-future-date'),
-        ));
+            $builder->add('associatedCliaExpDate', 'date', array(
+                'label' => "Associated CLIA Expiration Date:",
+                'widget' => 'single_text',
+                'required' => false,
+                'format' => 'MM-dd-yyyy',
+                'attr' => array('class' => 'datepicker form-control allow-future-date'),
+            ));
 
-        $builder->add('associatedPfi',null,array(
-            'label'=>'Associated NY Permanent Facility Identifier (PFI) Number:',
-            'attr' => array('class'=>'form-control')
-        ));
+            $builder->add('associatedPfi',null,array(
+                'label'=>'Associated NY Permanent Facility Identifier (PFI) Number:',
+                'attr' => array('class'=>'form-control')
+            ));
+        }
 
         $builder->add('comment', 'textarea', array(
             'max_length'=>5000,

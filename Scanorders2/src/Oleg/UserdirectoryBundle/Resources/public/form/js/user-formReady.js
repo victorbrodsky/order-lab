@@ -40,6 +40,8 @@ $(document).ready(function() {
 
     initUpdateExpectedPgy();
 
+    initFileUpload();
+
 });
 
 

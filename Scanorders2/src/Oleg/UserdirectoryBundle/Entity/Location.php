@@ -87,6 +87,16 @@ class Location extends BaseUserAttributes
     private $floor;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $suit;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $mailbox;
+
+    /**
      * Associated NYPH Code
      *
      * @ORM\Column(type="string", nullable=true)
@@ -473,6 +483,39 @@ class Location extends BaseUserAttributes
     {
         return $this->floor;
     }
+
+    /**
+     * @param mixed $suit
+     */
+    public function setSuit($suit)
+    {
+        $this->suit = $suit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSuit()
+    {
+        return $this->suit;
+    }
+
+    /**
+     * @param mixed $mailbox
+     */
+    public function setMailbox($mailbox)
+    {
+        $this->mailbox = $mailbox;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailbox()
+    {
+        return $this->mailbox;
+    }
+
 
     /**
      * @param mixed $user

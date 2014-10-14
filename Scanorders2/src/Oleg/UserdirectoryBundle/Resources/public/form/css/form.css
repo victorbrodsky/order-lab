@@ -339,3 +339,7 @@
 .limit-font-size > .select2-choice {
     font-size: 16px;
 }
+
+.user-collection-holder {
+    padding: 5px;
+}

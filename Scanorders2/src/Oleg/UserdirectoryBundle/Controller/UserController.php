@@ -860,23 +860,23 @@ class UserController extends Controller
         if( count($entity->getPublicComments()) == 0 ) {
             $entity->addPublicComment( new PublicComment($user) );
         }
-//        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
-//            $entity->getId() && $entity->getId() == $user->getId()
-//        ) {
-//            if( count($entity->getPrivateComments()) == 0 ) {
-//                $entity->addPrivateComment( new PrivateComment($user) );
-//            }
-//        }
-//        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-//            if( count($entity->getAdminComments()) == 0 ) {
-//                $entity->addAdminComment( new AdminComment($user) );
-//            }
-//        }
-//        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-//            if( count($entity->getConfidentialComments()) == 0 ) {
-//                $entity->addConfidentialComment( new ConfidentialComment($user) );
-//            }
-//        }
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
+            $entity->getId() && $entity->getId() == $user->getId()
+        ) {
+            if( count($entity->getPrivateComments()) == 0 ) {
+                $entity->addPrivateComment( new PrivateComment($user) );
+            }
+        }
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            if( count($entity->getAdminComments()) == 0 ) {
+                $entity->addAdminComment( new AdminComment($user) );
+            }
+        }
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            if( count($entity->getConfidentialComments()) == 0 ) {
+                $entity->addConfidentialComment( new ConfidentialComment($user) );
+            }
+        }
 
         if( count($entity->getResearchLabs()) == 0 ) {
             $entity->addResearchLab(new ResearchLab($user));
@@ -998,7 +998,7 @@ class UserController extends Controller
             $originalResLabs->add($lab);
         }
 
-        echo "count=".count($originalAdminTitles)."<br>";
+        //echo "count=".count($originalAdminTitles)."<br>";
         //exit();
 
         //Roles
@@ -1015,7 +1015,7 @@ class UserController extends Controller
 
         if( $form->isValid() ) {
 
-            echo "form is valid<br>";
+            //echo "form is valid<br>";
             //exit();
 
             //check if roles were changed and user is not admin
@@ -1206,7 +1206,7 @@ class UserController extends Controller
         }
 
         foreach( $entity->getAppointmentTitles() as $title) {
-            echo "<br>################### AppTitle: ###################<br>";
+            //echo "<br>################### AppTitle: ###################<br>";
             $this->processTitle($title);
         }
 
@@ -1234,7 +1234,7 @@ class UserController extends Controller
 
     public function setParentsForCommentTypeTree($entity) {
 
-        echo "process comments <br>";
+        //echo "process comments <br>";
 
         //echo "public comments count=".count($entity->getPublicComments())."<br>";
 
@@ -1263,11 +1263,11 @@ class UserController extends Controller
         //set author if not set
         $this->setUpdateInfo($comment);
 
-        //$comment->setCommentSubType(null);
+        //echo "<br>Comment text=".$comment->getComment()."<br>";
 
         //if comment text is empty => remove from user
-        echo "<br>Comment text=".$comment->getComment()."<br>";
         if( $comment->getComment() == "" ) {
+
             $user = $comment->getUser();
 
             $comment->setCommentType(null);
@@ -1275,10 +1275,9 @@ class UserController extends Controller
 
             $fullClassName = new \ReflectionClass($comment);
             $className = $fullClassName->getShortName();
-            //echo "className=".$className."<br>";
-            //$removeMethod = "remove".$className;
+
             $removeMethod = "remove".$className;
-            echo "removeMethod=".$removeMethod."<br>";
+            //echo "removeMethod=".$removeMethod."<br>";
 
             $user->$removeMethod($comment);
 
@@ -1293,46 +1292,6 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
-
-
-        return;
-
-        //echo "subtype id=".$subtype->getId()."<br>";
-        //echo "parent id=".$subtype->getParent()->getId()."<br>";
-        //echo "subtype id=".$subtype->getId()."<br>";
-        //echo "subtype=".$subtype."<br>";
-        //exit('2');
-
-        //$name = $subtype->getName();
-        //echo "subtype name=".$name."<br>";
-        //exit('2a');
-        //echo "subtype count=".count($subtype->getCommentSubTypes())."<br>";
-
-        $em = $this->getDoctrine()->getManager();
-
-        $author = $this->get('security.context')->getToken()->getUser();
-        $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->processCategoryElement($author,$comment,$subtype);
-
-//        echo "subtype count=".count($type->getCommentSubTypes())."<br>";
-//        foreach( $type->getCommentSubTypes() as $child ) {
-//            echo "child=".$child."<br>";
-//        }
-
-
-        //$subtype = $comment->getCommentSubType();
-        //echo "subtype name=".$subtype->getName()."<br>";
-        //echo "subtype parent=".$subtype->getParent()."<br>";
-
-        //TODO: testing
-
-        //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.context')->getToken()->getUser();
-        //$subtype = $em->getRepository('OlegUserdirectoryBundle:CommentTypeList')->checkAndSetParent($user,$comment,$type,$subtype);
-
-        //set subtype from type to comment
-        //$subtype = $type->getCommentSubTypes()->first();
-        //$comment->setCommentSubType($subtype);
-
     }
 
 

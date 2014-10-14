@@ -61,3 +61,8 @@ employees_logout:
 #    resource: "@FOSUserBundle/Resources/config/routing/group.xml"
 #    prefix: /group
 
+
+#OnueupUploaderBundle  file uploader
+oneup_uploader:
+    resource: .
+    type: uploader
