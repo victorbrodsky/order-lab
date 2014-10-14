@@ -37,6 +37,26 @@ function positionTypeListener() {
     $('.appointmenttitle-position-field').not("*[id^='s2id_']").each(function(e) {
         positionTypeAction(this);
     });
+
+    //pgy update listener
+    $('.pgylevel-field,.pgystart-field').on('change',function(e) {
+        updateExpectedPgyListener( $(this) );
+    });
+
+    //pgy expected field init
+    $('.pgylevelexpected-field').each(function(e) {
+        console.log('update expectedPgyLevel');
+        updateExpectedPgyListener( $(this) );
+    });
+
+}
+
+function updateExpectedPgyListener( element ) {
+    var holder = element.closest('.user-collection-holder');
+    var btnEl = holder.find('.update-pgy-btn');
+    var expectedPgyLevel = calculateExpectedPgy( btnEl );
+    console.log('expectedPgyLevel='+expectedPgyLevel);
+    holder.find('.pgylevelexpected-field').val(expectedPgyLevel);
 }
 
 //In the section "Academic Appointment Title(s)", if "Resident" is selected in the "Position Type" dropdown menu,
@@ -59,13 +79,16 @@ function positionTypeAction(element) {
 
     holder.find('.appointmenttitle-residencytrack-field').hide();
     holder.find('.appointmenttitle-fellowshiptype-field').hide();
+    holder.find('.appointmenttitle-pgy-field').hide();
 
     if( value == 'Resident' ) {
         holder.find('.appointmenttitle-residencytrack-field').show();
+        holder.find('.appointmenttitle-pgy-field').show();
     }
 
     if( value == 'Fellow' ) {
         holder.find('.appointmenttitle-fellowshiptype-field').show();
+        holder.find('.appointmenttitle-pgy-field').show();
     }
 }
 
@@ -166,9 +189,10 @@ function calculateExpectedPgy(btnEl) {
     var newPgyLevel = null;
 
     var holder = btnEl.closest('.user-collection-holder');
-    //console.log(holder);
+    console.log(holder);
 
     if( holder.length == 0 || !holder.hasClass('user-appointmentTitles') ) {
+        console.log('holder is null => return newPgyLevel null');
         return newPgyLevel;
     }
 
@@ -207,7 +231,7 @@ function calculateExpectedPgy(btnEl) {
 
     }
 
-    //console.log( 'res: newPgyLevel='+newPgyLevel);
+    console.log( 'res: newPgyLevel='+newPgyLevel);
 
     return newPgyLevel;
 }

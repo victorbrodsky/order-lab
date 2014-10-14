@@ -66,11 +66,15 @@ class GenericTreeTransformer implements DataTransformerInterface
             return "";
         }
 
+        //return $entity->getId();
+
+        //echo "count=".count($entity)."<br>";
+
         return $entity->getId();
     }
 
     /**
-     * Transforms a string (number) to an object (i.e. stain).
+     * Transforms a string (number) to an object. Return name string because the fields in the form are strings.
      *
      * @param  string $number
      *
@@ -84,27 +88,36 @@ class GenericTreeTransformer implements DataTransformerInterface
         //echo "data transformer text=".$text."<br>";
         //exit();
 
-        if (!$text) {
+        if( !$text ) {
+            //exit('text is null');
+            //echo "data transformer text is null <br>";
             return null;
         }
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
+            //echo 'text is id <br>';
+
             $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($text);
 
             if( null === $entity ) {
 
-                return $this->createNew($text); //create a new record in db
+                //exit('create new???');
+                return $this->createNew($text)->getName(); //create a new record in db
 
             } else {
 
-                return $entity; //use found object
+                //echo "found:".$entity->getName()."<br>";
+                //exit('use found object <br>');
+                return $entity->getName(); //use found object
 
             }
 
         } else {    //text => most probably it is new name
 
-            return $this->createNew($text); //create a new record in db
+            //exit('text is a new record name');
+            //echo "text is a new record name<br>";
+            return $this->createNew($text)->getName(); //create a new record in db
 
         }
 
@@ -113,9 +126,10 @@ class GenericTreeTransformer implements DataTransformerInterface
     public function createNew($name) {
 
         echo "enter create new name=".$name."<br>";
+        //exit('create new !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name);
+        $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name."");
         
         if( null === $entity ) {
 
@@ -126,11 +140,12 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $this->user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
             }
 
-            $newEntity = $this->createNewEntity($name,$this->className,$this->user);
+            $newEntity = $this->createNewEntity($name."",$this->className,$this->user);
 
             if( method_exists($newEntity,'getParent')  ) {
                 //don't flush this entity because it has parent and parent can not be set here
                 echo "this entity has parent => don't create <br>";
+                echo "name=".$newEntity->getName()."<br>";
                 //$this->em->persist($newEntity);
                 return $newEntity;
             }
@@ -152,21 +167,22 @@ class GenericTreeTransformer implements DataTransformerInterface
         $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
         $newEntity = new $fullClassName();
 
-        $newEntity->setName($name);
-        $newEntity->setCreator($creator);
-
         $newEntity = $this->populateEntity($newEntity);
+
+        $newEntity->setName($name."");
+        $newEntity->setCreator($creator);
 
         return $newEntity;
     }
 
     public function populateEntity($entity) {
-
-        $fullClassName = new \ReflectionClass($entity);
-        $className = $fullClassName->getShortName();
+        //exit('1');
 
         $entity->setCreatedate(new \DateTime());
         $entity->setType('user-added');
+
+        $fullClassName = new \ReflectionClass($entity);
+        $className = $fullClassName->getShortName();
 
         //get max orderinlist
         $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:'.$className.' c');

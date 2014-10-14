@@ -21,7 +21,7 @@ class CommentSubtypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $attr = array('class' => 'combobox combobox-width ajax-combobox-commentsubtype', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox-commentsubtype', 'type' => 'hidden');
         if( $this->params['read_only'] ) {
             $attr['readonly'] = 'readonly';
         }
@@ -37,6 +37,13 @@ class CommentSubtypeType extends AbstractType
 //            'required' => false,
 //            'attr' => array('class'=>'combobox combobox-width')
 //        ));
+
+
+        $builder->add('parent', new CommentTypeType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentTypeList',
+            'label' => false,
+            'required' => false
+        ));
 
 
     }

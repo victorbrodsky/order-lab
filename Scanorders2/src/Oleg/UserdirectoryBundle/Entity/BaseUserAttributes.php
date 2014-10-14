@@ -83,17 +83,6 @@ abstract class BaseUserAttributes {
      */
     protected $orderinlist;
 
-    /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $pgystart;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $pgylevel;
 
 
     public function __construct($author=null) {
@@ -208,38 +197,6 @@ abstract class BaseUserAttributes {
     public function getOrderinlist()
     {
         return $this->orderinlist;
-    }
-
-    /**
-     * @param \DateTime $pgylevel
-     */
-    public function setPgylevel($pgylevel)
-    {
-        $this->pgylevel = $pgylevel;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPgylevel()
-    {
-        return $this->pgylevel;
-    }
-
-    /**
-     * @param \DateTime $pgystart
-     */
-    public function setPgystart($pgystart)
-    {
-        $this->pgystart = $pgystart;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPgystart()
-    {
-        return $this->pgystart;
     }
 
     /**

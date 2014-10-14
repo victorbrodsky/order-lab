@@ -9,8 +9,171 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
 class TreeRepository extends EntityRepository {
 
+
+
+    //check if given category exists in DB (down to up processing)
+    //return category with all its parents
+    public function processCategoryElement($author,$holder,$category) {
+
+        $fullCategoryClassName = new \ReflectionClass($category);
+        $categoryClassName = $fullCategoryClassName->getShortName();
+        $setCategoryMethod = "set".$categoryClassName;
+        echo "<br><br>Process category=".$categoryClassName."<br>";
+
+        if( $category == null ) {
+            echo "don't process because subtype is null <br>";
+            return $category;
+        }
+
+        if( $category && $category->getId() ) {
+            echo "don't process because category exists in DB, id=".$category->getId()." <br>";
+
+            echo  "category: name=".$category->getName().", id=".$category->getId().", parentId=".$category->getParent()->getId()."<br>";
+
+            //overwrite entity
+            $holder->$setCategoryMethod($category);
+
+            return $category;
+        }
+
+        $foundCategory = $this->findCategoryByNameAndParentId($category);
+
+        if( $foundCategory ) {
+
+            echo "Case1: found in DB: ".$foundCategory->getName().", id=".$foundCategory->getId()."<br>";
+
+            //set parent
+            //$parent = $foundCategory->getParent();
+            //$parent->addChild($foundCategory);
+            if( !$foundCategory->getParent() ) {
+                exit('Logical Error: parent does not exists!!!');
+            }
+
+            //overwrite entity
+            $holder->$setCategoryMethod($foundCategory);
+
+            return $foundCategory;
+
+        } else {
+
+            echo "Case2: Not found in DB: ".$category->getName().", id=".$category->getId()."<br>";
+
+            //create category
+            //create new category with existing parent
+            $treeTransf = new GenericTreeTransformer($this->_em);
+            $category = $treeTransf->populateEntity($category);
+            $category->setCreator($author);
+            $category->setName($category->getName()."");
+
+            //set parent
+            if( method_exists($category,'getParent')  ) {
+
+                echo "Case2 A: Parent method exists<br>";
+
+                $parent = $category->getParent();
+
+                if( $parent && $parent->getId() ) {
+
+                    //parent exists in DB
+                    echo "Case2 A a: Parent method exists in DB, name=".$parent->getName().",id=".$parent->getId()."<br>";
+
+                } else {
+
+                    echo "Case2 A b: Parent method not exists in DB, name=".$parent->getName().",id=".$parent->getId()."<br>";
+
+                    //find parent
+                    $parent = $this->findCategoryByNameAndParentId($parent);
+                    //echo "find? parent=".$parent->getName().",id=".$parent->getId()."<br>";
+                    if( !$parent ) {
+                        $parent = $this->processCategoryElement($author,$holder,$category);
+                    }
+
+                }
+
+                echo "Parent, name=".$parent->getName().",id=".$parent->getId()."<br>";
+
+                $parent->addChild($category);
+
+            } else {
+
+                echo "Case2 B: Parent method not exists<br>";
+                $parent = $this->processCategoryElement($author,$holder,$category);
+                $parent->addChild($category);
+
+            }
+
+            echo "final category: name=".$category->getName().", id=".$category->getId().", parentId=".$category->getParent()->getId()."<br>";
+            //exit();
+
+            $this->_em->persist($category);
+            $this->_em->flush($category);
+
+            //overwrite entity
+            $holder->$setCategoryMethod($category);
+
+            return $category;
+
+        }
+
+
+        throw new \Exception( 'Logical error: no return');
+    }
+
+
+    public function findCategoryByNameAndParentId($category,$parent=null) {
+
+        if( $category->getId() && $category->getId() != NULL ) {
+            return $category;
+        }
+
+        $name = $category->getName();
+        $searchArr = array('name'=>$name);
+
+        $fullClassName = new \ReflectionClass($category);
+        $className = $fullClassName->getShortName();
+        echo "<br><br>find Category className=".$className."<br>";
+
+
+        if( method_exists($category,'getParent')  ) {
+
+            if( $parent == null ) {
+                $parent = $category->getParent();
+            }
+
+            echo "parent name=".$parent->getName().", id=".$parent->getId()."<br>";
+            if( $parent->getName() && $parent->getName() != "" && !$parent->getId() ) {
+                echo "parent does not exist in DB => this category does not exist in DB => return null<br>";
+                return null;
+            }
+
+            if( $parent && $parent->getId() && $parent->getId() != "" ) {
+                $searchArr['parent'] = $parent->getId();
+            }
+
+        }
+
+        echo "serach array:<br>";
+        print_r($searchArr);
+        echo "<br>";
+
+        $foundCategory = $this->_em->getRepository('OlegUserdirectoryBundle:'.$className)->findOneBy($searchArr);
+
+        return $foundCategory;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     //check if given category exists in DB
-    public function processListElement($author,$holder,$category,$parentCategory=null) {
+    public function processListElement_UpToDown($author,$holder,$category,$parentCategory=null) {
 
         $em = $this->_em;
 
@@ -26,11 +189,15 @@ class TreeRepository extends EntityRepository {
         $children = $category->getChildren();
         if( count($children) > 0 ) {
             $formSubCategory = $category->getChildren()->first();
-            echo "formSubCategory=".$formSubCategory."<br>";
+            //echo "formSubCategory=".$formSubCategory."<br>";
             //$holder->setCommentSubType($formSubCategory);
         }
 
+        //GenericTreeTransformer return id of the object, therefore $category is id of the object
+        //echo "category=".$category."<br>";
         $name = $category->getName();
+        $id = $category->getId();
+        echo "name=".$name.", id=".$id."<br>";
 
         $searchArr = array('name'=>$name);
         if( $parentCategory && $parentCategory->getId() ) {
@@ -67,13 +234,16 @@ class TreeRepository extends EntityRepository {
 
                 $foundCategory->addChild($child);
 
+                //set parent
                 if( method_exists($formSubCategory,'getParent')  ) {
-                    if( $formSubCategory && $formSubCategory->getName() == $child->getName() && $formSubCategory->getParent()->getName() == $child->getParent()->getName() ) {
-                        $fullChildClassName = new \ReflectionClass($category);
-                        $childClassName = $fullChildClassName->getShortName();
-                        $setChildMethod = "set".$childClassName;
-                        echo "setChildMethod=".$setChildMethod."<br>";
-                        $holder->$setChildMethod($child);
+                    if( $formSubCategory && $child && $formSubCategory->getName() == $child->getName() ) {
+                        if( $formSubCategory->getParent() && $child->getParent() && $formSubCategory->getParent()->getName() == $child->getParent()->getName() ) {
+                            $fullChildClassName = new \ReflectionClass($category);
+                            $childClassName = $fullChildClassName->getShortName();
+                            $setChildMethod = "set".$childClassName;
+                            //echo "setChildMethod=".$setChildMethod."<br>";
+                            $holder->$setChildMethod($child);
+                        }
                     }
                 }
 
@@ -90,7 +260,7 @@ class TreeRepository extends EntityRepository {
 
             //set parent if applicable
             if( $parentCategory && method_exists($category,'getParent') ) {
-                echo "set parent=".$parentCategory."<br>";
+                //echo "set parent=".$parentCategory."<br>";
                 $parentCategory->addChild($category);
             }
 
@@ -105,6 +275,7 @@ class TreeRepository extends EntityRepository {
             //exit();
 
             $em->persist($category);
+            $em->flush($category);
 
             //overwrite entity
             $fullChildClassName = new \ReflectionClass($category);

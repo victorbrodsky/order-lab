@@ -5,8 +5,20 @@ namespace Oleg\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+//@ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+
 /**
- * @ORM\Entity
+ *
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ *
+ * * @UniqueEntity(
+ *     fields={"parent", "name"},
+ *     errorPath="name",
+ *     message="Can not create a new category: the combination of the parent id and name is already in use."
+ * )
+ *
  * @ORM\Table(name="user_commentSubTypeList")
  */
 class CommentSubTypeList extends ListAbstract
@@ -86,6 +98,8 @@ class CommentSubTypeList extends ListAbstract
     {
         return $this->original;
     }
+
+
 
     /**
      * @param mixed $parent

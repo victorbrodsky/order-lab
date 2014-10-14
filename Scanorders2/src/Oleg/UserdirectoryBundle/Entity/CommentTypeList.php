@@ -6,11 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="user_commentTypeList")
  */
 class CommentTypeList extends ListAbstract
 {
+
 
     /**
      * @ORM\OneToMany(targetEntity="CommentTypeList", mappedBy="original")
@@ -24,7 +25,7 @@ class CommentTypeList extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="CommentSubTypeList", mappedBy="parent", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="CommentSubTypeList", mappedBy="parent")
      */
     protected $commentSubTypes;
 

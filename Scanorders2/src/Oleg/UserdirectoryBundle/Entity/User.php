@@ -21,7 +21,7 @@ use FOS\UserBundle\Model\User as BaseUser;
  * @UniqueEntity(
  *     fields={"keytype", "primaryPublicUserId"},
  *     errorPath="primaryPublicUserId",
- *     message="The primary public user Id is already in use on that type."
+ *     message="Can not create a new user: the combination of the Primary Public User ID Type and Primary Public User ID is already in use."
  * )
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="user_fosuser",
@@ -771,6 +771,13 @@ class User extends BaseUser
     public function getUsernamePrefix($username) {
         $usernameArr = explode("_@_",$username);
         return $usernameArr[1];
+    }
+
+    public function usernameIsValid($username) {
+        if( strpos($username,"_@_") !== false ) {
+            return true;
+        }
+        return false;
     }
 
     public function getCleanUsername() {

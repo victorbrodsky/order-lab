@@ -26,7 +26,7 @@ class CommentTypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $attr = array('class' => 'combobox combobox-width ajax-combobox-commenttype', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox-commenttype', 'type' => 'hidden');
         if( $this->params['read_only'] ) {
             $attr['readonly'] = 'readonly';
         }
@@ -71,39 +71,42 @@ class CommentTypeType extends AbstractType
 
 
 
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
-                $form = $event->getForm();
-
-                // this would be your entity, i.e. SportMeetup
-                $data = $event->getData();
-
-                $options = array(
-                    'type' => new CommentSubtypeType($this->params),
-                    //'data' => array( new CommentSubTypeList() ),
-                    'allow_add' => true,
-                    'allow_delete' => true,
-                    'required' => true,
-                    'label' => false,
-                    'by_reference' => false,
-                    'prototype' => true,
-                    'prototype_name' => '__commentsubtype__',
-                );
-
-                if( !$data ) {
-                    //echo "subtypes count=".count($data->getChildren())."<br>";
-                    $options['data'] = array( new CommentSubTypeList() );
-                }
-
-                //$sport = $data->getSport();
-                //$positions = null === $sport ? array() : $sport->getAvailablePositions();
-
-                //comment category
-                $form->add('commentSubTypes', 'collection', $options);
-
-            }
-        );
+//        $builder->addEventListener(
+//
+//            FormEvents::PRE_SET_DATA,
+//
+//            function (FormEvent $event) {
+//
+//                $form = $event->getForm();
+//
+//                // this would be your entity, i.e. SportMeetup
+//                $data = $event->getData();
+//
+//                $options = array(
+//                    'type' => new CommentSubtypeType($this->params),
+//                    'allow_add' => true,
+//                    'allow_delete' => true,
+//                    'required' => true,
+//                    'label' => false,
+//                    'by_reference' => false,
+//                    'prototype' => true,
+//                    'prototype_name' => '__commentsubtype__',
+//                );
+//
+//                if( !$data ) {
+//                    //echo "subtypes count=".count($data->getChildren())."<br>";
+//                    $options['data'] = array( new CommentSubTypeList() );
+//                }
+//
+//                //$sport = $data->getSport();
+//                //$positions = null === $sport ? array() : $sport->getAvailablePositions();
+//
+//                //comment category
+//                $form->add('commentSubTypes', 'collection', $options);
+//
+//            }
+//
+//        ); //listener
 
 
 

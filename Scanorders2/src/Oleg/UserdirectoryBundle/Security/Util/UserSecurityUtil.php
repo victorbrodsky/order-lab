@@ -202,5 +202,10 @@ class UserSecurityUtil {
         return $user->getUsernamePrefix($username);
     }
 
+    public function usernameIsValid($username) {
+        $user = new User();
+        return $user->usernameIsValid($username);
+    }
+
 
 }

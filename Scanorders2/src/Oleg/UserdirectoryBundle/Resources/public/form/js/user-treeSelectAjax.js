@@ -12,6 +12,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
         console.log( "holder is not found! class="+fieldClass );
         return;
     }
+    //console.log( holder );
 
     var targetEl = holder.find("."+fieldClass).not("*[id^='s2id_']");
     if( typeof targetEl === "undefined" || targetEl.length == 0 ) {
@@ -249,8 +250,10 @@ function setCommentTypeTreeChildren(holder) {
         holder = $('body');
     }
 
+    var targetId = holder.find(".ajax-combobox-commentsubtype");
+
     //subTypes
-    populateSelectCombobox( ".ajax-combobox-commentsubtype", null, "Select an option or type in a new value", false );
+    populateSelectCombobox( targetId, null, "Select an option or type in a new value", false );
 }
 ///////////////// EOF Comments Types ///////////////////
 

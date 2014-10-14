@@ -63,6 +63,18 @@ class BaseTitle extends BaseUserAttributes
      */
     protected $boss;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $pgystart;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $pgylevel;
+
 
 //    function __construct()
 //    {
@@ -241,6 +253,36 @@ class BaseTitle extends BaseUserAttributes
         return $this->boss;
     }
 
+    /**
+     * @param \DateTime $pgylevel
+     */
+    public function setPgylevel($pgylevel)
+    {
+        $this->pgylevel = $pgylevel;
+    }
 
+    /**
+     * @return \DateTime
+     */
+    public function getPgylevel()
+    {
+        return $this->pgylevel;
+    }
+
+    /**
+     * @param \DateTime $pgystart
+     */
+    public function setPgystart($pgystart)
+    {
+        $this->pgystart = $pgystart;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPgystart()
+    {
+        return $this->pgystart;
+    }
 
 }

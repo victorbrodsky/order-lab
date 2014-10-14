@@ -56,11 +56,20 @@ class BaseCommentsType extends AbstractType
 //            'prototype' => true,
 //            'prototype_name' => '__commenttype__',
 //        ));
-        $builder->add('commentType', new CommentTypeType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentTypeList',
+
+//        $builder->add('commentType', new CommentTypeType($this->params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentTypeList',
+//            'label' => false,
+//            'required' => false
+//        ));
+
+        $builder->add('commentSubType', new CommentSubtypeType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentSubTypeList',
             'label' => false,
             'required' => false
         ));
+
+
 
     }
 

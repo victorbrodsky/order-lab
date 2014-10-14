@@ -55,7 +55,14 @@ class LdapManager extends BaseLdapManager
     public function findUserByUsername($username)
     {
 
+        //exit('username='.$username);
+
         $userSecUtil = $this->container->get('user_security_utility');
+
+        //check if username is valid (has prefix)
+        if( $userSecUtil->usernameIsValid($username) !== true ) {
+            throw new BadCredentialsException('The usertype '.$username.' is not valid.');
+        }
 
         //don't authenticate users without WCMC CWID keytype
         $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
@@ -72,6 +79,8 @@ class LdapManager extends BaseLdapManager
     }
 
     protected function hydrate(UserInterface $user, array $entry) {
+
+        //exit('username='.$user->getUsername());
 
         parent::hydrate($user, $entry);
 

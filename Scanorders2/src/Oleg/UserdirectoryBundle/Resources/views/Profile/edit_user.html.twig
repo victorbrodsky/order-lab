@@ -60,37 +60,41 @@
         {% endif %}
 
         {% if formfield.residencyTrack is defined %}
+            <p>
             <div class="well appointmenttitle-residencytrack-field" style="display:none">
                 {{ formmacros.field(formfield.residencyTrack) }}
             </div>
+            </p>
         {% endif %}
 
         {% if formfield.fellowshipType is defined %}
+            <p>
             <div class="well appointmenttitle-fellowshiptype-field" style="display:none">
                 {{ formmacros.field(formfield.fellowshipType) }}
             </div>
+            </p>
         {% endif %}
-        </p>
-
 
         {#pgy#}
         {% if formfield.pgystart is defined and formfield.pgylevel is defined %}
             {#On the user profile page, always hide the entire PGY well if the Position Type is not equal to either Resident or Fellow#}
             {% if formfield.position is defined and formfield.vars.value and (formfield.vars.value.position == "Resident" or formfield.vars.value.position == "Fellow") or cicle == 'create_user' or cicle == 'edit_user' %}
                 <p>
-                    <div class="well">
-                        {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
-                        {{ formmacros.field(formfield.pgylevel) }}
-                        {{ formmacros.field(formfield.pgylevelexpected) }}
-                        <div class="row">
-                            <div class="col-xs-6" align="right">
-                                <strong></strong>
-                            </div>
+                <div class="well appointmenttitle-pgy-field" style="display:none">
+                    {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
+                    {{ formmacros.field(formfield.pgylevel) }}
+                    {{ formmacros.field(formfield.pgylevelexpected) }}
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <strong></strong>
+                        </div>
+                        {% if cicle != 'show_user' %}
                             <div class="col-xs-6" align="left">
                                 <button type="button" class="update-pgy-btn" onclick="updatePgy(this)">Update the academic year and PGY level to current</button>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
+                </div>
                 </p>
             {% else %}
                 {% do formfield.pgystart.setRendered %}
@@ -98,6 +102,9 @@
                 {% do formfield.pgylevelexpected.setRendered %}
             {% endif %}
         {% endif %}
+
+        </p>
+
 
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
@@ -411,11 +418,25 @@
                 {{ formmacros.field(formfield.status) }}
             {% endif %}
 
-            {{ formmacros.field(formfield.commentType.name) }}
+        {#{% if formfield.commentType is defined and formfield.commentType.name is defined %}#}
+            {#{{ formmacros.field(formfield.commentType.name) }}#}
+        {#{% endif %}#}
 
-            {% for commentSubType in formfield.commentType.commentSubTypes %}
-                {{ formmacros.field(commentSubType.name) }}
-            {% endfor %}
+        {#{% if formfield.commentType is defined and formfield.commentType.commentSubTypes is defined %}#}
+            {#{% for commentSubType in formfield.commentType.commentSubTypes %}#}
+                {#{% if commentSubType is defined and commentSubType.name is defined %}#}
+                    {#{{ formmacros.field(commentSubType.name) }}#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
+        {#{% endif %}#}
+
+            {% if formfield.commentSubType.parent is defined and formfield.commentSubType.parent.name is defined %}
+                {{ formmacros.field(formfield.commentSubType.parent.name) }}
+            {% endif %}
+
+            {% if formfield.commentSubType is defined and formfield.commentSubType.name is defined %}
+                {{ formmacros.field(formfield.commentSubType.name) }}
+            {% endif %}
 
             {{ formmacros.field(formfield.comment) }}
             </p>
@@ -424,7 +445,7 @@
 
     {% else %}
 
-        {% do formfield.commentType.setRendered %}
+        {#{% do formfield.commentType.setRendered %}#}
         {% do formfield.comment.setRendered %}
 
         {% if formfield.status is defined %}
