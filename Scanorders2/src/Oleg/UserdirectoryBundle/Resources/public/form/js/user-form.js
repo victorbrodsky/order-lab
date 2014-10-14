@@ -45,7 +45,7 @@ function positionTypeListener() {
 
     //pgy expected field init
     $('.pgylevelexpected-field').each(function(e) {
-        console.log('update expectedPgyLevel');
+        //console.log('update expectedPgyLevel');
         updateExpectedPgyListener( $(this) );
     });
 
@@ -53,9 +53,8 @@ function positionTypeListener() {
 
 function updateExpectedPgyListener( element ) {
     var holder = element.closest('.user-collection-holder');
-    var btnEl = holder.find('.update-pgy-btn');
-    var expectedPgyLevel = calculateExpectedPgy( btnEl );
-    console.log('expectedPgyLevel='+expectedPgyLevel);
+    var expectedPgyLevel = calculateExpectedPgy( element );
+    //console.log('expectedPgyLevel='+expectedPgyLevel);
     holder.find('.pgylevelexpected-field').val(expectedPgyLevel);
 }
 
@@ -184,15 +183,16 @@ function updatePgy(btn) {
 
 }
 
-function calculateExpectedPgy(btnEl) {
+//element is any element of the pgy well holder
+function calculateExpectedPgy(element) {
 
     var newPgyLevel = null;
 
-    var holder = btnEl.closest('.user-collection-holder');
-    console.log(holder);
+    var holder = element.closest('.user-collection-holder');
+    //console.log(holder);
 
     if( holder.length == 0 || !holder.hasClass('user-appointmentTitles') ) {
-        console.log('holder is null => return newPgyLevel null');
+        //console.log('holder is null => return newPgyLevel null');
         return newPgyLevel;
     }
 
@@ -231,7 +231,7 @@ function calculateExpectedPgy(btnEl) {
 
     }
 
-    console.log( 'res: newPgyLevel='+newPgyLevel);
+    //console.log( 'res: newPgyLevel='+newPgyLevel);
 
     return newPgyLevel;
 }

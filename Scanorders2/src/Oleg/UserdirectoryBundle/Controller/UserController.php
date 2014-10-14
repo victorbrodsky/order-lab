@@ -1036,13 +1036,13 @@ class UserController extends Controller
 
 
             //set parents for institution tree for Administrative and Academical Titles
-//            $this->setParentsForInstitutionTree($entity);
+            $this->setParentsForInstitutionTree($entity);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
 
             //set parents for institution tree for Administrative and Academical Titles
-//            $this->updateInfo($entity);
+            $this->updateInfo($entity);
 
 
 
@@ -1266,7 +1266,7 @@ class UserController extends Controller
         //$comment->setCommentSubType(null);
 
         //if comment text is empty => remove from user
-        echo "comment text=".$comment->getComment()."<br>";
+        echo "<br>Comment text=".$comment->getComment()."<br>";
         if( $comment->getComment() == "" ) {
             $user = $comment->getUser();
 
@@ -1275,7 +1275,7 @@ class UserController extends Controller
 
             $fullClassName = new \ReflectionClass($comment);
             $className = $fullClassName->getShortName();
-            echo "className=".$className."<br>";
+            //echo "className=".$className."<br>";
             //$removeMethod = "remove".$className;
             $removeMethod = "remove".$className;
             echo "removeMethod=".$removeMethod."<br>";
@@ -1285,9 +1285,17 @@ class UserController extends Controller
             return;
         }
 
+        $type = $comment->getCommentType();
         $subtype = $comment->getCommentSubType();
 
+        $author = $this->get('security.context')->getToken()->getUser();
 
+        $em = $this->getDoctrine()->getManager();
+
+        $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
+
+
+        return;
 
         //echo "subtype id=".$subtype->getId()."<br>";
         //echo "parent id=".$subtype->getParent()->getId()."<br>";

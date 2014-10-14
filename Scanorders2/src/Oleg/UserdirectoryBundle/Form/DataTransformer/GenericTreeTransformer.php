@@ -54,13 +54,17 @@ class GenericTreeTransformer implements DataTransformerInterface
         }
 
         //echo "data transformer entity=".$entity."<br>";
+        //echo "data transformer entity id=".$entity->getId()."<br>";
 
         if( is_int($entity) ) {
+            //echo "transform by id=".$entity." !!!<br>";
             $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($entity);
             //echo "findOneById entity=".$entity."<br>";
-        } else {
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($entity);
         }
+//        else {
+//            echo "transform by name=".$entity." ????????????????<br>";
+//            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($entity);
+//        }
 
         if( null === $entity ) {
             return "";
@@ -74,7 +78,7 @@ class GenericTreeTransformer implements DataTransformerInterface
     }
 
     /**
-     * Transforms a string (number) to an object. Return name string because the fields in the form are strings.
+     * Transforms a string (number) to an object.
      *
      * @param  string $number
      *
@@ -85,7 +89,7 @@ class GenericTreeTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        //echo "data transformer text=".$text."<br>";
+        //echo "data reverse transformer text=".$text."<br>";
         //exit();
 
         if( !$text ) {
@@ -103,21 +107,21 @@ class GenericTreeTransformer implements DataTransformerInterface
             if( null === $entity ) {
 
                 //exit('create new???');
-                return $this->createNew($text)->getName(); //create a new record in db
+                return $this->createNew($text); //create a new record in db
 
             } else {
 
-                //echo "found:".$entity->getName()."<br>";
+                echo "found:".$entity->getName()."<br>";
                 //exit('use found object <br>');
-                return $entity->getName(); //use found object
+                return $entity; //use found object
 
             }
 
         } else {    //text => most probably it is new name
 
             //exit('text is a new record name');
-            //echo "text is a new record name<br>";
-            return $this->createNew($text)->getName(); //create a new record in db
+            echo "text is a new record name=".$text."<br>";
+            return $this->createNew($text); //create a new record in db
 
         }
 

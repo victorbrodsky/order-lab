@@ -39,11 +39,11 @@ class CommentSubtypeType extends AbstractType
 //        ));
 
 
-        $builder->add('parent', new CommentTypeType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentTypeList',
-            'label' => false,
-            'required' => false
-        ));
+//        $builder->add('parent', new CommentTypeType($this->params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentTypeList',
+//            'label' => false,
+//            'required' => false
+//        ));
 
 
     }

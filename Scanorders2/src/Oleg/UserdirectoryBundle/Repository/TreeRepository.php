@@ -131,7 +131,7 @@ class TreeRepository extends EntityRepository {
 
         $fullClassName = new \ReflectionClass($category);
         $className = $fullClassName->getShortName();
-        echo "<br><br>find Category className=".$className."<br>";
+        //echo "<br><br>find Category className=".$className."<br>";
 
 
         if( method_exists($category,'getParent')  ) {
@@ -307,22 +307,56 @@ class TreeRepository extends EntityRepository {
     //utility function for tree parent-child relationship
     public function checkAndSetParent($user,$entity,$parent,$child) {
 
-        if( !$parent || !$child ) {
+        //echo "child=".$child."<br>";
+        if( !$child ) {
             return $child;
+            //exit('Logical error: child does not exist');
+            //throw new \Exception( 'Logical error: parent and child do not exist');
         }
 
-        if( method_exists($child,'getParent') == false ) {
-            return $child;
+        if( !$parent ) {
+            //exit('Logical error: parent does not exist');
+            throw new \Exception( 'Logical error: parent and child do not exist');
+            //return $child;
         }
-
-        //echo 'check <br>';
 
         $fullClassName = new \ReflectionClass($child);
         $className = $fullClassName->getShortName();
-        //echo "className=".$className."<br>";
+        echo "<br><br>Processing: className=".$className."<br>";
         //$removeMethod = "remove".$className;
         $addMethod = "add".$className;
         $setMethod = "set".$className;
+
+        if( !$parent->getId() ) {
+            //exit('Logical error: parent do not exist in DB, parent id is null');
+            throw new \Exception( 'Logical error: parent do not exist in DB, parent id is null');
+        }
+
+        if( method_exists($child,'getParent') == false ) {
+            //exit('Logical error: child does not have parent method');
+            throw new \Exception('Logical error: child does not have parent method');
+            //return $child;
+        }
+
+        if( $child && $child->getId() ) {
+            echo "don't process because category exists in DB, id=".$child->getId()." <br>";
+
+            if( $child->getParent() && $child->getParent()->getId() ) {
+                //echo  "category and parent exist in DB: name=".$child->getName().", id=".$child->getId().", parentId=".$child->getParent()->getId()."<br>";
+                return $child;
+            } else {
+                //echo  "category exist in DB: name=".$child->getName().", id=".$child->getId()."<br>";
+                //return $child;
+                //exit('Logical error: child exists in DB but does not have parent');
+                throw new \Exception( 'Logical error: child exists in DB but does not have parent');
+            }
+        }
+
+        ////////////////// By this point we sure that child is valid //////////////////
+
+        //echo 'check <br>';
+
+
 
         //don't overwrite parent
 //        if( $child->getParent() && $child->getId() ) {
@@ -335,25 +369,28 @@ class TreeRepository extends EntityRepository {
 
         $name = $child->getName();
 
-        echo "parent=".$parent.", id=".$parent->getId()."<br>";
-        echo "child=".$child.", id=".$child->getId()."<br>";
+        //echo "parent=".$parent.", id=".$parent->getId()."<br>";
+        //echo "child=".$child.", id=".$child->getId()."<br>";
 
-        //find child in DB by id or name and parent
-        if( $parent->getId() ) {
-            $foundChild = $em->getRepository('OlegUserdirectoryBundle:'.$className)->findOneBy(array('name'=>$name,'parent'=>$parent));
-        } else if( $child->getId() && $child->getId() != "" ) {
-            $foundChild = $child;
-        } else {
-            $foundChild = null;
-        }
+//        //find child in DB by name and parent
+//        if( $parent->getId() ) {
+//            $foundChild = $em->getRepository('OlegUserdirectoryBundle:'.$className)->findOneBy(array('name'=>$name,'parent'=>$parent));
+//        } else if( $child->getId() && $child->getId() != "" ) {
+//            $foundChild = $child;
+//        } else {
+//            $foundChild = null;
+//        }
 
-        //echo "foundChild=".$foundChild.", id=".$foundChild->getId()." <br>";
+        //find child in DB by name and parent
+        $foundChild = $this->findCategoryByNameAndParentId($child,$parent);
+
+        echo "foundChild=".$foundChild."<br>";
 
         //exit();
 
         if( !$foundChild ) {
 
-            echo "create new !!!!!!!!!!!!!!!!!!!!! <br>";
+            echo "Case 1: Not found in DB => create new <br>";
             $treeTransf = new GenericTreeTransformer($em,$user);
             $newChild = $treeTransf->createNewEntity($name,$className,$user);
             $em->persist($newChild);
@@ -363,16 +400,25 @@ class TreeRepository extends EntityRepository {
             //overwrite entity
             $entity->$setMethod($newChild);
 
+            echo "final category to create: name=".$newChild->getName().", id=".$newChild->getId().", parentId=".$newChild->getParent()->getId()."<br>";
+            //exit();
+
+            $this->_em->persist($newChild);
+            $this->_em->flush($newChild);
+
             return $newChild;
 
         } else {
 
-            $em->persist($foundChild);
+            echo "Case 2: Found in DB<br>";
+            //$em->persist($foundChild);
             $parent->$addMethod($foundChild);
 
             //overwrite entity
             $entity->$setMethod($foundChild);
             //$em->flush($entity);
+
+            echo "final category: name=".$foundChild->getName().", id=".$foundChild->getId().", parentId=".$foundChild->getParent()->getId()."<br>";
 
             return $foundChild;
 

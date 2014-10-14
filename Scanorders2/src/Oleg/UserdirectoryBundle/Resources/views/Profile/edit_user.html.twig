@@ -418,7 +418,12 @@
                 {{ formmacros.field(formfield.status) }}
             {% endif %}
 
-        {#{% if formfield.commentType is defined and formfield.commentType.name is defined %}#}
+            {{ formmacros.field(formfield.commentType) }}
+
+            {{ formmacros.field(formfield.commentSubType) }}
+
+
+                {#{% if formfield.commentType is defined and formfield.commentType.name is defined %}#}
             {#{{ formmacros.field(formfield.commentType.name) }}#}
         {#{% endif %}#}
 
@@ -430,13 +435,13 @@
             {#{% endfor %}#}
         {#{% endif %}#}
 
-            {% if formfield.commentSubType.parent is defined and formfield.commentSubType.parent.name is defined %}
-                {{ formmacros.field(formfield.commentSubType.parent.name) }}
-            {% endif %}
+            {#{% if formfield.commentSubType.parent is defined and formfield.commentSubType.parent.name is defined %}#}
+                {#{{ formmacros.field(formfield.commentSubType.parent.name) }}#}
+            {#{% endif %}#}
 
-            {% if formfield.commentSubType is defined and formfield.commentSubType.name is defined %}
-                {{ formmacros.field(formfield.commentSubType.name) }}
-            {% endif %}
+            {#{% if formfield.commentSubType is defined and formfield.commentSubType.name is defined %}#}
+                {#{{ formmacros.field(formfield.commentSubType.name) }}#}
+            {#{% endif %}#}
 
             {{ formmacros.field(formfield.comment) }}
             </p>
@@ -445,7 +450,8 @@
 
     {% else %}
 
-        {#{% do formfield.commentType.setRendered %}#}
+        {% do formfield.commentType.setRendered %}
+        {% do formfield.commentSubType.setRendered %}
         {% do formfield.comment.setRendered %}
 
         {% if formfield.status is defined %}

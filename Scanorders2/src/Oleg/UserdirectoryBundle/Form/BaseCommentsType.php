@@ -45,6 +45,22 @@ class BaseCommentsType extends AbstractType
         }
 
 
+        $builder->add('commentType', 'employees_custom_selector', array(
+            'label' => 'Comment Category:',
+            'attr' => array('class' => 'ajax-combobox-commenttype', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'commentType'
+        ));
+
+
+        $builder->add('commentSubType', 'employees_custom_selector', array(
+            'label' => 'Comment Name:',
+            'attr' => array('class' => 'ajax-combobox-commentsubtype', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'commentSubType'
+        ));
+
+
         //comment's category (type)
 //        $builder->add('commentType', 'collection', array(
 //            'type' => new CommentTypeType($this->params),
@@ -59,15 +75,15 @@ class BaseCommentsType extends AbstractType
 
 //        $builder->add('commentType', new CommentTypeType($this->params), array(
 //            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentTypeList',
-//            'label' => false,
+//            //'label' => false,
 //            'required' => false
 //        ));
 
-        $builder->add('commentSubType', new CommentSubtypeType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentSubTypeList',
-            'label' => false,
-            'required' => false
-        ));
+//        $builder->add('commentSubType', new CommentSubtypeType($this->params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\CommentSubTypeList',
+//            //'label' => false,
+//            'required' => false
+//        ));
 
 
 
