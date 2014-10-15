@@ -261,28 +261,53 @@ function getYearByDiff(date1,date2) {
 }
 
 
-Dropzone.autoDiscover = false;
 function initFileUpload() {
-//    // "myAwesomeDropzone" is the camelized version of the HTML element's ID
-//    Dropzone.options.myAwesomeDropzone = {
-//        paramName: "file", // The name that will be used to transfer the file
-//        maxFilesize: 2, // MB
-//        accept: function(file, done) {
-//            if (file.name == "justinbieber.jpg") {
-//                done("Naha, you don't.");
-//            }
-//            else { done(); }
-//        }
-//    };
 
-    $(".dropzone").dropzone({
+    if( $('.dropzone').length == 0 ) {
+        return;
+    }
+
+    var dataElement = document.getElementById("form-prototype-data");
+
+//    if( dataElement.length == 0 || typeof dataElement.dataset === 'undefined' ) {
+//        return;
+//    }
+
+    //var url = dataElement.dataset.uploadurl;
+    var url = dataElement.getAttribute('data-uploadurl');
+    console.log('url='+url);
+
+    //var userid = dataElement.dataset.userid;
+    var userid = dataElement.getAttribute('data-userid');
+    console.log('userid='+userid);
+
+    Dropzone.autoDiscover = false;
+
+    $(".file-upload-dropzone").dropzone({
+        url: url,
         addRemoveLinks: true,
-        maxFiles: 1
+        maxFiles: 1,
+        sending: function(file, xhr, formData){
+            formData.append('userid', userid);
+        },
+        success: function(file, responseText){
+            console.log('responseText='+responseText);
+            console.log(file);
+            file.previewTemplate.appendChild(document.createTextNode(responseText));
+        },
+        maxfilesexceeded: function(file) {
+            this.removeFile(file);
+        }
+//        confirm: function(question, accepted, rejected) {
+//            console.log();
+//            // Do your thing, ask the user for confirmation or rejection, and call
+//            // accepted() if the user accepts, or rejected() otherwise. Make
+//            // sure that rejected is actually defined!
+//        }
     });
 
 
-//    var myDropzone = window.Dropzone;
-//    myDropzone.addRemoveLinks = true;
-//    myDropzone.maxFiles = 1;
+//    $('#jquery-fileupload').fileupload({});
 
 }
+

@@ -1,6 +1,7 @@
 parameters:
 
   employees.sitename: employees
+  employees.uploadpath:
 
   default_time_zone: America/New_York
   default_system_email:
@@ -13,7 +14,6 @@ parameters:
 #  maintenanceenddate:
 #  maintenanceloginmsg:
 #  maintenancelogoutmsg:
-
 
 #framework:
 #    session:

@@ -74,6 +74,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $department_url = $row['departmenturl'];
             $department_name = $row['departmentname'];
 
+            $employeesuploadpath = $row['employeesuploadpath'];
+            $scanuploadpath = $row['scanuploadpath'];
+
 //            $maintenance = $row['maintenance'];
 //            $maintenanceenddate = $row['maintenanceenddate'];
 //            $maintenanceloginmsg = $row['maintenanceloginmsg'];
@@ -117,6 +120,10 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('institution_name',$institution_name);
         $container->setParameter('department_url',$department_url);
         $container->setParameter('department_name',$department_name);
+
+        //uploads
+        $container->setParameter('employees.uploadpath',$employeesuploadpath);
+        $container->setParameter('scan.uploadpath',$scanuploadpath);
 
         //maintenance
 //        $container->setParameter('maintenance',$maintenance);

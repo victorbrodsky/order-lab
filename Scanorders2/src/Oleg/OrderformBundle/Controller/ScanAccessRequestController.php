@@ -158,8 +158,9 @@ class ScanAccessRequestController extends AccessRequestController
             $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
 
             //add WCMC institional scope to Aperio created users
+            $creator = $this->get('security.context')->getToken()->getUser();
             $orderSecUtil = $this->container->get('order_security_utility');
-            $orderSecUtil->addInstitutionalPhiScopeWCMC($entity);
+            $orderSecUtil->addInstitutionalPhiScopeWCMC($entity,$creator);
 
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_APPROVED);

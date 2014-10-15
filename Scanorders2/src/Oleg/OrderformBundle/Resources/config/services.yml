@@ -1,6 +1,7 @@
 parameters:
 
   scan.sitename: scan
+  scan.uploadpath:
 
 
 twig:

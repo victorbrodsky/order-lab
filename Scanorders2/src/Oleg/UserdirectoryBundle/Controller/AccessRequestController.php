@@ -298,10 +298,18 @@ class AccessRequestController extends Controller
             $limit/*limit per page*/
         );
 
+        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+            $sitenameFull = "Employee Directory";
+        }
+        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+            $sitenameFull = "Scan Orders";
+        }
+
         return array(
             'entities' => $pagination,
             'roles' => $rolesArr,
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'sitenamefull'=>$sitenameFull
         );
 
     }

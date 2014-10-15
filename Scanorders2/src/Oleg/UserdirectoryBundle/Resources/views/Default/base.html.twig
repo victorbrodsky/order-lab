@@ -145,7 +145,6 @@
                 '@OlegUserdirectoryBundle/Resources/public/datepicker/js/*'
                 '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
                 '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
-                '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
 
                 '@OlegUserdirectoryBundle/Resources/public/form/js/modal.js'
 
@@ -166,6 +165,23 @@
             %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
+
+
+            {#dropzone#}
+            {% javascripts
+                '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
+            %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+
+            {#jquery-file-upload#}
+            {#{% javascripts#}
+            {#'@OlegUserdirectoryBundle/Resources/public/jquery-file-upload/js/vendor/jquery.ui.widget.js'#}
+            {#'@OlegUserdirectoryBundle/Resources/public/jquery-file-upload/js/jquery.iframe-transport.js'#}
+            {#'@OlegUserdirectoryBundle/Resources/public/jquery-file-upload/js/jquery.fileupload.js'#}
+            {#%}#}
+            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+            {#{% endjavascripts %}#}
 
         {% endblock %}
 

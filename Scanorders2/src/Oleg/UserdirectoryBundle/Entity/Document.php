@@ -2,12 +2,12 @@
 /**
  * Created by JetBrains PhpStorm.
  * User: oli2002
- * Date: 9/10/13
+ * Date: 9/10/14
  * Time: 5:46 PM
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,10 +17,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="partPaper")
+ * @ORM\Table(name="user_document")
  */
-class PartPaper extends PartArrayFieldAbstract
-{
+class Document {
+
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -39,18 +40,25 @@ class PartPaper extends PartArrayFieldAbstract
      */
     protected  $path;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected  $temp;
 
     /**
+     * @var File  - not a persistent field!
+     *
      * @Assert\File(maxSize="6000000")
      */
-    protected  $field;
+    protected  $file;
+
 
     /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="paper", cascade={"persist"})
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $part;
+    protected  $uploadDirectory;
+
+
 
     public function getAbsolutePath()
     {
@@ -63,52 +71,41 @@ class PartPaper extends PartArrayFieldAbstract
     {
         return null === $this->path
             ? null
-            : $this->getUploadDir().'/'.$this->path;
+            : $this->getUploadDirectory().'/'.$this->path;
     }
 
     protected function getUploadRootDir()
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        return __DIR__.'/'.$this->getPrefixPath().$this->getUploadDir();
+        return __DIR__.'/../../../../web/'.$this->getUploadDirectory();
     }
 
-    public function getRelativeUploadFullPath()
+//    protected function getUploadDir()
+//    {
+//        // get rid of the __DIR__ so it doesn't screw up
+//        // when displaying uploaded doc/image in the view.
+//        return 'uploads/documents';
+//    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
     {
-        // the absolute directory path where uploaded
-        // documents should be saved
-        return $this->getPrefixPath().$this->getUploadDir().'/'.$this->getPath();
-    }
-
-    protected function getPrefixPath() {
-        return '../../../../';
-    }
-
-    protected function getUploadDir()
-    {
-        // get rid of the __DIR__ so it doesn't screw up
-        // when displaying uploaded doc/image in the view.
-        return 'uploads/documents';
+        return $this->file;
     }
 
     /**
-     * Get field.
+     * Sets file. UploadedFile
      *
-     * @return UploadedField
+     * @param UploadedFile $file
      */
-    public function getField()
+    public function setFile( $file = null )
     {
-        return $this->field;
-    }
-
-    /**
-     * Sets field. UploadedFile
-     *
-     * @param UploadedField $field
-     */
-    public function setField( $field = null )
-    {
-        $this->field = $field;
+        $this->file = $file;
         // check if we have an old image path
         if (isset($this->path)) {
             // store the old name to delete after the update
@@ -125,16 +122,16 @@ class PartPaper extends PartArrayFieldAbstract
      */
     public function preUpload()
     {
-        if (null !== $this->getField()) {
+        if (null !== $this->getFile()) {
 
-            //echo "upload field=".$this->getField()."<br>";
-            //echo "original name=".$this->getField()->getClientOriginalName()."<br>";
+            //echo "upload file=".$this->getFile()."<br>";
+            //echo "original name=".$this->getFile()->getClientOriginalName()."<br>";
             //exit();
-            $this->name = $this->getField()->getClientOriginalName();
+            $this->name = $this->getFile()->getClientOriginalName();
 
             // do whatever you want to generate a unique name
             $filename = sha1(uniqid(mt_rand(), true));
-            $this->path = $filename.'.'.$this->getField()->guessExtension();
+            $this->path = $filename.'.'.$this->getFile()->guessExtension();
             //echo "preUpload path=".$this->path."<br>";
         }
     }
@@ -147,14 +144,14 @@ class PartPaper extends PartArrayFieldAbstract
     {
         //echo "upload <br>";
 
-        if (null === $this->getField()) {
+        if (null === $this->getFile()) {
             return;
         }
 
         // if there is an error when moving the file, an exception will
         // be automatically thrown by move(). This will properly prevent
         // the entity from being persisted to the database on error
-        $this->getField()->move($this->getUploadRootDir(), $this->path);
+        $this->getFile()->move($this->getUploadRootDir(), $this->path);
 
         // check if we have an old image
         if (isset($this->temp)) {
@@ -163,7 +160,7 @@ class PartPaper extends PartArrayFieldAbstract
             // clear the temp image path
             $this->temp = null;
         }
-        $this->field = null;
+        $this->file = null;
     }
 
     /**
@@ -171,13 +168,13 @@ class PartPaper extends PartArrayFieldAbstract
      */
     public function removeUpload()
     {
-        if ($field = $this->getAbsolutePath()) {
-            unlink($field);
+        if ($file = $this->getAbsolutePath()) {
+            unlink($file);
         }
     }
 
     public function __toString() {
-        //return "Paper: name=".$this->name.",path=".$this->path.",temp=".$this->temp.",field(file) =".$this->field."<br>";
+        //return "Paper: name=".$this->name.",path=".$this->path.",temp=".$this->temp.",file(file) =".$this->file."<br>";
         return '<a href="../../../../web/uploads/documents/' . $this->path . '" target="_blank">' . $this->name . '</a>';
         //return '<a href="http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/uploads/documents/' . $this->path . '" target="_blank">' . $this->name . '</a>';
     }
@@ -249,5 +246,23 @@ class PartPaper extends PartArrayFieldAbstract
     {
         return $this->temp;
     }
+
+    /**
+     * @param mixed $uploadDirectory
+     */
+    public function setUploadDirectory($uploadDirectory)
+    {
+        $this->uploadDirectory = $uploadDirectory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUploadDirectory()
+    {
+        return $this->uploadDirectory;
+    }
+
+
 
 }

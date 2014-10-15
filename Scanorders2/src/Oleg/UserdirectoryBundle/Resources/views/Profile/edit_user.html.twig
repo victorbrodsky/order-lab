@@ -2,14 +2,6 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-{% block title %}
-    {% if cicle == "create_user" %}
-        Add new employee
-    {% else %}
-        Profile | {{ form.vars.value.getUserNameShortStr() }}
-    {% endif %}
-{% endblock %}
-
 
 {% macro baseTitle( field, cicle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -61,7 +53,7 @@
 
         {% if formfield.residencyTrack is defined %}
             <p>
-            <div class="well appointmenttitle-residencytrack-field" style="display:none">
+            <div class="well appointmenttitle-residencytrack-field" style="display:none; margin-top: 20px;">
                 {{ formmacros.field(formfield.residencyTrack) }}
             </div>
             </p>
@@ -69,7 +61,7 @@
 
         {% if formfield.fellowshipType is defined %}
             <p>
-            <div class="well appointmenttitle-fellowshiptype-field" style="display:none">
+            <div class="well appointmenttitle-fellowshiptype-field" style="display:none; margin-top: 20px;">
                 {{ formmacros.field(formfield.fellowshipType) }}
             </div>
             </p>
@@ -404,62 +396,6 @@
     </div>
 {% endmacro %}
 
-
-{% macro comments( field, cicle, classname, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import _self as userform %}
-
-    {% if prototype == "prototype" %}
-        {% set formfield = field.vars.prototype %}
-    {% else %}
-        {% set formfield = field %}
-    {% endif %}
-
-    {% if formfield.comment.vars.value != "" or cicle != 'show_user' %}
-
-        {% if formfield.vars.value and formfield.vars.value.status == 0 and classname == 'user-privatecomments' %}
-            {% set wellclass = "user-alert-warning" %}
-        {% else %}
-            {% set wellclass = "" %}
-        {% endif %}
-
-        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
-
-            {% if cicle != 'show_user' %}
-                <div class="text-right">
-                    <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-                </div>
-            {% endif %}
-
-            {% if formfield.status is defined %}
-                {{ formmacros.field(formfield.status) }}
-            {% endif %}
-
-            {{ formmacros.field(formfield.commentType) }}
-
-            {{ formmacros.field(formfield.commentSubType) }}
-
-            {{ formmacros.field(formfield.comment) }}
-
-            {{ userform.fileupload( field, cicle, classname, prototype ) }}
-
-
-        </div>
-
-    {% else %}
-
-        {% do formfield.commentType.setRendered %}
-        {% do formfield.commentSubType.setRendered %}
-        {% do formfield.comment.setRendered %}
-
-        {% if formfield.status is defined %}
-            {% do formfield.status.setRendered %}
-        {% endif %}
-
-    {% endif %}
-
-{% endmacro %}
-
 {% macro researchLabs( field, cicle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
@@ -487,6 +423,60 @@
     </div>
 {% endmacro %}
 
+{% macro comments( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if formfield.comment.vars.value != "" or cicle != 'show_user' %}
+
+        {% if formfield.vars.value and formfield.vars.value.status == 0 and classname == 'user-privatecomments' %}
+            {% set wellclass = "user-alert-warning" %}
+        {% else %}
+            {% set wellclass = "" %}
+        {% endif %}
+
+        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+            {% if cicle != 'show_user' %}
+                <div class="text-right" style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            {% endif %}
+
+            {% if formfield.status is defined %}
+                {{ formmacros.field(formfield.status) }}
+            {% endif %}
+
+            {{ formmacros.field(formfield.commentType) }}
+
+            {{ formmacros.field(formfield.commentSubType) }}
+
+            {{ formmacros.field(formfield.comment) }}
+
+            {{ userform.fileupload( field, cicle, classname, prototype ) }}
+
+        </div>
+
+    {% else %}
+
+        {% do formfield.commentType.setRendered %}
+        {% do formfield.commentSubType.setRendered %}
+        {% do formfield.comment.setRendered %}
+
+        {% if formfield.status is defined %}
+            {% do formfield.status.setRendered %}
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
 {% macro fileupload( field, cicle, classname, prototype ) %}
     <p>
     <div class="row" style="height: 50px">
@@ -497,7 +487,12 @@
             {#<div class="form-control form-control-modif not-mapped-simplefield" {{ disabled }}>#}
                 {#{{ value|raw }}#}
             {#</div>#}
-            <form action="{{ oneup_uploader_endpoint('gallery') }}" class="dropzone" id="my-awesome-dropzone"></form>
+            {#<form action="{{ oneup_uploader_endpoint('gallery') }}" class="dropzone"></form>#}
+            <div class="dropzone file-upload-dropzone">
+                {#<input type="file" name="file" />#}
+                <div class="dropzone dropzone-previews"></div>
+            </div>
+
         </div>
     </div>
     </p>
@@ -506,10 +501,22 @@
 
 {% import _self as userform %}
 
+
+{% if cicle == "create_user" %}
+    {% set title = "Add New Employee" %}
+{% else %}
+    {% set title = "Profile: "~form.vars.value.getUserNameShortStr() %}
+{% endif %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
 {% block content %}
 
 
-    <h4 class="text-info" align="center">Profile: {{ form.vars.value.getUserNameStr() }}</h4>
+    <h4 class="text-info" align="center">{{ title }}</h4>
 
     <br>
 
@@ -519,6 +526,7 @@
     </p>
 
 
+    {#{{ form_start(form,{'attr': {'class': 'dropzone'}}) }}#}
     {{ form_start(form) }}
 
     {% set publicCommentsPrototype = null %}
@@ -576,12 +584,14 @@
          data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
          data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
          data-prototype-user-employmentstatus = "{{ employmentStatusPrototype|e }}"
-         data-userurllink = "{{ userform.userUrlLink()|e }}"
          data-prototype-user-identifiers = "{{ identifiersPrototype|e }}"
          data-prototype-user-publiccomments = "{{ publicCommentsPrototype|e }}"
          data-prototype-user-privatecomments = "{{ privateCommentsPrototype|e }}"
          data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
          data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
+         data-userurllink = "{{ userform.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+         data-userid = "{{ entity.id }}"
     ></div>
 
         <input type="hidden" id="user_id" value="{{ user_id }}" />

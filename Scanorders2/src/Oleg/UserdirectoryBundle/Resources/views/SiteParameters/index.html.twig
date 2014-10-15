@@ -199,7 +199,7 @@
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'institutionurl'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Department Namel</td>
+                <td>Department Name</td>
                 <td>{{ entity.departmentname }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'departmentname'}) }}">Edit</a></td>
             </tr>
@@ -242,6 +242,24 @@
                 <td>Maintenance Message on Login</td>
                 <td>{{ entity.maintenanceloginmsg }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
+            </tr>
+
+
+            {#Uploads#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Uploads:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Scan Orders Uploaded Folder (example: scan-order/Documents)</td>
+                <td>{{ entity.scanuploadpath }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'scanuploadpath'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Employee Directory Uploaded Folder (example: pathology-employees/Documents)</td>
+                <td>{{ entity.employeesuploadpath }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'employeesuploadpath'}) }}">Edit</a></td>
             </tr>
 
 

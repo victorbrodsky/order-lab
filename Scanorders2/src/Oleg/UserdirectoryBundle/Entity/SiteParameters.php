@@ -188,6 +188,17 @@ class SiteParameters {
      */
     protected $maintenanceloginmsg;
 
+    //uploads path
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $scanuploadpath;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $employeesuploadpath;
+
 
     /**
      * @param mixed $maxIdleTime
@@ -728,6 +739,38 @@ class SiteParameters {
     public function getMaintenancelogoutmsg()
     {
         return $this->maintenancelogoutmsg;
+    }
+
+    /**
+     * @param mixed $employeesuploadpath
+     */
+    public function setEmployeesuploadpath($employeesuploadpath)
+    {
+        $this->employeesuploadpath = $employeesuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmployeesuploadpath()
+    {
+        return $this->employeesuploadpath;
+    }
+
+    /**
+     * @param mixed $scanuploadpath
+     */
+    public function setScanuploadpath($scanuploadpath)
+    {
+        $this->scanuploadpath = $scanuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScanuploadpath()
+    {
+        return $this->scanuploadpath;
     }
 
 

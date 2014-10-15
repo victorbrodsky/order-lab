@@ -708,7 +708,8 @@
 
 {% macro fieldpaper(field,cycle) %}
     {% if cycle == 'show' %}
-        <a href="../../../../web/uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>
+        {#<a href="../../../../uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>#}
+        <a href="{{ field.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ field.vars.value.name }}</a>
     {% else %}
        {{ form_widget(field.field) }}
     {% endif %}

@@ -251,7 +251,12 @@ class AdminController extends Controller
                                         'and you should be able to submit that order after the maintenance is complete.',
             "maintenanceloginmsg" =>    'The scheduled maintenance of this software has begun. The administrators are planning to return this site to a fully '.
                                         'functional state on or before [June 10th, 2:00pm]. If you were in the middle of entering order information, '.
-                                        'it was saved as an "Unsubmitted" order and you should be able to submit that order after the maintenance is complete.'
+                                        'it was saved as an "Unsubmitted" order and you should be able to submit that order after the maintenance is complete.',
+
+            //uploads
+            "employeesuploadpath" => "scan-order/Documents",
+            "scanuploadpath" => "pathology-employees/Documents"
+
         );
 
         $params = new SiteParameters();
