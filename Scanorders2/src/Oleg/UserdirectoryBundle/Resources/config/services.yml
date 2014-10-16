@@ -94,3 +94,10 @@ services:
         class: Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
 
+    #OneupUploaderBundle upload listener
+    oleg.upload_listener:
+        class: Oleg\UserdirectoryBundle\Services\UploadListener
+        arguments: ["@service_container","@doctrine.orm.entity_manager","@security.context"]
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+#            - { name: kernel.event_listener, event: oneup_uploader.pre_upload, method: preUpload }

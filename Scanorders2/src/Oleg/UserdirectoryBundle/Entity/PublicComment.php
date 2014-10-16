@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -17,6 +18,22 @@ class PublicComment extends BaseComment
      */
     protected $user;
 
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Document")
+     * @ORM\JoinTable(name="user_publiccomm_document",
+     *      joinColumns={@ORM\JoinColumn(name="comm_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    protected $documents;
+
+
+    public function __construct($author=null) {
+        parent::__construct($author);
+
+        $this->documents = new ArrayCollection();
+    }
 
     /**
      * @param mixed $user

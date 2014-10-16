@@ -928,7 +928,7 @@ class UserController extends Controller
 //        $uow->computeChangeSets(); // do not compute changes if inside a listener
 //        $changeset = $uow->getEntityChangeSet($entity);
 //        print_r($changeset);
-//        exit();
+        //exit('edit user');
 
         //$oldEntity = clone $entity;
         //$oldUserArr = get_object_vars($oldEntity);
@@ -1011,7 +1011,9 @@ class UserController extends Controller
         //$form->add('submit', 'submit', array('label' => 'Update'));
 
         $form->handleRequest($request);
+
         //exit('after handle request');
+        //print_r($form->getErrors());
 
         if( $form->isValid() ) {
 
@@ -1033,7 +1035,7 @@ class UserController extends Controller
                 }
             }
 
-
+            //exit('before processing');
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForInstitutionTree($entity);
@@ -1121,6 +1123,8 @@ class UserController extends Controller
                 $this->createUserEditEvent($sitename,$event,$user,$request);
             }
 
+            //echo "user=".$entity."<br>";
+            //exit();
 
             //$em->persist($entity);
             $em->flush($entity);
@@ -1130,6 +1134,9 @@ class UserController extends Controller
                 return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
             }
         }
+
+        //echo "form is not valid<br>";
+        //exit();
 
         return array(
             'entity' => $entity,
@@ -1170,17 +1177,20 @@ class UserController extends Controller
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+
         //set author and roles if not set
         if( !$entity->getAuthor() ) {
-            $entity->setAuthor($user);
+            $entity->setAuthor($author);
         }
 //        else {
 //            $entity->setUpdateAuthor($user);
 //            $entity->setUpdateAuthorRoles($user->getRoles());
 //        }
 
-        $entity->setUpdateAuthor($user);
-        $entity->setUpdateAuthorRoles($user->getRoles());
+        $entity->setUpdateAuthor($author);
+        $entity->setUpdateAuthorRoles($author->getRoles());
     }
 
     public function createUserEditEvent($sitename,$event,$user,$request) {
@@ -1238,6 +1248,11 @@ class UserController extends Controller
 
         //echo "public comments count=".count($entity->getPublicComments())."<br>";
 
+        echo "comment count=".count($entity->getDocuments())."<br>";
+        foreach( $entity->getDocuments() as $doc ) {
+            echo "doc id=".$doc->geId().", originalname=".$doc->getOriginalname()."<br>";
+        }
+
         foreach( $entity->getPublicComments() as $comment) {
             $this->processCommentType($comment);
         }
@@ -1287,9 +1302,9 @@ class UserController extends Controller
         $type = $comment->getCommentType();
         $subtype = $comment->getCommentSubType();
 
-        $author = $this->get('security.context')->getToken()->getUser();
-
+        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+        $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
 
         $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
     }

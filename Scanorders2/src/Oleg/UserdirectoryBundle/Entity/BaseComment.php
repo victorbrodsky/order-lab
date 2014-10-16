@@ -34,24 +34,8 @@ abstract class BaseComment extends BaseUserAttributes {
     private $commentSubType;
 
 
-
-
     public function __construct($author=null) {
         parent::__construct($author);
-
-//        //create one commentSubType
-//        //echo "create commentSubType!!!!!!!!!!!!!!!!!! ";
-//        //exit();
-//        $this->commentSubType = new CommentSubTypeList();
-//        $this->commentSubType->setCreator($author);
-//        $this->commentSubType->setType('user-added');
-//
-//        $this->commentType = new CommentTypeList();
-//        $this->commentType->setCreator($author);
-//        $this->commentType->setType('user-added');
-//
-//        $this->commentType->addCommentSubType($this->commentSubType);
-
     }
 
 
@@ -113,7 +97,49 @@ abstract class BaseComment extends BaseUserAttributes {
     }
 
 
+    /**
+     * Add document
+     *
+     * @param \Oleg\OrderformBundle\Entity\Document $document
+     * @return Part
+     */
+    public function addDocument($document)
+    {
+        if( $document == null ) {
+            $document = new Document();
+        }
 
+        if( !$this->documents->contains($document) ) {
+            $this->documents->add($document);
+            $document->setPart($this);
+        }
 
+        return $this;
+    }
+    /**
+     * Remove document
+     *
+     * @param \Oleg\OrderformBundle\Entity\Document $document
+     */
+    public function removeDocument($document)
+    {
+        $this->documents->removeElement($document);
+    }
+
+    /**
+     * Get documents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    public function setDocuments($documents)
+    {
+        //$this->documents = new ArrayCollection();
+        return $this->documents = $documents;
+    }
 
 }

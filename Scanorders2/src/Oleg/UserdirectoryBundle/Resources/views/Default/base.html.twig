@@ -26,13 +26,18 @@
     {% block maincss %}
 
         {#jasny is used for clickable rows#}
-        {#'bundles/oleguserdirectory/dropzone/css/dropzone.css' filter='cssrewrite'#}
 
         {% stylesheets
         'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
         'bundles/oleguserdirectory/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
         'bundles/oleguserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'
         'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+        {% stylesheets
+        'bundles/oleguserdirectory/dropzone/css/dropzone.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}

@@ -56,7 +56,7 @@ class TreeRepository extends EntityRepository {
 
 
     //utility function for tree parent-child relationship
-    public function checkAndSetParent($user,$entity,$parent,$child) {
+    public function checkAndSetParent($author,$entity,$parent,$child) {
 
         //echo "child=".$child."<br>";
         if( !$child ) {
@@ -136,8 +136,8 @@ class TreeRepository extends EntityRepository {
         if( !$foundChild ) {
 
             //echo "Case 1: Not found in DB => create new <br>";
-            $treeTransf = new GenericTreeTransformer($em,$user);
-            $newChild = $treeTransf->createNewEntity($name,$className,$user);
+            $treeTransf = new GenericTreeTransformer($em,$author);
+            $newChild = $treeTransf->createNewEntity($name,$className,$author);
             $em->persist($newChild);
             $parent->$addMethod($newChild);
 

@@ -283,27 +283,103 @@ function initFileUpload() {
 
     Dropzone.autoDiscover = false;
 
+    var previewHtml =
+        '<div class="dz-preview dz-file-preview" style="width:30%; margin:0;">'+
+            '<div class="dz-details">'+
+                '<div class="dz-filename"><span data-dz-name></span></div>'+
+                '<div class="dz-size" data-dz-size></div>'+
+                '<img data-dz-thumbnail />'+
+            '</div>'+
+            '<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>'+
+            '<div class="dz-success-mark"><span>✔</span></div>'+
+            '<div class="dz-error-mark"><span>✘</span></div>'+
+            '<div class="dz-error-message"><span data-dz-errormessage></span></div>'+
+//            '<button type="button" class="btn btn-danger" data-dz-remove>Delete</button>'+
+        '</div>';
+
     $(".file-upload-dropzone").dropzone({
         url: url,
         addRemoveLinks: true,
-        maxFiles: 1,
+        maxFiles: 10,
+        previewTemplate: previewHtml,
+        dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
         sending: function(file, xhr, formData){
             formData.append('userid', userid);
+            var filename = file.name;
+            //console.log('filename='+filename);
+            formData.append('filename', filename);
         },
         success: function(file, responseText){
-            console.log('responseText='+responseText);
-            console.log(file);
-            file.previewTemplate.appendChild(document.createTextNode(responseText));
+            //console.log('responseText='+responseText);
+            //console.log(responseText);
+            //console.log(file);
+
+            //pupulate document id input field
+            var documentid = responseText.documentid;
+            console.log('documentid='+documentid);
+            var holder = $(this.element).closest('.files-upload-holder');
+            var fileIdField = holder.find('.file-upload-id');
+            fileIdField.val(documentid);
+            //file.previewTemplate.appendChild(document.createTextNode(responseText));
         },
         maxfilesexceeded: function(file) {
             this.removeFile(file);
+        },
+        removedfile: function(file) {
+            console.log('remove file name='+file.name);
+            //this.removeFile(file);
+            var holder = $(this.element).closest('.files-upload-holder');
+            var fileId = holder.find('.file-upload-id').val();
+            var url = getCommonBaseUrl("file-delete/","employees");
+            $.post(url, { deletfileid: fileId } );
         }
+//        init: function() {
+//            return;
+//            thisDropzone = this;
+//
+//            //console.log(thisDropzone);
+//            var holder = $(thisDropzone.element).closest('.files-upload-holder');
+//
+//            var existedfiles = holder.find('.file-holder');
+//            console.log('existedfiles len='+existedfiles.length);
+//
+//            var data = new Array();
+//
+//            existedfiles.each( function() {
+//                console.log('filename='+$(this).find('.file-upload-uniquename').val())
+//                var fileArr = new Array();
+//                fileArr['name'] = $(this).find('.file-upload-uniquename').val();
+//                fileArr['size'] = $(this).find('.file-upload-size').val();
+//                fileArr['dir'] = $(this).find('.file-upload-uploaddirectory').val();
+//                data.push(fileArr);
+//            });
+//
+//            console.log('data len='+data.length);
+//
+//            for( var i = 0; i < data.length; i++ ) {
+//
+//                var value = data[i];
+//
+//                console.log('name='+value.name);
+//
+//                var mockFile = { name: value.name, size: value.size };
+//
+//                thisDropzone.options.addedfile.call(thisDropzone, mockFile);
+//
+//                var filepath = "http://collage.med.cornell.edu/order/Uploaded/pathology-employees/Documents/"+value.name;
+//                console.log('path='+filepath);
+//
+//                thisDropzone.options.thumbnail.call(thisDropzone, mockFile, filepath);
+//            }
+//            //See more at: http://www.startutorial.com/articles/view/dropzonejs-php-how-to-display-existing-files-on-server#sthash.sqF6KDsk.dpuf
+//        }
 //        confirm: function(question, accepted, rejected) {
 //            console.log();
 //            // Do your thing, ask the user for confirmation or rejection, and call
 //            // accepted() if the user accepts, or rejected() otherwise. Make
 //            // sure that rejected is actually defined!
 //        }
+
     });
 
 

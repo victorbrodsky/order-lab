@@ -449,6 +449,10 @@
                 </div>
             {% endif %}
 
+            {% if formfield.vars.value %}
+                commentId:{{ formfield.vars.value.id }}
+            {% endif %}
+
             {% if formfield.status is defined %}
                 {{ formmacros.field(formfield.status) }}
             {% endif %}
@@ -459,7 +463,9 @@
 
             {{ formmacros.field(formfield.comment) }}
 
-            {{ userform.fileupload( field, cicle, classname, prototype ) }}
+            {% if formfield.documents is defined %}
+                {{ userform.fileupload( formfield, cicle, classname, prototype ) }}
+            {% endif %}
 
         </div>
 
@@ -477,25 +483,64 @@
 
 {% endmacro %}
 
-{% macro fileupload( field, cicle, classname, prototype ) %}
+{% macro fileupload( comment, cicle, classname, prototype ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
     <p>
-    <div class="row" style="height: 50px">
+    <div class="row files-upload-holder" style="height: 50px">
         <div class="col-xs-6" align="right">
-            <strong>Upload:</strong>
+            <strong>Attached Document(s):</strong>
         </div>
         <div class="col-xs-6" align="left">
-            {#<div class="form-control form-control-modif not-mapped-simplefield" {{ disabled }}>#}
-                {#{{ value|raw }}#}
-            {#</div>#}
-            {#<form action="{{ oneup_uploader_endpoint('gallery') }}" class="dropzone"></form>#}
-            <div class="dropzone file-upload-dropzone">
-                {#<input type="file" name="file" />#}
-                <div class="dropzone dropzone-previews"></div>
-            </div>
+
+            <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
+                
+                {% if cicle != "show_user" %}
+                    <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file</span></div>
+                {% else %}
+                    <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
+                {% endif %}
+
+                {% for document in comment.documents %}
+
+                    <div class="dz-preview dz-file-preview" style="width:30%; margin:0;">
+                        {{ formmacros.field(document.id) }}
+                        <div class="dz-details">
+                            <div class="dz-filename"><span data-dz-name>{{ document.vars.value.uniquename }}</span></div>
+                            <div class="dz-size" data-dz-size>{{ document.vars.value.size }}</div>
+                            <img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />
+                        </div>
+                        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                        <div class="dz-success-mark"><span>✔</span></div>
+                        <div class="dz-error-mark"><span>✘</span></div>
+                        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                        {#<button data-dz-remove class="btn btn-danger" type="button">Delete</button>#}
+                    </div>
+
+                    {#{{ formmacros.field(document.uniquename) }}#}
+                    {#{{ formmacros.field(document.uploadDirectory) }}#}
+                    {#{{ formmacros.field(document.size) }}#}
+
+                        {#<a href="{{ document.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ document.vars.value.originalname }}</a>#}
+                        {#{% if cicle != "show_user" %}#}
+                            {#<button type="button" class="btn btn-danger" data-dz-remove>Delete</button>#}
+                        {#{% endif %}#}
+
+                    {% do document.setRendered %}
+
+                {% endfor %}
+
+            {#{% if cicle != "show_user" %}#}
+                {#<div class="dz-message"><span>Drag and drop files here to upload or click to select a file</span></div>#}
+            {#{% endif %}#}
+
+            {% do comment.documents.setRendered %}
 
         </div>
     </div>
     </p>
+
 {% endmacro %}
 
 
@@ -526,7 +571,6 @@
     </p>
 
 
-    {#{{ form_start(form,{'attr': {'class': 'dropzone'}}) }}#}
     {{ form_start(form) }}
 
     {% set publicCommentsPrototype = null %}
