@@ -283,6 +283,14 @@ function initFileUpload() {
 
     Dropzone.autoDiscover = false;
 
+    var clickable = true;
+    var addRemoveLinks = true;
+    if( cicle == "show_user" ) {
+        clickable = false;
+        addRemoveLinks = false;
+    }
+    console.log('clickable='+clickable);
+
     var previewHtml =
         '<div class="dz-preview dz-file-preview" style="width:30%; margin:0;">'+
             '<div class="dz-details">'+
@@ -299,7 +307,8 @@ function initFileUpload() {
 
     $(".file-upload-dropzone").dropzone({
         url: url,
-        addRemoveLinks: true,
+        clickable: clickable,
+        addRemoveLinks: addRemoveLinks,
         maxFiles: 10,
         previewTemplate: previewHtml,
         dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
@@ -329,9 +338,10 @@ function initFileUpload() {
             console.log('remove file name='+file.name);
             //this.removeFile(file);
             var holder = $(this.element).closest('.files-upload-holder');
-            var fileId = holder.find('.file-upload-id').val();
-            var url = getCommonBaseUrl("file-delete/","employees");
-            $.post(url, { deletfileid: fileId } );
+            var documentid = holder.find('.file-upload-id').val();
+            var url = getCommonBaseUrl("file-delete","employees");
+            //use comment id and documentid
+            $.post(url, { documentid: documentid, commentid: null, commenttype: null } );
         }
 //        init: function() {
 //            return;

@@ -495,7 +495,7 @@
         <div class="col-xs-6" align="left">
 
             <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
-                
+
                 {% if cicle != "show_user" %}
                     <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file</span></div>
                 {% else %}
@@ -515,6 +515,8 @@
                         <div class="dz-success-mark"><span>✔</span></div>
                         <div class="dz-error-mark"><span>✘</span></div>
                         <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                        <div class="data-dz-remove"></div>
+                        <a class="dz-remove" href="javascript:undefined;" data-dz-remove="">Remove file</a>
                         {#<button data-dz-remove class="btn btn-danger" type="button">Delete</button>#}
                     </div>
 
