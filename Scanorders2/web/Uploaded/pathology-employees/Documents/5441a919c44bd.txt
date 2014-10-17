@@ -1,0 +1,14 @@
+Thank You! You have successfully submitted an account request. If you have provided your email or phone number we will let you know once your request is reviewed.
+
+Banned User 
+Unapproved Submitter 
+External Submitter 
+External Ordering Provider 
+Submitter 
+Ordering Provider 
+Pathology Resident 
+Pathology Fellow 
+Pathology Faculty 
+Processor 
+Data Quality Assurance Specialist 
+Administrator

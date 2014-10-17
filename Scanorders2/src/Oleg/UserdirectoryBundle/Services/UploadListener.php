@@ -62,6 +62,7 @@ class UploadListener {
 
         $response = $event->getResponse();
         $response['documentid'] = $object->getId();
+        $response['documentsrc'] = $object->getRelativeUploadFullPath();
 
     }
 

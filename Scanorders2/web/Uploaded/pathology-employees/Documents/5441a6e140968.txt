@@ -1,0 +1,7 @@
+1) add path
+
+C:\Python34;
+E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\test\usr\local\bin
+
+2) modified:
+python is installed to C:\Python34

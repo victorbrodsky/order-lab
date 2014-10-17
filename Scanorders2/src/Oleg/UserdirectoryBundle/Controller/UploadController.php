@@ -27,48 +27,50 @@ class UploadController extends Controller {
 
         $documentid = $request->get('documentid');
         $commentid = $request->get('commentid');
-        $commenttype = $request->get('commenttype');
-        echo "documentid=".$documentid;
+        $commentclass = $request->get('commenttype');    //comment class
+        //echo "documentid=".$documentid."<br>";
+        //echo "commentid=".$commentid."<br>";
+        //echo "commentclass=".$commentclass."<br>";
 
         //exit('my uploader');
 
         //find document with id
         $em = $this->getDoctrine()->getManager();
         $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($documentid);
+        //echo "document=".$document." => ";
 
         $count = 0;
 
-        //find object where document is belongs
-        $adminComment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:AdminComment')->findOneBy(array('documents'=>$documentid));
-        if( $adminComment ) {
-            $adminComment->removeDocument($document);
-            $em->persist($adminComment);
-            $count++;
-        }
+        if( $document ) {
 
-        $publicComment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:PublicComment')->findOneBy(array('documents'=>$documentid));
-        if( $publicComment ) {
-            $publicComment->removeDocument($document);
-            $em->persist($publicComment);
-            $count++;
-        }
+            //find object where document is belongs
+            //$comment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
 
-        $confComment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:ConfidentialComment')->findOneBy(array('documents'=>$documentid));
-        if( $confComment ) {
-            $confComment->removeDocument($document);
-            $em->persist($confComment);
-            $count++;
-        }
+            $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass);
+            $dql = $repository->createQueryBuilder("comment");
+            $dql->select('comment');
+            $dql->innerJoin("comment.documents", "documents");
+            $dql->where("documents = :document");
+            $query = $em->createQuery($dql)->setParameter("document",$document);
+            $comments = $query->getResult();
 
-        $privateComment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:PrivateComment')->findOneBy(array('documents'=>$documentid));
-        if( $privateComment ) {
-            $privateComment->removeDocument($document);
-            $em->persist($privateComment);
-            $count++;
-        }
+            //echo "comment count=".count($comments)." ";
+            if( count($comments) > 1 ) {
+                throw new \Exception( 'More than one comment found, count='.count($comments) );
+            }
 
-        $em->remove($document);
-        $em->flush();
+            if( count($comments) > 0 ) {
+                $comment = $comments[0];
+                $comment->removeDocument($document);
+                $em->persist($comment);
+                $count++;
+            }
+
+            $count++;
+            $em->remove($document);
+            $em->flush();
+
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

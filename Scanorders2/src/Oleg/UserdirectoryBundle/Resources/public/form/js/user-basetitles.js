@@ -49,6 +49,7 @@ function initBaseAdd(newForm) {
     getComboboxIdentifier(newForm);
     getComboboxFellowshipType(newForm);
     getComboboxResearchLabs(newForm);
+    initFileUpload(newForm);
 }
 
 //get input field only

@@ -101,7 +101,7 @@ abstract class BaseComment extends BaseUserAttributes {
      * Add document
      *
      * @param \Oleg\OrderformBundle\Entity\Document $document
-     * @return Part
+     * @return Comment
      */
     public function addDocument($document)
     {
@@ -111,7 +111,6 @@ abstract class BaseComment extends BaseUserAttributes {
 
         if( !$this->documents->contains($document) ) {
             $this->documents->add($document);
-            $document->setPart($this);
         }
 
         return $this;

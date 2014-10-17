@@ -12,7 +12,7 @@
         {% set formfield = field %}
     {% endif %}
 
-    {% if formfield.vars.value and formfield.vars.value.status == 0 %}
+    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
         {% set wellclass = "user-alert-warning" %}
     {% else %}
         {% set wellclass = "" %}
@@ -141,7 +141,7 @@
     {% endif %}
 
 
-    {% if formfield.vars.value and formfield.vars.value.status == 0 %}
+    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
         {% set wellclass = "user-alert-warning" %}
     {% else %}
         {% set wellclass = "" %}
@@ -435,13 +435,13 @@
 
     {% if formfield.comment.vars.value != "" or cicle != 'show_user' %}
 
-        {% if formfield.vars.value and formfield.vars.value.status == 0 and classname == 'user-privatecomments' %}
+        {% if classname == 'user-privatecomments' and (formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype') %}
             {% set wellclass = "user-alert-warning" %}
         {% else %}
             {% set wellclass = "" %}
         {% endif %}
 
-        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}" style="padding-bottom:120px;">
 
             {% if cicle != 'show_user' %}
                 <div class="text-right" style="padding-bottom: 10px">
@@ -449,9 +449,11 @@
                 </div>
             {% endif %}
 
-            {% if formfield.vars.value %}
-                commentId:{{ formfield.vars.value.id }}
-            {% endif %}
+            {#{% if formfield.vars.value %}#}
+                {#commentId:{{ formfield.vars.value.id }}#}
+            {#{% endif %}#}
+
+            {{ formmacros.field(formfield.id) }}
 
             {% if formfield.status is defined %}
                 {{ formmacros.field(formfield.status) }}
@@ -497,27 +499,36 @@
             <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
 
                 {% if cicle != "show_user" %}
-                    <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file</span></div>
+                    <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 10 files, 10 MB each)</span></div>
                 {% else %}
                     <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
                 {% endif %}
 
                 {% for document in comment.documents %}
 
-                    <div class="dz-preview dz-file-preview" style="width:30%; margin:0;">
-                        {{ formmacros.field(document.id) }}
+                    <div class="dz-preview dz-file-preview" style="width:24%; height:220px; margin:0;">
                         <div class="dz-details">
-                            <div class="dz-filename"><span data-dz-name>{{ document.vars.value.uniquename }}</span></div>
-                            <div class="dz-size" data-dz-size>{{ document.vars.value.size }}</div>
+                            <div class="dz-filename"><span data-dz-name>id:{{ document.vars.value.id }}, {{ document.vars.value.uniquename }}</span></div>
+                            <div class="dz-size" data-dz-size><strong>{{ document.vars.value.getSizeStr() }}</strong></div>
                             <img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />
                         </div>
                         <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
                         <div class="dz-success-mark"><span>✔</span></div>
                         <div class="dz-error-mark"><span>✘</span></div>
                         <div class="dz-error-message"><span data-dz-errormessage></span></div>
-                        <div class="data-dz-remove"></div>
-                        <a class="dz-remove" href="javascript:undefined;" data-dz-remove="">Remove file</a>
-                        {#<button data-dz-remove class="btn btn-danger" type="button">Delete</button>#}
+
+                        <div class="file-upload-showlink">
+                            <div style="overflow:hidden; white-space:nowrap;">
+                                <a href="{{ document.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ document.vars.value.originalname }}</a>
+                            </div>
+                        </div>
+
+                        {% if cicle != "show_user" %}
+                            <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
+                        {% endif %}
+
+                        {{ formmacros.field(document.id) }}
+
                     </div>
 
                     {#{{ formmacros.field(document.uniquename) }}#}
@@ -533,9 +544,7 @@
 
                 {% endfor %}
 
-            {#{% if cicle != "show_user" %}#}
-                {#<div class="dz-message"><span>Drag and drop files here to upload or click to select a file</span></div>#}
-            {#{% endif %}#}
+            </div>
 
             {% do comment.documents.setRendered %}
 
@@ -635,6 +644,7 @@
          data-prototype-user-privatecomments = "{{ privateCommentsPrototype|e }}"
          data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
          data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
+
          data-userurllink = "{{ userform.userUrlLink()|e }}"
          data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
          data-userid = "{{ entity.id }}"

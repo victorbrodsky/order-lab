@@ -1,0 +1,12 @@
+# Configuration info:
+http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php
+
+# Development mode:
+http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/
+
+# Production mode:
+http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app.php/
+
+
+postresql
+pass: admin

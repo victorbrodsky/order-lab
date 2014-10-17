@@ -23,6 +23,12 @@ class BaseCommentsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $builder->add( 'id', 'hidden', array(
+            'label'=>false,
+            'required'=>false,
+            'attr' => array('class' => 'comment-field-id')
+        ));
+
         $builder->add( 'comment', 'textarea', array(
             'label'=>'Comment:',
             'read_only' => $this->params['read_only'],

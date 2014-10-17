@@ -2,6 +2,10 @@
  * Created by oli2002 on 8/22/14.
  */
 
+//dropzone globals
+var _dz_maxFiles = 10;
+var _dz_maxFilesize = 10; //MB
+
 //do not show the [X] (delete) button in the right upper corner of "Employment Period(s)"
 // if it is the only one being displayed.
 // When the user adds another one, then show an [X] next to each one.
@@ -260,11 +264,19 @@ function getYearByDiff(date1,date2) {
     return years;
 }
 
-
-function initFileUpload() {
+//File Uploads using Dropzone and Oneup\UploaderBundle
+function initFileUpload( holder ) {
 
     if( $('.dropzone').length == 0 ) {
         return;
+    }
+
+    var targetid = ".file-upload-dropzone";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
     }
 
     var dataElement = document.getElementById("form-prototype-data");
@@ -275,11 +287,11 @@ function initFileUpload() {
 
     //var url = dataElement.dataset.uploadurl;
     var url = dataElement.getAttribute('data-uploadurl');
-    console.log('url='+url);
+    //console.log('url='+url);
 
     //var userid = dataElement.dataset.userid;
     var userid = dataElement.getAttribute('data-userid');
-    console.log('userid='+userid);
+    //console.log('userid='+userid);
 
     Dropzone.autoDiscover = false;
 
@@ -287,12 +299,13 @@ function initFileUpload() {
     var addRemoveLinks = true;
     if( cicle == "show_user" ) {
         clickable = false;
-        addRemoveLinks = false;
+        addRemoveLinks = null;
     }
-    console.log('clickable='+clickable);
+    //console.log('clickable='+clickable);
+    //console.log('addRemoveLinks='+addRemoveLinks);
 
     var previewHtml =
-        '<div class="dz-preview dz-file-preview" style="width:30%; margin:0;">'+
+        '<div class="dz-preview dz-file-preview" style="width:24%; height:220px; margin:0;">'+
             '<div class="dz-details">'+
                 '<div class="dz-filename"><span data-dz-name></span></div>'+
                 '<div class="dz-size" data-dz-size></div>'+
@@ -302,14 +315,16 @@ function initFileUpload() {
             '<div class="dz-success-mark"><span>✔</span></div>'+
             '<div class="dz-error-mark"><span>✘</span></div>'+
             '<div class="dz-error-message"><span data-dz-errormessage></span></div>'+
+            '<div class="file-upload-showlink"></div>'
 //            '<button type="button" class="btn btn-danger" data-dz-remove>Delete</button>'+
         '</div>';
 
-    $(".file-upload-dropzone").dropzone({
+    $(targetid).dropzone({
         url: url,
         clickable: clickable,
         addRemoveLinks: addRemoveLinks,
-        maxFiles: 10,
+        maxFiles: _dz_maxFiles,
+        maxFilesize: _dz_maxFilesize,
         previewTemplate: previewHtml,
         dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
         sending: function(file, xhr, formData){
@@ -323,25 +338,54 @@ function initFileUpload() {
             //console.log(responseText);
             //console.log(file);
 
-            //pupulate document id input field
             var documentid = responseText.documentid;
-            console.log('documentid='+documentid);
-            var holder = $(this.element).closest('.files-upload-holder');
-            var fileIdField = holder.find('.file-upload-id');
-            fileIdField.val(documentid);
+            //console.log('documentid='+documentid);
+            var documentSrc = responseText.documentsrc;
+
+            var commentHolder = $(this.element).closest('.user-collection-holder'); //commentHolder
+            //var comments = commentHolder.find('.comment-field-id').first();
+            //var commentFirst = comments.first();
+            var res = getNewDocumentInfoByHolder(commentHolder);
+
+            //insert document id input field
+            var commentType = res['commentType'];
+            var commentCount = res['commentCount'];
+            var documentCount = res['documentCount'];
+
+            //var documentCount = maxFiles + comments.length;    //'1'; //maximum number of comments is limited, so use this number
+
+            var idHtml =    '<input type="hidden" id="oleg_userdirectorybundle_user_'+commentType+'_'+commentCount+'_documents_'+documentCount+'_id" '+
+                            'name="oleg_userdirectorybundle_user['+commentType+']['+commentCount+'][documents]['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
+
+            var showlinkHtml =  '<div style="overflow:hidden; white-space:nowrap;">'+
+                                '<a href="'+documentSrc+'" target="_blank">'+file.name+'</a>'+
+                                '</div>';
+
+            if( file.previewElement ) {
+                $(file.previewElement).append(idHtml);
+                var showlinkDiv = $(file.previewElement).find('.file-upload-showlink');
+                showlinkDiv.html(showlinkHtml);
+
+                adjustHolderHeight(commentHolder);
+            }
+
+            //pupulate document id input field
+            //var holder = $(this.element).closest('.files-upload-holder');
+            //var fileIdField = holder.find('.file-upload-id');
+            //fileIdField.val(documentid);
             //file.previewTemplate.appendChild(document.createTextNode(responseText));
+
+            //parent function
+            if (file.previewElement) {
+                return file.previewElement.classList.add("dz-success");
+            }
         },
         maxfilesexceeded: function(file) {
             this.removeFile(file);
         },
         removedfile: function(file) {
-            console.log('remove file name='+file.name);
-            //this.removeFile(file);
-            var holder = $(this.element).closest('.files-upload-holder');
-            var documentid = holder.find('.file-upload-id').val();
-            var url = getCommonBaseUrl("file-delete","employees");
-            //use comment id and documentid
-            $.post(url, { documentid: documentid, commentid: null, commenttype: null } );
+            //console.log('remove js file name='+file.name);
+            return removeUploadedFileByHolder( file.previewElement, this );
         }
 //        init: function() {
 //            return;
@@ -397,3 +441,149 @@ function initFileUpload() {
 
 }
 
+function removeUploadedFileByHolder( previewElement, dropzone ) {
+
+    var r = confirm('Are you sure you want to remove this document?'+', id='+documentid);
+    if( r == false ) {
+        return;
+    }
+
+    if( !previewElement ) {
+        return;
+    }
+
+    var documentid = $(previewElement).find('.file-upload-id').val();
+    console.log('remove documentid='+documentid);
+
+    var holderTop = $(dropzone.element).closest('.user-collection-holder');
+    var commentid = holderTop.find('.comment-field-id').val();
+
+    var commenttype = null;
+    if( holderTop.hasClass('user-publiccomments') ) {
+        commenttype = "PublicComment";
+    }
+    if( holderTop.hasClass('user-privatecomments') ) {
+        commenttype = "PrivateComment";
+    }
+    if( holderTop.hasClass('user-admincomments') ) {
+        commenttype = "AdminComment";
+    }
+    if( holderTop.hasClass('user-confidentialcomment') ) {
+        commenttype = "ConfidentialComment";
+    }
+
+    var url = getCommonBaseUrl("file-delete","employees");
+    //use comment id and documentid
+    $.ajax({
+        type: "POST",
+        url: url,
+        timeout: _ajaxTimeout,
+        async: true,
+        data: { documentid: documentid, commentid: commentid, commenttype: commenttype }
+    }).success(function(data) {
+        //if( parseInt(data) > 0 ) {
+            //console.log('remove ok, data='+data);
+            //parent function
+            var _ref;
+            if( previewElement ) {
+                if( (_ref = previewElement) != null ) {
+                    _ref.parentNode.removeChild(previewElement);
+                }
+            }
+
+            adjustHolderHeight(holderTop);
+        //}
+    }).fail(function(data) {
+        console.log('remove failed, data='+data);
+    }) ;
+
+    return dropzone._updateMaxFilesReachedClass();
+}
+
+function removeUploadedFile(btn) {
+    var dropzoneEl = $(btn).closest('.file-upload-dropzone');
+    var dropzoneDom = dropzoneEl.get(0);
+    //console.log('className='+dropzoneDom.className);
+
+    var myDropzone = dropzoneDom.dropzone;
+
+    var previewElement = $(btn).closest('.dz-file-preview').get(0);
+
+    removeUploadedFileByHolder( previewElement, myDropzone );
+}
+
+function adjustHolderHeight( commentHolder ) {
+    return; //testing
+    console.log(commentHolder);
+    //use dropzone element height changes
+    var dropzoneElement = commentHolder.find('.file-upload-dropzone');
+    var dropzoneH = dropzoneElement.height();
+    console.log('dropzoneH='+dropzoneH);
+
+    var originalH = 150;
+    var extraH = parseInt(dropzoneH) + parseInt(originalH);
+    console.log('extraH='+extraH);
+
+    var commentH = commentHolder.height();
+    var newH = parseInt(commentH) + parseInt(extraH);
+    console.log('newH='+newH);
+    commentHolder.height( newH );
+
+}
+
+//get comment type and count
+function getNewDocumentInfoByHolder( commentHolder ) {
+
+    //console.log(commentHolder);
+
+    var id = commentHolder.find('input.file-upload-id').first().attr('id');
+
+    var res = getElementInfoById( id );
+
+    res['documentCount'] = getNextCollectionCount( commentHolder, 'input.file-upload-id' );
+    //res['documentCount'] = documentCount;
+
+    return res;
+}
+
+function getElementInfoById( id ) {
+    //  0           1           2       3          4    5      6  7
+    //oleg_userdirectorybundle_user_publicComments_0_documents_1_id
+    var idArr = id.split("_");
+    var commentType = idArr[3];
+    var commentCount = idArr[4];
+    var documentCount = idArr[6];
+
+    var res = new Array();
+    res['commentType'] = commentType;
+    res['commentCount'] = commentCount;
+    res['documentCount'] = documentCount;
+
+    return res;
+}
+
+//fieldSelector - any element's id or class in the collection with proper id
+function getNextCollectionCount( holder, fieldSelector ) {
+    var maxCount = 0;
+
+    //var len = holder.find(fieldSelector).length;
+    //console.log('len='+len);
+
+    holder.find(fieldSelector).each( function(){
+
+        var res = getElementInfoById( $(this).attr('id') );
+        var count = res['documentCount'];
+        console.log('count='+count);
+
+        if( parseInt(count) > parseInt(maxCount) ) {
+            maxCount = count;
+        }
+
+    });
+
+    maxCount = parseInt(maxCount)+1;
+
+    console.log('maxCount='+maxCount);
+
+    return maxCount;
+}

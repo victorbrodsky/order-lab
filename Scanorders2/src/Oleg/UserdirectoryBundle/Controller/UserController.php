@@ -1248,11 +1248,6 @@ class UserController extends Controller
 
         //echo "public comments count=".count($entity->getPublicComments())."<br>";
 
-        echo "comment count=".count($entity->getDocuments())."<br>";
-        foreach( $entity->getDocuments() as $doc ) {
-            echo "doc id=".$doc->geId().", originalname=".$doc->getOriginalname()."<br>";
-        }
-
         foreach( $entity->getPublicComments() as $comment) {
             $this->processCommentType($comment);
         }
@@ -1275,13 +1270,32 @@ class UserController extends Controller
     }
     public function processCommentType($comment) {
 
+        ///////////////////////// process documents /////////////////////////
+        echo "comment count=".count($comment->getDocuments())."<br>";
+        foreach( $comment->getDocuments() as $doc ) {
+            echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+            //if document does not have an original or unique names then this is a newly added document => find it in DB and attach it to this comment
+            if( $doc->getId() && ( !$doc->getOriginalname() || !$doc->getUniquename() ) ) {
+
+                $comment->removeDocument($doc);
+
+                $docDb = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
+                if( $docDb ) {
+                    echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
+                    $comment->addDocument($docDb);
+                }
+            }
+        }
+       //exit();
+       ///////////////////////// EOF process documents /////////////////////////
+
         //set author if not set
         $this->setUpdateInfo($comment);
 
         //echo "<br>Comment text=".$comment->getComment()."<br>";
 
         //if comment text is empty => remove from user
-        if( $comment->getComment() == "" ) {
+        if( $comment->getComment() == "" && count($comment->getDocuments()) == 0 ) {    //&& count($comment->getDocuments()) == 0
 
             $user = $comment->getUser();
 

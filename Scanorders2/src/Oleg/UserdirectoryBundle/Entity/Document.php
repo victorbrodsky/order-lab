@@ -181,5 +181,16 @@ class Document {
     }
 
 
+    public function getSizeStr()
+    {
+        $size = $this->size;
+        if( $size && $size != 0 ) {
+            $size = $size/1000000;
+            $size = round($size, 1);
+            $size = $size . " MiB";
+        }
+        return $size;
+    }
+
 
 }
