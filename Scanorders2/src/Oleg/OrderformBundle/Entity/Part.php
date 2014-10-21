@@ -7,11 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 //use Symfony\Component\Validator\Constraints as Assert;
 //use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+
 //* @UniqueEntity({"accession","partname"})
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PartRepository")
- * @ORM\Table(name="part")
+ * @ORM\Table(name="scan_part")
  */
 class Part extends ObjectAbstract
 {
@@ -91,9 +92,9 @@ class Part extends ObjectAbstract
         $this->sourceOrgan = new ArrayCollection();
         $this->description = new ArrayCollection();
         $this->disident = new ArrayCollection();
-        $this->paper = new ArrayCollection();
         $this->diffDisident = new ArrayCollection();
         $this->diseaseType = new ArrayCollection();
+        $this->paper = new ArrayCollection();
 
         if( $withfields ) {
             $this->addPartname( new PartPartname($status,$provider,$source) );

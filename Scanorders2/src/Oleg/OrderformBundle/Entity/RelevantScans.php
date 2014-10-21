@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="relevantScans")
+ * @ORM\Table(name="scan_relevantScans")
  */
 class RelevantScans extends SlideArrayFieldAbstract
 {

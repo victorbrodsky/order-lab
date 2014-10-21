@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="blockBlockname")
+ * @ORM\Table(name="scan_blockBlockname")
  */
 class BlockBlockname extends BlockArrayFieldAbstract
 {

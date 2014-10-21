@@ -2,10 +2,14 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 use Oleg\OrderformBundle\Helper\FormHelper;
+use Oleg\UserdirectoryBundle\Form\DocumentType;
+
 
 class PartPaperType extends AbstractType
 {
@@ -22,28 +26,40 @@ class PartPaperType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+
+        $builder->add('documents', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => " Attached Document(s)",
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__document__',
+        ));
+
         //echo "cicile=".$this->params['cicle']."<br>";
 
-        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' || $this->params['cicle'] == 'amend' ) {
-
-            //echo " => new, create or edit set file ";
-            $builder->add('field', 'file', array(
-                'label'=>'Relevant Paper or Abstract',
-                'required'=>false,
-                //'attr'=>array('class'=>'form-control', 'style'=>'height: 50px'),
-                //'data'=>'form.docx'
-            ));
-
-        } else {
-
-            //echo "show set name ";
-            $builder->add('name', 'text', array(
-                'label'=>'Relevant Paper or Abstract',
-                'required'=>false,
-                'attr'=>array('class'=>'form-control')
-            ));
-
-        }
+//        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' || $this->params['cicle'] == 'amend' ) {
+//
+//            //echo " => new, create or edit set file ";
+//            $builder->add('field', 'file', array(
+//                'label'=>'Relevant Paper or Abstract',
+//                'required'=>false,
+//                //'attr'=>array('class'=>'form-control', 'style'=>'height: 50px'),
+//                //'data'=>'form.docx'
+//            ));
+//
+//        } else {
+//
+//            //echo "show set name ";
+//            $builder->add('name', 'text', array(
+//                'label'=>'Relevant Paper or Abstract',
+//                'required'=>false,
+//                'attr'=>array('class'=>'form-control')
+//            ));
+//
+//        }
 
         $builder->add('partothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',

@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="procedurePatfirstname")
+ * @ORM\Table(name="scan_procedurePatfirstname")
  */
 class ProcedurePatfirstname extends ProcedureArrayFieldAbstract
 {

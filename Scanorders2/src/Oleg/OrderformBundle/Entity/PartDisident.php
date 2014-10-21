@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 //use disident (disease identify) as diagnosis, because diagnosis causes problem with symfony2&doctrine(?)
 /**
  * @ORM\Entity
- * @ORM\Table(name="partDisident")
+ * @ORM\Table(name="scan_partDisident")
  */
 class PartDisident extends PartArrayFieldAbstract
 {

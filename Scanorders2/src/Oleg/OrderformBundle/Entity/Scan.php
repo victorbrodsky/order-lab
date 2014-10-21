@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 //(repositoryClass="Oleg\OrderformBundle\Repository\ScanRepository")
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan")
+ * @ORM\Table(name="scan_scan")
  */
 class Scan extends SlideArrayFieldAbstract
 {

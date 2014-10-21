@@ -47,6 +47,8 @@
     '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
 	
 	'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
 
     '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
     '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
@@ -128,6 +130,8 @@
 
         <div id="form-prototype-data"
             data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype)|e }}"
+            data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
+            data-userid = "{{ app.security.getToken().getUser().getId() }}"
         ></div>
 
         <!-- handsontable -->

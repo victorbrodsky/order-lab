@@ -9,7 +9,7 @@ use Oleg\OrderformBundle\Entity\AccessionArrayFieldAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="accessionaccession",
+ * @ORM\Table(name="scan_accessionaccession",
  *  indexes={
  *      @ORM\Index( name="accession_field_idx", columns={"field"} ),
  *      @ORM\Index( name="accession_keytype_idx", columns={"keytype_id"} )

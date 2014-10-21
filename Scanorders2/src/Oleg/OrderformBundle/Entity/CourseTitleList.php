@@ -11,7 +11,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="CourseTitleList")
+ * @ORM\Table(name="scan_courseTitleList")
  */
 class CourseTitleList extends ListAbstract
 {
@@ -35,7 +35,7 @@ class CourseTitleList extends ListAbstract
 
     /**
      * @ORM\ManyToMany(targetEntity="DirectorList", inversedBy="courses", cascade={"persist"})
-     * @ORM\JoinTable(name="courses_directors")
+     * @ORM\JoinTable(name="scan_courses_directors")
      **/
     protected $directors;
 

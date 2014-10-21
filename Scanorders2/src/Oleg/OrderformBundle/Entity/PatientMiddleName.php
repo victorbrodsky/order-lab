@@ -10,7 +10,7 @@ use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="patientmiddlename",
+ * @ORM\Table(name="scan_patientmiddlename",
  *  indexes={
  *      @ORM\Index( name="patientmiddlename_field_idx", columns={"field"} )
  *  }

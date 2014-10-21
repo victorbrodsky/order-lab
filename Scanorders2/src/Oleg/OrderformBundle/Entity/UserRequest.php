@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\UserRequestRepository")
- * @ORM\Table(name="accountrequest")
+ * @ORM\Table(name="scan_accountrequest")
  * @ORM\HasLifecycleCallbacks
  */
 class UserRequest
@@ -65,7 +65,7 @@ class UserRequest
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinTable(name="accountrequest_institution",
+     * @ORM\JoinTable(name="scan_accountrequest_institution",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      * )
@@ -79,7 +79,7 @@ class UserRequest
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinTable(name="accountrequest_service",
+     * @ORM\JoinTable(name="scan_accountrequest_service",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
      * )

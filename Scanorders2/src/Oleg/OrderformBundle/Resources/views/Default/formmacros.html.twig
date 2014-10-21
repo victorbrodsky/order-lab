@@ -467,13 +467,14 @@
                         {% endif %}
                     {% endif %}
 
+
                     {% if showInfoDate == 0 and showInfoProvider == 0 %}
                         {% if fieldtype == "procedurepatfirstname" %}
                             {{form_label(fieldThis.firstName)}}<strong>:</strong>
                         {% elseif fieldtype == "procedurepatmiddlename" %}
                             {{form_label(fieldThis.middleName)}}<strong>:</strong>
-                        {% elseif fieldtype == "paper" and cycle == "show" %}
-                            {{form_label(fieldThis.name)}}<strong>:</strong>
+                        {% elseif fieldtype == "paper" %}
+                            {{form_label(fieldThis.documents)}}<strong>:</strong>
                         {% elseif fieldtype == "blockspecialStains" %}
                             {{form_label(fieldThis.staintype)}}<br>
                             {{form_label(fieldThis.field)}}<strong>:</strong>
@@ -485,8 +486,8 @@
                             {{form_label(fieldThis.firstName)}}
                         {% elseif fieldtype == "procedurepatmiddlename" %}
                             {{form_label(fieldThis.middleName)}}
-                        {% elseif fieldtype == "paper" and cycle == "show" %}
-                            {{form_label(fieldThis.name)}}
+                        {% elseif fieldtype == "paper" %}
+                            {{form_label(fieldThis.documents)}}
                         {% elseif fieldtype == "blockspecialStains" %}
                             {{form_label(fieldThis.staintype)}}<br>
                             {{form_label(fieldThis.field)}}
@@ -526,7 +527,7 @@
                 {% elseif fieldtype == "lockdate" %}
                     {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
                 {% elseif fieldtype == "paper" %}
-                    {{ formmacros.fieldpaper(fieldThis,cycle) }}
+                    {{ formmacros.fieldpaper(fieldThis,cycle,prototype) }}
                 {% elseif classname == "patientmrn" %}
                     {{ form_widget(fieldThis.keytype) }}
                     {{ form_widget(fieldThis.field) }}
@@ -706,13 +707,26 @@
 {% endmacro %}
 
 
-{% macro fieldpaper(field,cycle) %}
-    {% if cycle == 'show' %}
-        {#<a href="../../../../uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>#}
-        <a href="{{ field.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ field.vars.value.name }}</a>
-    {% else %}
-       {{ form_widget(field.field) }}
+{% macro fieldpaper(paper,cicle,prototype) %}
+
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if paper.documents is defined or prototype == 'prototype' %}
+
+        <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
+
+            {% if cicle != "show_user" %}
+                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 10 files, 10 MB each)</span></div>
+            {% else %}
+                <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
+            {% endif %}
+
+            {{ usermacros.document( paper, cicle ) }}
+
+        </div>
+        
     {% endif %}
+
 {% endmacro %}
 
 {#{% macro dataQualityWidgetExisting( field, cycle ) %}#}
@@ -924,7 +938,7 @@
         {% set key = "" %}
     {% endif %}
 
-    <div id="part_{{ uid }}" class="form-element-holder">
+    <div id="part_{{ uid }}" class="form-element-holder scan-partpaper">
 
         {% if partnameHtml is not defined or partnameHtml == "" %}
             {{ formmacros.inputArrayField(part.partname,cycle,"partpartname",key,"","","",status) }}
@@ -939,9 +953,9 @@
         {% endif %}
 
         {% if paperHtml is not defined or paperHtml == "" %}
-            {{ formmacros.inputArrayField(part.paper,cycle,"partpaper","paper","","","",status) }}
+            {#{{ formmacros.inputArrayField(part.paper,cycle,"partpaper","paper","","","",status) }}#}
         {% else  %}
-            <p><div class="partpaper">{{ paperHtml }}</div></p>
+            {#<p><div class="partpaper">{{ paperHtml }}</div></p>#}
         {% endif %}
 
         {% if descriptionHtml is not defined or descriptionHtml == "" %}

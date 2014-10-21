@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Procedure (use 'procedures', because 'procedure' causes problems (reserved?))
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ProcedureRepository")
- * @ORM\Table(name="procedures")
+ * @ORM\Table(name="scan_procedures")
  */
 class Procedure extends ObjectAbstract
 {

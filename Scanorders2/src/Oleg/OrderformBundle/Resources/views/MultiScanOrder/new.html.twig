@@ -92,7 +92,8 @@
 
         {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
-        {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"","prototype") %}
+        {#{% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"paper","prototype") %}#}
+        {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.documents,type,"paper","prototype") %}
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
         {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
 
@@ -188,6 +189,9 @@
           data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"","","","","plusbtn")|e }}"
 
       {% endif %}
+
+     data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
+     data-userid = "{{ app.security.getToken().getUser().getId() }}"
 
     ></div>
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}

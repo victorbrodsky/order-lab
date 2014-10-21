@@ -9,7 +9,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="urgency")
+ * @ORM\Table(name="scan_urgency")
  */
 class Urgency extends ListAbstract
 {

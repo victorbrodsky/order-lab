@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="slideReturnRequest")
+ * @ORM\Table(name="scan_slideReturnRequest")
  */
 class SlideReturnRequest extends OrderAbstract {
 
@@ -35,7 +35,7 @@ class SlideReturnRequest extends OrderAbstract {
 
     /**
      * @ORM\ManyToMany(targetEntity="Slide")
-     * @ORM\JoinTable(name="returnrequest_slide",
+     * @ORM\JoinTable(name="scan_returnrequest_slide",
      *      joinColumns={@ORM\JoinColumn(name="slideReturnRequest", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="slide", referencedColumnName="id")}
      * )

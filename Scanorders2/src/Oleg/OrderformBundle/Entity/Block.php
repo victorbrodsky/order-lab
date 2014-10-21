@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\BlockRepository")
- * @ORM\Table(name="block")
+ * @ORM\Table(name="scan_block")
  */
 class Block extends ObjectAbstract
 {

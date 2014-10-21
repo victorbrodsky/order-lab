@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="blockSpecialStains")
+ * @ORM\Table(name="scan_blockSpecialStains")
  */
 class BlockSpecialStains extends BlockArrayFieldAbstract
 {

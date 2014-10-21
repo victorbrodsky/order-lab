@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\DocumentRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="user_document")
  */
@@ -183,13 +183,37 @@ class Document {
 
     public function getSizeStr()
     {
-        $size = $this->size;
-        if( $size && $size != 0 ) {
-            $size = $size/1000000;
-            $size = round($size, 1);
-            $size = $size . " MiB";
+//        $size = $this->size;
+//        if( $size && $size != 0 ) {
+//            $size = $size/1000000;
+//            $size = round($size, 1);
+//            $size = $size . " MiB";
+//        }
+        return $this->Size($this->size);
+    }
+
+
+    public function Size( $size )
+    {
+        //$bytes = sprintf('%u', filesize($path));
+        $bytes = $size;
+
+        if ($bytes > 0)
+        {
+            $unit = intval(log($bytes, 1024));
+            $units = array('B', 'KiB', 'MiB', 'GB');
+
+            if (array_key_exists($unit, $units) === true)
+            {
+                return sprintf('%d %s', $bytes / pow(1024, $unit), $units[$unit]);
+            }
         }
-        return $size;
+
+        return $bytes;
+    }
+
+    public function getFullDescriptionStr() {
+        return "Document: id=".$this->getId().", originalname=".$this->getOriginalname().", uniquename=".$this->getUniquename()."<br>";
     }
 
 

@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="slidetype")
+ * @ORM\Table(name="scan_slidetype")
  */
 class SlideType extends ListAbstract
 {

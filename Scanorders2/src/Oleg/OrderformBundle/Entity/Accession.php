@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\AccessionRepository")
- * @ORM\Table(name="accession")
+ * @ORM\Table(name="scan_accession")
  */
 class Accession extends ObjectAbstract {
 

@@ -1270,32 +1270,40 @@ class UserController extends Controller
     }
     public function processCommentType($comment) {
 
+        $em = $this->getDoctrine()->getManager();
+
         ///////////////////////// process documents /////////////////////////
-        echo "comment count=".count($comment->getDocuments())."<br>";
-        foreach( $comment->getDocuments() as $doc ) {
-            echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
-            //if document does not have an original or unique names then this is a newly added document => find it in DB and attach it to this comment
-            if( $doc->getId() && ( !$doc->getOriginalname() || !$doc->getUniquename() ) ) {
+        $comment = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $comment );
 
-                $comment->removeDocument($doc);
-
-                $docDb = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
-                if( $docDb ) {
-                    echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
-                    $comment->addDocument($docDb);
-                }
-            }
-        }
+//        echo "comment count=".count($comment->getDocuments())."<br>";
+//        foreach( $comment->getDocuments() as $doc ) {
+//            echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+//            //if document does not have an original or unique names then this is a newly added document => find it in DB and attach it to this comment
+//            if( $doc->getId() && ( !$doc->getOriginalname() || !$doc->getUniquename() ) ) {
+//
+//                $comment->removeDocument($doc);
+//
+//                $docDb = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
+//                if( $docDb ) {
+//                    echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
+//                    $comment->addDocument($docDb);
+//                }
+//            }
+//        }
+//        echo "after processing comment count=".count($comment->getDocuments())."<br>";
+//        foreach( $comment->getDocuments() as $doc ) {
+//            echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+//        }
        //exit();
        ///////////////////////// EOF process documents /////////////////////////
 
         //set author if not set
         $this->setUpdateInfo($comment);
 
-        //echo "<br>Comment text=".$comment->getComment()."<br>";
+        echo "<br>Comment text=".$comment->getComment()."<br>";
 
         //if comment text is empty => remove from user
-        if( $comment->getComment() == "" && count($comment->getDocuments()) == 0 ) {    //&& count($comment->getDocuments()) == 0
+        if( $comment->getComment() == "" && count($comment->getDocuments()) == 0 ) {
 
             $user = $comment->getUser();
 
@@ -1317,7 +1325,6 @@ class UserController extends Controller
         $subtype = $comment->getCommentSubType();
 
         $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
         $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
 
         $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);

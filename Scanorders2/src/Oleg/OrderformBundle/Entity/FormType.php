@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="formtype")
+ * @ORM\Table(name="scan_formtype")
  */
 class FormType extends ListAbstract
 {

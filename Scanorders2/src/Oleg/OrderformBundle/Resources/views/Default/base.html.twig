@@ -37,6 +37,12 @@
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
 
+        {% stylesheets
+        'bundles/oleguserdirectory/dropzone/css/dropzone.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
     {% endblock %}
 
     {% block additionalcss %}{% endblock %}
@@ -148,6 +154,7 @@
                 '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
 
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
@@ -168,9 +175,19 @@
                 '@OlegOrderformBundle/Resources/public/form/js/modal.js'
                 '@OlegOrderformBundle/Resources/public/form/js/tooltips.js'
 
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
+
 
             %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+
+            {#dropzone#}
+            {% javascripts
+            '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
+            '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
+            %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
 
         {% endblock %}

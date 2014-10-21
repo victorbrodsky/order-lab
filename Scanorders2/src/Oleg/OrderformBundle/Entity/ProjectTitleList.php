@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ProjectTitleList")
+ * @ORM\Table(name="scan_projectTitleList")
  */
 class ProjectTitleList extends ListAbstract
 {
@@ -34,7 +34,7 @@ class ProjectTitleList extends ListAbstract
 
     /**
      * @ORM\ManyToMany(targetEntity="PIList", inversedBy="projectTitles", cascade={"persist"})
-     * @ORM\JoinTable(name="projectTitles_principals")
+     * @ORM\JoinTable(name="scan_projectTitles_principals")
      **/
     protected $principals;
 

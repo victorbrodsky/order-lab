@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="partSourceOrgan")
+ * @ORM\Table(name="scan_partSourceOrgan")
  */
 class PartSourceOrgan extends PartArrayFieldAbstract
 {

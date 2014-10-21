@@ -10,7 +10,7 @@ use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="patientsex")
+ * @ORM\Table(name="scan_patientsex")
  */
 class PatientSex extends PatientArrayFieldAbstract
 {

@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ProcedureList",
+ * @ORM\Table(name="scan_procedureList",
  *  indexes={
  *      @ORM\Index( name="procedure_name_idx", columns={"name"} )
  *  }

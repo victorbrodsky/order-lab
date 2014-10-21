@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="mrntype")
+ * @ORM\Table(name="scan_mrntype")
  */
 class MrnType extends ListAbstract
 {

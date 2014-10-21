@@ -149,6 +149,24 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //exit();
         }
 
+        if( $className == 'Part' ) {
+            if( $original ) {
+                $formEntity = $original;
+            } else {
+                $formEntity = $entity;
+            }
+//            echo "<br>paper count=".count($formEntity->getPaper())."<br>";
+//            echo "paper name=".$formEntity->getPaper()->first()->getName()."<br>";
+//            echo "doc count=".count($formEntity->obtainValidField('paper')->getDocuments())."<br>";
+//            echo "doc=".$formEntity->obtainValidField('paper')->getDocuments()->first()->getFullDescriptionStr()."<br>";
+
+            $validPaper = $formEntity->obtainValidField('paper');
+
+            $validPaper = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $validPaper );
+
+            //exit('exit part doc');
+        }
+
         //Accession only: if accession found in DB (original exists) set this procedure from accession
 //        if( $className == 'Accession' && $original ) {
 //

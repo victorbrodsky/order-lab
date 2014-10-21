@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="returnslideto")
+ * @ORM\Table(name="scan_returnslideto")
  */
 class ReturnSlideTo extends ListAbstract
 {

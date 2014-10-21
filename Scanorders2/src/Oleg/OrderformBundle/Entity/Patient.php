@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PatientRepository")
- * @ORM\Table(name="patient")
+ * @ORM\Table(name="scan_patient")
  * @ORM\HasLifecycleCallbacks
  */
 class Patient extends ObjectAbstract

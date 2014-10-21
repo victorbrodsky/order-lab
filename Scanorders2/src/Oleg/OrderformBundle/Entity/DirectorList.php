@@ -11,7 +11,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="DirectorList")
+ * @ORM\Table(name="scan_directorList")
  */
 class DirectorList extends ListAbstract
 {

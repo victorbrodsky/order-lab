@@ -11,7 +11,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="PIList")
+ * @ORM\Table(name="scan_piList")
  */
 class PIList extends ListAbstract
 {

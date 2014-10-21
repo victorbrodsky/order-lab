@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * OrderInfo might have many slides
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrderInfoRepository")
- * @ORM\Table(name="orderinfo",
+ * @ORM\Table(name="scan_orderinfo",
  *  indexes={
  *      @ORM\Index( name="oid_idx", columns={"oid"} )
  *  }
@@ -105,7 +105,7 @@ class OrderInfo extends OrderAbstract {
 
     /**
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo" )
-     * @ORM\JoinTable(name="patient_orderinfo")
+     * @ORM\JoinTable(name="scan_patient_orderinfo")
      **/
     private $patient;
 
@@ -137,31 +137,31 @@ class OrderInfo extends OrderAbstract {
        
     /**
      * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="procedure_orderinfo")
+     * @ORM\JoinTable(name="scan_procedure_orderinfo")
      **/
     private $procedure;
     
     /**
      * @ORM\ManyToMany(targetEntity="Accession", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="accession_orderinfo")
+     * @ORM\JoinTable(name="scan_accession_orderinfo")
      **/
     private $accession;
     
     /**
      * @ORM\ManyToMany(targetEntity="Part", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="part_orderinfo")
+     * @ORM\JoinTable(name="scan_part_orderinfo")
      **/
     private $part;
     
     /**
      * @ORM\ManyToMany(targetEntity="Block", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="block_orderinfo")
+     * @ORM\JoinTable(name="scan_block_orderinfo")
      **/
     private $block;
     
     /**
      * @ORM\ManyToMany(targetEntity="Slide", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="slide_orderinfo")
+     * @ORM\JoinTable(name="scan_slide_orderinfo")
      **/
     private $slide;
 

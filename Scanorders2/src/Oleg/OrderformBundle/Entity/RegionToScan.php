@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="regiontoscan")
+ * @ORM\Table(name="scan_regiontoscan")
  */
 class RegionToScan extends ListAbstract
 {

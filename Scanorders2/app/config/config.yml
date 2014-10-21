@@ -124,6 +124,7 @@ knp_paginator:
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
 ##OneupUploaderBundle  file uploader
+#Note: to initialize the first time, comment out directory options, then run deploy, then populate lists, then enable directory options, then run deploy again.
 oneup_uploader:
     mappings:
         scan_gallery:

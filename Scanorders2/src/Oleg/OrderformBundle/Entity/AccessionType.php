@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="accessiontype")
+ * @ORM\Table(name="scan_accessiontype")
  */
 class AccessionType extends ListAbstract
 {

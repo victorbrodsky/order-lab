@@ -11,7 +11,7 @@ use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
 /**
  * @ORM\Entity
  * @ORM\Table(
- *  name="perSiteSettings",
+ *  name="scan_perSiteSettings",
  *  indexes={
  *      @ORM\Index( name="user_idx", columns={"fosuser"} ),
  *  }
@@ -22,7 +22,7 @@ class PerSiteSettings extends BaseUserAttributes
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinTable(name="perSiteSettings_institution",
+     * @ORM\JoinTable(name="scan_perSiteSettings_institution",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      *      )
@@ -32,7 +32,7 @@ class PerSiteSettings extends BaseUserAttributes
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinTable(name="perSiteSettings_service",
+     * @ORM\JoinTable(name="scan_perSiteSettings_service",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
      *      )
@@ -41,7 +41,7 @@ class PerSiteSettings extends BaseUserAttributes
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinTable(name="chiefServices_service",
+     * @ORM\JoinTable(name="scan_chiefServices_service",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
      *      )

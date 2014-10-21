@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="procedureEncounterDate")
+ * @ORM\Table(name="scan_procedureEncounterDate")
  */
 class ProcedureEncounterDate extends ProcedureArrayFieldAbstract
 {

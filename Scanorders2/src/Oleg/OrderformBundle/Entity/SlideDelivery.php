@@ -9,7 +9,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="slidedelivery")
+ * @ORM\Table(name="scan_slidedelivery")
  */
 class SlideDelivery extends ListAbstract
 {

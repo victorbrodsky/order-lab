@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\SlideRepository")
- * @ORM\Table(name="slide")
+ * @ORM\Table(name="scan_slide")
  */
 class Slide extends ObjectAbstract
 {

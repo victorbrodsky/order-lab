@@ -46,7 +46,7 @@ class UploadController extends Controller {
             //find object where document is belongs
             //$comment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
 
-            $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass);
+            $repository = $this->getDoctrine()->getRepository($commentclass);
             $dql = $repository->createQueryBuilder("comment");
             $dql->select('comment');
             $dql->innerJoin("comment.documents", "documents");
@@ -61,9 +61,11 @@ class UploadController extends Controller {
 
             if( count($comments) > 0 ) {
                 $comment = $comments[0];
-                $comment->removeDocument($document);
-                $em->persist($comment);
-                $count++;
+                if( $comment->getId() == $commentid ) {
+                    $comment->removeDocument($document);
+                    $em->persist($comment);
+                    $count++;
+                }
             }
 
             $count++;

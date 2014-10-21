@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="organlist")
+ * @ORM\Table(name="scan_organlist")
  */
 class OrganList extends ListAbstract
 {

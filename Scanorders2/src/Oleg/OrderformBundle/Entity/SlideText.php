@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="slideText")
+ * @ORM\Table(name="scan_slideText")
  */
 class SlideText extends ArrayFieldAbstract
 {

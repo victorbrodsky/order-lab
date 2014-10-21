@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EducationalRepository")
- * @ORM\Table( name="educational",
+ * @ORM\Table( name="scan_educational",
  *  indexes={
  *      @ORM\Index( name="courseTitleStr_idx", columns={"courseTitleStr"} ),
  *      @ORM\Index( name="lessonTitleStr_idx", columns={"lessonTitleStr"} )

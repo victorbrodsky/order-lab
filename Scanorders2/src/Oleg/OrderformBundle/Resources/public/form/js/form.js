@@ -208,6 +208,8 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     fieldInputMask( newHolder ); //setDefaultMask(btnObj);
     //comboboxes init
     initComboboxJs(idsNext, newHolder);
+    //file upload
+    initFileUpload(newHolder);
 
     //setDefaultMask(btnObj);
 
@@ -284,6 +286,8 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
     fieldInputMask( newHolder );
     //comboboxes init
     initComboboxJs(ids, newHolder);
+    //file upload
+    initFileUpload(newHolder);
 
 }
 

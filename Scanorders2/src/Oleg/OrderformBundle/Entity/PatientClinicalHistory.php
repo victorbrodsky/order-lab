@@ -11,7 +11,7 @@ use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="patientclinicalHistory")
+ * @ORM\Table(name="scan_patientclinicalHistory")
  */
 class PatientClinicalHistory extends PatientArrayFieldAbstract
 {

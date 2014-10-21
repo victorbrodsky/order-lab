@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="partPartname")
+ * @ORM\Table(name="scan_partPartname")
  */
 class PartPartname extends PartArrayFieldAbstract
 {

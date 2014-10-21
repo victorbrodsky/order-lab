@@ -121,6 +121,16 @@ class MultiScanOrderController extends Controller {
         //$dataq = $form["dataquality"][0]["accession"]->getData();
         //echo "dataq=".$dataq."<br>";
 
+        //$partname = $form["patient"][0]["procedure"][0]["accession"][0]["part"][0]["partname"][0]['field']->getData();
+        //echo "partname data:<br>";
+        //print_r($partname);
+        //echo "partname field="
+
+        //$paper = $form["patient"][0]["procedure"][0]["accession"][0]["part"][0]["paper"][0]->getData();
+        //echo "<br>paper data:<br>";
+        //print_r($paper);
+        //exit();
+
         //check if the orderform already exists, so it's edit case
 //        echo "id=".$entity->getId()."<br>";
 //        echo "entity count=".count($entity)."<br>";

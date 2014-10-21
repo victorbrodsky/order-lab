@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="blockSectionsource",
+ * @ORM\Table(name="scan_blockSectionsource",
  *  indexes={
  *      @ORM\Index( name="block_field_idx", columns={"field"} )
  *  }

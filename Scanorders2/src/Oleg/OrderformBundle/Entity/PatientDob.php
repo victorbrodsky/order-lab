@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="patientdob")
+ * @ORM\Table(name="scan_patientdob")
  */
 class PatientDob extends PatientArrayFieldAbstract
 {

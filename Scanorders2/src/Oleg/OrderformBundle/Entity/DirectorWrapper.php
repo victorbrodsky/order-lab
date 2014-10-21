@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="scan_directorWrapper")
  */
 class DirectorWrapper {
 

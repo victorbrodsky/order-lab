@@ -118,6 +118,8 @@
             {#requires for check form to populate fields by AJAX (no '+' buttons)#}
              data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"","","","","plusbtn")|e }}"
 
+             data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
+             data-userid = "{{ app.security.getToken().getUser().getId() }}"
         >
         </div>
 

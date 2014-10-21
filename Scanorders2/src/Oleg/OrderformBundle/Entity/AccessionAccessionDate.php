@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="accessionDate")
+ * @ORM\Table(name="scan_accessionDate")
  */
 class AccessionAccessionDate extends AccessionArrayFieldAbstract
 {

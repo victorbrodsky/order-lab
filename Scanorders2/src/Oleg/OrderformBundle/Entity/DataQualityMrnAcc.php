@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="dataquality_mrnacc")
+ * @ORM\Table(name="scan_dataquality_mrnacc")
  */
 class DataQualityMrnAcc extends DataQuality
 {

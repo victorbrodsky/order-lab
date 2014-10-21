@@ -748,6 +748,20 @@ class User extends BaseUser
     }
 
 
+    //do not overwrite username when user id is set (user already exists in DB)
+    public function setUsernameCanonical($usernameCanonical)
+    {
+        if( $this->getId() && $usernameCanonical != $this->getUsernameCanonical() ) {
+            exit('Can not change canonical username when user is in DB: username='.$usernameCanonical.', id='.$this->getId());
+            throw new \Exception( 'Can not change canonical username when user is in DB: new usernameCanonical='.$usernameCanonical.', old usernameCanonical'.$this->getUsernameCanonical().', id='.$this->getId() );
+        }
+
+        $this->usernameCanonical = $usernameCanonical;
+
+        return $this;
+    }
+
+
     //Username utilities methods
     public function setUniqueUsername() {
         $this->setUsername($this->createUniqueUsername());

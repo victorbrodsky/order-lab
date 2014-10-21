@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="processorcomments")
+ * @ORM\Table(name="scan_processorcomments")
  */
 class ProcessorComments extends ListAbstract
 {

@@ -425,6 +425,7 @@
 
 {% macro comments( field, cicle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% import _self as userform %}
 
     {% if prototype == "prototype" %}
@@ -449,10 +450,6 @@
                 </div>
             {% endif %}
 
-            {#{% if formfield.vars.value %}#}
-                {#commentId:{{ formfield.vars.value.id }}#}
-            {#{% endif %}#}
-
             {{ formmacros.field(formfield.id) }}
 
             {% if formfield.status is defined %}
@@ -465,8 +462,8 @@
 
             {{ formmacros.field(formfield.comment) }}
 
-            {% if formfield.documents is defined %}
-                {{ userform.fileupload( formfield, cicle, classname, prototype ) }}
+            {% if formfield.documents is defined or prototype == 'prototype' %}
+                {{ usermacros.fileupload( formfield, cicle, classname, prototype ) }}
             {% endif %}
 
         </div>
@@ -485,74 +482,7 @@
 
 {% endmacro %}
 
-{% macro fileupload( comment, cicle, classname, prototype ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-
-    <p>
-    <div class="row files-upload-holder" style="height: 50px">
-        <div class="col-xs-6" align="right">
-            <strong>Attached Document(s):</strong>
-        </div>
-        <div class="col-xs-6" align="left">
-
-            <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
-
-                {% if cicle != "show_user" %}
-                    <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 10 files, 10 MB each)</span></div>
-                {% else %}
-                    <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
-                {% endif %}
-
-                {% for document in comment.documents %}
-
-                    <div class="dz-preview dz-file-preview" style="width:24%; height:220px; margin:0;">
-                        <div class="dz-details">
-                            <div class="dz-filename"><span data-dz-name>id:{{ document.vars.value.id }}, {{ document.vars.value.uniquename }}</span></div>
-                            <div class="dz-size" data-dz-size><strong>{{ document.vars.value.getSizeStr() }}</strong></div>
-                            <img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />
-                        </div>
-                        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-                        <div class="dz-success-mark"><span>✔</span></div>
-                        <div class="dz-error-mark"><span>✘</span></div>
-                        <div class="dz-error-message"><span data-dz-errormessage></span></div>
-
-                        <div class="file-upload-showlink">
-                            <div style="overflow:hidden; white-space:nowrap;">
-                                <a href="{{ document.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ document.vars.value.originalname }}</a>
-                            </div>
-                        </div>
-
-                        {% if cicle != "show_user" %}
-                            <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
-                        {% endif %}
-
-                        {{ formmacros.field(document.id) }}
-
-                    </div>
-
-                    {#{{ formmacros.field(document.uniquename) }}#}
-                    {#{{ formmacros.field(document.uploadDirectory) }}#}
-                    {#{{ formmacros.field(document.size) }}#}
-
-                        {#<a href="{{ document.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ document.vars.value.originalname }}</a>#}
-                        {#{% if cicle != "show_user" %}#}
-                            {#<button type="button" class="btn btn-danger" data-dz-remove>Delete</button>#}
-                        {#{% endif %}#}
-
-                    {% do document.setRendered %}
-
-                {% endfor %}
-
-            </div>
-
-            {% do comment.documents.setRendered %}
-
-        </div>
-    </div>
-    </p>
-
-{% endmacro %}
 
 
 {% import _self as userform %}

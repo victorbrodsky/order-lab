@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="history")
+ * @ORM\Table(name="scan_history")
  * @ORM\HasLifecycleCallbacks
  */
 class History

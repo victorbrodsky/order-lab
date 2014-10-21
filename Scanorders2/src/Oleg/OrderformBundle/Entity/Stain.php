@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 //(repositoryClass="Oleg\OrderformBundle\Repository\StainRepository")
 /**
  * @ORM\Entity
- * @ORM\Table(name="stain")
+ * @ORM\Table(name="scan_stain")
  */
 class Stain extends SlideArrayFieldAbstract
 {

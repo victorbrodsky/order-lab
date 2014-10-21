@@ -27,30 +27,6 @@ class DocumentType extends AbstractType
             'label' => false,
             'attr' => array('class' => 'file-upload-id')
         ));
-//
-//        $builder->add('uniquename','hidden',array(
-//            'attr' => array('class' => 'file-upload-uniquename')
-//        ));
-//
-//        $builder->add('uploadDirectory','hidden',array(
-//            'attr' => array('class' => 'file-upload-uploaddirectory')
-//        ));
-//
-//        $builder->add('size','hidden',array(
-//            'attr' => array('class' => 'file-upload-size')
-//        ));
-
-//        $builder->add('originalname', null, array(
-//            'label' => 'File:',
-//            'attr' => array('class' => 'form-control'),
-//            'required' => false
-//        ));
-
-//        $builder->add('newdocument', 'hidden', array(
-//            'mapped' => false,
-//            'label' => false,
-//            'required' => false
-//        ));
 
     }
 

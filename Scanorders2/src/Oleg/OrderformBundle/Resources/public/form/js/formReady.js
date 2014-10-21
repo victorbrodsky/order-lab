@@ -79,6 +79,8 @@ $(document).ready(function() {
     setInstitutionTreeChildren();
     initDefaultServiceManually();
 
+    initFileUpload();
+
 });
 
 
