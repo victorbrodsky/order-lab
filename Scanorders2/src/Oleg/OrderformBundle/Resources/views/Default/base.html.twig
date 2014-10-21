@@ -153,6 +153,9 @@
                 '@OlegUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
                 '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
 
+                '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
+
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
 
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
@@ -175,7 +178,6 @@
                 '@OlegOrderformBundle/Resources/public/form/js/modal.js'
                 '@OlegOrderformBundle/Resources/public/form/js/tooltips.js'
 
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
 
 
             %}
@@ -183,12 +185,12 @@
             {% endjavascripts %}
 
             {#dropzone#}
-            {% javascripts
-            '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
-            '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
-            %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}
+            {#{% javascripts#}
+            {#'@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'#}
+            {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'#}
+            {#%}#}
+            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+            {#{% endjavascripts %}#}
 
         {% endblock %}
 

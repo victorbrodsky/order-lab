@@ -3,6 +3,42 @@
  */
 
 
+
+//prevent exit modified form
+function windowCloseAlert() {
+
+    //console.log("window Close Alert");
+
+    if( cicle == "show_user" ) {
+        return;
+    }
+
+    window.onbeforeunload = confirmModifiedFormExit;
+
+    function confirmModifiedFormExit() {
+
+        var modified = false;
+
+        if( $('#form-prototype-data').length != 0 ) {
+            modified = true;    //checkIfUserWasModified();
+        }
+
+        //console.log("modified="+modified);
+        if( modified === true ) {
+            return "The changes you have made will not be saved if you navigate away from this page.";
+        } else {
+            return;
+        }
+    }
+
+    $('form').submit(function() {
+        window.onbeforeunload = null;
+    });
+}
+
+
+
+
 //do not show the [X] (delete) button in the right upper corner of "Employment Period(s)"
 // if it is the only one being displayed.
 // When the user adds another one, then show an [X] next to each one.

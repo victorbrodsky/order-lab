@@ -10,6 +10,11 @@
 
 $(document).ready(function() {
 
+    // Prevent Dropzone from auto discovering this element
+    if( typeof Dropzone !== 'undefined' ) {
+        Dropzone.autoDiscover = false;
+    }
+
     //overwrite
     idleTimeoutClass.prototype.onTimeout = function() {
         //console.log("onTimeout: scan");

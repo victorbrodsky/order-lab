@@ -110,7 +110,7 @@ class LocationType extends AbstractType
         ));
 
         $builder->add('suit',null,array(
-            'label'=>'Suit:',
+            'label'=>'Suite:',
             'attr' => array('class'=>'form-control')
         ));
 

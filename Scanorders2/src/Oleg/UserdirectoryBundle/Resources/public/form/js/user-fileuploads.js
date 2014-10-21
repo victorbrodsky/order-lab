@@ -7,10 +7,15 @@ var _dz_maxFiles = 10;
 var _dz_maxFilesize = 10; //MB
 
 
+// Prevent Dropzone from auto discovering this element
+if( typeof Dropzone !== 'undefined' ) {
+    Dropzone.autoDiscover = false;
+}
+
 //File Uploads using Dropzone and Oneup\UploaderBundle
 function initFileUpload( holder ) {
 
-    console.log('init File Upload');
+    //console.log('init File Upload');
 
     if( $('.dropzone').length == 0 ) {
         return;
@@ -25,7 +30,7 @@ function initFileUpload( holder ) {
     }
 
     var dataElement = document.getElementById("form-prototype-data");
-    console.log('dataElement len='+dataElement);
+    //console.log('dataElement len='+dataElement);
 
 //    if( dataElement.length == 0 || typeof dataElement.dataset === 'undefined' ) {
 //        return;
@@ -33,15 +38,15 @@ function initFileUpload( holder ) {
 
     //var url = dataElement.dataset.uploadurl;
     var url = dataElement.getAttribute('data-uploadurl');
-    console.log('url='+url);
+    //console.log('url='+url);
 
     //var userid = dataElement.dataset.userid;
     var userid = dataElement.getAttribute('data-userid');
-    console.log('userid='+userid);
+    //console.log('userid='+userid);
 
     Dropzone.autoDiscover = false;
 
-    console.log('cicle='+cicle);
+    //console.log('cicle='+cicle);
     var clickable = true;
     var addRemoveLinks = true;
     if( cicle == "show_user" || cicle == "show" ) {
@@ -138,8 +143,9 @@ function initFileUpload( holder ) {
         removedfile: function(file) {
             //console.log('remove js file name='+file.name);
             return removeUploadedFileByHolder( file.previewElement, this );
-        }
+        },
 //        init: function() {
+//            console.log('manual init');
 //            return;
 //            thisDropzone = this;
 //
@@ -205,7 +211,7 @@ function removeUploadedFileByHolder( previewElement, dropzone ) {
     }
 
     var documentid = $(previewElement).find('.file-upload-id').val();
-    console.log('remove documentid='+documentid);
+    //console.log('remove documentid='+documentid);
 
     var holderTop = $(dropzone.element).closest('.user-collection-holder,.form-element-holder');
     var commentid = holderTop.find('.comment-field-id').val();
@@ -288,19 +294,19 @@ function removeUploadedFile(btn) {
 
 function adjustHolderHeight( commentHolder ) {
     return; //testing
-    console.log(commentHolder);
+    //console.log(commentHolder);
     //use dropzone element height changes
     var dropzoneElement = commentHolder.find('.file-upload-dropzone');
     var dropzoneH = dropzoneElement.height();
-    console.log('dropzoneH='+dropzoneH);
+    //console.log('dropzoneH='+dropzoneH);
 
     var originalH = 150;
     var extraH = parseInt(dropzoneH) + parseInt(originalH);
-    console.log('extraH='+extraH);
+    //console.log('extraH='+extraH);
 
     var commentH = commentHolder.height();
     var newH = parseInt(commentH) + parseInt(extraH);
-    console.log('newH='+newH);
+    //console.log('newH='+newH);
     commentHolder.height( newH );
 
 }
@@ -308,20 +314,20 @@ function adjustHolderHeight( commentHolder ) {
 //get comment type and count
 function getNewDocumentInfoByHolder( commentHolder ) {
 
-    console.log(commentHolder);
+    //console.log(commentHolder);
 
     var uploadid = commentHolder.find('input.file-upload-id');
 
     if( uploadid.length == 0 ) {
         //no existing documents in comment => use alternative id (i.e. first input id)
-        console.log('upload id does not exist');
+        //console.log('upload id does not exist');
         uploadid = commentHolder.find('input').filter(':visible').not("*[id^='s2id_']"); //.ajax-combobox-partname
     }
 
     var id = uploadid.first().attr('id');
     var name = uploadid.first().attr('name');
 
-    console.log('id='+id+', name='+name);
+    //console.log('id='+id+', name='+name);
 
     var res = getElementInfoById( id, name );
 
@@ -467,7 +473,7 @@ function getNextCollectionCount( holder, fieldSelector ) {
 
         var res = getElementInfoById( $(this).attr('id'), $(this).attr('name') );
         var count = res['documentCount'];
-        console.log('count='+count);
+        //console.log('count='+count);
 
         if( parseInt(count) > parseInt(maxCount) ) {
             maxCount = count;
@@ -480,7 +486,7 @@ function getNextCollectionCount( holder, fieldSelector ) {
         maxCount = parseInt(maxCount)+1;
     }
 
-    console.log('maxCount='+maxCount);
+    //console.log('maxCount='+maxCount);
 
     return maxCount;
 }

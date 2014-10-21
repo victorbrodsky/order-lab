@@ -48,6 +48,17 @@
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
 
+
+        {% stylesheets
+        'bundles/oleguserdirectory/jquery-ui-1.11.2/jquery-ui.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/jquery-ui-1.11.2/jquery-ui.theme.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/jquery-ui-1.11.2/jquery-ui.structure.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        {#<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">#}
+
+
     {% endblock %}
 
     {% block additionalcss %}{% endblock %}
@@ -144,6 +155,7 @@
 
             {% javascripts
                 '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+                '@OlegUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'
                 '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
                 '@OlegUserdirectoryBundle/Resources/public/ladda/spin.min.js'
                 '@OlegUserdirectoryBundle/Resources/public/ladda/ladda.min.js'

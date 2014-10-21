@@ -14,6 +14,11 @@ _countdownDialog = $("#dialog-countdown");
 
 $(document).ready(function() {
 
+    // Prevent Dropzone from auto discovering this element
+    if( typeof Dropzone !== 'undefined' ) {
+        Dropzone.autoDiscover = false;
+    }
+
     var idleTimeout = new idleTimeoutClass();
 
     idleTimeout.init();

@@ -47,7 +47,7 @@ class ResearchLabType extends AbstractType
         ));
 
         $builder->add('location', null, array(
-            'label' => 'Location Title:',
+            'label' => "Location's Name:",
             'attr' => array('class'=>'form-control')
         ));
 

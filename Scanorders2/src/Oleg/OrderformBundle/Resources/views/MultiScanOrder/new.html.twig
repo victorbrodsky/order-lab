@@ -92,8 +92,7 @@
 
         {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
-        {#{% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"paper","prototype") %}#}
-        {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.documents,type,"paper","prototype") %}
+        {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"paper","prototype") %}
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
         {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
 
@@ -148,16 +147,17 @@
          data-prototype-procedurepatpathistory= "{{ patpathistoryHtml|e }}"
 
           data-prototype-part="
-        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, form.vars.value.status,
-              partnameHtml,
-              sourceorganHtml,
-              paperHtml,
-              descriptionHtml,
-              diagnosisHtml,
-              diffDiagnosesHtml,
-              diseaseTypeHtml
-           )|e }}
-        "
+            {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, form.vars.value.status,
+                  partnameHtml,
+                  sourceorganHtml,
+                  paperHtml,
+                  descriptionHtml,
+                  diagnosisHtml,
+                  diffDiagnosesHtml,
+                  diseaseTypeHtml
+               )|e }}
+          "
+
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"; withspace=""#}
           data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","","","","minusplusbtn")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}

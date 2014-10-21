@@ -6,7 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 
+
 $(document).ready(function() {
+
+    // Prevent Dropzone from auto discovering this element:
+    Dropzone.options.scanorderform = false;
+    Dropzone.autoDiscover = false;
+    initFileUpload();
 
     setNavBar();
 
@@ -78,8 +84,6 @@ $(document).ready(function() {
     initInstitutionManually();
     setInstitutionTreeChildren();
     initDefaultServiceManually();
-
-    initFileUpload();
 
 });
 

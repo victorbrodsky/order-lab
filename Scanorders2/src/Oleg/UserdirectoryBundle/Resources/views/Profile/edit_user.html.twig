@@ -21,7 +21,7 @@
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -317,7 +317,7 @@
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -409,7 +409,7 @@
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 

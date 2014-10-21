@@ -110,7 +110,7 @@ class BaseTitleType extends AbstractType
 
 
         $builder->add('orderinlist',null,array(
-            'label'=>'Order:',
+            'label'=>'Display Order:',
             'required' => false,
             'attr' => array('class'=>'form-control')
         ));

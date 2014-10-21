@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            {% if cicle != "show_user" %}
+            {% if cicle != "show_user" and cicle != "show" %}
                 <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
             {% endif %}
 
@@ -76,3 +76,6 @@
     {% do comment.documents.setRendered %}
 
 {% endmacro %}
+
+
+

@@ -42,6 +42,8 @@ $(document).ready(function() {
 
     initFileUpload();
 
+    windowCloseAlert();
+
 });
 
 
