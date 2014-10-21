@@ -3,6 +3,7 @@
 /web/js/
 /web/log/
 /web/uploads/
+/web/Uploaded/
 /app/bootstrap.php.cache
 /app/cache/*
 /app/config/parameters.yml
