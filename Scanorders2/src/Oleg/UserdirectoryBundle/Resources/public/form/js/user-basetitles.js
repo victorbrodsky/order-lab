@@ -50,6 +50,8 @@ function initBaseAdd(newForm) {
     getComboboxFellowshipType(newForm);
     getComboboxResearchLabs(newForm);
     initFileUpload(newForm);
+
+    confirmDeleteWithExpired(newForm);
 }
 
 //get input field only
@@ -87,7 +89,6 @@ function removeBaseTitle(btn,classname) {
     var btnEl = $(btn);
 
     if( btnEl.hasClass('confirm-delete-with-expired') ) {
-        //confirmDeleteWithExpired(btnEl);
         return;
     }
 
@@ -122,81 +123,66 @@ function removeBaseTitle(btn,classname) {
 //    });
 //});
 
+function confirmDeleteWithExpired( holder ) {
 
-$(function() {
+    var targetid = ".confirm-delete-with-expired";
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+
+        targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
+    }
 
     var dialogStr = "<p>You are about to permanently delete this record. If this record is not erroneous, please mark it \"Expired\" as of today's date instead. " +
         "This will maintain a historical list of previously valid employment periods, titles, and research labs.</p>";
 
-    $('.confirm-delete-with-expired').click(function(e) {
+    $(targetid).click(function(e) {
         e.preventDefault();
+
+        var btn = this;
+        var btnEl = $(btn);
+        var classname = 'user-collection-holder';
+        var collectionHolder = btnEl.closest('.'+classname);
+
         var dialog = $( dialogStr ).dialog({
             modal: true,
             title: "Confirmation",
+            open: function() {
+                $(".ui-dialog-titlebar-close").hide();
+            },
             buttons: {
                 "Mark as \"Expired\" as of today": function() {
-                    console.log('expired');
-                    //place today's date into the "End" field of the element
+                    //console.log('expired');
+                    //place today's date into the "End" field of the element expired-end-date
+                    var today = new Date();
+                    var datefieldEl = collectionHolder.find('.user-expired-end-date');
+                    datefieldEl.datepicker( 'setDate', today );
+                    datefieldEl.datepicker( 'update');
+                    dialog.dialog('close');
                 },
                 "Delete this erroneous record":  function() {
-                    console.log('delete');
+                    //console.log('delete');
                     //delete
-                    var btnEl = $(this);
-                    var classname = 'user-collection-holder';
-                    var element = btnEl.closest('.'+classname);
-                    element.remove();
+                    collectionHolder.remove();
                     processEmploymentStatusRemoveButtons(btn);
+                    dialog.dialog('close');
                 },
                 "Cancel":  function() {
-                    console.log('cancel');
+                    //console.log('cancel');
                     //do nothing
                     dialog.dialog('close');
                 }
             }
         });
     });
-});
 
-
-function confirmDeleteWithExpired(btn) {
-
-    console.log('remove dialog');
-
-    var btnEl = $(btn);
-
-    var dialogStr = "<p>\"You are about to permanently delete this record. If this record is not erroneous, please mark it \"Expired\" as of today's date instead. " +
-        "This will maintain a historical list of previously valid employment periods, titles, and research labs.\"</p>";
-
-    //$(".confirm-delete-with-expired").dialog({
-    btnEl.dialog({
-        resizable: true,
-        height:200,
-        modal: true,
-        title: "Confirmation",
-        open: function() {
-            var markup = dialogStr;
-            $(this).html(markup);
-        },
-        buttons: {
-            "Mark as \"Expired\" as of today": function() {
-                console.log('expired');
-                //place today's date into the "End" field of the element
-            },
-            "Delete this erroneous record":  function() {
-                console.log('delete');
-                //delete
-                var classname = 'user-collection-holder';
-                var element = btnEl.closest('.'+classname);
-                element.remove();
-                processEmploymentStatusRemoveButtons(btn);
-            },
-            "Cancel":  function() {
-                console.log('cancel');
-                //do nothing
-                $( this ).dialog('close');
-            }
-        }
-    });
 }
+
 
 

@@ -44,6 +44,8 @@ $(document).ready(function() {
 
     windowCloseAlert();
 
+    confirmDeleteWithExpired();
+
 });
 
 

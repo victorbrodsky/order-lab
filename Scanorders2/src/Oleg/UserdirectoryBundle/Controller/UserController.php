@@ -46,6 +46,15 @@ class UserController extends Controller
 {
 
     /**
+     * @Route("/about", name="employees_about_page")
+     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     */
+    public function aboutAction( Request $request ) {
+        return array();
+    }
+
+
+    /**
      * Show home page
      *
      * @Route("/", name="employees_home")

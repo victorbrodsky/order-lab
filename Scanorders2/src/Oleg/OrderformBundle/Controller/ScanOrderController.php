@@ -29,6 +29,14 @@ class ScanOrderController extends Controller {
     protected $limit = 50;
 
     /**
+     * @Route("/about", name="scan_about_page")
+     * @Template("OlegOrderformBundle:Default:about.html.twig")
+     */
+    public function aboutAction( Request $request ) {
+        return array();
+    }
+
+    /**
      * Lists all OrderInfo entities.
      *
      * @Route("/", name="scan_home")

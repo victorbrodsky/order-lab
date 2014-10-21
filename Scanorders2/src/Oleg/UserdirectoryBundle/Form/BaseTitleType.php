@@ -43,7 +43,7 @@ class BaseTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control allow-future-date'),
+            'attr' => array('class' => 'datepicker form-control allow-future-date user-expired-end-date'),
         ));
 
         $baseUserAttr = new $this->params['fullClassName']();

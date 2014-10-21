@@ -102,6 +102,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ path(scan_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
                             <li><a href="{{ path(scan_sitename~'_logout') }}">Log Out</a></li>
+                            <li><a href="{{ path(scan_sitename~'_about_page') }}">About</a></li>
                         </ul>
                     </li>
 
