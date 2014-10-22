@@ -40,6 +40,10 @@ class MaintenanceListener {
             return;
         }
 
+        if( $this->sc->isGranted('ROLE_ADMIN') ) {
+            return;
+        }
+
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
         if( strpos($controller,'Oleg\UserdirectoryBundle') !== false || strpos($controller,'Oleg\OrderformBundle') !== false ) {
@@ -60,9 +64,11 @@ class MaintenanceListener {
         /////////////// maintanance from DB. Container parameter will be updated only after cleaning the cache //////////////
         $userUtil = new UserUtil();
         $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
+
         if( $maintenance == -1 ) {
             return;
         }
+
         //echo "maintenanceDb=".$maintenanceDb."<br>";
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
