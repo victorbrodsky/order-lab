@@ -2,8 +2,8 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
+use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
-use Oleg\OrderformBundle\Entity\DataQualityAccMrn;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\Accession;
 
@@ -114,7 +114,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 //valid values are not empty
             } else {
                 //echo "skip!!! <br>";
-                $orderinfo->removeDataqualityAccMrn($dataquality);
+                $orderinfo->removeDataqualityMrnAcc($dataquality);
                 continue;   //remove and skip this dataquality
             }
 
@@ -200,7 +200,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 $currentDataquality->setProvider($orderinfo->getProvider());
                 $currentDataquality->setStatus('active');
 
-                $orderinfo->addDataqualityAccMrn($currentDataquality);
+                $orderinfo->addDataqualityMrnAcc($currentDataquality);
 
             }
         }

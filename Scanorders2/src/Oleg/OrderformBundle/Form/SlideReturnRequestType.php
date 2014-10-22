@@ -51,7 +51,7 @@ class SlideReturnRequestType extends AbstractType
             'prototype_name' => '__slides__',
         ));
 
-        $builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
+        //$builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
 
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',

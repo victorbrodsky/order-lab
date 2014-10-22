@@ -75,11 +75,14 @@
     {% endjavascripts %}
 
     <script type="text/javascript">
+
         var _tableFormCycle = '{{ type }}';
+
         if( '{{ orderdata }}' != '' ) {
             var _orderDataArr = JSON.parse('{{ orderdata|escape('js') }}');
         }
         //console.log("_orderDataArr="+_orderDataArr);
+
     </script>
 
 {% endblock %}

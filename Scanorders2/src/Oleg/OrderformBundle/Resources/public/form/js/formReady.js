@@ -9,9 +9,12 @@
 
 $(document).ready(function() {
 
-    // Prevent Dropzone from auto discovering this element:
-    Dropzone.options.scanorderform = false;
-    Dropzone.autoDiscover = false;
+    // Prevent Dropzone from auto discovering this element
+    if( typeof Dropzone !== 'undefined' ) {
+        //Dropzone.options.scanorderform = false;
+        Dropzone.autoDiscover = false;
+    }
+
     initFileUpload();
 
     setNavBar();

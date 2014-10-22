@@ -136,7 +136,8 @@
 
     {% import _self as formmacros %}
 
-    {{ formmacros.field(form.provider) }}
+    {#{{ formmacros.field(form.provider) }}#}
+    {{ formmacros.simplefield( "Submitter:", form.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
 
     {{ formmacros.field(form.proxyuser) }}
 
@@ -479,7 +480,9 @@
                             {{form_label(fieldThis.staintype)}}<br>
                             {{form_label(fieldThis.field)}}<strong>:</strong>
                         {% else %}
-                            {{form_label(fieldThis.field)}}<strong>:</strong>
+                            {% if fieldThis.field is defined %}
+                                {{form_label(fieldThis.field)}}<strong>:</strong>
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         {% if fieldtype == "procedurepatfirstname" %}
@@ -492,7 +495,9 @@
                             {{form_label(fieldThis.staintype)}}<br>
                             {{form_label(fieldThis.field)}}
                         {% else %}
-                            {{form_label(fieldThis.field)}}
+                            {% if fieldThis.field is defined %}
+                                {{form_label(fieldThis.field)}}
+                            {% endif %}
                         {% endif %}
                     {% endif %}
 
@@ -546,7 +551,9 @@
                 {% elseif fieldtype == "procedurepatmiddlename" %}
                     {{ form_widget(fieldThis.middleName) }}
                 {% else %}
-                    {{ form_widget(fieldThis.field) }}
+                    {% if fieldThis.field is defined %}
+                        {{ form_widget(fieldThis.field) }}
+                    {% endif %}
                 {% endif %}
                 {% if cycle != 'show' %}
                     {% if norest is not defined or norest == "" %}

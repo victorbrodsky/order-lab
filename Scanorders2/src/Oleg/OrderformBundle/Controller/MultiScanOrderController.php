@@ -294,17 +294,17 @@ class MultiScanOrderController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        $orderUtil = $this->get('scanorder_utility');
+
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
-            $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
-            $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
@@ -393,14 +393,34 @@ class MultiScanOrderController extends Controller {
         //set the default service
         $entity->setService($userSiteSettings->getDefaultService());
 
+        ////////////////// set previous service from the last order if default is null //////////////////
+        if( !$userSiteSettings->getDefaultService() ) {
+            //echo "find prev service <br>";
+            $previousOrder = $orderUtil->getPreviousOrderinfo();
+            //$this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
+            if( $previousOrder ) {
+                $entity->setService($previousOrder->getService());
+                //echo "prev service set<br>";
+            }
+        }
+
+        //set default department and division
+        if( $service = $entity->getService() ) {
+            $division = $service->getParent();
+            $department = $division->getParent();
+        } else {
+            //set default division to Anatomic Pathology
+            $division = $em->getRepository('OlegUserdirectoryBundle:Division')->findOneByName('Anatomic Pathology');
+            $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+        }
+        ////////////////// EOF set previous service from the last order if default is null //////////////////
+
         //set the default institution
         $entity->setInstitution($permittedInstitutions->first());
 
-
-
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$type, 'cicle'=>'new', 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
+        $params = array('type'=>$type, 'cicle'=>'new', 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user, 'division'=>$division, 'department'=>$department);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         if( $routeName != "single_new") {

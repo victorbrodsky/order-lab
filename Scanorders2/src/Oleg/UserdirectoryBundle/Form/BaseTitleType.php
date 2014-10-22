@@ -109,11 +109,13 @@ class BaseTitleType extends AbstractType
         ));
 
 
-        $builder->add('orderinlist',null,array(
-            'label'=>'Display Order:',
-            'required' => false,
-            'attr' => array('class'=>'form-control')
-        ));
+        if( $this->params['cicle'] != "show" ) {
+            $builder->add('orderinlist',null,array(
+                'label'=>'Display Order:',
+                'required' => false,
+                'attr' => array('class'=>'form-control')
+            ));
+        }
 
         //position, residencyTrack, fellowshipType, pgy for AppointmentTitle (Academic Appointment Title)
         if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle" ) {
@@ -185,7 +187,8 @@ class BaseTitleType extends AbstractType
 
             $builder->add('boss','entity',array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'label'=>"Reports to:",
+                'label' => "Reports to:",
+                'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'required' => false
             ));

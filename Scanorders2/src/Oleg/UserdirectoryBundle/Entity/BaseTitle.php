@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\MappedSuperclass
@@ -57,11 +58,19 @@ class BaseTitle extends BaseUserAttributes
      */
     protected $service;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="boss", referencedColumnName="id")
-     */
-    protected $boss;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="User")
+//     * @ORM\JoinColumn(name="boss", referencedColumnName="id")
+//     */
+//    protected $boss;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="User")
+//     * @ORM\JoinTable(name="user_user_boss",
+//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="boss_id", referencedColumnName="id")}
+//     * )
+//     **/
+//    protected $boss;
 
     /**
      * @var \DateTime
@@ -76,22 +85,12 @@ class BaseTitle extends BaseUserAttributes
     protected $pgylevel;
 
 
-//    function __construct()
-//    {
-//        parent::__construct();
-//
-////        if( $flag ) {
-////            echo "create tree <br>";
-////            $institution = new Institution();
-////            $department = new Department();
-////            $division = new Division();
-////            $service = new Service();
-////            $division->addService($service);
-////            $department->addDivision($division);
-////            $institution->addDepartment($department);
-////            $this->setInstitution($institution);
-////        }
-//    }
+
+    function __construct($author=null)
+    {
+        parent::__construct($author);
+    }
+
 
     /**
      * @param mixed $endDate
@@ -235,22 +234,6 @@ class BaseTitle extends BaseUserAttributes
     public function getEffort()
     {
         return $this->effort;
-    }
-
-    /**
-     * @param mixed $boss
-     */
-    public function setBoss($boss)
-    {
-        $this->boss = $boss;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBoss()
-    {
-        return $this->boss;
     }
 
     /**

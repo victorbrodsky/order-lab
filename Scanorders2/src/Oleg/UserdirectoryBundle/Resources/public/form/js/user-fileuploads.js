@@ -96,6 +96,11 @@ function initFileUpload( holder ) {
             var documentSrc = responseText.documentsrc;
 
             var commentHolder = $(this.element).closest('.user-collection-holder,.form-element-holder'); //commentHolder
+
+            if( commentHolder.length == 0 ) {
+                throw new Error("Collection holder for file upload is not found");
+            }
+
             //var comments = commentHolder.find('.comment-field-id').first();
             //var commentFirst = comments.first();
 
@@ -316,6 +321,10 @@ function getNewDocumentInfoByHolder( commentHolder ) {
 
     //console.log(commentHolder);
 
+    if( commentHolder.length == 0 ) {
+        throw new Error("Collection holder for file upload is not found");
+    }
+
     var uploadid = commentHolder.find('input.file-upload-id');
 
     if( uploadid.length == 0 ) {
@@ -338,6 +347,12 @@ function getNewDocumentInfoByHolder( commentHolder ) {
 }
 
 function getElementInfoById( id, name ) {
+
+    console.log('id='+id);
+
+    if( !id || id == ""  ) {
+        throw new Error("id is empty, id="+id+", name="+name);
+    }
 
     if( id.indexOf("orderformbundle") !== -1 ) {
         var res = getElementInfoById_Scan( id, name );
@@ -403,13 +418,28 @@ function getElementInfoById_Scan( id, name ) {
     //var commentCount = idArr[4];
     var documentCount = idArr[14];
 
+    var idDel = null;
+    var nameDel = null;
+
     if( id.indexOf("_documents_") !== -1 ) {
-        var idDel = "_documents_";
-        var nameDel = "[documents]";
+        idDel = "_paper_";  //"_documents_";
+        nameDel = "[paper]";    //"[documents]";
     } else {
         //when collection does not have a file => use first collection field
-        var idDel = "_partname_";
-        var nameDel = "[partname]";
+        if( id.indexOf("_partname_") !== -1 ) {
+            //id: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+            idDel = "_partname_";
+            nameDel = "[partname]";
+        }
+        if( id.indexOf("_sourceOrgan_") !== -1 ) {
+            //id: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_sourceOrgan_0_field
+            idDel = "_sourceOrgan_";
+            nameDel = "[sourceOrgan]";
+        }
+    }
+
+    if( idDel == null || nameDel == null ) {
+        throw new Error("id or name delimeter is empty, idDel="+idDel+", nameDel="+nameDel);
     }
 
     //up to documents string: oleg_userdirectorybundle_user_publicComments_0_
@@ -437,35 +467,13 @@ function getElementInfoById_Scan( id, name ) {
     return res;
 }
 
-//function fixBeginStr( res ) {
-//    var beginIdStr = res['beginIdStr'];
-//    var beginNameStr = res['beginNameStr'];
-//
-//    console.log('beginIdStr='+beginIdStr);
-//    if( beginIdStr.indexOf("orderformbundle") !== -1 ) {
-//        console.log('fix begin str');
-//        //id: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
-//        var beginIdStrArr = beginIdStr.split("_partname_");
-//        beginIdStr = beginIdStrArr[0];
-//        beginIdStr = beginIdStr + "_partpaper_0";
-//        res['beginIdStr'] = beginIdStr;
-//
-//        //name: oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][part][0][partname][0][field]
-//        var beginNameStrArr = beginNameStr.split("[partname]");
-//        beginNameStr = beginNameStrArr[0];
-//        beginNameStr = beginNameStr + "[partpaper][0]";
-//        res['beginNameStr'] = beginNameStr;
-//    }
-//
-//    return res;
-//}
 
 //fieldSelector - any element's id or class in the collection with proper id
 function getNextCollectionCount( holder, fieldSelector ) {
     var maxCount = 0;
 
-    //var len = holder.find(fieldSelector).length;
-    //console.log('len='+len);
+    var len = holder.find(fieldSelector).length;
+    console.log('len='+len);
 
     var counter = 0;
 
@@ -473,11 +481,12 @@ function getNextCollectionCount( holder, fieldSelector ) {
 
         var res = getElementInfoById( $(this).attr('id'), $(this).attr('name') );
         var count = res['documentCount'];
-        //console.log('count='+count);
+        console.log('count='+count);
 
         if( parseInt(count) > parseInt(maxCount) ) {
             maxCount = count;
         }
+        console.log('iteration maxCount='+maxCount);
 
         counter++;
     });
@@ -486,7 +495,7 @@ function getNextCollectionCount( holder, fieldSelector ) {
         maxCount = parseInt(maxCount)+1;
     }
 
-    //console.log('maxCount='+maxCount);
+    console.log('maxCount='+maxCount);
 
     return maxCount;
 }

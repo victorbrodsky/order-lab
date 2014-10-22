@@ -914,11 +914,19 @@ class ScanUtilController extends Controller {
             $division = $service->getParent();
             $department = $division->getParent();
             $inst = $department->getParent();
+        } else {
+            //add service from previous order for this user
+            $orderUtil = $this->get('scanorder_utility');
+            $previousOrder = $orderUtil->getPreviousOrderinfo();
+            if( $previousOrder ) {
+                $service = $previousOrder->getService();
+                //echo "prev service=".$service." => ";
+            }
         }
 
         $output = array();
 
-        if( $inst && $inst->getId() == $instid ) {
+        if( $service || $inst && $inst->getId() == $instid ) {
             $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
             $output[] = $element;
         }

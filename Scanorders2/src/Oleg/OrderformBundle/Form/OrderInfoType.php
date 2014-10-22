@@ -148,7 +148,12 @@ class OrderInfoType extends AbstractType
         ));
 
 
-        $builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
+        //$builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
+//        $builder->add( 'provider', null, array(
+//            'label'=>'Submitter:',
+//            'read_only' => true,
+//            'attr' => array('class'=>'form-control form-control-modif')
+//        ));
 
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -240,20 +245,36 @@ class OrderInfoType extends AbstractType
         ));
 
         if( $this->params['cicle'] != 'show' ) {
+
+            if( array_key_exists('department', $this->params) ) {
+                $departmentId = $this->params['department']->getId();
+            } else {
+                $departmentId = null;
+            }
+
             //department. User should be able to add institution to administrative or appointment titles
             $builder->add('department', 'employees_custom_selector', array(
                 'label' => "Department:",
                 "mapped" => false,
                 'required' => false,
+                'data' => $departmentId,
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
                 'classtype' => 'department'
             ));
+
+
+            if( array_key_exists('division', $this->params) ) {
+                $divisionId = $this->params['division']->getId();
+            } else {
+                $divisionId = null;
+            }
 
             //division. User should be able to add institution to administrative or appointment titles
             $builder->add('division', 'employees_custom_selector', array(
                 'label' => "Division:",
                 "mapped" => false,
                 'required' => false,
+                'data' => $divisionId,
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
                 'classtype' => 'division'
             ));

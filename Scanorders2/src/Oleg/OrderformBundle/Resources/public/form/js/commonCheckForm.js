@@ -36,7 +36,7 @@ function checkMultiFormOnNext(nextBtn) {
     //var x = $('#orderinfo_param').offset().top;
     var x = $(document).height();
     //console.log('x='+x);
-    $('html, body').animate( {scrollTop: x}, 400 );
+    $('html, body').animate( {scrollTop: x}, 250 );
 }
 
 //set global auto generated mrn and accession types
@@ -1351,7 +1351,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
     for (var i = 0; i < elements.length; i++) {
 
-        //console.log("\n\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        console.log("\n\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
@@ -1381,6 +1381,27 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //don't process 0 disident field: part's Diagnosis :
         if( orderformtype == "single" && id && id.indexOf("disident_0_field") != -1 ) {
+            continue;
+        }
+
+        //dropzone
+        if( elements.eq(i).hasClass('file-upload-dropzone') ) {
+            var dropzoneDom = elements.eq(i).get(0);
+            console.log('dropzone className='+dropzoneDom.className);
+            var myDropzone = dropzoneDom.dropzone;
+
+            if( disabled ) {
+                //disable
+                //myDropzone.options.clickable = false;
+                elements.eq(i).removeClass('dz-clickable'); // remove cursor
+                dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+            } else {
+                //enable
+                elements.eq(i).addClass('dz-clickable'); // remove cursor
+                dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+            }
+
+            console.log('dropzone maxfiles(10?)='+myDropzone.options.maxFiles);
             continue;
         }
 

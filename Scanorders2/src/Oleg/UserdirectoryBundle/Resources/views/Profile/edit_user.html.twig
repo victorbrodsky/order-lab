@@ -27,22 +27,37 @@
 
         {{ formmacros.field(formfield.id) }}
         {{ formmacros.field(formfield.status) }}
-        {{ formmacros.field(formfield.orderinlist) }}
+
+        {% if formfield.orderinlist is defined %}
+            {{ formmacros.field(formfield.orderinlist) }}
+        {% endif %}
         {{ formmacros.field(formfield.priority) }}
         {{ formmacros.field(formfield.name) }}
 
         {% if formfield.boss is defined %}
+
             {% if formfield.vars.value and formfield.vars.value.boss != "" or cicle == 'create_user' or cicle == 'edit_user' %}
                 {{ formmacros.field(formfield.boss) }}
                 {% if cicle == 'show_user' %}
-                    {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL %}
-                        {{ userform.emailPhoneField(formfield.vars.value.boss.preferredPhone,cicle,'phone',"Super's Preferred Phone Number:") }}
-                        {{ userform.emailPhoneField(formfield.vars.value.boss.email,cicle,'email',"Super's Preferred Email:") }}
+                    {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL and formfield.vars.value.boss|length > 0 %}
+                        <br>
+                        {% for boss in formfield.vars.value.boss %}
+                            {#{{ userform.emailPhoneField(formfield.vars.value.boss.preferredPhone,cicle,'phone',"Super's Preferred Phone Number:") }}#}
+                            {#{{ userform.emailPhoneField(formfield.vars.value.boss.email,cicle,'email',"Super's Preferred Email:") }}#}
+                            <p>
+                            <div class="well">
+                                {{ formmacros.simplefield( "Super:", boss.getUserNameShortStr(), "", "disabled" ) }}
+                                {{ userform.emailPhoneField(boss.preferredPhone,cicle,'phone',"Super's Preferred Phone Number:") }}
+                                {{ userform.emailPhoneField(boss.email,cicle,'email',"Super's Preferred Email:") }}
+                            </div>
+                            </p>
+                        {% endfor %}
                     {% endif %}
                 {% endif %}
             {% else %}
                 {% do formfield.boss.setRendered %}
             {% endif %}
+
         {% endif %}
 
         {#position type#}
@@ -201,18 +216,14 @@
             {{ formmacros.field(formfield.buildingAbbr) }}
             {{ formmacros.field(formfield.floor) }}
             {{ formmacros.field(formfield.suit) }}
+            {{ formmacros.field(formfield.mailbox) }}
+            {{ formmacros.field(formfield.associatedCode) }}
         {% else %}
             {% do formfield.buildingName.setRendered %}
             {% do formfield.buildingAbbr.setRendered %}
             {% do formfield.floor.setRendered %}
             {% do formfield.suit.setRendered %}
-        {% endif %}
-
-        {{ formmacros.field(formfield.mailbox) }}
-
-        {% if homeLocation == false %}
-            {{ formmacros.field(formfield.associatedCode) }}
-        {% else %}
+            {% do formfield.mailbox.setRendered %}
             {% do formfield.associatedCode.setRendered %}
         {% endif %}
 

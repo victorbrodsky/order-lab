@@ -27,7 +27,7 @@
 
         {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,cycle,"key","prototype") %}
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,cycle,"","prototype") %}
-        {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,cycle,"","prototype") %}
+        {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,cycle,"paper","prototype") %}
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,cycle,"","prototype") %}
         {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,cycle,"","prototype") %}
 
@@ -241,20 +241,16 @@
                                         {#patient's data: single simple fields#}
                                         {{ formmacros.inputArrayField(form_procedure.encounterDate,'new',"procedureencounterdate","date") }}
 
-                                        {#{{ formmacros.field(form_procedure.patname) }}#}
                                         {{ formmacros.inputArrayField(form_procedure.patlastname,'new',"procedurepatlastname") }}
 
                                         {{ formmacros.inputArrayField(form_procedure.patfirstname,'new',"procedurepatfirstname") }}
 
                                         {{ formmacros.inputArrayField(form_procedure.patmiddlename,'new',"procedurepatmiddlename") }}
 
-                                        {#{{ formmacros.field(form_procedure.patsex) }}#}
                                         {{ formmacros.inputArrayField(form_procedure.patsex,'new',"procedurepatsex") }}
 
-                                        {#{{ formmacros.field(form_procedure.patage) }}#}
                                         {{ formmacros.inputArrayField(form_procedure.patage,'new',"procedurepatage") }}
 
-                                        {#{{ formmacros.field(form_procedure.pathistory) }}#}
                                         {{ formmacros.inputArrayField(form_procedure.pathistory,'new',"procedurepathistory") }}
 
                                     </div>
@@ -269,7 +265,7 @@
 
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><h3 class="panel-title">Part</h3></div>
-                                    <div class="panel-body">
+                                    <div class="panel-body form-element-holder">
                                         {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
 
                                         {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
@@ -308,27 +304,6 @@
                                         {{ formmacros.field(form_slide.scan|first.scanregion) }}
                                     </div>
                                 </div>
-
-
-                                {#{% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' %}#}
-
-                                {#<div class="panel panel-default">#}
-                                    {#<div class="panel-heading"><h3 class="panel-title">Education</h3></div>#}
-                                    {#<div class="panel-body">#}
-                                        {#{{ formmacros.field(form.educational.courseTitle.name) }}#}
-                                        {#{{ formmacros.field(form.educational.courseTitle.lessonTitles) }}#}
-										{#{{ formmacros.field(form.educational.directorstr) }}#}
-                                    {#</div>#}
-                                {#</div>#}
-
-                                {#<div class="panel panel-default">#}
-                                    {#<div class="panel-heading"><h3 class="panel-title">Research</h3></div>#}
-                                    {#<div class="panel-body">#}
-                                        {#{{ formmacros.field(form.research.projectTitle.name) }}#}
-                                        {#{{ formmacros.field(form.research.projectTitle.setTitles) }}#}
-                                        {#{{ formmacros.field(form.research.principalstr) }}#}
-                                    {#</div>#}
-                                {#</div>#}
 
                                 <!-- end of optional elements -->
 

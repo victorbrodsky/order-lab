@@ -11,6 +11,8 @@ class DocumentRepository extends EntityRepository {
 
     public function processDocuments($holder) {
 
+        echo "<br>before processing holder count=".count($holder->getDocuments())."<br>";
+
         foreach( $holder->getDocuments() as $doc ) {
             echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
             //if document does not have an original or unique names then this is a newly added document => find it in DB and attach it to this holder
@@ -31,6 +33,7 @@ class DocumentRepository extends EntityRepository {
             echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
         }
 
+        //exit('eof documents processing');
 
         return $holder;
     }

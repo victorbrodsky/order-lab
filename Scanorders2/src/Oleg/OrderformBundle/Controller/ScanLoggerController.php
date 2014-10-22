@@ -26,7 +26,7 @@ class ScanLoggerController extends LoggerController
      *
      * @Route("/", name="scan_logger")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
+     * @Template("OlegOrderformBundle:Logger:index.html.twig")
      */
     public function indexAction()
     {

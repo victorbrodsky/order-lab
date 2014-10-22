@@ -156,7 +156,7 @@ class UserType extends AbstractType
 
 
         //Administrative Titles
-        $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype');
+        $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cicle'=>$this->cicle);
         $builder->add('administrativeTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,
@@ -168,7 +168,7 @@ class UserType extends AbstractType
             'prototype_name' => '__administrativetitles__',
         ));
 
-        $params = array('read_only'=>$read_only,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype');
+        $params = array('read_only'=>$read_only,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cicle'=>$this->cicle);
         $builder->add('appointmentTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,

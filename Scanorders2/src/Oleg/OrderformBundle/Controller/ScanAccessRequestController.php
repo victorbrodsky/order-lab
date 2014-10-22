@@ -51,7 +51,7 @@ class ScanAccessRequestController extends AccessRequestController
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 "You don't have permission to visit Scan Order site."."<br>".
-                "If you already applied for an access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }

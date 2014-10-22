@@ -38,6 +38,7 @@ twig:
         department_url: %department_url%
         department_name: %department_name%
         employees_sitename: %employees.sitename%
+        default_system_email: %default_system_email%
 
 #    form:
 #      resources: ['form_table_layout.html.twig']

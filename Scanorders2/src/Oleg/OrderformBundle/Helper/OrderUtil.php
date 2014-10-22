@@ -632,5 +632,23 @@ class OrderUtil {
         return $choicesServ;
     }
 
+    //get the last order
+    public function getPreviousOrderinfo() {
+        $previousOrder = null;
+
+        $user = $this->sc->getToken()->getUser();
+
+        $previousOrders = $this->em->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array('provider'=>$user), array('orderdate' => 'DESC'),1); //limit to one result
+
+        if( $previousOrders && count($previousOrders) > 0 ) {
+            $previousOrder = $previousOrders[0];
+        }
+
+        //echo "prev order=".$previousOrder."<br>";
+
+        return $previousOrder;
+    }
+
+
 
 }
