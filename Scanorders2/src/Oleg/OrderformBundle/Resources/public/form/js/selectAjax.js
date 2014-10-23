@@ -196,17 +196,17 @@ function getComboboxSpecialStain(ids, preset, setId) {
             async: asyncflag
         }).success(function(data) {
                 _stain = data;
-                populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
+                populateSelectCombobox( ".ajax-combobox-staintype", _stain, "Stain Type" );
             });
     } else {
         //console.log("populate _stain.length="+_stain.length);
-        populateSelectCombobox( targetid, _stain, null );
+        populateSelectCombobox( targetid, _stain, "Stain Type" );
     }
 
     //console.log("special stain preset="+preset);
-    if( targetid != "" ) {
-        setElementToId( targetid, _stain, setId );
-    }
+    //if( targetid != "" ) {
+        //setElementToId( targetid, _stain, setId );
+    //}
 }
 
 //#############  scan regions  ##############//

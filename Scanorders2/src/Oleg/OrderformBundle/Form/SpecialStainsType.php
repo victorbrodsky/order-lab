@@ -36,13 +36,14 @@ class SpecialStainsType extends AbstractType
         $attr = array('class' => 'ajax-combobox-staintype', 'type' => 'hidden');
         $options = array(
             'label' => 'Associated Special Stain Name:',
-            'required' => true,
+            'required' => false,
             'attr' => $attr,
             'classtype' => 'staintype'
         );
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
-            $options['data'] = 1;
-        }
+        //do not default "H&E" in Associated Stains
+        //if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+        //    $options['data'] = 1;
+        //}
         $builder->add('staintype', 'custom_selector', $options );
 
         //stainothers

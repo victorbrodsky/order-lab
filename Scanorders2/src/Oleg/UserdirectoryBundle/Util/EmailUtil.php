@@ -11,7 +11,7 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 class EmailUtil {
 
 
-    public function sendEmail( $email, $subject, $message, $em ) {
+    public function sendEmail( $email, $subject, $message, $em, $ccs=null ) {
 
         if( !$email || $email == "" ) {
             return false;
@@ -23,8 +23,13 @@ class EmailUtil {
 
         $this->initEmail($em);
 
+        $headers = null;
+        if( $ccs ) {
+            $headers = 'Cc: ' . $ccs . "\r\n";
+        }
+
         // Send
-        mail($email, $subject, $message);
+        mail($email, $subject, $message, $headers);
 
         return true;
     }

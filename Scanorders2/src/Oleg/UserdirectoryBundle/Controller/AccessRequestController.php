@@ -141,7 +141,7 @@ class AccessRequestController extends Controller
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 "You were banned to visit this site."."<br>".
-                "You can try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -153,7 +153,7 @@ class AccessRequestController extends Controller
                 'warning',
                 "You don't have permission to visit this site because you have UNAPPROVED role."."<br>".
                 "Please contact site system administrator ".$this->container->getParameter('default_system_email')."<br>".
-                "You can try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -250,6 +250,20 @@ class AccessRequestController extends Controller
         $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitenameFull, $emailBody, $em );
 
         $text = 'Your access request was successfully submitted and and will be reviewed.'.$emailStr;
+
+        ///////////////// Send an email to the preferred emails of the users who have Administrator role for a given site and CC the users with Platform Administrator role when an access request is submitted
+        $incomingReqPage = $this->generateUrl( $sitename.'_home', array(), true );
+        $subject = "[O R D E R] Access request for ".$sitenameFull." received from ".$user->getPrimaryUseridKeytypeStr();
+        $msg = $user->getPrimaryUseridKeytypeStr()." submitted a request to access ".$sitenameFull.". Please visit ".$incomingReqPage." to approve or deny it.";
+
+        $userSecUtil = $this->get('user_security_utility');
+        $emails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
+        $emailsStr = implode(", ", $emails);
+        $headers = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
+        $headersArr = implode(", ", $headers);
+
+        $emailUtil->sendEmail( $emailsStr, $subject, $msg, $em, $headersArr );
+        ///////////////// EOF /////////////////
 
         return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
     }

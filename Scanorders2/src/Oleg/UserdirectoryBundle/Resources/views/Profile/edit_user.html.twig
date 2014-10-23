@@ -668,7 +668,7 @@
             <div id="userprefrences" class="panel-collapse collapse in">
                 <div class="panel-body">
 
-                    {% if cicle == "show_user" or userEditor == true %}
+                    {% if form.roles is defined and (cicle == "show_user" or userEditor == true) %}
                         {{ formmacros.field(form.roles) }}
                     {% endif %}
 

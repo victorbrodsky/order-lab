@@ -209,4 +209,55 @@ class UserSecurityUtil {
     }
 
 
+    public function getUserEmailsByRole($sitename,$userRole) {
+
+        $roles = array();
+
+        if( $userRole == "Platform Administrator" ) {
+
+            $roles[] = "ROLE_ADMIN";
+
+        } else if( $userRole == "Administrator" ) {
+
+            if( $sitename == $this->container->getParameter('scan.sitename') ) {
+
+                if( $userRole == "Administrator" ) {
+                    $roles[] = "ROLE_SCANORDER_ADMIN";
+                }
+
+            }
+
+            if( $sitename == $this->container->getParameter('employees.sitename') ) {
+                $roles[] = "ROLE_ADMIN";
+                $roles[] = "ROLE_USERDIRECTORY_ADMIN";
+
+                if( $userRole == "Administrator" ) {
+                    $roles[] = "ROLE_SCANORDER_ADMIN";
+                }
+            }
+
+        } else {
+
+            return null;
+
+        }
+
+        $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findBy(
+            array(
+                'roles' => $roles,
+            )
+        );
+
+        $emails = array();
+        if( $users && count($users) > 0 ) {
+
+            foreach( $users as $user ) {
+                $emails[] = $user->getEmail();
+            }
+
+        }
+
+        return $emails;
+    }
+
 }

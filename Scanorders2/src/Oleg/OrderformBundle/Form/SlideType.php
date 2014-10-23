@@ -54,17 +54,6 @@ class SlideType extends AbstractType
                 'attr' => array('class'=>'textarea form-control'),
         ));
 
-//        $builder->add('specialStains', 'collection', array(
-//            'type' => new SpecialStainsType($this->params),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'label' => false,   //"Special Stain Results:",
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__slidespecialstains__',
-//        ));
-
         //relevantScans
         $builder->add('relevantScans', 'collection', array(
             'type' => new RelevantScansType($this->params),
