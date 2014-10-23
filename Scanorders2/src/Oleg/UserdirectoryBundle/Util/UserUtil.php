@@ -260,7 +260,7 @@ class UserUtil {
         return $maxIdleTime;
     }
 
-    public function getMaxIdleTimeAndMaintenance($em) {
+    public function getMaxIdleTimeAndMaintenance($em, $sc) {
 
         $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
@@ -282,6 +282,11 @@ class UserUtil {
         $maxIdleTime = $param->getMaxIdleTime();
         $maintenance = $param->getMaintenance();
 
+        //do not use maintenance for admin
+        if( $sc->isGranted('ROLE_ADMIN') ) {
+            $maintenance = false;
+        }
+
         //return time in seconds
         $maxIdleTime = $maxIdleTime * 60;
 
@@ -301,6 +306,8 @@ class UserUtil {
 //        if( !$params ) {
 //            //throw new \Exception( 'Parameter object is not found' );
 //        }
+
+        //echo "params count=".count($params)."<br>";
 
         if( count($params) == 0 ) {
             return -1;

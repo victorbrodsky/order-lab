@@ -40,9 +40,9 @@ class MaintenanceListener {
             return;
         }
 
-        if( $this->sc->isGranted('ROLE_ADMIN') ) {
-            return;
-        }
+//        if( $this->sc->isGranted('ROLE_ADMIN') ) {
+//            return;
+//        }
 
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
@@ -65,7 +65,10 @@ class MaintenanceListener {
         $userUtil = new UserUtil();
         $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
 
-        if( $maintenance == -1 ) {
+        //echo "maint list =".$maintenance."<br>";
+
+        if( $maintenance === -1 ) {
+            //site settings are not exist
             return;
         }
 
@@ -73,6 +76,7 @@ class MaintenanceListener {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if( !$maintenance ) {
+            //exit('no maint');
             if( $maintenanceRoute === $event->getRequest()->get('_route') ) {
                 $url = $this->container->get('router')->generate('logout');
                 $response = new RedirectResponse($url);
@@ -89,19 +93,29 @@ class MaintenanceListener {
             //echo "url=".$url."<br>";
             //echo "route=".$route."<br>";
 
-            if( $this->sc->isGranted('IS_AUTHENTICATED_FULLY') ){
-                //don't kick out already logged in users
-//                $maintenanceMsg = $userUtil->getSiteSetting($this->em,'maintenance');
-//                $this->container->get('session')->getFlashBag()->add(
-//                    'notice',
-//                    'Maintanance!'
-//                );
+            //echo "token=".$this->sc->getToken()."<br>";
+
+            if( null === $this->sc->getToken() ) {
+                //exit('token not set');
+            } else {
+
+                if( $this->sc->isGranted('IS_AUTHENTICATED_FULLY') ) {
+                    //don't kick out already logged in users
+                    return;
+                }
+
+                //exit('token set');
+            }
+
+            if( strpos($event->getRequest()->get('_route'),'_login') !== false ) {
                 return;
             }
 
             if( $maintenanceRoute === $event->getRequest()->get('_route') || $scanRoute === $event->getRequest()->get('_route') ) {
+                //exit('1');
                 return;
             } else {
+                //exit('2');
                 $url = $this->container->get('router')->generate($maintenanceRoute);
                 $response = new RedirectResponse($url);
                 $event->setResponse($response);

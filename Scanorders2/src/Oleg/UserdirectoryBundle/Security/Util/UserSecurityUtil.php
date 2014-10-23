@@ -101,7 +101,7 @@ class UserSecurityUtil {
     function idleLogout( $request, $sitename, $flag = null ) {
 
         $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em);
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->sc);
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
 
