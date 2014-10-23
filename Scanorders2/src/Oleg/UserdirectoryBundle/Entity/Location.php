@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -123,11 +124,19 @@ class Location extends BaseUserAttributes
      */
     private $comment;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="User")
+//     * @ORM\JoinColumn(name="assistant", referencedColumnName="id")
+//     */
+//    private $assistant;
     /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="assistant", referencedColumnName="id")
-     */
-    private $assistant;
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_location_assistant",
+     *      joinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="assistant_id", referencedColumnName="id")}
+     * )
+     **/
+    protected $assistant;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="locations")
@@ -144,23 +153,61 @@ class Location extends BaseUserAttributes
     public function __construct($author=null) {
         $this->setRemovable(true);
         parent::__construct($author);
+
+        $this->assistant = new ArrayCollection();
     }
 
+//    /**
+//     * @param mixed $assistant
+//     */
+//    public function setAssistant($assistant)
+//    {
+//        $this->assistant = $assistant;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getAssistant()
+//    {
+//        return $this->assistant;
+//    }
+
     /**
-     * @param mixed $assistant
+     * Add assistant
+     *
+     * @param \Oleg\OrderformBundle\Entity\User $assistant
+     * @return User
      */
-    public function setAssistant($assistant)
+    public function addAssistant($assistant)
     {
-        $this->assistant = $assistant;
+        if( !$this->assistant->contains($assistant) ) {
+            $this->assistant->add($assistant);
+        }
+
+        return $this;
+    }
+    /**
+     * Remove assistant
+     *
+     * @param \Oleg\OrderformBundle\Entity\User $assistant
+     */
+    public function removeAssistant($assistant)
+    {
+        $this->assistant->removeElement($assistant);
     }
 
     /**
-     * @return mixed
+     * Get assistant
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAssistant()
     {
         return $this->assistant;
     }
+
+
 
     /**
      * @param mixed $associatedCode

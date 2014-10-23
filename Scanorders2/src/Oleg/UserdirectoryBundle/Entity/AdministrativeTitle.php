@@ -21,7 +21,7 @@ class AdministrativeTitle extends BaseTitle
     /**
      * @ORM\ManyToMany(targetEntity="User")
      * @ORM\JoinTable(name="user_administrative_boss",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      joinColumns={@ORM\JoinColumn(name="administrative_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="boss_id", referencedColumnName="id")}
      * )
      **/

@@ -160,13 +160,13 @@ class SecurityController extends Controller
         $response = new Response();
 
         $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'));
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
 
         /////////////////// check if maintenance is on ////////////////////
         if( $maintenance ) {
-            //$maxIdleTime = 0;
+            $maxIdleTime = 0;
         }
         //echo '$maxIdleTime='.$maxIdleTime."<br>";
         ////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ class SecurityController extends Controller
         //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
 
         $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'));
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
 

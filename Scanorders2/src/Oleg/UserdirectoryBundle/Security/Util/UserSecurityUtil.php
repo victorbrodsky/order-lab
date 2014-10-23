@@ -11,6 +11,7 @@ namespace Oleg\UserdirectoryBundle\Security\Util;
 
 
 
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\UserdirectoryBundle\Entity\User;
@@ -101,13 +102,13 @@ class UserSecurityUtil {
     function idleLogout( $request, $sitename, $flag = null ) {
 
         $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->sc);
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->sc,$this->container);
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
 
         if( $maintenance ) {
 
-            $msg = $userUtil->getSiteSetting($this->em,'maintenancelogoutmsg');
+            $msg = $userUtil->getSiteSetting($this->em,'MaintenancelogoutmsgWithDate');
 
         } else {
 

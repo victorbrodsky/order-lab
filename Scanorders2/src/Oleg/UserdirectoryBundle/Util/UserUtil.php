@@ -260,7 +260,7 @@ class UserUtil {
         return $maxIdleTime;
     }
 
-    public function getMaxIdleTimeAndMaintenance($em, $sc) {
+    public function getMaxIdleTimeAndMaintenance($em, $sc, $container) {
 
         $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
@@ -284,6 +284,11 @@ class UserUtil {
 
         //do not use maintenance for admin
         if( $sc->isGranted('ROLE_ADMIN') ) {
+            $maintenance = false;
+        }
+
+        $debug = in_array( $container->get('kernel')->getEnvironment(), array('test', 'dev') );
+        if( $debug ) {
             $maintenance = false;
         }
 
@@ -318,6 +323,10 @@ class UserUtil {
         }
 
         $param = $params[0];
+
+        if( $setting == null ) {
+            return $param;
+        }
 
         $getSettingMethod = "get".$setting;
         $res = $param->$getSettingMethod();

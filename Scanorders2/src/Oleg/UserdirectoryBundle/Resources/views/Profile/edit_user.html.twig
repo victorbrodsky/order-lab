@@ -3,7 +3,7 @@
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 
-{% macro baseTitle( field, cicle, classname, prototype ) %}
+{% macro baseTitle( field, cicle, classname, prototype, sitename ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as userform %}
     {% if prototype == "prototype" %}
@@ -34,30 +34,29 @@
         {{ formmacros.field(formfield.priority) }}
         {{ formmacros.field(formfield.name) }}
 
-        {% if formfield.boss is defined %}
+        {#{% if formfield.boss is defined %}#}
+            {#{% if formfield.vars.value and formfield.vars.value.boss != "" or cicle == 'create_user' or cicle == 'edit_user' %}#}
+                {#{% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL and formfield.vars.value.boss|length > 0 %}#}
+                    {#{{ userform.displayUserArray( formfield.boss, formfield.vars.value.boss, cicle, sitename, "Reports to:" ) }}#}
+                {#{% endif %}#}
+            {#{% endif %}#}
+        {#{% endif %}#}
 
-            {% if formfield.vars.value and formfield.vars.value.boss != "" or cicle == 'create_user' or cicle == 'edit_user' %}
+        {#boss field#}
+        {% if formfield.boss is defined %}
+            {% if cicle != 'show_user' %}
                 {{ formmacros.field(formfield.boss) }}
-                {% if cicle == 'show_user' %}
-                    {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL and formfield.vars.value.boss|length > 0 %}
-                        <br>
-                        {% for boss in formfield.vars.value.boss %}
-                            {#{{ userform.emailPhoneField(formfield.vars.value.boss.preferredPhone,cicle,'phone',"Super's Preferred Phone Number:") }}#}
-                            {#{{ userform.emailPhoneField(formfield.vars.value.boss.email,cicle,'email',"Super's Preferred Email:") }}#}
-                            <p>
-                            <div class="well">
-                                {{ formmacros.simplefield( "Super:", boss.getUserNameShortStr(), "", "disabled" ) }}
-                                {{ userform.emailPhoneField(boss.preferredPhone,cicle,'phone',"Super's Preferred Phone Number:") }}
-                                {{ userform.emailPhoneField(boss.email,cicle,'email',"Super's Preferred Email:") }}
-                            </div>
-                            </p>
-                        {% endfor %}
-                    {% endif %}
-                {% endif %}
             {% else %}
+                {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL and formfield.vars.value.boss|length > 0 %}
+                    <p>
+                        <strong>Reports to:</strong>
+                    </p>
+                    {% for boss in formfield.vars.value.boss %}
+                        {{ userform.personInfo(boss,cicle,sitename) }}
+                    {% endfor %}
+                {% endif %}
                 {% do formfield.boss.setRendered %}
             {% endif %}
-
         {% endif %}
 
         {#position type#}
@@ -131,8 +130,21 @@
     </div>
 {% endmacro %}
 
+{% macro personInfo( person, cicle, sitename ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
+    <p>
+    <div class="well">
+        {% set bossurl = path(sitename~'_showuser',{'id':person.id}) %}
+        {% set bosslink = '<a href="'~bossurl~'">'~person.getUserNameShortStr()~'</a>'  %}
+        {{ formmacros.simplefield( "Name:", bosslink, "", "disabled" ) }}
+        {{ userform.emailPhoneField(person.preferredPhone,cicle,'phone',"Preferred Phone Number:") }}
+        {{ userform.emailPhoneField(person.email,cicle,'email',"Preferred Email:") }}
+    </div>
+    </p>
+{% endmacro %}
 
-{% macro location( field, cicle, classname, prototype ) %}
+{% macro location( field, cicle, classname, prototype, sitename ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as userform %}
 
@@ -186,15 +198,36 @@
         {{ userform.emailPhoneField(formfield.email,cicle,'email',"") }}
 
         {% if homeLocation == false %}
-            {{ formmacros.field(formfield.assistant) }}
-            {% if cicle == 'show_user' %}
-                {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL %}
-                    {#{{ formmacros.simplefield( "Assistant's Preferred Phone Number:", formfield.vars.value.assistant.preferredPhone, "", "disabled" ) }}#}
 
-                    {{ userform.emailPhoneField(formfield.vars.value.assistant.preferredPhone,cicle,'phone',"Assistant's Preferred Phone Number:") }}
-                    {{ userform.emailPhoneField(formfield.vars.value.assistant.email,cicle,'email',"Assistant's Preferred Email:") }}
+            {#{{ formmacros.field(formfield.assistant) }}#}
+            {#{% if cicle == 'show_user' %}#}
+                {#{% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL %}#}
+                    {#&#123;&#35;{{ formmacros.simplefield( "Assistant's Preferred Phone Number:", formfield.vars.value.assistant.preferredPhone, "", "disabled" ) }}&#35;&#125;#}
+
+                    {#{{ userform.emailPhoneField(formfield.vars.value.assistant.preferredPhone,cicle,'phone',"Assistant's Preferred Phone Number:") }}#}
+                    {#{{ userform.emailPhoneField(formfield.vars.value.assistant.email,cicle,'email',"Assistant's Preferred Email:") }}#}
+                {#{% endif %}#}
+            {#{% endif %}#}
+
+
+            {#assistant field#}
+            {% if formfield.assistant is defined %}
+                {% if cicle != 'show_user' %}
+                    {{ formmacros.field(formfield.assistant) }}
+                {% else %}
+                    {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
+                        <p>
+                            <strong>Reports to:</strong>
+                        </p>
+                        {% for assistant in formfield.vars.value.assistant %}
+                            {{ userform.personInfo(assistant,cicle,sitename) }}
+                        {% endfor %}
+                    {% endif %}
+                    {% do formfield.assistant.setRendered %}
                 {% endif %}
             {% endif %}
+
+
         {% else %}
             {% do formfield.assistant.setRendered %}
         {% endif %}
@@ -573,9 +606,9 @@
 
 
     <div id="form-prototype-data"
-         data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype')|e }}"
-         data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype')|e }}"
-         data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype')|e }}"
+         data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype', sitename)|e }}"
+         data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype', sitename)|e }}"
+         data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype',sitename)|e }}"
          data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
          data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
          data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
@@ -708,7 +741,7 @@
 
                     <div class="user-administrativeTitles-holder">
                         {% for administrativeTitle in form.administrativeTitles %}
-                            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
+                            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype',sitename) }}
                         {% endfor %}
                         {% if cicle != 'show_user' %}
                             <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
@@ -734,7 +767,7 @@
 
                     <div class="user-appointmentTitles-holder">
                         {% for appointmentTitle in form.appointmentTitles %}
-                            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
+                            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype',sitename) }}
                         {% endfor %}
                         {% if cicle != 'show_user' %}
                             <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>
@@ -760,7 +793,7 @@
 
                     <div class="user-locations-holder">
                         {% for location in form.locations %}
-                            {{ userform.location(location,cicle,'user-locations','noprototype') }}
+                            {{ userform.location(location,cicle,'user-locations','noprototype',sitename) }}
                         {% endfor %}
                         {% if cicle != 'show_user' %}
                             <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>

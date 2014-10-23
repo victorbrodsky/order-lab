@@ -80,8 +80,6 @@ $(document).ready(function() {
 
     initConvertEnterToTab();
 
-    initDatetimepicker();
-
     //set institutional tree
     initTreeSelect();   //clearFlag: false
     initInstitutionManually();

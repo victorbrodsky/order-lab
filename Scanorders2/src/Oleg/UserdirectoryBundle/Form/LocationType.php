@@ -153,9 +153,16 @@ class LocationType extends AbstractType
         ));
 
         //assistant
+//        $builder->add('assistant','entity',array(
+//            'class' => 'OlegUserdirectoryBundle:User',
+//            'label'=>"Assistant(s):",
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'required' => false
+//        ));
         $builder->add('assistant','entity',array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=>"Assistant's Name:",
+            'label' => "Assistant(s):",
+            'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'required' => false
         ));

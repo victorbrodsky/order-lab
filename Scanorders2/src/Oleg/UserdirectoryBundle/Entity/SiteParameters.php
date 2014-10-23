@@ -725,6 +725,40 @@ class SiteParameters {
         return $this->maintenanceloginmsg;
     }
 
+    public function getMaintenanceloginmsgWithDate()
+    {
+        $msg = str_replace("[[datetime]]", $this->getUntilDate(), $this->getMaintenanceloginmsg());
+        return $msg;
+    }
+
+    public function getUntilDate() {
+
+        $transformer = new DateTimeToStringTransformer(null,"America/New_York",'m/d/Y H:i');
+        $now = new \DateTime('now');
+        $nowStr = $transformer->transform($now);
+
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y H:i');
+        $maint = $this->getMaintenanceenddate();
+        $maintStr = $transformer->transform($maint);
+
+        //echo "maint=".$maintStr.", now=".$nowStr."<br>";
+
+        $now_time = strtotime($nowStr);
+        $maint_time = strtotime($maintStr);
+
+        //echo "maint=".$maint_time.", now=".$now_time."<br>";
+
+        if( !$this->getMaintenanceenddate() || $maint_time < $now_time ) {
+            $untilDate = date_modify( $now, '+1 hour' );
+            $transformer = new DateTimeToStringTransformer(null,"America/New_York",'m/d/Y H:i');
+            $untilDateStr = $transformer->transform($untilDate);
+        } else {
+            $untilDateStr = $this->getMaintenanceenddateString();
+        }
+
+        return $untilDateStr;
+    }
+
     /**
      * @param mixed $maintenancelogoutmsg
      */
@@ -739,6 +773,11 @@ class SiteParameters {
     public function getMaintenancelogoutmsg()
     {
         return $this->maintenancelogoutmsg;
+    }
+    public function getMaintenancelogoutmsgWithDate()
+    {
+        $msg = str_replace("[[datetime]]", $this->getUntilDate(), $this->getMaintenancelogoutmsg());
+        return $msg;
     }
 
     /**

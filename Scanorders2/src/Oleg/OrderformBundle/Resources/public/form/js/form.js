@@ -764,17 +764,17 @@ function purposeOption() {
 //    }
 //}
 
-function initDatetimepicker() {
-
-    var datetimepicker = $('.form_datetime');
-    //console.log('initDatetimepicker');
-    if( datetimepicker.length ) {
-        printF(datetimepicker,"init:");
-        datetimepicker.datetimepicker({
-            format: 'mm-dd-yyyy hh:i'
-        });
-    }
-}
+//function initDatetimepicker() {
+//
+//    var datetimepicker = $('.form_datetime');
+//    //console.log('initDatetimepicker');
+//    if( datetimepicker.length ) {
+//        printF(datetimepicker,"init:");
+//        datetimepicker.datetimepicker({
+//            format: 'mm-dd-yyyy hh:i'
+//        });
+//    }
+//}
 
 //function initDatepicker() {
 //
