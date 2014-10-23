@@ -199,17 +199,6 @@
 
         {% if homeLocation == false %}
 
-            {#{{ formmacros.field(formfield.assistant) }}#}
-            {#{% if cicle == 'show_user' %}#}
-                {#{% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL %}#}
-                    {#&#123;&#35;{{ formmacros.simplefield( "Assistant's Preferred Phone Number:", formfield.vars.value.assistant.preferredPhone, "", "disabled" ) }}&#35;&#125;#}
-
-                    {#{{ userform.emailPhoneField(formfield.vars.value.assistant.preferredPhone,cicle,'phone',"Assistant's Preferred Phone Number:") }}#}
-                    {#{{ userform.emailPhoneField(formfield.vars.value.assistant.email,cicle,'email',"Assistant's Preferred Email:") }}#}
-                {#{% endif %}#}
-            {#{% endif %}#}
-
-
             {#assistant field#}
             {% if formfield.assistant is defined %}
                 {% if cicle != 'show_user' %}
@@ -217,7 +206,7 @@
                 {% else %}
                     {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
                         <p>
-                            <strong>Reports to:</strong>
+                            <strong>Assistant(s):</strong>
                         </p>
                         {% for assistant in formfield.vars.value.assistant %}
                             {{ userform.personInfo(assistant,cicle,sitename) }}
@@ -685,7 +674,7 @@
 
                     {{ formmacros.field(form.preferences.timezone) }}
 
-                    {% if userEditor == true %}
+                    {% if form.locked is defined and userEditor == true %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}
                             {{ formmacros.checkbox(form.locked) }}
                         {% else %}
