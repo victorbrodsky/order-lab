@@ -373,7 +373,7 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
     newForm = newForm.replace(/__stain__/g, stainid);
 
     //newForm = newForm.replace(/__clinicalHistory__/g, 0);   //add only one clinical history to the new form
-    newForm = newForm.replace(/__paper__/g, 0);   //add only one clinical history to the new form
+    newForm = newForm.replace(/__paper__/g, 0);   //add only one paper to the new form
 
     //replace origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag with correct ids
     //origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag

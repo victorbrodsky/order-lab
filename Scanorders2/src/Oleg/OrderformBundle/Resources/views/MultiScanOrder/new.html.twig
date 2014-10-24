@@ -162,6 +162,7 @@
           data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","","","","minusplusbtn")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}
           data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","","","","plusbtn")|e }}"
+          data-prototype-partpaper= "{{ paperHtml|e }}"
 
          data-prototype-block="
         {{ formmacros.blockForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, form.vars.value.status, blocknameHtml, sectionsourceHtml, specialStainsHtml)|e }}

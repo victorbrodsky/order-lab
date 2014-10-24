@@ -1314,6 +1314,152 @@ function setSimpleField( element, text) {
 }
 
 
+
+function setPaperDocuments( data, parent ) {
+
+    console.log(parent);
+    console.log(data);
+
+    if( !parent.hasClass('scan-partpaper') ) {
+        return;
+    }
+
+    //keep enabled first paper dropzone
+    var existingDropzone = parent.find('.file-upload-dropzone').first();
+    existingDropzone.addClass('dropzone-keep-enabled');
+
+    if( data['paper'] && data['paper'] != undefined ) {
+
+        var papers = data['paper'];
+
+        if( papers.length == 0 ) {
+            return;
+        }
+
+        console.log('papers count=' + papers.length );
+
+        for( var i=0; i<papers.length; i++ ) {
+
+            var paper = papers[i];
+
+            console.log('paper id='+paper.id);
+
+            //create paper prototype using data-prototype-partpaper
+            var newDropzoneHolder = createDropzoneHolder(existingDropzone);
+            console.log('newDropzoneHolder='+newDropzoneHolder);
+            var newDropzoneHolderEl = $(newDropzoneHolder);
+
+            //attach paper prototype to part after Source Organ
+            var partPaperHolder = parent.find('.partpaper');
+            partPaperHolder.prepend( newDropzoneHolderEl );
+
+            //init dropzone
+            var paperdata = processPaperDocuments(paper);
+            initFileUpload( newDropzoneHolderEl, paperdata, null );
+
+        }
+
+    }
+
+}
+function processPaperDocuments( paper ) {
+
+    var documents = paper['documents'];
+
+    //console.log('documents count=' + documents.length );
+
+    if( documents.length == 0 ) {
+        return;
+    }
+
+    var data = new Array();
+
+    for( var i=0; i<documents.length; i++ ) {
+
+        var document = documents[i];
+
+        var originalname = document['originalname'];
+        var uniquename = document['uniquename'];
+        var size = document['size'];
+        var url = document['url'];
+
+        //console.log('originalname='+originalname);
+
+        var fileArr = new Array();
+        fileArr['originalname'] = originalname;
+        fileArr['uniquename'] = uniquename;
+        fileArr['size'] = size;
+        fileArr['url'] = url;
+        data.push(fileArr);
+
+    }
+
+    return data;
+}
+
+function createDropzoneHolder(existingDropzoneHolder) {
+
+    var dataElement = document.getElementById("form-prototype-data");
+    var prototype = dataElement.getAttribute('data-prototype-partpaper');
+
+    //console.log('prototype='+prototype);
+
+    //console.log(existingDropzoneHolder);
+
+    var paperidElement = existingDropzoneHolder.parent().find('.field-partpaperothers').last();
+
+    if( !paperidElement ) {
+        throw new Error("Paper element is not found");
+    }
+
+    //console.log(paperidElement);
+
+    var id = paperidElement.attr('id');
+
+    if( !id || id == "" ) {
+        throw new Error("Paper id element is not found");
+    }
+
+    var idArr = id.split("_");
+
+    //  0       1               2           3    4     5     6     7     8  9   10  11  12      13
+    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_paper_0_partpaperothers
+    var patientid = idArr[4];
+    var procedureid = idArr[6];
+    var accessionid = idArr[8];
+    var partid = idArr[10];
+    var paperid = idArr[12];
+
+    var newForm = prototype.replace(/__patient__/g, patientid);
+    newForm = newForm.replace(/__procedure__/g, procedureid);
+    newForm = newForm.replace(/__accession__/g, accessionid);
+    newForm = newForm.replace(/__part__/g, partid);
+    newForm = newForm.replace(/__partpaper__/g, paperid);
+
+
+    return newForm;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //TODO: functions to rewrite
 
 
@@ -1351,7 +1497,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
     for (var i = 0; i < elements.length; i++) {
 
-        console.log("\n\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        //console.log("\n\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
@@ -1387,21 +1533,20 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         //dropzone
         if( elements.eq(i).hasClass('file-upload-dropzone') ) {
             var dropzoneDom = elements.eq(i).get(0);
-            console.log('dropzone className='+dropzoneDom.className);
+            //console.log('disable/enable dropzone className='+dropzoneDom.className);
             var myDropzone = dropzoneDom.dropzone;
 
-            if( disabled ) {
+            if( disabled && !elements.eq(i).hasClass('dropzone-keep-enabled') ) {
                 //disable
-                //myDropzone.options.clickable = false;
                 elements.eq(i).removeClass('dz-clickable'); // remove cursor
                 dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
             } else {
                 //enable
-                elements.eq(i).addClass('dz-clickable'); // remove cursor
+                elements.eq(i).addClass('dz-clickable'); // add cursor
                 dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
             }
 
-            console.log('dropzone maxfiles(10?)='+myDropzone.options.maxFiles);
+            //console.log('dropzone maxfiles(10?)='+myDropzone.options.maxFiles);
             continue;
         }
 
@@ -1566,6 +1711,8 @@ function setElementBlock( element, data, cleanall, key ) {
     var parent = getButtonElementParent( element );
 
     setPatientNameSexAgeLockedFields(data,parent);
+
+    setPaperDocuments(data,parent);
 
     //console.log(parent);
     //console.log("key="+key+", single="+single);

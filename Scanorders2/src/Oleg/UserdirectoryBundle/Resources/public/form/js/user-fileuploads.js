@@ -13,13 +13,17 @@ if( typeof Dropzone !== 'undefined' ) {
 }
 
 //File Uploads using Dropzone and Oneup\UploaderBundle
-function initFileUpload( holder ) {
+//addRemoveLinks: true or null
+function initFileUpload( holder, data, addRemoveLinks ) {
 
-    //console.log('init File Upload');
+    console.log('init File Upload');
 
     if( $('.dropzone').length == 0 ) {
         return;
     }
+
+    console.log("dropzone holder=");
+    console.log(holder);
 
     var targetid = ".file-upload-dropzone";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
@@ -27,6 +31,14 @@ function initFileUpload( holder ) {
 
         if( targetid.length == 0 )
             return;
+    }
+
+    if( typeof data === 'undefined' ) {
+        data = null;
+    } else {
+        //console.log("dropzone data=");
+        //console.log(data);
+
     }
 
     var dataElement = document.getElementById("form-prototype-data");
@@ -44,18 +56,24 @@ function initFileUpload( holder ) {
     var userid = dataElement.getAttribute('data-userid');
     //console.log('userid='+userid);
 
-    Dropzone.autoDiscover = false;
+    //Dropzone.autoDiscover = false;
 
     //console.log('cicle='+cicle);
     var clickable = true;
-    var addRemoveLinks = true;
+
     if( cicle == "show_user" || cicle == "show" ) {
         clickable = false;
-        addRemoveLinks = null;
     }
 
-    //console.log('clickable='+clickable);
-    //console.log('addRemoveLinks='+addRemoveLinks);
+    if( typeof addRemoveLinks === 'undefined' ) {
+        var addRemoveLinks = true;
+        if( cicle == "show_user" || cicle == "show" ) {
+            addRemoveLinks = null;
+        }
+    }
+
+    console.log('clickable='+clickable);
+    console.log('addRemoveLinks='+addRemoveLinks);
 
     var previewHtml =
         '<div class="dz-preview dz-file-preview" style="width:24%; height:220px; margin:0;">'+
@@ -101,31 +119,12 @@ function initFileUpload( holder ) {
                 throw new Error("Collection holder for file upload is not found");
             }
 
-            //var comments = commentHolder.find('.comment-field-id').first();
-            //var commentFirst = comments.first();
-
-//            var res = getNewDocumentInfoByHolder(commentHolder);
-//
-//            //insert document id input field
-//            var bundleName = res['bundleName'];
-//            var commentType = res['commentType'];
-//            var commentCount = res['commentCount'];
-//            var documentCount = res['documentCount'];
-//
-//            //var documentCount = maxFiles + comments.length;    //'1'; //maximum number of comments is limited, so use this number
-//
-//            var idHtml =    '<input type="hidden" id="oleg_'+bundleName+'_user_'+commentType+'_'+commentCount+'_documents_'+documentCount+'_id" '+
-//                'name="oleg_'+bundleName+'_user['+commentType+']['+commentCount+'][documents]['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
-
             var idHtml = constractDocuemntIdFieldHtml(commentHolder,documentid);
-
-            var showlinkHtml =  '<div style="overflow:hidden; white-space:nowrap;">'+
-                '<a href="'+documentSrc+'" target="_blank">'+file.name+'</a>'+
-                '</div>';
 
             if( file.previewElement ) {
                 $(file.previewElement).append(idHtml);
                 var showlinkDiv = $(file.previewElement).find('.file-upload-showlink');
+                var showlinkHtml = constractShowLink(documentSrc,file.name);
                 showlinkDiv.html(showlinkHtml);
 
                 adjustHolderHeight(commentHolder);
@@ -149,17 +148,22 @@ function initFileUpload( holder ) {
             //console.log('remove js file name='+file.name);
             return removeUploadedFileByHolder( file.previewElement, this );
         },
-//        init: function() {
-//            console.log('manual init');
-//            return;
-//            thisDropzone = this;
-//
-//            //console.log(thisDropzone);
-//            var holder = $(thisDropzone.element).closest('.files-upload-holder');
-//
-//            var existedfiles = holder.find('.file-holder');
-//            console.log('existedfiles len='+existedfiles.length);
-//
+        init: function() {
+
+            if( data == null ) {
+                return;
+            }
+
+            //console.log('manual init');
+
+            var thisDropzone = this;
+
+            //console.log(thisDropzone);
+            var holder = $(thisDropzone.element).closest('.files-upload-holder');
+
+            var existedfiles = holder.find('.file-holder');
+            //console.log('existedfiles len='+existedfiles.length);
+
 //            var data = new Array();
 //
 //            existedfiles.each( function() {
@@ -170,26 +174,37 @@ function initFileUpload( holder ) {
 //                fileArr['dir'] = $(this).find('.file-upload-uploaddirectory').val();
 //                data.push(fileArr);
 //            });
-//
-//            console.log('data len='+data.length);
-//
-//            for( var i = 0; i < data.length; i++ ) {
-//
-//                var value = data[i];
-//
-//                console.log('name='+value.name);
-//
-//                var mockFile = { name: value.name, size: value.size };
-//
-//                thisDropzone.options.addedfile.call(thisDropzone, mockFile);
-//
-//                var filepath = "http://collage.med.cornell.edu/order/Uploaded/pathology-employees/Documents/"+value.name;
-//                console.log('path='+filepath);
-//
-//                thisDropzone.options.thumbnail.call(thisDropzone, mockFile, filepath);
-//            }
-//            //See more at: http://www.startutorial.com/articles/view/dropzonejs-php-how-to-display-existing-files-on-server#sthash.sqF6KDsk.dpuf
-//        }
+
+            //console.log('data len='+data.length);
+
+            for( var i = 0; i < data.length; i++ ) {
+
+                var value = data[i];
+
+                //console.log('name='+value.uniquename);
+
+                var mockFile = { name: value.uniquename, size: value.size };
+
+                //console.log('mockFile=');
+                //console.log(mockFile);
+
+                thisDropzone.options.addedfile.call(thisDropzone, mockFile);
+
+                var filepath = value.url;    //"http://collage.med.cornell.edu/order/Uploaded/pathology-employees/Documents/"+value.name;
+                //console.log('path='+filepath);
+
+                thisDropzone.options.thumbnail.call(thisDropzone, mockFile, filepath);
+
+                //add showlink
+                if( mockFile.previewElement ) {
+                    var showlinkDiv = $(mockFile.previewElement).find('.file-upload-showlink');
+                    var showlinkHtml = constractShowLink(value.url,value.uniquename);
+                    showlinkDiv.html(showlinkHtml);
+                }
+
+            }
+            //See more at: http://www.startutorial.com/articles/view/dropzonejs-php-how-to-display-existing-files-on-server#sthash.sqF6KDsk.dpuf
+        }
 //        confirm: function(question, accepted, rejected) {
 //            console.log();
 //            // Do your thing, ask the user for confirmation or rejection, and call
@@ -202,6 +217,13 @@ function initFileUpload( holder ) {
 
 //    $('#jquery-fileupload').fileupload({});
 
+}
+
+function constractShowLink(url,name) {
+    var showlinkHtml =  '<div style="overflow:hidden; white-space:nowrap;">'+
+        '<a href="'+url+'" target="_blank">'+name+'</a>'+
+        '</div>';
+    return showlinkHtml;
 }
 
 function removeUploadedFileByHolder( previewElement, dropzone ) {
@@ -519,4 +541,5 @@ function constractDocuemntIdFieldHtml(commentHolder,documentid) {
 
     return idHtml;
 }
+
 

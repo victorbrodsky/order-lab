@@ -11,6 +11,8 @@ class DocumentRepository extends EntityRepository {
 
     public function processDocuments($holder) {
 
+        echo $holder. ", id=".$holder->getId()."<br>";
+
         echo "<br>before processing holder count=".count($holder->getDocuments())."<br>";
 
         foreach( $holder->getDocuments() as $doc ) {

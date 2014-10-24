@@ -150,9 +150,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         if( $className == 'Part' ) {
+
             if( $original ) {
+                echo " ############ original ############ <br>";
                 $formEntity = $original;
             } else {
+                echo " ############ entity ############ <br>";
                 $formEntity = $entity;
             }
 //            echo "<br>paper count=".count($formEntity->getPaper())."<br>";
@@ -164,6 +167,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $validPaper = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $validPaper );
 
+            //add new paper to $entity
+            if( count($validPaper->getDocuments()) > 0 ) {
+                $entity->addPaper($validPaper);
+            }
+
+            echo "papers count=".count($entity->getPaper())."<br>";
             //exit('exit part doc');
         }
 

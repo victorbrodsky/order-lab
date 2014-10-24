@@ -20,15 +20,7 @@
                     <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
                 {% endif %}
 
-                {{ usermacros.document( comment, cicle ) }}
-
-                {#{% for document in comment.documents %}#}
-
-                    {#{{ usermacros.document( document, cicle ) }}#}
-
-                    {#{% do document.setRendered %}#}
-
-                {#{% endfor %}#}
+                {{ usermacros.document( comment, cicle, prototype ) }}
 
             </div>
 
@@ -40,7 +32,7 @@
 
 {% endmacro %}
 
-{% macro document( comment, cicle ) %}
+{% macro document( comment, cicle, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% for document in comment.documents %}

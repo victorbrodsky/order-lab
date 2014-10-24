@@ -68,7 +68,22 @@ class CheckController extends Controller {
                     if( $child == "staintype" ) {
                         $childValue = $field->$getMethod()->getId();
                         $hist[$child] = $childValue;
-                    } else {
+                    } else
+                    if( $child == "documents" ) {
+                            $childs = $field->$getMethod();
+                            $children = array();
+                            foreach( $childs as $onechild ) {
+                                $childArr = array();
+                                $childArr["id"] = $onechild->getId();
+                                $childArr["uniquename"] = $onechild->getUniquename();
+                                $childArr["originalname"] = $onechild->getOriginalname();
+                                $childArr["size"] = $onechild->getSize();
+                                $childArr["url"] = $onechild->getAbsoluteUploadFullPath();
+                                $children[] = $childArr;
+                            }
+                            $hist[$child] = $children;
+                    } else
+                    {
                         $childValue = $field->$getMethod()."";
                         //echo "childValue=".$childValue."<br>";
                         $hist[$child] = $childValue;
@@ -528,7 +543,7 @@ class CheckController extends Controller {
                 'sourceOrgan'=>$this->getArrayFieldJson($entity->getSourceOrgan()),
                 'description'=>$this->getArrayFieldJson($entity->getDescription()),
                 'disident'=>$this->getArrayFieldJson($entity->getDisident()),
-                'paper'=>$this->getArrayFieldJson($entity->getPaper()),
+                'paper'=>$this->getArrayFieldJson($entity->getPaper(), array("documents")),
                 'diffDisident'=>$this->getArrayFieldJson($entity->getDiffDisident()),
                 'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("origin","primaryorgan") )
             );
