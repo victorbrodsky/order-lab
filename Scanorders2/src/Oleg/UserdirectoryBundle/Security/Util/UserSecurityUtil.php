@@ -211,42 +211,27 @@ class UserSecurityUtil {
 
     public function getUserEmailsByRole($sitename,$userRole) {
 
-        $roles = array();
-
         if( $userRole == "Platform Administrator" ) {
 
-            $roles[] = "ROLE_ADMIN";
+            $role = "ROLE_ADMIN";
 
         } else if( $userRole == "Administrator" ) {
 
             if( $sitename == $this->container->getParameter('scan.sitename') ) {
-
-                if( $userRole == "Administrator" ) {
-                    $roles[] = "ROLE_SCANORDER_ADMIN";
-                }
-
+                $role = "ROLE_SCANORDER_ADMIN";
             }
 
             if( $sitename == $this->container->getParameter('employees.sitename') ) {
-                $roles[] = "ROLE_ADMIN";
-                $roles[] = "ROLE_USERDIRECTORY_ADMIN";
-
-                if( $userRole == "Administrator" ) {
-                    $roles[] = "ROLE_SCANORDER_ADMIN";
-                }
+                $role = "ROLE_USERDIRECTORY_ADMIN";
             }
 
         } else {
-
             return null;
-
         }
 
-        $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findBy(
-            array(
-                'roles' => $roles,
-            )
-        );
+        $users = $this->findByRole($role);
+
+        //echo "user count=".count($users)."<br>";
 
         $emails = array();
         if( $users && count($users) > 0 ) {
@@ -256,8 +241,18 @@ class UserSecurityUtil {
             }
 
         }
+        //print_r($emails);
 
-        return $emails;
+        return implode(", ", $emails);
+    }
+
+    public function findByRole($role) {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('u')
+            ->from('OlegUserdirectoryBundle:User', 'u')
+            ->where('u.roles LIKE :roles')
+            ->setParameter('roles', '%"' . $role . '"%');
+        return $qb->getQuery()->getResult();
     }
 
 }

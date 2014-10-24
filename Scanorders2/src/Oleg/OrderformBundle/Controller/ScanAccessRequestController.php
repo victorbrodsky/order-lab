@@ -65,15 +65,19 @@ class ScanAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/access-requests/new/{id}/{sitename}", name="scan_access_request_new", requirements={"id" = "\d+"})
+     * @Route("/access-requests/new", name="scan_access_request_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
-    public function accessRequestCreateAction($id,$sitename)
+    public function accessRequestCreateAction()
     {
 
+        $sitename = $this->container->getParameter('scan.sitename');
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $userSecUtil = $this->get('user_security_utility');
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$id) ) {
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$user) ) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
@@ -82,23 +86,20 @@ class ScanAccessRequestController extends AccessRequestController
             "banned" => "ROLE_SCANORDER_BANNED",
         );
 
-        return $this->accessRequestCreateNew($id,$sitename,$roles);
+        return $this->accessRequestCreateNew($user->getId(),$sitename,$roles);
     }
 
     /**
-     * @Route("/access-requests/new/{id}/{sitename}", name="scan_access_request_create", requirements={"id" = "\d+"})
+     * @Route("/access-requests/new/pending", name="scan_access_request_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
-    public function accessRequestAction($id,$sitename)
+    public function accessRequestAction()
     {
 
-        //echo "create new accreq, scan post <br>";
-
-//        $userSecUtil = $this->get('user_security_utility');
-//        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$id) ) {
-//            return $this->redirect($this->generateUrl($sitename.'_login'));
-//        }
+        $user = $this->get('security.context')->getToken()->getUser();
+        $id = $user->getId();
+        $sitename = $this->container->getParameter('scan.sitename');
 
         return $this->accessRequestCreate($id,$sitename);
     }

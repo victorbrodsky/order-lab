@@ -100,9 +100,17 @@
                     <li id="nav-bar-user" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ path(scan_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(scan_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
+                            {% endif %}
+
                             <li><a href="{{ path(scan_sitename~'_logout') }}">Log Out</a></li>
-                            <li><a href="{{ path(scan_sitename~'_about_page') }}">About</a></li>
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(scan_sitename~'_about_page') }}">About</a></li>
+                            {% endif %}
+
                         </ul>
                     </li>
 

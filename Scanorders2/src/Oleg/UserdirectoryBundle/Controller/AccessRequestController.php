@@ -61,15 +61,19 @@ class AccessRequestController extends Controller
     }
 
     /**
-     * @Route("/access-requests/new/{id}/{sitename}", name="employees_access_request_new", requirements={"id" = "\d+"})
+     * @Route("/access-requests/new", name="employees_access_request_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
-    public function accessRequestCreateAction($id,$sitename)
+    public function accessRequestCreateAction()
     {
 
+        $sitename = $this->container->getParameter('employees.sitename');
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $userSecUtil = $this->get('user_security_utility');
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED') ) {
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED',$user) ) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
@@ -78,9 +82,9 @@ class AccessRequestController extends Controller
             "banned" => "ROLE_USERDIRECTORY_BANNED",
         );
 
-        return $this->accessRequestCreateNew($id,$sitename,$roles);
-
+        return $this->accessRequestCreateNew($user->getId(),$sitename,$roles);
     }
+
 
     // check for cases:
     // 1) user has active accreq
@@ -121,7 +125,7 @@ class AccessRequestController extends Controller
             //$this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
 
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
+            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         // Case 2: user has accreq but it was declined
@@ -131,7 +135,7 @@ class AccessRequestController extends Controller
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
             $text = 'You have requested access to '.$sitenameFull.' on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
 
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
+            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         // Case 3: user has role banned
@@ -161,25 +165,24 @@ class AccessRequestController extends Controller
         //echo "create new accreq, exit??? <br>";
 
         return array(
-            'userid' => $id,
             'sitename' => $sitename,
-            'sitenamefull'=>$sitenameFull
+            'sitenamefull' => $sitenameFull,
+            'pendinguser' => true
         );
     }
 
 
 
-    /**
-     * @Route("/access-requests/new/{id}/{sitename}", name="employees_access_request_create", requirements={"id" = "\d+"})
-     * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
-     */
-    public function accessRequestAction($id,$sitename)
+     /**
+      * @Route("/access-requests/new/pending", name="employees_access_request_create")
+      * @Method("POST")
+      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+      */
+    public function accessRequestAction()
     {
-//        $userSecUtil = $this->get('user_security_utility');
-//        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED') ) {
-//            return $this->redirect( $this->generateUrl($sitename.'_logout') );
-//        }
+        $user = $this->get('security.context')->getToken()->getUser();
+        $id = $user->getId();
+        $sitename = $this->container->getParameter('employees.sitename');
 
         return $this->accessRequestCreate($id,$sitename);
 
@@ -220,7 +223,7 @@ class AccessRequestController extends Controller
                 "The status of your request is " . $userAccessReq->getStatusStr() . "." .
                 "Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
+            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         //Create a new active AccessRequest
@@ -258,15 +261,23 @@ class AccessRequestController extends Controller
 
         $userSecUtil = $this->get('user_security_utility');
         $emails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
-        $emailsStr = implode(", ", $emails);
         $headers = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
-        $headersArr = implode(", ", $headers);
 
-        $emailUtil->sendEmail( $emailsStr, $subject, $msg, $em, $headersArr );
+        if( !$emails ) {
+            $emails = $headers;
+            $headers = null;
+        }
+
+        //echo "user emails=".$emails."<br>";
+        //echo "user headers=".$headers."<br>";
+
+        $emailUtil->sendEmail( $emails, $subject, $msg, $em, $headers );
         ///////////////// EOF /////////////////
 
-        return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
+        return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
     }
+
+
 
 
     /**

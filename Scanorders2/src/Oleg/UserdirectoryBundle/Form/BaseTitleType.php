@@ -64,7 +64,7 @@ class BaseTitleType extends AbstractType
                 '0'   => 'Primary',
                 '1' => 'Secondary'
             ),
-            'label' => $this->params['label']." Type:",
+            'label' => $this->params['label']." Title Type:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
         ));

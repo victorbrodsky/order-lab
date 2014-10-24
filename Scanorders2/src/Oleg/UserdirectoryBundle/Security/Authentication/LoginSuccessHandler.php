@@ -59,7 +59,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options['event'] = 'Banned user login attempt to Employee Directory site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
         }
 
         //detect if the user was first time logged in by ldap: assign role UNAPPROVED user
@@ -74,7 +74,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options['event'] = 'Unapproved user login attempt to Employee Directory site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
         }
 
         $options['eventtype'] = "Successful Login";
@@ -98,6 +98,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 //        $response = new RedirectResponse($request->headers->get('Referer'));
 
         return $response;
+
+
+        // URL for redirect the user to where they were before the login process begun if you want.
+        // $referer_url = $request->headers->get('referer');
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
