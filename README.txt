@@ -57,6 +57,11 @@ php app/console doctrine:database:create
 2) git remote update
 3) git pull
 
+# If there are some local modified files, then will not allow to merge with local modifications. There are 3 options (option (b): git stash is enough):
+a) git commit -m "My message"
+b) git stash
+c) git reset --hard
+
 # To push changes from locally create branch (i.e. iss51) to remote repo
 git push -u origin iss51
 
