@@ -76,7 +76,8 @@ use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
+
+use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 
 
 class TableController extends Controller {
@@ -552,6 +553,7 @@ class TableController extends Controller {
         $entity = new OrderInfo();
 
         $type = "Table-View Scan Order";
+
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>null, 'user'=>$user);
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);

@@ -234,13 +234,19 @@ class OrderInfoType extends AbstractType
 //                },
 //        ));
 
+        if( array_key_exists('institutions', $this->params) ) {
+            $institutions = $this->params['institutions'];
+        } else {
+            $institutions = null;
+        }
+
         $builder->add('institution', 'entity', array(
             'label' => 'Institution:',
             'required'=> true,
             'multiple' => false,
             'empty_value' => false,
             'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $this->params['institutions'],
+            'choices' => $institutions, //$this->params['institutions'],
             'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
         ));
 
