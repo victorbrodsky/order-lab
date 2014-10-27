@@ -1334,6 +1334,9 @@ function setPaperDocuments( btnEl, parent, data ) {
     }
 
     if( data == null  ) {   //clean fields
+        if( parent.find('.file-upload-dropzone').length == 1 ) {
+            return;
+        }
         parent.find('.file-upload-dropzone').not('.dropzone-keep-enabled').closest('.row').remove();
         parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
         return;
