@@ -1324,6 +1324,12 @@ function setPaperDocuments( data, parent ) {
         return;
     }
 
+    if( data == null  ) {   //clean fields
+        parent.find('.file-upload-dropzone').not('.dropzone-keep-enabled').closest('.row').remove();
+        parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
+        return;
+    }
+
     //keep enabled first paper dropzone
     var existingDropzone = parent.find('.file-upload-dropzone').first();
     existingDropzone.addClass('dropzone-keep-enabled');
@@ -2509,6 +2515,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
     var parent = getButtonElementParent( element );
 
     cleanPatientNameSexAgeLockedFields(parent);
+
+    setPaperDocuments(null,parent);
 
     //console.log("clean single=" + single);
 
