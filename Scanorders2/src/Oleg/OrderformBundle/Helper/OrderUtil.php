@@ -401,12 +401,17 @@ class OrderUtil {
                 $child->setStatus($statusStr);
                 $em->getRepository('OlegOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
                 $count++;
+            } else {
+                //this entity (i.e. accession object) is used by another order
+                //TODO: what should we do? If we don't change the status, then we will have 2 entity with the same name (2 accessions with the same accession name and accession type)
             }
 
         }
 
         return $count;
     }
+
+
 
 
     //$flag = 'admin'-show only comments from users to admin or null-show only comments to the orders belonging to admin

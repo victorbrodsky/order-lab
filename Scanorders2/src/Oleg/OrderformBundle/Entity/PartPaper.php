@@ -95,4 +95,23 @@ class PartPaper extends PartArrayFieldAbstract
         return "Paper: Documents count=".count($this->getDocuments());
     }
 
+
+    /**
+     * @param mixed $field
+     */
+    public function setField($field=null)
+    {
+        //
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getField()
+    {
+        return null;
+    }
+
+
+
 }

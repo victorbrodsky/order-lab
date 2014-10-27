@@ -97,12 +97,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         } else {
 
-            if( $orderinfo->getStatus() == 'Amended' ) {
-                $found = null;
-            } else {
-                //this is a main function to check uniqueness
-                $found = $this->findUniqueByKey($entity);
-            }
+            //this is a main function to check uniqueness
+            $found = $this->findUniqueByKey($entity);
+
+            //TODO: if amend the use the same logic as for submit. Probably, restriction that only one valid field exist is not correct.
+//            if( $orderinfo->getStatus() == 'Amended' ) {
+//                //echo "amended order: found=".$found."<br>";
+//                //$found = null;
+//            } else {
+//                //this is a main function to check uniqueness
+//                //$found = $this->findUniqueByKey($entity);
+//            }
 
 
             if( $found ) {
@@ -701,7 +706,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //if entity is found in DB, then all fields have ID, if not then this function is not executed, because process FieldArrays has original=null
     public function copyField( $entity, $orderinfo, $field, $className, $methodName, $exceptionArr ) {
         $em = $this->_em;
-        //echo "copy Field: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
+        echo "copy Field: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
         //echo $entity;
 
         $addMethodName = "add".$methodName; //i.e. addMrn
