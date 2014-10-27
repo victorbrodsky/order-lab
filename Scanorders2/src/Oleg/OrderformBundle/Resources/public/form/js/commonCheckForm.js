@@ -1320,7 +1320,11 @@ function setPaperDocuments( data, parent ) {
     console.log(parent);
     console.log(data);
 
-    if( !parent.hasClass('scan-partpaper') ) {
+    if( !parent.hasClass('scan-partpaper') && orderformtype != "single" ) {
+        return;
+    }
+
+    if( orderformtype == "single" ) {
         return;
     }
 
