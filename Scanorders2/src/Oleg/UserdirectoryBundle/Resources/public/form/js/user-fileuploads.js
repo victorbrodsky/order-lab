@@ -16,14 +16,14 @@ if( typeof Dropzone !== 'undefined' ) {
 //addRemoveLinks: true or null
 function initFileUpload( holder, data, addRemoveLinks ) {
 
-    console.log('init File Upload');
+    //console.log('init File Upload');
 
     if( $('.dropzone').length == 0 ) {
         return;
     }
 
-    console.log("dropzone holder=");
-    console.log(holder);
+    //console.log("dropzone holder=");
+    //console.log(holder);
 
     var targetid = ".file-upload-dropzone";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
@@ -72,8 +72,8 @@ function initFileUpload( holder, data, addRemoveLinks ) {
         }
     }
 
-    console.log('clickable='+clickable);
-    console.log('addRemoveLinks='+addRemoveLinks);
+    //console.log('clickable='+clickable);
+    //console.log('addRemoveLinks='+addRemoveLinks);
 
     var previewHtml =
         '<div class="dz-preview dz-file-preview" style="width:24%; height:220px; margin:0;">'+
@@ -370,7 +370,7 @@ function getNewDocumentInfoByHolder( commentHolder ) {
 
 function getElementInfoById( id, name ) {
 
-    console.log('id='+id);
+    //console.log('id='+id);
 
     if( !id || id == ""  ) {
         throw new Error("id is empty, id="+id+", name="+name);
@@ -495,7 +495,7 @@ function getNextCollectionCount( holder, fieldSelector ) {
     var maxCount = 0;
 
     var len = holder.find(fieldSelector).length;
-    console.log('len='+len);
+    //console.log('len='+len);
 
     var counter = 0;
 
@@ -503,12 +503,12 @@ function getNextCollectionCount( holder, fieldSelector ) {
 
         var res = getElementInfoById( $(this).attr('id'), $(this).attr('name') );
         var count = res['documentCount'];
-        console.log('count='+count);
+        //console.log('count='+count);
 
         if( parseInt(count) > parseInt(maxCount) ) {
             maxCount = count;
         }
-        console.log('iteration maxCount='+maxCount);
+        //console.log('iteration maxCount='+maxCount);
 
         counter++;
     });
@@ -517,7 +517,7 @@ function getNextCollectionCount( holder, fieldSelector ) {
         maxCount = parseInt(maxCount)+1;
     }
 
-    console.log('maxCount='+maxCount);
+    //console.log('maxCount='+maxCount);
 
     return maxCount;
 }

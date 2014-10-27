@@ -221,7 +221,7 @@ class MultiScanOrderController extends Controller {
                 $emailUtil->sendEmail( $email, $em, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
                 if( isset($_POST['btnSaveOnIdleTimeout']) ) {
-                    return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));
+                    return $this->redirect($this->generateUrl('scan_idlelogout-saveorder',array('flag'=>'saveorder')));
                 }
 
                 if( count($entity->getDataqualityMrnAcc()) > 0 ) {

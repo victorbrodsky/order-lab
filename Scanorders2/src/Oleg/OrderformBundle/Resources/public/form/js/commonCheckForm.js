@@ -1315,17 +1315,22 @@ function setSimpleField( element, text) {
 
 
 
-function setPaperDocuments( data, parent ) {
+function setPaperDocuments( btnEl, parent, data ) {
 
-    console.log(parent);
-    console.log(data);
+    //console.log(parent);
+    //console.log(data);
 
     if( !parent.hasClass('scan-partpaper') && orderformtype != "single" ) {
         return;
     }
 
     if( orderformtype == "single" ) {
-        return;
+        var btnObj = new btnObject(btnEl);
+        //compare button name with holdername: 'patient' ?= 'accession'
+        //console.log("compare:"+btnObj.name+"?="+'part');
+        if( btnObj.name != 'part' ) {
+            return;
+        }
     }
 
     if( data == null  ) {   //clean fields
@@ -1346,13 +1351,13 @@ function setPaperDocuments( data, parent ) {
             return;
         }
 
-        console.log('papers count=' + papers.length );
+        //console.log('papers count=' + papers.length );
 
         for( var i=0; i<papers.length; i++ ) {
 
             var paper = papers[i];
 
-            console.log('paper id='+paper.id);
+            //console.log('paper id='+paper.id);
 
             if( paper['documents'].length == 0 ) {
                 continue;
@@ -1517,6 +1522,26 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
 
+        //dropzone
+        if( elements.eq(i).hasClass('file-upload-dropzone') ) {
+            var dropzoneDom = elements.eq(i).get(0);
+            //console.log('disable/enable dropzone className='+dropzoneDom.className);
+            var myDropzone = dropzoneDom.dropzone;
+
+            if( disabled && !elements.eq(i).hasClass('dropzone-keep-enabled') ) {
+                //disable
+                elements.eq(i).removeClass('dz-clickable'); // remove cursor
+                dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+            } else {
+                //enable
+                elements.eq(i).addClass('dz-clickable'); // add cursor
+                dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+            }
+
+            //console.log('dropzone maxfiles(10?)='+myDropzone.options.maxFiles);
+            continue;
+        }
+
         //don't process elements not belonging to this button
         if( fieldBelongsToButton( element, elements.eq(i) ) === false ) {
             //console.log("this field does not belong to clicked button");
@@ -1541,26 +1566,6 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //don't process 0 disident field: part's Diagnosis :
         if( orderformtype == "single" && id && id.indexOf("disident_0_field") != -1 ) {
-            continue;
-        }
-
-        //dropzone
-        if( elements.eq(i).hasClass('file-upload-dropzone') ) {
-            var dropzoneDom = elements.eq(i).get(0);
-            //console.log('disable/enable dropzone className='+dropzoneDom.className);
-            var myDropzone = dropzoneDom.dropzone;
-
-            if( disabled && !elements.eq(i).hasClass('dropzone-keep-enabled') ) {
-                //disable
-                elements.eq(i).removeClass('dz-clickable'); // remove cursor
-                dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
-            } else {
-                //enable
-                elements.eq(i).addClass('dz-clickable'); // add cursor
-                dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
-            }
-
-            //console.log('dropzone maxfiles(10?)='+myDropzone.options.maxFiles);
             continue;
         }
 
@@ -1726,7 +1731,7 @@ function setElementBlock( element, data, cleanall, key ) {
 
     setPatientNameSexAgeLockedFields(data,parent);
 
-    setPaperDocuments(data,parent);
+    setPaperDocuments(element,parent,data);
 
     //console.log(parent);
     //console.log("key="+key+", single="+single);
@@ -2524,7 +2529,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
 
     cleanPatientNameSexAgeLockedFields(parent);
 
-    setPaperDocuments(null,parent);
+    setPaperDocuments(element,parent,null);
 
     //console.log("clean single=" + single);
 
