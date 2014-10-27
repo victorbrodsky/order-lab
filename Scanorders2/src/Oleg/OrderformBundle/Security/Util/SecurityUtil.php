@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use Oleg\OrderformBundle\Entity\PerSiteSettings;
 
 class SecurityUtil extends UserSecurityUtil {
 
