@@ -1354,9 +1354,13 @@ function setPaperDocuments( data, parent ) {
 
             console.log('paper id='+paper.id);
 
+            if( paper['documents'].length == 0 ) {
+                continue;
+            }
+
             //create paper prototype using data-prototype-partpaper
             var newDropzoneHolder = createDropzoneHolder(existingDropzone);
-            console.log('newDropzoneHolder='+newDropzoneHolder);
+            //console.log('newDropzoneHolder='+newDropzoneHolder);
             var newDropzoneHolderEl = $(newDropzoneHolder);
 
             //attach paper prototype to part after Source Organ
