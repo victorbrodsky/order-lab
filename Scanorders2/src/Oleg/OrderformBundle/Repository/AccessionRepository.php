@@ -284,7 +284,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         }
 
         if( count($accessions) > 1 ) {
-            throw new \Exception( 'More than one Accession found, but single entity is expected:  key='. $accValue. ', type=' . $accKeytype . ', found=' . count($accessions) );
+            //throw new \Exception( 'More than one Accession found, but single entity is expected:  key='. $accValue. ', type=' . $accKeytype . ', found=' . count($accessions) );
+            //TODO: for now use the first accession. Make sure only one unique accession is created
         }
 
         if( count($accessions) == 0 ) {

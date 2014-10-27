@@ -140,7 +140,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         $accessions = $entity->getAccession();
         if( count($accessions) > 1 ) {
-            throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
+            //throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
+            //TODO: for now use the first accession. Make sure only one unique accession is created
         }
 
         //add procedure's name, sex to the corresponding patient fields in case if this is a new procedure (not found in DB)

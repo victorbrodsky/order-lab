@@ -90,6 +90,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->setOid(null);
         }
 
+        //set original order date and provider to the orders with amend status
         if( $originalStatus == 'Amended' ) {
 
             $originalId = $entity->getOid();
@@ -176,6 +177,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $history->setRoles($user->getRoles());
         $history->setCurrentstatus($entity->getStatus());
 
+        //record history
         if( $originalStatus == 'Amended' ) {
             $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Amended Order Submission');
             $history->setEventtype($eventtype);
