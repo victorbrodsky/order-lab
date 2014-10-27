@@ -35,7 +35,7 @@ class PartPaper extends PartArrayFieldAbstract
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document")
      * @ORM\JoinTable(name="scan_partpaper_document",
      *      joinColumns={@ORM\JoinColumn(name="partpaper_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id")}
      *      )
      **/
     protected $documents;
