@@ -198,6 +198,14 @@ class ScanOrderController extends Controller {
             $limit                                          /*limit per page*/
         );
 
+//        $postData = $request->query->all();
+//        $pagination->setParam('sort', $postData['sort']);
+//        $pagination->setParam('direction', $postData['direction']);
+//        $options = $pagination->getPaginatorOptions(); // options given to paginator when paginated
+//        print_r($options);
+//        $paramss = $pagination->getCustomParameters();
+//        print_r($paramss);
+
         //check for active user requests
         $accountreqs = $this->getActiveAccountReq();
 

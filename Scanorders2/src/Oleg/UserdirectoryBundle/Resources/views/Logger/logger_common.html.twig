@@ -13,7 +13,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'logger.eventType') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'eventType.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Event', 'logger.event') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'AD Server Response', 'logger.serverresponse') }}</th>
                 {#<th>Actions</th>#}
@@ -45,7 +45,9 @@
                     </td>
                 {% else %}
                     <td>
-                        <a href="{{ path(scan_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.username }}</a>
+                        {% if entity.user %}
+                            <a href="{{ path(scan_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.username }}</a>
+                        {% endif %}
                     </td>
                 {% endif %}
 

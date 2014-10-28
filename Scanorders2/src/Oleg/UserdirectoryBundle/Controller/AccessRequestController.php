@@ -312,7 +312,18 @@ class AccessRequestController extends Controller
         $dql->innerJoin('user.keytype','keytype');
         $dql->where("accreq.siteName = '" . $sitename . "'" );
         //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
-        $dql->orderBy("accreq.status","DESC");
+        
+		$request = $this->get('request');
+		$postData = $request->query->all();
+		
+		if( !isset($postData['sort']) ) { 
+			$dql->orderBy("accreq.status","DESC");
+		}
+		
+		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       
+		if( isset($postData['sort']) ) {    			
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
 
         $limit = 30;
         $query = $em->createQuery($dql);

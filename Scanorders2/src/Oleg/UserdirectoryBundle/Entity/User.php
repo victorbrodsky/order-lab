@@ -111,13 +111,13 @@ class User extends BaseUser
 
     /**
      * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"orderinlist" = "ASC", "endDate" = "ASC"})
+     * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
      */
     private $administrativeTitles;
 
     /**
      * @ORM\OneToMany(targetEntity="AppointmentTitle", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"orderinlist" = "ASC", "endDate" = "ASC"})
+     * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
      */
     private $appointmentTitles;
 

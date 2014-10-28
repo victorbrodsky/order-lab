@@ -69,6 +69,10 @@ class AdministrativeTitle extends BaseTitle
 
         return $this;
     }
+    public function addBos($boss)
+    {
+        return $this->addBoss($boss);
+    }
     /**
      * Remove boss
      *
@@ -77,6 +81,10 @@ class AdministrativeTitle extends BaseTitle
     public function removeBoss($boss)
     {
         $this->boss->removeElement($boss);
+    }
+    public function removeBos($boss)
+    {
+        $this->removeBoss($boss);
     }
 
     /**

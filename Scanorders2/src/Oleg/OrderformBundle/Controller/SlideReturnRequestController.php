@@ -327,20 +327,23 @@ class SlideReturnRequestController extends Controller
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list, COUNT(slides) as slidecount');
 
+        $dql->leftJoin("list.slide", "slides");
+        $dql->innerJoin('list.provider','provider');
+        $dql->innerJoin('list.orderinfo','orderinfo');
+        $dql->innerJoin('list.institution','institution');
+        $dql->leftJoin('list.proxyuser','proxyuser');
+
         $dql->groupBy('list');
         $dql->addGroupBy('provider.username');
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
         $dql->addGroupBy('institution.name');
 
-        $dql->leftJoin("list.slide", "slides");
-        $dql->innerJoin('list.provider','provider');
-        $dql->innerJoin('list.institution','institution');
-        $dql->leftJoin('list.orderinfo','orderinfo');
-
-        $dql->leftJoin('list.proxyuser','proxyuser');
-
-        $dql->orderBy('list.orderdate','DESC');
+		$postData = $request->query->all();
+		
+		if( !isset($postData['sort']) ) { 
+			$dql->orderBy('list.orderdate','DESC');
+		}
 
         $setParameter = false;
         $criteriastr = "";
@@ -359,6 +362,12 @@ class SlideReturnRequestController extends Controller
         /////////// EOF institution ///////////
 
         $dql->where($criteriastr);
+		
+		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       
+		if( isset($postData['sort']) ) {    			
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
+		
         //echo "dql=".$dql;
 
         $limit = 30;
@@ -366,7 +375,7 @@ class SlideReturnRequestController extends Controller
 
         if( $setParameter ) {
             $query->setParameter('status',$filter);
-        }
+        }				
 
         $paginator  = $this->get('knp_paginator');
         $sliderequests = $paginator->paginate(
@@ -441,14 +450,20 @@ class SlideReturnRequestController extends Controller
         $dql->addGroupBy('provider.username');
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
+        $dql->addGroupBy('institution.name');
 
         $dql->leftJoin("list.slide", "slides");
         $dql->innerJoin('list.provider','provider');
         $dql->leftJoin('list.orderinfo','orderinfo');
+        $dql->innerJoin('list.institution','institution');
 
         $dql->leftJoin('list.proxyuser','proxyuser');
 
-        $dql->orderBy('list.orderdate','DESC');
+		$postData = $request->query->all();
+		
+		if( !isset($postData['sort']) ) { 
+			$dql->orderBy('list.orderdate','DESC');
+		}
 
         $setParameter = false;
         if( $filter == '' || $filter == 'all' ) {
@@ -458,6 +473,11 @@ class SlideReturnRequestController extends Controller
             $setParameter = true;
         }
 
+		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       
+		if( isset($postData['sort']) ) {    			
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
+		
         //echo "dql=".$dql."<br>";
 
         $limit = 30;
@@ -465,7 +485,7 @@ class SlideReturnRequestController extends Controller
 
         if( $setParameter ) {
             $query->setParameter('status',$filter);
-        }
+        }				
 
         $paginator  = $this->get('knp_paginator');
         $sliderequests = $paginator->paginate(

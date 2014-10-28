@@ -29,7 +29,7 @@ class UserRequestController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction( Request $request )
     {
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
@@ -43,7 +43,17 @@ class UserRequestController extends Controller
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         //$dql->leftJoin("accreq.division", "division");
-        $dql->orderBy("accreq.creationdate","DESC");
+		
+		$postData = $request->query->all();
+		
+		if( !isset($postData['sort']) ) { 
+			$dql->orderBy("accreq.creationdate","DESC");
+		}
+		
+		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       
+		if( isset($postData['sort']) ) {    			
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
 
         $limit = 30;
         $query = $em->createQuery($dql);

@@ -74,6 +74,12 @@ class ListController extends Controller
             //echo "no synonyms! <br>";
         }
         //$dql->orderBy("ent.createdate","DESC");
+		
+		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       		
+		$postData = $request->query->all();
+		if( isset($postData['sort']) ) {    			
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
 
         //echo "dql=".$dql."<br>";
 

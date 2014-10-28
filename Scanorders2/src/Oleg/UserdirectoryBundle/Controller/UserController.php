@@ -172,11 +172,16 @@ class UserController extends Controller
         //$dql->leftJoin("user.institutions", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
 
-        if( $current == true ) {
-            $dql->orderBy("user.id","ASC");
-        } else {
-            $dql->orderBy("employmentStatus.terminationDate","DESC");
-            $dql->addOrderBy("user.lastName","ASC");
+        $request = $this->get('request');
+        $postData = $request->query->all();
+
+        if( !isset($postData['sort']) ) {
+            if( $current == true ) {
+                $dql->orderBy("user.id","ASC");
+            } else {
+                $dql->orderBy("employmentStatus.terminationDate","DESC");
+                $dql->addOrderBy("user.lastName","ASC");
+            }
         }
 
         //employmentStatus
@@ -213,6 +218,11 @@ class UserController extends Controller
         }
 
         $dql->where($totalcriteriastr);
+
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+        if( isset($postData['sort']) ) {
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
 
         //echo "dql=".$dql."<br>";
 

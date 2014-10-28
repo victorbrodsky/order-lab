@@ -13,7 +13,7 @@
             {{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}
         </th>
         <th>{{ knp_pagination_sortable(entities, 'Preferred Full Name for Display', 'user.displayName') }}</th>
-        <th>{{ knp_pagination_sortable(entities, 'Administrative Title(s)', 'user.administrativeTitles') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Administrative Title(s)', 'administrativeTitles.name') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'User ID (CWID)', 'user.username') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Preferred Email', 'user.email') }}</th>
         <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.preferredPhone') }}</th>
@@ -42,7 +42,7 @@
             <td>{{ entity.displayName }}</td>
             <td>
                 {% for administrativeTitle in entity.administrativeTitles %}
-                    {{ administrativeTitle.name }}<br>
+                    "{{ administrativeTitle.name }}"<br>
                 {% endfor %}
 
             </td>

@@ -37,9 +37,21 @@ class LoggerController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
         $dql =  $repository->createQueryBuilder("logger");
         $dql->select('logger');
+        $dql->innerJoin('logger.eventType', 'eventType');
         $dql->where("logger.siteName = '".$sitename."'");
-        $dql->orderBy("logger.creationdate","DESC");
+        
+		$request = $this->get('request');
+		$postData = $request->query->all();
+		
+		if( !isset($postData['sort']) ) { 
+			$dql->orderBy("logger.creationdate","DESC");
+		}
 
+		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       
+		if( isset($postData['sort']) ) {    			
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
+		
         $limit = 30;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
