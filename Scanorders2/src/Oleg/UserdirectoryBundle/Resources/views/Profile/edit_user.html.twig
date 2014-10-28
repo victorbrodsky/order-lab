@@ -31,16 +31,8 @@
         {% if formfield.orderinlist is defined %}
             {{ formmacros.field(formfield.orderinlist) }}
         {% endif %}
-        {{ formmacros.field(formfield.priority) }}
+        {{ formmacros.field_notempty(formfield.priority,cicle) }}
         {{ formmacros.field(formfield.name) }}
-
-        {#{% if formfield.boss is defined %}#}
-            {#{% if formfield.vars.value and formfield.vars.value.boss != "" or cicle == 'create_user' or cicle == 'edit_user' %}#}
-                {#{% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL and formfield.vars.value.boss|length > 0 %}#}
-                    {#{{ userform.displayUserArray( formfield.boss, formfield.vars.value.boss, cicle, sitename, "Reports to:" ) }}#}
-                {#{% endif %}#}
-            {#{% endif %}#}
-        {#{% endif %}#}
 
         {#boss field#}
         {% if formfield.boss is defined %}
@@ -113,7 +105,12 @@
 
 
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
+
+        {% if formfield.endDate.vars.value or not cicle == "show_user" %}
+            {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
+        {% else %}
+            {% do formfield.endDate.setRendered %}
+        {% endif %}
 
         {#On the user profile page, always hide "Percent Effort:" in both Academic and Administrative titles if they are empty#}
         {% if cicle != 'show_user' or (formfield.vars.value and formfield.vars.value.effort) %}
@@ -192,10 +189,10 @@
         {% endif %}
 
         {{ userform.emailPhoneField(formfield.phone,cicle,'phone',"") }}
-        {{ userform.emailPhoneField(formfield.pager,cicle,'phone',"") }}
-        {{ userform.emailPhoneField(formfield.mobile,cicle,'phone',"") }}
-        {{ formmacros.field(formfield.fax) }}
-        {{ userform.emailPhoneField(formfield.email,cicle,'email',"") }}
+        {{ userform.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
+        {{ userform.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
+        {{ formmacros.field_notempty(formfield.fax,cicle) }}
+        {{ userform.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
 
         {% if homeLocation == false %}
 
@@ -227,19 +224,19 @@
             {% do formfield.room.setRendered %}
         {% endif %}
 
-        {{ formmacros.field(formfield.street1) }}
-        {{ formmacros.field(formfield.street2) }}
-        {{ formmacros.field(formfield.city) }}
-        {{ formmacros.field(formfield.state) }}
-        {{ formmacros.field(formfield.zip) }}
+        {{ formmacros.field_notempty(formfield.street1,cicle) }}
+        {{ formmacros.field_notempty(formfield.street2,cicle) }}
+        {{ formmacros.field_notempty(formfield.city,cicle) }}
+        {{ formmacros.field_notempty(formfield.state,cicle) }}
+        {{ formmacros.field_notempty(formfield.zip,cicle) }}
 
         {% if homeLocation == false %}
             {{ formmacros.field(formfield.buildingName) }}
             {{ formmacros.field(formfield.buildingAbbr) }}
             {{ formmacros.field(formfield.floor) }}
-            {{ formmacros.field(formfield.suit) }}
-            {{ formmacros.field(formfield.mailbox) }}
-            {{ formmacros.field(formfield.associatedCode) }}
+            {{ formmacros.field_notempty(formfield.suit,cicle) }}
+            {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
+            {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
         {% else %}
             {% do formfield.buildingName.setRendered %}
             {% do formfield.buildingAbbr.setRendered %}
@@ -251,13 +248,19 @@
 
         {#In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.#}
         {% if formfield.associatedClia is defined %}
-            {{ formmacros.field(formfield.associatedClia) }}
-            {{ formmacros.fieldDateLabel(formfield.associatedCliaExpDate,'allow-future-date') }}
-            {{ formmacros.field(formfield.associatedPfi) }}
+            {{ formmacros.field_notempty(formfield.associatedClia,cicle) }}
+
+            {% if formfield.associatedCliaExpDate.vars.value or not cicle == "show_user" %}
+                {{ formmacros.fieldDateLabel(formfield.associatedCliaExpDate,'allow-future-date') }}
+            {% else %}
+                {% do formfield.associatedCliaExpDate.setRendered %}
+            {% endif %}
+
+            {{ formmacros.field_notempty(formfield.associatedPfi,cicle) }}
         {% endif %}
 
 
-        {{ formmacros.field(formfield.comment) }}
+        {{ formmacros.field_notempty(formfield.comment,cicle) }}
 
     </div>
 {% endmacro %}
@@ -364,6 +367,15 @@
 
 {% macro userUrlLink() %}
     <a href="{{ path('employees_showuser_notstrict', { 'id': 'user_replacement_id' }) }}">{{ 'user_replacement_username' }}</a><br>
+{% endmacro %}
+
+{% macro emailPhoneField_notempty(field,cicle,type,label) %}
+    {% import _self as formuser %}
+    {% if field.vars.value or not cicle == "show_user" %}
+        {{ formuser.emailPhoneField(field,cicle,type,label) }}
+    {% else %}
+        {% do field.setRendered %}
+    {% endif %}
 {% endmacro %}
 
 {% macro emailPhoneField(field,cicle,type,label) %}
@@ -642,14 +654,14 @@
 
                     {{ formmacros.field(form.displayName) }}
                     {{ formmacros.field(form.firstName) }}
-                    {{ formmacros.field(form.middleName) }}
+                    {{ formmacros.field_notempty(form.middleName,cicle) }}
                     {{ formmacros.field(form.lastName) }}
 
                     {{ userform.emailPhoneField(form.email,cicle,'email',"") }}
 
                     {{ userform.emailPhoneField(form.preferredPhone,cicle,'phone',"") }}
 
-                    {{ formmacros.field(form.initials) }}
+                    {{ formmacros.field_notempty(form.initials,cicle) }}
 
                 </div>
             </div>

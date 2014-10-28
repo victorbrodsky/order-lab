@@ -36,6 +36,17 @@
 {% endmacro %}
 
 
+{% macro field_notempty( field, cicle, label, attr ) %}
+    {% import _self as formmacros %}
+    {#{% if field.vars.value or not "show" in cicle %}#}
+    {% if field.vars.value or not (cicle == "show" or cicle == "show_user") %}
+        {{ formmacros.field(field, label, attr) }}
+    {% else %}
+        {% do field.setRendered %}
+    {% endif %}
+{% endmacro %}
+
+
 {% macro field( field, label, attr ) %}
     {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
     <p>
