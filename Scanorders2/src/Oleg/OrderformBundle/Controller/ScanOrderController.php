@@ -70,6 +70,8 @@ class ScanOrderController extends Controller {
         );
     }
 
+
+
     /**
      * Lists all OrderInfo entities.
      *
@@ -171,7 +173,13 @@ class ScanOrderController extends Controller {
                 $dql->addOrderBy("orderinfo.orderdate","DESC");
             }
         }
-        
+
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+        if( $sort && $sort != '' ) {
+            $postData = $request->query->all();
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
+
         //echo "dql=".$dql;
 
         if( $increaseMaxExecTime ) {
@@ -186,8 +194,8 @@ class ScanOrderController extends Controller {
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
+            $this->get('request')->query->get('page', 1),   /*page number*/
+            $limit                                          /*limit per page*/
         );
 
         //check for active user requests
@@ -202,8 +210,28 @@ class ScanOrderController extends Controller {
             ini_set('max_execution_time', $max_exec_time); //set back to the original value
         }
 
+        ////////////////// Testing pagination //////////////////
+//        $em    = $this->get('doctrine.orm.entity_manager');
+//        $postData = $request->query->all();
+//        $dql1   = "SELECT orderinfo, COUNT(slides.id) AS slidecount FROM OlegOrderformBundle:OrderInfo orderinfo INNER JOIN orderinfo.slide slides GROUP BY orderinfo ORDER BY $postData[sort] $postData[direction]";
+//        $query1 = $em->createQuery($dql1);
+//        echo "dql=".$dql1."<br>";
+//        $paginator  = $this->get('knp_paginator');
+//        $pagination1 = $paginator->paginate(
+//            $query1,
+//            $this->get('request')->query->get('page', 1)/*page number*/,
+//            10  /*limit per page*/
+//        );
+//        foreach( $pagination1 as $page ) {
+//            //echo "id=".$page->getId()."<br>";
+//            echo "id=".$page[0]->getId()."<br>";
+//            //echo "1=".$page['slidecount']."<br>";
+//            //print_r($page['orderinfo']);
+//        }
+        //exit('end');
+        ////////////////// EOF Testing pagination //////////////////
+
         //echo "<br>pagination count=".count($pagination)."<br>";
-        //exit();
 
         return array(
             'form' => $form->createView(),
@@ -216,6 +244,7 @@ class ScanOrderController extends Controller {
             'comments' => $processorComments
         );
     }
+
 
 
     //requirements={"id" = "\d+"}

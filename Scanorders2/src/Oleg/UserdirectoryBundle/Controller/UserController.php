@@ -1284,27 +1284,9 @@ class UserController extends Controller
         ///////////////////////// process documents /////////////////////////
         $comment = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $comment );
 
-//        echo "comment count=".count($comment->getDocuments())."<br>";
-//        foreach( $comment->getDocuments() as $doc ) {
-//            echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
-//            //if document does not have an original or unique names then this is a newly added document => find it in DB and attach it to this comment
-//            if( $doc->getId() && ( !$doc->getOriginalname() || !$doc->getUniquename() ) ) {
-//
-//                $comment->removeDocument($doc);
-//
-//                $docDb = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
-//                if( $docDb ) {
-//                    echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
-//                    $comment->addDocument($docDb);
-//                }
-//            }
-//        }
-//        echo "after processing comment count=".count($comment->getDocuments())."<br>";
-//        foreach( $comment->getDocuments() as $doc ) {
-//            echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
-//        }
-       //exit();
-       ///////////////////////// EOF process documents /////////////////////////
+        if( $comment == null ) {
+            return;
+        }
 
         //set author if not set
         $this->setUpdateInfo($comment);

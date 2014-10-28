@@ -105,6 +105,7 @@
         {% for entitycomplex in pagination  %}
 
             {% set entity = entitycomplex|first %}
+
             {% set trclassname = "" %}
             {% set statAndNotFilled = false  %}
             {% set Filled = "Filled" in entity.status.name %}

@@ -170,11 +170,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $validPaper = $formEntity->obtainValidField('paper');
 
-            $validPaper = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $validPaper );
+            $validPaper = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $validPaper, $formEntity );
 
             //add new paper to $entity
-            if( count($validPaper->getDocuments()) > 0 ) {
-                $entity->addPaper($validPaper);
+            if( $validPaper != null ) {
+                $docCount = count($validPaper->getDocuments());
+                if( $docCount > 0 ) {
+                    $entity->addPaper($validPaper);
+                } else {
+                    $formEntity->removePaper($validPaper);
+                }
             }
 
             echo "papers count=".count($entity->getPaper())."<br>";
