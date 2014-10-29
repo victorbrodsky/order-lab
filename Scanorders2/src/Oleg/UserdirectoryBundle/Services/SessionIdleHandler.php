@@ -110,7 +110,8 @@ class SessionIdleHandler
             $routeName == 'employees_setloginvisit' ||
             $routeName == 'logout' ||
             $routeName == 'getmaxidletime' ||
-            $routeName == '_wdt'
+            $routeName == '_wdt' ||
+            $routeName == 'keepalive'
         ) {
             $dontSetRedirect++;
         }

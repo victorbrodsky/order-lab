@@ -428,4 +428,47 @@ class UtilController extends Controller {
         return $response;
     }
 
+
+    /**
+     * @Route("/common/user-data-search/{type}/{search}", name="employees_user-data-search")
+     * @Method("GET")
+     */
+    public function getUserDataSearchAction(Request $request) {
+
+        $type = trim( $request->get('type') );
+        $search = trim( $request->get('search') );
+
+        //echo "type=".$type."<br>";
+
+        if( $type == "user" ) {
+            $className = 'OlegUserdirectoryBundle:User';
+            $field = "displayName";
+        }
+
+        if( $type == "title" ) {
+            $className = 'OlegUserdirectoryBundle:AdministrativeTitle';
+            $field = "name";
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from($className, 'e')
+            ->select("e.id as id, e.".$field." as text")
+            ->orderBy("e.".$field,"ASC");
+
+        if( $search == "min" ) {
+            $query->where("e.".$field." IS NOT NULL AND e.id < 50");
+        } else {
+            $query->where("e.".$field." = '".$search."'");
+        }
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 }
