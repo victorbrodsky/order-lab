@@ -82,26 +82,32 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-        $response = new RedirectResponse($this->router->generate($this->siteName.'_home'));
 
-//        $referer = $request->get('_referer');
-//        echo "referer=".$referer."<br>";
-//
-//        $referer = $request->headers->get('Referer');
-//        echo "referer=".$referer."<br>";
-//
-//        $referer = $request->getSession()->get('_security.target_path');
-//        echo "referer=".$referer."<br>";
-//
-//        exit();
-//
-//        $response = new RedirectResponse($request->headers->get('Referer'));
+        //Issue #381: redirect non-processor users to the previously requested page before authentication
 
+        //$response = new RedirectResponse($this->router->generate($this->siteName.'_home'));
+        //return $response;
+
+        //I should be redirected to the URL I was trying to visit after login.
+        $indexLastRoute = '_security.ldap_employees_firewall.target_path';
+        $lastRoute = $request->getSession()->get($indexLastRoute);
+        //exit("lastRoute=".$lastRoute."<br>");
+
+        $loginpos = strpos($lastRoute, '/login');
+        $nopermpos = strpos($lastRoute, '/no-permission');
+        $nocheck = strpos($lastRoute, '/check/');
+
+        if( $lastRoute && $lastRoute != '' && $loginpos === false && $nopermpos === false && $nocheck === false ) {
+            $referer_url = $lastRoute;
+        } else {
+            $referer_url = $this->router->generate($this->siteName.'_home');
+        }
+
+        //echo("referer_url=".$referer_url);
+
+        $response = new RedirectResponse($referer_url);
         return $response;
 
-
-        // URL for redirect the user to where they were before the login process begun if you want.
-        // $referer_url = $request->headers->get('referer');
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)

@@ -4,66 +4,10 @@
     Employee Directory
 {% endblock %}
 
-{% block contentleft %}
-
-    {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
-
-
-    <div style="margin-top: 100px;">
-        <p>
-            Welcome to the Employee Directory!
-        </p>
-
-        {% if app.security.getToken().getUser.getEmail == "" %}
-            <p>
-                If you would like to receive email notifications regarding your orders, please take a moment to update
-                <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
-                by adding your email account.
-            </p>
-        {% endif %}
-
-
-        <p>
-            Please review and update your <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
-        </p>
-
-
-        <br>
-
-        <p>
-
-            {% if is_granted('ROLE_USERDIRECTORY_ADMIN') %}
-
-                There are:
-
-                <ul>
-
-                    <li>
-                        <a href="{{ path(employees_sitename~'_accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s)</a>
-                    </li>
-
-                    <li>
-                        <a href="{{ path(employees_sitename~'_listusers',{'filter': 'Pending Administrative Review'}) }}">{{ pendingadminreview }} user profile(s) with data pending administrative review and approval</a>
-                    </li>
-
-                </ul>
-
-            {% endif %}
-
-        </p>
-
-
-    </div>
-
-{% endblock %}
-
-
-
-
 
 {% block content %}
 
-    <div style="margin-top:50px;">
+    <div style="margin-top:25px;">
 
         <form action="{{ path(employees_sitename~'_home') }}" method="get" class="well form-search">
             <div class="row">
@@ -82,8 +26,8 @@
         </form>
 
         {#<div class="input-group">#}
-            {#<input type="text" class="form-control">#}
-            {#<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>#}
+        {#<input type="text" class="form-control">#}
+        {#<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>#}
         {#</div>#}
 
 
@@ -96,3 +40,63 @@
 
 
 {% endblock %}
+
+
+
+{% block contentleft %}
+
+    {% if entities is not defined or entities|length == 0 %}
+
+        <div style="margin-top:25px;">
+
+            <p>
+                Welcome to the Employee Directory!
+            </p>
+
+            {% if app.security.getToken().getUser.getEmail == "" %}
+                <p>
+                    If you would like to receive email notifications regarding your orders, please take a moment to update
+                    <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                    by adding your email account.
+                </p>
+            {% endif %}
+
+
+            <p>
+                Please review and update your <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
+            </p>
+
+
+            <br>
+
+            <p>
+
+                {% if is_granted('ROLE_USERDIRECTORY_ADMIN') %}
+
+                    {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
+
+                    There are:
+
+                    <ul>
+
+                        <li>
+                            <a href="{{ path(employees_sitename~'_accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s)</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ path(employees_sitename~'_listusers',{'filter': 'Pending Administrative Review'}) }}">{{ pendingadminreview }} user profile(s) with data pending administrative review and approval</a>
+                        </li>
+
+                    </ul>
+
+                {% endif %}
+
+            </p>
+
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}
+

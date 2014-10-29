@@ -313,27 +313,29 @@ class UserController extends Controller
         //service
         $criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
 
-        //WCMC Employee Identification Number (EIN)
-        //NPI
-        $dql->leftJoin("credentials.identifiers", "identifiers");
-        //$criteriastr .= "identifiers.field LIKE '%".$search."%' OR ";
-        $criteriastr .= "identifiers.field='".$search."' OR ";
-
-        //NYPH Code
-        $dql->leftJoin("credentials.codeNYPH", "codeNYPH");
-        //$criteriastr .= "codeNYPH.field LIKE '%".$search."%' OR ";
-        $criteriastr .= "codeNYPH.field='".$search."' OR ";
-
         //Associated NYPH Code in Locations
         //$criteriastr .= "locations.associatedCode LIKE '%".$search."%' OR ";
         $criteriastr .= "locations.associatedCode='".$search."' OR ";
 
-        //License Number
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            //WCMC Employee Identification Number (EIN)
+            //NPI
+            $dql->leftJoin("credentials.identifiers", "identifiers");
+            //$criteriastr .= "identifiers.field LIKE '%".$search."%' OR ";
+            $criteriastr .= "identifiers.field='".$search."' OR ";
 
-        //Specialty (in Board Certifications)
-        $dql->leftJoin("credentials.boardCertification", "boardCertification");
-        $dql->leftJoin("boardCertification.specialty", "specialty");
-        $criteriastr .= "specialty.name LIKE '%".$search."%' OR ";
+            //NYPH Code
+            $dql->leftJoin("credentials.codeNYPH", "codeNYPH");
+            //$criteriastr .= "codeNYPH.field LIKE '%".$search."%' OR ";
+            $criteriastr .= "codeNYPH.field='".$search."' OR ";
+
+            //License Number
+
+            //Specialty (in Board Certifications)
+            $dql->leftJoin("credentials.boardCertification", "boardCertification");
+            $dql->leftJoin("boardCertification.specialty", "specialty");
+            $criteriastr .= "specialty.name LIKE '%".$search."%' OR ";
+        }
 
         //Position Type
         $criteriastr .= "appointmentTitles.position LIKE '%".$search."%'";

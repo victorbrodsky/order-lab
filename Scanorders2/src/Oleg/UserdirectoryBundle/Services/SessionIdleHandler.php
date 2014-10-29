@@ -48,7 +48,7 @@ class SessionIdleHandler
         }
 
         //*************** set url for redirection ***************//
-        //$this->setSessionLastRoute( $event );
+        $this->setSessionLastRoute( $event );
         //*************** end of set url for redirection ***************//
 
         if( $this->maxIdleTime > 0 ) {

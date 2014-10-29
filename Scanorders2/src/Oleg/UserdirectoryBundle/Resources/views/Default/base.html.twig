@@ -132,18 +132,19 @@
 
         </div>
 
-        <div>
+
+        <div class="order-content text-center col-xs-12">
+            {% block content %}{% endblock %}
+        </div>
+
+        <div class="order-content col-xs-12">
             {% block contentleft %}{% endblock %}
         </div>
 
         <div class="order-content text-center col-xs-12">
-            {% block content %}{% endblock %}
-
             <!-- footer -->
             {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
         </div>
-
-
 
 
         {% block mainjs %}

@@ -84,86 +84,33 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $options['eventtype'] = "Successful Login";
         $options['event'] = 'Successful login to Scan Order site';
-        $response = new RedirectResponse($this->router->generate('scan_home'));
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-        return $response;
+        //Issue #381: redirect non-processor users to the previously requested page before authentication
 
-//        //if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
-//        if( $this->security->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-//
-//            //echo "ROLE SCANORDER PROCESSOR <br>";
-//            //exit();
-//
-//            //$response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
-//            $response = new RedirectResponse($this->router->generate('scan_home'));
-//            $options['eventtype'] = "Successful Login";
-//            $options['event'] = 'Successful login as Scan Processor to Scan Order site';
-//
-//        }
-//        elseif(
-//            $this->security->isGranted('ROLE_SCANORDER_SUBMITTER') ||
-//            $this->security->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
-//        ) {
-//
-//
-//            if( 1 ) {
-//                //redirect all users to the home page
-//                $response = new RedirectResponse($this->router->generate('scan_home'));
-//                $options['eventtype'] = "Successful Login";
-//                $options['event'] = 'Successful login to Scan Order site';
-//
-//            } else {
-//                //redirect non-processor users to the previously requested page before authentication
-//                $indexLastRoute = '_security.aperio_ldap_firewall.target_path';   //'last_route';
-//                $lastRoute = $request->getSession()->get($indexLastRoute);
-//                //exit("lastRoute=".$lastRoute."<br>");
-//
-//                $loginpos = strpos($lastRoute, '/login');
-//                $nopermpos = strpos($lastRoute, '/no-permission');
-//                $nocheck = strpos($lastRoute, '/check/');
-//                //setloginvisit
-//
-//                if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false && $nocheck === false ) {
-//                    //$referer_url = $this->router->generate( $lastRoute );
-//                    $referer_url = $lastRoute;
-//                } else {
-//                    $referer_url = $this->router->generate('scan_home');
-//                }
-//
-//                //echo("referer_url=".$referer_url);
-//                //exit('<br>not processor');
-//
-//                $response = new RedirectResponse($referer_url);
-//
-//                $options['eventtype'] = "Successful Login";
-//                $options['event'] = 'Successful login to Scan Order site';
-//
-//            }
-//
-//        }
-//        else {
-//
-//            //echo "user role not ok!";
-//            //exit();
-//            $response = new RedirectResponse( $this->router->generate($this->siteName.'_logout') );
-//            $options['eventtype'] = "Unsuccessful Login Attempt";
-//            $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/ordering provider submitter";
-//
-//        }
-//
-////        $lastRouteArr = $request->getSession()->get('last_route_arr');
-////        echo "<br>lastRouteArr:<br>";
-////        print_r($lastRouteArr);
-////        $request->getSession()->set('last_route_arr', array());
-////        echo "Session:<br>";
-////        print_r($request->getSession());
-////        exit("<br>");
-//
-//        $userUtil->setLoginAttempt($request,$this->security,$em,$options);
-//
-//        return $response;
+        //$response = new RedirectResponse($this->router->generate($this->siteName.'_scan_home'));
+        //return $response;
+
+        //I should be redirected to the URL I was trying to visit after login.
+        $indexLastRoute = '_security.aperio_ldap_firewall.target_path';
+        $lastRoute = $request->getSession()->get($indexLastRoute);
+        //exit("lastRoute=".$lastRoute."<br>");
+
+        $loginpos = strpos($lastRoute, '/login');
+        $nopermpos = strpos($lastRoute, '/no-permission');
+        $nocheck = strpos($lastRoute, '/check/');
+
+        if( $lastRoute && $lastRoute != '' && $loginpos === false && $nopermpos === false && $nocheck === false ) {
+            $referer_url = $lastRoute;
+        } else {
+            $referer_url = $this->router->generate($this->siteName.'_home');
+        }
+
+        //echo("referer_url=".$referer_url);
+
+        $response = new RedirectResponse($referer_url);
+        return $response;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
