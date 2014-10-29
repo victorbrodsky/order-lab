@@ -105,12 +105,7 @@
 
 
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
-
-        {% if formfield.endDate.vars.value or not cicle == "show_user" %}
-            {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
-        {% else %}
-            {% do formfield.endDate.setRendered %}
-        {% endif %}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cicle,'allow-future-date') }}
 
         {#On the user profile page, always hide "Percent Effort:" in both Academic and Administrative titles if they are empty#}
         {% if cicle != 'show_user' or (formfield.vars.value and formfield.vars.value.effort) %}
@@ -249,13 +244,7 @@
         {#In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.#}
         {% if formfield.associatedClia is defined %}
             {{ formmacros.field_notempty(formfield.associatedClia,cicle) }}
-
-            {% if formfield.associatedCliaExpDate.vars.value or not cicle == "show_user" %}
-                {{ formmacros.fieldDateLabel(formfield.associatedCliaExpDate,'allow-future-date') }}
-            {% else %}
-                {% do formfield.associatedCliaExpDate.setRendered %}
-            {% endif %}
-
+            {{ formmacros.fieldDateLabel_notempty(formfield.associatedCliaExpDate,cicle,'allow-future-date') }}
             {{ formmacros.field_notempty(formfield.associatedPfi,cicle) }}
         {% endif %}
 
@@ -333,9 +322,9 @@
             </div>
         {% endif %}
 
-        {{ formmacros.field(formfield.field) }}
-        {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.field,cicle) }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cicle,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cicle,'allow-future-date') }}
 
     </div>
 {% endmacro %}
@@ -898,7 +887,7 @@
                                         <div class="user-personalinfo-holder">
 
                                             {{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}
-                                            {{ formmacros.field(form.credentials.ssn) }}
+                                            {{ formmacros.field_notempty(form.credentials.ssn,cicle) }}
                                             {{ formmacros.field(form.credentials.emergencyContactInfo) }}
 
                                         </div>
@@ -906,103 +895,148 @@
                                 </div>
                             </div>
 
+
                             {#Certificate of Qualification#}
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" href="#coq">
-                                            Certificate of Qualification
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="coq" class="panel-collapse collapse in">
-                                    <div class="panel-body">
-                                        <div class="user-coq-holder">
 
-                                            {{ formmacros.field(form.credentials.numberCOQ) }}
-                                            {{ formmacros.fieldDateLabel(form.credentials.coqExpirationDate,'allow-future-date') }}
+                            {#HIDE ENTIRE SECTION Certificate of Qualification if both fields are empty / no array members#}
+                            {% if form.credentials.numberCOQ.vars.value or form.credentials.coqExpirationDate.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                                {% set showCOQ = true %}
+                            {% else %}
+                                {% set showCOQ = false %}
+                            {% endif %}
 
+                            {% if showCOQ %}
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#coq">
+                                                Certificate of Qualification
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="coq" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="user-coq-holder">
+
+                                                {{ formmacros.field_notempty(form.credentials.numberCOQ,cicle) }}
+                                                {{ formmacros.fieldDateLabel_notempty(form.credentials.coqExpirationDate,cicle,'allow-future-date') }}
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                {% do form.credentials.numberCOQ.setRendered %}
+                                {% do form.credentials.coqExpirationDate.setRendered %}
+                            {% endif %}
+
 
                             {#Clinical Laboratory Improvement Amendments (CLIA)#}
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" href="#clia">
-                                            Clinical Laboratory Improvement Amendments (CLIA)
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="clia" class="panel-collapse collapse in">
-                                    <div class="panel-body">
-                                        <div class="user-clia-holder">
+                            {#HIDE ENTIRE SECTION Clinical Laboratory Improvement Amendments (CLIA) if both fields are empty / no array members#}
+                            {% if form.credentials.numberCLIA.vars.value or form.credentials.cliaExpirationDate.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                                {% set showCLIA = true %}
+                            {% else %}
+                                {% set showCLIA = false %}
+                            {% endif %}
 
-                                            {{ formmacros.field(form.credentials.numberCLIA) }}
-                                            {{ formmacros.fieldDateLabel(form.credentials.cliaExpirationDate,'allow-future-date') }}
+                            {% if showCLIA %}
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#clia">
+                                                Clinical Laboratory Improvement Amendments (CLIA)
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="clia" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="user-clia-holder">
 
+                                                {{ formmacros.field_notempty(form.credentials.numberCLIA,cicle) }}
+                                                {{ formmacros.fieldDateLabel_notempty(form.credentials.cliaExpirationDate,cicle,'allow-future-date') }}
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                {% do form.credentials.numberCLIA.setRendered %}
+                                {% do form.credentials.cliaExpirationDate.setRendered %}
+                            {% endif %}
 
 
                             {#NY Permanent Facility Identifier (PFI)#}
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" href="#pfi">
-                                            NY Permanent Facility Identifier (PFI)
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="pfi" class="panel-collapse collapse in">
-                                    <div class="panel-body">
-                                        <div class="user-pfi-holder">
+                            {#HIDE ENTIRE SECTION NY Permanent Facility Identifier (PFI) if both fields are empty / no array members#}
+                            {% if form.credentials.numberPFI.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                                {% set showPFI = true %}
+                            {% else %}
+                                {% set showPFI = false %}
+                            {% endif %}
 
-                                            {{ formmacros.field(form.credentials.numberPFI) }}
-
+                            {% if showPFI %}
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#pfi">
+                                                NY Permanent Facility Identifier (PFI)
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="pfi" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="user-pfi-holder">
+                                                {{ formmacros.field_notempty(form.credentials.numberPFI,cicle) }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                {% do form.credentials.numberPFI.setRendered %}
+                            {% endif %}
 
 
                             {#Code NYPH#}
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" href="#codenyph">
-                                            NYPH Code(s)
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="codenyph" class="panel-collapse collapse in">
-                                    <div class="panel-body">
+                            {#HIDE ENTIRE SECTION NYPH Code(s) if all three fields are empty / no array members#}
+                            {% set showNYPH = false %}
+                            {% for codeNYPH in form.credentials.codeNYPH %}
+                                {% if codeNYPH.field.vars.value or codeNYPH.startDate.vars.value or codeNYPH.endDate.vars.value or cicle != 'show_user' %}
+                                    {% set showNYPH = true %}
+                                {% endif %}
+                            {% endfor %}
 
-                                        <div class="user-codenyph-holder">
-
-                                            {% for codeNYPH in form.credentials.codeNYPH %}
-                                                {{ userform.codenyphs(codeNYPH,cicle,'user-codenyph','noprototype') }}
-                                            {% endfor %}
-                                            {% if cicle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-codenyph')" type='button'>Add NYPH Code</button>
-                                            {% endif %}
-
+                            {% if showNYPH  %}
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#codenyph">
+                                                NYPH Code(s)
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="codenyph" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="user-codenyph-holder">
+                                                {% for codeNYPH in form.credentials.codeNYPH %}
+                                                    {{ userform.codenyphs(codeNYPH,cicle,'user-codenyph','noprototype') }}
+                                                {% endfor %}
+                                                {% if cicle != 'show_user' %}
+                                                    <button class="btn btn-default" onClick="addBaseTitle(this,'user-codenyph')" type='button'>Add NYPH Code</button>
+                                                {% endif %}
+                                            </div>
                                         </div>
-
                                     </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                {% do form.credentials.codeNYPH.setRendered %}
+                            {% endif %}
+                            {#EOF Code NYPH#}
 
-                            {#State Licenses#}
+                            {#Medical Licenses#}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" href="#stateLicense">
-                                            State License(s)
+                                            Medical License(s)
                                         </a>
                                     </h4>
                                 </div>
@@ -1015,7 +1049,7 @@
                                                 {{ userform.stateLicenses(stateLicense,cicle,'user-statelicense','noprototype') }}
                                             {% endfor %}
                                             {% if cicle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-statelicense')" type='button'>Add State License</button>
+                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-statelicense')" type='button'>Add Medical License</button>
                                             {% endif %}
 
                                         </div>

@@ -104,6 +104,24 @@ doctrine:
 #                    OlegOrderformBundle: ~
 
 
+monolog:
+    handlers:
+#        applog:
+#            type: stream
+#            path: /logs/symfony.log
+#            level: error
+        main:
+            type: fingers_crossed
+            action_level: warning
+            handler: file
+        file:
+            type: stream
+            level: debug
+        syslog:
+            type: syslog
+            level: error
+
+
 
 # Swiftmailer Configuration
 swiftmailer:

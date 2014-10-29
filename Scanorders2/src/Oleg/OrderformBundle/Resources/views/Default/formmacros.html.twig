@@ -72,6 +72,15 @@
     </p>
 {% endmacro %}
 
+{% macro fieldDateLabel_notempty( field, cicle, classname, attr ) %}
+    {% import _self as formmacros %}
+    {% if field.vars.value or not (cicle == "show" or cicle == "show_user") %}
+        {{ formmacros.fieldDateLabel(field, classname, attr) }}
+    {% else %}
+        {% do field.setRendered %}
+    {% endif %}
+{% endmacro %}
+
 {% macro fieldDateLabel( field, classname, attr ) %}
     <p>
     <div class="row">

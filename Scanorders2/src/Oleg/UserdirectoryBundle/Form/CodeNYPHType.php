@@ -20,7 +20,7 @@ class CodeNYPHType extends AbstractType
         ));
 
         $builder->add('startDate', 'date', array(
-            'label' => "Start Date:",
+            'label' => "NYPH Code Start Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
@@ -28,7 +28,7 @@ class CodeNYPHType extends AbstractType
         ));
 
         $builder->add('endDate', 'date', array(
-            'label' => "End Date:",
+            'label' => "NYPH Code End Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
