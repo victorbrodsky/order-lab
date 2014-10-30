@@ -393,7 +393,7 @@ class Patient extends ObjectAbstract
     public function addLastname($lastname)
     {
 
-        //echo "Patient add lastname: lastname=".$lastname."<br>";
+        echo "Patient add lastname: lastname=".$lastname.", id=".$lastname->getId().", status=".$lastname->getStatus()."<br>";
 
 //        if( $lastname == null ) {
 //            $lastname = new PatientLastname();
@@ -767,7 +767,7 @@ class Patient extends ObjectAbstract
         return $patientFullName;
     }
 
-    //if simple field already exists. Compare by field name
+    //if simple field already exists. Compare by field name. This is to prevent creating similar fields
     public function hasSimpleField( $field, $getMethod ) {
 
         foreach( $this->$getMethod() as $obj ) {

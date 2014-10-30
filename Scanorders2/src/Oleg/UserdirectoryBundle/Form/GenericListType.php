@@ -33,12 +33,17 @@ class GenericListType extends AbstractType
 //                ));
 //        }
 
-        if( $this->mapper['className'] == "Roles" ) {
-            $builder
-                ->add('alias',null,array(
-                    'label'=>'Alias:',
-                    'attr' => array('class' => 'combobox combobox-width')
-                ));
+        //echo "mapper class name=".$this->mapper['className']."<br>";
+
+        if( strtolower($this->mapper['className']) == strtolower("Roles") ) {
+            $builder->add('alias',null,array(
+                'label'=>'Alias:',
+                'attr' => array('class' => 'form-control')
+            ));
+            $builder->add('description',null,array(
+                'label'=>'Capabilities:',
+                'attr' => array('class' => 'textarea form-control')
+            ));
         }
 
         $builder->add('list', new ListType($this->params, $this->mapper), array(

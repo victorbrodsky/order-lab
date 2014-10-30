@@ -18,138 +18,138 @@ use Oleg\OrderformBundle\Entity\DataQualityAge;
 class ProcedureRepository extends ArrayFieldAbstractRepository
 {
 
-    //$entity is procedure
-    public function processEntity_OLD( $entity, $orderinfo, $original=null ) {
-
-        if( !$entity ) {
-            throw new \Exception('Provided entity for processing is null');
-            //return $entity;
-        }
-
-        $em = $this->_em;
-        $class = new \ReflectionClass($entity);
-        $className = $class->getShortName();
-
-        //add this object to institution from orderinfo.
-        $addClassMethod = "add".$className;
-        $orderinfo->getInstitution()->$addClassMethod($entity);
-
-        echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        echo $entity;
-        echo $className.": original:".$original."<br>";
-
-        ///////////// process original /////////////
-        if( $original ) { //this means $entity-DB entity, $original-form entity
-
-            $original->setInstitution($orderinfo->getInstitution());
-
-            //check and remove duplication objects such as two Part 'A'.
-            $original = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $original, $orderinfo );
-
-            //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-            $original = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $original, $orderinfo );
-
-            return $this->setResult($entity, $orderinfo, $original);
-        } else {
-
-            //add this object to institution from orderinfo.
-            $addClassMethod = "add".$className;
-            $orderinfo->getInstitution()->$addClassMethod($entity);
-
-            //check and remove duplication objects such as two Part 'A'.
-            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
-
-            //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $entity, $orderinfo );
-
-        }
-        ///////////// EOF process original /////////////
-
-//        //check and remove duplication objects such as two Part 'A'.
-//        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
+//    //$entity is procedure
+//    public function processEntity_OLD( $entity, $orderinfo, $original=null ) {
 //
-//        //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-//        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
-
-        $keys = $entity->obtainAllKeyfield();
-
-        //echo "count keys=".count($keys)."<br>";
-        //echo "key=".$keys->first()."<br>";
-
-        if( count($keys) == 0 ) {
-            $entity->createKeyField();  //this can happen for procedure, because key and keytype fields are hidden in the form
-            $keytype = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
-            $key = $entity->obtainValidKeyField();
-            $key->setKeytype($keytype);
-            //throw new \Exception( 'Key field does not exists for '.$className );
-        } elseif( count($keys) > 1 ) {
-            //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
-            //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
-        }
-
-        $key = $entity->obtainValidKeyField();
-        //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
-
-        //change keytype from Existing Auto-generated to Auto-generated.
-        $entity = $this->changeKeytype($entity);
-
-        if( $orderinfo->getStatus() == 'Amended' ) {
-            $found = null;
-        } else {
-            //this is a main function to check uniqueness
-            $found = $this->findUniqueByKey($entity);   //$found - procedure in DB
-        }
-
-        if( $found ) {
-            //echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
-
-            //CopyChildren: copy form's object children to the found one.
-            //testing:
-//            foreach( $entity->getChildren() as $child ) {
-//                //echo "adding: ".$child."<br>";
-//                $found->addChildren( $child );
-//            }
-
-            //procedure were obtained from accession, so it's not persisted.
-            $em->persist($found);
-
-            //add procedure's name, sex to the corresponding patient fields
-            $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
-
-            return $this->setResult($found, $orderinfo, $entity);
-
-        } else
-        if( $key == "" ) {
-            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
-
-            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
-            $key->setKeytype($newkeytypeEntity);
-
-            $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
-
-            //we should have only one key field !!!
-            $key->setField($nextKey);
-            $key->setStatus(self::STATUS_VALID);
-            $key->setProvider($orderinfo->getProvider());
-
-        }
-        else {
-            //echo "Case 3: object does not exist in DB (new key is eneterd) or it's amend <br>";
-            //throw new \Exception('Invalid logic for Procedure, key='.$key);
-        }
-
-        $accessions = $entity->getAccession();
-        if( count($accessions) > 1 ) {
-            //throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
-            //TODO: for now use the first accession. Make sure only one unique accession is created
-        }
-
-        //add procedure's name, sex to the corresponding patient fields in case if this is a new procedure (not found in DB)
-        $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
-
-        return $this->setResult($entity, $orderinfo);
-
-    }
+//        if( !$entity ) {
+//            throw new \Exception('Provided entity for processing is null');
+//            //return $entity;
+//        }
+//
+//        $em = $this->_em;
+//        $class = new \ReflectionClass($entity);
+//        $className = $class->getShortName();
+//
+//        //add this object to institution from orderinfo.
+//        $addClassMethod = "add".$className;
+//        $orderinfo->getInstitution()->$addClassMethod($entity);
+//
+//        echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+//        echo $entity;
+//        echo $className.": original:".$original."<br>";
+//
+//        ///////////// process original /////////////
+//        if( $original ) { //this means $entity-DB entity, $original-form entity
+//
+//            $original->setInstitution($orderinfo->getInstitution());
+//
+//            //check and remove duplication objects such as two Part 'A'.
+//            $original = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $original, $orderinfo );
+//
+//            //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+//            $original = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $original, $orderinfo );
+//
+//            return $this->setResult($entity, $orderinfo, $original);
+//        } else {
+//
+//            //add this object to institution from orderinfo.
+//            $addClassMethod = "add".$className;
+//            $orderinfo->getInstitution()->$addClassMethod($entity);
+//
+//            //check and remove duplication objects such as two Part 'A'.
+//            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
+//
+//            //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+//            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $entity, $orderinfo );
+//
+//        }
+//        ///////////// EOF process original /////////////
+//
+////        //check and remove duplication objects such as two Part 'A'.
+////        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
+////
+////        //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+////        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
+//
+//        $keys = $entity->obtainAllKeyfield();
+//
+//        //echo "count keys=".count($keys)."<br>";
+//        //echo "key=".$keys->first()."<br>";
+//
+//        if( count($keys) == 0 ) {
+//            $entity->createKeyField();  //this can happen for procedure, because key and keytype fields are hidden in the form
+//            $keytype = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+//            $key = $entity->obtainValidKeyField();
+//            $key->setKeytype($keytype);
+//            //throw new \Exception( 'Key field does not exists for '.$className );
+//        } elseif( count($keys) > 1 ) {
+//            //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
+//            //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
+//        }
+//
+//        $key = $entity->obtainValidKeyField();
+//        //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
+//
+//        //change keytype from Existing Auto-generated to Auto-generated.
+//        $entity = $this->changeKeytype($entity);
+//
+//        if( $orderinfo->getStatus() == 'Amended' ) {
+//            $found = null;
+//        } else {
+//            //this is a main function to check uniqueness
+//            $found = $this->findUniqueByKey($entity);   //$found - procedure in DB
+//        }
+//
+//        if( $found ) {
+//            //echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+//
+//            //CopyChildren: copy form's object children to the found one.
+//            //testing:
+////            foreach( $entity->getChildren() as $child ) {
+////                //echo "adding: ".$child."<br>";
+////                $found->addChildren( $child );
+////            }
+//
+//            //procedure were obtained from accession, so it's not persisted.
+//            $em->persist($found);
+//
+//            //add procedure's name, sex to the corresponding patient fields
+//            $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
+//
+//            return $this->setResult($found, $orderinfo, $entity);
+//
+//        } else
+//        if( $key == "" ) {
+//            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+//
+//            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+//            $key->setKeytype($newkeytypeEntity);
+//
+//            $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+//
+//            //we should have only one key field !!!
+//            $key->setField($nextKey);
+//            $key->setStatus(self::STATUS_VALID);
+//            $key->setProvider($orderinfo->getProvider());
+//
+//        }
+//        else {
+//            //echo "Case 3: object does not exist in DB (new key is eneterd) or it's amend <br>";
+//            //throw new \Exception('Invalid logic for Procedure, key='.$key);
+//        }
+//
+//        $accessions = $entity->getAccession();
+//        if( count($accessions) > 1 ) {
+//            //throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
+//            //TODO: for now use the first accession. Make sure only one unique accession is created
+//        }
+//
+//        //add procedure's name, sex to the corresponding patient fields in case if this is a new procedure (not found in DB)
+//        $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
+//
+//        return $this->setResult($entity, $orderinfo);
+//
+//    }
 
     public function setProcedureKey($key, $entity, $orderinfo) {
         $em = $this->_em;
@@ -175,17 +175,28 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //lastname
         //echo "proc last name count=".count($procedure->getPatlastname())."<br>";
         if( count($procedure->getPatlastname()) > 0 ) {
-            if( $this->validFieldIsSet( $patient->getLastname() ) ) {
+            $lastname = $this->validFieldIsSet( $patient->getLastname() );
+            if( $lastname ) {
+                //$lastname->setStatus(self::STATUS_INVALID);
                 $status = self::STATUS_INVALID;
             }
             $patientlastname = new PatientLastName($status,$user,$source);
-            $patientlastname->setField($procedure->getPatlastname()->first()->getField());
+
+            foreach( $procedure->getPatlastname() as $name ) {
+                echo "Procedure: lastname=".$name.", id=".$name->getId().", status=".$name->getStatus()."<br>";
+            }
+
+            $procLastname = $procedure->obtainValidField('patlastname')->getField();
+
+            $patientlastname->setField($procLastname);
             $patient->addLastname($patientlastname);
         }
 
         //firstname
         if( count($procedure->getPatfirstname()) > 0 ) {
-            if( $this->validFieldIsSet( $patient->getFirstname() ) ) {
+            $firstname = $this->validFieldIsSet( $patient->getFirstname() );
+            if( $firstname ) {
+                //$firstname->setStatus(self::STATUS_INVALID);
                 $status = self::STATUS_INVALID;
             }
             $patientfirstname = new PatientFirstName($status,$user,$source);
@@ -195,7 +206,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         //middlename
         if( count($procedure->getPatmiddlename()) > 0 ) {
-            if( $this->validFieldIsSet( $patient->getMiddlename() ) ) {
+            $middlename = $this->validFieldIsSet( $patient->getMiddlename() );
+            if( $middlename ) {
+                //$middlename->setStatus(self::STATUS_INVALID);
                 $status = self::STATUS_INVALID;
             }
             $patientmiddlename = new PatientMiddleName($status,$user,$source);
@@ -205,7 +218,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         //sex
         if( count($procedure->getPatsex()) > 0 ) {
-            if( $this->validFieldIsSet( $patient->getSex() ) ) {
+            $sex = $this->validFieldIsSet( $patient->getSex() );
+            if( $sex ) {
+                //$sex->setStatus(self::STATUS_INVALID);
                 $status = self::STATUS_INVALID;
             }
             $patientsex = new PatientSex($status,$user,$source);
@@ -214,16 +229,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $patient->addSex($patientsex);
         }
 
-//        //age
-//        if( count($procedure->getPatage()) > 0 ) {
-//            if( $this->validFieldIsSet( $patient->getAge() ) ) {
-//                $status = self::STATUS_INVALID;
-//            }
-//            $patientage = new PatientAge($status,$user,$source);
-//            //echo "procedure age=".$procedure->getPatage()->first()->getField()."<br>";
-//            $patientage->setField($procedure->getPatage()->first()->getField());
-//            $patient->addAge($patientage);
-//        }
 
     }
 

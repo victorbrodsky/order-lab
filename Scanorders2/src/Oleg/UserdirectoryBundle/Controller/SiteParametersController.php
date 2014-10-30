@@ -24,12 +24,16 @@ class SiteParametersController extends Controller
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/", name="siteparameters")
+     * @Route("/", name="employees_siteparameters")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        return $this->indexParameters($request);
+    }
+
+    public function indexParameters($request) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -40,6 +44,10 @@ class SiteParametersController extends Controller
         }
 
         $entity = $entities[0];
+
+        $routeName = $request->get('_route');
+        $routeArr = explode("_", $routeName);
+        $sitename = $routeArr[0];
 
         $disabled = true;
 
@@ -56,7 +64,7 @@ class SiteParametersController extends Controller
         if( $entity->getDbServerAccountPassword() != '' )
             $entity->setDbServerAccountPassword($passw);
 
-        $editForm = $this->createEditForm($entity,$disabled);
+        $editForm = $this->createEditForm($sitename,$entity,$disabled);
 
         $link = realpath($_SERVER['DOCUMENT_ROOT']).'\order\scanorder\Scanorders2\app\config\parameters.yml';
         //echo "link=".$link."<br>";
@@ -65,38 +73,48 @@ class SiteParametersController extends Controller
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'cicle' => 'show',
-            'link' => $link
+            'link' => $link,
+            'sitename' => $sitename
         );
     }
 
     /**
      * Displays a form to edit an existing SiteParameters entity.
      *
-     * @Route("/{id}/edit", name="siteparameters_edit")
+     * @Route("/{id}/edit", name="employees_siteparameters_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
-    public function editAction($id)
+    public function editAction(Request $request,$id)
     {
-        $request = $this->get('request');
+        return $this->editParameters($request,$id);
+    }
+
+    public function editParameters(Request $request,$id)
+    {
         $param = trim( $request->get('param') );
+
+        $routeName = $request->get('_route');
+        $routeArr = explode("_", $routeName);
+        $sitename = $routeArr[0];
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);
 
-        if (!$entity) {
+        if( !$entity ) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
         }
 
-        $editForm = $this->createEditForm($entity,$param,false);
+        $editForm = $this->createEditForm($sitename,$entity,$param,false);
         //$deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'cicle' => 'edit',
-            'param' => $param
+            'param' => $param,
+            'sitename' => $sitename
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -104,11 +122,16 @@ class SiteParametersController extends Controller
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/{id}", name="siteparameters_update")
+     * @Route("/{id}", name="employees_siteparameters_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
+    {
+        return $this->updateParameters($request, $id);
+    }
+
+    public function updateParameters(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -121,21 +144,26 @@ class SiteParametersController extends Controller
         $param = trim( $request->get('param') );
         //echo "param=".$param."<br>";
 
-        $editForm = $this->createEditForm($entity,$param,false);
+        $routeName = $request->get('_route');
+        $routeArr = explode("_", $routeName);
+        $sitename = $routeArr[0];
+
+        $editForm = $this->createEditForm($sitename,$entity,$param,false);
 
         $editForm->handleRequest($request);
 
         if( $editForm->isValid() ) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('siteparameters'));
+            return $this->redirect($this->generateUrl($sitename.'_siteparameters'));
         }
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'cicle' => 'edit',
-            'param' => ''
+            'param' => '',
+            'sitename' => $sitename
         );
     }
 
@@ -146,7 +174,7 @@ class SiteParametersController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm(SiteParameters $entity, $param=null,$disabled=false)
+    private function createEditForm($sitename,SiteParameters $entity, $param=null,$disabled=false)
     {
 
         $cycle = 'show';
@@ -157,7 +185,7 @@ class SiteParametersController extends Controller
         $params = array('cicle'=>$cycle,'param'=>$param);
 
         $form = $this->createForm(new SiteParametersType($params), $entity, array(
-            'action' => $this->generateUrl('siteparameters_update', array('id' => $entity->getId(), 'param' => $param )),
+            'action' => $this->generateUrl($sitename.'_siteparameters_update', array('id' => $entity->getId(), 'param' => $param )),
             'method' => 'PUT',
             'disabled' => $disabled
         ));
@@ -171,31 +199,28 @@ class SiteParametersController extends Controller
 
 
 
-    /**
-     * Displays a admin email.
-     *
-     * @Route("/scan-order/admin-email", name="scan-order-admin-email")
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:History:index.html.twig")
-     */
-    public function getAdminEmailAction()
-    {
-
-        $userutil = new UserUtil();
-        $em = $this->getDoctrine()->getManager();
-        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
-
-        $response = new Response();
-        $response->setContent($adminemail);
-
-        return $response;
-    }
 
 
-
-
-
-
+//    /**
+//     * Displays a admin email.
+//     *
+//     * @Route("/scan-order/admin-email", name="scan-order-admin-email")
+//     * @Method("GET")
+//     * @Template("OlegOrderformBundle:History:index.html.twig")
+//     */
+//    public function getAdminEmailAction()
+//    {
+//
+//        $userutil = new UserUtil();
+//        $em = $this->getDoctrine()->getManager();
+//        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+//
+//        $response = new Response();
+//        $response->setContent($adminemail);
+//
+//        return $response;
+//    }
+//
     //    /**
 //     * Creates a new SiteParameters entity.
 //     *

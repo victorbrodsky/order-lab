@@ -17,6 +17,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Alias', 'ent.alias') }}</th>
             {% endif %}
 
+            {% if entities|first.description is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Capabilities', 'ent.description') }}</th>
+            {% endif %}
+
             {% if entities|first.original is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Original', 'original.name') }}</th>
             {% endif %}
@@ -47,6 +51,10 @@
 
                 {% if entity.alias is defined %}
                     <td>{{ entity.alias }}</td>
+                {% endif %}
+
+                {% if entity.description is defined %}
+                    <td>{{ entity.description }}</td>
                 {% endif %}
 
                 {% if entity.original is defined %}
@@ -115,6 +123,10 @@
         {{ formmacros.field(form.alias) }}
     {% endif %}
 
+    {% if form.description is defined %}
+        {{ formmacros.field(form.description) }}
+    {% endif %}
+
     {{ formmacros.field(form.list.type) }}
 
     {{ formmacros.field(form.list.creator) }}
@@ -167,6 +179,10 @@
 
     {% if edit_form.alias is defined %}
         {{ formmacros.field(edit_form.alias) }}
+    {% endif %}
+
+    {% if edit_form.description is defined %}
+        {{ formmacros.field(edit_form.description) }}
     {% endif %}
 
     {{ formmacros.field(edit_form.list.type) }}

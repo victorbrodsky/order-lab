@@ -126,11 +126,12 @@ function trimWithCheck(val) {
 //convert enter to tab behavior: pressing enter will focus the next input field
 function initConvertEnterToTab() {
     $('body').on('keydown', 'input, select', function(e) {
-
+        //console.log('init convert enter to tab');
         if( $(this).hasClass('submit-on-enter-field') ) {
             //console.log('submit-on-enter-field !');
             return;
         }
+        //console.log('continue convert enter to tab');
 
         var self = $(this)
             , form = self.parents('form:eq(0)')

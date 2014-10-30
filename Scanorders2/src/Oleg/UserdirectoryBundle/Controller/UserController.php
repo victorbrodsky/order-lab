@@ -78,14 +78,15 @@ class UserController extends Controller
         $accessreqs = $this->getActiveAccessReq();
 
         $search = trim( $request->get('search') );
+        $userid = trim( $request->get('userid') );
 
         //echo "search=".$search."<br>";
 
         $pagination = null;
         $roles = null;
 
-        if( $search != "" ) {
-            $res = $this->indexUser( null, true, true, $search );
+        if( $search != "" || $userid != "" ) {
+            $res = $this->indexUser( null, true, true, $search, $userid );
             $pagination = $res['entities'];
             $roles = $res['roles'];
         }
@@ -141,7 +142,7 @@ class UserController extends Controller
     }
 
 
-    public function indexUser( $filter=null, $current=true, $limitFlag=true, $search=null ) {
+    public function indexUser( $filter=null, $current=true, $limitFlag=true, $search=null, $userid=null ) {
 
         //$userManager = $this->container->get('fos_user.user_manager');
         //$users = $userManager->findUsers();
@@ -167,6 +168,7 @@ class UserController extends Controller
         $dql->leftJoin("appointmentTitles.service", "appointmentService");
 
         $dql->leftJoin("user.locations", "locations");
+        $dql->leftJoin("locations.assistant", "assistant");
         $dql->leftJoin("user.credentials", "credentials");
 
         //$dql->leftJoin("user.institutions", "institutions");
@@ -177,7 +179,10 @@ class UserController extends Controller
 
         if( !isset($postData['sort']) ) {
             if( $current == true ) {
-                $dql->orderBy("user.id","ASC");
+                $dql->orderBy("user.lastName","ASC");
+                $dql->addOrderBy("administrativeInstitution.name","ASC");
+                $dql->addOrderBy("administrativeService.name","ASC");
+                $dql->addOrderBy("appointmentService.name","ASC");
             } else {
                 $dql->orderBy("employmentStatus.terminationDate","DESC");
                 $dql->addOrderBy("user.lastName","ASC");
@@ -205,16 +210,24 @@ class UserController extends Controller
         }
 
 
-        //filter
-        $criteriastr = $this->getCriteriaStrByFilter( $dql, $filter );
+        if( $userid ) {
 
-        //search
-        $criteriastr .= $this->getCriteriaStrBySearch( $dql, $search );
+            $totalcriteriastr = "user.id =".$userid;
 
-        $totalcriteriastr = $timecriteriastr;
+        } else {
 
-        if( $criteriastr != "" ) {
-            $totalcriteriastr = "(" . $totalcriteriastr . ") AND " .  $criteriastr;
+            //filter
+            $criteriastr = $this->getCriteriaStrByFilter( $dql, $filter );
+
+            //search
+            $criteriastr .= $this->getCriteriaStrBySearch( $dql, $search );
+
+            $totalcriteriastr = $timecriteriastr;
+
+            if( $criteriastr != "" ) {
+                $totalcriteriastr = "(" . $totalcriteriastr . ") AND " .  $criteriastr;
+            }
+
         }
 
         $dql->where($totalcriteriastr);

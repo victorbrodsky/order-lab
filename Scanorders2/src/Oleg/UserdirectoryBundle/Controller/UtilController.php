@@ -18,52 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class UtilController extends Controller {
       
 
-//    /**
-//     * @Route("/service", name="get-service")
-//     * @Method("GET")
-//     */
-//    public function getServiceAction() {
-//
-//        $whereServicesList = "";
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $request = $this->get('request');
-//        $opt = trim( $request->get('opt') );
-//
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegUserdirectoryBundle:Service', 'list')
-//            ->select("list.id as id, list.name as text")
-//            ->orderBy("list.orderinlist","ASC");
-//
-//        $user = $this->get('security.context')->getToken()->getUser();
-//
-//        if( $opt == 'default' ) {
-//            if( $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
-//                $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
-//            } else {
-//                $query->where('list.type = :type ')->setParameter('type', 'default');
-//            }
-//        } else {
-//            //find user's services to include them in the list
-//            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($opt);
-//            $getServices = $user->getServices();	//TODO: user's or allowed services?
-//
-//            foreach( $getServices as $serviceId ) {
-//                $whereServicesList = $whereServicesList . " OR list.id=".$serviceId->getId();
-//            }
-//            //$query->where('list.type = :type OR list.creator = :user_id ' . $whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
-//            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user_id) ".$whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
-//        }
-//
-//        $output = $query->getQuery()->getResult();
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
-
     /**
      * @Route("/common/department", name="get-departments-by-parent")
      * @Route("/common/division", name="get-divisions-by-parent")
@@ -439,31 +393,54 @@ class UtilController extends Controller {
         $search = trim( $request->get('search') );
 
         //echo "type=".$type."<br>";
-
-        if( $type == "user" ) {
-            $className = 'OlegUserdirectoryBundle:User';
-            $field = "displayName";
-        }
-
-        if( $type == "title" ) {
-            $className = 'OlegUserdirectoryBundle:AdministrativeTitle';
-            $field = "name";
-        }
+        //echo "search=".$search."<br>";
 
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->createQueryBuilder()
-            ->from($className, 'e')
-            ->select("e.id as id, e.".$field." as text")
-            ->orderBy("e.".$field,"ASC");
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select("user.id as id, user.displayName as text");
+        $dql->groupBy('user');
 
-        if( $search == "min" ) {
-            $query->where("e.".$field." IS NOT NULL AND e.id < 50");
-        } else {
-            $query->where("e.".$field." = '".$search."'");
+
+        if( $type == "user" ) {
+            $object = "user";
+            $field = "displayName";
+            //$criteriastr = "user.".$field." LIKE '%".$search."%'";
+            //$criteriastr = "user.".$field." = '".$search."'";
         }
 
-        $output = $query->getQuery()->getResult();
+        if( $type == "cwid" ) {
+            $object = "user";
+            $field = "primaryPublicUserId";
+            //$criteriastr = "user.".$field." LIKE '%".$search."%'";
+            //$criteriastr = "user.".$field." = '".$search."'";
+        }
+
+        if( $type == "admintitle" ) {
+            $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+            $object = "administrativeTitles";
+            $field = "name";
+            //$criteriastr = "administrativeTitles.".$field." LIKE '%".$search."%'";
+            //$criteriastr = "administrativeTitles.".$field." = '".$search."'";
+        }
+
+
+        if( $search == "min" ) {
+
+            $criteriastr = $object.".".$field." IS NOT NULL";
+
+        } else {
+
+            $criteriastr = $object.".".$field." LIKE '%".$search."%'";
+
+        }
+
+        $dql->where($criteriastr);
+
+        $query = $em->createQuery($dql);
+
+        $output = $query->getResult();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

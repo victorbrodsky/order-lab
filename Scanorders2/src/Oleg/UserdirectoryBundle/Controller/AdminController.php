@@ -143,63 +143,73 @@ class AdminController extends Controller
     public function generateRoles() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         //Note: fos user has role ROLE_SCANORDER_SUPER_ADMIN
 
         $types = array(
 
             //////////// general roles are set by security.yml only ////////////
-            "ROLE_ADMIN" => "OrderPlatform Administrator",                //general super admin role for all sites
+
+            //general super admin role for all sites
+            "ROLE_ADMIN" => array("OrderPlatform Administrator","Full access for all sites"),
             //"ROLE_BANNED" => "Banned user for all sites",                 //general super admin role for all sites
             //"ROLE_UNAPPROVED" => "Unapproved User",                       //general unapproved user
 
             //////////// Scanorder roles ////////////
-            "ROLE_SCANORDER_ADMIN" => "ScanOrder Administrator",
-            "ROLE_SCANORDER_PROCESSOR" => "ScanOrder Processor",
+            "ROLE_SCANORDER_ADMIN" => array("ScanOrder Administrator","Full access for Scan Order site"),
+            "ROLE_SCANORDER_PROCESSOR" => array("ScanOrder Processor","Allow to view all orders and change scan order status"),
 
-            "ROLE_SCANORDER_DIVISION_CHIEF" => "ScanOrder Division Chief",  //view or modify all orders of the same division(institution)
-            "ROLE_SCANORDER_SERVICE_CHIEF" => "ScanOrder Service Chief",    //view or modify all orders of the same service
+            "ROLE_SCANORDER_DIVISION_CHIEF" => array("ScanOrder Division Chief","Allow to view and amend all orders for this division(institution)"),  //view or modify all orders of the same division(institution)
+            "ROLE_SCANORDER_SERVICE_CHIEF" => array("ScanOrder Service Chief","Allow to view and amend all orders for this service"),    //view or modify all orders of the same service
 
-            "ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST" => "ScanOrder Data Quality Assurance Specialist",
+            "ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST" => array("ScanOrder Data Quality Assurance Specialist","Allow to make data quality modification"),
 
             //"ROLE_USER" => "User", //this role must be always assigned to the authenticated user. Required by fos user bundle.
 
-            "ROLE_SCANORDER_SUBMITTER" => "ScanOrder Submitter",
-            "ROLE_SCANORDER_ORDERING_PROVIDER" => "ScanOrder Ordering Provider",
+            "ROLE_SCANORDER_SUBMITTER" => array("ScanOrder Submitter","Allow submit new orders, amend own order"),
+            "ROLE_SCANORDER_ORDERING_PROVIDER" => array("ScanOrder Ordering Provider","Allow submit new orders, amend own order"),
 
-            "ROLE_SCANORDER_PATHOLOGY_RESIDENT" => "ScanOrder Pathology Resident",
-            "ROLE_SCANORDER_PATHOLOGY_FELLOW" => "ScanOrder Pathology Fellow",
-            "ROLE_SCANORDER_PATHOLOGY_FACULTY" => "ScanOrder Pathology Faculty",
+            "ROLE_SCANORDER_PATHOLOGY_FELLOW" => array("ScanOrder Pathology Fellow",""),
+            "ROLE_SCANORDER_PATHOLOGY_FACULTY" => array("ScanOrder Pathology Faculty",""),
 
-            "ROLE_SCANORDER_COURSE_DIRECTOR" => "ScanOrder Course Director",
-            "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => "ScanOrder Principal Investigator",
+            "ROLE_SCANORDER_COURSE_DIRECTOR" => array("ScanOrder Course Director","Allow to be a Course Director in Educational orders"),
+            "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => array("ScanOrder Principal Investigator","Allow to be a Principal Investigator in Research orders"),
 
-            "ROLE_SCANORDER_UNAPPROVED_SUBMITTER" => "ScanOrder Unapproved Submitter",
-            "ROLE_SCANORDER_BANNED" => "ScanOrder Banned User",
+            "ROLE_SCANORDER_UNAPPROVED_SUBMITTER" => array("ScanOrder Unapproved Submitter","Does not allow to visit Scan Order site"),
+            "ROLE_SCANORDER_BANNED" => array("ScanOrder Banned User","Does not allow to visit Scan Order site"),
 
             //////////// EmployeeDirectory roles ////////////
-            "ROLE_USERDIRECTORY_OBSERVER" => "EmployeeDirectory Observer",
-            "ROLE_USERDIRECTORY_EDITOR" => "EmployeeDirectory Editor",
-            "ROLE_USERDIRECTORY_ADMIN" => "EmployeeDirectory Administrator",
-            "ROLE_USERDIRECTORY_BANNED" => "EmployeeDirectory Banned User",
-            "ROLE_USERDIRECTORY_UNAPPROVED" => "EmployeeDirectory Unapproved User",
+            "ROLE_USERDIRECTORY_OBSERVER" => array("EmployeeDirectory Observer","Allow to view all employees"),
+            "ROLE_USERDIRECTORY_EDITOR" => array("EmployeeDirectory Editor","Allow to edit all employees"),
+            "ROLE_USERDIRECTORY_ADMIN" => array("EmployeeDirectory Administrator","Full access for Employee Directory site"),
+            "ROLE_USERDIRECTORY_BANNED" => array("EmployeeDirectory Banned User","Does not allow to visit Employee Directory site"),
+            "ROLE_USERDIRECTORY_UNAPPROVED" => array("EmployeeDirectory Unapproved User","Does not allow to visit Employee Directory site"),
 
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
 
         $count = 1;
-        foreach( $types as $role => $alias ) {
+        foreach( $types as $role => $aliasDescription ) {
 
-            $entity = new Roles();
-            $this->setDefaultList($entity,$count,$username,null);
+            $alias = $aliasDescription[0];
+            $description = $aliasDescription[1];
+
+            $entity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName(trim($role));
+
+            if( !$entity ) {
+                $entity = new Roles();
+                $this->setDefaultList($entity,$count,$username,null);
+            }
+
             $entity->setName( trim($role) );
             $entity->setAlias( trim($alias) );
+            $entity->setDescription( trim($description) );
 
             $em->persist($entity);
             $em->flush();

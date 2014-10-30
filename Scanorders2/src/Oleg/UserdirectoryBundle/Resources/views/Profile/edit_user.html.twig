@@ -215,8 +215,12 @@
 
         {% if homeLocation == false %}
             {{ formmacros.field(formfield.room) }}
+            {{ formmacros.field_notempty(formfield.suit,cicle) }}
+            {{ formmacros.field(formfield.floor) }}
         {% else %}
             {% do formfield.room.setRendered %}
+            {% do formfield.suit.setRendered %}
+            {% do formfield.floor.setRendered %}
         {% endif %}
 
         {{ formmacros.field_notempty(formfield.street1,cicle) }}
@@ -228,15 +232,11 @@
         {% if homeLocation == false %}
             {{ formmacros.field(formfield.buildingName) }}
             {{ formmacros.field(formfield.buildingAbbr) }}
-            {{ formmacros.field(formfield.floor) }}
-            {{ formmacros.field_notempty(formfield.suit,cicle) }}
             {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
             {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
         {% else %}
             {% do formfield.buildingName.setRendered %}
             {% do formfield.buildingAbbr.setRendered %}
-            {% do formfield.floor.setRendered %}
-            {% do formfield.suit.setRendered %}
             {% do formfield.mailbox.setRendered %}
             {% do formfield.associatedCode.setRendered %}
         {% endif %}
@@ -347,9 +347,9 @@
         {% endif %}
 
         {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel(formfield.terminationDate,'allow-future-date') }}
-        {{ formmacros.field(formfield.terminationType) }}
-        {{ formmacros.field(formfield.terminationReason) }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.terminationType) }}
+        {{ formmacros.field_notempty(formfield.terminationReason) }}
 
     </div>
 {% endmacro %}
@@ -450,8 +450,8 @@
         {{ formmacros.field(formfield.researchLabTitle) }}
         {{ formmacros.checkbox(formfield.researchPI) }}
         {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel(formfield.dissolvedDate,'allow-future-date') }}
-        {{ formmacros.field(formfield.comment) }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cicle,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.comment,cicle) }}
         {{ formmacros.field(formfield.location) }}
 
     </div>
@@ -796,7 +796,15 @@
 
 
         {#Research Lab(s)#}
-        {% if form.researchLabs is defined %}
+        {#If the user has no Research Labs (no array members with a research lab title), hide the whole Research Lab(s) section on the profile page.#}
+        {% set showResearchLabs = false %}
+        {% for researchLabs in form.researchLabs %}
+            {% if researchLabs.researchLabTitle.vars.value or cicle != 'show_user' %}
+                {% set showResearchLabs = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showResearchLabs and form.researchLabs is defined %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -820,6 +828,8 @@
                     </div>
                 </div>
             </div>
+        {% else %}
+            {% do form.researchLabs.setRendered %}
         {% endif %}
 
         {#Credentials#}

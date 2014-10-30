@@ -1,24 +1,5 @@
 {% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
 
-{% block additionaljs %}
-    {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            initTypeaheadSerach();
-        });
-    </script>
-
-    {% endjavascripts %}
-{% endblock %}
-
-{% block title %}
-    Employee Directory
-{% endblock %}
 
 
 {% block additionalcss %}
@@ -29,32 +10,35 @@
     {% endstylesheets %}
 {% endblock %}
 
+{% block additionaljs %}
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            initTypeaheadUserSiteSerach();
+        });
+    </script>
+{% endblock %}
+
+
+
+
+{% block title %}
+    Employee Directory
+{% endblock %}
 
 
 {% block content %}
 
     <div style="margin-top:25px;">
 
-        {#class="well form-search"#}
-        <form action="{{ path(employees_sitename~'_home') }}" method="get">
-            <div class="row">
-                <div class="col-xs-10">
-                    <input type="text" class="form-control limit-font-size submit-on-enter-field" name="search" id="user_search" value="{{ search }}">
-                </div>
-                <div class="col-xs-2">
-                    <div class="btn-group btn-group-justified">
-                        <div class="btn-group">
-                            <button type="submit" class="btn btn-sm btn-default order-filter-btn"><i class="icon-search"></i>Search</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-        </form>
-
-        <br><br>
-
-        <form action="{{ path(employees_sitename~'_home') }}" method="get">
+        <form id="user-typeahead-serach-form" action="{{ path(employees_sitename~'_home') }}" method="get">
             <div class="row">
                 <div class="col-xs-12">
                     <div id="multiple-datasets-typeahead-search">
@@ -72,14 +56,6 @@
 
     </div>
 
-    {#<div class="row">#}
-        {#<div class="col-xs-12">#}
-            {#<div id="multiple-datasets-typeahead-search">#}
-                {#<input class="typeahead submit-on-enter-field" type="text" placeholder="Preferred Display Name / Administrative Title">#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
-
 
 {% endblock %}
 
@@ -89,7 +65,7 @@
 
     {% if entities is not defined or entities|length == 0 %}
 
-        <div style="margin-top:25px;">
+        <div style="margin-top:50px;">
 
             <p>
                 Welcome to the Employee Directory!

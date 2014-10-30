@@ -818,4 +818,13 @@ class User extends BaseUser
         }
     }
 
+
+    public function getUsernameShortest() {
+        if( $this->getDisplayName() ) {
+            return $this->getDisplayName();
+        } else {
+            return $this->primaryPublicUserId;
+        }
+    }
+
 }

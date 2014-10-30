@@ -19,6 +19,11 @@ class Roles extends ListAbstract {
     protected $alias;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
+
+    /**
      * @param mixed $alias
      */
     public function setAlias($alias)
@@ -33,6 +38,25 @@ class Roles extends ListAbstract {
     {
         return $this->alias;
     }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+
+
 
 
 }

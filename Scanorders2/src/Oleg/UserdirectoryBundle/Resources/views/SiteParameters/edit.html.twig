@@ -1,4 +1,10 @@
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% else %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% endif %}
+{% extends extendStr%}
 
 
 {% block title %}
@@ -187,7 +193,7 @@
         {% if cicle == "show" %}
 
             <p>
-                <a class="btn btn-success" href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': param }) }}">Edit</a>
+                <a class="btn btn-success" href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': param }) }}">Edit</a>
             </p>
 
         {% endif %}
@@ -204,7 +210,7 @@
     <br>
 
     <p>
-    <a href="{{ path('siteparameters') }}">
+    <a href="{{ path(sitename~'_siteparameters') }}">
         Back to the list
     </a>
     </p>
