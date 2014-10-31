@@ -393,7 +393,7 @@ class Patient extends ObjectAbstract
     public function addLastname($lastname)
     {
 
-        echo "Patient add lastname: lastname=".$lastname.", id=".$lastname->getId().", status=".$lastname->getStatus()."<br>";
+        //echo "Patient add lastname: lastname=".$lastname.", id=".$lastname->getId().", status=".$lastname->getStatus()."<br>";
 
 //        if( $lastname == null ) {
 //            $lastname = new PatientLastname();

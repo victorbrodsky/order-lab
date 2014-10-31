@@ -360,7 +360,7 @@
 
 {% macro emailPhoneField_notempty(field,cicle,type,label) %}
     {% import _self as formuser %}
-    {% if field.vars.value or not cicle == "show_user" %}
+    {% if field.vars.value or cicle != "show_user" %}
         {{ formuser.emailPhoneField(field,cicle,type,label) }}
     {% else %}
         {% do field.setRendered %}
@@ -517,6 +517,167 @@
 {% endmacro %}
 
 
+{% macro snapshot( user, sitename ) %}
+
+    <table class="table table-hover table-condensed text-left">
+    <thead>
+        <tr>
+            <th>Service(s)</th>
+            <th>Name</th>
+            <th>Administrative Title(s)</th>
+            <th>Academic Title(s)</th>
+            <th>Preferred Email</th>
+            <th>Preferred Phone Number</th>
+            <th>Room Number(s)</th>
+            <th>Assistant(s)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                {% for service in user.getServices %}
+                    {% if service is defined and service != "" %}
+                        {{ service.getParentTree() }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ user.displayName }}</td>
+            <td>
+                {% for administrativeTitle in user.administrativeTitles %}
+                    {% if administrativeTitle.name %}
+                        {{ administrativeTitle.name }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for appointmentTitles in user.appointmentTitles %}
+                    {% if appointmentTitles.name %}
+                        {{ appointmentTitles.name }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                <a href="mailto:{{ user.email }}" target="_top">{{ user.email }}</a>
+            </td>
+            <td>
+                {% set valueclean = user.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+                <a href="tel:{{ valueclean }}" target="_top">{{ user.preferredPhone }}</a>
+            </td>
+            <td>
+                {% for location in user.locations %}
+                    {% if location.room %}
+                        {{ location.room }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for location in user.locations %}
+                    {% if location.assistant %}
+                        {% for assistant in location.assistant %}
+                            <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
+                            ({{ location.name }}):
+                            {% set valueclean = assistant.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+                            <a href="tel:{{ valueclean }}" target="_top">{{ assistant.preferredPhone }}</a>
+                            {% if assistant.email %}
+                                ,
+                            {% endif %}
+                            <a href="mailto:{{ assistant.email }}" target="_top">{{ assistant.email }}</a>
+                            <br>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </td>
+
+        </tr>
+    </tbody>
+    </table>
+
+{% endmacro %}
+
+
+{% macro snapshot_well( user, sitename ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <div class="well">
+
+        {#service tree#}
+        {% set services = user.getServices() %}
+        {% if services|length > 0 %}
+            <p>
+                <strong>Service(s)</strong>:<br>
+                {% for service in services %}
+                    {{ service.getParentTree() }}<br>
+                {% endfor %}
+            <p>
+        {% endif %}
+
+        {#administrative titles#}
+        {% set titles = user.getAdministrativeTitles() %}
+        {% if titles|length > 0 %}
+            <p>
+                <strong>Administrative Title(s)</strong>:<br>
+                {% for title in titles %}
+                    {{ title.name }}<br>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#appointment titles#}
+        {% set titles = user.getAppointmentTitles() %}
+        {% if titles|length > 0 %}
+            <p>
+                <strong>Academic Appointment Title(s)</strong>:<br>
+                {% for title in titles %}
+                    {{ title.name }}<br>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#phone#}
+        <p>
+            <strong>Administrative Title(s)</strong>:<br>
+            {{ user.preferredPhone }}
+        </p>
+
+        {#pager#}
+        {% set locations = user.locations %}
+        {% if locations|length > 0 %}
+            <p>
+                <strong>Room(s)</strong>:<br>
+                {% for location in locations %}
+                    {{ location.pager }}<br>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#room#}
+        {% set locations = user.locations %}
+        {% if locations|length > 0 %}
+            <p>
+                <strong>Room(s)</strong>:<br>
+                {% for location in locations %}
+                    {{ location.room }}<br>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#assistance#}
+        {% set locations = user.locations %}
+        {% if locations|length > 0 %}
+            <p>
+                <strong>Assistant(s)</strong>:<br>
+                {% for location in locations %}
+                    {% for assistant in location.assistant %}
+                        {{ assistant.getUserNameStr() }}<br>
+                    {% endfor %}
+                {% endfor %}
+            </p>
+        {% endif %}
+
+    </div>
+
+{% endmacro %}
+
 
 
 {% import _self as userform %}
@@ -539,6 +700,10 @@
     <h4 class="text-info" align="center">{{ title }}</h4>
 
     <br>
+
+    {#user's snapshot#}
+    {{ userform.snapshot(entity,sitename) }}
+
 
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll()" >Collapse All</button>
@@ -631,7 +796,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="userinfo" class="panel-collapse collapse in">
+            <div id="userinfo" class="panel-collapse collapse">
                 <div class="panel-body">
 
                     {{ formmacros.field(form.keytype) }}
@@ -666,7 +831,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="userprefrences" class="panel-collapse collapse in">
+            <div id="userprefrences" class="panel-collapse collapse">
                 <div class="panel-body">
 
                     {% if form.roles is defined and (cicle == "show_user" or userEditor == true) %}
@@ -700,7 +865,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="EmploymentStatus" class="panel-collapse collapse in">
+                <div id="EmploymentStatus" class="panel-collapse collapse">
                     <div class="panel-body">
 
                         <div class="user-employmentStatus-holder">
@@ -726,7 +891,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="AdministrativeTitles" class="panel-collapse collapse in">
+            <div id="AdministrativeTitles" class="panel-collapse collapse">
                 <div class="panel-body">
 
                     <div class="user-administrativeTitles-holder">
@@ -752,7 +917,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="AppointmentTitles" class="panel-collapse collapse in">
+            <div id="AppointmentTitles" class="panel-collapse collapse">
                 <div class="panel-body">
 
                     <div class="user-appointmentTitles-holder">
@@ -778,7 +943,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="Locations" class="panel-collapse collapse in">
+            <div id="Locations" class="panel-collapse collapse">
                 <div class="panel-body">
 
                     <div class="user-locations-holder">
@@ -813,7 +978,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="ResearchLabs" class="panel-collapse collapse in">
+                <div id="ResearchLabs" class="panel-collapse collapse">
                     <div class="panel-body">
 
                         <div class="user-researchlabs-holder">
@@ -842,7 +1007,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="Credentials" class="panel-collapse collapse in">
+                <div id="Credentials" class="panel-collapse collapse">
                     <div class="panel-body">
 
                         <p>
@@ -1167,7 +1332,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="Comments" class="panel-collapse collapse in">
+                <div id="Comments" class="panel-collapse collapse">
                     <div class="panel-body">
 
                         {#Public Comments#}

@@ -22,6 +22,7 @@
         {#<th>{{ knp_pagination_sortable(entities, 'User ID (CWID)', 'user.username') }}</th>#}
         <th>{{ knp_pagination_sortable(entities, 'Preferred Email', 'user.email') }}</th>
         <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.preferredPhone') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Pager(s)', 'locations.pager') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Room Number(s)', 'locations.room') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Assistant(s)', 'assistant.displayName') }}</th>
 
@@ -81,6 +82,13 @@
             <td class="rowlink-skip">
                 {% set valueclean = entity.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
                 <a href="tel:{{ valueclean }}" target="_top">{{ entity.preferredPhone }}</a>
+            </td>
+            <td>
+                {% for location in entity.locations %}
+                    {% if location.pager %}
+                        {{ location.pager }}<br>
+                    {% endif %}
+                {% endfor %}
             </td>
             <td>
                 {% for location in entity.locations %}

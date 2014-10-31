@@ -124,7 +124,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             if( file.previewElement ) {
                 $(file.previewElement).append(idHtml);
                 var showlinkDiv = $(file.previewElement).find('.file-upload-showlink');
-                var showlinkHtml = constractShowLink(documentSrc,file.name);
+                var showlinkHtml = constractShowLink(documentid,file.name);
                 showlinkDiv.html(showlinkHtml);
 
                 adjustHolderHeight(commentHolder);
@@ -198,7 +198,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
                 //add showlink
                 if( mockFile.previewElement ) {
                     var showlinkDiv = $(mockFile.previewElement).find('.file-upload-showlink');
-                    var showlinkHtml = constractShowLink(value.url,value.uniquename);
+                    var showlinkHtml = constractShowLink(value.id,value.uniquename);
                     showlinkDiv.html(showlinkHtml);
                 }
 
@@ -219,9 +219,10 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
 }
 
-function constractShowLink(url,name) {
+function constractShowLink(id,name) {
+    var url = getCommonBaseUrl('file-download/'+id,"employees");
     var showlinkHtml =  '<div style="overflow:hidden; white-space:nowrap;">'+
-        '<a href="'+url+'" target="_blank">'+name+'</a>'+
+        '<a target="_blank" href="'+url+'" target="_blank">'+name+'</a>'+
         '</div>';
     return showlinkHtml;
 }

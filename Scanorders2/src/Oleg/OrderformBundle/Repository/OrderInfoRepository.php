@@ -133,7 +133,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //echo "projectTitle setTitleStr=".$entity->getResearch()->getSetTitleStr()."<br>";
 
         //throw new \Exception('TESTING');
-        exit('orderinfo repoexit testing');
+        //exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;

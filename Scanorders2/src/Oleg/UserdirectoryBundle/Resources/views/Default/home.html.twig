@@ -40,14 +40,19 @@
 
         <form id="user-typeahead-serach-form" action="{{ path(employees_sitename~'_home') }}" method="get">
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-8" align="right">
                     <div id="multiple-datasets-typeahead-search">
-                        <input type="text" class="typeahead submit-on-enter-field" name="search" id="user_search" value="{{ search }}" placeholder="Employees Search">
+                        <input type="text" class="typeahead submit-on-enter-field" name="search" id="user_search" value="{{ search }}" placeholder="Search for a name, service, division, etc">
                     </div>
                 </div>
+
+                <div class="col-xs-2" align="left">
+                    <button class="btn btn-lg" type="submit">Search</button>
+                </div>
+
+
             </div>
         </form>
-
 
         {% if entities and entities|length > 0 %}
             {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}

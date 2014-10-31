@@ -403,38 +403,63 @@ class UtilController extends Controller {
         $dql->groupBy('user');
 
 
+        $object = null;
+
         if( $type == "user" ) {
-            $object = "user";
-            $field = "displayName";
-            //$criteriastr = "user.".$field." LIKE '%".$search."%'";
-            //$criteriastr = "user.".$field." = '".$search."'";
+            if( $search == "min" ) {
+                $criteriastr = "user.displayName IS NOT NULL";
+            } else {
+                $criteriastr = "user.displayName LIKE '%".$search."%'";
+            }
+        }
+
+        if( $type == "service" ) {
+            $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+            $dql->leftJoin("administrativeTitles.service", "administrativeService");
+            $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+            $dql->leftJoin("appointmentTitles.service", "appointmentService");
+
+            if( $search == "min" ) {
+                $criteriastr = "administrativeService.name IS NOT NULL OR ";
+                $criteriastr .= "appointmentService.name IS NOT NULL";
+            } else {
+                $criteriastr = "administrativeService.name LIKE '%".$search."%' OR ";
+                $criteriastr .= "appointmentService.name LIKE '%".$search."%'";
+            }
+        }
+
+        if( $type == "division" ) {
+            $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+            $dql->leftJoin("administrativeTitles.division", "administrativeDivision");
+            $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+            $dql->leftJoin("appointmentTitles.division", "appointmentDivision");
+
+            if( $search == "min" ) {
+                $criteriastr = "administrativeDivision.name IS NOT NULL OR ";
+                $criteriastr .= "appointmentDivision.name IS NOT NULL";
+            } else {
+                $criteriastr = "administrativeDivision.name LIKE '%".$search."%' OR ";
+                $criteriastr .= "appointmentDivision.name LIKE '%".$search."%'";
+            }
         }
 
         if( $type == "cwid" ) {
-            $object = "user";
-            $field = "primaryPublicUserId";
-            //$criteriastr = "user.".$field." LIKE '%".$search."%'";
-            //$criteriastr = "user.".$field." = '".$search."'";
+            if( $search == "min" ) {
+                $criteriastr = "user.primaryPublicUserId IS NOT NULL";
+            } else {
+                $criteriastr = "user.primaryPublicUserId LIKE '%".$search."%'";
+            }
         }
 
         if( $type == "admintitle" ) {
             $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
-            $object = "administrativeTitles";
-            $field = "name";
-            //$criteriastr = "administrativeTitles.".$field." LIKE '%".$search."%'";
-            //$criteriastr = "administrativeTitles.".$field." = '".$search."'";
+            if( $search == "min" ) {
+                $criteriastr = "administrativeTitles.name IS NOT NULL";
+            } else {
+                $criteriastr = "administrativeTitles.name LIKE '%".$search."%'";
+            }
         }
 
-
-        if( $search == "min" ) {
-
-            $criteriastr = $object.".".$field." IS NOT NULL";
-
-        } else {
-
-            $criteriastr = $object.".".$field." LIKE '%".$search."%'";
-
-        }
 
         $dql->where($criteriastr);
 

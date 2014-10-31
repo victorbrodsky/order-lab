@@ -181,14 +181,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
                 $status = self::STATUS_INVALID;
             }
             $patientlastname = new PatientLastName($status,$user,$source);
-
-            foreach( $procedure->getPatlastname() as $name ) {
-                echo "Procedure: lastname=".$name.", id=".$name->getId().", status=".$name->getStatus()."<br>";
-            }
-
-            $procLastname = $procedure->obtainValidField('patlastname')->getField();
-
-            $patientlastname->setField($procLastname);
+            $patientlastname->setField($procedure->getPatlastname()->first()->getField());
             $patient->addLastname($patientlastname);
         }
 

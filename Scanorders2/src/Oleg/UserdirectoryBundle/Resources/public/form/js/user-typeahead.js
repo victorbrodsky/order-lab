@@ -19,10 +19,26 @@ function initTypeaheadUserSiteSerach() {
         dupDetector: duplicationDetector
     });
 
+    var serviceDB = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        //prefetch: getCommonBaseUrl("util/common/user-data-search/service/min","employees"),
+        remote: getCommonBaseUrl("util/common/user-data-search/service/%QUERY","employees"),
+        dupDetector: duplicationDetector
+    });
+
+    var divisionDB = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        //prefetch: getCommonBaseUrl("util/common/user-data-search/division/min","employees"),
+        remote: getCommonBaseUrl("util/common/user-data-search/division/%QUERY","employees"),
+        dupDetector: duplicationDetector
+    });
+
     var cwidDB = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: getCommonBaseUrl("util/common/user-data-search/cwid/min","employees"),
+        //prefetch: getCommonBaseUrl("util/common/user-data-search/cwid/min","employees"),
         remote: getCommonBaseUrl("util/common/user-data-search/cwid/%QUERY","employees"),
         dupDetector: duplicationDetector
     });
@@ -36,6 +52,8 @@ function initTypeaheadUserSiteSerach() {
     });
 
     userDB.initialize();
+    serviceDB.initialize();
+    divisionDB.initialize();
     cwidDB.initialize();
     admintitleDB.initialize();
 
@@ -48,6 +66,22 @@ function initTypeaheadUserSiteSerach() {
             source: userDB.ttAdapter(),
             templates: {
                 header: '<h3 class="search-name">Preferred Display Name</h3>'
+            }
+        },
+        {
+            name: 'service',
+            displayKey: 'text',
+            source: serviceDB.ttAdapter(),
+            templates: {
+                header: '<h3 class="search-name">Service</h3>'
+            }
+        },
+        {
+            name: 'division',
+            displayKey: 'text',
+            source: divisionDB.ttAdapter(),
+            templates: {
+                header: '<h3 class="search-name">Division</h3>'
             }
         },
         {
@@ -68,20 +102,13 @@ function initTypeaheadUserSiteSerach() {
         }
     );
 
-
     // Attach initialized event to it
     myTypeahead.on('typeahead:selected',function(event, suggestion, dataset){
-        //console.log('on select');
-        //console.log(suggestion);
-        //$('#user-typeahead-id').val(suggestion.id);
-
-        var input = $("<input>").attr("type", "hidden").attr("name", "userid").val(suggestion.id);
-        $('#user-typeahead-serach-form').append($(input));
-
-        //submit form
+        //show user by id
         if( suggestion.id != "" ) {
-            //console.log('enter pressed => submit form');
-            $('#user-typeahead-serach-form').submit();
+            var url = 'users/'+suggestion.id;
+            window.open(url,"_self");
+            return;
         }
     });
 

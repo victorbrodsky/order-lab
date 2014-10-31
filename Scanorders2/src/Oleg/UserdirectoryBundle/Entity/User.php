@@ -730,6 +730,7 @@ class User extends BaseUser
         return $institutions;
     }
 
+
     public function getSiteRoles($sitename) {
 
         $roles = array();

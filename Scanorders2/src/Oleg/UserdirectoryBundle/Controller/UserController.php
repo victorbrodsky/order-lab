@@ -230,6 +230,11 @@ class UserController extends Controller
 
         }
 
+        //filter out system user
+        if( $totalcriteriastr ) {
+            $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (".$totalcriteriastr.")";
+        }
+
         $dql->where($totalcriteriastr);
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters

@@ -186,19 +186,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //exit('exit part doc');
         }
 
-        //Accession only: if accession found in DB (original exists) set this procedure from accession
-//        if( $className == 'Accession' && $original ) {
-//
-//        }
-
-        //remove original from institution if original is present.
-        //That means that original has been replaced by found entity from DB, but we added original to institution and error will be thrown:
-        //A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\Institution#parts
-        //if( $original ) {
-            //echo "remove original from institution:".$original;
-            //$removeClassMethod = 'remove'.$className;
-            //$orderinfo->getInstitution()->$removeClassMethod($original);
-        //}
 
         //Check if institution of orderinfo and entity are match.
         //Since we set institution of entity from orderinfo on the previous step, the institution of orderinfo and entity must be the same.
@@ -217,31 +204,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //Copy Fields
         $entity = $this->processFieldArrays($entity,$orderinfo,$original);
-
-//        if( $original ) {
-//            //$em->detach($original);
-//            unset($original); //force garbage collector to clean memory
-//            gc_collect_cycles();
-//        }
-
-        //$children = $entity->getChildren();
-
-        //echo "After process fields:".$entity;
-        //echo $className.": count of children=".count($children)."<br>";
-
-//        foreach( $children as $child ) {
-//
-//            $childClass = new \ReflectionClass($child);
-//            $childClassName = $childClass->getShortName();
-//            //echo $className.": childClassName=".$childClassName."<br>";
-//
-//            $entity->removeChildren($child);
-//            $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
-//
-//            //add children
-//            $em->getRepository('OlegOrderformBundle:'.$className)->attachToParent( $entity, $child );
-//
-//        }
 
         //Clean empty array fields, which can be added by user dinamically, such as Part's "Differential Diagnoses" (DiffDisident) with empty input field
         //$entity->cleanEmptyArrayFields();
@@ -711,7 +673,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //if entity is found in DB, then all fields have ID, if not then this function is not executed, because process FieldArrays has original=null
     public function copyField( $entity, $orderinfo, $field, $className, $methodName, $exceptionArr ) {
         $em = $this->_em;
-        echo "copy Field: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
+        //echo "copy Field: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
         //echo $entity;
 
         $addMethodName = "add".$methodName; //i.e. addMrn
@@ -819,7 +781,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             //change status of the field to invalid if valid field is already exists for this entity
             if( $validField ) {
+                //requirement: last added field is invalid
                 $field->setStatus(self::STATUS_INVALID);
+
+                //requirement: last added field is valid, change status of previous valid field to invalid
+                //$field->setStatus(self::STATUS_VALID);
+                //$validField->setStatus(self::STATUS_INVALID);
             }
 
             $entity->$addMethodName( $field );

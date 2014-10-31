@@ -107,5 +107,19 @@ class Service extends ListAbstract
         return $this->parent;
     }
 
+    public function getParentTree($html=false) {
+        $division = $this->getParent();
+        $department = $division->getParent();
+        $inst = $department->getParent();
+        $del = " / "; //" -> ";
+        if( $html ) {
+            $tree = "<strong>".$inst."</strong>".$del."<strong>".$department."</strong>".$del."<strong>".$division."</strong>".$del."<strong>".$this."</strong>";
+        } else {
+            $tree = $inst.$del.$department.$del.$division.$del.$this;
+        }
+
+
+        return $tree;
+    }
 
 }

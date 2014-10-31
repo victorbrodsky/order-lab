@@ -81,6 +81,35 @@ class UploadController extends Controller {
     }
 
 
+    /**
+     * @Route("/file-download/{id}", name="employees_file_download", requirements={"id" = "\d+"})
+     * @Method("GET")
+     */
+    public function downloadFileAction($id) {
 
+        $em = $this->getDoctrine()->getManager();
+        $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
+
+        $response = new Response();
+
+        if( $document ) {
+
+            $originalname = $document->getOriginalname();
+            $abspath = $document->getAbsoluteUploadFullPath();
+            $size = $document->getSize();
+
+            $response->headers->set('Content-Type', 'application/unknown');
+            $response->headers->set('Content-Description', 'File Transfer');
+            $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
+            $response->headers->set('Content-Length', $size);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->setContent(file_get_contents($abspath));
+
+        } else {
+            $response->setContent('error');
+        }
+
+        return $response;
+    }
 
 } 

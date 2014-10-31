@@ -1404,6 +1404,7 @@ function processPaperDocuments( paper ) {
         var uniquename = document['uniquename'];
         var size = document['size'];
         var url = document['url'];
+        var id = document['id'];
 
         //console.log('originalname='+originalname);
 
@@ -1412,6 +1413,7 @@ function processPaperDocuments( paper ) {
         fileArr['uniquename'] = uniquename;
         fileArr['size'] = size;
         fileArr['url'] = url;
+        fileArr['id'] = id;
         data.push(fileArr);
 
     }
