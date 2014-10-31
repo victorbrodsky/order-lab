@@ -164,17 +164,6 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             var existedfiles = holder.find('.file-holder');
             //console.log('existedfiles len='+existedfiles.length);
 
-//            var data = new Array();
-//
-//            existedfiles.each( function() {
-//                console.log('filename='+$(this).find('.file-upload-uniquename').val())
-//                var fileArr = new Array();
-//                fileArr['name'] = $(this).find('.file-upload-uniquename').val();
-//                fileArr['size'] = $(this).find('.file-upload-size').val();
-//                fileArr['dir'] = $(this).find('.file-upload-uploaddirectory').val();
-//                data.push(fileArr);
-//            });
-
             //console.log('data len='+data.length);
 
             for( var i = 0; i < data.length; i++ ) {
@@ -198,19 +187,13 @@ function initFileUpload( holder, data, addRemoveLinks ) {
                 //add showlink
                 if( mockFile.previewElement ) {
                     var showlinkDiv = $(mockFile.previewElement).find('.file-upload-showlink');
-                    var showlinkHtml = constractShowLink(value.id,value.uniquename);
+                    var showlinkHtml = constractShowLink(value.id,value.originalname);
                     showlinkDiv.html(showlinkHtml);
                 }
 
             }
             //See more at: http://www.startutorial.com/articles/view/dropzonejs-php-how-to-display-existing-files-on-server#sthash.sqF6KDsk.dpuf
         }
-//        confirm: function(question, accepted, rejected) {
-//            console.log();
-//            // Do your thing, ask the user for confirmation or rejection, and call
-//            // accepted() if the user accepts, or rejected() otherwise. Make
-//            // sure that rejected is actually defined!
-//        }
 
     });
 
