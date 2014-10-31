@@ -24,7 +24,7 @@ php app/console cache:clear --env=prod --no-debug or (php app/console cache:clea
 php app/console assetic:dump --env=prod --no-debug
 
 
-# Since web folder is moved to root order/ and this is written in compser.json => run composer update
+# run composer update or self-update
 composer.phar update
 
 # Doctrine:
