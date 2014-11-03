@@ -26,6 +26,8 @@ class ListController extends Controller
      * @Route("/roles/", name="role-list")
      * @Route("/institutions/", name="institutions-list")
      * @Route("/departments/", name="departments-list")
+     * @Route("/divisions/", name="divisions-list")
+     * @Route("/services/", name="services-list")
      * @Route("/states/", name="states-list")
      * @Route("/board-certifications/", name="boardcertifications-list")
      * @Route("/employment_terminations/", name="employmentterminations-list")
@@ -106,6 +108,8 @@ class ListController extends Controller
      * @Route("/roles/", name="role_create")
      * @Route("/institutions/", name="institutions_create")
      * @Route("/departments/", name="departments_create")
+     * @Route("/divisions/", name="divisions_create")
+     * @Route("/services/", name="services_create")
      * @Route("/states/", name="states_create")
      * @Route("/board-certifications/", name="boardcertifications_create")
      * @Route("/employment_terminations/", name="employmentterminations_create")
@@ -187,6 +191,8 @@ class ListController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $options['user'] = $user;
 
+        $options['entity'] = $entity;
+
         $newForm = new GenericListType($options, $mapper);
 
         $form = $this->createForm($newForm, $entity, array(
@@ -204,6 +210,8 @@ class ListController extends Controller
      *
      * @Route("/roles/new", name="role_new")
      * @Route("/departments/new", name="departments_new")
+     * @Route("/divisions/new", name="divisions_new")
+     * @Route("/services/new", name="services_new")
      * @Route("/institutions/new", name="institutions_new")
      * @Route("/states/new", name="states_new")
      * @Route("/board-certifications/new", name="boardcertifications_new")
@@ -221,11 +229,13 @@ class ListController extends Controller
     {
         return $this->newList($request);
     }
-    public function newList($request) {
+    public function newList($request,$pid=null) {
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
         //echo "type=".$type."<br>";
+
+        $em = $this->getDoctrine()->getManager();
 
         $mapper= $this->classListMapper($pathbase);
 
@@ -238,11 +248,17 @@ class ListController extends Controller
         $entity->setType('user-added');
         $entity->setCreator($user);
 
+        if( $pid ) {
+            //echo "pid=".$pid."<br>";
+            $parentNMapper = $this->getParentName($mapper['className']);
+            $parent = $em->getRepository($parentNMapper['bundleName'].':'.$parentNMapper['className'])->find($pid);
+            $entity->setParent($parent);
+        }
+
         //$entity->setUpdatedby($user);
         //$entity->setUpdatedon(new \DateTime());
 
         //get max orderinlist + 10
-        $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$mapper['bundleName'].':'.$mapper['className'].' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
@@ -262,6 +278,8 @@ class ListController extends Controller
      *
      * @Route("/roles/{id}", name="role_show")
      * @Route("/departments/{id}", name="departments_show")
+     * @Route("/divisions/{id}", name="divisions_show")
+     * @Route("/services/{id}", name="services_show")
      * @Route("/institutions/{id}", name="institutions_show")
      * @Route("/states/{id}", name="states_show")
      * @Route("/board-certifications/{id}", name="boardcertifications_show")
@@ -312,6 +330,8 @@ class ListController extends Controller
      *
      * @Route("/roles/{id}/edit", name="role_edit")
      * @Route("/departments/{id}/edit", name="departments_edit")
+     * @Route("/divisions/{id}/edit", name="divisions_edit")
+     * @Route("/services/{id}/edit", name="services_edit")
      * @Route("/institutions/{id}/edit", name="institutions_edit")
      * @Route("/states/{id}/edit", name="states_edit")
      * @Route("/board-certifications/{id}/edit", name="boardcertifications_edit")
@@ -384,6 +404,8 @@ class ListController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $options['user'] = $user;
 
+        $options['entity'] = $entity;
+
         $newForm = new GenericListType($options,$mapper);
 
         $form = $this->createForm($newForm, $entity, array(
@@ -403,6 +425,8 @@ class ListController extends Controller
      *
      * @Route("/roles/{id}", name="role_update")
      * @Route("/departments/{id}", name="departments_update")
+     * @Route("/divisions/{id}", name="divisions_update")
+     * @Route("/services/{id}", name="services_update")
      * @Route("/institutions/{id}", name="institutions_update")
      * @Route("/states/{id}", name="states_update")
      * @Route("/board-certifications/{id}", name="boardcertifications_update")
@@ -485,61 +509,136 @@ class ListController extends Controller
     }
 
 
+
+
+
+
+
+    //////////////////////// Tree //////////////////////////////
+    /**
+     * @Route("/institutions-tree-management/", name="institutions-tree-management")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Tree:index.html.twig")
+     */
+    public function indexTreeAction(Request $request)
+    {
+        //exit('tree');
+        return array(
+            'name' => 'Institution'
+        );
+    }
+
+    /**
+     * Displays a form to create a new entity with parent.
+     *
+     * @Route("/department/new/parent/{pid}", name="departments_new_with_parent")
+     * @Route("/division/new/parent/{pid}", name="divisions_new_with_parent")
+     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+     */
+    public function newNodeWithParentAction(Request $request,$pid)
+    {
+        return $this->newList($request,$pid);
+    }
+
+    public function getParentName( $className ) {
+        switch( $className ) {
+            case "Department":
+                $className = "Institution";
+                break;
+            case "Division":
+                $className = "Department";
+                break;
+            case "Service":
+                $className = "Division";
+                break;
+            default:
+                $className = null;
+        }
+
+        $res = array();
+        $res['className'] = $className;
+        $res['fullClassName'] = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
+        $res['bundleName'] = "OlegUserdirectoryBundle";
+
+        return $res;
+    }
+    //////////////////////// EOF tree //////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
     public function classListMapper( $route ) {
 
         switch( $route ) {
 
-        case "role":
-            $className = "roles";
-            $displayName = "Roles";
-            break;
-        case "institutions":
-            $className = "Institution";
-            $displayName = "Institutions";
-            break;
-        case "departments":
+            case "role":
+                $className = "roles";
+                $displayName = "Roles";
+                break;
+            case "institutions":
+                $className = "Institution";
+                $displayName = "Institutions";
+                break;
+            case "departments":
             $className = "Department";
             $displayName = "Departments";
             break;
-        case "states":
-            $className = "States";
-            $displayName = "States";
-            break;
-        case "boardcertifications":
-            $className = "BoardCertifiedSpecialties";
-            $displayName = "Pathology Board Certified Specialties";
-            break;
-        case "employmentterminations":
-            $className = "EmploymentTerminationType";
-            $displayName = "Employment Types of Termination";
-            break;
-        case "loggereventtypes":
-            $className = "EventTypeList";
-            $displayName = "Event Log Types";
-            break;
-        case "usernametypes":
-            $className = "UsernameType";
-            $displayName = "Primary Public User ID Types";
-            break;
-        case "identifiers":
-            $className = "IdentifierTypeList";
-            $displayName = "Identifier Types";
-            break;
-        case "residencytracks":
-            $className = "ResidencyTrackList";
-            $displayName = "Residency Tracks";
-            break;
-        case "fellowshiptypes":
-            $className = "FellowshipTypeList";
-            $displayName = "Fellowship Types";
-            break;
-        case "researchlabtitles":
-            $className = "ResearchLabTitleList";
-            $displayName = "Research Lab Titles";
-            break;
-        default:
-            $className = null;
-            $displayName = null;
+            case "divisions":
+                $className = "Division";
+                $displayName = "Divisions";
+                break;
+            case "services":
+                $className = "Service";
+                $displayName = "Services";
+                break;
+            case "states":
+                $className = "States";
+                $displayName = "States";
+                break;
+            case "boardcertifications":
+                $className = "BoardCertifiedSpecialties";
+                $displayName = "Pathology Board Certified Specialties";
+                break;
+            case "employmentterminations":
+                $className = "EmploymentTerminationType";
+                $displayName = "Employment Types of Termination";
+                break;
+            case "loggereventtypes":
+                $className = "EventTypeList";
+                $displayName = "Event Log Types";
+                break;
+            case "usernametypes":
+                $className = "UsernameType";
+                $displayName = "Primary Public User ID Types";
+                break;
+            case "identifiers":
+                $className = "IdentifierTypeList";
+                $displayName = "Identifier Types";
+                break;
+            case "residencytracks":
+                $className = "ResidencyTrackList";
+                $displayName = "Residency Tracks";
+                break;
+            case "fellowshiptypes":
+                $className = "FellowshipTypeList";
+                $displayName = "Fellowship Types";
+                break;
+            case "researchlabtitles":
+                $className = "ResearchLabTitleList";
+                $displayName = "Research Lab Titles";
+                break;
+            default:
+                $className = null;
+                $displayName = null;
         }
 
         //echo "className=".$className.", displayName=".$displayName."<br>";
@@ -553,12 +652,16 @@ class ListController extends Controller
         return $res;
     }
 
+
+
     /////////////////// DELETE IS NOT USED /////////////////////////
     /**
      * Deletes a entity.
      *
      * @Route("/roles/{id}", name="role_delete")
      * @Route("/departments/{id}", name="departments_delete")
+     * @Route("/divisions/{id}", name="divisions_delete")
+     * @Route("/services/{id}", name="services_delete")
      * @Route("/institutions/{id}", name="institutions_delete")
      * @Route("/states/{id}", name="states_delete")
      * @Route("/board-certifications/{id}", name="boardcertifications_delete")

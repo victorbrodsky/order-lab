@@ -24,16 +24,14 @@ class GenericListType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-//        if( $this->mapper['className'] == "Status" ) {
-//            $builder
-//                ->add('action',null,array(
-//                    'label'=>'Action:',
-//                    'attr' => array('class' => 'combobox combobox-width')
-//                ));
-//        }
-
-        //echo "mapper class name=".$this->mapper['className']."<br>";
+        //echo "generic list <br>";
+        if( method_exists($this->params['entity'],'getParent') ) {
+            //echo "show parent <br>";
+            $builder->add('parent',null,array(
+                'label' => 'Parent:',
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
 
         if( strtolower($this->mapper['className']) == strtolower("Roles") ) {
             $builder->add('alias',null,array(

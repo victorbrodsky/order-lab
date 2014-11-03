@@ -1,0 +1,107 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ name }} Tree
+{% endblock %}
+
+{% block content %}
+
+
+    <h3 class="text-info">{{ name }} Tree</h3>
+
+    <br>
+
+
+    <div class="user-collection-holder">
+
+        <p>
+        <div class="row tree-node-holder">
+
+            <div class="col-xs-4" align="right">
+                <label for="oleg_userdirectorybundle_institution_institution">Institution:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                <input type="text"     id="oleg_userdirectorybundle_institution_institution" name="oleg_userdirectorybundle_institution[institution]"
+                       class="combobox combobox-width ajax-combobox-institution" type="hidden" />
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-default btn-sm btn-block" onClick="editTreeNode(this)" >Edit</button>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-default btn-sm btn-block" onClick="addTreeNode(this)" >Add New</button>
+            </div>
+
+        </div>
+        </p>
+
+
+        <p>
+        <div class="row tree-node-holder">
+
+            <div class="col-xs-4" align="right">
+                <label for="oleg_userdirectorybundle_institution_department">Department:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                <input type="text"     id="oleg_userdirectorybundle_institution_department" name="oleg_userdirectorybundle_institution[department]"
+                       class="combobox combobox-width ajax-combobox-department" type="hidden" />
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-default btn-sm btn-block" onClick="editTreeNode(this)" >Edit</button>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-default btn-sm btn-block" onClick="addTreeNode(this)" >Add New</button>
+            </div>
+
+        </div>
+        </p>
+
+
+        <p>
+        <div class="row tree-node-holder">
+
+            <div class="col-xs-4" align="right">
+                <label for="oleg_userdirectorybundle_institution_division">Division:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                <input type="text"     id="oleg_userdirectorybundle_institution_division" name="oleg_userdirectorybundle_institution[division]"
+                       class="combobox combobox-width ajax-combobox-division" type="hidden" />
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-default btn-sm btn-block" onClick="editTreeNode(this)" >Edit</button>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-default btn-sm btn-block" onClick="addTreeNode(this)" >Add New</button>
+            </div>
+
+        </div>
+        </p>
+
+
+        <p>
+        <div class="row tree-node-holder">
+
+            <div class="col-xs-4" align="right">
+                <label for="oleg_userdirectorybundle_institution_service">Service:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                <input type="text"     id="oleg_userdirectorybundle_institution_service" name="oleg_userdirectorybundle_institution[service]"
+                       class="combobox combobox-width ajax-combobox-service" type="hidden" />
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-default btn-sm btn-block" onClick="editTreeNode(this)" >Edit</button>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-default btn-sm btn-block" onClick="addTreeNode(this)" >Add New</button>
+            </div>
+
+        </div>
+        </p>
+
+
+    </div>
+
+
+
+
+{% endblock %}

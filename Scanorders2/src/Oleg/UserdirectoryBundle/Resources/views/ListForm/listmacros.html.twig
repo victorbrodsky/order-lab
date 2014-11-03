@@ -9,6 +9,10 @@
             <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
 
+            {% if entities|first.parent is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Parent(s)', 'ent.parent') }}</th>
+            {% endif %}
+
             {% if entities|first.action is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Action', 'ent.action') }}</th>
             {% endif %}
@@ -44,6 +48,21 @@
             <tr>
                 <td><a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
+
+                {% if entity.parent is defined %}
+                    <td>
+                        {% if entity.parent.parent.parent.parent is defined %}
+                            {{ entity.parent.parent.parent.parent }} /
+                        {% endif %}
+                        {% if entity.parent.parent.parent is defined %}
+                            {{ entity.parent.parent.parent }} /
+                        {% endif %}
+                        {% if entity.parent.parent is defined %}
+                            {{ entity.parent.parent }} /
+                        {% endif %}
+                        {{ entity.parent }}
+                    </td>
+                {% endif %}
 
                 {% if entity.action is defined %}
                     <td>{{ entity.action }}</td>
@@ -98,12 +117,19 @@
 {% endmacro %}
 
 
+
+
+
 {% macro listNew( form, pathbase ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {#{{ form(form) }}#}
     {{ form_start(form) }}
+
+    {% if form.parent is defined %}
+        {{ formmacros.field(form.parent) }}
+    {% endif %}
 
     {{ formmacros.field(form.list.name) }}
 
@@ -162,6 +188,10 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {{ form_start(edit_form) }}
+
+    {% if edit_form.parent is defined %}
+        {{ formmacros.field(edit_form.parent) }}
+    {% endif %}
 
     {{ formmacros.field(edit_form.list.name) }}
 
