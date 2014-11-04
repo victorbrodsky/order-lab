@@ -24,14 +24,22 @@ class GenericListType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //echo "generic list <br>";
+
+        //tree classes
         if( method_exists($this->params['entity'],'getParent') ) {
-            //echo "show parent <br>";
             $builder->add('parent',null,array(
-                'label' => 'Parent:',
-                'attr' => array('class' => 'combobox combobox-width')
+                'label' => $this->mapper['parentClassName'].':',
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>'readonly')
             ));
         }
+
+        //research lab ResearchLabTitleList: show a column called "Principal Investigator" and have a dropdown of all users
+//        if( strtolower($this->mapper['className']) == strtolower("ResearchLabTitleList") ) {
+//            $builder->add('researchlab',null,array(
+//                'label' => false,
+//                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>'readonly')
+//            ));
+//        }
 
         if( strtolower($this->mapper['className']) == strtolower("Roles") ) {
             $builder->add('alias',null,array(
@@ -39,7 +47,7 @@ class GenericListType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
             $builder->add('description',null,array(
-                'label'=>'Capabilities:',
+                'label'=>'Explanation of Capabilities:',
                 'attr' => array('class' => 'textarea form-control')
             ));
         }

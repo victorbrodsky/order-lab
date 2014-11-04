@@ -72,9 +72,15 @@ class ListController extends Controller
             $dql->addGroupBy('synonyms.name');
             $dql->leftJoin("ent.original", "original");
             $dql->addGroupBy('original.name');
-        } else {
-            //echo "no synonyms! <br>";
         }
+
+        if( method_exists($entityClass,'getResearchlab') ) {
+            //echo "synonyms exists! <br>";
+            $dql->leftJoin("ent.researchlab", "researchlab");
+            $dql->leftJoin("researchlab.user", "user");
+            $dql->addSelect('COUNT(user) AS HIDDEN usercount');
+        }
+
         //$dql->orderBy("ent.createdate","DESC");
 		
 		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       		
@@ -128,7 +134,6 @@ class ListController extends Controller
     }
     public function createList($request) {
         $routeName = $request->get('_route');
-        //exit("routeName=".$routeName); //mrntype
 
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -233,7 +238,7 @@ class ListController extends Controller
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
-        //echo "type=".$type."<br>";
+        //echo "pathbase=".$pathbase."<br>";
 
         $em = $this->getDoctrine()->getManager();
 
@@ -302,24 +307,26 @@ class ListController extends Controller
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
         //echo "pathbase=".$pathbase."<br>";
+        //exit('show');
 
         $em = $this->getDoctrine()->getManager();
 
         $mapper= $this->classListMapper($pathbase);
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        //echo "entity=".$entity."<br>";
         $form = $this->createEditForm($entity,$mapper,$pathbase,'edit',true);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$mapper['fullClassName'].' entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id,$pathbase);
+        //$deleteForm = $this->createDeleteForm($id,$pathbase);
 
         return array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'edit_form' => $form->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'delete_form' => null,  //$deleteForm->createView(),
             'displayName' => $mapper['displayName'],
             'pathbase' => $pathbase
         );
@@ -370,7 +377,7 @@ class ListController extends Controller
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            //'delete_form' => $deleteForm->createView(),
+            'delete_form' => $deleteForm->createView(),
             'displayName' => $mapper['displayName'],
             'pathbase' => $pathbase
         );
@@ -378,7 +385,7 @@ class ListController extends Controller
 
     /**
     * Creates a form to edit an entity.
-    * @param $entity The entity
+    * @param $entity
     * @return \Symfony\Component\Form\Form The form
     */
     private function createEditForm($entity,$mapper,$pathbase,$cicle,$disabled=false)
@@ -543,22 +550,24 @@ class ListController extends Controller
     }
 
     public function getParentName( $className ) {
+
         switch( $className ) {
             case "Department":
-                $className = "Institution";
+                $parentClassName = "Institution";
                 break;
             case "Division":
-                $className = "Department";
+                $parentClassName = "Department";
                 break;
             case "Service":
-                $className = "Division";
+                $parentClassName = "Division";
                 break;
             default:
-                $className = null;
+                //$parentClassName = null;
+                return null;
         }
 
         $res = array();
-        $res['className'] = $className;
+        $res['className'] = $parentClassName;
         $res['fullClassName'] = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
         $res['bundleName'] = "OlegUserdirectoryBundle";
 
@@ -648,6 +657,12 @@ class ListController extends Controller
         $res['fullClassName'] = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
         $res['bundleName'] = "OlegUserdirectoryBundle";
         $res['displayName'] = $displayName;
+
+        //check parent name
+        $parentMapper = $this->getParentName($className);
+        if( $parentMapper ) {
+            $res['parentClassName'] = $parentMapper['className'];
+        }
 
         return $res;
     }

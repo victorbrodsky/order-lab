@@ -7,6 +7,9 @@
 
 {% block addcontent %}
 
+    {#{% set collapsein = 'in' %}#}
+    {% set collapsein = '' %}
+
     {#Per Site User Settings by User#}
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -16,7 +19,7 @@
                 </a>
             </h4>
         </div>
-        <div id="persiteusersettings" class="panel-collapse collapse in">
+        <div id="persiteusersettings" class="panel-collapse collapse {{ collapsein }}">
             <div class="panel-body">
 
                 <div class="user-collection-holder">
@@ -42,7 +45,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="persiteadminsettings" class="panel-collapse collapse in">
+            <div id="persiteadminsettings" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
 
                     {{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}
@@ -65,7 +68,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="researchprojects" class="panel-collapse collapse in">
+            <div id="researchprojects" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
 
                     {% for project in projects %}
@@ -87,7 +90,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="educationalcourses" class="panel-collapse collapse in">
+            <div id="educationalcourses" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
 
                     {% for course in courses %}

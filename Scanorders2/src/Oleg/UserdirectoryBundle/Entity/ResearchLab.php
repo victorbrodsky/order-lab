@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,11 +12,19 @@ use Doctrine\ORM\Mapping as ORM;
 class ResearchLab extends BaseUserAttributes
 {
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="User", inversedBy="researchLabs")
+//     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
+//     */
+//    private $user;
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="researchLabs")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $user;
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="researchLabs")
+     * @ORM\JoinTable(name="user_researchlab_user",
+     *      joinColumns={@ORM\JoinColumn(name="researchlab_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * )
+     **/
+    protected $user;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -38,8 +47,8 @@ class ResearchLab extends BaseUserAttributes
     private $location;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ResearchLabTitleList")
-     * @ORM\JoinColumn(name="state_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="ResearchLabTitleList", inversedBy="researchlab")
+     * @ORM\JoinColumn(name="researchlabtitle_id", referencedColumnName="id", nullable=true)
      **/
     private $researchLabTitle;
 
@@ -47,6 +56,12 @@ class ResearchLab extends BaseUserAttributes
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $researchPI;
+
+
+    public function __construct($author=null) {
+        parent::__construct($author);
+        $this->user = new ArrayCollection();
+    }
 
     /**
      * @param mixed $comment
@@ -112,21 +127,56 @@ class ResearchLab extends BaseUserAttributes
         return $this->location;
     }
 
+//    /**
+//     * @param mixed $user
+//     */
+//    public function setUser($user)
+//    {
+//        $this->user = $user;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getUser()
+//    {
+//        return $this->user;
+//    }
+
     /**
-     * @param mixed $user
+     * Add user
+     *
+     * @param \Oleg\OrderformBundle\Entity\User $user
+     * @return User
      */
-    public function setUser($user)
+    public function addUser($user)
     {
-        $this->user = $user;
+        if( !$this->user->contains($user) ) {
+            $this->user->add($user);
+        }
+
+        return $this;
+    }
+    /**
+     * Remove user
+     *
+     * @param \Oleg\OrderformBundle\Entity\User $user
+     */
+    public function removeUser($user)
+    {
+        $this->user->removeElement($user);
     }
 
     /**
-     * @return mixed
+     * Get user
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUser()
     {
         return $this->user;
     }
+
 
     /**
      * @param mixed $researchPI

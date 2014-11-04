@@ -147,6 +147,9 @@ class Institution extends ListAbstract
         return $this->abbreviation;
     }
 
-
+    public function getClassName()
+    {
+        return "Institution";
+    }
 
 }

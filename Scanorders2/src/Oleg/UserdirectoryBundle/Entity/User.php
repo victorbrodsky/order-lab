@@ -127,10 +127,14 @@ class User extends BaseUser
      */
     private $employmentStatus;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="ResearchLab", mappedBy="user", cascade={"persist"})
+//     * @ORM\OrderBy({"dissolvedDate" = "ASC"})
+//     */
+//    private $researchLabs;
     /**
-     * @ORM\OneToMany(targetEntity="ResearchLab", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"dissolvedDate" = "ASC"})
-     */
+     * @ORM\ManyToMany(targetEntity="ResearchLab", mappedBy="user", cascade={"persist"})
+     **/
     private $researchLabs;
 
     /**
@@ -668,7 +672,7 @@ class User extends BaseUser
     {
         if( !$this->researchLabs->contains($researchLab) ) {
             $this->researchLabs->add($researchLab);
-            $researchLab->setUser($this);
+            $researchLab->addUser($this);
         }
 
         return $this;

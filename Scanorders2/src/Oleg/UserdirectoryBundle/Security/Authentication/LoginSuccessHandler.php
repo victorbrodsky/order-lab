@@ -96,8 +96,9 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $loginpos = strpos($lastRoute, '/login');
         $nopermpos = strpos($lastRoute, '/no-permission');
         $nocheck = strpos($lastRoute, '/check/');
+        $keepalive = strpos($lastRoute, '/keepalive/');
 
-        if( $lastRoute && $lastRoute != '' && $loginpos === false && $nopermpos === false && $nocheck === false ) {
+        if( $lastRoute && $lastRoute != '' && $loginpos === false && $nopermpos === false && $nocheck === false && $keepalive === false ) {
             $referer_url = $lastRoute;
         } else {
             $referer_url = $this->router->generate($this->siteName.'_home');

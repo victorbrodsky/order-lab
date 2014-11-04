@@ -122,4 +122,12 @@ class Service extends ListAbstract
         return $tree;
     }
 
+    public function getParentName()
+    {
+        return "Division";
+    }
+    public function getClassName()
+    {
+        return "Service";
+    }
 }

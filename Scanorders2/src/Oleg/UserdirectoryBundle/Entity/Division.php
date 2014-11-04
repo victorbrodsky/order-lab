@@ -151,5 +151,13 @@ class Division extends ListAbstract
         return $this->services;
     }
 
+    public function getParentName()
+    {
+        return "Department";
+    }
+    public function getClassName()
+    {
+        return "Division";
+    }
 
 }

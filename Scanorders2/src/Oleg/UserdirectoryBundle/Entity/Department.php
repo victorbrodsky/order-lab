@@ -148,6 +148,14 @@ class Department extends ListAbstract
         return $this->divisions;
     }
 
+    public function getParentName()
+    {
+        return "Institution";
+    }
 
+    public function getClassName()
+    {
+        return "Department";
+    }
 
 }

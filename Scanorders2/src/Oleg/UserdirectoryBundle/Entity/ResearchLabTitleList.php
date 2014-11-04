@@ -26,9 +26,15 @@ class ResearchLabTitleList extends ListAbstract
     protected $original;
 
 
+    /**
+     * @ORM\OneToMany(targetEntity="ResearchLab", mappedBy="researchLabTitle")
+     **/
+    private $researchlab;
+
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
+        $this->researchlab = new ArrayCollection();
     }
 
 
@@ -81,6 +87,29 @@ class ResearchLabTitleList extends ListAbstract
     {
         return $this->original;
     }
+
+
+    /**
+     * @return mixed
+     */
+    public function getResearchlab()
+    {
+        return $this->researchlab;
+    }
+    public function addResearchlab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchlab)
+    {
+        if( !$this->researchlab->contains($researchlab) ) {
+            $this->researchlab->add($researchlab);
+            $researchlab->setResearchLabTitle($this);
+        }
+
+        return $this;
+    }
+    public function removeResearchlab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchlab)
+    {
+        $this->researchlab->removeElement($researchlab);
+    }
+
 
 
 }

@@ -131,6 +131,8 @@ class SessionIdleHandler
             $session->set('last_route_arr', $routeNameArr);
             $session->set('target_path', $target_path);
             //echo "set session rout=".$routeName."<br>";
+        } else {
+            //$session->set('target_path', null);
         }
 //        echo "<br> kernel routeName=".$routeName."<br>";
 //        $referer = $request->headers->get('referer');

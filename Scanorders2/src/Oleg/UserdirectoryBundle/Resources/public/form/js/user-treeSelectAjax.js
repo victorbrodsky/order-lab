@@ -263,22 +263,22 @@ function setCommentTypeTreeChildren(holder) {
 //redirect to correct controller with node id and parent
 function editTreeNode(btn) {
     var holder = $(btn).closest('.tree-node-holder');
-    console.log(holder);
+    //console.log(holder);
 
     //get node id
     var inputEl = holder.find('input.combobox:text').not("*[id^='s2id_']");
-    console.log(inputEl);
+    //console.log(inputEl);
     var nodeid = inputEl.select2('val');
     var res = getInstitutionNodeInfo(inputEl);
     var nodename = res['name'];
-    console.log('nodeid='+nodeid+', nodename='+nodename);
+    //console.log('nodeid='+nodeid+', nodename='+nodename);
 
     if( nodename == null ) {
         return;
     }
     //redirect to edit page
     var url = getCommonBaseUrl("admin/list/"+nodename+"s/"+nodeid,"employees");
-    console.log("url="+url);
+    //console.log("url="+url);
 
     window.open(url);
     //window.location.href = url;
@@ -287,11 +287,11 @@ function editTreeNode(btn) {
 //redirect to correct controller with node id and parent
 function addTreeNode(btn) {
     var holder = $(btn).closest('.tree-node-holder');
-    console.log(holder);
+    //console.log(holder);
 
     //get node id
     var inputEl = holder.find('input.combobox:text').not("*[id^='s2id_']");
-    console.log(inputEl);
+    //console.log(inputEl);
     var nodeid = inputEl.select2('val');
 
     //get parent id
@@ -304,11 +304,15 @@ function addTreeNode(btn) {
     }
 
     if( parentClass ) {
-        console.log('parentClass='+parentClass);
+        //console.log('parentClass='+parentClass);
         var treeHolder = $(btn).closest('.user-collection-holder');
         var parentEl = treeHolder.find('.'+parentClass);
-        console.log(parentEl);
+        //console.log(parentEl);
         var parentid = parentEl.select2('val');
+        if( !parentid || parentid == "" ) {
+            alert("Parent is not specified");
+            return;
+        }
         var url = getCommonBaseUrl("admin/list/"+nodename+"/new/parent/"+parentid,"employees");
     } else {
         var url = getCommonBaseUrl("admin/list/institutions/new","employees");

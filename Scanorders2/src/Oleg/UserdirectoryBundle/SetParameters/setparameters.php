@@ -53,8 +53,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $department_url = null;
         $department_name = null;
 
-        $employeesuploadpath = null;
-        $scanuploadpath = null;
+        $employeesuploadpath = "pathology-employees/Documents";
+        $scanuploadpath = "scan-order/Documents";
 
         //maintenance
 //        $maintenance = null;
@@ -125,14 +125,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('department_name',$department_name);
 
         //uploads
-        if( $employeesuploadpath ) {
-            $employeesuploadpath = "Uploaded/"."pathology-employees/Documents";
-        }
         $container->setParameter('employees.uploadpath',$employeesuploadpath);
-
-        if( $scanuploadpath ) {
-            $scanuploadpath = "Uploaded/"."scan-order/Documents";
-        }
         $container->setParameter('scan.uploadpath',$scanuploadpath);
 
         //maintenance
