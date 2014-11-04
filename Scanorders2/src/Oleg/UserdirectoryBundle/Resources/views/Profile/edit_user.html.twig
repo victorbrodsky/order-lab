@@ -26,7 +26,8 @@
         {% endif %}
 
         {{ formmacros.field(formfield.id) }}
-        {{ formmacros.field(formfield.status) }}
+        {#{{ formmacros.field(formfield.status) }}#}
+        {{ userform.statusVerifiedField(formfield) }}
 
         {% if formfield.orderinlist is defined %}
             {{ formmacros.field(formfield.orderinlist) }}
@@ -175,7 +176,8 @@
         {% endif %}
 
         {{ formmacros.field(formfield.id) }}
-        {{ formmacros.field(formfield.status) }}
+        {#{{ formmacros.field(formfield.status) }}#}
+        {{ userform.statusVerifiedField(formfield) }}
 
         {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
             {{ formmacros.field(formfield.name) }}
@@ -487,7 +489,8 @@
             {{ formmacros.field(formfield.id) }}
 
             {% if formfield.status is defined %}
-                {{ formmacros.field(formfield.status) }}
+                {#{{ formmacros.field(formfield.status) }}#}
+                {{ userform.statusVerifiedField(formfield) }}
             {% endif %}
 
             {{ formmacros.field(formfield.commentType) }}
@@ -678,7 +681,18 @@
 
 {% endmacro %}
 
-
+{% macro statusVerifiedField( entity ) %}
+    {% if entity.status is defined %}
+        {#ver:{{ constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') }}#}
+        {#unver:{{ constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') }}#}
+        {% if entity.status.vars.value != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
+            {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+            {{ formmacros.field(entity.status) }}
+        {% else %}
+            {% do entity.status.setRendered %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
 
 {% import _self as userform %}
 

@@ -33,14 +33,6 @@ class GenericListType extends AbstractType
             ));
         }
 
-        //research lab ResearchLabTitleList: show a column called "Principal Investigator" and have a dropdown of all users
-//        if( strtolower($this->mapper['className']) == strtolower("ResearchLabTitleList") ) {
-//            $builder->add('researchlab',null,array(
-//                'label' => false,
-//                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>'readonly')
-//            ));
-//        }
-
         if( strtolower($this->mapper['className']) == strtolower("Roles") ) {
             $builder->add('alias',null,array(
                 'label'=>'Alias:',
