@@ -27,7 +27,7 @@
 
         {{ formmacros.field(formfield.id) }}
         {#{{ formmacros.field(formfield.status) }}#}
-        {{ userform.statusVerifiedField(formfield) }}
+        {{ userform.statusVerifiedField(formfield,cicle) }}
 
         {% if formfield.orderinlist is defined %}
             {{ formmacros.field(formfield.orderinlist) }}
@@ -177,12 +177,16 @@
 
         {{ formmacros.field(formfield.id) }}
         {#{{ formmacros.field(formfield.status) }}#}
-        {{ userform.statusVerifiedField(formfield) }}
+        {{ userform.statusVerifiedField(formfield,cicle) }}
 
         {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
             {{ formmacros.field(formfield.name) }}
         {% else %}
             {{ formmacros.field(formfield.name,"","readonly") }}
+        {% endif %}
+
+        {% if formfield.locationType is defined %}
+            {{ formmacros.field(formfield.locationType) }}
         {% endif %}
 
         {{ userform.emailPhoneField(formfield.phone,cicle,'phone',"") }}
@@ -206,23 +210,19 @@
                             {{ userform.personInfo(assistant,cicle,sitename) }}
                         {% endfor %}
                     {% endif %}
-                    {% do formfield.assistant.setRendered %}
                 {% endif %}
             {% endif %}
 
-
-        {% else %}
-            {% do formfield.assistant.setRendered %}
         {% endif %}
 
         {% if homeLocation == false %}
             {{ formmacros.field(formfield.room) }}
             {{ formmacros.field_notempty(formfield.suit,cicle) }}
             {{ formmacros.field(formfield.floor) }}
-        {% else %}
-            {% do formfield.room.setRendered %}
-            {% do formfield.suit.setRendered %}
-            {% do formfield.floor.setRendered %}
+            {{ formmacros.field(formfield.buildingName) }}
+            {{ formmacros.field(formfield.buildingAbbr) }}
+            {{ formmacros.field_notempty(formfield.institution,cicle) }}
+            {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
         {% endif %}
 
         {{ formmacros.field_notempty(formfield.street1,cicle) }}
@@ -230,17 +230,11 @@
         {{ formmacros.field_notempty(formfield.city,cicle) }}
         {{ formmacros.field_notempty(formfield.state,cicle) }}
         {{ formmacros.field_notempty(formfield.zip,cicle) }}
+        {{ formmacros.field_notempty(formfield.county,cicle) }}
+        {{ formmacros.field_notempty(formfield.country,cicle) }}
 
         {% if homeLocation == false %}
-            {{ formmacros.field(formfield.buildingName) }}
-            {{ formmacros.field(formfield.buildingAbbr) }}
-            {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
             {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
-        {% else %}
-            {% do formfield.buildingName.setRendered %}
-            {% do formfield.buildingAbbr.setRendered %}
-            {% do formfield.mailbox.setRendered %}
-            {% do formfield.associatedCode.setRendered %}
         {% endif %}
 
         {#In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.#}
@@ -254,6 +248,9 @@
         {{ formmacros.field_notempty(formfield.comment,cicle) }}
 
     </div>
+
+    {% do formfield.setRendered %}
+
 {% endmacro %}
 
 
@@ -274,6 +271,7 @@
             </div>
         {% endif %}
 
+        {{ formmacros.field_notempty(formfield.country,cicle) }}
         {{ formmacros.field(formfield.state) }}
         {{ formmacros.field(formfield.licenseNumber) }}
         {{ formmacros.fieldDateLabel(formfield.licenseExpirationDate,'allow-future-date') }}
@@ -490,7 +488,7 @@
 
             {% if formfield.status is defined %}
                 {#{{ formmacros.field(formfield.status) }}#}
-                {{ userform.statusVerifiedField(formfield) }}
+                {{ userform.statusVerifiedField(formfield,cicle) }}
             {% endif %}
 
             {{ formmacros.field(formfield.commentType) }}
@@ -681,11 +679,11 @@
 
 {% endmacro %}
 
-{% macro statusVerifiedField( entity ) %}
+{% macro statusVerifiedField( entity, cicle ) %}
     {% if entity.status is defined %}
         {#ver:{{ constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') }}#}
         {#unver:{{ constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') }}#}
-        {% if entity.status.vars.value != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
+        {% if cicle != "show_user" or entity.status.vars.value != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
             {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
             {{ formmacros.field(entity.status) }}
         {% else %}

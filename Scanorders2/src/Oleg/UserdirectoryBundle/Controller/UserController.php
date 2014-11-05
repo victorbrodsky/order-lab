@@ -669,7 +669,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')), $user, array('disabled' => false));
+        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context'),$em), $user, array('disabled' => false));
 
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
@@ -712,7 +712,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')), $user, array('disabled' => false));
+        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context'),$em), $user, array('disabled' => false));
 
         $form->handleRequest($request);
 
@@ -803,7 +803,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')), $entity, array('disabled' => true));
+        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context'),$em), $entity, array('disabled' => true));
 
 //        if (!is_object($user) || !$user instanceof UserInterface) {
 //            throw new AccessDeniedException('This user does not have access to this section.');
@@ -851,7 +851,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')), $entity, array(
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context'),$em), $entity, array(
             'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -1043,7 +1043,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')), $entity, array(
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context'),$em), $entity, array(
             'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));

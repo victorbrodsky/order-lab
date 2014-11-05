@@ -92,7 +92,7 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('stateLicense', 'collection', array(
-            'type' => new StateLicenseType(),
+            'type' => new StateLicenseType($this->params),
             'label' => false,
             'required' => false,
             'allow_add' => true,

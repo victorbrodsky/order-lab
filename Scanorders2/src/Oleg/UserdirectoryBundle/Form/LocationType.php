@@ -84,8 +84,48 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('state',null,array(
+        $builder->add( 'state', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:States',
+            'property' => 'name',
             'label'=>'State:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
+
+        //country
+        $defaultCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+        $builder->add( 'country', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Countries',
+            'property' => 'name',
+            'label'=>'Country:',
+            'required'=> false,
+            'multiple' => false,
+            //'data' => '225',  //United States
+            'preferred_choices' => $defaultCountries,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
+
+        $builder->add('county',null,array(
+            'label'=>'County:',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -177,6 +217,24 @@ class LocationType extends AbstractType
             'label' => "Status:",
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width'),
+        ));
+
+        if( $this->params['cicle'] != "show" ) {
+            $builder->add('locationType','entity',array(
+                'class' => 'OlegUserdirectoryBundle:LocationTypeList',
+                'label' => "Location Type:",
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false
+            ));
+        }
+
+        $builder->add('institution','entity',array(
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'label' => "Institution:",
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'required' => false
         ));
 
 

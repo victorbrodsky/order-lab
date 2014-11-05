@@ -26,13 +26,15 @@ class UserType extends AbstractType
     protected $subjectUser;
     protected $roles;
     protected $sc;
+    protected $em;
 
-    public function __construct( $cicle, $subjectUser, $roles, $sc )
+    public function __construct( $cicle, $subjectUser, $roles, $sc, $em )
     {
         $this->cicle = $cicle;
         $this->subjectUser = $subjectUser;
         $this->roles = $roles;
         $this->sc = $sc;
+        $this->em = $em;
 
         //echo "cicle=".$cicle."<br>";
         if( $cicle == 'create' ) {
@@ -180,7 +182,7 @@ class UserType extends AbstractType
             'prototype_name' => '__appointmenttitles__',
         ));
 
-        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser);
+        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser,'cicle'=>$this->cicle,'em'=>$this->em);
         $builder->add('locations', 'collection', array(
             'type' => new LocationType($params),
             'label' => false,
@@ -221,7 +223,8 @@ class UserType extends AbstractType
         }
 
         if( $this->roleAdmin || $currentUser ) {
-            $builder->add('credentials', new CredentialsType(), array(
+            $params = array('em'=>$this->em);
+            $builder->add('credentials', new CredentialsType($params), array(
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
                 'label' => false,
                 'required' => false,

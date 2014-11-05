@@ -29,6 +29,7 @@ class ListController extends Controller
      * @Route("/divisions/", name="divisions-list")
      * @Route("/services/", name="services-list")
      * @Route("/states/", name="states-list")
+     * @Route("/countries/", name="countries-list")
      * @Route("/board-certifications/", name="boardcertifications-list")
      * @Route("/employment_terminations/", name="employmentterminations-list")
      * @Route("/event-log-event-types/", name="loggereventtypes-list")
@@ -37,6 +38,7 @@ class ListController extends Controller
      * @Route("/residency-tracks/", name="residencytracks-list")
      * @Route("/fellowship-types/", name="fellowshiptypes-list")
      * @Route("/research-lab-titles/", name="researchlabtitles-list")
+     * @Route("/location-types/", name="locationtypes-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -75,10 +77,16 @@ class ListController extends Controller
         }
 
         if( method_exists($entityClass,'getResearchlab') ) {
-            //echo "synonyms exists! <br>";
             $dql->leftJoin("ent.researchlab", "researchlab");
             $dql->leftJoin("researchlab.user", "user");
             $dql->addSelect('COUNT(user) AS HIDDEN usercount');
+        }
+
+        if( method_exists($entityClass,'getParent') ) {
+            $dql->leftJoin("ent.parent", "parent");
+            $dql->addGroupBy('parent.name');
+            //$dql->leftJoin("researchlab.user", "user");
+            //$dql->addSelect('COUNT(user) AS HIDDEN usercount');
         }
 
         //$dql->orderBy("ent.createdate","DESC");
@@ -117,6 +125,7 @@ class ListController extends Controller
      * @Route("/divisions/", name="divisions_create")
      * @Route("/services/", name="services_create")
      * @Route("/states/", name="states_create")
+     * @Route("/countries/", name="countries_create")
      * @Route("/board-certifications/", name="boardcertifications_create")
      * @Route("/employment_terminations/", name="employmentterminations_create")
      * @Route("/event-log-event-types/", name="loggereventtypes_create")
@@ -125,6 +134,7 @@ class ListController extends Controller
      * @Route("/residency-tracks/", name="residencytracks_create")
      * @Route("/fellowship-types/", name="fellowshiptypes_create")
      * @Route("/research-lab-titles/", name="researchlabtitles_create")
+     * @Route("/location-types/", name="locationtypes_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -219,6 +229,7 @@ class ListController extends Controller
      * @Route("/services/new", name="services_new")
      * @Route("/institutions/new", name="institutions_new")
      * @Route("/states/new", name="states_new")
+     * @Route("/countries/new", name="countries_new")
      * @Route("/board-certifications/new", name="boardcertifications_new")
      * @Route("/employment_terminations/new", name="employmentterminations_new")
      * @Route("/event-log-event-types/new", name="loggereventtypes_new")
@@ -227,6 +238,7 @@ class ListController extends Controller
      * @Route("/residency-tracks/new", name="residencytracks_new")
      * @Route("/fellowship-types/new", name="fellowshiptypes_new")
      * @Route("/research-lab-titles/new", name="researchlabtitles_new")
+     * @Route("/location-types/new", name="locationtypes_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -287,6 +299,7 @@ class ListController extends Controller
      * @Route("/services/{id}", name="services_show")
      * @Route("/institutions/{id}", name="institutions_show")
      * @Route("/states/{id}", name="states_show")
+     * @Route("/countries/{id}", name="countries_show")
      * @Route("/board-certifications/{id}", name="boardcertifications_show")
      * @Route("/employment_terminations/{id}", name="employmentterminations_show")
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_show")
@@ -295,6 +308,7 @@ class ListController extends Controller
      * @Route("/residency-tracks/{id}", name="residencytracks_show")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_show")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_show")
+     * @Route("/location-types/{id}", name="locationtypes_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -341,6 +355,7 @@ class ListController extends Controller
      * @Route("/services/{id}/edit", name="services_edit")
      * @Route("/institutions/{id}/edit", name="institutions_edit")
      * @Route("/states/{id}/edit", name="states_edit")
+     * @Route("/countries/{id}/edit", name="countries_edit")
      * @Route("/board-certifications/{id}/edit", name="boardcertifications_edit")
      * @Route("/employment_terminations/{id}/edit", name="employmentterminations_edit")
      * @Route("/event-log-event-types/{id}/edit", name="loggereventtypes_edit")
@@ -349,6 +364,7 @@ class ListController extends Controller
      * @Route("/residency-tracks/{id}/edit", name="residencytracks_edit")
      * @Route("/fellowship-types/{id}/edit", name="fellowshiptypes_edit")
      * @Route("/research-lab-titles/{id}/edit", name="researchlabtitles_edit")
+     * @Route("/location-types/{id}/edit", name="locationtypes_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -436,6 +452,7 @@ class ListController extends Controller
      * @Route("/services/{id}", name="services_update")
      * @Route("/institutions/{id}", name="institutions_update")
      * @Route("/states/{id}", name="states_update")
+     * @Route("/countries/{id}", name="countries_update")
      * @Route("/board-certifications/{id}", name="boardcertifications_update")
      * @Route("/employment_terminations/{id}", name="employmentterminations_update")
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_update")
@@ -444,6 +461,7 @@ class ListController extends Controller
      * @Route("/residency-tracks/{id}", name="residencytracks_update")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_update")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_update")
+     * @Route("/location-types/{id}", name="locationtypes_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -613,6 +631,10 @@ class ListController extends Controller
                 $className = "States";
                 $displayName = "States";
                 break;
+            case "countries":
+                $className = "Countries";
+                $displayName = "Countries";
+                break;
             case "boardcertifications":
                 $className = "BoardCertifiedSpecialties";
                 $displayName = "Pathology Board Certified Specialties";
@@ -644,6 +666,10 @@ class ListController extends Controller
             case "researchlabtitles":
                 $className = "ResearchLabTitleList";
                 $displayName = "Research Lab Titles";
+                break;
+            case "locationtypes":
+                $className = "LocationTypeList";
+                $displayName = "Location Types";
                 break;
             default:
                 $className = null;
@@ -679,6 +705,7 @@ class ListController extends Controller
      * @Route("/services/{id}", name="services_delete")
      * @Route("/institutions/{id}", name="institutions_delete")
      * @Route("/states/{id}", name="states_delete")
+     * @Route("/countries/{id}", name="countries_delete")
      * @Route("/board-certifications/{id}", name="boardcertifications_delete")
      * @Route("/employment_terminations/{id}", name="employmentterminations_delete")
      * @Route("/event-log-event-types/{id}", name="loggereventtypes_delete")
@@ -687,6 +714,7 @@ class ListController extends Controller
      * @Route("/residency-tracks/{id}", name="residencytracks_delete")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_delete")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_delete")
+     * @Route("/location-types/{id}", name="locationtypes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

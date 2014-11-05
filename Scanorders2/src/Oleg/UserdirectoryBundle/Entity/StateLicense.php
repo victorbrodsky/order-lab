@@ -23,9 +23,15 @@ class StateLicense
 
     /**
      * @ORM\ManyToOne(targetEntity="States")
-     * @ORM\JoinColumn(name="state_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="state_id", referencedColumnName="id", nullable=true)
      **/
     private $state;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="States")
+     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
+     **/
+    private $country;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -124,6 +130,25 @@ class StateLicense
     {
         return $this->state;
     }
+
+    /**
+     * @param mixed $country
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+
+
 
     public function __toString() {
         return "State License";

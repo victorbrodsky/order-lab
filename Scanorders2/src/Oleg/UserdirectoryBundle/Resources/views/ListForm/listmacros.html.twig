@@ -11,12 +11,16 @@
             <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
 
+            {% if entities|first.abbreviation is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
+            {% endif %}
+
             {% if entities|first.researchlab is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Principal Investigator(s)', 'usercount') }}</th>
             {% endif %}
 
             {% if entities|first.parent is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Parent(s)', 'ent.parent') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Parent(s)', 'parent.name') }}</th>
             {% endif %}
 
             {% if entities|first.action is defined %}
@@ -45,8 +49,8 @@
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Updated On', 'ent.updatedon') }}</th>
-            <th>Actions</th>
-        </tr>
+            {#<th>Actions</th>#}
+        </trC>
         </thead>
         <tbody data-link="row" class="rowlink">
 
@@ -55,16 +59,16 @@
                 <td><a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
 
+                {% if entity.abbreviation is defined %}
+                    <td>
+                        {{ entity.abbreviation }}
+                    </td>
+                {% endif %}
+
+
                 {% if entity.researchlab is defined %}
                     <td>
                         {{ listmacros.showResearchLabPi( entity.researchlab ) }}
-                        {#{% for lab in entity.researchlab %}#}
-                            {#{% if lab.researchPI == true %}#}
-                                {#{% for user in lab.user %}#}
-                                    {#{{ user.getUserNameStr() }}#}
-                                {#{% endfor %}#}
-                            {#{% endif %}#}
-                        {#{% endfor %}#}
                     </td>
                 {% endif %}
 
@@ -72,15 +76,15 @@
                     <td class="rowlink-skip">
                         {#institution#}
                         {% if entity.parent.parent.parent is defined %}
-                            {{ listmacros.hrefLinkToNode(entity.parent.parent.parent) }}
+                            {{ listmacros.hrefLinkToNode(entity.parent.parent.parent) }} /
                         {% endif %}
                         {#department#}
                         {% if entity.parent.parent is defined %}
-                            {{ listmacros.hrefLinkToNode(entity.parent.parent) }}
+                            {{ listmacros.hrefLinkToNode(entity.parent.parent) }} /
                         {% endif %}
                         {#division#}
                         {% if entity.parent is defined %}
-                            {{ listmacros.hrefLinkToNode(entity.parent) }}
+                            {{ listmacros.hrefLinkToNode(entity.parent) }} /
                         {% endif %}
                     </td>
                 {% endif %}
@@ -118,9 +122,9 @@
                 <td>{{ entity.updatedby }}</td>
                 <td>{% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}</td>
 
-                <td class="rowlink-skip">
-                    <a class="btn btn-xs btn-default" href="{{ path(pathbase~'_edit', { 'id': entity.id }) }}">Edit</a>
-                </td>
+                {#<td class="rowlink-skip">#}
+                    {#<a class="btn btn-xs btn-default" href="{{ path(pathbase~'_edit', { 'id': entity.id }) }}">Edit</a>#}
+                {#</td>#}
             </tr>
         {% endfor %}
 
@@ -176,6 +180,10 @@
     {% endif %}
 
     {{ formmacros.field(form.list.name) }}
+
+    {% if entity.abbreviation is defined %}
+        {{ formmacros.field(edit_form.abbreviation) }}
+    {% endif %}
 
     {% if form.list.original is defined %}
         {{ formmacros.field(form.list.original) }}
@@ -241,6 +249,10 @@
     {% endif %}
 
     {{ formmacros.field(edit_form.list.name) }}
+
+    {% if entity.abbreviation is defined %}
+        {{ formmacros.field(edit_form.abbreviation) }}
+    {% endif %}
 
     {% if edit_form.list.original is defined %}
         {{ formmacros.field(edit_form.list.original) }}

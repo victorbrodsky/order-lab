@@ -10,19 +10,43 @@ use Doctrine\ORM\EntityRepository;
 class StateLicenseType extends AbstractType
 {
 
+    protected $params;
+
+    public function __construct( $params=null )
+    {
+        $this->params = $params;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add('state', null, array(
-//            'label' => 'State:',
-//            'attr' => array('class'=>'combobox combobox-width')
-//        ));
         $builder->add( 'state', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:States',
             'property' => 'name',
             'label'=>'State:',
             'required'=> false,
             'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
+
+        //country
+        $defaultCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+        $builder->add( 'country', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Countries',
+            'property' => 'name',
+            'label'=>'Country:',
+            'required'=> false,
+            'multiple' => false,
+            'preferred_choices' => $defaultCountries,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')

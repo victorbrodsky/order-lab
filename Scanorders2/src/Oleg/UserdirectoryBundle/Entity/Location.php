@@ -62,10 +62,23 @@ class Location extends BaseUserAttributes
      */
     private $city;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="States")
+     * @ORM\JoinColumn(name="state", referencedColumnName="id", nullable=true)
+     **/
+    private $state;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="States")
+     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
+     **/
+    private $country;
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $state;
+    private $county;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -124,11 +137,6 @@ class Location extends BaseUserAttributes
      */
     private $comment;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="User")
-//     * @ORM\JoinColumn(name="assistant", referencedColumnName="id")
-//     */
-//    private $assistant;
     /**
      * @ORM\ManyToMany(targetEntity="User")
      * @ORM\JoinTable(name="user_location_assistant",
@@ -140,7 +148,7 @@ class Location extends BaseUserAttributes
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="locations")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id")
      */
     private $user;
 
@@ -148,6 +156,18 @@ class Location extends BaseUserAttributes
      * @ORM\Column(type="boolean", options={"default" = 1}, nullable=true)
      */
     private $removable;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="LocationTypeList")
+     * @ORM\JoinColumn(name="locationType", referencedColumnName="id")
+     */
+    private $locationType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     */
+    private $institution;
 
 
     public function __construct($author=null) {
@@ -157,21 +177,6 @@ class Location extends BaseUserAttributes
         $this->assistant = new ArrayCollection();
     }
 
-//    /**
-//     * @param mixed $assistant
-//     */
-//    public function setAssistant($assistant)
-//    {
-//        $this->assistant = $assistant;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getAssistant()
-//    {
-//        return $this->assistant;
-//    }
 
     /**
      * Add assistant
@@ -288,7 +293,6 @@ class Location extends BaseUserAttributes
     {
         return $this->comment;
     }
-
 
 
     /**
@@ -595,6 +599,71 @@ class Location extends BaseUserAttributes
     {
         return $this->removable;
     }
+
+    /**
+     * @param mixed $locationType
+     */
+    public function setLocationType($locationType)
+    {
+        $this->locationType = $locationType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocationType()
+    {
+        return $this->locationType;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $country
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param mixed $county
+     */
+    public function setCounty($county)
+    {
+        $this->county = $county;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCounty()
+    {
+        return $this->county;
+    }
+
 
 
     public function __toString() {
