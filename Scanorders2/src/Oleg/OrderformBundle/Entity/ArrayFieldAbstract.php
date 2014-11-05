@@ -56,6 +56,13 @@ abstract class ArrayFieldAbstract {
     protected $orderinfo;
 
 
+    /**
+     * @ORM\OneToOne(targetEntity="DataQualityEventLog")
+     * @ORM\JoinColumn(name="dataqualityreview", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $dataqualityreview;
+
+
     public function __construct( $status = 'valid', $provider = null, $source = null )
     {
         $this->status = $status;
@@ -159,6 +166,29 @@ abstract class ArrayFieldAbstract {
     {
         return $this->orderinfo;
     }
+
+    /**
+     * @param mixed $dataqualityreview
+     */
+    public function setDataqualityreview($dataqualityreview)
+    {
+        $this->dataqualityreview = $dataqualityreview;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDataqualityreview()
+    {
+        return $this->dataqualityreview;
+    }
+
+
+
+
+
+
+
 
     public function __toString() {
         return $this->field."";
