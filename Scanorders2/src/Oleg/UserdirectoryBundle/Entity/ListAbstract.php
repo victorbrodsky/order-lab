@@ -90,6 +90,19 @@ abstract class ListAbstract
     }
 
     /**
+     * Set id
+     *
+     * @param integer $id
+     * @return List
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Set name
      *
      * @param string $name

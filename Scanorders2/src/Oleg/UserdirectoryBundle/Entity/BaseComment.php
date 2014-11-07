@@ -100,7 +100,7 @@ abstract class BaseComment extends BaseUserAttributes {
     /**
      * Add document
      *
-     * @param \Oleg\OrderformBundle\Entity\Document $document
+     * @param \Oleg\UserdirectoryBundle\Entity\Document $document
      * @return Comment
      */
     public function addDocument($document)
@@ -118,7 +118,7 @@ abstract class BaseComment extends BaseUserAttributes {
     /**
      * Remove document
      *
-     * @param \Oleg\OrderformBundle\Entity\Document $document
+     * @param \Oleg\UserdirectoryBundle\Entity\Document $document
      */
     public function removeDocument($document)
     {

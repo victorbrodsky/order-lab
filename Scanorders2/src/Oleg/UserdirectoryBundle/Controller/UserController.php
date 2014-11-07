@@ -1352,7 +1352,7 @@ class UserController extends Controller
     }
 
 
-    public function removeCollection($originalArr,$currentlArr) {
+    public function removeCollection($originalArr,$currentArr) {
         $em = $this->getDoctrine()->getManager();
         $removeArr = array();
 
@@ -1367,7 +1367,7 @@ class UserController extends Controller
 
             //echo "title=".$title->getName().", id=".$title->getId()."<br>";
             $em->persist($title);
-            if( false === $currentlArr->contains($title) ) {
+            if( false === $currentArr->contains($title) ) {
                 $removeArr[] = "<strong>"."Removed: ".$title." ".$this->getEntityId($title)."</strong>";
                 // if you wanted to delete the Tag entirely, you can also do that
                 $em->remove($title);

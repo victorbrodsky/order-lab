@@ -166,7 +166,7 @@ class OrderInfo extends OrderAbstract {
     private $slide;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ScannerList")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
      * @ORM\JoinColumn(name="scanner", referencedColumnName="id")
      */
     private $scanner;

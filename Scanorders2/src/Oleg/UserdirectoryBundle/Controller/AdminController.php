@@ -7,6 +7,8 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 
 
+use Oleg\UserdirectoryBundle\Entity\Equipment;
+use Oleg\UserdirectoryBundle\Entity\EquipmentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -94,6 +96,8 @@ class AdminController extends Controller
         $count_fellowshipTypeList = $this->generateFellowshipTypeList();
         $count_residencyTrackList = $this->generateResidencyTrackList();
         $count_locationTypeList = $this->generateLocationTypeList();
+        $count_equipmentType = $this->generateEquipmentType();
+        $count_equipment = $this->generateEquipment();
 
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
@@ -120,6 +124,8 @@ class AdminController extends Controller
             'Residency Tracks ='.$count_residencyTrackList.', '.
             'Fellowship Types ='.$count_fellowshipTypeList.', '.
             'Location Types ='.$count_locationTypeList.', '.
+            'Equipment Types ='.$count_equipmentType.', '.
+            'Equipment ='.$count_equipment.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1004,5 +1010,76 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+
+
+
+    public function generateEquipmentType() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Whole Slide Scanner'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new EquipmentType();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return $count;
+    }
+
+    public function generateEquipment() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:Equipment')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Aperio ScanScope AT'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new Equipment();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $keytype = $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findOneByName('Whole Slide Scanner');
+
+            if( !$keytype ) {
+               //exit('equipment keytype is null');
+               throw new \Exception( 'Equipment keytype is null' );
+            }
+
+            $keytype->addEquipment($listEntity);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return $count;
+    }
 
 }

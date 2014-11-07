@@ -169,7 +169,7 @@ class OrderInfoType extends AbstractType
         ));
 
         $builder->add( 'scanner', 'entity', array(
-            'class' => 'OlegOrderformBundle:ScannerList',
+            'class' => 'OlegUserdirectoryBundle:Equipment',
             'property' => 'name',
             'label'=>'Scanner:',
             'required'=> true,
@@ -177,8 +177,9 @@ class OrderInfoType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width combobox-scanner'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('i')
-                        ->where('i.type != :type')
-                        ->setParameters( array('type' => 'disabled') );
+                        ->leftJoin('i.keytype','keytype')
+                        ->where("keytype.name = :keytype AND i.type != :type")
+                        ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
                 },
         ));
 

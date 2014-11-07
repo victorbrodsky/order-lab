@@ -259,6 +259,17 @@ class AccessRequestController extends Controller
         $subject = "[O R D E R] Access request for ".$sitenameFull." received from ".$user->getPrimaryUseridKeytypeStr();
         $msg = $user->getPrimaryUseridKeytypeStr()." submitted a request to access ".$sitenameFull.". Please visit ".$incomingReqPage." to approve or deny it.";
 
+        $approveDelineMsg = "the access request from ".$user->getPrimaryUseridKeytypeStr()." to access ".$sitenameFull.", visit the following link:";
+        //add approve link
+        $approvedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"approve"), true );
+        $approvedMsg = "To approve " . $approveDelineMsg . "\r\n" . $approvedLink;
+
+        //add decline link
+        $declinedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"decline"), true );
+        $declinedMsg = "To approve " . $approveDelineMsg . "\r\n" . $declinedLink;
+
+        $msg = $msg . "\r\n"."\r\n" . $approvedMsg . "\r\n"."\r\n" . $declinedMsg;
+
         $userSecUtil = $this->get('user_security_utility');
         $emails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
         $headers = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
@@ -378,7 +389,7 @@ class AccessRequestController extends Controller
             throw new \Exception( 'AccessRequest is not found by id=' . $id );
         }
 
-        if( $status == "approved" ) {
+        if( $status == "approved" || $status == "approve" ) {
             //$entity->setRoles(array());
             $entity->removeRole('ROLE_USERDIRECTORY_UNAPPROVED');
             $entity->removeRole('ROLE_USERDIRECTORY_BANNED');
@@ -388,7 +399,7 @@ class AccessRequestController extends Controller
                 $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
 
-        if( $status == "declined" ) {
+        if( $status == "declined" || $status == "decline" ) {
             //$entity->setRoles(array());
             $entity->removeRole('ROLE_USERDIRECTORY_OBSERVER');
 

@@ -26,7 +26,6 @@ use Oleg\OrderformBundle\Entity\RegionToScan;
 use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
 use Oleg\OrderformBundle\Entity\Urgency;
-use Oleg\OrderformBundle\Entity\ScannerList;
 use Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -97,7 +96,6 @@ class ScanAdminController extends AdminController
         $count_RegionToScan = $this->generateRegionToScan();
         $count_comments = $this->generateProcessorComments();
         $count_urgency = $this->generateUrgency();
-        $count_scanners = $this->generateScanners();
         $count_progressCommentsEventType = $this->generateProgressCommentsEventType();
 
         $this->get('session')->getFlashBag()->add(
@@ -119,7 +117,6 @@ class ScanAdminController extends AdminController
             'Region To Scan='.$count_RegionToScan.', '.
             'Processor Comments='.$count_comments.', '.
             'Urgency='.$count_urgency.' '.
-            'Scanners='.$count_scanners.' '.
             'Progress and Comments EventTypes='.$count_progressCommentsEventType.' '.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -852,36 +849,6 @@ class ScanAdminController extends AdminController
         foreach( $types as $type ) {
 
             $listEntity = new Urgency();
-            $this->setDefaultList($listEntity,$count,$username,$type);
-
-            $em->persist($listEntity);
-            $em->flush();
-
-            $count = $count + 10;
-        }
-
-        return $count;
-    }
-
-    public function generateScanners() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ScannerList')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $types = array(
-            'Aperio ScanScope AT'
-        );
-
-        $count = 1;
-        foreach( $types as $type ) {
-
-            $listEntity = new ScannerList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

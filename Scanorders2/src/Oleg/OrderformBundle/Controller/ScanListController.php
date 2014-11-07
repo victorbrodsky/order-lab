@@ -45,7 +45,6 @@ class ScanListController extends ListController
      * @Route("/scan-order-processor-comments/", name="processorcomment-list")
      * @Route("/accounts/", name="accounts-list")
      * @Route("/urgency/", name="urgency-list")
-     * @Route("/scanners/", name="scanners-list")
      * @Route("/progress-and-comments-event-types/", name="progresscommentseventtypes-list")
      * @Route("/event-log-event-types/", name="scanloggereventtypes-list")
      * @Method("GET")
@@ -81,7 +80,6 @@ class ScanListController extends ListController
      * @Route("/scan-order-processor-comments/", name="processorcomment_create")
      * @Route("/accounts/", name="accounts_create")
      * @Route("/urgency/", name="urgency_create")
-     * @Route("/scanners/", name="scanners_create")
      * @Route("/progress-and-comments-event-types/", name="progresscommentseventtypes_create")
      * @Route("/event-log-event-types/", name="scanloggereventtypes_create")
      * @Method("POST")
@@ -117,7 +115,6 @@ class ScanListController extends ListController
      * @Route("/scan-order-processor-comments/new", name="processorcomment_new")
      * @Route("/accounts/new", name="accounts_new")
      * @Route("/urgency/new", name="urgency_new")
-     * @Route("/scanners/new", name="scanners_new")
      * @Route("/progress-and-comments-event-types/new", name="progresscommentseventtypes_new")
      * @Route("/event-log-event-types/new", name="scanloggereventtypes_new")
      * @Method("GET")
@@ -153,7 +150,6 @@ class ScanListController extends ListController
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_show")
      * @Route("/accounts/{id}", name="accounts_show")
      * @Route("/urgency/{id}", name="urgency_show")
-     * @Route("/scanners/{id}", name="scanners_show")
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_show")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_show")
      * @Method("GET")
@@ -189,7 +185,6 @@ class ScanListController extends ListController
      * @Route("/scan-order-processor-comments/{id}/edit", name="processorcomment_edit")
      * @Route("/accounts/{id}/edit", name="accounts_edit")
      * @Route("/urgency/{id}/edit", name="urgency_edit")
-     * @Route("/scanners/{id}/edit", name="scanners_edit")
      * @Route("/progress-and-comments-event-types/{id}/edit", name="progresscommentseventtypes_edit")
      * @Route("/event-log-event-types/{id}/edit", name="scanloggereventtypes_edit")
      * @Method("GET")
@@ -225,7 +220,6 @@ class ScanListController extends ListController
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_update")
      * @Route("/accounts/{id}", name="accounts_update")
      * @Route("/urgency/{id}", name="urgency_update")
-     * @Route("/scanners/{id}", name="scanners_update")
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_update")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_update")
      * @Method("PUT")
@@ -328,10 +322,6 @@ class ScanListController extends ListController
             $className = "Urgency";
             $displayName = "Urgencies";
             break;
-        case "scanners":
-            $className = "ScannerList";
-            $displayName = "Scanners";
-            break;
         case "progresscommentseventtypes":
             $className = "ProgressCommentsEventTypeList";
             $displayName = "Progress and Comments Event Types";
@@ -384,7 +374,6 @@ class ScanListController extends ListController
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_delete")
      * @Route("/accounts/{id}", name="accounts_delete")
      * @Route("/urgency/{id}", name="urgency_delete")
-     * @Route("/scanners/{id}", name="scanners_delete")
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_delete")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_delete")
      * @Method("DELETE")

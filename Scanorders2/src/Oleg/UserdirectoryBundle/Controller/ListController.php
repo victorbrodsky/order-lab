@@ -39,6 +39,9 @@ class ListController extends Controller
      * @Route("/fellowship-types/", name="fellowshiptypes-list")
      * @Route("/research-lab-titles/", name="researchlabtitles-list")
      * @Route("/location-types/", name="locationtypes-list")
+     * @Route("/locations/", name="locations-list")
+     * @Route("/equipment/", name="equipments-list")
+     * @Route("/equipment-types/", name="equipmenttypes-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -135,6 +138,9 @@ class ListController extends Controller
      * @Route("/fellowship-types/", name="fellowshiptypes_create")
      * @Route("/research-lab-titles/", name="researchlabtitles_create")
      * @Route("/location-types/", name="locationtypes_create")
+     * @Route("/locations/", name="locations_create")
+     * @Route("/equipment/", name="equipments_create")
+     * @Route("/equipment-types/", name="equipmenttypes_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -239,6 +245,9 @@ class ListController extends Controller
      * @Route("/fellowship-types/new", name="fellowshiptypes_new")
      * @Route("/research-lab-titles/new", name="researchlabtitles_new")
      * @Route("/location-types/new", name="locationtypes_new")
+     * @Route("/locations/new", name="locations_new")
+     * @Route("/equipment/new", name="equipments_new")
+     * @Route("/equipment-types/new", name="equipmenttypes_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -306,6 +315,9 @@ class ListController extends Controller
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_show")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_show")
      * @Route("/location-types/{id}", name="locationtypes_show")
+     * @Route("/locations/{id}", name="locations_show")
+     * @Route("/equipment/{id}", name="equipments_show")
+     * @Route("/equipment-types/{id}", name="equipmenttypes_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -362,6 +374,9 @@ class ListController extends Controller
      * @Route("/fellowship-types/{id}/edit", name="fellowshiptypes_edit")
      * @Route("/research-lab-titles/{id}/edit", name="researchlabtitles_edit")
      * @Route("/location-types/{id}/edit", name="locationtypes_edit")
+     * @Route("/locations/{id}/edit", name="locations_edit")
+     * @Route("/equipment/{id}/edit", name="equipments_edit")
+     * @Route("/equipment-types/{id}/edit", name="equipmenttypes_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -459,6 +474,9 @@ class ListController extends Controller
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_update")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_update")
      * @Route("/location-types/{id}", name="locationtypes_update")
+     * @Route("/locations/{id}", name="locations_update")
+     * @Route("/equipment/{id}", name="equipments_update")
+     * @Route("/equipment-types/{id}", name="equipmenttypes_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -669,6 +687,18 @@ class ListController extends Controller
                 $className = "LocationTypeList";
                 $displayName = "Location Types";
                 break;
+            case "locations":
+                $className = "Location";
+                $displayName = "Locations";
+                break;
+            case "equipments":
+                $className = "Equipment";
+                $displayName = "Equipment";
+                break;
+            case "equipmenttypes":
+                $className = "EquipmentType";
+                $displayName = "Equipment Types";
+                break;
             default:
                 $className = null;
                 $displayName = null;
@@ -713,6 +743,9 @@ class ListController extends Controller
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_delete")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_delete")
      * @Route("/location-types/{id}", name="locationtypes_delete")
+     * @Route("/locations/{id}", name="locations_delete")
+     * @Route("/equipment/{id}", name="equipments_delete")
+     * @Route("/equipment-types/{id}", name="equipmenttypes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

@@ -191,15 +191,16 @@ class User extends BaseUser
 
         //two default locations: "main office" and "home"
         $mainLocation = new Location($this);
-        $homeLocation = new Location($this);
         $mainLocation->setName('Main Office');
-        $homeLocation->setName('Home');
+        $mainLocation->setRemovable(false);
         $this->locations->set(0,$mainLocation);  //main has index 0
         $mainLocation->setUser($this);
-        $mainLocation->setRemovable(false);
+
+        $homeLocation = new Location($this);
+        $homeLocation->setName('Home');
+        $homeLocation->setRemovable(false);
         $this->locations->set(1,$homeLocation);  //home hsa index 1
         $homeLocation->setUser($this);
-        $homeLocation->setRemovable(false);
 
         parent::__construct();
     }
@@ -764,7 +765,7 @@ class User extends BaseUser
     public function setUsernameCanonical($usernameCanonical)
     {
         if( $this->getId() && $usernameCanonical != $this->getUsernameCanonical() ) {
-            exit('Can not change canonical username when user is in DB: username='.$usernameCanonical.', id='.$this->getId());
+            //exit('Can not change canonical username when user is in DB: username='.$usernameCanonical.', id='.$this->getId());
             throw new \Exception( 'Can not change canonical username when user is in DB: new usernameCanonical='.$usernameCanonical.', old usernameCanonical'.$this->getUsernameCanonical().', id='.$this->getId() );
         }
 
@@ -837,6 +838,35 @@ class User extends BaseUser
         } else {
             return $this->primaryPublicUserId;
         }
+    }
+
+    //the user has a Preferred Name, start with preferred name;
+    //If the user has no preferred name, but does have a first and last name, concatenate them
+    //and start with the first and last name combo; if the user has no first name, use just the last name;
+    //if the user has no last name, use the first name; if the user has none of the three names, start with the User ID:
+    public function getUsernameOptimal() {
+
+        if( $this->getDisplayName() ) {
+            return $this->getDisplayName();
+        }
+
+        if( $this->getLastName() && $this->getFirstName() ) {
+            return $this->getLastName() . " " . $this->getFirstName();
+        }
+
+        if( $this->getLastName() ) {
+            return $this->getLastName();
+        }
+
+        if( $this->getFirstName() ) {
+            return $this->getFirstName();
+        }
+
+        if( $this->getPrimaryPublicUserId() ) {
+            return $this->getPrimaryPublicUserId();
+        }
+
+        return $this->getId();
     }
 
 }

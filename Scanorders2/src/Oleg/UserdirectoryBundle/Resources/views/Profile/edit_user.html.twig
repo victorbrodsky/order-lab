@@ -169,7 +169,7 @@
 
     <div class="alert {{ classname }} {{ wellclass }}">
 
-        {% if cicle != 'show_user' and prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
+        {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>

@@ -85,7 +85,7 @@ function getBaseTitleForm( elclass ) {
     return newForm;
 }
 
-function removeBaseTitle(btn,classname) {
+function removeBaseTitle(btn,classname,id) {
 
     var btnEl = $(btn);
 
@@ -95,7 +95,10 @@ function removeBaseTitle(btn,classname) {
 
     var r = confirm("Are you sure you want to remove this record?");
     if (r == true) {
-        //txt = "You pressed OK!";
+        //for location only: check if this location is used by somewhere else
+        if( objectIsDeleteable(btn,classname,id) == false ) {
+            return;
+        }
     } else {
         return;
     }
@@ -106,6 +109,37 @@ function removeBaseTitle(btn,classname) {
     processEmploymentStatusRemoveButtons(btn);
 }
 
+function objectIsDeleteable(btn,classname,id) {
+    var btnEl = $(btn);
+    var element = btnEl.closest('.'+classname);
+    var idField = element.find('.user-object-id-field');
+    var locationid = idField.val();
+
+    if( !locationid || locationid == "" ) {
+        //alert("Error: this location is new or invalid");
+        return true;
+    }
+    //console.log('object id='+locationid);
+
+    var removable = false;
+
+    var url = getCommonBaseUrl("util/common/"+"location/delete/"+locationid,"employees");
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: false
+    }).success(function(data) {
+        if( data == 'ok' ) {
+            //console.log('ok to delete');
+            removable = true;
+        } else {
+            alert("This location is used by another objects");
+        }
+
+    });
+
+    return removable;
+}
 
 
 //$(function() {

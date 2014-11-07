@@ -5,8 +5,6 @@ namespace Oleg\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_location")
@@ -33,6 +31,7 @@ class Location extends ListAbstract
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
+
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -79,11 +78,9 @@ class Location extends ListAbstract
      */
     private $city;
 
-
     /**
-     * @ORM\ManyToOne(targetEntity="States")
-     * @ORM\JoinColumn(name="state", referencedColumnName="id", nullable=true)
-     **/
+     * @ORM\Column(type="string", nullable=true)
+     */
     private $state;
 
     /**
@@ -165,7 +162,7 @@ class Location extends ListAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="locations")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id")
+     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 
@@ -187,82 +184,60 @@ class Location extends ListAbstract
     private $institution;
 
 
-//    public function __construct($author=null) {
-//        $this->setRemovable(true);
-//        parent::__construct($author);
-//
-//        $this->assistant = new ArrayCollection();
-//    }
 
     public function __construct($creator=null) {
-        //return;
-        //exit('loc constract');
         $this->synonyms = new ArrayCollection();
         $this->assistant = new ArrayCollection();
 
         $this->setRemovable(true);
-        $this->setCreator($creator);
         $this->setStatus(self::STATUS_UNVERIFIED);
-    }
 
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Location $synonyms
-     * @return Location
-     */
-    public function addSynonym(Location $synonyms)
-    {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
+        //set mandatory list attributes
+        $this->setType('user-added');
+        $this->setCreatedate(new \DateTime());
+        $this->setOrderinlist(-1);
+
+        if( $creator ) {
+            $this->setCreator($creator);
         }
-
-        return $this;
     }
 
     /**
-     * Remove synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Location $synonyms
+     * @param mixed $institution
      */
-    public function removeSynonym(Location $synonyms)
+    public function setInstitution($institution)
     {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * @param mixed $original
-     */
-    public function setOriginal($original)
-    {
-        $this->original = $original;
+        $this->institution = $institution;
     }
 
     /**
      * @return mixed
      */
-    public function getOriginal()
+    public function getInstitution()
     {
-        return $this->original;
+        return $this->institution;
     }
 
+    /**
+     * @param mixed $locationType
+     */
+    public function setLocationType($locationType)
+    {
+        $this->locationType = $locationType;
+    }
 
-
+    /**
+     * @return mixed
+     */
+    public function getLocationType()
+    {
+        return $this->locationType;
+    }
 
     /**
      * Add assistant
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $assistant
+     * @param \Oleg\OrderformBundle\Entity\User $assistant
      * @return User
      */
     public function addAssistant($assistant)
@@ -276,7 +251,7 @@ class Location extends ListAbstract
     /**
      * Remove assistant
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $assistant
+     * @param \Oleg\OrderformBundle\Entity\User $assistant
      */
     public function removeAssistant($assistant)
     {
@@ -374,6 +349,7 @@ class Location extends ListAbstract
     {
         return $this->comment;
     }
+
 
 
     /**
@@ -682,35 +658,19 @@ class Location extends ListAbstract
     }
 
     /**
-     * @param mixed $locationType
+     * @param mixed $county
      */
-    public function setLocationType($locationType)
+    public function setCounty($county)
     {
-        $this->locationType = $locationType;
+        $this->county = $county;
     }
 
     /**
      * @return mixed
      */
-    public function getLocationType()
+    public function getCounty()
     {
-        return $this->locationType;
-    }
-
-    /**
-     * @param mixed $institution
-     */
-    public function setInstitution($institution)
-    {
-        $this->institution = $institution;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
+        return $this->county;
     }
 
     /**
@@ -729,21 +689,7 @@ class Location extends ListAbstract
         return $this->country;
     }
 
-    /**
-     * @param mixed $county
-     */
-    public function setCounty($county)
-    {
-        $this->county = $county;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getCounty()
-    {
-        return $this->county;
-    }
 
     /**
      * @param mixed $status
@@ -760,7 +706,6 @@ class Location extends ListAbstract
     {
         return $this->status;
     }
-
 
     public function getStatusStr()
     {
@@ -779,6 +724,60 @@ class Location extends ListAbstract
 
         return $str;
     }
+
+
+
+    /**
+     * Add synonyms
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\Location $synonyms
+     * @return Location
+     */
+    public function addSynonym(Location $synonyms)
+    {
+        if( !$this->synonyms->contains($synonyms) ) {
+            $this->synonyms->add($synonyms);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove synonyms
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\Location $synonyms
+     */
+    public function removeSynonym(Location $synonyms)
+    {
+        $this->synonyms->removeElement($synonyms);
+    }
+
+    /**
+     * Get synonyms
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSynonyms()
+    {
+        return $this->synonyms;
+    }
+
+    /**
+     * @param mixed $original
+     */
+    public function setOriginal($original)
+    {
+        $this->original = $original;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginal()
+    {
+        return $this->original;
+    }
+
 
 
     //interface function
@@ -801,11 +800,54 @@ class Location extends ListAbstract
     }
 
 
-
-
-
     public function __toString() {
-        return "Location: ". $this->name;
+
+        return $this->getNameFull();
+    }
+
+    public function getNameFull() {
+
+        $name = "";
+
+        if( $this->user ) {
+
+            $name = $name . $this->user->getUsernameOptimal() . "'s ";
+
+        }
+
+        $name = $name . $this->name;
+
+        $detailsArr = array();
+
+        if( $this->getRoom() ) {
+            $detailsArr[] = $this->getRoom();
+        }
+
+        if( $this->getSuit() ) {
+            $detailsArr[] = $this->getSuit();
+        }
+
+        if( $this->getBuildingAbbr() ) {
+            $detailsArr[] = $this->getBuildingAbbr();
+        } else {
+            if( $this->getBuildingName() ) {
+                $detailsArr[] = $this->getBuildingName();
+            }
+        }
+
+        if( $this->getInstitution() ) {
+            $detailsArr[] = $this->getInstitution()->getName()."";
+        }
+
+        if( $this->getMailbox() ) {
+            $detailsArr[] = $this->getMailbox();
+        }
+
+        if( count($detailsArr) > 0 ) {
+            $name = $name . "(" . implode(", ",$detailsArr) . ")";
+        }
+
+        return $name;
     }
 
 

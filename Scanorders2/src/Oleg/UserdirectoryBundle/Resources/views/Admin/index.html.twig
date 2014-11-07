@@ -119,6 +119,28 @@
 
     <hr>
 
+    <h3 class="text-info">Locations</h3>
+    <p>
+        <a href="{{ path('locations-list') }}">List of Locations</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Equipment Types</h3>
+    <p>
+        <a href="{{ path('equipmenttypes-list') }}">List of Equipment Types</a>
+    </p>
+
+    <h3 class="text-info">Equipment</h3>
+    <p>
+        <a href="{{ path('equipments-list') }}">List of Equipment</a>
+    </p>
+
+
+    <hr>
+
+
+
     {% if environment is not defined %}
         {% set environment = 'dev' %}
     {% endif %}

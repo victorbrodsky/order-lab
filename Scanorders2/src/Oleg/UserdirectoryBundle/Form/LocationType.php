@@ -32,6 +32,7 @@ class LocationType extends AbstractType
 
         $builder->add('id','hidden',array(
             'label'=>false,
+            'attr' => array('class'=>'user-object-id-field')
         ));
 
         $builder->add('name',null,array(

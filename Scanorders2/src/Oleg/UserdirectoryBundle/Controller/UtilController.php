@@ -238,14 +238,56 @@ class UtilController extends Controller {
 
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Location', 'list')
-            ->select("list.id as id, list.name as text")
+            ->select("list")
             ->orderBy("list.id","ASC");
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
-        //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        //Exclude from the list locations of type "Patient Contact Information", "Medical Office", and "Inpatient location".
+        $andWhere = "locationType.name IS NULL OR ".
+                    "locationType.name != 'Patient Contact Information' OR ".
+                    "locationType.name !='Patient Contact Information' OR ".
+                    "locationType.name !='Medical Office' OR ".
+                    "locationType.name !='Inpatient location'";
 
-        $output = $query->getQuery()->getResult();
+        $query->leftJoin("list.locationType", "locationType");
+        $query->leftJoin("list.user", "user");
+        $query->andWhere($andWhere);
+        $query->andWhere("user.email != '-1'");
+
+        //echo "query=".$query." | ";
+
+        $locations = $query->getQuery()->getResult();
+        //echo "loc count=".count($locations)."<br>";
+
+        $output = array();
+
+        foreach( $locations as $location ) {
+            $element = array('id'=>$location->getId(), 'text'=>$location->getNameFull());
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * check if location can be deleted
+     *
+     * @Route("/common/location/delete/{id}", name="employees_location_delete", requirements={"id" = "\d+"})
+     * @Method("GET")
+     */
+    public function getLocationCheckDeleteAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        $location = $em->getRepository('OlegUserdirectoryBundle:Location')->find($id);
+        $resLabs = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findByLocation($location);
+        if( count($resLabs) > 0 ) {
+            $output = 'not ok';
+        } else {
+            $output = 'ok';
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
