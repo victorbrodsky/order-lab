@@ -212,7 +212,10 @@ function constractShowLink(id,name) {
 
 function removeUploadedFileByHolder( previewElement, dropzone ) {
 
-    var r = confirm('Are you sure you want to remove this document?'+', id='+documentid);
+    var documentid = $(previewElement).find('.file-upload-id').val();
+    //console.log('remove documentid='+documentid);
+
+    var r = confirm('Are you sure you want to remove this document?'); //+', id='+documentid
     if( r == false ) {
         return;
     }
@@ -220,9 +223,6 @@ function removeUploadedFileByHolder( previewElement, dropzone ) {
     if( !previewElement ) {
         return;
     }
-
-    var documentid = $(previewElement).find('.file-upload-id').val();
-    //console.log('remove documentid='+documentid);
 
     var holderTop = $(dropzone.element).closest('.user-collection-holder,.form-element-holder');
     var commentid = holderTop.find('.comment-field-id').val();

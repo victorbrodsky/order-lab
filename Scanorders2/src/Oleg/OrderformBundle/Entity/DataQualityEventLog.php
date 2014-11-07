@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -9,32 +10,71 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="scan_dataquality_eventlog")
  */
-class DataQualityEventLog extends DataQuality
+class DataQualityEventLog
 {
 
+
     /**
-     * @var array
-     * @ORM\Column(type="array", nullable=true)
+     * @var integer
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $roles = array();
+    private $id;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DataQualityEvent", mappedBy="dqeventlog")
+     **/
+    private $dqevents;
+
+    public function __construct() {
+        $this->dqevents = new ArrayCollection();
+    }
 
 
 
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-    public function setRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addRole($role."");
+
+    /**
+     * Add dqevent
+     *
+     * @param DataQualityEvent $dqevent
+     * @return DataQualityEvent
+     */
+    public function addDqevent(DataQualityEvent $dqevent)
+    {
+        if( !$this->dqevents->contains($dqevent) ) {
+            $this->dqevents->add($dqevent);
         }
+
+        return $this;
     }
 
-    public function getRoles() {
-        return $this->roles;
+    /**
+     * Remove dqevent
+     *
+     * @param DataQualityEvent $dqevent
+     */
+    public function removeDqevent(DataQualityEvent $dqevent)
+    {
+        $this->dqevents->removeElement($dqevent);
     }
 
-    public function addRole($role) {
-        $this->roles[] = $role;
+    /**
+     * Get dqevents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDqevents()
+    {
+        return $this->dqevents;
     }
-
-
 
 }

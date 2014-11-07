@@ -127,6 +127,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $options['event'] = 'Bad credentials provided on login for Employee Directory site';
         $options['serverresponse'] = $exception->getMessage();
 
+        //testing
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
         $request->getSession()->set(SecurityContextInterface::AUTHENTICATION_ERROR, $exception);

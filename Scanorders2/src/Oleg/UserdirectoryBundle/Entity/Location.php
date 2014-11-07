@@ -5,17 +5,34 @@ namespace Oleg\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_location")
  */
-class Location extends BaseUserAttributes
+class Location extends ListAbstract
 {
 
+    const STATUS_UNVERIFIED = 0;    //unverified (not trusted)
+    const STATUS_VERIFIED = 1;      //verified by admin
+
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * status: valid, invalid
+     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
-    private $name;
+    protected $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Location", mappedBy="original")
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Location", inversedBy="synonyms")
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
+     **/
+    protected $original;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -170,18 +187,82 @@ class Location extends BaseUserAttributes
     private $institution;
 
 
-    public function __construct($author=null) {
-        $this->setRemovable(true);
-        parent::__construct($author);
+//    public function __construct($author=null) {
+//        $this->setRemovable(true);
+//        parent::__construct($author);
+//
+//        $this->assistant = new ArrayCollection();
+//    }
 
+    public function __construct($creator=null) {
+        //return;
+        //exit('loc constract');
+        $this->synonyms = new ArrayCollection();
         $this->assistant = new ArrayCollection();
+
+        $this->setRemovable(true);
+        $this->setCreator($creator);
+        $this->setStatus(self::STATUS_UNVERIFIED);
     }
+
+    /**
+     * Add synonyms
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\Location $synonyms
+     * @return Location
+     */
+    public function addSynonym(Location $synonyms)
+    {
+        if( !$this->synonyms->contains($synonyms) ) {
+            $this->synonyms->add($synonyms);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove synonyms
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\Location $synonyms
+     */
+    public function removeSynonym(Location $synonyms)
+    {
+        $this->synonyms->removeElement($synonyms);
+    }
+
+    /**
+     * Get synonyms
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSynonyms()
+    {
+        return $this->synonyms;
+    }
+
+    /**
+     * @param mixed $original
+     */
+    public function setOriginal($original)
+    {
+        $this->original = $original;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginal()
+    {
+        return $this->original;
+    }
+
+
 
 
     /**
      * Add assistant
      *
-     * @param \Oleg\OrderformBundle\Entity\User $assistant
+     * @param \Oleg\UserdirectoryBundle\Entity\User $assistant
      * @return User
      */
     public function addAssistant($assistant)
@@ -195,7 +276,7 @@ class Location extends BaseUserAttributes
     /**
      * Remove assistant
      *
-     * @param \Oleg\OrderformBundle\Entity\User $assistant
+     * @param \Oleg\UserdirectoryBundle\Entity\User $assistant
      */
     public function removeAssistant($assistant)
     {
@@ -664,10 +745,67 @@ class Location extends BaseUserAttributes
         return $this->county;
     }
 
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+
+    public function getStatusStr()
+    {
+        return $this->getStatusStrByStatus($this->getStatus());
+    }
+
+    public function getStatusStrByStatus($status)
+    {
+        $str = $status;
+
+        if( $status == self::STATUS_UNVERIFIED )
+            $str = "Pending Administrative Review";
+
+        if( $status == self::STATUS_VERIFIED )
+            $str = "Verified by Administration";
+
+        return $str;
+    }
+
+
+    //interface function
+    public function getAuthor()
+    {
+        return $this->getCreator();
+    }
+    public function setAuthor()
+    {
+        return $this->setCreator();
+    }
+
+    public function getUpdateAuthor()
+    {
+        return $this->getUpdatedby();
+    }
+    public function setUpdateAuthor($author)
+    {
+        return $this->setUpdatedby($author);
+    }
+
+
+
 
 
     public function __toString() {
-        return "Location";
+        return "Location: ". $this->name;
     }
 
 

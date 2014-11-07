@@ -35,8 +35,8 @@ class LocationType extends AbstractType
         ));
 
         $builder->add('name',null,array(
-            'label'=>"Location's Name:",
-            'attr' => array('class'=>'form-control')
+            'label'=>"* Location's Name:",
+            'attr' => array('class'=>'form-control user-location-name-field', 'required'=>'required')
         ));
 
         $builder->add('phone',null,array(

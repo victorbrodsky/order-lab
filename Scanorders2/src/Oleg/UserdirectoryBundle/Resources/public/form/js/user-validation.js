@@ -23,6 +23,20 @@ function validateUser(origuserid) {
     var primaryPublicUserId = $('#oleg_userdirectorybundle_user_primaryPublicUserId').val();
     primaryPublicUserId = trimWithCheck(primaryPublicUserId);
 
+    if( userType == "" ) {
+        $('#userinfo').collapse('show');
+        addErrorAlert("Primary Public User ID Type is empty");
+        $('.user-keytype-field').parent().addClass("has-error");
+        return false;
+    }
+
+    if( primaryPublicUserId == "" ) {
+        $('#userinfo').collapse('show');
+        addErrorAlert("Primary Public User ID is empty");
+        $('#oleg_userdirectorybundle_user_primaryPublicUserId').parent().addClass("has-error");
+        return false;
+    }
+
     if( firstName == "" ) {
         $('#userinfo').collapse('show');
         addErrorAlert("First Name is empty");
@@ -37,17 +51,8 @@ function validateUser(origuserid) {
         return false;
     }
 
-    if( userType == "" ) {
-        $('#userinfo').collapse('show');
-        addErrorAlert("Primary Public User ID Type is empty");
-        $('.user-keytype-field').parent().addClass("has-error");
-        return false;
-    }
-
-    if( primaryPublicUserId == "" ) {
-        $('#userinfo').collapse('show');
-        addErrorAlert("Primary Public User ID is empty");
-        $('#oleg_userdirectorybundle_user_primaryPublicUserId').parent().addClass("has-error");
+    //field with required attributes (location Name can not be empty)
+    if( validateSimpleRequiredAttrFields() == false ) {
         return false;
     }
 
@@ -196,4 +201,39 @@ function checkUsertypeUserid(userType,userId) {
         }
     });
     return user;
+}
+
+
+function validateSimpleRequiredAttrFields() {
+
+    var errorCount = 0;
+
+    $('input,textarea,select').filter('[required]').each( function() {
+        var value = $(this).val();
+        if( value == "" ) {
+            $(this).parent().addClass("has-error");
+
+            var msg = "Required Field is empty";
+
+            if( $(this).hasClass('user-location-name-field') ) {
+                $('#Locations').collapse('show');
+                msg = "Location Name is empty";
+            }
+
+            addErrorAlert(msg);
+
+            //attach on change listener
+            $(this).change(function() {
+                removeAllErrorAlerts();
+            });
+
+            errorCount++;
+        }
+    });
+
+    if( errorCount == 0 ) {
+        return true;
+    } else {
+        return false;
+    }
 }

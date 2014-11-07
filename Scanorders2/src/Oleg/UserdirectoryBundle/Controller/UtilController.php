@@ -216,9 +216,34 @@ class UtilController extends Controller {
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.context')->getToken()->getUser();
 
         $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/common/location", name="employees_get_location")
+     * @Method("GET")
+     */
+    public function getLocationAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Location', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.id","ASC");
+
+        //$user = $this->get('security.context')->getToken()->getUser();
+
+        //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
         $output = $query->getQuery()->getResult();
 

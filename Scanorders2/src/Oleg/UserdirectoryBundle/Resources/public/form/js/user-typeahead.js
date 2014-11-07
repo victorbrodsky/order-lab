@@ -69,6 +69,14 @@ function initTypeaheadUserSiteSerach() {
             }
         },
         {
+            name: 'admintitle',
+            displayKey: 'text',
+            source: admintitleDB.ttAdapter(),
+            templates: {
+                header: '<h3 class="search-name">Administrative Title</h3>'
+            }
+        },
+        {
             name: 'service',
             displayKey: 'text',
             source: serviceDB.ttAdapter(),
@@ -90,14 +98,6 @@ function initTypeaheadUserSiteSerach() {
             source: cwidDB.ttAdapter(),
             templates: {
                 header: '<h3 class="search-name">CWID</h3>'
-            }
-        },
-        {
-            name: 'admintitle',
-            displayKey: 'text',
-            source: admintitleDB.ttAdapter(),
-            templates: {
-                header: '<h3 class="search-name">Administrative Title</h3>'
             }
         }
     );

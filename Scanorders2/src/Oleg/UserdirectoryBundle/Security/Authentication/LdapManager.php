@@ -61,6 +61,7 @@ class LdapManager extends BaseLdapManager
 
         //check if username is valid (has prefix)
         if( $userSecUtil->usernameIsValid($username) !== true ) {
+            //exit('not valid');
             throw new BadCredentialsException('The usertype '.$username.' is not valid.');
         }
 
@@ -74,8 +75,14 @@ class LdapManager extends BaseLdapManager
 
         //clean username
         $usernameClean = $userSecUtil->createCleanUsername($username);
+        //echo "usernameClean=".$usernameClean."<br>";
 
-        return parent::findUserByUsername($usernameClean);
+        $user =  parent::findUserByUsername($usernameClean);
+
+        //echo "user=".$user->getUsername()."<br>";
+        //exit('after find');
+
+        return $user;
     }
 
     protected function hydrate(UserInterface $user, array $entry) {
@@ -125,7 +132,7 @@ class LdapManager extends BaseLdapManager
     public function bind(UserInterface $user, $password)
     {
 
-//        echo "before: user's username=".$user->getUsername()." <br>";
+        //echo "before: user's username=".$user->getUsername()." <br>";
 
         //always clean username before bind, use primaryPublicUserId
         $user->setUsername( $user->getPrimaryPublicUserId() );

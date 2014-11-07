@@ -74,6 +74,12 @@ abstract class ListAbstract
     protected $orderinlist;
 
     /**
+     * @var array
+     * @ORM\Column(type="array", nullable=true)
+     */
+    protected $updateAuthorRoles = array();
+
+    /**
      * Get id
      *
      * @return integer
@@ -238,6 +244,28 @@ abstract class ListAbstract
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateAuthorRoles()
+    {
+        return $this->updateAuthorRoles;
+    }
+
+
+    public function setUpdateAuthorRoles($roles) {
+        foreach( $roles as $role ) {
+            $this->addUpdateAuthorRole($role."");
+        }
+    }
+
+    public function addUpdateAuthorRole($role) {
+        $role = strtoupper($role);
+        if( !in_array($role, $this->updateAuthorRoles, true) ) {
+            $this->updateAuthorRoles[] = $role;
         }
     }
 

@@ -1187,7 +1187,7 @@ class UserController extends Controller
     }
 
     public function updateInfo($subjectUser) {
-        $user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.context')->getToken()->getUser();
 
         //Administartive and Appointment Titles and Comments update info set when parent are processed
         //So, set author info for the rest: EmploymentStatus, Location, Credentials, ResearchLab

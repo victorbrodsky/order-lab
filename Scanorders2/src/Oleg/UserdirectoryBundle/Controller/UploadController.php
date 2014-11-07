@@ -23,7 +23,7 @@ class UploadController extends Controller {
      * @Route("/file-delete", name="employees_file_delete")
      * @Method("POST")
      */
-    public function uploadFileAction(Request $request) {
+    public function deleteFileAction(Request $request) {
 
         $documentid = $request->get('documentid');
         $commentid = $request->get('commentid');
@@ -42,6 +42,10 @@ class UploadController extends Controller {
         $count = 0;
 
         if( $document ) {
+
+            //document absolute path
+            $documentPath = $document->getServerPath();
+            //echo "documentPath=".$documentPath."<br>";
 
             //find object where document is belongs
             //$comment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
@@ -71,6 +75,11 @@ class UploadController extends Controller {
             $count++;
             $em->remove($document);
             $em->flush();
+
+            //remove file from folder
+            if( is_file($documentPath) ) {
+                unlink($documentPath);
+            }
 
         }
 

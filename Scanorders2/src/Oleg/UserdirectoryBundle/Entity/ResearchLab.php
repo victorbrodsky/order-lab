@@ -12,11 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 class ResearchLab extends BaseUserAttributes
 {
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="User", inversedBy="researchLabs")
-//     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
-//     */
-//    private $user;
     /**
      * @ORM\ManyToMany(targetEntity="User", inversedBy="researchLabs")
      * @ORM\JoinTable(name="user_researchlab_user",
@@ -41,9 +36,14 @@ class ResearchLab extends BaseUserAttributes
      */
     private $comment;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $location;
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="Location")
+     * @ORM\JoinColumn(name="location", referencedColumnName="id", nullable=true)
+     **/
     private $location;
 
     /**
@@ -127,21 +127,6 @@ class ResearchLab extends BaseUserAttributes
         return $this->location;
     }
 
-//    /**
-//     * @param mixed $user
-//     */
-//    public function setUser($user)
-//    {
-//        $this->user = $user;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getUser()
-//    {
-//        return $this->user;
-//    }
 
     /**
      * Add user

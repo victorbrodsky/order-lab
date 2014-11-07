@@ -121,7 +121,7 @@ class ListType extends AbstractType
 
             $builder->add('original', 'entity', array(
                 'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
-                'label'=>'Original:',
+                'label'=>'Original Synonymous Term:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width select2-list-original'),
                 'query_builder' => function(EntityRepository $er) {

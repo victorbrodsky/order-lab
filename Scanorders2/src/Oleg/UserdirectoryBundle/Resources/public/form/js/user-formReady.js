@@ -33,6 +33,7 @@ $(document).ready(function() {
     getComboboxIdentifier();
     getComboboxFellowshipType();
     getComboboxResearchLabs();
+    getComboboxLocations();
 
     processEmploymentStatusRemoveButtons();
 

@@ -58,9 +58,9 @@ abstract class ArrayFieldAbstract {
 
     /**
      * @ORM\OneToOne(targetEntity="DataQualityEventLog")
-     * @ORM\JoinColumn(name="dataqualityreview", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="dqeventlog", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $dataqualityreview;
+    protected $dqeventlog;
 
 
     public function __construct( $status = 'valid', $provider = null, $source = null )
@@ -168,23 +168,20 @@ abstract class ArrayFieldAbstract {
     }
 
     /**
-     * @param mixed $dataqualityreview
+     * @param \Oleg\OrderformBundle\Entity\DataQualityEventLog $dqeventlog
      */
-    public function setDataqualityreview($dataqualityreview)
+    public function setDqeventlog(DataQualityEventLog $dqeventlog)
     {
-        $this->dataqualityreview = $dataqualityreview;
+        $this->dqeventlog = $dqeventlog;
     }
 
     /**
      * @return mixed
      */
-    public function getDataqualityreview()
+    public function getDqeventlog()
     {
-        return $this->dataqualityreview;
+        return $this->dqeventlog;
     }
-
-
-
 
 
 

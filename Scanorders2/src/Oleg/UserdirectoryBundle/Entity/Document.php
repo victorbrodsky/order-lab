@@ -163,6 +163,12 @@ class Document {
         return $this->getRelativeUploadFullPath();
     }
 
+    //get server path to delete file: /var/www/test/folder/images/image_name.jpeg
+    public function getServerPath()
+    {
+        return $this->getUploadDirectory().'/'.$this->getUniquename();
+    }
+
     public function getAbsoluteUploadFullPath()
     {
         return "http://" . $_SERVER['SERVER_NAME'] . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();

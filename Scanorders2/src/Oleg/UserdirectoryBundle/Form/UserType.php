@@ -70,8 +70,8 @@ class UserType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:UsernameType',
             'read_only' => ($this->cicle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'property' => 'name',
-            'label' => 'Primary Public User ID Type:',
-            'required' => false,
+            'label' => '* Primary Public User ID Type:',
+            'required' => true,
             'multiple' => false,
             'attr' => $attr,    //array('class'=>'combobox combobox-width user-keytype-field','readonly'=>$readonlyAttr ),
             'query_builder' => function(EntityRepository $er) {
@@ -94,13 +94,13 @@ class UserType extends AbstractType
 //        }
 
         $builder->add('primaryPublicUserId', null, array(
-            'label' => 'Primary Public User ID:',
+            'label' => '* Primary Public User ID:',
             'read_only' => ($this->cicle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
         $builder->add('firstName', null, array(
-            'label' => 'First Name:',
+            'label' => '* First Name:',
             'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'
         ));
         $builder->add('middleName', null, array(
@@ -108,7 +108,7 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('lastName', null, array(
-            'label' => 'Last Name:',
+            'label' => '* Last Name:',
             'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'
         ));
         $builder->add('email', 'email', array(

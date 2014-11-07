@@ -272,9 +272,6 @@ class ListController extends Controller
             $entity->setParent($parent);
         }
 
-        //$entity->setUpdatedby($user);
-        //$entity->setUpdatedon(new \DateTime());
-
         //get max orderinlist + 10
         $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$mapper['bundleName'].':'.$mapper['className'].' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
@@ -504,6 +501,7 @@ class ListController extends Controller
             $user = $this->get('security.context')->getToken()->getUser();
             $entity->setUpdatedby($user);
             $entity->setUpdatedon(new \DateTime());
+            $entity->setUpdateAuthorRoles($user->getRoles());
 
             if( method_exists($entity,'getSynonyms') ) {
                 //take care of self-referencing: remove

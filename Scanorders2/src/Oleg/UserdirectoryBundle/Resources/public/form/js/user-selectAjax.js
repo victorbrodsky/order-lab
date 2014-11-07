@@ -11,6 +11,7 @@ var _commenttype = new Array();
 var _identifiers = new Array();
 var _fellowshiptype = new Array();
 var _researchlabs = new Array();
+var _locations = new Array();
 
 
 function setElementToId( target, dataarr, setId ) {
@@ -214,3 +215,35 @@ function getComboboxResearchLabs(holder) {
 
 }
 
+
+function getComboboxLocations(holder) {
+
+    var targetid = ".ajax-combobox-location";
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
+    }
+
+    var url = getCommonBaseUrl("util/common/"+"location","employees");
+
+    if( _locations.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _locations = data;
+            populateSelectCombobox( targetid, _locations, "Select an option or type in a new value", false );
+        });
+    } else {
+        populateSelectCombobox( targetid, _locations, "Select an option or type in a new value", false );
+    }
+
+}

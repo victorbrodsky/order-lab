@@ -108,6 +108,14 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
      */
     private $locations;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Location")
+//     * @ORM\JoinTable(name="user_user_location",
+//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $locations;
 
     /**
      * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist"})
@@ -406,7 +414,6 @@ class User extends BaseUser
      */
     public function addLocation(\Oleg\UserdirectoryBundle\Entity\Location $location)
     {
-        //$this->locations[] = $location;
         if( !$this->locations->contains($location) ) {
             $this->locations->add($location);
             $location->setUser($this);
