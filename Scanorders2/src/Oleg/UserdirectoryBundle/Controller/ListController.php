@@ -42,6 +42,8 @@ class ListController extends Controller
      * @Route("/locations/", name="locations-list")
      * @Route("/equipment/", name="equipments-list")
      * @Route("/equipment-types/", name="equipmenttypes-list")
+     * @Route("/location-privacy-types/", name="locationprivacy-list")
+     * @Route("/role-attributes/", name="roleattributes-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -141,6 +143,8 @@ class ListController extends Controller
      * @Route("/locations/", name="locations_create")
      * @Route("/equipment/", name="equipments_create")
      * @Route("/equipment-types/", name="equipmenttypes_create")
+     * @Route("/location-privacy-types/", name="locationprivacy_create")
+     * @Route("/role-attributes/", name="roleattributes_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -248,6 +252,8 @@ class ListController extends Controller
      * @Route("/locations/new", name="locations_new")
      * @Route("/equipment/new", name="equipments_new")
      * @Route("/equipment-types/new", name="equipmenttypes_new")
+     * @Route("/location-privacy-types/new", name="locationprivacy_new")
+     * @Route("/role-attributes/new", name="roleattributes_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -318,6 +324,8 @@ class ListController extends Controller
      * @Route("/locations/{id}", name="locations_show")
      * @Route("/equipment/{id}", name="equipments_show")
      * @Route("/equipment-types/{id}", name="equipmenttypes_show")
+     * @Route("/location-privacy-types/{id}", name="locationprivacy_show")
+     * @Route("/role-attributes/{id}", name="roleattributes_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -377,6 +385,8 @@ class ListController extends Controller
      * @Route("/locations/{id}/edit", name="locations_edit")
      * @Route("/equipment/{id}/edit", name="equipments_edit")
      * @Route("/equipment-types/{id}/edit", name="equipmenttypes_edit")
+     * @Route("/location-privacy-types/{id}/edit", name="locationprivacy_edit")
+     * @Route("/role-attributes/{id}/edit", name="roleattributes_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -477,6 +487,8 @@ class ListController extends Controller
      * @Route("/locations/{id}", name="locations_update")
      * @Route("/equipment/{id}", name="equipments_update")
      * @Route("/equipment-types/{id}", name="equipmenttypes_update")
+     * @Route("/location-privacy-types/{id}", name="locationprivacy_update")
+     * @Route("/role-attributes/{id}", name="roleattributes_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -699,6 +711,14 @@ class ListController extends Controller
                 $className = "EquipmentType";
                 $displayName = "Equipment Types";
                 break;
+            case "locationprivacy":
+                $className = "LocationPrivacyList";
+                $displayName = "Location Privacy Types";
+                break;
+            case "roleattributes":
+                $className = "RoleAttributeList";
+                $displayName = "Role Attributes";
+                break;
             default:
                 $className = null;
                 $displayName = null;
@@ -746,6 +766,8 @@ class ListController extends Controller
      * @Route("/locations/{id}", name="locations_delete")
      * @Route("/equipment/{id}", name="equipments_delete")
      * @Route("/equipment-types/{id}", name="equipmenttypes_delete")
+     * @Route("/location-privacy-types/{id}", name="locationprivacy_delete")
+     * @Route("/role-attributes/{id}", name="roleattributes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

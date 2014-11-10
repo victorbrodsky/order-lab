@@ -185,6 +185,10 @@
             {{ formmacros.field(formfield.name,"","readonly") }}
         {% endif %}
 
+        {% if homeLocation == true %}
+            {{ formmacros.field(formfield.privacy) }}
+        {% endif %}
+
         {% if formfield.locationType is defined %}
             {{ formmacros.field(formfield.locationType) }}
         {% endif %}
@@ -692,6 +696,18 @@
     {% endif %}
 {% endmacro %}
 
+{% macro roleAttributes( roleobjects ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% for role in roleobjects %}
+        {% for attribute in role.getAttributes() %}
+            {{ formmacros.simplefield( attribute.getName()~":", attribute.getValue(), "input", "disabled" ) }}
+        {% endfor %}
+    {% endfor %}
+{% endmacro %}
+
+
+
+
 {% import _self as userform %}
 
 
@@ -833,6 +849,36 @@
             </div>
         </div>
 
+
+        {#Role Attributes#}
+        {% set showRoleattributes = false %}
+        {% if roleobjects is defined %}
+            {% for role in roleobjects %}
+                {% for attribute in role.getAttributes() %}
+                    {% if attribute.getValue() and cicle == 'show_user' %}
+                        {% set showRoleattributes = true %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        {% if showRoleattributes and roleobjects is defined %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#roleattributes">
+                            Role Attributes
+                        </a>
+                    </h4>
+                </div>
+                <div id="roleattributes" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        {% if roleobjects is defined %}
+                            {{ userform.roleAttributes(roleobjects) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
 
         {#Global User Preferences#}
         <div class="panel panel-primary">

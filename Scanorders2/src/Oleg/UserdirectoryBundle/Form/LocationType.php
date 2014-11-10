@@ -238,6 +238,13 @@ class LocationType extends AbstractType
             'required' => false
         ));
 
+        $builder->add('privacy','entity',array(
+            'class' => 'OlegUserdirectoryBundle:LocationPrivacyList',
+            'label' => "Location Privacy (who can see this contact info):",
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'required' => true
+        ));
 
     }
 

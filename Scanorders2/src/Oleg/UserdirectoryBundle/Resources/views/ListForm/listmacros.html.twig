@@ -4,6 +4,7 @@
 {% macro listIndex( entities, pathbase ) %}
 
     {% import _self as listmacros %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
@@ -21,6 +22,14 @@
 
             {% if entities|first.parent is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Parent(s)', 'parent.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.attributes is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Attribute(s)', 'ent.attributes') }}</th>
+            {% endif %}
+
+            {% if entities|first.value is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Value', 'ent.value') }}</th>
             {% endif %}
 
             {% if entities|first.action is defined %}
@@ -87,6 +96,18 @@
                             {{ listmacros.hrefLinkToNode(entity.parent) }} /
                         {% endif %}
                     </td>
+                {% endif %}
+
+                {% if entity.attributes is defined %}
+                    <td>
+                        {% for attribute in entity.attributes %}
+                            {{ attribute }}
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+                {% if entity.value is defined %}
+                    <td>{{ entity.value }}</td>
                 {% endif %}
 
                 {% if entity.action is defined %}
@@ -175,14 +196,22 @@
     {#{{ form(form) }}#}
     {{ form_start(form) }}
 
+    {{ formmacros.field(form.list.name) }}
+
     {% if form.parent is defined and form.vars.value.parent is defined %}
         {{ formmacros.field(form.parent) }}
     {% endif %}
 
-    {{ formmacros.field(form.list.name) }}
+    {% if form.attributes is defined and form.vars.value.attributes is defined %}
+        {{ formmacros.field(form.attributes) }}
+    {% endif %}
+
+    {% if form.value is defined %}
+        {{ formmacros.field(form.value) }}
+    {% endif %}
 
     {% if entity.abbreviation is defined %}
-        {{ formmacros.field(edit_form.abbreviation) }}
+        {{ formmacros.field(form.abbreviation) }}
     {% endif %}
 
     {% if form.list.original is defined %}
@@ -250,6 +279,10 @@
 
     {{ formmacros.field(edit_form.list.name) }}
 
+    {% if entity.value is defined %}
+        {{ formmacros.field(edit_form.value) }}
+    {% endif %}
+
     {% if entity.abbreviation is defined %}
         {{ formmacros.field(edit_form.abbreviation) }}
     {% endif %}
@@ -272,6 +305,10 @@
 
     {% if edit_form.description is defined %}
         {{ formmacros.field(edit_form.description) }}
+    {% endif %}
+
+    {% if edit_form.attributes is defined and entity.attributes is defined %}
+        {{ formmacros.field(edit_form.attributes) }}
     {% endif %}
 
     {{ formmacros.field(edit_form.list.type) }}

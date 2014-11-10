@@ -2,13 +2,6 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
-
-
-
-
-
-use Oleg\UserdirectoryBundle\Entity\Equipment;
-use Oleg\UserdirectoryBundle\Entity\EquipmentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -33,6 +26,10 @@ use Oleg\UserdirectoryBundle\Entity\FellowshipTypeList;
 use Oleg\UserdirectoryBundle\Entity\ResidencyTrackList;
 use Oleg\UserdirectoryBundle\Entity\LocationTypeList;
 use Oleg\UserdirectoryBundle\Entity\Countries;
+use Oleg\UserdirectoryBundle\Entity\Equipment;
+use Oleg\UserdirectoryBundle\Entity\EquipmentType;
+use Oleg\UserdirectoryBundle\Entity\LocationPrivacyList;
+use Oleg\UserdirectoryBundle\Entity\RoleAttributeList;
 
 /**
  * @Route("/admin")
@@ -98,6 +95,7 @@ class AdminController extends Controller
         $count_locationTypeList = $this->generateLocationTypeList();
         $count_equipmentType = $this->generateEquipmentType();
         $count_equipment = $this->generateEquipment();
+        $count_locprivacy = $this->generateLocationPrivacy();
 
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
@@ -125,7 +123,8 @@ class AdminController extends Controller
             'Fellowship Types ='.$count_fellowshipTypeList.', '.
             'Location Types ='.$count_locationTypeList.', '.
             'Equipment Types ='.$count_equipmentType.', '.
-            'Equipment ='.$count_equipment.' '.
+            'Equipment ='.$count_equipment.', '.
+            'Location Privacy ='.$count_locprivacy.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -161,7 +160,7 @@ class AdminController extends Controller
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         if( $entities ) {
-            return -1;
+            //return -1;
         }
 
         //Note: fos user has role ROLE_SCANORDER_SUPER_ADMIN
@@ -198,6 +197,9 @@ class AdminController extends Controller
             "ROLE_SCANORDER_UNAPPROVED_SUBMITTER" => array("ScanOrder Unapproved Submitter","Does not allow to visit Scan Order site"),
             "ROLE_SCANORDER_BANNED" => array("ScanOrder Banned User","Does not allow to visit Scan Order site"),
 
+            "ROLE_SCANORDER_ONCALL_TRAINEE" => array("OrderPlatform On Call Trainee","Allow to see the phone numbers & email of Home location"),
+            "ROLE_SCANORDER_ONCALL_ATTENDING" => array("OrderPlatform On Call Attending","Allow to see the phone numbers & email of Home location"),
+
             //////////// EmployeeDirectory roles ////////////
             "ROLE_USERDIRECTORY_OBSERVER" => array("EmployeeDirectory Observer","Allow to view all employees"),
             "ROLE_USERDIRECTORY_EDITOR" => array("EmployeeDirectory Editor","Allow to edit all employees"),
@@ -225,6 +227,21 @@ class AdminController extends Controller
             $entity->setName( trim($role) );
             $entity->setAlias( trim($alias) );
             $entity->setDescription( trim($description) );
+
+            //set attributes for ROLE_SCANORDER_ONCALL_TRAINEE
+            if( $role == "ROLE_SCANORDER_ONCALL_TRAINEE" ) {
+                $attr = new RoleAttributeList();
+                $this->setDefaultList($attr,1,$username,"Call Pager");
+                $attr->setValue("(111) 111-1111");
+                $entity->addAttribute($attr);
+            }
+            //set attributes for ROLE_SCANORDER_ONCALL_ATTENDING
+            if( $role == "ROLE_SCANORDER_ONCALL_ATTENDING" ) {
+                $attr = new RoleAttributeList();
+                $this->setDefaultList($attr,10,$username,"Call Pager");
+                $attr->setValue("(222) 222-2222");
+                $entity->addAttribute($attr);
+            }
 
             $em->persist($entity);
             $em->flush();
@@ -1072,6 +1089,41 @@ class AdminController extends Controller
             }
 
             $keytype->addEquipment($listEntity);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return $count;
+    }
+
+
+    public function generateLocationPrivacy() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Administration; Those 'on call' can see these phone numbers & email",
+            "Administration can see and edit this contact information",
+            "Any approved user of Employee Directory can see these phone numbers and email",
+            "Any approved user of Employee Directory can see this contact information if logged in",
+            "Anyone can see this contact information"
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new LocationPrivacyList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);
             $em->flush();

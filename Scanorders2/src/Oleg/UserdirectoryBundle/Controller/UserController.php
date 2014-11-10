@@ -839,13 +839,23 @@ class UserController extends Controller
 //            throw new AccessDeniedException('This user does not have access to this section.');
 //        }
 
+        //get roles objects for this user
+        $roleobjects = array();
+        foreach( $entity->getRoles() as $role ) {
+            $roleEntity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+            if( $roleEntity ) {
+                $roleobjects[] = $roleEntity;
+            }
+        }
+
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
             'cicle' => 'show_user',
             'user_id' => $id,
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'roleobjects' => $roleobjects
         );
     }
 

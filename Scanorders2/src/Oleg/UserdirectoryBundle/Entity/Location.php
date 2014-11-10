@@ -183,6 +183,11 @@ class Location extends ListAbstract
      */
     private $institution;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="LocationPrivacyList", inversedBy="locations")
+     * @ORM\JoinColumn(name="privacy_id", referencedColumnName="id")
+     **/
+    protected $privacy;
 
 
     public function __construct($creator=null) {
@@ -776,6 +781,22 @@ class Location extends ListAbstract
     public function getOriginal()
     {
         return $this->original;
+    }
+
+    /**
+     * @param mixed $privacy
+     */
+    public function setPrivacy($privacy)
+    {
+        $this->privacy = $privacy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrivacy()
+    {
+        return $this->privacy;
     }
 
 

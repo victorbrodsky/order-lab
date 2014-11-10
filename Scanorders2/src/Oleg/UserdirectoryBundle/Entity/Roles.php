@@ -23,6 +23,21 @@ class Roles extends ListAbstract {
      */
     protected $description;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="RoleAttributeList", mappedBy="role", cascade={"persist"})
+//     */
+//    protected $attributes;
+    /**
+     * @ORM\ManyToMany(targetEntity="RoleAttributeList", inversedBy="roles", cascade={"persist"})
+     * @ORM\JoinTable(name="user_roles_attributes")
+     **/
+    private $attributes;
+
+
+    public function __construct() {
+        $this->attributes = new ArrayCollection();
+    }
+
     /**
      * @param mixed $alias
      */
@@ -56,6 +71,21 @@ class Roles extends ListAbstract {
     }
 
 
+    public function addAttribute(RoleAttributeList $attribute)
+    {
+        if( !$this->attributes->contains($attribute) ) {
+            //$attribute->setRole($this);
+            $this->attributes->add($attribute);
+        }
+    }
+    public function removeAttribute(RoleAttributeList $attribute)
+    {
+        $this->attributes->removeElement($attribute);
+    }
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
 
 
 

@@ -42,6 +42,20 @@ class GenericListType extends AbstractType
                 'label'=>'Explanation of Capabilities:',
                 'attr' => array('class' => 'textarea form-control')
             ));
+            $builder->add('attributes','entity',array(
+                'class' => 'OlegUserdirectoryBundle:RoleAttributeList',
+                'label' => "Attribute(s):",
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false,
+            ));
+        }
+
+        if( strtolower($this->mapper['className']) == strtolower("RoleAttributeList") ) {
+            $builder->add('value',null,array(
+                'label'=>'Value:',
+                'attr' => array('class' => 'form-control')
+            ));
         }
 
         $builder->add('list', new ListType($this->params, $this->mapper), array(
