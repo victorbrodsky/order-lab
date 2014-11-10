@@ -347,7 +347,7 @@
         {% endif %}
 
         {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,cicle,'allow-future-date') }}
         {{ formmacros.field_notempty(formfield.terminationType) }}
         {{ formmacros.field_notempty(formfield.terminationReason) }}
 

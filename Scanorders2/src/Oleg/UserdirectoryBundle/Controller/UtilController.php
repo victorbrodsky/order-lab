@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -9,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 //TODO: optimise by removing foreach loops
 
@@ -451,23 +453,28 @@ class UtilController extends Controller {
 
 
     /**
-     * @Route("/common/user-data-search/{type}/{search}", name="employees_user-data-search")
+     * @Route("/common/user-data-search/{type}/{limit}/{search}", name="employees_user-data-search")
      * @Method("GET")
      */
     public function getUserDataSearchAction(Request $request) {
 
         $type = trim( $request->get('type') );
         $search = trim( $request->get('search') );
+        $limit = trim( $request->get('limit') );
 
         //echo "type=".$type."<br>";
         //echo "search=".$search."<br>";
+        //echo "limit=".$limit."<br>";
+        //exit();
 
         $em = $this->getDoctrine()->getManager();
+        $userutil = new UserUtil();
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select("user.id as id, user.displayName as text");
         $dql->groupBy('user');
+        $dql->orderBy("user.displayName","ASC");
 
 
         $object = null;
@@ -493,6 +500,10 @@ class UtilController extends Controller {
                 $criteriastr = "administrativeService.name LIKE '%".$search."%' OR ";
                 $criteriastr .= "appointmentService.name LIKE '%".$search."%'";
             }
+
+            //time
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
         }
 
         if( $type == "division" ) {
@@ -508,6 +519,10 @@ class UtilController extends Controller {
                 $criteriastr = "administrativeDivision.name LIKE '%".$search."%' OR ";
                 $criteriastr .= "appointmentDivision.name LIKE '%".$search."%'";
             }
+
+            //time
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
         }
 
         if( $type == "cwid" ) {
@@ -525,12 +540,16 @@ class UtilController extends Controller {
             } else {
                 $criteriastr = "administrativeTitles.name LIKE '%".$search."%'";
             }
+
+            //time
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
         }
 
 
         $dql->where($criteriastr);
 
-        $query = $em->createQuery($dql);
+        $query = $em->createQuery($dql)->setMaxResults($limit);
 
         $output = $query->getResult();
 

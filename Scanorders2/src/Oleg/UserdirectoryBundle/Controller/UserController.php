@@ -86,7 +86,7 @@ class UserController extends Controller
         $roles = null;
 
         if( $search != "" || $userid != "" ) {
-            $res = $this->indexUser( null, true, true, $search, $userid );
+            $res = $this->indexUser( null, 'current_only', true, $search, $userid );
             $pagination = $res['entities'];
             $roles = $res['roles'];
         }
@@ -129,20 +129,20 @@ class UserController extends Controller
 
         $filter = trim( $request->get('filter') );
 
-        $current = true;
+        $time = 'current_only';
         $routeName = $request->get('_route');
         if( $routeName == "employees_listusers_previous" ) {
-            $current = false;
+            $time = 'past_only';
         }
 
-        $res = $this->indexUser($filter,$current);
+        $res = $this->indexUser($filter,$time);
         $res['filter'] = $filter;
 
         return $res;
     }
 
-
-    public function indexUser( $filter=null, $current=true, $limitFlag=true, $search=null, $userid=null ) {
+    //$time: 'current_only' - search only current, 'past_only' - search only past, 'all' - search current and past (no filter)
+    public function indexUser( $filter=null, $time='all', $limitFlag=true, $search=null, $userid=null ) {
 
         //$userManager = $this->container->get('fos_user.user_manager');
         //$users = $userManager->findUsers();
@@ -178,36 +178,39 @@ class UserController extends Controller
         $postData = $request->query->all();
 
         if( !isset($postData['sort']) ) {
-            if( $current == true ) {
+            if( $time == 'current_only' ) {
                 $dql->orderBy("user.lastName","ASC");
                 $dql->addOrderBy("administrativeInstitution.name","ASC");
                 $dql->addOrderBy("administrativeService.name","ASC");
                 $dql->addOrderBy("appointmentService.name","ASC");
-            } else {
+            } else if( $time == 'past_only' ) {
                 $dql->orderBy("employmentStatus.terminationDate","DESC");
                 $dql->addOrderBy("user.lastName","ASC");
+            } else {
+                $dql->orderBy("user.lastName","ASC");
             }
         }
 
         //employmentStatus
-        $timecriteriastr = "";
-        $curdate = date("Y-m-d", time());
-        if( $current ) {
-            //Employment Status should have at least one group where Date of Termination is empty
-            $timecriteriastr .= "(employmentStatus IS NULL)";
-            $timecriteriastr .= " OR ";
-            $timecriteriastr .= "(employmentStatus.terminationDate IS NULL)";
-            $timecriteriastr .= " OR ";
-            $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."') )";
-        } else {
-            //Each group of fields in the employment status should have a non-empty Date of Termination.
-            //TODO: should the serach result display only users with all employment status have a non-empty Date of Termination?
-            $timecriteriastr .= "(employmentStatus IS NOT NULL)";
-            $timecriteriastr .= " AND ";
-            $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
-            //$timecriteriastr .= " AND ";
-            //$timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL)";
-        }
+//        $timecriteriastr = "";
+//        $curdate = date("Y-m-d", time());
+//        echo "time=".$time."<br>";
+//        if( $time == 'current_only' ) {
+//            //Employment Status should have at least one group where Date of Termination is empty
+//            $timecriteriastr .= "(employmentStatus IS NULL)";
+//            $timecriteriastr .= " OR ";
+//            $timecriteriastr .= "(employmentStatus.terminationDate IS NULL)";
+//            $timecriteriastr .= " OR ";
+//            $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."') )";
+//        } else {
+//            //Each group of fields in the employment status should have a non-empty Date of Termination.
+//            //TODO: should the serach result display only users with all employment status have a non-empty Date of Termination?
+//            $timecriteriastr .= "(employmentStatus IS NOT NULL)";
+//            $timecriteriastr .= " AND ";
+//            $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
+//            //$timecriteriastr .= " AND ";
+//            //$timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL)";
+//        }
 
 
         if( $userid ) {
@@ -216,23 +219,35 @@ class UserController extends Controller
 
         } else {
 
+            $criteriastr = "";
+
             //filter
-            $criteriastr = $this->getCriteriaStrByFilter( $dql, $filter );
+            $criteriastr = $this->getCriteriaStrByFilter( $dql, $filter, $criteriastr );
+            //echo "filter=".$criteriastr."<br>";
 
             //search
-            $criteriastr .= $this->getCriteriaStrBySearch( $dql, $search );
+            $criteriastr = $this->getCriteriaStrBySearch( $dql, $search, $criteriastr );
+            //echo "search=".$criteriastr."<br>";
 
-            $totalcriteriastr = $timecriteriastr;
+            //time
+            $userutil = new UserUtil();
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, $time, null, $criteriastr );
 
-            if( $criteriastr != "" ) {
-                $totalcriteriastr = "(" . $totalcriteriastr . ") AND " .  $criteriastr;
+            //filter out system user
+            $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
+
+            if( $criteriastr ) {
+                $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+            } else {
+
             }
 
-        }
+//            if( $criteriastr != "" ) {
+//                $totalcriteriastr = "(" . $timecriteriastr . ") AND " .  $criteriastr;
+//            } else {
+//                $totalcriteriastr = $timecriteriastr;
+//            }
 
-        //filter out system user
-        if( $totalcriteriastr ) {
-            $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (".$totalcriteriastr.")";
         }
 
         $dql->where($totalcriteriastr);
@@ -266,12 +281,13 @@ class UserController extends Controller
     }
 
 
-    public function getCriteriaStrBySearch( $dql, $search ) {
+
+    public function getCriteriaStrBySearch( $dql, $search, $inputCriteriastr ) {
 
         $criteriastr = "";
 
         if( !$search || $search == "" ) {
-            return $criteriastr;
+            return $inputCriteriastr;
         }
 
         //last name
@@ -363,7 +379,15 @@ class UserController extends Controller
             $criteriastr = " (" . $criteriastr . ")";
         }
 
-        return $criteriastr;
+        if( $inputCriteriastr && $inputCriteriastr != "" ) {
+            if( $criteriastr != "" ) {
+                $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
+            }
+        } else {
+            $inputCriteriastr = $criteriastr;
+        }
+
+        return $inputCriteriastr;
     }
 
     private function getCleanCriteriaStr($criteriastr,$fieldName) {
@@ -373,11 +397,11 @@ class UserController extends Controller
         return $criteriastr;
     }
 
-    public function getCriteriaStrByFilter( $dql, $filter ) {
+    public function getCriteriaStrByFilter( $dql, $filter, $inputCriteriastr ) {
 
         $criteriastr = "";
 
-        $curdate = date("Y-m-d", time());
+        //$curdate = date("Y-m-d", time());
 
         //Pending Administrative Review
         if( $filter && $filter == "Pending Administrative Review" ) {
@@ -549,8 +573,8 @@ class UserController extends Controller
             $criteriastr .= "(researchLabs.researchPI = 1)";
 
             //with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
-            $criteriastr .= " AND ";
-            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
         }
 
         // "All WCMC Pathology Faculty in Research Labs" - the same as "All WCMC Pathology Faculty"
@@ -562,11 +586,10 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty' OR appointmentTitles.position = 'Research Faculty')";
 
-            $dql->innerJoin("user.researchLabs", "researchLabs");
-
-            //with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
-            $criteriastr .= " AND ";
-            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
+//            $dql->innerJoin("user.researchLabs", "researchLabs");
+//            //with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
         }
 
 
@@ -580,11 +603,10 @@ class UserController extends Controller
             $criteriastr .= "administrativeInstitution.name = 'New York Hospital' AND administrativeDepartment.name = 'Pathology'";
             $criteriastr .= ") ";
 
-            $dql->innerJoin("user.researchLabs", "researchLabs");
-
-            //with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
-            $criteriastr .= " AND ";
-            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
+//            $dql->innerJoin("user.researchLabs", "researchLabs");
+//            //with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
         }
 
 
@@ -596,7 +618,15 @@ class UserController extends Controller
             );
         }
 
-        return $criteriastr;
+        if( $inputCriteriastr && $inputCriteriastr != "" ) {
+            if( $criteriastr != "" ) {
+                $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
+            }
+        } else {
+            $inputCriteriastr = $criteriastr;
+        }
+
+        return $inputCriteriastr;
     }
 
     public function pendingAdminReviewAction() {
@@ -610,7 +640,7 @@ class UserController extends Controller
 
         $limitFlag = false;
 
-        $res = $this->indexUser( 'Pending Administrative Review', true, $limitFlag );
+        $res = $this->indexUser( 'Pending Administrative Review', 'current_only', $limitFlag );
 
         $pending = count($res['entities']);
 

@@ -38,13 +38,13 @@ class ScanUserController extends UserController
 
         $filter = trim( $request->get('filter') );
 
-        $current = true;
+        $time = 'current_only';
         $routeName = $request->get('_route');
         if( $routeName == "scan_listusers_previous" ) {
-            $current = false;
+            $time = 'past_only';
         }
 
-        $res = $this->indexUser($filter,$current);
+        $res = $this->indexUser($filter,$time);
         $res['filter'] = $filter;
 
         return $res;

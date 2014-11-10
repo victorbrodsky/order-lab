@@ -11,44 +11,51 @@ function initTypeaheadUserSiteSerach() {
 
     //console.log('typeahead search');
 
+    var suggestions_limit = 5;
+
     var userDB = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: getCommonBaseUrl("util/common/user-data-search/user/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/user/%QUERY","employees"),
-        dupDetector: duplicationDetector
+        prefetch: getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/min","employees"),
+        remote: getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/%QUERY","employees"),
+        dupDetector: duplicationDetector,
+        limit: suggestions_limit
     });
 
     var serviceDB = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         //prefetch: getCommonBaseUrl("util/common/user-data-search/service/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/service/%QUERY","employees"),
-        dupDetector: duplicationDetector
+        remote: getCommonBaseUrl("util/common/user-data-search/service/"+suggestions_limit+"/%QUERY","employees"),
+        dupDetector: duplicationDetector,
+        limit: suggestions_limit
     });
 
     var divisionDB = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         //prefetch: getCommonBaseUrl("util/common/user-data-search/division/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/division/%QUERY","employees"),
-        dupDetector: duplicationDetector
+        remote: getCommonBaseUrl("util/common/user-data-search/division/"+suggestions_limit+"/%QUERY","employees"),
+        dupDetector: duplicationDetector,
+        limit: suggestions_limit
     });
 
     var cwidDB = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         //prefetch: getCommonBaseUrl("util/common/user-data-search/cwid/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/cwid/%QUERY","employees"),
-        dupDetector: duplicationDetector
+        remote: getCommonBaseUrl("util/common/user-data-search/cwid/"+suggestions_limit+"/%QUERY","employees"),
+        dupDetector: duplicationDetector,
+        limit: suggestions_limit
     });
 
     var admintitleDB = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         //prefetch: getCommonBaseUrl("util/common/user-data-search/admintitle/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/admintitle/%QUERY","employees"),
-        dupDetector: duplicationDetector
+        remote: getCommonBaseUrl("util/common/user-data-search/admintitle/"+suggestions_limit+"/%QUERY","employees"),
+        dupDetector: duplicationDetector,
+        limit: suggestions_limit
     });
 
     userDB.initialize();
@@ -127,6 +134,6 @@ function initTypeaheadUserSiteSerach() {
 
 function duplicationDetector(remoteMatch, localMatch) {
     //console.log('dup check');
-    return remoteMatch.value === localMatch.value;
+    return remoteMatch.text === localMatch.text;    //value
 }
 

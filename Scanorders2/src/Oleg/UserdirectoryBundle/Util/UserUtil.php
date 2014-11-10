@@ -424,4 +424,93 @@ class UserUtil {
 
 
 
+    //academic titles, administrative titles, sevices, and divisions: if a object has a non-empty end date that is older than today's date, it is a "past" object.
+    //$time: 'current_only' - search only current, 'past_only' - search only past, 'all' - search current and past (no filter)
+    public function getCriteriaStrByTime( $dql, $time, $searchField, $inputCriteriastr) {
+
+        //echo "time filter: time=".$time."<br>";
+
+        $criteriastr = "";
+        $curdate = date("Y-m-d", time());
+
+        switch( $time ) {
+            case "current_only":
+                //with an empty or future 'end date'
+
+                //titles: endDate
+                if( $searchField == null || $searchField == 'administrativeTitles' ) {
+                    $criteriastr .= "(administrativeTitles.endDate IS NULL OR administrativeTitles.endDate > '".$curdate."')";
+                    $criteriastr .= " OR ";
+                }
+                if( $searchField && $searchField == 'appointmentTitles' ) {
+                    $criteriastr .= "(appointmentTitles.endDate IS NULL OR appointmentTitles.endDate > '".$curdate."')";
+                    $criteriastr .= " OR ";
+                }
+
+                //research lab: dissolvedDate
+                if( $searchField == null || $searchField == 'researchLabs' ) {
+                    $dql->leftJoin("user.researchLabs", "researchLabs");
+                    $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
+                    $criteriastr .= " OR ";
+                }
+
+                //Employment Status should have at least one group where Date of Termination is empty
+                if( $searchField == null || $searchField == 'employmentStatus' ) {
+                    $criteriastr .= "(";
+                    $criteriastr .= "(employmentStatus IS NULL)";
+                    $criteriastr .= " OR ";
+                    $criteriastr .= "(employmentStatus.terminationDate IS NULL)";
+                    $criteriastr .= " OR ";
+                    $criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."') )";
+                    $criteriastr .= ")";
+                }
+
+                break;
+            case "past_only":
+                //past or empty or future 'end date'
+
+                //titles: endDate
+                if( $searchField == null || $searchField == 'administrativeTitles' ) {
+                    $criteriastr .= "(administrativeTitles.endDate IS NOT NULL AND administrativeTitles.endDate < '".$curdate."')";
+                    $criteriastr .= " OR ";
+                }
+                if( $searchField && $searchField == 'appointmentTitles' ) {
+                    $criteriastr .= "(appointmentTitles.endDate IS NOT NULL AND appointmentTitles.endDate < '".$curdate."')";
+                    $criteriastr .= " OR ";
+                }
+
+                //research lab: dissolvedDate
+                if( $searchField == null || $searchField == 'researchLabs' ) {
+                    $dql->leftJoin("user.researchLabs", "researchLabs");
+                    $criteriastr .= "(researchLabs.dissolvedDate IS NOT NULL AND researchLabs.dissolvedDate < '".$curdate."')";
+                    $criteriastr .= " OR ";
+                }
+
+                //Each group of fields in the employment status should have a non-empty Date of Termination.
+                if( $searchField == null || $searchField == 'employmentStatus' ) {
+                    //TODO: should the serach result display only users with all employment status have a non-empty Date of Termination?
+                    $criteriastr .= "(";
+                    $criteriastr .= "(employmentStatus IS NOT NULL)";
+                    $criteriastr .= " AND ";
+                    $criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
+                    $criteriastr .= ")";
+                }
+
+                break;
+            default:
+                //do nothing
+        }
+
+        if( $inputCriteriastr && $inputCriteriastr != "" ) {
+            if( $criteriastr != "" ) {
+                $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
+            }
+        } else {
+            $inputCriteriastr = $criteriastr;
+        }
+
+        return $inputCriteriastr;
+    }
+
+
 }
