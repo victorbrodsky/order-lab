@@ -864,6 +864,9 @@ class Location extends ListAbstract
             $detailsArr[] = $this->getMailbox();
         }
 
+        //print_r($detailsArr);
+        //exit();
+
         if( count($detailsArr) > 0 ) {
             $name = $name . "(" . implode(", ",$detailsArr) . ")";
         }

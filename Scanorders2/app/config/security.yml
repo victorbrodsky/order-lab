@@ -107,7 +107,8 @@ security:
      - { path: ^/pathology-employees/event-log, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/pathology-employees/user-directory, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/pathology-employees/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-     - { path: ^/pathology-employees/admin/list, role: ROLE_USERDIRECTORY_EDITOR }
+#     - { path: ^/pathology-employees/admin/lists, role: ROLE_USERDIRECTORY_EDITOR }
+#     - { path: ^/pathology-employees/admin/list, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/pathology-employees/admin/genall, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/pathology-employees/users/generate, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/pathology-employees/admin/, role: ROLE_USERDIRECTORY_ADMIN }

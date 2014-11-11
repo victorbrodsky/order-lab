@@ -39,6 +39,7 @@
 
 
         <form id="user-typeahead-serach-form" action="{{ path(employees_sitename~'_home') }}" method="get">
+
             <div class="row">
                 <div class="col-xs-8" align="right">
                     <div id="multiple-datasets-typeahead-search">
@@ -52,7 +53,12 @@
 
 
             </div>
+
+
         </form>
+
+
+
 
         {% if entities and entities|length > 0 %}
             {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}

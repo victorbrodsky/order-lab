@@ -49,9 +49,14 @@ class ListController extends Controller
      */
     public function indexAction(Request $request)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
         return $this->getList($request);
     }
     public function getList($request) {
+
         $type = $request->get('_route');
 
         //get object name: stain-list => stain
@@ -150,6 +155,10 @@ class ListController extends Controller
      */
     public function createAction(Request $request)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
         return $this->createList($request);
     }
     public function createList($request) {
@@ -259,6 +268,10 @@ class ListController extends Controller
      */
     public function newAction(Request $request)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
         return $this->newList($request);
     }
     public function newList($request,$pid=null) {
@@ -331,6 +344,11 @@ class ListController extends Controller
      */
     public function showAction(Request $request,$id)
     {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
         return $this->showList($request,$id);
     }
     public function showList($request,$id) {
@@ -392,6 +410,10 @@ class ListController extends Controller
      */
     public function editAction(Request $request,$id)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
         return $this->editList($request,$id);
     }
     function editList($request,$id) {
@@ -494,6 +516,10 @@ class ListController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
         return $this->updateList($request, $id);
     }
     public function updateList($request, $id) {
@@ -592,7 +618,7 @@ class ListController extends Controller
      */
     public function newNodeWithParentAction(Request $request,$pid)
     {
-        return $this->newList($request,$pid);
+        return $this->newList($request,$this->container->getParameter('employees.sitename'),$pid);
     }
 
     public function getParentName( $className ) {
@@ -772,9 +798,12 @@ class ListController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        return $this->deleteList($request, $id);
+
+        return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        //return $this->deleteList($request, $id);
     }
     public function deleteList($request, $id) {
+
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];

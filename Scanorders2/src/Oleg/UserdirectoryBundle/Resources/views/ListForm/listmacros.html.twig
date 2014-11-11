@@ -5,6 +5,7 @@
 
     {% import _self as listmacros %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
@@ -83,18 +84,7 @@
 
                 {% if entity.parent is defined %}
                     <td class="rowlink-skip">
-                        {#institution#}
-                        {% if entity.parent.parent.parent is defined %}
-                            {{ listmacros.hrefLinkToNode(entity.parent.parent.parent) }} /
-                        {% endif %}
-                        {#department#}
-                        {% if entity.parent.parent is defined %}
-                            {{ listmacros.hrefLinkToNode(entity.parent.parent) }} /
-                        {% endif %}
-                        {#division#}
-                        {% if entity.parent is defined %}
-                            {{ listmacros.hrefLinkToNode(entity.parent) }} /
-                        {% endif %}
+                        {{ usermacros.getInstitutionalTree(entity.parent) }}
                     </td>
                 {% endif %}
 
@@ -353,7 +343,7 @@
 
     <br>
 
-    {% if cicle == 'show' %}
+    {% if cicle == 'show' and (is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_SCANORDER_PROCESSOR')) %}
         <p>
             <a class="btn btn-success" href="{{ path(pathbase~'_edit', { 'id': entity.id }) }}">Edit</a>
         </p>

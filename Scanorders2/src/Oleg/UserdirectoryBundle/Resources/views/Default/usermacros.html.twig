@@ -73,3 +73,36 @@
 
 
 
+{% macro getInstitutionalTree( entity ) %}
+
+    {% import _self as userform %}
+
+    <ol class="breadcrumb">
+
+        {#institution#}
+        {% if entity.parent.parent.parent is defined %}
+            <li>{{ userform.hrefLinkToNode(entity.parent.parent.parent) }}</li>
+        {% endif %}
+        {#department#}
+        {% if entity.parent.parent is defined %}
+            <li>{{ userform.hrefLinkToNode(entity.parent.parent) }}</li>
+        {% endif %}
+        {#division#}
+        {% if entity.parent is defined %}
+            <li>{{ userform.hrefLinkToNode(entity.parent) }}</li>
+        {% endif %}
+        {#service#}
+        {% if entity is defined %}
+            <li>{{ userform.hrefLinkToNode(entity) }}</li>
+        {% endif %}
+
+    </ol>
+
+{% endmacro %}
+
+{% macro hrefLinkToNode( node ) %}
+    {% if node is defined %}
+        <a href="{{ path(node.getClassName()|lower~'s_show', { 'id': node.id }) }}">{{ node }}</a>
+    {% endif %}
+{% endmacro %}
+

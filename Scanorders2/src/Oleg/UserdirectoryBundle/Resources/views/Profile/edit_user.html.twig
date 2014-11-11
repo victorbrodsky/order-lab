@@ -137,7 +137,7 @@
     </p>
 {% endmacro %}
 
-{% macro location( field, cicle, classname, prototype, sitename ) %}
+{% macro location( field, cicle, classname, prototype, sitename, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as userform %}
 
@@ -167,91 +167,162 @@
         {% set wellclass = "" %}
     {% endif %}
 
-    <div class="alert {{ classname }} {{ wellclass }}">
+    {#    Show restrictions for home location:    #}
+    {#####Case1: privacy="Administration can see and edit this contact information"#}
+    {#Show Home location only to subjectuser, Administrator or Editor; Hide for others.#}
+    {#####Case2: privacy="Administration; Those 'on call' can see these phone numbers & email" or default (NULL)#}
+    {#Show only to subjectuser, Administrator or Editor #}
+    {#Show fields to users with role 'On Call' (ROLE_SCANORDER_ONCALL_TRAINEE, ROLE_SCANORDER_ONCALL_ATTENDING):#}
+    {#Phone,Mobile Phone,Pager,Fax,E-Mail#}
+    {#####Case3: privacy=others#}
+    {#Show it as now (show all non-empty fields)#}
 
-        {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
-            <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
+    {% if app.security.getToken().getUser().getId() == entity.id %}
+        {% set subjectuser = true %}
+    {% else %}
+        {% set subjectuser = false %}
+    {% endif %}
+
+    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_USERDIRECTORY_ADMIN') %}
+        {% set userEditor = true %}
+    {% else %}
+        {% set userEditor = false %}
+    {% endif %}
+
+    {% if is_granted('ROLE_SCANORDER_ONCALL_TRAINEE') or is_granted('ROLE_SCANORDER_ONCALL_ATTENDING') %}
+        {% set onCallUser = true %}
+    {% else %}
+        {% set onCallUser = false %}
+    {% endif %}
+
+    {% set privacyCase1 = false %}
+    {% set privacyCase2 = false %}
+    {% if homeLocation and formfield.vars.value.privacy == "Administration can see and edit this contact information" %}
+        {% set privacyCase1 = true %}
+    {% endif %}
+    {% if homeLocation and (formfield.vars.value.privacy == "Administration; Those 'on call' can see these phone numbers & email" or not formfield.vars.value.privacy) %}
+        {% set privacyCase2 = true %}
+    {% endif %}
+
+    {% set showRegularFields1 = true %}
+    {% set showRegularFields2 = true %}
+
+    {% if privacyCase1 %}
+        {% set showRegularFields1 = false %}
+        {% set showRegularFields2 = false %}
+
+        {% if userEditor or subjectuser %}
+            {% set showRegularFields1 = true %}
+            {% set showRegularFields2 = true %}
+        {% endif %}
+    {% endif %}
+
+    {% if privacyCase2 %}
+        {% set showRegularFields1 = false %}
+        {% set showRegularFields2 = false %}
+
+        {% if onCallUser %}
+            {% set showRegularFields2 = true %}
         {% endif %}
 
-        {{ formmacros.field(formfield.id) }}
-        {#{{ formmacros.field(formfield.status) }}#}
-        {{ userform.statusVerifiedField(formfield,cicle) }}
-
-        {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
-            {{ formmacros.field(formfield.name) }}
-        {% else %}
-            {{ formmacros.field(formfield.name,"","readonly") }}
+        {% if userEditor or subjectuser %}
+            {% set showRegularFields1 = true %}
+            {% set showRegularFields2 = true %}
         {% endif %}
+    {% endif %}
 
-        {% if homeLocation == true %}
-            {{ formmacros.field(formfield.privacy) }}
-        {% endif %}
+    {% if showRegularFields1 or showRegularFields2 %}
+        <div class="alert {{ classname }} {{ wellclass }}">
 
-        {% if formfield.locationType is defined %}
-            {{ formmacros.field(formfield.locationType) }}
-        {% endif %}
-
-        {{ userform.emailPhoneField(formfield.phone,cicle,'phone',"") }}
-        {{ userform.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
-        {{ userform.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
-        {{ formmacros.field_notempty(formfield.fax,cicle) }}
-        {{ userform.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
-
-        {% if homeLocation == false %}
-
-            {#assistant field#}
-            {% if formfield.assistant is defined %}
-                {% if cicle != 'show_user' %}
-                    {{ formmacros.field(formfield.assistant) }}
-                {% else %}
-                    {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
-                        <p>
-                            <strong>Assistant(s):</strong>
-                        </p>
-                        {% for assistant in formfield.vars.value.assistant %}
-                            {{ userform.personInfo(assistant,cicle,sitename) }}
-                        {% endfor %}
-                    {% endif %}
-                {% endif %}
+            {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
+                <div class="text-right">
+                    <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
             {% endif %}
 
-        {% endif %}
+            {% if showRegularFields1 %}
+                {{ formmacros.field(formfield.id) }}
+                {{ userform.statusVerifiedField(formfield,cicle) }}
 
-        {% if homeLocation == false %}
-            {{ formmacros.field(formfield.room) }}
-            {{ formmacros.field_notempty(formfield.suit,cicle) }}
-            {{ formmacros.field(formfield.floor) }}
-            {{ formmacros.field(formfield.buildingName) }}
-            {{ formmacros.field(formfield.buildingAbbr) }}
-            {{ formmacros.field_notempty(formfield.institution,cicle) }}
-            {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
-        {% endif %}
+                {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
+                    {{ formmacros.field(formfield.name) }}
+                {% else %}
+                    {{ formmacros.field(formfield.name,"","readonly") }}
+                {% endif %}
 
-        {{ formmacros.field_notempty(formfield.street1,cicle) }}
-        {{ formmacros.field_notempty(formfield.street2,cicle) }}
-        {{ formmacros.field_notempty(formfield.city,cicle) }}
-        {{ formmacros.field_notempty(formfield.state,cicle) }}
-        {{ formmacros.field_notempty(formfield.zip,cicle) }}
-        {{ formmacros.field_notempty(formfield.county,cicle) }}
-        {{ formmacros.field_notempty(formfield.country,cicle) }}
+                {% if homeLocation == true %}
+                    {{ formmacros.field(formfield.privacy) }}
+                {% endif %}
 
-        {% if homeLocation == false %}
-            {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
-        {% endif %}
+                {% if formfield.locationType is defined %}
+                    {{ formmacros.field(formfield.locationType) }}
+                {% endif %}
+            {% endif %}{#showRegularFields1#}
 
-        {#In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.#}
-        {% if formfield.associatedClia is defined %}
-            {{ formmacros.field_notempty(formfield.associatedClia,cicle) }}
-            {{ formmacros.fieldDateLabel_notempty(formfield.associatedCliaExpDate,cicle,'allow-future-date') }}
-            {{ formmacros.field_notempty(formfield.associatedPfi,cicle) }}
-        {% endif %}
+            {% if showRegularFields2 %}
+                {{ userform.emailPhoneField(formfield.phone,cicle,'phone',"") }}
+                {{ userform.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
+                {{ userform.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
+                {{ formmacros.field_notempty(formfield.fax,cicle) }}
+                {{ userform.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
+            {% endif %}{#showRegularFields2#}
+
+            {% if showRegularFields1 %}
+                {% if homeLocation == false %}
+
+                    {#assistant field#}
+                    {% if formfield.assistant is defined %}
+                        {% if cicle != 'show_user' %}
+                            {{ formmacros.field(formfield.assistant) }}
+                        {% else %}
+                            {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
+                                <p>
+                                    <strong>Assistant(s):</strong>
+                                </p>
+                                {% for assistant in formfield.vars.value.assistant %}
+                                    {{ userform.personInfo(assistant,cicle,sitename) }}
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+                {% endif %}
+
+                {% if homeLocation == false %}
+                    {{ formmacros.field(formfield.room) }}
+                    {{ formmacros.field_notempty(formfield.suit,cicle) }}
+                    {{ formmacros.field(formfield.floor) }}
+                    {{ formmacros.field(formfield.buildingName) }}
+                    {{ formmacros.field(formfield.buildingAbbr) }}
+                    {{ formmacros.field_notempty(formfield.institution,cicle) }}
+                    {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
+                {% endif %}
+
+                {{ formmacros.field_notempty(formfield.street1,cicle) }}
+                {{ formmacros.field_notempty(formfield.street2,cicle) }}
+                {{ formmacros.field_notempty(formfield.city,cicle) }}
+                {{ formmacros.field_notempty(formfield.state,cicle) }}
+                {{ formmacros.field_notempty(formfield.zip,cicle) }}
+                {{ formmacros.field_notempty(formfield.county,cicle) }}
+                {{ formmacros.field_notempty(formfield.country,cicle) }}
+
+                {% if homeLocation == false %}
+                    {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
+                {% endif %}
+
+                {#In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.#}
+                {% if formfield.associatedClia is defined %}
+                    {{ formmacros.field_notempty(formfield.associatedClia,cicle) }}
+                    {{ formmacros.fieldDateLabel_notempty(formfield.associatedCliaExpDate,cicle,'allow-future-date') }}
+                    {{ formmacros.field_notempty(formfield.associatedPfi,cicle) }}
+                {% endif %}
 
 
-        {{ formmacros.field_notempty(formfield.comment,cicle) }}
+                {{ formmacros.field_notempty(formfield.comment,cicle) }}
+            {% endif %} {#showRegularFields1#}
 
-    </div>
+        </div>
+    {% endif %}
 
     {% do formfield.setRendered %}
 
@@ -524,6 +595,18 @@
 
 {% macro snapshot( user, sitename ) %}
 
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {#check if assistants exist#}
+    {% set assistExist = false %}
+    {% if user.locations is defined %}
+        {% for location in user.locations %}
+            {% if location.assistant|length > 0 %}
+                {% set assistExist = true %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
     <table class="table table-hover table-condensed text-left">
     <thead>
         <tr>
@@ -534,7 +617,9 @@
             <th>Preferred Email</th>
             <th>Preferred Phone Number</th>
             <th>Room Number(s)</th>
-            <th>Assistant(s)</th>
+            {% if assistExist %}
+                <th>Assistant(s)</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -542,7 +627,8 @@
             <td>
                 {% for service in user.getServices %}
                     {% if service is defined and service != "" %}
-                        {{ service.getParentTree() }}<br>
+                        {#{{ service.getParentTree() }}<br>#}
+                        {{ usermacros.getInstitutionalTree(service) }}<br>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -575,23 +661,26 @@
                     {% endif %}
                 {% endfor %}
             </td>
-            <td>
-                {% for location in user.locations %}
-                    {% if location.assistant %}
-                        {% for assistant in location.assistant %}
-                            <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
-                            ({{ location.name }}):
-                            {% set valueclean = assistant.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
-                            <a href="tel:{{ valueclean }}" target="_top">{{ assistant.preferredPhone }}</a>
-                            {% if assistant.email %}
-                                ,
-                            {% endif %}
-                            <a href="mailto:{{ assistant.email }}" target="_top">{{ assistant.email }}</a>
-                            <br>
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            </td>
+
+            {% if assistExist %}
+                <td>
+                    {% for location in user.locations %}
+                        {% if location.assistant %}
+                            {% for assistant in location.assistant %}
+                                <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
+                                ({{ location.name }}):
+                                {% set valueclean = assistant.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+                                <a href="tel:{{ valueclean }}" target="_top">{{ assistant.preferredPhone }}</a>
+                                {% if assistant.preferredPhone and assistant.email %}
+                                    ,
+                                {% endif %}
+                                <a href="mailto:{{ assistant.email }}" target="_top">{{ assistant.email }}</a>
+                                <br>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            {% endif %}
 
         </tr>
     </tbody>
@@ -791,7 +880,7 @@
     <div id="form-prototype-data"
          data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype', sitename)|e }}"
          data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype', sitename)|e }}"
-         data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype',sitename)|e }}"
+         data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype',sitename,entity)|e }}"
          data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
          data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
          data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
@@ -1006,7 +1095,7 @@
 
                     <div class="user-locations-holder">
                         {% for location in form.locations %}
-                            {{ userform.location(location,cicle,'user-locations','noprototype',sitename) }}
+                            {{ userform.location(location,cicle,'user-locations','noprototype',sitename,entity) }}
                         {% endfor %}
                         {% if cicle != 'show_user' %}
                             <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
