@@ -232,7 +232,7 @@
     {% endif %}
 
     {% if showRegularFields1 or showRegularFields2 %}
-        <div class="alert {{ classname }} {{ wellclass }}">
+        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
             {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
                 <div class="text-right">
@@ -294,7 +294,13 @@
                     {{ formmacros.field(formfield.floor) }}
                     {{ formmacros.field(formfield.buildingName) }}
                     {{ formmacros.field(formfield.buildingAbbr) }}
+
+                    {#{{ formmacros.field_notempty(formfield.institution,cicle) }}#}
                     {{ formmacros.field_notempty(formfield.institution,cicle) }}
+                    {{ formmacros.field_notempty(formfield.department,cicle) }}
+                    {{ formmacros.field_notempty(formfield.division,cicle) }}
+                    {{ formmacros.field_notempty(formfield.service,cicle) }}
+
                     {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
                 {% endif %}
 
@@ -627,8 +633,7 @@
             <td>
                 {% for service in user.getServices %}
                     {% if service is defined and service != "" %}
-                        {#{{ service.getParentTree() }}<br>#}
-                        {{ usermacros.getInstitutionalTree(service) }}<br>
+                        {{ usermacros.getInstitutionalTree(service) }}
                     {% endif %}
                 {% endfor %}
             </td>

@@ -1287,37 +1287,37 @@ class UserController extends Controller
         $em->flush();
     }
 
-
+    //Process all holder containing institutional tree
     public function setParentsForInstitutionTree($entity) {
-
         foreach( $entity->getAdministrativeTitles() as $title) {
-            $this->processTitle($title);
+            $this->processInstTree($title);
         }
-
         foreach( $entity->getAppointmentTitles() as $title) {
-            //echo "<br>################### AppTitle: ###################<br>";
-            $this->processTitle($title);
+            $this->processInstTree($title);
         }
-
+        foreach( $entity->getLocations() as $location) {
+            $this->processInstTree($location);
+        }
     }
-    public function processTitle($title) {
 
-        $institution = $title->getInstitution();
-        $department = $title->getDepartment();
-        $division = $title->getDivision();
-        $service = $title->getService();
+    public function processInstTree($tree) {
+
+        $institution = $tree->getInstitution();
+        $department = $tree->getDepartment();
+        $division = $tree->getDivision();
+        $service = $tree->getService();
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$title,$institution,$department);
+        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$institution,$department);
 
-        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$title,$department,$division);
+        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$department,$division);
 
-        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$title,$division,$service);
+        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$division,$service);
 
         //set author if not set
-        $this->setUpdateInfo($title);
+        $this->setUpdateInfo($tree);
 
     }
 

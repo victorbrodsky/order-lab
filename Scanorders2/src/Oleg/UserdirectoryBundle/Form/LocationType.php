@@ -230,12 +230,43 @@ class LocationType extends AbstractType
             ));
         }
 
-        $builder->add('institution','entity',array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'label' => "Institution:",
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'required' => false
+//        $builder->add('institution','entity',array(
+//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'label' => "Institution:",
+//            'multiple' => false,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'required' => false
+//        ));
+        //institution. User should be able to add institution to administrative or appointment titles
+        $builder->add('institution', 'employees_custom_selector', array(
+            'label' => 'Institution:',
+            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'institution'
+        ));
+
+        //department. User should be able to add institution to administrative or appointment titles
+        $builder->add('department', 'employees_custom_selector', array(
+            'label' => "Department:",
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-department', 'type' => 'hidden'),
+            'classtype' => 'department'
+        ));
+
+        //division. User should be able to add institution to administrative or appointment titles
+        $builder->add('division', 'employees_custom_selector', array(
+            'label' => "Division:",
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-division', 'type' => 'hidden'),
+            'classtype' => 'division'
+        ));
+
+        //service. User should be able to add institution to administrative or appointment titles
+        $builder->add('service', 'employees_custom_selector', array(
+            'label' => "Service:",
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-service', 'type' => 'hidden'),
+            'classtype' => 'service'
         ));
 
         $builder->add('privacy','entity',array(

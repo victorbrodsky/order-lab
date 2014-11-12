@@ -178,10 +178,24 @@ class Location extends ListAbstract
     private $locationType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Institution",cascade={"persist"})
      */
-    private $institution;
+    protected $institution;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
+     */
+    protected $department;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
+     */
+    protected $division;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
+     */
+    protected $service;
 
     /**
      * @ORM\ManyToOne(targetEntity="LocationPrivacyList", inversedBy="locations")
@@ -222,6 +236,56 @@ class Location extends ListAbstract
     {
         return $this->institution;
     }
+
+    /**
+     * @param mixed $department
+     */
+    public function setDepartment($department)
+    {
+        $this->department = $department;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartment()
+    {
+        return $this->department;
+    }
+
+    /**
+     * @param mixed $division
+     */
+    public function setDivision($division)
+    {
+        $this->division = $division;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDivision()
+    {
+        return $this->division;
+    }
+
+    /**
+     * @param mixed $service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+
 
     /**
      * @param mixed $locationType
@@ -798,6 +862,7 @@ class Location extends ListAbstract
     {
         return $this->privacy;
     }
+
 
 
 
