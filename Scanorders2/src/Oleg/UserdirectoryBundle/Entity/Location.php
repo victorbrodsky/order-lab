@@ -933,7 +933,7 @@ class Location extends ListAbstract
         //exit();
 
         if( count($detailsArr) > 0 ) {
-            $name = $name . "(" . implode(", ",$detailsArr) . ")";
+            $name = $name . " (" . implode(", ",$detailsArr) . ")";
         }
 
         return $name;

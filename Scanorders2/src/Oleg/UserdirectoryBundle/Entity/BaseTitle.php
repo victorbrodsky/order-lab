@@ -70,6 +70,11 @@ class BaseTitle extends BaseUserAttributes
      */
     protected $pgylevel;
 
+//    /**
+//     * @ORM\Column(type="boolean", options={"default" = 1}, nullable=true)
+//     */
+//    private $removable;
+
 
 
     function __construct($author=null)
