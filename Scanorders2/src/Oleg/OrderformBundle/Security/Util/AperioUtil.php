@@ -9,6 +9,7 @@
 
 namespace Oleg\OrderformBundle\Security\Util;
 
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -79,6 +80,10 @@ class AperioUtil {
                 $user->setEnabled(1);
                 $user->setCreatedby('aperio');
                 $user->getPreferences()->setTimezone($default_time_zone);
+
+                //add default locations
+                $userUtil = new UserUtil();
+                $userUtil->addDefaultLocations($user,null,$this->em);
 
                 $perSiteSettings = null;
 

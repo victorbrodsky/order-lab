@@ -121,6 +121,10 @@ class LdapManager extends BaseLdapManager
             $user->addRole('ROLE_ADMIN');
         }
 
+        //add default locations
+        $userUtil = new UserUtil();
+        $userUtil->addDefaultLocations($user,null,$this->em);
+
 //        echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
 //        echo "user's username=".$user->getUsername()." <br>";
 //        echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";

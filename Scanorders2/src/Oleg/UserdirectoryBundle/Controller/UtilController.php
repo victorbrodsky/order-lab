@@ -247,10 +247,13 @@ class UtilController extends Controller {
 
         //Exclude from the list locations of type "Patient Contact Information", "Medical Office", and "Inpatient location".
         $andWhere = "locationType.name IS NULL OR ".
-                    "locationType.name != 'Patient Contact Information' OR ".
-                    "locationType.name !='Patient Contact Information' OR ".
-                    "locationType.name !='Medical Office' OR ".
-                    "locationType.name !='Inpatient location'";
+                    "(" .
+                        "locationType.name != 'Patient Contact Information' AND ".
+                        "locationType.name !='Patient Contact Information' AND ".
+                        "locationType.name !='Medical Office' AND ".
+                        "locationType.name !='Inpatient location' AND ".
+                        "locationType.name !='Employee Home'" .
+                    ")";
 
         $query->leftJoin("list.locationType", "locationType");
         $query->leftJoin("list.user", "user");

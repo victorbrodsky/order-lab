@@ -33,6 +33,7 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //Roles
         if( strtolower($this->mapper['className']) == strtolower("Roles") ) {
             $builder->add('alias',null,array(
                 'label'=>'Alias:',
@@ -51,17 +52,13 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //Role Attributes
         if( strtolower($this->mapper['className']) == strtolower("RoleAttributeList") ) {
             $builder->add('value',null,array(
                 'label'=>'Value:',
                 'attr' => array('class' => 'form-control')
             ));
         }
-
-        $builder->add('list', new ListType($this->params, $this->mapper), array(
-            'data_class' => $this->mapper['fullClassName'],
-            'label' => false
-        ));
 
         //Institution abbreviation
         if( method_exists($this->params['entity'],'getAbbreviation') ) {
@@ -70,6 +67,14 @@ class GenericListType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
         }
+
+
+        $builder->add('list', new ListType($this->params, $this->mapper), array(
+            'data_class' => $this->mapper['fullClassName'],
+            'label' => false
+        ));
+
+
 
 
     }

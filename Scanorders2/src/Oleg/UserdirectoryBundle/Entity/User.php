@@ -189,18 +189,18 @@ class User extends BaseUser
         //create credentials
         $this->setCredentials(new Credentials($this));
 
-        //two default locations: "main office" and "home"
-        $mainLocation = new Location($this);
-        $mainLocation->setName('Main Office');
-        $mainLocation->setRemovable(false);
-        $this->locations->set(0,$mainLocation);  //main has index 0
-        $mainLocation->setUser($this);
-
-        $homeLocation = new Location($this);
-        $homeLocation->setName('Home');
-        $homeLocation->setRemovable(false);
-        $this->locations->set(1,$homeLocation);  //home hsa index 1
-        $homeLocation->setUser($this);
+//        //two default locations: "main office" and "home"
+//        $mainLocation = new Location($this);
+//        $mainLocation->setName('Main Office');
+//        $mainLocation->setRemovable(false);
+//        $this->locations->set(0,$mainLocation);  //main has index 0
+//        $mainLocation->setUser($this);
+//
+//        $homeLocation = new Location($this);
+//        $homeLocation->setName('Home');
+//        $homeLocation->setRemovable(false);
+//        $this->locations->set(1,$homeLocation);  //home has index 1
+//        $homeLocation->setUser($this);
 
         parent::__construct();
     }
@@ -366,13 +366,45 @@ class User extends BaseUser
         return $this->createdby;
     }
 
-
+    //
     public function getMainLocation() {
-        return $this->getLocations()->get(0);
+
+        $loc = $this->getLocations()->get(0);
+
+        if( $loc->getLocationType()->getName() == "Employee Office" ) {
+            return $loc;
+        }
+
+        foreach( $this->getLocations() as $loc ) {
+            if( $loc->getLocationType()->getName() == "Employee Office" ) {
+                return $loc;
+            }
+            if( $loc->getName() == "Main Office" ) {
+                return $loc;
+            }
+        }
+
+        return null;
     }
 
     public function getHomeLocation() {
-        return $this->getLocations()->get(1);
+
+        $loc = $this->getLocations()->get(1);
+
+        if( $loc->getLocationType()->getName() == "Employee Office" ) {
+            return $loc;
+        }
+
+        foreach( $this->getLocations() as $loc ) {
+            if( $loc->getLocationType()->getName() == "Employee Home" ) {
+                return $loc;
+            }
+            if( $loc->getName() == "Home" ) {
+                return $loc;
+            }
+        }
+
+        return null;
     }
 
     public function hasRole($role)

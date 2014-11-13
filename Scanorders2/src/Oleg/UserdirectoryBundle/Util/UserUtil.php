@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
+use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\Logger;
@@ -98,8 +99,11 @@ class UserUtil {
             $user->setCreatedby('excel');
             $user->getPreferences()->setTimezone($default_time_zone);
 
+            //add default locations
+            $user = $this->addDefaultLocations($user,$systemuser,$em);
+
             //phone, fax, office are stored in Location object
-            $mainLocation  = $user->getMainLocation();
+            $mainLocation = $user->getMainLocation();
             $mainLocation->setPhone($phone);
             $mainLocation->setFax($fax);
             $mainLocation->setRoom($office);
@@ -510,6 +514,84 @@ class UserUtil {
         }
 
         return $inputCriteriastr;
+    }
+
+
+
+
+    public function processInstTree( $tree, $em, $sc ) {
+
+        $institution = $tree->getInstitution();
+        $department = $tree->getDepartment();
+        $division = $tree->getDivision();
+        $service = $tree->getService();
+
+        $user = $sc->getToken()->getUser();
+
+        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$institution,$department);
+
+        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$department,$division);
+
+        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$division,$service);
+
+        //set author if not set
+        $this->setUpdateInfo($tree,$sc,$em);
+
+    }
+
+    public function setUpdateInfo( $entity, $sc, $em ) {
+
+        if( !$entity ) {
+            return;
+        }
+
+        $user = $sc->getToken()->getUser();
+
+        $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+
+        //set author and roles if not set
+        if( !$entity->getAuthor() ) {
+            $entity->setAuthor($author);
+        }
+
+        $entity->setUpdateAuthor($author);
+        $entity->setUpdateAuthorRoles($author->getRoles());
+    }
+
+    //add two default locations: Home and Main Office
+    public function addDefaultLocations($entity,$creator,$em) {
+
+        if( $creator == null ) {
+            //$creator = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
+            $creator = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByKeytype(NULL);
+
+            if( !$creator ) {
+                $creator = $entity;
+            }
+        }
+
+        //echo "creator=".$creator.", id=".$creator->getId()."<br>";
+
+        //Main Office Location
+        $mainLocation = new Location($creator);
+        $mainLocation->setName('Main Office');
+        $mainLocation->setRemovable(false);
+        //$this->locations->set(0,$mainLocation);  //main has index 0
+        //$mainLocation->setUser($this);
+        $mainLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+        $mainLocation->setLocationType($mainLocType);
+        $entity->addLocation($mainLocation);
+        //Home Location
+        $homeLocation = new Location($creator);
+        $homeLocation->setName('Home');
+        $homeLocation->setRemovable(false);
+        //$this->locations->set(1,$homeLocation);  //home has index 1
+        //$homeLocation->setUser($this);
+        $homeLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Home");
+        $homeLocation->setLocationType($homeLocType);
+        $entity->addLocation($homeLocation);
+
+        return $entity;
     }
 
 

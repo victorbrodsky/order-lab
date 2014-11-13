@@ -162,7 +162,7 @@ class Location extends ListAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="locations")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     private $user;
 
@@ -890,9 +890,9 @@ class Location extends ListAbstract
     {
         return $this->getCreator();
     }
-    public function setAuthor()
+    public function setAuthor($author)
     {
-        return $this->setCreator();
+        return $this->setCreator($author);
     }
 
     public function getUpdateAuthor()

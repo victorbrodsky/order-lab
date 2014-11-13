@@ -999,6 +999,7 @@ class AdminController extends Controller
             'Employee Cubicle',
             'Employee Suite',
             'Employee Mailbox',
+            'Employee Home',
             'Conference Room',
             'Sign Out Room',
             'Clinical Laboratory',

@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -797,7 +798,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/users/show/{id}", name="employees_showuser_notstrict")
+     * @Route("/users/show/ee", name="employees_showuser_notstrict")
      * @Route("/users/{id}", name="employees_showuser", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
@@ -1229,48 +1230,28 @@ class UserController extends Controller
     public function updateInfo($subjectUser) {
         //$user = $this->get('security.context')->getToken()->getUser();
 
+        $em = $this->getDoctrine()->getManager();
+        $sc = $this->get('security.context');
+
         //Administartive and Appointment Titles and Comments update info set when parent are processed
         //So, set author info for the rest: EmploymentStatus, Location, Credentials, ResearchLab
         foreach( $subjectUser->getEmploymentStatus() as $entity ) {
-            $this->setUpdateInfo($entity);
+            $this->setUpdateInfo($entity,$em,$sc);
         }
 
         foreach( $subjectUser->getLocations() as $entity ) {
-            $this->setUpdateInfo($entity);
+            $this->setUpdateInfo($entity,$em,$sc);
         }
 
         //credentials
-        $this->setUpdateInfo($subjectUser->getCredentials());
+        $this->setUpdateInfo($subjectUser->getCredentials(),$em,$sc);
 
         foreach( $subjectUser->getResearchLabs() as $entity ) {
-            $this->setUpdateInfo($entity);
+            $this->setUpdateInfo($entity,$em,$sc);
         }
 
     }
-    public function setUpdateInfo($entity) {
 
-        //echo "ent=".$entity."<br>";
-
-        if( !$entity ) {
-            return;
-        }
-
-        $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
-        $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
-
-        //set author and roles if not set
-        if( !$entity->getAuthor() ) {
-            $entity->setAuthor($author);
-        }
-//        else {
-//            $entity->setUpdateAuthor($user);
-//            $entity->setUpdateAuthorRoles($user->getRoles());
-//        }
-
-        $entity->setUpdateAuthor($author);
-        $entity->setUpdateAuthorRoles($author->getRoles());
-    }
 
     public function createUserEditEvent($sitename,$event,$user,$request) {
         $userSecUtil = $this->get('user_security_utility');
@@ -1289,36 +1270,19 @@ class UserController extends Controller
 
     //Process all holder containing institutional tree
     public function setParentsForInstitutionTree($entity) {
-        foreach( $entity->getAdministrativeTitles() as $title) {
-            $this->processInstTree($title);
-        }
-        foreach( $entity->getAppointmentTitles() as $title) {
-            $this->processInstTree($title);
-        }
-        foreach( $entity->getLocations() as $location) {
-            $this->processInstTree($location);
-        }
-    }
-
-    public function processInstTree($tree) {
-
-        $institution = $tree->getInstitution();
-        $department = $tree->getDepartment();
-        $division = $tree->getDivision();
-        $service = $tree->getService();
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $sc = $this->get('security.context');
 
-        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$institution,$department);
-
-        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$department,$division);
-
-        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$division,$service);
-
-        //set author if not set
-        $this->setUpdateInfo($tree);
-
+        foreach( $entity->getAdministrativeTitles() as $title) {
+            $this->processInstTree($title,$em,$sc);
+        }
+        foreach( $entity->getAppointmentTitles() as $title) {
+            $this->processInstTree($title,$em,$sc);
+        }
+        foreach( $entity->getLocations() as $location) {
+            $this->processInstTree($location,$em,$sc);
+        }
     }
 
     public function setParentsForCommentTypeTree($entity) {
@@ -1359,7 +1323,9 @@ class UserController extends Controller
         }
 
         //set author if not set
-        $this->setUpdateInfo($comment);
+        $userUtil = new UserUtil();
+        $sc = $this->get('security.context');
+        $userUtil->setUpdateInfo($comment,$em,$sc);
 
         echo "<br>Comment text=".$comment->getComment()."<br>";
 

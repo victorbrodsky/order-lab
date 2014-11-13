@@ -4,8 +4,22 @@
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 
+{% set title = "Location" %}
+
+{% if cicle == 'create_location' %}
+    {% set title = "Create New Location" %}
+{% endif %}
+
+{% if cicle == 'show_location' %}
+    {% set title = "View Location" %}
+{% endif %}
+
+{% if cicle == 'edit_location' %}
+    {% set title = "Edit Location" %}
+{% endif %}
+
 {% block title %}
-    New Location
+    {{ title }}
 {% endblock %}
 
 
@@ -13,20 +27,48 @@
 {% block content %}
 
 
-    <h4 class="text-info" align="center">New Location</h4>
+    <h4 class="text-info" align="center">{{ title }}</h4>
 
     <br>
 
 
-
-
     {{ form_start(form) }}
 
-    {{ usermacros.locationObject(form,cicle,'user-locations','noprototype',employees_sitename,entity) }}
+        {{ usermacros.locationObject(form,cicle,'user-locations','noprototype',employees_sitename,entity) }}
 
-    {{ form_end(form) }}
+        {# Token CSRF #}
+        {{ form_widget(form._token) }}
 
 
+        {% if cicle == "show_location" %}
+            <p>
+                <a class="btn btn-success" href="{{ path(employees_sitename~'_edit_location',{id:entity.id}) }}" type='button'>Edit Location</a>
+            </p>
+        {% endif %}
+
+        {% if cicle != "show_location" and cicle != "create_location" %}
+            <p>
+            <div>
+                <button class="btn btn-warning" name="btnSubmit" type="submit">Update Location</button>
+                <a class="btn btn-info" href="{{ path(employees_sitename~'_show_location',{id:entity.id}) }}" type='button'>Cancel</a>
+            </div>
+            </p>
+        {% endif %}
+
+        {% if cicle == "create_location" %}
+            <p>
+                <button class="btn btn-success" name="btnSubmit" type="button">Add Location</button>
+            </p>
+        {% endif %}
+
+    {{ form_end(form,{'render_rest': false}) }}
+
+
+    <br>
+
+    <p>
+        <a href="{{ path('locations-list') }}">Back to the list</a>
+    </p>
 
 
 {% endblock %}
