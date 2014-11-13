@@ -193,6 +193,12 @@ class BaseTitleType extends AbstractType
                 'required' => false
             ));
 
+            $builder->add( 'supervisor', null, array(
+                'label'=>'Supervisor of this Service:',
+                'required'=>false,
+                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+            ));
+
         }
 
     }

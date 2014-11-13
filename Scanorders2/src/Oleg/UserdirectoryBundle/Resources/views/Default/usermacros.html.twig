@@ -106,3 +106,289 @@
     {% endif %}
 {% endmacro %}
 
+
+
+{% macro locationObject( field, cicle, classname, prototype, sitename, entity ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if   prototype == "prototype" or
+            formfield.vars.value and
+            (
+                formfield.vars.value.removable == true or
+                formfield.vars.value.removable != true and
+                formfield.vars.value.name != "Home"
+            )
+    %}
+        {% set homeLocation = false %}
+    {% else %}
+        {% set homeLocation = true %}
+    {% endif %}
+
+
+    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
+        {% set wellclass = "user-alert-warning" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    {#    Show restrictions for home location:    #}
+    {#####Case1: privacy="Administration can see and edit this contact information"#}
+    {#Show Home location only to subjectuser, Administrator or Editor; Hide for others.#}
+    {#####Case2: privacy="Administration; Those 'on call' can see these phone numbers & email" or default (NULL)#}
+    {#Show only to subjectuser, Administrator or Editor #}
+    {#Show fields to users with role 'On Call' (ROLE_SCANORDER_ONCALL_TRAINEE, ROLE_SCANORDER_ONCALL_ATTENDING):#}
+    {#Phone,Mobile Phone,Pager,Fax,E-Mail#}
+    {#####Case3: privacy=others#}
+    {#Show it as now (show all non-empty fields)#}
+
+    {% if app.security.getToken().getUser().getId() == entity.id %}
+        {% set subjectuser = true %}
+    {% else %}
+        {% set subjectuser = false %}
+    {% endif %}
+
+    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_USERDIRECTORY_ADMIN') %}
+        {% set userEditor = true %}
+    {% else %}
+        {% set userEditor = false %}
+    {% endif %}
+
+    {% if is_granted('ROLE_SCANORDER_ONCALL_TRAINEE') or is_granted('ROLE_SCANORDER_ONCALL_ATTENDING') %}
+        {% set onCallUser = true %}
+    {% else %}
+        {% set onCallUser = false %}
+    {% endif %}
+
+    {% set privacyCase1 = false %}
+    {% set privacyCase2 = false %}
+    {% if homeLocation and formfield.vars.value.privacy == "Administration can see and edit this contact information" %}
+        {% set privacyCase1 = true %}
+    {% endif %}
+    {% if homeLocation and (formfield.vars.value.privacy == "Administration; Those 'on call' can see these phone numbers & email" or not formfield.vars.value.privacy) %}
+        {% set privacyCase2 = true %}
+    {% endif %}
+
+    {% set showRegularFields1 = true %}
+    {% set showRegularFields2 = true %}
+
+    {% if privacyCase1 %}
+        {% set showRegularFields1 = false %}
+        {% set showRegularFields2 = false %}
+
+        {% if userEditor or subjectuser %}
+            {% set showRegularFields1 = true %}
+            {% set showRegularFields2 = true %}
+        {% endif %}
+    {% endif %}
+
+    {% if privacyCase2 %}
+        {% set showRegularFields1 = false %}
+        {% set showRegularFields2 = false %}
+
+        {% if onCallUser %}
+            {% set showRegularFields2 = true %}
+        {% endif %}
+
+        {% if userEditor or subjectuser %}
+            {% set showRegularFields1 = true %}
+            {% set showRegularFields2 = true %}
+        {% endif %}
+    {% endif %}
+
+    {% if showRegularFields1 or showRegularFields2 %}
+        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+            {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
+                <div class="text-right">
+                    <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            {% endif %}
+
+            {% if showRegularFields1 %}
+                {{ formmacros.field(formfield.id) }}
+                {{ userform.statusVerifiedField(formfield,cicle) }}
+
+                {% if formfield.user is defined %}
+                    {{ formmacros.field(formfield.user) }}
+                {% endif %}
+
+                {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
+                    {{ formmacros.field(formfield.name) }}
+                {% else %}
+                    {{ formmacros.field(formfield.name,"","readonly") }}
+                {% endif %}
+
+                {% if homeLocation == true %}
+                    {{ formmacros.field(formfield.privacy) }}
+                {% else %}
+                    {% do formfield.privacy.setRendered %}
+                {% endif %}
+
+                {% if formfield.locationType is defined %}
+                    {{ formmacros.field(formfield.locationType) }}
+                {% endif %}
+            {% endif %}{#showRegularFields1#}
+
+            {% if showRegularFields2 %}
+                {{ userform.emailPhoneField(formfield.phone,cicle,'phone',"") }}
+                {{ userform.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
+                {{ userform.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
+
+                {% if homeLocation == false %}
+                    {{ formmacros.field_notempty(formfield.ic,cicle) }}
+                {% endif %}
+
+                {{ formmacros.field_notempty(formfield.fax,cicle) }}
+                {{ userform.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
+            {% endif %}{#showRegularFields2#}
+
+            {% if showRegularFields1 %}
+                {% if homeLocation == false %}
+
+                    {#assistant field#}
+                    {% if formfield.assistant is defined %}
+                        {% if cicle != 'show_user' %}
+                            {{ formmacros.field(formfield.assistant) }}
+                        {% else %}
+                            {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
+                                <p>
+                                    <strong>Assistant(s):</strong>
+                                </p>
+                                {% for assistant in formfield.vars.value.assistant %}
+                                    {{ userform.personInfo(assistant,cicle,sitename) }}
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+                {% endif %}
+
+                {% if homeLocation == false %}
+                    {{ formmacros.field(formfield.room) }}
+                    {{ formmacros.field_notempty(formfield.suit,cicle) }}
+                    {{ formmacros.field(formfield.floor) }}
+                    {{ formmacros.field(formfield.buildingName) }}
+                    {{ formmacros.field(formfield.buildingAbbr) }}
+
+                    {#{{ formmacros.field_notempty(formfield.institution,cicle) }}#}
+                    {{ formmacros.field_notempty(formfield.institution,cicle) }}
+                    {{ formmacros.field_notempty(formfield.department,cicle) }}
+                    {{ formmacros.field_notempty(formfield.division,cicle) }}
+                    {{ formmacros.field_notempty(formfield.service,cicle) }}
+
+                    {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
+                {% endif %}
+
+                {{ formmacros.field_notempty(formfield.street1,cicle) }}
+                {{ formmacros.field_notempty(formfield.street2,cicle) }}
+                {{ formmacros.field_notempty(formfield.city,cicle) }}
+                {{ formmacros.field_notempty(formfield.state,cicle) }}
+                {{ formmacros.field_notempty(formfield.zip,cicle) }}
+                {{ formmacros.field_notempty(formfield.county,cicle) }}
+                {{ formmacros.field_notempty(formfield.country,cicle) }}
+
+                {% if homeLocation == false %}
+                    {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
+                {% endif %}
+
+                {#In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.#}
+                {% if formfield.associatedClia is defined %}
+                    {{ formmacros.field_notempty(formfield.associatedClia,cicle) }}
+                    {{ formmacros.fieldDateLabel_notempty(formfield.associatedCliaExpDate,cicle,'allow-future-date') }}
+                    {{ formmacros.field_notempty(formfield.associatedPfi,cicle) }}
+                {% endif %}
+
+
+                {{ formmacros.field_notempty(formfield.comment,cicle) }}
+            {% endif %} {#showRegularFields1#}
+
+        </div>
+    {% endif %}
+
+    {% do formfield.setRendered %}
+
+{% endmacro %}
+
+{% macro statusVerifiedField( entity, cicle ) %}
+    {% if entity.status is defined %}
+        {#ver:{{ constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') }}#}
+        {#unver:{{ constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') }}#}
+        {% if cicle != "show_user" or entity.status.vars.value != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
+            {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+            {{ formmacros.field(entity.status) }}
+        {% else %}
+            {% do entity.status.setRendered %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+
+{% macro emailPhoneField_notempty(field,cicle,type,label) %}
+    {% import _self as formuser %}
+    {% if field.vars.value or cicle != "show_user" %}
+        {{ formuser.emailPhoneField(field,cicle,type,label) }}
+    {% else %}
+        {% do field.setRendered %}
+    {% endif %}
+{% endmacro %}
+
+{% macro emailPhoneField(field,cicle,type,label) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if label == "" %}
+        {% set value = field.vars.value %}
+    {% else %}
+        {% set value = field %}
+    {% endif %}
+
+    {% if cicle == 'show_user' %}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {% if label == "" %}
+                    {{ form_label(field) }}
+                {% else %}
+                    <strong>{{ label }}</strong>
+                {% endif %}
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class="form-control form-control-modif" disabled>
+                    {% if type == "email" %}
+                        <a href="mailto:{{ value }}" target="_top">{{ value }}</a>
+                    {% else %}
+                        {% set valueclean = value|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+                        <a href="tel:{{ valueclean }}" target="_top">{{ value }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </p>
+        {% if label == "" %}
+            {% do field.setRendered %}
+        {% endif %}
+    {% else %}
+        {{ formmacros.field(field) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro personInfo( person, cicle, sitename ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
+    <p>
+    <div class="well">
+        {% set bossurl = path(sitename~'_showuser',{'id':person.id}) %}
+        {% set bosslink = '<a href="'~bossurl~'">'~person.getUserNameShortStr()~'</a>'  %}
+        {{ formmacros.simplefield( "Name:", bosslink, "", "disabled" ) }}
+        {{ userform.emailPhoneField(person.preferredPhone,cicle,'phone',"Preferred Phone Number:") }}
+        {{ userform.emailPhoneField(person.email,cicle,'email',"Preferred Email:") }}
+    </div>
+    </p>
+{% endmacro %}
+

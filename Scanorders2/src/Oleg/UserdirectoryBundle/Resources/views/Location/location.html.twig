@@ -1,0 +1,32 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+
+{% block title %}
+    New Location
+{% endblock %}
+
+
+
+{% block content %}
+
+
+    <h4 class="text-info" align="center">New Location</h4>
+
+    <br>
+
+
+
+
+    {{ form_start(form) }}
+
+    {{ usermacros.locationObject(form,cicle,'user-locations','noprototype',employees_sitename,entity) }}
+
+    {{ form_end(form) }}
+
+
+
+
+{% endblock %}

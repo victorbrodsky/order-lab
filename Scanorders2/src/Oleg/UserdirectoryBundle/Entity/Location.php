@@ -19,7 +19,7 @@ class Location extends ListAbstract
      * status: valid, invalid
      * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
-    protected $status;
+    private $status;
 
     /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="original")
@@ -158,7 +158,7 @@ class Location extends ListAbstract
      *      inverseJoinColumns={@ORM\JoinColumn(name="assistant_id", referencedColumnName="id")}
      * )
      **/
-    protected $assistant;
+    private $assistant;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="locations")
@@ -180,28 +180,33 @@ class Location extends ListAbstract
     /**
      * @ORM\ManyToOne(targetEntity="Institution",cascade={"persist"})
      */
-    protected $institution;
+    private $institution;
 
     /**
      * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
      */
-    protected $department;
+    private $department;
 
     /**
      * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
      */
-    protected $division;
+    private $division;
 
     /**
      * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
      */
-    protected $service;
+    private $service;
 
     /**
      * @ORM\ManyToOne(targetEntity="LocationPrivacyList", inversedBy="locations")
      * @ORM\JoinColumn(name="privacy_id", referencedColumnName="id")
      **/
-    protected $privacy;
+    private $privacy;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ic;
 
 
     public function __construct($creator=null) {
@@ -758,7 +763,21 @@ class Location extends ListAbstract
         return $this->country;
     }
 
+    /**
+     * @param mixed $ic
+     */
+    public function setIc($ic)
+    {
+        $this->ic = $ic;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getIc()
+    {
+        return $this->ic;
+    }
 
     /**
      * @param mixed $status

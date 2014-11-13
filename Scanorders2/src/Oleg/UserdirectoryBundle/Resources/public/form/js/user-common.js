@@ -325,6 +325,13 @@ function setNavBar() {
 //        id = 'admin';
 //    }
 
+    if( full.indexOf("/users/new") !== -1 ) {
+        id = 'adduser';
+    }
+    if( full.indexOf("/locations/new") !== -1 ) {
+        id = 'addlocation';
+    }
+
     if( full.indexOf("/user-directory") !== -1 ) {
         id = 'userlist';
     }
@@ -335,7 +342,7 @@ function setNavBar() {
 
     if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
-            id = 'admin';
+            //id = 'admin';
         } else {
             id = 'user';
         }

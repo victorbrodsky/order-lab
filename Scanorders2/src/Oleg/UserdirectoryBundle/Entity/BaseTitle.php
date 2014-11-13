@@ -70,16 +70,17 @@ class BaseTitle extends BaseUserAttributes
      */
     protected $pgylevel;
 
-//    /**
-//     * @ORM\Column(type="boolean", options={"default" = 1}, nullable=true)
-//     */
-//    private $removable;
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $supervisor;
 
 
 
     function __construct($author=null)
     {
         parent::__construct($author);
+        $this->supervisor = false;
     }
 
 
@@ -226,6 +227,24 @@ class BaseTitle extends BaseUserAttributes
     {
         return $this->effort;
     }
+
+    /**
+     * @param mixed $supervisor
+     */
+    public function setSupervisor($supervisor)
+    {
+        $this->supervisor = $supervisor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupervisor()
+    {
+        return $this->supervisor;
+    }
+
+
 
     /**
      * @param \DateTime $pgylevel

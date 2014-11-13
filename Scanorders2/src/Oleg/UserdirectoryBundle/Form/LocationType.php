@@ -55,6 +55,11 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('ic',null,array(
+            'label'=>'IC:',
+            'attr' => array('class'=>'form-control')
+        ));
+
         $builder->add('fax',null,array(
             'label'=>'Fax:',
             'attr' => array('class'=>'form-control')
@@ -211,7 +216,7 @@ class LocationType extends AbstractType
         $baseUserAttr = new Location();
         $builder->add('status', 'choice', array(
             'disabled' => ($this->params['read_only'] ? true : false),
-            'choices'   => array(
+            'choices' => array(
                 $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
                 $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
             ),
@@ -276,6 +281,17 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width'),
             'required' => true
         ));
+
+
+        if( $this->params['cicle'] == "create_location" || $this->params['cicle'] == "show_location" ) {
+            $builder->add('user','entity',array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "User:",
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false
+            ));
+        }
 
     }
 
