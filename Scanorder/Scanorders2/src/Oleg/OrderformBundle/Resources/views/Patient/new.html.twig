@@ -1,0 +1,40 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    <h1>Patient creation</h1>
+
+    {#Calendar Test <br>#}
+    {#<div class="input-group">#}
+        {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
+        {#&#123;&#35;{{ form_widget(form.dob) }}&#35;&#125;#}
+        {#<span class="input-group-addon btn" data-toggle="datepicker" type="button">#}
+            {#<i class="glyphicon glyphicon-calendar"></i>#}
+        {#</span>#}
+    {#</div>#}
+    {#<br><br>#}
+
+    <form action="{{ path('patient_create') }}" method="post" {{ form_enctype(form) }}>
+
+        {{ form_label(form.dob) }}
+        <div ng-app="myApp" ng-controller="Ctrl">
+            <div class="input-group date">
+                {{ form_widget(form.dob) }}
+                <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+            </div>
+        </div>
+        {#{{ form_widget(form.dob) }}#}
+
+
+        {{ form_widget(form) }}
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+
+
+        <a href="{{ path('patient') }}">
+            Back to the list
+        </a>
+
+{% endblock %}

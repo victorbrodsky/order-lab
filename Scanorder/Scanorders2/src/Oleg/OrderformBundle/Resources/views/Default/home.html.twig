@@ -1,0 +1,92 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+
+{% block title %}
+    Scan Order System
+{% endblock %}
+
+
+{% block contentleft %}
+
+    {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
+
+
+    <div style="margin-top: 150px;">
+        <p>
+            Welcome to the Scan Order System!
+        </p>
+
+        {% if app.security.getToken().getUser.getEmail == "" %}
+            <p>
+                If you would like to receive email notifications regarding your orders, please take a moment to update
+                <a href="{{ path(scan_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                by adding your email account.
+            </p>
+        {% endif %}
+
+        <p>
+            Please use the menu on the top to place a <a href="{{ path('single_new') }}">One-Slide</a>, <a href="{{ path('multi_new') }}">Multi-Slide</a>, or a <a href="{{ path('table_create') }}">Table-View</a> Scan Order or select <a href="{{ path('my-scan-orders') }}">My Scan Orders</a> to review the status of the orders you have placed.
+        </p>
+
+        <p>
+            You can also
+            <a href="{{ path('slide-return-request-table') }}">request slide return</a>
+            and
+            <a href="{{ path('my-slide-return-requests') }}">view the status of your submitted slide return requests</a>.
+        </p>
+
+        <p>
+            Lastly, please review and update your <a href="{{ path(scan_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
+        </p>
+
+
+        <p>
+
+            {% if comments is defined and comments > 0 %}
+
+                <a href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ comments }} new comment(s)</a> added to your order(s).
+
+            {% endif %}
+
+        </p>
+
+
+        <p>
+
+            {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
+
+                {% set admincomments = render(controller("OlegOrderformBundle:History:notViewedAdminComments")) %}
+
+                View <a href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a>. There are:
+
+                <ul>
+                    <li>
+                        <a href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'All Not Filled'}) }}">{{ unprocessed }} unprocessed order(s)</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path('incoming-slide-return-requests',{'filter_search_box[filter]':'active'}) }}">{{ sliderequests }} unprocessed slide return request(s)</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ admincomments }} new comment(s)</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path('accountrequest') }}">{{ accountreqs }} unprocessed account request(s) from users without CWIDs</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path(scan_sitename~'_accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s) from users with CWIDs</a>
+                    </li>
+
+                </ul>
+
+            {% endif %}
+
+        </p>
+
+
+    </div>
+
+{% endblock %}

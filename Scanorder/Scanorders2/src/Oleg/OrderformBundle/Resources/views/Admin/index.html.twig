@@ -1,0 +1,220 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block title %}
+    List Manager
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">List Manager</h3>
+
+
+    <h3 class="text-info">Research Project Titles</h3>
+    <p>
+        <a href="{{ path('researchprojecttitles-list') }}">List of Research Project Titles</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Research Set Titles</h3>
+    <p>
+        <a href="{{ path('researchsettitles-list') }}">List of Research Set Titles</a>
+    </p>
+
+    <h3 class="text-info">Principal Investigators</h3>
+    <p>
+        <a href="{{ path('principalinvestigators-list') }}">List of Principal Investigators</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Educational Course Titles</h3>
+    <p>
+        <a href="{{ path('educationalcoursetitles-list') }}">List of Educational Course Titles</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Educational Lesson Titles</h3>
+    <p>
+        <a href="{{ path('educationallessontitles-list') }}">List of Educational Lesson Titles</a>
+    </p>
+
+    <h3 class="text-info">Course Directors</h3>
+    <p>
+        <a href="{{ path('coursedirectors-list') }}">List of Course Directors</a>
+    </p>
+
+    <hr>
+
+
+    <h3 class="text-info">Stains</h3>
+    <p>
+    <a href="{{ path('stain-list') }}">List of Stains</a>
+    </p>
+    <p>
+        <a href="{{ path('generate_stain') }}">Generate Stains</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Organs</h3>
+    <p>
+    <a href="{{ path('organ-list') }}">List of Organs</a>
+    </p>
+    <p>
+        <a href="{{ path('generate_organ') }}">Generate Organs</a>
+    </p>
+
+
+    <br>
+
+    <h3 class="text-info">Procedures</h3>
+    <p>
+        <a href="{{ path('procedure-list') }}">List of Procedures</a>
+    </p>
+    <p>
+        <a href="{{ path('generate_procedure') }}">Generate Procedures</a>
+    </p>
+
+
+    <br>
+
+    {#<h3 class="text-info">Pathology Services</h3>#}
+    {#<p>#}
+        {#<a href="{{ path('pathservice-list') }}">List of Pathology Services</a>#}
+    {#</p>#}
+    {#<p>#}
+        {#<a href="{{ path('generate_pathservice') }}">Generate Pathology Services</a>#}
+    {#</p>#}
+
+    {#<br>#}
+
+    <h3 class="text-info">Slide Types</h3>
+    <p>
+        <a href="{{ path('slidetype-list') }}">List of Slide Types</a>
+    </p>
+    <p>
+        <a href="{{ path('generate_slidetype') }}">Generate Slide Types</a>
+    </p>
+
+    <br>
+    
+    <h3 class="text-info">MRN Types</h3>
+    <p>
+        <a href="{{ path('mrntype-list') }}">List of MRN Types</a>
+    </p>
+    <p>
+        <a href="{{ path('generate_mrntype') }}">Generate MRN Types</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Form Types</h3>
+    <p>
+        <a href="{{ path('formtype-list') }}">List of Form Types</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Accession Types</h3>
+    <p>
+        <a href="{{ path('accessiontype-list') }}">List of Accession Types</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Encounter Types</h3>
+    <p>
+        <a href="{{ path('encountertype-list') }}">List of Encounter Types</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Return Slide To</h3>
+    <p>
+        <a href="{{ path('returnslideto-list') }}">List of Return Slide To Options</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Slide Delivery</h3>
+    <p>
+        <a href="{{ path('slidedelivery-list') }}">List of Slide Delivery Options</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Region To Scan</h3>
+    <p>
+        <a href="{{ path('regiontoscan-list') }}">List of Region To Scan Options</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Processor Comments</h3>
+    <p>
+        <a href="{{ path('processorcomment-list') }}">List of Processor Comments</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Statuses</h3>
+    <p>
+        <a href="{{ path('status-list') }}">List of Statuses (will be attached to OrderInfo)</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Progress and Comments Event Types</h3>
+    <p>
+        <a href="{{ path('progresscommentseventtypes-list') }}">List of Progress and Comments Event Types</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Event Log Types</h3>
+    <p>
+        <a href="{{ path('scanloggereventtypes-list') }}">List of Event Log Types</a>
+    </p>
+
+    <hr>
+
+
+    <h3 class="text-info">Accounts</h3>
+    <p>
+        <a href="{{ path('accounts-list') }}">List of Accounts</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Urgencies</h3>
+    <p>
+        <a href="{{ path('urgency-list') }}">List of Urgencies</a>
+    </p>
+
+    <h3 class="text-info">Scanners</h3>
+    <p>
+        <a href="{{ path('scanners-list') }}">List of Scanners</a>
+    </p>
+
+
+
+    {% if environment is not defined %}
+        {% set environment = 'dev' %}
+    {% endif %}
+
+    <hr>
+    <br />
+
+    <!--show this only for dev. Don't show for live-->
+    {% if is_granted('ROLE_SCANORDER_ADMIN') and environment == 'dev' %}
+        <p><a  data-confirm="Are you sure you want to overwrite all data?"
+               href="{{ path('generate_all') }}">Generate All</a>
+        </p>
+    {% endif %}
+
+    <br>
+
+{% endblock %}
+

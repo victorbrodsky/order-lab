@@ -1,0 +1,14 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::ListForm/listmacros.html.twig" as listmacros %}
+
+{% block title %}
+    {{ displayName }}
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-info">{{ displayName }}</h3>
+
+    {{ listmacros.listIndex( entities, pathbase ) }}
+
+{% endblock %}

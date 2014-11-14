@@ -1,0 +1,125 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+
+
+{% block additionalcss %}
+    {% stylesheets
+    'bundles/oleguserdirectory/form/css/typeahead.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            initTypeaheadUserSiteSerach();
+        });
+    </script>
+{% endblock %}
+
+
+
+
+{% block title %}
+    Employee Directory
+{% endblock %}
+
+
+{% block content %}
+
+    <div style="margin-top:25px;">
+
+
+        <form id="user-typeahead-serach-form" action="{{ path(employees_sitename~'_home') }}" method="get">
+            <div class="row">
+                <div class="col-xs-8" align="right">
+                    <div id="multiple-datasets-typeahead-search">
+                        <input type="text" class="typeahead submit-on-enter-field" name="search" id="user_search" value="{{ search }}" placeholder="Search for a name, service, division, etc">
+                    </div>
+                </div>
+
+                <div class="col-xs-2" align="left">
+                    <button class="btn btn-lg" type="submit">Search</button>
+                </div>
+
+
+            </div>
+        </form>
+
+        {% if entities and entities|length > 0 %}
+            {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}
+        {% endif %}
+
+
+    </div>
+
+
+{% endblock %}
+
+
+
+{% block contentleft %}
+
+    {% if entities is not defined or entities|length == 0 %}
+
+        <div style="margin-top:50px;">
+
+            <p>
+                Welcome to the Employee Directory!
+            </p>
+
+            {% if app.security.getToken().getUser.getEmail == "" %}
+                <p>
+                    If you would like to receive email notifications regarding your orders, please take a moment to update
+                    <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                    by adding your email account.
+                </p>
+            {% endif %}
+
+
+            <p>
+                Please review and update your <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
+            </p>
+
+
+            <br>
+
+            <p>
+
+                {% if is_granted('ROLE_USERDIRECTORY_ADMIN') %}
+
+                    {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
+
+                    There are:
+
+                    <ul>
+
+                        <li>
+                            <a href="{{ path(employees_sitename~'_accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s)</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ path(employees_sitename~'_listusers',{'filter': 'Pending Administrative Review'}) }}">{{ pendingadminreview }} user profile(s) with data pending administrative review and approval</a>
+                        </li>
+
+                    </ul>
+
+                {% endif %}
+
+            </p>
+
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}
+

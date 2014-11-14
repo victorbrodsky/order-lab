@@ -1,0 +1,11 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Access Requests for {{ sitenamefull }}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'OlegUserdirectoryBundle::AccessRequest/access_request_list_content.html.twig' %}
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block content %} 
+{% block body -%}
+    <h1>Order Info</h1>
+
+    <form action="{{ path('scanorder_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+        <input type="hidden" name="_method" value="PUT" />     
+        
+        {{ form_widget(edit_form) }}
+        
+    </form>
+        
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+      <a class="btn btn-small btn-warning" href="{{ path('scanorder_edit', { 'id': entity.id }) }}">Edit</a> 
+    {% endif %}   
+      
+{% endblock %}
+{% endblock %}

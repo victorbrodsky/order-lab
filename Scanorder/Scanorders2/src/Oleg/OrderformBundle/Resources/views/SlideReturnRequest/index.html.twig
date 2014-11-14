@@ -1,0 +1,293 @@
+{#list all slide requests for admin or user's slide requests for other users#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
+{% if routename == 'incoming-slide-return-requests' %}
+    {% set title = 'Incoming Slide Return Requests' %}
+{% else %}
+    {% set title = 'My Slide Return Requests' %}
+{% endif %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block maincss %}
+
+    {% stylesheets
+    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
+    'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
+{% block mainjs %}
+
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'	
+    
+	'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+	
+	'@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+	'@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+	
+	'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@OlegOrderformBundle/Resources/public/form/js/modal.js'
+    '@OlegOrderformBundle/Resources/public/form/js/form.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            setNavBar();
+
+            $(".combobox").select2();
+
+        });
+
+    </script>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    <h3 class="text-info">{{ title }}</h3>
+    <br>
+
+    <form action="{{ path(routename) }}" method="get" {{ form_enctype(filter) }} class="well form-search">
+
+        <div class="row">
+            <div class="col-xs-3">
+                {{ form_widget(filter) }}
+            </div>
+            <div class="col-xs-1">
+                <div class="btn-group btn-group-justified">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-sm btn-default order-filter-btn"><i class="icon-search"></i>Filter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_rest(filter) }}
+        {#{{ form_widget(filter._token) }}#}
+
+    </form>
+
+    <br>
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(sliderequests, 'ID', 'list.id') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Date', 'list.orderdate') }}</th>
+                {% if routename == 'incoming-slide-return-requests' %}
+                    <th>{{ knp_pagination_sortable(sliderequests, 'Submitter', 'provider.username') }}</th>
+                {% endif %}
+                <th>{{ knp_pagination_sortable(sliderequests, 'Ordering Provider', 'proxyuser.username') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Institution', 'institution.name') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Status', 'list.status') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Return Slides to', 'list.returnSlide') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Urgency', 'list.urgency') }}</th>
+                <th class="col-xs-3">{{ knp_pagination_sortable(sliderequests, 'Slides', 'slidecount') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Scan Order ID', 'orderinfo.id') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Comment', 'list.comment') }}</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+
+        {% for sliderequestcomplex in sliderequests %}
+
+            {% set sliderequest = sliderequestcomplex|first %}
+
+            {% set returned = "Returned" in sliderequest.status %}
+
+            {% if is_granted('ROLE_SCANORDER_PROCESSOR') and routename == 'incoming-slide-return-requests' %}
+                {% include 'OlegOrderformBundle::SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
+            {% endif %}
+
+            {% if sliderequest.status == 'active' %}
+                <tr class="order-urgent-status" >
+            {% elseif returned %}
+                <tr class="order-neutral-status" >
+            {% else %}
+                <tr>
+            {% endif %}
+
+                <td>
+                    {{ sliderequest.id }}
+                </td>
+
+                <td>
+                    {{ sliderequest.orderdate|date('m/d/Y H:i') }}
+                </td>
+
+                {% if routename == 'incoming-slide-return-requests' %}
+                    <td>
+                        <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
+                    </td>
+                {% endif %}
+
+                <td>
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
+                </td>
+
+                <td>
+                    {{ sliderequest.institution }}
+                </td>
+
+                <td>
+                    {% set statusStr = sliderequest.status %}
+                    {% if sliderequest.status == 'cancel' %}
+                        {% set statusStr = 'Canceled' %}
+                    {% endif %}
+                    {% if sliderequest.status == 'cancel' or sliderequest.status == 'active' %}
+                        {% set statusStr = sliderequest.status|capitalize %}
+                    {% endif %}
+
+                    {{ statusStr }}
+                </td>
+
+                <td>
+                    {{ sliderequest.returnSlide }}
+                </td>
+
+                <td>
+                    {{ sliderequest.urgency }}
+                </td>
+
+                {#slides#}
+                <td>
+
+                    {% for descr in sliderequest.getSlideDescription(app.security.getToken().getUser()) %}
+
+                        <p>
+                            {{ descr|raw }}
+                        </p>
+
+                    {% endfor %}
+
+                    {% if sliderequest.returnoption != NULL %}
+                        <b>Return all slides that belong to listed accession numbers:</b><br>
+                    {% endif %}
+
+                    {% for descr in sliderequest.getSlideTextDescription(app.security.getToken().getUser()) %}
+
+                        <p>
+                            {{ descr|raw }}
+                        </p>
+
+                    {% endfor %}
+
+                </td>
+
+                <td>
+                    {% if sliderequest.orderinfo != NULL %}
+                        <a href="{{ path('multy_show', { 'id': sliderequest.orderinfo.oid }) }}">{{ sliderequest.orderinfo.oid }}</a>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ sliderequest.comment|raw }}
+                </td>
+
+                <td>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            {% if is_granted('ROLE_SCANORDER_PROCESSOR') and routename == 'incoming-slide-return-requests' %}
+
+                                {% if sliderequest.status != 'All Scanned & All Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to All Scanned & All Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'All Scanned & All Returned' }) }}">All Scanned & All Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Some Scanned & All Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Some Scanned & All Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Some Scanned & All Returned' }) }}">Some Scanned & All Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Not Scanned & All Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Not Scanned & All Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Not Scanned & All Returned' }) }}">Not Scanned & All Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Checked: Not Received' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Checked: Not Received?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Not Received' }) }}">Checked: Not Received</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Checked: Previously Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Checked: Previously Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Previously Returned' }) }}">Checked: Previously Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Checked: Some Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Checked: Some Returned?" class="status-with-comment" id="{{ sliderequest.id }}"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Some Returned' }) }}">Checked: Some Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#addSlideReturnRequestComment_{{ sliderequest.id }}">Add Comment</a>
+                                </li>
+
+                                <li class="divider"></li>
+
+                            {% endif %}
+
+                            {% if sliderequest.status != 'active' %}
+                                <li><a data-confirm='Are you sure you want to revert the request status to "Active"?'
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'active' }) }}">Revert Status to Active</a>
+                                </li>
+                            {% endif %}
+
+                            {% if sliderequest.status != 'cancel' %}
+                                <li><a data-confirm="Are you sure you want to Cancel this Slide Return Request?" data-ok="Cancel this request" data-cancel="Do not cancel this request"
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'cancel' }) }}">Cancel</a>
+                                </li>
+                            {% endif %}
+
+
+                        </ul>
+                    </div>
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endblock %}
+

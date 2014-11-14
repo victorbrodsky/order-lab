@@ -1,0 +1,71 @@
+<h2 class="alert alert-info well-lg safary-fix" align="center">Scan Order Submission</h2>
+
+<br>
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+    <div class="flash-notice" align="center">
+        {{ flashMessage }}
+    </div>
+{% endfor %}
+
+{% if error is not defined %}
+    {% set error = '' %}
+{% endif %}
+
+{% if last_username is not defined %}
+    {% set last_username = '' %}
+{% endif %}
+
+{% if error %} 
+    <p class="alert alert-danger" align="middle">
+        {#{{ error }}<br>#}
+        There was an error with your User Name/Password combination. Please try again.
+    </p>
+{% endif %}
+
+    
+<form class="form-signin" action="{{ path('scan_login_check') }}" method="post">
+
+    <input type="hidden" name="display_height" id="display_height" value="" />
+    <input type="hidden" name="display_width" id="display_width" value="" />
+
+    <div class="row">
+    <div class="col-xs-12">
+
+        <p>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username" autofocus>
+
+        <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
+        </p>
+
+    </div>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
+
+</form>
+
+<div class="text-center">
+    <br><br>
+    <p>
+    <p>
+        Please use your
+        <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>
+        or the
+        <a href="http://c.med.cornell.edu">Aperio eSlide Manager</a>
+        account to log in.
+    </p>
+    <p>
+        <a href="{{ path('accountrequest_new') }}">Request an Aperio eSlide Manager account</a> if you can't log in.
+    </p>
+    </p>
+</div>
+
+
+<script language="Javascript">
+    <!--
+        //console.log("width="+screen.width+"x"+screen.height);
+        document.getElementById("display_height").value = screen.height;
+        document.getElementById("display_width").value = screen.width;
+    //-->
+</script>

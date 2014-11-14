@@ -1,0 +1,29 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::ListForm/listmacros.html.twig" as listmacros %}
+
+{% block title %}
+    {{ displayName }}: ID {{ entity.id }} | Edit
+{% endblock %}
+
+{% block content %}
+
+    {% if delete_form is not defined %}
+        {% set delete_form = false %}
+    {% endif %}
+
+    <h3 class="text-info">{{ displayName }}: ID {{ entity.id }}</h3>
+
+    <br />
+
+    {{ listmacros.listEdit( entity, edit_form, delete_form, pathbase, 'edit' ) }}
+
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-listForm.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -1,0 +1,1491 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
+{% macro baseTitle( field, cicle, classname, prototype, sitename ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
+        {% set wellclass = "user-alert-warning" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.status) }}
+
+        {% if formfield.orderinlist is defined %}
+            {{ formmacros.field(formfield.orderinlist) }}
+        {% endif %}
+        {{ formmacros.field_notempty(formfield.priority,cicle) }}
+        {{ formmacros.field(formfield.name) }}
+
+        {#boss field#}
+        {% if formfield.boss is defined %}
+            {% if cicle != 'show_user' %}
+                {{ formmacros.field(formfield.boss) }}
+            {% else %}
+                {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL and formfield.vars.value.boss|length > 0 %}
+                    <p>
+                        <strong>Reports to:</strong>
+                    </p>
+                    {% for boss in formfield.vars.value.boss %}
+                        {{ userform.personInfo(boss,cicle,sitename) }}
+                    {% endfor %}
+                {% endif %}
+                {% do formfield.boss.setRendered %}
+            {% endif %}
+        {% endif %}
+
+        {#position type#}
+        <p>
+        {% if formfield.position is defined %}
+            {{ formmacros.field(formfield.position) }}
+        {% endif %}
+
+        {% if formfield.residencyTrack is defined %}
+            <p>
+            <div class="well appointmenttitle-residencytrack-field" style="display:none; margin-top: 20px;">
+                {{ formmacros.field(formfield.residencyTrack) }}
+            </div>
+            </p>
+        {% endif %}
+
+        {% if formfield.fellowshipType is defined %}
+            <p>
+            <div class="well appointmenttitle-fellowshiptype-field" style="display:none; margin-top: 20px;">
+                {{ formmacros.field(formfield.fellowshipType) }}
+            </div>
+            </p>
+        {% endif %}
+
+        {#pgy#}
+        {% if formfield.pgystart is defined and formfield.pgylevel is defined %}
+            {#On the user profile page, always hide the entire PGY well if the Position Type is not equal to either Resident or Fellow#}
+            {% if formfield.position is defined and formfield.vars.value and (formfield.vars.value.position == "Resident" or formfield.vars.value.position == "Fellow") or cicle == 'create_user' or cicle == 'edit_user' %}
+                <p>
+                <div class="well appointmenttitle-pgy-field" style="display:none">
+                    {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
+                    {{ formmacros.field(formfield.pgylevel) }}
+                    {{ formmacros.field(formfield.pgylevelexpected) }}
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <strong></strong>
+                        </div>
+                        {% if cicle != 'show_user' %}
+                            <div class="col-xs-6" align="left">
+                                <button type="button" class="update-pgy-btn" onclick="updatePgy(this)">Update the academic year and PGY level to current</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                </p>
+            {% else %}
+                {% do formfield.pgystart.setRendered %}
+                {% do formfield.pgylevel.setRendered %}
+                {% do formfield.pgylevelexpected.setRendered %}
+            {% endif %}
+        {% endif %}
+
+        </p>
+
+
+        {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cicle,'allow-future-date') }}
+
+        {#On the user profile page, always hide "Percent Effort:" in both Academic and Administrative titles if they are empty#}
+        {% if cicle != 'show_user' or (formfield.vars.value and formfield.vars.value.effort) %}
+            {{ formmacros.field(formfield.effort) }}
+        {% else %}
+            {% do formfield.effort.setRendered %}
+        {% endif %}
+
+
+        {{ formmacros.field(formfield.institution) }}
+        {{ formmacros.field(formfield.department) }}
+        {{ formmacros.field(formfield.division) }}
+        {{ formmacros.field(formfield.service) }}
+    </div>
+{% endmacro %}
+
+{% macro personInfo( person, cicle, sitename ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
+    <p>
+    <div class="well">
+        {% set bossurl = path(sitename~'_showuser',{'id':person.id}) %}
+        {% set bosslink = '<a href="'~bossurl~'">'~person.getUserNameShortStr()~'</a>'  %}
+        {{ formmacros.simplefield( "Name:", bosslink, "", "disabled" ) }}
+        {{ userform.emailPhoneField(person.preferredPhone,cicle,'phone',"Preferred Phone Number:") }}
+        {{ userform.emailPhoneField(person.email,cicle,'email',"Preferred Email:") }}
+    </div>
+    </p>
+{% endmacro %}
+
+{% macro location( field, cicle, classname, prototype, sitename ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if   prototype == "prototype" or
+            formfield.vars.value and
+            (
+                formfield.vars.value.removable == true or
+                formfield.vars.value.removable != true and
+                formfield.vars.value.name != "Home"
+            )
+    %}
+        {% set homeLocation = false %}
+    {% else %}
+        {% set homeLocation = true %}
+    {% endif %}
+
+
+    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
+        {% set wellclass = "user-alert-warning" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    <div class="alert {{ classname }} {{ wellclass }}">
+
+        {% if cicle != 'show_user' and prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.status) }}
+
+        {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
+            {{ formmacros.field(formfield.name) }}
+        {% else %}
+            {{ formmacros.field(formfield.name,"","readonly") }}
+        {% endif %}
+
+        {{ userform.emailPhoneField(formfield.phone,cicle,'phone',"") }}
+        {{ userform.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
+        {{ userform.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
+        {{ formmacros.field_notempty(formfield.fax,cicle) }}
+        {{ userform.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
+
+        {% if homeLocation == false %}
+
+            {#assistant field#}
+            {% if formfield.assistant is defined %}
+                {% if cicle != 'show_user' %}
+                    {{ formmacros.field(formfield.assistant) }}
+                {% else %}
+                    {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
+                        <p>
+                            <strong>Assistant(s):</strong>
+                        </p>
+                        {% for assistant in formfield.vars.value.assistant %}
+                            {{ userform.personInfo(assistant,cicle,sitename) }}
+                        {% endfor %}
+                    {% endif %}
+                    {% do formfield.assistant.setRendered %}
+                {% endif %}
+            {% endif %}
+
+
+        {% else %}
+            {% do formfield.assistant.setRendered %}
+        {% endif %}
+
+        {% if homeLocation == false %}
+            {{ formmacros.field(formfield.room) }}
+            {{ formmacros.field_notempty(formfield.suit,cicle) }}
+            {{ formmacros.field(formfield.floor) }}
+        {% else %}
+            {% do formfield.room.setRendered %}
+            {% do formfield.suit.setRendered %}
+            {% do formfield.floor.setRendered %}
+        {% endif %}
+
+        {{ formmacros.field_notempty(formfield.street1,cicle) }}
+        {{ formmacros.field_notempty(formfield.street2,cicle) }}
+        {{ formmacros.field_notempty(formfield.city,cicle) }}
+        {{ formmacros.field_notempty(formfield.state,cicle) }}
+        {{ formmacros.field_notempty(formfield.zip,cicle) }}
+
+        {% if homeLocation == false %}
+            {{ formmacros.field(formfield.buildingName) }}
+            {{ formmacros.field(formfield.buildingAbbr) }}
+            {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
+            {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
+        {% else %}
+            {% do formfield.buildingName.setRendered %}
+            {% do formfield.buildingAbbr.setRendered %}
+            {% do formfield.mailbox.setRendered %}
+            {% do formfield.associatedCode.setRendered %}
+        {% endif %}
+
+        {#In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.#}
+        {% if formfield.associatedClia is defined %}
+            {{ formmacros.field_notempty(formfield.associatedClia,cicle) }}
+            {{ formmacros.fieldDateLabel_notempty(formfield.associatedCliaExpDate,cicle,'allow-future-date') }}
+            {{ formmacros.field_notempty(formfield.associatedPfi,cicle) }}
+        {% endif %}
+
+
+        {{ formmacros.field_notempty(formfield.comment,cicle) }}
+
+    </div>
+{% endmacro %}
+
+
+{% macro stateLicenses( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.state) }}
+        {{ formmacros.field(formfield.licenseNumber) }}
+        {{ formmacros.fieldDateLabel(formfield.licenseExpirationDate,'allow-future-date') }}
+
+    </div>
+{% endmacro %}
+
+
+{% macro boardCertifications( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.specialty) }}
+        {{ formmacros.fieldDateLabel(formfield.issueDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.expirationDate,'allow-future-date') }}
+
+    </div>
+{% endmacro %}
+
+
+{% macro codenyphs( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field_notempty(formfield.field,cicle) }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cicle,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cicle,'allow-future-date') }}
+
+    </div>
+{% endmacro %}
+
+{% macro employmentStatuses( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.terminationType) }}
+        {{ formmacros.field_notempty(formfield.terminationReason) }}
+
+    </div>
+{% endmacro %}
+
+{% macro userUrlLink() %}
+    <a href="{{ path('employees_showuser_notstrict', { 'id': 'user_replacement_id' }) }}">{{ 'user_replacement_username' }}</a><br>
+{% endmacro %}
+
+{% macro emailPhoneField_notempty(field,cicle,type,label) %}
+    {% import _self as formuser %}
+    {% if field.vars.value or cicle != "show_user" %}
+        {{ formuser.emailPhoneField(field,cicle,type,label) }}
+    {% else %}
+        {% do field.setRendered %}
+    {% endif %}
+{% endmacro %}
+
+{% macro emailPhoneField(field,cicle,type,label) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if label == "" %}
+        {% set value = field.vars.value %}
+    {% else %}
+        {% set value = field %}
+    {% endif %}
+
+    {% if cicle == 'show_user' %}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {% if label == "" %}
+                    {{ form_label(field) }}
+                {% else %}
+                    <strong>{{ label }}</strong>
+                {% endif %}
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class="form-control form-control-modif" disabled>
+                    {% if type == "email" %}
+                        <a href="mailto:{{ value }}" target="_top">{{ value }}</a>
+                    {% else %}
+                        {% set valueclean = value|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+                        <a href="tel:{{ valueclean }}" target="_top">{{ value }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </p>
+        {% if label == "" %}
+            {% do field.setRendered %}
+        {% endif %}
+    {% else %}
+        {{ formmacros.field(field) }}
+    {% endif %}
+{% endmacro %}
+
+
+{% macro identifier( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.keytype) }}
+        {{ formmacros.field(formfield.field) }}
+
+    </div>
+{% endmacro %}
+
+{% macro researchLabs( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.researchLabTitle) }}
+        {{ formmacros.checkbox(formfield.researchPI) }}
+        {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cicle,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.comment,cicle) }}
+        {{ formmacros.field(formfield.location) }}
+
+    </div>
+{% endmacro %}
+
+{% macro comments( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import _self as userform %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if formfield.comment.vars.value != "" or cicle != 'show_user' %}
+
+        {% if classname == 'user-privatecomments' and (formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype') %}
+            {% set wellclass = "user-alert-warning" %}
+        {% else %}
+            {% set wellclass = "" %}
+        {% endif %}
+
+        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}" style="padding-bottom:120px;">
+
+            {% if cicle != 'show_user' %}
+                <div class="text-right" style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            {% endif %}
+
+            {{ formmacros.field(formfield.id) }}
+
+            {% if formfield.status is defined %}
+                {{ formmacros.field(formfield.status) }}
+            {% endif %}
+
+            {{ formmacros.field(formfield.commentType) }}
+
+            {{ formmacros.field(formfield.commentSubType) }}
+
+            {{ formmacros.field(formfield.comment) }}
+
+            {% if formfield.documents is defined or prototype == 'prototype' %}
+                {{ usermacros.fileupload( formfield, cicle, classname, prototype ) }}
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        {% do formfield.commentType.setRendered %}
+        {% do formfield.commentSubType.setRendered %}
+        {% do formfield.comment.setRendered %}
+
+        {% if formfield.status is defined %}
+            {% do formfield.status.setRendered %}
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro snapshot( user, sitename ) %}
+
+    <table class="table table-hover table-condensed text-left">
+    <thead>
+        <tr>
+            <th>Service(s)</th>
+            <th>Name</th>
+            <th>Administrative Title(s)</th>
+            <th>Academic Title(s)</th>
+            <th>Preferred Email</th>
+            <th>Preferred Phone Number</th>
+            <th>Room Number(s)</th>
+            <th>Assistant(s)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                {% for service in user.getServices %}
+                    {% if service is defined and service != "" %}
+                        {{ service.getParentTree() }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ user.displayName }}</td>
+            <td>
+                {% for administrativeTitle in user.administrativeTitles %}
+                    {% if administrativeTitle.name %}
+                        {{ administrativeTitle.name }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for appointmentTitles in user.appointmentTitles %}
+                    {% if appointmentTitles.name %}
+                        {{ appointmentTitles.name }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                <a href="mailto:{{ user.email }}" target="_top">{{ user.email }}</a>
+            </td>
+            <td>
+                {% set valueclean = user.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+                <a href="tel:{{ valueclean }}" target="_top">{{ user.preferredPhone }}</a>
+            </td>
+            <td>
+                {% for location in user.locations %}
+                    {% if location.room %}
+                        {{ location.room }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for location in user.locations %}
+                    {% if location.assistant %}
+                        {% for assistant in location.assistant %}
+                            <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
+                            ({{ location.name }}):
+                            {% set valueclean = assistant.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+                            <a href="tel:{{ valueclean }}" target="_top">{{ assistant.preferredPhone }}</a>
+                            {% if assistant.email %}
+                                ,
+                            {% endif %}
+                            <a href="mailto:{{ assistant.email }}" target="_top">{{ assistant.email }}</a>
+                            <br>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </td>
+
+        </tr>
+    </tbody>
+    </table>
+
+{% endmacro %}
+
+
+{% macro snapshot_well( user, sitename ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <div class="well">
+
+        {#service tree#}
+        {% set services = user.getServices() %}
+        {% if services|length > 0 %}
+            <p>
+                <strong>Service(s)</strong>:<br>
+                {% for service in services %}
+                    {{ service.getParentTree() }}<br>
+                {% endfor %}
+            <p>
+        {% endif %}
+
+        {#administrative titles#}
+        {% set titles = user.getAdministrativeTitles() %}
+        {% if titles|length > 0 %}
+            <p>
+                <strong>Administrative Title(s)</strong>:<br>
+                {% for title in titles %}
+                    {{ title.name }}<br>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#appointment titles#}
+        {% set titles = user.getAppointmentTitles() %}
+        {% if titles|length > 0 %}
+            <p>
+                <strong>Academic Appointment Title(s)</strong>:<br>
+                {% for title in titles %}
+                    {{ title.name }}<br>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#phone#}
+        <p>
+            <strong>Administrative Title(s)</strong>:<br>
+            {{ user.preferredPhone }}
+        </p>
+
+        {#pager#}
+        {% set locations = user.locations %}
+        {% if locations|length > 0 %}
+            <p>
+                <strong>Room(s)</strong>:<br>
+                {% for location in locations %}
+                    {{ location.pager }}<br>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#room#}
+        {% set locations = user.locations %}
+        {% if locations|length > 0 %}
+            <p>
+                <strong>Room(s)</strong>:<br>
+                {% for location in locations %}
+                    {{ location.room }}<br>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#assistance#}
+        {% set locations = user.locations %}
+        {% if locations|length > 0 %}
+            <p>
+                <strong>Assistant(s)</strong>:<br>
+                {% for location in locations %}
+                    {% for assistant in location.assistant %}
+                        {{ assistant.getUserNameStr() }}<br>
+                    {% endfor %}
+                {% endfor %}
+            </p>
+        {% endif %}
+
+    </div>
+
+{% endmacro %}
+
+
+
+{% import _self as userform %}
+
+
+{% if cicle == "create_user" %}
+    {% set title = "Add New Employee" %}
+{% else %}
+    {% set title = "Profile: "~form.vars.value.getUserNameStr() %}
+{% endif %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+
+    <h4 class="text-info" align="center">{{ title }}</h4>
+
+    <br>
+
+    {#user's snapshot#}
+    {{ userform.snapshot(entity,sitename) }}
+
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+
+
+    {{ form_start(form) }}
+
+    {% set publicCommentsPrototype = null %}
+    {% set privateCommentsPrototype = null %}
+    {% set adminCommentsPrototype = null %}
+    {% set employmentStatusPrototype = null %}
+    {% set researchLabsPrototype = null %}
+    {% set statelicensePrototype = null %}
+    {% set boardcertificationPrototype = null %}
+    {% set identifiersPrototype = null %}
+    {% set codeNYPHPrototype = null %}
+       
+    {% if form.publicComments is defined %}
+        {% set publicCommentsPrototype = userform.comments(form.publicComments,cicle,'user-publiccomments','prototype') %}
+    {% endif %}
+    {% if form.privateComments is defined %}
+        {% set privateCommentsPrototype = userform.comments(form.privateComments,cicle,'user-privatecomments','prototype') %}
+    {% endif %}
+    {% if form.adminComments is defined %}
+        {% set adminCommentsPrototype = userform.comments(form.adminComments,cicle,'user-admincomments','prototype') %}
+    {% endif %}
+    {% if form.employmentStatus is defined %}
+        {% set employmentStatusPrototype = userform.employmentStatuses(form.employmentStatus,cicle,'user-employmentStatus','prototype') %}
+    {% endif %}
+    {% if form.researchLabs is defined %}
+        {% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cicle,'user-researchlabs','prototype') %}
+    {% endif %}
+
+    {% if form.credentials is defined and form.credentials.stateLicense is defined %}
+        {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cicle,'user-statelicense','prototype') %}
+    {% endif %}
+    {% if form.credentials is defined and form.credentials.boardCertification is defined %}
+        {% set boardcertificationPrototype = userform.boardCertifications(form.credentials.boardCertification,cicle,'user-boardcertification','prototype') %}
+    {% endif %}
+    {% if form.credentials is defined and form.credentials.identifiers is defined %}
+        {% set identifiersPrototype = userform.identifier(form.credentials.identifiers,cicle,'user-identifiers','prototype') %}
+    {% endif %}
+    {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
+        {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype') %}
+    {% endif %}
+
+    {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_ADMIN#}
+    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_ADMIN') %}
+        {% set userEditor = true %}
+    {% else %}
+        {% set userEditor = false %}
+    {% endif %}
+
+
+    <div id="form-prototype-data"
+         data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype', sitename)|e }}"
+         data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype', sitename)|e }}"
+         data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype',sitename)|e }}"
+         data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
+         data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
+         data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
+         data-prototype-user-employmentstatus = "{{ employmentStatusPrototype|e }}"
+         data-prototype-user-identifiers = "{{ identifiersPrototype|e }}"
+         data-prototype-user-publiccomments = "{{ publicCommentsPrototype|e }}"
+         data-prototype-user-privatecomments = "{{ privateCommentsPrototype|e }}"
+         data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
+         data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
+
+         data-userurllink = "{{ userform.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+         data-userid = "{{ entity.id }}"
+    ></div>
+
+        <input type="hidden" id="user_id" value="{{ user_id }}" />
+        <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
+        {#<input type="hidden" id="user_name" value="{{ form.vars.value.getUserNameStr() }}" />#}
+        <input type="hidden" id="formcicle" value="{{ cicle }}" />
+        <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
+        {{ form_errors(form) }}
+
+        {#Name and Preferred Contact Info#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#userinfo">
+                        Name and Preferred Contact Info
+                    </a>
+                </h4>
+            </div>
+            <div id="userinfo" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form.keytype) }}
+                    {{ formmacros.field(form.primaryPublicUserId) }}
+
+                    {% if form.username is defined %}
+                        {{ formmacros.field(form.username) }}
+                    {% endif %}
+
+                    {{ formmacros.field(form.displayName) }}
+                    {{ formmacros.field(form.firstName) }}
+                    {{ formmacros.field_notempty(form.middleName,cicle) }}
+                    {{ formmacros.field(form.lastName) }}
+
+                    {{ userform.emailPhoneField(form.email,cicle,'email',"") }}
+
+                    {{ userform.emailPhoneField(form.preferredPhone,cicle,'phone',"") }}
+
+                    {{ formmacros.field_notempty(form.initials,cicle) }}
+
+                </div>
+            </div>
+        </div>
+
+
+        {#Global User Preferences#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#userprefrences">
+                        Global User Preferences
+                    </a>
+                </h4>
+            </div>
+            <div id="userprefrences" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    {% if form.roles is defined and (cicle == "show_user" or userEditor == true) %}
+                        {{ formmacros.field(form.roles) }}
+                    {% endif %}
+
+                    {{ formmacros.field(form.preferences.timezone) }}
+
+                    {% if form.locked is defined and userEditor == true %}
+                        {% if app.security.getToken().getUser().getId() != entity.id %}
+                            {{ formmacros.checkbox(form.locked) }}
+                        {% else %}
+                            {% do form.locked.setRendered %}
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+
+        {% block addcontent %}{% endblock %}
+
+        {#Employment Status#}
+        {% if form.employmentStatus is defined %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#EmploymentStatus">
+                            Employment Period(s) [visible only to Editors and Administrators]
+                        </a>
+                    </h4>
+                </div>
+                <div id="EmploymentStatus" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <div class="user-employmentStatus-holder">
+                            {% for employmentStatus in form.employmentStatus %}
+                                {{ userform.employmentStatuses(employmentStatus,cicle,'user-employmentStatus','noprototype') }}
+                            {% endfor %}
+                            {% if cicle != 'show_user' %}
+                                <button class="btn btn-default btn-add-minimumone-collection" onClick="addBaseTitle(this,'user-employmentStatus')" type='button'>Add Employment Period</button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {#Administrative Titles#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#AdministrativeTitles">
+                        Administrative Title(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="AdministrativeTitles" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <div class="user-administrativeTitles-holder">
+                        {% for administrativeTitle in form.administrativeTitles %}
+                            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype',sitename) }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {#Appointment Titles#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#AppointmentTitles">
+                        Academic Appointment Title(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="AppointmentTitles" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <div class="user-appointmentTitles-holder">
+                        {% for appointmentTitle in form.appointmentTitles %}
+                            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype',sitename) }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {#Locations#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#Locations">
+                        Location(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="Locations" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <div class="user-locations-holder">
+                        {% for location in form.locations %}
+                            {{ userform.location(location,cicle,'user-locations','noprototype',sitename) }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {#Research Lab(s)#}
+        {#If the user has no Research Labs (no array members with a research lab title), hide the whole Research Lab(s) section on the profile page.#}
+        {% set showResearchLabs = false %}
+        {% for researchLabs in form.researchLabs %}
+            {% if researchLabs.researchLabTitle.vars.value or cicle != 'show_user' %}
+                {% set showResearchLabs = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showResearchLabs and form.researchLabs is defined %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#ResearchLabs">
+                            Research Lab(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="ResearchLabs" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <div class="user-researchlabs-holder">
+                            {% for researchLab in form.researchLabs %}
+                                {{ userform.researchLabs(researchLab,cicle,'user-researchlabs','noprototype') }}
+                            {% endfor %}
+                            {% if cicle != 'show_user' %}
+                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-researchlabs')" type='button'>Add Research Lab</button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% do form.researchLabs.setRendered %}
+        {% endif %}
+
+        {#Credentials#}
+        {% if form.credentials is defined %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#Credentials">
+                            Credentials [Not publicly visible, but visible to the user]
+                        </a>
+                    </h4>
+                </div>
+                <div id="Credentials" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <p>
+                            <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('Credentials'))" >Collapse All</button>
+                            <button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('Credentials'))" >Expand All</button>
+                        </p>
+
+
+                        <div class="user-credentials-holder">
+
+
+                            {#Identifiers#}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#identifiers">
+                                            Identifiers
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="identifiers" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="user-identifiers-holder">
+
+                                            {#{{ formmacros.field(form.credentials.employeeId) }}#}
+                                            {#{{ formmacros.field(form.credentials.nationalProviderIdentifier) }}#}
+                                            <div class="user-employmentStatus-holder">
+                                                {% for identifier in form.credentials.identifiers %}
+                                                    {{ userform.identifier(identifier,cicle,'user-identifiers','noprototype') }}
+                                                {% endfor %}
+                                                {% if cicle != 'show_user' %}
+                                                    <button class="btn btn-default btn-add-minimumone-collection" onClick="addBaseTitle(this,'user-identifiers')" type='button'>Add Identifier</button>
+                                                {% endif %}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {#Personal Information#}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#personalinfo">
+                                            Personal Information
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="personalinfo" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="user-personalinfo-holder">
+
+                                            {{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}
+                                            {{ formmacros.field_notempty(form.credentials.ssn,cicle) }}
+                                            {{ formmacros.field(form.credentials.emergencyContactInfo) }}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {#Certificate of Qualification#}
+
+                            {#HIDE ENTIRE SECTION Certificate of Qualification if both fields are empty / no array members#}
+                            {% if form.credentials.numberCOQ.vars.value or form.credentials.coqExpirationDate.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                                {% set showCOQ = true %}
+                            {% else %}
+                                {% set showCOQ = false %}
+                            {% endif %}
+
+                            {% if showCOQ %}
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#coq">
+                                                Certificate of Qualification
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="coq" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="user-coq-holder">
+
+                                                {{ formmacros.field_notempty(form.credentials.numberCOQ,cicle) }}
+                                                {{ formmacros.fieldDateLabel_notempty(form.credentials.coqExpirationDate,cicle,'allow-future-date') }}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% do form.credentials.numberCOQ.setRendered %}
+                                {% do form.credentials.coqExpirationDate.setRendered %}
+                            {% endif %}
+
+
+                            {#Clinical Laboratory Improvement Amendments (CLIA)#}
+                            {#HIDE ENTIRE SECTION Clinical Laboratory Improvement Amendments (CLIA) if both fields are empty / no array members#}
+                            {% if form.credentials.numberCLIA.vars.value or form.credentials.cliaExpirationDate.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                                {% set showCLIA = true %}
+                            {% else %}
+                                {% set showCLIA = false %}
+                            {% endif %}
+
+                            {% if showCLIA %}
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#clia">
+                                                Clinical Laboratory Improvement Amendments (CLIA)
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="clia" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="user-clia-holder">
+
+                                                {{ formmacros.field_notempty(form.credentials.numberCLIA,cicle) }}
+                                                {{ formmacros.fieldDateLabel_notempty(form.credentials.cliaExpirationDate,cicle,'allow-future-date') }}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% do form.credentials.numberCLIA.setRendered %}
+                                {% do form.credentials.cliaExpirationDate.setRendered %}
+                            {% endif %}
+
+
+                            {#NY Permanent Facility Identifier (PFI)#}
+                            {#HIDE ENTIRE SECTION NY Permanent Facility Identifier (PFI) if both fields are empty / no array members#}
+                            {% if form.credentials.numberPFI.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                                {% set showPFI = true %}
+                            {% else %}
+                                {% set showPFI = false %}
+                            {% endif %}
+
+                            {% if showPFI %}
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#pfi">
+                                                NY Permanent Facility Identifier (PFI)
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="pfi" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="user-pfi-holder">
+                                                {{ formmacros.field_notempty(form.credentials.numberPFI,cicle) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% do form.credentials.numberPFI.setRendered %}
+                            {% endif %}
+
+
+                            {#Code NYPH#}
+                            {#HIDE ENTIRE SECTION NYPH Code(s) if all three fields are empty / no array members#}
+                            {% set showNYPH = false %}
+                            {% for codeNYPH in form.credentials.codeNYPH %}
+                                {% if codeNYPH.field.vars.value or codeNYPH.startDate.vars.value or codeNYPH.endDate.vars.value or cicle != 'show_user' %}
+                                    {% set showNYPH = true %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if showNYPH  %}
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#codenyph">
+                                                NYPH Code(s)
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="codenyph" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="user-codenyph-holder">
+                                                {% for codeNYPH in form.credentials.codeNYPH %}
+                                                    {{ userform.codenyphs(codeNYPH,cicle,'user-codenyph','noprototype') }}
+                                                {% endfor %}
+                                                {% if cicle != 'show_user' %}
+                                                    <button class="btn btn-default" onClick="addBaseTitle(this,'user-codenyph')" type='button'>Add NYPH Code</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% do form.credentials.codeNYPH.setRendered %}
+                            {% endif %}
+                            {#EOF Code NYPH#}
+
+                            {#Medical Licenses#}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#stateLicense">
+                                            Medical License(s)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="stateLicense" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+
+                                        <div class="user-statelicense-holder">
+
+                                            {% for stateLicense in form.credentials.stateLicense %}
+                                                {{ userform.stateLicenses(stateLicense,cicle,'user-statelicense','noprototype') }}
+                                            {% endfor %}
+                                            {% if cicle != 'show_user' %}
+                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-statelicense')" type='button'>Add Medical License</button>
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {#Board Certification#}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#boardCertification">
+                                            Board Certification(s)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="boardCertification" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+
+                                        <div class="user-boardcertification-holder">
+
+                                            {% for boardCertification in form.credentials.boardCertification %}
+                                                {{ userform.boardCertifications(boardCertification,cicle,'user-boardcertification','noprototype') }}
+                                            {% endfor %}
+                                            {% if cicle != 'show_user' %}
+                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-boardcertification')" type='button'>Add Board Certification</button>
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        {% endif %}
+        {#EOF credentials#}
+
+
+        {#Comments#}
+        {#On the user profile page always hide all Comments (including the whole Comments section) if they are empty.#}
+        {% set showPublicComments = false %}
+        {% set showPrivateComments = false %}
+        {% set showConfComments = false %}
+        {% set showAdminComments = false %}
+
+        {% for publicComment in form.publicComments %}
+            {% if publicComment.comment.vars.value != "" or cicle != 'show_user' %}
+                {% set showPublicComments = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if form.privateComments is defined %}
+            {% for privateComment in form.privateComments %}
+                {% if privateComment.comment.vars.value != "" or cicle != 'show_user' %}
+                    {% set showPrivateComments = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if form.confidentialComments is defined %}
+            {% for confidentialComment in form.confidentialComments %}
+                {% if confidentialComment.comment.vars.value != "" or cicle != 'show_user' %}
+                    {% set showConfComments = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if form.adminComments is defined %}
+            {% for adminComment in form.adminComments %}
+                {% if adminComment.comment.vars.value != "" or cicle != 'show_user' %}
+                    {% set showAdminComments = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if showPublicComments == false %}
+            {% do form.publicComments.setRendered %}
+        {% endif %}
+        {% if showPrivateComments == false and form.privateComments is defined %}
+            {% do form.privateComments.setRendered %}
+        {% endif %}
+        {% if showConfComments == false and form.confidentialComments is defined %}
+            {% do form.confidentialComments.setRendered %}
+        {% endif %}
+        {% if showAdminComments == false and form.adminComments is defined %}
+            {% do form.adminComments.setRendered %}
+        {% endif %}
+
+        {% if showPublicComments or showPrivateComments or showConfComments or showAdminComments %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#Comments">
+                            Comments
+                        </a>
+                    </h4>
+                </div>
+                <div id="Comments" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        {#Public Comments#}
+                        {% if showPublicComments %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#publicComment">
+                                            Public Comment(s)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="publicComment" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="user-publiccomments-holder">
+                                            {% for publicComment in form.publicComments %}
+                                                {{ userform.comments(publicComment,cicle,'user-publiccomments','noprototype') }}
+                                            {% endfor %}
+                                            {% if cicle != 'show_user' %}
+                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-publiccomments')" type='button'>Add Public Comment</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+
+                        {#Private Comments#}
+                        {% if form.privateComments is defined and showPrivateComments %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#privatecomment">
+                                            Private Comment(s) [Not publicly visible, but visible to and editable by the user]
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="privatecomment" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="user-privatecomments-holder">
+                                            {% for privateComment in form.privateComments %}
+                                                {{ userform.comments(privateComment,cicle,'user-privatecomments','noprototype') }}
+                                            {% endfor %}
+                                            {% if cicle != 'show_user' %}
+                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-privatecomments')" type='button'>Add Private Comment</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+
+                        {#Confidential Comments#}
+                        {% if form.confidentialComments is defined and showConfComments %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#Confidential">
+                                            Confidential Comment(s) [Not publicly visible, but visible to the user]
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="Confidential" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="user-confidentialcomments-holder">
+                                            {% for confidentialComment in form.confidentialComments %}
+                                                {{ userform.comments(confidentialComment,cicle,'user-confidentialcomment','noprototype') }}
+                                            {% endfor %}
+                                            {% if cicle != 'show_user' %}
+                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-confidentialcomment')" type='button'>Add Confidential Comment</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+
+                        {#Admin Comments#}
+                        {% if form.adminComments is defined and showAdminComments %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#admincomment">
+                                            Administrative Comment(s) [visible only to Editors and Administrators]
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="admincomment" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="user-admincomments-holder">
+                                            {% for adminComment in form.adminComments %}
+                                                {{ userform.comments(adminComment,cicle,'user-admincomments','noprototype') }}
+                                            {% endfor %}
+                                            {% if cicle != 'show_user' %}
+                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-admincomments')" type='button'>Add Administrative Comment</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {#EOF Comments#}
+
+
+        <br>
+
+        {#{{ form_rest(form) }}#}
+        {#{{ form_widget(form._token) }}#}
+
+        {#{{ form(form) }}#}
+
+        <p>
+            <div id="user-errors"></div>
+        </p>
+
+
+        {% if cicle != "show_user" and cicle != "create_user" %}
+            <p>
+                <div>
+                    <button class="btn btn-warning" name="btnSubmit" type="button" onclick="validateUser({{entity.id}})">Update</button>
+                    <a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>
+                </div>
+            </p>
+        {% endif %}
+
+        {% if cicle == "create_user" %}
+            <p>
+                <button class="btn btn-success" name="btnSubmit" type="button" onclick="validateUser()">Add Employee</button>
+            </p>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+
+    {% if userEditor == true or entity.id == app.security.getToken().getUser().getId() %}
+        {% if cicle == "show_user" and cicle != "create_user" %}
+            <p><a class="btn btn-success" href="{{ path(sitename~'_user_edit',{'id':entity.id}) }}">Edit</a></p>
+        {% endif %}
+    {% endif %}
+
+    {% if userEditor == true %}
+        <br>
+        <p>
+            <a href="{{ path(sitename~'_listusers') }}">View the list of all users</a>
+        </p>
+    {% endif %}
+
+{% endblock %}

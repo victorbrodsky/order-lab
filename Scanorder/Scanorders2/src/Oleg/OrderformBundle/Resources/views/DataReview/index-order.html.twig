@@ -1,0 +1,46 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Data Review
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">Data Review for <a href="{{ path('multy_show', { 'id': entity.oid }) }}">Order {{ entity.oid }}</a></h3>
+
+    <br />
+
+    {% if researches|length > 0 %}
+        <p>
+            {#{% include 'OlegOrderformBundle::Research/index.html.twig' %}#}
+            {% render url('research_edit', {'id': entity.research.id}) %}
+        </p>
+    {% endif %}
+
+
+
+    {% if educationals|length > 0 %}
+        <br />
+        <p>
+            {#{% include 'OlegOrderformBundle::Educational/index.html.twig' %}#}
+            {% render url('educational_edit', {'id': entity.educational.id}) %}
+
+            {#{{ include(#}
+                {#'OlegOrderformBundle:Educational:edit.html.twig',#}
+                {#{ 'id': entity.educational.id }#}
+            {#) }}#}
+
+        </p>
+    {% endif %}
+
+
+{% endblock %}
+
+{#{% block additionaljs %}#}
+    {#{% javascripts#}
+    {#'@OlegOrderformBundle/Resources/public/form/js/form.js'#}
+    {#'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+{#{% endblock %}#}

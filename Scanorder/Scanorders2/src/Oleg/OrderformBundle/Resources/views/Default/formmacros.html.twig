@@ -1,0 +1,1111 @@
+{#macro for form label input inline#}
+
+{% macro checkbox( value ) %}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {{ form_label(value) }}
+        </div>
+        <div class="col-xs-6 text-center" align="left" style="width: 50px;">
+            {{ form_widget(value) }}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+
+{% macro simplefield( label, value, type, disabled ) %}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            <strong>{{ label }}</strong>
+        </div>
+        <div class="col-xs-6" align="left">
+            {% if type is defined and type == "input" %}
+                <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value|raw }}" {{ disabled }}>
+            {% else %}
+                {#<div class="well well-sm" style="margin-bottom:0; min-height:40px">#}
+                    {#{{ value|raw }}#}
+                {#</div>#}
+                <div class="form-control form-control-modif not-mapped-simplefield" {{ disabled }}>
+                    {{ value|raw }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+
+
+{% macro field_notempty( field, cicle, label, attr ) %}
+    {% import _self as formmacros %}
+    {#{% if field.vars.value or not "show" in cicle %}#}
+    {% if field.vars.value or not (cicle == "show" or cicle == "show_user") %}
+        {{ formmacros.field(field, label, attr) }}
+    {% else %}
+        {% do field.setRendered %}
+    {% endif %}
+{% endmacro %}
+
+
+{% macro field( field, label, attr ) %}
+    {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
+    <p>
+    <div class="row">
+        {{ form_errors(field) }}
+        <div class="col-xs-6" align="right">
+            {{ form_label(field,label) }}
+        </div>
+        <div class="col-xs-6" align="left">
+            {% if attr == "disabled" %}
+                {#value of disabled field will be ignored#}
+                {{ form_widget(field,{ 'disabled':'disabled' }) }}
+            {% elseif attr == "readonly" %}
+                {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+            {% elseif attr == "required" %}
+                {{ form_widget(field, { 'attr': {'required': 'true'} }) }}
+            {% else %}
+                {{ form_widget(field) }}
+            {% endif %}
+        </div>
+        {{ form_rest(field) }}
+    </div>
+    </p>
+{% endmacro %}
+
+{% macro fieldDateLabel_notempty( field, cicle, classname, attr ) %}
+    {% import _self as formmacros %}
+    {% if field.vars.value or not (cicle == "show" or cicle == "show_user") %}
+        {{ formmacros.fieldDateLabel(field, classname, attr) }}
+    {% else %}
+        {% do field.setRendered %}
+    {% endif %}
+{% endmacro %}
+
+{% macro fieldDateLabel( field, classname, attr ) %}
+    <p>
+    <div class="row">
+        {{ form_errors(field) }}
+        <div class="col-xs-6" align="right">
+            {{ form_label(field) }}
+        </div>
+        <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+
+            <div class="input-group input-group-reg date {{ classname }}">
+                {% if attr == "disabled" %}
+                    {#value of disabled field will be ignored#}
+                    {{ form_widget(field,{ 'disabled':'disabled' }) }}
+                {% elseif attr == "readonly" %}
+                    {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+                {% else %}
+                    {{ form_widget(field) }}
+                {% endif %}
+                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+
+            </div>
+
+        </div>
+        {{ form_rest(field) }}
+    </div>
+    </p>
+{% endmacro %}
+{% macro fielddate( field, classname, attr ) %}
+    <div class="input-group input-group-reg date {{ classname }}">
+        {% if attr == "disabled" %}
+            {#value of disabled field will be ignored#}
+            {{ form_widget(field,{ 'disabled':'disabled' }) }}
+        {% elseif attr == "readonly" %}
+            {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+        {% else %}
+            {{ form_widget(field) }}
+        {% endif %}
+        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+    </div>
+{% endmacro %}
+
+{% macro fieldicon( field, extra, classname ) %}
+
+    {% set classname = classname~"btn" %}
+
+    {% import _self as formmacros %}
+    {% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}
+
+        <div class="row ">
+            <div class="col-xs-10">
+                {% if extra != "" %}
+                    {{ form_widget(extra) }}
+                {% endif %}
+                {{ form_widget(field) }}
+            </div>           
+            <div class="col-xs-2">
+                <button id="check_btn" class="btn btn-default checkbtn {{ classname }}" type="button" onclick="checkForm(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
+            </div>
+        </div>
+
+{% endmacro %}
+
+
+{% macro orderinfo(form) %}
+
+    <input type="hidden" id="user_name" value="{{ form.vars.value.provider.getUserNameStr() }}" />
+    <input type="hidden" id="user_id" value="{{ form.vars.value.provider.id }}" />
+
+    {% for proxyuser in form.vars.value.proxyuser %}
+        <input type="hidden" id="proxyuser_name" value="{{ proxyuser.getUserNameStr() }}" />
+        <input type="hidden" id="proxyuser_id" value="{{ proxyuser.id }}" />
+    {% endfor %}
+
+    {% import _self as formmacros %}
+
+    {#{{ formmacros.field(form.provider) }}#}
+    {{ formmacros.simplefield( "Submitter:", form.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
+
+    {{ formmacros.field(form.proxyuser) }}
+
+    <div class="user-collection-holder">
+        {{ formmacros.field(form.institution) }}
+
+        {#not mapped#}
+        {% if form.department is defined %}
+            {{ formmacros.field(form.department) }}
+            {{ formmacros.field(form.division) }}
+        {% endif %}
+
+        {{ formmacros.field(form.service) }}
+    </div>
+
+    {{ formmacros.field(form.scanner) }}
+
+    {{ formmacros.field(form.purpose) }}
+
+    <div id="purpose_option" class="collapse">
+        <div class="well" align='center'>
+            {{ formmacros.field(form.account) }}
+        </div>
+    </div>
+
+    {{ formmacros.field(form.priority) }}
+
+    {#optional for priority#}
+    <div id="priority_option" class="collapse">
+        <div class="well" align='center'>
+
+            {{ formmacros.fieldDateLabel(form.scandeadline,'allow-future-date') }}
+            {{ formmacros.field(form.returnoption) }}
+
+        </div>
+    </div>
+
+    {{ formmacros.field(form.slideDelivery) }}
+    {{ formmacros.field(form.returnSlide) }}
+
+{% endmacro %}
+
+
+{% macro orderinfo_panel(form, header) %}
+
+    {% import _self as formmacros %}
+    {#panel-patient panel-primary#}
+    <div  class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-12">
+                    {#<h4>{{ header }}</h4>#}
+                    <h4 class="panel-title">{{ header }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body collapse in">
+            {{ formmacros.orderinfo(form) }}
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+{% macro orderinfo_panel_header(
+    name, type, formtype, count, toatlLength, uid,
+    patientCount,
+    procedureCount,
+    accessionCount,
+    partCount,
+    blockCount,
+    slideCount,
+    scanCount,
+    stainCount
+) %}
+
+    <div class="panel-heading">
+
+        <button
+             id="form_body_toggle_{{ name }}_{{ uid }}" type="button"
+             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
+             data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}">
+        </button>
+
+        {% if name == 'procedure' %}
+            {% set title = 'accession' %}
+        {% else %}
+            {% set title = name %}
+        {% endif %}
+
+        {#<div class="element-title text-left">{{ title | capitalize }} {{ count+1 }}</div>#}
+        <h4 class="panel-title element-title">{{ title | capitalize }} {{ count+1 }}</h4>
+
+        {% if name != "scan" and name != "stain" %}
+            {% if type == 'new' or type == 'edit' or (type == 'amend' and formtype != 'One-Slide Scan Order' ) %}
+
+                <div class="form-btn-options">
+                    <button id="form_add_btn_{{ name }}_{{ uid }}" type="button"
+                            class="btn btn-default btn-xs add_form_btn pull-right"
+                            onclick="addSameForm(
+                                '{{ name }}',
+                                '{{ patientCount }}',
+                                '{{ procedureCount }}',
+                                '{{ accessionCount }}',
+                                '{{ partCount }}',
+                                '{{ blockCount }}',
+                                '{{ slideCount }}',
+                                '{{ scanCount }}',
+                                '{{ stainCount }}'
+                            )">Add</button>
+                    {#<button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>#}
+                    {#<button id="delete_form_btn_{{ name }}_{{ uid }}" type="button" style="margin-right:1%;" class="btn btn-danger btn-xs delete_form_btn pull-right">Delete</button>#}
+                </div>
+
+            {% endif %}
+        {% endif %}
+        <div class="clearfix"></div>
+
+    </div> <!-- panel-heading -->
+
+{% endmacro %}
+
+
+
+{#history info#}
+{% macro history_info(histories, form) %}
+
+    {% set formstatus = form.vars.value.status.name|lower %}
+
+    <div class="well well-sm">
+
+        {% if histories|first.orderinfo.status != "Superseded" %}
+            {% if histories|first.orderinfo.status == "Amended" %}
+                <p>
+                    This order has been originally submitted
+                    by
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.orderinfo.provider.id }) }}">{{ histories|first.orderinfo.provider }}</a>
+                    on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
+                    and most recently {{ formstatus }} by
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
+                    on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
+                </p>
+            {% else %}               
+                {% if 'by' in formstatus %}
+                    {% set performed = 'performed ' %}
+                {% else %}
+                    {% set performed = '' %}
+                {% endif %}
+                <p>
+                    This order has been {{ formstatus }} {{performed}}by
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
+                    {#on {{ histories|last.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|last.orderinfo.orderdate|date('h:i a') }}#}
+                    on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
+                </p>
+            {% endif %}
+        {% endif %}
+
+        {% for history in histories %}
+
+            {% set historytatus = history.currentstatus|lower %}
+
+            {% if history.orderinfo.id != history.currentid %}
+                {% if history.currentid > history.orderinfo.id %}
+                    <p class="text-danger">
+                        This order is the older archived version of and has been {{ formstatus }} by
+                        <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a> via amendment
+                        on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by
+                        <a href="{{ path(scan_sitename~'_showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
+                        .
+                    </p>
+                {% else %}
+                    {% if historytatus != 'canceled by submitter' and historytatus != 'submitted' %}
+                        <p>
+                            Older, superseded version of this order:
+                            <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
+                            {{ history.currentstatus.name|lower }} on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by
+                            <a href="{{ path(scan_sitename~'_showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
+                        </p>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+{% endmacro %}
+
+
+{#disease type form#}
+{% macro diseaseTypeForm( field ) %}
+    {% import _self as formmacros %}
+
+    {{ formmacros.field(field.field) }}
+    <br>
+
+    <div class="collapse originradio">
+        <div class="well" align='center'>
+            {#{{ form_label(form.origin) }}#}
+            {#{{ form_widget(form.origin) }}#}
+            {{ formmacros.field(field.origin) }}
+        </div>
+    </div>
+
+    <div class="collapse primaryorganradio">
+        <div class="well" align='center'>
+            {#{{ form_label(form.primaryOrgan) }}#}
+            {#{{ form_widget(form.primaryOrgan) }}#}
+            {{ formmacros.field(field.primaryOrgan) }}
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+{######################  holder for array of fields  #################################}
+{% macro inputArrayField(fields,cycle,classname,fieldtype,nobtn,nolabel,withspace,status) %}
+    {% import _self as formmacros %}
+    {% set count = 1 %}
+
+    <p>
+    <div class="{{ classname }}">
+    {% for field in fields|reverse %}
+
+        {% if field.vars.value.status is defined %}
+            {%  set fieldstatus = field.vars.value.status %}
+        {% else %}
+            {%  set fieldstatus = 'valid' %}
+        {% endif %}
+
+        {#get correct field: valid for submitter#}
+        {% if is_granted('ROLE_SCANORDER_SUBMITTER') and fieldstatus == 'valid' %}
+            {%  set show = 1 %}
+        {% else %}
+            {%  set show = 0 %}
+            {#don't show: {{ form_widget(field) }}#}
+        {% endif %}
+
+        {#to see all data: ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST#}
+        {% if is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') and fieldstatus == 'invalid' %}
+            {%  set show = 1 %}
+        {% endif %}
+
+        {#do not show empty patient clinical history#}
+        {% if classname == "patientclinicalhistory" and show == 1 and field.vars.value == "" %}
+            {%  set show = 0 %}
+        {% endif %}
+
+        {% if show == 1 or
+              cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded'
+        %}
+            {% set btntype = 'plusbtn' %}
+            {% if cycle == 'amend' %}
+                {% if fields|length == 1 %}
+                    {% set btntype = 'plusbtn' %}
+                {% else %}
+                    {% if count < fields|length %}
+                        {% set btntype = 'minusbtn' %}
+                    {%  else %}
+                        {% set btntype = 'minusplusbtn' %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+
+            {% if cycle == 'show' %}
+                {% set btntype = 'none' %}
+            {% endif %}
+
+            {% if classname == "procedurepatname" %}
+                {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
+                {{ formmacros.inputField(field,cycle,"procedurepatfirstname","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
+                {{ formmacros.inputField(field,cycle,"procedurepatmiddlename","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
+            {% else %}
+                {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}
+            {% endif %}
+
+        {% endif %}
+        {% set count = count + 1 %}
+    {% endfor %}
+    </div>
+    </p>
+{% endmacro %}
+
+{#input array field with separate label#}
+{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname,withspace,btntype,norest) %}
+    {% import _self as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set fieldThis = field.vars.prototype %}
+    {% else %}
+        {% set fieldThis = field %}
+    {% endif %}
+
+    {% if fieldtype == "diseaseType" %}
+
+        {{ formmacros.diseaseTypeForm(fieldThis) }}
+
+    {%  else %}
+
+        {% if withspace is defined and withspace != "" %}
+            <div class="row" style="padding-top: 1%;">
+        {% else %}
+            <div class="row">
+        {% endif %}
+
+            <div class="col-xs-6" align="right">
+                <p>
+                {% if nolabel is defined and nolabel != "" %}
+                    {#no label#}
+                {% else %}
+
+                    {#show provider and status to dataquality specialist#}
+                    {% set showInfoDate = 0 %}
+                    {% set showInfoProvider = 0 %}
+                    {% if field.vars.value.provider is defined %}
+                        {% if cycle == "show" or cycle == "amend" %}
+                            {% if field.vars.value.creationdate != "" and field.vars.value.status != 'valid' %}
+                                {% set showInfoDate = 1 %}
+                            {% endif %}
+                            {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
+                                {% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}
+                                    {% set showInfoProvider = 1 %}
+                                {% endif %}
+                                {% if field.vars.value.status != 'valid' %}
+                                    {% set showInfoDate = 1 %}
+                                    {% set showInfoProvider = 1 %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+
+                    {% if showInfoDate == 0 and showInfoProvider == 0 %}
+                        {% if fieldtype == "procedurepatfirstname" %}
+                            {{form_label(fieldThis.firstName)}}<strong>:</strong>
+                        {% elseif fieldtype == "procedurepatmiddlename" %}
+                            {{form_label(fieldThis.middleName)}}<strong>:</strong>
+                        {% elseif fieldtype == "paper" %}
+                            {{form_label(fieldThis.documents)}}<strong>:</strong>
+                        {% elseif fieldtype == "blockspecialStains" %}
+                            {{form_label(fieldThis.staintype)}}<br>
+                            {{form_label(fieldThis.field)}}<strong>:</strong>
+                        {% else %}
+                            {% if fieldThis.field is defined %}
+                                {{form_label(fieldThis.field)}}<strong>:</strong>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {% if fieldtype == "procedurepatfirstname" %}
+                            {{form_label(fieldThis.firstName)}}
+                        {% elseif fieldtype == "procedurepatmiddlename" %}
+                            {{form_label(fieldThis.middleName)}}
+                        {% elseif fieldtype == "paper" %}
+                            {{form_label(fieldThis.documents)}}
+                        {% elseif fieldtype == "blockspecialStains" %}
+                            {{form_label(fieldThis.staintype)}}<br>
+                            {{form_label(fieldThis.field)}}
+                        {% else %}
+                            {% if fieldThis.field is defined %}
+                                {{form_label(fieldThis.field)}}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+                    {% if showInfoDate == 1 %}
+                        entered on
+                        {{field.vars.value.creationdate|date('Y-m-d')}}
+                    {% endif %}
+                    {% if showInfoProvider == 1 %}
+                        by
+                        {{field.vars.value.provider}}
+                        {% if showInfoDate == 1 %}
+                            ({{ field.vars.value.status }})<strong>:</strong>
+                        {% endif %}
+                    {% endif %}
+
+                {% endif %}
+
+                </p>
+            </div>
+
+            <div class="col-xs-6" align="left">
+                {% if fieldtype == "key" and ( cycle == 'new' or cycle == 'amend' ) %}
+                    {% if classname == "patientmrn" %}
+                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.keytype,classname) }}
+                    {% elseif classname == "accessionaccession" %}
+                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.keytype,classname) }}
+                    {% else %}
+                        {{ formmacros.fieldicon(fieldThis.field,"",classname) }}
+                    {% endif %}
+                {% elseif fieldtype == "date" %}
+                    {{ formmacros.fielddate(fieldThis.field,'regular-datepicker') }}
+                {% elseif fieldtype == "lockdate" %}
+                    {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
+                {% elseif fieldtype == "paper" %}
+                    {{ formmacros.fieldpaper(fieldThis,cycle,prototype) }}
+                {% elseif classname == "patientmrn" %}
+                    {{ form_widget(fieldThis.keytype) }}
+                    {{ form_widget(fieldThis.field) }}
+                {% elseif classname == "accessionaccession" %}
+                    {{ form_widget(fieldThis.keytype) }}
+                    {{ form_widget(fieldThis.field) }}
+                {% elseif   fieldtype == "partdiffDisident" or
+                            fieldtype == "partdisident" or
+                            fieldtype == "sliderelevantScans"
+                            and cycle != 'show' %}
+                    {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
+                {% elseif fieldtype == "blockspecialStains" %}
+                    {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
+                {% elseif fieldtype == "procedurepatfirstname" %}
+                    {{ form_widget(fieldThis.firstName) }}
+                {% elseif fieldtype == "procedurepatmiddlename" %}
+                    {{ form_widget(fieldThis.middleName) }}
+                {% else %}
+                    {% if fieldThis.field is defined %}
+                        {{ form_widget(fieldThis.field) }}
+                    {% endif %}
+                {% endif %}
+                {% if cycle != 'show' %}
+                    {% if norest is not defined or norest == "" %}
+                        {{ form_rest(fieldThis) }}
+                    {% endif %}
+                {% endif %}
+            </div>
+
+        </div>
+
+    {% endif %}
+
+{% endmacro %}
+
+{#simple field widget. i.e. diffDiagnoses field widget#}
+{% macro fieldWidget(field) %}
+    {{ form_widget(field.vars.prototype.other) }}
+    {{ form_widget(field.vars.prototype.field) }}
+{% endmacro %}
+
+{% macro fieldSpecialStainsWidget(field) %}
+    {#added other#}
+    {{ form_widget(field.vars.prototype.stainothers) }}
+    {{ form_widget(field.vars.prototype.staintype) }}
+    {{ form_widget(field.vars.prototype.field) }}
+{% endmacro %}
+
+{% macro fieldWidgetNoOther(field) %}
+    {{ form_widget(field.vars.prototype.field) }}
+{% endmacro %}
+{#{% macro fieldProcedurePatnameWidget(field) %}#}
+    {#{% import _self as formmacros %}#}
+                          {#&#123;&#35; field, cycle, fieldtype,   prototype,   widget, nobtn, nolabel, classname, withspace, btntype, norest       &#35;&#125;#}
+    {#{{ formmacros.inputField(field, "new", "",          "prototype", "",     "",    "",      "",        "",        "",      "norest") }}#}
+    {#&#123;&#35;{{ formmacros.field(field.vars.prototype.procedurepatnameothers) }}&#35;&#125;#}
+    {#{{ formmacros.field(field.vars.prototype.firstName) }}#}
+    {#{{ formmacros.field(field.vars.prototype.middleName) }}#}
+{#{% endmacro %}#}
+
+{############# custom array fields #############}
+
+{% macro fieldCollectionInput(field, cycle, prototype, widget, nobtn, btntype) %}
+
+    {{ form_errors(field.field) }}
+
+    {% if btntype is not defined or btntype == "" %}
+        {% set btntype = 'plusbtn' %}
+    {% endif %}
+
+    {% if nobtn is defined and nobtn == "nobtn" %}
+        {{ widget }}
+    {% else %}
+
+        <div style="float:left; width:100%">
+
+            {% if cycle == 'show' %}
+                {{ form_widget(field.field) }}
+            {% else %}
+                <div class="fieldInputColl">
+                    <div class="input-group input-group-reg">
+                        {% if widget is not defined or widget == "" %}
+                            {{ form_widget(field.field) }}
+                        {% else %}
+                            {{ widget }}
+                        {% endif %}
+
+                        {% if btntype == "minusbtn" %}
+                            <span
+                                onClick="delCollectionField(this)"
+                                class="input-group-addon btn delbtnCollField" type="button">
+                                <i class="glyphicon glyphicon-minus-sign"></i>
+                            </span>
+                        {% endif %}
+
+                        {% if btntype == "minusplusbtn" %}
+                            <span
+                                onClick="delCollectionField(this)"
+                                class="input-group-addon btn delbtnCollField" type="button">
+                                <i class="glyphicon glyphicon-minus-sign"></i>
+                            </span>
+                            <span
+                                onClick="addCollectionField(this)"
+                                class="input-group-addon btn addbtnCollField" type="button">
+                                <i class="glyphicon glyphicon-plus-sign"></i>
+                            </span>
+                        {% endif %}
+
+                        {% if btntype == "plusbtn" %}
+                            <span
+                                onClick="addCollectionField(this)"
+                                class="input-group-addon btn addbtnCollField" type="button">
+                                <i class="glyphicon glyphicon-plus-sign"></i>
+                            </span>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro fieldCollectionInputTextarea(field, cycle, prototype, widget, nobtn, btntype) %}
+
+    {{ form_errors(field.field) }}
+
+    {% if btntype is not defined or btntype == "" %}
+        {% set btntype = 'plusbtn' %}
+    {% endif %}
+
+    {% if nobtn is defined and nobtn == "nobtn" %}
+
+        {{ form_widget(field.staintype) }}
+        {{ form_widget(field.field) }}
+
+    {% else %}
+
+        <div style="float:left; width:100%">
+            <div class="fieldInputColl">
+                <div class="input-group-oleg">
+
+                    {% if widget is not defined or widget == "" %}
+                        {{ form_widget(field.staintype) }}
+                        {{ form_widget(field.field) }}
+                    {% else %}
+                        {{ widget }}
+                    {% endif %}
+
+                    {% if btntype == 'minusplusbtn' %}
+                        <div class="addDelBtnColl" style="width:100%;">
+                            <button onClick="delCollectionField(this,'bottom')" type="button" class="btn btn-sm delbtnCollField"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                            <button onClick="addCollectionField(this,'bottom')" type="button" class="btn btn-sm addbtnCollField"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                        </div>
+                    {% endif %}
+
+                    {% if btntype == "plusbtn" %}
+                        <div class="addDelBtnColl" style="width:100%; float:left;">
+                            <button onClick="addCollectionField(this,'bottom')" type="button" class="btn btn-sm addbtnCollField"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                        </div>
+                    {% endif %}
+
+                    {% if btntype == 'minusbtn' %}
+                        <div class="addDelBtnColl" style="width:100%;">
+                            <button onClick="delCollectionField(this,'bottom')" type="button" class="btn btn-sm delbtnCollField"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro fieldpaper(paper,cicle,prototype) %}
+
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if paper.documents is defined or prototype == 'prototype' %}
+
+        {#paper.id:{{ paper.vars.value.id }}#}
+        {#part.id:{{ paper.vars.value.part.id }}#}
+        {#orderid:{{ paper.vars.value.orderinfo.id }}#}
+
+        <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
+            {% if cicle != "show" %}
+                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 4 files, 10 MB each)</span></div>
+            {% else %}
+                <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
+            {% endif %}
+
+            {{ usermacros.document( paper, cicle, prototype ) }}
+
+        </div>
+        
+    {% endif %}
+
+{% endmacro %}
+
+{#{% macro dataQualityWidgetExisting( field, cycle ) %}#}
+    {#{% import _self as formmacros %}#}
+    {#&#123;&#35;{% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}&#35;&#125;#}
+
+    {#<div class="validationerror-added alert alert-danger">#}
+        {#{{ form_errors(field) }}#}
+        {#&#123;&#35;{{ form_label(field.description) }}&#35;&#125;#}
+        {#<br>#}
+        {#Conflict Resolved by Replacement:#}
+        {#<br>#}
+        {#<b>{{ field.vars.value.accession }}</b> => <b>{{ field.vars.value.newaccession }}</b>#}
+        {#<br>#}
+        {#&#123;&#35;{{ form_rest(field) }}&#35;&#125;#}
+    {#</div>#}
+{#{% endmacro %}#}
+{% macro dataQualityWidgetNotMapped( field ) %}
+
+    {% import _self as formmacros %}
+    {% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}
+
+    <div class="validationerror-added alert alert-danger" style="height: 210px;">
+    {#<div class="validationerror-added alert alert-danger">#}
+
+        {{ form_errors(field) }}
+
+        {{ form_label(field.btnoption) }}
+        {{ form_widget(field.btnoption) }}
+
+        {{ form_widget(field.description) }}
+        {{ form_widget(field.accession) }}
+        {{ form_widget(field.accessiontype) }}
+        {{ form_widget(field.mrn) }}
+        {{ form_widget(field.mrntype) }}
+
+        {#{{ form_rest(field) }}#}
+    </div>
+
+{% endmacro %}
+
+
+{############################ Objects ###########################}
+
+{% macro patientForm( patient, flag, uid, cycle, status, mrnHtml, dobHtml, clinicalhistoryHtml ) %}
+    {% import _self as formmacros %}
+    {% import _self as formmacros %}
+
+    {% if cycle != 'show' %}
+        {% set key = "key" %}
+    {% else %}
+        {% set key = "" %}
+    {% endif %}
+
+    <div id="patient_{{ uid }}" class="form-element-holder">
+
+        {% if mrnHtml is not defined or mrnHtml == "" %}
+            {{ formmacros.inputArrayField(patient.mrn,cycle,"patientmrn",key,"","","",status) }}
+        {% else  %}
+            <p><div class="patientmrn">{{ mrnHtml }}</div></p>
+        {% endif %}
+
+        <div class="patientname">
+            {% if patient.vars.value != NULL %}
+                {% set patientFullName = patient.vars.value.getFullPatientName %}
+            {% else %}
+                {% set patientFullName = "" %}
+            {% endif %}
+            {{ formmacros.simplefield( "Name:", patientFullName, "", "disabled" ) }}
+        </div>
+
+        <div class="patientsex">
+            {% if patient.vars.value != NULL %}
+                {% set patientSex = patient.vars.value.obtainValidField('sex') %}
+            {% else %}
+                {% set patientSex = "" %}
+            {% endif %}
+            {{ formmacros.simplefield( "Sex:", patientSex, "", "disabled" ) }}
+        </div>
+
+        {% if dobHtml is not defined or dobHtml == "" %}
+            {{ formmacros.inputArrayField(patient.dob,cycle,"patientdob","date","","","",status) }}
+        {% else  %}
+            <p><div class="patientdob">{{ dobHtml }}</div></p>
+        {% endif %}
+
+        <div class="patientage">
+            {% if patient.vars.value != NULL %}
+                {% set patientAge = patient.vars.value.calculateAge %}
+            {% else %}
+                {% set patientAge = "" %}
+            {% endif %}
+            {{ formmacros.simplefield( "Age:", patientAge, "", "disabled" ) }}
+        </div>
+
+
+        {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}
+            {{ formmacros.inputArrayField(patient.clinicalHistory,cycle,"patientclinicalhistory","","","","",status) }}
+        {% else  %}
+            <p><div class="patientclinicalhistory">{{ clinicalhistoryHtml }}</div></p>
+        {% endif %}
+
+    </div>
+{% endmacro %}
+
+
+
+{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml, accessiondateHtml, encounterdateHtml, patlastnameHtml,patfirstnameHtml,patmiddlenameHtml, patageHtml,patsexHtml,patpathistoryHtml ) %}
+    {% import _self as formmacros %}
+
+    {% if cycle != 'show' %}
+        {% set key = "key" %}
+    {% else %}
+        {% set key = "" %}
+    {% endif %}
+
+    <div id="accession_{{ uid }}" class="form-element-holder">
+        {% if accessionHtml is not defined or accessionHtml == "" %}
+            {{ formmacros.inputArrayField(accession.accession,cycle,"accessionaccession",key,"","","",status) }}
+        {% else  %}
+            <p><div class="accessionaccession">{{ accessionHtml }}</div></p>
+        {% endif %}
+
+        {% if accessiondateHtml is not defined or accessiondateHtml == "" %}
+            {{ formmacros.inputArrayField(accession.accessionDate,cycle,"accessionaccessiondate","date","","","",status) }}
+        {% else  %}
+            <p><div class="accessionaccessiondate">{{ accessiondateHtml }}</div></p>
+        {% endif %}
+
+        {#{{ formmacros.field(procedure.name) }}#}
+        {% if procedureHtml is not defined or procedureHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.name,cycle,"procedurename","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurename">{{ procedureHtml }}</div></p>
+        {% endif %}
+
+        {% if encounterHtml is not defined or encounterHtml == "" %}
+            {#{{ formmacros.inputArrayField(procedure.encounter,cycle,"procedureencounter","","","nolabel") }}#}
+            {#{{ form_widget(procedure.encounter|first) }}#}
+            {% for encounter in procedure.encounter %}
+                {% if encounter.vars.value.status == 'valid' %}
+                    {{ form_row(encounter, {'label': false}) }}
+                {% endif %}
+            {% endfor %}
+        {% else  %}
+            <p><div class="procedureencounter">{{ encounterHtml }}</div></p>
+        {% endif %}
+
+        {#patient's data: single simple fields#}
+        {% if encounterdateHtml is not defined or encounterdateHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.encounterDate,cycle,"procedureencounterdate","date","","","",status) }}
+        {% else  %}
+            <p><div class="procedureencounterdate">{{ encounterdateHtml }}</div></p>
+        {% endif %}
+
+        {#{{ formmacros.field(procedure.patname) }}#}
+        {% if patlastnameHtml is not defined or patlastnameHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patlastname,cycle,"procedurepatlastname","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepatlastname">{{ patlastnameHtml }}</div></p>
+        {% endif %}
+
+        {% if patfirstameHtml is not defined or patfirstnameHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patfirstname,cycle,"procedurepatfirstname","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepatfirstname">{{ patfirstnameHtml }}</div></p>
+        {% endif %}
+
+        {% if patmiddlenameHtml is not defined or patmiddlenameHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patmiddlename,cycle,"procedurepatmiddlename","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepatmiddlename">{{ patmiddlenameHtml }}</div></p>
+        {% endif %}
+
+        {#{{ formmacros.field(procedure.patsex) }}#}
+        {% if patsexHtml is not defined or patsexHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patsex,cycle,"procedurepatsex","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepatsex">{{ patsexHtml }}</div></p>
+        {% endif %}
+
+        {#{{ formmacros.field(procedure.patage) }}#}
+        {% if patageHtml is not defined or patageHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patage,cycle,"procedurepatage","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepatage">{{ patageHtml }}</div></p>
+        {% endif %}
+
+        {#{{ formmacros.field(procedure.pathistory) }}#}
+        {% if patpathistoryHtml is not defined or patpathistoryHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.pathistory,cycle,"procedurepathistory","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepathistory">{{ patpathistoryHtml }}</div></p>
+        {% endif %}
+
+
+    </div>
+{% endmacro %}
+
+
+
+{% macro partForm( part, flag, uid, cycle, status, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml,diseaseTypeHtml ) %}
+
+    {% import _self as formmacros %}
+
+    {% if cycle != 'show' %}
+        {% set key = "key" %}
+    {% else %}
+        {% set key = "" %}
+    {% endif %}
+
+    <div id="part_{{ uid }}" class="form-element-holder scan-partpaper">
+
+        {% if partnameHtml is not defined or partnameHtml == "" %}
+            {{ formmacros.inputArrayField(part.partname,cycle,"partpartname",key,"","","",status) }}
+        {% else  %}
+            <p><div class="partpartname">{{ partnameHtml }}</div></p>
+        {% endif %}
+
+        {% if sourceorganHtml is not defined or sourceorganHtml == "" %}
+            {{ formmacros.inputArrayField(part.sourceOrgan,cycle,"partsourceorgan","","","","",status) }}
+        {% else  %}
+            <p><div class="partsourceorgan">{{ sourceorganHtml }}</div></p>
+        {% endif %}
+
+        {% if paperHtml is not defined or paperHtml == "" %}
+            {{ formmacros.inputArrayField(part.paper,cycle,"partpaper","paper","","","",status) }}
+        {% else %}
+            <p><div class="partpaper">{{ paperHtml }}</div></p>
+        {% endif %}
+
+        {% if descriptionHtml is not defined or descriptionHtml == "" %}
+            {{ formmacros.inputArrayField(part.description,cycle,"partdescription","","","","",status) }}
+        {% else  %}
+            <p><div class="partdescription">{{ descriptionHtml }}</div></p>
+        {% endif %}
+
+        {% if diagnosisHtml is not defined or diagnosisHtml == "" %}
+            {{ formmacros.inputArrayField(part.disident,cycle,"partdisident","","","","",status) }}
+        {% else  %}
+            <p><div class="partdisident">{{ diagnosisHtml }}</div></p>
+        {% endif %}
+
+        {% if diffDiagnosesHtml is not defined or diffDiagnosesHtml == "" %}
+            {{ formmacros.inputArrayField(part.diffDisident,cycle,"partdiffdisident","partdiffDisident","","","",status) }}
+        {% else  %}
+           <p><div class="partdiffdisident">{{ diffDiagnosesHtml }}</div></p>
+        {% endif %}
+
+        {% if diseaseTypeHtml is not defined or diseaseTypeHtml == "" %}
+            {{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType","","","",status) }}
+        {% else  %}
+            <p><div class="partdiseasetype">{{ diseaseTypeHtml }}</div></p>
+            {#{{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType") }}#}
+        {% endif %}
+
+    </div>
+
+{% endmacro %}
+
+
+
+{% macro blockForm( block, flag, uid, cycle, status, blocknameHtml, sectionsourceHtml, specialStainsHtml ) %}
+    {% import _self as formmacros %}
+
+    {% if cycle != 'show' %}
+        {% set key = "key" %}
+    {% else %}
+        {% set key = "" %}
+    {% endif %}
+
+    <div id="block_{{ uid }}" class="form-element-holder">
+
+        {% if blocknameHtml is not defined or blocknameHtml == "" %}
+            {{ formmacros.inputArrayField(block.blockname,cycle,"blockblockname",key,"","","",status) }}
+        {% else  %}
+            <p><div class="blockblockname">{{ blocknameHtml }}</div></p>
+        {% endif %}
+
+        {% if sectionsourceHtml is not defined or sectionsourceHtml == "" %}
+            {{ formmacros.inputArrayField(block.sectionsource,cycle,"blocksectionsource","blocksectionsource","","","",status) }}
+        {% else  %}
+            <p><div class="blocksectionsource">{{ sectionsourceHtml }}</div></p>
+        {% endif %}
+
+        {% if specialStainsHtml is not defined or specialStainsHtml == "" %}
+            {#                              fields,             cycle,classname,            fieldtype,          nobtn,      nolabel,withspace,status#}
+            {{ formmacros.inputArrayField(block.specialStains,cycle,"blockspecialstains","blockspecialStains","","","",status) }}
+        {% else  %}
+            <p><div class="blockspecialstains">{{ specialStainsHtml }}</div></p>
+        {% endif %}
+
+    </div>
+
+{% endmacro %}
+
+
+
+
+{% macro slideForm( slide, flag, uid, cycle, slidetypeHtml, stainHtml, scanHtml, scanregionHtml, noteHtml, microscopicdescrHtml, relevantScansHtml ) %}
+    {% import _self as formmacros %}
+
+    <div id="slide_{{ uid }}" class="form-element-holder">
+
+        {{ formmacros.field(slide.title) }}
+
+        <p><div class="slideslidetype">     
+        {% if slidetypeHtml is not defined or slidetypeHtml == "" %}
+            {{ formmacros.field(slide.slidetype) }}
+        {% else  %}
+            {{ slidetypeHtml }}
+        {% endif %}
+        </div></p>
+
+        {% if stainHtml is not defined or stainHtml == "" %}    {#regular#}
+
+            {% for stain in slide.stain %}
+                {{ formmacros.field(stain.field) }}
+            {% endfor %}
+
+            {% for scan in slide.scan %}
+                {{ formmacros.field(scan.field) }}
+                {{ formmacros.field(scan.scanregion) }}
+                {{ formmacros.field(scan.note) }}
+            {% endfor %}
+
+        {% else  %} {#prototype#}
+            <p><div class="slidestain">{{ stainHtml }}</div></p>
+            <p><div class="slidescan">{{ scanHtml }}</div></p>
+            <p><div class="slidescanregion">{{ scanregionHtml }}</div></p>
+            <p><div class="slidenote">{{ noteHtml }}</div></p>
+        {% endif %}
+
+        {% if microscopicdescrHtml is not defined or microscopicdescrHtml == "" %}
+            {{ formmacros.field(slide.microscopicdescr) }}
+        {% else  %}
+            <p><div class="slidemicroscopicdescr">{{ microscopicdescrHtml }}</div></p>
+        {% endif %}
+
+        {% if relevantScansHtml is not defined or relevantScansHtml == "" %}
+            {{ formmacros.inputArrayField(slide.relevantScans,cycle,"sliderelevantscans","sliderelevantScans") }}
+        {% else  %}
+            <p><div class="sliderelevantscans">{{ relevantScansHtml }}</div></p>
+        {% endif %}
+
+    </div>
+
+{% endmacro %}
+
+{############################ END OF Objects ###########################}
+
+

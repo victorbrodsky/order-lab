@@ -1,0 +1,63 @@
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block maincss %}{% endblock %}
+{% block header %}{% endblock %}
+{% block mainjs %}{% endblock %}
+
+{% block title %}
+    Scan Order - {{ status_code }} {{ status_text }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <div class="hero-unit center">
+
+                {#{% set admin_email = render(controller("OlegOrderformBundle:SiteParameters:getAdminEmail")) %}#}
+
+                <h1><font face="Tahoma" color="red">{{ status_code }}</font></h1>
+                {#<h1>The server returned a "<font face="Tahoma" color="red">{{ status_code }} {{ status_text }}</font></small>".</h1>#}
+
+                <br />
+
+                <p>
+                    <h1>
+                        The page you are trying to reach does not exist.
+                    </h1>
+                </p>
+
+                <br />
+
+                <p>
+                    <h3>
+                        <small>
+                            Please verify that the address in your browser's URL bar is correct or press the <a class="btn btn-info" href="javascript:;" onclick="history.go(-1);">BACK</a> button
+                            or the <a class="btn btn-info" href="{{ path('main_common_home') }}">HOME</a> button.
+                        </small>
+                    </h3>
+                </p>
+
+                {#<p>#}
+                    {#<a class="btn btn-large btn-info" href="javascript:;" onclick="history.go(-1);">BACK</a>#}
+                {#</p>#}
+
+                <br />
+
+                <p>
+                    <h3>
+                        <small>
+                            If you believe there may be an issue, please contact the system administrator at <a href="mailto:{{ default_system_email }}?Subject={{ status_code }} {{ status_text }}" target="_top">{{ default_system_email }}</a>.
+                        </small>
+                    </h3>
+                </p>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

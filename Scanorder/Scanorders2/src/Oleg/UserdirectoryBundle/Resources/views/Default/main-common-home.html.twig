@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    {% stylesheets
+    'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
+    'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    <title>O R D E R</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+    <div class="text-center">
+
+        <h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R</h2>
+
+        <br>
+
+
+        {% for flashMessage in app.session.flashbag.get('warning') %}
+            <div style="height: 1%;">&nbsp;</div>
+            <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+        {% endfor %}
+
+        <br>
+
+        Welcome to the O R D E R platform!
+
+        <br><br>
+
+        The following sites are available:
+
+        <br><br>
+
+        <p><a href="{{ path('scan_home') }}">Glass Slide Scan Orders</a></p>
+
+
+        <p><a href="{{ path('employees_home') }}">Employee Directory</a></p>
+
+
+
+        {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+
+    </div> <!-- /text-center -->
+
+</div> <!-- /container -->
+
+</body>
+
+</html>

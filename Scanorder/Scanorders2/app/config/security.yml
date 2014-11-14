@@ -1,0 +1,151 @@
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+        FOS\UserBundle\Model\UserInterface: sha512
+
+    role_hierarchy:
+
+        # Scan order roles
+        ROLE_SCANORDER_ALL_PATHOLOGY: [ROLE_SCANORDER_PATHOLOGY_RESIDENT, ROLE_SCANORDER_PATHOLOGY_FELLOW, ROLE_SCANORDER_PATHOLOGY_FACULTY]
+
+        ROLE_SCANORDER_PATHOLOGY_RESIDENT: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
+        ROLE_SCANORDER_PATHOLOGY_FELLOW: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
+        ROLE_SCANORDER_PATHOLOGY_FACULTY: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
+
+        ROLE_SCANORDER_PROCESSOR:   [ROLE_SCANORDER_SUBMITTER,ROLE_SCANORDER_ORDERING_PROVIDER,ROLE_SCANORDER_ALL_PATHOLOGY]
+        ROLE_SCANORDER_ADMIN:       [ROLE_ADMIN, ROLE_USER, ROLE_ALLOWED_TO_SWITCH, ROLE_SCANORDER_PROCESSOR, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
+
+        # Userdirectory roles
+        ROLE_USERDIRECTORY_EDITOR: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
+        ROLE_USERDIRECTORY_ADMIN: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER, ROLE_USERDIRECTORY_EDITOR]
+
+        # General roles
+#        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
+#        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED_SUBMITTER]
+        ROLE_EDITOR: [ROLE_SCANORDER_PROCESSOR, ROLE_USERDIRECTORY_EDITOR]  #permission to edit the content of DB such as change access request status
+#        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
+        ROLE_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN]
+
+
+    providers:
+
+        chain_provider:
+            chain:
+                providers: [fos_userbundle, fr3d_ldapbundle]
+
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+        fr3d_ldapbundle:
+            id: fr3d_ldap.security.user.provider
+
+#        in_memory:
+#            memory:
+#                users:
+#                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+#                    admin: { password: adminpass123, roles: [ 'ROLE_ADMIN' ] }
+
+    firewalls:
+
+        #this firewall name must be the same as in the bundle's service.yml.
+        aperio_ldap_firewall:
+            pattern: ^/scan
+            aperio: true
+            fr3d_ldap:  ~
+            context: scan_auth
+            form_login:
+#                 always_use_default_target_path: false
+                 use_referer: true
+                 success_handler: authentication_handler
+                 failure_handler: authentication_handler
+                 check_path: /scan/login_check
+                 login_path: /scan/login
+            logout:
+                path:   /scan/logout
+                target: /scan/login
+            anonymous:  true
+            access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
+
+        ldap_employees_firewall:
+            pattern: ^/pathology-employees
+            fr3d_ldap:  ~
+            context: scan_auth
+            form_login:
+#                always_use_default_target_path: true
+                use_referer: true
+                success_handler: employees_authentication_handler
+                failure_handler: employees_authentication_handler
+                check_path: /pathology-employees/login_check
+                login_path: /pathology-employees/login
+                # login success redirecting options (read further below)
+#                default_target_path: /pathology-employees/
+#                target_path_parameter: _target_path
+            logout:
+                path:   /pathology-employees/logout
+                target: /pathology-employees/login
+            anonymous:  true
+            access_denied_url: /pathology-employees/access-requests/new/create
+
+          
+    access_control:
+
+     - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
+
+     ############################## common idle time out logic ##############################
+     - { path: ^/pathology-employees/common/, role: ROLE_USER }
+     ############################## common institution tree ##############################
+     - { path: ^/pathology-employees/util/common/, role: ROLE_USER }
+
+     ############################## EMPLOYEES SITE SETTINGS ##############################
+     - { path: ^/pathology-employees/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/pathology-employees/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/pathology-employees/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+     #make all /employees accessible only limited special roles
+     - { path: ^/pathology-employees/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
+
+     - { path: ^/pathology-employees/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/pathology-employees/user-directory, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/pathology-employees/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/pathology-employees/admin/list, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/pathology-employees/admin/genall, role: ROLE_USERDIRECTORY_ADMIN }
+     - { path: ^/pathology-employees/users/generate, role: ROLE_USERDIRECTORY_ADMIN }
+     - { path: ^/pathology-employees/admin/, role: ROLE_USERDIRECTORY_ADMIN }
+     - { path: ^/pathology-employees/site-settings/, role: ROLE_ADMIN }
+
+
+     ############################## SCAN SITE SETTINGS ##############################
+     - { path: ^/scan/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/scan/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+     #make all sure /scan is protected from accessing the users with not sufficient roles
+     - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') and !has_role('ROLE_SCANORDER_BANNED')" }
+
+     - { path: ^/scan/admin/genall, role: ROLE_SCANORDER_ADMIN }
+     - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
+     - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
+     - { path: ^/scan/site-settings/, role: ROLE_ADMIN }
+
+     - { path: ^/scan/user-directory, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/settings/, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/account-requests, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/event-log, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/incoming-slide-return-requests, role: [ROLE_SCANORDER_PROCESSOR]}
+
+     - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
+     - { path: ^/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
+
+     - { path: ^/scan/users/, role: ROLE_SCANORDER_SUBMITTER }
+     - { path: ^/scan/edit-user-profile/, role: [ROLE_SCANORDER_SUBMITTER] }
+
+     - { path: ^/scan/scan-order, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+     - { path: ^/scan/my-scan-orders, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+
+     - { path: ^/scan/slide-return-request, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+     - { path: ^/scan/my-slide-return-requests, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+

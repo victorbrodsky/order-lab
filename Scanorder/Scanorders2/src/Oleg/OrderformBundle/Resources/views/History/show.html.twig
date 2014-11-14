@@ -1,0 +1,61 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>History</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Currentid</th>
+                <td>{{ entity.currentid }}</td>
+            </tr>
+            <tr>
+                <th>Newid</th>
+                <td>{{ entity.newid }}</td>
+            </tr>
+            <tr>
+                <th>Changedate</th>
+                <td>{{ entity.changedate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>
+                    {#{{ entity.roles }}#}
+                    {% for role in entity.roles %}
+                        {% if role != "ROLE_USER" %}
+                            "{{ role }}"
+                            {#"{{ attribute(roles, role) }}"#}
+                        {% endif %}
+
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ entity.note }}</td>
+            </tr>
+            <tr>
+                <th>Viewed</th>
+                <td>{{ entity.viewed }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('history') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('history_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

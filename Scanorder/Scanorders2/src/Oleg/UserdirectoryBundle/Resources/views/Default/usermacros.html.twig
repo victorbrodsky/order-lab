@@ -1,0 +1,75 @@
+
+{% macro fileupload( comment, cicle, classname, prototype ) %}
+
+
+    {#{% import _self as userform %}#}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <p>
+    <div class="row files-upload-holder" style="height: 50px">
+        <div class="col-xs-6" align="right">
+            <strong>Attached Document(s):</strong>
+        </div>
+        <div class="col-xs-6" align="left">
+
+            <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
+
+                {% if cicle != "show_user" %}
+                    <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 4 files, 10 MB each)</span></div>
+                {% else %}
+                    <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
+                {% endif %}
+
+                {{ usermacros.document( comment, cicle, prototype ) }}
+
+            </div>
+
+            {#{% do comment.documents.setRendered %}#}
+
+        </div>
+    </div>
+    </p>
+
+{% endmacro %}
+
+{% macro document( comment, cicle, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% for document in comment.documents %}
+
+        <div class="dz-preview dz-file-preview" style="width:24%; height:220px; margin:0;">
+            <div class="dz-details">
+                <div class="dz-filename"><span data-dz-name>{{ document.vars.value.uniquename }}</span></div>
+                <div class="dz-size" data-dz-size><strong>{{ document.vars.value.getSizeStr() }}</strong></div>
+                <img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />
+            </div>
+            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+            <div class="dz-success-mark"><span>✔</span></div>
+            <div class="dz-error-mark"><span>✘</span></div>
+            <div class="dz-error-message"><span data-dz-errormessage></span></div>
+
+            {#link to open/download file#}
+            <div class="file-upload-showlink">
+                <div style="overflow:hidden; white-space:nowrap;">
+                    {#<a href="{{ document.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ document.vars.value.originalname }}</a>#}
+                    <a target="_blank" href="{{ path('employees_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }}</a>
+                </div>
+            </div>
+
+            {% if cicle != "show_user" and cicle != "show" %}
+                <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
+            {% endif %}
+
+            {{ formmacros.field(document.id) }}
+        </div>
+
+        {% do document.setRendered %}
+
+    {% endfor %}
+
+    {% do comment.documents.setRendered %}
+
+{% endmacro %}
+
+
+

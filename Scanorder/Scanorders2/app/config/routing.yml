@@ -1,0 +1,68 @@
+
+main_common_home:
+    path:      /
+    defaults:  { _controller: OlegUserdirectoryBundle:Home:mainCommonHome }
+
+oleg_orderform:
+    resource: "@OlegOrderformBundle/Controller/"
+    type:     annotation
+    prefix:   /scan
+
+oleg_userdirectory:
+    resource: "@OlegUserdirectoryBundle/Controller/"
+    type:     annotation
+    prefix:   /pathology-employees
+
+acme_demo:
+    resource: "@AcmeDemoBundle/Controller/"
+    type:     annotation
+    prefix:   /demo
+
+
+#login and logout routes
+
+#logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
+logout:
+    path:   /pathology-employees/logout
+login:
+    path:   /pathology-employees/login
+
+scan_login_check:
+    path:   /scan/login_check
+scan_logout:
+    path:   /scan/logout
+
+employees_login_check:
+    path:   /pathology-employees/login_check
+employees_logout:
+    path:   /pathology-employees/logout
+
+#fos user bundle
+#fos_user_security:
+#    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+#
+#fos_user_profile:
+#    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+#    prefix: /profile
+#
+#fos_user_register:
+#    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+#    prefix: /register
+#
+#fos_user_resetting:
+#    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+#    prefix: /resetting
+#
+#fos_user_change_password:
+#    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+#    prefix: /profile
+
+#fos_user_group:
+#    resource: "@FOSUserBundle/Resources/config/routing/group.xml"
+#    prefix: /group
+
+
+#OnueupUploaderBundle  file uploader
+oneup_uploader:
+    resource: .
+    type: uploader

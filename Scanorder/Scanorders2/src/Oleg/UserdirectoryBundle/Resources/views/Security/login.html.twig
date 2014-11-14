@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        {% stylesheets
+            'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
+            'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
+            'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
+        %}
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+        {% if sitename == employees_sitename %}
+            {% set title = "Employee Directory" %}
+        {% else %}
+            {% set title = "Scan Orders" %}
+        {% endif %}
+
+        <title>{{ title }}</title>
+
+        {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {#<meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"/>#}
+        {#<meta name="apple-mobile-web-app-capable" content="yes"/>#}
+
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+    </head>
+
+    <body>
+
+        <div class="container text-center">
+
+            <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
+            {% include 'OlegUserdirectoryBundle::Security/login_content.html.twig' with {'sitename': sitename, 'title': title} %}
+
+            {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+
+        </div> <!-- /container -->
+
+        {% javascripts
+        '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+        '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+        '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
+        '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+
+        <script type="text/javascript">
+            var _ajaxTimeout = 15000;  //15000 => 15 sec
+            //var urlBase = $("#baseurl").val();
+            var url = getCommonBaseUrl("setloginvisit/");	//urlBase+"setloginvisit/";
+            //console.log("url="+url);
+
+            $(document).ready(function() {
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    async: false,
+                    timeout: _ajaxTimeout,
+                    data: { display_height: screen.height, display_width: screen.width },
+                    success: function (data) {
+                       //console.debug('send browser data ok');
+                    },
+                    error: function (x , t, m) {
+                        if( t === "timeout" ) {
+                            getAjaxTimeoutMsg();
+                        }
+                       //console.debug('send browser data error');
+                    }
+                });
+
+                regularCombobox();
+
+                $("#login-form").on("submit", function () {
+                    setFullUsername();
+                    //alert("username="+document.getElementById("username").value + ", password=" + document.getElementById("password").value );
+                    return true;
+                });
+
+            });
+
+            //append usernametype to username
+            function setFullUsername() {
+
+                var usertypeAbbreviation = $('#usernametypeid_show').select2('val');
+                if( !usertypeAbbreviation || usertypeAbbreviation == "" ) {
+                    return;
+                }
+
+                var username = $('#display-username').val();
+                if( !username || username == "" ) {
+                    return;
+                }
+
+                var fullusername = username + "_@_" + usertypeAbbreviation;
+
+                //console.log("usertypeAbbreviation="+usertypeAbbreviation+", fullusername="+fullusername);
+
+                $('#username').val(fullusername);
+
+                return;
+            }
+
+
+
+
+
+
+        </script>
+
+
+    </body>
+         
+</html>

@@ -1,0 +1,218 @@
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% else %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% endif %}
+{% extends extendStr%}
+
+
+{% block title %}
+    Update Site Parameter: {{ param }}
+{% endblock %}
+
+
+{% block additionalcss %}
+
+    {% stylesheets
+        'bundles/oleguserdirectory/datetimepicker/css/bootstrap-datetimepicker.min.css'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {#<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">#}
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    {% javascripts
+        '@OlegUserdirectoryBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <h3 class="text-info">Update Site Parameter: {{ param }}</h3>
+
+    <br>
+
+    {{ form_start(edit_form) }}
+
+    {% if cicle == 'show' %}
+        <hr>
+    {% endif %}
+
+        {% if edit_form.maxIdleTime is defined %}
+            {{ formmacros.field(edit_form.maxIdleTime) }}
+        {% endif %}
+
+        {% if edit_form.environment is defined %}
+            {{ formmacros.field(edit_form.environment) }}
+        {% endif %}
+
+        {% if cicle == 'show' %}
+            <hr>
+            <h3 class="text-info">Email</h3>
+        {% endif %}
+
+        {% if edit_form.siteEmail is defined %}
+            {{ formmacros.field(edit_form.siteEmail) }}
+        {% endif %}
+
+        {% if edit_form.smtpServerAddress is defined %}
+            {{ formmacros.field(edit_form.smtpServerAddress) }}
+        {% endif %}
+
+    {% if cicle == 'show' %}
+        <hr>
+        <h3 class="text-info">ScanOrder DB</h3>
+        Note: Parameters are stored in app/config/parameters.yml
+        <br><br>
+    {% endif %}
+
+        {% if edit_form.dbServerAddress is defined %}
+            {{ formmacros.field(edit_form.dbServerAddress) }}
+        {% endif %}
+
+        {% if edit_form.dbServerPort is defined %}
+            {{ formmacros.field(edit_form.dbServerPort) }}
+        {% endif %}
+
+        {% if edit_form.dbServerAccountUserName is defined %}
+            {{ formmacros.field(edit_form.dbServerAccountUserName) }}
+        {% endif %}
+
+        {% if edit_form.dbServerAccountPassword is defined %}
+            {{ formmacros.field(edit_form.dbServerAccountPassword) }}
+        {% endif %}
+
+        {% if edit_form.dbDatabaseName is defined %}
+            {{ formmacros.field(edit_form.dbDatabaseName) }}
+        {% endif %}
+
+
+    {% if cicle == 'show' %}
+        <hr>
+
+        <h3 class="text-info">AD/LDAP</h3>
+        Note: Parameters are stored in Resources/config/services.yml
+        <br><br>
+    {% endif %}
+
+        {% if edit_form.autoAssignInstitution is defined %}
+            {{ formmacros.field(edit_form.autoAssignInstitution) }}
+        {% endif %}
+
+        {% if edit_form.aDLDAPServerAddress is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerAddress) }}
+        {% endif %}
+
+        {% if edit_form.aDLDAPServerPort is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerPort) }}
+        {% endif %}
+
+        {% if edit_form.aDLDAPServerOu is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerOu) }}
+        {% endif %}
+
+        {% if edit_form.aDLDAPServerAccountUserName is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerAccountUserName) }}
+        {% endif %}
+
+        {% if edit_form.aDLDAPServerAccountPassword is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerAccountPassword) }}
+        {% endif %}
+
+
+    {% if cicle == 'show' %}
+        <hr>
+        <h3 class="text-info">Footer</h3>
+    {% endif %}
+
+    {% if edit_form.institutionname is defined %}
+        {{ formmacros.field(edit_form.institutionname) }}
+    {% endif %}
+
+    {% if edit_form.institutionurl is defined %}
+        {{ formmacros.field(edit_form.institutionurl) }}
+    {% endif %}
+
+    {% if edit_form.departmentname is defined %}
+        {{ formmacros.field(edit_form.departmentname) }}
+    {% endif %}
+
+    {% if edit_form.departmenturl is defined %}
+        {{ formmacros.field(edit_form.departmenturl) }}
+    {% endif %}
+
+
+    {% if cicle == 'show' %}
+        <hr>
+        <h3 class="text-info">Maintanence Mode</h3>
+    {% endif %}
+
+    {% if edit_form.maintenance is defined %}
+        {{ formmacros.checkbox(edit_form.maintenance) }}
+    {% endif %}
+
+    {% if edit_form.maintenanceenddate is defined %}
+        {#{{ formmacros.fielddate(edit_form.maintenanceenddate, "maintenanceenddate") }}#}
+        <p>
+        <div class="col-xs-12" align="center">
+            <div class="input-group input-group-reg date form_datetime" style="width:30%">
+                {{ form_widget(edit_form.maintenanceenddate) }}
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </div>
+        </p>
+    {% endif %}
+
+    {% if edit_form.maintenanceloginmsg is defined %}
+        {{ formmacros.field(edit_form.maintenanceloginmsg) }}
+    {% endif %}
+
+    {% if edit_form.maintenancelogoutmsg is defined %}
+        {{ formmacros.field(edit_form.maintenancelogoutmsg) }}
+    {% endif %}
+
+
+
+    {% if cicle == 'show' %}
+        <hr>
+    {% endif %}
+
+        <br>
+
+        {% if cicle == "show" %}
+
+            <p>
+                <a class="btn btn-success" href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': param }) }}">Edit</a>
+            </p>
+
+        {% endif %}
+
+    <p>
+        {{ form_rest(edit_form) }}
+    </p>
+
+        {#{{ form(edit_form) }}#}
+
+    {{ form_end(edit_form) }}
+
+    <br>
+    <br>
+
+    <p>
+    <a href="{{ path(sitename~'_siteparameters') }}">
+        Back to the list
+    </a>
+    </p>
+
+{% endblock %}

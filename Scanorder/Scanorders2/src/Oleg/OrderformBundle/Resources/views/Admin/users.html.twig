@@ -1,0 +1,15 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': scan_sitename} %}
+
+    <br>
+
+    <h3 class="text-info">User Management</h3>
+    <p>
+        <a href="{{ path('generate_users') }}">Generate Users from Excel</a>
+    </p>
+
+{% endblock %}
+

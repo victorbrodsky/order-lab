@@ -1,0 +1,87 @@
+<h2 class="alert alert-info well-lg safary-fix" align="center">{{ title }}</h2>
+
+<br>
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+    <div class="flash-notice" align="center">
+        {{ flashMessage }}
+    </div>
+{% endfor %}
+
+{% if error is not defined %}
+    {% set error = '' %}
+{% endif %}
+
+{% if last_username is not defined %}
+    {% set last_username = '' %}
+{% endif %}
+
+{% if error %} 
+    <p class="alert alert-danger" align="middle">
+        {#{{ error }}<br>#}
+        There was an error with your User Name/Password combination. Please try again.
+    </p>
+{% endif %}
+
+
+<input type="hidden" name="display_height" id="display_height" value="" />
+<input type="hidden" name="display_width" id="display_width" value="" />
+
+
+<form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">
+
+    <div class="row">
+    <div class="col-xs-12">
+
+        <p>
+            {#usernametype#}
+            <select id="usernametypeid_show" class="combobox limit-font-size">
+                {% for  usernametype in usernametypes %}
+                    <option value="{{ usernametype.abbreviation }}">{{ usernametype.name }}</option>
+                {% endfor %}
+            </select>
+
+            {#display username field and hidden real fields using by security#}
+            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username Hidden" style="display:none;">
+            <input type="text" id="display-username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username" autofocus>
+
+            <input type="password" id="password" name="_password" class="form-control limit-font-size" placeholder="Password">
+
+        </p>
+
+    </div>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit" >Log In</button>
+
+</form>
+
+<div class="text-center">
+    <br><br>
+    <p>
+        Please use your
+        <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>
+        {% if title == "Scan Orders" %}
+            or your
+            <a href="http://c.med.cornell.edu/">Aperio eSlide Manager</a> account
+        {% endif %}
+        to log in.
+    </p>
+
+    {% if title == "Scan Orders" %}
+        <p>
+            <a href="{{ path('accountrequest_new') }}">Request an Aperio eSlide Manager account</a> if you can't log in.
+        </p>
+    {% endif %}
+
+
+</div>
+
+
+<script language="Javascript">
+    <!--
+        //console.log("width="+screen.width+"x"+screen.height);
+        document.getElementById("display_height").value = screen.height;
+        document.getElementById("display_width").value = screen.width;
+    //-->
+</script>
