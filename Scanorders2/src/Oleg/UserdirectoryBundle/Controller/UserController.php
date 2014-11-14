@@ -192,27 +192,6 @@ class UserController extends Controller
             }
         }
 
-        //employmentStatus
-//        $timecriteriastr = "";
-//        $curdate = date("Y-m-d", time());
-//        echo "time=".$time."<br>";
-//        if( $time == 'current_only' ) {
-//            //Employment Status should have at least one group where Date of Termination is empty
-//            $timecriteriastr .= "(employmentStatus IS NULL)";
-//            $timecriteriastr .= " OR ";
-//            $timecriteriastr .= "(employmentStatus.terminationDate IS NULL)";
-//            $timecriteriastr .= " OR ";
-//            $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."') )";
-//        } else {
-//            //Each group of fields in the employment status should have a non-empty Date of Termination.
-//            //TODO: should the serach result display only users with all employment status have a non-empty Date of Termination?
-//            $timecriteriastr .= "(employmentStatus IS NOT NULL)";
-//            $timecriteriastr .= " AND ";
-//            $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
-//            //$timecriteriastr .= " AND ";
-//            //$timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL)";
-//        }
-
 
         if( $userid ) {
 
@@ -319,8 +298,11 @@ class UserController extends Controller
         //$criteriastr .= "locations.email='".$search."' OR ";
 
         //User ID/CWID
-        //$criteriastr .= "user.primaryPublicUserId LIKE '%".$search."%' OR ";
-        $criteriastr .= "user.primaryPublicUserId='".$search."' OR ";
+        $criteriastr .= "user.primaryPublicUserId LIKE '%".$search."%' OR ";
+        //$criteriastr .= "user.primaryPublicUserId='".$search."' OR ";
+
+        //Username
+        $criteriastr .= "user.username LIKE '%".$search."%' OR ";
 
         //administrative title
         //institution
@@ -772,6 +754,12 @@ class UserController extends Controller
             //set unique username
             $user->setUniqueUsername();
 
+            //set parents for institution tree for Administrative and Academical Titles
+            $this->setParentsForInstitutionTree($user);
+
+            //set parents for institution tree for Administrative and Academical Titles
+            $this->setParentsForCommentTypeTree($user);
+
             $em->persist($user);
             $em->flush();
 
@@ -1123,9 +1111,8 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
 
-            //set parents for institution tree for Administrative and Academical Titles
+            //set update info for user
             $this->updateInfo($entity);
-
 
 
             /////////////// Add event log on edit (edit or add collection) ///////////////
@@ -1232,22 +1219,23 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $sc = $this->get('security.context');
+        $userUtil = new UserUtil();
 
         //Administartive and Appointment Titles and Comments update info set when parent are processed
         //So, set author info for the rest: EmploymentStatus, Location, Credentials, ResearchLab
         foreach( $subjectUser->getEmploymentStatus() as $entity ) {
-            $this->setUpdateInfo($entity,$em,$sc);
+            $userUtil->setUpdateInfo($entity,$em,$sc);
         }
 
         foreach( $subjectUser->getLocations() as $entity ) {
-            $this->setUpdateInfo($entity,$em,$sc);
+            $userUtil->setUpdateInfo($entity,$em,$sc);
         }
 
         //credentials
-        $this->setUpdateInfo($subjectUser->getCredentials(),$em,$sc);
+        $userUtil->setUpdateInfo($subjectUser->getCredentials(),$em,$sc);
 
         foreach( $subjectUser->getResearchLabs() as $entity ) {
-            $this->setUpdateInfo($entity,$em,$sc);
+            $userUtil->setUpdateInfo($entity,$em,$sc);
         }
 
     }
@@ -1273,15 +1261,16 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $sc = $this->get('security.context');
+        $userUtil = new UserUtil();
 
         foreach( $entity->getAdministrativeTitles() as $title) {
-            $this->processInstTree($title,$em,$sc);
+            $userUtil->processInstTree($title,$em,$sc);
         }
         foreach( $entity->getAppointmentTitles() as $title) {
-            $this->processInstTree($title,$em,$sc);
+            $userUtil->processInstTree($title,$em,$sc);
         }
         foreach( $entity->getLocations() as $location) {
-            $this->processInstTree($location,$em,$sc);
+            $userUtil->processInstTree($location,$em,$sc);
         }
     }
 

@@ -34,7 +34,7 @@ class EmploymentStatusType extends AbstractType
         ));
 
         $builder->add('terminationDate',null,array(
-            'label'=>"Date of Termination:",
+            'label'=>"End of Employment Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
@@ -45,7 +45,7 @@ class EmploymentStatusType extends AbstractType
             'disabled' => ($this->params['read_only'] ? true : false),
             'class' => 'OlegUserdirectoryBundle:EmploymentTerminationType',
             'property' => 'name',
-            'label'=>'Type of Termination:',
+            'label'=>'Type of End of Employment:',
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -60,10 +60,12 @@ class EmploymentStatusType extends AbstractType
                 },
         ));
 
-        $builder->add('terminationReason', null, array(
-            'label' => 'Reason for Termination:',
-            'attr' => array('class'=>'textarea form-control')
-        ));
+        if( $this->params['currentUser'] == false || $this->params['admin'] == true ) {
+            $builder->add('terminationReason', null, array(
+                'label' => 'Reason for End of Employment:',
+                'attr' => array('class'=>'textarea form-control')
+            ));
+        }
 
 
     }

@@ -101,7 +101,7 @@
 {% endmacro %}
 
 {% macro hrefLinkToNode( node ) %}
-    {% if node is defined %}
+    {% if node and node is defined %}
         <a href="{{ path(node.getClassName()|lower~'s_show', { 'id': node.id }) }}">{{ node }}</a>
     {% endif %}
 {% endmacro %}
@@ -274,8 +274,7 @@
                     {{ formmacros.field(formfield.room) }}
                     {{ formmacros.field_notempty(formfield.suit,cicle) }}
                     {{ formmacros.field(formfield.floor) }}
-                    {{ formmacros.field(formfield.buildingName) }}
-                    {{ formmacros.field(formfield.buildingAbbr) }}
+                    {{ formmacros.field(formfield.building) }}
 
                     {#{{ formmacros.field_notempty(formfield.institution,cicle) }}#}
                     {{ formmacros.field_notempty(formfield.institution,cicle) }}

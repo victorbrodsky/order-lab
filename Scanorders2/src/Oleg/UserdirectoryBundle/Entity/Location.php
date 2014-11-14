@@ -99,15 +99,15 @@ class Location extends ListAbstract
      */
     private $zip;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $buildingName;
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="BuildingList")
+     * @ORM\JoinColumn(name="building", referencedColumnName="id")
      */
-    private $buildingName;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $buildingAbbr;
+    private $building;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -619,35 +619,19 @@ class Location extends ListAbstract
     }
 
     /**
-     * @param mixed $buildingAbbr
+     * @param mixed $building
      */
-    public function setBuildingAbbr($buildingAbbr)
+    public function setBuilding($building)
     {
-        $this->buildingAbbr = $buildingAbbr;
+        $this->building = $building;
     }
 
     /**
      * @return mixed
      */
-    public function getBuildingAbbr()
+    public function getBuilding()
     {
-        return $this->buildingAbbr;
-    }
-
-    /**
-     * @param mixed $buildingName
-     */
-    public function setBuildingName($buildingName)
-    {
-        $this->buildingName = $buildingName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBuildingName()
-    {
-        return $this->buildingName;
+        return $this->building;
     }
 
     /**
@@ -932,12 +916,8 @@ class Location extends ListAbstract
             $detailsArr[] = $this->getSuit();
         }
 
-        if( $this->getBuildingAbbr() ) {
-            $detailsArr[] = $this->getBuildingAbbr();
-        } else {
-            if( $this->getBuildingName() ) {
-                $detailsArr[] = $this->getBuildingName();
-            }
+        if( $this->getBuilding() ) {
+            $detailsArr[] = $this->getBuilding()."";
         }
 
         if( $this->getInstitution() ) {

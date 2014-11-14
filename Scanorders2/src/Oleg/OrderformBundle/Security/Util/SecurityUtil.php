@@ -241,7 +241,6 @@ class SecurityUtil extends UserSecurityUtil {
         if( !$persitesettings ) {
             //set institution to per site settings
             $persitesettings = new PerSiteSettings();
-            //$creator = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
             $persitesettings->setAuthor($creator);
             $persitesettings->setUser($user);
             $persitesettings->addPermittedInstitutionalPHIScope($inst);

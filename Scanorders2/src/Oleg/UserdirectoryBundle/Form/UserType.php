@@ -50,7 +50,7 @@ class UserType extends AbstractType
 
         $currentUser = false;
         $user = $this->sc->getToken()->getUser();
-        if( $user->getId() == $this->subjectUser->getId() ) {
+        if( $user->getId() === $this->subjectUser->getId() ) {
             $currentUser = true;
         }
 
@@ -194,8 +194,8 @@ class UserType extends AbstractType
             'prototype_name' => '__locations__',
         ));
 
-        if( $this->roleAdmin ) {
-            $params = array('read_only'=>$read_only);
+        if( $this->roleAdmin || ($currentUser && $this->cicle == "show") ) {
+            $params = array('read_only'=>$read_only,'currentUser'=>$currentUser,'admin'=>$this->roleAdmin);
             $builder->add('employmentStatus', 'collection', array(
                 'type' => new EmploymentStatusType($params),
                 'label' => false,
@@ -208,19 +208,16 @@ class UserType extends AbstractType
             ));
         }
 
-        if( $this->roleAdmin ) {
-            $params = array('read_only'=>$read_only);
-            $builder->add('researchLabs', 'collection', array(
-                'type' => new ResearchLabType($params),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__researchlabs__',
-            ));
-        }
+        $builder->add('researchLabs', 'collection', array(
+            'type' => new ResearchLabType(null),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__researchlabs__',
+        ));
 
         if( $this->roleAdmin || $currentUser ) {
             $params = array('em'=>$this->em);

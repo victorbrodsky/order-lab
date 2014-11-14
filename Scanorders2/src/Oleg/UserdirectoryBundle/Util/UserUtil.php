@@ -13,12 +13,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
-
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\Logger;
 use Oleg\UserdirectoryBundle\Entity\UsernameType;
+use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
 class UserUtil {
 
@@ -100,7 +100,7 @@ class UserUtil {
             $user->getPreferences()->setTimezone($default_time_zone);
 
             //add default locations
-            $user = $this->addDefaultLocations($user,$systemuser,$em);
+            $user = $this->addDefaultLocations($user,$systemuser,$em,$serviceContainer);
 
             //phone, fax, office are stored in Location object
             $mainLocation = $user->getMainLocation();
@@ -388,28 +388,34 @@ class UserUtil {
 
     public function createSystemUser($em,$userkeytype,$default_time_zone) {
 
-        $adminemail = $this->getSiteSetting($em,'siteEmail');
-        $systemuser = new User();
-        $systemuser->setKeytype($userkeytype);
-        $systemuser->setPrimaryPublicUserId('system');
-        $systemuser->setUsername('system');
-        $systemuser->setUsernameCanonical('system');
-        $systemuser->setEmail($adminemail);
-        $systemuser->setEmailCanonical($adminemail);
-        $systemuser->setPassword("");
-        $systemuser->setCreatedby('system');
-        $systemuser->addRole('ROLE_SCANORDER_PROCESSOR');
-        $systemuser->getPreferences()->setTimezone($default_time_zone);
-        $systemuser->setEnabled(true);
-        $systemuser->setLocked(true); //system is locked, so no one can logged in with this account
-        $systemuser->setExpired(false);
+        $userSecUtil = new UserSecurityUtil($em,null,null);
 
-        $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
+        $found_user = $userSecUtil->findSystemUser();
+
         if( !$found_user ) {
+
+            $adminemail = $this->getSiteSetting($em,'siteEmail');
+            $systemuser = new User();
+            $systemuser->setKeytype($userkeytype);
+            $systemuser->setPrimaryPublicUserId('system');
+            $systemuser->setUsername('system');
+            $systemuser->setUsernameCanonical('system');
+            $systemuser->setEmail($adminemail);
+            $systemuser->setEmailCanonical($adminemail);
+            $systemuser->setPassword("");
+            $systemuser->setCreatedby('system');
+            $systemuser->addRole('ROLE_SCANORDER_PROCESSOR');
+            $systemuser->getPreferences()->setTimezone($default_time_zone);
+            $systemuser->setEnabled(true);
+            $systemuser->setLocked(true); //system is locked, so no one can logged in with this account
+            $systemuser->setExpired(false);
             $em->persist($systemuser);
             $em->flush();
+
         } else {
+
             $systemuser = $found_user;
+
         }
 
         return $systemuser;
@@ -535,11 +541,12 @@ class UserUtil {
         $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$division,$service);
 
         //set author if not set
-        $this->setUpdateInfo($tree,$sc,$em);
+        $this->setUpdateInfo($tree,$em,$sc);
 
+        //exit('eof tree');
     }
 
-    public function setUpdateInfo( $entity, $sc, $em ) {
+    public function setUpdateInfo( $entity, $em, $sc ) {
 
         if( !$entity ) {
             return;
@@ -559,11 +566,11 @@ class UserUtil {
     }
 
     //add two default locations: Home and Main Office
-    public function addDefaultLocations($entity,$creator,$em) {
+    public function addDefaultLocations($entity,$creator,$em,$container) {
 
         if( $creator == null ) {
-            //$creator = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
-            $creator = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByKeytype(NULL);
+            $userSecUtil = $container->get('user_security_utility');
+            $creator = $userSecUtil->findSystemUser();
 
             if( !$creator ) {
                 $creator = $entity;
@@ -576,17 +583,14 @@ class UserUtil {
         $mainLocation = new Location($creator);
         $mainLocation->setName('Main Office');
         $mainLocation->setRemovable(false);
-        //$this->locations->set(0,$mainLocation);  //main has index 0
-        //$mainLocation->setUser($this);
         $mainLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
         $mainLocation->setLocationType($mainLocType);
         $entity->addLocation($mainLocation);
+
         //Home Location
         $homeLocation = new Location($creator);
         $homeLocation->setName('Home');
         $homeLocation->setRemovable(false);
-        //$this->locations->set(1,$homeLocation);  //home has index 1
-        //$homeLocation->setUser($this);
         $homeLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Home");
         $homeLocation->setLocationType($homeLocType);
         $entity->addLocation($homeLocation);

@@ -226,8 +226,12 @@
 
         {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,cicle,'allow-future-date') }}
-        {{ formmacros.field_notempty(formfield.terminationType) }}
-        {{ formmacros.field_notempty(formfield.terminationReason) }}
+        {{ formmacros.field_notempty(formfield.terminationType,cicle) }}
+
+        {#{% if formfield.terminationReason is defined or (prototype == "prototype" and field.vars.value.terminationReason ) %}#}
+        {% if formfield.terminationReason is defined %}
+            {{ formmacros.field_notempty(formfield.terminationReason,cicle) }}
+        {% endif %}
 
     </div>
 {% endmacro %}
@@ -545,6 +549,11 @@
 {% import _self as userform %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
+{% if cicle == "show_user" %}
+    {% set collapsein = "" %}
+{% else %}
+    {% set collapsein = "in" %}
+{% endif %}
 
 
 {% if cicle == "create_user" %}
@@ -566,7 +575,9 @@
     <br>
 
     {#user's snapshot#}
-    {{ userform.snapshot(entity,sitename) }}
+    {% if cicle == "show_user" %}
+        {{ userform.snapshot(entity,sitename) }}
+    {% endif %}
 
 
     <p>
@@ -660,7 +671,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="userinfo" class="panel-collapse collapse">
+            <div id="userinfo" class="panel-collapse collapse in">
                 <div class="panel-body">
 
                     {{ formmacros.field(form.keytype) }}
@@ -706,7 +717,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="roleattributes" class="panel-collapse collapse">
+                <div id="roleattributes" class="panel-collapse collapse {{ collapsein }}">
                     <div class="panel-body">
                         {% if roleobjects is defined %}
                             {{ userform.roleAttributes(roleobjects) }}
@@ -725,7 +736,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="userprefrences" class="panel-collapse collapse">
+            <div id="userprefrences" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
 
                     {% if form.roles is defined and (cicle == "show_user" or userEditor == true) %}
@@ -750,7 +761,14 @@
         {% block addcontent %}{% endblock %}
 
         {#Employment Status#}
-        {% if form.employmentStatus is defined %}
+        {% set showEmploymentStatus = false %}
+        {% for employmentStatus in form.employmentStatus %}
+            {% if employmentStatus.hireDate.vars.value or cicle != 'show_user' %}
+                {% set showEmploymentStatus = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showEmploymentStatus and form.employmentStatus is defined %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -759,7 +777,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="EmploymentStatus" class="panel-collapse collapse">
+                <div id="EmploymentStatus" class="panel-collapse collapse {{ collapsein }}">
                     <div class="panel-body">
 
                         <div class="user-employmentStatus-holder">
@@ -774,6 +792,8 @@
                     </div>
                 </div>
             </div>
+        {% else %}
+            {% do form.employmentStatus.setRendered %}
         {% endif %}
 
         {#Administrative Titles#}
@@ -785,7 +805,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="AdministrativeTitles" class="panel-collapse collapse">
+            <div id="AdministrativeTitles" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
 
                     <div class="user-administrativeTitles-holder">
@@ -811,7 +831,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="AppointmentTitles" class="panel-collapse collapse">
+            <div id="AppointmentTitles" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
 
                     <div class="user-appointmentTitles-holder">
@@ -837,7 +857,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="Locations" class="panel-collapse collapse">
+            <div id="Locations" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
 
                     <div class="user-locations-holder">
@@ -872,7 +892,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="ResearchLabs" class="panel-collapse collapse">
+                <div id="ResearchLabs" class="panel-collapse collapse {{ collapsein }}">
                     <div class="panel-body">
 
                         <div class="user-researchlabs-holder">
@@ -901,7 +921,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="Credentials" class="panel-collapse collapse">
+                <div id="Credentials" class="panel-collapse collapse {{ collapsein }}">
                     <div class="panel-body">
 
                         <p>
@@ -1226,7 +1246,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="Comments" class="panel-collapse collapse">
+                <div id="Comments" class="panel-collapse collapse {{ collapsein }}">
                     <div class="panel-body">
 
                         {#Public Comments#}

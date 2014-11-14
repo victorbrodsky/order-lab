@@ -10,11 +10,13 @@
 namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
 
+
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
 class GenericTreeTransformer implements DataTransformerInterface
 {
@@ -141,7 +143,8 @@ class GenericTreeTransformer implements DataTransformerInterface
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
-                $this->user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
+                $userSecUtil = new UserSecurityUtil($this->em,null,null);
+                $this->user = $userSecUtil->findSystemUser();
             }
 
             $newEntity = $this->createNewEntity($name."",$this->className,$this->user);

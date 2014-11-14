@@ -83,7 +83,7 @@ class AperioUtil {
 
                 //add default locations
                 $userUtil = new UserUtil();
-                $userUtil->addDefaultLocations($user,null,$this->em);
+                $userUtil->addDefaultLocations($user,null,$this->em,$serviceContainer);
 
                 $perSiteSettings = null;
 
@@ -97,8 +97,9 @@ class AperioUtil {
                     $institution = $param->getAutoAssignInstitution();
                     if( $institution ) {
                         //set institution to per site settings
-                        $perSiteSettings = new PerSiteSettings();                        
-                        $systemUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
+                        $perSiteSettings = new PerSiteSettings();
+                        $userSecUtil = $serviceContainer->get('user_security_utility');
+                        $systemUser = $userSecUtil->findSystemUser();
                         $perSiteSettings->setAuthor($systemUser);
                         $perSiteSettings->setUser($user);
                         $perSiteSettings->addPermittedInstitutionalPHIScope($institution);

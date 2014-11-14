@@ -255,4 +255,23 @@ class UserSecurityUtil {
         return $qb->getQuery()->getResult();
     }
 
+    public function findSystemUser() {
+
+        $systemusers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findBy(
+            array(
+                'keytype' => NULL,
+                'primaryPublicUserId' => 'system'
+            )
+        );
+
+        if( !$systemusers || count($systemusers) == 0  ) {
+            return null;
+        }
+
+        $systemuser = $systemusers[0];
+
+        return $systemuser;
+    }
+
+
 }

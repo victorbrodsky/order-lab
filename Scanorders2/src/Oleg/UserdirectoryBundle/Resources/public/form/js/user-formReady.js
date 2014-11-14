@@ -34,6 +34,7 @@ $(document).ready(function() {
     getComboboxFellowshipType();
     getComboboxResearchLabs();
     getComboboxLocations();
+    getComboboxBuidlings();
 
     processEmploymentStatusRemoveButtons();
 

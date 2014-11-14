@@ -123,7 +123,7 @@ class LdapManager extends BaseLdapManager
 
         //add default locations
         $userUtil = new UserUtil();
-        $userUtil->addDefaultLocations($user,null,$this->em);
+        $userUtil->addDefaultLocations($user,null,$this->em,$this->container);
 
 //        echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
 //        echo "user's username=".$user->getUsername()." <br>";

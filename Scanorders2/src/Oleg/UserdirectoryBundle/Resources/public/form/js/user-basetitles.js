@@ -50,6 +50,7 @@ function initBaseAdd(newForm) {
     getComboboxFellowshipType(newForm);
     getComboboxResearchLabs(newForm);
     getComboboxLocations(newForm);
+    getComboboxBuidlings(newForm);
     initFileUpload(newForm);
 
     confirmDeleteWithExpired(newForm);

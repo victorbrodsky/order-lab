@@ -279,6 +279,38 @@ class UtilController extends Controller {
     }
 
     /**
+     * @Route("/common/building", name="employees_get_building")
+     * @Method("GET")
+     */
+    public function getBuildingsAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:BuildingList', 'list')
+            ->select("list")
+            ->orderBy("list.orderinlist","ASC");
+
+        //$user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+        $buildings = $query->getQuery()->getResult();
+
+        $output = array();
+        foreach($buildings as $building) {
+            $element = array('id'=>$building->getId(), 'text'=>$building."");
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+    /**
      * check if location can be deleted
      *
      * @Route("/common/location/delete/{id}", name="employees_location_delete", requirements={"id" = "\d+"})
@@ -475,8 +507,10 @@ class UtilController extends Controller {
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
-        $dql->select("user.id as id, user.displayName as text");
+        $dql->select("user.id as id, user.displayName as text, user.username as username, keytype.id as keytypeid");
+        $dql->leftJoin("user.keytype", "keytype");
         $dql->groupBy('user');
+        $dql->addGroupBy('keytype');
         $dql->orderBy("user.displayName","ASC");
 
 

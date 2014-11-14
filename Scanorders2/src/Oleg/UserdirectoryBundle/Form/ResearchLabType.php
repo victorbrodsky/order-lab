@@ -46,10 +46,6 @@ class ResearchLabType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-//        $builder->add('location', null, array(
-//            'label' => "Location:",
-//            'attr' => array('class'=>'combobox combobox-width')
-//        ));
         $builder->add('location', 'employees_custom_selector', array(
             'label' => "Location:",
             'required' => false,

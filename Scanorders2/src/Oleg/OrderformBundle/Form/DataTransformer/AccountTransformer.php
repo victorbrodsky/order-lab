@@ -9,11 +9,14 @@
 
 namespace Oleg\OrderformBundle\Form\DataTransformer;
 
-use Oleg\UserdirectoryBundle\Entity\User;
+
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
+
 use Oleg\OrderformBundle\Entity\Account;
+use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
 class AccountTransformer implements DataTransformerInterface
 {
@@ -103,7 +106,8 @@ class AccountTransformer implements DataTransformerInterface
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
-                $this->user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
+                $userSecUtil = new UserSecurityUtil($this->em,null,null);
+                $this->user = $userSecUtil->findSystemUser();
             }
 
             $newEntity = new Account();

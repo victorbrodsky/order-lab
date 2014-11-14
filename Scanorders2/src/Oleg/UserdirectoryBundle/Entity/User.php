@@ -189,6 +189,13 @@ class User extends BaseUser
         //create credentials
         $this->setCredentials(new Credentials($this));
 
+        //set unlocked, enabled
+        $this->setLocked(false);
+        $this->setEnabled(true);
+
+        //$this->setEmail('-1');
+        //$this->setEmailCanonical('-1');
+
 //        //two default locations: "main office" and "home"
 //        $mainLocation = new Location($this);
 //        $mainLocation->setName('Main Office');
@@ -845,21 +852,21 @@ class User extends BaseUser
 
     public function getUserNameStr() {
         if( $this->getDisplayName() ) {
-            return $this->getPrimaryUseridKeytypeStr()." - ".$this->displayName;
+            return $this->getPrimaryUseridKeytypeStr()." - ".$this->getDisplayName();
         } else {
             return $this->getPrimaryUseridKeytypeStr();
         }
     }
 
     public function getUserNameShortStr() {
-        return $this->primaryPublicUserId;
+        return $this->getPrimaryPublicUserId();
     }
 
     public function getPrimaryUseridKeytypeStr() {
         if( $this->getKeytype() ) {
-            return $this->primaryPublicUserId." (".$this->getKeytype()->getName().")";
+            return $this->getPrimaryPublicUserId()." (".$this->getKeytype()->getName().")";
         } else {
-            return $this->primaryPublicUserId;
+            return $this->getPrimaryPublicUserId();
         }
     }
 
@@ -868,7 +875,7 @@ class User extends BaseUser
         if( $this->getDisplayName() ) {
             return $this->getDisplayName();
         } else {
-            return $this->primaryPublicUserId;
+            return $this->getPrimaryPublicUserId();
         }
     }
 
@@ -899,6 +906,16 @@ class User extends BaseUser
         }
 
         return $this->getId();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setDisplaynameIfEmpty()
+    {
+        if( !$this->getDisplayName() || $this->getDisplayName() == "" ) {
+            $this->setDisplayname( $this->getUsernameOptimal() );
+        }
     }
 
 }

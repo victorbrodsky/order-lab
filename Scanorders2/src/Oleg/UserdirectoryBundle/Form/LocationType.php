@@ -140,14 +140,15 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('buildingName',null,array(
-            'label'=>'Building Name:',
-            'attr' => array('class'=>'form-control')
-        ));
-
-        $builder->add('buildingAbbr',null,array(
-            'label'=>'Building Abbreviation:',
-            'attr' => array('class'=>'form-control')
+//        $builder->add('buildingName',null,array(
+//            'label'=>'Building Name:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+        $builder->add('building', 'employees_custom_selector', array(
+            'label' => 'Building:',
+            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'building'
         ));
 
         $builder->add('floor',null,array(

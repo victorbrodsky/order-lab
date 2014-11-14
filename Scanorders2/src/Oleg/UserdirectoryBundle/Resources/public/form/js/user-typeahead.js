@@ -134,6 +134,9 @@ function initTypeaheadUserSiteSerach() {
 
 function duplicationDetector(remoteMatch, localMatch) {
     //console.log('dup check');
-    return remoteMatch.text === localMatch.text;    //value
+    if( remoteMatch.username === localMatch.username && remoteMatch.keytypeid === localMatch.keytypeid ) {
+        return true;
+    }
+    return false;
 }
 
