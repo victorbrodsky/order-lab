@@ -51,56 +51,7 @@ class ProjectTitleList extends ListAbstract
     }
 
 
-    /**
-     * Add synonyms
-     *
-     * @param ProjectTitleList $synonyms
-     * @return ProjectTitleList
-     */
-    public function addSynonym(ProjectTitleList $synonyms)
-    {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param ProjectTitleList $synonyms
-     */
-    public function removeSynonym(ProjectTitleList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * @param mixed $original
-     */
-    public function setOriginal($original)
-    {
-        $this->original = $original;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
+    
 
 
     public function addSetTitle(SetTitleList $setTitle = null)

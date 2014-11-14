@@ -28,60 +28,7 @@ class ProgressCommentsEventTypeList extends ListAbstract
 
 
 
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
-    }
-
-
-
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList $synonyms
-     * @return ProgressCommentsEventTypeList
-     */
-    public function addSynonym(\Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList $synonyms)
-    {
-        $this->synonyms->add($synonyms);
-
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList $synonyms
-     */
-    public function removeSynonym(\Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * @param mixed $original
-     */
-    public function setOriginal($original)
-    {
-        $this->original = $original;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
+    
 
 
 }

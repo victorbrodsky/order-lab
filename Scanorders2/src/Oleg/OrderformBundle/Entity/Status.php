@@ -27,11 +27,24 @@ class Status extends ListAbstract
     protected $orderinfo;
 
     /**
+     * @ORM\OneToMany(targetEntity="Status", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Status", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
+
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->orderinfo = new ArrayCollection();
+        $this->synonyms = new ArrayCollection();
     }
 
     public function __toString() {

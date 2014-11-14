@@ -1333,12 +1333,21 @@ function setPaperDocuments( btnEl, parent, data ) {
         }
     }
 
-    if( data == null  ) {   //clean fields
+    //clean fields
+    if( data == null  ) {
+
         if( parent.find('.file-upload-dropzone').length == 1 ) {
+            parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
+            parent.find('.file-upload-dropzone').find('.dz-preview').remove();
+            parent.find('.file-upload-dropzone').find('.dz-message').css('opacity','1');
+            attachTooltip(parent.find('.file-upload-dropzone'),true,'part');
             return;
         }
+
         parent.find('.file-upload-dropzone').not('.dropzone-keep-enabled').closest('.row').remove();
         parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
+        parent.find('.file-upload-dropzone').find('.dz-message').css('opacity','1');
+        parent.find('.file-upload-dropzone').find('.dz-preview').remove();
         return;
     }
 
@@ -1537,10 +1546,14 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
                 //disable
                 elements.eq(i).removeClass('dz-clickable'); // remove cursor
                 dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+                //add tooltip
+                attachTooltip(elements.eq(i),true,'part');
             } else {
                 //enable
                 elements.eq(i).addClass('dz-clickable'); // add cursor
                 dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+                //remove tooltip
+                attachTooltip(elements.eq(i),false,'part');
             }
 
             //console.log('dropzone maxfiles(10?)='+myDropzone.options.maxFiles);

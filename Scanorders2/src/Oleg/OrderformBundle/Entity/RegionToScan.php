@@ -15,5 +15,15 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 class RegionToScan extends ListAbstract
 {
 
+    /**
+     * @ORM\OneToMany(targetEntity="RegionToScan", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RegionToScan", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
 
 }

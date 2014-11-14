@@ -43,61 +43,7 @@ class Institution extends ListAbstract
         $this->departments = new ArrayCollection();
     }
 
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Institution $synonyms
-     * @return Institution
-     */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\Institution $synonyms)
-    {
-        $this->synonyms[] = $synonyms;
     
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Institution $synonyms
-     */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\Institution $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * Set original
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Institution $original
-     * @return Institution
-     */
-    public function setOriginal(\Oleg\UserdirectoryBundle\Entity\Institution $original = null)
-    {
-        $this->original = $original;
-    
-        return $this;
-    }
-
-    /**
-     * Get original
-     *
-     * @return \Oleg\UserdirectoryBundle\Entity\Institution
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
 
     /**
      * Add department

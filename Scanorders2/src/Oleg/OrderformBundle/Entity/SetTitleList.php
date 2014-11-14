@@ -33,58 +33,7 @@ class SetTitleList extends ListAbstract
     protected $projectTitle;
 
 
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
-    }
 
-    /**
-     * Add synonyms
-     *
-     * @param SetTitleList $synonyms
-     * @return SetTitleList
-     */
-    public function addSynonym(SetTitleList $synonyms)
-    {
-        $this->synonyms->add($synonyms);
-
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param SetTitleList $synonyms
-     */
-    public function removeSynonym(SetTitleList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * @param mixed $original
-     */
-    public function setOriginal($original)
-    {
-        $this->original = $original;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
 
     /**
      * @param mixed $projectTitle

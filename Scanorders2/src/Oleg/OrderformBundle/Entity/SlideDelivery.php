@@ -14,5 +14,15 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 class SlideDelivery extends ListAbstract
 {
 
+    /**
+     * @ORM\OneToMany(targetEntity="SlideDelivery", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="SlideDelivery", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
 
 }

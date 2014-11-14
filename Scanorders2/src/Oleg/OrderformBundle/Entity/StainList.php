@@ -47,74 +47,7 @@ class StainList extends ListAbstract
         $this->specialstain = new ArrayCollection();
     }
 
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\StainList $synonyms
-     * @return StainList
-     */
-    public function addSynonym(\Oleg\OrderformBundle\Entity\StainList $synonyms)
-    {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
-        }
     
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\StainList $synonyms
-     */
-    public function removeSynonym(\Oleg\OrderformBundle\Entity\StainList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-//    public function setSynonyms(\Oleg\OrderformBundle\Entity\StainList $synonyms = null) {
-//        $newsynonyms = new ArrayCollection();
-//        if( $synonyms ) {
-//            $newsynonyms->add($synonyms);
-//            $this->synonyms = $newsynonyms;
-//        } else {
-//            $this->synonyms = $newsynonyms;
-//        }
-//        return $this;
-//    }
-
-    /**
-     * Set original
-     *
-     * @param \Oleg\OrderformBundle\Entity\StainList $original
-     * @return StainList
-     */
-    public function setOriginal(\Oleg\OrderformBundle\Entity\StainList $original = null)
-    {
-        $this->original = $original;
-    
-        return $this;
-    }
-
-    /**
-     * Get original
-     *
-     * @return \Oleg\OrderformBundle\Entity\StainList 
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
 
     /**
      * Add stain

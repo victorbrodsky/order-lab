@@ -15,4 +15,15 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 class FormType extends ListAbstract
 {
 
+    /**
+     * @ORM\OneToMany(targetEntity="FormType", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="FormType", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
+
 }

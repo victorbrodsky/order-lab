@@ -47,61 +47,6 @@ class OrganList extends ListAbstract
         $this->part = new ArrayCollection();
     }
 
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrganList $synonyms
-     * @return OrganList
-     */
-    public function addSynonym(\Oleg\OrderformBundle\Entity\OrganList $synonyms)
-    {
-        $this->synonyms[] = $synonyms;
-    
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrganList $synonyms
-     */
-    public function removeSynonym(\Oleg\OrderformBundle\Entity\OrganList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * Set original
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrganList $original
-     * @return OrganList
-     */
-    public function setOriginal(\Oleg\OrderformBundle\Entity\OrganList $original = null)
-    {
-        $this->original = $original;
-    
-        return $this;
-    }
-
-    /**
-     * Get original
-     *
-     * @return \Oleg\OrderformBundle\Entity\OrganList 
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
 
     /**
      * Add part

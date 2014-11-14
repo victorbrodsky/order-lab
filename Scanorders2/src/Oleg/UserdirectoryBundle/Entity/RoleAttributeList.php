@@ -45,56 +45,7 @@ class RoleAttributeList extends ListAbstract
     }
 
 
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\RoleAttributeList $synonyms
-     * @return RoleAttributeList
-     */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\RoleAttributeList $synonyms)
-    {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\RoleAttributeList $synonyms
-     */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\RoleAttributeList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * @param mixed $original
-     */
-    public function setOriginal($original)
-    {
-        $this->original = $original;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
+    
 
     public function addRole(Roles $role)
     {

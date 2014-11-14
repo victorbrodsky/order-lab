@@ -42,62 +42,7 @@ class CommentSubTypeList extends ListAbstract
     protected $parent;
 
 
-
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
-    }
-
-
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\CommentSubTypeList $synonyms
-     * @return CommentSubTypeList
-     */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\CommentSubTypeList $synonyms)
-    {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\CommentSubTypeList $synonyms
-     */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\CommentSubTypeList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * @param mixed $original
-     */
-    public function setOriginal($original)
-    {
-        $this->original = $original;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
+    
 
 
 

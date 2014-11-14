@@ -57,37 +57,5 @@ class AccessionType extends ListAbstract
         return $this->accessionaccession;
     }
 
-    /**
-     * @param mixed $original
-     */
-    public function setOriginal($original)
-    {
-        $this->original = $original;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
-
-    /**
-     * @param mixed $synonyms
-     */
-    public function setSynonyms($synonyms)
-    {
-        $this->synonyms = $synonyms;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
 
 }

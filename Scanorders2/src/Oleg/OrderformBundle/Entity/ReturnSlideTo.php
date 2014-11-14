@@ -15,5 +15,15 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 class ReturnSlideTo extends ListAbstract
 {
 
+    /**
+     * @ORM\OneToMany(targetEntity="ReturnSlideTo", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ReturnSlideTo", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
 
 }

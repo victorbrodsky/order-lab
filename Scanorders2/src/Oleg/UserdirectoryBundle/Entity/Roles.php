@@ -33,9 +33,21 @@ class Roles extends ListAbstract {
      **/
     private $attributes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Roles", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Roles", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
+
 
     public function __construct() {
         $this->attributes = new ArrayCollection();
+        $this->synonyms = new ArrayCollection();
     }
 
     /**

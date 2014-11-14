@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvent;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
-class DocumentType extends AbstractType
+class DocumentType_TODEL extends AbstractType
 {
 
     protected $params;

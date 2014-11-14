@@ -36,61 +36,6 @@ class Account extends ListAbstract
         $this->orderinfo = new ArrayCollection();
     }
 
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\Account $synonyms
-     * @return Account
-     */
-    public function addSynonym(\Oleg\OrderformBundle\Entity\Account $synonyms)
-    {
-        $this->synonyms[] = $synonyms;
-    
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\Account $synonyms
-     */
-    public function removeSynonym(\Oleg\OrderformBundle\Entity\Account $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * Set original
-     *
-     * @param \Oleg\OrderformBundle\Entity\Account $original
-     * @return Account
-     */
-    public function setOriginal(\Oleg\OrderformBundle\Entity\Account $original = null)
-    {
-        $this->original = $original;
-    
-        return $this;
-    }
-
-    /**
-     * Get original
-     *
-     * @return \Oleg\OrderformBundle\Entity\Account
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
 
     /**
      * Add orderinfo

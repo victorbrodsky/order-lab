@@ -38,63 +38,7 @@ class ProcedureList extends ListAbstract
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->procedure = new ArrayCollection();
-    }
-
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\ProcedureList $synonyms
-     * @return ProcedureList
-     */
-    public function addSynonym(\Oleg\OrderformBundle\Entity\ProcedureList $synonyms)
-    {
-        $this->synonyms->add($synonyms);
-    
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\OrderformBundle\Entity\ProcedureList $synonyms
-     */
-    public function removeSynonym(\Oleg\OrderformBundle\Entity\ProcedureList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * Set original
-     *
-     * @param \Oleg\OrderformBundle\Entity\ProcedureList $original
-     * @return ProcedureList
-     */
-    public function setOriginal(\Oleg\OrderformBundle\Entity\ProcedureList $original = null)
-    {
-        $this->original = $original;
-    
-        return $this;
-    }
-
-    /**
-     * Get original
-     *
-     * @return \Oleg\OrderformBundle\Entity\ProcedureList 
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
+    }   
 
     /**
      * Add procedure

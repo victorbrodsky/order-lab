@@ -15,4 +15,15 @@ class Urgency extends ListAbstract
 {
 
 
+    /**
+     * @ORM\OneToMany(targetEntity="Urgency", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Urgency", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
+
 }

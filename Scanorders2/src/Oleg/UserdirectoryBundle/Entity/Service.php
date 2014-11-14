@@ -32,64 +32,7 @@ class Service extends ListAbstract
 
 
 
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
-    }
-
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Division $synonyms
-     * @return Division
-     */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\Division $synonyms)
-    {
-        $this->synonyms->add($synonyms);
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Division $synonyms
-     */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\Division $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * Set original
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Division $original
-     * @return Division
-     */
-    public function setOriginal(\Oleg\UserdirectoryBundle\Entity\Division $original = null)
-    {
-        $this->original = $original;
     
-        return $this;
-    }
-
-    /**
-     * Get original
-     *
-     * @return \Oleg\UserdirectoryBundle\Entity\Division
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
 
     /**
      * @param mixed $parent

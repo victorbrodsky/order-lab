@@ -15,4 +15,15 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 class SlideType extends ListAbstract
 {
 
+    /**
+     * @ORM\OneToMany(targetEntity="SlideType", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="SlideType", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
+
 }

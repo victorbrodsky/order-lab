@@ -41,61 +41,7 @@ class Department extends ListAbstract
         $this->divisions = new ArrayCollection();
     }
 
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Department $synonyms
-     * @return Department
-     */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\Department $synonyms)
-    {
-        $this->synonyms[] = $synonyms;
     
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Department $synonyms
-     */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\Department $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * Set original
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Department $original
-     * @return Department
-     */
-    public function setOriginal(\Oleg\UserdirectoryBundle\Entity\Department $original = null)
-    {
-        $this->original = $original;
-    
-        return $this;
-    }
-
-    /**
-     * Get original
-     *
-     * @return \Oleg\UserdirectoryBundle\Entity\Department
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
 
     /**
      * @param mixed $parent

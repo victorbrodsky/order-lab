@@ -16,4 +16,15 @@ class ProcessorComments extends ListAbstract
 {
 
 
+    /**
+     * @ORM\OneToMany(targetEntity="ProcessorComments", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ProcessorComments", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
+
 }

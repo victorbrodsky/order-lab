@@ -7,8 +7,11 @@
 
 {% block addcontent %}
 
-    {#{% set collapsein = 'in' %}#}
-    {% set collapsein = '' %}
+    {% if cicle == "show_user" %}
+        {% set collapsein = "" %}
+    {% else %}
+        {% set collapsein = "in" %}
+    {% endif %}
 
     {#Per Site User Settings by User#}
     <div class="panel panel-primary">

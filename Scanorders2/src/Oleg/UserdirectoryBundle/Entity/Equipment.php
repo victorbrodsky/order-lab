@@ -33,67 +33,7 @@ class Equipment extends ListAbstract
     protected $keytype;
 
 
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
-    }
-
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Equipment $synonyms
-     * @return Equipment
-     */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\Equipment $synonyms)
-    {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
-        }
     
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Equipment $synonyms
-     */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\Equipment $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * Set original
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Equipment $original
-     * @return Equipment
-     */
-    public function setOriginal(\Oleg\UserdirectoryBundle\Entity\Equipment $original = null)
-    {
-        $this->original = $original;
-    
-        return $this;
-    }
-
-    /**
-     * Get original
-     *
-     * @return \Oleg\UserdirectoryBundle\Entity\Equipment
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
 
     /**
      * @param mixed $keytype

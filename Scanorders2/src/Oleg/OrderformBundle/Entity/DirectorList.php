@@ -47,57 +47,6 @@ class DirectorList extends ListAbstract
     }
 
     /**
-     * Add synonyms
-     *
-     * @param DirectorList $synonyms
-     * @return DirectorList
-     */
-    public function addSynonym(DirectorList $synonyms)
-    {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove synonyms
-     *
-     * @param DirectorList $synonyms
-     */
-    public function removeSynonym(DirectorList $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
-
-    /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
-
-    /**
-     * @param mixed $original
-     */
-    public function setOriginal($original)
-    {
-        $this->original = $original;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOriginal()
-    {
-        return $this->original;
-    }
-
-    /**
      * Set director
      *
      * @param User $director
