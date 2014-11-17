@@ -29,6 +29,149 @@ use Oleg\UserdirectoryBundle\Entity\Location;
 class LocationController extends Controller
 {
 
+
+//    /**
+//     * @Route("/locations/list/", name="employees_list_location")
+//     * @Method("GET")
+//     * @Template("OlegUserdirectoryBundle:Location:index.html.twig")
+//     */
+//    public function indexLocationAction(Request $request)
+//    {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $locations = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
+//
+//        return array(
+//            'locations' => $locations
+//        );
+//    }
+
+//    /**
+//     * Search Location
+//     *
+//     * @Route("/locations/", name="locations_home")
+//     * @Template("OlegUserdirectoryBundle:Location:locations-content.html.twig")
+//     */
+//    public function indexAction( Request $request ) {
+//
+//        $search = trim( $request->get('search') );
+//
+//        //echo "search=".$search."<br>";
+//
+//        $locations = null;
+//        $pagination = null;
+//        $roles = null;
+//
+//        if( $search != "" ) {
+//            $userUtil = new UserUtil();
+//            $locations = $userUtil->indexLocation($search, $request, $this->container, $this->getDoctrine());
+//        }
+//
+//        return array(
+//            'locations' => $locations,
+//            'search' => $search
+//        );
+//    }
+//
+//    //render the search results for all search objects
+//    public function getSearchLocationAction( $search, $page ) {
+//
+//        $locations = $this->searchLocation($search, $page);
+//
+//        return $this->render('OlegUserdirectoryBundle:Location:locations-content.html.twig', array(
+//            'locations'=>$locations,
+//            'search'=>$search
+//        ));
+//
+//    }
+//
+//    public function searchLocation( $search, $page ) {
+//
+//        $request = $this->container->get('request');
+//
+//        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Location');
+//        $dql =  $repository->createQueryBuilder("location");
+//        $dql->select('location');
+//
+//        $dql->leftJoin("location.user", "user");
+//        $dql->leftJoin("location.service", "service");
+//        $dql->leftJoin("location.building", "building");
+//
+//
+//        $postData = $request->query->all();
+//        print_r($postData);
+//
+//        if( !isset($postData['sort']) ) {
+//            $dql->orderBy("location.name","ASC");
+//        }
+//
+//        //search
+//        $criteriastr = "";
+//
+//
+//        //name
+//        $criteriastr .= "location.name LIKE '%".$search."%' OR ";
+//
+//        //IC
+//        $criteriastr .= "location.ic LIKE '%".$search."%' OR ";
+//
+//        //phone
+//        $criteriastr .= "location.phone LIKE '%".$search."%' OR ";
+//
+//        //pager
+//        $criteriastr .= "location.pager LIKE '%".$search."%' OR ";
+//
+//        //room
+//        $criteriastr .= "location.room LIKE '%".$search."%' OR ";
+//
+//        //service
+//        $criteriastr .= "service.name LIKE '%".$search."%' OR ";
+//
+//        //user.displayName
+//        $criteriastr .= "user.displayName LIKE '%".$search."%' OR ";
+//
+//        //service
+//        $criteriastr .= "building.name LIKE '%".$search."%'";
+//
+//
+//        $dql->where($criteriastr);
+//
+//        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+//        if( isset($postData['sort']) ) {
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
+//
+//        //echo "Location dql=".$dql."<br>";
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
+//
+//        $limitFlag = true;
+//        if( $limitFlag ) {
+//            $limit = 10;
+//            $paginator  = $this->get('knp_paginator');
+//            $pagination = $paginator->paginate(
+//                $query,
+//                $page,  //$request->query->get('page', 1), /*page number*/
+//                $limit/*limit per page*/
+//            );
+//        } else {
+//            $pagination = $query->getResult();
+//        }
+//
+//        //echo "locations count=".count($pagination)."<br>";
+//
+//        return $pagination;
+//
+//    }
+
+
+
+
+
+
+
     /**
      * @Route("/locations/show/{id}", name="employees_show_location", requirements={"id" = "\d+"})
      * @Route("/locations/edit/{id}", name="employees_edit_location", requirements={"id" = "\d+"})

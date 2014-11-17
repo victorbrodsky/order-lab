@@ -81,12 +81,24 @@ class UserController extends Controller
         $search = trim( $request->get('search') );
         $userid = trim( $request->get('userid') );
 
+//        $page = $request->get('page');
+//        if( !$page && $page == "" ) {
+//            $page = 1;
+//        }
+
         //echo "search=".$search."<br>";
 
+        $locations = null;
         $pagination = null;
         $roles = null;
 
         if( $search != "" || $userid != "" ) {
+
+            //location search
+            $userUtil = new UserUtil();
+            $locations = $userUtil->indexLocation($search, $request, $this->container, $this->getDoctrine());
+
+            //user search
             $res = $this->indexUser( null, 'current_only', true, $search, $userid );
             $pagination = $res['entities'];
             $roles = $res['roles'];
@@ -94,9 +106,11 @@ class UserController extends Controller
 
         return array(
             'accessreqs' => count($accessreqs),
+            'locations' => $locations,
             'entities' => $pagination,
             'roles' => $roles,
-            'search' => $search
+            'search' => $search,
+            //'page' => $page
         );
     }
 
@@ -145,8 +159,16 @@ class UserController extends Controller
     //$time: 'current_only' - search only current, 'past_only' - search only past, 'all' - search current and past (no filter)
     public function indexUser( $filter=null, $time='all', $limitFlag=true, $search=null, $userid=null ) {
 
-        //$userManager = $this->container->get('fos_user.user_manager');
-        //$users = $userManager->findUsers();
+        $request = $this->get('request');
+        $postData = $request->query->all();
+
+        $sort = null;
+        if( isset($postData['sort']) ) {
+            //check for location sort
+            if( strpos($postData['sort'],'location.') === false && strpos($postData['sort'],'locationuser') === false ) {
+                $sort = $postData['sort'];
+            }
+        }
 
         $rolesArr = $this->getUserRoles();
 
@@ -175,10 +197,7 @@ class UserController extends Controller
         //$dql->leftJoin("user.institutions", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
 
-        $request = $this->get('request');
-        $postData = $request->query->all();
-
-        if( !isset($postData['sort']) ) {
+        if( $sort == null ) {
             if( $time == 'current_only' ) {
                 $dql->orderBy("user.lastName","ASC");
                 $dql->addOrderBy("administrativeInstitution.name","ASC");
@@ -233,7 +252,7 @@ class UserController extends Controller
         $dql->where($totalcriteriastr);
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
-        if( isset($postData['sort']) ) {
+        if( $sort ) {
             $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
         }
 
@@ -632,6 +651,8 @@ class UserController extends Controller
 
         return $response;
     }
+
+
 
 
 

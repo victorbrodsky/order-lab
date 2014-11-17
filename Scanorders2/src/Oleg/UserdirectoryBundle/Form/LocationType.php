@@ -56,7 +56,7 @@ class LocationType extends AbstractType
         ));
 
         $builder->add('ic',null,array(
-            'label'=>'IC:',
+            'label'=>'Intercom (IC):',
             'attr' => array('class'=>'form-control')
         ));
 

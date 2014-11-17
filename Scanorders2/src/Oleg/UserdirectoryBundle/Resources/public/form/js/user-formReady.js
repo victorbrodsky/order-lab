@@ -8,6 +8,8 @@
 
 $(document).ready(function() {
 
+    $(document).scrollTop(0);
+
     setNavBar();
 
     fieldInputMask();

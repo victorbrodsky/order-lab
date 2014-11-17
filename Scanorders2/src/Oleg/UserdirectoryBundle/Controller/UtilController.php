@@ -255,6 +255,8 @@ class UtilController extends Controller {
                         "locationType.name !='Employee Home'" .
                     ")";
 
+        //
+
         $query->leftJoin("list.locationType", "locationType");
         $query->leftJoin("list.user", "user");
         $query->andWhere($andWhere);

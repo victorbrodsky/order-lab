@@ -1,10 +1,12 @@
 
-
-{% if filter is defined and filter != "" %}
-    <h3 class="text-info">Results of search for: {{ filter }}</h3>
+{% if search is defined and search != "" %}
+    <h3 class="text-info">Results of Employee search for: "{{ search }}"</h3>
 {% endif %}
 
-<br>
+{% if filter is defined and filter != "" %}
+    <h3 class="text-info">Results of Employee search for: {{ filter }}</h3>
+{% endif %}
+
 <table class="records_list table table-hover table-condensed text-left">
     <thead>
     <tr>
@@ -22,6 +24,7 @@
         {#<th>{{ knp_pagination_sortable(entities, 'User ID (CWID)', 'user.username') }}</th>#}
         <th>{{ knp_pagination_sortable(entities, 'Preferred Email', 'user.email') }}</th>
         <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.preferredPhone') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'IC(s)', 'locations.ic') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Pager(s)', 'locations.pager') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Room Number(s)', 'locations.room') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Assistant(s)', 'assistant.displayName') }}</th>
@@ -85,6 +88,13 @@
             </td>
             <td>
                 {% for location in entity.locations %}
+                    {% if location.ic %}
+                        {{ location.ic }}<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for location in entity.locations %}
                     {% if location.pager %}
                         {{ location.pager }}<br>
                     {% endif %}
@@ -116,23 +126,23 @@
             </td>
 
 
-            {#{% if sitename != employees_sitename %}#}
-                {#<td>#}
-                    {#{% for role in entity.roles %}#}
-                        {#{% if role != "ROLE_USER" %}#}
-                            {#"{{ attribute(roles, role) }}"#}
-                        {#{% endif %}#}
-                    {#{% endfor %}#}
-                {#</td>#}
-                {#<td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>#}
-                {#<td>#}
-                    {#{% if entity.locked == 1 %}#}
-                        {#true#}
-                    {#{% else %}#}
-                        {#false#}
-                    {#{% endif %}#}
-                {#</td>#}
-            {#{% endif %}#}
+            {% if sitename != employees_sitename %}
+                <td>
+                    {% for role in entity.roles %}
+                        {% if role != "ROLE_USER" %}
+                            "{{ attribute(roles, role) }}"
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
+                <td>
+                    {% if entity.locked == 1 %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+            {% endif %}
 
             {#<td class="rowlink-skip">#}
                 {#<div class="btn-group">#}

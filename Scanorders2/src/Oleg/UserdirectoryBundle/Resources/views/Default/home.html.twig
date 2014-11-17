@@ -58,7 +58,11 @@
         </form>
 
 
-
+        {#display search result for locations #}
+        {% if locations and locations|length > 0 %}
+            {% include 'OlegUserdirectoryBundle::Location/locations-content.html.twig' with {'sitename': employees_sitename} %}
+        {% endif %}
+        {#{{ render( controller( 'OlegUserdirectoryBundle:Location:getSearchLocation', {'search':search, 'page':page} ) ) }}#}
 
         {% if entities and entities|length > 0 %}
             {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}
@@ -74,7 +78,7 @@
 
 {% block contentleft %}
 
-    {% if entities is not defined or entities|length == 0 %}
+    {% if (entities is not defined or entities|length == 0) and (locations is not defined or locations|length == 0) %}
 
         <div style="margin-top:50px;">
 

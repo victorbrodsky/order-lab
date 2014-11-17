@@ -523,6 +523,93 @@ class UserUtil {
     }
 
 
+    public function indexLocation( $search, $request, $container, $doctrine ) {
+
+        $repository = $doctrine->getRepository('OlegUserdirectoryBundle:Location');
+        $dql =  $repository->createQueryBuilder("location");
+        $dql->select('location');
+
+        $dql->leftJoin("location.user", "locationuser");
+        $dql->leftJoin("location.service", "service");
+        $dql->leftJoin("location.building", "building");
+
+        $postData = $request->query->all();
+
+        $sort = null;
+        if( isset($postData['sort']) ) {
+            //check for location sort
+            if( strpos($postData['sort'],'location.') !== false || strpos($postData['sort'],'locationuser') !== false ) {
+                $sort = $postData['sort'];
+            }
+        }
+
+        if( $sort == null ) {
+            $dql->orderBy("location.name","ASC");
+        }
+
+        //search
+        $criteriastr = "";
+
+
+        //name
+        $criteriastr .= "location.name LIKE '%".$search."%' OR ";
+
+        //IC
+        $criteriastr .= "location.ic LIKE '%".$search."%' OR ";
+
+        //phone
+        $criteriastr .= "location.phone LIKE '%".$search."%' OR ";
+
+        //pager
+        $criteriastr .= "location.pager LIKE '%".$search."%' OR ";
+
+        //room
+        $criteriastr .= "location.room LIKE '%".$search."%' OR ";
+
+        //service
+        $criteriastr .= "service.name LIKE '%".$search."%' OR ";
+
+        //locationuser.displayName
+        $criteriastr .= "locationuser.displayName LIKE '%".$search."%' OR ";
+
+        //service
+        $criteriastr .= "building.name LIKE '%".$search."%'";
+
+
+        $dql->where($criteriastr);
+
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+        if( $sort ) {
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
+
+        //echo "Location dql=".$dql."<br>";
+
+        $em = $doctrine->getManager();
+        $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
+
+        $limitFlag = true;
+        if( $limitFlag ) {
+            $limit = 10;
+            $paginator  = $container->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $query,
+                $request->query->get('page', 1), /*page number*/
+                $limit/*limit per page*/
+            );
+        } else {
+            $pagination = $query->getResult();
+        }
+
+        return $pagination;
+
+    }
+
+
+
+
+
+
 
 
     public function processInstTree( $tree, $em, $sc ) {

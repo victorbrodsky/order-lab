@@ -376,6 +376,7 @@
             <th>Academic Title(s)</th>
             <th>Preferred Email</th>
             <th>Preferred Phone Number</th>
+            <th>IC</th>
             <th>Room Number(s)</th>
             {% if assistExist %}
                 <th>Assistant(s)</th>
@@ -412,6 +413,13 @@
             <td>
                 {% set valueclean = user.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
                 <a href="tel:{{ valueclean }}" target="_top">{{ user.preferredPhone }}</a>
+            </td>
+            <td>
+                {% for location in user.locations %}
+                    {% if location.ic %}
+                        {{ location.ic }}<br>
+                    {% endif %}
+                {% endfor %}
             </td>
             <td>
                 {% for location in user.locations %}
