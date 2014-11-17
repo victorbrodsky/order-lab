@@ -57,6 +57,10 @@ class ResearchLab extends BaseUserAttributes
      */
     protected $researchPI;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $weblink;
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -193,6 +197,22 @@ class ResearchLab extends BaseUserAttributes
     public function getResearchLabTitle()
     {
         return $this->researchLabTitle;
+    }
+
+    /**
+     * @param mixed $weblink
+     */
+    public function setWeblink($weblink)
+    {
+        $this->weblink = $weblink;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWeblink()
+    {
+        return $this->weblink;
     }
 
 

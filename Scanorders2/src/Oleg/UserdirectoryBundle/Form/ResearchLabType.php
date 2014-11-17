@@ -66,6 +66,11 @@ class ResearchLabType extends AbstractType
             'classtype' => 'researchLabTitle'
         ));
 
+        $builder->add('weblink', null, array(
+            'label' => 'Web page link:',
+            'attr' => array('class'=>'form-control')
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

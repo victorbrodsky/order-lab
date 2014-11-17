@@ -193,8 +193,26 @@ class BaseTitleType extends AbstractType
                 'required' => false
             ));
 
-            $builder->add( 'supervisor', null, array(
-                'label'=>'Supervisor of this Service:',
+            $builder->add( 'supervisorInstitution', null, array(
+                'label'=>'Head of this institution:',
+                'required'=>false,
+                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+            ));
+
+            $builder->add( 'supervisorDepartment', null, array(
+                'label'=>'Head of this department:',
+                'required'=>false,
+                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+            ));
+
+            $builder->add( 'supervisorDivision', null, array(
+                'label'=>'Head of this division:',
+                'required'=>false,
+                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+            ));
+
+            $builder->add( 'supervisorService', null, array(
+                'label'=>'Head of this service:',
                 'required'=>false,
                 'attr' => array('class'=>'form-control', 'style'=>'margin:0')
             ));

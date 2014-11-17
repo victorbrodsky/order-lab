@@ -255,12 +255,18 @@ class UtilController extends Controller {
                         "locationType.name !='Employee Home'" .
                     ")";
 
-        //
-
         $query->leftJoin("list.locationType", "locationType");
         $query->leftJoin("list.user", "user");
         $query->andWhere($andWhere);
-        $query->andWhere("user.email != '-1'");
+
+        //exclude system user:  "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'"; //"user.email != '-1'"
+        $query->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'");
+
+        //do not show (exclude) all locations that are tied to a user who has no current employment periods (all of whose employment periods have an end date)
+        $curdate = date("Y-m-d", time());
+        $query->leftJoin("user.employmentStatus", "employmentStatus");
+        $currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        $query->andWhere($currentusers);
 
         //echo "query=".$query." | ";
 

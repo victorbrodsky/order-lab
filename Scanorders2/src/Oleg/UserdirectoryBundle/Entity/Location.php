@@ -63,46 +63,42 @@ class Location extends ListAbstract
      */
     private $room;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $street1;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $street2;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $city;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $state;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="States")
-     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
-     **/
-    private $country;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $county;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $zip;
-
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
 //     */
-//    private $buildingName;
+//    private $street1;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $street2;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $city;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $state;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="States")
+//     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
+//     **/
+//    private $country;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $county;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $zip;
+
     /**
      * @ORM\ManyToOne(targetEntity="BuildingList")
      * @ORM\JoinColumn(name="building", referencedColumnName="id")
@@ -426,21 +422,21 @@ class Location extends ListAbstract
 
 
 
-    /**
-     * @param mixed $city
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
+//    /**
+//     * @param mixed $city
+//     */
+//    public function setCity($city)
+//    {
+//        $this->city = $city;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getCity()
+//    {
+//        return $this->city;
+//    }
 
     /**
      * @param mixed $email
@@ -554,69 +550,69 @@ class Location extends ListAbstract
         return $this->room;
     }
 
-    /**
-     * @param mixed $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param mixed $street1
-     */
-    public function setStreet1($street1)
-    {
-        $this->street1 = $street1;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStreet1()
-    {
-        return $this->street1;
-    }
-
-    /**
-     * @param mixed $street2
-     */
-    public function setStreet2($street2)
-    {
-        $this->street2 = $street2;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStreet2()
-    {
-        return $this->street2;
-    }
-
-    /**
-     * @param mixed $zip
-     */
-    public function setZip($zip)
-    {
-        $this->zip = $zip;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getZip()
-    {
-        return $this->zip;
-    }
+//    /**
+//     * @param mixed $state
+//     */
+//    public function setState($state)
+//    {
+//        $this->state = $state;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getState()
+//    {
+//        return $this->state;
+//    }
+//
+//    /**
+//     * @param mixed $street1
+//     */
+//    public function setStreet1($street1)
+//    {
+//        $this->street1 = $street1;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getStreet1()
+//    {
+//        return $this->street1;
+//    }
+//
+//    /**
+//     * @param mixed $street2
+//     */
+//    public function setStreet2($street2)
+//    {
+//        $this->street2 = $street2;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getStreet2()
+//    {
+//        return $this->street2;
+//    }
+//
+//    /**
+//     * @param mixed $zip
+//     */
+//    public function setZip($zip)
+//    {
+//        $this->zip = $zip;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getZip()
+//    {
+//        return $this->zip;
+//    }
 
     /**
      * @param mixed $building
@@ -715,37 +711,37 @@ class Location extends ListAbstract
         return $this->removable;
     }
 
-    /**
-     * @param mixed $county
-     */
-    public function setCounty($county)
-    {
-        $this->county = $county;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCounty()
-    {
-        return $this->county;
-    }
-
-    /**
-     * @param mixed $country
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
+//    /**
+//     * @param mixed $county
+//     */
+//    public function setCounty($county)
+//    {
+//        $this->county = $county;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getCounty()
+//    {
+//        return $this->county;
+//    }
+//
+//    /**
+//     * @param mixed $country
+//     */
+//    public function setCountry($country)
+//    {
+//        $this->country = $country;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getCountry()
+//    {
+//        return $this->country;
+//    }
 
     /**
      * @param mixed $ic

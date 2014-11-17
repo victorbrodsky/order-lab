@@ -70,17 +70,37 @@ class BaseTitle extends BaseUserAttributes
      */
     protected $pgylevel;
 
+
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $supervisor;
+    private $supervisorInstitution;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $supervisorDepartment;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $supervisorDivision;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $supervisorService;
 
 
 
     function __construct($author=null)
     {
         parent::__construct($author);
-        $this->supervisor = false;
+
+        $this->supervisorInstitution = false;
+        $this->supervisorDepartment = false;
+        $this->supervisorDivision = false;
+        $this->supervisorService = false;
     }
 
 
@@ -229,21 +249,68 @@ class BaseTitle extends BaseUserAttributes
     }
 
     /**
-     * @param mixed $supervisor
+     * @param mixed $supervisorDepartment
      */
-    public function setSupervisor($supervisor)
+    public function setSupervisorDepartment($supervisorDepartment)
     {
-        $this->supervisor = $supervisor;
+        $this->supervisorDepartment = $supervisorDepartment;
     }
 
     /**
      * @return mixed
      */
-    public function getSupervisor()
+    public function getSupervisorDepartment()
     {
-        return $this->supervisor;
+        return $this->supervisorDepartment;
     }
 
+    /**
+     * @param mixed $supervisorDivision
+     */
+    public function setSupervisorDivision($supervisorDivision)
+    {
+        $this->supervisorDivision = $supervisorDivision;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupervisorDivision()
+    {
+        return $this->supervisorDivision;
+    }
+
+    /**
+     * @param mixed $supervisorInstitution
+     */
+    public function setSupervisorInstitution($supervisorInstitution)
+    {
+        $this->supervisorInstitution = $supervisorInstitution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupervisorInstitution()
+    {
+        return $this->supervisorInstitution;
+    }
+
+    /**
+     * @param mixed $supervisorService
+     */
+    public function setSupervisorService($supervisorService)
+    {
+        $this->supervisorService = $supervisorService;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupervisorService()
+    {
+        return $this->supervisorService;
+    }
 
 
     /**

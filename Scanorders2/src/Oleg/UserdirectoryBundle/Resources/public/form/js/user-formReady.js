@@ -8,7 +8,7 @@
 
 $(document).ready(function() {
 
-    $(document).scrollTop(0);
+    $(this).scrollTop(0);
 
     setNavBar();
 

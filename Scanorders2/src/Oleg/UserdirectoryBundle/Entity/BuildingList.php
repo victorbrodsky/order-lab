@@ -19,6 +19,11 @@ class BuildingList extends ListAbstract
      */
     private $abbreviation;
 
+    /**
+     * @ORM\OneToOne(targetEntity="GeoLocation", mappedBy="building", cascade={"persist"})
+     **/
+    protected $geoLocation;
+
 
     /**
      * @ORM\OneToMany(targetEntity="BuildingList", mappedBy="original", cascade={"persist"})
@@ -30,6 +35,7 @@ class BuildingList extends ListAbstract
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
+
 
 
 
@@ -48,6 +54,24 @@ class BuildingList extends ListAbstract
     {
         return $this->abbreviation;
     }
+
+    /**
+     * @param mixed $geographicLocation
+     */
+    public function setGeographicLocation($geographicLocation)
+    {
+        $this->geographicLocation = $geographicLocation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeographicLocation()
+    {
+        return $this->geographicLocation;
+    }
+
+
 
 
 

@@ -123,8 +123,17 @@
         {{ formmacros.field(formfield.division) }}
         {{ formmacros.field(formfield.service) }}
 
-        {% if formfield.supervisor is defined %}
-            {{ formmacros.checkbox(formfield.supervisor) }}
+        {% if formfield.supervisorInstitution is defined %}
+            {{ formmacros.checkbox(formfield.supervisorInstitution) }}
+        {% endif %}
+        {% if formfield.supervisorDepartment is defined %}
+            {{ formmacros.checkbox(formfield.supervisorDepartment) }}
+        {% endif %}
+        {% if formfield.supervisorDivision is defined %}
+            {{ formmacros.checkbox(formfield.supervisorDivision) }}
+        {% endif %}
+        {% if formfield.supervisorService is defined %}
+            {{ formmacros.checkbox(formfield.supervisorService) }}
         {% endif %}
     </div>
 {% endmacro %}
@@ -268,6 +277,7 @@
 
 {% macro researchLabs( field, cicle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -289,6 +299,7 @@
         {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cicle,'allow-future-date') }}
         {{ formmacros.field_notempty(formfield.comment,cicle) }}
         {{ formmacros.field(formfield.location) }}
+        {{ usermacros.emailPhoneField_notempty(formfield.weblink,cicle,'link',"") }}
 
     </div>
 {% endmacro %}
@@ -886,7 +897,7 @@
         {#If the user has no Research Labs (no array members with a research lab title), hide the whole Research Lab(s) section on the profile page.#}
         {% set showResearchLabs = false %}
         {% for researchLabs in form.researchLabs %}
-            {% if researchLabs.researchLabTitle.vars.value or cicle != 'show_user' %}
+            {% if researchLabs.researchLabTitle.vars.value or researchLabs.weblink.vars.value or researchLabs.comment.vars.value or researchLabs.foundedDate.vars.value or cicle != 'show_user' %}
                 {% set showResearchLabs = true %}
             {% endif %}
         {% endfor %}

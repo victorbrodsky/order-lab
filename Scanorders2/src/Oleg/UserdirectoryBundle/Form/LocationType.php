@@ -75,70 +75,76 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('street1',null,array(
-            'label'=>'Street Address [Line 1]:',
-            'attr' => array('class'=>'form-control')
+        $builder->add('building', new UserPreferencesType(), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
+            'label' => false,
+            'required' => false,
         ));
 
-        $builder->add('street2',null,array(
-            'label'=>'Street Address [Line 2]:',
-            'attr' => array('class'=>'form-control')
-        ));
-
-        $builder->add('city',null,array(
-            'label'=>'City:',
-            'attr' => array('class'=>'form-control')
-        ));
-
-        $builder->add( 'state', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:States',
-            'property' => 'name',
-            'label'=>'State:',
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-        ));
-
-        //country
-        $defaultCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
-        $builder->add( 'country', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Countries',
-            'property' => 'name',
-            'label'=>'Country:',
-            'required'=> false,
-            'multiple' => false,
-            //'data' => '225',  //United States
-            'preferred_choices' => $defaultCountries,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-        ));
-
-        $builder->add('county',null,array(
-            'label'=>'County:',
-            'attr' => array('class'=>'form-control')
-        ));
-
-        $builder->add('zip',null,array(
-            'label'=>'Zip Code:',
-            'attr' => array('class'=>'form-control')
-        ));
+//        $builder->add('street1',null,array(
+//            'label'=>'Street Address [Line 1]:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+//
+//        $builder->add('street2',null,array(
+//            'label'=>'Street Address [Line 2]:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+//
+//        $builder->add('city',null,array(
+//            'label'=>'City:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+//
+//        $builder->add( 'state', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:States',
+//            'property' => 'name',
+//            'label'=>'State:',
+//            'required'=> false,
+//            'multiple' => false,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//        ));
+//
+//        //country
+//        $defaultCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+//        $builder->add( 'country', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:Countries',
+//            'property' => 'name',
+//            'label'=>'Country:',
+//            'required'=> false,
+//            'multiple' => false,
+//            //'data' => '225',  //United States
+//            'preferred_choices' => $defaultCountries,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//        ));
+//
+//        $builder->add('county',null,array(
+//            'label'=>'County:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+//
+//        $builder->add('zip',null,array(
+//            'label'=>'Zip Code:',
+//            'attr' => array('class'=>'form-control')
+//        ));
 
 //        $builder->add('buildingName',null,array(
 //            'label'=>'Building Name:',
@@ -275,13 +281,23 @@ class LocationType extends AbstractType
             'classtype' => 'service'
         ));
 
-        $builder->add('privacy','entity',array(
+
+        //Privacy
+        $arrayOptions = array(
             'class' => 'OlegUserdirectoryBundle:LocationPrivacyList',
             'label' => "Location Privacy (who can see this contact info):",
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
-            'required' => true
-        ));
+            'required' => true,
+        );
+
+        //get default privacy
+        if( $this->params['cicle'] == "create_location" ) {
+            $defaultPrivacy = $this->params['em']->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+            $arrayOptions['data'] = $defaultPrivacy;
+        }
+
+        $builder->add('privacy','entity',$arrayOptions);
 
 
         if( $this->params['cicle'] == "create_location" || $this->params['cicle'] == "show_location" ) {

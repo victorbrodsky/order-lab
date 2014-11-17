@@ -225,7 +225,7 @@
                     {{ formmacros.field(formfield.name,"","readonly") }}
                 {% endif %}
 
-                {% if homeLocation == true %}
+                {% if homeLocation == true or cicle == "create_location" or cicle == "show_location" or cicle == "edit_location" %}
                     {{ formmacros.field(formfield.privacy) }}
                 {% else %}
                     {% do formfield.privacy.setRendered %}
@@ -285,13 +285,13 @@
                     {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
                 {% endif %}
 
-                {{ formmacros.field_notempty(formfield.street1,cicle) }}
-                {{ formmacros.field_notempty(formfield.street2,cicle) }}
-                {{ formmacros.field_notempty(formfield.city,cicle) }}
-                {{ formmacros.field_notempty(formfield.state,cicle) }}
-                {{ formmacros.field_notempty(formfield.zip,cicle) }}
-                {{ formmacros.field_notempty(formfield.county,cicle) }}
-                {{ formmacros.field_notempty(formfield.country,cicle) }}
+                {{ formmacros.field_notempty(formfield.building.street1,cicle) }}
+                {{ formmacros.field_notempty(formfield.building.street2,cicle) }}
+                {{ formmacros.field_notempty(formfield.building.city,cicle) }}
+                {{ formmacros.field_notempty(formfield.building.state,cicle) }}
+                {{ formmacros.field_notempty(formfield.building.zip,cicle) }}
+                {{ formmacros.field_notempty(formfield.building.county,cicle) }}
+                {{ formmacros.field_notempty(formfield.building.country,cicle) }}
 
                 {% if homeLocation == false %}
                     {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
@@ -361,9 +361,18 @@
                 <div class="form-control form-control-modif" disabled>
                     {% if type == "email" %}
                         <a href="mailto:{{ value }}" target="_top">{{ value }}</a>
-                    {% else %}
+                    {% endif %}
+                    {% if type == "phone" %}
                         {% set valueclean = value|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
                         <a href="tel:{{ valueclean }}" target="_top">{{ value }}</a>
+                    {% endif %}
+                    {% if type == "link" %}
+                        {% if "http" not in valud %}
+                            {% set weburl = "http://"~value %}
+                        {% else %}
+                            {% set weburl = value %}
+                        {% endif %}
+                        <a href="{{ weburl }}" target="_top">{{ weburl }}</a>
                     {% endif %}
                 </div>
             </div>
@@ -390,4 +399,5 @@
     </div>
     </p>
 {% endmacro %}
+
 
