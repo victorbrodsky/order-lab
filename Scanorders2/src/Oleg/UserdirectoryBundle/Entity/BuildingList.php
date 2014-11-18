@@ -20,9 +20,14 @@ class BuildingList extends ListAbstract
     private $abbreviation;
 
     /**
-     * @ORM\OneToOne(targetEntity="GeoLocation", mappedBy="building", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="GeoLocation", mappedBy="building",cascade={"persist"})
      **/
     protected $geoLocation;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    private $institution;
 
 
     /**
@@ -37,6 +42,38 @@ class BuildingList extends ListAbstract
     protected $original;
 
 
+
+    public function __construct($creator=null) {
+        $this->synonyms = new ArrayCollection();
+
+        //set mandatory list attributes
+        $this->setName("");
+        $this->setType('user-added');
+        $this->setCreatedate(new \DateTime());
+        $this->setOrderinlist(-1);
+
+        if( $creator ) {
+            $this->setCreator($creator);
+        }
+    }
+
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return List
+     */
+    public function setName($name)
+    {
+        if( $name == null ) {
+            $name = "";
+        }
+
+        $this->name = $name;
+
+        return $this;
+    }
 
 
     /**
@@ -56,32 +93,96 @@ class BuildingList extends ListAbstract
     }
 
     /**
-     * @param mixed $geographicLocation
+     * @param mixed $geoLocation
      */
-    public function setGeographicLocation($geographicLocation)
+    public function setGeoLocation($geoLocation)
     {
-        $this->geographicLocation = $geographicLocation;
+        $this->geoLocation = $geoLocation;
+        $geoLocation->setBuilding($this);
     }
 
     /**
      * @return mixed
      */
-    public function getGeographicLocation()
+    public function getGeoLocation()
     {
-        return $this->geographicLocation;
+        return $this->geoLocation;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
     }
 
 
 
 
 
+    //interface function
+    public function getAuthor()
+    {
+        return $this->getCreator();
+    }
+    public function setAuthor($author)
+    {
+        return $this->setCreator($author);
+    }
+    public function getUpdateAuthor()
+    {
+        return $this->getUpdatedby();
+    }
+    public function setUpdateAuthor($author)
+    {
+        return $this->setUpdatedby($author);
+    }
+
+
+    //WCMC - Weill Cornell Medical College / 1300 York Ave / Abbreviation = C
     public function __toString() {
 
-        if( $this->getAbbreviation() ) {
-            return $this->getAbbreviation() . " - " . $this->getName();
-        } else {
-            return $this->getName();
+        $instName = "";
+        if( $this->getInstitution() ) {
+            if( $this->getInstitution()->getAbbreviation() ) {
+                $instName = $this->getInstitution()->getAbbreviation()."";
+            } else {
+                $instName = $this->getInstitution()->getName()."";
+            }
         }
+
+        $geoName = "";
+        if( $this->getGeoLocation() != "" ) {
+            $geoName = $this->getGeoLocation()."";
+        }
+
+        $name = "";
+        if( $instName != "" ) {
+            $name = $instName . " - ";
+        }
+
+        if( $this->getName() != "" ) {
+            $name = $name . $this->getName() . " / ";
+        }
+
+        if( $geoName != "" ) {
+            $name = $name . $geoName;
+        }
+
+        if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
+            $name = $name . " / Abbreviation = " . $this->getAbbreviation()."";
+        }
+
+        return $name;
     }
 
 

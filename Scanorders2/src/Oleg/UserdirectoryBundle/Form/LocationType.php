@@ -24,10 +24,16 @@ class LocationType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $standAloneLocation = false;
+        if( $this->params['cicle'] == "create_location" || $this->params['cicle'] == "show_location" || $this->params['cicle'] == "edit_location" ) {
+            $standAloneLocation = true;
+        }
 
 
         $builder->add('id','hidden',array(
@@ -75,8 +81,8 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('building', new UserPreferencesType(), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
+        $builder->add('building', new BuildingType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
             'label' => false,
             'required' => false,
         ));
@@ -150,12 +156,12 @@ class LocationType extends AbstractType
 //            'label'=>'Building Name:',
 //            'attr' => array('class'=>'form-control')
 //        ));
-        $builder->add('building', 'employees_custom_selector', array(
-            'label' => 'Building:',
-            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'building'
-        ));
+//        $builder->add('building', 'employees_custom_selector', array(
+//            'label' => 'Building:',
+//            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
+//            'required' => false,
+//            'classtype' => 'building'
+//        ));
 
         $builder->add('floor',null,array(
             'label'=>'Floor:',
@@ -206,31 +212,29 @@ class LocationType extends AbstractType
         ));
 
         //assistant
-//        $builder->add('assistant','entity',array(
-//            'class' => 'OlegUserdirectoryBundle:User',
-//            'label'=>"Assistant(s):",
-//            'attr' => array('class'=>'combobox combobox-width'),
-//            'required' => false
-//        ));
-        $builder->add('assistant','entity',array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label' => "Assistant(s):",
-            'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'required' => false
-        ));
+        if( $this->params['cicle'] != "create_location" ) {
+            $builder->add('assistant','entity',array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Assistant(s):",
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false
+            ));
+        }
 
-        $baseUserAttr = new Location();
-        $builder->add('status', 'choice', array(
-            'disabled' => ($this->params['read_only'] ? true : false),
-            'choices' => array(
-                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
-                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
-            ),
-            'label' => "Status:",
-            'required' => true,
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
+        if( $this->params['cicle'] != "create_location" ) {
+            $baseUserAttr = new Location();
+            $builder->add('status', 'choice', array(
+                'disabled' => ($this->params['read_only'] ? true : false),
+                'choices' => array(
+                    $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
+                    $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
+                ),
+                'label' => "Status:",
+                'required' => true,
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        }
 
         if( $this->params['cicle'] != "show" ) {
             $builder->add('locationType','entity',array(
@@ -242,13 +246,6 @@ class LocationType extends AbstractType
             ));
         }
 
-//        $builder->add('institution','entity',array(
-//            'class' => 'OlegUserdirectoryBundle:Institution',
-//            'label' => "Institution:",
-//            'multiple' => false,
-//            'attr' => array('class'=>'combobox combobox-width'),
-//            'required' => false
-//        ));
         //institution. User should be able to add institution to administrative or appointment titles
         $builder->add('institution', 'employees_custom_selector', array(
             'label' => 'Institution:',
@@ -300,15 +297,34 @@ class LocationType extends AbstractType
         $builder->add('privacy','entity',$arrayOptions);
 
 
-        if( $this->params['cicle'] == "create_location" || $this->params['cicle'] == "show_location" ) {
+        //add user and list properties for stand alone location managemenet by LocationController
+        if( $standAloneLocation ) {
+            //user
             $builder->add('user','entity',array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'label' => "User:",
+                'label' => "Inhabitant:",
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'required' => false
             ));
+
+            //list attributes
+            $params = array();
+            $mapper = array();
+            $params['user'] = $this->params['user'];
+            $params['cicle'] = $this->params['cicle'];
+            $params['standalone'] = true;
+            $mapper['className'] = "Location";
+            $mapper['bundleName'] = "OlegUserdirectoryBundle";
+
+            $builder->add('list', new ListType($params, $mapper), array(
+                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+                'label' => false
+            ));
         }
+
+
+
 
     }
 

@@ -83,11 +83,14 @@ abstract class ListAbstract
 
 
 
-
-
     public function __construct() {
+
         $this->synonyms = new ArrayCollection();
+
     }
+
+
+
 
     public function addSynonym($synonyms)
     {
@@ -239,7 +242,7 @@ abstract class ListAbstract
     /**
      * Get creator
      *
-     * @return string
+     * @return \Oleg\UserdirectoryBundle\Entity\User $creator
      */
     public function getCreator()
     {

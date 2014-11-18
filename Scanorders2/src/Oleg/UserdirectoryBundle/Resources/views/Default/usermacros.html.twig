@@ -138,6 +138,42 @@
         {% set wellclass = "" %}
     {% endif %}
 
+    {% set standAloneLocation = false %}
+    {% if cicle == "create_location" or cicle == "show_location" or cicle == "edit_location" %}
+        {% set wellclass = "" %}
+        {% set standAloneLocation = true %}
+    {% endif %}
+
+    {#show list properties#}
+    {% if standAloneLocation %}
+        <div class="well">
+            <p>
+                <h4 class="text-muted" align="center">List properties:</h4>
+            </p>
+            {% if formfield.list.original is defined %}
+                {{ formmacros.field(formfield.list.original) }}
+            {% endif %}
+
+            {% if formfield.list.synonyms is defined %}
+                {{ formmacros.field(formfield.list.synonyms) }}
+            {% endif %}
+
+            {{ formmacros.field(formfield.list.type) }}
+
+            {{ formmacros.field(formfield.list.creator) }}
+
+            {{ formmacros.field(formfield.list.createdate) }}
+
+            {{ formmacros.field(formfield.list.orderinlist) }}
+
+            {% if formfield.list.updatedby is defined %}
+                {{ formmacros.field(formfield.list.updatedby) }}
+                {{ formmacros.field(formfield.list.updatedon) }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+
     {#    Show restrictions for home location:    #}
     {#####Case1: privacy="Administration can see and edit this contact information"#}
     {#Show Home location only to subjectuser, Administrator or Editor; Hide for others.#}
@@ -205,7 +241,7 @@
     {% if showRegularFields1 or showRegularFields2 %}
         <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
-            {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
+            {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) and not standAloneLocation %}
                 <div class="text-right">
                     <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
@@ -225,7 +261,7 @@
                     {{ formmacros.field(formfield.name,"","readonly") }}
                 {% endif %}
 
-                {% if homeLocation == true or cicle == "create_location" or cicle == "show_location" or cicle == "edit_location" %}
+                {% if homeLocation == true or standAloneLocation %}
                     {{ formmacros.field(formfield.privacy) }}
                 {% else %}
                     {% do formfield.privacy.setRendered %}
@@ -274,24 +310,19 @@
                     {{ formmacros.field(formfield.room) }}
                     {{ formmacros.field_notempty(formfield.suit,cicle) }}
                     {{ formmacros.field(formfield.floor) }}
-                    {{ formmacros.field(formfield.building) }}
-
-                    {#{{ formmacros.field_notempty(formfield.institution,cicle) }}#}
                     {{ formmacros.field_notempty(formfield.institution,cicle) }}
                     {{ formmacros.field_notempty(formfield.department,cicle) }}
                     {{ formmacros.field_notempty(formfield.division,cicle) }}
                     {{ formmacros.field_notempty(formfield.service,cicle) }}
 
                     {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
+
+                    {#Building#}
+                    {{ userform.buildingName(field,cicle,prototype) }}
                 {% endif %}
 
-                {{ formmacros.field_notempty(formfield.building.street1,cicle) }}
-                {{ formmacros.field_notempty(formfield.building.street2,cicle) }}
-                {{ formmacros.field_notempty(formfield.building.city,cicle) }}
-                {{ formmacros.field_notempty(formfield.building.state,cicle) }}
-                {{ formmacros.field_notempty(formfield.building.zip,cicle) }}
-                {{ formmacros.field_notempty(formfield.building.county,cicle) }}
-                {{ formmacros.field_notempty(formfield.building.country,cicle) }}
+                {#Building GeoLocation#}
+                {{ userform.buildingGeoLocation(field,cicle,prototype) }}
 
                 {% if homeLocation == false %}
                     {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
@@ -315,10 +346,39 @@
 
 {% endmacro %}
 
+{% macro buildingName( entity, cicle, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = entity.vars.prototype.building %}
+    {% else %}
+        {% set formfield = entity.building %}
+    {% endif %}
+
+    {{ formmacros.field_notempty(formfield.name,cicle) }}
+    {{ formmacros.field_notempty(formfield.abbreviation,cicle) }}
+{% endmacro %}
+
+{% macro buildingGeoLocation( entity, cicle, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = entity.vars.prototype.building %}
+    {% else %}
+        {% set formfield = entity.building %}
+    {% endif %}
+
+    {{ formmacros.field_notempty(formfield.geoLocation.street1,cicle) }}
+    {{ formmacros.field_notempty(formfield.geoLocation.street2,cicle) }}
+    {{ formmacros.field_notempty(formfield.geoLocation.city,cicle) }}
+    {{ formmacros.field_notempty(formfield.geoLocation.state,cicle) }}
+    {{ formmacros.field_notempty(formfield.geoLocation.zip,cicle) }}
+    {{ formmacros.field_notempty(formfield.geoLocation.county,cicle) }}
+    {{ formmacros.field_notempty(formfield.geoLocation.country,cicle) }}
+{% endmacro %}
+
 {% macro statusVerifiedField( entity, cicle ) %}
     {% if entity.status is defined %}
-        {#ver:{{ constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') }}#}
-        {#unver:{{ constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') }}#}
         {% if cicle != "show_user" or entity.status.vars.value != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
             {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
             {{ formmacros.field(entity.status) }}

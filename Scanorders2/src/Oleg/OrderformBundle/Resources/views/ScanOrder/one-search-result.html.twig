@@ -136,7 +136,7 @@
                 {% if showprovider is defined and showprovider == 'true' %}
                     <td>
                         {% for provider in entity.provider %}
-                            {{ provider.username }}
+                            {{ provider.getUserNameStr() }}
                         {% endfor %}
                     </td>
                 {% endif %}
@@ -158,7 +158,7 @@
                 {% if showproxyuser is defined and showproxyuser == 'true' %}
                     <td>
                         {% for proxyuser in entity.proxyuser %}
-                            {{ proxyuser.username }}
+                            {{ proxyuser.getUserNameStr() }}
                         {% endfor %}
                     </td>
                 {% endif %}

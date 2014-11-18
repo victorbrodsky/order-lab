@@ -31,7 +31,7 @@ class LocationController extends Controller
 
 
 //    /**
-//     * @Route("/locations/list/", name="employees_list_location")
+//     * @Route("/locations/{id}", name="locations_show")
 //     * @Method("GET")
 //     * @Template("OlegUserdirectoryBundle:Location:index.html.twig")
 //     */
@@ -42,10 +42,75 @@ class LocationController extends Controller
 //
 //        $locations = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
 //
+//        //exit('loc controller');
+//
 //        return array(
-//            'locations' => $locations
+//            'entities' => $locations
 //        );
 //    }
+
+    /**
+     * @Route("/admin/list/locations/", name="locations-list")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Location:index.html.twig")
+     */
+    public function indexAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        return $this->getList($request);
+    }
+    public function getList($request) {
+
+        $type = $request->get('_route');
+
+        //get object name: stain-list => stain
+        $pieces = explode("-", $type);
+        $pathbase = $pieces[0];
+
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Location');
+        $dql =  $repository->createQueryBuilder("ent");
+        $dql->select('ent');
+        $dql->groupBy('ent');
+
+        $dql->leftJoin("ent.user", "user");
+
+        $dql->leftJoin("ent.creator", "creator");
+        $dql->leftJoin("ent.updatedby", "updatedby");
+
+        $dql->addGroupBy('creator.username');
+        $dql->addGroupBy('updatedby.username');
+
+        $dql->leftJoin("ent.synonyms", "synonyms");
+        $dql->addGroupBy('synonyms.name');
+        $dql->leftJoin("ent.original", "original");
+        $dql->addGroupBy('original.name');
+
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+        $postData = $request->query->all();
+        if( isset($postData['sort']) ) {
+            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+        }
+
+        //echo "dql=".$dql."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $limit = 30;
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $entities = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            $limit/*limit per page*/
+        );
+
+        return array(
+            'entities' => $entities,
+            'displayName' => "List of Locations"
+        );
+    }
 
 //    /**
 //     * Search Location
@@ -173,8 +238,8 @@ class LocationController extends Controller
 
 
     /**
-     * @Route("/locations/show/{id}", name="employees_show_location", requirements={"id" = "\d+"})
-     * @Route("/locations/edit/{id}", name="employees_edit_location", requirements={"id" = "\d+"})
+     * @Route("/admin/list/locations/show/{id}", name="locations_show", requirements={"id" = "\d+"})
+     * @Route("/admin/list/locations/edit/{id}", name="employees_edit_location", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Location:location.html.twig")
      */
@@ -189,7 +254,7 @@ class LocationController extends Controller
 
         $cicle = 'show_location';
 
-        if( $routeName == "employees_show_location" ) {
+        if( $routeName == "locations_show" ) {
             $cicle = 'show_location';
         }
 
@@ -273,11 +338,14 @@ class LocationController extends Controller
             $sc = $this->get('security.context');
             $userUtil->processInstTree($location,$em,$sc);
 
+            //set Reviewed by Administration
+            $location->setStatus($location::STATUS_VERIFIED);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($location);
             $em->flush();
 
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_show_location', array('id' => $location->getId())));
+            return $this->redirect($this->generateUrl('locations_show', array('id' => $location->getId())));
         }
 
         //echo "error loc <br>";
@@ -313,9 +381,13 @@ class LocationController extends Controller
 
         $form->handleRequest($request);
 
-        print_r($form->getErrors());
+//        echo "loc errors:<br>";
+//        print_r($form->getErrors());
+//        echo "<br>loc string errors:<br>";
+//        print_r($form->getErrorsAsString());
+//        echo "<br>";
 
-        if ($form->isValid()) {
+        if( $form->isValid() ) {
 
             //set parents for institution tree for Administrative and Academical Titles
             $userUtil = new UserUtil();
@@ -327,7 +399,7 @@ class LocationController extends Controller
             $em->persist($location);
             $em->flush();
 
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_show_location', array('id' => $location->getId())));
+            return $this->redirect($this->generateUrl('locations_show', array('id' => $location->getId())));
         }
 
         echo "error loc <br>";
@@ -359,7 +431,7 @@ class LocationController extends Controller
 
         if( $cicle == "show_location" ) {
             $method = "GET";    //list
-            $path = $this->container->getParameter('employees.sitename').'_show_location';
+            $path = 'locations_show';
             $action = $this->generateUrl($path, array('id' => $entity->getId()));
             $disabled = true;
         }
@@ -370,9 +442,11 @@ class LocationController extends Controller
             $action = $this->generateUrl($path, array('id' => $entity->getId()));
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $isAdmin = $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR');
 
-        $params = array('read_only'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cicle'=>$cicle,'em'=>$em);
+        $params = array('read_only'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cicle'=>$cicle,'em'=>$em,'user'=>$user);
 
         $form = $this->createForm(new LocationType($params,$entity), $entity, array(
             'disabled' => $disabled,

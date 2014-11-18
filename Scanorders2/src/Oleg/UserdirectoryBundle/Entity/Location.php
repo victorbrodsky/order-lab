@@ -100,7 +100,7 @@ class Location extends ListAbstract
 //    private $zip;
 
     /**
-     * @ORM\ManyToOne(targetEntity="BuildingList")
+     * @ORM\ManyToOne(targetEntity="BuildingList", cascade={"persist"})
      * @ORM\JoinColumn(name="building", referencedColumnName="id")
      */
     private $building;
@@ -222,12 +222,45 @@ class Location extends ListAbstract
         }
     }
 
+//    /**
+//     * @ORM\PrePersist
+//     */
+    public function setBuildingListDefault()
+    {
+        //echo "pre persist<br>";
+        if( $this->getInstitution() ) {
+
+            $building = $this->getBuilding($this->getCreator());
+
+            if($building == null ) {
+                $building = new BuildingList();
+            }
+
+            $building->setInstitution($this->getInstitution());
+            $this->setBuilding($building);
+        }
+
+//        $building->setType('user-added');
+//        $building->setCreatedate(new \DateTime());
+//        $building->setOrderinlist(-1);
+//
+//        if( $building->getCreator() == null ) {
+//            $building->setCreator( $this->getCreator() );
+//        }
+//
+//        $this->setBuilding($building);
+
+    }
+
+
     /**
      * @param mixed $institution
      */
     public function setInstitution($institution)
     {
         $this->institution = $institution;
+
+        $this->setBuildingListDefault();
     }
 
     /**
@@ -865,7 +898,7 @@ class Location extends ListAbstract
             $detailsArr[] = $this->getBuilding()."";
         }
 
-        if( $this->getInstitution() ) {
+        if( $this->getInstitution() && $this->getBuilding() == null ) {
             $detailsArr[] = $this->getInstitution()->getName()."";
         }
 

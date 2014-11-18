@@ -46,7 +46,7 @@
                 {% else %}
                     <td>
                         {% if entity.user %}
-                            <a href="{{ path(scan_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.username }}</a>
+                            <a href="{{ path(scan_sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.user.getUserNameStr() }}</a>
                         {% endif %}
                     </td>
                 {% endif %}

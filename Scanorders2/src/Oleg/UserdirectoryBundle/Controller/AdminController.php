@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Entity\ResearchLabTitleList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -96,6 +97,7 @@ class AdminController extends Controller
         $count_equipmentType = $this->generateEquipmentType();
         $count_equipment = $this->generateEquipment();
         $count_locprivacy = $this->generateLocationPrivacy();
+        $count_reslabtitles = $this->generateResLabTitles();
 
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
@@ -124,7 +126,8 @@ class AdminController extends Controller
             'Location Types ='.$count_locationTypeList.', '.
             'Equipment Types ='.$count_equipmentType.', '.
             'Equipment ='.$count_equipment.', '.
-            'Location Privacy ='.$count_locprivacy.' '.
+            'Location Privacy ='.$count_locprivacy.', '.
+            'Reaserch Lab Titles='.$count_reslabtitles.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -288,7 +291,7 @@ class AdminController extends Controller
             "maintenance" => false,
             //"maintenanceenddate" => null,
             "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.
-                                        'The administrators are planning to return this site to a fully functional state on or before [[datetime]].'.
+                                        ' The administrators are planning to return this site to a fully functional state on or before [[datetime]].'.
                                         'If you were in the middle of entering order information, it was saved as an "Unsubmitted" order '.
                                         'and you should be able to submit that order after the maintenance is complete.',
             "maintenanceloginmsg" =>    'The scheduled maintenance of this software has begun. The administrators are planning to return this site to a fully '.
@@ -1124,6 +1127,48 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $listEntity = new LocationPrivacyList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return $count;
+    }
+
+
+    public function generateResLabTitles() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLabTitleList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Laboratory of Prostate Cancer Research Group",
+            "Proteolytic Oncogenesis",
+            "Macrophages and Tissue Remodeling",
+            "Molecular Gynecologic Pathology",
+            "Cancer Biology",
+            "Laboratory of Cell Metabolism",
+            "Viral Oncogenesis",
+            "Center for Vascular Biology",
+            "Cell Cycle",
+            "Laboratory of Stem Cell Aging and Cancer",
+            "Molecular Pathology",
+            "Skeletal Biology"
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new ResearchLabTitleList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

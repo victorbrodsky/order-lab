@@ -7,7 +7,7 @@
 {% set title = "Location" %}
 
 {% if cicle == 'create_location' %}
-    {% set title = "Create New Location" %}
+    {% set title = "Add New Location" %}
 {% endif %}
 
 {% if cicle == 'show_location' %}
@@ -50,7 +50,7 @@
             <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update Location</button>
-                <a class="btn btn-info" href="{{ path(employees_sitename~'_show_location',{id:entity.id}) }}" type='button'>Cancel</a>
+                <a class="btn btn-info" href="{{ path('locations_show',{id:entity.id}) }}" type='button'>Cancel</a>
             </div>
             </p>
         {% endif %}

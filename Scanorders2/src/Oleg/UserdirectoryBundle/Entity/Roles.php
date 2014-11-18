@@ -16,17 +16,13 @@ class Roles extends ListAbstract {
      * Alias is a display name for each role, i.e.: ROLE_SCANORDER_ADMIN => Administrator
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $alias;
+    private $alias;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $description;
+    private $description;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="RoleAttributeList", mappedBy="role", cascade={"persist"})
-//     */
-//    protected $attributes;
     /**
      * @ORM\ManyToMany(targetEntity="RoleAttributeList", inversedBy="roles", cascade={"persist"})
      * @ORM\JoinTable(name="user_roles_attributes")

@@ -39,7 +39,6 @@ class ListController extends Controller
      * @Route("/fellowship-types/", name="fellowshiptypes-list")
      * @Route("/research-lab-titles/", name="researchlabtitles-list")
      * @Route("/location-types/", name="locationtypes-list")
-     * @Route("/locations/", name="locations-list")
      * @Route("/equipment/", name="equipments-list")
      * @Route("/equipment-types/", name="equipmenttypes-list")
      * @Route("/location-privacy-types/", name="locationprivacy-list")
@@ -100,6 +99,11 @@ class ListController extends Controller
             //$dql->addSelect('COUNT(user) AS HIDDEN usercount');
         }
 
+        if( method_exists($entityClass,'getRoles') ) {
+            $dql->leftJoin("ent.roles", "roles");
+            $dql->addGroupBy('roles.name');
+        }
+
         //$dql->orderBy("ent.createdate","DESC");
 		
 		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       		
@@ -146,7 +150,6 @@ class ListController extends Controller
      * @Route("/fellowship-types/", name="fellowshiptypes_create")
      * @Route("/research-lab-titles/", name="researchlabtitles_create")
      * @Route("/location-types/", name="locationtypes_create")
-     * @Route("/locations/", name="locations_create")
      * @Route("/equipment/", name="equipments_create")
      * @Route("/equipment-types/", name="equipmenttypes_create")
      * @Route("/location-privacy-types/", name="locationprivacy_create")
@@ -260,7 +263,6 @@ class ListController extends Controller
      * @Route("/fellowship-types/new", name="fellowshiptypes_new")
      * @Route("/research-lab-titles/new", name="researchlabtitles_new")
      * @Route("/location-types/new", name="locationtypes_new")
-     * @Route("/locations/new", name="locations_new")
      * @Route("/equipment/new", name="equipments_new")
      * @Route("/equipment-types/new", name="equipmenttypes_new")
      * @Route("/location-privacy-types/new", name="locationprivacy_new")
@@ -337,7 +339,6 @@ class ListController extends Controller
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_show")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_show")
      * @Route("/location-types/{id}", name="locationtypes_show")
-     * @Route("/locations/{id}", name="locations_show")
      * @Route("/equipment/{id}", name="equipments_show")
      * @Route("/equipment-types/{id}", name="equipmenttypes_show")
      * @Route("/location-privacy-types/{id}", name="locationprivacy_show")
@@ -404,7 +405,6 @@ class ListController extends Controller
      * @Route("/fellowship-types/{id}/edit", name="fellowshiptypes_edit")
      * @Route("/research-lab-titles/{id}/edit", name="researchlabtitles_edit")
      * @Route("/location-types/{id}/edit", name="locationtypes_edit")
-     * @Route("/locations/{id}/edit", name="locations_edit")
      * @Route("/equipment/{id}/edit", name="equipments_edit")
      * @Route("/equipment-types/{id}/edit", name="equipmenttypes_edit")
      * @Route("/location-privacy-types/{id}/edit", name="locationprivacy_edit")
@@ -511,7 +511,6 @@ class ListController extends Controller
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_update")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_update")
      * @Route("/location-types/{id}", name="locationtypes_update")
-     * @Route("/locations/{id}", name="locations_update")
      * @Route("/equipment/{id}", name="equipments_update")
      * @Route("/equipment-types/{id}", name="equipmenttypes_update")
      * @Route("/location-privacy-types/{id}", name="locationprivacy_update")
@@ -731,10 +730,6 @@ class ListController extends Controller
                 $className = "LocationTypeList";
                 $displayName = "Location Types";
                 break;
-            case "locations":
-                $className = "Location";
-                $displayName = "Locations";
-                break;
             case "equipments":
                 $className = "Equipment";
                 $displayName = "Equipment";
@@ -799,7 +794,6 @@ class ListController extends Controller
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_delete")
      * @Route("/research-lab-titles/{id}", name="researchlabtitles_delete")
      * @Route("/location-types/{id}", name="locationtypes_delete")
-     * @Route("/locations/{id}", name="locations_delete")
      * @Route("/equipment/{id}", name="equipments_delete")
      * @Route("/equipment-types/{id}", name="equipmenttypes_delete")
      * @Route("/location-privacy-types/{id}", name="locationprivacy_delete")

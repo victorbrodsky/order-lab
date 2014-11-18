@@ -34,13 +34,18 @@ class GeoLocation
      */
     private $city;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $state;
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="States")
+     * @ORM\JoinColumn(name="state", referencedColumnName="id", nullable=true)
+     **/
     private $state;
 
     /**
-     * @ORM\ManyToOne(targetEntity="States")
+     * @ORM\ManyToOne(targetEntity="Countries")
      * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
      **/
     private $country;
@@ -210,7 +215,22 @@ class GeoLocation
 
 
 
+    public function __toString() {
 
+        if( $this->getStreet1() && $this->getStreet2() ) {
+            return $this->getStreet1() . ", " .  $this->getStreet2();
+        }
+
+        if( $this->getStreet1() ) {
+            return $this->getStreet1() . "";
+        }
+
+        if( $this->getStreet2() ) {
+            return $this->getStreet2() . "";
+        }
+
+        return "";
+    }
 
 
 

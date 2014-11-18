@@ -35,77 +35,29 @@ class BuildingType extends AbstractType
 //            'required' => false,
 //        ));
 
-        $builder->add('building', 'employees_custom_selector', array(
-            'label' => 'Building:',
-            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'building'
-        ));
+//        $builder->add('building', 'employees_custom_selector', array(
+//            'label' => 'Building:',
+//            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
+//            'required' => false,
+//            'classtype' => 'building'
+//        ));
 
 
-        $builder->add('street1',null,array(
-            'label'=>'Street Address [Line 1]:',
+        $builder->add('name',null,array(
+            'label'=>'Building Name:',
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('street2',null,array(
-            'label'=>'Street Address [Line 2]:',
+        $builder->add('abbreviation',null,array(
+            'label'=>'Building Abbreviation:',
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('city',null,array(
-            'label'=>'City:',
-            'attr' => array('class'=>'form-control')
-        ));
 
-        $builder->add( 'state', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:States',
-            'property' => 'name',
-            'label'=>'State:',
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-        ));
-
-        //country
-        $defaultCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
-        $builder->add( 'country', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Countries',
-            'property' => 'name',
-            'label'=>'Country:',
-            'required'=> false,
-            'multiple' => false,
-            //'data' => '225',  //United States
-            'preferred_choices' => $defaultCountries,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-        ));
-
-        $builder->add('county',null,array(
-            'label'=>'County:',
-            'attr' => array('class'=>'form-control')
-        ));
-
-        $builder->add('zip',null,array(
-            'label'=>'Zip Code:',
-            'attr' => array('class'=>'form-control')
+        $builder->add('geoLocation', new GeoLocationType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'label' => false,
+            'required' => false
         ));
 
 

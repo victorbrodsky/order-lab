@@ -215,7 +215,7 @@
                 {% if showproxyuser is defined and showproxyuser == 'true' %}
                     <td>
                         {% for proxyuser in entity.proxyuser %}
-                            {{ proxyuser.username }}
+                            {{ proxyuser.getUserNameStr() }}
                         {% endfor %}
                     </td>
                 {% endif %}

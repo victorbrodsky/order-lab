@@ -1,0 +1,88 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::ListForm/listmacros.html.twig" as listmacros %}
+
+{% block title %}
+    {{ displayName }}
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">{{ displayName }}</h3>
+
+    {% import _self as listmacros %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+        <tr>
+        <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
+
+
+        {% if entities|first.original is defined %}
+            <th>{{ knp_pagination_sortable(entities, 'Original', 'original.name') }}</th>
+        {% endif %}
+
+        {% if entities|first.synonyms is defined %}
+            <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
+        {% endif %}
+
+        <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Employee', 'user.username') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Updated On', 'ent.updatedon') }}</th>
+        {#<th>Actions</th>#}
+        </trC>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('locations_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.name }}</td>
+
+                {% if entity.original is defined %}
+                    <td>{{ entity.original }}</td>
+                {% endif %}
+
+                {% if entity.synonyms is defined %}
+                    <td>
+                        {% for synonym in entity.synonyms %}
+                            <p>{{ synonym }}</p>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+                <td>{{ entity.type }}</td>
+                <td>{{ entity.orderinlist }}</td>
+
+                <td class="rowlink-skip">
+                    <a href="{{ path('employees_showuser', { 'id': entity.id }) }}">{{ entity.user.getUsernameOptimal() }}</a>
+                </td>
+
+                <td>{{ entity.creator.getUsernameOptimal() }}</td>
+                <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+
+                <td>{{ entity.updatedby }}</td>
+                <td>{% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}</td>
+
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(entities) }}
+    </div>
+
+    <a href="{{ path('employees_new_location') }}">
+        Create a new entry
+    </a>
+
+{% endblock %}

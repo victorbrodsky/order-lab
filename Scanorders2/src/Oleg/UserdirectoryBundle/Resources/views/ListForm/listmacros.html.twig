@@ -29,8 +29,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Attribute(s)', 'ent.attributes') }}</th>
             {% endif %}
 
+            {#role attributes#}
             {% if entities|first.value is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Value', 'ent.value') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Roles', 'roles.name') }}</th>
             {% endif %}
 
             {% if entities|first.action is defined %}
@@ -54,7 +56,7 @@
             {% endif %}
 
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Order', 'ent.orderinlist') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
@@ -98,6 +100,13 @@
 
                 {% if entity.value is defined %}
                     <td>{{ entity.value }}</td>
+                {% endif %}
+                {% if entity.roles is defined %}
+                    <td>
+                        {% for role in entity.roles %}
+                            {{ role }}
+                        {% endfor %}
+                    </td>
                 {% endif %}
 
                 {% if entity.action is defined %}

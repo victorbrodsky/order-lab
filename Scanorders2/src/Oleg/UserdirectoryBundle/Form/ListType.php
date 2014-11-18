@@ -43,15 +43,17 @@ class ListType extends AbstractType
     {
 
         $builder->add('orderinlist',null,array(
-            'label'=>'Order:',
+            'label'=>'Display Order:',
             'required' => true,
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('name',null,array(
-            'label'=>'Name:',
-            'attr' => array('class'=>'form-control')
-        ));
+        if( !array_key_exists('standalone', $this->params) || $this->params['standalone'] == false ) {
+            $builder->add('name',null,array(
+                'label'=>'Name:',
+                'attr' => array('class'=>'form-control')
+            ));
+        }
 
         $builder->add('type','choice',array(
             'label'=>'Type:',
@@ -77,7 +79,7 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        if( array_key_exists('cicle', $this->params) && $this->params['cicle'] != 'new' ) {
+        if( array_key_exists('cicle', $this->params) && $this->params['cicle'] != 'new' && $this->params['cicle'] != "create_location" ) {
 
             //echo "cicle=".$this->params['cicle']."<br>";
 

@@ -1250,6 +1250,7 @@ class UserController extends Controller
 
         foreach( $subjectUser->getLocations() as $entity ) {
             $userUtil->setUpdateInfo($entity,$em,$sc);
+            $userUtil->setUpdateInfo($entity->getBuilding(),$em,$sc);
         }
 
         //credentials

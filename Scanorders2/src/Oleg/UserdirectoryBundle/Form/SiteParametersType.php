@@ -245,13 +245,13 @@ class SiteParametersType extends AbstractType
         //uploads
         if( $this->params['cicle'] == 'show' || $this->params['param'] == 'employeesuploadpath' )
             $builder->add('employeesuploadpath',null,array(
-                'label'=>'Employee Directory Uploaded Folder:',
+                'label'=>'Employee Directory Upload Folder:',
                 'attr' => array('class'=>'form-control')
             ));
 
         if( $this->params['cicle'] == 'show' || $this->params['param'] == 'scanuploadpath' )
             $builder->add('scanuploadpath',null,array(
-                'label'=>'Scan Orders Uploaded Folder:',
+                'label'=>'Scan Orders Upload Folder:',
                 'attr' => array('class'=>'form-control')
             ));
 

@@ -111,8 +111,14 @@ class SessionIdleHandler
             $routeName == 'logout' ||
             $routeName == 'getmaxidletime' ||
             $routeName == '_wdt' ||
-            $routeName == 'keepalive'
+            $routeName == 'keepalive' ||
+            $routeName == 'idlelogout'
         ) {
+            $dontSetRedirect++;
+        }
+
+        $idlelogout = strpos($routeName, 'idlelogout');
+        if( $idlelogout ) {
             $dontSetRedirect++;
         }
 

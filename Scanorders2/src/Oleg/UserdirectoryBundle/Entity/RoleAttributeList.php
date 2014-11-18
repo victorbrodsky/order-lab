@@ -17,11 +17,6 @@ class RoleAttributeList extends ListAbstract
      */
     protected $value;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Roles", inversedBy="attributes")
-//     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
-//     **/
-//    protected $role;
     /**
      * @ORM\ManyToMany(targetEntity="Roles", mappedBy="attributes")
      **/
