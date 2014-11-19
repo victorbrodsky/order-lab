@@ -616,12 +616,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maks3w/FR3DLdapBundle.git",
-                "reference": "0252caaa19fa64f5de34eec6380776d5d4e4987a"
+                "reference": "74cb2c9b528c7a4e95081322387ec7ec50c50522"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maks3w/FR3DLdapBundle/zipball/0252caaa19fa64f5de34eec6380776d5d4e4987a",
-                "reference": "0252caaa19fa64f5de34eec6380776d5d4e4987a",
+                "url": "https://api.github.com/repos/Maks3w/FR3DLdapBundle/zipball/74cb2c9b528c7a4e95081322387ec7ec50c50522",
+                "reference": "74cb2c9b528c7a4e95081322387ec7ec50c50522",
                 "shasum": ""
             },
             "require": {
@@ -664,7 +664,7 @@
                 "Authentication",
                 "ldap"
             ],
-            "time": "2014-10-30 00:12:44"
+            "time": "2014-11-11 09:34:36"
         },
         {
             "name": "friendsofsymfony/user-bundle",
@@ -672,12 +672,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "9714a92e968f7e12431ccf5fecb1346f0d5adc65"
+                "reference": "3565dfb22df2b0791137d5244d34d528d887f73e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/9714a92e968f7e12431ccf5fecb1346f0d5adc65",
-                "reference": "9714a92e968f7e12431ccf5fecb1346f0d5adc65",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/3565dfb22df2b0791137d5244d34d528d887f73e",
+                "reference": "3565dfb22df2b0791137d5244d34d528d887f73e",
                 "shasum": ""
             },
             "require": {
@@ -731,7 +731,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2014-10-20 09:15:23"
+            "time": "2014-11-19 10:34:13"
         },
         {
             "name": "incenteev/composer-parameter-handler",

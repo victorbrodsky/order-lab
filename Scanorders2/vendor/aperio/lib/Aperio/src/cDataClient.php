@@ -83,7 +83,7 @@ function Authenticate($UserName, $Password)
         if($res['LogonResult']->ASResult == 0)
         {
             $ReturnArray['ReturnCode'] = 0;
-            $ReturnArray['Token_TODEL'] = $res['Token_TODEL'];
+            $ReturnArray['Token'] = $res['Token'];
             $ReturnArray['UserId'] = $res['UserData']->UserId;
             $ReturnArray['FullName'] = $res['UserData']->FullName;
             $ReturnArray['LoginName'] = $res['UserData']->LoginName;
@@ -105,7 +105,7 @@ function Authenticate($UserName, $Password)
                 $ReturnArray['ScanDataGroupId'] = DEFAULT_DATAGROUP;
         }
         
-        $this->Token = $ReturnArray['Token_TODEL'];
+        $this->Token = $ReturnArray['Token'];
     }
     if(is_object($res))
     {
@@ -120,7 +120,7 @@ function GetAuthVars ()
 {
     return array
     (
-        new SoapParam ($this->Token, 'Token_TODEL'),
+        new SoapParam ($this->Token, 'Token'),
         new SoapParam ($this->RenewToken ? '0' : '1', 'DoNotRenewToken')
     );
 }
@@ -128,7 +128,7 @@ function GetAuthVars ()
 function IsValidToken($Token)
 {   
     $res = $this->SecClient->__soapCall(    'IsValidToken',                                                    //SOAP Method Name
-                                array(new SoapParam($Token, 'Token_TODEL')));            //Parameters
+                                array(new SoapParam($Token, 'Token')));            //Parameters    
 
     if(is_array($res))
     {
@@ -149,7 +149,7 @@ function IsValidToken($Token)
 * Accepts a valid existing token and returns a new token for the same
 * user and same role.
 * 
-* @return string $Token_TODEL     - new token
+* @return string $Token     - new token
 * 
 */
 function GetAdditionalToken()
@@ -161,7 +161,7 @@ function GetAdditionalToken()
     {
         if($res['GetAdditionalTokenResult']->ASResult == 0)
         {
-            return $res['Token_TODEL'];
+            return $res['Token'];
         }            
     }
     return ReportDataServerError($res);   
@@ -811,8 +811,8 @@ function ListClientSystemDataGroups($SystemId)
         }
     }    
     
-    //print_r($arr);
-    //exit;
+    print_r($arr);
+    exit;
 }
 
 
