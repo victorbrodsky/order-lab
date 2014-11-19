@@ -79,7 +79,7 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        if( array_key_exists('cicle', $this->params) && $this->params['cicle'] != 'new' && $this->params['cicle'] != "create_location" ) {
+        if( array_key_exists('cicle', $this->params) && $this->params['cicle'] != 'new' ) {
 
             //echo "cicle=".$this->params['cicle']."<br>";
 

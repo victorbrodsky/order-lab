@@ -29,19 +29,27 @@ class BuildingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add('geo', new GeoLocationType(), array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
-//            'label' => false,
-//            'required' => false,
-//        ));
+        $standAloneLocation = false;
+        if( strpos($this->params['cicle'],'_standalone') !== false && strpos($this->params['cicle'],'new') === false ) {
+            $standAloneLocation = true;
+        }
 
-//        $builder->add('building', 'employees_custom_selector', array(
-//            'label' => 'Building:',
-//            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
-//            'required' => false,
-//            'classtype' => 'building'
-//        ));
+        //add user and list properties for stand alone location managemenet by LocationController
+        if( $standAloneLocation ) {
+            //list attributes
+            $params = array();
+            $mapper = array();
+            $params['user'] = $this->params['user'];
+            $params['cicle'] = $this->params['cicle'];
+            $params['standalone'] = true;
+            $mapper['className'] = "BuildingList";
+            $mapper['bundleName'] = "OlegUserdirectoryBundle";
 
+            $builder->add('list', new ListType($params, $mapper), array(
+                'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
+                'label' => false
+            ));
+        }
 
         $builder->add('name',null,array(
             'label'=>'Building Name:',
@@ -53,13 +61,11 @@ class BuildingType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-
         $builder->add('geoLocation', new GeoLocationType($this->params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
         ));
-
 
     }
 

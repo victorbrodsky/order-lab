@@ -20,9 +20,9 @@ class BuildingList extends ListAbstract
     private $abbreviation;
 
     /**
-     * @ORM\OneToOne(targetEntity="GeoLocation", mappedBy="building",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
      **/
-    protected $geoLocation;
+    private $geoLocation;
 
     /**
      * @ORM\ManyToOne(targetEntity="Institution")
@@ -98,7 +98,6 @@ class BuildingList extends ListAbstract
     public function setGeoLocation($geoLocation)
     {
         $this->geoLocation = $geoLocation;
-        $geoLocation->setBuilding($this);
     }
 
     /**

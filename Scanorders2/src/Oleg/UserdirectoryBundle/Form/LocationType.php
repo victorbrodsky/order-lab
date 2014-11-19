@@ -31,10 +31,9 @@ class LocationType extends AbstractType
     {
 
         $standAloneLocation = false;
-        if( $this->params['cicle'] == "create_location" || $this->params['cicle'] == "show_location" || $this->params['cicle'] == "edit_location" ) {
+        if( strpos($this->params['cicle'],'_standalone') !== false && strpos($this->params['cicle'],'new') === false ) {
             $standAloneLocation = true;
         }
-
 
         $builder->add('id','hidden',array(
             'label'=>false,
@@ -81,87 +80,23 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('building', new BuildingType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
-            'label' => false,
+//        $builder->add('building', new BuildingType($this->params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
+//            'label' => false,
+//            'required' => false,
+//        ));
+        $builder->add('building', 'employees_custom_selector', array(
+            'label' => 'Building:',
+            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
             'required' => false,
+            'classtype' => 'building'
         ));
 
-//        $builder->add('street1',null,array(
-//            'label'=>'Street Address [Line 1]:',
-//            'attr' => array('class'=>'form-control')
-//        ));
-//
-//        $builder->add('street2',null,array(
-//            'label'=>'Street Address [Line 2]:',
-//            'attr' => array('class'=>'form-control')
-//        ));
-//
-//        $builder->add('city',null,array(
-//            'label'=>'City:',
-//            'attr' => array('class'=>'form-control')
-//        ));
-//
-//        $builder->add( 'state', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:States',
-//            'property' => 'name',
-//            'label'=>'State:',
-//            'required'=> false,
-//            'multiple' => false,
-//            'attr' => array('class'=>'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->where("list.type = :typedef OR list.type = :typeadd")
-//                        ->orderBy("list.orderinlist","ASC")
-//                        ->setParameters( array(
-//                            'typedef' => 'default',
-//                            'typeadd' => 'user-added',
-//                        ));
-//                },
-//        ));
-//
-//        //country
-//        $defaultCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
-//        $builder->add( 'country', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:Countries',
-//            'property' => 'name',
-//            'label'=>'Country:',
-//            'required'=> false,
-//            'multiple' => false,
-//            //'data' => '225',  //United States
-//            'preferred_choices' => $defaultCountries,
-//            'attr' => array('class'=>'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->where("list.type = :typedef OR list.type = :typeadd")
-//                        ->orderBy("list.orderinlist","ASC")
-//                        ->setParameters( array(
-//                            'typedef' => 'default',
-//                            'typeadd' => 'user-added',
-//                        ));
-//                },
-//        ));
-//
-//        $builder->add('county',null,array(
-//            'label'=>'County:',
-//            'attr' => array('class'=>'form-control')
-//        ));
-//
-//        $builder->add('zip',null,array(
-//            'label'=>'Zip Code:',
-//            'attr' => array('class'=>'form-control')
-//        ));
-
-//        $builder->add('buildingName',null,array(
-//            'label'=>'Building Name:',
-//            'attr' => array('class'=>'form-control')
-//        ));
-//        $builder->add('building', 'employees_custom_selector', array(
-//            'label' => 'Building:',
-//            'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
-//            'required' => false,
-//            'classtype' => 'building'
-//        ));
+        $builder->add('geoLocation', new GeoLocationType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'label' => false,
+            'required' => false
+        ));
 
         $builder->add('floor',null,array(
             'label'=>'Floor:',
@@ -212,7 +147,7 @@ class LocationType extends AbstractType
         ));
 
         //assistant
-        if( $this->params['cicle'] != "create_location" ) {
+        if( $this->params['cicle'] != "new_standalone" ) {
             $builder->add('assistant','entity',array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Assistant(s):",
@@ -222,7 +157,7 @@ class LocationType extends AbstractType
             ));
         }
 
-        if( $this->params['cicle'] != "create_location" ) {
+        if( $this->params['cicle'] != "new_standalone" ) {
             $baseUserAttr = new Location();
             $builder->add('status', 'choice', array(
                 'disabled' => ($this->params['read_only'] ? true : false),
@@ -236,7 +171,7 @@ class LocationType extends AbstractType
             ));
         }
 
-        if( $this->params['cicle'] != "show" ) {
+        if( $this->params['cicle'] != "show_standalone" ) {
             $builder->add('locationType','entity',array(
                 'class' => 'OlegUserdirectoryBundle:LocationTypeList',
                 'label' => "Location Type:",
@@ -289,7 +224,7 @@ class LocationType extends AbstractType
         );
 
         //get default privacy
-        if( $this->params['cicle'] == "create_location" ) {
+        if( $this->params['cicle'] == "new_standalone" ) {
             $defaultPrivacy = $this->params['em']->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
             $arrayOptions['data'] = $defaultPrivacy;
         }

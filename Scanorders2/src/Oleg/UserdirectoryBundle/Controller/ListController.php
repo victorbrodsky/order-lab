@@ -561,7 +561,7 @@ class ListController extends Controller
 
             $user = $this->get('security.context')->getToken()->getUser();
             $entity->setUpdatedby($user);
-            $entity->setUpdatedon(new \DateTime());
+            //$entity->setUpdatedon(new \DateTime());
             $entity->setUpdateAuthorRoles($user->getRoles());
 
             if( method_exists($entity,'getSynonyms') ) {

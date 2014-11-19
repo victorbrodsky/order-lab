@@ -36,10 +36,6 @@ class ResearchLab extends BaseUserAttributes
      */
     private $comment;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $location;
     /**
      * @ORM\ManyToOne(targetEntity="Location")
      * @ORM\JoinColumn(name="location", referencedColumnName="id", nullable=true)

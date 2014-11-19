@@ -60,7 +60,7 @@
 
         {#display search result for locations #}
         {% if locations and locations|length > 0 %}
-            {% include 'OlegUserdirectoryBundle::Location/locations-content.html.twig' with {'sitename': employees_sitename} %}
+            {% include 'OlegUserdirectoryBundle::Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
         {% endif %}
         {#{{ render( controller( 'OlegUserdirectoryBundle:Location:getSearchLocation', {'search':search, 'page':page} ) ) }}#}
 

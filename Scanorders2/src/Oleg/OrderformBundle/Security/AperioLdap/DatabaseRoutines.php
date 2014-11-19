@@ -366,6 +366,7 @@ function MakeArray($Thing)
 	return $ThingArray;
 }
 
+
 //------------------------------------------------------------------
 // ADB_Authenticate - Verify that the login/password exist in the db
 //	if a match is found, then return the authentication token and 
@@ -374,31 +375,20 @@ function MakeArray($Thing)
 //------------------------------------------------------------------
 function ADB_Authenticate($UserName, $Password)
 {
-
-        //echo "!!!!!!!!!!!!!! ADB_Authenticate session=<br>";
-        //print_r($_SESSION);
-        //echo "<br>";
-        //exit();
-    
-    $DataServerURL = 'a.wcmc-ad.net';
-       
-	$client = GetSOAPSecurityClient();
+	$client = GetSOAPSecurityClient ();
 
 	// since this is usually the first call to dataserver put it in a try/catch block
 	// because it might fail if dataserver is not accessible.  If an exception occurs
 	// we can display a decent error message.
 	try
-	{                   
+	{
 		$res = $client->__soapCall(	'Logon',																	//SOAP Method Name
-                                                array(
-                                                    'soap_version'=>SOAP_1_2,
-                                                    new SoapParam($UserName, 'UserName'), 		//Parameters
-                                                    new SoapParam($Password, 'PassWord'),                                                   
-                                                    ));            
+									array('soap_version'=>SOAP_1_2,new SoapParam($UserName, 'UserName'), 		//Parameters
+									new SoapParam($Password, 'PassWord')));	
 	}
 	catch (Exception $e) 
-	{		
-                
+	{
+		$DataServerURL = GetDataServerURL();
 		trigger_error("Spectrum SOAP Error:  Unable to communicate with DataServer at $DataServerURL", E_USER_ERROR);
 	}
 
@@ -406,7 +396,7 @@ function ADB_Authenticate($UserName, $Password)
 	if (is_array($res) && ($res['LogonResult']->ASResult == 0))
 	{
 		$ReturnArray['ReturnCode'] = 0;
-		$ReturnArray['Token_TODEL'] = $res['Token_TODEL'];
+		$ReturnArray['Token'] = $res['Token'];
 		$ReturnArray['UserId'] = $res['UserData']->UserId;
 		$ReturnArray['UserMustChangePassword'] = $res['UserData']->UserMustChangePassword;
 	}
@@ -420,22 +410,21 @@ function ADB_Authenticate($UserName, $Password)
 		$ReturnArray = array('ReturnCode'=>'-1','ReturnText'=>'');
 	}
 
-
 	return $ReturnArray;
 
 }
 
 //------------------------------------------------------------------
-// ADB_Logoff - Disconnect and invalidate the existing Auth Token_TODEL
+// ADB_Logoff - Disconnect and invalidate the existing Auth Token
 //------------------------------------------------------------------
 function ADB_Logoff()
 {
 	$client = GetSOAPSecurityClient ();
-	$res = $client->__soapCall('Logoff', array(new SoapParam($_SESSION['AuthToken'], 'Token_TODEL')));
+	$res = $client->__soapCall('Logoff', array(new SoapParam($_SESSION['AuthToken'], 'Token')));
 }
 
 //------------------------------------------------------------------
-// ADB_IsValidToken - Validate an Auth Token_TODEL
+// ADB_IsValidToken - Validate an Auth Token
 //	if $Renew is true, then the valid token is renewed
 //------------------------------------------------------------------
 function ADB_IsValidToken($DoNotRenewToken = false)
@@ -443,7 +432,7 @@ function ADB_IsValidToken($DoNotRenewToken = false)
 	$client = GetSOAPSecurityClient ();
 	
 	$res = $client->__soapCall('IsValidToken',
-								array(new SoapParam($_SESSION['AuthToken'], 'Token_TODEL'),
+								array(new SoapParam($_SESSION['AuthToken'], 'Token'),
 									  new SoapParam($DoNotRenewToken ? '1' : '0', 'DoNotRenewToken')));
 
 	if(is_array($res))
@@ -469,7 +458,7 @@ function ADB_IsValidSignature($Password)
 	$client = GetSOAPSecurityClient ();
 
 	$res = $client->__soapCall(	'IsValidSignature',
-								array(new SoapParam($_SESSION['AuthToken'], 'Token_TODEL'),
+								array(new SoapParam($_SESSION['AuthToken'], 'Token'),
 								new SoapParam($Password, 'Password')));	 	  
 
 	if(is_array($res))
@@ -915,16 +904,25 @@ function ADB_UpdateAccessByDataGroup($DataGroupId, $UserIds, $AccessLevels, $Pri
 
 }
 //------------------------------------------------------------------
-// ADB_GetPinDrops -  returns XML list of pin drops for entire case
+// ADB_GetPinDrops -  returns XML list of pin drops for entire $TableName
 //------------------------------------------------------------------
-function ADB_GetPinDrops($TableName, $CurrentId)
+function ADB_GetPinDrops($TableName, $CurrentIds)
 {
 	$client = GetSOAPImageClient();
-	$CaseIds = '<Ids><Id>' . $CurrentId . '</Id></Ids>';  // TODO Get prior case ids
+	if (!is_array($CurrentIds))
+	{
+		$CurrentId = array($CurrentIds);
+	}
+	$Ids = '<Ids>';
+	foreach($CurrentIds as $Id)
+	{
+		$Ids .= "<Id>$Id</Id>";
+	}
+	$Ids .= '</Ids>';
 	
 	$ParamsArray = GetAuthVars();
 	$ParamsArray[] = new SoapParam($TableName, 'TableName');
-	$ParamsArray[] = new SoapVar($CaseIds, 147);
+	$ParamsArray[] = new SoapVar($Ids, 147);
 
 	$res = $client->__soapCall('GetPinDrops', $ParamsArray);
 	CheckDBResult($res);
@@ -1373,7 +1371,7 @@ function ADB_GetRecordListWithFilterArray($TableName='Slide', $RecordsPerPage=0,
 			$SelectColumnsAliasXML .= "<Column><Name>" . $SortByField . '</Name><Alias>B' . $alias . '</Alias></Column>';			
 		}
 	}
-   $SelectColumnsAliasXML .= '</ColumnList>';   
+	$SelectColumnsAliasXML .= '</ColumnList>';   
 	$ParamsArray[] = new SoapVar($SelectColumnsAliasXML, 147);	
 	
 	if (is_array($SortByField) || is_array($SortOrder))
@@ -1514,6 +1512,18 @@ function ADB_GetRecordListWithFilterArray($TableName='Slide', $RecordsPerPage=0,
 	}
 
 	return ReportDataServerError($res);
+}
+//------------------------------------------------------------------
+// ADB_CheckUserRights -  Check user rights for an image
+//------------------------------------------------------------------
+function ADB_CheckUserRights($ImageId)
+{
+	$client = GetSOAPImageClient();
+	$ParamsArray = GetAuthVars ();
+	$ParamsArray[] = new SoapParam ($ImageId, 'ImageId');
+	$res = $client->__soapCall(	'CheckUserRights', $ParamsArray, array('encoding'=>'UTF-8'));
+
+	return $res;
 }
 
 //------------------------------------------------------------------
@@ -1790,6 +1800,8 @@ function ADB_GetDSCUsers()
 	//remove logged on user from possible participants list. You cannot be a host and participant!!
 	$FilterSelfXML = "<FilterBy Column='Id' FilterOperator='&lt;&gt;' FilterValue='".$_SESSION['UserId']."' />";
 	$ParamsArray[] = new SoapVar($FilterSelfXML, 147);
+	$SelectColumns = '<ColumnList Distinct="true">Id FullName LoginName DscAvailability</ColumnList>';   
+	$ParamsArray[] = new SoapVar($SelectColumns, 147);	
 
 	$res = $client->__soapCall('GetDSCUsers', $ParamsArray, array('encoding'=>'UTF-8'));
 
@@ -1844,6 +1856,22 @@ function ADB_GetDSCUser($UserId)
 	}
 
 	return new stdClass();
+}
+
+//------------------------------------------------------------------
+// ADB_CreateDataTransfer -  Schedules a new entity (case,specimen, etc.) for upload to cloud (ePathAccess)
+//------------------------------------------------------------------
+function ADB_CreateDataTransfer($TableName, $RecordId, $MemoContent)
+{
+    // get AMN client
+    $client = GetSOAPAmnClient();
+
+    $ParamsArray = GetAuthVars ();
+    $ParamsArray[] = new SoapParam($TableName, 'TableName');
+    $ParamsArray[] = new SoapParam($RecordId, 'RecordId');
+    $ParamsArray[] = new SoapParam($MemoContent, 'MemoContent');
+    
+    return $client->__soapCall('CreateDataTransfer', $ParamsArray);
 }
 
 //------------------------------------------------------------------
@@ -3543,7 +3571,7 @@ function ADB_GetDataHierarchy($HierarchyName, $IncludeDocuments, $IncludeReports
 	}
 
 
-	if (IsLicensed('Health Care Suite') == true)
+	if (IsLicensed('Health Care') == true)
 	{
 		$TableNames[] = 'VwCaseInfo';
 		$TableNames[] = 'VwCaseResults';
@@ -3652,7 +3680,7 @@ function ADB_GetConfigValues()
 	// If it hasn't been loaded for the session yet, grab all the defaults
 	if (!isset ($_SESSION ['Config']))
 	{
-		$_SESSION ['Config'] = GetConfigDefaults();	// Start with the defaults
+		SetConfigDefaults();	// Start with the defaults
 	}
 
 	unset($_SESSION['Config']['ini']);	// Ensure any new settings are captured
@@ -4282,14 +4310,14 @@ function ADB_SetLicenses ($systemId, $systemDesc, $key)
 
 
 // Return all the system licensing information
-// ent:	$Token_TODEL - current session's token (needed because this is called from Authenticate.php
+// ent:	$Token - current session's token (needed because this is called from Authenticate.php
 // 					where the AuthToken Session var is set but not yet established.
 function ADB_GetLicenses ($Token = NULL, $DoThrow = true)
 {
 	$client = GetSOAPSecurityClient ();
 
 	if ($Token)
-		$ParamsArray = array (new SoapParam($Token, 'Token_TODEL'));
+		$ParamsArray = array (new SoapParam($Token, 'Token'));
 	else
 		$ParamsArray = GetAuthVars();
 
@@ -4349,10 +4377,26 @@ function ADB_GetLicenses ($Token = NULL, $DoThrow = true)
 						{
 							$Ret['Components']['TumorBoard'] = $Component;
 						}
+						else if ($Component->Name == 'Health Care Suite')
+						{
+							// Try to be compatible with 12.0.1 license
+							$Component->Name = 'Health Care';
+							$Ret['Components']['Health Care'] = $Component;
+						}
+						else if (($Component->Name == 'Procedural App')
+							||   ($Component->Name == 'Peer Review'))
+						{
+							// All php components know this as eMicroscope
+							$Ret['Components']['eMicroscope'] = $Component;
+						}
 						else if ($Component->Name == 'ExpirationWarningTime')
 						{
 							// This technically isn't a component
 							$Ret['ExpirationWarningTime'] = $Component->NumDays;
+						}
+						else if ($Component->Name == 'Aperio Image Hub')
+						{
+							continue;
 						}
 						else
 						{
@@ -4377,7 +4421,7 @@ function ADB_GetLicenses ($Token = NULL, $DoThrow = true)
 	// There is no more vanilla spectrum - SpectrumPlus is required (and can expire)
 	if ($HasEslideMgr == false)
 	{
-		SetError('eSlide Manager license has expired. Please contact Aperio at 866-478-3999 or support@aperio.com to renew', E_ERROR);
+		SetError('eSlide Manager license has expired.' . ContactSupport() . 'to renew', E_ERROR);
 		$Ret['ASResult'] = INVALID_LICENSE;
 	}
 
@@ -6680,8 +6724,6 @@ function ADB_DeleteUserGroup ($UserGroupId)
  * @descr   Saves the User to DataGroup or Role assignments or removal of assignments.
  * @param	string $FKFieldName -- "DataGroupId" or "RoleId"
  * @param	int	$FKId -- The Id value of $FKFieldName
- * @param	string $TableName -- The table name where we're adding/removing/modifying data.
- * @param	int $IdFieldName -- "UserId" or "UserGroupId"
  * @param	string $AddListStr -- If $FKFieldName = "DataGroupId" then a string of one or more (Id,AccessFlags) where Id is associated with $IdFieldName comma seperated,
  * 			else just a list of $IdFieldName Ids that need to be added to $TableName
  * @param	string $RemoveListStr -- A list of $IdFieldName Ids that need to be removed from $TableName
@@ -6887,7 +6929,7 @@ function ADB_GetEffectiveRoles($UserId){
 	foreach ($UserGroupRoles as $RolesRec2)
 	{
 		if ($RolesRec2['UpToUserGroupByUserGroupId.DownToUserGroupRoleByUserGroupId.UpToRoleByRoleId.Name'] != '')
-		{    // user has roles via user group.
+		{	// user has roles via user group.
 			$UserGroupRoles2[$index]['RoleId'] = $RolesRec2['UpToUserGroupByUserGroupId.DownToUserGroupRoleByUserGroupId.RoleId'];
 			$UserGroupRoles2[$index]['RoleName'] = $RolesRec2['UpToUserGroupByUserGroupId.DownToUserGroupRoleByUserGroupId.UpToRoleByRoleId.Name'];
 			$UserGroupRoles2[$index]['RoleDescription'] = $RolesRec2['UpToUserGroupByUserGroupId.DownToUserGroupRoleByUserGroupId.UpToRoleByRoleId.Description'];
@@ -7387,11 +7429,12 @@ function ADB_RenameTBFolder($TBId,$NewName)
 				array('DataGroups'),
 				'','',$Total);
 	
-	if (!is_array($res)){
+	if (!is_array($res) || !isset($res[0]['UpToDataGroupsByParentDataGroupId.Name']))
+	{
 		trigger_error("Can't find parent datagroup");
 		return -1;
 	}
-	$ParentName = $res[0]['Name'];
+	$ParentName = $res[0]['UpToDataGroupsByParentDataGroupId.Name'];
 
 	$DataGroupRec['Name'] = $NewName;
 	$DataGroupRec['Description'] = $ParentName . " - " . $NewName;
@@ -7399,26 +7442,6 @@ function ADB_RenameTBFolder($TBId,$NewName)
 	$res = ADB_PutRecordData('DataGroups',$DataGroupRec,$TBId);
 	
 	return $res;
-}
-
-/**
- * Database function to remove a TB folder under the main TB Folders tree represented in DataGroups table.
- * 
- * @param string  $TBId 		    	TB Id
- * @return array|bool                   Returns 0 or error.
- * 
- */
-function ADB_DeleteTBFolder($TBId)
-{
-	// get Spectrum Health Care client
-	$client = GetSOAPShcClient ();
-	
-	$ParamsArray = GetAuthVars ();
-	$ParamsArray[] = new SoapParam($TBId, 'TumorBoardId');
-	$res = $client->__soapCall(	'DeleteTumorBoard', $ParamsArray, array('encoding'=>'UTF-8'));
-
-	CheckDBResult($res);
-	return $res;	
 }
 
 function ADB_CreateRoleCopy($roleName, $roleDescription, $dataHierarchyId, $allowSelfAssign, $copyRoleId)

@@ -139,7 +139,7 @@
     {% endif %}
 
     {% set standAloneLocation = false %}
-    {% if cicle == "create_location" or cicle == "show_location" or cicle == "edit_location" %}
+    {% if cicle == "create_standalone" or cicle == "show_standalone" or cicle == "edit_standalone" %}
         {% set wellclass = "" %}
         {% set standAloneLocation = true %}
     {% endif %}
@@ -314,15 +314,12 @@
                     {{ formmacros.field_notempty(formfield.department,cicle) }}
                     {{ formmacros.field_notempty(formfield.division,cicle) }}
                     {{ formmacros.field_notempty(formfield.service,cicle) }}
-
                     {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
-
-                    {#Building#}
-                    {{ userform.buildingName(field,cicle,prototype) }}
+                    {{ formmacros.field_notempty(formfield.building,cicle) }}
                 {% endif %}
 
-                {#Building GeoLocation#}
-                {{ userform.buildingGeoLocation(field,cicle,prototype) }}
+                {#Location GeoLocation#}
+                {{ userform.geoLocation(field,cicle,prototype) }}
 
                 {% if homeLocation == false %}
                     {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
@@ -346,35 +343,24 @@
 
 {% endmacro %}
 
-{% macro buildingName( entity, cicle, prototype ) %}
+
+{#entity is a location object#}
+{% macro geoLocation( entity, cicle, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
-        {% set formfield = entity.vars.prototype.building %}
+        {% set formfield = entity.vars.prototype.geoLocation %}
     {% else %}
-        {% set formfield = entity.building %}
+        {% set formfield = entity.geoLocation %}
     {% endif %}
 
-    {{ formmacros.field_notempty(formfield.name,cicle) }}
-    {{ formmacros.field_notempty(formfield.abbreviation,cicle) }}
-{% endmacro %}
-
-{% macro buildingGeoLocation( entity, cicle, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-
-    {% if prototype == "prototype" %}
-        {% set formfield = entity.vars.prototype.building %}
-    {% else %}
-        {% set formfield = entity.building %}
-    {% endif %}
-
-    {{ formmacros.field_notempty(formfield.geoLocation.street1,cicle) }}
-    {{ formmacros.field_notempty(formfield.geoLocation.street2,cicle) }}
-    {{ formmacros.field_notempty(formfield.geoLocation.city,cicle) }}
-    {{ formmacros.field_notempty(formfield.geoLocation.state,cicle) }}
-    {{ formmacros.field_notempty(formfield.geoLocation.zip,cicle) }}
-    {{ formmacros.field_notempty(formfield.geoLocation.county,cicle) }}
-    {{ formmacros.field_notempty(formfield.geoLocation.country,cicle) }}
+    {{ formmacros.field_notempty(formfield.street1,cicle) }}
+    {{ formmacros.field_notempty(formfield.street2,cicle) }}
+    {{ formmacros.field_notempty(formfield.city,cicle) }}
+    {{ formmacros.field_notempty(formfield.state,cicle) }}
+    {{ formmacros.field_notempty(formfield.zip,cicle) }}
+    {{ formmacros.field_notempty(formfield.county,cicle) }}
+    {{ formmacros.field_notempty(formfield.country,cicle) }}
 {% endmacro %}
 
 {% macro statusVerifiedField( entity, cicle ) %}
@@ -461,3 +447,62 @@
 {% endmacro %}
 
 
+{% macro listProperties(formfield) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    <div class="well">
+        <p>
+        <h4 class="text-muted" align="center">List properties:</h4>
+        </p>
+        {% if formfield.list.original is defined %}
+            {{ formmacros.field(formfield.list.original) }}
+        {% endif %}
+
+        {% if formfield.list.synonyms is defined %}
+            {{ formmacros.field(formfield.list.synonyms) }}
+        {% endif %}
+
+        {{ formmacros.field(formfield.list.type) }}
+
+        {{ formmacros.field(formfield.list.creator) }}
+
+        {{ formmacros.field(formfield.list.createdate) }}
+
+        {{ formmacros.field(formfield.list.orderinlist) }}
+
+        {% if formfield.list.updatedby is defined %}
+            {{ formmacros.field(formfield.list.updatedby) }}
+            {{ formmacros.field(formfield.list.updatedon) }}
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro buildingObject( field, cicle, classname, prototype, sitename, entity ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as userform %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% set standAloneLocation = false %}
+    {% if cicle == "create_standalone" or cicle == "show_standalone" or cicle == "edit_standalone" %}
+        {% set wellclass = "" %}
+        {% set standAloneLocation = true %}
+    {% endif %}
+
+    {#show list properties#}
+    {% if standAloneLocation %}
+        {{ userform.listProperties(formfield) }}
+    {% endif %}
+
+    {{ formmacros.field(formfield.name) }}
+    {{ formmacros.field(formfield.abbreviation) }}
+
+    {#Location GeoLocation#}
+    {{ userform.geoLocation(field,cicle,prototype) }}
+
+    {% do formfield.setRendered %}
+
+{% endmacro %}

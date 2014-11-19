@@ -108,14 +108,6 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
      */
     private $locations;
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Location")
-//     * @ORM\JoinTable(name="user_user_location",
-//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id")}
-//     *      )
-//     **/
-//    private $locations;
 
     /**
      * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist"})
@@ -192,22 +184,6 @@ class User extends BaseUser
         //set unlocked, enabled
         $this->setLocked(false);
         $this->setEnabled(true);
-
-        //$this->setEmail('-1');
-        //$this->setEmailCanonical('-1');
-
-//        //two default locations: "main office" and "home"
-//        $mainLocation = new Location($this);
-//        $mainLocation->setName('Main Office');
-//        $mainLocation->setRemovable(false);
-//        $this->locations->set(0,$mainLocation);  //main has index 0
-//        $mainLocation->setUser($this);
-//
-//        $homeLocation = new Location($this);
-//        $homeLocation->setName('Home');
-//        $homeLocation->setRemovable(false);
-//        $this->locations->set(1,$homeLocation);  //home has index 1
-//        $homeLocation->setUser($this);
 
         parent::__construct();
     }

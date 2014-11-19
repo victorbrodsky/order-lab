@@ -2,6 +2,8 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Entity\BuildingList;
+use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\ResearchLabTitleList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -98,7 +100,7 @@ class AdminController extends Controller
         $count_equipment = $this->generateEquipment();
         $count_locprivacy = $this->generateLocationPrivacy();
         $count_reslabtitles = $this->generateResLabTitles();
-
+        $count_buildings = $this->generateBuildings();
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
@@ -123,10 +125,11 @@ class AdminController extends Controller
             'Identifier Types ='.$count_identifierTypeList.', '.
             'Residency Tracks ='.$count_residencyTrackList.', '.
             'Fellowship Types ='.$count_fellowshipTypeList.', '.
-            'Location Types ='.$count_locationTypeList.', '.
             'Equipment Types ='.$count_equipmentType.', '.
             'Equipment ='.$count_equipment.', '.
+            'Location Types ='.$count_locationTypeList.', '.
             'Location Privacy ='.$count_locprivacy.', '.
+            'Buildings ='.$count_buildings.', '.
             'Reaserch Lab Titles='.$count_reslabtitles.' '.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -501,7 +504,7 @@ class AdminController extends Controller
         );
 
         $nyh = array(
-            'abbreviation'=>'NYH',
+            'abbreviation'=>'NYP',
             'departments'=>$nyhDep
         );
 
@@ -1170,6 +1173,90 @@ class AdminController extends Controller
 
             $listEntity = new ResearchLabTitleList();
             $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return $count;
+    }
+
+
+    public function generateBuildings() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $buildings = array(
+            "Weill Cornell Medical College" => array('street1'=>'1300 York Ave','abbr'=>'C','inst'=>'WCMC'),
+            "Belfer Research Building" => array('street1'=>'413 East 69th Street','abbr'=>null,'inst'=>'WCMC'),
+            "Helmsley Medical Tower" => array('street1'=>'1320 York Ave','abbr'=>null,'inst'=>'WCMC'),
+            "Weill Greenberg Center" => array('street1'=>'1305 York Ave','abbr'=>null,'inst'=>'WCMC'),
+            "Olin Hall" => array('street1'=>'445 East 69th Street','abbr'=>null,'inst'=>'WCMC'),
+            "" => array('street1'=>'575 Lexington Ave','abbr'=>null,'inst'=>'WCMC'),                        //WCMC - 575 Lexington Ave
+            "" => array('street1'=>'402 East 67th Street','abbr'=>null,'inst'=>'WCMC'),                     //WCMC - 402 East 67th Street
+            "" => array('street1'=>'425 East 61st Street','abbr'=>null,'inst'=>'WCMC'),                     //WCMC - 425 East 61st Street
+            "Starr Pavilion" => array('street1'=>'520 East 70th Street','abbr'=>'ST','inst'=>'NYP'),
+            "J Corridor" => array('street1'=>'525 East 68th Street','abbr'=>'J','inst'=>'NYP'),
+            "L Corridor" => array('street1'=>'525 East 68th Street','abbr'=>'L','inst'=>'NYP'),
+            "K Wing" => array('street1'=>'525 East 68th Street','abbr'=>'K','inst'=>'NYP'),
+            "F Wing, Floors 2-9" => array('street1'=>'525 East 68th Street','abbr'=>'F','inst'=>'NYP'),
+            "Baker Pavilion - F Wing" => array('street1'=>'525 East 68th Street','abbr'=>'P','inst'=>'NYP'),
+            "Payson Pavilion" => array('street1'=>'425 East 61st Street','abbr'=>null,'inst'=>'NYP'),
+            "Whitney Pavilion" => array('street1'=>'525 East 68th Street','abbr'=>'W','inst'=>'NYP'),
+            "M Wing" => array('street1'=>'530 East 70th Street','abbr'=>'M','inst'=>'NYP'),
+            "N Wing" => array('street1'=>'530 East 70th Street','abbr'=>'N','inst'=>'NYP'),
+            "Weill Cornell Medical Assoc. Eastside" => array('street1'=>'201 East 80th Street','abbr'=>null,'inst'=>'NYP'),
+            "Weill Cornell Medical Assoc. Westside" => array('street1'=>'12 West 72nd Street','abbr'=>null,'inst'=>'NYP'),
+            "Iris Cantor Women’s Health Center" => array('street1'=>'425 East 61st Street','abbr'=>null,'inst'=>'NYP'),
+            "Weill Cornell Imaging at NewYork-Presbyterian" => array('street1'=>'416 East 55th Street','abbr'=>null,'inst'=>'NYP'),    //NYP - Weill Cornell Imaging at NewYork-Presbyterian / 416 East 55th Street
+            "Weill Cornell Imaging at NewYork-Presbyterian, 9th Floor" => array('street1'=>'425 East 61st Street','abbr'=>null,'inst'=>'NYP'),    //NYP - Weill Cornell Imaging at NewYork-Presbyterian / 425 East 61st Street, 9th Floor
+            "Weill Cornell Imaging at NewYork-Presbyterian, lobby level" => array('street1'=>'520 East 70th Street','abbr'=>null,'inst'=>'NYP'),    //NYP - Weill Cornell Imaging at NewYork-Presbyterian / 520 East 70th Street, lobby level
+            "Weill Cornell Imaging at NewYork-Presbyterian, 3rd Floor" => array('street1'=>'1305 York Avenue','abbr'=>null,'inst'=>'NYP'),    //NYP - Weill Cornell Imaging at NewYork-Presbyterian / 1305 York Avenue, 3rd Floor
+            "Oxford Medical Offices" => array('street1'=>'428 East 72nd Street','abbr'=>null,'inst'=>'NYP'),
+            "Stich Building" => array('street1'=>'1315 York Ave','abbr'=>null,'inst'=>'NYP'),
+            "Kips Bay Medical Offices" => array('street1'=>'411 East 69th Street','abbr'=>null,'inst'=>'NYP'),
+            "Phipps House Medical Offices" => array('street1'=>'449 East 68th Street','abbr'=>null,'inst'=>'NYP'),
+            ""  => array('street1'=>'333 East 38th Street','abbr'=>null,'inst'=>'NYP')  //NYP - 333 East 38th Street
+
+        );
+
+        $city = "New York";
+        $state = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("New York");
+        $country = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("United States");
+
+        $count = 1;
+        foreach( $buildings as $building => $attr ) {
+
+            $listEntity = new BuildingList();
+            $this->setDefaultList($listEntity,$count,$username,$building);
+
+            //add buildings attributes
+            $street1 = $attr['street1'];
+            $buildingAbbr = $attr['abbr'];
+
+            $geo = new GeoLocation();
+            $geo->setStreet1($street1);
+            $geo->setCity($city);
+            $geo->setState($state);
+            $geo->setCountry($country);
+
+            $listEntity->setGeoLocation($geo);
+            $listEntity->setAbbreviation($buildingAbbr);
+
+            $instAbbr = $attr['inst'];
+            $inst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
+            if( $inst ) {
+                $listEntity->setInstitution($inst);
+            }
 
             $em->persist($listEntity);
             $em->flush();

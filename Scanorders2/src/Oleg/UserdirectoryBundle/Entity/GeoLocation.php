@@ -34,10 +34,6 @@ class GeoLocation
      */
     private $city;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $state;
     /**
      * @ORM\ManyToOne(targetEntity="States")
      * @ORM\JoinColumn(name="state", referencedColumnName="id", nullable=true)
@@ -60,29 +56,29 @@ class GeoLocation
      */
     private $zip;
 
-    /**
-     * @ORM\OneToOne(targetEntity="BuildingList", inversedBy="geoLocation")
-     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
-     */
-    private $building;
+//    /**
+//     * @ORM\OneToOne(targetEntity="BuildingList", inversedBy="geoLocation")
+//     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
+//     */
+//    private $building;
 
 
 
-    /**
-     * @param mixed $building
-     */
-    public function setBuilding($building)
-    {
-        $this->building = $building;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBuilding()
-    {
-        return $this->building;
-    }
+//    /**
+//     * @param mixed $building
+//     */
+//    public function setBuilding($building)
+//    {
+//        $this->building = $building;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getBuilding()
+//    {
+//        return $this->building;
+//    }
 
     /**
      * @param mixed $city

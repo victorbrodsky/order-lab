@@ -33,22 +33,22 @@ include_once '/Skeleton.php';
 		$SaveSession['OverrideStartPage'] = $_SESSION['OverrideStartPage'];
 
 	// Destroy the last session (if any), create the new one
-	$Id = strval(time()); // Set a unique (across tabs/browsers) session id
 	while (true)
 	{
 		session_destroy();
-		session_id($Id);
+		$id = GenerateSessionId();
+		session_id($id);
 		session_start();
 		// PHP will sometimes have a user log in under an existing session (a different user); prevent this
 		if (empty($_SESSION))
 			break;
-		$Id++;
 	}
 
 	// Restore saved parameters
 	foreach ($SaveSession as $Key => $Value)
 		$_SESSION[$Key] = $Value;
 
+	SetConfigDefaults();	//  Set configuration defaults.  They may be needed if licensing.
 
 	$AuthResult = ADB_Authenticate($LoginName, $Password);
 	if ($AuthResult['ReturnCode'] != 0)
@@ -58,7 +58,7 @@ include_once '/Skeleton.php';
 		header("Location: /Login.php?error=$Error");
 		exit();
 	}
-	$_SESSION['AuthToken'] = $AuthResult['Token_TODEL'];
+	$_SESSION['AuthToken'] = $AuthResult['Token'];
 
 	// If the user MUST change their password before proceeding
 	if (isset ($AuthResult['UserMustChangePassword']) && $AuthResult['UserMustChangePassword'] == 'True')
@@ -82,26 +82,19 @@ include_once '/Skeleton.php';
 
 	$UsersTable = GetTableObj('Users');
 	$User = $UsersTable->GetOneRecord($AuthResult['UserId']);
-	// ??? Should reset StartPage to AllRecords.php if PAL user --especially if iPad users cannot login to Spectrum now
-	if ((isset($User->StartPage) == false) || ($User->StartPage == '')) {
-		//$User->StartPage = '/Welcome.php';
-                $User->StartPage = '/order/scanorder/Scanorders2/web/app_dev.php/orderinfo/';
-                echo "OK!!!!";
-                //exit();
-        }
-	// Keep StartPage encoded during session so that it may be passed in URL
-	$User->StartPage = urlencode($User->StartPage);
+	if (isset($User->StartPage) && ($User->StartPage != ''))
+	{
+		// Keep StartPage encoded during session so that it may be passed in URL
+		$User->StartPage = urlencode($User->StartPage);
+	}
+
+	// Maintain deprecated interface
 	$_SESSION['User'] = ObjectToArray($User);
 
 
 	//
 	// Set standard SESSION variables
 	//
-
-	// Limit masthead commands until login is completed
-	$_SESSION['MastHead']['DisplayUserName'] = false;
-	$_SESSION['MastHead']['DisplayNonAdminMenu'] = false;
-	$_SESSION['MastHead']['DisplayAdminMenu'] = false;
 
 	// Timezone offset (subtract this form all DateTime fields when displaying and saving)
 	$_SESSION['TimezoneOffset'] = isset ($_REQUEST['TimezoneOffset']) ? $_REQUEST['TimezoneOffset'] : 0;
@@ -123,13 +116,13 @@ include_once '/Skeleton.php';
 	$_SESSION['FullName'] = $User->FullName;
 	$_SESSION['Phone'] = $User->Phone;
 	$_SESSION['E_Mail'] = $User->E_Mail;
-   	$_SESSION['AcceptedTerms'] = $User->AcceptedTerms;
+	$_SESSION['AcceptedTerms'] = $User->AcceptedTerms;
 	$_SESSION['LastLoginTime'] = $User->LastLoginTime;
 	$_SESSION['StartPage'] = $User->StartPage;
 	$_SESSION['PasswordDaysLeft'] = $User->PasswordDaysLeft;
 	$_SESSION['UserMustChangePassword'] = $User->UserMustChangePassword;
 	$_SESSION['AutoView'] = $User->AutoView;
-   	$_SESSION['ImageTransferNotificationEmail'] = $User->ImageTransferNotificationEmail;
+	$_SESSION['ImageTransferNotificationEmail'] = $User->ImageTransferNotificationEmail;
 	$_SESSION['DisableLicenseWarning'] = $User->DisableLicenseWarning;
 	$_SESSION['ScanDataGroupId'] = $User->ScanDataGroupId;
 
@@ -147,7 +140,7 @@ include_once '/Skeleton.php';
 		}
 		else
 		{
-			header('Location: /order/Ldap//LogOff.php?error=System is unlicensed, please log in as administrator.');
+			header('Location: /LogOff.php?error=System is unlicensed, please log in as administrator.');
 		}
 		exit();
 	}
@@ -159,11 +152,10 @@ include_once '/Skeleton.php';
 	{
 		if (($LoginName != 'administrator') && ($LoginName != 'guest'))
 		{
-			header('Location: /order/Ldap/Login2.php?error=Invalid User');
+			header('Location: /Login.php?error=Invalid User');
 			exit();
 		}
 	}
 
-	//header('Location: /order/Ldap/Welcome.php');
-        header('Location: /order/scanorder/Scanorders2/web/app_dev.php/orderinfo/');
+	header('Location: /Disclaimer.php');
 ?>

@@ -3287,7 +3287,7 @@ function ADB_AddAnalysisMacro($MacroName, $DataGroupID, $MacroXml)
 		elseif($res->ASResult != 0)
 		{
 			SetError('Invalid Macro file');
-			header('Location: /AddAnalysisMacro.php');
+			header('ComplexList: /AddAnalysisMacro.php');
 			exit();
 		}
 	}
@@ -6425,9 +6425,9 @@ function ADB_GetExternalUserInfo($UserName)
  * 
  * <WorkflowEntityCopyResult><ASResult>0</ASResult><ASMessage></ASMessage></WorkflowEntityCopyResult> 
  * <Documents> 
- * <Document><Id>136</Id><Location>C:\\UploadedDocs\\Breast CA Report[3003].doc</Location></Document> 
- * <Document><Id>137</Id><Location>C:\\UploadedDocs\\Breast CA Report[3005].doc</Location></Document> 
- * <Document><Id>138</Id><Location>C:\\UploadedDocs\\Perforce User's Guide.pdf</Location></Document> 
+ * <Document><Id>136</Id><ComplexList>C:\\UploadedDocs\\Breast CA Report[3003].doc</ComplexList></Document>
+ * <Document><Id>137</Id><ComplexList>C:\\UploadedDocs\\Breast CA Report[3005].doc</ComplexList></Document>
+ * <Document><Id>138</Id><ComplexList>C:\\UploadedDocs\\Perforce User's Guide.pdf</ComplexList></Document>
  * </Documents>
  */
 function ADB_CopyToEntities($parentTable, $currentTable, $copyRecordIds, $copyAnnotationsFlag, $copyDocumentsFlag, $copyReportsFlag, $parentId = null)
@@ -6471,9 +6471,9 @@ function ADB_CopyToEntities($parentTable, $currentTable, $copyRecordIds, $copyAn
  * Sample Returned XML from DataServer:
  * <CopyToEntitiesResult><ASResult>0</ASResult><ASMessage></ASMessage></CopyToEntitiesResult> 
  * <Documents> 
- * <Document><Id>136</Id><Location>C:\\UploadedDocs\\Breast CA Report[3003].doc</Location></Document> 
- * <Document><Id>137</Id><Location>C:\\UploadedDocs\\Breast CA Report[3005].doc</Location></Document> 
- * <Document><Id>138</Id><Location>C:\\UploadedDocs\\Perforce User's Guide.pdf</Location></Document> 
+ * <Document><Id>136</Id><ComplexList>C:\\UploadedDocs\\Breast CA Report[3003].doc</ComplexList></Document>
+ * <Document><Id>137</Id><ComplexList>C:\\UploadedDocs\\Breast CA Report[3005].doc</ComplexList></Document>
+ * <Document><Id>138</Id><ComplexList>C:\\UploadedDocs\\Perforce User's Guide.pdf</ComplexList></Document>
  * </Documents>                         
  */
 function ADB_CopyWorkflowEntities($currentTable, $dataGroupId, $copyAnnotationsFlag, $copyDocumentsFlag, $copyReportsFlag, $copyEntityIds)

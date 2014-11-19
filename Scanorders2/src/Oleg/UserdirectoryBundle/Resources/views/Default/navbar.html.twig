@@ -85,7 +85,7 @@
                     {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 
                         <li id="nav-bar-adduser" class="hidden-xs divider-vertical"><a href="{{ path(employees_sitename~'_new_user') }}">Add Employee</a></li>
-                        <li id="nav-bar-addlocation" class="hidden-xs divider-vertical"><a href="{{ path(employees_sitename~'_new_location') }}">Add Location</a></li>
+                        <li id="nav-bar-addlocation" class="hidden-xs divider-vertical"><a href="{{ path(employees_sitename~'_locations_pathaction_new_standalone') }}">Add Location</a></li>
 
                     {% endif %}
 

@@ -13,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Validator\Constraints as Assert;
-//use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -290,13 +289,15 @@ abstract class ListAbstract
         return $this->updatedby;
     }
 
-    //@ORM\PrePersist
     /**
-     * @param \DateTime $updatedon
+     * @ORM\PrePersist
+     * @param
      */
-    public function setUpdatedon($updatedon)
+    public function setUpdatedon()
     {
-        $this->updatedon = $updatedon;
+        if( $this->id ) {
+            $this->updatedon = new \DateTime();
+        }
     }
 
     /**
