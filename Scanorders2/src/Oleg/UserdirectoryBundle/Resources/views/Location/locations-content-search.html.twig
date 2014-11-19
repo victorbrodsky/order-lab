@@ -1,0 +1,38 @@
+
+
+{% if search is defined and search != "" %}
+    <h3 class="text-info">Results of Location search for: "{{ search }}"</h3>
+{% endif %}
+
+<table class="records_list table table-hover table-condensed text-left">
+    <thead>
+    <tr>
+        <th style="display:none">{{ knp_pagination_sortable(locations, 'ID', 'location.id') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Name', 'location.name') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Phone', 'location.phone') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'IC', 'location.ic') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Fax', 'location.fax') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Room', 'location.room') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Supervisor', 'locationuser.displayName') }}</th>
+    </tr>
+    </thead>
+    <tbody data-link="row" class="rowlink">
+    {% for entity in locations %}
+        <tr>
+            <td style="display:none"><a href="{{ path(employees_sitename~'locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>{{ entity.getNameFull() }}</td>
+            <td>{{ entity.phone }}</td>
+            <td>{{ entity.ic }}</td>
+            <td>{{ entity.fax }}</td>
+            <td>{{ entity.room }}</td>
+            <td>{{ entity.user }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<div class="navigation">
+    {{ knp_pagination_render(locations) }}
+</div>
+

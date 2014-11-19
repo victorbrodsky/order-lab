@@ -1,0 +1,86 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+
+{% set title = singleName %}
+
+{% if cicle == 'new_standalone' %}
+    {% set title = "Add New "~singleName %}
+{% endif %}
+
+{% if cicle == 'show_standalone' %}
+    {% set title = "View "~singleName %}
+{% endif %}
+
+{% if cicle == 'edit_standalone' %}
+    {% set title = "Edit "~singleName %}
+{% endif %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+
+{% block content %}
+
+
+    <h4 class="text-info" align="center">{{ title }}</h4>
+
+    <br>
+
+
+    {{ form_start(form) }}
+
+
+
+
+        {% if pathname == 'locations' %}
+            {{ usermacros.locationObject(form,cicle,'user-locations','noprototype',employees_sitename,entity) }}
+        {% endif %}
+
+        {% if pathname == 'buildings' %}
+            {{ usermacros.buildingObject(form,cicle,'user-buildings','noprototype',employees_sitename,entity) }}
+        {% endif %}
+
+
+
+
+        {# Token CSRF #}
+        {{ form_widget(form._token) }}
+
+
+        {% if cicle == "show_standalone" %}
+            <p>
+                <a class="btn btn-success" href="{{ path(employees_sitename~'_'~pathname~'_pathaction_edit_standalone',{id:entity.id}) }}" type='button'>Edit {{ singleName }}</a>
+            </p>
+        {% endif %}
+
+        {% if cicle != "show_standalone" and cicle != "new_standalone" %}
+            <p>
+            <div>
+                <button class="btn btn-warning" name="btnSubmit" type="submit">Update {{ singleName }}</button>
+                <a class="btn btn-info" href="{{ path(employees_sitename~'_'~pathname~'_pathaction_show_standalone',{id:entity.id}) }}" type='button'>Cancel</a>
+            </div>
+            </p>
+        {% endif %}
+
+        {% if cicle == "new_standalone" %}
+            <p>
+                <button class="btn btn-success" name="btnSubmit" type="submit">Add {{ singleName }}</button>
+            </p>
+        {% endif %}
+
+    {{ form_end(form,{'render_rest': false}) }}
+
+
+    <br>
+
+    <p>
+        <a href="{{ path(employees_sitename~'_'~pathname~'_pathaction_list') }}">{{ singleName }} list</a>
+    </p>
+
+
+{% endblock %}
