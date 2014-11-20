@@ -8,6 +8,7 @@ use Oleg\OrderformBundle\Entity\PatientFirstName;
 use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\DataQualityAge;
+use Oleg\OrderformBundle\Entity\PatientSuffix;
 
 /**
  * ProcedureRepository
@@ -171,6 +172,18 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         $source = "scanorder";
         $status = self::STATUS_VALID;
+
+        //suffix
+        if( count($procedure->getPatsuffix()) > 0 ) {
+            $suffix = $this->validFieldIsSet( $patient->getSuffix() );
+            if( $suffix ) {
+                //$suffix->setStatus(self::STATUS_INVALID);
+                $status = self::STATUS_INVALID;
+            }
+            $patientsuffix = new PatientSuffix($status,$user,$source);
+            $patientsuffix->setField($procedure->getPatsuffix()->first()->getField());
+            $patient->addSuffix($patientsuffix);
+        }
 
         //lastname
         //echo "proc last name count=".count($procedure->getPatlastname())."<br>";

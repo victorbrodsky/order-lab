@@ -72,12 +72,11 @@ class OrderInfo extends OrderAbstract {
     private $slideDelivery;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="returnSlide", type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
      * @Assert\NotBlank
-     */
-    protected $returnSlide;
+     **/
+    private $returnSlide;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -182,8 +181,6 @@ class OrderInfo extends OrderAbstract {
         $this->part = new ArrayCollection();      
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
-        //$this->provider = new ArrayCollection();
-        //$this->proxyuser = new ArrayCollection();
         $this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
     }
@@ -209,7 +206,6 @@ class OrderInfo extends OrderAbstract {
             //
             $provider = $this->getProvider();
             $proxyuser = $this->getProxyuser();
-            //$proxys = $this->getProxyuser();
             $dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
             $histories = $this->getHistory();
 
@@ -219,14 +215,7 @@ class OrderInfo extends OrderAbstract {
             $this->history = new ArrayCollection();
 
             $this->setProvider( $provider );
-//            foreach( $providers as $thisprov ) {
-//                $this->addProvider($thisprov);
-//            }
-
             $this->setProxyuser( $proxyuser );
-//            foreach( $proxys as $thisproxy ) {
-//                $this->addProxyuser($thisproxy);
-//            }
 
             foreach( $dataqualitiesmrnacc as $dataqualitymrnacc ) {
                 $this->addDataqualityMrnAcc($dataqualitymrnacc);
@@ -456,12 +445,7 @@ class OrderInfo extends OrderAbstract {
         return $this->slideDelivery;
     }
 
-    /**
-     * Set returnSlide
-     *
-     * @param string $returnSlide
-     * @return OrderInfo
-     */
+
     public function setReturnSlide($returnSlide)
     {
         $this->returnSlide = $returnSlide;
@@ -469,11 +453,6 @@ class OrderInfo extends OrderAbstract {
         return $this;
     }
 
-    /**
-     * Get returnSlide
-     *
-     * @return string 
-     */
     public function getReturnSlide()
     {
         return $this->returnSlide;

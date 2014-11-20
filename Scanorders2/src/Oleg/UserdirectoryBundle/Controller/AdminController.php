@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
+use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\ResearchLabTitleList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -95,12 +96,16 @@ class AdminController extends Controller
         $count_identifierTypeList = $this->generateIdentifierTypeList();
         $count_fellowshipTypeList = $this->generateFellowshipTypeList();
         $count_residencyTrackList = $this->generateResidencyTrackList();
-        $count_locationTypeList = $this->generateLocationTypeList();
+
         $count_equipmentType = $this->generateEquipmentType();
         $count_equipment = $this->generateEquipment();
-        $count_locprivacy = $this->generateLocationPrivacy();
-        $count_reslabtitles = $this->generateResLabTitles();
+
         $count_buildings = $this->generateBuildings();
+        $count_locationTypeList = $this->generateLocationTypeList();
+        $count_locprivacy = $this->generateLocationPrivacy();
+        $count_locations = $this->generateLocations();
+
+        $count_reslabtitles = $this->generateResLabTitles();
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
@@ -129,6 +134,7 @@ class AdminController extends Controller
             'Equipment ='.$count_equipment.', '.
             'Location Types ='.$count_locationTypeList.', '.
             'Location Privacy ='.$count_locprivacy.', '.
+            'Locations ='.$count_locations.', '.
             'Buildings ='.$count_buildings.', '.
             'Reaserch Lab Titles='.$count_reslabtitles.' '.
             ' (Note: -1 means that this table is already exists)'
@@ -1012,7 +1018,8 @@ class AdminController extends Controller
             'Research Laboratory',
             'Patient Contact Information',
             'Medical Office',
-            'Inpatient Room'
+            'Inpatient Room',
+            'Surgical Pathology Filing Room'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -1064,7 +1071,7 @@ class AdminController extends Controller
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateEquipment() {
@@ -1103,7 +1110,7 @@ class AdminController extends Controller
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -1138,7 +1145,7 @@ class AdminController extends Controller
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -1180,7 +1187,7 @@ class AdminController extends Controller
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -1230,8 +1237,8 @@ class AdminController extends Controller
         );
 
         $city = "New York";
-        $state = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("New York");
-        $country = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("United States");
+        $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
+        $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
 
         $count = 1;
         foreach( $buildings as $building => $attr ) {
@@ -1264,7 +1271,70 @@ class AdminController extends Controller
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
+    }
+
+
+    public function generateLocations() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
+
+        $locations = array(
+            "Surgical Pathology Filing Room" => array('street1'=>'520 East 70th Street','phone'=>'222-0059','room'=>'ST-1012','inst'=>'NYP'),
+        );
+
+        $city = "New York";
+        $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
+        $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
+        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Surgical Pathology Filing Room");
+        $locationPrivacy = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+        $building = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findOneByName("Starr Pavilion");
+
+        $count = 1;
+        foreach( $locations as $location => $attr ) {
+
+            $listEntity = new Location();
+            $this->setDefaultList($listEntity,$count,$username,$location);
+
+            //add buildings attributes
+            $street1 = $attr['street1'];
+            $phone = $attr['phone'];
+            $room = $attr['room'];
+            $instAbbr = $attr['inst'];
+
+            $inst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
+            if( $inst ) {
+                $listEntity->setInstitution($inst);
+            }
+
+            $geo = new GeoLocation();
+            $geo->setStreet1($street1);
+            $geo->setCity($city);
+            $geo->setState($state);
+            $geo->setCountry($country);
+
+            $listEntity->setGeoLocation($geo);
+            $listEntity->setPhone($phone);
+            $listEntity->setRoom($room);
+            $listEntity->setStatus($listEntity::STATUS_VERIFIED);
+            $listEntity->setLocationType($locationType);
+            $listEntity->setPrivacy($locationPrivacy);
+            $listEntity->setBuilding($building);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
     }
 
 }

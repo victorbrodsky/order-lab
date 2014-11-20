@@ -73,23 +73,15 @@ class ProcedureType extends AbstractType
             'prototype_name' => '__procedureencounterDate__',
         ));
 
-//        $builder->add( 'patname', 'text', array(
-//            'label'=>"Patient's Name (at the time of encounter):",
-//            'required'=>false,
-//            'attr' => array('class' => 'form-control procedurename-field')
-//        ));
-//        $attr = array('class'=>'form-control procedurename-field');
-//        $gen_attr = array('label'=>"Patient's Name (at the time of encounter)",'class'=>'Oleg\OrderformBundle\Entity\ProcedurePatname','type'=>null);
-//        $builder->add('patname', 'collection', array(
-//            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'label' => "Patient's Name (at the time of encounter):",
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__procedurepatname__',
-//        ));
+        $builder->add('patsuffix', 'collection', array(
+            'type' => new ProcedurePatsuffixType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__procedurepatsuffix__',
+        ));
         $builder->add('patlastname', 'collection', array(
             'type' => new ProcedurePatlastnameType($this->params, null),
             'allow_add' => true,

@@ -114,14 +114,6 @@ class OrderInfoType extends AbstractType
             'classtype' => 'slideDelivery'
         ));
 
-        $attr = array('class' => 'ajax-combobox-return', 'type' => 'hidden');
-        $builder->add('returnSlide', 'custom_selector', array(
-            'label' => 'Return Slides to:',
-            'attr' => $attr,
-            'required'=>true,
-            'classtype' => 'returnSlide'
-        ));
-
         //scandeadline
         if( $this->params['cicle'] == 'new' ) {
             $scandeadline = date_modify(new \DateTime(), '+2 week');
@@ -201,40 +193,34 @@ class OrderInfoType extends AbstractType
         ));
 
 
+        ////////////// returnSlide //////////////////////
+        $returnSlidesOptions = array(
+            'label' => "Return Slides to:",
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
+            'classtype' => 'location',
+        );
 
-        //new fields
-//        $attr = array('class' => 'ajax-combobox-department', 'type' => 'hidden');
-//        $builder->add('department', 'custom_selector', array(
-//            'label' => 'Department:',
-//            'attr' => $attr,
-//            'required' => false,
-//            'classtype' => 'department'
-//        ));
-        //allow to select only one service
-//        $attr = array('class' => 'ajax-combobox-service', 'type' => 'hidden');  //ajax-combobox-pathservice
-//        $builder->add('service', 'custom_selector', array(
-//            'label' => 'Service:',
-//            'attr' => $attr,
-//            'required' => false,
-//            'classtype' => 'pathologyService'
-//        ));
-//        $builder->add( 'institution', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:Institution',
-//            'property' => 'name',
-//            'label'=>'Institution:',
-//            'required'=> true,
-//            'multiple' => false,
-//            'attr' => array('class'=>'combobox combobox-width combobox-institution'),
-//            'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('i')
-//                        ->innerJoin('i.users', 'user')
-//                        ->where('user = :user')
-//                        ->setParameters( array(
-//                            'user' => $this->params['user'],
-//                        ));
-//                },
-//        ));
+        //locations default and preferred choices
+        if( $this->params['cicle'] == 'new' && array_key_exists('returnSlide', $this->params) ) {
+            $returnSlide = $this->params['returnSlide'];
+            $returnSlidesOptions['data'] = $returnSlide['data']->getId();
+        }
 
+        if( $this->params['cicle'] == 'show' ) {
+            $builder->add('returnSlide', 'entity', array(
+                'label' => 'Return Slides to:',
+                'required'=> false,
+                'multiple' => false,
+                'class' => 'OlegUserdirectoryBundle:Location',
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        } else {
+            $builder->add('returnSlide', 'employees_custom_selector', $returnSlidesOptions);
+        }
+        ////////////// EOF returnSlide //////////////////////
+
+        //Institution Tree
         if( array_key_exists('institutions', $this->params) ) {
             $institutions = $this->params['institutions'];
         } else {

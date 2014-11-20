@@ -16,24 +16,12 @@
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,cycle,"key","prototype") %}
         {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,cycle,"date","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,cycle,"","prototype") %}
-        {#{% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,cycle,"","prototype") %}#}
-        {#{% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,cycle,"","prototype") %}#}
-
-        {#{% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,cycle,"key","prototype") %}#}
-        {#{% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,cycle,"","prototype") %}#}
-        {#{% set patlastnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patlastname,type,"","prototype") %}#}
-        {#{% set patfirstnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patfirstname,type,"","prototype") %}#}
-        {#{% set patmiddlenameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patmiddlename,type,"","prototype") %}#}
 
         {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,cycle,"key","prototype") %}
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,cycle,"","prototype") %}
         {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,cycle,"paper","prototype") %}
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,cycle,"","prototype") %}
         {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,cycle,"","prototype") %}
-
-        {#{% set diffDiagnosesField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}#}
-        {#{% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}#}
-        {#{% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,cycle,"partdiffDisident","prototype",diffDiagnosesWidget,"") %}#}
 
         {% set diseaseTypeHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,cycle,"diseaseType","prototype") %}
 
@@ -48,7 +36,6 @@
         {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
         {% set specialStainsHtml = formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
 
-        {#{% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}#}
         {% set imgLoading = "http://collage.med.cornell.edu/order/bundles/olegorderform/form/img/select2-spinner.gif" %}
     {% endif %}
 
@@ -241,6 +228,8 @@
 
                                         {#patient's data: single simple fields#}
                                         {{ formmacros.inputArrayField(form_procedure.encounterDate,'new',"procedureencounterdate","date") }}
+
+                                        {{ formmacros.inputArrayField(form_procedure.patsuffix,'new',"procedurepatsuffix") }}
 
                                         {{ formmacros.inputArrayField(form_procedure.patlastname,'new',"procedurepatlastname") }}
 

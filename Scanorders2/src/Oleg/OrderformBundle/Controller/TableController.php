@@ -30,6 +30,7 @@ use Oleg\OrderformBundle\Entity\Procedure;
 use Oleg\OrderformBundle\Entity\ProcedureEncounter;
 use Oleg\OrderformBundle\Entity\ProcedureName;
 
+use Oleg\OrderformBundle\Entity\ProcedurePatsuffix;
 use Oleg\OrderformBundle\Entity\ProcedurePatlastname;
 use Oleg\OrderformBundle\Entity\ProcedurePatfirstname;
 use Oleg\OrderformBundle\Entity\ProcedurePatmiddlename;
@@ -277,6 +278,12 @@ class TableController extends Controller {
                 $rowArr['Encounter Date']['value'] = $transformer->transform($encounterdate->getField());
             }
 
+            $patsuffix = $procedure->obtainStatusField('patsuffix',$fieldstatus,$id);
+            if( $patsuffix ) {
+                $rowArr["Patient's Suffix"]['id'] = $patsuffix->getId();
+                $rowArr["Patient's Suffix"]['value'] = $patsuffix->getField();
+            }
+
             $patlastname = $procedure->obtainStatusField('patlastname',$fieldstatus,$id);
             if( $patlastname ) {
                 $rowArr["Patient's Last Name"]['id'] = $patlastname->getId();
@@ -517,7 +524,16 @@ class TableController extends Controller {
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$type, 'cicle'=>'new', 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user, 'division'=>$division, 'department'=>$department);
+        $params = array(
+            'type'=>$type,
+            'cicle'=>'new',
+            'institutions'=>$permittedInstitutions,
+            'services'=>$permittedServices,
+            'user'=>$user,
+            'division'=>$division,
+            'department'=>$department,
+            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($entity)
+        );
         $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
@@ -785,6 +801,15 @@ class TableController extends Controller {
             $encounterDateObj->setField($encounterDateFormat);
             $encounterDateObj->setId($encounterDateArr['id']);
             $procedure->addEncounterDate($encounterDateObj);
+        }
+
+        //Procedure Suffix
+        $patsuffixArr = $this->getValueByHeaderName("Patient's Suffix",$row,$columnData);
+        if( $force || $patsuffixArr['val'] && $patsuffixArr['val'] != '' ) {
+            $patsuffixObj = new ProcedurePatsuffix($status,$provider,$source);
+            $patsuffixObj->setField($patsuffixArr['val']);
+            $patsuffixObj->setId($patsuffixArr['id']);
+            $procedure->addPatsuffix($patsuffixObj);
         }
 
         //Procedure Last Name

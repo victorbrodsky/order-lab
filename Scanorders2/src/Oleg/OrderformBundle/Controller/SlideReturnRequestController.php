@@ -37,17 +37,17 @@ class SlideReturnRequestController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
 
+        $orderUtil = $this->get('scanorder_utility');
+
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
-            $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
-            $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
@@ -61,7 +61,13 @@ class SlideReturnRequestController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
-        $params = array('user'=>$user,'type'=>'table','institutions'=>$permittedInst);
+        $params = array(
+            'user'=>$user,
+            'type'=>'table',
+            'institutions'=>$permittedInst,
+            'cicle' => 'new',
+            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($slideReturnRequest)
+        );
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         return array(
@@ -204,7 +210,14 @@ class SlideReturnRequestController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
-        $params = array('user'=>$user,'institutions'=>$permittedInst);
+        $orderUtil = $this->get('scanorder_utility');
+
+        $params = array(
+            'user'=>$user,
+            'institutions'=>$permittedInst,
+            'cicle' => 'new',
+            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($slideReturnRequest)
+        );
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         return array(
@@ -328,16 +341,18 @@ class SlideReturnRequestController extends Controller
         $dql->select('list, COUNT(slides) as slidecount');
 
         $dql->leftJoin("list.slide", "slides");
-        $dql->innerJoin('list.provider','provider');
-        $dql->innerJoin('list.orderinfo','orderinfo');
-        $dql->innerJoin('list.institution','institution');
+        $dql->leftJoin('list.provider','provider');
+        $dql->leftJoin('list.orderinfo','orderinfo');
+        $dql->leftJoin('list.institution','institution');
         $dql->leftJoin('list.proxyuser','proxyuser');
+        $dql->leftJoin("list.returnSlide", "returnSlide");
 
         $dql->groupBy('list');
         $dql->addGroupBy('provider.username');
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
         $dql->addGroupBy('institution.name');
+        $dql->addGroupBy('returnSlide.name');
 
 		$postData = $request->query->all();
 		
@@ -358,7 +373,6 @@ class SlideReturnRequestController extends Controller
 
         /////////// institution ///////////
         $criteriastr = $this->addSlideReturnRequestInstitutionQueryCriterion($user,$criteriastr);
-        //echo "instStr=".$instStr."<br>";
         /////////// EOF institution ///////////
 
         $dql->where($criteriastr);
@@ -451,13 +465,14 @@ class SlideReturnRequestController extends Controller
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
         $dql->addGroupBy('institution.name');
+        $dql->addGroupBy('returnSlide.name');
 
         $dql->leftJoin("list.slide", "slides");
         $dql->innerJoin('list.provider','provider');
         $dql->leftJoin('list.orderinfo','orderinfo');
         $dql->innerJoin('list.institution','institution');
-
         $dql->leftJoin('list.proxyuser','proxyuser');
+        $dql->leftJoin("list.returnSlide", "returnSlide");
 
 		$postData = $request->query->all();
 		

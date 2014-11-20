@@ -149,10 +149,8 @@
     <input type="hidden" id="user_name" value="{{ form.vars.value.provider.getUserNameStr() }}" />
     <input type="hidden" id="user_id" value="{{ form.vars.value.provider.id }}" />
 
-    {% for proxyuser in form.vars.value.proxyuser %}
-        <input type="hidden" id="proxyuser_name" value="{{ proxyuser.getUserNameStr() }}" />
-        <input type="hidden" id="proxyuser_id" value="{{ proxyuser.id }}" />
-    {% endfor %}
+    <input type="hidden" id="proxyuser_name" value="{{ form.vars.value.proxyuser.getUserNameStr() }}" />
+    <input type="hidden" id="proxyuser_id" value="{{ form.vars.value.proxyuser.id }}" />
 
     {% import _self as formmacros %}
 
@@ -864,7 +862,7 @@
 
 
 
-{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml, accessiondateHtml, encounterdateHtml, patlastnameHtml,patfirstnameHtml,patmiddlenameHtml, patageHtml,patsexHtml,patpathistoryHtml ) %}
+{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml, accessiondateHtml, encounterdateHtml, patsuffixHtml, patlastnameHtml,patfirstnameHtml,patmiddlenameHtml, patageHtml,patsexHtml,patpathistoryHtml ) %}
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}
@@ -912,7 +910,12 @@
             <p><div class="procedureencounterdate">{{ encounterdateHtml }}</div></p>
         {% endif %}
 
-        {#{{ formmacros.field(procedure.patname) }}#}
+        {% if patsuffixHtml is not defined or patsuffixHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patsuffix,cycle,"procedurepatsuffix","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepatsuffix">{{ patsuffixHtml }}</div></p>
+        {% endif %}
+
         {% if patlastnameHtml is not defined or patlastnameHtml == "" %}
             {{ formmacros.inputArrayField(procedure.patlastname,cycle,"procedurepatlastname","","","","",status) }}
         {% else  %}

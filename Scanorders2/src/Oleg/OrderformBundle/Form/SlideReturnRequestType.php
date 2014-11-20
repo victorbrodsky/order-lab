@@ -24,15 +24,6 @@ class SlideReturnRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('returnSlide', 'custom_selector', array(
-            'label' => 'Return Slides to:',
-            'attr' => array('class' => 'ajax-combobox-return', 'type' => 'hidden'),
-            'required'=>true,
-            'classtype' => 'returnSlide'
-        ));
-
-        //$builder->add( 'provider', new ProviderType($this->params,$this->entity), array('label'=>'Submitter:') );
-
         $builder->add('urgency', 'custom_selector', array(
             'label' => 'Urgency:',
             'attr' => array('class' => 'ajax-combobox-urgency', 'type' => 'hidden'),
@@ -76,6 +67,7 @@ class SlideReturnRequestType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 
+
         if( array_key_exists('type', $this->params) &&  $this->params['type'] == 'table' ) {
             $builder->add('returnoption', 'checkbox', array(
                 'label'     => 'Return all slides that belong to listed accession numbers:',
@@ -85,6 +77,36 @@ class SlideReturnRequestType extends AbstractType
                 "mapped" => false
             ));
         }
+
+
+        ////////////// returnSlide //////////////////////
+        $returnSlidesOptions = array(
+            'label' => "Return Slides to:",
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
+            'classtype' => 'location',
+        );
+
+        //locations default and preferred choices
+        if( array_key_exists('returnSlide', $this->params) ) {
+            if( array_key_exists('cicle', $this->params) && $this->params['cicle'] == 'new' ) {
+                $returnSlide = $this->params['returnSlide'];
+                $returnSlidesOptions['data'] = $returnSlide['data']->getId();
+            }
+        }
+
+        if( array_key_exists('cicle', $this->params) === false || $this->params['cicle'] != 'new' ) {
+            $builder->add('returnSlide', 'entity', array(
+                'label' => 'Return Slides to:',
+                'required'=> false,
+                'multiple' => false,
+                'class' => 'OlegUserdirectoryBundle:Location',
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        } else {
+            $builder->add('returnSlide', 'employees_custom_selector', $returnSlidesOptions);
+        }
+        ////////////// EOF returnSlide //////////////////////
         
     }
 

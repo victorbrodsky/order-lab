@@ -248,7 +248,6 @@ class UtilController extends Controller {
         //Exclude from the list locations of type "Patient Contact Information", "Medical Office", and "Inpatient location".
         $andWhere = "locationType.name IS NULL OR ".
                     "(" .
-                        "locationType.name != 'Patient Contact Information' AND ".
                         "locationType.name !='Patient Contact Information' AND ".
                         "locationType.name !='Medical Office' AND ".
                         "locationType.name !='Inpatient location' AND ".

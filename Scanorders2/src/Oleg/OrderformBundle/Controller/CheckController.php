@@ -220,10 +220,7 @@ class CheckController extends Controller {
         $element = array(
             'id'=>$entity->getId(),
             'mrn'=>$this->getArrayFieldJson($entity->getMrn(),array('keytype')),
-            //'lastname'=>$this->getArrayFieldJson($entity->getLastName()),
-            //'sex'=>$this->getArrayFieldJson($entity->getSex()),
             'dob'=>$this->getArrayFieldJson($entity->getDob()),
-            //'age'=>$this->getArrayFieldJson($entity->getAge()),
             'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
         );
 
@@ -357,6 +354,7 @@ class CheckController extends Controller {
 
                 //$encDate = $transformer->transform( $entity->getProcedure()->getEncounterDate()->first() );
                 $encDate = $entity->getProcedure()->getEncounterDate();
+                $patSuffix = $entity->getProcedure()->getPatsuffix();
                 $patLastName = $entity->getProcedure()->getPatlastname();
                 $patFirstName = $entity->getProcedure()->getPatfirstname();
                 $patMiddleName = $entity->getProcedure()->getPatmiddlename();
@@ -375,6 +373,7 @@ class CheckController extends Controller {
                 $procedureName = array();
 
                 $encDate = array();
+                $patSuffix = array();
                 $patLastName = array();
                 $patFirstName = array();
                 $patMiddleName = array();
@@ -395,6 +394,7 @@ class CheckController extends Controller {
                 'procedure'=>$this->getArrayFieldJson($procedureName),
 
                 'encounterDate'=>$this->getArrayFieldJson($encDate),
+                'patsuffix'=>$this->getArrayFieldJson($patSuffix),
                 'patlastname'=>$this->getArrayFieldJson($patLastName),
                 'patfirstname'=>$this->getArrayFieldJson($patFirstName),
                 'patmiddlename'=>$this->getArrayFieldJson($patMiddleName),

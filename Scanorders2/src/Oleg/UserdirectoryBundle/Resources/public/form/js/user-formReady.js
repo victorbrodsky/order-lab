@@ -52,6 +52,8 @@ $(document).ready(function() {
 
     initDatetimepicker();
 
+    userCloneListener();
+
 });
 
 

@@ -20,11 +20,11 @@ class SlideReturnRequest extends OrderAbstract {
     protected $status;
 
     /**
-     * @var string
-     * @ORM\Column(name="returnSlide", type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
      * @Assert\NotBlank
-     */
-    protected $returnSlide;
+     **/
+    private $returnSlide;
 
     /**
      * @var string
@@ -74,12 +74,7 @@ class SlideReturnRequest extends OrderAbstract {
         $this->slidetext = new ArrayCollection();
     }
 
-    /**
-     * Set returnSlide
-     *
-     * @param string $returnSlide
-     * @return SlideReturnRequest
-     */
+
     public function setReturnSlide($returnSlide)
     {
         $this->returnSlide = $returnSlide;
@@ -87,11 +82,6 @@ class SlideReturnRequest extends OrderAbstract {
         return $this;
     }
 
-    /**
-     * Get returnSlide
-     *
-     * @return string
-     */
     public function getReturnSlide()
     {
         return $this->returnSlide;

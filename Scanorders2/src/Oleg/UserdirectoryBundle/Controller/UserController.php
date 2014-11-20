@@ -659,10 +659,11 @@ class UserController extends Controller
     ////////////////////// Create New User //////////////////////
     /**
      * @Route("/users/new", name="employees_new_user")
+     * @Route("/users/new/clone/{id}", name="employees_new_user_clone", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
-    public function newUserAction(Request $request)
+    public function newUserAction(Request $request,$id=null)
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -671,9 +672,25 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$user = new User();
-        $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->createUser();
+        //echo "user id=".$id."<br>";
+        //exit();
+
+        $userclone = null;
+        if( $id && $id != "" ) {
+            $userclone = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+            //$user = clone $userclone;
+            $user = $userclone;
+            //$user->setIdNull();
+            $user->setDisplayName("");
+            //$user->setPrimaryPublicUserId(null);
+            $user->setUsername("");
+            $user->setFirstname("");
+            $user->setLastname("");
+            $user->setEmail("");
+        } else {
+            $userManager = $this->container->get('fos_user.user_manager');
+            $user = $userManager->createUser();
+        }
 
         $user->setEnabled(true);
         $user->setCreatedby('manual');
@@ -711,7 +728,8 @@ class UserController extends Controller
             'form' => $form->createView(),
             'cicle' => 'create_user',
             'user_id' => '',
-            'sitename' => $this->container->getParameter('employees.sitename')
+            'sitename' => $this->container->getParameter('employees.sitename'),
+            'userclone' => $userclone
         );
 
     }

@@ -353,97 +353,6 @@ class ScanUtilController extends Controller {
         return $response;
     }
 
-    /**
-     * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/return", name="get-returnslide")
-     * @Method("GET")
-     */
-    public function getReturnSlideAction(Request $request) {
-
-        $arr = array();
-
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        //$entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findByType('default');
-
-        //////////////////////////////////// 1) get all default list ////////////////////////////////////
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:ReturnSlideTo', 'list')
-            ->select("list.name")
-            ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
-            ->groupBy('list')
-            ->orderBy("list.orderinlist","ASC");
-        $entities = $query->getQuery()->getResult();
-        //////////////////////////////////// END OF 1 ///////////////////////////////////////////
-
-        //////////////// 2) create addwhere to does not select scanregion elements with the same name as in list names //////////////////////
-        $addwhere = "";
-        $count = 1;
-        $parametersArr = array();
-        foreach( $entities as $entity ) {
-            $arr[] = $entity["name"];
-            $parametersArr['text'.$count] = $entity["name"];
-            $addwhere = $addwhere . "list.returnSlide != :text".$count;
-            if( count($entities) > $count ) {
-                $addwhere = $addwhere . " AND ";
-            }
-            $count++;
-        }
-
-        if( $addwhere != "" ) {
-            $addwhere = " AND (" . $addwhere . ")";
-        }
-
-        //echo "addwhere=".$addwhere." \n ";
-        //////////////////////////////////// END OF 2 ///////////////////////////////////////////
-
-        //////////////// 3) add custom added values by order id (if id is set) //////////////////////
-        $request = $this->get('request');
-        $id = trim( $request->get('opt') );
-        if( $id ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
-            if( $orderinfo ) {
-                $arr[] = $orderinfo->getReturnSlide();
-            }
-        }
-        //////////////////////////////////// END OF 3 ///////////////////////////////////////////
-
-        //////////////// 4) add custom added values from all my orders //////////////////////
-        $parametersArr['user'] = $user;
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:OrderInfo', 'list')
-            ->select("list.returnSlide")
-            ->innerJoin("list.provider","provider")
-            ->groupBy('list.returnSlide')
-            ->where( "provider = :user ".$addwhere )
-            ->setParameters( $parametersArr );
-
-        //echo "query=".$query." \n ";
-
-        $myOrders = $query->getQuery()->getResult();
-
-        foreach( $myOrders as $scanreg ) {
-            //echo $scanreg['scanregion']." => ";
-            $arr[] = $scanreg['returnSlide'];
-        }
-        //////////////////////////////////// END OF 4 ///////////////////////////////////////////
-
-        $output = array();
-        
-        //$count = 0;
-        foreach( $arr as $region ) {
-            $element = array('id'=>$region, 'text'=>$region);
-            $output[] = $element;          
-            //$count++;
-        }
-        
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
 
     /**
      * @Route("/partname", name="get-partname")
@@ -1023,6 +932,93 @@ class ScanUtilController extends Controller {
             //echo "urgency=".$urgency->getName()." ";
             //var_dump($urgency);
             $element = array('id'=>$urgency['text']."", 'text'=>$urgency['text']."");
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/returnslideslocation", name="scan_get_returnslideslocation")
+     * @Method("GET")
+     */
+    public function getLocationAction(Request $request) {
+
+        $providerid = trim( $request->get('providerid') );
+        $proxyid = trim( $request->get('proxyid') );
+
+        if( $providerid == 'undefined' ) {
+            $providerid = null;
+        }
+
+        if( $proxyid == 'undefined' ) {
+            $proxyid = null;
+        }
+
+        //get default returnSlide option
+        $orderUtil = $this->get('scanorder_utility');
+        $returnSlideLocations = $orderUtil->getOrderReturnSlidesLocation(null,$providerid,$proxyid);
+        $preferredLocations = $returnSlideLocations['preferred_choices'];
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Location', 'list')
+            ->select("list")
+            ->orderBy("list.id","ASC");
+
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+        //Exclude from the list locations of type "Patient Contact Information", "Medical Office", and "Inpatient location".
+        $andWhere = "locationType.name IS NULL OR ".
+            "(" .
+                "locationType.name !='Patient Contact Information' AND ".
+                "locationType.name !='Medical Office' AND ".
+                "locationType.name !='Inpatient location' AND ".
+                "locationType.name !='Employee Home'" .
+            ")";
+
+        $query->leftJoin("list.locationType", "locationType");
+        $query->leftJoin("list.user", "user");
+        $query->andWhere($andWhere);
+
+        //exclude system user:  "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'"; //"user.email != '-1'"
+        $query->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'");
+
+        //exclude preferred locations (they will be added later)
+        $prefLocs = "";
+        foreach( $preferredLocations as $loc ) {
+            if( $prefLocs != "" ) {
+                $prefLocs = $prefLocs . " AND ";
+            }
+            $prefLocs = $prefLocs . " list.id != " .$loc->getId();
+        }
+        //echo "prefLocs=".$prefLocs."<br>";
+        $query->andWhere($prefLocs);
+
+        //do not show (exclude) all locations that are tied to a user who has no current employment periods (all of whose employment periods have an end date)
+        $curdate = date("Y-m-d", time());
+        $query->leftJoin("user.employmentStatus", "employmentStatus");
+        $currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        $query->andWhere($currentusers);
+
+        //echo "query=".$query." | ";
+
+        $locations = $query->getQuery()->getResult();
+        //echo "loc count=".count($locations)."<br>";
+
+        $output = array();
+
+        foreach( $preferredLocations as $location ) {
+            $element = array('id'=>$location->getId(), 'text'=>$location->getNameFull());
+            $output[] = $element;
+        }
+
+        foreach( $locations as $location ) {
+            $element = array('id'=>$location->getId(), 'text'=>$location->getNameFull());
             $output[] = $element;
         }
 

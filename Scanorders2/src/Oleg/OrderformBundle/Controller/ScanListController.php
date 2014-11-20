@@ -39,7 +39,6 @@ class ScanListController extends ListController
      * @Route("/slide-types/", name="slidetype-list")
      * @Route("/form-types/", name="formtype-list")
      * @Route("/statuses/", name="status-list")
-     * @Route("/return-slide-to-options/", name="returnslideto-list")
      * @Route("/slide-delivery-options/", name="slidedelivery-list")
      * @Route("/region-to-scan-options/", name="regiontoscan-list")
      * @Route("/scan-order-processor-comments/", name="processorcomment-list")
@@ -78,7 +77,6 @@ class ScanListController extends ListController
      * @Route("/slide-types/", name="slidetype_create")
      * @Route("/form-types/", name="formtype_create")
      * @Route("/statuses/", name="status_create")
-     * @Route("/return-slide-to-options/", name="returnslideto_create")
      * @Route("/slide-delivery-options/", name="slidedelivery_create")
      * @Route("/region-to-scan-options/", name="regiontoscan_create")
      * @Route("/scan-order-processor-comments/", name="processorcomment_create")
@@ -117,7 +115,6 @@ class ScanListController extends ListController
      * @Route("/slide-types/new", name="slidetype_new")
      * @Route("/form-types/new", name="formtype_new")
      * @Route("/statuses/new", name="status_new")
-     * @Route("/return-slide-to-options/new", name="returnslideto_new")
      * @Route("/slide-delivery-options/new", name="slidedelivery_new")
      * @Route("/region-to-scan-options/new", name="regiontoscan_new")
      * @Route("/scan-order-processor-comments/new", name="processorcomment_new")
@@ -156,7 +153,6 @@ class ScanListController extends ListController
      * @Route("/slide-types/{id}", name="slidetype_show")
      * @Route("/form-types/{id}", name="formtype_show")
      * @Route("/statuses/{id}", name="status_show")
-     * @Route("/return-slide-to-options/{id}", name="returnslideto_show")
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_show")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_show")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_show")
@@ -195,7 +191,6 @@ class ScanListController extends ListController
      * @Route("/slide-types/{id}/edit", name="slidetype_edit")
      * @Route("/form-types/{id}/edit", name="formtype_edit")
      * @Route("/statuses/{id}/edit", name="status_edit")
-     * @Route("/return-slide-to-options/{id}/edit", name="returnslideto_edit")
      * @Route("/slide-delivery-options/{id}/edit", name="slidedelivery_edit")
      * @Route("/region-to-scan-options/{id}/edit", name="regiontoscan_edit")
      * @Route("/scan-order-processor-comments/{id}/edit", name="processorcomment_edit")
@@ -234,7 +229,6 @@ class ScanListController extends ListController
      * @Route("/slide-types/{id}", name="slidetype_update")
      * @Route("/form-types/{id}", name="formtype_update")
      * @Route("/statuses/{id}", name="status_update")
-     * @Route("/return-slide-to-options/{id}", name="returnslideto_update")
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_update")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_update")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_update")
@@ -322,10 +316,6 @@ class ScanListController extends ListController
             $className = "status";
             $displayName = "Statuses";
             break;
-        case "returnslideto":
-            $className = "returnslideto";
-            $displayName = '"Return Slide To" Options';
-            break;
         case "slidedelivery":
             $className = "slidedelivery";
             $displayName = "Slide Delivery Options";
@@ -392,7 +382,6 @@ class ScanListController extends ListController
      * @Route("/slide-types/{id}", name="slidetype_delete")
      * @Route("/form-types/{id}", name="formtype_delete")
      * @Route("/statuses/{id}", name="status_delete")
-     * @Route("/return-slide-to-options/{id}", name="returnslideto_delete")
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_delete")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_delete")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_delete")

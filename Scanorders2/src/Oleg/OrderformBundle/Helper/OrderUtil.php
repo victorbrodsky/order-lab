@@ -655,5 +655,72 @@ class OrderUtil {
     }
 
 
+    public function getOrderReturnSlidesLocation( $orderinfo, $providerid=null, $proxyid=null ) {
+
+        $provider = null;
+        $proxy = null;
+
+        if( $orderinfo ) {
+            $provider = $orderinfo->getProvider();
+            $proxy = $orderinfo->getProxyuser();
+        } else {
+            if( $providerid && $providerid != "" ) {
+                $provider = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($providerid);
+            }
+            if( $proxyid && $proxyid != "" && $proxyid != $providerid ) {
+                $proxy = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($proxyid);
+            }
+        }
+
+        //get default returnSlide option
+        //the top three choices should be the Submitter's Main Office location (from the user who is logged in; selected by default),
+        //followed by the "Surgical Pathology Filing Room",
+        //followed by the Ordering Provider's Main Office location, and then everyone else in alphabetical order.
+
+        $mainOfficeLocation = null;
+        $surgicalPathLocation = null;
+        $orderingProviderMainOfficeLocation = null;
+
+        //1) get submitter location
+        if( $provider ) {
+            $mainOfficeLocation = $provider->getMainLocation();
+        }
+
+        //2) get "Surgical Pathology Filing Room" location
+        $defaultLocationType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Surgical Pathology Filing Room");
+        $surgicalPathLocation = $this->em->getRepository('OlegUserdirectoryBundle:Location')->findOneByLocationType($defaultLocationType);
+
+        //3) orderring provider location
+        if( $proxy ) {
+            $orderingProviderMainOfficeLocation = $proxy->getMainLocation();
+        }
+
+        if( $mainOfficeLocation ) {
+            $defaultLocation = $mainOfficeLocation;
+        } else if( $surgicalPathLocation ) {
+            $defaultLocation = $surgicalPathLocation;
+        } else if( $orderingProviderMainOfficeLocation ) {
+            $defaultLocation = $surgicalPathLocation;
+        } else {
+            $defaultLocation = null;
+        }
+
+        $preferredChoices = array();
+        if( $mainOfficeLocation ) {
+            $preferredChoices[] = $mainOfficeLocation;
+        }
+        if( $surgicalPathLocation ) {
+            $preferredChoices[] = $surgicalPathLocation;
+        }
+        if( $orderingProviderMainOfficeLocation ) {
+            $preferredChoices[] = $orderingProviderMainOfficeLocation;
+        }
+
+        $res = array();
+        $res['data'] = $defaultLocation;
+        $res['preferred_choices'] = $preferredChoices;
+
+        return $res;
+    }
 
 }

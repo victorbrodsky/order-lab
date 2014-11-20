@@ -298,3 +298,19 @@ function getYearByDiff(date1,date2) {
 }
 
 
+function userCloneListener() {
+    $('.user-userclone-field').on("change", function(e) {
+        var userid = $(this).select2('val');
+        //console.log('userid='+userid);
+        if( userid && userid != "" ) {
+            //reload page with userid
+            var urlCreateUser = getCommonBaseUrl("users/new/clone/"+userid,"employees");
+        } else {
+            //reload page regular new user
+            var urlCreateUser = getCommonBaseUrl("users/new","employees");
+        }
+        window.location = urlCreateUser;
+    });
+}
+
+

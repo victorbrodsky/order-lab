@@ -246,6 +246,7 @@ var _columnData_scanorder = [
     //procedure: 6
     { header:'Procedure Type', default:0, columns:{type:'dropdown', source:_procedures_simple, strict:true} },
     { header:'Encounter Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
+    { header:"Patient's Suffix", columns:{} },
     { header:"Patient's Last Name", columns:{} },
     { header:"Patient's First Name", columns:{} },
     { header:"Patient's Middle Name", columns:{} },

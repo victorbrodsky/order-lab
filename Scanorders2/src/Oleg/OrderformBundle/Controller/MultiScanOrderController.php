@@ -346,7 +346,12 @@ class MultiScanOrderController extends Controller {
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
 
         $entity->setProvider($user);
-        $entity->setProxyuser($user);
+
+        if( $lastProxy ) {
+            $entity->setProxyuser($lastProxy);
+        } else {
+            $entity->setProxyuser($user);
+        }
 
         $patient = new Patient(true,$status,$user,$source);
         $entity->addPatient($patient);
@@ -384,12 +389,6 @@ class MultiScanOrderController extends Controller {
             $type = "One-Slide Scan Order";
         }
 
-        if( $lastProxy ) {
-            $entity->setProxyuser($lastProxy);
-        } else {
-            $entity->setProxyuser($user);
-        }
-
         //set the default service
         $entity->setService($userSiteSettings->getDefaultService());
 
@@ -420,7 +419,16 @@ class MultiScanOrderController extends Controller {
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$type, 'cicle'=>'new', 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user, 'division'=>$division, 'department'=>$department);
+        $params = array(
+            'type'=>$type,
+            'cicle'=>'new',
+            'institutions'=>$permittedInstitutions,
+            'services'=>$permittedServices,
+            'user'=>$user,
+            'division'=>$division,
+            'department'=>$department,
+            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($entity)
+        );
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         if( $routeName != "single_new") {

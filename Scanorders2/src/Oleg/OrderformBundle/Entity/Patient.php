@@ -20,37 +20,37 @@ class Patient extends ObjectAbstract
     /**
      * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="patient", cascade={"persist"})
      */
-    protected $mrn;
+    private $mrn;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PatientSuffix", mappedBy="patient", cascade={"persist"})
+     */
+    private $suffix;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientLastName", mappedBy="patient", cascade={"persist"})
      */
-    protected $lastname;
+    private $lastname;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientFirstName", mappedBy="patient", cascade={"persist"})
      */
-    protected $firstname;
+    private $firstname;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientMiddleName", mappedBy="patient", cascade={"persist"})
      */
-    protected $middlename;
-
-//    /**
-//     * @ORM\OneToMany(targetEntity="PatientAge", mappedBy="patient", cascade={"persist"})
-//     */
-//    protected $age;
+    private $middlename;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientSex", mappedBy="patient", cascade={"persist"})
      */
-    protected $sex;
+    private $sex;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientDob", mappedBy="patient", cascade={"persist"})
      */
-    protected $dob;
+    private $dob;
 
     //@ORM\OrderBy({"creationdate" = "DESC", "id" = "DESC"})
     /**
@@ -58,7 +58,7 @@ class Patient extends ObjectAbstract
      * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="PatientClinicalHistory", mappedBy="patient", cascade={"persist"})
      */
-    protected $clinicalHistory;
+    private $clinicalHistory;
         
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
@@ -71,7 +71,7 @@ class Patient extends ObjectAbstract
      * 
      * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
      */
-    protected $procedure;
+    private $procedure;
     
     /**
      * Constructor
@@ -83,6 +83,7 @@ class Patient extends ObjectAbstract
 
         //fields:
         $this->mrn = new ArrayCollection();
+        $this->suffix = new ArrayCollection();
         $this->lastname = new ArrayCollection();
         $this->firstname = new ArrayCollection();
         $this->middlename = new ArrayCollection();
@@ -106,6 +107,7 @@ class Patient extends ObjectAbstract
 
     public function makeDependClone() {
         $this->mrn = $this->cloneDepend($this->mrn,$this);
+        $this->suffix = $this->cloneDepend($this->suffix,$this);
         $this->lastname = $this->cloneDepend($this->lastname,$this);
         $this->firstname = $this->cloneDepend($this->firstname,$this);
         $this->middlename = $this->cloneDepend($this->middlename,$this);
@@ -383,6 +385,25 @@ class Patient extends ObjectAbstract
     {
         return $this->clinicalHistory;
     }
+
+
+    public function addSuffix($suffix)
+    {
+        if( !$this->suffix->contains($suffix) && !$this->hasSimpleField($suffix,"getSuffix") ) {
+            $suffix->setPatient($this);
+            $this->suffix->add($suffix);
+        }
+        return $this;
+    }
+    public function removeSuffix($suffix)
+    {
+        $this->suffix->removeElement($suffix);
+    }
+    public function getSuffix()
+    {
+        return $this->suffix;
+    }
+
 
     /**
      * Add lastname
@@ -737,11 +758,21 @@ class Patient extends ObjectAbstract
             return $patientFullName;
         }
 
-        //echo "lastname=".implode(",",$this->getLastname())."<br>";
+        if( $this->getSuffix() && $this->getSuffix()->first() && $this->getSuffix()->first()->getField() ) {
+            $patientFullName .= $this->getSuffix()->first()->getField();
+        } else {
+            $patientFullName .= "No Suffix Provided";
+        }
 
         if( $this->getLastname() && $this->getLastname()->first() && $this->getLastname()->first()->getField() ) {
+            if( $patientFullName != '' ) {
+                $patientFullName .= ' ';
+            }
             $patientFullName .= '<b>'.$this->getLastname()->first()->getField().'</b>';
         } else {
+            if( $patientFullName != '' ) {
+                $patientFullName .= ' ';
+            }
             $patientFullName .= "No Last Name Provided";
         }
 
@@ -834,7 +865,7 @@ class Patient extends ObjectAbstract
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Mrn','Lastname','Firstname','Middlename','Sex','Dob','ClinicalHistory');
+        $fieldsArr = array('Mrn','Suffix','Lastname','Firstname','Middlename','Sex','Dob','ClinicalHistory');
         return $fieldsArr;
     }
 

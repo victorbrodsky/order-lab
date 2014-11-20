@@ -41,7 +41,7 @@
 
         $(document).ready(function() {
 
-            getComboboxReturn(new Array("0","0","0","0","0","0"));
+            getComboboxReturnSlidesLocations();
             getUrgency();
             regularCombobox();
 			setResearchEducational();
@@ -93,6 +93,11 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <input type="hidden" id="formcicle" value="{{ cicle }}" />
+
+    <input type="hidden" id="user_name" value="{{ form.vars.value.provider.getUserNameStr() }}" />
+    <input type="hidden" id="user_id" value="{{ form.vars.value.provider.id }}" />
+    <input type="hidden" id="proxyuser_name" value="{{ form.vars.value.proxyuser.getUserNameStr() }}" />
+    <input type="hidden" id="proxyuser_id" value="{{ form.vars.value.proxyuser.id }}" />
 
     <h3 class="text-info">Please select the slides you would like to be returned</h3>
 

@@ -130,7 +130,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
                 adjustHolderHeight(commentHolder);
             }
 
-            //pupulate document id input field
+            //populate document id input field
             //var holder = $(this.element).closest('.files-upload-holder');
             //var fileIdField = holder.find('.file-upload-id');
             //fileIdField.val(documentid);
@@ -142,11 +142,12 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             }
         },
         maxfilesexceeded: function(file) {
-            this.removeFile(file);
+            alert('Maximum file upload limit reached');
+            return removeUploadedFileByHolder( file.previewElement, this, false );
         },
         removedfile: function(file) {
             //console.log('remove js file name='+file.name);
-            return removeUploadedFileByHolder( file.previewElement, this );
+            return removeUploadedFileByHolder( file.previewElement, this, true );
         },
         init: function() {
 
@@ -210,10 +211,20 @@ function constractShowLink(id,name) {
     return showlinkHtml;
 }
 
-function removeUploadedFileByHolder( previewElement, dropzone ) {
+function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
 
     var documentid = $(previewElement).find('.file-upload-id').val();
-    //console.log('remove documentid='+documentid);
+    //console.log('remove documentid='+documentid+", confirmFlag="+confirmFlag);
+
+    if( confirmFlag == false ) {
+        var _ref;
+        if( previewElement ) {
+            if( (_ref = previewElement) != null ) {
+                _ref.parentNode.removeChild(previewElement);
+            }
+        }
+        return;
+    }
 
     var r = confirm('Are you sure you want to remove this document?'); //+', id='+documentid
     if( r == false ) {
@@ -300,7 +311,7 @@ function removeUploadedFile(btn) {
 
     var previewElement = $(btn).closest('.dz-file-preview').get(0);
 
-    removeUploadedFileByHolder( previewElement, myDropzone );
+    removeUploadedFileByHolder( previewElement, myDropzone, true );
 }
 
 function adjustHolderHeight( commentHolder ) {

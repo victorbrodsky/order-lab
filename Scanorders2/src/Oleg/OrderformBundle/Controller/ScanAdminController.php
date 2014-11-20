@@ -21,7 +21,6 @@ use Oleg\OrderformBundle\Entity\Status;
 use Oleg\OrderformBundle\Entity\SlideType;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\OrderformBundle\Entity\ReturnSlideTo;
 use Oleg\OrderformBundle\Entity\RegionToScan;
 use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
@@ -91,7 +90,6 @@ class ScanAdminController extends AdminController
         //$count_pathservice = $this->generatePathServices();
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
-        $count_returnslide = $this->generateReturnSlideTo();
         $count_SlideDelivery = $this->generateSlideDelivery();
         $count_RegionToScan = $this->generateRegionToScan();
         $count_comments = $this->generateProcessorComments();
@@ -112,7 +110,6 @@ class ScanAdminController extends AdminController
             //'Pathology Services='.$count_pathservice.', '.
             'Slide Types='.$count_slidetype.', '.
             'MRN Types='.$count_mrntype.', '.
-            'Return Slide To='.$count_returnslide.', '.
             'Slide Delivery='.$count_SlideDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
             'Processor Comments='.$count_comments.', '.
@@ -689,36 +686,6 @@ class ScanAdminController extends AdminController
         return $count;
     }
 
-
-    public function generateReturnSlideTo() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $types = array(
-            'Me (the Submitter)', 'Ordering Provider', 'Filing Room'
-        );
-
-        $count = 1;
-        foreach( $types as $type ) {
-
-            $listEntity = new ReturnSlideTo();
-            $this->setDefaultList($listEntity,$count,$username,$type);
-
-            $em->persist($listEntity);
-            $em->flush();
-
-            $count = $count + 10;
-        }
-
-        return $count;
-    }
 
 
     public function generateSlideDelivery() {

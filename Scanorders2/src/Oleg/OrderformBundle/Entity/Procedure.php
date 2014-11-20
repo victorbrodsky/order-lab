@@ -53,10 +53,11 @@ class Procedure extends ObjectAbstract
      */
     protected $encounterDate;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $patlastname;
+    /**
+     * @ORM\OneToMany(targetEntity="ProcedurePatsuffix", mappedBy="procedure", cascade={"persist"})
+     */
+    protected $patsuffix;
+
     /**
      * @ORM\OneToMany(targetEntity="ProcedurePatlastname", mappedBy="procedure", cascade={"persist"})
      */
@@ -109,17 +110,22 @@ class Procedure extends ObjectAbstract
         $this->name = new ArrayCollection();
         $this->encounter = new ArrayCollection();
         $this->encounterDate = new ArrayCollection();
+
+        $this->patsuffix = new ArrayCollection();
         $this->patlastname = new ArrayCollection();
         $this->patmiddlename = new ArrayCollection();
         $this->patfirstname = new ArrayCollection();
+
         $this->patsex = new ArrayCollection();
         $this->patage = new ArrayCollection();
+
         $this->pathistory = new ArrayCollection();
 
         if( $withfields ) {
             $this->addName( new ProcedureName($status,$provider,$source) );
             $this->addEncounter( new ProcedureEncounter($status,$provider,$source) );
             $this->addEncounterDate( new ProcedureEncounterDate($status,$provider,$source) );
+            $this->addPatsuffix( new ProcedurePatsuffix($status,$provider,$source) );
             $this->addPatlastname( new ProcedurePatlastname($status,$provider,$source) );
             $this->addPatfirstname( new ProcedurePatfirstname($status,$provider,$source) );
             $this->addPatmiddlename( new ProcedurePatmiddlename($status,$provider,$source) );
@@ -133,6 +139,7 @@ class Procedure extends ObjectAbstract
         $this->name = $this->cloneDepend($this->name,$this);
         $this->encounter = $this->cloneDepend($this->encounter,$this);
         $this->encounterDate = $this->cloneDepend($this->encounterDate,$this);
+        $this->patsuffix = $this->cloneDepend($this->patsuffix,$this);
         $this->patlastname = $this->cloneDepend($this->patlastname,$this);
         $this->patfirstname = $this->cloneDepend($this->patfirstname,$this);
         $this->patmiddlename = $this->cloneDepend($this->patmiddlename,$this);
@@ -236,6 +243,35 @@ class Procedure extends ObjectAbstract
     {
         $this->pathistory->removeElement($pathistory);
     }
+
+
+    public function setPatsuffix($patsuffix)
+    {
+        $this->patsuffix = $patsuffix;
+    }
+    public function getPatsuffix()
+    {
+        return $this->patsuffix;
+    }
+    public function addPatsuffix($patsuffix)
+    {
+        if( $patsuffix == null ) {
+            $patsuffix = new ProcedurePatsuffix();
+        }
+
+        if( !$this->patsuffix->contains($patsuffix) ) {
+            $patsuffix->setProcedure($this);
+            $this->patsuffix->add($patsuffix);
+        }
+
+        return $this;
+    }
+    public function removePatsuffix($patsuffix)
+    {
+        $this->patsuffix->removeElement($patsuffix);
+    }
+
+
 
     /**
      * @param mixed $patlastname
@@ -583,7 +619,7 @@ class Procedure extends ObjectAbstract
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Encounter','Name','EncounterDate','Patlastname','Patfirstname','Patmiddlename','Patage','Patsex','Pathistory');
+        $fieldsArr = array('Encounter','Name','EncounterDate','Patsuffix','Patlastname','Patfirstname','Patmiddlename','Patage','Patsex','Pathistory');
         return $fieldsArr;
     }
 

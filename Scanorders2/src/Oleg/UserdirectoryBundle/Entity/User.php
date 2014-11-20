@@ -189,6 +189,10 @@ class User extends BaseUser
     }
 
 
+    public function setIdNull() {
+        $this->id = null;
+    }
+
     /**
      * @param mixed $keytype
      */
@@ -354,12 +358,12 @@ class User extends BaseUser
 
         $loc = $this->getLocations()->get(0);
 
-        if( $loc->getLocationType()->getName() == "Employee Office" ) {
+        if( $loc->getLocationType() && $loc->getLocationType()->getName() == "Employee Office" ) {
             return $loc;
         }
 
         foreach( $this->getLocations() as $loc ) {
-            if( $loc->getLocationType()->getName() == "Employee Office" ) {
+            if( $loc->getLocationType() && $loc->getLocationType()->getName() == "Employee Office" ) {
                 return $loc;
             }
             if( $loc->getName() == "Main Office" ) {

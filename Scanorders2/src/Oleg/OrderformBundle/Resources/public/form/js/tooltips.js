@@ -39,7 +39,7 @@ function attachPatientNameSexAgeLockedTooltip() {
     patname.parent().tooltip({
         'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's [Last, First, Middle] Name (at the time of encounter)\" in the "+sexname+" section."
     });
-    highlightProcedureNameElement( patname.parent(), '.procedure-lastName', '.procedure-firstName', '.procedure-middleName' );
+    highlightProcedureNameElement( patname.parent(), '.procedure-suffix', '.procedure-lastName', '.procedure-firstName', '.procedure-middleName' );
 
 }
 
@@ -52,13 +52,15 @@ function highlightProcedureAgeElement( element, parentTarget) {
     });
 }
 
-function highlightProcedureNameElement( element, parentTarget1, parentTarget2, parentTarget3 ) {
+function highlightProcedureNameElement( element, parentTarget0, parentTarget1, parentTarget2, parentTarget3 ) {
     element.on('show.bs.tooltip', function () {
+        $(parentTarget0).css("background-color","#d9edf7");
         $(parentTarget1).css("background-color","#d9edf7");
         $(parentTarget2).css("background-color","#d9edf7");
         $(parentTarget3).css("background-color","#d9edf7");
     });
     element.on('hide.bs.tooltip', function () {
+        $(parentTarget0).css("background-color","");
         $(parentTarget1).css("background-color","");
         $(parentTarget2).css("background-color","");
         $(parentTarget3).css("background-color","");

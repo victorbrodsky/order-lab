@@ -62,6 +62,31 @@ class UserType extends AbstractType
         }
         //echo "read_only=".$read_only."<br>";
 
+
+        //dummy user clone field
+        if( $this->cicle == "create" ) {
+
+            $options = array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Clone:",
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width user-userclone-field'),
+                'required' => false,
+                'mapped' => false,
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('user')
+                            ->where("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
+                            ->orderBy("user.primaryPublicUserId","ASC");
+                    },
+            );
+
+            if( $this->subjectUser->getPrimaryPublicUserId() && $this->subjectUser->getPrimaryPublicUserId() != "" ) {
+                $options['data'] = $this->subjectUser;
+            }
+
+            $builder->add('userclone','entity',$options);
+        }
+
         $attr = array('class'=>'combobox combobox-width user-keytype-field');
         if( $read_only ) {
             $attr['readonly'] = 'readonly';

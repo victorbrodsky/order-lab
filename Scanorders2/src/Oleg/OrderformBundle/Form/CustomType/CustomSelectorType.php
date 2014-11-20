@@ -9,6 +9,7 @@
 
 namespace Oleg\OrderformBundle\Form\CustomType;
 
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -23,7 +24,7 @@ use Oleg\OrderformBundle\Form\DataTransformer\UserListTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccountTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 
-
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 
 class CustomSelectorType extends AbstractType {
@@ -83,17 +84,11 @@ class CustomSelectorType extends AbstractType {
             case "mrntype":
                 $transformer = new MrnTypeTransformer($this->om, $username);
                 break;
-
-//            case "service":
-//                $transformer = new ServiceTransformer($this->om, $this->serviceContainer, $username);
+//            case "returnSlide":
+//                $transformer = new  GenericTreeTransformer($this->om, $username, 'Location');
 //                break;
-//            case "userServices":
-//                $transformer = new UserServicesTransformer($this->om, $this->serviceContainer, $username);
-//                break;
-
             case "scanRegion":
             case "slideDelivery":
-            case "returnSlide":
             case "partname":
             case "blockname":
             case "projectTitle":

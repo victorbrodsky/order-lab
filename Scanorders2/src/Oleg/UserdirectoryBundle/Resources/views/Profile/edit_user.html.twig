@@ -591,6 +591,10 @@
 
     <h4 class="text-info" align="center">{{ title }}</h4>
 
+    {% if form.userclone is defined %}
+        {{ formmacros.field(form.userclone) }}
+    {% endif %}
+
     <br>
 
     {#user's snapshot#}
@@ -603,7 +607,6 @@
         <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll()" >Collapse All</button>
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
     </p>
-
 
     {{ form_start(form) }}
 
