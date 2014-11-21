@@ -35,6 +35,7 @@ class PublicComment extends BaseComment
         $this->documents = new ArrayCollection();
     }
 
+
     /**
      * @param mixed $user
      */

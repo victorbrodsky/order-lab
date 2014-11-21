@@ -127,11 +127,6 @@ class User extends BaseUser
      */
     private $employmentStatus;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="ResearchLab", mappedBy="user", cascade={"persist"})
-//     * @ORM\OrderBy({"dissolvedDate" = "ASC"})
-//     */
-//    private $researchLabs;
     /**
      * @ORM\ManyToMany(targetEntity="ResearchLab", mappedBy="user", cascade={"persist"})
      **/

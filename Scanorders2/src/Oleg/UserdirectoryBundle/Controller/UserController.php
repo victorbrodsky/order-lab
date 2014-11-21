@@ -675,33 +675,24 @@ class UserController extends Controller
         //echo "user id=".$id."<br>";
         //exit();
 
-        $userclone = null;
-        if( $id && $id != "" ) {
-            $userclone = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-            //$user = clone $userclone;
-            $user = $userclone;
-            //$user->setIdNull();
-            $user->setDisplayName("");
-            //$user->setPrimaryPublicUserId(null);
-            $user->setUsername("");
-            $user->setFirstname("");
-            $user->setLastname("");
-            $user->setEmail("");
-        } else {
-            $userManager = $this->container->get('fos_user.user_manager');
-            $user = $userManager->createUser();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->createUser();
 
-            $creator = $this->get('security.context')->getToken()->getUser();
-            $userUtil = new UserUtil();
-            $user = $userUtil->addDefaultLocations($user,$creator,$em,$this->container);
-        }
-
-        $user->setEnabled(true);
-        $user->setCreatedby('manual');
+        $creator = $this->get('security.context')->getToken()->getUser();
+        $userUtil = new UserUtil();
+        $user = $userUtil->addDefaultLocations($user,$creator,$em,$this->container);
 
         $userSecUtil = $this->get('user_security_utility');
         $userkeytype = $userSecUtil->getDefaultUsernameType();
         $user->setKeytype($userkeytype);
+
+        //clone user
+        $subjectUser = null;
+        if( $id && $id != "" ) {
+            $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+            $userUtil = new UserUtil();
+            $user = $userUtil->makeUserClone($subjectUser,$user);
+        }
 
         $this->addEmptyCollections($user);
 
@@ -724,7 +715,20 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context'),$em), $user, array('disabled' => false));
+        $params = array(
+            'cicle' => 'create',
+            'user' => $user,
+            'cloneuser' => $subjectUser,
+            'roles' => $rolesArr,
+            'sc' => $this->get('security.context'),
+            'em' => $em
+        );
+
+        $form = $this->createForm(new UserType($params), $user, array(
+            'disabled' => false,
+            'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+            'method' => 'POST',
+        ));
 
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
@@ -733,7 +737,7 @@ class UserController extends Controller
             'cicle' => 'create_user',
             'user_id' => '',
             'sitename' => $this->container->getParameter('employees.sitename'),
-            'userclone' => $userclone
+            'userclone' => $subjectUser
         );
 
     }
@@ -768,7 +772,16 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context'),$em), $user, array('disabled' => false));
+        $params = array(
+            'cicle' => 'create',
+            'user' => $user,
+            'cloneuser' => null,
+            'roles' => $rolesArr,
+            'sc' => $this->get('security.context'),
+            'em' => $em
+        );
+
+        $form = $this->createForm(new UserType($params), $user, array('disabled' => false));
 
         $form->handleRequest($request);
 
@@ -792,7 +805,17 @@ class UserController extends Controller
             $form->get('primaryPublicUserId')->addError($error);
         }
 
-        if ($form->isValid()) {
+//        echo "loc errors:<br>";
+//        print_r($form->getErrors());
+//        echo "<br>loc string errors:<br>";
+//        print_r($form->getErrorsAsString());
+//        echo "<br>";
+        //exit();
+
+        if( $form->isValid() ) {
+
+            $user->setEnabled(true);
+            $user->setCreatedby('manual');
 
             //set unique username
             $user->setUniqueUsername();
@@ -865,7 +888,16 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context'),$em), $entity, array('disabled' => true));
+        $params = array(
+            'cicle' => 'show',
+            'user' => $entity,
+            'cloneuser' => null,
+            'roles' => $rolesArr,
+            'sc' => $this->get('security.context'),
+            'em' => $em
+        );
+
+        $form = $this->createForm(new UserType($params), $entity, array('disabled' => true));
 
 //        if (!is_object($user) || !$user instanceof UserInterface) {
 //            throw new AccessDeniedException('This user does not have access to this section.');
@@ -923,7 +955,16 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context'),$em), $entity, array(
+        $params = array(
+            'cicle' => 'edit',
+            'user' => $entity,
+            'cloneuser' => null,
+            'roles' => $rolesArr,
+            'sc' => $this->get('security.context'),
+            'em' => $em
+        );
+
+        $form = $this->createForm(new UserType($params), $entity, array(
             'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -1115,7 +1156,16 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context'),$em), $entity, array(
+        $params = array(
+            'cicle' => 'edit',
+            'user' => $entity,
+            'cloneuser' => null,
+            'roles' => $rolesArr,
+            'sc' => $this->get('security.context'),
+            'em' => $em
+        );
+
+        $form = $this->createForm(new UserType($params), $entity, array(
             'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));

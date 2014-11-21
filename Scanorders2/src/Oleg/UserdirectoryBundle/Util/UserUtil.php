@@ -689,5 +689,52 @@ class UserUtil {
         return $entity;
     }
 
+    //clone user according to issue #392
+    public function makeUserClone( $suser, $duser ) {
+
+        //Time Zone: America / New York
+        $duser->setPreferences( clone $suser->getPreferences() );
+
+        //Administrative Title Type
+        foreach( $suser->getAdministrativeTitles() as $object ) {
+            $clone = clone $object;
+            $duser->addAdministrativeTitle( $clone );
+        }
+
+        //Academic Titles
+        foreach( $suser->getAppointmentTitles() as $object ) {
+            $clone = clone $object;
+            $duser->addAppointmentTitle( $clone );
+        }
+
+        //Locations
+        //1) remove all locations
+        $homeLocations = new ArrayCollection();
+        foreach( $duser->getLocations() as $object ) {
+            if( $object->getLocationType()->getName() == "Employee Home" ) {
+                $homeLocations->add($object);
+            }
+            $duser->removeLocation($object);
+        }
+        //2) add cloned locations
+        foreach( $suser->getLocations() as $object ) {
+            if( $object->getLocationType()->getName() != "Employee Home" ) {
+                $clone = clone $object;
+                $duser->addLocation( $clone );
+            }
+        }
+        //3) set home as the last location
+        foreach( $homeLocations as $object ) {
+            $duser->addLocation( $object );
+        }
+
+
+        //Medical License: Country, State
+        $sMedicalLicense = $suser->getCredentials()->getStateLicense()->first();
+        $duser->getCredentials()->getStateLicense()->first()->setCountry($sMedicalLicense->getCountry());
+        $duser->getCredentials()->getStateLicense()->first()->setState($sMedicalLicense->getState());
+
+        return $duser;
+    }
 
 }

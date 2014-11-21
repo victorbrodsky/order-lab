@@ -28,7 +28,7 @@ class StateLicense
     private $state;
 
     /**
-     * @ORM\ManyToOne(targetEntity="States")
+     * @ORM\ManyToOne(targetEntity="Countries")
      * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
      **/
     private $country;

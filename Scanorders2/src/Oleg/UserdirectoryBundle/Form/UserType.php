@@ -24,23 +24,25 @@ class UserType extends AbstractType
     protected $cicle;
     protected $roleAdmin;
     protected $subjectUser;
+    protected $cloneUser;
     protected $roles;
     protected $sc;
     protected $em;
 
-    public function __construct( $cicle, $subjectUser, $roles, $sc, $em )
+    public function __construct( $params )
     {
-        $this->cicle = $cicle;
-        $this->subjectUser = $subjectUser;
-        $this->roles = $roles;
-        $this->sc = $sc;
-        $this->em = $em;
+        $this->cicle = $params['cicle'];
+        $this->subjectUser = $params['user'];
+        $this->cloneUser = $params['cloneuser'];
+        $this->roles = $params['roles'];
+        $this->sc = $params['sc'];
+        $this->em = $params['em'];
 
         //echo "cicle=".$cicle."<br>";
-        if( $cicle == 'create' ) {
-            $this->roleAdmin = $sc->isGranted('ROLE_USERDIRECTORY_EDITOR');
+        if( $this->cicle == 'create' ) {
+            $this->roleAdmin = $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR');
         } else {
-            $this->roleAdmin = $sc->isGranted('ROLE_ADMIN');
+            $this->roleAdmin = $this->sc->isGranted('ROLE_ADMIN');
         }
 
     }
@@ -80,8 +82,9 @@ class UserType extends AbstractType
                     },
             );
 
-            if( $this->subjectUser->getPrimaryPublicUserId() && $this->subjectUser->getPrimaryPublicUserId() != "" ) {
-                $options['data'] = $this->subjectUser;
+            //if( $this->subjectUser->getPrimaryPublicUserId() && $this->subjectUser->getPrimaryPublicUserId() != "" ) {
+            if( $this->cloneUser ) {
+                $options['data'] = $this->cloneUser;
             }
 
             $builder->add('userclone','entity',$options);

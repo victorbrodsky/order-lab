@@ -187,7 +187,7 @@
     {{ form_start(form) }}
 
     {{ formmacros.field(form.list.name) }}
-    {{ formmacros.field(form.abbreviation) }}
+    {{ formmacros.field(form.list.abbreviation) }}
 
     {% if form.parent is defined and form.vars.value.parent is defined %}
         {{ formmacros.field(form.parent) }}
@@ -265,7 +265,7 @@
     {% endif %}
 
     {{ formmacros.field(edit_form.list.name) }}
-    {{ formmacros.field(edit_form.abbreviation) }}
+    {{ formmacros.field(edit_form.list.abbreviation) }}
 
     {% if entity.value is defined %}
         {{ formmacros.field(edit_form.value) }}

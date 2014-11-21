@@ -77,7 +77,7 @@ class AperioUtil {
                 $user->setUniqueUsername();
 
                 $user->setEmail($AuthResult['E_Mail']);
-                $user->setEnabled(1);
+                $user->setEnabled(true);
                 $user->setCreatedby('aperio');
                 $user->getPreferences()->setTimezone($default_time_zone);
 

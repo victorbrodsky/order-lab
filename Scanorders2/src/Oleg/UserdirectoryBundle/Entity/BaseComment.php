@@ -39,7 +39,6 @@ abstract class BaseComment extends BaseUserAttributes {
     }
 
 
-
     /**
      * @param mixed $comment
      */
