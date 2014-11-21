@@ -22,7 +22,7 @@ class StateLicenseType extends AbstractType
 
         $builder->add( 'state', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:States',
-            'property' => 'name',
+            //'property' => 'name',
             'label'=>'State:',
             'required'=> false,
             'multiple' => false,

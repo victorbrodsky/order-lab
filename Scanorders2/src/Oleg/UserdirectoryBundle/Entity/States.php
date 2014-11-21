@@ -24,6 +24,8 @@ class States extends ListAbstract
     protected $original;
 
 
-    
+    public function __toString() {
+        return $this->name . " (" . $this->abbreviation . ")";
+    }
 
 }
