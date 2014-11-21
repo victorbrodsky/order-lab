@@ -29,11 +29,6 @@ class Institution extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $abbreviation;
-
-    /**
      * @ORM\OneToMany(targetEntity="Department", mappedBy="parent", cascade={"persist"})
      */
     protected $departments;
@@ -77,21 +72,6 @@ class Institution extends ListAbstract
         return $this->departments;
     }
 
-    /**
-     * @param mixed $abbreviation
-     */
-    public function setAbbreviation($abbreviation)
-    {
-        $this->abbreviation = $abbreviation;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAbbreviation()
-    {
-        return $this->abbreviation;
-    }
 
     public function getClassName()
     {

@@ -15,11 +15,6 @@ class BuildingList extends ListAbstract
 {
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $abbreviation;
-
-    /**
      * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
      **/
     private $geoLocation;
@@ -73,23 +68,6 @@ class BuildingList extends ListAbstract
         $this->name = $name;
 
         return $this;
-    }
-
-
-    /**
-     * @param mixed $abbreviation
-     */
-    public function setAbbreviation($abbreviation)
-    {
-        $this->abbreviation = $abbreviation;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAbbreviation()
-    {
-        return $this->abbreviation;
     }
 
     /**
@@ -147,6 +125,14 @@ class BuildingList extends ListAbstract
     }
 
 
+    public function getShortName() {
+        $name = "";
+        if( $this->getGeoLocation() != "" ) {
+            $name = $this->getGeoLocation()."";
+        }
+        return $name;
+    }
+
     //WCMC - Weill Cornell Medical College / 1300 York Ave / Abbreviation = C
     public function __toString() {
 
@@ -170,15 +156,18 @@ class BuildingList extends ListAbstract
         }
 
         if( $this->getName() != "" ) {
-            $name = $name . $this->getName() . " / ";
-        }
-
-        if( $geoName != "" ) {
-            $name = $name . $geoName;
+            $name = $name . $this->getName() . " ";
         }
 
         if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
-            $name = $name . " / Abbreviation = " . $this->getAbbreviation()."";
+            $name = $name . "(" . $this->getAbbreviation() . ")";
+        }
+
+        if( $geoName != "" ) {
+            if( $name != "" ) {
+                $name = $name . " / ";
+            }
+            $name = $name . $geoName;
         }
 
         return $name;

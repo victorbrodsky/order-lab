@@ -209,8 +209,6 @@ class GeoLocation
     }
 
 
-
-
     public function __toString() {
 
         if( $this->getStreet1() && $this->getStreet2() ) {

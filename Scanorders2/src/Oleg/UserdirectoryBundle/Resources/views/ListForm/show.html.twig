@@ -14,13 +14,4 @@
 
     {{ listmacros.listEdit( entity, edit_form, delete_form, pathbase, 'show' ) }}
 
-
-    {#{% if displayName == "Locations" %}#}
-        {#<p>#}
-            {#<a href="{{ path(employees_sitename~'_show_location',{id:entity.id}) }}">#}
-                {#Full Location Management#}
-            {#</a>#}
-        {#</p>#}
-    {#{% endif %}#}
-
 {% endblock %}

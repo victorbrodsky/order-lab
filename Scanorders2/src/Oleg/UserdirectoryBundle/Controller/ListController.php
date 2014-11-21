@@ -78,13 +78,12 @@ class ListController extends Controller
 
         $entityClass = $mapper['fullClassName'];   //"Oleg\\OrderformBundle\\Entity\\".$mapper['className'];
 
-        if( method_exists($entityClass,'getSynonyms') ) {
-            //echo "synonyms exists! <br>";
-            $dql->leftJoin("ent.synonyms", "synonyms");
-            $dql->addGroupBy('synonyms.name');
-            $dql->leftJoin("ent.original", "original");
-            $dql->addGroupBy('original.name');
-        }
+        //synonyms and original
+        $dql->leftJoin("ent.synonyms", "synonyms");
+        $dql->addGroupBy('synonyms.name');
+        $dql->leftJoin("ent.original", "original");
+        $dql->addGroupBy('original.name');
+
 
         if( method_exists($entityClass,'getResearchlab') ) {
             $dql->leftJoin("ent.researchlab", "researchlab");
@@ -213,14 +212,6 @@ class ListController extends Controller
     private function createCreateForm($entity,$mapper,$pathbase,$cicle=null)
     {
         $options = array();
-
-        if( method_exists($entity,'getOriginal') ) {
-            $options['original'] = true;
-        }
-
-        if( method_exists($entity,'getSynonyms') ) {
-            $options['synonyms'] = true;
-        }
 
         if( $cicle ) {
             $options['cicle'] = $cicle;
@@ -460,14 +451,6 @@ class ListController extends Controller
 
         $options['id'] = $entity->getId();
 
-        if( method_exists($entity,'getOriginal') ) {
-            $options['original'] = true;
-        }
-
-        if( method_exists($entity,'getSynonyms') ) {
-            $options['synonyms'] = true;
-        }
-
         if( $cicle ) {
             $options['cicle'] = $cicle;
         }
@@ -539,9 +522,7 @@ class ListController extends Controller
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
 
         //save array of synonyms
-        if( method_exists($entity,'getSynonyms') && $entity->getSynonyms() ) {
-            $beforeformSynonyms = clone $entity->getSynonyms();
-        }
+        $beforeformSynonyms = clone $entity->getSynonyms();
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$mapper['fullClassName'].' entity.');
@@ -564,18 +545,16 @@ class ListController extends Controller
             //$entity->setUpdatedon(new \DateTime());
             $entity->setUpdateAuthorRoles($user->getRoles());
 
-            if( method_exists($entity,'getSynonyms') ) {
-                //take care of self-referencing: remove
-                if( count($beforeformSynonyms) > count($entity->getSynonyms()) ) {
-                    foreach( $beforeformSynonyms as $syn ) {
-                        $syn->setOriginal(NULL);
-                    }
+            //take care of self-referencing: remove
+            if( count($beforeformSynonyms) > count($entity->getSynonyms()) ) {
+                foreach( $beforeformSynonyms as $syn ) {
+                    $syn->setOriginal(NULL);
                 }
+            }
 
-                //take care of self-referencing: add
-                foreach( $entity->getSynonyms() as $syn ) {
-                    $syn->setOriginal($entity);
-                }
+            //take care of self-referencing: add
+            foreach( $entity->getSynonyms() as $syn ) {
+                $syn->setOriginal($entity);
             }
 
             $em->flush();

@@ -61,6 +61,24 @@ class BuildingType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add( 'institution', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'property' => 'name',
+            'label'=>'Institution:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
+
         $builder->add('geoLocation', new GeoLocationType($this->params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,

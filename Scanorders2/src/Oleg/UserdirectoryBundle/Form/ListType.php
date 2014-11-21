@@ -55,6 +55,11 @@ class ListType extends AbstractType
             ));
         }
 
+        $builder->add('abbreviation',null,array(
+            'label' => 'Abbreviation:',
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('type','choice',array(
             'label'=>'Type:',
             'choices' => $this->types,
@@ -86,6 +91,7 @@ class ListType extends AbstractType
             $builder->add('updatedby',null,array(
                 'label'=>'Updated by:',
                 'required'=>false,
+                'read_only'=>true,
                 'attr' => array('class'=>'combobox combobox-width select2-list-creator')
             ));
 
@@ -102,38 +108,31 @@ class ListType extends AbstractType
             //echo "no update <br>";
         }
 
-        if( array_key_exists('synonyms', $this->params) ) {
 
-            $builder->add('synonyms', 'entity', array(
-                'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
-                'label'=>'Synonyms:',
-                'required' => false,
-                'multiple' => true,
-                'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where( "list.type != :type" . $this->addwhere )
-                        ->setParameters( array( 'type'=>'default' ) );
-                },
-            ));
-        }
+        $builder->add('synonyms', 'entity', array(
+            'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
+            'label'=>'Synonyms:',
+            'required' => false,
+            'multiple' => true,
+            'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where( "list.type != :type" . $this->addwhere )
+                    ->setParameters( array( 'type'=>'default' ) );
+            },
+        ));
 
-
-        if( array_key_exists('original', $this->params) ) {
-
-            $builder->add('original', 'entity', array(
-                'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
-                'label'=>'Original Synonymous Term:',
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width select2-list-original'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where( "list.type = :type" . $this->addwhere )
-                        ->setParameter( 'type','default' );
-                },
-            ));
-        }
-
+        $builder->add('original', 'entity', array(
+            'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
+            'label'=>'Original Synonymous Term:',
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width select2-list-original'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where( "list.type = :type" . $this->addwhere )
+                    ->setParameter( 'type','default' );
+            },
+        ));
 
 
     }

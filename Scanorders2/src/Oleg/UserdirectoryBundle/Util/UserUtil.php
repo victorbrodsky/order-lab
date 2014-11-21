@@ -648,8 +648,12 @@ class UserUtil {
             $entity->setAuthor($author);
         }
 
-        $entity->setUpdateAuthor($author);
-        $entity->setUpdateAuthorRoles($author->getRoles());
+        if( $entity->getId() ) {
+            if( $entity->getUpdateAuthor() == null ) {  //update author can be set to any user, not a current user
+                $entity->setUpdateAuthor($author);
+            }
+            $entity->setUpdateAuthorRoles($entity->getUpdateAuthor()->getRoles());
+        }
     }
 
     //add two default locations: Home and Main Office

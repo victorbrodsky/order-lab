@@ -30,10 +30,6 @@ class UsernameType extends ListAbstract
      */
     protected $users;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $abbreviation;
 
 
     public function __construct() {
@@ -42,8 +38,6 @@ class UsernameType extends ListAbstract
     }
 
 
-
-    
 
 
     public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
@@ -62,22 +56,6 @@ class UsernameType extends ListAbstract
     public function getUsers()
     {
         return $this->users;
-    }
-
-    /**
-     * @param mixed $abbreviation
-     */
-    public function setAbbreviation($abbreviation)
-    {
-        $this->abbreviation = $abbreviation;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAbbreviation()
-    {
-        return $this->abbreviation;
     }
 
 

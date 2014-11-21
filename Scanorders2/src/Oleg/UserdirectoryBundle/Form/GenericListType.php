@@ -60,13 +60,6 @@ class GenericListType extends AbstractType
             ));
         }
 
-        //Institution abbreviation
-        if( method_exists($this->params['entity'],'getAbbreviation') ) {
-            $builder->add('abbreviation',null,array(
-                'label' => 'Abbreviation:',
-                'attr' => array('class' => 'form-control')
-            ));
-        }
 
 
         $builder->add('list', new ListType($this->params, $this->mapper), array(

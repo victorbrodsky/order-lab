@@ -146,31 +146,7 @@
 
     {#show list properties#}
     {% if standAloneLocation %}
-        <div class="well">
-            <p>
-                <h4 class="text-muted" align="center">List properties:</h4>
-            </p>
-            {% if formfield.list.original is defined %}
-                {{ formmacros.field(formfield.list.original) }}
-            {% endif %}
-
-            {% if formfield.list.synonyms is defined %}
-                {{ formmacros.field(formfield.list.synonyms) }}
-            {% endif %}
-
-            {{ formmacros.field(formfield.list.type) }}
-
-            {{ formmacros.field(formfield.list.creator) }}
-
-            {{ formmacros.field(formfield.list.createdate) }}
-
-            {{ formmacros.field(formfield.list.orderinlist) }}
-
-            {% if formfield.list.updatedby is defined %}
-                {{ formmacros.field(formfield.list.updatedby) }}
-                {{ formmacros.field(formfield.list.updatedon) }}
-            {% endif %}
-        </div>
+        {{ userform.listProperties(formfield) }}
     {% endif %}
 
 
@@ -453,6 +429,9 @@
         <p>
         <h4 class="text-muted" align="center">List properties:</h4>
         </p>
+
+        {#{{ formmacros.field(formfield.list.abbreviation) }}#}
+
         {% if formfield.list.original is defined %}
             {{ formmacros.field(formfield.list.original) }}
         {% endif %}
@@ -502,6 +481,8 @@
 
     {#Location GeoLocation#}
     {{ userform.geoLocation(field,cicle,prototype) }}
+
+    {{ formmacros.field(formfield.institution) }}
 
     {% do formfield.setRendered %}
 

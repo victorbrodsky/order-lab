@@ -54,9 +54,11 @@ class FullListController extends Controller
 
         if( $mapper['pathname'] == 'locations' ) {
             $dql->leftJoin("ent.user", "user");
+            $dql->addGroupBy('user');
         }
         if( $mapper['pathname'] == 'buildings' ) {
-
+            $dql->leftJoin("ent.institution", "institution");
+            $dql->addGroupBy('institution');
         }
 
         $dql->leftJoin("ent.creator", "creator");
@@ -69,6 +71,10 @@ class FullListController extends Controller
         $dql->addGroupBy('synonyms.name');
         $dql->leftJoin("ent.original", "original");
         $dql->addGroupBy('original.name');
+
+        $dql->leftJoin("ent.geoLocation", "geoLocation");
+        $dql->addGroupBy('geoLocation');
+
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
         $postData = $request->query->all();
@@ -217,8 +223,9 @@ class FullListController extends Controller
 //        echo "creator=".$entity->getCreator()."<br>";
 //        exit();
 
-        if ($form->isValid()) {
+        if( $form->isValid() ) {
 
+            //echo "pathname=".$mapper['pathname']."<br>";
             if( $mapper['pathname'] == 'locations' ) {
                 //set parents for institution tree for Administrative and Academical Titles
                 $userUtil = new UserUtil();
@@ -228,10 +235,17 @@ class FullListController extends Controller
 
                 //set Reviewed by Administration
                 $entity->setStatus($entity::STATUS_VERIFIED);
+
+                //set Location Privacy
+                $locPrivacy = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+                $entity->setPrivacy($locPrivacy);
             }
 
             if( $mapper['pathname'] == 'buildings' ) {
-
+                $userUtil = new UserUtil();
+                $em = $this->getDoctrine()->getManager();
+                $sc = $this->get('security.context');
+                $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -277,9 +291,13 @@ class FullListController extends Controller
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
 
+        //update author can be set to any user, not a current user
+        $entity->setUpdateAuthor(null);
+
         $form = $this->createCreateForm($entity,$cicle,$mapper);
 
         $form->handleRequest($request);
+
 
 //        echo "loc errors:<br>";
 //        print_r($form->getErrors());
@@ -296,6 +314,13 @@ class FullListController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $sc = $this->get('security.context');
                 $userUtil->processInstTree($entity,$em,$sc);
+            }
+
+            if( $mapper['pathname'] == 'buildings' ) {
+                $userUtil = new UserUtil();
+                $em = $this->getDoctrine()->getManager();
+                $sc = $this->get('security.context');
+                $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
             $em = $this->getDoctrine()->getManager();

@@ -621,7 +621,8 @@ class AdminController extends Controller
             return -1;
         }
 
-        $states = array('AL'=>"Alabama",
+        $states = array(
+            'AL'=>"Alabama",
             'AK'=>"Alaska",
             'AZ'=>"Arizona",
             'AR'=>"Arkansas",
@@ -671,8 +672,8 @@ class AdminController extends Controller
             'WA'=>"Washington",
             'WV'=>"West Virginia",
             'WI'=>"Wisconsin",
-            'WY'=>"Wyoming");
-
+            'WY'=>"Wyoming"
+        );
 
         $username = $this->get('security.context')->getToken()->getUser();
 
@@ -682,6 +683,7 @@ class AdminController extends Controller
             $entity = new States();
             $this->setDefaultList($entity,$count,$username,null);
             $entity->setName( trim($value) );
+            $entity->setAbbreviation( trim($key) );
 
             $em->persist($entity);
             $em->flush();

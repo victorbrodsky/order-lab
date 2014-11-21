@@ -690,6 +690,10 @@ class UserController extends Controller
         } else {
             $userManager = $this->container->get('fos_user.user_manager');
             $user = $userManager->createUser();
+
+            $creator = $this->get('security.context')->getToken()->getUser();
+            $userUtil = new UserUtil();
+            $user = $userUtil->addDefaultLocations($user,$creator,$em,$this->container);
         }
 
         $user->setEnabled(true);

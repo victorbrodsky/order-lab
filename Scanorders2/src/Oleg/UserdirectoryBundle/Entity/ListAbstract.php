@@ -36,6 +36,11 @@ abstract class ListAbstract
     protected $name;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $abbreviation;
+
+    /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank
      */
@@ -180,6 +185,24 @@ abstract class ListAbstract
     }
 
     /**
+     * @param mixed $abbreviation
+     */
+    public function setAbbreviation($abbreviation)
+    {
+        $this->abbreviation = $abbreviation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAbbreviation()
+    {
+        return $this->abbreviation;
+    }
+
+
+
+    /**
      * Set type
      *
      * @param string $type
@@ -270,15 +293,14 @@ abstract class ListAbstract
         return $this->name."";
     }
 
-    //@ORM\PrePersist
     /**
      * @param mixed $updatedby
      */
     public function setUpdatedby($user)
     {
-        if( $user ) {
+        //if( $user ) {
             $this->updatedby = $user;
-        }
+        //}
     }
 
     /**
@@ -290,8 +312,7 @@ abstract class ListAbstract
     }
 
     /**
-     * @ORM\PrePersist
-     * @param
+     * @ORM\PreUpdate
      */
     public function setUpdatedon()
     {

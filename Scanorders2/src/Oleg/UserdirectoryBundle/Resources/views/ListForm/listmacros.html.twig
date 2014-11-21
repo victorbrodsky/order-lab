@@ -12,10 +12,7 @@
         <tr>
             <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
-
-            {% if entities|first.abbreviation is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
-            {% endif %}
+            <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
 
             {% if entities|first.researchlab is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Principal Investigator(s)', 'usercount') }}</th>
@@ -70,13 +67,7 @@
             <tr>
                 <td><a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
-
-                {% if entity.abbreviation is defined %}
-                    <td>
-                        {{ entity.abbreviation }}
-                    </td>
-                {% endif %}
-
+                <td>{{ entity.abbreviation }}</td>
 
                 {% if entity.researchlab is defined %}
                     <td>
@@ -196,6 +187,7 @@
     {{ form_start(form) }}
 
     {{ formmacros.field(form.list.name) }}
+    {{ formmacros.field(form.abbreviation) }}
 
     {% if form.parent is defined and form.vars.value.parent is defined %}
         {{ formmacros.field(form.parent) }}
@@ -207,10 +199,6 @@
 
     {% if form.value is defined %}
         {{ formmacros.field(form.value) }}
-    {% endif %}
-
-    {% if entity.abbreviation is defined %}
-        {{ formmacros.field(form.abbreviation) }}
     {% endif %}
 
     {% if form.list.original is defined %}
@@ -277,13 +265,10 @@
     {% endif %}
 
     {{ formmacros.field(edit_form.list.name) }}
+    {{ formmacros.field(edit_form.abbreviation) }}
 
     {% if entity.value is defined %}
         {{ formmacros.field(edit_form.value) }}
-    {% endif %}
-
-    {% if entity.abbreviation is defined %}
-        {{ formmacros.field(edit_form.abbreviation) }}
     {% endif %}
 
     {% if edit_form.list.original is defined %}

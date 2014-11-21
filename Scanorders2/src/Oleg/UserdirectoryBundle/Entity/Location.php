@@ -339,6 +339,14 @@ class Location extends BaseLocation
         return $this->getNameFull();
     }
 
+    public function getShortName() {
+        $name = "";
+        if( $this->getGeoLocation() != "" ) {
+            $name = $this->getGeoLocation()."";
+        }
+        return $name;
+    }
+
     public function getNameFull() {
 
         $name = "";
