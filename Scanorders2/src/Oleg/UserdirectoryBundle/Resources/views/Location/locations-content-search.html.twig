@@ -19,7 +19,7 @@
     <tbody data-link="row" class="rowlink">
     {% for entity in locations %}
         <tr>
-            <td style="display:none"><a href="{{ path(employees_sitename~'locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td style="display:none"><a href="{{ path(employees_sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.getNameFull() }}</td>
             <td>{{ entity.phone }}</td>
             <td>{{ entity.ic }}</td>
