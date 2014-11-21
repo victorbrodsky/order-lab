@@ -62,6 +62,10 @@ a) git commit -m "My message"
 b) git stash
 c) git reset --hard
 
+# Force Git to overwrite local files on pull; This will remove all the local files (http://stackoverflow.com/questions/1125968/force-git-to-overwrite-local-files-on-pull)
+git fetch --all
+git reset --hard origin/master
+
 # To push changes from locally create branch (i.e. iss51) to remote repo
 git push -u origin iss51
 
