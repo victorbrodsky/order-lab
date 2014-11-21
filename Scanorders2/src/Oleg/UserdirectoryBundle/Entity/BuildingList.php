@@ -164,7 +164,7 @@ class BuildingList extends ListAbstract
         }
 
         if( $geoName != "" ) {
-            if( $name != "" ) {
+            if( $name != "" && $this->getName() != "" ) {
                 $name = $name . " / ";
             }
             $name = $name . $geoName;

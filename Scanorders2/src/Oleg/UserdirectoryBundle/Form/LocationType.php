@@ -80,11 +80,6 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-//        $builder->add('building', new BuildingType($this->params), array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
-//            'label' => false,
-//            'required' => false,
-//        ));
         $builder->add('building', 'employees_custom_selector', array(
             'label' => 'Building:',
             'attr' => array('class' => 'ajax-combobox-building', 'type' => 'hidden'),
