@@ -30,11 +30,6 @@ class LocationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $standAloneLocation = false;
-        if( strpos($this->params['cicle'],'_standalone') !== false && strpos($this->params['cicle'],'new') === false ) {
-            $standAloneLocation = true;
-        }
-
         $builder->add('id','hidden',array(
             'label'=>false,
             'attr' => array('class'=>'user-object-id-field')
@@ -227,7 +222,13 @@ class LocationType extends AbstractType
         $builder->add('privacy','entity',$arrayOptions);
 
 
-        //add user and list properties for stand alone location managemenet by LocationController
+        //add user and list properties for stand alone location management by LocationController
+        //Consider stanAlone for all cicles with _standalone, except new_standalone. Cicle new_standalone is exception because we don't show list attributes in creation page
+        $standAloneLocation = false;
+        if( strpos($this->params['cicle'],'_standalone') !== false && strpos($this->params['cicle'],'new') === false ) {
+            $standAloneLocation = true;
+        }
+
         if( $standAloneLocation ) {
             //user
             $builder->add('user','entity',array(

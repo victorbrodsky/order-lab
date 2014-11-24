@@ -138,6 +138,7 @@
         {% set wellclass = "" %}
     {% endif %}
 
+    {#Consider stanAlone for all cicles with _standalone, except new_standalone. Cicle new_standalone is exception because we don't show list attributes in creation page#}
     {% set standAloneLocation = false %}
     {% if cicle == "create_standalone" or cicle == "show_standalone" or cicle == "edit_standalone" %}
         {% set wellclass = "" %}
@@ -217,10 +218,14 @@
     {% if showRegularFields1 or showRegularFields2 %}
         <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
-            {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) and not standAloneLocation %}
-                <div class="text-right">
-                    <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-                </div>
+            {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
+                {% if not standAloneLocation and cicle != "new_standalone" %}
+                    <div class="text-right">
+                        <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" >
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </div>
+                {% endif %}
             {% endif %}
 
             {% if showRegularFields1 %}
@@ -238,7 +243,9 @@
                 {% endif %}
 
                 {% if homeLocation == true or standAloneLocation %}
-                    {{ formmacros.field(formfield.privacy) }}
+                    {% if cicle != 'show_user' or cicle == 'show_user' and (userEditor or subjectuser) %}
+                        {{ formmacros.field(formfield.privacy) }}
+                    {% endif %}
                 {% else %}
                     {% do formfield.privacy.setRendered %}
                 {% endif %}
@@ -351,6 +358,15 @@
 {% endmacro %}
 
 
+{% macro checkbox_notempty(field,value,cicle) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% if value == 1 or cicle != "show_user" %}
+        {{ formmacros.checkbox(field) }}
+    {% else %}
+        {% do field.setRendered %}
+    {% endif %}
+{% endmacro %}
+
 {% macro emailPhoneField_notempty(field,cicle,type,label) %}
     {% import _self as formuser %}
     {% if field.vars.value or cicle != "show_user" %}
@@ -389,7 +405,7 @@
                         <a href="tel:{{ valueclean }}" target="_top">{{ value }}</a>
                     {% endif %}
                     {% if type == "link" %}
-                        {% if "http" not in valud %}
+                        {% if "http" not in value %}
                             {% set weburl = "http://"~value %}
                         {% else %}
                             {% set weburl = value %}

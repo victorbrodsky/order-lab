@@ -34,8 +34,6 @@ class ScanUserController extends UserController
             return $this->redirect($this->generateUrl('scan-order-nopermission'));
         }
 
-        //return $this->indexUser();
-
         $filter = trim( $request->get('filter') );
 
         $time = 'current_only';
@@ -44,7 +42,8 @@ class ScanUserController extends UserController
             $time = 'past_only';
         }
 
-        $res = $this->indexUser($filter,$time);
+        $params = array('filter'=>$filter,'time'=>$time);
+        $res = $this->indexUser($params);
         $res['filter'] = $filter;
 
         return $res;

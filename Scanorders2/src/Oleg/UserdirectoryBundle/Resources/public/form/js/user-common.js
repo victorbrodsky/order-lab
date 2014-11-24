@@ -199,6 +199,8 @@ function collpaseAll(holder) {
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('hide');
     } else {
+        console.log("holder id="+$(holder).attr('id'));
+        console.log($(holder));
         $(holder).find('.panel-collapse').collapse('hide');
     }
 

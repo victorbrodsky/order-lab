@@ -8,6 +8,8 @@
 
 $(document).ready(function() {
 
+    //console.log('user form ready');
+
     $(this).scrollTop(0);
 
     setNavBar();

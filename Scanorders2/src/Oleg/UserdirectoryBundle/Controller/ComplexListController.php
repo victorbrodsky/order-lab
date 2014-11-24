@@ -2,9 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Form\LocationType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -13,17 +11,17 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
-
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Form\LocationType;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Entity\Location;
 
 
-class FullListController extends Controller
+class ComplexListController extends Controller
 {
 
 
@@ -96,7 +94,7 @@ class FullListController extends Controller
 
         return array(
             'entities' => $entities,
-            'singleName' => $mapper['displayName'],
+            'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
             'pathname' => $mapper['pathname']
         );
@@ -140,7 +138,7 @@ class FullListController extends Controller
             'form' => $form->createView(),
             'cicle' => $cicle,
             'id' => $entity->getId(),
-            'singleName' => $mapper['displayName'],
+            'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
             'pathname' => $mapper['pathname']
         );
@@ -179,7 +177,7 @@ class FullListController extends Controller
             'form' => $form->createView(),
             'cicle' => $cicle,
             'id' => '',
-            'singleName' => $mapper['displayName'],
+            'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
             'pathname' => $mapper['pathname']
         );
@@ -262,7 +260,7 @@ class FullListController extends Controller
             'form' => $form->createView(),
             'cicle' => $cicle,
             'id' => '',
-            'singleName' => $mapper['displayName'],
+            'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
             'pathname' => $mapper['pathname']
         );
@@ -337,7 +335,7 @@ class FullListController extends Controller
             'form' => $form->createView(),
             'cicle' => $cicle,
             'id' => '',
-            'singleName' => $mapper['displayName'],
+            'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
             'pathname' => $mapper['pathname']
         );

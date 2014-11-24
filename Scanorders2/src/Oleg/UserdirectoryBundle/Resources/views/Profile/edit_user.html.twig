@@ -123,17 +123,17 @@
         {{ formmacros.field(formfield.division) }}
         {{ formmacros.field(formfield.service) }}
 
-        {% if formfield.supervisorInstitution is defined %}
-            {{ formmacros.checkbox(formfield.supervisorInstitution) }}
+        {% if formfield.supervisorInstitution is defined and formfield.vars.value %}
+            {{ usermacros.checkbox_notempty(formfield.supervisorInstitution,formfield.vars.value.supervisorInstitution,cicle) }}
         {% endif %}
-        {% if formfield.supervisorDepartment is defined %}
-            {{ formmacros.checkbox(formfield.supervisorDepartment) }}
+        {% if formfield.supervisorDepartment is defined and formfield.vars.value %}
+            {{ usermacros.checkbox_notempty(formfield.supervisorDepartment,formfield.vars.value.supervisorDepartment,cicle) }}
         {% endif %}
-        {% if formfield.supervisorDivision is defined %}
-            {{ formmacros.checkbox(formfield.supervisorDivision) }}
+        {% if formfield.supervisorDivision is defined and formfield.vars.value %}
+            {{ usermacros.checkbox_notempty(formfield.supervisorDivision,formfield.vars.value.supervisorDivision,cicle) }}
         {% endif %}
-        {% if formfield.supervisorService is defined %}
-            {{ formmacros.checkbox(formfield.supervisorService) }}
+        {% if formfield.supervisorService is defined and formfield.vars.value %}
+            {{ usermacros.checkbox_notempty(formfield.supervisorService,formfield.vars.value.supervisorService,cicle) }}
         {% endif %}
     </div>
 {% endmacro %}
@@ -378,7 +378,7 @@
         {% endfor %}
     {% endif %}
 
-    <table class="table table-hover table-condensed text-left">
+    <table class="table table-condensed text-left">
     <thead>
         <tr>
             <th>Service(s)</th>
@@ -610,71 +610,71 @@
 
     {{ form_start(form) }}
 
-    {% set publicCommentsPrototype = null %}
-    {% set privateCommentsPrototype = null %}
-    {% set adminCommentsPrototype = null %}
-    {% set employmentStatusPrototype = null %}
-    {% set researchLabsPrototype = null %}
-    {% set statelicensePrototype = null %}
-    {% set boardcertificationPrototype = null %}
-    {% set identifiersPrototype = null %}
-    {% set codeNYPHPrototype = null %}
-       
-    {% if form.publicComments is defined %}
-        {% set publicCommentsPrototype = userform.comments(form.publicComments,cicle,'user-publiccomments','prototype') %}
-    {% endif %}
-    {% if form.privateComments is defined %}
-        {% set privateCommentsPrototype = userform.comments(form.privateComments,cicle,'user-privatecomments','prototype') %}
-    {% endif %}
-    {% if form.adminComments is defined %}
-        {% set adminCommentsPrototype = userform.comments(form.adminComments,cicle,'user-admincomments','prototype') %}
-    {% endif %}
-    {% if form.employmentStatus is defined %}
-        {% set employmentStatusPrototype = userform.employmentStatuses(form.employmentStatus,cicle,'user-employmentStatus','prototype') %}
-    {% endif %}
-    {% if form.researchLabs is defined %}
-        {% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cicle,'user-researchlabs','prototype') %}
-    {% endif %}
+        {% set publicCommentsPrototype = null %}
+        {% set privateCommentsPrototype = null %}
+        {% set adminCommentsPrototype = null %}
+        {% set employmentStatusPrototype = null %}
+        {% set researchLabsPrototype = null %}
+        {% set statelicensePrototype = null %}
+        {% set boardcertificationPrototype = null %}
+        {% set identifiersPrototype = null %}
+        {% set codeNYPHPrototype = null %}
 
-    {% if form.credentials is defined and form.credentials.stateLicense is defined %}
-        {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cicle,'user-statelicense','prototype') %}
-    {% endif %}
-    {% if form.credentials is defined and form.credentials.boardCertification is defined %}
-        {% set boardcertificationPrototype = userform.boardCertifications(form.credentials.boardCertification,cicle,'user-boardcertification','prototype') %}
-    {% endif %}
-    {% if form.credentials is defined and form.credentials.identifiers is defined %}
-        {% set identifiersPrototype = userform.identifier(form.credentials.identifiers,cicle,'user-identifiers','prototype') %}
-    {% endif %}
-    {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
-        {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype') %}
-    {% endif %}
+        {% if form.publicComments is defined %}
+            {% set publicCommentsPrototype = userform.comments(form.publicComments,cicle,'user-publiccomments','prototype') %}
+        {% endif %}
+        {% if form.privateComments is defined %}
+            {% set privateCommentsPrototype = userform.comments(form.privateComments,cicle,'user-privatecomments','prototype') %}
+        {% endif %}
+        {% if form.adminComments is defined %}
+            {% set adminCommentsPrototype = userform.comments(form.adminComments,cicle,'user-admincomments','prototype') %}
+        {% endif %}
+        {% if form.employmentStatus is defined %}
+            {% set employmentStatusPrototype = userform.employmentStatuses(form.employmentStatus,cicle,'user-employmentStatus','prototype') %}
+        {% endif %}
+        {% if form.researchLabs is defined %}
+            {% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cicle,'user-researchlabs','prototype') %}
+        {% endif %}
 
-    {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_ADMIN#}
-    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_ADMIN') %}
-        {% set userEditor = true %}
-    {% else %}
-        {% set userEditor = false %}
-    {% endif %}
+        {% if form.credentials is defined and form.credentials.stateLicense is defined %}
+            {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cicle,'user-statelicense','prototype') %}
+        {% endif %}
+        {% if form.credentials is defined and form.credentials.boardCertification is defined %}
+            {% set boardcertificationPrototype = userform.boardCertifications(form.credentials.boardCertification,cicle,'user-boardcertification','prototype') %}
+        {% endif %}
+        {% if form.credentials is defined and form.credentials.identifiers is defined %}
+            {% set identifiersPrototype = userform.identifier(form.credentials.identifiers,cicle,'user-identifiers','prototype') %}
+        {% endif %}
+        {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
+            {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype') %}
+        {% endif %}
+
+        {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_ADMIN#}
+        {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_ADMIN') %}
+            {% set userEditor = true %}
+        {% else %}
+            {% set userEditor = false %}
+        {% endif %}
 
 
-    <div id="form-prototype-data"
-         data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype', sitename)|e }}"
-         data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype', sitename)|e }}"
-         data-prototype-user-locations = "{{ usermacros.locationObject(form.locations,cicle,'user-locations','prototype',sitename,entity)|e }}"
-         data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
-         data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
-         data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
-         data-prototype-user-employmentstatus = "{{ employmentStatusPrototype|e }}"
-         data-prototype-user-identifiers = "{{ identifiersPrototype|e }}"
-         data-prototype-user-publiccomments = "{{ publicCommentsPrototype|e }}"
-         data-prototype-user-privatecomments = "{{ privateCommentsPrototype|e }}"
-         data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
-         data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
+        <div id="form-prototype-data"
+             data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype', sitename)|e }}"
+             data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype', sitename)|e }}"
+             data-prototype-user-locations = "{{ usermacros.locationObject(form.locations,cicle,'user-locations','prototype',sitename,entity)|e }}"
+             data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
+             data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
+             data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
+             data-prototype-user-employmentstatus = "{{ employmentStatusPrototype|e }}"
+             data-prototype-user-identifiers = "{{ identifiersPrototype|e }}"
+             data-prototype-user-publiccomments = "{{ publicCommentsPrototype|e }}"
+             data-prototype-user-privatecomments = "{{ privateCommentsPrototype|e }}"
+             data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
+             data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
 
-         data-userurllink = "{{ userform.userUrlLink()|e }}"
-         data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
-         data-userid = "{{ entity.id }}"
-    ></div>
+             data-userurllink = "{{ userform.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+             data-userid = "{{ entity.id }}"
+        ></div>
 
         <input type="hidden" id="user_id" value="{{ user_id }}" />
         <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
@@ -773,6 +773,10 @@
                         {% else %}
                             {% do form.locked.setRendered %}
                         {% endif %}
+                    {% endif %}
+
+                    {% if cicle == "show_user" %}
+                        {{ formmacros.simplefield( "Current time in user's time zone:", "now"|date('Y-m-d H:i:s', entity.preferences.timezone), "", "disabled" ) }}
                     {% endif %}
 
                 </div>

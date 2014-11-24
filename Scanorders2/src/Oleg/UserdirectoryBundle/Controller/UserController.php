@@ -56,6 +56,71 @@ class UserController extends Controller
 
 
     /**
+     * Me boss
+     *
+     * @Route("/my-reports", name="employees_my_reports")
+     */
+    public function myReportsAction() {
+
+        //user search
+        $params = array('time'=>'current_only','myteam'=>'myreports');
+        $res = $this->indexUser( $params );
+        $pagination = $res['entities'];
+
+        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+            array(
+                'entities' => $pagination,
+                'sitename' => $this->container->getParameter('employees.sitename')
+            )
+        );
+    }
+
+    /**
+     * The same boss
+     *
+     * @Route("/my-groups", name="employees_my_groups")
+     */
+    public function myGroupsAction(Request $request) {
+
+        $myboss = $request->get('myboss');
+
+        //user search
+        $params = array('time'=>'current_only','myteam'=>'mygroups','myboss'=>$myboss);
+        $res = $this->indexUser( $params );
+        $pagination = $res['entities'];
+
+        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+            array(
+                'entities' => $pagination,
+                'sitename' => $this->container->getParameter('employees.sitename')
+            )
+        );
+    }
+
+    /**
+     * The same boss
+     *
+     * @Route("/my-services", name="employees_my_services")
+     */
+    public function myServicesAction(Request $request) {
+
+        $myservice = $request->get('myservice');
+
+        //user search
+        $params = array('time'=>'current_only','myteam'=>'myservices','myservice'=>$myservice);
+        $res = $this->indexUser( $params );
+        $pagination = $res['entities'];
+
+        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+            array(
+                'entities' => $pagination,
+                'sitename' => $this->container->getParameter('employees.sitename')
+            )
+        );
+    }
+
+
+    /**
      * Show home page
      *
      * @Route("/", name="employees_home")
@@ -99,7 +164,8 @@ class UserController extends Controller
             $locations = $userUtil->indexLocation($search, $request, $this->container, $this->getDoctrine());
 
             //user search
-            $res = $this->indexUser( null, 'current_only', true, $search, $userid );
+            $params = array('time'=>'current_only','search'=>$search,'userid'=>$userid);
+            $res = $this->indexUser($params);
             $pagination = $res['entities'];
             $roles = $res['roles'];
         }
@@ -110,7 +176,7 @@ class UserController extends Controller
             'entities' => $pagination,
             'roles' => $roles,
             'search' => $search,
-            //'page' => $page
+            'postData' => $request->query->all()
         );
     }
 
@@ -150,14 +216,25 @@ class UserController extends Controller
             $time = 'past_only';
         }
 
-        $res = $this->indexUser($filter,$time);
+        $params = array('filter'=>$filter,'time'=>$time);
+        $res = $this->indexUser($params);
         $res['filter'] = $filter;
 
         return $res;
     }
 
     //$time: 'current_only' - search only current, 'past_only' - search only past, 'all' - search current and past (no filter)
-    public function indexUser( $filter=null, $time='all', $limitFlag=true, $search=null, $userid=null ) {
+    //public function indexUser( $filter=null, $time='all', $limitFlag=true, $search=null, $userid=null ) {
+    public function indexUser( $params ) {
+
+        $filter = ( array_key_exists('filter', $params) ? $params['filter'] : null);
+        $time = ( array_key_exists('time', $params) ? $params['time'] : 'all');
+        $limitFlag = ( array_key_exists('limitFlag', $params) ? $params['limitFlag'] : true);
+        $search = ( array_key_exists('search', $params) ? $params['search'] : null);
+        $userid = ( array_key_exists('userid', $params) ? $params['userid'] : null);
+        $myteam = ( array_key_exists('myteam', $params) ? $params['myteam'] : null);
+        $myboss = ( array_key_exists('myboss', $params) ? $params['myboss'] : null);
+        $myservice = ( array_key_exists('myservice', $params) ? $params['myservice'] : null);
 
         $request = $this->get('request');
         $postData = $request->query->all();
@@ -227,6 +304,9 @@ class UserController extends Controller
             //search
             $criteriastr = $this->getCriteriaStrBySearch( $dql, $search, $criteriastr );
             //echo "search=".$criteriastr."<br>";
+
+            //myteam
+            $criteriastr = $this->getMyTeam( $dql, $myteam, $myboss, $myservice, $criteriastr );
 
             //time
             $userutil = new UserUtil();
@@ -631,6 +711,50 @@ class UserController extends Controller
         return $inputCriteriastr;
     }
 
+
+    public function getMyTeam( $dql, $myteam, $myboss, $myservice, $inputCriteriastr ) {
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $criteriastr = "";
+
+        //Me Boss: list names of users who have me listed as their boss in their profile and link each name to the user's profile
+        if( $myteam && $myteam == "myreports" ) {
+            $dql->leftJoin("administrativeTitles.boss", "boss");
+            $criteriastr = "user.id != " . $user->getId() . " AND " . "boss.id = " . $user->getId();
+        }
+
+        //The Same Boss: list names of users who have the same boss as me in their profile
+        if( $myteam && $myteam == "mygroups" ) {
+            if( $myboss ) {
+                $dql->leftJoin("administrativeTitles.boss", "boss");
+                $criteriastr = "boss.id = " . $myboss . " AND user.id != " . $user->getId();
+            }
+        }
+
+        //users with this service
+        if( $myteam && $myteam == "myservices" ) {
+            if( $myservice ) {
+                $criteriastr = "(administrativeService.id = " . $myservice . " OR " . "appointmentService.id = " . $myservice . ") AND " . "user.id != " . $user->getId();
+            }
+        }
+
+
+        if( $inputCriteriastr && $inputCriteriastr != "" ) {
+            if( $criteriastr != "" ) {
+                $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
+            }
+        } else {
+            $inputCriteriastr = $criteriastr;
+        }
+
+        //echo "inputCriteriastr=".$inputCriteriastr."<br>";
+
+        return $inputCriteriastr;
+    }
+
+
+
     public function pendingAdminReviewAction() {
         $pending = null;
 
@@ -642,7 +766,9 @@ class UserController extends Controller
 
         $limitFlag = false;
 
-        $res = $this->indexUser( 'Pending Administrative Review', 'current_only', $limitFlag );
+        //$filter=null, $time='all', $limitFlag=true, $search=null, $userid=null
+        $params = array('filter'=>'Pending Administrative Review','time'=>'current_only','limitFlag'=>$limitFlag);
+        $res = $this->indexUser( $params );
 
         $pending = count($res['entities']);
 

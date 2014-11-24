@@ -756,6 +756,15 @@ class User extends BaseUser
         return $institutions;
     }
 
+    public function getBosses() {
+        $bosses = new ArrayCollection();
+        foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+            foreach( $adminTitles->getBoss() as $boss ) {
+                $bosses->add($boss);
+            }
+        }
+        return $bosses;
+    }
 
     public function getSiteRoles($sitename) {
 

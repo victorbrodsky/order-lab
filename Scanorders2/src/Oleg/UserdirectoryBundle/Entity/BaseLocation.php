@@ -17,73 +17,73 @@ class BaseLocation extends ListAbstract
      * status: valid, invalid
      * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
-    private $status;
+    protected $status;
 
     /**
      * @ORM\Column(type="boolean", options={"default" = 1}, nullable=true)
      */
-    private $removable;
+    protected $removable;
 
     /**
      * @ORM\ManyToOne(targetEntity="LocationTypeList")
      * @ORM\JoinColumn(name="locationType", referencedColumnName="id")
      */
-    private $locationType;
+    protected $locationType;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $phone;
+    protected $phone;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $pager;
+    protected $pager;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $mobile;
+    protected $mobile;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $fax;
+    protected $fax;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $email;
+    protected $email;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $room;
+    protected $room;
 
     /**
      * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
      **/
-    private $geoLocation;
+    protected $geoLocation;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $floor;
+    protected $floor;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $suit;
+    protected $suit;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $mailbox;
+    protected $mailbox;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $comment;
+    protected $comment;
 
 
     public function __construct($creator=null) {
