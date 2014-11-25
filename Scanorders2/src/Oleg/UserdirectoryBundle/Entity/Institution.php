@@ -72,6 +72,14 @@ class Institution extends ListAbstract
         return $this->departments;
     }
 
+    public function __toString()
+    {
+        if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
+            return $this->getAbbreviation()."";
+        }
+
+        return $this->getName()."";
+    }
 
     public function getClassName()
     {
