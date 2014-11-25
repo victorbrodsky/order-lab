@@ -256,17 +256,17 @@ class AccessRequestController extends Controller
 
         ///////////////// Send an email to the preferred emails of the users who have Administrator role for a given site and CC the users with Platform Administrator role when an access request is submitted
         $incomingReqPage = $this->generateUrl( $sitename.'_home', array(), true );
-        $subject = "[O R D E R] Access request for ".$sitenameFull." received from ".$user->getPrimaryUseridKeytypeStr();
-        $msg = $user->getPrimaryUseridKeytypeStr()." submitted a request to access ".$sitenameFull.". Please visit ".$incomingReqPage." to approve or deny it.";
+        $subject = "[O R D E R] Access request for ".$sitenameFull." received from ".$user->getUsernameOptimal();
+        $msg = $user->getUsernameOptimal()." submitted a request to access ".$sitenameFull.". Please visit ".$incomingReqPage." to approve or deny it.";
 
-        $approveDelineMsg = "the access request from ".$user->getPrimaryUseridKeytypeStr()." to access ".$sitenameFull.", visit the following link:";
+        $approveDelineMsg = "the access request from ".$user->getUsernameOptimal()." to access ".$sitenameFull.", visit the following link:";
         //add approve link
         $approvedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"approve"), true );
         $approvedMsg = "To approve " . $approveDelineMsg . "\r\n" . $approvedLink;
 
         //add decline link
         $declinedLink = $this->generateUrl( $sitename.'_accessrequest_change', array("id"=>$id,"status"=>"decline"), true );
-        $declinedMsg = "To approve " . $approveDelineMsg . "\r\n" . $declinedLink;
+        $declinedMsg = "To decline " . $approveDelineMsg . "\r\n" . $declinedLink;
 
         $msg = $msg . "\r\n"."\r\n" . $approvedMsg . "\r\n"."\r\n" . $declinedMsg;
 
