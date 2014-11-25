@@ -60,6 +60,11 @@ class User extends BaseUser
     private $primaryPublicUserId;
 
     /**
+     * @ORM\Column(name="suffix", type="string", nullable=true)
+     */
+    private $suffix;
+
+    /**
      * @ORM\Column(name="firstName", type="string", nullable=true)
      */
     private $firstName;
@@ -218,6 +223,22 @@ class User extends BaseUser
     public function getPrimaryPublicUserId()
     {
         return $this->primaryPublicUserId;
+    }
+
+    /**
+     * @param mixed $suffix
+     */
+    public function setSuffix($suffix)
+    {
+        $this->suffix = $suffix;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSuffix()
+    {
+        return $this->suffix;
     }
 
     /**

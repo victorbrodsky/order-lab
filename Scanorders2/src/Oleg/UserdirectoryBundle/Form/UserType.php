@@ -127,6 +127,10 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
+        $builder->add('suffix', null, array(
+            'label' => 'Name Suffix:',
+            'attr' => array('class'=>'form-control form-control-modif')
+        ));
         $builder->add('firstName', null, array(
             'label' => '* First Name:',
             'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'

@@ -144,6 +144,9 @@
         {% set wellclass = "" %}
         {% set standAloneLocation = true %}
     {% endif %}
+    {% if cicle == "new_standalone" %}
+        {% set wellclass = "" %}
+    {% endif %}
 
     {#show list properties#}
     {% if standAloneLocation %}

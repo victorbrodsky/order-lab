@@ -159,7 +159,7 @@
         {% endfor %}
 
         {#My Team#}
-        {% if myreports|length > 1 or mygroupsArr|length > 0 or myservicesArr|length > 0 %}
+        {% if render(myreports)|length > 1 or mygroupsArr|length > 0 or myservicesArr|length > 0 %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
