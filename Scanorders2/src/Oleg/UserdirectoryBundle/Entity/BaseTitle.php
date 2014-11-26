@@ -254,6 +254,12 @@ class BaseTitle extends BaseUserAttributes
     public function setSupervisorDepartment($supervisorDepartment)
     {
         $this->supervisorDepartment = $supervisorDepartment;
+
+        if( $supervisorDepartment ) {
+            $this->getDepartment()->addHead( $this->getUser() );
+        } else {
+            $this->getDepartment()->removeHead( $this->getUser() );
+        }
     }
 
     /**
@@ -270,6 +276,12 @@ class BaseTitle extends BaseUserAttributes
     public function setSupervisorDivision($supervisorDivision)
     {
         $this->supervisorDivision = $supervisorDivision;
+
+        if( $supervisorDivision ) {
+            $this->getDivision()->addHead( $this->getUser() );
+        } else {
+            $this->getDivision()->removeHead( $this->getUser() );
+        }
     }
 
     /**
@@ -286,6 +298,12 @@ class BaseTitle extends BaseUserAttributes
     public function setSupervisorInstitution($supervisorInstitution)
     {
         $this->supervisorInstitution = $supervisorInstitution;
+
+        if( $supervisorInstitution ) {
+            $this->getInstitution()->addHead( $this->getUser() );
+        } else {
+            $this->getInstitution()->removeHead( $this->getUser() );
+        }
     }
 
     /**
@@ -302,6 +320,12 @@ class BaseTitle extends BaseUserAttributes
     public function setSupervisorService($supervisorService)
     {
         $this->supervisorService = $supervisorService;
+
+        if( $supervisorService ) {
+            $this->getService()->addHead( $this->getUser() );
+        } else {
+            $this->getService()->removeHead( $this->getUser() );
+        }
     }
 
     /**

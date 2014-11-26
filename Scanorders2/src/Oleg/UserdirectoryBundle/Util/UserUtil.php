@@ -527,18 +527,21 @@ class UserUtil {
 
         $repository = $doctrine->getRepository('OlegUserdirectoryBundle:Location');
         $dql =  $repository->createQueryBuilder("location");
-        $dql->select('location');
+        $dql->addSelect('location');
 
         $dql->leftJoin("location.user", "locationuser");
         $dql->leftJoin("location.service", "service");
-        $dql->leftJoin("location.building", "building");
+        $dql->leftJoin("service.heads", "heads");
 
         $postData = $request->query->all();
 
         $sort = null;
         if( isset($postData['sort']) ) {
             //check for location sort
-            if( strpos($postData['sort'],'location.') !== false || strpos($postData['sort'],'locationuser') !== false ) {
+            if(
+                strpos($postData['sort'],'location.') !== false ||
+                strpos($postData['sort'],'heads.') !== false
+            ) {
                 $sort = $postData['sort'];
             }
         }
@@ -557,26 +560,9 @@ class UserUtil {
         //name
         $criteriastr .= "location.name LIKE '%".$search."%'";
 
-//        //IC
-//        $criteriastr .= "location.ic LIKE '%".$search."%' OR ";
-//
-//        //phone
-//        $criteriastr .= "location.phone LIKE '%".$search."%' OR ";
-//
-//        //pager
-//        $criteriastr .= "location.pager LIKE '%".$search."%' OR ";
-//
-//        //room
-//        $criteriastr .= "location.room LIKE '%".$search."%' OR ";
-//
-//        //service
-//        $criteriastr .= "service.name LIKE '%".$search."%' OR ";
-//
-//        //locationuser.displayName
-//        $criteriastr .= "locationuser.displayName LIKE '%".$search."%' OR ";
-//
-//        //service
-//        $criteriastr .= "building.name LIKE '%".$search."%'";
+        //The "Supervisor" column for the orphaned Location should be the person who belongs to the same "Service" as the orphan location according
+        //to their Administrative or Academic Title, and who has the "Head of this Service" checkmarked checked for this service.
+        //Since multiple people can check this checkmark for a given service, list all of them, separated by commas.
 
 
         $dql->where($criteriastr);
@@ -612,29 +598,27 @@ class UserUtil {
 
 
 
+    public function processInstTree( $treeholder, $em, $sc ) {
 
-
-
-    public function processInstTree( $tree, $em, $sc ) {
-
-        $institution = $tree->getInstitution();
-        $department = $tree->getDepartment();
-        $division = $tree->getDivision();
-        $service = $tree->getService();
+        $institution = $treeholder->getInstitution();
+        $department = $treeholder->getDepartment();
+        $division = $treeholder->getDivision();
+        $service = $treeholder->getService();
 
         $user = $sc->getToken()->getUser();
 
-        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$institution,$department);
+        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$institution,$department);
 
-        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$department,$division);
+        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$department,$division);
 
-        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$tree,$division,$service);
+        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$division,$service);
 
         //set author if not set
-        $this->setUpdateInfo($tree,$em,$sc);
+        $this->setUpdateInfo($treeholder,$em,$sc);
 
         //exit('eof tree');
     }
+
 
     public function setUpdateInfo( $entity, $em, $sc ) {
 

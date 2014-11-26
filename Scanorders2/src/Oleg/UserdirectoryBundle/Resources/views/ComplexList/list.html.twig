@@ -51,13 +51,20 @@
         {{ form_widget(form._token) }}
 
 
-        {% if cicle == "show_standalone" %}
+        {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_ADMIN#}
+        {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_ADMIN') %}
+            {% set userEditor = true %}
+        {% else %}
+            {% set userEditor = false %}
+        {% endif %}
+
+        {% if cicle == "show_standalone" and userEditor %}
             <p>
-                <a class="btn btn-success" href="{{ path(employees_sitename~'_'~pathname~'_pathaction_edit_standalone',{id:entity.id}) }}" type='button'>Edit {{ singleName }}</a>
+                <a class="btn btn-success" href="{{ path(employees_sitename~'_'~pathname~'_pathaction_edit_standalone',{id:entity.id}) }}" type='button'>Edit</a>
             </p>
         {% endif %}
 
-        {% if cicle != "show_standalone" and cicle != "new_standalone" %}
+        {% if cicle != "show_standalone" and cicle != "new_standalone" and userEditor %}
             <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update {{ singleName }}</button>
@@ -66,7 +73,7 @@
             </p>
         {% endif %}
 
-        {% if cicle == "new_standalone" %}
+        {% if cicle == "new_standalone" and userEditor %}
             <p>
                 <button class="btn btn-success" name="btnSubmit" type="submit">Add {{ singleName }}</button>
             </p>

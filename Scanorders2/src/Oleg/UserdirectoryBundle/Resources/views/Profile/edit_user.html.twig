@@ -426,8 +426,7 @@
                 <a href="mailto:{{ user.email }}" target="_top">{{ user.email }}</a>
             </td>
             <td>
-                {% set valueclean = user.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
-                <a href="tel:{{ valueclean }}" target="_top">{{ user.preferredPhone }}</a>
+                {{ usermacros.phoneHref(user.preferredPhone) }}
             </td>
             <td>
                 {% for location in user.locations %}
@@ -451,8 +450,7 @@
                             {% for assistant in location.assistant %}
                                 <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
                                 ({{ location.name }}):
-                                {% set valueclean = assistant.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
-                                <a href="tel:{{ valueclean }}" target="_top">{{ assistant.preferredPhone }}</a>
+                                {{ usermacros.phoneHref(assistant.preferredPhone) }}
                                 {% if assistant.preferredPhone and assistant.email %}
                                     ,
                                 {% endif %}

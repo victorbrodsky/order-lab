@@ -158,6 +158,8 @@ class User extends BaseUser
     private $adminComments;
 
 
+
+
     function __construct()
     {
         $this->locations = new ArrayCollection();

@@ -347,7 +347,7 @@ class Location extends BaseLocation
         return $name;
     }
 
-    public function getNameFull() {
+    public function getNameFull($html=false) {
 
         $name = "";
 
@@ -357,7 +357,11 @@ class Location extends BaseLocation
 
         }
 
-        $name = $name . $this->name;
+        if( $html ) {
+            $name = $name . "<strong>" . $this->name . "</strong>";
+        } else {
+            $name = $name . $this->name;
+        }
 
         $detailsArr = array();
 

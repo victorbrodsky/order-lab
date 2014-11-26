@@ -1,4 +1,6 @@
 
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
 {% if entities|length > 0 %}
 
     {% if search is defined and search != "" %}
@@ -93,8 +95,7 @@
                     <a href="mailto:{{ entity.email }}" target="_top">{{ entity.email }}</a>
                 </td>
                 <td class="rowlink-skip">
-                    {% set valueclean = entity.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
-                    <a href="tel:{{ valueclean }}" target="_top">{{ entity.preferredPhone }}</a>
+                    {{ usermacros.phoneHref(entity.preferredPhone) }}
                 </td>
                 <td>
                     {% for location in entity.locations %}
@@ -123,8 +124,7 @@
                             {% for assistant in location.assistant %}
                                 <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
                                 ({{ location.name }}):
-                                {% set valueclean = assistant.preferredPhone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
-                                <a href="tel:{{ valueclean }}" target="_top">{{ assistant.preferredPhone }}</a>
+                                {{ usermacros.phoneHref(assistant.preferredPhone) }}
                                 {% if assistant.email %}
                                 ,
                                 {% endif %}

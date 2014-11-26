@@ -31,8 +31,38 @@ class Service extends ListAbstract
     protected $parent;
 
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_service_head")
+     **/
+    private $heads;
 
-    
+
+    public function __construct() {
+        $this->heads = new ArrayCollection();
+        parent::__construct();
+    }
+
+
+
+    public function addHead($head)
+    {
+        if( !$this->heads->contains($head) ) {
+            $this->heads->add($head);
+        }
+        return $this;
+    }
+
+    public function removeHead($head)
+    {
+        $this->heads->removeElement($head);
+    }
+
+    public function getHeads()
+    {
+        return $this->heads;
+    }
+
 
     /**
      * @param mixed $parent
@@ -64,6 +94,9 @@ class Service extends ListAbstract
 
         return $tree;
     }
+
+
+
 
     public function getParentName()
     {

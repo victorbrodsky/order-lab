@@ -2,8 +2,7 @@
 {% macro fileupload( comment, cicle, classname, prototype ) %}
 
 
-    {#{% import _self as userform %}#}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import _self as usermacros %}
 
     <p>
     <div class="row files-upload-holder" style="height: 50px">
@@ -75,7 +74,7 @@
 
 {% macro getInstitutionalTree( entity, linktype ) %}
 
-    {% import _self as userform %}
+    {% import _self as usermacros %}
 
     {% if linktype is defined and linktype == 'userlink' %}
     {% else %}
@@ -86,19 +85,19 @@
 
         {#institution#}
         {% if entity.parent.parent.parent is defined %}
-            <li>{{ userform.hrefLinkToNode(entity.parent.parent.parent,linktype) }}</li>
+            <li>{{ usermacros.hrefLinkToNode(entity.parent.parent.parent,linktype) }}</li>
         {% endif %}
         {#department#}
         {% if entity.parent.parent is defined %}
-            <li>{{ userform.hrefLinkToNode(entity.parent.parent,linktype) }}</li>
+            <li>{{ usermacros.hrefLinkToNode(entity.parent.parent,linktype) }}</li>
         {% endif %}
         {#division#}
         {% if entity.parent is defined %}
-            <li>{{ userform.hrefLinkToNode(entity.parent,linktype) }}</li>
+            <li>{{ usermacros.hrefLinkToNode(entity.parent,linktype) }}</li>
         {% endif %}
         {#service#}
         {% if entity is defined %}
-            <li>{{ userform.hrefLinkToNode(entity,linktype) }}</li>
+            <li>{{ usermacros.hrefLinkToNode(entity,linktype) }}</li>
         {% endif %}
 
     </ol>
@@ -118,7 +117,7 @@
 
 {% macro locationObject( field, cicle, classname, prototype, sitename, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import _self as userform %}
+    {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -154,11 +153,6 @@
     {% endif %}
     {% if cicle == "new_standalone" %}
         {% set wellclass = "" %}
-    {% endif %}
-
-    {#show list properties#}
-    {% if standAloneLocation %}
-        {{ userform.listProperties(formfield) }}
     {% endif %}
 
 
@@ -241,7 +235,7 @@
 
             {% if showRegularFields1 %}
                 {{ formmacros.field(formfield.id) }}
-                {{ userform.statusVerifiedField(formfield,cicle) }}
+                {{ usermacros.statusVerifiedField(formfield,cicle) }}
 
                 {% if formfield.user is defined %}
                     {{ formmacros.field(formfield.user) }}
@@ -267,16 +261,16 @@
             {% endif %}{#showRegularFields1#}
 
             {% if showRegularFields2 %}
-                {{ userform.emailPhoneField(formfield.phone,cicle,'phone',"") }}
-                {{ userform.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
-                {{ userform.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
+                {{ usermacros.emailPhoneField(formfield.phone,cicle,'phone',"") }}
+                {{ usermacros.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
+                {{ usermacros.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
 
                 {% if homeLocation == false %}
                     {{ formmacros.field_notempty(formfield.ic,cicle) }}
                 {% endif %}
 
                 {{ formmacros.field_notempty(formfield.fax,cicle) }}
-                {{ userform.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
+                {{ usermacros.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
             {% endif %}{#showRegularFields2#}
 
             {% if showRegularFields1 %}
@@ -292,7 +286,7 @@
                                     <strong>Assistant(s):</strong>
                                 </p>
                                 {% for assistant in formfield.vars.value.assistant %}
-                                    {{ userform.personInfo(assistant,cicle,sitename) }}
+                                    {{ usermacros.personInfo(assistant,cicle,sitename) }}
                                 {% endfor %}
                             {% endif %}
                         {% endif %}
@@ -313,7 +307,7 @@
                 {% endif %}
 
                 {#Location GeoLocation#}
-                {{ userform.geoLocation(field,cicle,prototype) }}
+                {{ usermacros.geoLocation(field,cicle,prototype) }}
 
                 {% if homeLocation == false %}
                     {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
@@ -331,6 +325,11 @@
             {% endif %} {#showRegularFields1#}
 
         </div>
+    {% endif %}
+
+    {#show list properties#}
+    {% if standAloneLocation %}
+        {{ usermacros.listProperties(formfield) }}
     {% endif %}
 
     {% do formfield.setRendered %}
@@ -389,6 +388,7 @@
 
 {% macro emailPhoneField(field,cicle,type,label) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as usermacros %}
 
     {% if label == "" %}
         {% set value = field.vars.value %}
@@ -412,8 +412,7 @@
                         <a href="mailto:{{ value }}" target="_top">{{ value }}</a>
                     {% endif %}
                     {% if type == "phone" %}
-                        {% set valueclean = value|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
-                        <a href="tel:{{ valueclean }}" target="_top">{{ value }}</a>
+                        {{ usermacros.phoneHref(value) }}
                     {% endif %}
                     {% if type == "link" %}
                         {% if "http" not in value %}
@@ -435,16 +434,21 @@
     {% endif %}
 {% endmacro %}
 
+{% macro phoneHref(phone) %}
+    {% set valueclean = phone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
+    <a href="tel:{{ valueclean }}" target="_top">{{ phone }}</a>
+{% endmacro %}
+
 {% macro personInfo( person, cicle, sitename ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import _self as userform %}
+    {% import _self as usermacros %}
     <p>
     <div class="well">
         {% set bossurl = path(sitename~'_showuser',{'id':person.id}) %}
         {% set bosslink = '<a href="'~bossurl~'">'~person.getUserNameShortStr()~'</a>'  %}
         {{ formmacros.simplefield( "Name:", bosslink, "", "disabled" ) }}
-        {{ userform.emailPhoneField(person.preferredPhone,cicle,'phone',"Preferred Phone Number:") }}
-        {{ userform.emailPhoneField(person.email,cicle,'email',"Preferred Email:") }}
+        {{ usermacros.emailPhoneField(person.preferredPhone,cicle,'phone',"Preferred Phone Number:") }}
+        {{ usermacros.emailPhoneField(person.email,cicle,'email',"Preferred Email:") }}
     </div>
     </p>
 {% endmacro %}
@@ -484,7 +488,7 @@
 
 {% macro buildingObject( field, cicle, classname, prototype, sitename, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import _self as userform %}
+    {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -498,18 +502,20 @@
         {% set standAloneLocation = true %}
     {% endif %}
 
-    {#show list properties#}
-    {% if standAloneLocation %}
-        {{ userform.listProperties(formfield) }}
-    {% endif %}
-
     {{ formmacros.field(formfield.name) }}
     {{ formmacros.field(formfield.abbreviation) }}
 
     {#Location GeoLocation#}
-    {{ userform.geoLocation(field,cicle,prototype) }}
+    {{ usermacros.geoLocation(field,cicle,prototype) }}
 
     {{ formmacros.field(formfield.institution) }}
+
+    <br>
+
+    {#show list properties#}
+    {% if standAloneLocation %}
+        {{ usermacros.listProperties(formfield) }}
+    {% endif %}
 
     {% do formfield.setRendered %}
 

@@ -115,11 +115,13 @@ class ComplexListController extends Controller
     public function showListAction(Request $request, $id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
-        }
-
         $routeName = $request->get('_route');
+
+        if( $routeName == "employees_locations_pathaction_edit_standalone" || $routeName == "employees_buildings_pathaction_edit_standalone" ) {
+            if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+                return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            }
+        }
 
         $mapper = $this->classListMapper($routeName);
 

@@ -33,11 +33,36 @@ class Institution extends ListAbstract
      */
     protected $departments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_institution_head")
+     **/
+    private $heads;
+
     public function __construct() {
-        $this->synonyms = new ArrayCollection();
         $this->departments = new ArrayCollection();
+        $this->heads = new ArrayCollection();
+        parent::__construct();
     }
 
+
+    public function addHead($head)
+    {
+        if( !$this->heads->contains($head) ) {
+            $this->heads->add($head);
+        }
+        return $this;
+    }
+
+    public function removeHead($head)
+    {
+        $this->heads->removeElement($head);
+    }
+
+    public function getHeads()
+    {
+        return $this->heads;
+    }
     
 
     /**
