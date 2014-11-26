@@ -246,7 +246,7 @@
 {% endmacro %}
 
 {% macro userUrlLink() %}
-    <a href="{{ path('employees_showuser_notstrict', { 'id': 'user_replacement_id' }) }}">{{ 'user_replacement_username' }}</a><br>
+    <a href="{{ path(employees_sitename~'_showuser_notstrict', { 'id': 'user_replacement_id' }) }}">{{ 'user_replacement_username' }}</a><br>
 {% endmacro %}
 
 
@@ -399,7 +399,7 @@
             <td>
                 {% for service in user.getServices %}
                     {% if service is defined and service != "" %}
-                        {{ usermacros.getInstitutionalTree(service) }}
+                        {{ usermacros.getInstitutionalTree(service,'userlink') }}
                     {% endif %}
                 {% endfor %}
             </td>
@@ -407,14 +407,18 @@
             <td>
                 {% for administrativeTitle in user.administrativeTitles %}
                     {% if administrativeTitle.name %}
-                        {{ administrativeTitle.name }}<br>
+                        <p>
+                        <a href="{{ path( sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name, 'name': administrativeTitle.name }) }}">{{ administrativeTitle.name }}</a>
+                        </p>
                     {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for appointmentTitles in user.appointmentTitles %}
                     {% if appointmentTitles.name %}
-                        {{ appointmentTitles.name }}<br>
+                        <p>
+                        <a href="{{ path( sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name, 'name': appointmentTitles.name }) }}">{{ appointmentTitles.name }}</a>
+                        </p>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -435,7 +439,7 @@
             <td>
                 {% for location in user.locations %}
                     {% if location.room %}
-                        {{ location.room }}<br>
+                        <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'room','id': location.room, 'name': location.room }) }}">{{ location.room }}</a></p>
                     {% endif %}
                 {% endfor %}
             </td>

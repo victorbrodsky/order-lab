@@ -121,6 +121,49 @@ class UserController extends Controller
 
 
     /**
+     * Search for the users with the same object. For example, the same institution, service, room, academic title, appointment title
+     *
+     * @Route("/search-users", name="employees_search_same_object")
+     */
+    public function getSameObjectAction(Request $request) {
+
+        $tablename = $request->get('tablename');
+        $objectid = $request->get('id');
+        $objectname = $request->get('name');
+
+        //user search
+        $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid);
+        $res = $this->indexUser( $params );
+        $pagination = $res['entities'];
+
+//        return $this->render(
+//            'OlegUserdirectoryBundle::Admin/users-content.html.twig',
+//            array(
+//                'entities' => $pagination,
+//                'sitename' => $this->container->getParameter('employees.sitename')
+//            )
+//        );
+
+
+        return $this->render(
+            'OlegUserdirectoryBundle:Default:home.html.twig',
+            array(
+                'accessreqs' => null,
+                'locations' => null,
+                'entities' => $pagination,
+                'roles' => null,
+                'search' => null,
+                'sameusers' => "all current employees of " . $objectname . " " . $tablename,
+                'postData' => $request->query->all()
+            )
+        );
+
+
+
+    }
+
+
+    /**
      * Show home page
      *
      * @Route("/", name="employees_home")
@@ -235,6 +278,8 @@ class UserController extends Controller
         $myteam = ( array_key_exists('myteam', $params) ? $params['myteam'] : null);
         $myboss = ( array_key_exists('myboss', $params) ? $params['myboss'] : null);
         $myservice = ( array_key_exists('myservice', $params) ? $params['myservice'] : null);
+        $objectname = ( array_key_exists('objectname', $params) ? $params['objectname'] : null);
+        $objectid = ( array_key_exists('objectid', $params) ? $params['objectid'] : null);
 
         $request = $this->get('request');
         $postData = $request->query->all();
@@ -307,6 +352,9 @@ class UserController extends Controller
 
             //myteam
             $criteriastr = $this->getMyTeam( $dql, $myteam, $myboss, $myservice, $criteriastr );
+
+            //same object
+            $criteriastr = $this->getSameObject( $dql, $objectname, $objectid, $criteriastr );
 
             //time
             $userutil = new UserUtil();
@@ -472,12 +520,6 @@ class UserController extends Controller
         return $inputCriteriastr;
     }
 
-    private function getCleanCriteriaStr($criteriastr,$fieldName) {
-        if( $criteriastr != "" ) {
-            $criteriastr = " OR " . $criteriastr;
-        }
-        return $criteriastr;
-    }
 
     public function getCriteriaStrByFilter( $dql, $filter, $inputCriteriastr ) {
 
@@ -739,6 +781,66 @@ class UserController extends Controller
             }
         }
 
+
+        if( $inputCriteriastr && $inputCriteriastr != "" ) {
+            if( $criteriastr != "" ) {
+                $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
+            }
+        } else {
+            $inputCriteriastr = $criteriastr;
+        }
+
+        //echo "inputCriteriastr=".$inputCriteriastr."<br>";
+
+        return $inputCriteriastr;
+    }
+
+
+    public function getSameObject( $dql, $objectname, $objectid, $inputCriteriastr ) {
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $criteriastr = "";
+
+        if( $objectname && $objectname == "institution" ) {
+            $criteriastr .= "administrativeInstitution.id = " . $objectid;
+            $criteriastr .= " OR ";
+            $criteriastr .= "appointmentInstitution.id = " . $objectid;
+        }
+
+        if( $objectname && $objectname == "service" ) {
+            $criteriastr .= "administrativeService.id = " . $objectid;
+            $criteriastr .= " OR ";
+            $criteriastr .= "appointmentService.id = " . $objectid;
+        }
+
+        if( $objectname && $objectname == "administrativeTitle" ) {
+            $criteriastr .= "administrativeTitles.name = '" . $objectid . "'";
+        }
+
+        if( $objectname && $objectname == "appointmentTitles" ) {
+            $criteriastr .= "appointmentTitles.name = '" . $objectid . "'";
+        }
+
+        if( $objectname && $objectname == "room" ) {
+            $criteriastr .= "locations.room = '" . $objectid . "'";
+        }
+
+        if( $objectname && $objectname == "department" ) {
+            $criteriastr .= "administrativeDepartment.id = " . $objectid;
+            $criteriastr .= " OR ";
+            $criteriastr .= "appointmentDepartment.id = " . $objectid;
+        }
+
+        if( $objectname && $objectname == "division" ) {
+            $criteriastr .= "administrativeDivision.id = " . $objectid;
+            $criteriastr .= " OR ";
+            $criteriastr .= "appointmentDivision.id = " . $objectid;
+        }
+
+//        if( $criteriastr != "" ) {
+//            $criteriastr = "user.id != " . $user->getId() . " AND (" . $criteriastr . ")";
+//        }
 
         if( $inputCriteriastr && $inputCriteriastr != "" ) {
             if( $criteriastr != "" ) {

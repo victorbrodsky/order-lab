@@ -7,7 +7,7 @@
 <table class="records_list table table-hover table-condensed text-left">
     <thead>
     <tr>
-        <th style="display:none">{{ knp_pagination_sortable(locations, 'ID', 'location.id') }}</th>
+        {#<th style="display:none">{{ knp_pagination_sortable(locations, 'ID', 'location.id') }}</th>#}
         <th>{{ knp_pagination_sortable(locations, 'Name', 'location.name') }}</th>
         <th>{{ knp_pagination_sortable(locations, 'Phone', 'location.phone') }}</th>
         <th>{{ knp_pagination_sortable(locations, 'IC', 'location.ic') }}</th>
@@ -19,8 +19,11 @@
     <tbody data-link="row" class="rowlink">
     {% for entity in locations %}
         <tr>
-            <td style="display:none"><a href="{{ path(employees_sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-            <td>{{ entity.getNameFull() }}</td>
+            {#<td style="display:none"><a href="{{ path(employees_sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+            <td>
+                {#{{ entity.getNameFull() }}#}
+                <a href="{{ path(employees_sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.getNameFull() }}</a>
+            </td>
             <td>{{ entity.phone }}</td>
             <td>{{ entity.ic }}</td>
             <td>{{ entity.fax }}</td>

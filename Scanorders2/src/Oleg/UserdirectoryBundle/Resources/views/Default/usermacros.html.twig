@@ -52,7 +52,7 @@
             <div class="file-upload-showlink">
                 <div style="overflow:hidden; white-space:nowrap;">
                     {#<a href="{{ document.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ document.vars.value.originalname }}</a>#}
-                    <a target="_blank" href="{{ path('employees_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }}</a>
+                    <a target="_blank" href="{{ path(employees_sitename~'_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }}</a>
                 </div>
             </div>
 
@@ -73,40 +73,48 @@
 
 
 
-{% macro getInstitutionalTree( entity ) %}
+{% macro getInstitutionalTree( entity, linktype ) %}
 
     {% import _self as userform %}
+
+    {% if linktype is defined and linktype == 'userlink' %}
+    {% else %}
+        {% set linktype = 'nodelink' %}
+    {% endif %}
 
     <ol class="breadcrumb">
 
         {#institution#}
         {% if entity.parent.parent.parent is defined %}
-            <li>{{ userform.hrefLinkToNode(entity.parent.parent.parent) }}</li>
+            <li>{{ userform.hrefLinkToNode(entity.parent.parent.parent,linktype) }}</li>
         {% endif %}
         {#department#}
         {% if entity.parent.parent is defined %}
-            <li>{{ userform.hrefLinkToNode(entity.parent.parent) }}</li>
+            <li>{{ userform.hrefLinkToNode(entity.parent.parent,linktype) }}</li>
         {% endif %}
         {#division#}
         {% if entity.parent is defined %}
-            <li>{{ userform.hrefLinkToNode(entity.parent) }}</li>
+            <li>{{ userform.hrefLinkToNode(entity.parent,linktype) }}</li>
         {% endif %}
         {#service#}
         {% if entity is defined %}
-            <li>{{ userform.hrefLinkToNode(entity) }}</li>
+            <li>{{ userform.hrefLinkToNode(entity,linktype) }}</li>
         {% endif %}
 
     </ol>
 
 {% endmacro %}
 
-{% macro hrefLinkToNode( node ) %}
+{% macro hrefLinkToNode( node, linktype ) %}
     {% if node and node is defined %}
-        <a href="{{ path(node.getClassName()|lower~'s_show', { 'id': node.id }) }}">{{ node }}</a>
+        {% if linktype == 'nodelink' %}
+            <a href="{{ path(node.getClassName()|lower~'s_show', { 'id': node.id }) }}">{{ node }}</a>
+        {% endif %}
+        {% if linktype == 'userlink' %}
+            <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':node.getClassName()|lower,'id': node.id, 'name': node.__toString() }) }}">{{ node }}</a>
+        {% endif %}
     {% endif %}
 {% endmacro %}
-
-
 
 {% macro locationObject( field, cicle, classname, prototype, sitename, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}

@@ -39,7 +39,7 @@
 }
 
 .tt-dropdown-menu {
-    width: 422px;
+    //width: 550px;
     margin-top: 12px;
     padding: 8px 0;
     background-color: #fff;
@@ -78,7 +78,7 @@
 #multiple-datasets-typeahead-search .search-name {
     color: #428bca;
     font-weight: bold;
-    width: 422px;
+    //width: 550px;
     margin: 0 20px 5px 20px;
     padding: 3px 0;
     border-bottom: 1px solid #ccc;

@@ -328,10 +328,10 @@ function setNavBar() {
 //    }
 
     if( full.indexOf("/users/new") !== -1 ) {
-        id = 'adduser';
+        id = 'add';
     }
     if( full.indexOf("/locations/new") !== -1 ) {
-        id = 'addlocation';
+        id = 'add';
     }
 
     if( full.indexOf("/user-directory") !== -1 ) {

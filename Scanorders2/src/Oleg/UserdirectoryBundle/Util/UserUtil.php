@@ -551,29 +551,32 @@ class UserUtil {
         $criteriastr = "";
 
 
+        //Show ONLY orphaned locations
+        $criteriastr .= "locationuser IS NULL AND ";
+
         //name
-        $criteriastr .= "location.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "location.name LIKE '%".$search."%'";
 
-        //IC
-        $criteriastr .= "location.ic LIKE '%".$search."%' OR ";
-
-        //phone
-        $criteriastr .= "location.phone LIKE '%".$search."%' OR ";
-
-        //pager
-        $criteriastr .= "location.pager LIKE '%".$search."%' OR ";
-
-        //room
-        $criteriastr .= "location.room LIKE '%".$search."%' OR ";
-
-        //service
-        $criteriastr .= "service.name LIKE '%".$search."%' OR ";
-
-        //locationuser.displayName
-        $criteriastr .= "locationuser.displayName LIKE '%".$search."%' OR ";
-
-        //service
-        $criteriastr .= "building.name LIKE '%".$search."%'";
+//        //IC
+//        $criteriastr .= "location.ic LIKE '%".$search."%' OR ";
+//
+//        //phone
+//        $criteriastr .= "location.phone LIKE '%".$search."%' OR ";
+//
+//        //pager
+//        $criteriastr .= "location.pager LIKE '%".$search."%' OR ";
+//
+//        //room
+//        $criteriastr .= "location.room LIKE '%".$search."%' OR ";
+//
+//        //service
+//        $criteriastr .= "service.name LIKE '%".$search."%' OR ";
+//
+//        //locationuser.displayName
+//        $criteriastr .= "locationuser.displayName LIKE '%".$search."%' OR ";
+//
+//        //service
+//        $criteriastr .= "building.name LIKE '%".$search."%'";
 
 
         $dql->where($criteriastr);
