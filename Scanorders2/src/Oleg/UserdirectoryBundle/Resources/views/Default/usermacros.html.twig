@@ -248,8 +248,16 @@
                 {% endif %}
 
                 {% if homeLocation == true or standAloneLocation %}
-                    {% if cicle != 'show_user' or cicle == 'show_user' and (userEditor or subjectuser) %}
-                        {{ formmacros.field(formfield.privacy) }}
+                    {#Do not show "Location Privacy (who can see this contact info):" field for orphan locations (locations not connected to any user)#}
+                    {% if
+                        cicle != 'show_user' or
+                        cicle == 'show_user' and (userEditor or subjectuser) and entity.user
+                    %}
+                        {% if cicle != 'show_standalone' or cicle == 'show_standalone' and (userEditor or subjectuser) and entity.user %}
+                            {{ formmacros.field(formfield.privacy) }}
+                        {% else %}
+                            {% do formfield.privacy.setRendered %}
+                        {% endif %}
                     {% endif %}
                 {% else %}
                     {% do formfield.privacy.setRendered %}
