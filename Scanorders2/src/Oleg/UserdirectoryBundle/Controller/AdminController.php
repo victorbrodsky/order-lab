@@ -100,17 +100,18 @@ class AdminController extends Controller
         $count_equipmentType = $this->generateEquipmentType();
         $count_equipment = $this->generateEquipment();
 
-        $count_buildings = $this->generateBuildings();
+        $count_states = $this->generateStates();
+        $count_countryList = $this->generateCountryList();
+
         $count_locationTypeList = $this->generateLocationTypeList();
         $count_locprivacy = $this->generateLocationPrivacy();
+
+        $count_buildings = $this->generateBuildings();
         $count_locations = $this->generateLocations();
 
         $count_reslabtitles = $this->generateResLabTitles();
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
-
-        $count_states = $this->generateStates();
-        $count_countryList = $this->generateCountryList();
 
         $count_boardSpecialties = $this->generateBoardSpecialties();
 
@@ -121,8 +122,6 @@ class AdminController extends Controller
             'Site Settings='.$count_siteParameters.', '.
             'Institutions='.$count_institution.', '.
             'Users='.$count_users.', '.
-            'States='.$count_states.', '.
-            'Countries='.$count_countryList.', '.
             'Board Specialties='.$count_boardSpecialties.', '.
             'Employment Types of Termination='.$count_terminationTypes.', '.
             'Event Log Types ='.$count_eventTypeList.', '.
@@ -134,6 +133,8 @@ class AdminController extends Controller
             'Equipment ='.$count_equipment.', '.
             'Location Types ='.$count_locationTypeList.', '.
             'Location Privacy ='.$count_locprivacy.', '.
+            'States='.$count_states.', '.
+            'Countries='.$count_countryList.', '.
             'Locations ='.$count_locations.', '.
             'Buildings ='.$count_buildings.', '.
             'Reaserch Lab Titles='.$count_reslabtitles.' '.
@@ -1201,7 +1202,7 @@ class AdminController extends Controller
         $entities = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findAll();
 
         if( $entities ) {
-            //return -1;
+            return -1;
         }
 
         $buildings = array(
@@ -1240,6 +1241,8 @@ class AdminController extends Controller
         $city = "New York";
         $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
         $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
+        if( !$country )
+            exit('country null');
 
         $count = 1;
         foreach( $buildings as $building ) {

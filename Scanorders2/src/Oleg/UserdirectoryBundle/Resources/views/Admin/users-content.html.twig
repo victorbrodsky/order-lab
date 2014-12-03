@@ -4,21 +4,21 @@
 {% if entities|length > 0 %}
 
     {% if search is defined and search != "" %}
-        <h3 class="text-info">Results of Employee search for: "{{ search }}"</h3>
+        <h3 class="text-info">Results of Employee search for: "{{ search }}" of the </h3>
     {% endif %}
 
     {% if filter is defined and filter != "" %}
-        <h3 class="text-info">Results of Employee search for: {{ filter }}</h3>
+        <h3 class="text-info">Results of Employee search for: {{ filter }} of the </h3>
     {% endif %}
 
     {% if sameusers is defined and sameusers != "" %}
-        <h3 class="text-info">Results of Employee search for: {{ sameusers }}</h3>
+        <h3 class="text-info">Results of Employee search for: {{ sameusers }} of the </h3>
     {% endif %}
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
         <tr>
-            {#<th style="display:none">{{ knp_pagination_sortable(entities, 'ID', 'user.id') }}</th>#}
+            <th style="display:none">{{ knp_pagination_sortable(entities, 'ID', 'user.id') }}</th>
             <th>
                 {{ knp_pagination_sortable(entities, 'Institution(s)', 'administrativeInstitution.name') }}
             </th>
@@ -52,7 +52,7 @@
         {% for entity in entities %}
 
             <tr>
-                {#<td style="display:none"><a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+                <td style="display:none"><a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td class="rowlink-skip">
                     {% for institution in entity.getinstitutions %}
                         <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a></p>
@@ -65,7 +65,7 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td >
+                <td>
                     <a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}"><strong>{{ entity.displayName }}</strong></a>
                 </td>
                 <td class="rowlink-skip">

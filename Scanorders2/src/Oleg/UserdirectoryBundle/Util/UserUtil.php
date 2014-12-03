@@ -553,12 +553,15 @@ class UserUtil {
         //search
         $criteriastr = "";
 
-
         //Show ONLY orphaned locations
-        $criteriastr .= "locationuser IS NULL AND ";
+        $criteriastr .= "locationuser IS NULL";
 
-        //name
-        $criteriastr .= "location.name LIKE '%".$search."%'";
+        if( $search == "All Common Locations" ) {
+            $criteriastr .= "";
+        } else {
+            //name
+            $criteriastr .= " AND location.name LIKE '%".$search."%'";
+        }
 
         //The "Supervisor" column for the orphaned Location should be the person who belongs to the same "Service" as the orphan location according
         //to their Administrative or Academic Title, and who has the "Head of this Service" checkmarked checked for this service.

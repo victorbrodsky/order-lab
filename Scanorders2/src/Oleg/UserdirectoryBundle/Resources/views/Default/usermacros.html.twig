@@ -226,7 +226,7 @@
             {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
                 {% if not standAloneLocation and cicle != "new_standalone" %}
                     <div class="text-right">
-                        <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" >
+                        <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" >
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </div>
@@ -251,9 +251,9 @@
                     {#Do not show "Location Privacy (who can see this contact info):" field for orphan locations (locations not connected to any user)#}
                     {% if
                         cicle != 'show_user' or
-                        cicle == 'show_user' and (userEditor or subjectuser) and entity.user
+                        cicle == 'show_user' and (userEditor or subjectuser) and formfield.vars.value.user
                     %}
-                        {% if cicle != 'show_standalone' or cicle == 'show_standalone' and (userEditor or subjectuser) and entity.user %}
+                        {% if cicle != 'show_standalone' or cicle == 'show_standalone' and (userEditor or subjectuser) and formfield.vars.value.user %}
                             {{ formmacros.field(formfield.privacy) }}
                         {% else %}
                             {% do formfield.privacy.setRendered %}

@@ -1,7 +1,14 @@
 {#   navigation menu   #}
 
-{% macro listUsers(pathlink) %}
+{% macro listUsers(pathlink,flag) %}
     <ul class="dropdown-menu">
+
+        {% if flag == "common-locations" %}
+            <li><a href="{{ path(employees_sitename~'_list_common_locations') }}">All Common Locations</a></li>
+        {% endif %}
+
+        <hr style="margin-bottom:0; margin-top:0;">
+
         <li><a href="{{ path(pathlink) }}">All Employees</a></li>
         <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Employees'}) }}">All WCMC Pathology Employees</a></li>
         <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Faculty'}) }}">All WCMC Pathology Faculty</a></li>
@@ -74,12 +81,12 @@
                         {% else %}
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a>
                         {% endif %}
-                        {{ usernavbar.listUsers(employees_sitename~'_listusers') }}
+                        {{ usernavbar.listUsers(employees_sitename~'_listusers','common-locations') }}
                     </li>
 
                     <li id="nav-bar-userlist-previous" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Previous<b class="caret"></b></a>
-                        {{ usernavbar.listUsers(employees_sitename~'_listusers_previous') }}
+                        {{ usernavbar.listUsers(employees_sitename~'_listusers_previous',null) }}
                     </li>
 
                     {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}

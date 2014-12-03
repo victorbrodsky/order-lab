@@ -121,6 +121,26 @@ class UserController extends Controller
 
 
     /**
+     * In the "List Current" menu, add the top choice called "All Common Locations". CLicking it should list all "orphan" locations that are not attached to any users.
+     *
+     * @Route("/common-locations", name="employees_list_common_locations")
+     * @Template("OlegUserdirectoryBundle:Location:common-locations.html.twig")
+     */
+    public function listCommonLocationsAction(Request $request) {
+
+        $search = "All Common Locations";
+
+        //location search
+        $userUtil = new UserUtil();
+        $locations = $userUtil->indexLocation($search, $request, $this->container, $this->getDoctrine());
+
+        return array(
+            'locations' => $locations
+        );
+    }
+
+
+    /**
      * Search for the users with the same object. For example, the same institution, service, room, academic title, appointment title
      *
      * @Route("/search-users", name="employees_search_same_object")

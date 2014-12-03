@@ -280,4 +280,15 @@ function getComboboxBuidlings(holder) {
         populateSelectCombobox( targetid, _buildings, "Select an option or type in a new value", false );
     }
 
+
+    //add listener for: Pull in the address of the building into the address fields once the building is selected
+    $('.ajax-combobox-building').on("change", function(e) {
+
+        var holder = $(this).closest('.user-collection-holder');
+        //console.log(holder);
+
+        setGeoLocation( holder, _buildings, $(this).select2('val') );
+    });
+
 }
+

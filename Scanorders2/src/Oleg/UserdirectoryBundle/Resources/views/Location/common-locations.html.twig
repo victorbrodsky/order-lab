@@ -1,0 +1,25 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+
+{% block title %}
+    All Common Locations
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">All Common Locations</h4>
+
+    <div style="margin-top:25px;">
+
+        {#display search result for locations #}
+        {% if locations and locations|length > 0 %}
+            {% include 'OlegUserdirectoryBundle::Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
+        {% endif %}
+
+    </div>
+
+
+
+{% endblock %}
+

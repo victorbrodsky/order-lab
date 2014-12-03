@@ -5,7 +5,7 @@
  */
 
 
-function addBaseTitle(btn,classname) {
+function addNewObject(btn,classname) {
 //    var btnEl = $(btn);
 
     var holder = $('.'+classname+'-holder');
@@ -86,7 +86,7 @@ function getBaseTitleForm( elclass ) {
     return newForm;
 }
 
-function removeBaseTitle(btn,classname,id) {
+function removeExistingObject(btn,classname,id) {
 
     var btnEl = $(btn);
 
@@ -221,4 +221,18 @@ function confirmDeleteWithExpired( holder ) {
 }
 
 
+function collapseObject( checkbox ) {
+    var checkboxEl = $(checkbox);
+    //console.log(checkboxEl);
 
+    var holder = checkboxEl.closest('.panel');
+    //console.log(holder);
+
+    if( checkboxEl.is(':checked') ) {
+        holder.find('.collapse-non-empty-enddate').show();
+    } else {
+        holder.find('.collapse-non-empty-enddate').hide();
+    }
+
+
+}

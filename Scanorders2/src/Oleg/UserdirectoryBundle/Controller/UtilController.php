@@ -306,7 +306,18 @@ class UtilController extends Controller {
 
         $output = array();
         foreach($buildings as $building) {
-            $element = array('id'=>$building->getId(), 'text'=>$building."");
+            $geoloc = $building->getGeoLocation();
+            $element = array(
+                'id'        => $building->getId(),
+                'text'      => $building."",
+                'street1'   => $geoloc->getStreet1(),
+                'street2'   => $geoloc->getStreet2(),
+                'city'   => $geoloc->getCity(),
+                'county'   => $geoloc->getCounty(),
+                'country'   => ( $geoloc->getCountry() ? $geoloc->getCountry()->getId() : null ),
+                'state'   => ( $geoloc->getState() ? $geoloc->getState()->getId() : null ),
+                'zip'   => $geoloc->getZip(),
+            );
             $output[] = $element;
         }
 

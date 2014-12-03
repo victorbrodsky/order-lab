@@ -31,17 +31,17 @@ class GeoLocationType extends AbstractType
 
         $builder->add('street1',null,array(
             'label'=>'Street Address [Line 1]:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control geo-field-street1')
         ));
 
         $builder->add('street2',null,array(
             'label'=>'Street Address [Line 2]:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control geo-field-street2')
         ));
 
         $builder->add('city',null,array(
             'label'=>'City:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control geo-field-city')
         ));
 
         $builder->add( 'state', 'entity', array(
@@ -50,7 +50,7 @@ class GeoLocationType extends AbstractType
             'label'=>'State:',
             'required'=> false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width geo-field-state'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
@@ -72,7 +72,7 @@ class GeoLocationType extends AbstractType
             'multiple' => false,
             //'data' => '225',  //United States
             'preferred_choices' => $defaultCountries,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
@@ -86,12 +86,12 @@ class GeoLocationType extends AbstractType
 
         $builder->add('county',null,array(
             'label'=>'County:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control geo-field-county')
         ));
 
         $builder->add('zip',null,array(
             'label'=>'Zip Code:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control geo-field-zip')
         ));
 
     }

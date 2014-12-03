@@ -222,14 +222,8 @@ class LocationType extends AbstractType
         $builder->add('privacy','entity',$arrayOptions);
 
 
-        //add user and list properties for stand alone location management by LocationController
-        //Consider stanAlone for all cicles with _standalone, except new_standalone. Cicle new_standalone is exception because we don't show list attributes in creation page
-        $standAloneLocation = false;
-        if( strpos($this->params['cicle'],'_standalone') !== false && strpos($this->params['cicle'],'new') === false ) {
-            $standAloneLocation = true;
-        }
-
-        if( $standAloneLocation ) {
+        //add user (Inhabitant) for all stand alone location management by LocationController
+        if( strpos($this->params['cicle'],'_standalone') !== false ) {
             //user
             $builder->add('user','entity',array(
                 'class' => 'OlegUserdirectoryBundle:User',
@@ -238,7 +232,10 @@ class LocationType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
                 'required' => false
             ));
+        }
 
+        //Consider stanAlone for all cicles with _standalone, except new_standalone. Cicle new_standalone is exception because we don't show list attributes in creation page
+        if( strpos($this->params['cicle'],'_standalone') !== false && strpos($this->params['cicle'],'new') === false ) {
             //list attributes
             $params = array();
             $mapper = array();

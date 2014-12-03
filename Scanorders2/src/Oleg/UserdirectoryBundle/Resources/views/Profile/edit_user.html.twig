@@ -20,10 +20,18 @@
         {% set wellclass = "" %}
     {% endif %}
 
-    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+    {#hide the titles/objects that have a non-empty "Title End Date:"#}
+    {% set endDateClass = '' %}
+    {% set displayNone = '' %}
+    {% if formfield.endDate is defined and formfield.vars.value and formfield.vars.value.endDate %}
+        {% set endDateClass = 'collapse-non-empty-enddate' %}
+        {% set displayNone = 'style=display:none' %}
+    {% endif %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }} {{ endDateClass }}" {{ displayNone }}>
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -154,7 +162,7 @@
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -180,7 +188,7 @@
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -205,7 +213,7 @@
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -229,7 +237,7 @@
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -265,7 +273,7 @@
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -289,7 +297,7 @@
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -326,7 +334,7 @@
 
             {% if cicle != 'show_user' %}
                 <div class="text-right" style="padding-bottom: 10px">
-                    <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                    <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
             {% endif %}
 
@@ -469,88 +477,88 @@
 {% endmacro %}
 
 
-{% macro snapshot_well( user, sitename ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{#{% macro snapshot_well( user, sitename ) %}#}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
 
-    <div class="well">
+    {#<div class="well">#}
 
-        {#service tree#}
-        {% set services = user.getServices() %}
-        {% if services|length > 0 %}
-            <p>
-                <strong>Service(s)</strong>:<br>
-                {% for service in services %}
-                    {{ service.getParentTree() }}<br>
-                {% endfor %}
-            <p>
-        {% endif %}
+        {#&#123;&#35;service tree&#35;&#125;#}
+        {#{% set services = user.getServices() %}#}
+        {#{% if services|length > 0 %}#}
+            {#<p>#}
+                {#<strong>Service(s)</strong>:<br>#}
+                {#{% for service in services %}#}
+                    {#{{ service.getParentTree() }}<br>#}
+                {#{% endfor %}#}
+            {#<p>#}
+        {#{% endif %}#}
 
-        {#administrative titles#}
-        {% set titles = user.getAdministrativeTitles() %}
-        {% if titles|length > 0 %}
-            <p>
-                <strong>Administrative Title(s)</strong>:<br>
-                {% for title in titles %}
-                    {{ title.name }}<br>
-                {% endfor %}
-            </p>
-        {% endif %}
+        {#&#123;&#35;administrative titles&#35;&#125;#}
+        {#{% set titles = user.getAdministrativeTitles() %}#}
+        {#{% if titles|length > 0 %}#}
+            {#<p>#}
+                {#<strong>Administrative Title(s)</strong>:<br>#}
+                {#{% for title in titles %}#}
+                    {#{{ title.name }}<br>#}
+                {#{% endfor %}#}
+            {#</p>#}
+        {#{% endif %}#}
 
-        {#appointment titles#}
-        {% set titles = user.getAppointmentTitles() %}
-        {% if titles|length > 0 %}
-            <p>
-                <strong>Academic Appointment Title(s)</strong>:<br>
-                {% for title in titles %}
-                    {{ title.name }}<br>
-                {% endfor %}
-            </p>
-        {% endif %}
+        {#&#123;&#35;appointment titles&#35;&#125;#}
+        {#{% set titles = user.getAppointmentTitles() %}#}
+        {#{% if titles|length > 0 %}#}
+            {#<p>#}
+                {#<strong>Academic Appointment Title(s)</strong>:<br>#}
+                {#{% for title in titles %}#}
+                    {#{{ title.name }}<br>#}
+                {#{% endfor %}#}
+            {#</p>#}
+        {#{% endif %}#}
 
-        {#phone#}
-        <p>
-            <strong>Administrative Title(s)</strong>:<br>
-            {{ user.preferredPhone }}
-        </p>
+        {#&#123;&#35;phone&#35;&#125;#}
+        {#<p>#}
+            {#<strong>Administrative Title(s)</strong>:<br>#}
+            {#{{ user.preferredPhone }}#}
+        {#</p>#}
 
-        {#pager#}
-        {% set locations = user.locations %}
-        {% if locations|length > 0 %}
-            <p>
-                <strong>Room(s)</strong>:<br>
-                {% for location in locations %}
-                    {{ location.pager }}<br>
-                {% endfor %}
-            </p>
-        {% endif %}
+        {#&#123;&#35;pager&#35;&#125;#}
+        {#{% set locations = user.locations %}#}
+        {#{% if locations|length > 0 %}#}
+            {#<p>#}
+                {#<strong>Room(s)</strong>:<br>#}
+                {#{% for location in locations %}#}
+                    {#{{ location.pager }}<br>#}
+                {#{% endfor %}#}
+            {#</p>#}
+        {#{% endif %}#}
 
-        {#room#}
-        {% set locations = user.locations %}
-        {% if locations|length > 0 %}
-            <p>
-                <strong>Room(s)</strong>:<br>
-                {% for location in locations %}
-                    {{ location.room }}<br>
-                {% endfor %}
-            </p>
-        {% endif %}
+        {#&#123;&#35;room&#35;&#125;#}
+        {#{% set locations = user.locations %}#}
+        {#{% if locations|length > 0 %}#}
+            {#<p>#}
+                {#<strong>Room(s)</strong>:<br>#}
+                {#{% for location in locations %}#}
+                    {#{{ location.room }}<br>#}
+                {#{% endfor %}#}
+            {#</p>#}
+        {#{% endif %}#}
 
-        {#assistance#}
-        {% set locations = user.locations %}
-        {% if locations|length > 0 %}
-            <p>
-                <strong>Assistant(s)</strong>:<br>
-                {% for location in locations %}
-                    {% for assistant in location.assistant %}
-                        {{ assistant.getUserNameStr() }}<br>
-                    {% endfor %}
-                {% endfor %}
-            </p>
-        {% endif %}
+        {#&#123;&#35;assistance&#35;&#125;#}
+        {#{% set locations = user.locations %}#}
+        {#{% if locations|length > 0 %}#}
+            {#<p>#}
+                {#<strong>Assistant(s)</strong>:<br>#}
+                {#{% for location in locations %}#}
+                    {#{% for assistant in location.assistant %}#}
+                        {#{{ assistant.getUserNameStr() }}<br>#}
+                    {#{% endfor %}#}
+                {#{% endfor %}#}
+            {#</p>#}
+        {#{% endif %}#}
 
-    </div>
+    {#</div>#}
 
-{% endmacro %}
+{#{% endmacro %}#}
 
 
 
@@ -594,10 +602,12 @@
     <h4 class="text-info" align="center">{{ title }}</h4>
 
     {% if form.userclone is defined %}
+        <div style="margin-bottom: 20px; margin-top: 20px">
         {{ formmacros.field(form.userclone) }}
+        </div>
     {% endif %}
 
-    <br>
+
 
     {#user's snapshot#}
     {% if cicle == "show_user" %}
@@ -706,10 +716,10 @@
                     {% endif %}
 
                     {{ formmacros.field(form.displayName) }}
-                    {{ formmacros.field_notempty(form.suffix,cicle) }}
                     {{ formmacros.field(form.firstName) }}
                     {{ formmacros.field_notempty(form.middleName,cicle) }}
                     {{ formmacros.field(form.lastName) }}
+                    {{ formmacros.field_notempty(form.suffix,cicle) }}
 
                     {{ usermacros.emailPhoneField(form.email,cicle,'email',"") }}
 
@@ -814,7 +824,7 @@
                                 {{ userform.employmentStatuses(employmentStatus,cicle,'user-employmentStatus','noprototype') }}
                             {% endfor %}
                             {% if cicle != 'show_user' %}
-                                <button class="btn btn-default btn-add-minimumone-collection" onClick="addBaseTitle(this,'user-employmentStatus')" type='button'>Add Employment Period</button>
+                                <button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-employmentStatus')" type='button'>Add Employment Period</button>
                             {% endif %}
                         </div>
 
@@ -832,6 +842,9 @@
                     <a data-toggle="collapse" href="#AdministrativeTitles">
                         Administrative Title(s)
                     </a>
+                    <div style="float:right">
+                        <input type="checkbox" name="show-previous" value="show-previous" onClick="collapseObject(this)"> Show previous titles
+                    </div>
                 </h4>
             </div>
             <div id="AdministrativeTitles" class="panel-collapse collapse {{ collapsein }}">
@@ -842,7 +855,7 @@
                             {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype',sitename) }}
                         {% endfor %}
                         {% if cicle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
+                            <button class="btn btn-default" onClick="addNewObject(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
                         {% endif %}
                     </div>
 
@@ -858,6 +871,9 @@
                     <a data-toggle="collapse" href="#AppointmentTitles">
                         Academic Appointment Title(s)
                     </a>
+                    <div style="float:right">
+                        <input type="checkbox" name="show-previous" value="show-previous" onClick="collapseObject(this)"> Show previous titles
+                    </div>
                 </h4>
             </div>
             <div id="AppointmentTitles" class="panel-collapse collapse {{ collapsein }}">
@@ -868,7 +884,7 @@
                             {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype',sitename) }}
                         {% endfor %}
                         {% if cicle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>
+                            <button class="btn btn-default" onClick="addNewObject(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>
                         {% endif %}
                     </div>
 
@@ -894,7 +910,7 @@
                             {{ usermacros.locationObject(location,cicle,'user-locations','noprototype',sitename,entity) }}
                         {% endfor %}
                         {% if cicle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
+                            <button class="btn btn-default" onClick="addNewObject(this,'user-locations')" type='button'>Add Location</button>
                         {% endif %}
                     </div>
 
@@ -929,7 +945,7 @@
                                 {{ userform.researchLabs(researchLab,cicle,'user-researchlabs','noprototype') }}
                             {% endfor %}
                             {% if cicle != 'show_user' %}
-                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-researchlabs')" type='button'>Add Research Lab</button>
+                                <button class="btn btn-default" onClick="addNewObject(this,'user-researchlabs')" type='button'>Add Research Lab</button>
                             {% endif %}
                         </div>
 
@@ -982,7 +998,7 @@
                                                     {{ userform.identifier(identifier,cicle,'user-identifiers','noprototype') }}
                                                 {% endfor %}
                                                 {% if cicle != 'show_user' %}
-                                                    <button class="btn btn-default btn-add-minimumone-collection" onClick="addBaseTitle(this,'user-identifiers')" type='button'>Add Identifier</button>
+                                                    <button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-identifiers')" type='button'>Add Identifier</button>
                                                 {% endif %}
                                             </div>
 
@@ -1138,7 +1154,7 @@
                                                     {{ userform.codenyphs(codeNYPH,cicle,'user-codenyph','noprototype') }}
                                                 {% endfor %}
                                                 {% if cicle != 'show_user' %}
-                                                    <button class="btn btn-default" onClick="addBaseTitle(this,'user-codenyph')" type='button'>Add NYPH Code</button>
+                                                    <button class="btn btn-default" onClick="addNewObject(this,'user-codenyph')" type='button'>Add NYPH Code</button>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -1167,7 +1183,7 @@
                                                 {{ userform.stateLicenses(stateLicense,cicle,'user-statelicense','noprototype') }}
                                             {% endfor %}
                                             {% if cicle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-statelicense')" type='button'>Add Medical License</button>
+                                                <button class="btn btn-default" onClick="addNewObject(this,'user-statelicense')" type='button'>Add Medical License</button>
                                             {% endif %}
 
                                         </div>
@@ -1194,7 +1210,7 @@
                                                 {{ userform.boardCertifications(boardCertification,cicle,'user-boardcertification','noprototype') }}
                                             {% endfor %}
                                             {% if cicle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-boardcertification')" type='button'>Add Board Certification</button>
+                                                <button class="btn btn-default" onClick="addNewObject(this,'user-boardcertification')" type='button'>Add Board Certification</button>
                                             {% endif %}
 
                                         </div>
@@ -1295,7 +1311,7 @@
                                                 {{ userform.comments(publicComment,cicle,'user-publiccomments','noprototype') }}
                                             {% endfor %}
                                             {% if cicle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-publiccomments')" type='button'>Add Public Comment</button>
+                                                <button class="btn btn-default" onClick="addNewObject(this,'user-publiccomments')" type='button'>Add Public Comment</button>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -1321,7 +1337,7 @@
                                                 {{ userform.comments(privateComment,cicle,'user-privatecomments','noprototype') }}
                                             {% endfor %}
                                             {% if cicle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-privatecomments')" type='button'>Add Private Comment</button>
+                                                <button class="btn btn-default" onClick="addNewObject(this,'user-privatecomments')" type='button'>Add Private Comment</button>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -1347,7 +1363,7 @@
                                                 {{ userform.comments(confidentialComment,cicle,'user-confidentialcomment','noprototype') }}
                                             {% endfor %}
                                             {% if cicle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-confidentialcomment')" type='button'>Add Confidential Comment</button>
+                                                <button class="btn btn-default" onClick="addNewObject(this,'user-confidentialcomment')" type='button'>Add Confidential Comment</button>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -1373,7 +1389,7 @@
                                                 {{ userform.comments(adminComment,cicle,'user-admincomments','noprototype') }}
                                             {% endfor %}
                                             {% if cicle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-admincomments')" type='button'>Add Administrative Comment</button>
+                                                <button class="btn btn-default" onClick="addNewObject(this,'user-admincomments')" type='button'>Add Administrative Comment</button>
                                             {% endif %}
                                         </div>
                                     </div>

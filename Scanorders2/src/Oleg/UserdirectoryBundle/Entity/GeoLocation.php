@@ -56,29 +56,6 @@ class GeoLocation
      */
     private $zip;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="BuildingList", inversedBy="geoLocation")
-//     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
-//     */
-//    private $building;
-
-
-
-//    /**
-//     * @param mixed $building
-//     */
-//    public function setBuilding($building)
-//    {
-//        $this->building = $building;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getBuilding()
-//    {
-//        return $this->building;
-//    }
 
     /**
      * @param mixed $city

@@ -159,7 +159,7 @@
         {% endfor %}
 
         {#My Team#}
-        {% if render(myreports)|length > 1 or mygroupsArr|length > 0 or myservicesArr|length > 0 %}
+        {% if render(myreports)|length > 2 or mygroupsArr|length > 0 or myservicesArr|length > 0 %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -183,7 +183,7 @@
                     <div id="myteam-panel-body" class="panel-body">
 
                         {#My Report(s)#}
-                        {% if render(myreports)|length > 1 %}
+                        {% if render(myreports)|length > 2 %}
                             {#My Report(s)#}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
@@ -205,7 +205,7 @@
                         {% if mygroupsArr is defined %}
                             {% for mygroup in mygroupsArr %}
 
-                                {% if render( mygroup['table'] )|length > 1 %}
+                                {% if render( mygroup['table'] )|length > 2 %}
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
                                             <h4 class="panel-title">
@@ -230,7 +230,7 @@
                             {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                             {% for myservice in myservicesArr %}
 
-                            {% if render( myservice['table'] )|length > 1 %}
+                            {% if render( myservice['table'] )|length > 2 %}
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
                                             <h4 class="panel-title">

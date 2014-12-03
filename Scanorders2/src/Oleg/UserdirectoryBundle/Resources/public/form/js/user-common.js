@@ -399,3 +399,44 @@ function isInt(value) {
         !isNaN(parseInt(value, 10));
 }
 
+
+//set geo location
+function setGeoLocation( holder, data, id ) {
+    var street1 = null;
+    var street2 = null;
+    var city = null;
+    var state = null;
+    var county = null;
+    var country = null;
+    var zip = null;
+
+    if( data ) {
+        var item = findObjectById(data, id);
+        if( item ) {
+            street1 = item.street1;
+            street2 = item.street2;
+            city = item.city;
+            state = item.state;
+            county = item.county;
+            country = item.country;
+            zip = item.zip;
+        }
+    }
+
+    holder.find('.geo-field-street1').val(street1);
+    holder.find('.geo-field-street2').val(street2);
+    holder.find('.geo-field-city').val(city);
+    holder.find('.geo-field-county').val(county);
+    holder.find('.geo-field-state').select2('val',state);
+    holder.find('.geo-field-country').select2('val',country);
+    holder.find('.geo-field-zip').val(zip);
+}
+function findObjectById( data, id ) {
+    for( var i = 0; i < data.length; i++ ) {
+        if( data[i].id == id ) {
+            return data[i];
+        }
+    }
+    return null;
+}
+
