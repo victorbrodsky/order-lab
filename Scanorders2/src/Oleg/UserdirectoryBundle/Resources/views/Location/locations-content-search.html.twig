@@ -2,7 +2,10 @@
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 {% if search is defined and search != "" %}
-    <h3 class="text-info">Results of Location search for: "{{ search }}" of the </h3>
+    <h3 class="text-info">
+        {#Results of Location search for: "{{ search }}" of the#}
+        Common Locations
+    </h3>
 {% endif %}
 
 <table class="records_list table table-hover table-condensed text-left">

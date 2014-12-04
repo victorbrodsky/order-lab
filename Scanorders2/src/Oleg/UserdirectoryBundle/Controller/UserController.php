@@ -98,7 +98,7 @@ class UserController extends Controller
     }
 
     /**
-     * The same boss
+     * The same services
      *
      * @Route("/my-services", name="employees_my_services")
      */
@@ -156,13 +156,37 @@ class UserController extends Controller
         $res = $this->indexUser( $params );
         $pagination = $res['entities'];
 
-//        return $this->render(
-//            'OlegUserdirectoryBundle::Admin/users-content.html.twig',
-//            array(
-//                'entities' => $pagination,
-//                'sitename' => $this->container->getParameter('employees.sitename')
-//            )
-//        );
+        $title = "Current employees: ".$tablename." ".$objectname;
+
+        if( $tablename == "room" ) {
+            $title = "Current employees in ".$tablename." ".$objectname;
+        }
+
+        if( $tablename == "administrativeTitle" ) {
+            $title = 'Current employees with the administrative title of "'.$objectname.'"';
+        }
+
+        if( $tablename == "appointmentTitles" ) {
+            $title = 'Current employees with the academic title of "'.$objectname.'"';
+        }
+
+        if( $tablename == "service" ) {
+            $title = 'Current employees of the '.$objectname.' service';
+        }
+
+        if( $tablename == "institution" ) {
+            $em = $this->getDoctrine()->getManager();
+            $instName = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($objectname);
+            $title = 'Current employees of the '.$instName->getName();
+        }
+
+        if( $tablename == "division" ) {
+            $title = 'Current employees of the '.$objectname.' division';
+        }
+
+        if( $tablename == "department" ) {
+            $title = 'Current employees of the '.$objectname.' department';
+        }
 
 
         return $this->render(
@@ -173,7 +197,7 @@ class UserController extends Controller
                 'entities' => $pagination,
                 'roles' => null,
                 'search' => null,
-                'sameusers' => "all current employees of " . $objectname . " " . $tablename,
+                'sameusers' => $title,  //"all current employees of " . $objectname . " " . $tablename,
                 'postData' => $request->query->all()
             )
         );

@@ -4,7 +4,10 @@
 {% if entities|length > 0 %}
 
     {% if search is defined and search != "" %}
-        <h3 class="text-info">Results of Employee search for: "{{ search }}" of the </h3>
+        <h3 class="text-info">
+            {#Results of Employee search for: "{{ search }}" of the#}
+            Employees
+        </h3>
     {% endif %}
 
     {% if filter is defined and filter != "" %}
@@ -12,7 +15,7 @@
     {% endif %}
 
     {% if sameusers is defined and sameusers != "" %}
-        <h3 class="text-info">Results of Employee search for: {{ sameusers }} of the </h3>
+        <h3 class="text-info">{{ sameusers }}</h3>
     {% endif %}
 
     <table class="records_list table table-hover table-condensed text-left">
