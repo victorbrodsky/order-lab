@@ -180,7 +180,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
                 thisDropzone.options.addedfile.call(thisDropzone, mockFile);
 
-                var filepath = value.url;    //"http://collage.med.cornell.edu/order/Uploaded/pathology-employees/Documents/"+value.name;
+                var filepath = value.url;   
                 //console.log('path='+filepath);
 
                 thisDropzone.options.thumbnail.call(thisDropzone, mockFile, filepath);

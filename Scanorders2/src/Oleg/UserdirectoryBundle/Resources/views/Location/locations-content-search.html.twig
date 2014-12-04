@@ -23,9 +23,9 @@
     <tbody data-link="row" class="rowlink">
     {% for entity in locations %}
         <tr>
-            {#<td style="display:none"><a href="{{ path(employees_sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+            {#<td style="display:none"><a href="{{ path(sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
             <td>
-                <a href="{{ path(employees_sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.getNameFull(true)|raw }}</a>
+                <a href="{{ path(sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.getNameFull(true)|raw }}</a>
             </td>
             <td class="rowlink-skip">
                 {{ usermacros.phoneHref(entity.phone) }}
@@ -34,7 +34,7 @@
             <td>{{ entity.fax }}</td>
             <td class="rowlink-skip">
                 {#{{ entity.room }}#}
-                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': entity.room, 'name': entity.room }) }}">{{ entity.room }}</a>
+                <a href="{{ path( sitename~'_search_same_object', { 'tablename':'room','id': entity.room, 'name': entity.room }) }}">{{ entity.room }}</a>
             </td>
             <td class="rowlink-skip">
                 {% if entity.service %}

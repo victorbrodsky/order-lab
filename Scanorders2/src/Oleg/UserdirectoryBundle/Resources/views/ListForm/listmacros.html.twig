@@ -23,7 +23,7 @@
             {% endif %}
 
             {% if entities|first.attributes is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Attribute(s)', 'ent.attributes') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Attribute(s)', 'attributes.value') }}</th>
             {% endif %}
 
             {#role attributes#}

@@ -416,7 +416,7 @@
                 {% for administrativeTitle in user.administrativeTitles %}
                     {% if administrativeTitle.name %}
                         <p>
-                        <a href="{{ path( sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name, 'name': administrativeTitle.name }) }}">{{ administrativeTitle.name }}</a>
+                        <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name, 'name': administrativeTitle.name }) }}">{{ administrativeTitle.name }}</a>
                         </p>
                     {% endif %}
                 {% endfor %}
@@ -425,7 +425,7 @@
                 {% for appointmentTitles in user.appointmentTitles %}
                     {% if appointmentTitles.name %}
                         <p>
-                        <a href="{{ path( sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name, 'name': appointmentTitles.name }) }}">{{ appointmentTitles.name }}</a>
+                        <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name, 'name': appointmentTitles.name }) }}">{{ appointmentTitles.name }}</a>
                         </p>
                     {% endif %}
                 {% endfor %}
@@ -446,7 +446,7 @@
             <td>
                 {% for location in user.locations %}
                     {% if location.room %}
-                        <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'room','id': location.room, 'name': location.room }) }}">{{ location.room }}</a></p>
+                        <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': location.room, 'name': location.room }) }}">{{ location.room }}</a></p>
                     {% endif %}
                 {% endfor %}
             </td>

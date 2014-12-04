@@ -67,7 +67,9 @@ class UserController extends Controller
         $res = $this->indexUser( $params );
         $pagination = $res['entities'];
 
-        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+        //echo "paginations=".count($pagination)."<br>";
+
+        return $this->render( 'OlegUserdirectoryBundle::Admin/users-content.html.twig',
             array(
                 'entities' => $pagination,
                 'sitename' => $this->container->getParameter('employees.sitename')
@@ -176,8 +178,8 @@ class UserController extends Controller
 
         if( $tablename == "institution" ) {
             $em = $this->getDoctrine()->getManager();
-            $instName = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($objectname);
-            $title = 'Current employees of the '.$instName->getName();
+            $instName = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation();
+            $title = 'Current employees of the '.$instName;
         }
 
         if( $tablename == "division" ) {
@@ -187,6 +189,7 @@ class UserController extends Controller
         if( $tablename == "department" ) {
             $title = 'Current employees of the '.$objectname.' department';
         }
+
 
 
         return $this->render(

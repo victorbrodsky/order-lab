@@ -64,7 +64,7 @@
         {% endif %}
         {#{{ render( controller( 'OlegUserdirectoryBundle:Location:getSearchLocation', {'search':search, 'page':page} ) ) }}#}
 
-        {% if entities and entities|length > 0 %}
+        {% if (entities and entities|length > 0) or (sameusers is defined and sameusers) %}
             {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}
         {% endif %}
 
@@ -79,7 +79,7 @@
 
 {% block contentleft %}
 
-    {% if (entities is not defined or entities|length == 0) and (locations is not defined or locations|length == 0) %}
+    {% if (entities is not defined or entities|length == 0) and (locations is not defined or locations|length == 0) and (sameusers is not defined) %}
 
         <div style="margin-top:50px;">
 
@@ -158,8 +158,12 @@
             {% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}
         {% endfor %}
 
-        {#My Team#}
-        {% if render(myreports)|length > 2 or mygroupsArr|length > 0 or myservicesArr|length > 0 %}
+        {#myreports:{{ render(myreports)|length }}#}
+        {#mygroupsArr|length:{{ mygroupsArr|length }}#}
+        {#myservicesArr|length:{{ myservicesArr|length }}#}
+
+        {#My Team#} {#render(myreports)|length should be more than sitename#}
+        {% if render(myreports)|length > 50 or mygroupsArr|length > 0 or myservicesArr|length > 0 %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -183,7 +187,7 @@
                     <div id="myteam-panel-body" class="panel-body">
 
                         {#My Report(s)#}
-                        {% if render(myreports)|length > 2 %}
+                        {% if render(myreports)|length > 50 %}
                             {#My Report(s)#}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
