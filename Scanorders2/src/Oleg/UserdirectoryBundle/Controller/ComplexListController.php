@@ -26,8 +26,8 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/admin/list/locations/", name="employees_locations_pathaction_list")
-     * @Route("/admin/list/buildings/", name="employees_buildings_pathaction_list")
+     * @Route("/list/locations/", name="employees_locations_pathaction_list")
+     * @Route("/list/buildings/", name="employees_buildings_pathaction_list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:index.html.twig")
      */
@@ -103,11 +103,11 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/admin/list/locations/show/{id}", name="employees_locations_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/admin/list/locations/edit/{id}", name="employees_locations_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/locations/show/{id}", name="employees_locations_pathaction_show_standalone", requirements={"id" = "\d+"})
+     * @Route("/admin/locations/edit/{id}", name="employees_locations_pathaction_edit_standalone", requirements={"id" = "\d+"})
      *
-     * @Route("/admin/list/buildings/show/{id}", name="employees_buildings_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/admin/list/buildings/edit/{id}", name="employees_buildings_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/buildings/show/{id}", name="employees_buildings_pathaction_show_standalone", requirements={"id" = "\d+"})
+     * @Route("/admin/buildings/edit/{id}", name="employees_buildings_pathaction_edit_standalone", requirements={"id" = "\d+"})
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
@@ -148,8 +148,8 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/admin/list/locations/new", name="employees_locations_pathaction_new_standalone")
-     * @Route("/admin/list/buildings/new", name="employees_buildings_pathaction_new_standalone")
+     * @Route("/admin/locations/new", name="employees_locations_pathaction_new_standalone")
+     * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_standalone")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -187,8 +187,8 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/admin/list/locations/new", name="employees_locations_pathaction_new_post_standalone")
-     * @Route("/admin/list/buildings/new", name="employees_buildings_pathaction_new_post_standalone")
+     * @Route("/admin/locations/new", name="employees_locations_pathaction_new_post_standalone")
+     * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_post_standalone")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -270,8 +270,8 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/admin/list/locations/update/{id}", name="employees_locations_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
-     * @Route("/admin/list/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * @Route("/admin/locations/update/{id}", name="employees_locations_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * @Route("/admin/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -330,7 +330,7 @@ class ComplexListController extends Controller
             return $this->redirect($this->generateUrl('employees_'.$mapper['pathname'].'_pathaction_show_standalone', array('id' => $entity->getId())));
         }
 
-        echo "error loc <br>";
+        //echo "error loc <br>";
 
         return array(
             'entity' => $entity,

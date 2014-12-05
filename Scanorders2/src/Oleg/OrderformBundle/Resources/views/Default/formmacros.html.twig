@@ -38,8 +38,15 @@
 
 {% macro field_notempty( field, cicle, label, attr ) %}
     {% import _self as formmacros %}
+
+    {% if "show" in cicle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
     {#{% if field.vars.value or not "show" in cicle %}#}
-    {% if field.vars.value or not (cicle == "show" or cicle == "show_user") %}
+    {% if field.vars.value or not showFlag %}
         {{ formmacros.field(field, label, attr) }}
     {% else %}
         {% do field.setRendered %}
@@ -74,7 +81,14 @@
 
 {% macro fieldDateLabel_notempty( field, cicle, classname, attr ) %}
     {% import _self as formmacros %}
-    {% if field.vars.value or not (cicle == "show" or cicle == "show_user") %}
+
+    {% if "show" in cicle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if field.vars.value or not showFlag %}
         {{ formmacros.fieldDateLabel(field, classname, attr) }}
     {% else %}
         {% do field.setRendered %}

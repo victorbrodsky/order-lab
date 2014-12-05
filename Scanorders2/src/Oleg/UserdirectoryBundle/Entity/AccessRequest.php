@@ -61,6 +61,18 @@ class AccessRequest
      */
     private $updatedate;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
+     */
+    protected $updatedby;
+
+    /**
+     * @var array
+     * @ORM\Column(type="array", nullable=true)
+     */
+    protected $updateAuthorRoles = array();
+
 
     public function __construct() {
         $this->setStatus(self::STATUS_ACTIVE);
@@ -147,6 +159,42 @@ class AccessRequest
     {
         return $this->createdate;
     }
+
+    /**
+     * @param mixed $updatedby
+     */
+    public function setUpdatedby($updatedby)
+    {
+        $this->updatedby = $updatedby;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedby()
+    {
+        return $this->updatedby;
+    }
+
+    public function getUpdateAuthorRoles()
+    {
+        return $this->updateAuthorRoles;
+    }
+
+
+    public function setUpdateAuthorRoles($roles) {
+        foreach( $roles as $role ) {
+            $this->addUpdateAuthorRole($role."");
+        }
+    }
+
+    public function addUpdateAuthorRole($role) {
+        $role = strtoupper($role);
+        if( !in_array($role, $this->updateAuthorRoles, true) ) {
+            $this->updateAuthorRoles[] = $role;
+        }
+    }
+
 
     /**
      * @param mixed $status

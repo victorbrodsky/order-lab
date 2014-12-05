@@ -3,13 +3,12 @@
 
 {% if search is defined and search != "" %}
     <h3 class="text-info">
-        {#Results of Employee search for: "{{ search }}" of the#}
         Employees
     </h3>
 {% endif %}
 
     {% if filter is defined and filter != "" %}
-        <h3 class="text-info">Results of Employee search for: {{ filter }} of the </h3>
+        <h3 class="text-info">{{ filter }}</h3>
     {% endif %}
 
 {% if sameusers is defined and sameusers != "" %}
@@ -32,7 +31,7 @@
             <th>{{ knp_pagination_sortable(entities, 'Name', 'user.displayName') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Administrative Title(s)', 'administrativeTitles.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Academic Title(s)', 'appointmentTitles.name') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Expected Current PGY', 'appointmentTitles.pgylevel') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Training Year', 'appointmentTitles.pgylevel') }}</th>
             {#<th>{{ knp_pagination_sortable(entities, 'User ID (CWID)', 'user.username') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Preferred Email', 'user.email') }}</th>
             <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.preferredPhone') }}</th>

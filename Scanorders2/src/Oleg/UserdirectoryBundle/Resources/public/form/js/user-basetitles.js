@@ -221,17 +221,17 @@ function confirmDeleteWithExpired( holder ) {
 }
 
 
-function collapseObject( checkbox ) {
-    var checkboxEl = $(checkbox);
+function collapseObject( button ) {
+    var buttonEl = $(button);
     //console.log(checkboxEl);
 
-    var holder = checkboxEl.closest('.panel');
+    var holder = buttonEl.closest('.panel');
     //console.log(holder);
 
-    if( checkboxEl.is(':checked') ) {
-        holder.find('.collapse-non-empty-enddate').show();
-    } else {
+    if( buttonEl.hasClass('active') ) {
         holder.find('.collapse-non-empty-enddate').hide();
+    } else {
+        holder.find('.collapse-non-empty-enddate').show();
     }
 
 

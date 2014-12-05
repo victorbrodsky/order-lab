@@ -138,12 +138,16 @@ class LocationType extends AbstractType
 
         //assistant
         if( $this->params['cicle'] != "new_standalone" ) {
-            $builder->add('assistant','entity',array(
+            $builder->add( 'assistant', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'label' => "Assistant(s):",
+                'label'=> "Assistant(s):",
+                'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
-                'required' => false
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->orderBy("list.displayName","ASC");
+                    },
             ));
         }
 
@@ -225,12 +229,16 @@ class LocationType extends AbstractType
         //add user (Inhabitant) for all stand alone location management by LocationController
         if( strpos($this->params['cicle'],'_standalone') !== false ) {
             //user
-            $builder->add('user','entity',array(
+            $builder->add( 'user', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'label' => "Inhabitant:",
+                'label'=> "Inhabitant:",
+                'required'=> false,
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
-                'required' => false
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->orderBy("list.displayName","ASC");
+                    },
             ));
         }
 

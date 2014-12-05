@@ -7,15 +7,15 @@
             <th>{{ knp_pagination_sortable(entities, 'Request ID', 'accreq.id') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Request Date', 'accreq.createdate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Request Status', 'accreq.status') }}</th>
-            {#<th>{{ knp_pagination_sortable(entities, 'Service(s)', 'pathologyServices.name') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Full Name', 'user.displayName') }}</th>
-            {#<th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.title') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'User ID Type', 'keytype.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'User ID', 'user.primaryPublicUserId') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.preferredPhone') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Status Updated On', 'accreq.updatedate') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Status Updated By', 'updatedby.displayName') }}</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -37,13 +37,7 @@
             <td><a href="{{ path(sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.createdate|date('Y-m-d H:i') }}</td>
             <td>{{ entity.getStatusStr|capitalize }}</td>
-            {#<td>#}
-                {#{% for pathologyServices in entity.pathologyServices %}#}
-                    {#"{{ pathologyServices }}"#}
-                {#{% endfor %}#}
-            {#</td>#}
-            <td>{{ entity.user.displayName }}</td>
-            {#<td>{{ entity.title }}</td>#}
+            <td>{{ entity.user }}</td>
             <td>{{ entity.user.keytype }}</td>
             <td>{{ entity.user.primaryPublicUserId }}</td>
             <td>{{ entity.user.email }}</td>
@@ -57,9 +51,14 @@
             </td>
             <td>{{ entity.user.lastLogin|date('Y-m-d H:i') }}</td>
 
-            <td class="rowlink-skip">
+            <td>{{ entity.updatedate|date('Y-m-d H:i') }}</td>
 
-{#                <a class="btn" href="{{ path('accountrequest_show', { 'id': entity.id }) }}">Show</a>#}
+            <td class="rowlink-skip">
+                <a href="{{ path(sitename~'_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby }}</a>
+            </td>
+
+
+            <td class="rowlink-skip">
 
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

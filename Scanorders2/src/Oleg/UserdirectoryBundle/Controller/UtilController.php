@@ -527,6 +527,7 @@ class UtilController extends Controller {
         $dql =  $repository->createQueryBuilder("user");
         $dql->select("user.id as id, user.displayName as text, user.username as username, keytype.id as keytypeid");
         $dql->leftJoin("user.keytype", "keytype");
+        //$dql->leftJoin("user.researchLabs", "researchLabs");
         $dql->groupBy('user');
         $dql->addGroupBy('keytype');
         $dql->orderBy("user.displayName","ASC");

@@ -321,6 +321,7 @@ class AccessRequestController extends Controller
         $dql->select('accreq');
         $dql->innerJoin('accreq.user','user');
         $dql->innerJoin('user.keytype','keytype');
+        $dql->leftJoin('accreq.updatedby','updatedby');
         $dql->where("accreq.siteName = '" . $sitename . "'" );
         //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
         
@@ -416,6 +417,11 @@ class AccessRequestController extends Controller
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         }
+
+        //set updated by and updated author roles
+        $user = $this->get('security.context')->getToken()->getUser();
+        $accReq->setUpdatedby($user);
+        $accReq->setUpdateAuthorRoles($user->getRoles());
 
         $em->persist($entity);
         $em->persist($accReq);

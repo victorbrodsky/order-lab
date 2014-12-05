@@ -459,7 +459,6 @@ class UserUtil {
 
                 //research lab: dissolvedDate
                 if( $searchField == null || $searchField == 'researchLabs' ) {
-                    $dql->leftJoin("user.researchLabs", "researchLabs");
                     $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
                     $criteriastr .= " OR ";
                 }
@@ -491,7 +490,6 @@ class UserUtil {
 
                 //research lab: dissolvedDate
                 if( $searchField == null || $searchField == 'researchLabs' ) {
-                    $dql->leftJoin("user.researchLabs", "researchLabs");
                     $criteriastr .= "(researchLabs.dissolvedDate IS NOT NULL AND researchLabs.dissolvedDate < '".$curdate."')";
                     $criteriastr .= " OR ";
                 }
@@ -556,11 +554,37 @@ class UserUtil {
         //Show ONLY orphaned locations
         $criteriastr .= "locationuser IS NULL";
 
-        if( $search == "All Common Locations" ) {
-            $criteriastr .= "";
-        } else {
-            //name
-            $criteriastr .= " AND location.name LIKE '%".$search."%'";
+        switch( $search ) {
+            case "Common Locations":
+                $criteriastr .= "";
+                break;
+            case "Pathology Common Location":
+                //filter by Department=Pathology and Laboratory Medicine
+                $dql->leftJoin("location.department", "department");
+                $criteriastr .= " AND ";
+                $criteriastr .= "department.name LIKE '%Pathology%'";
+                break;
+            case "WCMC Pathology Common Locations":
+                //filter by Institution=Weill Cornell Medical College and Department=Pathology and Laboratory Medicine
+                $dql->leftJoin("location.department", "department");
+                $dql->leftJoin("location.institution", "institution");
+                $criteriastr .= " AND ";
+                $criteriastr .= "department.name LIKE 'Pathology and Laboratory Medicine'";
+                $criteriastr .= " AND ";
+                $criteriastr .= "institution.name LIKE 'Weill Cornell Medical College'";
+                break;
+            case "NYP Pathology Common Locations":
+                //filter by Institution=New York Hospital and Department=Pathology and Laboratory Medicine
+                $dql->leftJoin("location.department", "department");
+                $dql->leftJoin("location.institution", "institution");
+                $criteriastr .= " AND ";
+                $criteriastr .= "department.name LIKE 'Pathology'";
+                $criteriastr .= " AND ";
+                $criteriastr .= "institution.name LIKE 'New York Hospital'";
+                break;
+            default:
+                //search by name
+                $criteriastr .= " AND location.name LIKE '%".$search."%'";
         }
 
         //The "Supervisor" column for the orphaned Location should be the person who belongs to the same "Service" as the orphan location according

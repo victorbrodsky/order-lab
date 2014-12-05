@@ -112,6 +112,7 @@ class ListType extends AbstractType
         $builder->add('synonyms', 'entity', array(
             'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
             'label'=>'Synonyms:',
+            'read_only'=>true,
             'required' => false,
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),

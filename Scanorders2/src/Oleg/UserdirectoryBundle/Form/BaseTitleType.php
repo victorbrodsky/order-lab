@@ -127,7 +127,7 @@ class BaseTitleType extends AbstractType
                     'Clinical Faculty' => 'Clinical Faculty',
                     'Research Faculty' => 'Research Faculty'
                 ),
-                'label' => "Position Type:",
+                'label' => "Position Track Type:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeAction(this)'),
             ));

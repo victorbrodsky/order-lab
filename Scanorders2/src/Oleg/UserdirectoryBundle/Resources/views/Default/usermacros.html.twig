@@ -139,10 +139,16 @@
     {% endif %}
 
 
-    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
+    {% if formfield.vars.value and formfield.vars.value.status == constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') or prototype == 'prototype' %}
         {% set wellclass = "user-alert-warning" %}
     {% else %}
         {% set wellclass = "" %}
+    {% endif %}
+
+    {% if "show" in cicle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
     {% endif %}
 
     {#Consider stanAlone for all cicles with _standalone, except new_standalone. Cicle new_standalone is exception because we don't show list attributes in creation page#}
@@ -155,6 +161,12 @@
         {% set wellclass = "" %}
     {% endif %}
 
+    {#On "Common Location" view pages, (for locations where Inhabitant is not set)#}
+    {% if not standAloneLocation or formfield.vars.value.user or cicle != 'show_standalone' %}
+        {% set standAloneLocationNotView = true %}
+    {% else %}
+        {% set standAloneLocationNotView = false %}
+    {% endif %}
 
     {#    Show restrictions for home location:    #}
     {#####Case1: privacy="Administration can see and edit this contact information"#}
@@ -238,7 +250,10 @@
                 {{ usermacros.statusVerifiedField(formfield,cicle) }}
 
                 {% if formfield.user is defined %}
-                    {{ formmacros.field(formfield.user) }}
+                    {#On "Common Location" view pages, (for locations where Inhabitant is not set) hide "Inhabitant" field and value (still show it on the Edit page).#}
+                    {% if standAloneLocationNotView %}
+                        {{ formmacros.field(formfield.user) }}
+                    {% endif %}
                 {% endif %}
 
                 {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
@@ -269,7 +284,9 @@
             {% endif %}{#showRegularFields1#}
 
             {% if showRegularFields2 %}
+
                 {{ usermacros.emailPhoneField(formfield.phone,cicle,'phone',"") }}
+
                 {{ usermacros.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
                 {{ usermacros.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
 
@@ -279,39 +296,50 @@
 
                 {{ formmacros.field_notempty(formfield.fax,cicle) }}
                 {{ usermacros.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
+
             {% endif %}{#showRegularFields2#}
 
             {% if showRegularFields1 %}
                 {% if homeLocation == false %}
 
-                    {#assistant field#}
-                    {% if formfield.assistant is defined %}
-                        {% if cicle != 'show_user' %}
-                            {{ formmacros.field(formfield.assistant) }}
-                        {% else %}
-                            {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
-                                <p>
-                                    <strong>Assistant(s):</strong>
-                                </p>
-                                {% for assistant in formfield.vars.value.assistant %}
-                                    {{ usermacros.personInfo(assistant,cicle,sitename) }}
-                                {% endfor %}
+                    {#On "Common Location" view pages, (for locations where Inhabitant is not set) hide "Assistant(s):" field and value.#}
+                    {#{% if standAloneLocationNotView %}#}
+
+                        {#assistant field#}
+                        {% if formfield.assistant is defined %}
+                            {% if not showFlag %}
+                                {{ formmacros.field(formfield.assistant) }}
+                            {% else %}
+                                {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
+                                    <p>
+                                        <strong>Assistant(s):</strong>
+                                    </p>
+                                    {% for assistant in formfield.vars.value.assistant %}
+                                        {{ usermacros.personInfo(assistant,cicle,sitename) }}
+                                    {% endfor %}
+                                {% endif %}
                             {% endif %}
                         {% endif %}
-                    {% endif %}
+
+                    {#{% endif %}#}
 
                 {% endif %}
 
                 {% if homeLocation == false %}
-                    {{ formmacros.field(formfield.room) }}
+
+                    {{ formmacros.field_notempty(formfield.room,cicle) }}
                     {{ formmacros.field_notempty(formfield.suit,cicle) }}
+
                     {{ formmacros.field(formfield.floor) }}
-                    {{ formmacros.field_notempty(formfield.institution,cicle) }}
-                    {{ formmacros.field_notempty(formfield.department,cicle) }}
-                    {{ formmacros.field_notempty(formfield.division,cicle) }}
-                    {{ formmacros.field_notempty(formfield.service,cicle) }}
+                    {{ formmacros.field(formfield.institution) }}
+                    {{ formmacros.field(formfield.department) }}
+                    {{ formmacros.field(formfield.division) }}
+                    {{ formmacros.field(formfield.service) }}
+
                     {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
-                    {{ formmacros.field_notempty(formfield.building,cicle) }}
+
+                    {{ formmacros.field(formfield.building) }}
+
                 {% endif %}
 
                 {#Location GeoLocation#}
@@ -327,7 +355,6 @@
                     {{ formmacros.fieldDateLabel_notempty(formfield.associatedCliaExpDate,cicle,'allow-future-date') }}
                     {{ formmacros.field_notempty(formfield.associatedPfi,cicle) }}
                 {% endif %}
-
 
                 {{ formmacros.field_notempty(formfield.comment,cicle) }}
             {% endif %} {#showRegularFields1#}
@@ -366,7 +393,15 @@
 
 {% macro statusVerifiedField( entity, cicle ) %}
     {% if entity.status is defined %}
-        {% if cicle != "show_user" or entity.status.vars.value != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
+
+        {#On "Common Location" view pages, (for locations where Inhabitant is not set) hide "Status" field and value if it is equal to "Verified by Administration"#}
+        {% if "show" in cicle %}
+            {% set showFlag = true %}
+        {% else %}
+            {% set showFlag = false %}
+        {% endif %}
+
+        {% if not showFlag or entity.status.vars.value != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
             {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
             {{ formmacros.field(entity.status) }}
         {% else %}
@@ -378,7 +413,15 @@
 
 {% macro checkbox_notempty(field,value,cicle) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% if value == 1 or cicle != "show_user" %}
+
+    {% if "show" in cicle %}
+        {% set showFlag = true %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if value == 1 or not showFlag %}
         {{ formmacros.checkbox(field) }}
     {% else %}
         {% do field.setRendered %}
@@ -387,7 +430,14 @@
 
 {% macro emailPhoneField_notempty(field,cicle,type,label) %}
     {% import _self as formuser %}
-    {% if field.vars.value or cicle != "show_user" %}
+
+    {% if "show" in cicle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if field.vars.value or not showFlag %}
         {{ formuser.emailPhoneField(field,cicle,type,label) }}
     {% else %}
         {% do field.setRendered %}
@@ -404,7 +454,13 @@
         {% set value = field %}
     {% endif %}
 
-    {% if cicle == 'show_user' %}
+    {% if "show" in cicle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if showFlag %}
         <p>
         <div class="row">
             <div class="col-xs-6" align="right">
