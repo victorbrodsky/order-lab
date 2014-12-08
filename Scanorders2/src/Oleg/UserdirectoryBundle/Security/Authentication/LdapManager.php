@@ -91,6 +91,8 @@ class LdapManager extends BaseLdapManager
 
         parent::hydrate($user, $entry);
 
+        $userUtil = new UserUtil();
+
         $user->setCreatedby('ldap');
         $user->getPreferences()->setTimezone($this->timezone);
 
@@ -102,8 +104,7 @@ class LdapManager extends BaseLdapManager
         //first time login when DB is clean
         //echo "userkeytype=".$userkeytype."<br>";
         if( !$userkeytype ) {
-            $userutil = new UserUtil();
-            $count_usernameTypeList = $userutil->generateUsernameTypes($this->em);
+            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
             //echo "generated user types=".$count_usernameTypeList."<br>";
             $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
             //echo "userkeytype=".$userkeytype."<br>";
@@ -122,8 +123,10 @@ class LdapManager extends BaseLdapManager
         }
 
         //add default locations
-        $userUtil = new UserUtil();
         $userUtil->addDefaultLocations($user,null,$this->em,$this->container);
+
+        //replace admin title by object
+        $userUtil->replaceAdminTitleByObject($user,null,$this->em,$this->container);
 
 //        echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
 //        echo "user's username=".$user->getUsername()." <br>";

@@ -39,10 +39,15 @@ class UserType extends AbstractType
         $this->em = $params['em'];
 
         //echo "cicle=".$cicle."<br>";
-        if( $this->cicle == 'create' ) {
-            $this->roleAdmin = $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR');
+//        if( $this->cicle == 'create' ) {
+//            $this->roleAdmin = $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR');
+//        } else {
+//            $this->roleAdmin = $this->sc->isGranted('ROLE_ADMIN');
+//        }
+        if( $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->sc->isGranted('ROLE_ADMIN') ) {
+            $this->roleAdmin = true;
         } else {
-            $this->roleAdmin = $this->sc->isGranted('ROLE_ADMIN');
+            $this->roleAdmin = false;
         }
 
     }
@@ -226,7 +231,9 @@ class UserType extends AbstractType
             'prototype_name' => '__locations__',
         ));
 
-        if( $this->roleAdmin || ($currentUser && $this->cicle == "show") ) {
+        //visible only to admin or user himself on view
+        if( $this->roleAdmin || ($currentUser == false && $this->cicle == "show") ) {
+        //if( ($currentUser == true && $this->cicle == "show") || ($currentUser == false && $this->cicle == "show") ) {
             $params = array('read_only'=>$read_only,'currentUser'=>$currentUser,'admin'=>$this->roleAdmin);
             $builder->add('employmentStatus', 'collection', array(
                 'type' => new EmploymentStatusType($params),

@@ -46,11 +46,10 @@ function initBaseAdd(newForm) {
     //init comboboxes
     getComboboxInstitution(newForm);   //init institution for administrative and appointnment titles
     getComboboxCommentType(newForm);
-    getComboboxIdentifier(newForm);
-    getComboboxFellowshipType(newForm);
-    getComboboxResearchLabs(newForm);
-    getComboboxLocations(newForm);
-    getComboboxBuidlings(newForm);
+
+    //init generic comboboxes
+    initAllComboboxGeneric(newForm);
+
     initFileUpload(newForm);
 
     confirmDeleteWithExpired(newForm);

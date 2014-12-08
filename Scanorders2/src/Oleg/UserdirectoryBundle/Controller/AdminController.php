@@ -1336,6 +1336,11 @@ class AdminController extends Controller
             $listEntity->setPrivacy($locationPrivacy);
             $listEntity->setBuilding($building);
 
+            //set room object
+            $userUtil = new UserUtil();
+            $roomObj = $userUtil->getObjectByNameTransformer($room,$username,'RoomList',$em);
+            $listEntity->setRoom($roomObj);
+
             $em->persist($listEntity);
             $em->flush();
 

@@ -12,10 +12,10 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class BaseTitle extends BaseUserAttributes
 {
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $name;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $name;
 
     /**
      * Primary, Secondary
@@ -35,8 +35,9 @@ class BaseTitle extends BaseUserAttributes
     protected $endDate;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="EffortList")
+     * @ORM\JoinColumn(name="suit", referencedColumnName="id", nullable=true)
+     **/
     protected $effort;
 
     /**

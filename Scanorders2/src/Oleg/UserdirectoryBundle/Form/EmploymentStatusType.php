@@ -25,7 +25,14 @@ class EmploymentStatusType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        if( $this->params['currentUser'] == true ) {
+            $readonly = true;
+        } else {
+            $readonly = false;
+        }
+
         $builder->add('hireDate',null,array(
+            'read_only' => $readonly,
             'label'=>"Date of Hire:",
             'widget' => 'single_text',
             'required' => false,
@@ -34,6 +41,7 @@ class EmploymentStatusType extends AbstractType
         ));
 
         $builder->add('terminationDate',null,array(
+            'read_only' => $readonly,
             'label'=>"End of Employment Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -41,6 +49,11 @@ class EmploymentStatusType extends AbstractType
             'attr' => array('class' => 'datepicker form-control user-expired-end-date')
         ));
 
+        if( $readonly ) {
+            $attr = array('class'=>'combobox combobox-width', 'readonly'=>'readonly');
+        } else {
+            $attr = array('class'=>'combobox combobox-width');
+        }
         $builder->add( 'terminationType', 'entity', array(
             'disabled' => ($this->params['read_only'] ? true : false),
             'class' => 'OlegUserdirectoryBundle:EmploymentTerminationType',
@@ -48,7 +61,7 @@ class EmploymentStatusType extends AbstractType
             'label'=>'Type of End of Employment:',
             'required'=> false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => $attr,
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
@@ -60,7 +73,8 @@ class EmploymentStatusType extends AbstractType
                 },
         ));
 
-        if( $this->params['currentUser'] == false || $this->params['admin'] == true ) {
+        //do not show reason for user himself
+        if( $this->params['currentUser'] == false ) {
             $builder->add('terminationReason', null, array(
                 'label' => 'Reason for End of Employment:',
                 'attr' => array('class'=>'textarea form-control')

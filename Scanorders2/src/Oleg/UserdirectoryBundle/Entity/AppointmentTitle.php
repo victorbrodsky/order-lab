@@ -12,6 +12,12 @@ class AppointmentTitle extends BaseTitle
 {
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppTitleList")
+     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
+     **/
+    protected $name;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="appointmentTitles")
      * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
      */

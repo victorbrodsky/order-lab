@@ -34,11 +34,9 @@ $(document).ready(function() {
     getComboboxInstitution();
 
     getComboboxCommentType();
-    getComboboxIdentifier();
-    getComboboxFellowshipType();
-    getComboboxResearchLabs();
-    getComboboxLocations();
-    getComboboxBuidlings();
+
+    //init generic comboboxes
+    initAllComboboxGeneric();
 
     processEmploymentStatusRemoveButtons();
 

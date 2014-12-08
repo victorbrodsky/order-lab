@@ -221,18 +221,38 @@ function initDatepicker() {
 
         //console.log("init Datepicker");
 
-        var regularDatepickers = $('.input-group.date.regular-datepicker').not('.allow-future-date');
-        initSingleDatepicker( regularDatepickers );
+        var regularDatepickers = $('.input-group.date.regular-datepicker').not('.allow-future-date').each( function() {
 
-        var scandateDatepickers = $('.input-group.date.allow-future-date');
-        initSingleDatepicker( scandateDatepickers );
+            //make sure the masking is clear when input is cleared by datepicker
+            $(this).datepicker().on("clearDate", function(e){
+                var inputField = $(this).find('input');
+                //printF(inputField,"clearDate input:");
+                clearErrorField( inputField );
+            });
 
-        //make sure the masking is clear when input is cleared by datepicker
-        regularDatepickers.datepicker().on("clearDate", function(e){
-            var inputField = $(this).find('input');
-            //printF(inputField,"clearDate input:");
-            clearErrorField( inputField );
+            initSingleDatepicker( $(this) );
+
         });
+
+        var scandateDatepickers = $('.input-group.date.allow-future-date').each( function() {
+
+            //make sure the masking is clear when input is cleared by datepicker
+            $(this).datepicker().on("clearDate", function(e){
+                var inputField = $(this).find('input');
+                //printF(inputField,"clearDate input:");
+                clearErrorField( inputField );
+            });
+
+            initSingleDatepicker( $(this) );
+
+        });
+
+//        //make sure the masking is clear when input is cleared by datepicker
+//        regularDatepickers.datepicker().on("clearDate", function(e){
+//            var inputField = $(this).find('input');
+//            //printF(inputField,"clearDate input:");
+//            clearErrorField( inputField );
+//        });
 
     }
 
@@ -241,23 +261,39 @@ function initDatepicker() {
 function initSingleDatepicker( datepickerElement ) {
 
     //printF(datepickerElement,'datepicker element:');
+    //console.log(datepickerElement);
 
-    var endDate = new Date(); //use current date as default
+    //disable datepickers with readonly attributes
+    var inputField = datepickerElement.find('input.datepicker');
+    if( inputField.is('[readonly]') || inputField.is('[disabled]') ) {
 
-    if( datepickerElement.hasClass('allow-future-date') ) {
-        endDate = false;//'End of time';
+            //console.log('datepicker readonly');
+            //console.log(inputField);
+            datepickerElement.datepicker("remove");
+            datepickerElement.find('.calendar-icon-button').off();
+
+    } else {
+
+        var endDate = new Date(); //use current date as default
+
+        if( datepickerElement.hasClass('allow-future-date') ) {
+            endDate = false;//'End of time';
+        }
+        //console.log('endDate='+endDate);
+
+        //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
+        datepickerElement.datepicker({
+            autoclose: true,
+            clearBtn: true,
+            todayBtn: "linked",
+            todayHighlight: true,
+            endDate: endDate
+        });
+
     }
-    //console.log('endDate='+endDate);
 
-    //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
-    datepickerElement.datepicker({
-        autoclose: true,
-        clearBtn: true,
-        todayBtn: "linked",
-        todayHighlight: true,
-        endDate: endDate
-    });
 }
+
 
 function expandTextarea() {
     //var elements = document.getElementsByClassName('textarea');

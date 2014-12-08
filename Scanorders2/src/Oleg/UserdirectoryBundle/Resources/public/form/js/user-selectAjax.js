@@ -14,6 +14,34 @@ var _researchlabs = new Array();
 var _locations = new Array();
 var _buildings = new Array();
 
+var _rooms = new Array();
+var _suites = new Array();
+var _floors = new Array();
+var _mailboxes = new Array();
+var _efforts = new Array();
+var _addmintitles = new Array();
+var _apptitles = new Array();
+
+
+function initAllComboboxGeneric(newForm) {
+
+    getComboboxGeneric(newForm,'identifierkeytype',_identifiers);
+    getComboboxGeneric(newForm,'fellowshiptype',_fellowshiptype);
+    getComboboxGeneric(newForm,'researchlabtitle',_researchlabs);
+    getComboboxGeneric(newForm,'location',_locations,'');
+
+    getComboboxGeneric(newForm,'room',_rooms);
+    getComboboxGeneric(newForm,'suit',_suites);
+    getComboboxGeneric(newForm,'floor',_floors);
+    getComboboxGeneric(newForm,'mailbox',_mailboxes);
+    getComboboxGeneric(newForm,'effort',_efforts);
+    getComboboxGeneric(newForm,'administrativetitletype',_addmintitles);
+    getComboboxGeneric(newForm,'appointmenttitletype',_apptitles);
+
+    getComboboxBuidlings(newForm);
+
+}
+
 
 function setElementToId( target, dataarr, setId ) {
     if( dataarr == undefined || dataarr.length == 0 ) {
@@ -40,6 +68,43 @@ function getDataIdByText(arr,text) {
         }
     }
     return id;
+}
+
+//Generic ajax combobox
+function getComboboxGeneric(holder,name,globalDataArray,urlprefix) {
+
+    var targetid = ".ajax-combobox-"+name;
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
+    }
+
+    if( typeof urlprefix !== 'undefined' ) {
+        urlprefix = "generic/";
+    }
+
+    var url = getCommonBaseUrl("util/common/"+urlprefix+name,"employees");
+
+    if( globalDataArray.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            globalDataArray = data;
+            populateSelectCombobox( targetid, globalDataArray, "Select an option or type in a new value", false );
+        });
+    } else {
+        populateSelectCombobox( targetid, globalDataArray, "Select an option or type in a new value", false );
+    }
+
 }
 
 
@@ -117,169 +182,9 @@ function getComboboxCommentType(holder) {
 }
 
 
-function getComboboxIdentifier(holder) {
-
-    var targetid = ".ajax-combobox-identifierkeytype";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    var url = getCommonBaseUrl("util/common/"+"identifierkeytype","employees");
-
-    //console.log('cicle='+cicle);
-
-    if( _identifiers.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _identifiers = data;
-            populateSelectCombobox( targetid, _identifiers, "Select an option or type in a new value", false );
-        });
-    } else {
-        populateSelectCombobox( targetid, _identifiers, "Select an option or type in a new value", false );
-    }
-
-}
-
-function getComboboxFellowshipType(holder) {
-
-    var targetid = ".ajax-combobox-fellowshiptype";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    var url = getCommonBaseUrl("util/common/"+"fellowshiptype","employees");
-
-    if( _fellowshiptype.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _fellowshiptype = data;
-            populateSelectCombobox( targetid, _fellowshiptype, "Select an option or type in a new value", false );
-        });
-    } else {
-        populateSelectCombobox( targetid, _fellowshiptype, "Select an option or type in a new value", false );
-    }
-
-}
-
-
-function getComboboxResearchLabs(holder) {
-
-    var targetid = ".ajax-combobox-researchlabtitle";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    var url = getCommonBaseUrl("util/common/"+"researchlabtitle","employees");
-
-    if( _researchlabs.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _researchlabs = data;
-            populateSelectCombobox( targetid, _researchlabs, "Select an option or type in a new value", false );
-        });
-    } else {
-        populateSelectCombobox( targetid, _researchlabs, "Select an option or type in a new value", false );
-    }
-
-}
-
-
-function getComboboxLocations(holder) {
-
-    var targetid = ".ajax-combobox-location";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    var url = getCommonBaseUrl("util/common/"+"location","employees");
-
-    if( _locations.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _locations = data;
-            populateSelectCombobox( targetid, _locations, "Select an option or type in a new value", false );
-        });
-    } else {
-        populateSelectCombobox( targetid, _locations, "Select an option or type in a new value", false );
-    }
-
-}
-
-
 function getComboboxBuidlings(holder) {
 
-    var targetid = ".ajax-combobox-building";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    var url = getCommonBaseUrl("util/common/"+"building","employees");
-
-    if( _buildings.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _buildings = data;
-            populateSelectCombobox( targetid, _buildings, "Select an option or type in a new value", false );
-        });
-    } else {
-        populateSelectCombobox( targetid, _buildings, "Select an option or type in a new value", false );
-    }
-
+    getComboboxGeneric(holder,'building',_buildings,'');
 
     //add listener for: Pull in the address of the building into the address fields once the building is selected
     $('.ajax-combobox-building').on("change", function(e) {
@@ -291,4 +196,6 @@ function getComboboxBuidlings(holder) {
     });
 
 }
+
+
 

@@ -13,6 +13,12 @@ class AdministrativeTitle extends BaseTitle
 {
 
     /**
+     * @ORM\ManyToOne(targetEntity="AdminTitleList")
+     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
+     **/
+    protected $name;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="administrativeTitles")
      * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
      */

@@ -18,6 +18,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\Logger;
 use Oleg\UserdirectoryBundle\Entity\UsernameType;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
 class UserUtil {
@@ -106,11 +107,18 @@ class UserUtil {
             $mainLocation = $user->getMainLocation();
             $mainLocation->setPhone($phone);
             $mainLocation->setFax($fax);
-            $mainLocation->setRoom($office);
+
+            //set room object
+            $roomObj = $this->getObjectByNameTransformer($office,$systemuser,'RoomList',$em);
+            $mainLocation->setRoom($roomObj);
 
             //title is stored in Administrative Title
             $administrativeTitle = new AdministrativeTitle($systemuser);
-            $administrativeTitle->setName($title);
+
+            //set title object
+            $titleObj = $this->getObjectByNameTransformer($title,$systemuser,'AdminTitleList',$em);
+            $administrativeTitle->setName($titleObj);
+
             $user->addAdministrativeTitle($administrativeTitle);
 
             //add scanorder Roles
@@ -558,11 +566,24 @@ class UserUtil {
             case "Common Locations":
                 $criteriastr .= "";
                 break;
-            case "Pathology Common Location":
+            case "Pathology Common Locations":
                 //filter by Department=Pathology and Laboratory Medicine
                 $dql->leftJoin("location.department", "department");
                 $criteriastr .= " AND ";
                 $criteriastr .= "department.name LIKE '%Pathology%'";
+                break;
+            case "WCMC & NYP Pathology Common Locations":
+                //filter by Institution=Weill Cornell Medical College & NYP and Department=Pathology
+                $dql->leftJoin("location.department", "department");
+                $dql->leftJoin("location.institution", "institution");
+                $criteriastr .= " AND ";
+                $criteriastr .= "department.name LIKE '%Pathology%'";
+                $criteriastr .= " AND (";
+                $criteriastr .= "institution.name LIKE 'Weill Cornell Medical College'";
+                $criteriastr .= " OR ";
+                $criteriastr .= "institution.name LIKE 'New York Hospital'";
+                $criteriastr .= ")";
+
                 break;
             case "WCMC Pathology Common Locations":
                 //filter by Institution=Weill Cornell Medical College and Department=Pathology and Laboratory Medicine
@@ -702,6 +723,64 @@ class UserUtil {
 
         return $entity;
     }
+
+
+    public function replaceAdminTitleByObject($entity,$creator,$em,$container) {
+
+        if( $creator == null ) {
+            $userSecUtil = $container->get('user_security_utility');
+            $creator = $userSecUtil->findSystemUser();
+
+            if( !$creator ) {
+                $creator = $entity;
+            }
+        }
+
+        $adminTitle = $entity->getAdministrativeTitles()->first();
+        $adminTitleName = $adminTitle->getName();
+
+        if( $adminTitleName == null ) {
+            return;
+        }
+
+//        $adminTitleNameObject = $em->getRepository('OlegUserdirectoryBundle:AdminTitleList')->findOneByName($adminTitleName);
+//
+//        if( !$adminTitleNameObject ) {
+//
+//            //generate admin Title Name
+//            $treeTransf = new GenericTreeTransformer($em,$creator);
+//            $adminTitleNameObject = $treeTransf->createNewEntity($adminTitleName,"AdminTitleList",$creator);
+//
+//            $em->persist($adminTitleNameObject);
+//        }
+
+        $adminTitleNameObject = $this->getObjectByNameTransformer( $adminTitleName, $creator, "AdminTitleList", $em );
+
+        $adminTitle->setName($adminTitleNameObject);
+
+    }
+
+    //get string to object using transformer
+    public function getObjectByNameTransformer( $name, $creator, $className, $em ) {
+
+        if( $name == null || $name == "" ) {
+            return null;
+        }
+
+        $nameObject = $em->getRepository('OlegUserdirectoryBundle:'.$className)->findOneByName($name);
+
+        if( !$nameObject ) {
+
+            //generate admin Title Name
+            $treeTransf = new GenericTreeTransformer($em,$creator);
+            $nameObject = $treeTransf->createNewEntity($name,$className,$creator);
+
+            $em->persist($nameObject);
+        }
+
+        return $nameObject;
+    }
+
 
     //clone user according to issue #392
     public function makeUserClone( $suser, $duser ) {

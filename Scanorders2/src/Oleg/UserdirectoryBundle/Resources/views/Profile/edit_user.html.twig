@@ -235,7 +235,7 @@
 
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if cicle != 'show_user' %}
+        {% if cicle != 'show_user' and field.vars.value.id != app.security.getToken().getUser().getId() %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
@@ -823,7 +823,7 @@
                             {% for employmentStatus in form.employmentStatus %}
                                 {{ userform.employmentStatuses(employmentStatus,cicle,'user-employmentStatus','noprototype') }}
                             {% endfor %}
-                            {% if cicle != 'show_user' %}
+                            {% if cicle != 'show_user' and entity.id != app.security.getToken().getUser().getId() %}
                                 <button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-employmentStatus')" type='button'>Add Employment Period</button>
                             {% endif %}
                         </div>

@@ -24,10 +24,16 @@ class BaseTitleType extends AbstractType
 
         $builder->add('id','hidden',array('label'=>false));
 
-        $builder->add( 'name', 'text', array(
-            'label'=>$this->params['label'].' Title:',   //'Admnistrative Title:',
-            'required'=>false,
-            'attr' => array('class' => 'form-control')
+//        $builder->add( 'name', 'text', array(
+//            'label'=>$this->params['label'].' Title:',   //'Admnistrative Title:',
+//            'required'=>false,
+//            'attr' => array('class' => 'form-control')
+//        ));
+        $builder->add('name', 'employees_custom_selector', array(
+            'label'=>$this->params['label'].' Title:',
+            'attr' => array('class' => 'ajax-combobox-'.$this->params['formname'], 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => $this->params['formname']
         ));
 
         $builder->add('startDate', 'date', array(
@@ -102,10 +108,16 @@ class BaseTitleType extends AbstractType
             'classtype' => 'service'
         ));
 
-        $builder->add( 'effort', 'text', array(
-            'label'=>'Percent Effort:',
-            'required'=>false,
-            'attr' => array('class' => 'form-control', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false")
+//        $builder->add( 'effort', 'text', array(
+//            'label'=>'Percent Effort:',
+//            'required'=>false,
+//            'attr' => array('class' => 'form-control', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false")
+//        ));
+        $builder->add('effort', 'employees_custom_selector', array(
+            'label' => 'Percent Effort:',
+            'attr' => array('class' => 'ajax-combobox-effort', 'type' => 'hidden', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),
+            'required' => false,
+            'classtype' => 'effort'
         ));
 
 

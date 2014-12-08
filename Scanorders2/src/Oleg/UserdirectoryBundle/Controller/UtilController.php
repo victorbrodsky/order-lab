@@ -18,7 +18,73 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
  * @Route("/util")
  */
 class UtilController extends Controller {
-      
+
+
+    /**
+     * @Route("/common/generic/{name}", name="employees_get_generic_select2")
+     * @Method("GET")
+     */
+    public function getGenericAction( $name ) {
+
+        //echo "name=".$name."<br>";
+
+        switch( $name ) {
+            case "room":
+                $className = "RoomList";
+                break;
+            case "suit":
+                $className = "SuitList";
+                break;
+            case "floor":
+                $className = "FloorList";
+                break;
+            case "floor":
+                $className = "FloorList";
+            case "mailbox":
+                $className = "MailboxList";
+                break;
+            case "effort":
+                $className = "EffortList";
+                break;
+            case "administrativetitletype":
+                $className = "AdminTitleList";
+                break;
+            case "appointmenttitletype":
+                $className = "AppTitleList";
+                break;
+            default:
+                $className = null;
+        }
+
+        //echo "className=".$className."<br>";
+
+        if( $className ) {
+
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:'.$className, 'list')
+                ->select("list.id as id, list.name as text")
+                ->orderBy("list.orderinlist","ASC");
+
+            $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+            $output = $query->getQuery()->getResult();
+
+        } else {
+
+            $output = array();
+
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+
 
     /**
      * @Route("/common/department", name="get-departments-by-parent")
@@ -155,80 +221,50 @@ class UtilController extends Controller {
     }
 
 
+
+
     /**
-     * @Route("/common/identifierkeytype", name="employees_get_identifierkeytype")
+     * @Route("/common/building", name="employees_get_building")
      * @Method("GET")
      */
-    public function getIdentifierKeytypeAction() {
+    public function getBuildingsAction() {
 
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:IdentifierTypeList', 'list')
-            ->select("list.id as id, list.name as text")
-            ->orderBy("list.orderinlist","ASC");
-
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-
-        $output = $query->getQuery()->getResult();
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
-    /**
-     * @Route("/common/fellowshiptype", name="employees_get_fellowshiptype")
-     * @Method("GET")
-     */
-    public function getFellowshipTypeAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:FellowshipTypeList', 'list')
-            ->select("list.id as id, list.name as text")
-            ->orderBy("list.orderinlist","ASC");
-
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-
-        $output = $query->getQuery()->getResult();
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
-    /**
-     * @Route("/common/researchlabtitle", name="employees_get_researchlabtitle")
-     * @Method("GET")
-     */
-    public function getResearchLabTitleAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:ResearchLabTitleList', 'list')
-            ->select("list.id as id, list.name as text")
+            ->from('OlegUserdirectoryBundle:BuildingList', 'list')
+            ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
         //$user = $this->get('security.context')->getToken()->getUser();
 
         $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
-        $output = $query->getQuery()->getResult();
+        $buildings = $query->getQuery()->getResult();
+
+        $output = array();
+        foreach($buildings as $building) {
+            $geoloc = $building->getGeoLocation();
+            $element = array(
+                'id'        => $building->getId(),
+                'text'      => $building."",
+                'street1'   => $geoloc->getStreet1(),
+                'street2'   => $geoloc->getStreet2(),
+                'city'   => $geoloc->getCity(),
+                'county'   => $geoloc->getCounty(),
+                'country'   => ( $geoloc->getCountry() ? $geoloc->getCountry()->getId() : null ),
+                'state'   => ( $geoloc->getState() ? $geoloc->getState()->getId() : null ),
+                'zip'   => $geoloc->getZip(),
+            );
+            $output[] = $element;
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));
         return $response;
     }
+
 
     /**
      * @Route("/common/location", name="employees_get_location")
@@ -276,48 +312,6 @@ class UtilController extends Controller {
 
         foreach( $locations as $location ) {
             $element = array('id'=>$location->getId(), 'text'=>$location->getNameFull());
-            $output[] = $element;
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
-    /**
-     * @Route("/common/building", name="employees_get_building")
-     * @Method("GET")
-     */
-    public function getBuildingsAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:BuildingList', 'list')
-            ->select("list")
-            ->orderBy("list.orderinlist","ASC");
-
-        //$user = $this->get('security.context')->getToken()->getUser();
-
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-
-        $buildings = $query->getQuery()->getResult();
-
-        $output = array();
-        foreach($buildings as $building) {
-            $geoloc = $building->getGeoLocation();
-            $element = array(
-                'id'        => $building->getId(),
-                'text'      => $building."",
-                'street1'   => $geoloc->getStreet1(),
-                'street2'   => $geoloc->getStreet2(),
-                'city'   => $geoloc->getCity(),
-                'county'   => $geoloc->getCounty(),
-                'country'   => ( $geoloc->getCountry() ? $geoloc->getCountry()->getId() : null ),
-                'state'   => ( $geoloc->getState() ? $geoloc->getState()->getId() : null ),
-                'zip'   => $geoloc->getZip(),
-            );
             $output[] = $element;
         }
 

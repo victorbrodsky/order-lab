@@ -56,8 +56,9 @@ class BaseLocation extends ListAbstract
     protected $email;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="RoomList")
+     * @ORM\JoinColumn(name="room", referencedColumnName="id", nullable=true)
+     **/
     protected $room;
 
     /**
@@ -66,18 +67,21 @@ class BaseLocation extends ListAbstract
     protected $geoLocation;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="FloorList")
+     * @ORM\JoinColumn(name="floor", referencedColumnName="id", nullable=true)
+     **/
     protected $floor;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="SuitList")
+     * @ORM\JoinColumn(name="suit", referencedColumnName="id", nullable=true)
+     **/
     protected $suit;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="MailboxList")
+     * @ORM\JoinColumn(name="mailbox", referencedColumnName="id", nullable=true)
+     **/
     protected $mailbox;
 
     /**

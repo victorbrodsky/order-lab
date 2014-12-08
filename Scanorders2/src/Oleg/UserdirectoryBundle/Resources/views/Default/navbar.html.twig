@@ -5,7 +5,8 @@
 
         {% if pathlink_loc is defined and pathlink_loc %}
             <li><a href="{{ path(pathlink_loc,{'filter': 'Common Locations'}) }}">Common Locations</a></li>
-            <li><a href="{{ path(pathlink_loc,{'filter': 'Pathology Common Location'}) }}">Pathology Common Location</a></li>
+            {#<li><a href="{{ path(pathlink_loc,{'filter': 'Pathology Common Locations'}) }}">Pathology Common Locations</a></li>#}
+            <li><a href="{{ path(pathlink_loc,{'filter': 'WCMC & NYP Pathology Common Locations'}) }}">WCMC & NYP Pathology Common Locations</a></li>
             <li><a href="{{ path(pathlink_loc,{'filter': 'WCMC Pathology Common Locations'}) }}">WCMC Pathology Common Locations</a></li>
             <li><a href="{{ path(pathlink_loc,{'filter': 'NYP Pathology Common Locations'}) }}">NYP Pathology Common Locations</a></li>
         {% endif %}
