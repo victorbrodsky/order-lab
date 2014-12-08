@@ -44,6 +44,13 @@ class ListController extends Controller
      * @Route("/location-privacy-types/", name="locationprivacy-list")
      * @Route("/role-attributes/", name="roleattributes-list")
      * @Route("/buidlings/", name="buildings-list")
+     * @Route("/rooms/", name="rooms-list")
+     * @Route("/suites/", name="suites-list")
+     * @Route("/floors/", name="floors-list")
+     * @Route("/mailboxes/", name="mailboxes-list")
+     * @Route("/efforts/", name="efforts-list")
+     * @Route("/admintitles/", name="admintitles-list")
+     * @Route("/apptitles/", name="apptitles-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -159,6 +166,13 @@ class ListController extends Controller
      * @Route("/location-privacy-types/", name="locationprivacy_create")
      * @Route("/role-attributes/", name="roleattributes_create")
      * @Route("/buidlings/", name="buildings_create")
+     * @Route("/rooms/", name="rooms_create")
+     * @Route("/suites/", name="suites_create")
+     * @Route("/floors/", name="floors_create")
+     * @Route("/mailboxes/", name="mailboxes_create")
+     * @Route("/efforts/", name="efforts_create")
+     * @Route("/admintitles/", name="admintitles_create")
+     * @Route("/apptitles/", name="apptitles_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -264,6 +278,13 @@ class ListController extends Controller
      * @Route("/location-privacy-types/new", name="locationprivacy_new")
      * @Route("/role-attributes/new", name="roleattributes_new")
      * @Route("/buidlings/new", name="buildings_new")
+     * @Route("/rooms/new", name="rooms_new")
+     * @Route("/suites/new", name="suites_new")
+     * @Route("/floors/new", name="floors_new")
+     * @Route("/mailboxes/new", name="mailboxes_new")
+     * @Route("/efforts/new", name="efforts_new")
+     * @Route("/admintitles/new", name="admintitles_new")
+     * @Route("/apptitles/new", name="apptitles_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -340,6 +361,13 @@ class ListController extends Controller
      * @Route("/location-privacy-types/{id}", name="locationprivacy_show")
      * @Route("/role-attributes/{id}", name="roleattributes_show")
      * @Route("/buidlings/{id}", name="buildings_show")
+     * @Route("/rooms/{id}", name="rooms_show")
+     * @Route("/suites/{id}", name="suites_show")
+     * @Route("/floors/{id}", name="floors_show")
+     * @Route("/mailboxes/{id}", name="mailboxes_show")
+     * @Route("/efforts/{id}", name="efforts_show")
+     * @Route("/admintitles/{id}", name="admintitles_show")
+     * @Route("/apptitles/{id}", name="apptitles_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -406,6 +434,13 @@ class ListController extends Controller
      * @Route("/location-privacy-types/{id}/edit", name="locationprivacy_edit")
      * @Route("/role-attributes/{id}/edit", name="roleattributes_edit")
      * @Route("/buidlings/{id}/edit", name="buildings_edit")
+     * @Route("/rooms/{id}/edit", name="rooms_edit")
+     * @Route("/suites/{id}/edit", name="suites_edit")
+     * @Route("/floors/{id}/edit", name="floors_edit")
+     * @Route("/mailboxes/{id}/edit", name="mailboxes_edit")
+     * @Route("/efforts/{id}/edit", name="efforts_edit")
+     * @Route("/admintitles/{id}/edit", name="admintitles_edit")
+     * @Route("/apptitles/{id}/edit", name="apptitles_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -504,6 +539,13 @@ class ListController extends Controller
      * @Route("/location-privacy-types/{id}", name="locationprivacy_update")
      * @Route("/role-attributes/{id}", name="roleattributes_update")
      * @Route("/buidlings/{id}", name="buildings_update")
+     * @Route("/rooms/{id}", name="rooms_update")
+     * @Route("/suites/{id}", name="suites_update")
+     * @Route("/floors/{id}", name="floors_update")
+     * @Route("/mailboxes/{id}", name="mailboxes_update")
+     * @Route("/efforts/{id}", name="efforts_update")
+     * @Route("/admintitles/{id}", name="admintitles_update")
+     * @Route("/apptitles/{id}", name="apptitles_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -734,6 +776,34 @@ class ListController extends Controller
                 $className = "BuildingList";
                 $displayName = "Buildings";
                 break;
+            case "rooms":
+                $className = "RoomList";
+                $displayName = "Rooms";
+                break;
+            case "suites":
+                $className = "SuitList";
+                $displayName = "Suites";
+                break;
+            case "floors":
+                $className = "FloorList";
+                $displayName = "Floors";
+                break;
+            case "mailboxes":
+                $className = "MailboxList";
+                $displayName = "Mailboxes";
+                break;
+            case "efforts":
+                $className = "EffortList";
+                $displayName = "Percent Efforts";
+                break;
+            case "admintitles":
+                $className = "AdminTitleList";
+                $displayName = "Administrative Titles";
+                break;
+            case "apptitles":
+                $className = "AppTitleList";
+                $displayName = "Academic Appointment Titles";
+                break;
             default:
                 $className = null;
                 $displayName = null;
@@ -783,6 +853,13 @@ class ListController extends Controller
      * @Route("/location-privacy-types/{id}", name="locationprivacy_delete")
      * @Route("/role-attributes/{id}", name="roleattributes_delete")
      * @Route("/buidlings/{id}", name="buildings_delete")
+     * @Route("/rooms/{id}", name="rooms_delete")
+     * @Route("/suites/{id}", name="suites_delete")
+     * @Route("/floors/{id}", name="floors_delete")
+     * @Route("/mailboxes/{id}", name="mailboxes_delete")
+     * @Route("/efforts/{id}", name="efforts_delete")
+     * @Route("/admintitles/{id}", name="admintitles_delete")
+     * @Route("/apptitles/{id}", name="apptitles_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

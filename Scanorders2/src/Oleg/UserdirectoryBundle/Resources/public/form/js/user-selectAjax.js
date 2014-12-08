@@ -86,7 +86,7 @@ function getComboboxGeneric(holder,name,globalDataArray,urlprefix) {
             return;
     }
 
-    if( typeof urlprefix !== 'undefined' ) {
+    if( typeof urlprefix === 'undefined' ) {
         urlprefix = "generic/";
     }
 
