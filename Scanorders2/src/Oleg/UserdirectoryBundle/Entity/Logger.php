@@ -34,7 +34,7 @@ class Logger
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     private $user;
 
@@ -225,6 +225,7 @@ class Logger
 
     public function addRole($role) {
         $this->roles[] = $role;
+        return $this;
     }
 
     /**

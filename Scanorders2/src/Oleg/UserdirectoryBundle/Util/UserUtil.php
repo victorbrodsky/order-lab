@@ -201,7 +201,10 @@ class UserUtil {
         return $count;
     }
 
+    //TODO: check if this function causes login delay.
     public function setLoginAttempt( $request, $security_content, $em, $options ) {
+
+        //return;
 
         $user = null;
         $username = null;
@@ -217,18 +220,26 @@ class UserUtil {
         $token = $security_content->getToken();
 
         if( $token ) {
+
             $user = $security_content->getToken()->getUser();
             $username = $token->getUsername();
-            print_r($user);
+
             if( $user && is_object($user) ) {
                 $roles = $user->getRoles();
             } else {
                 $user = null;
             }
+
             $logger->setUser($user);
+
         } else {
-            $logger->setUser(null);
+
             $username = $request->get('_username');
+
+            $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+
+            $logger->setUser($userDb);
+
         }
 
         $logger->setRoles($roles);
@@ -244,11 +255,8 @@ class UserUtil {
         $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
         $logger->setEventType($eventtype);
 
-        //exit();
-
         $em->persist($logger);
         $em->flush($logger);
-
     }
 
     public function getMaxIdleTime($em) {
