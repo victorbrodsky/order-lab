@@ -125,20 +125,20 @@ class ComplexListController extends Controller
 
         $mapper = $this->classListMapper($routeName);
 
-        //get cicle
+        //get cycle
         $pieces = explode("_pathaction_", $routeName);
-        $cicle = $pieces[1];
+        $cycle = $pieces[1];
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
 
-        $form = $this->createCreateForm($entity,$cicle,$mapper);
+        $form = $this->createCreateForm($entity,$cycle,$mapper);
 
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => $cicle,
+            'cycle' => $cycle,
             'id' => $entity->getId(),
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
@@ -166,18 +166,18 @@ class ComplexListController extends Controller
 
         $entityClass = $mapper['fullClassName'];
 
-        $cicle = 'new_standalone';
+        $cycle = 'new_standalone';
 
         $user = $this->get('security.context')->getToken()->getUser();
 
         $entity = new $entityClass($user);
 
-        $form = $this->createCreateForm($entity,$cicle,$mapper);
+        $form = $this->createCreateForm($entity,$cycle,$mapper);
 
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => $cicle,
+            'cycle' => $cycle,
             'id' => '',
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
@@ -199,7 +199,7 @@ class ComplexListController extends Controller
             return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
-        $cicle = 'new_post_standalone';
+        $cycle = 'new_post_standalone';
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -211,7 +211,7 @@ class ComplexListController extends Controller
 
         $entity = new $entityClass($user);
 
-        $form = $this->createCreateForm($entity,$cicle,$mapper);
+        $form = $this->createCreateForm($entity,$cycle,$mapper);
 
         $form->handleRequest($request);
 
@@ -260,7 +260,7 @@ class ComplexListController extends Controller
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => $cicle,
+            'cycle' => $cycle,
             'id' => '',
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
@@ -285,7 +285,7 @@ class ComplexListController extends Controller
         $routeName = $request->get('_route');
         $mapper = $this->classListMapper($routeName);
 
-        $cicle = 'edit_put_standalone';
+        $cycle = 'edit_put_standalone';
 
         $em = $this->getDoctrine()->getManager();
 
@@ -294,7 +294,7 @@ class ComplexListController extends Controller
         //update author can be set to any user, not a current user
         $entity->setUpdateAuthor(null);
 
-        $form = $this->createCreateForm($entity,$cicle,$mapper);
+        $form = $this->createCreateForm($entity,$cycle,$mapper);
 
         $form->handleRequest($request);
 
@@ -335,7 +335,7 @@ class ComplexListController extends Controller
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => $cicle,
+            'cycle' => $cycle,
             'id' => '',
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
@@ -345,19 +345,19 @@ class ComplexListController extends Controller
 
 
 
-    public function createCreateForm($entity,$cicle,$mapper) {
+    public function createCreateForm($entity,$cycle,$mapper) {
 
         $em = $this->getDoctrine()->getManager();
 
         $disabled = false;
         $method = null;
 
-        //echo "cicle=".$cicle."<br>";
+        //echo "cycle=".$cycle."<br>";
 
-        $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.$cicle;
+        $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.$cycle;
 
         //create new page
-        if( $cicle == "new_standalone" ) {
+        if( $cycle == "new_standalone" ) {
             //on a new page show a form with method=POST and action=create_post_standalone
             $method = "POST";
             $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.'new_post_standalone';
@@ -365,20 +365,20 @@ class ComplexListController extends Controller
         }
 
         //create: submit action
-        if( $cicle == "new_post_standalone" ) {
+        if( $cycle == "new_post_standalone" ) {
             $method = "POST";
             $action = $this->generateUrl($path);
         }
 
         //show existing page
-        if( $cicle == "show_standalone" ) {
+        if( $cycle == "show_standalone" ) {
             $method = "GET";
             $action = $this->generateUrl($path, array('id' => $entity->getId()));
             $disabled = true;
         }
 
         //edit existing page
-        if( $cicle == "edit_standalone" ) {
+        if( $cycle == "edit_standalone" ) {
             //on a edit page show a form with method=PUT and action=edit_put_standalone
             $method = "PUT";
             $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.'edit_put_standalone';
@@ -386,7 +386,7 @@ class ComplexListController extends Controller
         }
 
         //edit: submit action
-        if( $cicle == "edit_put_standalone" ) {
+        if( $cycle == "edit_put_standalone" ) {
             $method = "PUT";
             $action = $this->generateUrl($path, array('id' => $entity->getId()));
         }
@@ -395,7 +395,7 @@ class ComplexListController extends Controller
 
         $isAdmin = $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR');
 
-        $params = array('read_only'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cicle'=>$cicle,'em'=>$em,'user'=>$user);
+        $params = array('read_only'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cycle'=>$cycle,'em'=>$em,'user'=>$user);
 
         $form = $this->createForm(new $mapper['fullFormType']($params,$entity), $entity, array(
             'disabled' => $disabled,
@@ -414,7 +414,7 @@ class ComplexListController extends Controller
         //$route = employees_locations_pathaction_list
         $pieces = explode("_pathaction_", $route);
         $name = str_replace("employees_","",$pieces[0]);
-        $cicle = $pieces[1];
+        $cycle = $pieces[1];
 
         switch( $name ) {
 

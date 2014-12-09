@@ -97,11 +97,11 @@ class LocationType extends AbstractType
             'classtype' => 'floor'
         ));
 
-        $builder->add('suit', 'employees_custom_selector', array(
+        $builder->add('suite', 'employees_custom_selector', array(
             'label' => 'Suite:',
-            'attr' => array('class' => 'ajax-combobox-suit', 'type' => 'hidden'),
+            'attr' => array('class' => 'ajax-combobox-suite', 'type' => 'hidden'),
             'required' => false,
-            'classtype' => 'suit'
+            'classtype' => 'suite'
         ));
 
         $builder->add('mailbox', 'employees_custom_selector', array(
@@ -145,7 +145,7 @@ class LocationType extends AbstractType
         ));
 
         //assistant
-        if( $this->params['cicle'] != "new_standalone" ) {
+        if( $this->params['cycle'] != "new_standalone" ) {
             $builder->add( 'assistant', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label'=> "Assistant(s):",
@@ -159,7 +159,7 @@ class LocationType extends AbstractType
             ));
         }
 
-        if( $this->params['cicle'] != "new_standalone" ) {
+        if( $this->params['cycle'] != "new_standalone" ) {
             $baseUserAttr = new Location();
             $builder->add('status', 'choice', array(
                 'disabled' => ($this->params['read_only'] ? true : false),
@@ -173,7 +173,7 @@ class LocationType extends AbstractType
             ));
         }
 
-        if( $this->params['cicle'] != "show_standalone" ) {
+        if( $this->params['cycle'] != "show_standalone" ) {
             $builder->add('locationType','entity',array(
                 'class' => 'OlegUserdirectoryBundle:LocationTypeList',
                 'label' => "Location Type:",
@@ -226,7 +226,7 @@ class LocationType extends AbstractType
         );
 
         //get default privacy
-        if( $this->params['cicle'] == "new_standalone" ) {
+        if( $this->params['cycle'] == "new_standalone" ) {
             $defaultPrivacy = $this->params['em']->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
             $arrayOptions['data'] = $defaultPrivacy;
         }
@@ -235,7 +235,7 @@ class LocationType extends AbstractType
 
 
         //add user (Inhabitant) for all stand alone location management by LocationController
-        if( strpos($this->params['cicle'],'_standalone') !== false ) {
+        if( strpos($this->params['cycle'],'_standalone') !== false ) {
             //user
             $builder->add( 'user', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
@@ -250,13 +250,13 @@ class LocationType extends AbstractType
             ));
         }
 
-        //Consider stanAlone for all cicles with _standalone, except new_standalone. Cicle new_standalone is exception because we don't show list attributes in creation page
-        if( strpos($this->params['cicle'],'_standalone') !== false && strpos($this->params['cicle'],'new') === false ) {
+        //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page
+        if( strpos($this->params['cycle'],'_standalone') !== false && strpos($this->params['cycle'],'new') === false ) {
             //list attributes
             $params = array();
             $mapper = array();
             $params['user'] = $this->params['user'];
-            $params['cicle'] = $this->params['cicle'];
+            $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "Location";
             $mapper['bundleName'] = "OlegUserdirectoryBundle";

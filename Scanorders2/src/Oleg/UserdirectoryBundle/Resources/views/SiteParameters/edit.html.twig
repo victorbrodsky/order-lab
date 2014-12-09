@@ -45,7 +45,7 @@
 
     {{ form_start(edit_form) }}
 
-    {% if cicle == 'show' %}
+    {% if cycle == 'show' %}
         <hr>
     {% endif %}
 
@@ -57,7 +57,7 @@
             {{ formmacros.field(edit_form.environment) }}
         {% endif %}
 
-        {% if cicle == 'show' %}
+        {% if cycle == 'show' %}
             <hr>
             <h3 class="text-info">Email</h3>
         {% endif %}
@@ -70,7 +70,7 @@
             {{ formmacros.field(edit_form.smtpServerAddress) }}
         {% endif %}
 
-    {% if cicle == 'show' %}
+    {% if cycle == 'show' %}
         <hr>
         <h3 class="text-info">ScanOrder DB</h3>
         Note: Parameters are stored in app/config/parameters.yml
@@ -98,7 +98,7 @@
         {% endif %}
 
 
-    {% if cicle == 'show' %}
+    {% if cycle == 'show' %}
         <hr>
 
         <h3 class="text-info">AD/LDAP</h3>
@@ -131,7 +131,7 @@
         {% endif %}
 
 
-    {% if cicle == 'show' %}
+    {% if cycle == 'show' %}
         <hr>
         <h3 class="text-info">Footer</h3>
     {% endif %}
@@ -153,7 +153,7 @@
     {% endif %}
 
 
-    {% if cicle == 'show' %}
+    {% if cycle == 'show' %}
         <hr>
         <h3 class="text-info">Maintanence Mode</h3>
     {% endif %}
@@ -184,13 +184,13 @@
 
 
 
-    {% if cicle == 'show' %}
+    {% if cycle == 'show' %}
         <hr>
     {% endif %}
 
         <br>
 
-        {% if cicle == "show" %}
+        {% if cycle == "show" %}
 
             <p>
                 <a class="btn btn-success" href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': param }) }}">Edit</a>

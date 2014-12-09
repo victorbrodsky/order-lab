@@ -41,6 +41,22 @@ class AppointmentTitle extends BaseTitle
     private $fellowshipType;
 
     /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * @param mixed $user
      */
     public function setUser($user)

@@ -65,14 +65,14 @@ class SlideReturnRequestController extends Controller
             'user'=>$user,
             'type'=>'table',
             'institutions'=>$permittedInst,
-            'cicle' => 'new',
+            'cycle' => 'new',
             'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($slideReturnRequest)
         );
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         return array(
             'form' => $form->createView(),
-            'cicle' => 'new'
+            'cycle' => 'new'
         );
     }
 
@@ -215,7 +215,7 @@ class SlideReturnRequestController extends Controller
         $params = array(
             'user'=>$user,
             'institutions'=>$permittedInst,
-            'cicle' => 'new',
+            'cycle' => 'new',
             'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($slideReturnRequest)
         );
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
@@ -223,7 +223,7 @@ class SlideReturnRequestController extends Controller
         return array(
             'orderinfo' => $orderinfo,
             'form' => $form->createView(),
-            'cicle' => 'new'
+            'cycle' => 'new'
         );
     }
 

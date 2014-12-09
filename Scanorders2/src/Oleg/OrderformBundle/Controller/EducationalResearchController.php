@@ -52,7 +52,7 @@ class EducationalResearchController extends Controller {
         return $this->render('OlegOrderformBundle:'.$type.':edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            //'cicle' => 'show'
+            //'cycle' => 'show'
         ));
     }
 
@@ -155,17 +155,17 @@ class EducationalResearchController extends Controller {
         return $this->render('OlegOrderformBundle:'.$type.':edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            //'cicle' => 'show'
+            //'cycle' => 'show'
         ));
 
     }
 
-    private function createEditForm($entity, $cicle = null) {
+    private function createEditForm($entity, $cycle = null) {
 
         $params = array('type'=>'SingleObject');
         $disable = false;
 
-        if( $cicle == 'show' ) {
+        if( $cycle == 'show' ) {
             $disable = true;
         }
 
@@ -187,7 +187,7 @@ class EducationalResearchController extends Controller {
             'disabled' => $disable
         ));
 
-        if( $cicle != 'show' ) {
+        if( $cycle != 'show' ) {
             $form->add('submit', 'submit', array('label' => 'Save '.$btnMsg.' Information', 'attr' => array('class' => 'btn btn-primary')));
         }
 

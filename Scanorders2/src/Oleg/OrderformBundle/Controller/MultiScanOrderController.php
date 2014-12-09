@@ -99,7 +99,7 @@ class MultiScanOrderController extends Controller {
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$type, 'cicle'=>'create', 'user'=>$user, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices);
+        $params = array('type'=>$type, 'cycle'=>'create', 'user'=>$user, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices);
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
 
@@ -169,19 +169,19 @@ class MultiScanOrderController extends Controller {
             //exit("controller exit");
 
             if( isset($_POST['btnSubmit']) ) {
-                $cicle = 'new';
+                $cycle = 'new';
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
                 $entity->setStatus($status);
             }
 
             if( isset($_POST['btnAmend']) ) {
-                $cicle = 'amend';
+                $cycle = 'amend';
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Amended');
                 $entity->setStatus($status);
             }
 
             if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
-                $cicle = 'edit';
+                $cycle = 'edit';
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');
                 $entity->setStatus($status);
             }
@@ -236,7 +236,7 @@ class MultiScanOrderController extends Controller {
                 $session = $request->getSession();
                 $submittedData = array(
                     'oid' => $entity->getOid(),
-                    'cicle' => $cicle,
+                    'cycle' => $cycle,
                     'neworder' => $new_order,
                     'conflicts' => $conflictsStr
                 );
@@ -271,7 +271,7 @@ class MultiScanOrderController extends Controller {
         return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
             'oid' => $submittedData['oid'],
             'conflicts' => $submittedData['conflicts'],
-            'cicle' => $submittedData['cicle'],
+            'cycle' => $submittedData['cycle'],
             'neworder' => $submittedData['neworder']
         ));
     }
@@ -421,7 +421,7 @@ class MultiScanOrderController extends Controller {
 
         $params = array(
             'type'=>$type,
-            'cicle'=>'new',
+            'cycle'=>'new',
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
             'user'=>$user,
@@ -668,7 +668,7 @@ class MultiScanOrderController extends Controller {
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$single_multy, 'cicle'=>$type, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
+        $params = array('type'=>$single_multy, 'cycle'=>$type, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
 
         //echo "type=".$entity->getType();
@@ -698,7 +698,7 @@ class MultiScanOrderController extends Controller {
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'type' => $type,    //form cicle: new, show, amend ...
+            'type' => $type,    //form cycle: new, show, amend ...
             'formtype' => $entity->getType(),
             'history' => $history,
             'amendable' => $securityUtil->isUserAllowOrderActions($entity, $user, array('amend')),

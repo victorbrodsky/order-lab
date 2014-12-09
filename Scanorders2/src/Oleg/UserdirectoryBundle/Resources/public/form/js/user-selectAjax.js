@@ -31,7 +31,7 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'location',_locations,'');
 
     getComboboxGeneric(newForm,'room',_rooms);
-    getComboboxGeneric(newForm,'suit',_suites);
+    getComboboxGeneric(newForm,'suite',_suites);
     getComboboxGeneric(newForm,'floor',_floors);
     getComboboxGeneric(newForm,'mailbox',_mailboxes);
     getComboboxGeneric(newForm,'effort',_efforts);
@@ -130,7 +130,7 @@ function getComboboxInstitution(holder) {
 
     var url = getCommonBaseUrl("util/common/"+"institution","employees"); //always use "employees" to get institution
 
-    //console.log('cicle='+cicle);
+    //console.log('cycle='+cycle);
 
     if( _institution.length == 0 ) {
         $.ajax({

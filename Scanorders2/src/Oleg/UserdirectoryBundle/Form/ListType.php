@@ -84,9 +84,9 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        if( array_key_exists('cicle', $this->params) && $this->params['cicle'] != 'new' ) {
+        if( array_key_exists('cycle', $this->params) && $this->params['cycle'] != 'new' ) {
 
-            //echo "cicle=".$this->params['cicle']."<br>";
+            //echo "cycle=".$this->params['cycle']."<br>";
 
             $builder->add('updatedby',null,array(
                 'label'=>'Updated by:',

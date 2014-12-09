@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -9,6 +10,13 @@ use Doctrine\ORM\EntityRepository;
 
 class IdentifierType extends AbstractType
 {
+
+    protected $params;
+
+    public function __construct( $params=null )
+    {
+        $this->params = $params;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -26,6 +34,23 @@ class IdentifierType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('link', null, array(
+            'label' => 'Link:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        //status
+        $baseUserAttr = new Identifier();
+        $builder->add('status', 'choice', array(
+            'disabled' => ($this->params['admin'] ? false : true),
+            'choices'   => array(
+                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
+                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
+            ),
+            'label' => "Status:",
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width'),
+        ));
 
     }
 

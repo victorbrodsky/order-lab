@@ -26,7 +26,7 @@ class PatientType extends AbstractType
         //echo "patient: type=".$this->params['type']."<br>";
 
         $flag = false;
-        if( $this->params['type'] != 'One-Slide Scan Order' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
+        if( $this->params['type'] != 'One-Slide Scan Order' && ($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') ) {
             //$flag = true;
         }
 

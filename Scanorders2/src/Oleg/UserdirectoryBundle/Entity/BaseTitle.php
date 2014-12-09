@@ -12,11 +12,6 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class BaseTitle extends BaseUserAttributes
 {
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $name;
-
     /**
      * Primary, Secondary
      *
@@ -35,8 +30,7 @@ class BaseTitle extends BaseUserAttributes
     protected $endDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="EffortList")
-     * @ORM\JoinColumn(name="suit", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="EffortList",cascade={"persist"})
      **/
     protected $effort;
 
@@ -119,22 +113,6 @@ class BaseTitle extends BaseUserAttributes
     public function getEndDate()
     {
         return $this->endDate;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**

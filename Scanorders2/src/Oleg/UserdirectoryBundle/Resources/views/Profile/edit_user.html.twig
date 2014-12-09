@@ -5,7 +5,7 @@
 
 {###################      Begin macros      ####################}
 
-{% macro baseTitle( field, cicle, classname, prototype, sitename ) %}
+{% macro baseTitle( field, cycle, classname, prototype, sitename ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% if prototype == "prototype" %}
@@ -29,7 +29,7 @@
     {% endif %}
 
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }} {{ endDateClass }}" {{ displayNone }}>
-        {% if cicle != 'show_user' %}
+        {% if cycle != 'show_user' %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
@@ -37,17 +37,17 @@
 
         {{ formmacros.field(formfield.id) }}
         {#{{ formmacros.field(formfield.status) }}#}
-        {{ usermacros.statusVerifiedField(formfield,cicle) }}
+        {{ usermacros.statusVerifiedField(formfield,cycle) }}
 
         {% if formfield.orderinlist is defined %}
             {{ formmacros.field(formfield.orderinlist) }}
         {% endif %}
-        {{ formmacros.field_notempty(formfield.priority,cicle) }}
+        {{ formmacros.field_notempty(formfield.priority,cycle) }}
         {{ formmacros.field(formfield.name) }}
 
         {#boss field#}
         {% if formfield.boss is defined %}
-            {% if cicle != 'show_user' %}
+            {% if cycle != 'show_user' %}
                 {{ formmacros.field(formfield.boss) }}
             {% else %}
                 {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL and formfield.vars.value.boss|length > 0 %}
@@ -55,7 +55,7 @@
                         <strong>Reports to:</strong>
                     </p>
                     {% for boss in formfield.vars.value.boss %}
-                        {{ usermacros.personInfo(boss,cicle,sitename) }}
+                        {{ usermacros.personInfo(boss,cycle,sitename) }}
                     {% endfor %}
                 {% endif %}
                 {% do formfield.boss.setRendered %}
@@ -87,7 +87,7 @@
         {#pgy#}
         {% if formfield.pgystart is defined and formfield.pgylevel is defined %}
             {#On the user profile page, always hide the entire PGY well if the Position Type is not equal to either Resident or Fellow#}
-            {% if formfield.position is defined and formfield.vars.value and (formfield.vars.value.position == "Resident" or formfield.vars.value.position == "Fellow") or cicle == 'create_user' or cicle == 'edit_user' %}
+            {% if formfield.position is defined and formfield.vars.value and (formfield.vars.value.position == "Resident" or formfield.vars.value.position == "Fellow") or cycle == 'create_user' or cycle == 'edit_user' %}
                 <p>
                 <div class="well appointmenttitle-pgy-field" style="display:none">
                     {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
@@ -97,7 +97,7 @@
                         <div class="col-xs-6" align="right">
                             <strong></strong>
                         </div>
-                        {% if cicle != 'show_user' %}
+                        {% if cycle != 'show_user' %}
                             <div class="col-xs-6" align="left">
                                 <button type="button" class="update-pgy-btn" onclick="updatePgy(this)">Update the academic year and PGY level to current</button>
                             </div>
@@ -116,10 +116,10 @@
 
 
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cicle,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date') }}
 
         {#On the user profile page, always hide "Percent Effort:" in both Academic and Administrative titles if they are empty#}
-        {% if cicle != 'show_user' or (formfield.vars.value and formfield.vars.value.effort) %}
+        {% if cycle != 'show_user' or (formfield.vars.value and formfield.vars.value.effort) %}
             {{ formmacros.field(formfield.effort) }}
         {% else %}
             {% do formfield.effort.setRendered %}
@@ -132,16 +132,16 @@
         {{ formmacros.field(formfield.service) }}
 
         {% if formfield.supervisorInstitution is defined and formfield.vars.value %}
-            {{ usermacros.checkbox_notempty(formfield.supervisorInstitution,formfield.vars.value.supervisorInstitution,cicle) }}
+            {{ usermacros.checkbox_notempty(formfield.supervisorInstitution,formfield.vars.value.supervisorInstitution,cycle) }}
         {% endif %}
         {% if formfield.supervisorDepartment is defined and formfield.vars.value %}
-            {{ usermacros.checkbox_notempty(formfield.supervisorDepartment,formfield.vars.value.supervisorDepartment,cicle) }}
+            {{ usermacros.checkbox_notempty(formfield.supervisorDepartment,formfield.vars.value.supervisorDepartment,cycle) }}
         {% endif %}
         {% if formfield.supervisorDivision is defined and formfield.vars.value %}
-            {{ usermacros.checkbox_notempty(formfield.supervisorDivision,formfield.vars.value.supervisorDivision,cicle) }}
+            {{ usermacros.checkbox_notempty(formfield.supervisorDivision,formfield.vars.value.supervisorDivision,cycle) }}
         {% endif %}
         {% if formfield.supervisorService is defined and formfield.vars.value %}
-            {{ usermacros.checkbox_notempty(formfield.supervisorService,formfield.vars.value.supervisorService,cicle) }}
+            {{ usermacros.checkbox_notempty(formfield.supervisorService,formfield.vars.value.supervisorService,cycle) }}
         {% endif %}
     </div>
 {% endmacro %}
@@ -149,7 +149,7 @@
 
 
 
-{% macro stateLicenses( field, cicle, classname, prototype ) %}
+{% macro stateLicenses( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -160,13 +160,13 @@
 
     <div class="well {{ classname }}">
 
-        {% if cicle != 'show_user' %}
+        {% if cycle != 'show_user' %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
-        {{ formmacros.field_notempty(formfield.country,cicle) }}
+        {{ formmacros.field_notempty(formfield.country,cycle) }}
         {{ formmacros.field(formfield.state) }}
         {{ formmacros.field(formfield.licenseNumber) }}
         {{ formmacros.fieldDateLabel(formfield.licenseExpirationDate,'allow-future-date') }}
@@ -175,7 +175,7 @@
 {% endmacro %}
 
 
-{% macro boardCertifications( field, cicle, classname, prototype ) %}
+{% macro boardCertifications( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -186,7 +186,7 @@
 
     <div class="well {{ classname }}">
 
-        {% if cicle != 'show_user' %}
+        {% if cycle != 'show_user' %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
@@ -200,7 +200,7 @@
 {% endmacro %}
 
 
-{% macro codenyphs( field, cicle, classname, prototype ) %}
+{% macro codenyphs( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -211,20 +211,20 @@
 
     <div class="well {{ classname }}">
 
-        {% if cicle != 'show_user' %}
+        {% if cycle != 'show_user' %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
-        {{ formmacros.field_notempty(formfield.field,cicle) }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cicle,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cicle,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.field,cycle) }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cycle,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date') }}
 
     </div>
 {% endmacro %}
 
-{% macro employmentStatuses( field, cicle, classname, prototype ) %}
+{% macro employmentStatuses( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -235,19 +235,19 @@
 
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if cicle != 'show_user' and field.vars.value.id != app.security.getToken().getUser().getId() %}
+        {% if cycle != 'show_user' and field.vars.value.id != app.security.getToken().getUser().getId() %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
         {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,cicle,'allow-future-date') }}
-        {{ formmacros.field_notempty(formfield.terminationType,cicle) }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,cycle,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.terminationType,cycle) }}
 
         {#{% if formfield.terminationReason is defined or (prototype == "prototype" and field.vars.value.terminationReason ) %}#}
         {% if formfield.terminationReason is defined %}
-            {{ formmacros.field_notempty(formfield.terminationReason,cicle) }}
+            {{ formmacros.field_notempty(formfield.terminationReason,cycle) }}
         {% endif %}
 
     </div>
@@ -260,8 +260,9 @@
 
 
 
-{% macro identifier( field, cicle, classname, prototype ) %}
+{% macro identifier( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -269,21 +270,58 @@
         {% set formfield = field %}
     {% endif %}
 
-    <div class="well {{ classname }}">
+    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
+        {% set wellclass = "user-alert-warning" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
 
-        {% if cicle != 'show_user' %}
-            <div class="text-right">
+    <div class="alert {{ classname }} {{ wellclass }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right" style="padding-bottom: 10px">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
+        {{ usermacros.statusVerifiedField(formfield,cycle) }}
+
         {{ formmacros.field(formfield.keytype) }}
-        {{ formmacros.field(formfield.field) }}
+
+        {% if cycle == 'show_user' %}
+
+            {% if formfield.link is defined and formfield.vars.value and formfield.vars.value.link != '' %}
+
+                {% if "http" in formfield.vars.value.link %}
+                    {% set href = formfield.vars.value.link %}
+                {% else %}
+                    {% set href = "http://"~formfield.vars.value.link %}
+                {% endif %}
+
+                {% set hreflink = '<a href="'~href|raw~'">'~formfield.field.vars.value~'</a>' %}
+
+                {{ formmacros.simplefield( "Identifier:", hreflink, "", "disabled" ) }}
+
+            {% else %}
+
+                {{ formmacros.field(formfield.field) }}
+
+            {% endif %}
+
+        {% else %}
+            {{ formmacros.field(formfield.field) }}
+        {% endif %}
+
+        {% if formfield.link is defined and cycle != 'show_user' %}
+            {{ formmacros.field(formfield.link) }}
+        {% endif %}
 
     </div>
+
+    {% do field.setRendered %}
 {% endmacro %}
 
-{% macro researchLabs( field, cicle, classname, prototype ) %}
+{% macro researchLabs( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -295,7 +333,7 @@
 
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if cicle != 'show_user' %}
+        {% if cycle != 'show_user' %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
@@ -304,15 +342,15 @@
         {{ formmacros.field(formfield.researchLabTitle) }}
         {{ formmacros.checkbox(formfield.researchPI) }}
         {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cicle,'allow-future-date') }}
-        {{ formmacros.field_notempty(formfield.comment,cicle) }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.comment,cycle) }}
         {{ formmacros.field(formfield.location) }}
-        {{ usermacros.emailPhoneField_notempty(formfield.weblink,cicle,'link',"") }}
+        {{ usermacros.emailPhoneField_notempty(formfield.weblink,cycle,'link',"") }}
 
     </div>
 {% endmacro %}
 
-{% macro comments( field, cicle, classname, prototype ) %}
+{% macro comments( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -322,7 +360,7 @@
         {% set formfield = field %}
     {% endif %}
 
-    {% if formfield.comment.vars.value != "" or cicle != 'show_user' %}
+    {% if formfield.comment.vars.value != "" or cycle != 'show_user' %}
 
         {% if classname == 'user-privatecomments' and (formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype') %}
             {% set wellclass = "user-alert-warning" %}
@@ -332,7 +370,7 @@
 
         <div class="user-collection-holder alert {{ classname }} {{ wellclass }}" style="padding-bottom:120px;">
 
-            {% if cicle != 'show_user' %}
+            {% if cycle != 'show_user' %}
                 <div class="text-right" style="padding-bottom: 10px">
                     <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
@@ -341,8 +379,7 @@
             {{ formmacros.field(formfield.id) }}
 
             {% if formfield.status is defined %}
-                {#{{ formmacros.field(formfield.status) }}#}
-                {{ usermacros.statusVerifiedField(formfield,cicle) }}
+                {{ usermacros.statusVerifiedField(formfield,cycle) }}
             {% endif %}
 
             {{ formmacros.field(formfield.commentType) }}
@@ -352,7 +389,7 @@
             {{ formmacros.field(formfield.comment) }}
 
             {% if formfield.documents is defined or prototype == 'prototype' %}
-                {{ usermacros.fileupload( formfield, cicle, classname, prototype ) }}
+                {{ usermacros.fileupload( formfield, cycle, classname, prototype ) }}
             {% endif %}
 
         </div>
@@ -416,7 +453,7 @@
                 {% for administrativeTitle in user.administrativeTitles %}
                     {% if administrativeTitle.name %}
                         <p>
-                        <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name, 'name': administrativeTitle.name }) }}">{{ administrativeTitle.name }}</a>
+                        <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name.id, 'name': administrativeTitle.name.name }) }}">{{ administrativeTitle.name }}</a>
                         </p>
                     {% endif %}
                 {% endfor %}
@@ -425,7 +462,7 @@
                 {% for appointmentTitles in user.appointmentTitles %}
                     {% if appointmentTitles.name %}
                         <p>
-                        <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name, 'name': appointmentTitles.name }) }}">{{ appointmentTitles.name }}</a>
+                        <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name.id, 'name': appointmentTitles.name.name }) }}">{{ appointmentTitles.name }}</a>
                         </p>
                     {% endif %}
                 {% endfor %}
@@ -446,7 +483,7 @@
             <td>
                 {% for location in user.locations %}
                     {% if location.room %}
-                        <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': location.room, 'name': location.room }) }}">{{ location.room }}</a></p>
+                        <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': location.room.id, 'name': location.room.name }) }}">{{ location.room }}</a></p>
                     {% endif %}
                 {% endfor %}
             </td>
@@ -477,91 +514,6 @@
 {% endmacro %}
 
 
-{#{% macro snapshot_well( user, sitename ) %}#}
-    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-
-    {#<div class="well">#}
-
-        {#&#123;&#35;service tree&#35;&#125;#}
-        {#{% set services = user.getServices() %}#}
-        {#{% if services|length > 0 %}#}
-            {#<p>#}
-                {#<strong>Service(s)</strong>:<br>#}
-                {#{% for service in services %}#}
-                    {#{{ service.getParentTree() }}<br>#}
-                {#{% endfor %}#}
-            {#<p>#}
-        {#{% endif %}#}
-
-        {#&#123;&#35;administrative titles&#35;&#125;#}
-        {#{% set titles = user.getAdministrativeTitles() %}#}
-        {#{% if titles|length > 0 %}#}
-            {#<p>#}
-                {#<strong>Administrative Title(s)</strong>:<br>#}
-                {#{% for title in titles %}#}
-                    {#{{ title.name }}<br>#}
-                {#{% endfor %}#}
-            {#</p>#}
-        {#{% endif %}#}
-
-        {#&#123;&#35;appointment titles&#35;&#125;#}
-        {#{% set titles = user.getAppointmentTitles() %}#}
-        {#{% if titles|length > 0 %}#}
-            {#<p>#}
-                {#<strong>Academic Appointment Title(s)</strong>:<br>#}
-                {#{% for title in titles %}#}
-                    {#{{ title.name }}<br>#}
-                {#{% endfor %}#}
-            {#</p>#}
-        {#{% endif %}#}
-
-        {#&#123;&#35;phone&#35;&#125;#}
-        {#<p>#}
-            {#<strong>Administrative Title(s)</strong>:<br>#}
-            {#{{ user.preferredPhone }}#}
-        {#</p>#}
-
-        {#&#123;&#35;pager&#35;&#125;#}
-        {#{% set locations = user.locations %}#}
-        {#{% if locations|length > 0 %}#}
-            {#<p>#}
-                {#<strong>Room(s)</strong>:<br>#}
-                {#{% for location in locations %}#}
-                    {#{{ location.pager }}<br>#}
-                {#{% endfor %}#}
-            {#</p>#}
-        {#{% endif %}#}
-
-        {#&#123;&#35;room&#35;&#125;#}
-        {#{% set locations = user.locations %}#}
-        {#{% if locations|length > 0 %}#}
-            {#<p>#}
-                {#<strong>Room(s)</strong>:<br>#}
-                {#{% for location in locations %}#}
-                    {#{{ location.room }}<br>#}
-                {#{% endfor %}#}
-            {#</p>#}
-        {#{% endif %}#}
-
-        {#&#123;&#35;assistance&#35;&#125;#}
-        {#{% set locations = user.locations %}#}
-        {#{% if locations|length > 0 %}#}
-            {#<p>#}
-                {#<strong>Assistant(s)</strong>:<br>#}
-                {#{% for location in locations %}#}
-                    {#{% for assistant in location.assistant %}#}
-                        {#{{ assistant.getUserNameStr() }}<br>#}
-                    {#{% endfor %}#}
-                {#{% endfor %}#}
-            {#</p>#}
-        {#{% endif %}#}
-
-    {#</div>#}
-
-{#{% endmacro %}#}
-
-
-
 {% macro roleAttributes( roleobjects ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% for role in roleobjects %}
@@ -578,14 +530,14 @@
 {% import _self as userform %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-{% if cicle == "show_user" %}
+{% if cycle == "show_user" %}
     {% set collapsein = "" %}
 {% else %}
     {% set collapsein = "in" %}
 {% endif %}
 
 
-{% if cicle == "create_user" %}
+{% if cycle == "create_user" %}
     {% set title = "Add New Employee" %}
 {% else %}
     {% set title = "Profile: "~form.vars.value.getUserNameStr() %}
@@ -610,7 +562,7 @@
 
 
     {#user's snapshot#}
-    {% if cicle == "show_user" %}
+    {% if cycle == "show_user" %}
         {{ userform.snapshot(entity,sitename) }}
     {% endif %}
 
@@ -633,32 +585,32 @@
         {% set codeNYPHPrototype = null %}
 
         {% if form.publicComments is defined %}
-            {% set publicCommentsPrototype = userform.comments(form.publicComments,cicle,'user-publiccomments','prototype') %}
+            {% set publicCommentsPrototype = userform.comments(form.publicComments,cycle,'user-publiccomments','prototype') %}
         {% endif %}
         {% if form.privateComments is defined %}
-            {% set privateCommentsPrototype = userform.comments(form.privateComments,cicle,'user-privatecomments','prototype') %}
+            {% set privateCommentsPrototype = userform.comments(form.privateComments,cycle,'user-privatecomments','prototype') %}
         {% endif %}
         {% if form.adminComments is defined %}
-            {% set adminCommentsPrototype = userform.comments(form.adminComments,cicle,'user-admincomments','prototype') %}
+            {% set adminCommentsPrototype = userform.comments(form.adminComments,cycle,'user-admincomments','prototype') %}
         {% endif %}
         {% if form.employmentStatus is defined %}
-            {% set employmentStatusPrototype = userform.employmentStatuses(form.employmentStatus,cicle,'user-employmentStatus','prototype') %}
+            {% set employmentStatusPrototype = userform.employmentStatuses(form.employmentStatus,cycle,'user-employmentStatus','prototype') %}
         {% endif %}
         {% if form.researchLabs is defined %}
-            {% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cicle,'user-researchlabs','prototype') %}
+            {% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cycle,'user-researchlabs','prototype') %}
         {% endif %}
 
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
-            {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cicle,'user-statelicense','prototype') %}
+            {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cycle,'user-statelicense','prototype') %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.boardCertification is defined %}
-            {% set boardcertificationPrototype = userform.boardCertifications(form.credentials.boardCertification,cicle,'user-boardcertification','prototype') %}
+            {% set boardcertificationPrototype = userform.boardCertifications(form.credentials.boardCertification,cycle,'user-boardcertification','prototype') %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.identifiers is defined %}
-            {% set identifiersPrototype = userform.identifier(form.credentials.identifiers,cicle,'user-identifiers','prototype') %}
+            {% set identifiersPrototype = userform.identifier(form.credentials.identifiers,cycle,'user-identifiers','prototype') %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
-            {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype') %}
+            {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cycle,'user-codenyph','prototype') %}
         {% endif %}
 
         {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_ADMIN#}
@@ -670,9 +622,9 @@
 
 
         <div id="form-prototype-data"
-             data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype', sitename)|e }}"
-             data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype', sitename)|e }}"
-             data-prototype-user-locations = "{{ usermacros.locationObject(form.locations,cicle,'user-locations','prototype',sitename,entity)|e }}"
+             data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cycle,'user-administrativeTitles','prototype', sitename)|e }}"
+             data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cycle,'user-appointmentTitles','prototype', sitename)|e }}"
+             data-prototype-user-locations = "{{ usermacros.locationObject(form.locations,cycle,'user-locations','prototype',sitename,entity)|e }}"
              data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
              data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
              data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
@@ -691,7 +643,7 @@
         <input type="hidden" id="user_id" value="{{ user_id }}" />
         <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
         {#<input type="hidden" id="user_name" value="{{ form.vars.value.getUserNameStr() }}" />#}
-        <input type="hidden" id="formcicle" value="{{ cicle }}" />
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
         <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
         {{ form_errors(form) }}
@@ -717,15 +669,15 @@
 
                     {{ formmacros.field(form.displayName) }}
                     {{ formmacros.field(form.firstName) }}
-                    {{ formmacros.field_notempty(form.middleName,cicle) }}
+                    {{ formmacros.field_notempty(form.middleName,cycle) }}
                     {{ formmacros.field(form.lastName) }}
-                    {{ formmacros.field_notempty(form.suffix,cicle) }}
+                    {{ formmacros.field_notempty(form.suffix,cycle) }}
 
-                    {{ usermacros.emailPhoneField(form.email,cicle,'email',"") }}
+                    {{ usermacros.emailPhoneField(form.email,cycle,'email',"") }}
 
-                    {{ usermacros.emailPhoneField(form.preferredPhone,cicle,'phone',"") }}
+                    {{ usermacros.emailPhoneField(form.preferredPhone,cycle,'phone',"") }}
 
-                    {{ formmacros.field_notempty(form.initials,cicle) }}
+                    {{ formmacros.field_notempty(form.initials,cycle) }}
 
                 </div>
             </div>
@@ -737,7 +689,7 @@
         {% if roleobjects is defined %}
             {% for role in roleobjects %}
                 {% for attribute in role.getAttributes() %}
-                    {% if attribute.getValue() and cicle == 'show_user' %}
+                    {% if attribute.getValue() and cycle == 'show_user' %}
                         {% set showRoleattributes = true %}
                     {% endif %}
                 {% endfor %}
@@ -774,7 +726,7 @@
             <div id="userprefrences" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
 
-                    {% if form.roles is defined and (cicle == "show_user" or userEditor == true) %}
+                    {% if form.roles is defined and (cycle == "show_user" or userEditor == true) %}
                         {{ formmacros.field(form.roles) }}
                     {% endif %}
 
@@ -788,7 +740,7 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if cicle == "show_user" %}
+                    {% if cycle == "show_user" %}
                         {{ formmacros.simplefield( "Current time in user's time zone:", "now"|date('Y-m-d H:i:s', entity.preferences.timezone), "", "disabled" ) }}
                     {% endif %}
 
@@ -802,7 +754,7 @@
         {#Employment Status#}
         {% set showEmploymentStatus = false %}
         {% for employmentStatus in form.employmentStatus %}
-            {% if employmentStatus.hireDate.vars.value or cicle != 'show_user' %}
+            {% if employmentStatus.hireDate.vars.value or cycle != 'show_user' %}
                 {% set showEmploymentStatus = true %}
             {% endif %}
         {% endfor %}
@@ -821,9 +773,9 @@
 
                         <div class="user-employmentStatus-holder">
                             {% for employmentStatus in form.employmentStatus %}
-                                {{ userform.employmentStatuses(employmentStatus,cicle,'user-employmentStatus','noprototype') }}
+                                {{ userform.employmentStatuses(employmentStatus,cycle,'user-employmentStatus','noprototype') }}
                             {% endfor %}
-                            {% if cicle != 'show_user' and entity.id != app.security.getToken().getUser().getId() %}
+                            {% if cycle != 'show_user' and entity.id != app.security.getToken().getUser().getId() %}
                                 <button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-employmentStatus')" type='button'>Add Employment Period</button>
                             {% endif %}
                         </div>
@@ -864,9 +816,9 @@
 
                     <div class="user-administrativeTitles-holder">
                         {% for administrativeTitle in form.administrativeTitles %}
-                            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype',sitename) }}
+                            {{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}
                         {% endfor %}
-                        {% if cicle != 'show_user' %}
+                        {% if cycle != 'show_user' %}
                             <button class="btn btn-default" onClick="addNewObject(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
                         {% endif %}
                     </div>
@@ -905,9 +857,9 @@
 
                     <div class="user-appointmentTitles-holder">
                         {% for appointmentTitle in form.appointmentTitles %}
-                            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype',sitename) }}
+                            {{ userform.baseTitle(appointmentTitle,cycle,'user-appointmentTitles','noprototype',sitename) }}
                         {% endfor %}
-                        {% if cicle != 'show_user' %}
+                        {% if cycle != 'show_user' %}
                             <button class="btn btn-default" onClick="addNewObject(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>
                         {% endif %}
                     </div>
@@ -931,9 +883,9 @@
 
                     <div class="user-locations-holder">
                         {% for location in form.locations %}
-                            {{ usermacros.locationObject(location,cicle,'user-locations','noprototype',sitename,entity) }}
+                            {{ usermacros.locationObject(location,cycle,'user-locations','noprototype',sitename,entity) }}
                         {% endfor %}
-                        {% if cicle != 'show_user' %}
+                        {% if cycle != 'show_user' %}
                             <button class="btn btn-default" onClick="addNewObject(this,'user-locations')" type='button'>Add Location</button>
                         {% endif %}
                     </div>
@@ -947,7 +899,7 @@
         {#If the user has no Research Labs (no array members with a research lab title), hide the whole Research Lab(s) section on the profile page.#}
         {% set showResearchLabs = false %}
         {% for researchLabs in form.researchLabs %}
-            {% if researchLabs.researchLabTitle.vars.value or researchLabs.weblink.vars.value or researchLabs.comment.vars.value or researchLabs.foundedDate.vars.value or cicle != 'show_user' %}
+            {% if researchLabs.researchLabTitle.vars.value or researchLabs.weblink.vars.value or researchLabs.comment.vars.value or researchLabs.foundedDate.vars.value or cycle != 'show_user' %}
                 {% set showResearchLabs = true %}
             {% endif %}
         {% endfor %}
@@ -966,9 +918,9 @@
 
                         <div class="user-researchlabs-holder">
                             {% for researchLab in form.researchLabs %}
-                                {{ userform.researchLabs(researchLab,cicle,'user-researchlabs','noprototype') }}
+                                {{ userform.researchLabs(researchLab,cycle,'user-researchlabs','noprototype') }}
                             {% endfor %}
-                            {% if cicle != 'show_user' %}
+                            {% if cycle != 'show_user' %}
                                 <button class="btn btn-default" onClick="addNewObject(this,'user-researchlabs')" type='button'>Add Research Lab</button>
                             {% endif %}
                         </div>
@@ -1019,9 +971,9 @@
                                             {#{{ formmacros.field(form.credentials.nationalProviderIdentifier) }}#}
                                             <div class="user-employmentStatus-holder">
                                                 {% for identifier in form.credentials.identifiers %}
-                                                    {{ userform.identifier(identifier,cicle,'user-identifiers','noprototype') }}
+                                                    {{ userform.identifier(identifier,cycle,'user-identifiers','noprototype') }}
                                                 {% endfor %}
-                                                {% if cicle != 'show_user' %}
+                                                {% if cycle != 'show_user' %}
                                                     <button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-identifiers')" type='button'>Add Identifier</button>
                                                 {% endif %}
                                             </div>
@@ -1045,7 +997,7 @@
                                         <div class="user-personalinfo-holder">
 
                                             {{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}
-                                            {{ formmacros.field_notempty(form.credentials.ssn,cicle) }}
+                                            {{ formmacros.field_notempty(form.credentials.ssn,cycle) }}
                                             {{ formmacros.field(form.credentials.emergencyContactInfo) }}
 
                                         </div>
@@ -1057,7 +1009,7 @@
                             {#Certificate of Qualification#}
 
                             {#HIDE ENTIRE SECTION Certificate of Qualification if both fields are empty / no array members#}
-                            {% if form.credentials.numberCOQ.vars.value or form.credentials.coqExpirationDate.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                            {% if form.credentials.numberCOQ.vars.value or form.credentials.coqExpirationDate.vars.value or not (cycle == "show" or cycle == "show_user") %}
                                 {% set showCOQ = true %}
                             {% else %}
                                 {% set showCOQ = false %}
@@ -1076,8 +1028,8 @@
                                         <div class="panel-body">
                                             <div class="user-coq-holder">
 
-                                                {{ formmacros.field_notempty(form.credentials.numberCOQ,cicle) }}
-                                                {{ formmacros.fieldDateLabel_notempty(form.credentials.coqExpirationDate,cicle,'allow-future-date') }}
+                                                {{ formmacros.field_notempty(form.credentials.numberCOQ,cycle) }}
+                                                {{ formmacros.fieldDateLabel_notempty(form.credentials.coqExpirationDate,cycle,'allow-future-date') }}
 
                                             </div>
                                         </div>
@@ -1091,7 +1043,7 @@
 
                             {#Clinical Laboratory Improvement Amendments (CLIA)#}
                             {#HIDE ENTIRE SECTION Clinical Laboratory Improvement Amendments (CLIA) if both fields are empty / no array members#}
-                            {% if form.credentials.numberCLIA.vars.value or form.credentials.cliaExpirationDate.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                            {% if form.credentials.numberCLIA.vars.value or form.credentials.cliaExpirationDate.vars.value or not (cycle == "show" or cycle == "show_user") %}
                                 {% set showCLIA = true %}
                             {% else %}
                                 {% set showCLIA = false %}
@@ -1110,8 +1062,8 @@
                                         <div class="panel-body">
                                             <div class="user-clia-holder">
 
-                                                {{ formmacros.field_notempty(form.credentials.numberCLIA,cicle) }}
-                                                {{ formmacros.fieldDateLabel_notempty(form.credentials.cliaExpirationDate,cicle,'allow-future-date') }}
+                                                {{ formmacros.field_notempty(form.credentials.numberCLIA,cycle) }}
+                                                {{ formmacros.fieldDateLabel_notempty(form.credentials.cliaExpirationDate,cycle,'allow-future-date') }}
 
                                             </div>
                                         </div>
@@ -1125,7 +1077,7 @@
 
                             {#NY Permanent Facility Identifier (PFI)#}
                             {#HIDE ENTIRE SECTION NY Permanent Facility Identifier (PFI) if both fields are empty / no array members#}
-                            {% if form.credentials.numberPFI.vars.value or not (cicle == "show" or cicle == "show_user") %}
+                            {% if form.credentials.numberPFI.vars.value or not (cycle == "show" or cycle == "show_user") %}
                                 {% set showPFI = true %}
                             {% else %}
                                 {% set showPFI = false %}
@@ -1143,7 +1095,7 @@
                                     <div id="pfi" class="panel-collapse collapse in">
                                         <div class="panel-body">
                                             <div class="user-pfi-holder">
-                                                {{ formmacros.field_notempty(form.credentials.numberPFI,cicle) }}
+                                                {{ formmacros.field_notempty(form.credentials.numberPFI,cycle) }}
                                             </div>
                                         </div>
                                     </div>
@@ -1157,7 +1109,7 @@
                             {#HIDE ENTIRE SECTION NYPH Code(s) if all three fields are empty / no array members#}
                             {% set showNYPH = false %}
                             {% for codeNYPH in form.credentials.codeNYPH %}
-                                {% if codeNYPH.field.vars.value or codeNYPH.startDate.vars.value or codeNYPH.endDate.vars.value or cicle != 'show_user' %}
+                                {% if codeNYPH.field.vars.value or codeNYPH.startDate.vars.value or codeNYPH.endDate.vars.value or cycle != 'show_user' %}
                                     {% set showNYPH = true %}
                                 {% endif %}
                             {% endfor %}
@@ -1175,9 +1127,9 @@
                                         <div class="panel-body">
                                             <div class="user-codenyph-holder">
                                                 {% for codeNYPH in form.credentials.codeNYPH %}
-                                                    {{ userform.codenyphs(codeNYPH,cicle,'user-codenyph','noprototype') }}
+                                                    {{ userform.codenyphs(codeNYPH,cycle,'user-codenyph','noprototype') }}
                                                 {% endfor %}
-                                                {% if cicle != 'show_user' %}
+                                                {% if cycle != 'show_user' %}
                                                     <button class="btn btn-default" onClick="addNewObject(this,'user-codenyph')" type='button'>Add NYPH Code</button>
                                                 {% endif %}
                                             </div>
@@ -1204,9 +1156,9 @@
                                         <div class="user-statelicense-holder">
 
                                             {% for stateLicense in form.credentials.stateLicense %}
-                                                {{ userform.stateLicenses(stateLicense,cicle,'user-statelicense','noprototype') }}
+                                                {{ userform.stateLicenses(stateLicense,cycle,'user-statelicense','noprototype') }}
                                             {% endfor %}
-                                            {% if cicle != 'show_user' %}
+                                            {% if cycle != 'show_user' %}
                                                 <button class="btn btn-default" onClick="addNewObject(this,'user-statelicense')" type='button'>Add Medical License</button>
                                             {% endif %}
 
@@ -1231,9 +1183,9 @@
                                         <div class="user-boardcertification-holder">
 
                                             {% for boardCertification in form.credentials.boardCertification %}
-                                                {{ userform.boardCertifications(boardCertification,cicle,'user-boardcertification','noprototype') }}
+                                                {{ userform.boardCertifications(boardCertification,cycle,'user-boardcertification','noprototype') }}
                                             {% endfor %}
-                                            {% if cicle != 'show_user' %}
+                                            {% if cycle != 'show_user' %}
                                                 <button class="btn btn-default" onClick="addNewObject(this,'user-boardcertification')" type='button'>Add Board Certification</button>
                                             {% endif %}
 
@@ -1264,14 +1216,14 @@
         {% set showAdminComments = false %}
 
         {% for publicComment in form.publicComments %}
-            {% if publicComment.comment.vars.value != "" or cicle != 'show_user' %}
+            {% if publicComment.comment.vars.value != "" or cycle != 'show_user' %}
                 {% set showPublicComments = true %}
             {% endif %}
         {% endfor %}
 
         {% if form.privateComments is defined %}
             {% for privateComment in form.privateComments %}
-                {% if privateComment.comment.vars.value != "" or cicle != 'show_user' %}
+                {% if privateComment.comment.vars.value != "" or cycle != 'show_user' %}
                     {% set showPrivateComments = true %}
                 {% endif %}
             {% endfor %}
@@ -1279,7 +1231,7 @@
 
         {% if form.confidentialComments is defined %}
             {% for confidentialComment in form.confidentialComments %}
-                {% if confidentialComment.comment.vars.value != "" or cicle != 'show_user' %}
+                {% if confidentialComment.comment.vars.value != "" or cycle != 'show_user' %}
                     {% set showConfComments = true %}
                 {% endif %}
             {% endfor %}
@@ -1287,7 +1239,7 @@
 
         {% if form.adminComments is defined %}
             {% for adminComment in form.adminComments %}
-                {% if adminComment.comment.vars.value != "" or cicle != 'show_user' %}
+                {% if adminComment.comment.vars.value != "" or cycle != 'show_user' %}
                     {% set showAdminComments = true %}
                 {% endif %}
             {% endfor %}
@@ -1332,9 +1284,9 @@
                                     <div class="panel-body">
                                         <div class="user-publiccomments-holder">
                                             {% for publicComment in form.publicComments %}
-                                                {{ userform.comments(publicComment,cicle,'user-publiccomments','noprototype') }}
+                                                {{ userform.comments(publicComment,cycle,'user-publiccomments','noprototype') }}
                                             {% endfor %}
-                                            {% if cicle != 'show_user' %}
+                                            {% if cycle != 'show_user' %}
                                                 <button class="btn btn-default" onClick="addNewObject(this,'user-publiccomments')" type='button'>Add Public Comment</button>
                                             {% endif %}
                                         </div>
@@ -1358,9 +1310,9 @@
                                     <div class="panel-body">
                                         <div class="user-privatecomments-holder">
                                             {% for privateComment in form.privateComments %}
-                                                {{ userform.comments(privateComment,cicle,'user-privatecomments','noprototype') }}
+                                                {{ userform.comments(privateComment,cycle,'user-privatecomments','noprototype') }}
                                             {% endfor %}
-                                            {% if cicle != 'show_user' %}
+                                            {% if cycle != 'show_user' %}
                                                 <button class="btn btn-default" onClick="addNewObject(this,'user-privatecomments')" type='button'>Add Private Comment</button>
                                             {% endif %}
                                         </div>
@@ -1384,9 +1336,9 @@
                                     <div class="panel-body">
                                         <div class="user-confidentialcomments-holder">
                                             {% for confidentialComment in form.confidentialComments %}
-                                                {{ userform.comments(confidentialComment,cicle,'user-confidentialcomment','noprototype') }}
+                                                {{ userform.comments(confidentialComment,cycle,'user-confidentialcomment','noprototype') }}
                                             {% endfor %}
-                                            {% if cicle != 'show_user' %}
+                                            {% if cycle != 'show_user' %}
                                                 <button class="btn btn-default" onClick="addNewObject(this,'user-confidentialcomment')" type='button'>Add Confidential Comment</button>
                                             {% endif %}
                                         </div>
@@ -1410,9 +1362,9 @@
                                     <div class="panel-body">
                                         <div class="user-admincomments-holder">
                                             {% for adminComment in form.adminComments %}
-                                                {{ userform.comments(adminComment,cicle,'user-admincomments','noprototype') }}
+                                                {{ userform.comments(adminComment,cycle,'user-admincomments','noprototype') }}
                                             {% endfor %}
-                                            {% if cicle != 'show_user' %}
+                                            {% if cycle != 'show_user' %}
                                                 <button class="btn btn-default" onClick="addNewObject(this,'user-admincomments')" type='button'>Add Administrative Comment</button>
                                             {% endif %}
                                         </div>
@@ -1440,7 +1392,7 @@
         </p>
 
 
-        {% if cicle != "show_user" and cicle != "create_user" %}
+        {% if cycle != "show_user" and cycle != "create_user" %}
             <p>
                 <div>
                     <button class="btn btn-warning" name="btnSubmit" type="button" onclick="validateUser({{entity.id}})">Update</button>
@@ -1449,7 +1401,7 @@
             </p>
         {% endif %}
 
-        {% if cicle == "create_user" %}
+        {% if cycle == "create_user" %}
             <p>
                 <button class="btn btn-success" name="btnSubmit" type="button" onclick="validateUser()">Add Employee</button>
             </p>
@@ -1459,7 +1411,7 @@
 
 
     {% if userEditor == true or entity.id == app.security.getToken().getUser().getId() %}
-        {% if cicle == "show_user" and cicle != "create_user" %}
+        {% if cycle == "show_user" and cycle != "create_user" %}
             <p><a class="btn btn-success" href="{{ path(sitename~'_user_edit',{'id':entity.id}) }}">Edit</a></p>
         {% endif %}
     {% endif %}

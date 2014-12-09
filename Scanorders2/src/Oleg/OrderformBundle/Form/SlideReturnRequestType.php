@@ -89,13 +89,13 @@ class SlideReturnRequestType extends AbstractType
 
         //locations default and preferred choices
         if( array_key_exists('returnSlide', $this->params) ) {
-            if( array_key_exists('cicle', $this->params) && $this->params['cicle'] == 'new' ) {
+            if( array_key_exists('cycle', $this->params) && $this->params['cycle'] == 'new' ) {
                 $returnSlide = $this->params['returnSlide'];
                 $returnSlidesOptions['data'] = $returnSlide['data']->getId();
             }
         }
 
-        if( array_key_exists('cicle', $this->params) === false || $this->params['cicle'] != 'new' ) {
+        if( array_key_exists('cycle', $this->params) === false || $this->params['cycle'] != 'new' ) {
             $builder->add('returnSlide', 'entity', array(
                 'label' => 'Return Slides to:',
                 'required'=> false,

@@ -29,11 +29,14 @@ class UtilController extends Controller {
         //echo "name=".$name."<br>";
 
         switch( $name ) {
+            case "identifierkeytype":
+                $className = "IdentifierTypeList";
+                break;
             case "room":
                 $className = "RoomList";
                 break;
-            case "suit":
-                $className = "SuitList";
+            case "suite":
+                $className = "SuiteList";
                 break;
             case "floor":
                 $className = "FloorList";

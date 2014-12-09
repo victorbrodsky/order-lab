@@ -174,7 +174,7 @@ class TableController extends Controller {
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$orderinfo->getType(), 'cicle'=>$type, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
+        $params = array('type'=>$orderinfo->getType(), 'cycle'=>$type, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
 
         //$slides = $orderinfo->getSlide();
@@ -526,7 +526,7 @@ class TableController extends Controller {
 
         $params = array(
             'type'=>$type,
-            'cicle'=>'new',
+            'cycle'=>'new',
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
             'user'=>$user,
@@ -570,7 +570,7 @@ class TableController extends Controller {
 
         $type = "Table-View Scan Order";
 
-        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>null, 'user'=>$user);
+        $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user);
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
 
@@ -588,19 +588,19 @@ class TableController extends Controller {
         //exit("<br>afterpost");
 
         if( $clickedbtn == 'btnSubmit' ) {
-            $cicle = 'new';
+            $cycle = 'new';
             $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
             $entity->setStatus($status);
         }
 
         if( $clickedbtn == 'btnAmend' ) {
-            $cicle = 'amend';
+            $cycle = 'amend';
             $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Amended');
             $entity->setStatus($status);
         }
 
         if( $clickedbtn == 'btnSaveOnIdleTimeout' ) {
-            $cicle = 'edit';
+            $cycle = 'edit';
             $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');
             $entity->setStatus($status);
         }
@@ -709,7 +709,7 @@ class TableController extends Controller {
         $session = $request->getSession();
         $submittedData = array(
             'oid' => $entity->getOid(),
-            'cicle' => $cicle,
+            'cycle' => $cycle,
             'neworder' => "table_create",
             'conflicts' => $conflictsStr
         );

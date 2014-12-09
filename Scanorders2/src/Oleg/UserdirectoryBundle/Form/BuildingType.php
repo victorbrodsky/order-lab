@@ -30,7 +30,7 @@ class BuildingType extends AbstractType
     {
 
         $standAloneLocation = false;
-        if( strpos($this->params['cicle'],'_standalone') !== false && strpos($this->params['cicle'],'new') === false ) {
+        if( strpos($this->params['cycle'],'_standalone') !== false && strpos($this->params['cycle'],'new') === false ) {
             $standAloneLocation = true;
         }
 
@@ -40,7 +40,7 @@ class BuildingType extends AbstractType
             $params = array();
             $mapper = array();
             $params['user'] = $this->params['user'];
-            $params['cicle'] = $this->params['cicle'];
+            $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "BuildingList";
             $mapper['bundleName'] = "OlegUserdirectoryBundle";

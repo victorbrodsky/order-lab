@@ -20,14 +20,14 @@ use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 class UserPreferencesType extends AbstractType
 {
 
-//    protected $cicle;
+//    protected $cycle;
 //    protected $roleAdmin;
 //    protected $user;
 //    protected $roles;
 
     public function __construct()
     {
-//        $this->cicle = $cicle;
+//        $this->cycle = $cycle;
 //        $this->user = $user;
 //        $this->roleAdmin = $roleAdmin;
 //        $this->roles = $roles;

@@ -26,8 +26,8 @@ class DocumentType_TODEL extends AbstractType
     {
 
 
-        //echo "cicle=".$this->params['cicle'];
-        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' || $this->params['cicle'] == 'amend' ) {
+        //echo "cycle=".$this->params['cycle'];
+        if( $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' || $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'amend' ) {
 
             //echo " => new, create or edit set file ";
             $builder->add('file', 'file', array(

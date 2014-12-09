@@ -121,7 +121,7 @@ class BaseTitleType extends AbstractType
         ));
 
 
-        if( $this->params['cicle'] != "show" ) {
+        if( $this->params['cycle'] != "show" ) {
             $builder->add('orderinlist',null,array(
                 'label'=>'Display Order:',
                 'required' => false,

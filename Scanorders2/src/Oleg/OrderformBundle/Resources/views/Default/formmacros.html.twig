@@ -36,16 +36,16 @@
 {% endmacro %}
 
 
-{% macro field_notempty( field, cicle, label, attr ) %}
+{% macro field_notempty( field, cycle, label, attr ) %}
     {% import _self as formmacros %}
 
-    {% if "show" in cicle %}
+    {% if "show" in cycle %}
         {% set showFlag = true %}
     {% else %}
         {% set showFlag = false %}
     {% endif %}
 
-    {#{% if field.vars.value or not "show" in cicle %}#}
+    {#{% if field.vars.value or not "show" in cycle %}#}
     {% if field.vars.value or not showFlag %}
         {{ formmacros.field(field, label, attr) }}
     {% else %}
@@ -79,10 +79,10 @@
     </p>
 {% endmacro %}
 
-{% macro fieldDateLabel_notempty( field, cicle, classname, attr ) %}
+{% macro fieldDateLabel_notempty( field, cycle, classname, attr ) %}
     {% import _self as formmacros %}
 
-    {% if "show" in cicle %}
+    {% if "show" in cycle %}
         {% set showFlag = true %}
     {% else %}
         {% set showFlag = false %}
@@ -746,7 +746,7 @@
 {% endmacro %}
 
 
-{% macro fieldpaper(paper,cicle,prototype) %}
+{% macro fieldpaper(paper,cycle,prototype) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -757,13 +757,13 @@
         {#orderid:{{ paper.vars.value.orderinfo.id }}#}
 
         <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
-            {% if cicle != "show" %}
+            {% if cycle != "show" %}
                 <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 4 files, 10 MB each)</span></div>
             {% else %}
                 <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
             {% endif %}
 
-            {{ usermacros.document( paper, cicle, prototype ) }}
+            {{ usermacros.document( paper, cycle, prototype ) }}
 
         </div>
         

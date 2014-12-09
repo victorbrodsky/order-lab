@@ -6,15 +6,15 @@
 
 {% set title = singleName %}
 
-{% if cicle == 'new_standalone' %}
+{% if cycle == 'new_standalone' %}
     {% set title = "Add New "~singleName %}
 {% endif %}
 
-{% if cicle == 'show_standalone' %}
+{% if cycle == 'show_standalone' %}
     {% set title = "View "~singleName %}
 {% endif %}
 
-{% if cicle == 'edit_standalone' %}
+{% if cycle == 'edit_standalone' %}
     {% set title = "Edit "~singleName %}
 {% endif %}
 
@@ -38,11 +38,11 @@
 
 
         {% if pathname == 'locations' %}
-            {{ usermacros.locationObject(form,cicle,'user-locations','noprototype',employees_sitename,entity) }}
+            {{ usermacros.locationObject(form,cycle,'user-locations','noprototype',employees_sitename,entity) }}
         {% endif %}
 
         {% if pathname == 'buildings' %}
-            {{ usermacros.buildingObject(form,cicle,'user-buildings','noprototype',employees_sitename,entity) }}
+            {{ usermacros.buildingObject(form,cycle,'user-buildings','noprototype',employees_sitename,entity) }}
         {% endif %}
 
 
@@ -58,13 +58,13 @@
             {% set userEditor = false %}
         {% endif %}
 
-        {% if cicle == "show_standalone" and userEditor %}
+        {% if cycle == "show_standalone" and userEditor %}
             <p>
                 <a class="btn btn-success" href="{{ path(employees_sitename~'_'~pathname~'_pathaction_edit_standalone',{id:entity.id}) }}" type='button'>Edit</a>
             </p>
         {% endif %}
 
-        {% if cicle != "show_standalone" and cicle != "new_standalone" and userEditor %}
+        {% if cycle != "show_standalone" and cycle != "new_standalone" and userEditor %}
             <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update {{ singleName }}</button>
@@ -73,7 +73,7 @@
             </p>
         {% endif %}
 
-        {% if cicle == "new_standalone" and userEditor %}
+        {% if cycle == "new_standalone" and userEditor %}
             <p>
                 <button class="btn btn-success" name="btnSubmit" type="submit">Add {{ singleName }}</button>
             </p>

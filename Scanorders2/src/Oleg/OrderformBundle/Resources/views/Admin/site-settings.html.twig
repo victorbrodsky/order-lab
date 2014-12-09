@@ -18,7 +18,7 @@
         </div>
 
 
-        {% if cicle != "show" and is_granted('ROLE_SCANORDER_ADMIN') %}
+        {% if cycle != "show" and is_granted('ROLE_SCANORDER_ADMIN') %}
             <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
@@ -29,7 +29,7 @@
 
     {{ form_end(form) }}
 
-    {% if cicle == "show" and is_granted('ROLE_SCANORDER_ADMIN') %}
+    {% if cycle == "show" and is_granted('ROLE_SCANORDER_ADMIN') %}
         <p><a class="btn btn-success" href="{{ path('scan_order_settings_edit',{'id':userid}) }}">Edit</a></p>
     {% endif %}
 

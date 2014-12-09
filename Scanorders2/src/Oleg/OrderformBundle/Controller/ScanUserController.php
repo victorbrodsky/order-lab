@@ -304,9 +304,9 @@ class ScanUserController extends UserController
 
         return $this->getScanSettings($id,'edit');
     }
-    public function getScanSettings($id,$cicle) {
+    public function getScanSettings($id,$cycle) {
 
-        $res = $this->getScanSettingsForm($id,$cicle);
+        $res = $this->getScanSettingsForm($id,$cycle);
         $entity = $res['entity'];
         $form = $res['form'];
         $subjectuser = $res['subjectuser'];
@@ -314,12 +314,12 @@ class ScanUserController extends UserController
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => $cicle,
+            'cycle' => $cycle,
             'userid' => $id,
             'username' => $subjectuser.""
         );
     }
-    public function getScanSettingsForm($id,$cicle) {
+    public function getScanSettingsForm($id,$cycle) {
         $secUtil = $this->get('order_security_utility');
 
         $disabled = true;
@@ -343,7 +343,7 @@ class ScanUserController extends UserController
             //$entity->setType(PerSiteSettings::TYPE_RESTRICTED);
         }
 
-        if( $cicle == 'edit' ) {
+        if( $cycle == 'edit' ) {
             $disabled = false;
         }
 
@@ -434,7 +434,7 @@ class ScanUserController extends UserController
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'cicle' => 'edit',
+            'cycle' => 'edit',
             'userid' => $id
         );
     }

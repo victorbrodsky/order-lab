@@ -25,203 +25,203 @@ class SiteParametersType extends AbstractType
 
 //        $always_empty = true;
 //
-//        if( $this->params['cicle'] != 'show' ) {
+//        if( $this->params['cycle'] != 'show' ) {
 //            $always_empty = false;
 //        }
 
         //echo "$always_empty=".$always_empty."<br>";
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maxIdleTime' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'maxIdleTime' )
         $builder->add('maxIdleTime',null,array(
             'label'=>'Max Idle Time (min):',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'environment' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'environment' )
         $builder->add('environment','choice',array(
             'label'=>'Environment:',
             'choices' => array("live"=>"live", "dev"=>"dev"),
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'siteEmail' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'siteEmail' )
         $builder->add('siteEmail','email',array(
             'label'=>'Site Email:',
             'attr' => array('class'=>'form-control')
         ));
 
         //smtp
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'smtpServerAddress' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'smtpServerAddress' )
         $builder->add('smtpServerAddress',null,array(
             'label'=>'SMTP Server Address:',
             'attr' => array('class'=>'form-control')
         ));
 
         //scan order DB
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'dbServerAddress' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'dbServerAddress' )
         $builder->add('dbServerAddress',null,array(
             'label'=>'ScanOrder DB Server Address:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'dbServerPort' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'dbServerPort' )
         $builder->add('dbServerPort',null,array(
             'label'=>'ScanOrder DB Server Port:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'dbServerAccountUserName' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'dbServerAccountUserName' )
         $builder->add('dbServerAccountUserName',null,array(
             'label'=>'ScanOrder DB Server Account User Name:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'dbServerAccountPassword' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'dbServerAccountPassword' )
         $builder->add('dbServerAccountPassword',null,array(
             'label'=>'ScanOrder DB Server Account Password:',
             //'always_empty' => $always_empty,
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'dbDatabaseName' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'dbDatabaseName' )
         $builder->add('dbDatabaseName',null,array(
             'label'=>'ScanOrder Database Name:',
             'attr' => array('class'=>'form-control')
         ));
 
         //LDAP
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aDLDAPServerAddress' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAddress' )
         $builder->add('aDLDAPServerAddress',null,array(
             'label'=>'AD/LDAP Server Address:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aDLDAPServerPort' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerPort' )
         $builder->add('aDLDAPServerPort',null,array(
             'label'=>'AD/LDAP Server Port:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aDLDAPServerOu' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerOu' )
         $builder->add('aDLDAPServerOu',null,array(
             'label'=>'AD/LDAP Server OU:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aDLDAPServerAccountUserName' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAccountUserName' )
         $builder->add('aDLDAPServerAccountUserName',null,array(
             'label'=>'AD/LDAP Server Account User Name:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aDLDAPServerAccountPassword' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAccountPassword' )
         $builder->add('aDLDAPServerAccountPassword',null,array(
             'label'=>'AD/LDAP Server Account Password:',
             //'always_empty' => $always_empty,
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )
             $builder->add('autoAssignInstitution',null,array(
                 'label'=>'Auto-Assign Institution name:',
                 'attr' => array('class'=>'form-control')
             ));
 
         //Co-Path DB
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'coPathDBServerAddress' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBServerAddress' )
         $builder->add('coPathDBServerAddress',null,array(
             'label'=>'CoPath DB Server Address:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'coPathDBServerPort' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBServerPort' )
         $builder->add('coPathDBServerPort',null,array(
             'label'=>'CoPath DB Server Port:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'coPathDBAccountUserName' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBAccountUserName' )
         $builder->add('coPathDBAccountUserName',null,array(
             'label'=>'CoPath DB Server Account User Name:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'coPathDBAccountPassword' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBAccountPassword' )
         $builder->add('coPathDBAccountPassword',null,array(
             'label'=>'CoPath DB Server Account Password:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'coPathDBName' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBName' )
         $builder->add('coPathDBName',null,array(
             'label'=>'CoPath Database Name:',
             'attr' => array('class'=>'form-control')
         ));
 
         //Aperio DB
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerAddress' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerAddress' )
         $builder->add('aperioeSlideManagerDBServerAddress',null,array(
             'label'=>'Aperio eSlide Manager DB Server Address:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerPort' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerPort' )
         $builder->add('aperioeSlideManagerDBServerPort',null,array(
             'label'=>'Aperio eSlide Manager DB Server Port:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBUserName' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBUserName' )
         $builder->add('aperioeSlideManagerDBUserName',null,array(
             'label'=>'Aperio eSlide Manager DB Server User Name:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBPassword' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBPassword' )
         $builder->add('aperioeSlideManagerDBPassword',null,array(
             'label'=>'Aperio eSlide Manager DB Server Password:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBName' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBName' )
         $builder->add('aperioeSlideManagerDBName',null,array(
             'label'=>'Aperio eSlide Manager Database Name:',
             'attr' => array('class'=>'form-control')
         ));
 
         //footer
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'institutionurl' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'institutionurl' )
             $builder->add('institutionurl',null,array(
                 'label'=>'Institution URL:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'institutionname' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'institutionname' )
             $builder->add('institutionname',null,array(
                 'label'=>'Institution Name:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'departmenturl' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'departmenturl' )
             $builder->add('departmenturl',null,array(
                 'label'=>'Department URL:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'departmentname' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'departmentname' )
             $builder->add('departmentname',null,array(
                 'label'=>'Department Name:',
                 'attr' => array('class'=>'form-control')
             ));
 
         //maintenance
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenance' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'maintenance' )
             $builder->add('maintenance',null,array(
                 'label'=>'Maintenance:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenanceenddate' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'maintenanceenddate' )
             $builder->add('maintenanceenddate',null,array(
                 'label'=>'Maintenance Until:',
                 'widget' => 'single_text',
@@ -229,13 +229,13 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control datetimepicker')
             ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenanceloginmsg' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'maintenanceloginmsg' )
             $builder->add('maintenanceloginmsg',null,array(
                 'label'=>'Maintenance Login Message:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenancelogoutmsg' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'maintenancelogoutmsg' )
             $builder->add('maintenancelogoutmsg',null,array(
                 'label'=>'Maintenance Logout Message:',
                 'attr' => array('class'=>'form-control')
@@ -243,13 +243,13 @@ class SiteParametersType extends AbstractType
 
 
         //uploads
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'employeesuploadpath' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'employeesuploadpath' )
             $builder->add('employeesuploadpath',null,array(
                 'label'=>'Employee Directory Upload Folder:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'scanuploadpath' )
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'scanuploadpath' )
             $builder->add('scanuploadpath',null,array(
                 'label'=>'Scan Orders Upload Folder:',
                 'attr' => array('class'=>'form-control')

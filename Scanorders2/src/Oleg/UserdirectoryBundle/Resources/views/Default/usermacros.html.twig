@@ -1,5 +1,5 @@
 
-{% macro fileupload( comment, cicle, classname, prototype ) %}
+{% macro fileupload( comment, cycle, classname, prototype ) %}
 
 
     {% import _self as usermacros %}
@@ -13,13 +13,13 @@
 
             <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
 
-                {% if cicle != "show_user" %}
+                {% if cycle != "show_user" %}
                     <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 4 files, 10 MB each)</span></div>
                 {% else %}
                     <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
                 {% endif %}
 
-                {{ usermacros.document( comment, cicle, prototype ) }}
+                {{ usermacros.document( comment, cycle, prototype ) }}
 
             </div>
 
@@ -31,7 +31,7 @@
 
 {% endmacro %}
 
-{% macro document( comment, cicle, prototype ) %}
+{% macro document( comment, cycle, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% for document in comment.documents %}
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            {% if cicle != "show_user" and cicle != "show" %}
+            {% if cycle != "show_user" and cycle != "show" %}
                 <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
             {% endif %}
 
@@ -115,7 +115,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro locationObject( field, cicle, classname, prototype, sitename, entity ) %}
+{% macro locationObject( field, cycle, classname, prototype, sitename, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
@@ -145,24 +145,24 @@
         {% set wellclass = "" %}
     {% endif %}
 
-    {% if "show" in cicle %}
+    {% if "show" in cycle %}
         {% set showFlag = true %}
     {% else %}
         {% set showFlag = false %}
     {% endif %}
 
-    {#Consider stanAlone for all cicles with _standalone, except new_standalone. Cicle new_standalone is exception because we don't show list attributes in creation page#}
+    {#Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page#}
     {% set standAloneLocation = false %}
-    {% if cicle == "create_standalone" or cicle == "show_standalone" or cicle == "edit_standalone" %}
+    {% if cycle == "create_standalone" or cycle == "show_standalone" or cycle == "edit_standalone" %}
         {% set wellclass = "" %}
         {% set standAloneLocation = true %}
     {% endif %}
-    {% if cicle == "new_standalone" %}
+    {% if cycle == "new_standalone" %}
         {% set wellclass = "" %}
     {% endif %}
 
     {#On "Common Location" view pages, (for locations where Inhabitant is not set)#}
-    {% if not standAloneLocation or formfield.vars.value.user or cicle != 'show_standalone' %}
+    {% if not standAloneLocation or formfield.vars.value.user or cycle != 'show_standalone' %}
         {% set standAloneLocationNotView = true %}
     {% else %}
         {% set standAloneLocationNotView = false %}
@@ -235,8 +235,8 @@
     {% if showRegularFields1 or showRegularFields2 %}
         <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
-            {% if cicle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
-                {% if not standAloneLocation and cicle != "new_standalone" %}
+            {% if cycle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
+                {% if not standAloneLocation and cycle != "new_standalone" %}
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" >
                             <span class="glyphicon glyphicon-remove"></span>
@@ -247,7 +247,7 @@
 
             {% if showRegularFields1 %}
                 {{ formmacros.field(formfield.id) }}
-                {{ usermacros.statusVerifiedField(formfield,cicle) }}
+                {{ usermacros.statusVerifiedField(formfield,cycle) }}
 
                 {% if formfield.user is defined %}
                     {#On "Common Location" view pages, (for locations where Inhabitant is not set) hide "Inhabitant" field and value (still show it on the Edit page).#}
@@ -265,10 +265,10 @@
                 {% if homeLocation == true or standAloneLocation %}
                     {#Do not show "Location Privacy (who can see this contact info):" field for orphan locations (locations not connected to any user)#}
                     {% if
-                        cicle != 'show_user' or
-                        cicle == 'show_user' and (userEditor or subjectuser) and formfield.vars.value.user
+                        cycle != 'show_user' or
+                        cycle == 'show_user' and (userEditor or subjectuser) and formfield.vars.value.user
                     %}
-                        {% if cicle != 'show_standalone' or cicle == 'show_standalone' and (userEditor or subjectuser) and formfield.vars.value.user %}
+                        {% if cycle != 'show_standalone' or cycle == 'show_standalone' and (userEditor or subjectuser) and formfield.vars.value.user %}
                             {{ formmacros.field(formfield.privacy) }}
                         {% else %}
                             {% do formfield.privacy.setRendered %}
@@ -285,17 +285,17 @@
 
             {% if showRegularFields2 %}
 
-                {{ usermacros.emailPhoneField(formfield.phone,cicle,'phone',"") }}
+                {{ usermacros.emailPhoneField(formfield.phone,cycle,'phone',"") }}
 
-                {{ usermacros.emailPhoneField_notempty(formfield.pager,cicle,'phone',"") }}
-                {{ usermacros.emailPhoneField_notempty(formfield.mobile,cicle,'phone',"") }}
+                {{ usermacros.emailPhoneField_notempty(formfield.pager,cycle,'phone',"") }}
+                {{ usermacros.emailPhoneField_notempty(formfield.mobile,cycle,'phone',"") }}
 
                 {% if homeLocation == false %}
-                    {{ formmacros.field_notempty(formfield.ic,cicle) }}
+                    {{ formmacros.field_notempty(formfield.ic,cycle) }}
                 {% endif %}
 
-                {{ formmacros.field_notempty(formfield.fax,cicle) }}
-                {{ usermacros.emailPhoneField_notempty(formfield.email,cicle,'email',"") }}
+                {{ formmacros.field_notempty(formfield.fax,cycle) }}
+                {{ usermacros.emailPhoneField_notempty(formfield.email,cycle,'email',"") }}
 
             {% endif %}{#showRegularFields2#}
 
@@ -315,7 +315,7 @@
                                         <strong>Assistant(s):</strong>
                                     </p>
                                     {% for assistant in formfield.vars.value.assistant %}
-                                        {{ usermacros.personInfo(assistant,cicle,sitename) }}
+                                        {{ usermacros.personInfo(assistant,cycle,sitename) }}
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
@@ -327,8 +327,8 @@
 
                 {% if homeLocation == false %}
 
-                    {{ formmacros.field_notempty(formfield.room,cicle) }}
-                    {{ formmacros.field_notempty(formfield.suit,cicle) }}
+                    {{ formmacros.field_notempty(formfield.room,cycle) }}
+                    {{ formmacros.field_notempty(formfield.suite,cycle) }}
 
                     {{ formmacros.field(formfield.floor) }}
                     {{ formmacros.field(formfield.institution) }}
@@ -336,27 +336,27 @@
                     {{ formmacros.field(formfield.division) }}
                     {{ formmacros.field(formfield.service) }}
 
-                    {{ formmacros.field_notempty(formfield.mailbox,cicle) }}
+                    {{ formmacros.field_notempty(formfield.mailbox,cycle) }}
 
                     {{ formmacros.field(formfield.building) }}
 
                 {% endif %}
 
                 {#Location GeoLocation#}
-                {{ usermacros.geoLocation(field,cicle,prototype) }}
+                {{ usermacros.geoLocation(field,cycle,prototype) }}
 
                 {% if homeLocation == false %}
-                    {{ formmacros.field_notempty(formfield.associatedCode,cicle) }}
+                    {{ formmacros.field_notempty(formfield.associatedCode,cycle) }}
                 {% endif %}
 
                 {#In Locations, show the CLIA, and PFI fields only to Administrators and the user himself.#}
                 {% if formfield.associatedClia is defined %}
-                    {{ formmacros.field_notempty(formfield.associatedClia,cicle) }}
-                    {{ formmacros.fieldDateLabel_notempty(formfield.associatedCliaExpDate,cicle,'allow-future-date') }}
-                    {{ formmacros.field_notempty(formfield.associatedPfi,cicle) }}
+                    {{ formmacros.field_notempty(formfield.associatedClia,cycle) }}
+                    {{ formmacros.fieldDateLabel_notempty(formfield.associatedCliaExpDate,cycle,'allow-future-date') }}
+                    {{ formmacros.field_notempty(formfield.associatedPfi,cycle) }}
                 {% endif %}
 
-                {{ formmacros.field_notempty(formfield.comment,cicle) }}
+                {{ formmacros.field_notempty(formfield.comment,cycle) }}
             {% endif %} {#showRegularFields1#}
 
         </div>
@@ -373,7 +373,7 @@
 
 
 {#entity is a location object#}
-{% macro geoLocation( entity, cicle, prototype ) %}
+{% macro geoLocation( entity, cycle, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -382,20 +382,20 @@
         {% set formfield = entity.geoLocation %}
     {% endif %}
 
-    {{ formmacros.field_notempty(formfield.street1,cicle) }}
-    {{ formmacros.field_notempty(formfield.street2,cicle) }}
-    {{ formmacros.field_notempty(formfield.city,cicle) }}
-    {{ formmacros.field_notempty(formfield.state,cicle) }}
-    {{ formmacros.field_notempty(formfield.zip,cicle) }}
-    {{ formmacros.field_notempty(formfield.county,cicle) }}
-    {{ formmacros.field_notempty(formfield.country,cicle) }}
+    {{ formmacros.field_notempty(formfield.street1,cycle) }}
+    {{ formmacros.field_notempty(formfield.street2,cycle) }}
+    {{ formmacros.field_notempty(formfield.city,cycle) }}
+    {{ formmacros.field_notempty(formfield.state,cycle) }}
+    {{ formmacros.field_notempty(formfield.zip,cycle) }}
+    {{ formmacros.field_notempty(formfield.county,cycle) }}
+    {{ formmacros.field_notempty(formfield.country,cycle) }}
 {% endmacro %}
 
-{% macro statusVerifiedField( entity, cicle ) %}
+{% macro statusVerifiedField( entity, cycle ) %}
     {% if entity.status is defined %}
 
         {#On "Common Location" view pages, (for locations where Inhabitant is not set) hide "Status" field and value if it is equal to "Verified by Administration"#}
-        {% if "show" in cicle %}
+        {% if "show" in cycle %}
             {% set showFlag = true %}
         {% else %}
             {% set showFlag = false %}
@@ -411,10 +411,10 @@
 {% endmacro %}
 
 
-{% macro checkbox_notempty(field,value,cicle) %}
+{% macro checkbox_notempty(field,value,cycle) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-    {% if "show" in cicle %}
+    {% if "show" in cycle %}
         {% set showFlag = true %}
         {% set showFlag = true %}
     {% else %}
@@ -428,23 +428,23 @@
     {% endif %}
 {% endmacro %}
 
-{% macro emailPhoneField_notempty(field,cicle,type,label) %}
+{% macro emailPhoneField_notempty(field,cycle,type,label) %}
     {% import _self as formuser %}
 
-    {% if "show" in cicle %}
+    {% if "show" in cycle %}
         {% set showFlag = true %}
     {% else %}
         {% set showFlag = false %}
     {% endif %}
 
     {% if field.vars.value or not showFlag %}
-        {{ formuser.emailPhoneField(field,cicle,type,label) }}
+        {{ formuser.emailPhoneField(field,cycle,type,label) }}
     {% else %}
         {% do field.setRendered %}
     {% endif %}
 {% endmacro %}
 
-{% macro emailPhoneField(field,cicle,type,label) %}
+{% macro emailPhoneField(field,cycle,type,label) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
@@ -454,7 +454,7 @@
         {% set value = field %}
     {% endif %}
 
-    {% if "show" in cicle %}
+    {% if "show" in cycle %}
         {% set showFlag = true %}
     {% else %}
         {% set showFlag = false %}
@@ -503,7 +503,7 @@
     <a href="tel:{{ valueclean }}" target="_top">{{ phone }}</a>
 {% endmacro %}
 
-{% macro personInfo( person, cicle, sitename ) %}
+{% macro personInfo( person, cycle, sitename ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
     <p>
@@ -511,8 +511,8 @@
         {% set bossurl = path(sitename~'_showuser',{'id':person.id}) %}
         {% set bosslink = '<a href="'~bossurl~'">'~person.getUserNameShortStr()~'</a>'  %}
         {{ formmacros.simplefield( "Name:", bosslink, "", "disabled" ) }}
-        {{ usermacros.emailPhoneField(person.preferredPhone,cicle,'phone',"Preferred Phone Number:") }}
-        {{ usermacros.emailPhoneField(person.email,cicle,'email',"Preferred Email:") }}
+        {{ usermacros.emailPhoneField(person.preferredPhone,cycle,'phone',"Preferred Phone Number:") }}
+        {{ usermacros.emailPhoneField(person.email,cycle,'email',"Preferred Email:") }}
     </div>
     </p>
 {% endmacro %}
@@ -550,7 +550,7 @@
     </div>
 {% endmacro %}
 
-{% macro buildingObject( field, cicle, classname, prototype, sitename, entity ) %}
+{% macro buildingObject( field, cycle, classname, prototype, sitename, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
@@ -561,7 +561,7 @@
     {% endif %}
 
     {% set standAloneLocation = false %}
-    {% if cicle == "create_standalone" or cicle == "show_standalone" or cicle == "edit_standalone" %}
+    {% if cycle == "create_standalone" or cycle == "show_standalone" or cycle == "edit_standalone" %}
         {% set wellclass = "" %}
         {% set standAloneLocation = true %}
     {% endif %}
@@ -570,7 +570,7 @@
     {{ formmacros.field(formfield.abbreviation) }}
 
     {#Location GeoLocation#}
-    {{ usermacros.geoLocation(field,cicle,prototype) }}
+    {{ usermacros.geoLocation(field,cycle,prototype) }}
 
     {{ formmacros.field(formfield.institution) }}
 

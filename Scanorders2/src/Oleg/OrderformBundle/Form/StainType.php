@@ -34,7 +34,7 @@ class StainType extends AbstractType
             'classtype' => 'stain',
         );
 
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+        if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
             $options['data'] = 1; //new
         }
 

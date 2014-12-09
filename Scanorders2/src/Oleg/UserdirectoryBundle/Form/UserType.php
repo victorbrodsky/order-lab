@@ -21,7 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class UserType extends AbstractType
 {
 
-    protected $cicle;
+    protected $cycle;
     protected $roleAdmin;
     protected $subjectUser;
     protected $cloneUser;
@@ -31,15 +31,15 @@ class UserType extends AbstractType
 
     public function __construct( $params )
     {
-        $this->cicle = $params['cicle'];
+        $this->cycle = $params['cycle'];
         $this->subjectUser = $params['user'];
         $this->cloneUser = $params['cloneuser'];
         $this->roles = $params['roles'];
         $this->sc = $params['sc'];
         $this->em = $params['em'];
 
-        //echo "cicle=".$cicle."<br>";
-//        if( $this->cicle == 'create' ) {
+        //echo "cycle=".$cycle."<br>";
+//        if( $this->cycle == 'create' ) {
 //            $this->roleAdmin = $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR');
 //        } else {
 //            $this->roleAdmin = $this->sc->isGranted('ROLE_ADMIN');
@@ -71,7 +71,7 @@ class UserType extends AbstractType
 
 
         //dummy user clone field
-        if( $this->cicle == "create" ) {
+        if( $this->cycle == "create" ) {
 
             $options = array(
                 'class' => 'OlegUserdirectoryBundle:User',
@@ -101,7 +101,7 @@ class UserType extends AbstractType
         }
         $builder->add('keytype', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
-            'read_only' => ($this->cicle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            'read_only' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'property' => 'name',
             'label' => '* Primary Public User ID Type:',
             'required' => true,
@@ -128,7 +128,7 @@ class UserType extends AbstractType
 
         $builder->add('primaryPublicUserId', null, array(
             'label' => '* Primary Public User ID:',
-            'read_only' => ($this->cicle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            'read_only' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
@@ -172,7 +172,7 @@ class UserType extends AbstractType
         ));
 
         //Roles
-        if( $this->cicle == "show" || $this->roleAdmin ) {
+        if( $this->cycle == "show" || $this->roleAdmin ) {
             $attr = array('class' => 'combobox combobox-width');
             $builder->add('roles', 'choice', array(
                 'choices' => $this->roles,
@@ -195,7 +195,7 @@ class UserType extends AbstractType
 
 
         //Administrative Titles
-        $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cicle'=>$this->cicle);
+        $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cycle'=>$this->cycle);
         $builder->add('administrativeTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,
@@ -207,7 +207,7 @@ class UserType extends AbstractType
             'prototype_name' => '__administrativetitles__',
         ));
 
-        $params = array('read_only'=>$read_only,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cicle'=>$this->cicle);
+        $params = array('read_only'=>$read_only,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
         $builder->add('appointmentTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,
@@ -219,7 +219,7 @@ class UserType extends AbstractType
             'prototype_name' => '__appointmenttitles__',
         ));
 
-        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser,'cicle'=>$this->cicle,'em'=>$this->em);
+        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->cycle,'em'=>$this->em);
         $builder->add('locations', 'collection', array(
             'type' => new LocationType($params),
             'label' => false,
@@ -232,8 +232,8 @@ class UserType extends AbstractType
         ));
 
         //visible only to admin or user himself on view
-        if( $this->roleAdmin || ($currentUser == false && $this->cicle == "show") ) {
-        //if( ($currentUser == true && $this->cicle == "show") || ($currentUser == false && $this->cicle == "show") ) {
+        if( $this->roleAdmin || ($currentUser == false && $this->cycle == "show") ) {
+        //if( ($currentUser == true && $this->cycle == "show") || ($currentUser == false && $this->cycle == "show") ) {
             $params = array('read_only'=>$read_only,'currentUser'=>$currentUser,'admin'=>$this->roleAdmin);
             $builder->add('employmentStatus', 'collection', array(
                 'type' => new EmploymentStatusType($params),
@@ -259,7 +259,7 @@ class UserType extends AbstractType
         ));
 
         if( $this->roleAdmin || $currentUser ) {
-            $params = array('em'=>$this->em);
+            $params = array('em'=>$this->em,'cycle'=>$this->cycle,'admin'=>$this->roleAdmin);
             $builder->add('credentials', new CredentialsType($params), array(
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
                 'label' => false,
@@ -312,7 +312,7 @@ class UserType extends AbstractType
             ));
         }
 
-        if( $this->roleAdmin || ($currentUser && $this->cicle == 'show') ) {
+        if( $this->roleAdmin || ($currentUser && $this->cycle == 'show') ) {
             $params = array('read_only'=>$read_only,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments');
             $builder->add('confidentialComments', 'collection', array(
                 'type' => new BaseCommentsType($params),

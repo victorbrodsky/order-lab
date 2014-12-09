@@ -20,7 +20,7 @@ class OrderInfoType extends AbstractType
     
 //    public function __construct( $type = null, $service = null, $entity = null )
     //params: type: single or clinical, educational, research
-    //params: cicle: new, edit, show
+    //params: cycle: new, edit, show
     //params: service: pathology service
     //params: entity: entity itself
     public function __construct( $params=null, $entity=null )
@@ -35,7 +35,7 @@ class OrderInfoType extends AbstractType
 
 //        echo "orderinfo params=";
         //echo "type=".$this->params['type']."<br>";
-        //echo "cicle=".$this->params['cicle']."<br>";
+        //echo "cycle=".$this->params['cycle']."<br>";
 //        echo "<br>";
 
         $helper = new FormHelper();
@@ -56,7 +56,7 @@ class OrderInfoType extends AbstractType
         ));
 
         //add children
-        //if( $this->params['type'] != 'Table-View Scan Order' || ($this->params['type'] == 'Table-View Scan Order' && $this->params['cicle'] != 'new') ) {
+        //if( $this->params['type'] != 'Table-View Scan Order' || ($this->params['type'] == 'Table-View Scan Order' && $this->params['cycle'] != 'new') ) {
         if( $this->params['type'] != 'Table-View Scan Order' ) {
 
             //echo "orderinfo type: show patient <br>";
@@ -100,7 +100,7 @@ class OrderInfoType extends AbstractType
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type', 'required'=>'required')
         );
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+        if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' ) {
             $priorityArr['data'] = 'Routine';    //new
         }
         $builder->add( 'priority', 'choice', $priorityArr);
@@ -115,7 +115,7 @@ class OrderInfoType extends AbstractType
         ));
 
         //scandeadline
-        if( $this->params['cicle'] == 'new' ) {
+        if( $this->params['cycle'] == 'new' ) {
             $scandeadline = date_modify(new \DateTime(), '+2 week');
         } else {
             $scandeadline = null;
@@ -202,12 +202,12 @@ class OrderInfoType extends AbstractType
         );
 
         //locations default and preferred choices
-        if( $this->params['cicle'] == 'new' && array_key_exists('returnSlide', $this->params) ) {
+        if( $this->params['cycle'] == 'new' && array_key_exists('returnSlide', $this->params) ) {
             $returnSlide = $this->params['returnSlide'];
             $returnSlidesOptions['data'] = $returnSlide['data']->getId();
         }
 
-        if( $this->params['cicle'] == 'show' ) {
+        if( $this->params['cycle'] == 'show' ) {
             $builder->add('returnSlide', 'entity', array(
                 'label' => 'Return Slides to:',
                 'required'=> false,
@@ -237,7 +237,7 @@ class OrderInfoType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
         ));
 
-        if( $this->params['cicle'] != 'show' ) {
+        if( $this->params['cycle'] != 'show' ) {
 
             if( array_key_exists('department', $this->params) ) {
                 $departmentId = $this->params['department']->getId();
@@ -273,7 +273,7 @@ class OrderInfoType extends AbstractType
             ));
         }
 
-        if( $this->params['cicle'] == 'show' ) {
+        if( $this->params['cycle'] == 'show' ) {
             //echo "entity service";
             $builder->add('service', 'entity', array(
                 'label' => 'Service:',

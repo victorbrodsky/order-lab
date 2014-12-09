@@ -10,7 +10,7 @@
 //prevent exit modified form
 function windowCloseAlert() {
 
-    if( cicle == "show" ) {
+    if( cycle == "show" ) {
         return;
     }
 
@@ -779,7 +779,7 @@ function purposeOption() {
 //function initDatepicker() {
 //
 //    //console.log('init datepicker');
-//    if( cicle != "show" ) {
+//    if( cycle != "show" ) {
 //
 //        //console.log("init Datepicker");
 //
@@ -806,7 +806,7 @@ function purposeOption() {
 //remove null or "remove"
 function processDatepicker( element, remove ) {
 
-    if( cicle != "show" ) {
+    if( cycle != "show" ) {
 
         //replace element (input field) by a parent with class .input-group .date
         if( !element ) {

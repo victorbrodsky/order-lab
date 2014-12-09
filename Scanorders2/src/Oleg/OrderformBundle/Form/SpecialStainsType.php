@@ -41,7 +41,7 @@ class SpecialStainsType extends AbstractType
             'classtype' => 'staintype'
         );
         //do not default "H&E" in Associated Stains
-        //if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+        //if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
         //    $options['data'] = 1;
         //}
         $builder->add('staintype', 'custom_selector', $options );

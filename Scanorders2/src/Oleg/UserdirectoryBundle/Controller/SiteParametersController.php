@@ -72,7 +72,7 @@ class SiteParametersController extends Controller
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'cicle' => 'show',
+            'cycle' => 'show',
             'link' => $link,
             'sitename' => $sitename
         );
@@ -112,7 +112,7 @@ class SiteParametersController extends Controller
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'cicle' => 'edit',
+            'cycle' => 'edit',
             'param' => $param,
             'sitename' => $sitename
             //'delete_form' => $deleteForm->createView(),
@@ -161,7 +161,7 @@ class SiteParametersController extends Controller
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'cicle' => 'edit',
+            'cycle' => 'edit',
             'param' => '',
             'sitename' => $sitename
         );
@@ -182,7 +182,7 @@ class SiteParametersController extends Controller
         if( !$disabled ) {
             $cycle = 'edit';
         }
-        $params = array('cicle'=>$cycle,'param'=>$param);
+        $params = array('cycle'=>$cycle,'param'=>$param);
 
         $form = $this->createForm(new SiteParametersType($params), $entity, array(
             'action' => $this->generateUrl($sitename.'_siteparameters_update', array('id' => $entity->getId(), 'param' => $param )),

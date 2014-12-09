@@ -165,7 +165,7 @@ class OrderUtil {
             $entity->setStatus($status_entity);
             $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
             $entity->setOid($swapId);
-            //$entity->setCicle("superseded");
+            //$entity->setCycle("superseded");
 
             //record history
             $history->setCurrentid($entity->getOid());
@@ -322,7 +322,7 @@ class OrderUtil {
 //        $em->detach($newOrderinfo);
 //
 //        $newOrderinfo->setStatus($status_entity);
-//        //$newOrderinfo->setCicle('submit');
+//        //$newOrderinfo->setCycle('submit');
 //        $newOrderinfo->setOid($originalId);
 //
 //        //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );

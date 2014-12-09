@@ -179,7 +179,7 @@ class UserController extends Controller
 
         if( $tablename == "institution" ) {
             $em = $this->getDoctrine()->getManager();
-            $instName = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation();
+            $instName = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation($objectname);
             $title = 'Current employees of the '.$instName;
         }
 
@@ -977,7 +977,7 @@ class UserController extends Controller
         $rolesArr = $this->getUserRoles();
 
         $params = array(
-            'cicle' => 'create',
+            'cycle' => 'create',
             'user' => $user,
             'cloneuser' => $subjectUser,
             'roles' => $rolesArr,
@@ -995,7 +995,7 @@ class UserController extends Controller
         return array(
             'entity' => $user,
             'form' => $form->createView(),
-            'cicle' => 'create_user',
+            'cycle' => 'create_user',
             'user_id' => '',
             'sitename' => $this->container->getParameter('employees.sitename'),
             'userclone' => $subjectUser
@@ -1034,7 +1034,7 @@ class UserController extends Controller
         $rolesArr = $this->getUserRoles();
 
         $params = array(
-            'cicle' => 'create',
+            'cycle' => 'create',
             'user' => $user,
             'cloneuser' => null,
             'roles' => $rolesArr,
@@ -1096,7 +1096,7 @@ class UserController extends Controller
         return array(
             'entity' => $user,
             'form' => $form->createView(),
-            'cicle' => 'create_user',
+            'cycle' => 'create_user',
             'user_id' => '',
             'sitename' => $this->container->getParameter('employees.sitename')
         );
@@ -1150,7 +1150,7 @@ class UserController extends Controller
         $rolesArr = $this->getUserRoles();
 
         $params = array(
-            'cicle' => 'show',
+            'cycle' => 'show',
             'user' => $entity,
             'cloneuser' => null,
             'roles' => $rolesArr,
@@ -1177,7 +1177,7 @@ class UserController extends Controller
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => 'show_user',
+            'cycle' => 'show_user',
             'user_id' => $id,
             'sitename' => $sitename,
             'roleobjects' => $roleobjects
@@ -1217,7 +1217,7 @@ class UserController extends Controller
         $rolesArr = $this->getUserRoles();
 
         $params = array(
-            'cicle' => 'edit',
+            'cycle' => 'edit',
             'user' => $entity,
             'cloneuser' => null,
             'roles' => $rolesArr,
@@ -1234,7 +1234,7 @@ class UserController extends Controller
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => 'edit_user',
+            'cycle' => 'edit_user',
             'user_id' => $id,
             'sitename' => $sitename
         );
@@ -1418,7 +1418,7 @@ class UserController extends Controller
         $rolesArr = $this->getUserRoles();
 
         $params = array(
-            'cicle' => 'edit',
+            'cycle' => 'edit',
             'user' => $entity,
             'cloneuser' => null,
             'roles' => $rolesArr,
@@ -1562,7 +1562,7 @@ class UserController extends Controller
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'cicle' => 'edit_user',
+            'cycle' => 'edit_user',
             'user_id' => $id,
             'sitename' => $sitename
         );

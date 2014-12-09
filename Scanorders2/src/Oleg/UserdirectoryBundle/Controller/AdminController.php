@@ -893,7 +893,8 @@ class AdminController extends Controller
 
         $elements = array(
             'WCMC Employee Identification Number (EIN)',
-            'National Provider Identifier (NPI)'
+            'National Provider Identifier (NPI)',
+            'MRN'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

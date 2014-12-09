@@ -8,7 +8,7 @@ var asyncflag = true;
 var combobox_width = '100%'; //'element'
 
 var urlBase = $("#baseurl").val();
-var cicle = $("#formcicle").val();
+var cycle = $("#formcycle").val();
 var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
 
@@ -217,7 +217,7 @@ function extendAll(holder) {
 
 function initDatepicker() {
 
-    if( cicle != "show" ) {
+    if( cycle != "show" ) {
 
         //console.log("init Datepicker");
 

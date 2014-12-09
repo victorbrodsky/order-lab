@@ -83,8 +83,8 @@ class CustomSelectorType extends AbstractType {
             case "room":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'RoomList');
                 break;
-            case "suit":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'SuitList');
+            case "suite":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'SuiteList');
                 break;
             case "floor":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'FloorList');

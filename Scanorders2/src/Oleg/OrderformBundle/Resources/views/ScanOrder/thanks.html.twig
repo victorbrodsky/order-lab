@@ -18,12 +18,12 @@
 
 {% block content %}
 
-    {% if cicle == 'new' %}
-        {% set cicleStr = 'Submitted' %}
-    {% elseif cicle == 'edit' %}
-        {% set cicleStr = 'Saved' %}
+    {% if cycle == 'new' %}
+        {% set cycleStr = 'Submitted' %}
+    {% elseif cycle == 'edit' %}
+        {% set cycleStr = 'Saved' %}
     {% else %}
-        {% set cicleStr = 'Amended' %}
+        {% set cycleStr = 'Amended' %}
     {% endif %}
 
     {% set emailconf = "" %}
@@ -34,7 +34,7 @@
     <div class="alert alert-info well-lg">
         <p><h1>Thank you for your order!</h1></p>
         <p><h3>
-            <a href="{{ path('multy_show', { 'id': oid }) }}">Order {{ oid }}</a> has been successfully {{ cicleStr|lower }}{{ emailconf }}.
+            <a href="{{ path('multy_show', { 'id': oid }) }}">Order {{ oid }}</a> has been successfully {{ cycleStr|lower }}{{ emailconf }}.
         </h3></p>
 
         {% if app.security.getToken().getUser.getEmail == null or app.security.getToken().getUser.getEmail == "" %}

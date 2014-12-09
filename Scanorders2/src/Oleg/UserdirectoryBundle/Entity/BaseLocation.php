@@ -25,7 +25,7 @@ class BaseLocation extends ListAbstract
     protected $removable;
 
     /**
-     * @ORM\ManyToOne(targetEntity="LocationTypeList")
+     * @ORM\ManyToOne(targetEntity="LocationTypeList",cascade={"persist"})
      * @ORM\JoinColumn(name="locationType", referencedColumnName="id")
      */
     protected $locationType;
@@ -56,8 +56,7 @@ class BaseLocation extends ListAbstract
     protected $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RoomList")
-     * @ORM\JoinColumn(name="room", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="RoomList",cascade={"persist"})
      **/
     protected $room;
 
@@ -67,20 +66,17 @@ class BaseLocation extends ListAbstract
     protected $geoLocation;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FloorList")
-     * @ORM\JoinColumn(name="floor", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="FloorList",cascade={"persist"})
      **/
     protected $floor;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SuitList")
-     * @ORM\JoinColumn(name="suit", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="SuiteList",cascade={"persist"})
      **/
-    protected $suit;
+    protected $suite;
 
     /**
-     * @ORM\ManyToOne(targetEntity="MailboxList")
-     * @ORM\JoinColumn(name="mailbox", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="MailboxList",cascade={"persist"})
      **/
     protected $mailbox;
 
@@ -313,19 +309,19 @@ class BaseLocation extends ListAbstract
     }
 
     /**
-     * @param mixed $suit
+     * @param mixed $suite
      */
-    public function setSuit($suit)
+    public function setSuite($suite)
     {
-        $this->suit = $suit;
+        $this->suite = $suite;
     }
 
     /**
      * @return mixed
      */
-    public function getSuit()
+    public function getSuite()
     {
-        return $this->suit;
+        return $this->suite;
     }
 
     public function getStatusStr()

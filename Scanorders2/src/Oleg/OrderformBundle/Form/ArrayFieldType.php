@@ -24,7 +24,7 @@ class ArrayFieldType extends AbstractType
     {
         $builder->add('id','hidden');
 
-        if( $this->params['cicle'] == "show" ) {
+        if( $this->params['cycle'] == "show" ) {
             $builder->add('creationdate');
             $builder->add('provider');
         }

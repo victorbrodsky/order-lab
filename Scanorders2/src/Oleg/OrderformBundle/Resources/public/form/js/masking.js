@@ -97,7 +97,7 @@ function fieldInputMask( holder ) {
         holder.find(":input").inputmask();
     }
 
-    if( cicle == "new" || cicle == "create" ) {
+    if( cycle == "new" || cycle == "create" ) {
 
         if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
             //console.log("Set default mask for all");

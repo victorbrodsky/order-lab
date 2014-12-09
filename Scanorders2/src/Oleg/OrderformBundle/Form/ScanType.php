@@ -33,7 +33,7 @@ class ScanType extends AbstractType
             'attr' => $attr,
             'classtype' => 'scanRegion'
         );
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+        if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
             $options['data'] = 'Entire Slide';
         }
         $builder->add('scanregion', 'custom_selector', $options);
@@ -94,7 +94,7 @@ class ScanType extends AbstractType
 //            'expanded' => true,
 //            'attr' => array('class' => 'horizontal_type', 'required'=>'required', 'title'=>'40X Scan Batch is run Fri-Mon. Some slide may have to be rescanned once or more. We will do our best to expedite the scanning.')
 //        );
-//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+//        if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' ) {
 //            $magArr['data'] = '20X';    //new
 //        }
 //        $builder->add( 'field', 'choice', $magArr );

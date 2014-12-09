@@ -228,12 +228,12 @@ class ListController extends Controller
     * @param $entity The entity
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createCreateForm($entity,$mapper,$pathbase,$cicle=null)
+    private function createCreateForm($entity,$mapper,$pathbase,$cycle=null)
     {
         $options = array();
 
-        if( $cicle ) {
-            $options['cicle'] = $cicle;
+        if( $cycle ) {
+            $options['cycle'] = $cycle;
         }
 
         //use $timezone = $user->getTimezone(); ?
@@ -484,15 +484,15 @@ class ListController extends Controller
     * @param $entity
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm($entity,$mapper,$pathbase,$cicle,$disabled=false)
+    private function createEditForm($entity,$mapper,$pathbase,$cycle,$disabled=false)
     {
 
         $options = array();
 
         $options['id'] = $entity->getId();
 
-        if( $cicle ) {
-            $options['cicle'] = $cicle;
+        if( $cycle ) {
+            $options['cycle'] = $cycle;
         }
 
         //use $timezone = $user->getTimezone(); ?
@@ -781,7 +781,7 @@ class ListController extends Controller
                 $displayName = "Rooms";
                 break;
             case "suites":
-                $className = "SuitList";
+                $className = "SuiteList";
                 $displayName = "Suites";
                 break;
             case "floors":

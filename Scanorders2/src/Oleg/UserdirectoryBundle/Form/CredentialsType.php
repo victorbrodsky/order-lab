@@ -114,7 +114,7 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('identifiers', 'collection', array(
-            'type' => new IdentifierType(),
+            'type' => new IdentifierType($this->params),
             'label' => false,
             'required' => false,
             'allow_add' => true,

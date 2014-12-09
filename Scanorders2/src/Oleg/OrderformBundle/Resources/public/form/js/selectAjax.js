@@ -13,7 +13,7 @@ var asyncflag = true;
 var urlBase = $("#baseurl").val();
 //var urlCommon = urlBase+"util/";
 //var type = $("#formtype").val();
-var cicle = $("#formcicle").val();
+var cycle = $("#formcycle").val();
 //var user_keytype = $("#user_keytype").val();
 var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
@@ -76,9 +76,9 @@ function setResearchEducational() {
 
 function customCombobox() {
 
-    //console.log("cicle="+cicle);
+    //console.log("cycle="+cycle);
 
-    if( cicle && urlBase && cicle != 'edit_user' && cicle != 'accountreq' ) {
+    if( cycle && urlBase && cycle != 'edit_user' && cycle != 'accountreq' ) {
         getComboboxMrnType(new Array("0","0","0","0","0","0"));
         getComboboxAccessionType(new Array("0","0","0","0","0","0"));
         getComboboxPartname(new Array("0","0","0","0","0","0"));
@@ -138,7 +138,7 @@ function getComboboxStain(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"stain");
 
-    if( cicle == "new" || cicle == "create" ) {
+    if( cycle == "new" || cycle == "create" ) {
         url = url + "?opt=default";
     }
 
@@ -165,7 +165,7 @@ function getComboboxStain(ids,holder) {
         //populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
     }
 
-    if( cicle == "new"  ) {
+    if( cycle == "new"  ) {
 //        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
 //        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
 //        var targetid = id+"stain_0_field";
@@ -178,12 +178,12 @@ function getComboboxSpecialStain(ids, preset, setId) {
 
     var url = getCommonBaseUrl("util/"+"stain");    //urlCommon+"stain";
 
-    if( cicle == "new" || cicle == "create" ) {
+    if( cycle == "new" || cycle == "create" ) {
         url = url + "?opt=default";
     }
 
     var targetid = "";
-    if( cicle == "new" || (cicle == "amend" && preset) || (cicle == "edit" && preset) ) {
+    if( cycle == "new" || (cycle == "amend" && preset) || (cycle == "edit" && preset) ) {
         var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         targetid = id+"specialStains_"+ids[5]+"_staintype";
@@ -222,7 +222,7 @@ function getComboboxScanregion(ids,holder) {
         targetid = holder.find(targetid);
     }
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
 
@@ -239,7 +239,7 @@ function getComboboxScanregion(ids,holder) {
         populateSelectCombobox( targetid, _scanregion, null );
     }
 
-    if( cicle == "new"  ) {
+    if( cycle == "new"  ) {
 //        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
 //        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
 //        var targetid = id+"scan_0_scanregion";
@@ -257,7 +257,7 @@ function getComboboxOrgan(ids,holder) {
         targetid = holder.find(targetid);
     }
 
-    if( cicle == "new" || cicle == "create" ) {
+    if( cycle == "new" || cycle == "create" ) {
         url = url + "?opt=default";
     }
 
@@ -286,7 +286,7 @@ function getComboboxProcedure(ids,holder) {
         targetid = holder.find(targetid);
     }
 
-    if( cicle == "new" || cicle == "create" ) {
+    if( cycle == "new" || cycle == "create" ) {
         url = url + "?opt=default";
     }
 
@@ -315,7 +315,7 @@ function getComboboxAccessionType(ids,holder) {
         targetid = holder.find(targetid);
     }
 
-    if( cicle == "new" || cicle == "create" ) {
+    if( cycle == "new" || cycle == "create" ) {
         url = url + "?opt=default&type="+orderformtype;
     }
 
@@ -333,7 +333,7 @@ function getComboboxAccessionType(ids,holder) {
         populateSelectCombobox( targetid, _accessiontype, null );
     }
 
-    if( cicle == "new"  ) {
+    if( cycle == "new"  ) {
 //        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2];
 //        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
 //        var targetid = id+"accession_0_accessiontype";
@@ -353,7 +353,7 @@ function getComboboxMrnType(ids,holder) {
         targetid = holder.find(targetid);
     }
 
-    if( cicle == "new" || cicle == "create" ) {
+    if( cycle == "new" || cycle == "create" ) {
         url = url + "?opt=default&type="+orderformtype;
     }
 
@@ -371,7 +371,7 @@ function getComboboxMrnType(ids,holder) {
         populateSelectCombobox( targetid, _mrntype, null );
     }
 
-    if( cicle == "new"  ) {
+    if( cycle == "new"  ) {
         //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_keytype
 //        var uid = 'patient_'+ids[0];
 //        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
@@ -395,9 +395,9 @@ function getComboboxPartname(ids,holder) {
         targetid = holder.find(targetid);
     }
     //console.log("part targetid="+targetid);
-    //console.log("cicle="+cicle);
+    //console.log("cycle="+cycle);
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
 
@@ -448,7 +448,7 @@ function getComboboxBlockname(ids,holder) {
     }
     //console.log("block targetid="+targetid);
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
 
@@ -474,7 +474,7 @@ function getComboboxDelivery(ids) {
     var url = getCommonBaseUrl("util/"+"delivery");    //urlCommon+"delivery";
     var target = ".ajax-combobox-delivery";
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
 
@@ -487,13 +487,13 @@ function getComboboxDelivery(ids) {
         }).success(function(data) {
                 _delivery = data;
             populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
-            if( cicle == "new"  ) {
+            if( cycle == "new"  ) {
                 setElementToId( target, _delivery );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
-        if( cicle == "new"  ) {
+        if( cycle == "new"  ) {
             setElementToId( target, _delivery );
         }
     }
@@ -507,7 +507,7 @@ function getComboboxDelivery(ids) {
 //    var url = getCommonBaseUrl("util/"+"return"); //urlCommon+"return";
 //    //var targetid = id+"returnSlide";
 //
-//    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+//    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
 //        url = url + "?opt="+orderinfoid;
 //    }
 //
@@ -520,14 +520,14 @@ function getComboboxDelivery(ids) {
 //        }).success(function(data) {
 //                _returnslide = data;
 //            populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
-//            if( cicle == "new"  ) {
+//            if( cycle == "new"  ) {
 //                //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
 //                setElementToId( ".ajax-combobox-return", _returnslide );
 //            }
 //        });
 //    } else {
 //        populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
-//        if( cicle == "new"  ) {
+//        if( cycle == "new"  ) {
 //            //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
 //            setElementToId( ".ajax-combobox-return", _returnslide );
 //        }
@@ -546,7 +546,7 @@ function getProjectTitle(ids,holder) {
         targetid = holder.find(targetid);
     }
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
 
@@ -588,7 +588,7 @@ function getSetTitle() {
 
     url = url + "?opt="+idInArr;
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "&orderoid="+orderinfoid;
     }
 
@@ -619,7 +619,7 @@ function getCourseTitle(ids,holder) {
         targetid = holder.find(targetid);
     }
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
 
@@ -660,7 +660,7 @@ function getLessonTitle() {
 
     url = url + "?opt="+idInArr;
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "&orderoid="+orderinfoid;
     }
 
@@ -795,7 +795,7 @@ function getComboboxAccount(ids,holder) {
         targetid = holder.find(targetid);
     }
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
 
@@ -851,7 +851,7 @@ function getUrgency() {
 
     var url = getCommonBaseUrl("util/"+"urgency");  //urlCommon+"urgency";
 
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
 
@@ -864,13 +864,13 @@ function getUrgency() {
         }).success(function(data) {
             _urgency = data;
             populateSelectCombobox( ".ajax-combobox-urgency", _urgency, null );
-            if( cicle == "new"  ) {
+            if( cycle == "new"  ) {
                 setElementToId( ".ajax-combobox-urgency", _urgency );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-urgency", _urgency, null );
-        if( cicle == "new"  ) {
+        if( cycle == "new"  ) {
             setElementToId( ".ajax-combobox-urgency", _urgency );
         }
     }
@@ -883,7 +883,7 @@ function initComboboxJs(ids, holder) {
 
     if( urlBase ) {
 
-        cicle = 'new';
+        cycle = 'new';
 
         getComboboxMrnType(ids,holder);
         getComboboxAccessionType(ids,holder);

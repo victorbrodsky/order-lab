@@ -74,14 +74,14 @@
                 <td class="rowlink-skip">
                     {% for administrativeTitle in entity.administrativeTitles %}
                         {% if administrativeTitle.name %}
-                            <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name, 'name': administrativeTitle.name }) }}">{{ administrativeTitle.name }}</a></p>
+                            <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name.id, 'name': administrativeTitle.name.name }) }}">{{ administrativeTitle.name }}</a></p>
                         {% endif %}
                     {% endfor %}
                 </td>
                 <td class="rowlink-skip">
                     {% for appointmentTitles in entity.appointmentTitles %}
                         {% if appointmentTitles.name %}
-                            <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name, 'name': appointmentTitles.name }) }}">{{ appointmentTitles.name }}</a></p>
+                            <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name.id, 'name': appointmentTitles.name.name }) }}">{{ appointmentTitles.name }}</a></p>
                         {% endif %}
                     {% endfor %}
                 </td>
@@ -117,7 +117,7 @@
                 <td class="rowlink-skip">
                     {% for location in entity.locations %}
                         {% if location.room %}
-                            <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'room','id': location.room, 'name': location.room }) }}">{{ location.room }}</a></p>
+                            <p><a href="{{ path( sitename~'_search_same_object', { 'tablename':'room','id': location.room.id, 'name': location.room.name }) }}">{{ location.room }}</a></p>
                         {% endif %}
                     {% endfor %}
                 </td>

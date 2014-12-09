@@ -7,18 +7,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_suitlist")
+ * @ORM\Table(name="user_suitelist")
  */
-class SuitList extends ListAbstract
+class SuiteList extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="SuitList", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="SuiteList", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SuitList", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="SuiteList", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;

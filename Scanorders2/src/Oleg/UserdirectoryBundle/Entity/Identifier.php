@@ -12,6 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Identifier
 {
 
+    const STATUS_UNVERIFIED = 0;    //unverified (not trusted)
+    const STATUS_VERIFIED = 1;      //verified by admin
+
     /**
      * @var integer
      *
@@ -32,12 +35,27 @@ class Identifier
      */
     private $field;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $link;
 
     /**
      * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="identifiers")
      * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $credentials;
+    private $credentials;
+
+    /**
+     * status: valid, invalid
+     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
+     */
+    private $status;
+
+
+    public function __construct() {
+        $this->setStatus(self::STATUS_UNVERIFIED);
+    }
 
 
 
@@ -103,6 +121,56 @@ class Identifier
     public function getKeytype()
     {
         return $this->keytype;
+    }
+
+    /**
+     * @param mixed $link
+     */
+    public function setLink($link)
+    {
+        $this->link = $link;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function getStatusStr()
+    {
+        return $this->getStatusStrByStatus($this->getStatus());
+    }
+
+    public function getStatusStrByStatus($status)
+    {
+        $str = $status;
+
+        if( $status == self::STATUS_UNVERIFIED )
+            $str = "Pending Administrative Review";
+
+        if( $status == self::STATUS_VERIFIED )
+            $str = "Verified by Administration";
+
+        return $str;
     }
 
 

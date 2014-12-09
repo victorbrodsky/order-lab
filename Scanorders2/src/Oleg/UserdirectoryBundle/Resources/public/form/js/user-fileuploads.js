@@ -58,16 +58,16 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     //Dropzone.autoDiscover = false;
 
-    //console.log('cicle='+cicle);
+    //console.log('cycle='+cycle);
     var clickable = true;
 
-    if( cicle == "show_user" || cicle == "show" ) {
+    if( cycle == "show_user" || cycle == "show" ) {
         clickable = false;
     }
 
     if( typeof addRemoveLinks === 'undefined' ) {
         var addRemoveLinks = true;
-        if( cicle == "show_user" || cicle == "show" ) {
+        if( cycle == "show_user" || cycle == "show" ) {
             addRemoveLinks = null;
         }
     }

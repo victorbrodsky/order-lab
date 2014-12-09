@@ -369,8 +369,8 @@ class Location extends BaseLocation
             $detailsArr[] = $this->getRoom();
         }
 
-        if( $this->getSuit() ) {
-            $detailsArr[] = $this->getSuit();
+        if( $this->getSuite() ) {
+            $detailsArr[] = $this->getSuite();
         }
 
         if( $this->getBuilding() ) {

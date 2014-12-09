@@ -49,7 +49,7 @@ function tryToSubmitForm() {
     console.log("try To Submit Form: on timeout. len="+$('#save_order_onidletimeout_btn').length);
 
     if( $('#save_order_onidletimeout_btn').length > 0 &&
-        ( cicle == "new" || cicle == "edit" || cicle == "amend" ) &&
+        ( cycle == "new" || cycle == "edit" || cycle == "amend" ) &&
         checkIfOrderWasModified()
         ) {
         console.log("try To Submit Form: save!!!!!!!!!!!");
