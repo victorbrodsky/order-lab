@@ -34,7 +34,7 @@ class Logger
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
@@ -301,75 +301,5 @@ class Logger
 
         $this->setEvent( $event );
     }
-
-
-//    //Edit events
-//
-//    /**
-//     * @param mixed $editfieldname
-//     */
-//    public function setEditfieldname($editfieldname)
-//    {
-//        $this->editfieldname = $editfieldname;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getEditfieldname()
-//    {
-//        return $this->editfieldname;
-//    }
-//
-//    /**
-//     * @param mixed $editfieldnewvalue
-//     */
-//    public function setEditfieldnewvalue($editfieldnewvalue)
-//    {
-//        $this->editfieldnewvalue = $editfieldnewvalue;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getEditfieldnewvalue()
-//    {
-//        return $this->editfieldnewvalue;
-//    }
-//
-//    /**
-//     * @param mixed $editfieldoldvalue
-//     */
-//    public function setEditfieldoldvalue($editfieldoldvalue)
-//    {
-//        $this->editfieldoldvalue = $editfieldoldvalue;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getEditfieldoldvalue()
-//    {
-//        return $this->editfieldoldvalue;
-//    }
-//
-//    /**
-//     * @param mixed $subjectuser
-//     */
-//    public function setSubjectuser($subjectuser)
-//    {
-//        $this->subjectuser = $subjectuser;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getSubjectuser()
-//    {
-//        return $this->subjectuser;
-//    }
-
-
-
 
 }

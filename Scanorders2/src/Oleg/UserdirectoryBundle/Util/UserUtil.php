@@ -212,23 +212,25 @@ class UserUtil {
             $options['serverresponse'] = http_response_code();
         }
 
+        $logger = new Logger($options['sitename']);
+
         $token = $security_content->getToken();
 
         if( $token ) {
             $user = $security_content->getToken()->getUser();
             $username = $token->getUsername();
-            //print_r($user);
+            print_r($user);
             if( $user && is_object($user) ) {
                 $roles = $user->getRoles();
             } else {
                 $user = null;
             }
+            $logger->setUser($user);
         } else {
+            $logger->setUser(null);
             $username = $request->get('_username');
         }
 
-        $logger = new Logger($options['sitename']);
-        $logger->setUser($user);
         $logger->setRoles($roles);
         $logger->setUsername($username);
         $logger->setIp($request->getClientIp());
@@ -245,7 +247,7 @@ class UserUtil {
         //exit();
 
         $em->persist($logger);
-        $em->flush();
+        $em->flush($logger);
 
     }
 
