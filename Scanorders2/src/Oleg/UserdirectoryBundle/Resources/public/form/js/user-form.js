@@ -314,3 +314,41 @@ function userCloneListener() {
 }
 
 
+
+//identifier type listener
+function identifierTypeListener( holder ) {
+
+    var targetClass = ".ajax-combobox-identifierkeytype";   //".identifier-keytypemrn-field";
+
+    var identifiersTypes = $(targetClass);
+
+    if( identifiersTypes.length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        identifiersTypes = holder.find(targetClass);
+
+        if( identifiersTypes.length == 0 ) {
+            return;
+        }
+    }
+
+    identifiersTypes.on("change", function(e) {
+
+        var type = $(this).select2('data');
+        console.log("type="+type);
+
+        if( type && type.text == "MRN" ) {
+            $(this).closest('.user-identifiers').find('.identifier-keytypemrn-field-holder').show();
+            //$(this).closest('.user-identifiers').find('.identifier-keytypemrn-field-holder').removeClass('hideComplex');
+        } else {
+            $(this).closest('.user-identifiers').find('.identifier-keytypemrn-field-holder').hide();
+            //$(this).closest('.user-identifiers').find('.identifier-keytypemrn-field-holder').addClass('hideComplex');
+        }
+
+    });
+
+}
+
+

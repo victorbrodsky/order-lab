@@ -9,6 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
+ * Note: this file is used in Oleg\UserdirectoryBundle\Entity\Identifier. Do not change!
+ *
  * @ORM\Entity
  * @ORM\Table(name="scan_mrntype")
  */

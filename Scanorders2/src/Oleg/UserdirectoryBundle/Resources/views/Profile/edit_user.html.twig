@@ -235,7 +235,7 @@
 
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if cycle != 'show_user' and field.vars.value.id != app.security.getToken().getUser().getId() %}
+        {% if cycle != 'show_user' and formfield.vars.value and formfield.vars.value.id != app.security.getToken().getUser().getId() %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
@@ -288,6 +288,23 @@
 
         {{ formmacros.field(formfield.keytype) }}
 
+        {% if formfield.keytypemrn is defined %}
+            {#{% set displayNone = "display:none;" %}#}
+            {#{% set hideClass = "hideComplex" %}#}
+            {% if formfield.vars.value and formfield.vars.value.keytypemrn.id %}
+                {% set displayNone = "" %}
+                {#{% set hideClass = "" %}#}
+            {% else %}
+                <p></p>
+                {% set displayNone = "display:none;" %}
+            {% endif %}
+
+            <div class="identifier-keytypemrn-field-holder" style="{{ displayNone }}">
+                {#<div class="identifier-keytypemrn-field-holder {{ hideClass }}">#}
+                {{ formmacros.field(formfield.keytypemrn) }}
+            </div>
+        {% endif %}
+
         {% if cycle == 'show_user' %}
 
             {% if formfield.link is defined and formfield.vars.value and formfield.vars.value.link != '' %}
@@ -303,9 +320,8 @@
                 {{ formmacros.simplefield( "Identifier:", hreflink, "", "disabled" ) }}
 
             {% else %}
-
+                <br>
                 {{ formmacros.field(formfield.field) }}
-
             {% endif %}
 
         {% else %}

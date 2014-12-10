@@ -54,6 +54,8 @@ $(document).ready(function() {
 
     userCloneListener();
 
+    identifierTypeListener();
+
 });
 
 

@@ -53,6 +53,8 @@ function initBaseAdd(newForm) {
     initFileUpload(newForm);
 
     confirmDeleteWithExpired(newForm);
+
+    identifierTypeListener(newForm);
 }
 
 //get input field only

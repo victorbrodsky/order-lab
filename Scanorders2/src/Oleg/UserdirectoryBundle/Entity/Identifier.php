@@ -31,6 +31,14 @@ class Identifier
     private $keytype;
 
     /**
+     * Note: this is a link to OrderformBundle bundle file Oleg\OrderformBundle\Entity\MrnType.
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MrnType", cascade={"persist"})
+     * @ORM\JoinColumn(name="keytypemrn_id", referencedColumnName="id", nullable=true)
+     */
+    protected $keytypemrn;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $field;
@@ -58,6 +66,21 @@ class Identifier
     }
 
 
+    /**
+     * @param mixed $keytypemrn
+     */
+    public function setKeytypemrn($keytypemrn)
+    {
+        $this->keytypemrn = $keytypemrn;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getKeytypemrn()
+    {
+        return $this->keytypemrn;
+    }
 
     /**
      * @param mixed $credentials

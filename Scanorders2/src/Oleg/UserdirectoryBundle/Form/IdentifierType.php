@@ -52,6 +52,25 @@ class IdentifierType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
+        //keytypemrn
+        $builder->add('keytypemrn', 'entity', array(
+            'class' => 'OlegOrderformBundle:MrnType',
+            'property' => 'name',
+            'label'=>'MRN Type:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width identifier-keytypemrn-field'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

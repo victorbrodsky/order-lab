@@ -965,7 +965,7 @@ class UserController extends Controller
         }
         $user->getCredentials()->addIdentifier($identEin);
 
-        //add EIN identifier to credentials
+        //add NPI identifier to credentials
         $identNpi = new Identifier();
         $identKeytypeNpi = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("National Provider Identifier (NPI)");
         if( $identKeytypeNpi ) {
@@ -1369,6 +1369,11 @@ class UserController extends Controller
         }
 
         //Credentials collections
+        $originalIdentifiers = new ArrayCollection();
+        foreach( $entity->getCredentials()->getIdentifiers() as $subitem) {
+            $originalIdentifiers->add($subitem);
+        }
+
         $originalStateLicense = new ArrayCollection();
         foreach( $entity->getCredentials()->getStateLicense() as $subitem) {
             $originalStateLicense->add($subitem);
@@ -1383,6 +1388,7 @@ class UserController extends Controller
         foreach( $entity->getCredentials()->getCodeNYPH() as $subitem) {
             $originalCodeNYPH->add($subitem);
         }
+        //eof Credentials collections
 
         $originalEmplStatus = new ArrayCollection();
         foreach( $entity->getEmploymentStatus() as $item) {
@@ -1491,7 +1497,12 @@ class UserController extends Controller
                 $removedCollections[] = $removedInfo;
             }
 
-            //check for removed collection for Credentials: stateLicense, boardCertification, codeNYPH
+            //check for removed collection for Credentials: identifiers, stateLicense, boardCertification, codeNYPH
+            $removedInfo = $this->removeCollection($originalIdentifiers,$entity->getCredentials()->getIdentifiers());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
             $removedInfo = $this->removeCollection($originalStateLicense,$entity->getCredentials()->getStateLicense());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
@@ -1506,6 +1517,7 @@ class UserController extends Controller
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
+            //eof removed collection for Credentials
 
             $removedEmplStatus = $this->removeCollection($originalEmplStatus,$entity->getEmploymentStatus());
             if( $removedEmplStatus ) {
