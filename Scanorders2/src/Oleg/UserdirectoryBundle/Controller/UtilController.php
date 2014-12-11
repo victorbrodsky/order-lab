@@ -590,10 +590,11 @@ class UtilController extends Controller {
 
         if( $type == "admintitle" ) {
             $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+            $dql->leftJoin("administrativeTitles.name", "adminTitleName");
             if( $search == "min" ) {
-                $criteriastr = "administrativeTitles.name IS NOT NULL";
+                $criteriastr = "adminTitleName.name IS NOT NULL";
             } else {
-                $criteriastr = "administrativeTitles.name LIKE '%".$search."%'";
+                $criteriastr = "adminTitleName.name LIKE '%".$search."%'";
             }
 
             //time
