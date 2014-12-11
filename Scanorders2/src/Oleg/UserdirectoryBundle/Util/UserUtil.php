@@ -747,7 +747,11 @@ class UserUtil {
         }
 
         $adminTitle = $entity->getAdministrativeTitles()->first();
-        $adminTitleName = $adminTitle->getName();
+        if( $adminTitle ) {
+            $adminTitleName = $adminTitle->getName();
+        } else {
+            $adminTitleName = null;
+        }
 
         if( $adminTitleName == null ) {
             return;
