@@ -750,6 +750,36 @@ class User extends BaseUser
         return $this->getUserNameStr();
     }
 
+
+    //If the person is a head of a Department, list all people who belong in that department.
+    public function getDepartments($head=false) {
+        $departments = new ArrayCollection();
+        foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+            if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getName() != "" )
+                if( $head == true ) {
+                    if( $this->getId() && $adminTitles->getDepartment()->getHeads()->contains($this->getId()) ) {
+                        if( !$departments->contains($adminTitles->getDepartment()) ) {
+                            $departments->add($adminTitles->getDepartment());
+                        }
+                    }
+                } else {
+                    if( !$departments->contains($adminTitles->getDepartment()) ) {
+                        $departments->add($adminTitles->getDepartment());
+                    }
+                }
+        }
+        if( $head == false ) {
+            foreach( $this->getAppointmentTitles() as $appTitles ) {
+                if( $appTitles->getDepartment() && $appTitles->getDepartment()->getName() != "" ) {
+                    if( !$departments->contains($appTitles->getDepartment()) ) {
+                        $departments->add($appTitles->getDepartment());
+                    }
+                }
+            }
+        }
+        return $departments;
+    }
+
     //get all services from administrative and appointment titles.
     public function getServices() {
         $services = new ArrayCollection();

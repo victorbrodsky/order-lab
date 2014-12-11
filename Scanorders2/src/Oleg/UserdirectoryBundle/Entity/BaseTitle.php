@@ -235,9 +235,11 @@ class BaseTitle extends BaseUserAttributes
         $this->supervisorDepartment = $supervisorDepartment;
 
         if( $supervisorDepartment ) {
-            $this->getDepartment()->addHead( $this->getUser() );
+            if( $this->getDepartment() )
+                $this->getDepartment()->addHead( $this->getUser() );
         } else {
-            $this->getDepartment()->removeHead( $this->getUser() );
+            if( $this->getDepartment() )
+                $this->getDepartment()->removeHead( $this->getUser() );
         }
     }
 

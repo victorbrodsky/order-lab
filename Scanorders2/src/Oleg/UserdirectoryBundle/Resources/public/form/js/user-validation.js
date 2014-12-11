@@ -240,9 +240,9 @@ function validateMrntypeIdentifier() {
             if( valid == false ) {
                 var alertid = "mrntype_identifier-"+keytypemrnVal+"-"+identifier;
                 if( $('#'+alertid).length == 0 ) {
-                    var msg = 'The supplied MRN "'+keytypemrnText+':'+identifier+'" was not found.'+
-                              ' <input class="ignore-checkbox" type="checkbox" name="ignore" value="ignore"> Ignore';
-                    var alert = '<div id="'+alertid+'" class="alert alert-danger with-ignore" role="alert">'+msg+'</div>';
+                    var msg = 'The supplied MRN "'+keytypemrnText+': '+identifier+'" was not found.'+
+                              ' <input class="ignore-checkbox" type="checkbox" name="ignore" value="ignore"> Ignore this warning';
+                    var alert = '<div id="'+alertid+'" class="alert alert-warning with-ignore" role="alert">'+msg+'</div>';
                     $('#user-errors').append(alert);
                 }
                 $('#Credentials').collapse('show');

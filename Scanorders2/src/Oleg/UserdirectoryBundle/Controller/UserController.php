@@ -121,6 +121,36 @@ class UserController extends Controller
         );
     }
 
+    /**
+     * The same services
+     *
+     * @Route("/my-objects", name="employees_my_objects")
+     */
+    public function myObjectsAction(Request $request) {
+
+        $tablename = $request->get('tablename');
+        $objectid = $request->get('id');
+        $objectname = $request->get('name');
+        $postData = $request->get('postData');
+
+        //user search
+        $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid);
+        $res = $this->indexUser( $params );
+        $pagination = $res['entities'];
+
+//        //user search
+//        $params = array('time'=>'current_only','myteam'=>'myservices','myservice'=>$myservice);
+//        $res = $this->indexUser( $params );
+//        $pagination = $res['entities'];
+
+        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+            array(
+                'entities' => $pagination,
+                'sitename' => $this->container->getParameter('employees.sitename')
+            )
+        );
+    }
+
 
     /**
      * In the "List Current" menu, add the top choice called "Common Locations". CLicking it should list all "orphan" locations that are not attached to any users.
