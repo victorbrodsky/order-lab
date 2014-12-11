@@ -96,13 +96,12 @@ function validateUser(origuserid) {
     }
 
     //check existing MRN identifier
-    var identifierKeytypemrn = $('.identifier-keytypemrn-field-holder').filter(':visible');
-    identifierKeytypemrn.each( function(e){
-        var keytypemrn = $(this).find('.identifier-keytypemrn-field').select2('val');
-        console.log('keytypemrn='+keytypemrn);
-    });
+    if( validateMrntypeIdentifier() == false ) {
+        console.log('Validation Mrntype Identifier failed');
+        return false;
+    }
 
-    return false; //testing
+    //return false; //testing
     $("form:first").submit();
 }
 
@@ -114,9 +113,9 @@ function getUserUrl(userid,username) {
     return url;
 }
 
-function addErrorAlert($text) {
+function addErrorAlert(text) {
     var alert = '<div class="alert alert-danger user-error-alert" role="alert">'+
-        $text +
+        text +
         '</div>';
     $('#user-errors').append(alert);
 }
@@ -197,4 +196,114 @@ function validateSimpleRequiredAttrFields() {
     } else {
         return false;
     }
+}
+
+
+//generate error for identifier field:
+//If the number is not found, display a validation warning error well saying "The supplied MRN was not found."
+// both next to the "Save" button and next to the Identifer field
+//(it should still allow the user to save it even if the MRN was not found).
+function validateMrntypeIdentifier() {
+
+    var identifierKeytypemrn = $('.identifier-keytypemrn-field-holder');
+
+    identifierKeytypemrn.each( function(e){
+        var holder = $(this).closest('.user-identifiers');
+        var keytypemrn = holder.find('.identifier-keytypemrn-field').select2('data');
+        var keytypemrnVal = null;
+        var keytypemrnText = null;
+        if( keytypemrn ) {
+            keytypemrnVal = holder.find('.identifier-keytypemrn-field').select2('val');
+            keytypemrnText = holder.find('.identifier-keytypemrn-field').select2('data').text;
+        }
+        //console.log('keytypemrn='+keytypemrn);
+        var identifier = holder.find('.identifier-field-field').val();
+        //console.log('keytypemrn='+keytypemrn+", identifier="+identifier);
+
+        if( keytypemrnVal && keytypemrnVal != "" && identifier && identifier != "" ) {
+
+            var url = getCommonBaseUrl("util/common/mrntype-identifier","employees");
+            var valid = true;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: {mrntype: keytypemrnVal, identifier:identifier},
+                timeout: _ajaxTimeout,
+                async: false
+            }).success(function(data) {
+                if( data != 'OK' ) {
+                    valid = false;
+                }
+            });
+
+            if( valid == false ) {
+                var alertid = "mrntype_identifier-"+keytypemrnVal+"-"+identifier;
+                if( $('#'+alertid).length == 0 ) {
+                    var msg = 'The supplied MRN "'+keytypemrnText+':'+identifier+'" was not found.'+
+                              ' <input class="ignore-checkbox" type="checkbox" name="ignore" value="ignore"> Ignore';
+                    var alert = '<div id="'+alertid+'" class="alert alert-danger with-ignore" role="alert">'+msg+'</div>';
+                    $('#user-errors').append(alert);
+                }
+                $('#Credentials').collapse('show');
+                $('#identifiers').collapse('show');
+                holder.find('.identifier-field-field').parent().addClass("has-error");
+            }
+
+        } //if
+
+    });
+
+    //removed old error boxes
+    var withIgnore = $('.with-ignore');
+    withIgnore.each( function() {
+        var checkboxId = $(this).attr('id');
+        var idArr = checkboxId.split("-");
+        var boxMrntypeVal = idArr[1];
+        var boxFieldVal = idArr[2];
+
+        //now check if this keytype and field exists in any identifier object
+        var exists = false;
+        $('.user-identifiers').each( function(){
+            var field = $(this).find('.identifier-field-field').val();
+            var keytypemrn = $(this).find('.identifier-keytypemrn-field').select2('data');
+            var keytypemrnVal = null;
+            if( keytypemrn ) {
+                keytypemrnVal = $(this).find('.identifier-keytypemrn-field').select2('val');
+            }
+            //check only identifiers with mrntype and field
+            if( keytypemrnVal && keytypemrnVal != "" && field && field != "" ) {
+                if( boxMrntypeVal == keytypemrnVal && boxFieldVal == field ) {
+                    exists = true;
+                    return;
+                }
+            }
+        });
+
+        if( exists == false ) {
+            $(this).remove();
+        }
+    });
+
+    var withIgnore = $('.with-ignore');
+    if( withIgnore.length > 0 ) {
+        //check for ignore checkboxes
+        var ignored = 0;
+        withIgnore.each( function(){
+            var ignore = $(this).find('.ignore-checkbox');
+            //console.log(ignore);
+            if( ignore.is(':checked') ) {
+                ignored++;
+            }
+        });
+
+        //console.log('withIgnore.length='+withIgnore.length+", ignored="+ignored);
+        if( withIgnore.length == ignored ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return true;
 }

@@ -3,6 +3,8 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\PatientMrn;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -612,4 +614,55 @@ class UtilController extends Controller {
         return $response;
     }
 
+
+    /**
+     * @Route("/common/mrntype-identifier", name="employees_check_mrntype_identifier")
+     * @Method("GET")
+     */
+    public function checkMrntypeIdentifierAction(Request $request) {
+
+        if( false === $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        }
+
+        $mrntype = $request->get('mrntype');
+        $identifier = $request->get('identifier');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $keytype = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
+
+//        //construct patient
+//        $patientMrn = new PatientMrn();
+//        $patient = new Patient();
+//        $patientMrn->setStatus('valid');
+//        $patientMrn->setField($identifier);
+//        $patientMrn->setKeytype($keytype);
+//        $patient->addMrn($patientMrn);
+//
+//        $patientDb = $em->getRepository('OlegOrderformBundle:Patient')->findUniqueByKey($patient);
+
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Patient', 'patient')
+            ->select("patient")
+            ->leftJoin("patient.mrn", "mrn")
+            ->where("mrn.keytype = :keytype AND mrn.field = :field")
+            ->setParameters( array('keytype'=>$mrntype,'field'=>$identifier) )
+            ->getQuery();
+
+        $patients = $query->getResult();
+        //echo "patient count=".count($patients)." ";
+
+        if( count($patients) > 0 ) {
+            $output = "OK";
+        } else {
+            $output = "Invalid";
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
 }

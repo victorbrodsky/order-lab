@@ -31,7 +31,7 @@ class IdentifierType extends AbstractType
 
         $builder->add('field', null, array(
             'label' => 'Identifier:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control identifier-field-field')
         ));
 
         $builder->add('link', null, array(
