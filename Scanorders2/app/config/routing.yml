@@ -11,7 +11,7 @@ oleg_orderform:
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
     type:     annotation
-    prefix:   /pathology-employees
+    prefix:   /directory
 
 acme_demo:
     resource: "@AcmeDemoBundle/Controller/"
@@ -23,9 +23,9 @@ acme_demo:
 
 #logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
 logout:
-    path:   /pathology-employees/logout
+    path:   /directory/logout
 login:
-    path:   /pathology-employees/login
+    path:   /directory/login
 
 scan_login_check:
     path:   /scan/login_check
@@ -33,9 +33,9 @@ scan_logout:
     path:   /scan/logout
 
 employees_login_check:
-    path:   /pathology-employees/login_check
+    path:   /directory/login_check
 employees_logout:
-    path:   /pathology-employees/logout
+    path:   /directory/logout
 
 #fos user bundle
 #fos_user_security:

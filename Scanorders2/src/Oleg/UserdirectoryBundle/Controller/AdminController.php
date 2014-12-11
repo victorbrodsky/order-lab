@@ -309,7 +309,7 @@ class AdminController extends Controller
                                         'it was saved as an "Unsubmitted" order and you should be able to submit that order after the maintenance is complete.',
 
             //uploads
-            "employeesuploadpath" => "pathology-employees/Documents",
+            "employeesuploadpath" => "directory/Documents",
             "scanuploadpath" => "scan-order/Documents"
 
         );

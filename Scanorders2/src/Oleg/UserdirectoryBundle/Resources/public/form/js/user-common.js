@@ -161,7 +161,7 @@ function getCommonBaseUrl(link,sitename) {
     }
 
     if( sitename == "employees" ) {
-        sitename = "pathology-employees";
+        sitename = "directory";
     }
 
     //console.log('sitename='+sitename);

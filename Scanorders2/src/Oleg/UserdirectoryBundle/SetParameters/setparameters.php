@@ -53,7 +53,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $department_url = null;
         $department_name = null;
 
-        $employeesuploadpath = "pathology-employees/Documents";
+        $employeesuploadpath = "directory/Documents";
         $scanuploadpath = "scan-order/Documents";
 
         //maintenance
