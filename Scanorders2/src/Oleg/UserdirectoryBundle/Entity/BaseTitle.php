@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
  */
 class BaseTitle extends BaseUserAttributes
 {
@@ -232,11 +233,18 @@ class BaseTitle extends BaseUserAttributes
      */
     public function setSupervisorDepartment($supervisorDepartment)
     {
+        if( !$this->getDepartment() && $supervisorDepartment ) {
+            return;
+        }
+
+        echo "supervisorDepartment=".$supervisorDepartment."<br>";
         $this->supervisorDepartment = $supervisorDepartment;
 
+        echo "user=".$this->getUser()."<br>";
         if( $supervisorDepartment ) {
-            if( $this->getDepartment() )
-                $this->getDepartment()->addHead( $this->getUser() );
+            if( $this->getDepartment() ) {
+                //$this->getDepartment()->addHead( $this->getUser() );
+            }
         } else {
             if( $this->getDepartment() )
                 $this->getDepartment()->removeHead( $this->getUser() );
@@ -256,6 +264,10 @@ class BaseTitle extends BaseUserAttributes
      */
     public function setSupervisorDivision($supervisorDivision)
     {
+        if( !$this->getDivision() ) {
+            return;
+        }
+
         $this->supervisorDivision = $supervisorDivision;
 
         if( $supervisorDivision ) {
@@ -278,6 +290,10 @@ class BaseTitle extends BaseUserAttributes
      */
     public function setSupervisorInstitution($supervisorInstitution)
     {
+        if( !$this->getInstitution() ) {
+            return;
+        }
+
         $this->supervisorInstitution = $supervisorInstitution;
 
         if( $supervisorInstitution ) {
@@ -300,6 +316,10 @@ class BaseTitle extends BaseUserAttributes
      */
     public function setSupervisorService($supervisorService)
     {
+        if( !$this->getService() ) {
+            return;
+        }
+
         $this->supervisorService = $supervisorService;
 
         if( $supervisorService ) {
@@ -315,6 +335,74 @@ class BaseTitle extends BaseUserAttributes
     public function getSupervisorService()
     {
         return $this->supervisorService;
+    }
+
+//    /**
+//     * @ORM\PreRemove
+//     */
+    public function unsetHeads() {
+        //exit('on remove');
+        //remove possible links institution-head
+        if( $this->getInstitution() ) {
+            if( $this->getInstitution()->getHeads()->contains($this->getUser()) ) {
+                $this->getInstitution()->removeHead( $this->getUser() );
+            }
+        }
+
+        //department
+        if( $this->getDepartment() ) {
+            if( $this->getDepartment()->getHeads()->contains($this->getUser()) ) {
+                $this->getDepartment()->removeHead( $this->getUser() );
+            }
+        }
+
+        //division
+        if( $this->getDivision() ) {
+            if( $this->getDivision()->getHeads()->contains($this->getUser()) ) {
+                $this->getDivision()->removeHead( $this->getUser() );
+            }
+        }
+
+        //service
+        if( $this->getService() ) {
+            if( $this->getService()->getHeads()->contains($this->getUser()) ) {
+                $this->getService()->removeHead( $this->getUser() );
+            }
+        }
+
+    }
+
+//    /**
+//     * @ORM\preFlush
+//     */
+    public function setHeads() {
+        //add possible links institution-head
+        if( $this->getInstitution() ) {
+            if( !$this->getInstitution()->getHeads()->contains($this->getUser()) ) {
+                $this->getInstitution()->addHead( $this->getUser() );
+            }
+        }
+
+        //department
+        if( $this->getDepartment() ) {
+            if( !$this->getDepartment()->getHeads()->contains($this->getUser()) ) {
+                $this->getDepartment()->addHead($this->getUser());
+            }
+        }
+
+        //division
+        if( $this->getDivision() ) {
+            if( !$this->getDivision()->getHeads()->contains($this->getUser()) ) {
+                $this->getDivision()->addHead( $this->getUser() );
+            }
+        }
+
+        //service
+        if( $this->getService() ) {
+            if( !$this->getService()->getHeads()->contains($this->getUser()) ) {
+                $this->getService()->addHead( $this->getUser() );
+            }
+        }
     }
 
 

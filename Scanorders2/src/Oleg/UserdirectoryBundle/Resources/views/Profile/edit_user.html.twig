@@ -131,17 +131,38 @@
         {{ formmacros.field(formfield.division) }}
         {{ formmacros.field(formfield.service) }}
 
-        {% if formfield.supervisorInstitution is defined and formfield.vars.value %}
-            {{ usermacros.checkbox_notempty(formfield.supervisorInstitution,formfield.vars.value.supervisorInstitution,cycle) }}
+        {#show "head of ..." on show only if set#}
+        {% if formfield.supervisorInstitution is defined %}
+            {% if formfield.vars.value and formfield.vars.value.supervisorInstitution == 1 %}
+                {% set value = 1 %}
+            {% else %}
+                {% set value = 0 %}
+            {% endif %}
+            {{ usermacros.checkbox_notempty(formfield.supervisorInstitution,value,cycle) }}
         {% endif %}
-        {% if formfield.supervisorDepartment is defined and formfield.vars.value %}
-            {{ usermacros.checkbox_notempty(formfield.supervisorDepartment,formfield.vars.value.supervisorDepartment,cycle) }}
+        {% if formfield.supervisorDepartment is defined %}
+            {% if formfield.vars.value and formfield.vars.value.supervisorDepartment == 1 %}
+                {% set value = 1 %}
+            {% else %}
+                {% set value = 0 %}
+            {% endif %}
+            {{ usermacros.checkbox_notempty(formfield.supervisorDepartment,value,cycle) }}
         {% endif %}
-        {% if formfield.supervisorDivision is defined and formfield.vars.value %}
-            {{ usermacros.checkbox_notempty(formfield.supervisorDivision,formfield.vars.value.supervisorDivision,cycle) }}
+        {% if formfield.supervisorDivision is defined %}
+            {% if formfield.vars.value and formfield.vars.value.supervisorDivision == 1 %}
+                {% set value = 1 %}
+            {% else %}
+                {% set value = 0 %}
+            {% endif %}
+            {{ usermacros.checkbox_notempty(formfield.supervisorDivision,value,cycle) }}
         {% endif %}
-        {% if formfield.supervisorService is defined and formfield.vars.value %}
-            {{ usermacros.checkbox_notempty(formfield.supervisorService,formfield.vars.value.supervisorService,cycle) }}
+        {% if formfield.supervisorService is defined %}
+            {% if formfield.vars.value and formfield.vars.value.supervisorService == 1 %}
+                {% set value = 1 %}
+            {% else %}
+                {% set value = 0 %}
+            {% endif %}
+            {{ usermacros.checkbox_notempty(formfield.supervisorService,value,cycle) }}
         {% endif %}
     </div>
 {% endmacro %}

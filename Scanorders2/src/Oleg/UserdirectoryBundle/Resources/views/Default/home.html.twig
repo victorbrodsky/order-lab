@@ -144,15 +144,17 @@
         {% set mygroupsShow = false %}
         {% set myservicesShow = false %}
         {% set mydepartmentsShow = false %}
+        {% set mydivisionsShow = false %}
+        {% set mylabsShow = false %}
 
         {#My Reports#}
-        {% set myreports = controller( 'OlegUserdirectoryBundle:User:myReports', {'postData':postData} ) %}
+        {% set myreports = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myreports','id':null,'name':null} ) %}
 
         {#My Group#}
         {% set bosses = app.security.getToken().getUser.getBosses() %}
         {% set mygroupsArr = {} %}
         {% for myboss in bosses %}
-            {% set table = controller( 'OlegUserdirectoryBundle:User:myGroups', {'postData':postData, 'myboss':myboss.getId()} ) %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
             {% set element = {'table': table, 'element':myboss} %}
             {% set mygroupsArr = mygroupsArr|merge({ (loop.index0): element}) %}
             {% if render(table)|length > mygroupMax %}
@@ -160,7 +162,7 @@
             {% endif %}
         {% endfor %}
 
-        {#My Department#}
+        {#My Department if head#}
         {% set departments = app.security.getToken().getUser.getDepartments(true) %}
         {% set mydepartmentsArr = {} %}
         {% for department in departments %}
@@ -172,15 +174,39 @@
             {% endif %}
         {% endfor %}
 
+        {#My Division if head or service is empty#}
+        {% set divisions = app.security.getToken().getUser.getDivisions(true,true) %}
+        {% set mydivisionsArr = {} %}
+        {% for division in divisions %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'division','id':division.getId(),'name':division} ) %}
+            {% set element = {'table': table, 'element':division} %}
+            {% set mydivisionsArr = mydivisionsArr|merge({ (loop.index0): element}) %}
+            {% if render(table)|length > myserviceMax %}
+                {% set mydivisionsShow = true %}
+            {% endif %}
+        {% endfor %}
+
         {#My Service#}
         {% set services = app.security.getToken().getUser.getServices() %}
         {% set myservicesArr = {} %}
         {% for service in services %}
-            {% set table = controller( 'OlegUserdirectoryBundle:User:myServices', {'postData':postData, 'myservice':service.getId()} ) %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}
             {% set element = {'table': table, 'element':service} %}
             {% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}
             {% if render(table)|length > myserviceMax %}
                 {% set myservicesShow = true %}
+            {% endif %}
+        {% endfor %}
+
+        {#My Research Lab#}
+        {% set labs = app.security.getToken().getUser.getResearchLabs() %}
+        {% set mylabsArr = {} %}
+        {% for lab in labs %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'researchLabs','id':lab.getId(),'name':lab} ) %}
+            {% set element = {'table': table, 'element':lab} %}
+            {% set mylabsArr = mylabsArr|merge({ (loop.index0): element}) %}
+            {% if render(table)|length > myserviceMax %}
+                {% set mylabsShow = true %}
             {% endif %}
         {% endfor %}
 
@@ -189,7 +215,7 @@
         {#myservicesArr|length:{{ myservicesArr|length }}#}
 
         {#My Team#} {#render(myreports)|length should be more than sitename#}
-        {% if render(myreports)|length > myreportMax or mygroupsShow or myservicesShow %}
+        {% if render(myreports)|length > myreportMax or mygroupsShow or myservicesShow or mydepartmentsShow or mydivisionsShow or mylabsShow %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -200,6 +226,11 @@
                 </div>
                 <div id="myteam" class="panel-collapse collapse in">
                     <div id="myteam-panel-body" class="panel-body">
+
+                        <p>
+                            <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>
+                            <button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('myteam-panel-body'))" >Expand All</button>
+                        </p>
 
                         {#My Report(s)#}
                         {% if render(myreports)|length > myreportMax %}
@@ -245,7 +276,7 @@
                         {% endif %}
 
 
-                        {#My Departmet(s)#}
+                        {#My Department(s)#}
                         {% if mydepartmentsArr is defined %}
                             {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                             {% for mydepartment in mydepartmentsArr %}
@@ -255,7 +286,6 @@
                                         <div class="panel-heading">
                                             <h4 class="panel-title">
                                                 <a data-toggle="collapse" href="#mydepartments-{{ mydepartment['element'].getId() }}">
-                                                    {#My Department(s) for Department {{ usermacros.hrefLinkToNode( mydepartment['element'] ) }}#}
                                                     {{ mydepartment['element'] }} Department
                                                 </a>
                                             </h4>
@@ -263,6 +293,31 @@
                                         <div id="mydepartments-{{ mydepartment['element'].getId() }}" class="panel-collapse collapse in">
                                             <div class="panel-body">
                                                 {{ render( mydepartment['table'] ) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+                        {% endif %}
+
+                        {#My Division(s)#}
+                        {% if mydivisionsArr is defined %}
+                            {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                            {% for mydivision in mydivisionsArr %}
+
+                                {% if render( mydivision['table'] )|length > myserviceMax %}
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" href="#mydivisions-{{ mydivision['element'].getId() }}">
+                                                    {{ mydivision['element'] }} Division
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="mydivisions-{{ mydivision['element'].getId() }}" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                {{ render( mydivision['table'] ) }}
                                             </div>
                                         </div>
                                     </div>
@@ -291,6 +346,32 @@
                                         <div id="myservices-{{ myservice['element'].getId() }}" class="panel-collapse collapse in">
                                             <div class="panel-body">
                                                 {{ render( myservice['table'] ) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+                        {% endif %}
+
+
+                        {#My Research Lab(s)#}
+                        {% if mylabsArr is defined %}
+                            {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                            {% for mylab in mylabsArr %}
+
+                                {% if render( mylab['table'] )|length > myserviceMax %}
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" href="#mylabs-{{ mylab['element'].getId() }}">
+                                                    {{ mylab['element'] }} Research Lab
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="mylabs-{{ mylab['element'].getId() }}" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                {{ render( mylab['table'] ) }}
                                             </div>
                                         </div>
                                     </div>

@@ -55,71 +55,71 @@ class UserController extends Controller
     }
 
 
-    /**
-     * Me boss
-     *
-     * @Route("/my-reports", name="employees_my_reports")
-     */
-    public function myReportsAction() {
+//    /**
+//     * Me boss
+//     *
+//     * @Route("/my-reports", name="employees_my_reports")
+//     */
+//    public function myReportsAction() {
+//
+//        //user search
+//        $params = array('time'=>'current_only','myteam'=>'myreports');
+//        $res = $this->indexUser( $params );
+//        $pagination = $res['entities'];
+//
+//        //echo "paginations=".count($pagination)."<br>";
+//
+//        return $this->render( 'OlegUserdirectoryBundle::Admin/users-content.html.twig',
+//            array(
+//                'entities' => $pagination,
+//                'sitename' => $this->container->getParameter('employees.sitename')
+//            )
+//        );
+//    }
 
-        //user search
-        $params = array('time'=>'current_only','myteam'=>'myreports');
-        $res = $this->indexUser( $params );
-        $pagination = $res['entities'];
+//    /**
+//     * The same boss
+//     *
+//     * @Route("/my-groups", name="employees_my_groups")
+//     */
+//    public function myGroupsAction(Request $request) {
+//
+//        $myboss = $request->get('myboss');
+//
+//        //user search
+//        $params = array('time'=>'current_only','myteam'=>'mygroups','myboss'=>$myboss);
+//        $res = $this->indexUser( $params );
+//        $pagination = $res['entities'];
+//
+//        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+//            array(
+//                'entities' => $pagination,
+//                'sitename' => $this->container->getParameter('employees.sitename')
+//            )
+//        );
+//    }
 
-        //echo "paginations=".count($pagination)."<br>";
-
-        return $this->render( 'OlegUserdirectoryBundle::Admin/users-content.html.twig',
-            array(
-                'entities' => $pagination,
-                'sitename' => $this->container->getParameter('employees.sitename')
-            )
-        );
-    }
-
-    /**
-     * The same boss
-     *
-     * @Route("/my-groups", name="employees_my_groups")
-     */
-    public function myGroupsAction(Request $request) {
-
-        $myboss = $request->get('myboss');
-
-        //user search
-        $params = array('time'=>'current_only','myteam'=>'mygroups','myboss'=>$myboss);
-        $res = $this->indexUser( $params );
-        $pagination = $res['entities'];
-
-        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
-            array(
-                'entities' => $pagination,
-                'sitename' => $this->container->getParameter('employees.sitename')
-            )
-        );
-    }
-
-    /**
-     * The same services
-     *
-     * @Route("/my-services", name="employees_my_services")
-     */
-    public function myServicesAction(Request $request) {
-
-        $myservice = $request->get('myservice');
-
-        //user search
-        $params = array('time'=>'current_only','myteam'=>'myservices','myservice'=>$myservice);
-        $res = $this->indexUser( $params );
-        $pagination = $res['entities'];
-
-        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
-            array(
-                'entities' => $pagination,
-                'sitename' => $this->container->getParameter('employees.sitename')
-            )
-        );
-    }
+//    /**
+//     * The same services
+//     *
+//     * @Route("/my-services", name="employees_my_services")
+//     */
+//    public function myServicesAction(Request $request) {
+//
+//        $myservice = $request->get('myservice');
+//
+//        //user search
+//        $params = array('time'=>'current_only','myteam'=>'myservices','myservice'=>$myservice);
+//        $res = $this->indexUser( $params );
+//        $pagination = $res['entities'];
+//
+//        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+//            array(
+//                'entities' => $pagination,
+//                'sitename' => $this->container->getParameter('employees.sitename')
+//            )
+//        );
+//    }
 
     /**
      * The same services
@@ -130,18 +130,13 @@ class UserController extends Controller
 
         $tablename = $request->get('tablename');
         $objectid = $request->get('id');
-        $objectname = $request->get('name');
-        $postData = $request->get('postData');
+        //$objectname = $request->get('name');
+        //$postData = $request->get('postData');
 
         //user search
-        $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid);
-        $res = $this->indexUser( $params );
+        $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid,'excludeCurrentUser'=>true);
+        $res = $this->indexUser( $params ); //use function getTheSameObject
         $pagination = $res['entities'];
-
-//        //user search
-//        $params = array('time'=>'current_only','myteam'=>'myservices','myservice'=>$myservice);
-//        $res = $this->indexUser( $params );
-//        $pagination = $res['entities'];
 
         return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
             array(
@@ -178,7 +173,7 @@ class UserController extends Controller
      *
      * @Route("/search-users", name="employees_search_same_object")
      */
-    public function getSameObjectAction(Request $request) {
+    public function searchSameObjectAction(Request $request) {
 
         $tablename = $request->get('tablename');
         $objectid = $request->get('id');
@@ -353,11 +348,12 @@ class UserController extends Controller
         $limitFlag = ( array_key_exists('limitFlag', $params) ? $params['limitFlag'] : true);
         $search = ( array_key_exists('search', $params) ? $params['search'] : null);
         $userid = ( array_key_exists('userid', $params) ? $params['userid'] : null);
-        $myteam = ( array_key_exists('myteam', $params) ? $params['myteam'] : null);
-        $myboss = ( array_key_exists('myboss', $params) ? $params['myboss'] : null);
-        $myservice = ( array_key_exists('myservice', $params) ? $params['myservice'] : null);
+//        $myteam = ( array_key_exists('myteam', $params) ? $params['myteam'] : null);
+//        $myboss = ( array_key_exists('myboss', $params) ? $params['myboss'] : null);
+//        $myservice = ( array_key_exists('myservice', $params) ? $params['myservice'] : null);
         $objectname = ( array_key_exists('objectname', $params) ? $params['objectname'] : null);
         $objectid = ( array_key_exists('objectid', $params) ? $params['objectid'] : null);
+        $excludeCurrentUser = ( array_key_exists('excludeCurrentUser', $params) ? $params['excludeCurrentUser'] : null);
 
         $request = $this->get('request');
         $postData = $request->query->all();
@@ -430,10 +426,10 @@ class UserController extends Controller
             //echo "search=".$criteriastr."<br>";
 
             //myteam
-            $criteriastr = $this->getMyTeam( $dql, $myteam, $myboss, $myservice, $criteriastr );
+            //$criteriastr = $this->getMyTeam( $dql, $myteam, $myboss, $criteriastr );
 
             //same object
-            $criteriastr = $this->getSameObject( $dql, $objectname, $objectid, $criteriastr );
+            $criteriastr = $this->getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $criteriastr );
 
             //time
             $userutil = new UserUtil();
@@ -817,49 +813,49 @@ class UserController extends Controller
     }
 
 
-    public function getMyTeam( $dql, $myteam, $myboss, $myservice, $inputCriteriastr ) {
+//    public function getMyTeam( $dql, $myteam, $myboss, $inputCriteriastr ) {
+//
+//        $user = $this->get('security.context')->getToken()->getUser();
+//
+//        $criteriastr = "";
+//
+//        //Me Boss: list names of users who have me listed as their boss in their profile and link each name to the user's profile
+//        if( $myteam && $myteam == "myreports" ) {
+//            $dql->leftJoin("administrativeTitles.boss", "boss");
+//            $criteriastr = "user.id != " . $user->getId() . " AND " . "boss.id = " . $user->getId();
+//        }
+//
+//        //The Same Boss: list names of users who have the same boss as me in their profile
+//        if( $myteam && $myteam == "mygroups" ) {
+//            if( $myboss ) {
+//                $dql->leftJoin("administrativeTitles.boss", "boss");
+//                $criteriastr = "boss.id = " . $myboss . " AND user.id != " . $user->getId();
+//            }
+//        }
+//
+////        //users with this service
+////        if( $myteam && $myteam == "myservices" ) {
+////            if( $myservice ) {
+////                $criteriastr = "(administrativeService.id = " . $myservice . " OR " . "appointmentService.id = " . $myservice . ") AND " . "user.id != " . $user->getId();
+////            }
+////        }
+//
+//
+//        if( $inputCriteriastr && $inputCriteriastr != "" ) {
+//            if( $criteriastr != "" ) {
+//                $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
+//            }
+//        } else {
+//            $inputCriteriastr = $criteriastr;
+//        }
+//
+//        //echo "inputCriteriastr=".$inputCriteriastr."<br>";
+//
+//        return $inputCriteriastr;
+//    }
 
-        $user = $this->get('security.context')->getToken()->getUser();
 
-        $criteriastr = "";
-
-        //Me Boss: list names of users who have me listed as their boss in their profile and link each name to the user's profile
-        if( $myteam && $myteam == "myreports" ) {
-            $dql->leftJoin("administrativeTitles.boss", "boss");
-            $criteriastr = "user.id != " . $user->getId() . " AND " . "boss.id = " . $user->getId();
-        }
-
-        //The Same Boss: list names of users who have the same boss as me in their profile
-        if( $myteam && $myteam == "mygroups" ) {
-            if( $myboss ) {
-                $dql->leftJoin("administrativeTitles.boss", "boss");
-                $criteriastr = "boss.id = " . $myboss . " AND user.id != " . $user->getId();
-            }
-        }
-
-        //users with this service
-        if( $myteam && $myteam == "myservices" ) {
-            if( $myservice ) {
-                $criteriastr = "(administrativeService.id = " . $myservice . " OR " . "appointmentService.id = " . $myservice . ") AND " . "user.id != " . $user->getId();
-            }
-        }
-
-
-        if( $inputCriteriastr && $inputCriteriastr != "" ) {
-            if( $criteriastr != "" ) {
-                $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
-            }
-        } else {
-            $inputCriteriastr = $criteriastr;
-        }
-
-        //echo "inputCriteriastr=".$inputCriteriastr."<br>";
-
-        return $inputCriteriastr;
-    }
-
-
-    public function getSameObject( $dql, $objectname, $objectid, $inputCriteriastr ) {
+    public function getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $inputCriteriastr ) {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -901,9 +897,27 @@ class UserController extends Controller
             $criteriastr .= "appointmentDivision.id = " . $objectid;
         }
 
-//        if( $criteriastr != "" ) {
-//            $criteriastr = "user.id != " . $user->getId() . " AND (" . $criteriastr . ")";
-//        }
+        if( $objectname && $objectname == "myboss" ) {
+            $dql->leftJoin("administrativeTitles.boss", "boss");
+            $criteriastr = "boss.id = " . $objectid;
+        }
+
+        if( $objectname && $objectname == "myreports" ) {
+            $dql->leftJoin("administrativeTitles.boss", "boss");
+            $criteriastr = "boss.id = " . $user->getId();
+        }
+
+        if( $objectname && $objectname == "researchLabs" ) {
+            $criteriastr = "researchLabs.id = " . $objectid;
+        }
+
+        if( $excludeCurrentUser ) {
+            if( $criteriastr != "" ) {
+                $criteriastr = "user.id != " . $user->getId() . " AND (" . $criteriastr . ")";
+            } else {
+                $criteriastr = "user.id != " . $user->getId();
+            }
+        }
 
         if( $inputCriteriastr && $inputCriteriastr != "" ) {
             if( $criteriastr != "" ) {

@@ -491,6 +491,8 @@ class User extends BaseUser
         if( !$this->administrativeTitles->contains($administrativeTitle) ) {
             $this->administrativeTitles->add($administrativeTitle);
             $administrativeTitle->setUser($this);
+
+            $administrativeTitle->setHeads();
         }
     
         return $this;
@@ -501,9 +503,10 @@ class User extends BaseUser
      *
      * @param \Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitles
      */
-    public function removeAdministrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitles)
+    public function removeAdministrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle)
     {
-        $this->administrativeTitles->removeElement($administrativeTitles);
+        $administrativeTitle->unsetHeads();
+        $this->administrativeTitles->removeElement($administrativeTitle);
     }
 
     /**
@@ -755,9 +758,9 @@ class User extends BaseUser
     public function getDepartments($head=false) {
         $departments = new ArrayCollection();
         foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-            if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getName() != "" )
+            if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getName() != "" ) {
                 if( $head == true ) {
-                    if( $this->getId() && $adminTitles->getDepartment()->getHeads()->contains($this->getId()) ) {
+                    if( $adminTitles->getDepartment()->getHeads()->contains($this) ) {
                         if( !$departments->contains($adminTitles->getDepartment()) ) {
                             $departments->add($adminTitles->getDepartment());
                         }
@@ -767,6 +770,7 @@ class User extends BaseUser
                         $departments->add($adminTitles->getDepartment());
                     }
                 }
+            }
         }
         if( $head == false ) {
             foreach( $this->getAppointmentTitles() as $appTitles ) {
@@ -778,6 +782,50 @@ class User extends BaseUser
             }
         }
         return $departments;
+    }
+
+    //If the person is a head of a Division, list all people who belong in that division.
+    //$emptyService=true => divisions with empty service
+    public function getDivisions($head=false,$emptyService=false) {
+        $divisions = new ArrayCollection();
+        foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+            if( $adminTitles->getDivision() && $adminTitles->getDivision()->getName() != "" ) {
+                //echo "division=".$adminTitles->getDivision()->getName()."<br>";
+                if( $emptyService && $adminTitles->getDivision() && count($adminTitles->getDivision()->getServices()) == 0 ) {
+                    //echo "set head true <br>";
+                    $head = false;
+                }
+                if( $head == true ) {
+                    if( $adminTitles->getDivision()->getHeads()->contains($this) ) {
+                        if( !$divisions->contains($adminTitles->getDivision()) ) {
+                            $divisions->add($adminTitles->getDivision());
+                        }
+                    }
+                } else {
+                    if( !$divisions->contains($adminTitles->getDivision()) ) {
+                        $divisions->add($adminTitles->getDivision());
+                    }
+                }
+            }
+        }
+
+        foreach( $this->getAppointmentTitles() as $appTitles ) {
+            if( $emptyService && $appTitles->getDivision() && count($appTitles->getDivision()->getServices()) == 0 ) {
+                $head = false;
+            }
+            if( $head == true ) {
+                if( $appTitles->getDivision() && $appTitles->getDivision()->getName() != "" ) {
+                    if( !$divisions->contains($appTitles->getDivision()) ) {
+                        $divisions->add($appTitles->getDivision());
+                    }
+                }
+            } else {
+                if( !$divisions->contains($appTitles->getDivision()) ) {
+                    $divisions->add($appTitles->getDivision());
+                }
+            }
+        }
+        return $divisions;
     }
 
     //get all services from administrative and appointment titles.
