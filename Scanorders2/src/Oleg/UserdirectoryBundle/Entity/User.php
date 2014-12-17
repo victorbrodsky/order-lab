@@ -577,7 +577,7 @@ class User extends BaseUser
      * @param \Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus
      * @return User
      */
-    public function addEmploymentStatus(\Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus)
+    public function addEmploymentStatus($employmentStatus)
     {
         if( !$this->employmentStatus->contains($employmentStatus) ) {
             $this->employmentStatus->add($employmentStatus);
