@@ -28,6 +28,7 @@ class ComplexListController extends Controller
     /**
      * @Route("/list/locations/", name="employees_locations_pathaction_list")
      * @Route("/list/buildings/", name="employees_buildings_pathaction_list")
+     * @Route("/list/researchlabs/", name="employees_researchlabs_pathaction_list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:index.html.twig")
      */
@@ -51,12 +52,22 @@ class ComplexListController extends Controller
         $dql->groupBy('ent');
 
         if( $mapper['pathname'] == 'locations' ) {
+            $dql->leftJoin("ent.geoLocation", "geoLocation");
+            $dql->addGroupBy('geoLocation');
             $dql->leftJoin("ent.user", "user");
             $dql->addGroupBy('user');
         }
+
         if( $mapper['pathname'] == 'buildings' ) {
+            $dql->leftJoin("ent.geoLocation", "geoLocation");
+            $dql->addGroupBy('geoLocation');
             $dql->leftJoin("ent.institution", "institution");
             $dql->addGroupBy('institution');
+        }
+
+        if( $mapper['pathname'] == 'researchlabs' ) {
+            $dql->leftJoin("ent.user", "user");
+            $dql->addGroupBy('user');
         }
 
         $dql->leftJoin("ent.creator", "creator");
@@ -70,8 +81,8 @@ class ComplexListController extends Controller
         $dql->leftJoin("ent.original", "original");
         $dql->addGroupBy('original.name');
 
-        $dql->leftJoin("ent.geoLocation", "geoLocation");
-        $dql->addGroupBy('geoLocation');
+        //$dql->leftJoin("ent.geoLocation", "geoLocation");
+        //$dql->addGroupBy('geoLocation');
 
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
@@ -109,6 +120,9 @@ class ComplexListController extends Controller
      * @Route("/buildings/show/{id}", name="employees_buildings_pathaction_show_standalone", requirements={"id" = "\d+"})
      * @Route("/admin/buildings/edit/{id}", name="employees_buildings_pathaction_edit_standalone", requirements={"id" = "\d+"})
      *
+     * @Route("/researchlabs/show/{id}", name="employees_researchlabs_pathaction_show_standalone", requirements={"id" = "\d+"})
+     * @Route("/admin/researchlabs/edit/{id}", name="employees_researchlabs_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -117,7 +131,11 @@ class ComplexListController extends Controller
 
         $routeName = $request->get('_route');
 
-        if( $routeName == "employees_locations_pathaction_edit_standalone" || $routeName == "employees_buildings_pathaction_edit_standalone" ) {
+        if(
+            $routeName == "employees_locations_pathaction_edit_standalone" ||
+            $routeName == "employees_buildings_pathaction_edit_standalone" ||
+            $routeName == "employees_researchlabs_pathaction_edit_standalone"
+        ) {
             if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
                 return $this->redirect( $this->generateUrl('employees-order-nopermission') );
             }
@@ -150,6 +168,7 @@ class ComplexListController extends Controller
     /**
      * @Route("/admin/locations/new", name="employees_locations_pathaction_new_standalone")
      * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_standalone")
+     * @Route("/admin/researchlabs/new", name="employees_researchlabs_pathaction_new_standalone")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -189,6 +208,7 @@ class ComplexListController extends Controller
     /**
      * @Route("/admin/locations/new", name="employees_locations_pathaction_new_post_standalone")
      * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_post_standalone")
+     * @Route("/admin/researchlabs/new", name="employees_researchlabs_pathaction_new_post_standalone")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -248,6 +268,13 @@ class ComplexListController extends Controller
                 $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
+            if( $mapper['pathname'] == 'researchlabs' ) {
+                $userUtil = new UserUtil();
+                $em = $this->getDoctrine()->getManager();
+                $sc = $this->get('security.context');
+                $userUtil->setUpdateInfo($entity,$em,$sc);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -272,6 +299,7 @@ class ComplexListController extends Controller
     /**
      * @Route("/admin/locations/update/{id}", name="employees_locations_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Route("/admin/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * @Route("/admin/researchlabs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -317,6 +345,13 @@ class ComplexListController extends Controller
             }
 
             if( $mapper['pathname'] == 'buildings' ) {
+                $userUtil = new UserUtil();
+                $em = $this->getDoctrine()->getManager();
+                $sc = $this->get('security.context');
+                $userUtil->setUpdateInfo($entity,$em,$sc);
+            }
+
+            if( $mapper['pathname'] == 'researchlabs' ) {
                 $userUtil = new UserUtil();
                 $em = $this->getDoctrine()->getManager();
                 $sc = $this->get('security.context');
@@ -429,6 +464,12 @@ class ComplexListController extends Controller
                 $displayName = "Buildings";
                 $singleName = "Building";
                 $formType = "BuildingType";
+                break;
+            case "researchlabs":
+                $className = "ResearchLab";
+                $displayName = "Research Labs";
+                $singleName = "Research Lab";
+                $formType = "ResearchLabType";
                 break;
             default:
                 $className = null;

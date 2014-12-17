@@ -359,6 +359,10 @@ abstract class ListAbstract
         }
     }
 
+    public function removeDependents($user) {
+        return;
+    }
+
     //for entity with synonyms
 //    public function setSynonyms($synonyms = null) {
 //        echo "set synonym=".$synonyms."<br>";

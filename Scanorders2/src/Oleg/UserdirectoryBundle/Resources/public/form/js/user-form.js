@@ -351,4 +351,150 @@ function identifierTypeListener( holder ) {
 
 }
 
+//identifier type listener
+function researchLabListener( holder ) {
+
+    var targetClass = ".ajax-combobox-researchlab";
+
+    var labs = $(targetClass);
+
+    if( labs.length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        labs = holder.find(targetClass);
+
+        if( labs.length == 0 ) {
+            return;
+        }
+    }
+
+    labs.on("change", function(e) {
+
+        var labName = $(this);
+
+        var labObject = labName.select2('data');
+
+        console.log(labObject);
+
+        if( labObject ) {
+            console.log("id="+labObject.id+", text="+labObject.text+', user_id='+user_id);
+
+            var url = getCommonBaseUrl("util/common/researchlab/"+labObject.id+"/"+user_id,"employees");
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                async: asyncflag
+            }).success(function(data) {
+                populateResearchlabData(data,labName);
+            });
+
+        } else {
+            populateResearchlabData(null,labName);
+        }
+
+    });
+
+}
+
+
+function populateResearchlabData( data, elementName ) {
+    console.log(data);
+
+    var holder = elementName.closest('.user-researchlabs');
+    console.log(holder);
+    printF(holder,'holder=');
+
+    var idfield = holder.find('.researchlab-id-field');
+    var weblink = holder.find('.researchlab-weblink-field');
+    var foundedDate = holder.find('.researchlab-foundedDate-field');
+    var dissolvedDate = holder.find('.researchlab-dissolvedDate-field');
+    var location = holder.find('.ajax-combobox-location');
+    var commentDummy = holder.find('.researchlab-commentDummy-field');
+    var piDummy = holder.find('.researchlab-piDummy-field');
+
+    commentDummy.attr("readonly", false);
+    piDummy.attr("readonly", false);
+
+    if( data && data.length > 1 ) {
+        throw new Error('More than 1 object found. count='+data.length);
+    }
+
+    if( !data ) {
+        console.log("data is null => empty lab");
+
+        //set null
+        idfield.val(null);
+        weblink.val(null);
+        foundedDate.val(null);
+        dissolvedDate.val(null);
+        location.select2('val',null);
+        commentDummy.val(null);
+        piDummy.prop('checked', false);
+
+        //enable
+        weblink.attr("readonly", true);
+        foundedDate.attr("readonly", true);
+        dissolvedDate.attr("readonly", true);
+        location.select2("enable", true);
+        commentDummy.attr("readonly", true);
+        piDummy.attr("readonly", true);
+
+        return;
+    }
+
+    if( data.length == 0 ) {
+        console.log("data is empty => new lab");
+
+        //set null
+        idfield.val(null);
+        weblink.val(null);
+        foundedDate.val(null);
+        dissolvedDate.val(null);
+        location.select2('val',null);
+        commentDummy.val(null);
+        piDummy.prop('checked', false);
+
+        //enable
+        weblink.attr("readonly", false);
+        foundedDate.attr("readonly", false);
+        dissolvedDate.attr("readonly", false);
+        location.select2("enable", false);
+
+        return;
+    }
+
+    if( data && data.length > 0) {
+
+        data = data[0];
+        console.log("comment="+data.commentDummy);
+        console.log(commentDummy);
+
+        //set data
+        idfield.val(data.id);
+        weblink.val(data.weblink);
+        foundedDate.val(data.foundedDate);
+        dissolvedDate.val(data.dissolvedDate);
+        location.select2('val',data.lablocation);
+        //commentDummy.val(data.commentDummy);
+
+//        if( data.piDummy && data.piDummy == user_id ) {
+//            piDummy.prop('checked', true);
+//        } else {
+//            piDummy.prop('checked', false);
+//        }
+
+        //enable
+        weblink.attr("readonly", true);
+        foundedDate.attr("readonly", true);
+        dissolvedDate.attr("readonly", true);
+        location.select2("enable", true);
+
+        return;
+    }
+
+    return;
+}
 

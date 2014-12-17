@@ -35,8 +35,6 @@
     {{ form_start(form) }}
 
 
-
-
         {% if pathname == 'locations' %}
             {{ usermacros.locationObject(form,cycle,'user-locations','noprototype',employees_sitename,entity) }}
         {% endif %}
@@ -45,6 +43,9 @@
             {{ usermacros.buildingObject(form,cycle,'user-buildings','noprototype',employees_sitename,entity) }}
         {% endif %}
 
+        {% if pathname == 'researchlabs' %}
+            {{ usermacros.researchlabObject(form,cycle,'user-researchlabs','noprototype',employees_sitename,entity) }}
+        {% endif %}
 
 
         {# Token CSRF #}

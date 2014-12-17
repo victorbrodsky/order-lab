@@ -5,7 +5,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\ResearchLabTitleList;
+use Oleg\UserdirectoryBundle\Entity\ResearchLab;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -109,7 +109,7 @@ class AdminController extends Controller
         $count_buildings = $this->generateBuildings();
         $count_locations = $this->generateLocations();
 
-        $count_reslabtitles = $this->generateResLabTitles();
+        $count_reslabs = $this->generateResLabs();
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
@@ -137,7 +137,7 @@ class AdminController extends Controller
             'Countries='.$count_countryList.', '.
             'Locations ='.$count_locations.', '.
             'Buildings ='.$count_buildings.', '.
-            'Reaserch Lab Titles='.$count_reslabtitles.' '.
+            'Reaserch Labs='.$count_reslabs.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1153,12 +1153,12 @@ class AdminController extends Controller
     }
 
 
-    public function generateResLabTitles() {
+    public function generateResLabs() {
 
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLabTitleList')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1182,7 +1182,7 @@ class AdminController extends Controller
         $count = 1;
         foreach( $types as $type ) {
 
-            $listEntity = new ResearchLabTitleList();
+            $listEntity = new ResearchLab();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

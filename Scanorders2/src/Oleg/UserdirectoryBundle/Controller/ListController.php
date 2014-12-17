@@ -37,7 +37,7 @@ class ListController extends Controller
      * @Route("/identifier-types/", name="identifiers-list")
      * @Route("/residency-tracks/", name="residencytracks-list")
      * @Route("/fellowship-types/", name="fellowshiptypes-list")
-     * @Route("/research-lab-titles/", name="researchlabtitles-list")
+//     * @Route("/research-labs/", name="researchlabs-list")
      * @Route("/location-types/", name="locationtypes-list")
      * @Route("/equipment/", name="equipments-list")
      * @Route("/equipment-types/", name="equipmenttypes-list")
@@ -92,17 +92,15 @@ class ListController extends Controller
         $dql->addGroupBy('original.name');
 
 
-        if( method_exists($entityClass,'getResearchlab') ) {
-            $dql->leftJoin("ent.researchlab", "researchlab");
-            $dql->leftJoin("researchlab.user", "user");
-            $dql->addSelect('COUNT(user) AS HIDDEN usercount');
-        }
+//        if( method_exists($entityClass,'getResearchlab') ) {
+//            $dql->leftJoin("ent.researchlab", "researchlab");
+//            $dql->leftJoin("researchlab.user", "user");
+//            $dql->addSelect('COUNT(user) AS HIDDEN usercount');
+//        }
 
         if( method_exists($entityClass,'getParent') ) {
             $dql->leftJoin("ent.parent", "parent");
             $dql->addGroupBy('parent.name');
-            //$dql->leftJoin("researchlab.user", "user");
-            //$dql->addSelect('COUNT(user) AS HIDDEN usercount');
         }
 
         if( method_exists($entityClass,'getRoles') ) {
@@ -159,7 +157,7 @@ class ListController extends Controller
      * @Route("/identifier-types/", name="identifiers_create")
      * @Route("/residency-tracks/", name="residencytracks_create")
      * @Route("/fellowship-types/", name="fellowshiptypes_create")
-     * @Route("/research-lab-titles/", name="researchlabtitles_create")
+//     * @Route("/research-labs/", name="researchlabs_create")
      * @Route("/location-types/", name="locationtypes_create")
      * @Route("/equipment/", name="equipments_create")
      * @Route("/equipment-types/", name="equipmenttypes_create")
@@ -271,7 +269,7 @@ class ListController extends Controller
      * @Route("/identifier-types/new", name="identifiers_new")
      * @Route("/residency-tracks/new", name="residencytracks_new")
      * @Route("/fellowship-types/new", name="fellowshiptypes_new")
-     * @Route("/research-lab-titles/new", name="researchlabtitles_new")
+//     * @Route("/research-labs/new", name="researchlabs_new")
      * @Route("/location-types/new", name="locationtypes_new")
      * @Route("/equipment/new", name="equipments_new")
      * @Route("/equipment-types/new", name="equipmenttypes_new")
@@ -354,7 +352,7 @@ class ListController extends Controller
      * @Route("/identifier-types/{id}", name="identifiers_show")
      * @Route("/residency-tracks/{id}", name="residencytracks_show")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_show")
-     * @Route("/research-lab-titles/{id}", name="researchlabtitles_show")
+//     * @Route("/research-labs/{id}", name="researchlabs_show")
      * @Route("/location-types/{id}", name="locationtypes_show")
      * @Route("/equipment/{id}", name="equipments_show")
      * @Route("/equipment-types/{id}", name="equipmenttypes_show")
@@ -427,7 +425,7 @@ class ListController extends Controller
      * @Route("/identifier-types/{id}/edit", name="identifiers_edit")
      * @Route("/residency-tracks/{id}/edit", name="residencytracks_edit")
      * @Route("/fellowship-types/{id}/edit", name="fellowshiptypes_edit")
-     * @Route("/research-lab-titles/{id}/edit", name="researchlabtitles_edit")
+//     * @Route("/research-labs/{id}/edit", name="researchlabs_edit")
      * @Route("/location-types/{id}/edit", name="locationtypes_edit")
      * @Route("/equipment/{id}/edit", name="equipments_edit")
      * @Route("/equipment-types/{id}/edit", name="equipmenttypes_edit")
@@ -532,7 +530,7 @@ class ListController extends Controller
      * @Route("/identifier-types/{id}", name="identifiers_update")
      * @Route("/residency-tracks/{id}", name="residencytracks_update")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_update")
-     * @Route("/research-lab-titles/{id}", name="researchlabtitles_update")
+//     * @Route("/research-labs/{id}", name="researchlabs_update")
      * @Route("/location-types/{id}", name="locationtypes_update")
      * @Route("/equipment/{id}", name="equipments_update")
      * @Route("/equipment-types/{id}", name="equipmenttypes_update")
@@ -748,10 +746,10 @@ class ListController extends Controller
                 $className = "FellowshipTypeList";
                 $displayName = "Fellowship Types";
                 break;
-            case "researchlabtitles":
-                $className = "ResearchLabTitleList";
-                $displayName = "Research Lab Titles";
-                break;
+//            case "researchlabs":
+//                $className = "ResearchLab";
+//                $displayName = "Research Labs";
+//                break;
             case "locationtypes":
                 $className = "LocationTypeList";
                 $displayName = "Location Types";
@@ -846,7 +844,7 @@ class ListController extends Controller
      * @Route("/identifier-types/{id}", name="identifiers_delete")
      * @Route("/residency-tracks/{id}", name="residencytracks_delete")
      * @Route("/fellowship-types/{id}", name="fellowshiptypes_delete")
-     * @Route("/research-lab-titles/{id}", name="researchlabtitles_delete")
+//     * @Route("/research-labs/{id}", name="researchlabs_delete")
      * @Route("/location-types/{id}", name="locationtypes_delete")
      * @Route("/equipment/{id}", name="equipments_delete")
      * @Route("/equipment-types/{id}", name="equipmenttypes_delete")

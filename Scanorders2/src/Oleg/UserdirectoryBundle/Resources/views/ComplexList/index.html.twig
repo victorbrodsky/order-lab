@@ -18,7 +18,10 @@
         <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
-        <th>{{ knp_pagination_sortable(entities, 'Address', 'geoLocation.street1') }}</th>
+
+        {% if entities|first.geoLocation is defined %}
+            <th>{{ knp_pagination_sortable(entities, 'Address', 'geoLocation.street1') }}</th>
+        {% endif %}
 
         {% if entities|first.institution is defined and pathname == 'buildings' %}
             <th>{{ knp_pagination_sortable(entities, 'Institution', 'institution.abbreviation') }}</th>
@@ -54,14 +57,25 @@
                 <td><a href="{{ path(employees_sitename~'_'~pathname~'_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.abbreviation }}</td>
-                <td>{{ entity.getShortName() }}</td>
+
+                {% if entity.geoLocation is defined %}
+                    <td>{{ entity.getShortName() }}</td>
+                {% endif %}
 
                 {% if entity.institution is defined and pathname == 'buildings' %}
                     <td>{{ entity.institution.abbreviation }}</td>
                 {% endif %}
 
                 {% if entity.user is defined %}
-                    <td>{{ entity.user }}</td>
+                    <td>
+                    {% if entity.user is iterable %}
+                        {% for user in entity.user %}
+                            {{ user }}
+                        {% endfor %}
+                    {% else %}
+                        {{ entity.user }}
+                    {% endif %}
+                    </td>
                 {% endif %}
 
                 {% if entity.original is defined %}
@@ -85,11 +99,15 @@
                 {#<td>{{ entity.creator.getUsernameOptimal() }}</td>#}
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
-                <td class="rowlink-skip">
-                    <a href="{{ path('employees_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby.getUsernameOptimal() }}</a>
-                </td>
-                {#<td>{{ entity.updatedby }}</td>#}
-                <td>{% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}</td>
+                {% if entity.updatedby is defined and entity.updatedby %}
+                    <td class="rowlink-skip">
+                        <a href="{{ path('employees_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby.getUsernameOptimal() }}</a>
+                    </td>
+                {% endif %}
+
+                {% if entity.updatedon is defined and entity.updatedon %}
+                    <td>{% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}</td>
+                {% endif %}
 
             </tr>
         {% endfor %}

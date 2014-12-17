@@ -358,34 +358,35 @@
     {% do field.setRendered %}
 {% endmacro %}
 
-{% macro researchLabs( field, cycle, classname, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{#{% macro researchLabs( field, cycle, classname, prototype ) %}#}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
 
-    {% if prototype == "prototype" %}
-        {% set formfield = field.vars.prototype %}
-    {% else %}
-        {% set formfield = field %}
-    {% endif %}
+    {#{% if prototype == "prototype" %}#}
+        {#{% set formfield = field.vars.prototype %}#}
+    {#{% else %}#}
+        {#{% set formfield = field %}#}
+    {#{% endif %}#}
 
-    <div class="user-collection-holder well {{ classname }}">
+    {#<div class="user-collection-holder well {{ classname }}">#}
 
-        {% if cycle != 'show_user' %}
-            <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
-        {% endif %}
+        {#{% if cycle != 'show_user' %}#}
+            {#<div class="text-right">#}
+                {#<button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>#}
+            {#</div>#}
+        {#{% endif %}#}
 
-        {{ formmacros.field(formfield.researchLabTitle) }}
-        {{ formmacros.checkbox(formfield.researchPI) }}
-        {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date') }}
-        {{ formmacros.field_notempty(formfield.comment,cycle) }}
-        {{ formmacros.field(formfield.location) }}
-        {{ usermacros.emailPhoneField_notempty(formfield.weblink,cycle,'link',"") }}
+        {#&#123;&#35;{{ formmacros.field(formfield.researchLabTitle) }}&#35;&#125;#}
+        {#{{ formmacros.field(formfield.name) }}#}
+        {#{{ formmacros.checkbox(formfield.researchPI) }}#}
+        {#{{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}#}
+        {#{{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date') }}#}
+        {#{{ formmacros.field_notempty(formfield.comment,cycle) }}#}
+        {#{{ formmacros.field(formfield.location) }}#}
+        {#{{ usermacros.emailPhoneField_notempty(formfield.weblink,cycle,'link',"") }}#}
 
-    </div>
-{% endmacro %}
+    {#</div>#}
+{#{% endmacro %}#}
 
 {% macro comments( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -634,7 +635,8 @@
             {% set employmentStatusPrototype = userform.employmentStatuses(form.employmentStatus,cycle,'user-employmentStatus','prototype') %}
         {% endif %}
         {% if form.researchLabs is defined %}
-            {% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cycle,'user-researchlabs','prototype') %}
+            {#{% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cycle,'user-researchlabs','prototype') %}#}
+            {% set researchLabsPrototype = usermacros.researchlabObject(form.researchLabs,cycle,'user-researchlabs','prototype',sitename,entity) %}
         {% endif %}
 
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
@@ -936,7 +938,7 @@
         {#If the user has no Research Labs (no array members with a research lab title), hide the whole Research Lab(s) section on the profile page.#}
         {% set showResearchLabs = false %}
         {% for researchLabs in form.researchLabs %}
-            {% if researchLabs.researchLabTitle.vars.value or researchLabs.weblink.vars.value or researchLabs.comment.vars.value or researchLabs.foundedDate.vars.value or cycle != 'show_user' %}
+            {% if researchLabs.vars.value or researchLabs.weblink.vars.value or researchLabs.foundedDate.vars.value or cycle != 'show_user' %}
                 {% set showResearchLabs = true %}
             {% endif %}
         {% endfor %}
@@ -955,7 +957,7 @@
 
                         <div class="user-researchlabs-holder">
                             {% for researchLab in form.researchLabs %}
-                                {{ userform.researchLabs(researchLab,cycle,'user-researchlabs','noprototype') }}
+                                {{ usermacros.researchlabObject(researchLab,cycle,'user-researchlabs','noprototype',sitename,entity) }}
                             {% endfor %}
                             {% if cycle != 'show_user' %}
                                 <button class="btn btn-default" onClick="addNewObject(this,'user-researchlabs')" type='button'>Add Research Lab</button>
@@ -1415,6 +1417,10 @@
             </div>
         {% endif %}
         {#EOF Comments#}
+
+
+        {#Team#}
+        {#{{ usermacros.userTeam(entity) }}#}
 
 
         <br>

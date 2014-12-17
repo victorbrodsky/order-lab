@@ -907,6 +907,7 @@ class UserController extends Controller
             $criteriastr = "boss.id = " . $user->getId();
         }
 
+        //TODO: users will have different lab id because they don't have a choice to join to existing lab
         if( $objectname && $objectname == "researchLabs" ) {
             $criteriastr = "researchLabs.id = " . $objectid;
         }
@@ -1130,6 +1131,8 @@ class UserController extends Controller
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($user);
+
+            $this->processResearchLab($user);
 
             $em->persist($user);
             $em->flush();
@@ -1376,9 +1379,9 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $this->addEmptyCollections($entity);
+        //$this->addEmptyCollections($entity);
 
-        $this->addHookFields($entity);
+        //$this->addHookFields($entity);
 
 //        $entity->setPreferredPhone('111222333');
 //        $uow = $em->getUnitOfWork();
@@ -1515,6 +1518,8 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
 
+            $this->processResearchLab($entity);
+
             //set update info for user
             $this->updateInfo($entity);
 
@@ -1585,7 +1590,7 @@ class UserController extends Controller
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalResLabs,$entity->getResearchLabs());
+            $removedInfo = $this->removeCollection($originalResLabs,$entity->getResearchLabs(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
@@ -1757,8 +1762,93 @@ class UserController extends Controller
         $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
     }
 
+    public function processResearchLab( $user ) {
 
-    public function removeCollection($originalArr,$currentArr) {
+        $em = $this->getDoctrine()->getManager();
+
+        $labs = $user->getResearchLabs();
+        //echo "labs count=".count($labs)."<br>";
+
+        foreach( $labs as $lab ) {
+
+            //echo "<br> lab name=".$lab->getName().", id=".$lab->getId()."<br>";
+
+            //get lab from DB if exists
+            if( $lab && $lab->getId() ) {
+                //$lab = $em->merge($lab);
+                $labDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($lab->getId());
+
+                //merge db and form entity
+                $labDb->setPiDummy($lab->getPiDummy());
+                $labDb->setCommentDummy($lab->getCommentDummy());
+                //$labDb = $em->merge($lab);
+
+                $user->removeResearchLab($lab);
+                $user->addResearchLab($labDb);
+
+                $lab = $labDb;
+                //echo "lab dummy: id=".$lab->getId().", pi=".$lab->getPiDummy().", comment=".$lab->getCommentDummy()."<br>";
+            }
+
+            //set pi
+            //echo "pis1=".count($lab->getPis())."<br>";
+
+            //check if pi=$user for this lab already exists
+            $piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$user, 'researchLab'=>$lab->getId() ) );
+
+            if( $lab->getPiDummy() && $lab->getPiDummy() == true ) {
+                //echo "lab pi=".$lab->getPiDummy()."<br>";
+
+                if( $piDb ) {
+                    //echo "exist pi=".$piDb->getPi()."<br>";
+                    $piDb->setPi($user);
+                } else {
+                    //echo "does not exist pi <br>";
+                    $lab->setPiUser($user);
+                }
+
+            } else {
+
+                $lab->removePi($piDb);
+                if( $piDb ) {
+                    $em->remove($piDb);
+                }
+
+            }
+
+            //echo "pis2=".count($lab->getPis())."<br>";
+
+            //set comment
+            //echo "comments 1=".count($lab->getComments())."<br>";
+
+            //check if comment authored by $user for this lab already exists
+            $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'researchLab'=>$lab->getId() ) );
+
+            if( $lab->getCommentDummy() && $lab->getCommentDummy() != "" ) {
+                //echo "lab comment=".$lab->getCommentDummy()."<br>";
+
+                if( $commentDb ) {
+                    //echo "exist comment=".$commentDb->getComment()."<br>";
+                    $commentDb->setComment($lab->getCommentDummy());
+                } else {
+                    //echo "does not exist comment <br>";
+                    $lab->setComment($lab->getCommentDummy(),$user);
+                }
+
+            } else {
+                $lab->removeComment($commentDb);
+                if( $commentDb ) {
+                    $em->remove($commentDb);
+                }
+            }
+            //echo "comments 2=".count($lab->getComments())."<br>";
+
+        } //foreach
+
+        //exit('exit');
+    }
+
+    public function removeCollection($originalArr,$currentArr,$subjectUser=null) {
         $em = $this->getDoctrine()->getManager();
         $removeArr = array();
 
@@ -1771,15 +1861,31 @@ class UserController extends Controller
                 }
             }
 
-            //echo "title=".$title->getName().", id=".$title->getId()."<br>";
+            echo "title=".$title.", id=".$title->getId()."<br>";
             $em->persist($title);
+
             if( false === $currentArr->contains($title) ) {
                 $removeArr[] = "<strong>"."Removed: ".$title." ".$this->getEntityId($title)."</strong>";
-                // if you wanted to delete the Tag entirely, you can also do that
-                $em->remove($title);
-                $em->flush();
+                echo "before delete <br>";
+                if( is_subclass_of($title, 'Oleg\UserdirectoryBundle\Entity\ListAbstract') === false ) {
+                    //echo "delete object entirely <br>";
+                    // delete object entirely
+                    $em->remove($title);
+                    $em->flush();
+                } else {
+                    echo 'no delete from DB because list <br>';
+                    if( $subjectUser ) {
+                        $title->removeUser($subjectUser);
+                        //remove dependents: remove comments and id from lab
+                        //$title->removeDependents($subjectUser);
+                        $this->removeDependents($subjectUser,$title);
+                    }
+                }
+            } else {
+                //echo "no delete <br>";
             }
-        }
+
+        } //foreach
 
         return implode("<br>", $removeArr);
     }
@@ -2045,6 +2151,34 @@ class UserController extends Controller
             'notice',
             "You do not have permission to perform this operation: ".$msg
         );
+    }
+
+    //remove pi and comment for Research Lab
+    public function removeDependents($subjectUser,$lab) {
+
+        //echo "remove user=".$subjectUser.", lab=".$lab->getId()."<br>";
+
+        if( !$lab instanceof ResearchLab ) {
+            //echo 'not research lab object <br>';
+            return;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
+        if( $commentDb ) {
+            //echo "remove comment=".$commentDb."<br>";
+            $em->remove($commentDb);
+            $em->flush();
+        }
+
+        $piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
+        if( $piDb ) {
+            //echo "remove pi=".$piDb."<br>";
+            $em->remove($piDb);
+            $em->flush();
+        }
+
     }
 
 }

@@ -3,16 +3,18 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\PatientMrn;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\PatientMrn;
 
 //TODO: optimise by removing foreach loops
 
@@ -57,6 +59,9 @@ class UtilController extends Controller {
             case "appointmenttitletype":
                 $className = "AppTitleList";
                 break;
+            case "researchlab":
+                $className = "ResearchLab";
+                break;
             default:
                 $className = null;
         }
@@ -67,8 +72,7 @@ class UtilController extends Controller {
 
             $em = $this->getDoctrine()->getManager();
 
-            $query = $em->createQueryBuilder()
-                ->from('OlegUserdirectoryBundle:'.$className, 'list')
+            $query = $em->createQueryBuilder()->from('OlegUserdirectoryBundle:'.$className, 'list')
                 ->select("list.id as id, list.name as text")
                 ->orderBy("list.orderinlist","ASC");
 
@@ -360,6 +364,76 @@ class UtilController extends Controller {
         return false;
     }
 
+
+    /**
+     * @Route("/common/researchlab/{id}/{subjectUser}", name="employees_get_researchlab")
+     * @Method("GET")
+     */
+    public function getResearchlabByIdAction( $id, $subjectUser ) {
+
+        if( !is_numeric($id) ) {
+            //echo "return null";
+            $output = array();
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+//        $researchLabDB = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($id);
+//        if( !$researchLabDB ) {
+//            $response = new Response();
+//            $response->headers->set('Content-Type', 'application/json');
+//            $response->setContent(null);
+//            return $response;
+//        }
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:ResearchLab', 'list')
+            ->leftJoin('list.location','location')
+            ->leftJoin('list.comments','comments')
+            ->leftJoin('comments.author','commentauthor')
+            ->leftJoin('list.pis','pis')
+            ->leftJoin('pis.pi','piauthor')
+            ->select("list")
+            ->orderBy("list.orderinlist","ASC");
+
+        //$user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.id=".$id);
+
+        $labs = $query->getQuery()->getResult();
+
+        $output = array();
+
+        foreach( $labs as $lab ) {
+
+            //$commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUserDB, 'researchLab'=>$researchLabDB ) );
+            //$piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUserDB, 'researchLab'=>$researchLabDB ) );
+
+            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+
+            $element = array(
+                'id'            => $lab->getId(),
+                'text'          => $lab."",
+                'weblink'       => $lab->getWeblink(),
+                'lablocation'   => ( $lab->getLocation() ? $lab->getLocation()->getId() : null ),
+                'foundedDate'   => $transformer->transform($lab->getFoundedDate()),
+                'dissolvedDate' => $transformer->transform($lab->getDissolvedDate()),
+                //'commentDummy'  => ( $commentDb ? $commentDb->getComment() : null ),
+                //'piDummy'       => ( $piDb ? $piDb->getPi()->getId() : null ),
+            );
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
 
 
 

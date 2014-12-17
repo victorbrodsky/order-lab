@@ -247,8 +247,9 @@ class UserType extends AbstractType
             ));
         }
 
+        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
         $builder->add('researchLabs', 'collection', array(
-            'type' => new ResearchLabType(null),
+            'type' => new ResearchLabType($params),
             'label' => false,
             'required' => false,
             'allow_add' => true,

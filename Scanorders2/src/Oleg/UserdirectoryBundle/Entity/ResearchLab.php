@@ -9,8 +9,19 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="user_researchLab")
  */
-class ResearchLab extends BaseUserAttributes
+class ResearchLab extends ListAbstract  //extends BaseUserAttributes
 {
+
+    /**
+     * @ORM\OneToMany(targetEntity="BuildingList", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
 
     /**
      * @ORM\ManyToMany(targetEntity="User", inversedBy="researchLabs")
@@ -19,7 +30,7 @@ class ResearchLab extends BaseUserAttributes
      *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
      * )
      **/
-    protected $user;
+    private $user;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -32,51 +43,98 @@ class ResearchLab extends BaseUserAttributes
     private $dissolvedDate;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $comment;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Location")
      * @ORM\JoinColumn(name="location", referencedColumnName="id", nullable=true)
      **/
     private $location;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ResearchLabTitleList", inversedBy="researchlab")
-     * @ORM\JoinColumn(name="researchlabtitle_id", referencedColumnName="id", nullable=true)
-     **/
-    private $researchLabTitle;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $researchPI;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $weblink;
 
-    public function __construct($author=null) {
-        parent::__construct($author);
+
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $comment;
+    /**
+     * @ORM\OneToMany(targetEntity="ResearchLabComment", mappedBy="researchLab", cascade={"persist","remove"})
+     **/
+    private $comments;
+    private $commentDummy;
+
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $researchPI;
+    /**
+     * @ORM\OneToMany(targetEntity="ResearchLabPI", mappedBy="researchLab", cascade={"persist","remove"})
+     **/
+    private $pis;
+    private $piDummy;
+
+
+    public function __construct($creator=null) {
+
+        $this->comments = new ArrayCollection();
+        $this->pis = new ArrayCollection();
+
         $this->user = new ArrayCollection();
+        $this->synonyms = new ArrayCollection();
+
+        //set mandatory list attributes
+        $this->setName("");
+        $this->setType('user-added');
+        $this->setCreatedate(new \DateTime());
+        $this->setOrderinlist(-1);
+
+        if( $creator ) {
+            $this->setCreator($creator);
+        }
+
+//        //add comment
+//        $comment = new ResearchLabComment();
+//        $this->addComment($comment);
+//
+//        //add pi
+//        $pi = new ResearchLabPI();
+//        $this->addPi($pi);
     }
 
-    /**
-     * @param mixed $comment
-     */
-    public function setComment($comment)
+
+    public function getComments()
     {
-        $this->comment = $comment;
+        return $this->comments;
+    }
+    public function addComment($comment)
+    {
+        if( !$this->comments->contains($comment) ) {
+            $this->comments->add($comment);
+            $comment->setResearchLab($this);
+        }
+        return $this;
+    }
+    public function removeComment($comment)
+    {
+        $this->comments->removeElement($comment);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getComment()
+    public function getPis()
     {
-        return $this->comment;
+        return $this->pis;
+    }
+    public function addPi($pi)
+    {
+        if( !$this->pis->contains($pi) ) {
+            $this->pis->add($pi);
+            $pi->setResearchLab($this);
+        }
+        return $this;
+    }
+    public function removePi($pi)
+    {
+        $this->pis->removeElement($pi);
     }
 
     /**
@@ -138,6 +196,7 @@ class ResearchLab extends BaseUserAttributes
     {
         if( !$this->user->contains($user) ) {
             $this->user->add($user);
+            $user->addResearchLab($this);
         }
 
         return $this;
@@ -162,39 +221,6 @@ class ResearchLab extends BaseUserAttributes
         return $this->user;
     }
 
-
-    /**
-     * @param mixed $researchPI
-     */
-    public function setResearchPI($researchPI)
-    {
-        $this->researchPI = $researchPI;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResearchPI()
-    {
-        return $this->researchPI;
-    }
-
-    /**
-     * @param mixed $researchLabTitle
-     */
-    public function setResearchLabTitle($researchLabTitle)
-    {
-        $this->researchLabTitle = $researchLabTitle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResearchLabTitle()
-    {
-        return $this->researchLabTitle;
-    }
-
     /**
      * @param mixed $weblink
      */
@@ -215,6 +241,91 @@ class ResearchLab extends BaseUserAttributes
 
 
 
+    /**
+     * @param mixed $commentDummy
+     */
+    public function setCommentDummy($commentDummy)
+    {
+        $this->commentDummy = $commentDummy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCommentDummy()
+    {
+        return $this->commentDummy;
+    }
+
+    /**
+     * @param mixed $piDummy
+     */
+    public function setPiDummy($piDummy)
+    {
+        $this->piDummy = $piDummy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPiDummy()
+    {
+        return $this->piDummy;
+    }
+
+    public function setComment($text,$user)
+    {
+        if( $text && $text != "" ) {
+            $comment = new ResearchLabComment();
+            $comment->setComment($text);
+            $comment->setAuthor($user);
+            $this->addComment($comment);
+        }
+    }
+    public function setPiUser($user)
+    {
+        if( $user ) {
+            $pi = new ResearchLabPI();
+            $pi->setPi($user);
+            $this->addPi($pi);
+        }
+    }
+
+
+    public function removeDependents($user) {
+        //remove user's comments
+        foreach( $this->getComments() as $comment ) {
+            if( $comment->getAuthor()->getId() == $user->getId() ) {
+                $this->removeComment($comment);
+            }
+        }
+        //remove user's pi
+        foreach( $this->getPis() as $pi ) {
+            if( $pi->getPi()->getId() == $user->getId() ) {
+                $this->removePi($pi);
+            }
+        }
+    }
+
+    //interface function
+    public function getAuthor()
+    {
+        return $this->getCreator();
+    }
+    public function setAuthor($author)
+    {
+        return $this->setCreator($author);
+    }
+    public function getUpdateAuthor()
+    {
+        return $this->getUpdatedby();
+    }
+    public function setUpdateAuthor($author)
+    {
+        return $this->setUpdatedby($author);
+    }
+
+    //
 
     public function __toString() {
         return "Research Lab";

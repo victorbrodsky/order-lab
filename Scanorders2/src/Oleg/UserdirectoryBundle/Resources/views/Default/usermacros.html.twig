@@ -583,3 +583,122 @@
     {% do formfield.setRendered %}
 
 {% endmacro %}
+
+
+{% macro researchlabObject( field, cycle, classname, prototype, sitename, user ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as usermacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% set standAloneObject = false %}
+    {% if cycle == "create_standalone" or cycle == "show_standalone" or cycle == "edit_standalone" %}
+        {% set standAloneObject = true %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.id) }}
+
+        {{ formmacros.field(formfield.name) }}
+
+        {#pi#}
+        {% if formfield.piDummy is defined %}
+            {{ formmacros.checkbox(formfield.piDummy) }}
+        {% endif %}
+        {#{% if prototype == "prototype" %}#}
+            {#{{ formmacros.checkbox(formfield.piDummy) }}#}
+        {#{% else %}#}
+            {#{% for pi in formfield.pis %}#}
+                {#{{ formmacros.field(pi.isPi) }}#}
+            {#{% endfor %}#}
+        {#{% endif %}#}
+
+        {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date') }}
+
+        {#comment#}
+        {% if formfield.piDummy is defined %}
+            {{ formmacros.field(formfield.commentDummy) }}
+        {% endif %}
+        {#{% if prototype == "prototype" %}#}
+            {#{{ formmacros.field(formfield.commentDummy) }}#}
+        {#{% else %}#}
+            {#{% for comment in formfield.comments %}#}
+                {#{{ formmacros.field(comment.comment) }}#}
+            {#{% endfor %}#}
+        {#{% endif %}#}
+
+        {{ formmacros.field(formfield.location) }}
+        {{ usermacros.emailPhoneField_notempty(formfield.weblink,cycle,'link',"") }}
+
+    </div>
+
+    {#show list properties#}
+    {% if standAloneObject %}
+        {{ usermacros.listProperties(formfield) }}
+    {% endif %}
+
+    {% do formfield.setRendered %}
+
+{% endmacro %}
+
+
+{% macro userTeam( user ) %}
+
+    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_ADMIN') %}
+        {% set userEditor = true %}
+    {% else %}
+        {% set userEditor = false %}
+    {% endif %}
+
+    {% if userEditor %}
+
+        {% if showTeam %}
+
+            {% if cycle == "show_user" %}
+                {% set collapsein = "" %}
+            {% else %}
+                {% set collapsein = "in" %}
+            {% endif %}
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#userteam">
+                            Team
+                        </a>
+                    </h4>
+                </div>
+                <div id="userteam" class="panel-collapse collapse {{ collapsein }}">
+                    <div class="panel-body">
+
+                        <div class="user-researchlabs-holder">
+                            {% for researchLab in form.researchLabs %}
+                                {{ userform.researchLabs(researchLab,cycle,'user-researchlabs','noprototype') }}
+                            {% endfor %}
+                            {% if cycle != 'show_user' %}
+                                <button class="btn btn-default" onClick="addNewObject(this,'user-researchlabs')" type='button'>Add Research Lab</button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endif %} {#showTeam#}
+
+    {% endif %} {#userEditor#}
+
+{% endmacro %}
+

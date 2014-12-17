@@ -86,8 +86,11 @@ git rm -r --cached .
 git add .
 git commit -m ".gitignore is now working"
 
+#To revert a specific file to a specific version (abcde-commit you want)
+git checkout abcde file/to/restore
+
 #Testing: run phpunit script, located in symfony's 'bin' folder, with the test file as a parameter:
 ./bin/phpunit -c app src/Oleg/OrderformBundle/Tests/LoginTest.php
 
-#Testing with casperjs: run http://collage.med.cornell.edu/order/test/index.php
+#Testing with casperjs: run   http://collage.med.cornell.edu/order/test/index.php
 #The result log and screenshots are in order/test folder

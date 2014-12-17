@@ -55,6 +55,8 @@ function initBaseAdd(newForm) {
     confirmDeleteWithExpired(newForm);
 
     identifierTypeListener(newForm);
+
+    researchLabListener(newForm);
 }
 
 //get input field only

@@ -9,6 +9,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
+use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -71,8 +72,8 @@ class CustomSelectorType extends AbstractType {
             case "commentSubType":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'CommentSubTypeList');
                 break;
-            case "researchLabTitle":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'ResearchLabTitleList');
+            case "researchlab":
+                $transformer = new ResearchLabTransformer($this->om, $username, 'ResearchLab');
                 break;
             case "location":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Location');
