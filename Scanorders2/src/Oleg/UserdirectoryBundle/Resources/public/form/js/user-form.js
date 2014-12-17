@@ -438,7 +438,7 @@ function populateResearchlabData( data, elementName ) {
         weblink.attr("readonly", true);
         foundedDate.attr("readonly", true);
         dissolvedDate.attr("readonly", true);
-        location.select2("enable", true);
+        location.select2("readonly", true);
         commentDummy.attr("readonly", true);
         piDummy.attr("readonly", true);
 
@@ -461,7 +461,10 @@ function populateResearchlabData( data, elementName ) {
         weblink.attr("readonly", false);
         foundedDate.attr("readonly", false);
         dissolvedDate.attr("readonly", false);
-        location.select2("enable", false);
+        location.select2("readonly", false);
+//        location.select2("readonly", false);
+//        location.attr("readonly", false);
+//        location.removeAttr( "readonly" );
 
         return;
     }
@@ -490,7 +493,7 @@ function populateResearchlabData( data, elementName ) {
         weblink.attr("readonly", true);
         foundedDate.attr("readonly", true);
         dissolvedDate.attr("readonly", true);
-        location.select2("enable", true);
+        location.select2("readonly", true);
 
         return;
     }
