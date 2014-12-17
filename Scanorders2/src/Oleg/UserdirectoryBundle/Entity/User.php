@@ -573,9 +573,11 @@ class User extends BaseUser
 
     public function addEmploymentStatus($employmentStatus)
     {
-        if( !$this->employmentStatus->contains($employmentStatus) ) {
-            $this->employmentStatus->add($employmentStatus);
-            $employmentStatus->setUser($this);
+        if( $employmentStatus ) {
+            if( !$this->employmentStatus->contains($employmentStatus) ) {
+                $this->employmentStatus->add($employmentStatus);
+                $employmentStatus->setUser($this);
+            }
         }
 
         return $this;
