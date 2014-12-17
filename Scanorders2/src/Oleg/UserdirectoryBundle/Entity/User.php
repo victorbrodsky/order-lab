@@ -571,12 +571,6 @@ class User extends BaseUser
         return $this->credentials;
     }
 
-    /**
-     * Add employmentStatus
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus
-     * @return User
-     */
     public function addEmploymentStatus($employmentStatus)
     {
         if( !$this->employmentStatus->contains($employmentStatus) ) {
@@ -591,11 +585,6 @@ class User extends BaseUser
         return $this;
     }
 
-    /**
-     * Remove employmentStatus
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus
-     */
     public function removeEmploymentStatus(\Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus)
     {
         $this->employmentStatus->removeElement($employmentStatus);
