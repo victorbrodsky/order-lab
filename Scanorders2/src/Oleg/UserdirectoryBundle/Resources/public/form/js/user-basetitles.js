@@ -67,7 +67,9 @@ function getBaseTitleForm( elclass ) {
     var holderClass = elclass+'-holder';
     //console.log('holderClass='+holderClass);
 
-    var elements = $('.'+holderClass).find('.'+elclass);
+    var elementsHolder = $('.'+holderClass);
+
+    var elements = elementsHolder.find('.'+elclass);
     //console.log('elements='+elements.length);
 
     var identLowerCase = elclass.toLowerCase();
@@ -83,7 +85,11 @@ function getBaseTitleForm( elclass ) {
     var classArr = identLowerCase.split("-"); //user-fieldname
 
     var regex = new RegExp( '__' + classArr[1] + '__', 'g' );
-    var newForm = prototype.replace(regex, elements.length);
+
+    //var elementCount = elements.length;
+    var elementCount = getNextElementCount(elementsHolder,elclass);
+
+    var newForm = prototype.replace(regex, elementCount);
 
     //console.log("newForm="+newForm);
     return newForm;
@@ -208,8 +214,11 @@ function confirmDeleteWithExpired( holder ) {
                 "Delete this erroneous record":  function() {
                     //console.log('delete');
                     //delete
-                    collectionHolder.remove();
-                    processEmploymentStatusRemoveButtons(btn);
+                    var deleted = deleteObjectFromDB(btn);
+                    if( deleted ) {
+                        collectionHolder.remove();
+                        processEmploymentStatusRemoveButtons(btn);
+                    }
                     dialog.dialog('close');
                 },
                 "Cancel":  function() {
@@ -236,6 +245,52 @@ function collapseObject( button ) {
     } else {
         holder.find('.collapse-non-empty-enddate').show();
     }
+}
 
 
+function getNextElementCount( holder, elclass ) {
+
+    var elements = holder.find('.'+elclass);
+
+    var maxCount = 0;
+
+    elements.each( function(){
+
+        //find valid input field with valid id
+        var inputEl = null;
+        $(this).find('input[type=text]').not("*[id^='s2id_']").each( function(){
+            var id = $(this).attr('id');
+            if( id ) {
+                var counter = getElementCounter( $(this) );
+                if( counter ) {
+                    inputEl = $(this);
+                    return;
+                }
+            }
+        });
+
+        //printF( inputEl, 'element:');
+        var counter = getElementCounter( inputEl );
+        //console.log("counter="+counter+", maxCount="+maxCount);
+        if( parseInt(counter) > parseInt(maxCount) ) {
+            maxCount = counter;
+        }
+    });
+
+    var elementCount = parseInt(maxCount) + 1;
+
+    //console.log("elementCount="+elementCount);
+
+    return elementCount;
+}
+
+function getElementCounter( element ) {
+    var id = element.attr('id');
+    //  0           1           2       3          4
+    //oleg_userdirectorybundle_user_publicComments_0
+    var idArr = id.split("_");
+    //var bundleName = idArr[1];
+    //var commentType = idArr[3];
+    var elementCount = idArr[4];
+    return elementCount;
 }

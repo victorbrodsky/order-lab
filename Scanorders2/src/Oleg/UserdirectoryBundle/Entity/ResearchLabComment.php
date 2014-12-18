@@ -130,7 +130,8 @@ class ResearchLabComment
 
 
     public function __toString() {
-        return "Research Lab comment: id=".$this->id.", text=".$this->comment."<br>";
+        return "Research Lab comment: id=".$this->id.", text=".$this->comment.", res lab name=".$this->getResearchLab()->getName().", res lab id=".$this->getResearchLab()->getId()."<br>";
+        //return "Research Lab comment";
     }
 
 

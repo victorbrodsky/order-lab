@@ -337,7 +337,7 @@ function identifierTypeListener( holder ) {
     identifiersTypes.on("change", function(e) {
 
         var type = $(this).select2('data');
-        console.log("type="+type);
+        //console.log("type="+type);
 
         if( type && type.text == "MRN" ) {
             $(this).closest('.user-identifiers').find('.identifier-keytypemrn-field-holder').show();
@@ -376,10 +376,10 @@ function researchLabListener( holder ) {
 
         var labObject = labName.select2('data');
 
-        console.log(labObject);
+        //console.log(labObject);
 
         if( labObject ) {
-            console.log("id="+labObject.id+", text="+labObject.text+', user_id='+user_id);
+            //console.log("id="+labObject.id+", text="+labObject.text+', user_id='+user_id);
 
             var url = getCommonBaseUrl("util/common/researchlab/"+labObject.id+"/"+user_id,"employees");
 
@@ -401,11 +401,11 @@ function researchLabListener( holder ) {
 
 
 function populateResearchlabData( data, elementName ) {
-    console.log(data);
+    //console.log(data);
 
     var holder = elementName.closest('.user-researchlabs');
-    console.log(holder);
-    printF(holder,'holder=');
+    //console.log(holder);
+    //printF(holder,'holder=');
 
     var idfield = holder.find('.researchlab-id-field');
     var weblink = holder.find('.researchlab-weblink-field');
@@ -415,15 +415,15 @@ function populateResearchlabData( data, elementName ) {
     var commentDummy = holder.find('.researchlab-commentDummy-field');
     var piDummy = holder.find('.researchlab-piDummy-field');
 
-    commentDummy.attr("readonly", false);
-    piDummy.attr("readonly", false);
+    //commentDummy.attr("readonly", false);
+    //isableCheckbox(piDummy,false);
 
     if( data && data.length > 1 ) {
         throw new Error('More than 1 object found. count='+data.length);
     }
 
     if( !data ) {
-        console.log("data is null => empty lab");
+        //console.log("data is null => empty lab");
 
         //set null
         idfield.val(null);
@@ -434,19 +434,21 @@ function populateResearchlabData( data, elementName ) {
         commentDummy.val(null);
         piDummy.prop('checked', false);
 
-        //enable
+        //disable
         weblink.attr("readonly", true);
         foundedDate.attr("readonly", true);
         dissolvedDate.attr("readonly", true);
         location.select2("readonly", true);
         commentDummy.attr("readonly", true);
-        piDummy.attr("readonly", true);
+        disableCheckbox(piDummy,true);
+
+        initDatepicker(holder);
 
         return;
     }
 
     if( data.length == 0 ) {
-        console.log("data is empty => new lab");
+        //console.log("data is empty => new lab");
 
         //set null
         idfield.val(null);
@@ -462,9 +464,10 @@ function populateResearchlabData( data, elementName ) {
         foundedDate.attr("readonly", false);
         dissolvedDate.attr("readonly", false);
         location.select2("readonly", false);
-//        location.select2("readonly", false);
-//        location.attr("readonly", false);
-//        location.removeAttr( "readonly" );
+        commentDummy.attr("readonly", false);
+        disableCheckbox(piDummy,false);
+
+        initDatepicker(holder);
 
         return;
     }
@@ -472,8 +475,7 @@ function populateResearchlabData( data, elementName ) {
     if( data && data.length > 0) {
 
         data = data[0];
-        console.log("comment="+data.commentDummy);
-        console.log(commentDummy);
+        //console.log("existing lab: idfield="+data.id);
 
         //set data
         idfield.val(data.id);
@@ -481,8 +483,9 @@ function populateResearchlabData( data, elementName ) {
         foundedDate.val(data.foundedDate);
         dissolvedDate.val(data.dissolvedDate);
         location.select2('val',data.lablocation);
-        //commentDummy.val(data.commentDummy);
 
+        //no comment or pi is attached to a new research lab
+        //commentDummy.val(data.commentDummy);
 //        if( data.piDummy && data.piDummy == user_id ) {
 //            piDummy.prop('checked', true);
 //        } else {
@@ -494,10 +497,60 @@ function populateResearchlabData( data, elementName ) {
         foundedDate.attr("readonly", true);
         dissolvedDate.attr("readonly", true);
         location.select2("readonly", true);
+        commentDummy.attr("readonly", false);
+        disableCheckbox(piDummy,false);
+
+        initDatepicker(holder);
 
         return;
     }
 
+    function disableCheckbox( checkboxEl, disable ) {
+        if( disable ) {
+            checkboxEl.prop("disabled", true);
+        } else {
+            checkboxEl.prop("disabled", false);
+        }
+    }
+
     return;
+}
+
+//delete research lab from user in DB
+function deleteObjectFromDB(btn) {
+    var btnEl = $(btn);
+    var holder = btnEl.closest('.user-researchlabs');
+
+    if( holder.length == 0 ) {
+        return true;
+    }
+
+    var idfield = holder.find('.researchlab-id-field').val();
+    //console.log("remove lab with idfield="+idfield);
+
+    if( !idfield || idfield == "" ) {
+        //console.log('empty lab title');
+        return true;
+    }
+
+    var res = false;
+
+    var url = getCommonBaseUrl("util/common/researchlab/deletefromuser/"+idfield+"/"+user_id,"employees");
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: false,
+        type: 'DELETE'
+    }).success(function(data) {
+        if( data == 'ok' ) {
+            console.log('research lab with id='+idfield+' deleted from user with id='+user_id);
+        } else {
+            console.log('Failed: research lab with id='+idfield+' not deleted from user with id='+user_id);
+        }
+        res = true;
+    });
+
+    return res;
 }
 

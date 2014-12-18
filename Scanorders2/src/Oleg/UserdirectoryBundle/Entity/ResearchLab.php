@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\ResearchLabRepository")
  * @ORM\Table(name="user_researchLab")
  */
 class ResearchLab extends ListAbstract  //extends BaseUserAttributes
@@ -53,21 +53,12 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
      */
     private $weblink;
 
-
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $comment;
     /**
      * @ORM\OneToMany(targetEntity="ResearchLabComment", mappedBy="researchLab", cascade={"persist","remove"})
      **/
     private $comments;
     private $commentDummy;
 
-//    /**
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $researchPI;
     /**
      * @ORM\OneToMany(targetEntity="ResearchLabPI", mappedBy="researchLab", cascade={"persist","remove"})
      **/
@@ -186,12 +177,7 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
     }
 
 
-    /**
-     * Add user
-     *
-     * @param \Oleg\OrderformBundle\Entity\User $user
-     * @return User
-     */
+
     public function addUser($user)
     {
         if( !$this->user->contains($user) ) {
@@ -201,21 +187,10 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
 
         return $this;
     }
-    /**
-     * Remove user
-     *
-     * @param \Oleg\OrderformBundle\Entity\User $user
-     */
     public function removeUser($user)
     {
         $this->user->removeElement($user);
     }
-
-    /**
-     * Get user
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
     public function getUser()
     {
         return $this->user;
@@ -328,7 +303,7 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
     //
 
     public function __toString() {
-        return "Research Lab";
+        return "Research Lab"." name=".$this->getName().", id=".$this->getId();
     }
 
 

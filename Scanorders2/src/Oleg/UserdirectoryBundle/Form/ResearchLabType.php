@@ -93,13 +93,6 @@ class ResearchLabType extends AbstractType
 
         if( strpos($this->params['cycle'],'_standalone') === false ) {
 
-            $builder->add('name', 'employees_custom_selector', array(
-                'label' => "Research Lab Title:",
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-researchlab', 'type' => 'hidden'),
-                'classtype' => 'researchlab'
-            ));
-
             ////////////////////////// comment and pi /////////////////////////
             //pi and comment
             //pi and common are arrays, but we should show only objects belonging to the subjectUser,
@@ -108,6 +101,14 @@ class ResearchLabType extends AbstractType
 
                 $lab = $event->getData();
                 $form = $event->getForm();
+
+                $form->add('name', 'employees_custom_selector', array(
+                    'read_only' => ($lab && $lab->getId() ? true : false),
+                    'label' => "Research Lab Title:",
+                    'required' => false,
+                    'attr' => array('class' => 'combobox combobox-width ajax-combobox-researchlab', 'type' => 'hidden'),
+                    'classtype' => 'researchlab'
+                ));
 
                 if( $lab ) {
 

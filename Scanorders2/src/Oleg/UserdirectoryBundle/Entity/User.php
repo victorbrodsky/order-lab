@@ -17,7 +17,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 //Generate unique username (post): primaryPublicUserId + "_" + keytype + "_" _ id
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserRepository")
  * @UniqueEntity(
  *     fields={"keytype", "primaryPublicUserId"},
  *     errorPath="primaryPublicUserId",
@@ -725,6 +725,7 @@ class User extends BaseUser
     public function removeResearchLab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab)
     {
         $this->researchLabs->removeElement($researchLab);
+        $researchLab->removeUser($this);
     }
 
     /**

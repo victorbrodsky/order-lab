@@ -215,37 +215,24 @@ function extendAll(holder) {
 }
 
 
-function initDatepicker() {
+function initDatepicker( holder ) {
 
     if( cycle != "show" ) {
 
         //console.log("init Datepicker");
 
-        var regularDatepickers = $('.input-group.date.regular-datepicker').not('.allow-future-date').each( function() {
+        if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
 
-            //make sure the masking is clear when input is cleared by datepicker
-            $(this).datepicker().on("clearDate", function(e){
-                var inputField = $(this).find('input');
-                //printF(inputField,"clearDate input:");
-                clearErrorField( inputField );
-            });
+            var target1 = holder.find('.input-group.date.regular-datepicker').not('.allow-future-date');
+            var target2 = holder.find('.input-group.date.allow-future-date');
 
-            initSingleDatepicker( $(this) );
+        } else {
+            var target1 = $('.input-group.date.regular-datepicker').not('.allow-future-date');
+            var target2 = $('.input-group.date.allow-future-date');
+        }
 
-        });
-
-        var scandateDatepickers = $('.input-group.date.allow-future-date').each( function() {
-
-            //make sure the masking is clear when input is cleared by datepicker
-            $(this).datepicker().on("clearDate", function(e){
-                var inputField = $(this).find('input');
-                //printF(inputField,"clearDate input:");
-                clearErrorField( inputField );
-            });
-
-            initSingleDatepicker( $(this) );
-
-        });
+        processAllDatepickers( target1 );
+        processAllDatepickers( target2 );
 
 //        //make sure the masking is clear when input is cleared by datepicker
 //        regularDatepickers.datepicker().on("clearDate", function(e){
@@ -256,6 +243,21 @@ function initDatepicker() {
 
     }
 
+}
+
+function processAllDatepickers( target ) {
+    target.each( function() {
+
+        //make sure the masking is clear when input is cleared by datepicker
+        $(this).datepicker().on("clearDate", function(e){
+            var inputField = $(this).find('input');
+            //printF(inputField,"clearDate input:");
+            clearErrorField( inputField );
+        });
+
+        initSingleDatepicker( $(this) );
+
+    });
 }
 
 function initSingleDatepicker( datepickerElement ) {

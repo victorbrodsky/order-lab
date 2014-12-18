@@ -435,6 +435,43 @@ class UtilController extends Controller {
         return $response;
     }
 
+    /**
+     * check if location can be deleted
+     *
+     * @Route("/common/researchlab/deletefromuser/{id}/{subjectUser}", name="employees_researchlab_deletefromuser")
+     * @Method("DELETE")
+     */
+    public function researchLabDeleteAction($id, $subjectUser) {
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+        $lab = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($id);
+
+        $output = 'not ok';
+
+        //more effificient than looping (?)
+        if( $user && $lab ) {
+            $user->removeResearchLab($lab);
+            $em->persist($user);
+            $em->flush();
+            $output = 'ok';
+        }
+
+//        foreach( $user->getResearchLabs() as $lab ) {
+//            if( $lab->getId() == $id ) {
+//                $user->removeResearchLab($lab);
+//                $em->persist($user);
+//                $em->flush();
+//                $output = 'ok';
+//                break;
+//            }
+//        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
 
 
     /**

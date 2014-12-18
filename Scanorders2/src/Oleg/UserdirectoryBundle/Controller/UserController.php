@@ -1132,7 +1132,7 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($user);
 
-            $this->processResearchLab($user);
+            $user = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
 
             $em->persist($user);
             $em->flush();
@@ -1518,11 +1518,10 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
 
-            $this->processResearchLab($entity);
+            $entity = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $entity );
 
             //set update info for user
             $this->updateInfo($entity);
-
 
             /////////////// Add event log on edit (edit or add collection) ///////////////
             /////////////// Must run before removeCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
@@ -1762,97 +1761,6 @@ class UserController extends Controller
         $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
     }
 
-    public function processResearchLab( $user ) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $labs = $user->getResearchLabs();
-        //echo "labs count=".count($labs)."<br>";
-
-        foreach( $labs as $lab ) {
-
-            //echo "<br> lab name=".$lab->getName().", id=".$lab->getId()."<br>";
-
-            if( !($lab && $lab->getName() && $lab->getName() != "") ) {
-                $user->removeResearchLab($lab);
-                //echo "lab has no name => continue to the next research lab object <br>";
-                continue;
-            }
-
-            //get lab from DB if exists
-            if( $lab && $lab->getId() ) {
-                //$lab = $em->merge($lab);
-                $labDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($lab->getId());
-
-                //merge db and form entity
-                $labDb->setPiDummy($lab->getPiDummy());
-                $labDb->setCommentDummy($lab->getCommentDummy());
-                //$labDb = $em->merge($lab);
-
-                $user->removeResearchLab($lab);
-                $user->addResearchLab($labDb);
-                $lab = $labDb;
-
-                //echo "lab dummy: id=".$lab->getId().", pi=".$lab->getPiDummy().", comment=".$lab->getCommentDummy()."<br>";
-            }
-
-            //set pi
-            //echo "pis1=".count($lab->getPis())."<br>";
-
-            //check if pi=$user for this lab already exists
-            $piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$user, 'researchLab'=>$lab->getId() ) );
-
-            if( $lab->getPiDummy() && $lab->getPiDummy() == true ) {
-                //echo "lab pi=".$lab->getPiDummy()."<br>";
-
-                if( $piDb ) {
-                    //echo "exist pi=".$piDb->getPi()."<br>";
-                    $piDb->setPi($user);
-                } else {
-                    //echo "does not exist pi <br>";
-                    $lab->setPiUser($user);
-                }
-
-            } else {
-
-                $lab->removePi($piDb);
-                if( $piDb ) {
-                    $em->remove($piDb);
-                }
-
-            }
-
-            //echo "pis2=".count($lab->getPis())."<br>";
-
-            //set comment
-            //echo "comments 1=".count($lab->getComments())."<br>";
-
-            //check if comment authored by $user for this lab already exists
-            $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'researchLab'=>$lab->getId() ) );
-
-            if( $lab->getCommentDummy() && $lab->getCommentDummy() != "" ) {
-                //echo "lab comment=".$lab->getCommentDummy()."<br>";
-
-                if( $commentDb ) {
-                    //echo "exist comment=".$commentDb->getComment()."<br>";
-                    $commentDb->setComment($lab->getCommentDummy());
-                } else {
-                    //echo "does not exist comment <br>";
-                    $lab->setComment($lab->getCommentDummy(),$user);
-                }
-
-            } else {
-                $lab->removeComment($commentDb);
-                if( $commentDb ) {
-                    $em->remove($commentDb);
-                }
-            }
-            //echo "comments 2=".count($lab->getComments())."<br>";
-
-        } //foreach
-
-        //exit('exit');
-    }
 
     public function removeCollection($originalArr,$currentArr,$subjectUser=null) {
         $em = $this->getDoctrine()->getManager();
@@ -1882,9 +1790,11 @@ class UserController extends Controller
                     //echo 'no delete from DB because list <br>';
                     if( $subjectUser ) {
                         $title->removeUser($subjectUser);
-                        //remove dependents: remove comments and id from lab
-                        //$title->removeDependents($subjectUser);
-                        $this->removeDependents($subjectUser,$title);
+
+                        if( $title instanceof ResearchLab ) {
+                            //remove dependents: remove comments and id from lab
+                            $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->removeDependents( $subjectUser, $title );
+                        }
                     }
                 }
             } else {
@@ -2159,32 +2069,6 @@ class UserController extends Controller
         );
     }
 
-    //remove pi and comment for Research Lab
-    public function removeDependents($subjectUser,$lab) {
 
-        //echo "remove user=".$subjectUser.", lab=".$lab->getId()."<br>";
-
-        if( !$lab instanceof ResearchLab ) {
-            //echo 'not research lab object <br>';
-            return;
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
-        if( $commentDb ) {
-            //echo "remove comment=".$commentDb."<br>";
-            $em->remove($commentDb);
-            $em->flush();
-        }
-
-        $piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
-        if( $piDb ) {
-            //echo "remove pi=".$piDb."<br>";
-            $em->remove($piDb);
-            $em->flush();
-        }
-
-    }
 
 }
