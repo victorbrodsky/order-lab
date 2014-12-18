@@ -587,7 +587,7 @@ class User extends BaseUser
         return $this;
     }
 
-    public function removeEmploymentStatus(\Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus)
+    public function removeEmploymentStatus($employmentStatus)
     {
         $this->employmentStatus->removeElement($employmentStatus);
     }

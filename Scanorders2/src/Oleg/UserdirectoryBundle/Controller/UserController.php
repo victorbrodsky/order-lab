@@ -1732,7 +1732,7 @@ class UserController extends Controller
         $sc = $this->get('security.context');
         $userUtil->setUpdateInfo($comment,$em,$sc);
 
-        echo "<br>Comment text=".$comment->getComment()."<br>";
+        //echo "<br>Comment text=".$comment->getComment()."<br>";
 
         //if comment text is empty => remove from user
         if( $comment->getComment() == "" && count($comment->getDocuments()) == 0 ) {
@@ -1773,6 +1773,12 @@ class UserController extends Controller
 
             //echo "<br> lab name=".$lab->getName().", id=".$lab->getId()."<br>";
 
+            if( !($lab && $lab->getName() && $lab->getName() != "") ) {
+                $user->removeResearchLab($lab);
+                //echo "lab has no name => continue to the next research lab object <br>";
+                continue;
+            }
+
             //get lab from DB if exists
             if( $lab && $lab->getId() ) {
                 //$lab = $em->merge($lab);
@@ -1785,8 +1791,8 @@ class UserController extends Controller
 
                 $user->removeResearchLab($lab);
                 $user->addResearchLab($labDb);
-
                 $lab = $labDb;
+
                 //echo "lab dummy: id=".$lab->getId().", pi=".$lab->getPiDummy().", comment=".$lab->getCommentDummy()."<br>";
             }
 
@@ -1861,19 +1867,19 @@ class UserController extends Controller
                 }
             }
 
-            echo "title=".$title.", id=".$title->getId()."<br>";
+            //echo "title=".$title.", id=".$title->getId()."<br>";
             $em->persist($title);
 
             if( false === $currentArr->contains($title) ) {
                 $removeArr[] = "<strong>"."Removed: ".$title." ".$this->getEntityId($title)."</strong>";
-                echo "before delete <br>";
+                //echo "before delete <br>";
                 if( is_subclass_of($title, 'Oleg\UserdirectoryBundle\Entity\ListAbstract') === false ) {
                     //echo "delete object entirely <br>";
                     // delete object entirely
                     $em->remove($title);
                     $em->flush();
                 } else {
-                    echo 'no delete from DB because list <br>';
+                    //echo 'no delete from DB because list <br>';
                     if( $subjectUser ) {
                         $title->removeUser($subjectUser);
                         //remove dependents: remove comments and id from lab
