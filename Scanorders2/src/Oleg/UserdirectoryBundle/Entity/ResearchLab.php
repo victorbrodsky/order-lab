@@ -300,11 +300,11 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
         return $this->setUpdatedby($author);
     }
 
-    //
 
-    public function __toString() {
-        return "Research Lab"." name=".$this->getName().", id=".$this->getId();
-    }
+//    public function __toString() {
+//        //return "Research Lab"." name=".$this->getName().", id=".$this->getId();
+//        return $this->getName();
+//    }
 
 
 }

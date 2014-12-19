@@ -130,8 +130,8 @@ class UserController extends Controller
 
         $tablename = $request->get('tablename');
         $objectid = $request->get('id');
-        //$objectname = $request->get('name');
-        //$postData = $request->get('postData');
+        $objectname = $request->get('name');
+        $postData = $request->get('postData');
 
         //user search
         $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid,'excludeCurrentUser'=>true);
@@ -141,7 +141,8 @@ class UserController extends Controller
         return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
             array(
                 'entities' => $pagination,
-                'sitename' => $this->container->getParameter('employees.sitename')
+                'sitename' => $this->container->getParameter('employees.sitename'),
+                'postData' => $postData
             )
         );
     }
@@ -907,9 +908,16 @@ class UserController extends Controller
             $criteriastr = "boss.id = " . $user->getId();
         }
 
-        //TODO: users will have different lab id because they don't have a choice to join to existing lab
         if( $objectname && $objectname == "researchLabs" ) {
             $criteriastr = "researchLabs.id = " . $objectid;
+        }
+
+        if( $objectname && $objectname == "assistances" ) {
+            //get user's assistants
+            $assistantsRes = $user->getAssistants();
+            $assistants = $assistantsRes['ids'];
+            $assistantsStr = implode(",", $assistants);
+            $criteriastr = "user.id IN (" . $assistantsStr . ")";
         }
 
         if( $excludeCurrentUser ) {
@@ -1043,7 +1051,8 @@ class UserController extends Controller
             'cycle' => 'create_user',
             'user_id' => '',
             'sitename' => $this->container->getParameter('employees.sitename'),
-            'userclone' => $subjectUser
+            'userclone' => $subjectUser,
+            'postData' => $request->query->all()
         );
 
     }
@@ -1175,6 +1184,8 @@ class UserController extends Controller
         return $this->showUser($id,$this->container->getParameter('employees.sitename'));
     }
     public function showUser($id, $sitename=null) {
+
+        $request = $this->container->get('request');
         $em = $this->getDoctrine()->getManager();
 
         //echo "id=".$id."<br>";
@@ -1227,7 +1238,8 @@ class UserController extends Controller
             'cycle' => 'show_user',
             'user_id' => $id,
             'sitename' => $sitename,
-            'roleobjects' => $roleobjects
+            'roleobjects' => $roleobjects,
+            'postData' => $request->query->all()
         );
     }
 
@@ -1247,6 +1259,8 @@ class UserController extends Controller
     }
 
     public function editUser($id,$sitename=null) {
+
+        $request = $this->container->get('request');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1283,7 +1297,8 @@ class UserController extends Controller
             'form' => $form->createView(),
             'cycle' => 'edit_user',
             'user_id' => $id,
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'postData' => $request->query->all()
         );
     }
 
@@ -1624,7 +1639,8 @@ class UserController extends Controller
             'form'   => $form->createView(),
             'cycle' => 'edit_user',
             'user_id' => $id,
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'postData' => $request->query->all()
         );
     }
 

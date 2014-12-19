@@ -1420,7 +1420,9 @@
 
 
         {#Team#}
-        {#{{ usermacros.userTeam(entity) }}#}
+        {% if userEditor == true and cycle == "show_user" %}
+            {{ usermacros.userTeam(entity,'profile',postData,'') }}
+        {% endif %}
 
 
         <br>

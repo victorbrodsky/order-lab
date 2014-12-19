@@ -849,6 +849,7 @@ class User extends BaseUser
         return $institutions;
     }
 
+    //TODO: check performance of foreach. It might be replaced by direct DB query
     public function getBosses() {
         $bosses = new ArrayCollection();
         foreach( $this->getAdministrativeTitles() as $adminTitles ) {
@@ -857,6 +858,25 @@ class User extends BaseUser
             }
         }
         return $bosses;
+    }
+
+    //TODO: check performance of foreach. It might be replaced by direct DB query
+    public function getAssistants() {
+        $assistants = new ArrayCollection();
+        $ids = array();
+        foreach( $this->getLocations() as $location ) {
+            foreach( $location->getAssistant() as $assistant ) {
+                $assistants->add($assistant);
+                $ids[] = $assistant->getId();
+            }
+        }
+
+        $res = array();
+        $res['entities'] = $assistants;
+        $res['ids'] = $ids;
+        //print_r($ids);
+
+        return $res;
     }
 
     public function getSiteRoles($sitename) {
