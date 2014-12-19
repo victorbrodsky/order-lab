@@ -16,11 +16,11 @@ class ResearchLabRepository extends EntityRepository {
         $em = $this->_em;
 
         $labs = $user->getResearchLabs();
-        echo "labs count=".count($labs)."<br>";
+        //echo "labs count=".count($labs)."<br>";
 
         foreach( $labs as $lab ) {
 
-            echo "<br> lab name=".$lab->getName().", id=".$lab->getId()."<br>";
+            //echo "<br> lab name=".$lab->getName().", id=".$lab->getId()."<br>";
 
             if( !($lab && $lab->getName() && $lab->getName() != "") ) {
                 $user->removeResearchLab($lab);
@@ -35,7 +35,7 @@ class ResearchLabRepository extends EntityRepository {
 
             if( $labDb ) {
 
-                echo "found lab in DB name=".$lab->getName().", id=".$lab->getId()."<br>";
+                //echo "found lab in DB name=".$lab->getName().", id=".$lab->getId()."<br>";
 
                 //merge db and form entity
                 $labDb->setPiDummy($lab->getPiDummy());
@@ -143,15 +143,15 @@ class ResearchLabRepository extends EntityRepository {
             }
             //echo "comments 2=".count($labFinal->getComments())."<br>";
 
-            foreach( $labFinal->getComments() as $comment ) {
-                echo $comment;
-            }
+            //foreach( $labFinal->getComments() as $comment ) {
+            //    echo $comment;
+            //}
 
         } //foreach
 
-        echo "labs final count=".count($user->getResearchLabs())."<br>";
-        $labOrig = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find(21);
-        echo "original form labOrig id=21: name=".$labOrig->getName().", id=".$labOrig->getId()."<br>";
+        //echo "labs final count=".count($user->getResearchLabs())."<br>";
+        //$labOrig = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find(21);
+        //echo "original form labOrig id=21: name=".$labOrig->getName().", id=".$labOrig->getId()."<br>";
 
         //exit('process lab');
 
