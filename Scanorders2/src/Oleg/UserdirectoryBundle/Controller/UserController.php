@@ -332,20 +332,25 @@ class UserController extends Controller
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
 
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+        $dql->leftJoin("administrativeTitles.name", "administrativeName");
         $dql->leftJoin("administrativeTitles.institution", "administrativeInstitution");
         $dql->leftJoin("administrativeTitles.department", "administrativeDepartment");
         $dql->leftJoin("administrativeTitles.division", "administrativeDivision");
         $dql->leftJoin("administrativeTitles.service", "administrativeService");
 
         $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+        $dql->leftJoin("appointmentTitles.name", "appointmentName");
         $dql->leftJoin("appointmentTitles.institution", "appointmentInstitution");
         $dql->leftJoin("appointmentTitles.department", "appointmentDepartment");
         $dql->leftJoin("appointmentTitles.division", "appointmentDivision");
         $dql->leftJoin("appointmentTitles.service", "appointmentService");
 
         $dql->leftJoin("user.locations", "locations");
+        $dql->leftJoin("locations.room", "locationroom");
         $dql->leftJoin("locations.assistant", "assistant");
+
         $dql->leftJoin("user.credentials", "credentials");
+
         $dql->leftJoin("user.researchLabs", "researchLabs");
 
         //$dql->leftJoin("user.institutions", "institutions");

@@ -137,7 +137,7 @@ class UtilController extends Controller {
                 ->innerJoin("list.parent", "parent")
                 ->select("list.id as id, list.name as text")
                 //->select("list.name as id, list.name as text")
-                ->orderBy("list.orderinlist","ASC");
+                ->orderBy("list.name","ASC");
 
             $query->where("parent = :pid AND (list.type = :typedef OR list.type = :typeadd)")->setParameters(array('typedef' => 'default','typeadd' => 'user-added','pid'=>$pid));
 

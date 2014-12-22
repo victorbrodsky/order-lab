@@ -219,7 +219,7 @@ class UserType extends AbstractType
             'prototype_name' => '__appointmenttitles__',
         ));
 
-        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->cycle,'em'=>$this->em);
+        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
         $builder->add('locations', 'collection', array(
             'type' => new LocationType($params),
             'label' => false,

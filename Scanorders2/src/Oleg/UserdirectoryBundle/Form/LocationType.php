@@ -154,7 +154,9 @@ class LocationType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('list')
-                            ->orderBy("list.displayName","ASC");
+                            ->where( "list.id != :userid" )
+                            ->orderBy("list.displayName","ASC")
+                            ->setParameters( array('userid' => $this->params['subjectUser']->getId()) );
                     },
             ));
         }
