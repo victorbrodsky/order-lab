@@ -133,8 +133,7 @@
         <br>
 
         {# My Team #}
-        {#postData:{{ dump(postData) }}#}
-        {{ usermacros.userTeam( app.security.getToken().getUser, 'home', postData, 'in' ) }}
+        {{ usermacros.userTeam( app.security.getToken().getUser, 'home', employees_sitename, postData, 'in' ) }}
 
     {% endif %}
 

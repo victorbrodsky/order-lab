@@ -508,7 +508,7 @@
     <p>
     <div class="well">
         {% set bossurl = path(sitename~'_showuser',{'id':person.id}) %}
-        {% set bosslink = '<a href="'~bossurl~'">'~person.getUserNameShortStr()~'</a>'  %}
+        {% set bosslink = '<a href="'~bossurl~'">'~person.getUsernameOptimal()~'</a>'  %}
         {{ formmacros.simplefield( "Name:", bosslink, "", "disabled" ) }}
         {{ usermacros.emailPhoneField(person.preferredPhone,cycle,'phone',"Preferred Phone Number:") }}
         {{ usermacros.emailPhoneField(person.email,cycle,'email',"Preferred Email:") }}
@@ -656,7 +656,7 @@
 
 
 {########################### My Team #############################}
-{% macro userTeam( user, type, postData, collapsein ) %}
+{% macro userTeam( user, type, sitename, postData, collapsein ) %}
 
     {% set threshold = 50 %}
 
@@ -680,17 +680,24 @@
         {% set myassistancesShow = true %}
     {% endif %}
 
+    {#<br>before myboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
     {#My Group#}
-    {% set bosses = user.getBosses() %}
+    {% set titleBosses = user.getBosses() %}
     {% set mygroupsArr = {} %}
-    {% for myboss in bosses %}
-        {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
-        {% set element = {'table': table, 'element':myboss} %}
-        {% set mygroupsArr = mygroupsArr|merge({ (loop.index0): element}) %}
-        {% if render(table)|length > threshold %}
-            {% set mygroupsShow = true %}
-        {% endif %}
+    {% set myTitleBossesArr = {} %}
+    {% for title in titleBosses %}
+        {% for myboss in title['bosses'] %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
+            {% set element = {'table': table, 'element':myboss} %}
+            {% set mygroupsArr = mygroupsArr|merge({ (loop.index0): element}) %}
+            {% if render(table)|length > threshold %}
+                {% set mygroupsShow = true %}
+            {% endif %}
+        {% endfor %}
+        {% set element = {'title':title['titleobject'],'bosses': title['bosses']} %}
+        {% set myTitleBossesArr = myTitleBossesArr|merge({ (loop.index0): element}) %}
     {% endfor %}
+    {#<br>after myboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
 
     {#My Department if head#}
     {% set departments = user.getDepartments(true) %}
@@ -765,7 +772,6 @@
 
             {#My Assistance(s)#}
             {% if myassistancesShow %}
-
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -804,12 +810,12 @@
             {% if mygroupsArr is defined %}
                 {% for mygroup in mygroupsArr %}
 
-                    {% if mygroupsShow %}
+                    {% if render( mygroup['table'] )|length > threshold %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" href="#mygroups-{{ mygroup['element'].getId() }}">
-                                        My Group for <a href="{{ path('employees_showuser',{'id':mygroup['element'].getId()}) }}">{{ mygroup['element'].getUsernameOptimal() }}</a>
+                                        My Group for <a href="{{ path(sitename~'_showuser',{'id':mygroup['element'].getId()}) }}">{{ mygroup['element'].getUsernameOptimal() }}</a>
                                     </a>
                                 </h4>
                             </div>
@@ -824,16 +830,41 @@
                 {% endfor %}
             {% endif %}
 
-
+            {#<br>before titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
             {#If the user has people she/he reports to, list them here, but separate by the associated title of the user
             ("As a [Medical Director of Informatics] Victor Brodsky reports to: Yao Chen [listed as a search result table]";
             As a [Janitor] Victor Brodsky reports to: John Smith, Mary Jones {listed as lines of the search results table].#}
-            {% if mygroupsArr is defined and type == 'profile' %}
-                {% for mygroup in mygroupsArr %}
-                    {#As a {{ user.getTitleAndName(mygroup['element']) }} reports to: {{ user.getUserReportToByTitle(mygroup['element']) }}#}
-                    {#reports to here is under construction ...#}
+            {% if myTitleBossesArr is defined and myTitleBossesArr|length > 0 and type == 'profile' %}
+                {% for titleBosses in myTitleBossesArr %}
+
+                    {% set bossArr = {} %}
+                    {% set bossidsArr = {} %}
+                    {% for boss in titleBosses['bosses'] %}
+                        {% set bossHtml = '<a href="'~path(sitename~'_showuser',{'id':boss.getId()})~'">'~boss.getUsernameOptimal()~'</a>' %}
+                        {% set bossArr = bossArr|merge([bossHtml]) %}
+                        {% set bossidsArr = bossidsArr|merge([boss.getId]) %}
+                    {% endfor %}
+
+                    {% set mybosses = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'mybosses','id':bossidsArr,'name':null} ) %}
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#mytitlebosses-{{ titleBosses['title'].getId() }}">
+                                    As a {{ user.getTitleAndNameByTitle(titleBosses['title']) }} reports to: {{ bossArr|join(",")|raw }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="mytitlebosses-{{ titleBosses['title'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                            <div class="panel-body">
+                                {{ render( mybosses ) }}
+                            </div>
+                        </div>
+                    </div>
+
                 {% endfor %}
             {% endif %}
+            {#<br>after titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
 
 
             {#My Department(s)#}
@@ -841,7 +872,7 @@
                 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                 {% for mydepartment in mydepartmentsArr %}
 
-                    {% if mydepartmentsShow %}
+                    {% if render( mydepartment['table'] )|length > threshold %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -866,7 +897,7 @@
                 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                 {% for mydivision in mydivisionsArr %}
 
-                    {% if mydivisionsShow %}
+                    {% if render( mydivision['table'] )|length > threshold %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -892,7 +923,7 @@
                 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                 {% for myservice in myservicesArr %}
 
-                    {% if myservicesShow %}
+                    {% if render( myservice['table'] )|length > threshold %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -920,7 +951,7 @@
                 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                 {% for mylab in mylabsArr %}
 
-                    {% if mylabsShow %}
+                    {% if render( mylab['table'] )|length > threshold %}
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -946,5 +977,8 @@
         </div>{#panel panel-primary#}
 
     {% endif %}
+
+    {#<br>end of myteam: getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
+
 {% endmacro %}
 {########################### EOF My Team #############################}

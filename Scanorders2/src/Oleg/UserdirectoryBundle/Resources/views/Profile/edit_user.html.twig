@@ -1421,7 +1421,7 @@
 
         {#Team#}
         {% if userEditor == true and cycle == "show_user" %}
-            {{ usermacros.userTeam(entity,'profile',postData,'') }}
+            {{ usermacros.userTeam(entity,'profile',sitename,postData,'') }}
         {% endif %}
 
 
@@ -1467,5 +1467,8 @@
             <a href="{{ path(sitename~'_listusers') }}">View the list of all users</a>
         </p>
     {% endif %}
+
+
+    {#<br>final getMemoryUsage: {{ entity.getMemoryUsage }}<br>#}
 
 {% endblock %}

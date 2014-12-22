@@ -851,13 +851,30 @@ class User extends BaseUser
 
     //TODO: check performance of foreach. It might be replaced by direct DB query
     public function getBosses() {
-        $bosses = new ArrayCollection();
+        $res = array();
+        //$bosses = new ArrayCollection();
         foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+            $bosses = new ArrayCollection();
             foreach( $adminTitles->getBoss() as $boss ) {
                 $bosses->add($boss);
+                //$res[$adminTitles->getId()][] = $boss;
             }
+            $res[$adminTitles->getId()]['bosses'] = $bosses;
+            $res[$adminTitles->getId()]['titleobject'] = $adminTitles;
         }
-        return $bosses;
+        //return $bosses;
+        return $res;
+    }
+
+    //returns: [Medical Director of Informatics] Victor Brodsky
+    public function getTitleAndNameByTitle( $admintitle ) {
+        return "[" . $admintitle->getName() . "] " . $this->getUsernameOptimal();
+    }
+
+    //Testing
+    public function getMemoryUsage() {
+        //return round(memory_get_usage() / 1024);
+        return memory_get_usage();
     }
 
     //TODO: check performance of foreach. It might be replaced by direct DB query

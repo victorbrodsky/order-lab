@@ -55,39 +55,16 @@ class UserController extends Controller
     }
 
 
-//    /**
-//     * Me boss
-//     *
-//     * @Route("/my-reports", name="employees_my_reports")
-//     */
-//    public function myReportsAction() {
-//
-//        //user search
-//        $params = array('time'=>'current_only','myteam'=>'myreports');
-//        $res = $this->indexUser( $params );
-//        $pagination = $res['entities'];
-//
-//        //echo "paginations=".count($pagination)."<br>";
-//
-//        return $this->render( 'OlegUserdirectoryBundle::Admin/users-content.html.twig',
-//            array(
-//                'entities' => $pagination,
-//                'sitename' => $this->container->getParameter('employees.sitename')
-//            )
-//        );
-//    }
 
 //    /**
 //     * The same boss
 //     *
-//     * @Route("/my-groups", name="employees_my_groups")
+//     * @Route("/users-by-ids", name="employees_users-by-ids")
 //     */
-//    public function myGroupsAction(Request $request) {
-//
-//        $myboss = $request->get('myboss');
+//    public function getUsersListAction(Request $request, $idsArr) {
 //
 //        //user search
-//        $params = array('time'=>'current_only','myteam'=>'mygroups','myboss'=>$myboss);
+//        $params = array('time'=>'current_only','objectname'=>'usersbyids','objectid'=>$idsArr,'excludeCurrentUser'=>true);
 //        $res = $this->indexUser( $params );
 //        $pagination = $res['entities'];
 //
@@ -99,27 +76,6 @@ class UserController extends Controller
 //        );
 //    }
 
-//    /**
-//     * The same services
-//     *
-//     * @Route("/my-services", name="employees_my_services")
-//     */
-//    public function myServicesAction(Request $request) {
-//
-//        $myservice = $request->get('myservice');
-//
-//        //user search
-//        $params = array('time'=>'current_only','myteam'=>'myservices','myservice'=>$myservice);
-//        $res = $this->indexUser( $params );
-//        $pagination = $res['entities'];
-//
-//        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
-//            array(
-//                'entities' => $pagination,
-//                'sitename' => $this->container->getParameter('employees.sitename')
-//            )
-//        );
-//    }
 
     /**
      * The same services
@@ -918,6 +874,11 @@ class UserController extends Controller
             $assistants = $assistantsRes['ids'];
             $assistantsStr = implode(",", $assistants);
             $criteriastr = "user.id IN (" . $assistantsStr . ")";
+        }
+
+        if( $objectname && $objectname == "mybosses" ) {
+            $bossesStr = implode(",", $objectid);
+            $criteriastr = "user.id IN (" . $bossesStr . ")";
         }
 
         if( $excludeCurrentUser ) {
