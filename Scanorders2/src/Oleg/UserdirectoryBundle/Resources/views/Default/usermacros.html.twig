@@ -658,6 +658,8 @@
 {########################### My Team #############################}
 {% macro userTeam( user, type, sitename, postData, collapsein ) %}
 
+    {#postData:{{ dump(postData) }}#}
+
     {% set threshold = 50 %}
 
     {% set myreportsShow = false %}
@@ -739,7 +741,7 @@
     {% set labs = user.getResearchLabs() %}
     {% set mylabsArr = {} %}
     {% for lab in labs %}
-        {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'researchLabs','id':lab.getId(),'name':lab} ) %}
+        {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'researchlabs','id':lab.getId(),'name':lab} ) %}
         {% set element = {'table': table, 'element':lab} %}
         {% set mylabsArr = mylabsArr|merge({ (loop.index0): element}) %}
         {% if render(table)|length > threshold %}

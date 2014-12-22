@@ -113,7 +113,9 @@ function initTypeaheadUserSiteSerach() {
     myTypeahead.on('typeahead:selected',function(event, suggestion, dataset){
         //show user by id
         if( suggestion.id != "" ) {
-            var url = 'users/'+suggestion.id;
+            console.log('user shoosen with id='+suggestion.id);
+            //var url = 'users/'+suggestion.id;
+            var url = getCommonBaseUrl('users/'+suggestion.id,"employees");
             window.open(url,"_self");
             return;
         }
@@ -124,7 +126,7 @@ function initTypeaheadUserSiteSerach() {
         if(event.keyCode == 13) {
             event.preventDefault();
             if( $(this).val() != "" ) {
-                //console.log('enter pressed => submit form');
+                console.log('enter pressed => submit form');
                 $('#user-typeahead-serach-form').submit();
             }
         }

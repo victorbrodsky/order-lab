@@ -2,28 +2,28 @@
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-{% block additionalcss %}
-    {% stylesheets
-    'bundles/oleguserdirectory/form/css/typeahead.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-{% endblock %}
+{#{% block additionalcss %}#}
+    {#{% stylesheets#}
+    {#'bundles/oleguserdirectory/form/css/typeahead.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+{#{% endblock %}#}
 
-{% block additionaljs %}
-    {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+{#{% block additionaljs %}#}
+    {#{% javascripts#}
+    {#'@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            initTypeaheadUserSiteSerach();
-        });
-    </script>
-{% endblock %}
+    {#<script type="text/javascript">#}
+        {#$(document).ready(function() {#}
+            {#initTypeaheadUserSiteSerach();#}
+        {#});#}
+    {#</script>#}
+{#{% endblock %}#}
 
 
 
@@ -51,9 +51,7 @@
                     <button class="btn btn-lg" type="submit" style="height: 50px">Search</button>
                 </div>
 
-
             </div>
-
 
         </form>
 

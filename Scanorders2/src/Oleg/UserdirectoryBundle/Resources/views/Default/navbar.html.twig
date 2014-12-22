@@ -109,6 +109,26 @@
 
             {% endif %}
 
+            {#Search for a name, service, division, etc#}
+            {% if search is not defined %}
+                {% set search = "" %}
+            {% endif %}
+            <form class="navbar-form navbar-left" role="search" id="user-typeahead-serach-form" action="{{ path(employees_sitename~'_home') }}" method="get">
+                <div class="form-group">
+                    {#<input type="text" class="form-control" placeholder="Search">#}
+                    <div id="multiple-datasets-typeahead-search">
+                        <input type="text"
+                               class="typeahead submit-on-enter-field form-control"
+                               name="search" value="{{ search }}"
+                               placeholder="Search"
+                               style="font-size: 100% !important;"
+                        >
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+                {#<button class="btn btn-lg" type="submit" style="height: 50px">Search</button>#}
+            </form>
+
 
             <ul class="nav navbar-nav navbar-right">
 

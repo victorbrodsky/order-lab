@@ -864,21 +864,27 @@ class UserController extends Controller
             $criteriastr = "boss.id = " . $user->getId();
         }
 
-        if( $objectname && $objectname == "researchLabs" ) {
-            $criteriastr = "researchLabs.id = " . $objectid;
+        if( $objectname && $objectname == "researchlabs" ) {
+            if( $objectid && $objectid != "" ) {
+                $criteriastr = "researchLabs.id = " . $objectid;
+            }
         }
 
         if( $objectname && $objectname == "assistances" ) {
             //get user's assistants
             $assistantsRes = $user->getAssistants();
             $assistants = $assistantsRes['ids'];
-            $assistantsStr = implode(",", $assistants);
-            $criteriastr = "user.id IN (" . $assistantsStr . ")";
+            if( count($assistants) > 0 ) {
+                $assistantsStr = implode(",", $assistants);
+                $criteriastr = "user.id IN (" . $assistantsStr . ")";
+            }
         }
 
         if( $objectname && $objectname == "mybosses" ) {
-            $bossesStr = implode(",", $objectid);
-            $criteriastr = "user.id IN (" . $bossesStr . ")";
+            if( count($objectid) > 0 ) {
+                $bossesStr = implode(",", $objectid);
+                $criteriastr = "user.id IN (" . $bossesStr . ")";
+            }
         }
 
         if( $excludeCurrentUser ) {
