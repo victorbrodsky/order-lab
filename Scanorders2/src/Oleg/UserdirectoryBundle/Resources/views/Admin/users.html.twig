@@ -1,5 +1,9 @@
 {% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
 
+{% block title %}
+    {{ filter }}
+{% endblock %}
+
 {% block content %}
 
     {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}

@@ -291,6 +291,15 @@ class UserController extends Controller
 
         $params = array('filter'=>$filter,'time'=>$time);
         $res = $this->indexUser($params);
+
+        if( $filter == "" ) {
+            if( $routeName == "employees_listusers_previous" ) {
+                $filter = "All Previous Employees";
+            } else {
+                $filter = "All Current Employees";
+            }
+        }
+
         $res['filter'] = $filter;
 
         return $res;
