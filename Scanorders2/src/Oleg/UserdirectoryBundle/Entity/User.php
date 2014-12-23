@@ -750,7 +750,7 @@ class User extends BaseUser
     public function getDepartments($head=false) {
         $departments = new ArrayCollection();
         foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-            if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getName() != "" ) {
+            if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getId() && $adminTitles->getDepartment()->getName() != "" ) {
                 if( $head == true ) {
                     if( $adminTitles->getDepartment()->getHeads()->contains($this) ) {
                         if( !$departments->contains($adminTitles->getDepartment()) ) {
@@ -766,7 +766,7 @@ class User extends BaseUser
         }
         if( $head == false ) {
             foreach( $this->getAppointmentTitles() as $appTitles ) {
-                if( $appTitles->getDepartment() && $appTitles->getDepartment()->getName() != "" ) {
+                if( $appTitles->getDepartment() && $appTitles->getDepartment()->getId() && $appTitles->getDepartment()->getName() != "" ) {
                     if( !$departments->contains($appTitles->getDepartment()) ) {
                         $departments->add($appTitles->getDepartment());
                     }
@@ -781,7 +781,7 @@ class User extends BaseUser
     public function getDivisions($head=false,$emptyService=false) {
         $divisions = new ArrayCollection();
         foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-            if( $adminTitles->getDivision() && $adminTitles->getDivision()->getName() != "" ) {
+            if( $adminTitles->getDivision() && $adminTitles->getDivision()->getId() && $adminTitles->getDivision()->getName() != "" ) {
                 //echo "division=".$adminTitles->getDivision()->getName()."<br>";
                 if( $emptyService && $adminTitles->getDivision() && count($adminTitles->getDivision()->getServices()) == 0 ) {
                     //echo "set head true <br>";
@@ -802,21 +802,22 @@ class User extends BaseUser
         }
 
         foreach( $this->getAppointmentTitles() as $appTitles ) {
-            if( $emptyService && $appTitles->getDivision() && count($appTitles->getDivision()->getServices()) == 0 ) {
-                $head = false;
-            }
-            if( $head == true ) {
-                if( $appTitles->getDivision() && $appTitles->getDivision()->getName() != "" ) {
+            if( $appTitles->getDivision() && $appTitles->getDivision()->getId() && $appTitles->getDivision()->getName() != "" ) {
+                if( $emptyService && $appTitles->getDivision() && count($appTitles->getDivision()->getServices()) == 0 ) {
+                    $head = false;
+                }
+                if( $head == true ) {
+                    if( !$divisions->contains($appTitles->getDivision()) ) {
+                        $divisions->add($appTitles->getDivision());
+                    }
+                } else {
                     if( !$divisions->contains($appTitles->getDivision()) ) {
                         $divisions->add($appTitles->getDivision());
                     }
                 }
-            } else {
-                if( !$divisions->contains($appTitles->getDivision()) ) {
-                    $divisions->add($appTitles->getDivision());
-                }
             }
         }
+
         return $divisions;
     }
 
@@ -824,11 +825,11 @@ class User extends BaseUser
     public function getServices() {
         $services = new ArrayCollection();
         foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-            if( $adminTitles->getService() && $adminTitles->getService()->getName() != "" )
+            if( $adminTitles->getService() && $adminTitles->getService()->getId() && $adminTitles->getService()->getName() != "" )
                 $services->add($adminTitles->getService());
         }
         foreach( $this->getAppointmentTitles() as $appTitles ) {
-            if( $appTitles->getService() && $appTitles->getService()->getName() != "" )
+            if( $appTitles->getService() && $appTitles->getService()->getId() && $appTitles->getService()->getName() != "" )
                 $services->add($appTitles->getService());
         }
         return $services;
@@ -838,11 +839,11 @@ class User extends BaseUser
     public function getInstitutions() {
         $institutions = new ArrayCollection();
         foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-            if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getName() != "" )
+            if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
                 $institutions->add($adminTitles->getInstitution());
         }
         foreach( $this->getAppointmentTitles() as $appTitles ) {
-            if( $appTitles->getInstitution() && $appTitles->getInstitution()->getName() != "" )
+            if( $appTitles->getInstitution() && $appTitles->getInstitution()->getId() && $appTitles->getInstitution()->getName() != "" )
                 $institutions->add($appTitles->getInstitution());
         }
         //echo "inst count=".count($institutions)."<br>";

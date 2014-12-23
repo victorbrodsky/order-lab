@@ -662,6 +662,8 @@ class UserUtil {
         $department = $treeholder->getDepartment();
         $division = $treeholder->getDivision();
         $service = $treeholder->getService();
+        //echo "service: name=".$service->getName().", id=".$service->getId()."<br>";
+        //exit();
 
         $user = $sc->getToken()->getUser();
 

@@ -51,6 +51,8 @@ class GenericTreeTransformer implements DataTransformerInterface
     public function transform($entity)
     {
 
+        //echo "transform: entity=".$entity."<br>";
+
         if( null === $entity || $entity == "" ) {
             return "";
         }
@@ -121,7 +123,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         } else {    //text => most probably it is new name
 
-            //exit('text is a new record name');
+            //exit('text is a new record name='.$text);
             //echo "text is a new record name=".$text."<br>";
             return $this->createNew($text); //create a new record in db
 
@@ -133,6 +135,11 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         //echo "enter create new name=".$name."<br>";
         //exit('create new !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+
+        if( !$name || $name == "" ) {
+            //exit('child name is NULL');
+            return null;
+        }
 
         //check if it is already exists in db
         $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name."");
@@ -171,6 +178,11 @@ class GenericTreeTransformer implements DataTransformerInterface
 
 
     public function createNewEntity($name,$className,$creator) {
+
+        if( !$name || $name == "" ) {
+            return null;
+        }
+
         $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
         $newEntity = new $fullClassName();
 

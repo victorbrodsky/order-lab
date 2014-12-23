@@ -123,6 +123,11 @@ class TreeRepository extends EntityRepository {
 
         $name = $child->getName();
 
+        if( !$name || $name == '' ) {
+            //exit('child name is NULL');
+            return $child;
+        }
+
         //echo "parent=".$parent.", id=".$parent->getId()."<br>";
         //echo "child=".$child.", id=".$child->getId()."<br>";
 
@@ -130,7 +135,6 @@ class TreeRepository extends EntityRepository {
         $foundChild = $this->findCategoryByNameAndParentId($child,$parent);
 
         //echo "foundChild=".$foundChild."<br>";
-
         //exit();
 
         if( !$foundChild ) {
@@ -155,6 +159,7 @@ class TreeRepository extends EntityRepository {
         } else {
 
             //echo "Case 2: Found in DB<br>";
+            //exit();
 
             $parent->$addMethod($foundChild);
 

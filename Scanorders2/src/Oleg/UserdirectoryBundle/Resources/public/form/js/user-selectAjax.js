@@ -44,7 +44,8 @@ function initAllComboboxGeneric(newForm) {
 
 
 function setElementToId( target, dataarr, setId ) {
-    if( dataarr == undefined || dataarr.length == 0 ) {
+    if( typeof dataarr === "undefined" || dataarr == undefined || dataarr.length == 0 ) {
+        $(target).select2('data', null);
         return;
     }
 

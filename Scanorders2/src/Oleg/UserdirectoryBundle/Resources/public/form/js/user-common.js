@@ -37,7 +37,7 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
     //console.log("target="+target);
 
-    //clear the value if it is not set (What is the point to do so if it is empty?!)
+//    //clear the value if it is not set (What is the point to do so if it is empty?!)
 //    var value = $(target).val();
 //    console.log("target="+target+", value1="+value);
 //    if( !value || value == "" ) {
@@ -199,8 +199,8 @@ function collpaseAll(holder) {
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('hide');
     } else {
-        console.log("holder id="+$(holder).attr('id'));
-        console.log($(holder));
+        //console.log("holder id="+$(holder).attr('id'));
+        //console.log($(holder));
         $(holder).find('.panel-collapse').collapse('hide');
     }
 

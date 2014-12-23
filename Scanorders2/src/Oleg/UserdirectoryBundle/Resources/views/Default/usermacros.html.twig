@@ -695,11 +695,13 @@
     {% set myTitleBossesArr = {} %}
     {% for title in titleBosses %}
         {% for myboss in title['bosses'] %}
-            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
-            {% set element = {'table': table, 'element':myboss} %}
-            {% set mygroupsArr = mygroupsArr|merge({ (loop.index0): element}) %}
-            {% if render(table)|length > threshold %}
-                {% set mygroupsShow = true %}
+            {% if myboss and myboss.getId() %}
+                {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
+                {% set element = {'table': table, 'element':myboss} %}
+                {% set mygroupsArr = mygroupsArr|merge({ (loop.index0): element}) %}
+                {% if render(table)|length > threshold %}
+                    {% set mygroupsShow = true %}
+                {% endif %}
             {% endif %}
         {% endfor %}
         {% set element = {'title':title['titleobject'],'bosses': title['bosses']} %}
@@ -711,11 +713,13 @@
     {% set departments = user.getDepartments(true) %}
     {% set mydepartmentsArr = {} %}
     {% for department in departments %}
-        {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'department','id':department.getId(),'name':department} ) %}
-        {% set element = {'table': table, 'element':department} %}
-        {% set mydepartmentsArr = mydepartmentsArr|merge({ (loop.index0): element}) %}
-        {% if render(table)|length > threshold %}
-            {% set mydepartmentsShow = true %}
+        {% if department and department.getId() %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'department','id':department.getId(),'name':department} ) %}
+            {% set element = {'table': table, 'element':department} %}
+            {% set mydepartmentsArr = mydepartmentsArr|merge({ (loop.index0): element}) %}
+            {% if render(table)|length > threshold %}
+                {% set mydepartmentsShow = true %}
+            {% endif %}
         {% endif %}
     {% endfor %}
 
@@ -723,11 +727,13 @@
     {% set divisions = user.getDivisions(true,true) %}
     {% set mydivisionsArr = {} %}
     {% for division in divisions %}
-        {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'division','id':division.getId(),'name':division} ) %}
-        {% set element = {'table': table, 'element':division} %}
-        {% set mydivisionsArr = mydivisionsArr|merge({ (loop.index0): element}) %}
-        {% if render(table)|length > threshold %}
-            {% set mydivisionsShow = true %}
+        {% if division and division.getId() %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'division','id':division.getId(),'name':division} ) %}
+            {% set element = {'table': table, 'element':division} %}
+            {% set mydivisionsArr = mydivisionsArr|merge({ (loop.index0): element}) %}
+            {% if render(table)|length > threshold %}
+                {% set mydivisionsShow = true %}
+            {% endif %}
         {% endif %}
     {% endfor %}
 
@@ -735,11 +741,13 @@
     {% set services = user.getServices() %}
     {% set myservicesArr = {} %}
     {% for service in services %}
-        {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}
-        {% set element = {'table': table, 'element':service} %}
-        {% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}
-        {% if render(table)|length > threshold %}
-            {% set myservicesShow = true %}
+        {% if service and service.getId() %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}
+            {% set element = {'table': table, 'element':service} %}
+            {% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}
+            {% if render(table)|length > threshold %}
+                {% set myservicesShow = true %}
+            {% endif %}
         {% endif %}
     {% endfor %}
 
@@ -747,11 +755,13 @@
     {% set labs = user.getResearchLabs() %}
     {% set mylabsArr = {} %}
     {% for lab in labs %}
-        {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'researchlabs','id':lab.getId(),'name':lab} ) %}
-        {% set element = {'table': table, 'element':lab} %}
-        {% set mylabsArr = mylabsArr|merge({ (loop.index0): element}) %}
-        {% if render(table)|length > threshold %}
-            {% set mylabsShow = true %}
+        {% if lab and lab.getId() %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'researchlabs','id':lab.getId(),'name':lab} ) %}
+            {% set element = {'table': table, 'element':lab} %}
+            {% set mylabsArr = mylabsArr|merge({ (loop.index0): element}) %}
+            {% if render(table)|length > threshold %}
+                {% set mylabsShow = true %}
+            {% endif %}
         {% endif %}
     {% endfor %}
 
