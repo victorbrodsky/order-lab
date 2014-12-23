@@ -468,8 +468,8 @@
             <th>Name</th>
             <th>Administrative Title(s)</th>
             <th>Academic Title(s)</th>
-            <th>Preferred Email</th>
-            <th>Preferred Phone Number</th>
+            <th>Email</th>
+            <th>Phone Number</th>
             <th>IC</th>
             <th>Room Number(s)</th>
             {% if assistExist %}
@@ -506,10 +506,14 @@
                 {% endfor %}
             </td>
             <td>
-                <a href="mailto:{{ user.email }}" target="_top">{{ user.email }}</a>
+                {% for email in user.getAllEmail() %}
+                    <p>{{ email['prefix'] }}: <a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
+                {% endfor %}
             </td>
             <td>
-                {{ usermacros.phoneHref(user.preferredPhone) }}
+                {% for phone in user.getAllPhones() %}
+                    <p>{{ phone['prefix'] }}: {{ usermacros.phoneHref(phone['phone']) }}</p>
+                {% endfor %}
             </td>
             <td>
                 {% for location in user.locations %}
@@ -533,11 +537,16 @@
                             {% for assistant in location.assistant %}
                                 <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
                                 ({{ location.name }}):
-                                {{ usermacros.phoneHref(assistant.preferredPhone) }}
+                                {#{{ usermacros.phoneHref(assistant.preferredPhone) }}#}
+                                {% for phone in assistant.getAllPhones() %}
+                                    <p>{{ phone['prefix'] }}: {{ usermacros.phoneHref(phone['phone']) }}</p>
+                                {% endfor %}
                                 {% if assistant.preferredPhone and assistant.email %}
                                     ,
                                 {% endif %}
-                                <a href="mailto:{{ assistant.email }}" target="_top">{{ assistant.email }}</a>
+                                {% for email in assistant.getAllEmail() %}
+                                    <p>{{ email['prefix'] }}: <a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
+                                {% endfor %}
                                 <br>
                             {% endfor %}
                         {% endif %}
@@ -610,7 +619,7 @@
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
     </p>
 
-    {{ form_start(form) }}
+    {{ form_start(form,{'attr': {'id': 'user-profile-form'}}) }}
 
         {% set publicCommentsPrototype = null %}
         {% set privateCommentsPrototype = null %}
@@ -685,9 +694,9 @@
         <input type="hidden" id="formcycle" value="{{ cycle }}" />
         <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
-        <div class="text-left">
-
         {{ form_errors(form) }}
+
+        <div class="text-left">
 
         {#Name and Preferred Contact Info#}
         <div class="panel panel-primary">
@@ -978,18 +987,24 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#Credentials">
-                            Credentials [Not publicly visible, but visible to the user]
-                        </a>
+                        <div class="row">
+                            <div class="col-xs-6" align="left">
+                                <a data-toggle="collapse" href="#Credentials" style="color:#fff;">Credentials [Not publicly visible, but visible to the user]</a>
+                            </div>
+                            <div class="col-xs-6" align="right">
+                                <button type="button" class="btn btn-default btn-xs" onClick="collpaseAll(document.getElementById('Credentials'))" >Collapse All</button>
+                                <button type="button" class="btn btn-default btn-xs" onClick="extendAll(document.getElementById('Credentials'))" >Expand All</button>
+                            </div>
+                        </div>
                     </h4>
                 </div>
                 <div id="Credentials" class="panel-collapse collapse {{ collapsein }}">
                     <div class="panel-body">
 
-                        <p>
-                            <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('Credentials'))" >Collapse All</button>
-                            <button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('Credentials'))" >Expand All</button>
-                        </p>
+                        {#<p>#}
+                            {#<button type="button" class="btn btn-default btn-sm panel-collapse-btn" onClick="collpaseAll(document.getElementById('Credentials'))" >Collapse All</button>#}
+                            {#<button type="button" class="btn btn-default btn-sm panel-collapse-btn" onClick="extendAll(document.getElementById('Credentials'))" >Expand All</button>#}
+                        {#</p>#}
 
 
                         <div class="user-credentials-holder">

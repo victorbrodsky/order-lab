@@ -913,6 +913,71 @@ class User extends BaseUser
         return $roles;
     }
 
+    //Preferred: (646) 555-5555
+    //Main Office Line: (212) 444-4444
+    //Main Office Mobile: (123) 333-3333
+    public function getAllPhones() {
+        $phonesArr = array();
+        //get all locations phones
+        if( $this->getPreferredPhone() ) {
+            $phone = array();
+            $phone['prefix'] = "Preferred";
+            $phone['phone'] = $this->getPreferredPhone();
+            $phonesArr[] = $phone;
+        }
+
+        foreach( $this->getLocations() as $location ) {
+            if( $location->getLocationType() && $location->getLocationType()->getName() != "Employee Home" ) {
+                if( $location->getPhone() ) {
+                    $phone = array();
+                    $phone['prefix'] = $location->getName()." Line";
+                    $phone['phone'] = $location->getPhone();
+                    $phonesArr[] = $phone;
+                }
+                if( $location->getMobile() ) {
+                    $phone = array();
+                    $phone['prefix'] = $location->getName()." Mobile";
+                    $phone['phone'] = $location->getMobile();
+                    $phonesArr[] = $phone;
+                }
+                if( $location->getPager() ) {
+                    $phone = array();
+                    $phone['prefix'] = $location->getName()." Pager";
+                    $phone['phone'] = $location->getPager();
+                    $phonesArr[] = $phone;
+                }
+//                if( $location->getIc() )
+//                    $phonesArr[] = $location->getName()." Intercom: ".$location->getIc();
+            }
+        }
+
+        return $phonesArr;
+    }
+
+    public function getAllEmail() {
+        $emailArr = array();
+        //get all locations phones
+        if( $this->getEmail() ) {
+            $email = array();
+            $email['prefix'] = "Preferred";
+            $email['email'] = $this->getEmail();
+            $emailArr[] = $email;
+        }
+
+        foreach( $this->getLocations() as $location ) {
+            if( $location->getLocationType() && $location->getLocationType()->getName() != "Employee Home" ) {
+                if( $location->getEmail() ) {
+                    $email = array();
+                    $email['prefix'] = $location->getName();
+                    $email['email'] = $this->getEmail();
+                    $emailArr[] = $email;
+                }
+            }
+        }
+
+        return $emailArr;
+    }
+
 
     //do not overwrite username when user id is set (user already exists in DB)
     public function setUsernameCanonical($usernameCanonical)

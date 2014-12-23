@@ -764,12 +764,11 @@
         <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" href="#myteam">
 
                     {#centered#}
                     {#<div class="row">#}
                         {#<div class="col-xs-7" align="right" style="padding-right: 100px;">#}
-                            {#{{ boxnamePrefix }}Team#}
+                            {#<a data-toggle="collapse" href="#myteam">{{ boxnamePrefix }}Team</a>#}
                         {#</div>#}
                         {#<div class="col-xs-5" align="right">#}
                             {#<button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>#}
@@ -779,229 +778,229 @@
 
                     <div class="row">
                         <div class="col-xs-6" align="left">
-                            {{ boxnamePrefix }}Team
+                            <a data-toggle="collapse" href="#myteam" style="color:#fff;">{{ boxnamePrefix }}Team</a>
                         </div>
                         <div class="col-xs-6" align="right">
-                            <button type="button" class="btn btn-default btn-sm pull-right" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>
-                            <button type="button" class="btn btn-default btn-sm pull-right" onClick="extendAll(document.getElementById('myteam-panel-body'))" >Expand All</button>
+                            <button type="button" class="btn btn-default btn-xs panel-collapse-btn" onClick="collpaseAll(document.getElementById('myteam'))" >Collapse All</button>
+                            <button type="button" class="btn btn-default btn-xs panel-collapse-btn" onClick="extendAll(document.getElementById('myteam'))" >Expand All</button>
                         </div>
                     </div>
-                </a>
+
             </h4>
         </div>
         <div id="myteam" class="panel-collapse collapse {{ collapsein }}">
-        <div id="myteam-panel-body" class="panel-body">
+            <div id="myteam-panel-body" class="panel-body">
 
-            {#<p>#}
-                {#<button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>#}
-                {#<button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('myteam-panel-body'))" >Expand All</button>#}
-            {#</p>#}
+                {#<p>#}
+                    {#<button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>#}
+                    {#<button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('myteam-panel-body'))" >Expand All</button>#}
+                {#</p>#}
 
-            {#Assistance(s)#}
-            {% if myassistancesShow %}
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#myassistances">
-                                {{ boxnamePrefix }}Assistant(s)
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="myassistances" class="panel-collapse collapse {{ collapsein }}">
-                        <div class="panel-body">
-                            {{ render( myassistants ) }}
+                {#Assistance(s)#}
+                {% if myassistancesShow %}
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#myassistances">
+                                    {{ boxnamePrefix }}Assistant(s)
+                                </a>
+                            </h4>
                         </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            {#Report(s)#}
-            {% if myreportsShow %}
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#myreports">
-                                {{ boxnamePrefix }}Report(s)
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="myreports" class="panel-collapse collapse {{ collapsein }}">
-                        <div class="panel-body">
-                            {{ render( myreports ) }}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            {#Group#}
-            {% if mygroupsArr is defined %}
-                {% for mygroup in mygroupsArr %}
-
-                    {% if render( mygroup['table'] )|length > threshold %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#mygroups-{{ mygroup['element'].getId() }}">
-                                        {{ boxnamePrefix }}Group for <a href="{{ path(sitename~'_showuser',{'id':mygroup['element'].getId()}) }}">{{ mygroup['element'].getUsernameOptimal() }}</a>
-                                    </a>
-                                </h4>
+                        <div id="myassistances" class="panel-collapse collapse {{ collapsein }}">
+                            <div class="panel-body">
+                                {{ render( myassistants ) }}
                             </div>
-                            <div id="mygroups-{{ mygroup['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
-                                <div class="panel-body">
-                                    {{ render( mygroup['table'] ) }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {#Report(s)#}
+                {% if myreportsShow %}
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#myreports">
+                                    {{ boxnamePrefix }}Report(s)
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="myreports" class="panel-collapse collapse {{ collapsein }}">
+                            <div class="panel-body">
+                                {{ render( myreports ) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {#Group#}
+                {% if mygroupsArr is defined %}
+                    {% for mygroup in mygroupsArr %}
+
+                        {% if render( mygroup['table'] )|length > threshold %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#mygroups-{{ mygroup['element'].getId() }}">
+                                            {{ boxnamePrefix }}Group for <a href="{{ path(sitename~'_showuser',{'id':mygroup['element'].getId()}) }}">{{ mygroup['element'].getUsernameOptimal() }}</a>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="mygroups-{{ mygroup['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                                    <div class="panel-body">
+                                        {{ render( mygroup['table'] ) }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
 
-                {% endfor %}
-            {% endif %}
-
-            {#<br>before titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
-            {#If the user has people she/he reports to, list them here, but separate by the associated title of the user
-            ("As a [Medical Director of Informatics] Victor Brodsky reports to: Yao Chen [listed as a search result table]";
-            As a [Janitor] Victor Brodsky reports to: John Smith, Mary Jones {listed as lines of the search results table].#}
-            {% if myTitleBossesArr is defined and myTitleBossesArr|length > 0 and type == 'profile' %}
-                {% for titleBosses in myTitleBossesArr %}
-
-                    {% set bossArr = {} %}
-                    {% set bossidsArr = {} %}
-                    {% for boss in titleBosses['bosses'] %}
-                        {% set bossHtml = '<a href="'~path(sitename~'_showuser',{'id':boss.getId()})~'">'~boss.getUsernameOptimal()~'</a>' %}
-                        {% set bossArr = bossArr|merge([bossHtml]) %}
-                        {% set bossidsArr = bossidsArr|merge([boss.getId]) %}
                     {% endfor %}
+                {% endif %}
 
-                    {% set mybosses = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'mybosses','id':bossidsArr,'name':null} ) %}
+                {#<br>before titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
+                {#If the user has people she/he reports to, list them here, but separate by the associated title of the user
+                ("As a [Medical Director of Informatics] Victor Brodsky reports to: Yao Chen [listed as a search result table]";
+                As a [Janitor] Victor Brodsky reports to: John Smith, Mary Jones {listed as lines of the search results table].#}
+                {% if myTitleBossesArr is defined and myTitleBossesArr|length > 0 and type == 'profile' %}
+                    {% for titleBosses in myTitleBossesArr %}
 
-                    {% if render( mybosses )|length > threshold  %}
+                        {% set bossArr = {} %}
+                        {% set bossidsArr = {} %}
+                        {% for boss in titleBosses['bosses'] %}
+                            {% set bossHtml = '<a href="'~path(sitename~'_showuser',{'id':boss.getId()})~'">'~boss.getUsernameOptimal()~'</a>' %}
+                            {% set bossArr = bossArr|merge([bossHtml]) %}
+                            {% set bossidsArr = bossidsArr|merge([boss.getId]) %}
+                        {% endfor %}
 
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#mytitlebosses-{{ titleBosses['title'].getId() }}">
-                                        As a {{ user.getTitleAndNameByTitle(titleBosses['title']) }} reports to: {{ bossArr|join(",")|raw }}
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="mytitlebosses-{{ titleBosses['title'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
-                                <div class="panel-body">
-                                    {{ render( mybosses ) }}
+                        {% set mybosses = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'mybosses','id':bossidsArr,'name':null} ) %}
+
+                        {% if render( mybosses )|length > threshold  %}
+
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#mytitlebosses-{{ titleBosses['title'].getId() }}">
+                                            As a {{ user.getTitleAndNameByTitle(titleBosses['title']) }} reports to: {{ bossArr|join(",")|raw }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="mytitlebosses-{{ titleBosses['title'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                                    <div class="panel-body">
+                                        {{ render( mybosses ) }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                    {% endif %}
+                        {% endif %}
 
-                {% endfor %}
-            {% endif %}
-            {#<br>after titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
+                    {% endfor %}
+                {% endif %}
+                {#<br>after titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
 
 
-            {#Department(s)#}
-            {% if mydepartmentsArr is defined %}
-                {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-                {% for mydepartment in mydepartmentsArr %}
+                {#Department(s)#}
+                {% if mydepartmentsArr is defined %}
+                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {% for mydepartment in mydepartmentsArr %}
 
-                    {% if render( mydepartment['table'] )|length > threshold %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#mydepartments-{{ mydepartment['element'].getId() }}">
-                                        {{ mydepartment['element'] }} Department
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="mydepartments-{{ mydepartment['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
-                                <div class="panel-body">
-                                    {{ render( mydepartment['table'] ) }}
+                        {% if render( mydepartment['table'] )|length > threshold %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#mydepartments-{{ mydepartment['element'].getId() }}">
+                                            {{ mydepartment['element'] }} Department
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="mydepartments-{{ mydepartment['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                                    <div class="panel-body">
+                                        {{ render( mydepartment['table'] ) }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
 
-                {% endfor %}
-            {% endif %}
+                    {% endfor %}
+                {% endif %}
 
-            {#Division(s)#}
-            {% if mydivisionsArr is defined %}
-                {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-                {% for mydivision in mydivisionsArr %}
+                {#Division(s)#}
+                {% if mydivisionsArr is defined %}
+                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {% for mydivision in mydivisionsArr %}
 
-                    {% if render( mydivision['table'] )|length > threshold %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#mydivisions-{{ mydivision['element'].getId() }}">
-                                        {{ mydivision['element'] }} Division
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="mydivisions-{{ mydivision['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
-                                <div class="panel-body">
-                                    {{ render( mydivision['table'] ) }}
+                        {% if render( mydivision['table'] )|length > threshold %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#mydivisions-{{ mydivision['element'].getId() }}">
+                                            {{ mydivision['element'] }} Division
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="mydivisions-{{ mydivision['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                                    <div class="panel-body">
+                                        {{ render( mydivision['table'] ) }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
 
-                {% endfor %}
-            {% endif %}
+                    {% endfor %}
+                {% endif %}
 
 
-            {#Service(s)#}
-            {% if myservicesArr is defined %}
-                {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-                {% for myservice in myservicesArr %}
+                {#Service(s)#}
+                {% if myservicesArr is defined %}
+                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {% for myservice in myservicesArr %}
 
-                    {% if render( myservice['table'] )|length > threshold %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#myservices-{{ myservice['element'].getId() }}">
-                                        {{ myservice['element'] }} Service
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="myservices-{{ myservice['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
-                                <div class="panel-body">
-                                    {{ render( myservice['table'] ) }}
+                        {% if render( myservice['table'] )|length > threshold %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#myservices-{{ myservice['element'].getId() }}">
+                                            {{ myservice['element'] }} Service
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="myservices-{{ myservice['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                                    <div class="panel-body">
+                                        {{ render( myservice['table'] ) }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
 
-                {% endfor %}
-            {% endif %}
+                    {% endfor %}
+                {% endif %}
 
 
-            {#Research Lab(s)#}
-            {% if mylabsArr is defined %}
-                {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-                {% for mylab in mylabsArr %}
+                {#Research Lab(s)#}
+                {% if mylabsArr is defined %}
+                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {% for mylab in mylabsArr %}
 
-                    {% if render( mylab['table'] )|length > threshold %}
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#mylabs-{{ mylab['element'].getId() }}">
-                                        {{ mylab['element'] }} Research Lab
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="mylabs-{{ mylab['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
-                                <div class="panel-body">
-                                    {{ render( mylab['table'] ) }}
+                        {% if render( mylab['table'] )|length > threshold %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#mylabs-{{ mylab['element'].getId() }}">
+                                            {{ mylab['element'] }} Research Lab
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="mylabs-{{ mylab['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                                    <div class="panel-body">
+                                        {{ render( mylab['table'] ) }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
 
-                {% endfor %}
-            {% endif %}
+                    {% endfor %}
+                {% endif %}
 
 
-        </div> {#myteam-panel-body#}
+            </div> {#myteam-panel-body#}
         </div>{#myteam#}
         </div>{#panel panel-primary#}
     {% endif %}

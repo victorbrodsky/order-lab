@@ -102,7 +102,7 @@ function validateUser(origuserid) {
     }
 
     //return false; //testing
-    $("form:first").submit();
+    $("#user-profile-form").submit();
 }
 
 function getUserUrl(userid,username) {

@@ -204,6 +204,9 @@ function collpaseAll(holder) {
         $(holder).find('.panel-collapse').collapse('hide');
     }
 
+//    if( $(holder).is(":visible") ) {
+//        $(holder).collapse('hide');
+//    }
 }
 
 function extendAll(holder) {
@@ -211,6 +214,10 @@ function extendAll(holder) {
         $('.panel-collapse').collapse('show');
     } else {
         $(holder).find('.panel-collapse').collapse('show');
+    }
+
+    if( !$(holder).is(":visible") ) {
+        $(holder).collapse('show');
     }
 }
 
