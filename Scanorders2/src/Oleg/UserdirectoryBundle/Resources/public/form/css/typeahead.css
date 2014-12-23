@@ -9,14 +9,16 @@
 .tt-query,
 .tt-hint {
     width: 550px;
-    //height: 30px;
+    /*height: 30px;*/
     padding: 8px 12px;
     font-size: 24px;
     line-height: 30px;
-    border: 2px solid #ccc;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
+    /*border: 2px solid #ccc;*/
+    /*-webkit-border-radius: 8px;*/
+    /*-moz-border-radius: 8px;*/
+    /*border-radius: 8px;*/
+    border: 1px solid #ccc;
+    border-radius: 4px;
     outline: none;
 }
 
@@ -25,7 +27,7 @@
 }
 
 .typeahead:focus {
-    border: 2px solid #0097cf;
+    border: 1px solid #0097cf;
 }
 
 .tt-query {

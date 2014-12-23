@@ -655,10 +655,16 @@
 
 
 
-{########################### My Team #############################}
+{########################### Team #############################}
 {% macro userTeam( user, type, sitename, postData, collapsein ) %}
 
     {#postData:{{ dump(postData) }}#}
+
+    {% if type == "home" %}
+        {% set boxnamePrefix = "My " %}
+    {% else %}
+        {% set boxnamePrefix = "" %}
+    {% endif %}
 
     {% set threshold = 50 %}
 
@@ -670,7 +676,7 @@
     {% set mylabsShow = false %}
     {% set myassistancesShow = false %}
 
-    {#My Reports#}
+    {#Reports#}
     {% set myreports = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myreports','id':null,'name':null} ) %}
     {% if render(myreports)|length > threshold %}
         {% set myreportsShow = true %}
@@ -683,7 +689,7 @@
     {% endif %}
 
     {#<br>before myboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
-    {#My Group#}
+    {#Group#}
     {% set titleBosses = user.getBosses() %}
     {% set mygroupsArr = {} %}
     {% set myTitleBossesArr = {} %}
@@ -701,7 +707,7 @@
     {% endfor %}
     {#<br>after myboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
 
-    {#My Department if head#}
+    {#Department if head#}
     {% set departments = user.getDepartments(true) %}
     {% set mydepartmentsArr = {} %}
     {% for department in departments %}
@@ -713,7 +719,7 @@
         {% endif %}
     {% endfor %}
 
-    {#My Division if head or service is empty#}
+    {#Division if head or service is empty#}
     {% set divisions = user.getDivisions(true,true) %}
     {% set mydivisionsArr = {} %}
     {% for division in divisions %}
@@ -725,7 +731,7 @@
         {% endif %}
     {% endfor %}
 
-    {#My Service#}
+    {#Service#}
     {% set services = user.getServices() %}
     {% set myservicesArr = {} %}
     {% for service in services %}
@@ -737,7 +743,7 @@
         {% endif %}
     {% endfor %}
 
-    {#My Research Lab#}
+    {#Research Lab#}
     {% set labs = user.getResearchLabs() %}
     {% set mylabsArr = {} %}
     {% for lab in labs %}
@@ -753,32 +759,51 @@
     {#mygroupsArr|length:{{ mygroupsArr|length }}#}
     {#myservicesArr|length:{{ myservicesArr|length }}#}
 
-    {#My Team#} {#render(myreports)|length should be more than sitename#}
+    {#Team#} {#render(myreports)|length should be more than sitename#}
     {% if myreportsShow or mygroupsShow or myservicesShow or mydepartmentsShow or mydivisionsShow or mylabsShow or myassistancesShow %}
         <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#myteam">
-                    Team
+
+                    {#centered#}
+                    {#<div class="row">#}
+                        {#<div class="col-xs-7" align="right" style="padding-right: 100px;">#}
+                            {#{{ boxnamePrefix }}Team#}
+                        {#</div>#}
+                        {#<div class="col-xs-5" align="right">#}
+                            {#<button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>#}
+                            {#<button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('myteam-panel-body'))" >Expand All</button>#}
+                        {#</div>#}
+                    {#</div>#}
+
+                    <div class="row">
+                        <div class="col-xs-6" align="left">
+                            {{ boxnamePrefix }}Team
+                        </div>
+                        <div class="col-xs-6" align="right">
+                            <button type="button" class="btn btn-default btn-sm pull-right" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>
+                            <button type="button" class="btn btn-default btn-sm pull-right" onClick="extendAll(document.getElementById('myteam-panel-body'))" >Expand All</button>
+                        </div>
+                    </div>
                 </a>
             </h4>
         </div>
         <div id="myteam" class="panel-collapse collapse {{ collapsein }}">
         <div id="myteam-panel-body" class="panel-body">
 
-            <p>
-                <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>
-                <button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('myteam-panel-body'))" >Expand All</button>
-            </p>
+            {#<p>#}
+                {#<button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('myteam-panel-body'))" >Collapse All</button>#}
+                {#<button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('myteam-panel-body'))" >Expand All</button>#}
+            {#</p>#}
 
-
-            {#My Assistance(s)#}
+            {#Assistance(s)#}
             {% if myassistancesShow %}
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" href="#myassistances">
-                                My Assistant(s)
+                                {{ boxnamePrefix }}Assistant(s)
                             </a>
                         </h4>
                     </div>
@@ -790,13 +815,13 @@
                 </div>
             {% endif %}
 
-            {#My Report(s)#}
+            {#Report(s)#}
             {% if myreportsShow %}
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" href="#myreports">
-                                My Report(s)
+                                {{ boxnamePrefix }}Report(s)
                             </a>
                         </h4>
                     </div>
@@ -808,7 +833,7 @@
                 </div>
             {% endif %}
 
-            {#My Group#}
+            {#Group#}
             {% if mygroupsArr is defined %}
                 {% for mygroup in mygroupsArr %}
 
@@ -817,7 +842,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" href="#mygroups-{{ mygroup['element'].getId() }}">
-                                        My Group for <a href="{{ path(sitename~'_showuser',{'id':mygroup['element'].getId()}) }}">{{ mygroup['element'].getUsernameOptimal() }}</a>
+                                        {{ boxnamePrefix }}Group for <a href="{{ path(sitename~'_showuser',{'id':mygroup['element'].getId()}) }}">{{ mygroup['element'].getUsernameOptimal() }}</a>
                                     </a>
                                 </h4>
                             </div>
@@ -849,27 +874,31 @@
 
                     {% set mybosses = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'mybosses','id':bossidsArr,'name':null} ) %}
 
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" href="#mytitlebosses-{{ titleBosses['title'].getId() }}">
-                                    As a {{ user.getTitleAndNameByTitle(titleBosses['title']) }} reports to: {{ bossArr|join(",")|raw }}
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="mytitlebosses-{{ titleBosses['title'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
-                            <div class="panel-body">
-                                {{ render( mybosses ) }}
+                    {% if render( mybosses )|length > threshold  %}
+
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#mytitlebosses-{{ titleBosses['title'].getId() }}">
+                                        As a {{ user.getTitleAndNameByTitle(titleBosses['title']) }} reports to: {{ bossArr|join(",")|raw }}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="mytitlebosses-{{ titleBosses['title'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                                <div class="panel-body">
+                                    {{ render( mybosses ) }}
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                    {% endif %}
 
                 {% endfor %}
             {% endif %}
             {#<br>after titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
 
 
-            {#My Department(s)#}
+            {#Department(s)#}
             {% if mydepartmentsArr is defined %}
                 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                 {% for mydepartment in mydepartmentsArr %}
@@ -894,7 +923,7 @@
                 {% endfor %}
             {% endif %}
 
-            {#My Division(s)#}
+            {#Division(s)#}
             {% if mydivisionsArr is defined %}
                 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                 {% for mydivision in mydivisionsArr %}
@@ -920,7 +949,7 @@
             {% endif %}
 
 
-            {#My Service(s)#}
+            {#Service(s)#}
             {% if myservicesArr is defined %}
                 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                 {% for myservice in myservicesArr %}
@@ -931,8 +960,6 @@
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" href="#myservices-{{ myservice['element'].getId() }}">
                                         {{ myservice['element'] }} Service
-                                        {#My Service(s) for Service #}
-                                        {#{{ usermacros.hrefLinkToNode( myservice['element'] ) }}#}
                                     </a>
                                 </h4>
                             </div>
@@ -948,7 +975,7 @@
             {% endif %}
 
 
-            {#My Research Lab(s)#}
+            {#Research Lab(s)#}
             {% if mylabsArr is defined %}
                 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                 {% for mylab in mylabsArr %}
@@ -977,7 +1004,6 @@
         </div> {#myteam-panel-body#}
         </div>{#myteam#}
         </div>{#panel panel-primary#}
-
     {% endif %}
 
     {#<br>end of myteam: getMemoryUsage: {{ user.getMemoryUsage }}<br>#}

@@ -872,6 +872,8 @@ class UserController extends Controller
         if( $objectname && $objectname == "researchlabs" ) {
             if( $objectid && $objectid != "" ) {
                 $criteriastr = "researchLabs.id = " . $objectid;
+            } else {
+                $criteriastr = "1==0";
             }
         }
 
@@ -882,6 +884,8 @@ class UserController extends Controller
             if( count($assistants) > 0 ) {
                 $assistantsStr = implode(",", $assistants);
                 $criteriastr = "user.id IN (" . $assistantsStr . ")";
+            } else {
+                $criteriastr = "1==0";
             }
         }
 
@@ -889,6 +893,8 @@ class UserController extends Controller
             if( count($objectid) > 0 ) {
                 $bossesStr = implode(",", $objectid);
                 $criteriastr = "user.id IN (" . $bossesStr . ")";
+            } else {
+                $criteriastr = "1==0";
             }
         }
 

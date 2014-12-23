@@ -685,6 +685,8 @@
         <input type="hidden" id="formcycle" value="{{ cycle }}" />
         <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
+        <div class="text-left">
+
         {{ form_errors(form) }}
 
         {#Name and Preferred Contact Info#}
@@ -1424,6 +1426,7 @@
             {{ usermacros.userTeam(entity,'profile',sitename,postData,"") }}
         {% endif %}
 
+        </div>{#text-left#}
 
         <br>
 
