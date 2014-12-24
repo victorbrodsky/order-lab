@@ -1175,6 +1175,11 @@ class UserController extends Controller
 
             $user = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
 
+            //record create user to Event Log
+            $userAdmin = $this->get('security.context')->getToken()->getUser();
+            $event = "User ".$user." has been created by ".$userAdmin."<br>";
+            $this->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'User Created');
+
             $em->persist($user);
             $em->flush();
 
@@ -1648,7 +1653,7 @@ class UserController extends Controller
                 $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
-                $this->createUserEditEvent($sitename,$event,$user,$request);
+                $this->createUserEditEvent($sitename,$event,$user,$entity,$request);
             }
 
             //echo "user=".$entity."<br>";
@@ -1704,15 +1709,25 @@ class UserController extends Controller
     }
 
 
-    public function createUserEditEvent($sitename,$event,$user,$request) {
+    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='User Updated') {
         $userSecUtil = $this->get('user_security_utility');
         $eventLog = $userSecUtil->constructEventLog($sitename,$user,$request);
         $eventLog->setEvent($event);
 
         //set Event Type
         $em = $this->getDoctrine()->getManager();
-        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('User Updated');
+        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
         $eventLog->setEventType($eventtype);
+
+        //get classname, entity name and id of subject entity
+        $class = new \ReflectionClass($subjectEntity);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        //set classname, entity name and id of subject entity
+        $eventLog->setEntityNamespace($classNamespace);
+        $eventLog->setEntityName($className);
+        $eventLog->setEntityId($subjectEntity->getId());
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($eventLog);
@@ -1933,7 +1948,7 @@ class UserController extends Controller
         $userAdmin = $this->get('security.context')->getToken()->getUser();
         $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
         $event = $event . "User status changed to ".$status;
-        $this->createUserEditEvent($sitename,$event,$user,$request);
+        $this->createUserEditEvent($sitename,$event,$userAdmin,$user,$request);
 
         $em->persist($user);
         $em->flush();

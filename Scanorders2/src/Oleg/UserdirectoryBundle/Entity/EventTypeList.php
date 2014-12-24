@@ -25,9 +25,4 @@ class EventTypeList extends ListAbstract
      **/
     protected $original;
 
-
-
-
-
-
 }

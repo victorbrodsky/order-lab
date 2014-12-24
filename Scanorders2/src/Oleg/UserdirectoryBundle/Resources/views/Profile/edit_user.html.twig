@@ -1441,6 +1441,12 @@
             {{ usermacros.userTeam(entity,'profile',sitename,postData,"") }}
         {% endif %}
 
+
+        {#Team#}
+        {% if userEditor == true and cycle == "show_user" %}
+            {{ usermacros.auditLog(entity,'profile',sitename,"") }}
+        {% endif %}
+
         </div>{#text-left#}
 
         <br>

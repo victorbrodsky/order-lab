@@ -86,6 +86,44 @@ class Logger
     private $serverresponse;
 
 
+    //Fields specifying a subject entity
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $entityNamespace;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $entityName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $entityId;
+
+    //user's institution, department, division, service at the moment of creation/update
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $institutions = array();
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $departments = array();
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $divisions = array();
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $services = array();
+
+
 
     public function __construct($siteName) {
         $this->siteName = $siteName;
@@ -129,6 +167,25 @@ class Logger
     public function setUser($user)
     {
         $this->user = $user;
+
+        if( $user ) {
+            //set user's institution, department, division, service
+            foreach( $user->getInstitutions() as $inst ) {
+                $this->addInstitution($inst);
+            }
+
+            foreach( $user->getDepartments() as $dep ) {
+                $this->addDepartment($dep);
+            }
+
+            foreach( $user->getDivisions() as $div ) {
+                $this->addDivision($div);
+            }
+
+            foreach( $user->getServices() as $serv ) {
+                $this->addService($serv);
+            }
+        }
 
         return $this;
     }
@@ -302,5 +359,97 @@ class Logger
 
         $this->setEvent( $event );
     }
+
+
+
+    /**
+     * @param mixed $entityNamespace
+     */
+    public function setEntityNamespace($entityNamespace)
+    {
+        $this->entityNamespace = $entityNamespace;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityNamespace()
+    {
+        return $this->entityNamespace;
+    }
+
+    /**
+     * @param mixed $entityId
+     */
+    public function setEntityId($entityId)
+    {
+        $this->entityId = $entityId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * @param mixed $entityName
+     */
+    public function setEntityName($entityName)
+    {
+        $this->entityName = $entityName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityName()
+    {
+        return $this->entityName;
+    }
+
+
+
+    public function addInstitution($institution)
+    {
+        $this->institutions[] = $institution->getId();
+    }
+    public function getInstitutions()
+    {
+        return $this->institutions;
+    }
+
+    public function addDepartment($department)
+    {
+        $this->departments[] = $department->getId();
+    }
+    public function getDepartments()
+    {
+        return $this->departments;
+    }
+
+    public function addDivision($division)
+    {
+        $this->divisions[] = $division->getId();
+    }
+    public function getDivisions()
+    {
+        return $this->divisions;
+    }
+
+    public function addService($service)
+    {
+        $this->services[] = $service->getId();
+    }
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+
+
+
 
 }

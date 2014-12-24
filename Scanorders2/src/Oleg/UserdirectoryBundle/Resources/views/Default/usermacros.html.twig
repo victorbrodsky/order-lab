@@ -658,6 +658,8 @@
 {########################### Team #############################}
 {% macro userTeam( user, type, sitename, postData, collapsein ) %}
 
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
     {#postData:{{ dump(postData) }}#}
 
     {% if type == "home" %}
@@ -906,7 +908,6 @@
 
                 {#Department(s)#}
                 {% if mydepartmentsArr is defined %}
-                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {% for mydepartment in mydepartmentsArr %}
 
                         {% if render( mydepartment['table'] )|length > threshold %}
@@ -931,7 +932,6 @@
 
                 {#Division(s)#}
                 {% if mydivisionsArr is defined %}
-                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {% for mydivision in mydivisionsArr %}
 
                         {% if render( mydivision['table'] )|length > threshold %}
@@ -957,7 +957,6 @@
 
                 {#Service(s)#}
                 {% if myservicesArr is defined %}
-                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {% for myservice in myservicesArr %}
 
                         {% if render( myservice['table'] )|length > threshold %}
@@ -983,7 +982,6 @@
 
                 {#Research Lab(s)#}
                 {% if mylabsArr is defined %}
-                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {% for mylab in mylabsArr %}
 
                         {% if render( mylab['table'] )|length > threshold %}
@@ -1016,3 +1014,29 @@
 
 {% endmacro %}
 {########################### EOF My Team #############################}
+
+
+{% macro auditLog( user, type, sitename, collapsein ) %}
+
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {#Audit Log#}
+    {% set auditlog = true %}
+    {% if auditlog is defined and auditlog %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#auditlog">
+                        Audit Log
+                    </a>
+                </h4>
+            </div>
+            <div id="auditlog" class="panel-collapse collapse {{ collapsein }}">
+                <div class="panel-body">
+                    {#{{ render( auditlog ) }}#}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endmacro %}
