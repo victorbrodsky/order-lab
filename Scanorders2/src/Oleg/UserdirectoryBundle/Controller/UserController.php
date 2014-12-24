@@ -94,6 +94,13 @@ class UserController extends Controller
         $res = $this->indexUser( $params ); //use function getTheSameObject
         $pagination = $res['entities'];
 
+        if( count($pagination) == 0 ) {
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(null);
+            return $response;
+        }
+
         return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
             array(
                 'entities' => $pagination,
@@ -828,49 +835,84 @@ class UserController extends Controller
 
     public function getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $inputCriteriastr ) {
 
+        //echo "objectname=".$objectname.", objectid=".$objectid."<br>";
+        //exit();
+
         $user = $this->get('security.context')->getToken()->getUser();
 
         $criteriastr = "";
 
         if( $objectname && $objectname == "institution" ) {
-            $criteriastr .= "administrativeInstitution.id = " . $objectid;
-            $criteriastr .= " OR ";
-            $criteriastr .= "appointmentInstitution.id = " . $objectid;
+            if( !$objectid || $objectid != "" ) {
+                $criteriastr .= "administrativeInstitution.id = " . $objectid;
+                $criteriastr .= " OR ";
+                $criteriastr .= "appointmentInstitution.id = " . $objectid;
+            } else {
+                $criteriastr = "1=0";
+            }
         }
 
         if( $objectname && $objectname == "service" ) {
-            $criteriastr .= "administrativeService.id = " . $objectid;
-            $criteriastr .= " OR ";
-            $criteriastr .= "appointmentService.id = " . $objectid;
+            if( !$objectid || $objectid != "" ) {
+                $criteriastr .= "administrativeService.id = " . $objectid;
+                $criteriastr .= " OR ";
+                $criteriastr .= "appointmentService.id = " . $objectid;
+            } else {
+                $criteriastr = "1=0";
+            }
         }
 
         if( $objectname && $objectname == "administrativeTitle" ) {
-            $criteriastr .= "administrativeTitles.name = '" . $objectid . "'";
+            if( !$objectid || $objectid != "" ) {
+                $criteriastr .= "administrativeTitles.name = '" . $objectid . "'";
+            } else {
+                $criteriastr = "1=0";
+            }
         }
 
         if( $objectname && $objectname == "appointmentTitles" ) {
-            $criteriastr .= "appointmentTitles.name = '" . $objectid . "'";
+            if( !$objectid || $objectid != "" ) {
+                $criteriastr .= "appointmentTitles.name = '" . $objectid . "'";
+            } else {
+                $criteriastr = "1=0";
+            }
         }
 
         if( $objectname && $objectname == "room" ) {
-            $criteriastr .= "locations.room = '" . $objectid . "'";
+            if( !$objectid || $objectid != "" ) {
+                $criteriastr .= "locations.room = '" . $objectid . "'";
+            } else {
+                $criteriastr = "1=0";
+            }
         }
 
         if( $objectname && $objectname == "department" ) {
-            $criteriastr .= "administrativeDepartment.id = " . $objectid;
-            $criteriastr .= " OR ";
-            $criteriastr .= "appointmentDepartment.id = " . $objectid;
+            if( !$objectid || $objectid != "" ) {
+                $criteriastr .= "administrativeDepartment.id = " . $objectid;
+                $criteriastr .= " OR ";
+                $criteriastr .= "appointmentDepartment.id = " . $objectid;
+            } else {
+                $criteriastr = "1=0";
+            }
         }
 
         if( $objectname && $objectname == "division" ) {
-            $criteriastr .= "administrativeDivision.id = " . $objectid;
-            $criteriastr .= " OR ";
-            $criteriastr .= "appointmentDivision.id = " . $objectid;
+            if( !$objectid || $objectid != "" ) {
+                $criteriastr .= "administrativeDivision.id = " . $objectid;
+                $criteriastr .= " OR ";
+                $criteriastr .= "appointmentDivision.id = " . $objectid;
+            } else {
+                $criteriastr = "1=0";
+            }
         }
 
         if( $objectname && $objectname == "myboss" ) {
-            $dql->leftJoin("administrativeTitles.boss", "boss");
-            $criteriastr = "boss.id = " . $objectid;
+            if( !$objectid || $objectid != "" ) {
+                $dql->leftJoin("administrativeTitles.boss", "boss");
+                $criteriastr = "boss.id = " . $objectid;
+            } else {
+                $criteriastr = "1=0";
+            }
         }
 
         if( $objectname && $objectname == "myreports" ) {
@@ -879,10 +921,10 @@ class UserController extends Controller
         }
 
         if( $objectname && $objectname == "researchlabs" ) {
-            if( $objectid && $objectid != "" ) {
+            if( !$objectid || $objectid != "" ) {
                 $criteriastr = "researchLabs.id = " . $objectid;
             } else {
-                $criteriastr = "1==0";
+                $criteriastr = "1=0";
             }
         }
 
@@ -894,7 +936,7 @@ class UserController extends Controller
                 $assistantsStr = implode(",", $assistants);
                 $criteriastr = "user.id IN (" . $assistantsStr . ")";
             } else {
-                $criteriastr = "1==0";
+                $criteriastr = "1=0";
             }
         }
 
@@ -903,7 +945,7 @@ class UserController extends Controller
                 $bossesStr = implode(",", $objectid);
                 $criteriastr = "user.id IN (" . $bossesStr . ")";
             } else {
-                $criteriastr = "1==0";
+                $criteriastr = "1=0";
             }
         }
 
@@ -915,6 +957,8 @@ class UserController extends Controller
             }
         }
 
+        //echo "criteriastr=".$criteriastr."<br>";
+
         if( $inputCriteriastr && $inputCriteriastr != "" ) {
             if( $criteriastr != "" ) {
                 $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
@@ -924,6 +968,7 @@ class UserController extends Controller
         }
 
         //echo "inputCriteriastr=".$inputCriteriastr."<br>";
+        //exit();
 
         return $inputCriteriastr;
     }

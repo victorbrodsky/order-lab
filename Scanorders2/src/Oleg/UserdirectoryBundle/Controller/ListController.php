@@ -647,7 +647,7 @@ class ListController extends Controller
      */
     public function newNodeWithParentAction(Request $request,$pid)
     {
-        return $this->newList($request,$this->container->getParameter('employees.sitename'),$pid);
+        return $this->newList($request,$pid);
     }
 
     public function getParentName( $className ) {

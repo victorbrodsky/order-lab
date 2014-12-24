@@ -688,7 +688,6 @@
         {% set myassistancesShow = true %}
     {% endif %}
 
-    {#<br>before myboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
     {#Group#}
     {% set titleBosses = user.getBosses() %}
     {% set mygroupsArr = {} %}
@@ -707,7 +706,6 @@
         {% set element = {'title':title['titleobject'],'bosses': title['bosses']} %}
         {% set myTitleBossesArr = myTitleBossesArr|merge({ (loop.index0): element}) %}
     {% endfor %}
-    {#<br>after myboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
 
     {#Department if head#}
     {% set departments = user.getDepartments(true) %}
@@ -866,7 +864,7 @@
                     {% endfor %}
                 {% endif %}
 
-                {#<br>before titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
+
                 {#If the user has people she/he reports to, list them here, but separate by the associated title of the user
                 ("As a [Medical Director of Informatics] Victor Brodsky reports to: Yao Chen [listed as a search result table]";
                 As a [Janitor] Victor Brodsky reports to: John Smith, Mary Jones {listed as lines of the search results table].#}
@@ -888,9 +886,9 @@
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" href="#mytitlebosses-{{ titleBosses['title'].getId() }}">
-                                            As a {{ user.getTitleAndNameByTitle(titleBosses['title']) }} reports to: {{ bossArr|join(",")|raw }}
-                                        </a>
+                                        <a data-toggle="collapse" href="#mytitlebosses-{{ titleBosses['title'].getId() }}"
+                                                >As a {{ user.getTitleAndNameByTitle(titleBosses['title']) }} reports to:</a> {{ bossArr|join(",")|raw }}
+
                                     </h4>
                                 </div>
                                 <div id="mytitlebosses-{{ titleBosses['title'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
@@ -904,7 +902,6 @@
 
                     {% endfor %}
                 {% endif %}
-                {#<br>after titleboss getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
 
 
                 {#Department(s)#}
