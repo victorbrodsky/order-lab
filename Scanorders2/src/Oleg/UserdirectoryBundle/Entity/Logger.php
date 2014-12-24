@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -103,30 +104,41 @@ class Logger
     private $entityId;
 
     //user's institution, department, division, service at the moment of creation/update
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $institutions = array();
+//    /**
+//     * @ORM\Column(type="array", nullable=true)
+//     */
+//    private $institutions = array();
+//
+//    /**
+//     * @ORM\Column(type="array", nullable=true)
+//     */
+//    private $departments = array();
+//
+//    /**
+//     * @ORM\Column(type="array", nullable=true)
+//     */
+//    private $divisions = array();
+//
+//    /**
+//     * @ORM\Column(type="array", nullable=true)
+//     */
+//    private $services = array();
+
+//    /**
+//     * @ORM\ManyToOne(targetEntity="InstitutionTree", cascade={"persist"})
+//     * @ORM\JoinColumn(name="institutionTree", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+//     **/
 
     /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $departments = array();
-
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $divisions = array();
-
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $services = array();
+     * @ORM\OneToMany(targetEntity="InstitutionTree", mappedBy="logger", cascade={"persist","remove"})
+     **/
+    private $institutionTrees;
 
 
 
     public function __construct($siteName) {
         $this->siteName = $siteName;
+        $this->institutionTrees = new ArrayCollection();
     }
 
 
@@ -170,20 +182,22 @@ class Logger
 
         if( $user ) {
             //set user's institution, department, division, service
-            foreach( $user->getInstitutions() as $inst ) {
-                $this->addInstitution($inst);
+            //$this->setInstTree($user,"AdministrativeTitle");
+            //$this->setInstTree($user,"AppointmentTitle");
+
+            foreach( $user->getAdministrativeTitles() as $title ) {
+                $tree = $this->setInstTree($title,"AdministrativeTitle");
+                if( $tree ) {
+                    $this->addInstitutionTree($tree);
+                }
             }
 
-            foreach( $user->getDepartments() as $dep ) {
-                $this->addDepartment($dep);
-            }
 
-            foreach( $user->getDivisions() as $div ) {
-                $this->addDivision($div);
-            }
-
-            foreach( $user->getServices() as $serv ) {
-                $this->addService($serv);
+            foreach( $user->getAppointmentTitles() as $title ) {
+                $tree = $this->setInstTree($title,"AppointmentTitle");
+                if( $tree ) {
+                    $this->addInstitutionTree($tree);
+                }
             }
         }
 
@@ -193,6 +207,30 @@ class Logger
     public function getUser()
     {
         return $this->user;
+    }
+
+    //set inst tree
+    public function setInstTree($title,$type) {
+        $instTreeEntity = null;
+
+        $ins = $title->getInstitution();
+        $dep = $title->getDepartment();
+        $div = $title->getDivision();
+        $ser = $title->getService();
+
+        if( $ins || $dep || $div || $ser ) {
+            $instTreeEntity = new InstitutionTree($type);
+            if( $ins )
+                $instTreeEntity->setInstitution($ins);
+            if( $dep )
+                $instTreeEntity->setDepartment($dep);
+            if( $div )
+                $instTreeEntity->setDivision($div);
+            if( $ser )
+                $instTreeEntity->setService($ser);
+        }
+
+        return $instTreeEntity;
     }
 
     /**
@@ -412,41 +450,65 @@ class Logger
 
 
 
-    public function addInstitution($institution)
+    /**
+     * @return mixed
+     */
+    public function getInstitutionTrees()
     {
-        $this->institutions[] = $institution->getId();
+        return $this->institutionTrees;
     }
-    public function getInstitutions()
+    public function addInstitutionTree($tree)
     {
-        return $this->institutions;
+        if( !$this->institutionTrees->contains($tree) ) {
+            $this->institutionTrees->add($tree);
+            $tree->setLogger($this);
+        }
+
+        return $this;
+    }
+    public function removeInstitutionTree($tree)
+    {
+        $this->institutionTrees->removeElement($tree);
     }
 
-    public function addDepartment($department)
-    {
-        $this->departments[] = $department->getId();
-    }
-    public function getDepartments()
-    {
-        return $this->departments;
-    }
 
-    public function addDivision($division)
-    {
-        $this->divisions[] = $division->getId();
-    }
-    public function getDivisions()
-    {
-        return $this->divisions;
-    }
 
-    public function addService($service)
-    {
-        $this->services[] = $service->getId();
-    }
-    public function getServices()
-    {
-        return $this->services;
-    }
+
+//    public function addInstitution($institution)
+//    {
+//        $this->institutions[] = $institution->getId();
+//    }
+//    public function getInstitutions()
+//    {
+//        return $this->institutions;
+//    }
+//
+//    public function addDepartment($department)
+//    {
+//        $this->departments[] = $department->getId();
+//    }
+//    public function getDepartments()
+//    {
+//        return $this->departments;
+//    }
+//
+//    public function addDivision($division)
+//    {
+//        $this->divisions[] = $division->getId();
+//    }
+//    public function getDivisions()
+//    {
+//        return $this->divisions;
+//    }
+//
+//    public function addService($service)
+//    {
+//        $this->services[] = $service->getId();
+//    }
+//    public function getServices()
+//    {
+//        return $this->services;
+//    }
 
 
 
