@@ -327,16 +327,17 @@
 
                 {% if homeLocation == false %}
 
-                    {{ formmacros.field_notempty(formfield.room,cycle) }}
-                    {{ formmacros.field_notempty(formfield.suite,cycle) }}
 
-                    {{ formmacros.field(formfield.floor) }}
                     {{ formmacros.field(formfield.institution) }}
                     {{ formmacros.field(formfield.department) }}
                     {{ formmacros.field(formfield.division) }}
                     {{ formmacros.field(formfield.service) }}
 
                     {{ formmacros.field_notempty(formfield.mailbox,cycle) }}
+
+                    {{ formmacros.field_notempty(formfield.room,cycle) }}
+                    {{ formmacros.field_notempty(formfield.suite,cycle) }}
+                    {{ formmacros.field(formfield.floor) }}
 
                     {{ formmacros.field(formfield.building) }}
 

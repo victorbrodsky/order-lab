@@ -31,6 +31,10 @@ class ScanSecurityController extends SecurityController
 
         $formArr = $this->loginPage($sitename);
 
+        if( $formArr == null ) {
+            return $this->redirect( $this->generateUrl('main_common_home') );
+        }
+
         $em = $this->getDoctrine()->getManager();
         $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
 

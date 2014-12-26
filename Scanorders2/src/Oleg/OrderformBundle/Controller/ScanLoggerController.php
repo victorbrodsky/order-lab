@@ -35,6 +35,36 @@ class ScanLoggerController extends LoggerController
     }
 
 
+    /**
+     * @Route("/user/{id}/all", name="scan_logger_user_all")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Logger:index.html.twig")
+     */
+    public function getAuditLogAllAction(Request $request)
+    {
+        $postData = $request->get('postData');
+        $userid = $request->get('id');
+        //$onlyheader = $request->get('onlyheader');
+
+        //echo "postData=<br>";
+        //print_r($postData);
+
+        $entityName = 'User';
+
+        $params = array(
+            'sitename'=>$this->container->getParameter('scan.sitename'),
+            'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
+            'entityName'=>$entityName,
+            'entityId'=>$userid,
+            'postData'=>$postData,
+            'onlyheader'=>false,
+            'allsites'=>true
+        );
+
+        $logger =  $this->listLogger($params);
+
+        return $logger;
+    }
 
 
 }

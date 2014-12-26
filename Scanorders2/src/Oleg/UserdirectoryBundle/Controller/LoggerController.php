@@ -73,7 +73,8 @@ class LoggerController extends Controller
             'entityName'=>$entityName,
             'entityId'=>$userid,
             'postData'=>$postData,
-            'onlyheader'=>false
+            'onlyheader'=>false,
+            'allsites'=>true
         );
 
         $logger =  $this->listLogger($params);
@@ -101,6 +102,7 @@ class LoggerController extends Controller
     protected function listLogger( $params ) {
 
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
+        $allsites = ( array_key_exists('allsites', $params) ? $params['allsites'] : null);
         $entityNamespace = ( array_key_exists('entityNamespace', $params) ? $params['entityNamespace'] : null);
         $entityName = ( array_key_exists('entityName', $params) ? $params['entityName'] : null);
         $entityId = ( array_key_exists('entityId', $params) ? $params['entityId'] : null);
@@ -121,7 +123,10 @@ class LoggerController extends Controller
         $dql =  $repository->createQueryBuilder("logger");
         $dql->select('logger');
         $dql->innerJoin('logger.eventType', 'eventType');
-        $dql->where("logger.siteName = '".$sitename."'");
+
+        if( $allsites == null || $allsites == false ) {
+            $dql->where("logger.siteName = '".$sitename."'");
+        }
 
         $createLogger = null;
         $updateLogger = null;
