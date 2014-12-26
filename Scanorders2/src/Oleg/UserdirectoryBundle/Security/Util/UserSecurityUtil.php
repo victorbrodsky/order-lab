@@ -141,10 +141,13 @@ class UserSecurityUtil {
         $logger->setUser($user);
         $logger->setRoles($user->getRoles());
         $logger->setUsername($user."");
-        $logger->setIp($request->getClientIp());
         $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
-        $logger->setWidth($request->get('display_width'));
-        $logger->setHeight($request->get('display_height'));
+
+        if( $request ) {
+            $logger->setIp($request->getClientIp());
+            $logger->setWidth($request->get('display_width'));
+            $logger->setHeight($request->get('display_height'));
+        }
 
         return $logger;
     }
@@ -271,6 +274,30 @@ class UserSecurityUtil {
         $systemuser = $systemusers[0];
 
         return $systemuser;
+    }
+
+
+    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='User Updated') {
+        $eventLog = $this->constructEventLog($sitename,$user,$request);
+        $eventLog->setEvent($event);
+
+        //set Event Type
+        $em = $this->em;
+        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
+        $eventLog->setEventType($eventtype);
+
+        //get classname, entity name and id of subject entity
+        $class = new \ReflectionClass($subjectEntity);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        //set classname, entity name and id of subject entity
+        $eventLog->setEntityNamespace($classNamespace);
+        $eventLog->setEntityName($className);
+        $eventLog->setEntityId($subjectEntity->getId());
+
+        $em->persist($eventLog);
+        $em->flush();
     }
 
 }

@@ -1016,12 +1016,21 @@
 {########################### EOF My Team #############################}
 
 
-{% macro auditLog( user, type, sitename, collapsein ) %}
+{% macro auditLog( user, type, sitename, postData, collapsein ) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
+    {#{{ dump(postData) }}#}
+    {% if postData and postData['sort'] is defined %}
+        {% if ('logger.' in postData['sort']) or ('eventType.' in postData['sort']) %}
+            {% set collapsein = "in" %}
+        {% endif %}
+    {% endif %}
+
+    {% set auditlog = controller( 'OlegUserdirectoryBundle:Logger:getAuditLog', {'postData':postData,'id':user.id, 'onlyheader':true} ) %}
+
     {#Audit Log#}
-    {% set auditlog = true %}
+    {#{% set auditlog = true %}#}
     {% if auditlog is defined and auditlog %}
         <div class="panel panel-info">
             <div class="panel-heading">
@@ -1033,10 +1042,50 @@
             </div>
             <div id="auditlog" class="panel-collapse collapse {{ collapsein }}">
                 <div class="panel-body">
-                    {#{{ render( auditlog ) }}#}
+                    {{ render( auditlog ) }}
+
+                    <br>
+
+                    <div class="text-center col-xs-12">
+                        <a href="{{ path(sitename~'_logger_user_all',{id:user.id}) }}">Event Log</a>
+                    </div>
+
                 </div>
             </div>
         </div>
     {% endif %}
+
+{% endmacro %}
+
+
+{% macro getLoggerTreeByType( logger, treeType, loggeraction ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% for tree in logger.getInstitutionTreesByType(treeType) %}
+        <div class="well well-sm">
+            <div class="text-center col-xs-12">
+                {% if treeType == 'AdministrativeTitle' %}
+                    Administrative Title
+                {% elseif treeType == 'AppointmentTitle' %}
+                    Appointment Title
+                {% else %}
+                    {{ treeType }}
+                {% endif %}
+            </div>
+            {% if tree.institution %}
+                {{ formmacros.simplefield( loggeraction~" by user from Institution:", tree.institution.name, "input", "disabled" ) }}
+            {% endif %}
+            {% if tree.department %}
+                {{ formmacros.simplefield( loggeraction~" by user from Department:", tree.department.name, "input", "disabled" ) }}
+            {% endif %}
+            {% if tree.division %}
+                {{ formmacros.simplefield( loggeraction~" by user from Division:", tree.division.name, "input", "disabled" ) }}
+            {% endif %}
+            {% if tree.service %}
+                {{ formmacros.simplefield( loggeraction~" by user from Service:", tree.service.name, "input", "disabled" ) }}
+            {% endif %}
+        </div>
+    {% endfor %}
 
 {% endmacro %}

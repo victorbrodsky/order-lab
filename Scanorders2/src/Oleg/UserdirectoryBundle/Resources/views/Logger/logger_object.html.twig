@@ -1,0 +1,49 @@
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+
+{% if createLogger is defined and createLogger %}
+
+    {{ formmacros.simplefield( "Added by user:", createLogger.user.getUsernameOptimal, "input", "disabled" ) }}
+
+    {{ usermacros.getLoggerTreeByType(createLogger,'AdministrativeTitle','Created') }}
+    {{ usermacros.getLoggerTreeByType(createLogger,'AppointmentTitle','Created') }}
+
+    {{ formmacros.simplefield( "Added on:", createLogger.creationdate|date('Y-m-d H:i:s'), "input", "disabled" ) }}
+
+{% endif %}
+
+
+{% if updateLogger is defined and updateLogger %}
+
+    <hr>
+
+    {#{{ formmacros.simplefield( "Logger id:", updateLogger.id, "input", "disabled" ) }}#}
+    {{ formmacros.simplefield( "Last Updated by user:", updateLogger.user.getUsernameOptimal, "input", "disabled" ) }}
+
+    {#roleslen:{{ updateLogger.roles|length }}<br>#}
+    {% set rolesArr = {} %}
+    {% for role in updateLogger.roles %}
+        {% if role != "ROLE_USER" %}
+            {#"{{ attribute(roles, role) }}"#}
+            {% set rolesArr = rolesArr|merge([attribute(roles, role)]) %}
+        {% endif %}
+    {% endfor %}
+    {% if rolesArr|length > 0 %}
+        {{ formmacros.simplefield( "Last Updated by user with role(s):", rolesArr|join(","), "input", "disabled" ) }}
+    {% endif %}
+
+    {{ usermacros.getLoggerTreeByType(updateLogger,'AdministrativeTitle','Updated') }}
+    {{ usermacros.getLoggerTreeByType(updateLogger,'AppointmentTitle','Updated') }}
+
+    {{ formmacros.simplefield( "Last Updated on:", updateLogger.creationdate|date('Y-m-d H:i:s'), "input", "disabled" ) }}
+
+{% endif %}
+
+
+
+
+
+
+

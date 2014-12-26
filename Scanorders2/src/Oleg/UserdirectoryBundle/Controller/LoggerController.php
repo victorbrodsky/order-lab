@@ -19,6 +19,70 @@ class LoggerController extends Controller
 {
 
     /**
+     * Lists audit log for a specific user
+     *
+     * @Route("/user/{id}", name="employees_logger_user_with_id")
+     * @Route("/user", name="employees_logger_user")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Logger:logger_object.html.twig")
+     */
+    public function getAuditLogAction(Request $request)
+    {
+        $postData = $request->get('postData');
+        $userid = $request->get('id');
+        $onlyheader = $request->get('onlyheader');
+
+        //echo "postData=<br>";
+        //print_r($postData);
+
+        $entityName = 'User';
+
+        $params = array(
+            'sitename'=>$this->container->getParameter('employees.sitename'),
+            'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
+            'entityName'=>$entityName,
+            'entityId'=>$userid,
+            'postData'=>$postData,
+            'onlyheader'=>true
+        );
+
+        $logger =  $this->listLogger($params);
+
+        return $logger;
+    }
+
+    /**
+     * @Route("/user/{id}/all", name="employees_logger_user_all")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
+     */
+    public function getAuditLogAllAction(Request $request)
+    {
+        $postData = $request->get('postData');
+        $userid = $request->get('id');
+        //$onlyheader = $request->get('onlyheader');
+
+        //echo "postData=<br>";
+        //print_r($postData);
+
+        $entityName = 'User';
+
+        $params = array(
+            'sitename'=>$this->container->getParameter('employees.sitename'),
+            'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
+            'entityName'=>$entityName,
+            'entityId'=>$userid,
+            'postData'=>$postData,
+            'onlyheader'=>false
+        );
+
+        $logger =  $this->listLogger($params);
+
+        return $logger;
+    }
+
+
+    /**
      * Lists all Logger entities.
      *
      * @Route("/", name="employees_logger")
@@ -27,22 +91,105 @@ class LoggerController extends Controller
      */
     public function indexAction()
     {
-        return $this->listLogger($this->container->getParameter('employees.sitename'));
+        $params = array(
+            'sitename'=>$this->container->getParameter('employees.sitename')
+        );
+        return $this->listLogger($params);
     }
 
-    protected function listLogger( $sitename ) {
+
+    protected function listLogger( $params ) {
+
+        $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
+        $entityNamespace = ( array_key_exists('entityNamespace', $params) ? $params['entityNamespace'] : null);
+        $entityName = ( array_key_exists('entityName', $params) ? $params['entityName'] : null);
+        $entityId = ( array_key_exists('entityId', $params) ? $params['entityId'] : null);
+        $postData = ( array_key_exists('postData', $params) ? $params['postData'] : null);
+        $onlyheader = ( array_key_exists('onlyheader', $params) ? $params['onlyheader'] : null);
 
         $em = $this->getDoctrine()->getManager();
+
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+        $rolesArr = array();
+        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
         $dql =  $repository->createQueryBuilder("logger");
         $dql->select('logger');
         $dql->innerJoin('logger.eventType', 'eventType');
         $dql->where("logger.siteName = '".$sitename."'");
-        
-		$request = $this->get('request');
-		$postData = $request->query->all();
-		
+
+        $createLogger = null;
+        $updateLogger = null;
+
+        //get only specific object log
+        if( $entityNamespace && $entityName && $entityId ) {
+            //'Oleg\UserdirectoryBundle\Entity'
+            //$namepartsArr = explode("\\", $entityNamespace);
+            //$repName = $namepartsArr[0].$namepartsArr[1];
+            //echo "entityNamespace=".$entityNamespace."<br>";
+            //echo "0=".$namepartsArr[0]."<br>";
+            //$subjectUser = $em->getRepository($repName.':'.$entityName)->find($entityId);
+
+            $dql->andWhere('logger.entityNamespace = :entityNamespace');
+            $dql->andWhere('logger.entityName = :entityName');
+            $dql->andWhere('logger.entityId = :entityId');
+
+            if( $onlyheader ) {
+
+                /////////////// get created info ///////////////
+                $dql2 = clone $dql;
+                $dql2->andWhere("eventType.name = 'User Created'");
+                $dql2->orderBy("logger.id","ASC");
+                //echo "dql2=".$dql2."<br>";
+
+                $query2 = $em->createQuery($dql2);
+                $query2->setParameters( array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId ) );
+                $query2->setMaxResults(1);
+
+                $loggers = $query2->getResult();
+                //echo "logger count=".count($loggers)."<br>";
+                if( count($loggers) > 0 ) {
+                    $createLogger = $loggers[0];
+                    //echo "logger id=".$createLogger->getId()."<br>";
+                    //echo "logger eventType=".$createLogger->getEventType()->getName()."<br>";
+                }
+
+                /////////////// get updated info ///////////////
+                $dql3 = clone $dql;
+                $dql3->andWhere("eventType.name = 'User Updated'");
+                $dql3->orderBy("logger.id","DESC");
+                //echo "dql2=".$dql3."<br>";
+
+                $query3 = $em->createQuery($dql3);
+                $query3->setParameters( array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId ) );
+                $query3->setMaxResults(1);
+                $loggers = $query3->getResult();
+                //echo "logger count=".count($loggers)."<br>";
+                if( count($loggers) > 0 ) {
+                    $updateLogger = $loggers[0];
+                }
+
+                return array(
+                    'roles' => $rolesArr,
+                    'sitename' => $sitename,
+                    'createLogger' => $createLogger,
+                    'updateLogger' => $updateLogger
+                );
+
+            } //if onlyheader
+
+        } //if entityNamespace entityName entityId
+
+        if( $postData == null ) {
+		    $request = $this->get('request');
+		    $postData = $request->query->all();
+        }
+
 		if( !isset($postData['sort']) ) { 
 			$dql->orderBy("logger.creationdate","DESC");
 		}
@@ -54,6 +201,11 @@ class LoggerController extends Controller
 		
         $limit = 30;
         $query = $em->createQuery($dql);
+
+        if( $entityNamespace && $entityName && $entityId ) {
+            $query->setParameters( array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId ) );
+        }
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -61,19 +213,14 @@ class LoggerController extends Controller
             $limit/*limit per page*/
         );
 
-        $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
-        $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
-        }
+
 
         return array(
             'pagination' => $pagination,
             'roles' => $rolesArr,
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'createLogger' => $createLogger,
+            'updateLogger' => $updateLogger
         );
     }
 

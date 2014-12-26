@@ -87,6 +87,7 @@ class Logger
     private $serverresponse;
 
 
+
     //Fields specifying a subject entity
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -103,32 +104,9 @@ class Logger
      */
     private $entityId;
 
+
+
     //user's institution, department, division, service at the moment of creation/update
-//    /**
-//     * @ORM\Column(type="array", nullable=true)
-//     */
-//    private $institutions = array();
-//
-//    /**
-//     * @ORM\Column(type="array", nullable=true)
-//     */
-//    private $departments = array();
-//
-//    /**
-//     * @ORM\Column(type="array", nullable=true)
-//     */
-//    private $divisions = array();
-//
-//    /**
-//     * @ORM\Column(type="array", nullable=true)
-//     */
-//    private $services = array();
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="InstitutionTree", cascade={"persist"})
-//     * @ORM\JoinColumn(name="institutionTree", referencedColumnName="id", nullable=true, onDelete="CASCADE")
-//     **/
-
     /**
      * @ORM\OneToMany(targetEntity="InstitutionTree", mappedBy="logger", cascade={"persist","remove"})
      **/
@@ -181,10 +159,7 @@ class Logger
         $this->user = $user;
 
         if( $user ) {
-            //set user's institution, department, division, service
-            //$this->setInstTree($user,"AdministrativeTitle");
-            //$this->setInstTree($user,"AppointmentTitle");
-
+            //set title's institution, department, division, service
             foreach( $user->getAdministrativeTitles() as $title ) {
                 $tree = $this->setInstTree($title,"AdministrativeTitle");
                 if( $tree ) {
@@ -323,6 +298,23 @@ class Logger
         return $this;
     }
 
+    public function getSiteRoles($sitename) {
+
+        $roles = array();
+
+        if( $sitename == 'employees' ) {
+            $sitename = 'userdirectory';
+        }
+
+        foreach( $this->getRoles() as $role ) {
+            if( stristr($role, $sitename) ) {
+                $roles[] = $role;
+            }
+        }
+
+        return $roles;
+    }
+
     /**
      * @param mixed $useragent
      */
@@ -449,10 +441,6 @@ class Logger
     }
 
 
-
-    /**
-     * @return mixed
-     */
     public function getInstitutionTrees()
     {
         return $this->institutionTrees;
@@ -471,6 +459,21 @@ class Logger
         $this->institutionTrees->removeElement($tree);
     }
 
+    //$type is title type: AdministrativeTitle or AppointmentTitle
+    public function getInstitutionTreesByType($type)
+    {
+        if( $type ) {
+            $institutionTrees = new ArrayCollection();
+            foreach( $this->getInstitutionTrees() as $tree ) {
+                if( $tree->getType()."" == $type ) {
+                    $institutionTrees->add($tree);
+                }
+            }
+            return $institutionTrees;
+        } else {
+            return $this->getInstitutionTrees();
+        }
+    }
 
 
 

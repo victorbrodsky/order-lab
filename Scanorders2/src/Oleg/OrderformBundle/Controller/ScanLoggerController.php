@@ -30,7 +30,8 @@ class ScanLoggerController extends LoggerController
      */
     public function indexAction()
     {
-        return $this->listLogger($this->container->getParameter('scan.sitename'));
+		$params = array('sitename'=>$this->container->getParameter('scan.sitename'));
+        return $this->listLogger($params);
     }
 
 

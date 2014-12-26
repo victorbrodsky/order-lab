@@ -312,7 +312,7 @@
         {% if formfield.keytypemrn is defined %}
             {#{% set displayNone = "display:none;" %}#}
             {#{% set hideClass = "hideComplex" %}#}
-            {% if formfield.vars.value and formfield.vars.value.keytypemrn.id %}
+            {% if formfield.vars.value and formfield.vars.value.keytypemrn and formfield.vars.value.keytypemrn.id %}
                 {% set displayNone = "" %}
                 {#{% set hideClass = "" %}#}
             {% else %}
@@ -1442,9 +1442,9 @@
         {% endif %}
 
 
-        {#Team#}
+        {#Audit Log#}
         {% if userEditor == true and cycle == "show_user" %}
-            {{ usermacros.auditLog(entity,'profile',sitename,"") }}
+            {{ usermacros.auditLog(entity,'profile',sitename,postData,"") }}
         {% endif %}
 
         </div>{#text-left#}

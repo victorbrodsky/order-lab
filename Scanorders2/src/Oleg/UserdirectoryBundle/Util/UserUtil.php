@@ -193,6 +193,9 @@ class UserUtil {
                 $em->flush();
                 //**************** EOF create PerSiteSettings for this user **************//
 
+                //record user log create
+                $event = "User ".$user." has been created by ".$systemuser."<br>";
+                $userSecUtil->createUserEditEvent($serviceContainer->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
             }
 
         }//for each user
