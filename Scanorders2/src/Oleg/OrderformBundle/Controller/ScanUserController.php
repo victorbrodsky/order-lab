@@ -219,7 +219,7 @@ class ScanUserController extends UserController
                 $user = $this->get('security.context')->getToken()->getUser();
                 $event = "User information of ".$subjectuser." has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $eventArr);
-                $this->createUserEditEvent($this->container->getParameter('scan.sitename'),$event,$user,$subjectuser,$request);
+                $secUtil->createUserEditEvent($this->container->getParameter('scan.sitename'),$event,$user,$subjectuser,$request);
             }
             ////////////////////// EOF set Edit event log for Scan Settings //////////////////////
 

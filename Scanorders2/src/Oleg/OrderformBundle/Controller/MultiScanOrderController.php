@@ -155,16 +155,18 @@ class MultiScanOrderController extends Controller {
         }
         
         //exit("Before validation main entity:<br>");
+       if( $form->isValid() ) {
+           echo "form is valid !!! <br>";
+       } else {
+           echo "form is not valid ??? <br>";
+       }
+        print_r($form->getErrors());
+        echo "<br>errors:<br>";
+        print_r($form->getErrorsAsString());
+        echo "<br>";
+        //exit("controller exit");
 
-//       if( $form->isValid() ) {
-//           echo "form is valid !!! <br>";
-//       } else {
-//           echo "form is not valid ??? <br>";
-//       }
-//        echo "form errors=".print_r($form->getErrors())."<br>";
-//        exit("controller exit");
-
-        if( 1 ) {
+        if( $form->isValid() ) {
 
             //exit("controller exit");
 
@@ -250,12 +252,8 @@ class MultiScanOrderController extends Controller {
 
         }
 
-        //form always valid, so this will not be reached anyway
-        return array(
-            'form'   => $form->createView(),
-            'type' => 'new',
-            'formtype' => $entity->getType()
-        );
+        throw new \Exception( 'Form is not valid Errors='.$form->getErrorsAsString() );
+
     }
 
     /**
@@ -402,20 +400,16 @@ class MultiScanOrderController extends Controller {
                 //echo "prev service set<br>";
             }
         }
-
-        //set default department and division
-        if( $service = $entity->getService() ) {
-            $division = $service->getParent();
-            $department = $division->getParent();
-        } else {
-            //set default division to Anatomic Pathology
-            $division = $em->getRepository('OlegUserdirectoryBundle:Division')->findOneByName('Anatomic Pathology');
-            $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
-        }
         ////////////////// EOF set previous service from the last order if default is null //////////////////
 
         //set the default institution
         $entity->setInstitution($permittedInstitutions->first());
+
+        //set default department and division
+        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
+        $department = $defaultsDepDiv['department'];
+        $division = $defaultsDepDiv['division'];
+
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
@@ -668,7 +662,20 @@ class MultiScanOrderController extends Controller {
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$single_multy, 'cycle'=>$type, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
+        //set default department and division
+        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
+        $department = $defaultsDepDiv['department'];
+        $division = $defaultsDepDiv['division'];
+
+        $params = array(
+            'type'=>$single_multy,
+            'cycle'=>$type,
+            'institutions'=>$permittedInstitutions,
+            'services'=>$permittedServices,
+            'user'=>$user,
+            'division'=>$division,
+            'department'=>$department
+        );
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
 
         //echo "type=".$entity->getType();

@@ -34,7 +34,7 @@
             <td>{{ entity.fax }}</td>
             <td class="rowlink-skip">
                 {#{{ entity.room }}#}
-                <a href="{{ path( sitename~'_search_same_object', { 'tablename':'room','id': entity.room.id, 'name': entity.room.name }) }}">{{ entity.room }}</a>
+                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': entity.room.id, 'name': entity.room.name }) }}">{{ entity.room }}</a>
             </td>
             <td class="rowlink-skip">
                 {% if entity.service %}

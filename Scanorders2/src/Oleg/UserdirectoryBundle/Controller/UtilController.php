@@ -135,7 +135,7 @@ class UtilController extends Controller {
             $query = $em->createQueryBuilder()
                 ->from('OlegUserdirectoryBundle:'.$className, 'list')
                 ->innerJoin("list.parent", "parent")
-                ->select("list.id as id, list.name as text")
+                ->select("list.id as id, list.name as text, parent.id as parentid")
                 //->select("list.name as id, list.name as text")
                 ->orderBy("list.name","ASC");
 

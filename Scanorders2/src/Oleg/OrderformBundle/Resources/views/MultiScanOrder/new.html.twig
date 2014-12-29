@@ -58,6 +58,7 @@
 
     {#################################### START FORM ######################################}
     <form id="scanorderform" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
+    {#{{ form_start(form,{'attr': {'id': 'scanorderform'}}) }}#}
     {#{{ form_start(form) }}#}
 
     {{ form_widget(form.oid) }}
@@ -357,11 +358,6 @@
             </div>
         </div>
 
-        {#Note: data-prototype-rest="{{form_widget(form) | e}} is required; otherwise the leftovers of the form (?) appears in html page#}
-        {#<div data-prototype-orderinfo="{{form_rest(form) | e}}">#}
-            {#{{ form_rest(form) }}#}
-        {#</div>#}
-
     {% endif %}
 
     {% if entity is defined and entity is not null %}
@@ -379,6 +375,8 @@
     {% endif %}
 
     <div id="validationerror" style="padding-top: 2%"></div>
+
+    {{ form_row(form._token) }}
 
     {#{{ form_end(form) }}#}
     </form>

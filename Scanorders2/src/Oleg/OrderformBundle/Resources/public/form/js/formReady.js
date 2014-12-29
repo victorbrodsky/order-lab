@@ -81,7 +81,7 @@ $(document).ready(function() {
     initConvertEnterToTab();
 
     //set institutional tree
-    initTreeSelect();   //clearFlag: false
+    initTreeSelect();   //clearFlag: default true
     initInstitutionManually();
     setInstitutionTreeChildren();
     initDefaultServiceManually();

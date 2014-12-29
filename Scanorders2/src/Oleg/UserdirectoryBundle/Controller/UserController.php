@@ -1950,7 +1950,8 @@ class UserController extends Controller
         $userAdmin = $this->get('security.context')->getToken()->getUser();
         $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
         $event = $event . "User status changed to ".$status;
-        $this->createUserEditEvent($sitename,$event,$userAdmin,$user,$request);
+        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($sitename,$event,$userAdmin,$user,$request);
 
         $em->persist($user);
         $em->flush();

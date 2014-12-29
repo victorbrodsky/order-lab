@@ -235,6 +235,42 @@ class SecurityUtil extends UserSecurityUtil {
         return $entity;
     }
 
+    public function getDefaultDepartmentDivision($orderinfo,$userSiteSettings) {
+        if( $service = $orderinfo->getService() ) {
+            $division = $service->getParent();
+            $department = $division->getParent();
+        } else {
+            //first get default division and department
+            $department = $userSiteSettings->getDefaultDepartment();
+            if( !$department ) {
+                //set default department to Pathology and Laboratory Medicine
+                $department = $this->em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+
+            }
+            if( $orderinfo->getInstitution() == null || ($orderinfo->getInstitution() && $department->getParent()->getId() != $orderinfo->getInstitution()->getId()) ) {
+                $department = null;
+            }
+
+            $division = $userSiteSettings->getDefaultDivision();
+            if( !$division ) {
+                //set default division to Anatomic Pathology
+                $division = $this->em->getRepository('OlegUserdirectoryBundle:Division')->findOneByName('Anatomic Pathology');
+            }
+            if( $department == null || ($department && $division && $division->getParent()->getId() != $department->getId()) ) {
+                $division = null;
+            }
+
+        }
+//        echo $department->getParent()->getId()."?=?".$orderinfo->getInstitution()->getId()."<br>";
+
+
+        $params = array();
+        $params['department'] = $department;
+        $params['division'] = $division;
+
+        return $params;
+    }
+
     public function addInstitutionalPhiScopeWCMC($user,$creator) {
         $inst = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Weill Cornell Medical College');
         $persitesettings = $this->getUserPerSiteSettings($user);

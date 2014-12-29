@@ -68,23 +68,43 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
         }).success(function(data) {
             //console.log('success: data:');
             //console.log(data);
-            //console.log("targetId="+targetId);
 
-            //clear field value if data is not found
             if( !data || data.length == 0 ) {
-                //$(targetId).val('');
-                //clearChildren(holder,fieldClass);
-                clearTreeToDown(targetId,holder,fieldClass);
-            } else {
-                populateSelectCombobox( targetId, data, "Select an option or type in a new value" );
+                //console.log('data is null');
+                clearTreeToDown(targetId,holder,fieldClass,parentId);
                 $(targetId).select2("readonly", false);
-                loadChildren($(targetId),holder,fieldClass);
+            } else {
+                //console.log('data ok');
+                populateSelectCombobox( targetId, data, "Select an option or type in a new value" );
+                //$(targetId).select2("readonly", false);
+
+                //get parent id
+                var thisParentId = null;
+                var thisData = $(targetId).select2('data');
+                if( thisData ) {
+                    //console.log( "thisData is ok" );
+                    var thisParentId = thisData.parentid;
+                } else {
+                    //console.log( "thisData is null" );
+                }
+                //console.log( "thisParentId="+thisParentId );
+                if( thisParentId != parentId ) {
+                    //console.log( "clear and populate this thisParentId="+thisParentId );
+                    //clear tree
+                    clearTreeToDown(targetId,holder,fieldClass,parentId);
+                    //re-populate this select box
+                    populateSelectCombobox( targetId, data, "Select an option or type in a new value" );
+                } {
+                    //console.log( "load children this thisParentId="+thisParentId );
+                    loadChildren($(targetId),holder,fieldClass);
+                }
+                $(targetId).select2("readonly", false);
             }
 
 //            //test value
-//            console.log('value='+$(targetId).select2('val'));
+//            console.log(fieldClass+': after value='+$(targetId).select2('val'));
 //            if( $(targetId).select2('data') ) {
-//                console.log('text='+$(targetId).select2('data').text);
+//                console.log('after text='+$(targetId).select2('data').text);
 //            }
         });
 
@@ -100,7 +120,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
             //$(targetId).select2("readonly", true);
 
             //clearChildren(holder,fieldClass);
-            clearTreeToDown(targetId,holder,fieldClass);
+            clearTreeToDown(targetId,holder,fieldClass,parentId);
         }
     }
 
@@ -149,25 +169,31 @@ function loadChildren(parentElement,holder,fieldClass) {
 
 }
 
-//function clearTreeToDown(targetId,holder,fieldClass) {
-//    console.log( "clear tree to down: targetId="+targetId+", fieldClass="+fieldClass );
-//    $(targetId).val('');
-//    populateSelectCombobox( targetId, null, "Select an option or type in a new value" );
-//    clearChildren(targetId,holder,fieldClass);
-//}
 
-function clearTreeToDown(targetId,holder,fieldClass) {
+function clearTreeToDown(targetId,holder,fieldClass,parentId) {
 
-    //console.log( "clear tree to down: targetId="+targetId+", fieldClass="+fieldClass );
+    //console.log( "clear tree to down: targetId="+targetId+", fieldClass="+fieldClass+", parentId="+parentId+", cleanThis="+cleanThis );
 
     if( $(targetId).length == 0 ) {
         //console.log( "clear tree to down: element with targetId does not exists" );
         return;
     }
 
-    $(targetId).val('');
-    populateSelectCombobox( targetId, null, "Select an option or type in a new value" );
-    $(targetId).select2("readonly", true);
+    var thisParentId = null;
+    var thisData = $(targetId).select2('data');
+    if( thisData ) {
+        //console.log( "thisData is ok" );
+        var thisParentId = thisData.parentid;
+    } else {
+        //console.log( "thisData is null" );
+    }
+    //console.log( "thisParentId="+thisParentId );
+
+    if( thisParentId == null || parentId == null || thisParentId != parentId ) {
+        $(targetId).val('');
+        populateSelectCombobox( targetId, null, "Select an option or type in a new value" );
+        $(targetId).select2("readonly", true);
+    }
 
     //var holder = parentElement.closest('.user-collection-holder');
     var childrenTargetClass = getChildrenTargetClass(fieldClass);
@@ -177,12 +203,13 @@ function clearTreeToDown(targetId,holder,fieldClass) {
         //console.log( "clear Children="+childrenTargetClass );
         var childrenTargetId = '#' + holder.find("."+childrenTargetClass).not("*[id^='s2id_']").attr('id');
 
-        $(childrenTargetId).val('');
-        populateSelectCombobox( childrenTargetId, null, "Select an option or type in a new value" );
-        $(childrenTargetId).select2("readonly", true);
-        //setElementToId( childrenTargetId );
+        if( $(childrenTargetId).select2('data') && $(childrenTargetId).select2('data').parentid != thisParentId ) {
+            $(childrenTargetId).val('');
+            populateSelectCombobox( childrenTargetId, null, "Select an option or type in a new value" );
+            $(childrenTargetId).select2("readonly", true);
+        }
 
-        clearTreeToDown(childrenTargetId,holder,childrenTargetClass);
+        clearTreeToDown(childrenTargetId,holder,childrenTargetClass,thisParentId);
 
     } else {
         //console.log( "don't clear="+fieldClass );
@@ -200,7 +227,7 @@ function initInstitutionManually() {
 
     $('.ajax-combobox-institution-preset').each(function(e){
         //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! init inst manually" );
-        var clearFlag = true; //don't clear children and default service
+        var clearFlag = true; //clear children and default service
         getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
     });
 }
@@ -222,11 +249,12 @@ function initTreeSelect(clearFlag) {
     });
 
     $('.ajax-combobox-department').on('change', function(e){
-        //console.log( "department on change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
+        //console.log( "department on change" );
         getComboboxTreeByPid($(this),'ajax-combobox-division',null,clearFlag);
     });
 
     $('.ajax-combobox-division').on('change', function(e){
+        //console.log( "division on change" );
         getComboboxTreeByPid($(this),'ajax-combobox-service',null,clearFlag);
     });
 

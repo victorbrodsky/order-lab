@@ -174,7 +174,20 @@ class TableController extends Controller {
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$orderinfo->getType(), 'cycle'=>$type, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
+        //set default department and division
+        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($orderinfo,$userSiteSettings);
+        $department = $defaultsDepDiv['department'];
+        $division = $defaultsDepDiv['division'];
+
+        $params = array(
+            'type'=>$orderinfo->getType(),
+            'cycle'=>$type,
+            'institutions'=>$permittedInstitutions,
+            'services'=>$permittedServices,
+            'user'=>$user,
+            'division'=>$division,
+            'department'=>$department
+        );
         $form = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
 
         //$slides = $orderinfo->getSlide();
@@ -505,20 +518,15 @@ class TableController extends Controller {
                 //echo "prev service set<br>";
             }
         }
-
-        //set default department and division
-        if( $service = $entity->getService() ) {
-            $division = $service->getParent();
-            $department = $division->getParent();
-        } else {
-            //set default division to Anatomic Pathology
-            $division = $em->getRepository('OlegUserdirectoryBundle:Division')->findOneByName('Anatomic Pathology');
-            $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
-        }
         ////////////////// EOF set previous service from the last order if default is null //////////////////
 
         //set the default institution
         $entity->setInstitution($permittedInstitutions->first());
+
+        //set default department and division
+        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
+        $department = $defaultsDepDiv['department'];
+        $division = $defaultsDepDiv['division'];
 
         $type = "Table-View Scan Order";
 
