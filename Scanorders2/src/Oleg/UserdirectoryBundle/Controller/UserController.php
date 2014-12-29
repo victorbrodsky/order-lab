@@ -1542,23 +1542,36 @@ class UserController extends Controller
 
         //exit('after handle request');
         //print_r($form->getErrors());
+//        print_r($form->getErrors());
+//        echo "<br>loc string errors:<br>";
+//        print_r($form->getErrorsAsString());
+//        echo "<br>";
+//        exit();
 
         if( $form->isValid() ) {
 
             //echo "form is valid<br>";
-            //exit();
+            //exit();           
 
-            //check if roles were changed and user is not admin
-            if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-                $currRoles = $entity->getRoles();
-                if( count($originalRoles) != count($currRoles) ) {
-                    $this->setSessionForbiddenNote("Change Roles");
-                    throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Roles");
+            //check if changed roles are "Platform Administrator" or "Deputy Platform Administrator"
+            $currRoles = $entity->getRoles();
+            $resultRoles = $this->array_diff_assoc_true($currRoles,$originalRoles);
+
+            //check 1: if the roles are changed by non admin user
+            if( count($resultRoles) > 0 ) {
+                if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+                    $this->setSessionForbiddenNote("Change Role ".$role);
+                    //throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Role ".$role);
+                    return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
                 }
-                foreach( $currRoles as $role ) {
-                    if( !in_array($role, $originalRoles) ) {
-                        $this->setSessionForbiddenNote("Change Roles");
-                        throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Roles");
+            }
+            //check 2: if the roles "Platform Administrator" or "Deputy Platform Administrator" are changed by non super admin user
+            foreach( $resultRoles as $role ) {
+                if( $role == "ROLE_ADMIN" || $role == "ROLE_SUPER_ADMIN" ) {
+                    if( false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') ) {
+                        $this->setSessionForbiddenNote("Change Role ".$role);
+                        //throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Role ".$role);
+                        return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
                     }
                 }
             }
@@ -1903,7 +1916,7 @@ class UserController extends Controller
     public function getUserRoles() {
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(array(), array('orderinlist' => 'ASC'));  //findAll();
         foreach( $roles as $role ) {
             $rolesArr[$role->getName()] = $role->getAlias();
         }
@@ -2133,6 +2146,12 @@ class UserController extends Controller
             'notice',
             "You do not have permission to perform this operation: ".$msg
         );
+    }
+
+    function array_diff_assoc_true($array1, $array2)
+    {
+        $res = array_merge( array_diff_assoc($array1,$array2), array_diff_assoc($array2,$array1) );
+        return array_unique($res);
     }
 
 

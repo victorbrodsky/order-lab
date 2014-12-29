@@ -183,7 +183,8 @@ class AdminController extends Controller
             //////////// general roles are set by security.yml only ////////////
 
             //general super admin role for all sites
-            "ROLE_ADMIN" => array("OrderPlatform Administrator","Full access for all sites"),
+            "ROLE_SUPER_ADMIN" => array("Platform Administrator","Full access for all sites"),
+            "ROLE_ADMIN" => array("Deputy Platform Administrator",'The same as "Platform Administrator" role can do except assign or remove "Platform Administrator" or "Deputy Platform Administrator" roles'),
             //"ROLE_BANNED" => "Banned user for all sites",                 //general super admin role for all sites
             //"ROLE_UNAPPROVED" => "Unapproved User",                       //general unapproved user
 

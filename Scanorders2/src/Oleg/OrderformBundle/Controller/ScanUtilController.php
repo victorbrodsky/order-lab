@@ -968,7 +968,8 @@ class ScanUtilController extends Controller {
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Location', 'list')
             ->select("list")
-            ->orderBy("list.id","ASC");
+            ->orderBy("user.username","ASC")
+            ->addOrderBy("list.name","ASC");
 
         $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
