@@ -77,7 +77,7 @@
 
             <p>
 
-                {% if is_granted('ROLE_USERDIRECTORY_ADMIN') %}
+                {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 
                     {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
 

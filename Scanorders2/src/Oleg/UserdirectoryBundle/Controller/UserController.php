@@ -1559,8 +1559,11 @@ class UserController extends Controller
 
             //check 1: if the roles are changed by non admin user
             if( count($resultRoles) > 0 ) {
-                if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-                    $this->setSessionForbiddenNote("Change Role ".$role);
+                if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') &&
+                    false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
+                    false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')
+                ) {
+                    $this->setSessionForbiddenNote("Change Role(s) ".join(",",$resultRoles));
                     //throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Role ".$role);
                     return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
                 }
