@@ -56,15 +56,11 @@ class BaseLocation extends ListAbstract
     protected $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RoomList",cascade={"persist"})
-     **/
-    protected $room;
-
-    /**
      * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
      **/
     protected $geoLocation;
 
+    //TODO: floor has many suites. Should floor and suite exist in parallel in the Location object?
     /**
      * @ORM\ManyToOne(targetEntity="FloorList",cascade={"persist"})
      **/
@@ -74,6 +70,12 @@ class BaseLocation extends ListAbstract
      * @ORM\ManyToOne(targetEntity="SuiteList",cascade={"persist"})
      **/
     protected $suite;
+
+    //TODO: suite has many rooms. Should suite and room exist in parallel in the Location object?
+    /**
+     * @ORM\ManyToOne(targetEntity="RoomList",cascade={"persist"})
+     **/
+    protected $room;
 
     /**
      * @ORM\ManyToOne(targetEntity="MailboxList",cascade={"persist"})

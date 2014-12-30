@@ -24,4 +24,29 @@ class RoomList extends ListAbstract
     protected $original;
 
 
+    /**
+     * @ORM\ManyToOne(targetEntity="SuiteList", inversedBy="rooms")
+     * @ORM\JoinColumn(name="suite_id", referencedColumnName="id")
+     **/
+    protected $suite;
+
+    /**
+     * @param mixed $suite
+     */
+    public function setSuite($suite)
+    {
+        $this->suite = $suite;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSuite()
+    {
+        return $this->suite;
+    }
+
+
+
+
 }

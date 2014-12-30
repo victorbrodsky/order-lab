@@ -5,6 +5,7 @@ namespace Oleg\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+//TODO: merge Location and BaseLocation
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_location")
@@ -23,6 +24,7 @@ class Location extends BaseLocation
      **/
     protected $original;
 
+    //TODO: building has many locations. Add mapped locations field in BuildingList?
     /**
      * @ORM\ManyToOne(targetEntity="BuildingList", cascade={"persist"})
      * @ORM\JoinColumn(name="building", referencedColumnName="id")

@@ -23,5 +23,36 @@ class SuiteList extends ListAbstract
      **/
     protected $original;
 
+    /**
+     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="suite")
+     **/
+    protected $rooms;
+
+
+    public function __construct() {
+        $this->synonyms = new ArrayCollection();
+        $this->rooms = new ArrayCollection();
+    }
+
+
+
+    public function addRoom($room)
+    {
+        if( !$this->rooms->contains($room) ) {
+            $this->rooms->add($room);
+            $room->setSuite($this);
+        }
+
+        return $this;
+    }
+    public function removeRoom($room)
+    {
+        $this->rooms->removeElement($room);
+    }
+    public function getRooms()
+    {
+        return $this->rooms;
+    }
+
 
 }
