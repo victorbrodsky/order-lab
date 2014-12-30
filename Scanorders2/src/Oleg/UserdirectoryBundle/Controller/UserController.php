@@ -1569,9 +1569,9 @@ class UserController extends Controller
             foreach( $resultRoles as $role ) {
                 if( $role == "ROLE_ADMIN" || $role == "ROLE_SUPER_ADMIN" ) {
                     if( false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') ) {
-                        //$this->setSessionForbiddenNote("Change Role ".$role);
+                        $this->setSessionForbiddenNote("Change Role ".$role);
                         //throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Role ".$role);
-                        //return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
+                        return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
                     }
                 }
             }
