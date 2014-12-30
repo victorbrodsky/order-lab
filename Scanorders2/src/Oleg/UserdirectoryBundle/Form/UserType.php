@@ -48,7 +48,9 @@ class UserType extends AbstractType
             $this->roleAdmin = true;
         } else {
             $this->roleAdmin = false;
+
         }
+        //echo "0 roleAdmin=".$this->roleAdmin."<br>";
 
     }
 
@@ -260,7 +262,7 @@ class UserType extends AbstractType
         ));
 
         if( $this->roleAdmin || $currentUser ) {
-            $params = array('em'=>$this->em,'cycle'=>$this->cycle,'admin'=>$this->roleAdmin);
+            $params = array('sc'=>$this->sc,'em'=>$this->em,'cycle'=>$this->cycle,'roleAdmin'=>$this->roleAdmin);
             $builder->add('credentials', new CredentialsType($params), array(
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
                 'label' => false,
@@ -286,7 +288,7 @@ class UserType extends AbstractType
         ));
 
         if( $this->roleAdmin || $currentUser ) {
-            $params = array('read_only'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments');
+            $params = array('roleAdmin'=>$this->roleAdmin,'read_only'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments');
             $builder->add('privateComments', 'collection', array(
                 'type' => new BaseCommentsType($params),
                 'label' => false,

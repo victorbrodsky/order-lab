@@ -39,7 +39,7 @@ class BaseCommentsType extends AbstractType
         if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\PrivateComment" ) {
             $baseAttr = new PrivateComment();
             $builder->add('status', 'choice', array(
-                'disabled' => ($this->params['read_only'] ? true : false),
+                'disabled' => ($this->params['roleAdmin'] ? false : true),
                 'choices'   => array(
                     $baseAttr::STATUS_UNVERIFIED => $baseAttr->getStatusStrByStatus($baseAttr::STATUS_UNVERIFIED),
                     $baseAttr::STATUS_VERIFIED => $baseAttr->getStatusStrByStatus($baseAttr::STATUS_VERIFIED)

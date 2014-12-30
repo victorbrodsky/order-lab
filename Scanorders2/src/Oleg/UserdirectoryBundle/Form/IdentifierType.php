@@ -12,10 +12,19 @@ class IdentifierType extends AbstractType
 {
 
     protected $params;
+    protected $rolePlatformAdmin;
 
     public function __construct( $params=null )
     {
         $this->params = $params;
+
+        //only the "Platform Administrator" and "Deputy Platform Administrator" should be able to confirm the MRN by setting the Status of the MRN identifier as "Reviewed by Administration"
+        if( $this->params['sc']->isGranted('ROLE_ADMIN') ) {
+            $this->rolePlatformAdmin = true;
+        } else {
+            $this->rolePlatformAdmin = false;
+
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -42,7 +51,7 @@ class IdentifierType extends AbstractType
         //status
         $baseUserAttr = new Identifier();
         $builder->add('status', 'choice', array(
-            'disabled' => ($this->params['admin'] ? false : true),
+            'disabled' => ($this->rolePlatformAdmin ? false : true),
             'choices'   => array(
                 $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
                 $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)

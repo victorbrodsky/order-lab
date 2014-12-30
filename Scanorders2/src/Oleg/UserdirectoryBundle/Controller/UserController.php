@@ -1551,7 +1551,7 @@ class UserController extends Controller
         if( $form->isValid() ) {
 
             //echo "form is valid<br>";
-            //exit();           
+            //exit();
 
             //check if changed roles are "Platform Administrator" or "Deputy Platform Administrator"
             $currRoles = $entity->getRoles();
