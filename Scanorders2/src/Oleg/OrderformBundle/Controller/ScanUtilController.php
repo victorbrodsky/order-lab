@@ -987,7 +987,7 @@ class ScanUtilController extends Controller {
         $query->andWhere($andWhere);
 
         //exclude system user:  "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'"; //"user.email != '-1'"
-        $query->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'");
+        $query->andWhere("user IS NULL OR (user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system')");
 
         //exclude preferred locations (they will be added later)
         $prefLocs = "";

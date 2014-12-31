@@ -446,7 +446,7 @@ function isInt(value) {
 
 
 //set geo location
-function setGeoLocation( holder, data, id ) {
+function setGeoLocation( holder, data ) {
     var street1 = null;
     var street2 = null;
     var city = null;
@@ -455,17 +455,16 @@ function setGeoLocation( holder, data, id ) {
     var country = null;
     var zip = null;
 
+    //console.log(data);
+
     if( data ) {
-        var item = findObjectById(data, id);
-        if( item ) {
-            street1 = item.street1;
-            street2 = item.street2;
-            city = item.city;
-            state = item.state;
-            county = item.county;
-            country = item.country;
-            zip = item.zip;
-        }
+        street1 = data.street1;
+        street2 = data.street2;
+        city = data.city;
+        state = data.state;
+        county = data.county;
+        country = data.country;
+        zip = data.zip;
     }
 
     holder.find('.geo-field-street1').val(street1);
@@ -476,12 +475,5 @@ function setGeoLocation( holder, data, id ) {
     holder.find('.geo-field-country').select2('val',country);
     holder.find('.geo-field-zip').val(zip);
 }
-function findObjectById( data, id ) {
-    for( var i = 0; i < data.length; i++ ) {
-        if( data[i].id == id ) {
-            return data[i];
-        }
-    }
-    return null;
-}
+
 

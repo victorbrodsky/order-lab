@@ -46,7 +46,7 @@ class ResearchLabPI
      */
     public function setCreatedate()
     {
-        $this->createdate = new \DateTime();;
+        $this->createdate = new \DateTime();
     }
 
     /**

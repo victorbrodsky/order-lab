@@ -31,6 +31,19 @@ class RoomList extends ListAbstract
     protected $suite;
 
     /**
+     * @ORM\ManyToOne(targetEntity="FloorList", inversedBy="rooms")
+     * @ORM\JoinColumn(name="floor_id", referencedColumnName="id")
+     **/
+    protected $floor;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="rooms")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
+     **/
+    protected $building;
+
+
+    /**
      * @param mixed $suite
      */
     public function setSuite($suite)
@@ -44,6 +57,42 @@ class RoomList extends ListAbstract
     public function getSuite()
     {
         return $this->suite;
+    }
+
+
+
+    /**
+     * @param mixed $floor
+     */
+    public function setFloor($floor)
+    {
+        $this->floor = $floor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFloor()
+    {
+        return $this->floor;
+    }
+
+
+
+    /**
+     * @param mixed $building
+     */
+    public function setBuilding($building)
+    {
+        $this->building = $building;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuilding()
+    {
+        return $this->building;
     }
 
 

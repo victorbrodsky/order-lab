@@ -155,7 +155,7 @@ class SecurityController extends Controller
     //////////////// Idle Time Out - Common Functions ////////////////////
 
     /**
-     * @Route("/common/keepalive/", name="keepalive")
+     * @Route("/common/keepalive", name="keepalive")
      * @Method("GET")
      */
     public function keepAliveAction( Request $request )

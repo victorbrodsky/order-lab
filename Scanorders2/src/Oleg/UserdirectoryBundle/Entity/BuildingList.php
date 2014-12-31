@@ -15,17 +15,6 @@ class BuildingList extends ListAbstract
 {
 
     /**
-     * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
-     **/
-    private $geoLocation;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
-    private $institution;
-
-
-    /**
      * @ORM\OneToMany(targetEntity="BuildingList", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
@@ -37,9 +26,38 @@ class BuildingList extends ListAbstract
     protected $original;
 
 
+    /**
+     * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
+     **/
+    private $geoLocation;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    private $institution;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Location", mappedBy="building", cascade={"persist"})
+     **/
+    protected $locations;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="SuiteList", mappedBy="building")
+     **/
+    protected $suites;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="building")
+     **/
+    protected $rooms;
+
 
     public function __construct($creator=null) {
         $this->synonyms = new ArrayCollection();
+        $this->locations = new ArrayCollection();
+        $this->suites = new ArrayCollection();
+        $this->rooms = new ArrayCollection();
 
         //set mandatory list attributes
         $this->setName("");
@@ -52,6 +70,61 @@ class BuildingList extends ListAbstract
         }
     }
 
+
+    public function addLocation($location)
+    {
+        if( !$this->locations->contains($location) ) {
+            $this->locations->add($location);
+            $location->setBuilding($this);
+        }
+
+        return $this;
+    }
+    public function removeLocation($location)
+    {
+        $this->locations->removeElement($location);
+    }
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+
+    public function addSuite($suite)
+    {
+        if( !$this->suites->contains($suite) ) {
+            $this->suites->add($suite);
+            $suite->setBuilding($this);
+        }
+
+        return $this;
+    }
+    public function removeSuite($suite)
+    {
+        $this->suites->removeElement($suite);
+    }
+    public function getSuites()
+    {
+        return $this->suites;
+    }
+
+    public function addRoom($room)
+    {
+        if( !$this->rooms->contains($room) ) {
+            $this->rooms->add($room);
+            $room->setBuilding($this);
+        }
+
+        return $this;
+    }
+    public function removeRoom($room)
+    {
+        $this->rooms->removeElement($room);
+    }
+    public function getRooms()
+    {
+        return $this->rooms;
+    }
 
     /**
      * Set name

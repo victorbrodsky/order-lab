@@ -90,13 +90,16 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //I should be redirected to the URL I was trying to visit after login.
         $indexLastRoute = '_security.ldap_employees_firewall.target_path';
         $lastRoute = $request->getSession()->get($indexLastRoute);
-        //exit("lastRoute=".$lastRoute."<br>");
 
         $loginpos = strpos($lastRoute, '/login');
         $nopermpos = strpos($lastRoute, '/no-permission');
         $nocheck = strpos($lastRoute, '/check/');
-        $keepalive = strpos($lastRoute, '/keepalive/');
+        $keepalive = strpos($lastRoute, '/keepalive');
         $idlelogout = strpos($lastRoute, '/idlelogout');
+
+        //echo "keepalive=".$keepalive."<br>";
+        //echo "lastRoute=".$lastRoute."<br>";
+
 
         if( $lastRoute && $lastRoute != '' && $loginpos === false && $nopermpos === false && $nocheck === false && $keepalive === false && $idlelogout === false ) {
             $referer_url = $lastRoute;

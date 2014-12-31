@@ -29,6 +29,7 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'fellowshiptype',_fellowshiptype);
     getComboboxGeneric(newForm,'researchlab',_researchlabs);
     getComboboxGeneric(newForm,'location',_locations,'');
+    getComboboxGeneric(newForm,'building',_buildings,'');
 
     getComboboxGeneric(newForm,'room',_rooms);
     getComboboxGeneric(newForm,'suite',_suites);
@@ -38,7 +39,7 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'administrativetitletype',_addmintitles);
     getComboboxGeneric(newForm,'appointmenttitletype',_apptitles);
 
-    getComboboxBuidlings(newForm);
+    setBuidlingListener(newForm);
 
 }
 
@@ -99,7 +100,9 @@ function getComboboxGeneric(holder,name,globalDataArray,urlprefix) {
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            globalDataArray = data;
+            $.each(data, function(key, val) {
+                globalDataArray.push(val);
+            });
             populateSelectCombobox( targetid, globalDataArray, "Select an option or type in a new value", false );
         });
     } else {
@@ -183,19 +186,13 @@ function getComboboxCommentType(holder) {
 }
 
 
-function getComboboxBuidlings(holder) {
-
-    getComboboxGeneric(holder,'building',_buildings,'');
-
+function setBuidlingListener(holder) {
     //add listener for: Pull in the address of the building into the address fields once the building is selected
     $('.ajax-combobox-building').on("change", function(e) {
-
         var holder = $(this).closest('.user-collection-holder');
         //console.log(holder);
-
-        setGeoLocation( holder, _buildings, $(this).select2('val') );
+        setGeoLocation( holder, $(this).select2('data') );
     });
-
 }
 
 

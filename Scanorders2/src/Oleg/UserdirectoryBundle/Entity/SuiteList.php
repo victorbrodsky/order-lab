@@ -28,6 +28,18 @@ class SuiteList extends ListAbstract
      **/
     protected $rooms;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="FloorList", inversedBy="suites")
+     * @ORM\JoinColumn(name="floor_id", referencedColumnName="id")
+     **/
+    protected $floor;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="suites")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
+     **/
+    protected $building;
+
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
@@ -53,6 +65,40 @@ class SuiteList extends ListAbstract
     {
         return $this->rooms;
     }
+
+    /**
+     * @param mixed $floor
+     */
+    public function setFloor($floor)
+    {
+        $this->floor = $floor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFloor()
+    {
+        return $this->floor;
+    }
+
+    /**
+     * @param mixed $building
+     */
+    public function setBuilding($building)
+    {
+        $this->building = $building;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuilding()
+    {
+        return $this->building;
+    }
+
+
 
 
 }
