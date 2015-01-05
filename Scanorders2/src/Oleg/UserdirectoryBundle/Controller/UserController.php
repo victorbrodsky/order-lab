@@ -1677,6 +1677,10 @@ class UserController extends Controller
             //echo "user=".$entity."<br>";
             //exit();
 
+            //avatar test
+            //$avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find(3);
+            //$entity->setAvatar($avatar);
+
             //$em->persist($entity);
             $em->flush($entity);
 
@@ -2158,5 +2162,32 @@ class UserController extends Controller
     }
 
 
+
+
+
+
+    /**
+     * @Route("/users/save-avatar", name="employees_save_avatar")
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
+     */
+    public function saveAvatarAction(Request $request)
+    {
+
+        print_r($request);
+
+        $id = 2;
+
+        $secUtil = $this->get('user_security_utility');
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        }
+
+        //class CropAvatar.php new ($src, $data, $file)
+
+        exit();
+        return $this->redirect($this->generateUrl('employees_listusers'));
+        //return $this->redirect($this->generateUrl('employees_showuser', array('id' => $id)));
+    }
 
 }

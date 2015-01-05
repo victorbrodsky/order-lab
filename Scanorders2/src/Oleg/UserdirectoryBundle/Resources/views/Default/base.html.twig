@@ -63,6 +63,13 @@
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
+        {% stylesheets
+        'bundles/oleguserdirectory/fengyuanchen-image-cropper/cropper.min.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/form/css/crop-avatar.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
     {% endblock %}
 
     {% block additionalcss %}{% endblock %}
@@ -182,6 +189,9 @@
 
                 '@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
+
+                '@OlegUserdirectoryBundle/Resources/public/fengyuanchen-image-cropper/cropper.min.js'
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-crop-avatar.js'
 
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'

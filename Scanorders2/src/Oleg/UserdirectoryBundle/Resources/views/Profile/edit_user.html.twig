@@ -621,17 +621,21 @@
     {% endif %}
 
 
-
     {#user's snapshot#}
     {% if cycle == "show_user" %}
         {{ userform.snapshot(entity,sitename) }}
     {% endif %}
 
 
+    {#avatar form modal#}
+    {{ usermacros.avatarForm(entity) }}
+
+
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll()" >Collapse All</button>
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
     </p>
+
 
     {{ form_start(form,{'attr': {'id': 'user-profile-form'}}) }}
 
@@ -723,6 +727,8 @@
             </div>
             <div id="userinfo" class="panel-collapse collapse in">
                 <div class="panel-body">
+
+                    {{ usermacros.currentAvatar(entity,cycle) }}
 
                     {{ formmacros.field(form.keytype) }}
                     {{ formmacros.field(form.primaryPublicUserId) }}

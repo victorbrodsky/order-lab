@@ -157,6 +157,13 @@ class User extends BaseUser
      */
     private $adminComments;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Document")
+     * @ORM\JoinColumn(name="avatar_id", referencedColumnName="id")
+     **/
+    private $avatar;
+
+
 
 
 
@@ -191,8 +198,27 @@ class User extends BaseUser
     }
 
 
+
+
     public function setIdNull() {
         $this->id = null;
+    }
+
+
+    /**
+     * @param mixed $avatar
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
     }
 
     /**
