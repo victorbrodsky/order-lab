@@ -166,15 +166,16 @@ class AdminController extends Controller
     }
 
    
-
+    //Generate or Update roles
     public function generateRoles() {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
-        if( $entities ) {
-            //return -1;
-        }
+        //generate role can update the role too
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+//        if( $entities ) {
+//            //return -1;
+//        }
 
         //Note: fos user has role ROLE_SCANORDER_SUPER_ADMIN
 
@@ -389,6 +390,7 @@ class AdminController extends Controller
             'Orthopaedic Surgery' => null,
             'Otolaryngology - Head and Neck Surgery' => null,
             'Pathology and Laboratory Medicine' => array(
+                'shortname' => 'Pathology',
                 //divisions
                 'Anatomic Pathology' => array(
                     //services
@@ -559,10 +561,13 @@ class AdminController extends Controller
             $this->setDefaultList($institution,$instCount,$username,$institutionname);
             $institution->setAbbreviation( trim($infos['abbreviation']) );
 
-            if( $infos['departments'] && is_array($infos['departments'])  ) {
+            if( array_key_exists('departments', $infos) && $infos['departments'] && is_array($infos['departments'])  ) {
+
                 $depCount = 0;
                 foreach( $infos['departments'] as $departmentname=>$divisions ) {
+
                     $department = new Department();
+
                     if( is_numeric($departmentname) ){
                         $departmentname = $infos['departments'][$departmentname];
                     }
@@ -572,6 +577,14 @@ class AdminController extends Controller
                     if( $divisions && is_array($divisions) ) {
                         $divCount = 0;
                         foreach( $divisions as $divisionname=>$services ) {
+
+                            //shortname
+                            if( $divisionname === 'shortname' && $services ) {
+                                //echo "<br> services=".$services."<br>";
+                                $department->setShortname($services);
+                                continue;
+                            }
+
                             $division = new Division();
                             if( is_numeric($divisionname) ){
                                 $divisionname = $divisions[$divisionname];
@@ -1243,8 +1256,10 @@ class AdminController extends Controller
         $city = "New York";
         $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
         $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
-        if( !$country )
-            exit('country null');
+        if( !$country ) {
+            //exit('ERROR: country null');
+            throw new \Exception( "country is not found by name=" . "United States" );
+        }
 
         $count = 1;
         foreach( $buildings as $building ) {
@@ -1291,10 +1306,10 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
-//        if( $entities ) {
-//            return -1;
-//        }
+        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
+        if( $entities ) {
+            return -1;
+        }
 
         $locations = array(
             "Surgical Pathology Filing Room" => array('street1'=>'520 East 70th Street','phone'=>'222-0059','room'=>'ST-1012','inst'=>'NYP'),

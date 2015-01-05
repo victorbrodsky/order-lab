@@ -23,15 +23,25 @@ class FloorList extends ListAbstract
      **/
     protected $original;
 
+
+//    /**
+//     * @ORM\OneToMany(targetEntity="SuiteList", mappedBy="floor")
+//     **/
     /**
-     * @ORM\OneToMany(targetEntity="SuiteList", mappedBy="floor")
+     * @ORM\ManyToMany(targetEntity="SuiteList", inversedBy="floors")
+     * @ORM\JoinTable(name="user_floors_suites")
      **/
     protected $suites;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="floor")
+//     **/
     /**
-     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="floor")
+     * @ORM\ManyToMany(targetEntity="RoomList", inversedBy="floors")
+     * @ORM\JoinTable(name="user_floors_rooms")
      **/
     protected $rooms;
+
 
 
     public function __construct() {
@@ -43,9 +53,9 @@ class FloorList extends ListAbstract
 
     public function addSuite($suite)
     {
-        if( !$this->suites->contains($suite) ) {
+        if( $suite && !$this->suites->contains($suite) ) {
             $this->suites->add($suite);
-            $suite->setFloor($this);
+            $suite->addFloor($this);
         }
 
         return $this;
@@ -53,6 +63,7 @@ class FloorList extends ListAbstract
     public function removeSuite($suite)
     {
         $this->suites->removeElement($suite);
+        $suite->removeFloor($this);
     }
     public function getSuites()
     {
@@ -62,9 +73,9 @@ class FloorList extends ListAbstract
 
     public function addRoom($room)
     {
-        if( !$this->rooms->contains($room) ) {
+        if( $room && !$this->rooms->contains($room) ) {
             $this->rooms->add($room);
-            $room->setFloor($this);
+            $room->addFloor($this);
         }
 
         return $this;
@@ -72,6 +83,7 @@ class FloorList extends ListAbstract
     public function removeRoom($room)
     {
         $this->rooms->removeElement($room);
+        $room->removeFloor($this);
     }
     public function getRooms()
     {

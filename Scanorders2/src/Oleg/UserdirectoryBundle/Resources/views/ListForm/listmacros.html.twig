@@ -12,6 +12,7 @@
         <tr>
             <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Short Name', 'ent.shortname') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
 
             {% if entities|first.researchlab is defined %}
@@ -67,6 +68,7 @@
             <tr>
                 <td><a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
+                <td>{{ entity.shortname }}</td>
                 <td>{{ entity.abbreviation }}</td>
 
                 {% if entity.researchlab is defined %}
@@ -181,6 +183,7 @@
     {{ form_start(form) }}
 
     {{ formmacros.field(form.list.name) }}
+    {{ formmacros.field(form.list.shortname) }}
     {{ formmacros.field(form.list.abbreviation) }}
 
     {% if form.parent is defined and form.vars.value.parent is defined %}
@@ -259,6 +262,7 @@
     {% endif %}
 
     {{ formmacros.field(edit_form.list.name) }}
+    {{ formmacros.field(edit_form.list.shortname) }}
     {{ formmacros.field(edit_form.list.abbreviation) }}
 
     {% if entity.value is defined %}

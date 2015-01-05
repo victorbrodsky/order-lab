@@ -23,34 +23,45 @@ class SuiteList extends ListAbstract
      **/
     protected $original;
 
+
+
     /**
      * @ORM\OneToMany(targetEntity="RoomList", mappedBy="suite")
      **/
-    protected $rooms;
+    private $rooms;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="FloorList", inversedBy="suites")
+//     * @ORM\JoinColumn(name="floor_id", referencedColumnName="id")
+//     **/
+//    protected $floor;
     /**
-     * @ORM\ManyToOne(targetEntity="FloorList", inversedBy="suites")
-     * @ORM\JoinColumn(name="floor_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="FloorList", mappedBy="suites")
      **/
-    protected $floor;
+    private $floors;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="suites")
+//     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
+//     **/
     /**
-     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="suites")
-     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="suites")
      **/
-    protected $building;
+    private $buildings;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->rooms = new ArrayCollection();
+        $this->floors = new ArrayCollection();
+        $this->buildings = new ArrayCollection();
     }
 
 
 
     public function addRoom($room)
     {
-        if( !$this->rooms->contains($room) ) {
+        if( $room && !$this->rooms->contains($room) ) {
             $this->rooms->add($room);
             $room->setSuite($this);
         }
@@ -66,36 +77,39 @@ class SuiteList extends ListAbstract
         return $this->rooms;
     }
 
-    /**
-     * @param mixed $floor
-     */
-    public function setFloor($floor)
+
+    public function getFloors()
     {
-        $this->floor = $floor;
+        return $this->floors;
+    }
+    public function addFloor($floor)
+    {
+        if( !$this->floors->contains($floor) ) {
+            $this->floors->add($floor);
+        }
+        return $this;
+    }
+    public function removeFloor($floor)
+    {
+        $this->floors->removeElement($floor);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFloor()
-    {
-        return $this->floor;
-    }
 
-    /**
-     * @param mixed $building
-     */
-    public function setBuilding($building)
+    public function getBuildings()
     {
-        $this->building = $building;
+        return $this->buildings;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getBuilding()
+    public function addBuilding($building)
     {
-        return $this->building;
+        if( !$this->buildings->contains($building) ) {
+            $this->buildings->add($building);
+        }
+
+        return $this;
+    }
+    public function removeBuilding($building)
+    {
+        $this->buildings->removeElement($building);
     }
 
 

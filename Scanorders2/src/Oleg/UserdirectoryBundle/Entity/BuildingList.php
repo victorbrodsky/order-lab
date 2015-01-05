@@ -39,18 +39,27 @@ class BuildingList extends ListAbstract
     /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="building", cascade={"persist"})
      **/
-    protected $locations;
+    private $locations;
 
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="SuiteList", mappedBy="building")
+//     **/
     /**
-     * @ORM\OneToMany(targetEntity="SuiteList", mappedBy="building")
+     * @ORM\ManyToMany(targetEntity="SuiteList", inversedBy="buildings")
+     * @ORM\JoinTable(name="user_buildings_suites")
      **/
-    protected $suites;
+    private $suites;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="building")
+//     **/
+//    protected $rooms;
     /**
-     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="building")
+     * @ORM\ManyToMany(targetEntity="RoomList", inversedBy="buildings")
+     * @ORM\JoinTable(name="user_buildings_rooms")
      **/
-    protected $rooms;
+    private $rooms;
 
 
     public function __construct($creator=null) {
@@ -92,9 +101,11 @@ class BuildingList extends ListAbstract
 
     public function addSuite($suite)
     {
-        if( !$this->suites->contains($suite) ) {
-            $this->suites->add($suite);
-            $suite->setBuilding($this);
+        if( $suite ) {
+            if( !$this->suites->contains($suite) ) {
+                $this->suites->add($suite);
+                $suite->addBuilding($this);
+            }
         }
 
         return $this;
@@ -102,17 +113,21 @@ class BuildingList extends ListAbstract
     public function removeSuite($suite)
     {
         $this->suites->removeElement($suite);
+        $suite->removeBuilding($this);
     }
     public function getSuites()
     {
         return $this->suites;
     }
 
+
     public function addRoom($room)
     {
-        if( !$this->rooms->contains($room) ) {
-            $this->rooms->add($room);
-            $room->setBuilding($this);
+        if( $room ) {
+            if( !$this->rooms->contains($room) ) {
+                $this->rooms->add($room);
+                $room->addBuilding($this);
+            }
         }
 
         return $this;
@@ -120,6 +135,7 @@ class BuildingList extends ListAbstract
     public function removeRoom($room)
     {
         $this->rooms->removeElement($room);
+        $room->removeBuilding($this);
     }
     public function getRooms()
     {

@@ -41,6 +41,11 @@ abstract class ListAbstract
     protected $abbreviation;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $shortname;
+
+    /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank
      */
@@ -200,7 +205,21 @@ abstract class ListAbstract
         return $this->abbreviation;
     }
 
+    /**
+     * @param mixed $shortname
+     */
+    public function setShortname($shortname)
+    {
+        $this->shortname = $shortname;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getShortname()
+    {
+        return $this->shortname;
+    }
 
     /**
      * Set type
@@ -290,7 +309,20 @@ abstract class ListAbstract
 
     public function __toString()
     {
-        return $this->name."";
+        $name = $this->name."";
+//        if( $this->shortname && $this->shortname != "" ) {
+//            $name = $this->shortname."";
+//        }
+        return $name;
+    }
+
+    public function getOptimalName()
+    {
+        $name = $this->name."";
+        if( $this->shortname && $this->shortname != "" ) {
+            $name = $this->shortname."";
+        }
+        return $name;
     }
 
     /**

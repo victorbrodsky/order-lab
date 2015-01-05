@@ -108,13 +108,13 @@
     {% if node and node is defined %}
         {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
             {% if linktype == 'nodelink' %}
-                <a href="{{ path(node.getClassName()|lower~'s_show', { 'id': node.id }) }}">{{ node }}</a>
+                <a href="{{ path(node.getClassName()|lower~'s_show', { 'id': node.id }) }}">{{ node.getOptimalName() }}</a>
             {% endif %}
             {% if linktype == 'userlink' %}
-                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':node.getClassName()|lower,'id': node.id, 'name': node.__toString() }) }}">{{ node }}</a>
+                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':node.getClassName()|lower,'id': node.id, 'name': node.getOptimalName() }) }}">{{ node.getOptimalName() }}</a>
             {% endif %}
         {% else %}
-            {{ node }}
+            {{ node.getOptimalName() }}
         {% endif %}
     {% endif %}
 {% endmacro %}

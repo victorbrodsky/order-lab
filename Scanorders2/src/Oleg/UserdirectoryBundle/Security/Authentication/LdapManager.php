@@ -119,7 +119,7 @@ class LdapManager extends BaseLdapManager
             ||  $user->getPrimaryPublicUserId() == "vib9020"
             //||  $user->getPrimaryPublicUserId() == "svc_aperio_spectrum"
         ) {
-            $user->addRole('ROLE_ADMIN');
+            $user->addRole('ROLE_SUPER_ADMIN');
         }
 
         //add default locations

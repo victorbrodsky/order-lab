@@ -60,6 +60,11 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('shortname',null,array(
+            'label' => 'Short Name:',
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('type','choice',array(
             'label'=>'Type:',
             'choices' => $this->types,
