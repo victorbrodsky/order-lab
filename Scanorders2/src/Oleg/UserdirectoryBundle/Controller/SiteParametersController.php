@@ -191,7 +191,7 @@ class SiteParametersController extends Controller
         ));
 
         if( $disabled === false ) {
-            $form->add('submit', 'submit', array('label' => 'Update', 'attr'=>array('class'=>'btn btn-warning')));
+            $form->add('submit', 'submit', array('label' => 'Update', 'attr'=>array('class'=>'btn btn-warning','style'=>'margin-top: 15px;')));
         }
 
         return $form;

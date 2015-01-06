@@ -2,6 +2,7 @@ parameters:
 
   employees.sitename: employees
   employees.uploadpath:
+  employees.avataruploadpath:
 
   default_time_zone: America/New_York
   default_system_email:

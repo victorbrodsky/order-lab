@@ -199,6 +199,12 @@ class SiteParameters {
      */
     protected $employeesuploadpath;
 
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $avataruploadpath;
+
+
 
     /**
      * @param mixed $maxIdleTime
@@ -812,8 +818,21 @@ class SiteParameters {
         return $this->scanuploadpath;
     }
 
+    /**
+     * @param mixed $avataruploadpath
+     */
+    public function setAvataruploadpath($avataruploadpath)
+    {
+        $this->avataruploadpath = $avataruploadpath;
+    }
 
-
+    /**
+     * @return mixed
+     */
+    public function getAvataruploadpath()
+    {
+        return $this->avataruploadpath;
+    }
 
 
 }

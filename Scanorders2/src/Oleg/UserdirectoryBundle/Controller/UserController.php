@@ -5,6 +5,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Util\CropAvatar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -2174,19 +2175,47 @@ class UserController extends Controller
     public function saveAvatarAction(Request $request)
     {
 
-        print_r($request);
+//        $src = $_POST['avatar_src'];
+//        $data = $_POST['avatar_data'];
+//        $file = $_FILES['avatar_file'];
+//        $userid = $_POST['avatar_userid'];
 
-        $id = 2;
+        $src = $request->get('avatar_src');
+        $data = $request->get('avatar_data');
+        $file = $_FILES['avatar_file']; //$request->get('avatar_file');
+        $userid = $request->get('avatar_userid');
+
+        //echo "src=".$src." <br>";
+        //echo "data=".$data." <br>";
+        //echo "file=".$file." <br>";
+        //echo "userid1=".$userid." <br>";
 
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( !$secUtil->isCurrentUser($userid) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
-        //class CropAvatar.php new ($src, $data, $file)
+        $uploadPath = $this->container->getParameter('employees.avataruploadpath');
 
-        exit();
-        return $this->redirect($this->generateUrl('employees_listusers'));
+        //class CropAvatar.php new ($src, $data, $file)
+        $crop = new CropAvatar($src, $data, $file, $uploadPath);
+
+        $responseArr = array(
+            'state'  => 200,
+            'message' => $crop -> getMsg(),
+            'result' => $crop -> getResult()
+        );
+
+        //echo json_encode($responseArr);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($responseArr));
+        return $response;
+
+        //exit();
+        //return $this->redirect($this->generateUrl('employees_listusers'));
+        //return $this->redirect($this->generateUrl('employees_listusers'));
         //return $this->redirect($this->generateUrl('employees_showuser', array('id' => $id)));
     }
 

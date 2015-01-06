@@ -267,9 +267,14 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'scanuploadpath'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Employee Directory Upload Folder (example: directory/pathology/Documents)</td>
+                <td>Employee Directory Upload Folder (example: directory/Documents)</td>
                 <td>{{ entity.employeesuploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'employeesuploadpath'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Employee Directory Avatar Upload Folder (example: directory/Avatars)</td>
+                <td>{{ entity.avataruploadpath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'avataruploadpath'}) }}">Edit</a></td>
             </tr>
 
 

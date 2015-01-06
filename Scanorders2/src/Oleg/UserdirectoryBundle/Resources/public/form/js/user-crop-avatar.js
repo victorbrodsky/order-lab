@@ -60,23 +60,8 @@
     addListener: function () {
       this.$avatarView.on("click", $.proxy(this.click, this));
       this.$avatarInput.on("change", $.proxy(this.change, this));
-
       //this.$avatarForm.on("submit", $.proxy(this.submit, this));
-//        console.log("1 avatarSave:");
-//        printF(this.$avatarSave,"avatarSave:");
       this.$avatarSave.on("click", $.proxy(this.submit, this));
-
-//        console.log("2 avatarSave:");
-//        //console.log(this.$avatarSave);
-//        printF(this.$avatarSave,"avatarSave:");
-//        $('.avatar-save').on('click',function(){
-//            alert('avatar-save click!');
-//            this.$avatarModal.find(".avatar-form").submit;
-//        });
-//        $('.avatar-save').on('click',function(){
-//            alert('avatar-save click!');
-//            this.$avatarModal.find(".avatar-form").submit;
-//        });
     },
 
 //    submitModalForm: function() {
@@ -243,7 +228,8 @@
 
       //var url = getCommonBaseUrl('file-download/'+id,"employees");
       console.log("url="+url);
-      alert("url="+url);
+      console.log("data="+data);
+      //alert("url="+url);
       //return false;
 
       $.ajax(url, {

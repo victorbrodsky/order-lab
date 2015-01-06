@@ -55,6 +55,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
         $employeesuploadpath = "directory/Documents";
         $scanuploadpath = "scan-order/Documents";
+        $employeesavataruploadpath = "directory/Avatars";
 
         //maintenance
 //        $maintenance = null;
@@ -79,6 +80,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
             $employeesuploadpath = $row['employeesuploadpath'];
             $scanuploadpath = $row['scanuploadpath'];
+            $employeesavataruploadpath = $row['avataruploadpath'];
 
 //            $maintenance = $row['maintenance'];
 //            $maintenanceenddate = $row['maintenanceenddate'];
@@ -125,6 +127,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('department_name',$department_name);
 
         //uploads
+        $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
         $container->setParameter('employees.uploadpath',$employeesuploadpath);
         $container->setParameter('scan.uploadpath',$scanuploadpath);
 

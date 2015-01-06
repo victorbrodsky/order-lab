@@ -152,6 +152,18 @@
         {{ formmacros.field(edit_form.departmenturl) }}
     {% endif %}
 
+    {% if edit_form.scanuploadpath is defined %}
+        {{ formmacros.field(edit_form.scanuploadpath) }}
+    {% endif %}
+
+    {% if edit_form.employeesuploadpath is defined %}
+        {{ formmacros.field(edit_form.employeesuploadpath) }}
+    {% endif %}
+
+    {% if edit_form.avataruploadpath is defined %}
+        {{ formmacros.field(edit_form.avataruploadpath) }}
+    {% endif %}
+
 
     {% if cycle == 'show' %}
         <hr>

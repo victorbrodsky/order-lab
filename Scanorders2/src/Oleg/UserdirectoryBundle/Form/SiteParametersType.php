@@ -255,6 +255,11 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'avataruploadpath' )
+            $builder->add('avataruploadpath',null,array(
+                'label'=>'Employee Directory Avatar Upload Folder:',
+                'attr' => array('class'=>'form-control')
+            ));
 
     }
     
