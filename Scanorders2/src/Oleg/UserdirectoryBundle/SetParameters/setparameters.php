@@ -24,6 +24,14 @@ $connectionParams = array(
     'driver' => $driver,
 );
 
+//upload paths can't be NULL
+$employeesuploadpath = "directory/Documents";
+$scanuploadpath = "scan-order/Documents";
+$employeesavataruploadpath = "directory/Avatars";
+$container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
+$container->setParameter('employees.uploadpath',$employeesuploadpath);
+$container->setParameter('scan.uploadpath',$scanuploadpath);
+
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
 $table = 'user_siteParameters';
@@ -52,10 +60,6 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $institution_name = null;
         $department_url = null;
         $department_name = null;
-
-        $employeesuploadpath = "directory/Documents";
-        $scanuploadpath = "scan-order/Documents";
-        $employeesavataruploadpath = "directory/Avatars";
 
         //maintenance
 //        $maintenance = null;

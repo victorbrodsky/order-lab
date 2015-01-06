@@ -2212,7 +2212,7 @@ class UserController extends Controller
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($responseArr));
         return $response;
-        
+
 
         //exit();
         //return $this->redirect($this->generateUrl('employees_listusers'));

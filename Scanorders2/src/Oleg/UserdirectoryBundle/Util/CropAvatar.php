@@ -11,13 +11,17 @@ class CropAvatar {
     private $dst;
     private $type;
     private $extension;
-    private $srcDir = 'img/upload';
-    private $dstDir = 'img/avatar';
+    private $srcDir;// = 'img/upload';
+    private $dstDir;// = 'img/avatar';
     private $msg;
 
     function __construct($src, $data, $file, $uploadPath) {
         $this->srcDir = $uploadPath."/upload";
         $this->dstDir = $uploadPath."/avatar";
+
+        echo "srcDir folder:".$this->srcDir." ";
+        echo "dstDir folder:".$this->dstDir." ";
+
 
         if (!file_exists($this->srcDir)) {
             echo "create folder:".$this->srcDir." ";
