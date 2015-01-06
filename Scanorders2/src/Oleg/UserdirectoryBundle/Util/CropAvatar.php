@@ -3,6 +3,8 @@
 namespace Oleg\UserdirectoryBundle\Util;
 
 
+use Symfony\Component\Filesystem\Filesystem;
+
 class CropAvatar {
 
     private $src;
@@ -16,21 +18,45 @@ class CropAvatar {
     private $msg;
 
     function __construct($src, $data, $file, $uploadPath) {
-        $this->srcDir = $uploadPath."/upload";
-        $this->dstDir = $uploadPath."/avatar";
+
+        echo "__DIR__=".__DIR__." ";
+
+        $this->srcDir = "/".$uploadPath."/upload";
+        $this->dstDir = "/".$uploadPath."/avatar";
 
         echo "srcDir folder:".$this->srcDir." ";
         echo "dstDir folder:".$this->dstDir." ";
 
+        $fs = new Filesystem();
 
-        if (!file_exists($this->srcDir)) {
-            echo "create folder:".$this->srcDir." ";
-            mkdir($this->srcDir, 0777);
+        try {
+            if( !$fs->exists($this->srcDir) ) {
+                $fs->mkdir($this->srcDir,0777);
+                echo "create folder srcDir:".$this->srcDir." ";
+            } else {
+                echo "!!!!!!!!!!!! exist folder srcDir:".$this->srcDir." ";
+            }
+        } catch (IOExceptionInterface $e) {
+            echo "An error occurred while creating your directory at ".$e->getPath();
         }
-        if (!file_exists($this->dstDir)) {
-            echo "create folder:".$this->dstDir." ";
-            mkdir($this->dstDir, 0777);
+
+        try {
+            if( !$fs->exists($this->dstDir) ) {
+                $fs->mkdir($this->dstDir,0777);
+                echo "create folder dstDir:".$this->dstDir." ";
+            }
+        } catch (IOExceptionInterface $e) {
+            echo "An error occurred while creating your directory at ".$e->getPath();
         }
+
+//        if (!file_exists($this->srcDir)) {
+//            echo "create folder:".$this->srcDir." ";
+//            mkdir($this->srcDir, 0777);
+//        }
+//        if (!file_exists($this->dstDir)) {
+//            echo "create folder:".$this->dstDir." ";
+//            mkdir($this->dstDir, 0777);
+//        }
 
         $this -> setSrc($src);
         $this -> setData($data);

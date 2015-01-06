@@ -1139,7 +1139,12 @@
         <!-- Current avatar -->
         <div class="avatar-view" title="Change the avatar">
             {#<img src="/img/picture.jpg" alt="Avatar">#}
-            <img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">
+            {% if user.avatar %}
+                <img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">
+            {% else %}
+                {#{{ formmacros.simplefield( "Avatar:", "No avatar image is set", "input", "disabled" ) }}#}
+                No avatar image is set
+            {% endif %}
         </div>
 
         <!-- Cropping modal -->

@@ -134,10 +134,10 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
-        $builder->add('avatar', new DocumentType(), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Document',
-            'label' => false
-        ));
+//        $builder->add('avatar', new DocumentType(), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Document',
+//            'label' => false
+//        ));
 
         $builder->add('suffix', null, array(
             'label' => 'Name Suffix:',
