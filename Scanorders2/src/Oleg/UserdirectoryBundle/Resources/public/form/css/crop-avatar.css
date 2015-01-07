@@ -4,10 +4,12 @@ body {
 
 .avatar-view {
   display: block;
-  margin: 15% auto 5%;
+  //margin: 15% auto 5%;
+  margin: 5% auto 5%;
+  //margin-left: 43%;
   height: 220px;
   width: 220px;
-  border: 3px solid #fff;
+  //border: 3px solid #fff;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0,0,0,.15);
   cursor: pointer;
@@ -76,6 +78,23 @@ body {
 
 .avatar-preview img {
   width: 100%;
+}
+
+.avatar-view-clean-default {
+    //height: 126px;
+    //width: 116px;
+    margin: 15px;
+}
+
+/*.avatar-view-default {*/
+    /*height: 132px;*/
+    /*width: 122px;*/
+/*}*/
+
+.avatar-preview-default {
+    height: 126px;
+    width: 116px;
+    margin-top: 15px;
 }
 
 .preview-lg {

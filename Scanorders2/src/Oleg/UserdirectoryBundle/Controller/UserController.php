@@ -1177,7 +1177,7 @@ class UserController extends Controller
             $this->setParentsForCommentTypeTree($user);
 
             //set avatar
-            $this->processAvatar($user);
+            $this->processSetAvatar($user);
 
             $user = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
 
@@ -1523,6 +1523,15 @@ class UserController extends Controller
             $originalResLabs->add($lab);
         }
 
+        if( $entity->getAvatar() ) {
+            //$oldAvatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($entity->getAvatar()->getId());
+            $oldAvatar = $entity->getAvatar();
+            $oldAvatarId = $entity->getAvatar()->getId();
+            echo "0 oldAvatarId=".$oldAvatarId."<br>";
+        } else {
+            $oldAvatarId = NULL;
+        }
+
         //echo "count=".count($originalAdminTitles)."<br>";
         //exit();
 
@@ -1594,7 +1603,7 @@ class UserController extends Controller
             $this->setParentsForCommentTypeTree($entity);
 
             //set avatar
-            $this->processAvatar($entity);
+            $this->processSetAvatar($entity);
 
             $entity = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $entity );
 
@@ -1688,6 +1697,9 @@ class UserController extends Controller
 
             //$em->persist($entity);
             $em->flush($entity);
+
+            //delete old avatar document from DB
+            $this->processDeleteOldAvatar($oldAvatarId);
 
             //redirect only if this was called by the same controller class
             if( $sitename == $this->container->getParameter('employees.sitename') ) {
@@ -1851,45 +1863,64 @@ class UserController extends Controller
         $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
     }
 
-    public function processAvatar($subjectUser) {
+
+    //explicitly set a new avatar
+    public function processSetAvatar($subjectUser) {
+
+        if( $subjectUser->getAvatar() ) {
+            $avatarid = $subjectUser->getAvatar()->getId();
+            //echo "new avatarid=".$avatarid."<br>";
+            //echo "new avatar size=".$subjectUser->getAvatar()->getSize()."<br>";
+
+            $em = $this->getDoctrine()->getManager();
+            $avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($avatarid);
+            $subjectUser->setAvatar($avatar);
+
+            //$subjectUserAvatar = $subjectUser->getAvatar();
+            //echo "new subject avatar id=".$subjectUserAvatar->getId()."<br>";
+        }
+
+        //exit('1');
+    }
+
+    //delete old avatar document from DB and avatar images from filesystem
+    public function processDeleteOldAvatar($oldAvatarId) {
+
+        if( $oldAvatarId == NULL ) {
+            return;
+        }
 
         $em = $this->getDoctrine()->getManager();
+        $em->clear();
 
-//        //clean user old avatar
-//        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser->getId());
-//        $avatarOld = $user->getAvatar();
-//        if( $avatarOld ) {
-//            $oldImageAvatar = $avatarOld->getAbsoluteUploadFullPath();
-//            //$oldImageUpload = str_replace($crop->getAvatarPostfix(),$crop->getUploadPostfix(),$oldImageAvatar);
-//            $oldImageUpload = str_replace('avatar','upload',$oldImageAvatar);
-//
-//            $fs = new Filesystem();
-//            try {
-//                $fs->remove(array($oldImageAvatar));
-//            } catch (IOExceptionInterface $e) {
-//                echo "An error occurred while creating your directory at ".$e->getPath();
-//            }
-//
-//            try {
-//                $fs->remove(array($oldImageUpload));
-//            } catch (IOExceptionInterface $e) {
-//                echo "An error occurred while creating your directory at ".$e->getPath();
-//            }
-//
-//            $em->remove($avatarOld);
-//            //$em->flush($avatarOld);
-//        }
+        echo "1 oldAvatarId=".$oldAvatarId."<br>";
+        $oldAvatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($oldAvatarId);
 
+        if( $oldAvatar ) {
 
-        $avatarid = $subjectUser->getAvatar()->getId();
-        //echo "avatar id=".$avatarid."<br>";
-        //exit();
+            echo "old avatar id=".$oldAvatar->getId()."<br>";
 
-        $avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($avatarid);
-        $subjectUser->setAvatar($avatar);
+            $oldImageAvatar = $oldAvatar->getAbsoluteUploadFullPath();
+            //$oldImageUpload = str_replace($crop->getAvatarPostfix(),$crop->getUploadPostfix(),$oldImageAvatar);
+            $oldImageUpload = str_replace('avatar','upload',$oldImageAvatar);
 
+            $fs = new Filesystem();
+            try {
+                $fs->remove(array($oldImageAvatar));
+            } catch (IOExceptionInterface $e) {
+                echo "An error occurred while creating your directory at ".$e->getPath();
+            }
 
+            try {
+                $fs->remove(array($oldImageUpload));
+            } catch (IOExceptionInterface $e) {
+                echo "An error occurred while creating your directory at ".$e->getPath();
+            }
 
+            //exit('delete old avatar');
+            $em->remove($oldAvatar);
+            $em->flush();
+        }
     }
 
 

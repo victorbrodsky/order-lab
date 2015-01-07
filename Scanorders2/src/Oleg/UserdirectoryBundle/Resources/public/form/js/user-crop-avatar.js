@@ -150,12 +150,12 @@
     },
 
     click: function () {
-      console.log('click function');
+      //console.log('click function');
       this.$avatarModal.modal("show");
     },
 
     change: function () {
-      alert('change function');
+      //alert('change function');
       var files,
           file;
 
@@ -180,10 +180,10 @@
 
     submit: function () {
 
-      alert('submit function');
+      //alert('submit function');
 
       if (!this.$avatarSrc.val() && !this.$avatarInput.val()) {
-          alert('src is null => return false');
+          //alert('src is null => return false');
         return false;
       }
 
@@ -226,18 +226,26 @@
         this.$img = $('<img src="' + this.url + '">');
         this.$avatarWrapper.empty().html(this.$img);
         this.$img.cropper({
-          aspectRatio: 1,
-          preview: this.$avatarPreview.selector,
-          done: function (data) {
-            var json = [
-                  '{"x":' + data.x,
-                  '"y":' + data.y,
-                  '"height":' + data.height,
-                  '"width":' + data.width + "}"
-                ].join();
+            //resizable: false,
+            //zoomable: false,
+            aspectRatio: 0.9206,
+//            data: {   //126,116 => 251,231
+//                x: 242,
+//                y: 182,
+//                width: 116,
+//                height: 126
+//            },
+            preview: this.$avatarPreview.selector,
+            done: function (data) {
+                var json = [
+                      '{"x":' + data.x,
+                      '"y":' + data.y,
+                      '"height":' + data.height,
+                      '"width":' + data.width + "}"
+                    ].join();
 
-            _this.$avatarData.val(json);
-          }
+                _this.$avatarData.val(json);
+            }
         });
 
         this.active = true;

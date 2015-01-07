@@ -1141,30 +1141,32 @@
         {% set showFlag = false %}
     {% endif %}
 
+    {% if user.avatar %}
+        {% set avatarImage = user.avatar.getAbsoluteUploadFullPath %}
+    {% else %}
+        {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+    {% endif %}
+
     {% if showFlag %}
 
-        <div class="container">
-            <p>
-                <img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">
-            </p>
-            <br>
-        </div>
+        {#<div class="container">#}
+        {#<div class="text-center col-xs-12">#}
+            <div class="avatar-view-clean-default">
+                <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
+            </div>
+        {#</div>#}
+        {#</div>#}
 
     {% else %}
 
         <div class="container" id="crop-avatar">
 
             <!-- Current avatar -->
-            <div class="avatar-view" title="Change the avatar">
+            <div class="avatar-view" title="Change the avatar" style="height:126px; width:116px;">
                 {#<img src="/img/picture.jpg" alt="Avatar">#}
                 {#avatar.id: {{ user.avatar.id }}#}
                 {#avatarurl: {{ user.avatar.getAbsoluteUploadFullPath }}#}
-                {% if user.avatar %}
-                    <img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">
-                {% else %}
-                    {#{{ formmacros.simplefield( "Avatar:", "No avatar image is set", "input", "disabled" ) }}#}
-                    No avatar image is set
-                {% endif %}
+                <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
             </div>
 
             <!-- Cropping modal -->
@@ -1195,7 +1197,8 @@
                                             <div class="avatar-wrapper"></div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="avatar-preview preview-lg"></div>
+                                            <div class="avatar-preview avatar-preview-default"></div>
+                                            {#<div class="avatar-preview preview-lg"></div>#}
                                             {#<div class="avatar-preview preview-md"></div>#}
                                             {#<div class="avatar-preview preview-sm"></div>#}
                                         </div>
