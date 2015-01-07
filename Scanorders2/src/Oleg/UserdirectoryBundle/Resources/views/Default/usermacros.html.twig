@@ -1062,7 +1062,7 @@
         {% if service and service.getId() %}
             {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}
 
-            table:{{ dump(render(table)) }}
+            {#table:{{ dump(render(table)) }}#}
             {#{% set arr = render(table)|split('<tr>') %}#}
             arr length:{{ arr|length }}
 
