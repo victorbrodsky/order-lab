@@ -758,17 +758,17 @@
         {% if service and service.getId() %}
             {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}
             {#table:{{ dump(render(table)) }}#}
-            {% set rowArr = render(table)|split('<tr>') %}
-            rowArr length:{{ rowArr|length }}
+            {#{% set rowArr = render(table)|split('<tr>') %}#}
+            {#rowArr length:{{ rowArr|length }}#}
             {% set element = {'table': table, 'element':service} %}
             {% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}
-            {#{% if render(table)|length > threshold %}#}
-            {% if rowArr|length > 2 %}
+            {% if render(table)|length > threshold %}
+            {#{% if rowArr|length > 2 %}#}
                 {% set myservicesShow = true %}
             {% endif %}
-            {% if rowArr|length > 3 %}
-                {% set myservicesShowEmail = true %}
-            {% endif %}
+            {#{% if rowArr|length > 3 %}#}
+                {#{% set myservicesShowEmail = true %}#}
+            {#{% endif %}#}
         {% endif %}
     {% endfor %}
 
@@ -987,9 +987,9 @@
                                         <a data-toggle="collapse" href="#myservices-{{ myservice['element'].getId() }}">
                                             {{ myservice['element'] }} Service
                                         </a>
-                                        {% if myservicesShowEmail %}
+                                        {#{% if myservicesShowEmail %}#}
                                             {#<a style="margin-left: 20px;" href="{{ path(sitename~'_get_group_emails',{'userid'=>user.id, 'objectid'=>myservice.id}) }}">E-Mail Addresses</a>#}
-                                        {% endif %}
+                                        {#{% endif %}#}
                                     </h4>
                                 </div>
                                 <div id="myservices-{{ myservice['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
