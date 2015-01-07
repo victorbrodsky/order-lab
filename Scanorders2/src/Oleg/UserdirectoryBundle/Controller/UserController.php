@@ -1524,10 +1524,8 @@ class UserController extends Controller
         }
 
         if( $entity->getAvatar() ) {
-            //$oldAvatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($entity->getAvatar()->getId());
-            $oldAvatar = $entity->getAvatar();
             $oldAvatarId = $entity->getAvatar()->getId();
-            echo "0 oldAvatarId=".$oldAvatarId."<br>";
+            //echo "0 oldAvatarId=".$oldAvatarId."<br>";
         } else {
             $oldAvatarId = NULL;
         }
@@ -1872,9 +1870,11 @@ class UserController extends Controller
             //echo "new avatarid=".$avatarid."<br>";
             //echo "new avatar size=".$subjectUser->getAvatar()->getSize()."<br>";
 
-            $em = $this->getDoctrine()->getManager();
-            $avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($avatarid);
-            $subjectUser->setAvatar($avatar);
+            if( $avatarid && $avatarid != "" ) {
+                $em = $this->getDoctrine()->getManager();
+                $avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($avatarid);
+                $subjectUser->setAvatar($avatar);
+            }
 
             //$subjectUserAvatar = $subjectUser->getAvatar();
             //echo "new subject avatar id=".$subjectUserAvatar->getId()."<br>";
