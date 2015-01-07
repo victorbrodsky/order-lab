@@ -684,6 +684,14 @@
     {% set mylabsShow = false %}
     {% set myassistancesShow = false %}
 
+    {% set myreportsShowEmail = false %}
+    {% set mygroupsShowEmail = false %}
+    {% set myservicesShowEmail = false %}
+    {% set mydepartmentsShowEmail = false %}
+    {% set mydivisionsShowEmail = false %}
+    {% set mylabsShowEmail = false %}
+    {% set myassistancesShowEmail = false %}
+
     {#Reports#}
     {% set myreports = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myreports','id':null,'name':null} ) %}
     {% if render(myreports)|length > threshold %}
@@ -749,10 +757,17 @@
     {% for service in services %}
         {% if service and service.getId() %}
             {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}
+            {#table:{{ dump(render(table)) }}#}
+            {% set rowArr = render(table)|split('<tr>') %}
+            rowArr length:{{ rowArr|length }}
             {% set element = {'table': table, 'element':service} %}
             {% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}
-            {% if render(table)|length > threshold %}
+            {#{% if render(table)|length > threshold %}#}
+            {% if rowArr|length > 2 %}
                 {% set myservicesShow = true %}
+            {% endif %}
+            {% if rowArr|length > 3 %}
+                {% set myservicesShowEmail = true %}
             {% endif %}
         {% endif %}
     {% endfor %}
@@ -972,6 +987,9 @@
                                         <a data-toggle="collapse" href="#myservices-{{ myservice['element'].getId() }}">
                                             {{ myservice['element'] }} Service
                                         </a>
+                                        {% if myservicesShowEmail %}
+                                            {#<a style="margin-left: 20px;" href="{{ path(sitename~'_get_group_emails',{'userid'=>user.id, 'objectid'=>myservice.id}) }}">E-Mail Addresses</a>#}
+                                        {% endif %}
                                     </h4>
                                 </div>
                                 <div id="myservices-{{ myservice['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
@@ -1013,6 +1031,99 @@
 
             </div> {#myteam-panel-body#}
         </div>{#myteam#}
+        </div>{#panel panel-primary#}
+    {% endif %}
+
+    {#<br>end of myteam: getMemoryUsage: {{ user.getMemoryUsage }}<br>#}
+
+{% endmacro %}
+
+
+{% macro userTeam2( user, type, sitename, postData, collapsein ) %}
+
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {#postData:{{ dump(postData) }}#}
+
+    {% if type == "home" %}
+        {% set boxnamePrefix = "My " %}
+    {% else %}
+        {% set boxnamePrefix = "" %}
+    {% endif %}
+
+    {% set threshold = 50 %}
+
+    {% set myservicesShow = false %}
+
+    {#Service#}
+    {% set services = user.getServices() %}
+    {% set myservicesArr = {} %}
+    {% for service in services %}
+        {% if service and service.getId() %}
+            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}
+
+            table:{{ dump(render(table)) }}
+            {#{% set arr = render(table)|split('<tr>') %}#}
+            arr length:{{ arr|length }}
+
+            {% set element = {'table': table, 'element':service} %}
+            {% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}
+            {% if render(table)|length > threshold %}
+                {% set myservicesShow = true %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {#Team#} {#render(myreports)|length should be more than sitename#}
+    {% if myservicesShow %}
+        <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+
+
+                <div class="row">
+                    <div class="col-xs-6" align="left">
+                        <a data-toggle="collapse" href="#myteam" style="color:#fff;">{{ boxnamePrefix }}Team</a>
+                    </div>
+                    <div class="col-xs-6" align="right">
+                        <button type="button" class="btn btn-default btn-xs panel-collapse-btn" onClick="collpaseAll(document.getElementById('myteam'))" >Collapse All</button>
+                        <button type="button" class="btn btn-default btn-xs panel-collapse-btn" onClick="extendAll(document.getElementById('myteam'))" >Expand All</button>
+                    </div>
+                </div>
+
+            </h4>
+        </div>
+    <div id="myteam" class="panel-collapse collapse {{ collapsein }}">
+        <div id="myteam-panel-body" class="panel-body">
+
+
+        {#Service(s)#}
+        {% if myservicesArr is defined %}
+            {% for myservice in myservicesArr %}
+
+                {#{% if render( myservice['table'] )|length > threshold %}#}
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#myservices-{{ myservice['element'].getId() }}">
+                                    {{ myservice['element'] }} Service
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="myservices-{{ myservice['element'].getId() }}" class="panel-collapse collapse {{ collapsein }}">
+                            <div class="panel-body">
+                                {#{{ render( myservice['table'] ) }}#}
+                            </div>
+                        </div>
+                    </div>
+                {#{% endif %}#}
+
+            {% endfor %}
+        {% endif %}
+
+
+        </div> {#myteam-panel-body#}
+    </div>{#myteam#}
         </div>{#panel panel-primary#}
     {% endif %}
 

@@ -104,13 +104,27 @@ class UserController extends Controller
             return $response;
         }
 
-        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+        $render = $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
             array(
                 'entities' => $pagination,
                 'sitename' => $this->container->getParameter('employees.sitename'),
                 'postData' => $postData
             )
         );
+        return $render;
+
+//        $params = array(
+//            'entities' => $pagination,
+//            'sitename' => $this->container->getParameter('employees.sitename'),
+//            'postData' => $postData
+//        );
+//
+//        $res = array( 'params' => $render, 'count' => count($pagination) );
+//
+//        $response = new Response();
+//        $response->setContent($res);
+//
+//        return $response;
     }
 
 

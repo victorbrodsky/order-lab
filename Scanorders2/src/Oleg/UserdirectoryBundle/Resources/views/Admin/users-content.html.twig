@@ -18,6 +18,16 @@
 
 {% if entities|length > 0 %}
 
+    {% if entities|length > 1 %}
+        {% set emailsArr = {} %}
+        {% for entity in entities %}
+            {% set emailsArr = emailsArr|merge({ (loop.index0): entity.email}) %}
+        {% endfor %}
+        <div class="well well-sm">
+            E-Mail Addresses: {{ emailsArr|join(', ') }}
+        </div>
+    {% endif %}
+
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
         <tr>
