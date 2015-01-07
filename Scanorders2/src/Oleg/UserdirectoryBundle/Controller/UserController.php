@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Util\CropAvatar;
@@ -10,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -1174,6 +1176,9 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($user);
 
+            //set avatar
+            $this->processAvatar($user);
+
             $user = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
 
             $em->persist($user);
@@ -1588,6 +1593,9 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
 
+            //set avatar
+            $this->processAvatar($entity);
+
             $entity = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $entity );
 
             //set update info for user
@@ -1677,10 +1685,6 @@ class UserController extends Controller
 
             //echo "user=".$entity."<br>";
             //exit();
-
-            //avatar test
-            //$avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find(3);
-            //$entity->setAvatar($avatar);
 
             //$em->persist($entity);
             $em->flush($entity);
@@ -1845,6 +1849,47 @@ class UserController extends Controller
         $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
 
         $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
+    }
+
+    public function processAvatar($subjectUser) {
+
+        $em = $this->getDoctrine()->getManager();
+
+//        //clean user old avatar
+//        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser->getId());
+//        $avatarOld = $user->getAvatar();
+//        if( $avatarOld ) {
+//            $oldImageAvatar = $avatarOld->getAbsoluteUploadFullPath();
+//            //$oldImageUpload = str_replace($crop->getAvatarPostfix(),$crop->getUploadPostfix(),$oldImageAvatar);
+//            $oldImageUpload = str_replace('avatar','upload',$oldImageAvatar);
+//
+//            $fs = new Filesystem();
+//            try {
+//                $fs->remove(array($oldImageAvatar));
+//            } catch (IOExceptionInterface $e) {
+//                echo "An error occurred while creating your directory at ".$e->getPath();
+//            }
+//
+//            try {
+//                $fs->remove(array($oldImageUpload));
+//            } catch (IOExceptionInterface $e) {
+//                echo "An error occurred while creating your directory at ".$e->getPath();
+//            }
+//
+//            $em->remove($avatarOld);
+//            //$em->flush($avatarOld);
+//        }
+
+
+        $avatarid = $subjectUser->getAvatar()->getId();
+        //echo "avatar id=".$avatarid."<br>";
+        //exit();
+
+        $avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($avatarid);
+        $subjectUser->setAvatar($avatar);
+
+
+
     }
 
 
@@ -2195,15 +2240,48 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
-        $uploadPath = $this->container->getParameter('employees.avataruploadpath');
+        $uploadPath = "Uploaded/".$this->container->getParameter('employees.avataruploadpath');
+
+        //$baseUrl = $this->container->get('router')->getContext()->getBaseUrl();
+        //echo "baseUrl=".$baseUrl." ";
 
         //class CropAvatar.php new ($src, $data, $file)
         $crop = new CropAvatar($src, $data, $file, $uploadPath);
 
+        $avatarid = NULL;
+        $avatarpath = NULL;
+
+        if( !$crop->getMsg() && $crop->getResult() ) {
+
+            //(x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\UserdirectoryBundle\Util/../../../../web/Uploaded/directory/Avatars/avatar/20150106205815.jpeg
+            $fullnameArr = explode("/", $crop->getResult());
+            $uniquefilename = $fullnameArr[count($fullnameArr)-1];
+            //echo "uniquefilename=".$uniquefilename." ";
+
+            $size = filesize($crop->getResult());
+            //echo "size=".$size." ";
+
+            $uploadDir = $uploadPath . "/" .$crop->getAvatarPostfix();
+
+            $object = new Document();
+            $object->setOriginalname(NULL);
+            $object->setUniquename($uniquefilename);
+            $object->setUploadDirectory($uploadDir);
+            $object->setSize($size);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($object);
+            $em->flush($object);
+
+            $avatarid = $object->getId();
+            $avatarpath = $object->getAbsoluteUploadFullPath();
+        }
+
         $responseArr = array(
             'state'  => 200,
             'message' => $crop -> getMsg(),
-            'result' => $crop -> getResult()
+            'result' => $crop -> getResult(),
+            'avatarid' => $avatarid,
+            'avatarpath' => $avatarpath
         );
 
         //echo json_encode($responseArr);

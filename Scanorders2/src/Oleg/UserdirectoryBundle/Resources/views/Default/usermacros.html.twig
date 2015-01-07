@@ -1097,9 +1097,43 @@
 {% endmacro %}
 
 
-{% macro currentAvatar(user,cycle) %}
+{#{% macro currentAvatar(user,cycle) %}#}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+
+    {#{% if "show" in cycle %}#}
+        {#{% set showFlag = true %}#}
+    {#{% else %}#}
+        {#{% set showFlag = false %}#}
+    {#{% endif %}#}
+
+    {#{% if showFlag %}#}
+
+        {#{% if user.avatar %}#}
+            {#&#123;&#35;<img alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />&#35;&#125;#}
+            {#&#123;&#35;{{ formmacros.simplefield( "Avatar:", document.vars.value.originalname, "div", "" ) }}&#35;&#125;#}
+
+            {#&#123;&#35;<div id="user-current-avatar-view" class="avatar-view" title="Change the avatar">&#35;&#125;#}
+                {#&#123;&#35;<img src="/img/picture.jpg" alt="Avatar">&#35;&#125;#}
+                {#<img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">#}
+            {#&#123;&#35;</div>&#35;&#125;#}
+
+        {#{% else %}#}
+            {#{{ formmacros.simplefield( "Avatar:", "No avatar image is set", "input", "disabled" ) }}#}
+        {#{% endif %}#}
+
+    {#{% else %}#}
+
+        {#&#123;&#35;<div id="user-current-avatar-view" class="avatar-view" title="Change the avatar">&#35;&#125;#}
+            {#&#123;&#35;&#123;&#35;<img src="/img/picture.jpg" alt="Avatar">&#35;&#125;&#35;&#125;#}
+            {#&#123;&#35;<img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">&#35;&#125;#}
+        {#&#123;&#35;</div>&#35;&#125;#}
+
+    {#{% endif %}#}
+
+{#{% endmacro %}#}
+
+{% macro avatarForm(user,cycle) %}
 
     {% if "show" in cycle %}
         {% set showFlag = true %}
@@ -1109,89 +1143,78 @@
 
     {% if showFlag %}
 
-        {% if user.avatar %}
-            {#<img alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />#}
-            {#{{ formmacros.simplefield( "Avatar:", document.vars.value.originalname, "div", "" ) }}#}
-
-            {#<div id="user-current-avatar-view" class="avatar-view" title="Change the avatar">#}
-                {#<img src="/img/picture.jpg" alt="Avatar">#}
+        <div class="container">
+            <p>
                 <img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">
-            {#</div>#}
-
-        {% else %}
-            {{ formmacros.simplefield( "Avatar:", "No avatar image is set", "input", "disabled" ) }}
-        {% endif %}
+            </p>
+            <br>
+        </div>
 
     {% else %}
 
-        {#<div id="user-current-avatar-view" class="avatar-view" title="Change the avatar">#}
-            {#&#123;&#35;<img src="/img/picture.jpg" alt="Avatar">&#35;&#125;#}
-            {#<img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">#}
-        {#</div>#}
+        <div class="container" id="crop-avatar">
 
-    {% endif %}
+            <!-- Current avatar -->
+            <div class="avatar-view" title="Change the avatar">
+                {#<img src="/img/picture.jpg" alt="Avatar">#}
+                {#avatar.id: {{ user.avatar.id }}#}
+                {#avatarurl: {{ user.avatar.getAbsoluteUploadFullPath }}#}
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">
+                {% else %}
+                    {#{{ formmacros.simplefield( "Avatar:", "No avatar image is set", "input", "disabled" ) }}#}
+                    No avatar image is set
+                {% endif %}
+            </div>
 
-{% endmacro %}
+            <!-- Cropping modal -->
+            <div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        {#<form class="avatar-form" action="crop-avatar.php" enctype="multipart/form-data" method="post">#}
+                        <form class="avatar-form" action="{{ path("employees_save_avatar") }}" enctype="multipart/form-data" method="post">
+                            <div class="modal-header">
+                                <button class="close" data-dismiss="modal" type="button">&times;</button>
+                                <h4 class="modal-title" id="avatar-modal-label">Change Avatar</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="avatar-body">
 
-{% macro avatarForm(user) %}
-    <div class="container" id="crop-avatar">
-
-        <!-- Current avatar -->
-        <div class="avatar-view" title="Change the avatar">
-            {#<img src="/img/picture.jpg" alt="Avatar">#}
-            {% if user.avatar %}
-                <img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">
-            {% else %}
-                {#{{ formmacros.simplefield( "Avatar:", "No avatar image is set", "input", "disabled" ) }}#}
-                No avatar image is set
-            {% endif %}
-        </div>
-
-        <!-- Cropping modal -->
-        <div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    {#<form class="avatar-form" action="crop-avatar.php" enctype="multipart/form-data" method="post">#}
-                    <form class="avatar-form" action="{{ path("employees_save_avatar") }}" enctype="multipart/form-data" method="post">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal" type="button">&times;</button>
-                            <h4 class="modal-title" id="avatar-modal-label">Change Avatar</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="avatar-body">
-
-                                <!-- Upload image and data -->
-                                <div class="avatar-upload">
-                                    <input class="avatar-userid" name="avatar_userid" type="hidden" value="{{ user.id }}">
-                                    <input class="avatar-src" name="avatar_src" type="hidden">
-                                    <input class="avatar-data" name="avatar_data" type="hidden">
-                                    <label for="avatarInput">Local upload</label>
-                                    <input class="avatar-input" id="avatarInput" name="avatar_file" type="file">
-                                </div>
-
-                                <!-- Crop and preview -->
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <div class="avatar-wrapper"></div>
+                                    <!-- Upload image and data -->
+                                    <div class="avatar-upload">
+                                        <input class="avatar-userid" name="avatar_userid" type="hidden" value="{{ user.id }}">
+                                        <input class="avatar-src" name="avatar_src" type="hidden">
+                                        <input class="avatar-data" name="avatar_data" type="hidden">
+                                        <label for="avatarInput">Local upload</label>
+                                        <input class="avatar-input" id="avatarInput" name="avatar_file" type="file">
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="avatar-preview preview-lg"></div>
-                                        <div class="avatar-preview preview-md"></div>
-                                        <div class="avatar-preview preview-sm"></div>
+
+                                    <!-- Crop and preview -->
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="avatar-wrapper"></div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="avatar-preview preview-lg"></div>
+                                            {#<div class="avatar-preview preview-md"></div>#}
+                                            {#<div class="avatar-preview preview-sm"></div>#}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-primary avatar-save" type="button">Save</button>
-                        </div>
-                    </form>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-primary avatar-save" type="button">Save</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </div><!-- /.modal -->
+            </div><!-- /.modal -->
 
-        <!-- Loading state -->
-        <div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
-    </div>
+            <!-- Loading state -->
+            <div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+        </div>
+
+    {% endif %}
+
 {% endmacro %}

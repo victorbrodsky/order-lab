@@ -15,26 +15,30 @@ class CropAvatar {
     private $extension;
     private $srcDir;// = 'img/upload';
     private $dstDir;// = 'img/avatar';
+    private $avatarPostfix = "avatar";
+    private $uploadPostfix = "upload";
     private $msg;
 
     function __construct($src, $data, $file, $uploadPath) {
 
-        echo "__DIR__=".__DIR__." ";
+        //echo "__DIR__=".__DIR__." ";
+        $webPath = __DIR__.'/../../../../web/';
+        //$webPath = __DIR__."\..\..\..\..\..\web\"";
+        //echo "webPath=".$webPath." ";
 
-        $this->srcDir = "/".$uploadPath."/upload";
-        $this->dstDir = "/".$uploadPath."/avatar";
+        $this->srcDir = $webPath.$uploadPath."/".$this->uploadPostfix;
+        $this->dstDir = $webPath.$uploadPath."/".$this->avatarPostfix;
 
-        echo "srcDir folder:".$this->srcDir." ";
-        echo "dstDir folder:".$this->dstDir." ";
+        //echo "srcDir folder:".$this->srcDir." ";
+        //echo "dstDir folder:".$this->dstDir." ";
+        //echo "dstDir folder:".$this->dstDir." ";
 
         $fs = new Filesystem();
 
         try {
             if( !$fs->exists($this->srcDir) ) {
                 $fs->mkdir($this->srcDir,0777);
-                echo "create folder srcDir:".$this->srcDir." ";
-            } else {
-                echo "!!!!!!!!!!!! exist folder srcDir:".$this->srcDir." ";
+                //echo "create folder srcDir:".$this->srcDir." ";
             }
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while creating your directory at ".$e->getPath();
@@ -43,7 +47,7 @@ class CropAvatar {
         try {
             if( !$fs->exists($this->dstDir) ) {
                 $fs->mkdir($this->dstDir,0777);
-                echo "create folder dstDir:".$this->dstDir." ";
+                //echo "create folder dstDir:".$this->dstDir." ";
             }
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while creating your directory at ".$e->getPath();
@@ -129,6 +133,7 @@ class CropAvatar {
     private function setDst() {
         $dir = $this -> dstDir;
 
+        //echo "                 dstDir=".$dir."                    ";
         if (!file_exists($dir)) {
             mkdir($dir, 0777);
         }
@@ -230,6 +235,22 @@ class CropAvatar {
 
     public function getMsg() {
         return $this -> msg;
+    }
+
+    public function getDst() {
+        return $this->dstDir;
+    }
+
+    public function getSrc() {
+        return $this->srcDir;
+    }
+
+    public function getAvatarPostfix() {
+        return $this->avatarPostfix;
+    }
+
+    public function getUploadPostfix() {
+        return $this->uploadPostfix;
     }
 
 }
