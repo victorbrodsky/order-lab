@@ -81,7 +81,6 @@
     },
 
     initPreview: function () {
-        console.log('init preview');
       var url = this.$avatar.attr("src");
       this.$avatarPreview.empty().html('<img src="' + url + '">');
 
@@ -219,10 +218,8 @@
         //console.log("this.url="+this.url);
 
       if (this.active) {
-        console.log("active");
         this.$img.cropper("replace", this.url);
       } else {
-          console.log("not active");
         this.$img = $('<img src="' + this.url + '">');
         this.$avatarWrapper.empty().html(this.$img);
         this.$img.cropper({
@@ -265,12 +262,6 @@
           data = new FormData(this.$avatarForm[0]),
           _this = this;
 
-      //var url = getCommonBaseUrl('file-download/'+id,"employees");
-      console.log("url="+url);
-      console.log("data="+data);
-      //alert("url="+url);
-      //return false;
-
       $.ajax(url, {
         type: "post",
         data: data,
@@ -309,19 +300,17 @@
             data = $.parseJSON(data);
         } catch (e) {};
 
-        console.log(data);
+        //console.log(data);
 
         if (data && data.state === 200) {
             if (data.result) {
                 this.url = data.result;
-                console.log("this.url="+this.url);
+                //console.log("this.url="+this.url);
 
                 if( this.support.datauri || this.uploaded ) {
-                    console.log("1");
                     this.uploaded = false;
                     this.cropDone();
                 } else {
-                    console.log("2");
                     this.uploaded = true;
                     this.$avatarSrc.val(this.url);
                     //printF(this.$avatarSrc,"this.$avatarSrc");
@@ -338,7 +327,7 @@
 
                 //set avatar path="user-avatar-id"
                 if( data.avatarpath ) {
-                    console.log("data.avatarpath="+data.avatarpath);
+                    //console.log("data.avatarpath="+data.avatarpath);
                     this.$avatar.attr("src", data.avatarpath);
                     this.initPreview();
                 }
@@ -363,7 +352,6 @@
     cropDone: function () {
       this.$avatarSrc.val("");
       this.$avatarData.val("");
-      console.log("this.url="+this.url);
       this.$avatar.attr("src", this.url);
       this.stopCropper();
       this.$avatarModal.modal("hide");

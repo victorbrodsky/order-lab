@@ -1097,42 +1097,6 @@
 {% endmacro %}
 
 
-{#{% macro currentAvatar(user,cycle) %}#}
-
-    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-
-    {#{% if "show" in cycle %}#}
-        {#{% set showFlag = true %}#}
-    {#{% else %}#}
-        {#{% set showFlag = false %}#}
-    {#{% endif %}#}
-
-    {#{% if showFlag %}#}
-
-        {#{% if user.avatar %}#}
-            {#&#123;&#35;<img alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />&#35;&#125;#}
-            {#&#123;&#35;{{ formmacros.simplefield( "Avatar:", document.vars.value.originalname, "div", "" ) }}&#35;&#125;#}
-
-            {#&#123;&#35;<div id="user-current-avatar-view" class="avatar-view" title="Change the avatar">&#35;&#125;#}
-                {#&#123;&#35;<img src="/img/picture.jpg" alt="Avatar">&#35;&#125;#}
-                {#<img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">#}
-            {#&#123;&#35;</div>&#35;&#125;#}
-
-        {#{% else %}#}
-            {#{{ formmacros.simplefield( "Avatar:", "No avatar image is set", "input", "disabled" ) }}#}
-        {#{% endif %}#}
-
-    {#{% else %}#}
-
-        {#&#123;&#35;<div id="user-current-avatar-view" class="avatar-view" title="Change the avatar">&#35;&#125;#}
-            {#&#123;&#35;&#123;&#35;<img src="/img/picture.jpg" alt="Avatar">&#35;&#125;&#35;&#125;#}
-            {#&#123;&#35;<img src="{{ user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar">&#35;&#125;#}
-        {#&#123;&#35;</div>&#35;&#125;#}
-
-    {#{% endif %}#}
-
-{#{% endmacro %}#}
-
 {% macro avatarForm(user,cycle) %}
 
     {% if "show" in cycle %}
@@ -1149,13 +1113,9 @@
 
     {% if showFlag %}
 
-        {#<div class="container">#}
-        {#<div class="text-center col-xs-12">#}
-            <div class="avatar-view-clean-default">
-                <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
-            </div>
-        {#</div>#}
-        {#</div>#}
+        <div class="avatar-view-clean-default">
+            <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
+        </div>
 
     {% else %}
 
@@ -1163,9 +1123,6 @@
 
             <!-- Current avatar -->
             <div class="avatar-view" title="Change the avatar" style="height:126px; width:116px;">
-                {#<img src="/img/picture.jpg" alt="Avatar">#}
-                {#avatar.id: {{ user.avatar.id }}#}
-                {#avatarurl: {{ user.avatar.getAbsoluteUploadFullPath }}#}
                 <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
             </div>
 

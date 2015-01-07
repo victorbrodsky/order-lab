@@ -728,10 +728,7 @@
             <div id="userinfo" class="panel-collapse collapse in">
                 <div class="panel-body">
 
-                    {#{{ usermacros.currentAvatar(entity,cycle) }}#}
                     <div id="user-avatar-id">
-                        {#avatarurl1: {{ entity.avatar.getAbsoluteUploadFullPath }}#}
-                        {#avatarurl2: {{ form.avatar.vars.value.getAbsoluteUploadFullPath }}#}
                         {{ formmacros.field(form.avatar.id) }}
                     </div>
 
