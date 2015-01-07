@@ -823,14 +823,14 @@ class UserUtil {
         //1) remove all locations
         $homeLocations = new ArrayCollection();
         foreach( $duser->getLocations() as $object ) {
-            if( $object->getLocationType()->getName() == "Employee Home" ) {
+            if( $object->getLocationType() && $object->getLocationType()->getName() == "Employee Home" ) {
                 $homeLocations->add($object);
             }
             $duser->removeLocation($object);
         }
         //2) add cloned locations
         foreach( $suser->getLocations() as $object ) {
-            if( $object->getLocationType()->getName() != "Employee Home" ) {
+            if( $object->getLocationType() && $object->getLocationType()->getName() != "Employee Home" ) {
                 $clone = clone $object;
                 $duser->addLocation( $clone );
             }

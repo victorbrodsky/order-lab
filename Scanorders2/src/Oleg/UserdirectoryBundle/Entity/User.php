@@ -158,7 +158,7 @@ class User extends BaseUser
     private $adminComments;
 
     /**
-     * @ORM\OneToOne(targetEntity="Document", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="Document")
      * @ORM\JoinColumn(name="avatar_id", referencedColumnName="id")
      **/
     private $avatar;
