@@ -470,13 +470,7 @@ class User extends BaseUser
         return $this->id;
     }
 
-    /**
-     * Add locations
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Location $locations
-     * @return User
-     */
-    public function addLocation(\Oleg\UserdirectoryBundle\Entity\Location $location=null)
+    public function addLocation($location)
     {
         if( $location && !$this->locations->contains($location) ) {
             $this->locations->add($location);
@@ -485,34 +479,16 @@ class User extends BaseUser
     
         return $this;
     }
-
-    /**
-     * Remove locations
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Location $locations
-     */
-    public function removeLocation(\Oleg\UserdirectoryBundle\Entity\Location $locations)
+    public function removeLocation($locations)
     {
         $this->locations->removeElement($locations);
     }
-
-    /**
-     * Get locations
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
     public function getLocations()
     {
         return $this->locations;
     }
 
-    /**
-     * Add administrativeTitles
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle
-     * @return User
-     */
-    public function addAdministrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle=null)
+    public function addAdministrativeTitle($administrativeTitle)
     {
         if( $administrativeTitle && !$this->administrativeTitles->contains($administrativeTitle) ) {
             $this->administrativeTitles->add($administrativeTitle);
@@ -523,59 +499,29 @@ class User extends BaseUser
     
         return $this;
     }
-
-    /**
-     * Remove administrativeTitles
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitles
-     */
-    public function removeAdministrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle)
+    public function removeAdministrativeTitle($administrativeTitle)
     {
         $administrativeTitle->unsetHeads();
         $this->administrativeTitles->removeElement($administrativeTitle);
     }
-
-    /**
-     * Get administrativeTitles
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
     public function getAdministrativeTitles()
     {
         return $this->administrativeTitles;
     }
 
-    /**
-     * Add appointmentTitles
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles
-     * @return User
-     */
-    public function addAppointmentTitle(\Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles=null)
+    public function addAppointmentTitle($appointmentTitle)
     {
-        if( $appointmentTitles && !$this->appointmentTitles->contains($appointmentTitles) ) {
-            $this->appointmentTitles->add($appointmentTitles);
-            $appointmentTitles->setUser($this);
+        if( $appointmentTitle && !$this->appointmentTitles->contains($appointmentTitle) ) {
+            $this->appointmentTitles->add($appointmentTitle);
+            $appointmentTitle->setUser($this);
         }
     
         return $this;
     }
-
-    /**
-     * Remove appointmentTitles
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles
-     */
-    public function removeAppointmentTitle(\Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles)
+    public function removeAppointmentTitle($appointmentTitle)
     {
-        $this->appointmentTitles->removeElement($appointmentTitles);
+        $this->appointmentTitles->removeElement($appointmentTitle);
     }
-
-    /**
-     * Get appointmentTitles
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
     public function getAppointmentTitles()
     {
         return $this->appointmentTitles;
@@ -727,13 +673,7 @@ class User extends BaseUser
 
 
 
-    /**
-     * Add researchLabs
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLabs
-     * @return User
-     */
-    public function addResearchLab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab=null)
+    public function addResearchLab($researchLab)
     {
         if( $researchLab && !$this->researchLabs->contains($researchLab) ) {
             $this->researchLabs->add($researchLab);
@@ -742,23 +682,11 @@ class User extends BaseUser
 
         return $this;
     }
-
-    /**
-     * Remove researchLab
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab
-     */
-    public function removeResearchLab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab)
+    public function removeResearchLab($researchLab)
     {
         $this->researchLabs->removeElement($researchLab);
         $researchLab->removeUser($this);
     }
-
-    /**
-     * Get researchLabs
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
     public function getResearchLabs()
     {
         return $this->researchLabs;

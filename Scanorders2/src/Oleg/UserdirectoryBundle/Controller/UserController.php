@@ -1117,7 +1117,7 @@ class UserController extends Controller
         $user->setPassword("");
         $user->setCreatedby('manual');
 
-        $this->addEmptyCollections($user);
+        //$this->addEmptyCollections($user);
 
         //Roles
         $rolesArr = $this->getUserRoles();
