@@ -1871,16 +1871,17 @@ class UserController extends Controller
             //echo "new avatar size=".$subjectUser->getAvatar()->getSize()."<br>";
 
             if( $avatarid && $avatarid != "" ) {
+                //echo "avatarid=".$avatarid."<br>";
                 $em = $this->getDoctrine()->getManager();
                 $avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($avatarid);
                 $subjectUser->setAvatar($avatar);
+            } else {
+                //echo "null avatarid=".$avatarid."<br>";
+                $subjectUser->setAvatar(NULL);
             }
 
-            //$subjectUserAvatar = $subjectUser->getAvatar();
-            //echo "new subject avatar id=".$subjectUserAvatar->getId()."<br>";
         }
 
-        //exit('1');
     }
 
     //delete old avatar document from DB and avatar images from filesystem
@@ -1893,12 +1894,12 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->clear();
 
-        echo "1 oldAvatarId=".$oldAvatarId."<br>";
+        //echo "1 oldAvatarId=".$oldAvatarId."<br>";
         $oldAvatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($oldAvatarId);
 
         if( $oldAvatar ) {
 
-            echo "old avatar id=".$oldAvatar->getId()."<br>";
+            //echo "old avatar id=".$oldAvatar->getId()."<br>";
 
             $oldImageAvatar = $oldAvatar->getAbsoluteUploadFullPath();
             //$oldImageUpload = str_replace($crop->getAvatarPostfix(),$crop->getUploadPostfix(),$oldImageAvatar);
