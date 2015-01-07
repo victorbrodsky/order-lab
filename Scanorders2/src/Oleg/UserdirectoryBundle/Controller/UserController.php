@@ -1697,7 +1697,7 @@ class UserController extends Controller
             $em->flush($entity);
 
             //delete old avatar document from DB
-            $this->processDeleteOldAvatar($oldAvatarId);
+            $this->processDeleteOldAvatar($entity,$oldAvatarId);
 
             //redirect only if this was called by the same controller class
             if( $sitename == $this->container->getParameter('employees.sitename') ) {
@@ -1885,9 +1885,14 @@ class UserController extends Controller
     }
 
     //delete old avatar document from DB and avatar images from filesystem
-    public function processDeleteOldAvatar($oldAvatarId) {
+    public function processDeleteOldAvatar($subjectUser,$oldAvatarId) {
 
         if( $oldAvatarId == NULL ) {
+            return;
+        }
+
+        //don't try to delete if old and new avatar id are the same (avatar has not changed)
+        if( $subjectUser->getAvatar()->getId() == $oldAvatarId ) {
             return;
         }
 
