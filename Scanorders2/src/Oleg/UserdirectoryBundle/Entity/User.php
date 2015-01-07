@@ -476,9 +476,9 @@ class User extends BaseUser
      * @param \Oleg\UserdirectoryBundle\Entity\Location $locations
      * @return User
      */
-    public function addLocation(\Oleg\UserdirectoryBundle\Entity\Location $location)
+    public function addLocation(\Oleg\UserdirectoryBundle\Entity\Location $location=null)
     {
-        if( !$this->locations->contains($location) ) {
+        if( $location && !$this->locations->contains($location) ) {
             $this->locations->add($location);
             $location->setUser($this);
         }
@@ -512,9 +512,9 @@ class User extends BaseUser
      * @param \Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle
      * @return User
      */
-    public function addAdministrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle)
+    public function addAdministrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle=null)
     {
-        if( !$this->administrativeTitles->contains($administrativeTitle) ) {
+        if( $administrativeTitle && !$this->administrativeTitles->contains($administrativeTitle) ) {
             $this->administrativeTitles->add($administrativeTitle);
             $administrativeTitle->setUser($this);
 
@@ -551,9 +551,9 @@ class User extends BaseUser
      * @param \Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles
      * @return User
      */
-    public function addAppointmentTitle(\Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles)
+    public function addAppointmentTitle(\Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles=null)
     {
-        if( !$this->appointmentTitles->contains($appointmentTitles) ) {
+        if( $appointmentTitles && !$this->appointmentTitles->contains($appointmentTitles) ) {
             $this->appointmentTitles->add($appointmentTitles);
             $appointmentTitles->setUser($this);
         }
@@ -733,9 +733,9 @@ class User extends BaseUser
      * @param \Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLabs
      * @return User
      */
-    public function addResearchLab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab)
+    public function addResearchLab(\Oleg\UserdirectoryBundle\Entity\ResearchLab $researchLab=null)
     {
-        if( !$this->researchLabs->contains($researchLab) ) {
+        if( $researchLab && !$this->researchLabs->contains($researchLab) ) {
             $this->researchLabs->add($researchLab);
             $researchLab->addUser($this);
         }
