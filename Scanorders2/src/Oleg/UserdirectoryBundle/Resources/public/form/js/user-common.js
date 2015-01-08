@@ -363,7 +363,7 @@ function setNavBar() {
         id = 'admin';
     }
     if( full.indexOf("/users/") !== -1 ) {
-        id = 'admin';
+        id = 'user';
     }
     if( full.indexOf("/event-log") !== -1 ) {
         id = 'admin';

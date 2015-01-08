@@ -23,7 +23,7 @@
     {% if entities|length > 1 %}
         {% set emailsArr = {} %}
         {% for entity in entities %}
-            {% set emailsArr = emailsArr|merge({ (loop.index0): entity.getUsernameOptimal~" "~entity.email}) %}
+            {% set emailsArr = emailsArr|merge({ (loop.index0): entity.getUsernameOptimal~" <"~entity.email~">"}) %}
         {% endfor %}
         {#<div class="well well-sm">#}
             {#E-Mail Addresses: {{ emailsArr|join(', ') }}#}
