@@ -18,12 +18,12 @@
 
 {% if entities|length > 0 %}
 
-    
+
     {# show all emails #}
     {% if entities|length > 1 %}
         {% set emailsArr = {} %}
         {% for entity in entities %}
-            {% set emailsArr = emailsArr|merge({ (loop.index0): entity.email}) %}
+            {% set emailsArr = emailsArr|merge({ (loop.index0): entity.getUsernameOptimal~" "~entity.email}) %}
         {% endfor %}
         {#<div class="well well-sm">#}
             {#E-Mail Addresses: {{ emailsArr|join(', ') }}#}
@@ -39,7 +39,7 @@
             </div>
             <div class="panel-collapse collapse" role="tabpanel">
                 <div class="panel-body">
-                    {{ emailsArr|join(', ') }}
+                    {{ emailsArr|join('; ') }}
                 </div>
             </div>
         </div>
