@@ -195,12 +195,15 @@ function getSitename() {
     return sitename;
 }
 
-function collpaseAll(holder) {
+function collapseThis(link) {
+    var holder = $(link).closest('.panel');
+    holder.find('.panel-collapse').collapse('toggle');
+}
+
+function collapseAll(holder) {
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('hide');
     } else {
-        //console.log("holder id="+$(holder).attr('id'));
-        //console.log($(holder));
         $(holder).find('.panel-collapse').collapse('hide');
     }
 
