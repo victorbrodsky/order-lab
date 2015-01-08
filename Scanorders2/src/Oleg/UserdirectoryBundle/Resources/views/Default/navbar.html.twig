@@ -113,7 +113,7 @@
 
             <ul class="nav navbar-nav navbar-right">
 
-
+                {#Search in navbar#}
                 {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
                     {% if urltype is not defined or urltype != "home" %}
                         <li id="nav-bar-usersearch">

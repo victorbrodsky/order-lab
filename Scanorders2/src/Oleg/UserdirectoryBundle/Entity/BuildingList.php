@@ -31,6 +31,7 @@ class BuildingList extends ListAbstract
      **/
     private $geoLocation;
 
+    //TODO: many-to-many with institution
     /**
      * @ORM\ManyToOne(targetEntity="Institution")
      */
