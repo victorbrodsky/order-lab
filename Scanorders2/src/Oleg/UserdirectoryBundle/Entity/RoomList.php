@@ -30,21 +30,11 @@ class RoomList extends ListAbstract
      **/
     private $suite;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="FloorList", inversedBy="rooms")
-//     * @ORM\JoinColumn(name="floor_id", referencedColumnName="id")
-//     **/
-//    protected $floor;
     /**
      * @ORM\ManyToMany(targetEntity="FloorList", mappedBy="rooms")
      **/
     private $floors;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="rooms")
-//     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
-//     **/
-//    protected $building;
     /**
      * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="rooms")
      **/

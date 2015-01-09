@@ -39,9 +39,17 @@ class Institution extends ListAbstract
      **/
     private $heads;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="institutions")
+     **/
+    private $buildings;
+
+
     public function __construct() {
         $this->departments = new ArrayCollection();
         $this->heads = new ArrayCollection();
+        $this->buildings = new ArrayCollection();
+
         parent::__construct();
     }
 
@@ -96,6 +104,25 @@ class Institution extends ListAbstract
     {
         return $this->departments;
     }
+
+
+    public function getBuildings()
+    {
+        return $this->buildings;
+    }
+    public function addBuilding($building)
+    {
+        if( !$this->buildings->contains($building) ) {
+            $this->buildings->add($building);
+        }
+
+        return $this;
+    }
+    public function removeBuilding($building)
+    {
+        $this->buildings->removeElement($building);
+    }
+
 
     public function __toString()
     {

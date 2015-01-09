@@ -31,31 +31,24 @@ class BuildingList extends ListAbstract
      **/
     private $geoLocation;
 
-    //TODO: many-to-many with institution
     /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
-    private $institution;
+     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="buildings")
+     * @ORM\JoinTable(name="user_buildings_institutions")
+     **/
+    private $institutions;
 
     /**
+     * This is inverse side, because we link the building to the location (location is responsible for adding building) => mappedBy
      * @ORM\OneToMany(targetEntity="Location", mappedBy="building", cascade={"persist"})
      **/
     private $locations;
 
-
-//    /**
-//     * @ORM\OneToMany(targetEntity="SuiteList", mappedBy="building")
-//     **/
     /**
      * @ORM\ManyToMany(targetEntity="SuiteList", inversedBy="buildings")
      * @ORM\JoinTable(name="user_buildings_suites")
      **/
     private $suites;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="building")
-//     **/
-//    protected $rooms;
     /**
      * @ORM\ManyToMany(targetEntity="RoomList", inversedBy="buildings")
      * @ORM\JoinTable(name="user_buildings_rooms")
@@ -65,6 +58,8 @@ class BuildingList extends ListAbstract
 
     public function __construct($creator=null) {
         $this->synonyms = new ArrayCollection();
+
+        $this->institutions = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->suites = new ArrayCollection();
         $this->rooms = new ArrayCollection();
@@ -176,23 +171,27 @@ class BuildingList extends ListAbstract
         return $this->geoLocation;
     }
 
-    /**
-     * @param mixed $institution
-     */
-    public function setInstitution($institution)
+
+    public function getInstitutions()
     {
-        $this->institution = $institution;
+        return $this->institutions;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
+    public function addInstitution($institution)
     {
-        return $this->institution;
+        if( $institution ) {
+            if( !$this->institutions->contains($institution) ) {
+                $this->institutions->add($institution);
+                $institution->addBuilding($this);
+            }
+        }
+
+        return $this;
     }
-
-
+    public function removeInstitution($institution)
+    {
+        $this->institutions->removeElement($institution);
+        $institution->removeBuilding($this);
+    }
 
 
 
@@ -227,13 +226,23 @@ class BuildingList extends ListAbstract
     public function __toString() {
 
         $instName = "";
-        if( $this->getInstitution() ) {
-            if( $this->getInstitution()->getAbbreviation() ) {
-                $instName = $this->getInstitution()->getAbbreviation()."";
+//        if( $this->getInstitution() ) {
+//            if( $this->getInstitution()->getAbbreviation() ) {
+//                $instName = $this->getInstitution()->getAbbreviation()."";
+//            } else {
+//                $instName = $this->getInstitution()->getName()."";
+//            }
+//        }
+        $instNameArr = array();
+        foreach( $this->getInstitutions() as $inst ) {
+            if( $inst->getAbbreviation() ) {
+                $thisInstName = $inst->getAbbreviation()."";
             } else {
-                $instName = $this->getInstitution()->getName()."";
+                $thisInstName = $inst->getName()."";
             }
+            $instNameArr[] = $thisInstName;
         }
+        $instName = join(",",$instNameArr);
 
         $geoName = "";
         if( $this->getGeoLocation() != "" ) {

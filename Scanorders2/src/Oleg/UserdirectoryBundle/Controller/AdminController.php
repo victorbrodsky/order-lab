@@ -1286,7 +1286,7 @@ class AdminController extends Controller
             $instAbbr = $building['inst'];
             $inst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
             if( $inst ) {
-                $listEntity->setInstitution($inst);
+                $listEntity->addInstitution($inst);
             }
 
             //echo $count.": name=".$name.", street1=".$street1."<br>";

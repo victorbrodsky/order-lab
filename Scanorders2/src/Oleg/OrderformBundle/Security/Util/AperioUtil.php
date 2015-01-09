@@ -83,7 +83,7 @@ class AperioUtil {
 
                 //add default locations
                 $userUtil = new UserUtil();
-                $userUtil->addDefaultLocations($user,null,$this->em,$serviceContainer);
+                $userUtil->addDefaultLocations($user,null,$em,$serviceContainer);
 
                 $perSiteSettings = null;
 

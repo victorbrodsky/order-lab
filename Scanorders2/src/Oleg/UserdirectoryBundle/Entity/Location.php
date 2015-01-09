@@ -756,28 +756,45 @@ class Location extends ListAbstract //extends BaseLocation
     }
 
 
-    //set suite, room, floor, building
+    //set suite, room, floor, building, institution relationship
     /**
      * @ORM\preFlush
      */
     public function setRoomSuiteFloorBuilding()
     {
         //exit('set room, suite, floor, building');
+        //add institution to building
+        if( $this->building ) {
+            if( $this->institution ) {
+                $this->building->addInstitution($this->institution);
+            }
+        }
+
         //add room to suit
         if( $this->suite ) {
-            $this->suite->addRoom($this->room);
+            if( $this->room ) {
+                $this->suite->addRoom($this->room);
+            }
         }
 
         //add room and suite to floor
         if( $this->floor ) {
-            $this->floor->addRoom($this->room);
-            $this->floor->addSuite($this->suite);
+            if( $this->room ) {
+                $this->floor->addRoom($this->room);
+            }
+            if( $this->suite ) {
+                $this->floor->addSuite($this->suite);
+            }
         }
 
         //add room and suite to building
         if( $this->building ) {
-            $this->building->addRoom($this->room);
-            $this->building->addSuite($this->suite);
+            if( $this->room ) {
+                $this->building->addRoom($this->room);
+            }
+            if( $this->suite ) {
+                $this->building->addSuite($this->suite);
+            }
         }
         //echo "set room suite floor building <br>";
     }
