@@ -679,7 +679,6 @@
             {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cycle,'user-codenyph','prototype') %}
         {% endif %}
 
-        {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_ADMIN#}
         {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_ADMIN') %}
             {% set userEditor = true %}
         {% else %}
