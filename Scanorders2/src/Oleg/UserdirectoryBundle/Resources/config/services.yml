@@ -24,7 +24,7 @@ parameters:
 fr3d_ldap:
     driver:
         host: cumcdcp02.a.wcmc-ad.net
-        username: svc_aperio_spectrum@a.wcmc-ad.net
+        username: svc_aperio_spectrum
         password: Aperi0,123
         accountDomainName: a.wcmc-ad.net
 
@@ -38,7 +38,7 @@ fr3d_ldap:
 #       password:          Aperi0,123                               # Optional
 #       accountDomainName: a.wcmc-ad.net                            # Required
     user:
-        baseDn: dc=a,dc=wcmc-ad,dc=net
+        baseDn: CN=Users,dc=a,dc=wcmc-ad,dc=net
         filter: (&(ObjectClass=user)) #Person
         attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
                 - { ldap_attr: cn,   user_method: setUsername }
