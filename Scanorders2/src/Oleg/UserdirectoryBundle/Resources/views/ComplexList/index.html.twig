@@ -24,7 +24,7 @@
         {% endif %}
 
         {% if entities|first.institution is defined and pathname == 'buildings' %}
-            <th>{{ knp_pagination_sortable(entities, 'Institution', 'institution.abbreviation') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Institution(s)', 'institutions.abbreviation') }}</th>
         {% endif %}
 
         {% if entities|first.user is defined %}
@@ -62,8 +62,13 @@
                     <td>{{ entity.getShortName() }}</td>
                 {% endif %}
 
-                {% if entity.institution is defined and pathname == 'buildings' %}
-                    <td>{{ entity.institution.abbreviation }}</td>
+                {% if entity.institutions is defined and pathname == 'buildings' %}
+                    <td>
+                        {{ entity.institution.abbreviation }}
+                        {% for institution in entity.institutions %}
+                            <p>{{ entity.institution.abbreviation }}</p>
+                        {% endfor %}
+                    </td>
                 {% endif %}
 
                 {% if entity.user is defined %}

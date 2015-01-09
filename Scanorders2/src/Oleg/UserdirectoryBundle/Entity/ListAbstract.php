@@ -306,7 +306,6 @@ abstract class ListAbstract
         return $this->orderinlist;
     }
 
-
     public function __toString()
     {
         $name = $this->name."";
@@ -316,13 +315,20 @@ abstract class ListAbstract
         return $name;
     }
 
+    //For search
     public function getOptimalName()
     {
-        $name = $this->name."";
-        if( $this->shortname && $this->shortname != "" ) {
-            $name = $this->shortname."";
+        if( $this->abbreviation && $this->abbreviation != "" ) {
+            return $this->abbreviation."";
         }
-        return $name;
+
+        if( $this->shortname && $this->shortname != "" ) {
+            return $this->shortname."";
+        }
+
+        if( $this->name && $this->name != "" ) {
+            return $this->name."";
+        }
     }
 
     /**

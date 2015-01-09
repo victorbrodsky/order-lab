@@ -61,12 +61,12 @@ class BuildingType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add( 'institution', 'entity', array(
+        $builder->add( 'institutions', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
             'property' => 'name',
-            'label'=>'Institution:',
+            'label'=>'Institution(s):',
             'required'=> false,
-            'multiple' => false,
+            'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')

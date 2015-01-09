@@ -50,7 +50,6 @@ fr3d_ldap:
     service:
         ldap_manager:  oleg.security.ldap_manager
 
-
 #<LDAPInterfaceConfig Description="Active Directory" HostName="cumcdcp02.a.wcmc-ad.net"
 #  Username="svc_aperio_spectrum" Password="71hLsDDdQvRwRZGdQuj06Ef6at1D3rHB"
 #  AppendDNtoUsername="false" PrefixUsername="false" PasswordEncrypted="true"

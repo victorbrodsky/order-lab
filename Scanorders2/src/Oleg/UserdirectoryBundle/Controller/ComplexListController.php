@@ -61,8 +61,8 @@ class ComplexListController extends Controller
         if( $mapper['pathname'] == 'buildings' ) {
             $dql->leftJoin("ent.geoLocation", "geoLocation");
             $dql->addGroupBy('geoLocation');
-            $dql->leftJoin("ent.institution", "institution");
-            $dql->addGroupBy('institution');
+            $dql->leftJoin("ent.institutions", "institutions");
+            $dql->addGroupBy('institutions');
         }
 
         if( $mapper['pathname'] == 'researchlabs' ) {
