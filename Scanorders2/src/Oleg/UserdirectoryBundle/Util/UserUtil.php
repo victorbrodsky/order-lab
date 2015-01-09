@@ -89,6 +89,7 @@ class UserUtil {
             //set unique username
             $usernameUnique = $user->createUniqueUsername();
             $user->setUsername($usernameUnique);
+            echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
             $user->setUsernameCanonical($usernameUnique);
 
             $user->setEmail($email);

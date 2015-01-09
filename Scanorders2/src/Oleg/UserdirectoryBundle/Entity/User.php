@@ -956,8 +956,9 @@ class User extends BaseUser
     public function setUsernameCanonical($usernameCanonical)
     {
         if( $this->getId() && $usernameCanonical != $this->getUsernameCanonical() ) {
+            return;
             //exit('Can not change canonical username when user is in DB: username='.$usernameCanonical.', id='.$this->getId());
-            throw new \Exception( 'Can not change canonical username when user is in DB: new usernameCanonical='.$usernameCanonical.', old usernameCanonical'.$this->getUsernameCanonical().', id='.$this->getId() );
+            throw new \Exception( 'Can not change canonical username when user is in DB: new usernameCanonical='.$usernameCanonical.', old usernameCanonical='.$this->getUsernameCanonical().', id='.$this->getId() );
         }
 
         $this->usernameCanonical = $usernameCanonical;
@@ -988,7 +989,12 @@ class User extends BaseUser
 
     public function getUsernamePrefix($username) {
         $usernameArr = explode("_@_",$username);
-        return $usernameArr[1];
+        if( array_key_exists(1, $usernameArr) ) {
+            $prefix = $usernameArr[1];
+        } else {
+            $prefix = "";
+        }
+        return $prefix;
     }
 
     public function usernameIsValid($username) {
