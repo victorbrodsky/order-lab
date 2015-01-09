@@ -23,10 +23,16 @@ parameters:
 
 fr3d_ldap:
     driver:
-        host: a.wcmc-ad.net
+        host: cumcdcp02.a.wcmc-ad.net
         username: svc_aperio_spectrum@a.wcmc-ad.net
         password: Aperi0,123
         accountDomainName: a.wcmc-ad.net
+
+#        host: a.wcmc-ad.net
+#        username: svc_aperio_spectrum@a.wcmc-ad.net
+#        password: Aperi0,123
+#        accountDomainName: a.wcmc-ad.net
+
 #       host:              a.wcmc-ad.net                            # Required
 #       username:          svc_aperio_spectrum@a.wcmc-ad.net        # Optional
 #       password:          Aperi0,123                               # Optional
@@ -44,6 +50,21 @@ fr3d_ldap:
     service:
         ldap_manager:  oleg.security.ldap_manager
 
+
+#<LDAPInterfaceConfig Description="Active Directory" HostName="cumcdcp02.a.wcmc-ad.net"
+#  Username="svc_aperio_spectrum" Password="71hLsDDdQvRwRZGdQuj06Ef6at1D3rHB"
+#  AppendDNtoUsername="false" PrefixUsername="false" PasswordEncrypted="true"
+#  UseDefaultCredentials="true" LDAPAuthType="Negotiate" UserLDAPAuthType="Negotiate"
+#  DistinguishedName="CN=Users,DC=a,DC=wcmc-ad,DC=net" SearchFilter="(objectClass=user)"
+#  AttributeNameUUID="objectGuid" AttributeNameUser="sAMAccountName" PageSize="10">
+#
+#  <Mapping>
+#    <add LDAP="telephoneNumber" Spectrum="Phone" />
+#    <add LDAP="cn" Spectrum="FullName" />
+#    <add LDAP="mail" Spectrum="E_Mail" />
+#    <add LDAP="objectGUID" Spectrum="ExternalId" />
+#  </Mapping>
+#</LDAPInterfaceConfig>
 
 #fos user bundle
 fos_user:
