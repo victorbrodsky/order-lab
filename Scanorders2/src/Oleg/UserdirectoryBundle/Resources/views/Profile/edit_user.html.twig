@@ -825,11 +825,13 @@
 
         {#Employment Status#}
         {% set showEmploymentStatus = false %}
-        {% for employmentStatus in form.employmentStatus %}
-            {% if employmentStatus.hireDate.vars.value or cycle != 'show_user' %}
-                {% set showEmploymentStatus = true %}
-            {% endif %}
-        {% endfor %}
+        {% if form.employmentStatus is defined %}
+            {% for employmentStatus in form.employmentStatus %}
+                {% if employmentStatus.hireDate.vars.value or cycle != 'show_user' %}
+                    {% set showEmploymentStatus = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
         {% if showEmploymentStatus and form.employmentStatus is defined %}
             <div class="panel panel-primary">
@@ -856,7 +858,9 @@
                 </div>
             </div>
         {% else %}
-            {% do form.employmentStatus.setRendered %}
+            {% if form.employmentStatus is defined %}
+                {% do form.employmentStatus.setRendered %}
+            {% endif %}
         {% endif %}
 
 

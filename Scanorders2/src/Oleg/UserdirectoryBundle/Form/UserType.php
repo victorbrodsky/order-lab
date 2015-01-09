@@ -39,14 +39,11 @@ class UserType extends AbstractType
         $this->em = $params['em'];
 
         //echo "cycle=".$cycle."<br>";
-//        if( $this->cycle == 'create' ) {
-//            $this->roleAdmin = $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR');
-//        } else {
-//            $this->roleAdmin = $this->sc->isGranted('ROLE_ADMIN');
-//        }
-        if( $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->sc->isGranted('ROLE_ADMIN') ) {
+        if( $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->sc->isGranted('ROLE_SCANORDER_ADMIN') || $this->sc->isGranted('ROLE_ADMIN') ) {
+            //echo "role ADMIN<br>";
             $this->roleAdmin = true;
         } else {
+            //echo "role not ADMIN<br>";
             $this->roleAdmin = false;
 
         }
@@ -240,7 +237,6 @@ class UserType extends AbstractType
 
         //visible only to admin or user himself on view
         if( $this->roleAdmin || ($currentUser == false && $this->cycle == "show") ) {
-        //if( ($currentUser == true && $this->cycle == "show") || ($currentUser == false && $this->cycle == "show") ) {
             $params = array('read_only'=>$read_only,'currentUser'=>$currentUser,'admin'=>$this->roleAdmin);
             $builder->add('employmentStatus', 'collection', array(
                 'type' => new EmploymentStatusType($params),

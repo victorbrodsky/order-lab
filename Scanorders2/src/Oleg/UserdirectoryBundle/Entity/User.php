@@ -956,9 +956,10 @@ class User extends BaseUser
     public function setUsernameCanonical($usernameCanonical)
     {
         if( $this->getId() && $usernameCanonical != $this->getUsernameCanonical() ) {
+            //continue without error
             return;
             //exit('Can not change canonical username when user is in DB: username='.$usernameCanonical.', id='.$this->getId());
-            throw new \Exception( 'Can not change canonical username when user is in DB: new usernameCanonical='.$usernameCanonical.', old usernameCanonical='.$this->getUsernameCanonical().', id='.$this->getId() );
+            //throw new \Exception( 'Can not change canonical username when user is in DB: new usernameCanonical='.$usernameCanonical.', old usernameCanonical='.$this->getUsernameCanonical().', id='.$this->getId() );
         }
 
         $this->usernameCanonical = $usernameCanonical;

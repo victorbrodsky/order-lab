@@ -23,7 +23,6 @@ class PerSiteSettingsType extends AbstractType
     {
 
         if( $this->roleAdmin ) {
-
             $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 'property' => 'name',

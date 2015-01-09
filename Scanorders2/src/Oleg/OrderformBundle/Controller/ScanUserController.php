@@ -347,7 +347,7 @@ class ScanUserController extends UserController
             $disabled = false;
         }
 
-        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
+        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
             'disabled' => $disabled
@@ -405,7 +405,7 @@ class ScanUserController extends UserController
         $entity->setUpdateAuthor($user);
         $entity->setUpdateAuthorRoles($user->getRoles());
 
-        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
+        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
         ));
