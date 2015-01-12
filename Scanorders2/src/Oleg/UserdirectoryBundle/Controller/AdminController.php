@@ -113,6 +113,8 @@ class AdminController extends Controller
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
+        $count_testusers = $userutil->generateTestUsers();
+
         $count_boardSpecialties = $this->generateBoardSpecialties();
 
         $this->get('session')->getFlashBag()->add(
@@ -122,6 +124,7 @@ class AdminController extends Controller
             'Site Settings='.$count_siteParameters.', '.
             'Institutions='.$count_institution.', '.
             'Users='.$count_users.', '.
+            'Test Users='.$count_testusers.', '.
             'Board Specialties='.$count_boardSpecialties.', '.
             'Employment Types of Termination='.$count_terminationTypes.', '.
             'Event Log Types ='.$count_eventTypeList.', '.
@@ -1366,6 +1369,108 @@ class AdminController extends Controller
         }
 
         return round($count/10);
+    }
+
+    public function generateTestUsers() {
+
+        $testusers = array(
+            "testsuperadministrator" => "ROLE_SUPER_ADMIN",
+            "testdeputyadministrator" => "ROLE_ADMIN",
+
+            "testscanadministrator" => "ROLE_SCANORDER_ADMIN",
+            "testscanprocessor" => "ROLE_SCANORDER_PROCESSOR",
+            "testscansubmitter" => "ROLE_SCANORDER_SUBMITTER",
+
+            "testuseradministrator" => "ROLE_USERDIRECTORY_ADMIN",
+            "testusereditor" => "ROLE_USERDIRECTORY_EDITOR",
+            "testuserobserver" => "ROLE_USERDIRECTORY_OBSERVER"
+        );
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userUtil = new UserUtil();
+        $em = $this->getDoctrine()->getManager();
+        $systemuser = $this->createSystemUser($em,null,null);  //$this->get('security.context')->getToken()->getUser();
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
+
+
+        $count = 1;
+        foreach( $testusers as $testusername => $role ) {
+
+            $user = new User();
+            $user->setKeytype("aperio");
+            $user->setPrimaryPublicUserId($testusername);
+
+            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
+            if( $found_user ) {
+                continue;
+            }
+
+            //set unique username
+            $usernameUnique = $user->createUniqueUsername();
+            $user->setUsername($usernameUnique);
+            $user->setUsernameCanonical($usernameUnique);
+
+            //$user->setEmail($email);
+            //$user->setEmailCanonical($email);
+            $user->setFirstName($testusername);
+            $user->setLastName($testusername);
+            $user->setDisplayName($testusername." ".$testusername);
+            $user->setPassword("");
+            $user->setCreatedby('system');
+            $user->getPreferences()->setTimezone($default_time_zone);
+
+            //add default locations
+            $user = $userUtil->addDefaultLocations($user,$systemuser,$em,$this->container);
+
+            //phone, fax, office are stored in Location object
+            $mainLocation = $user->getMainLocation();
+            //$mainLocation->setPhone($phone);
+            //$mainLocation->setFax($fax);
+
+            //title is stored in Administrative Title
+            $administrativeTitle = new AdministrativeTitle($systemuser);
+            $user->addAdministrativeTitle($administrativeTitle);
+
+            //add scanorder Roles
+            $user->addRole($role);
+
+            $user->setEnabled(true);
+            $user->setLocked(false);
+            $user->setExpired(false);
+
+            //**************** create PerSiteSettings for this user **************//
+            //TODO: ideally, this should be located on scanorder site
+            $perSiteSettings = new PerSiteSettings($systemuser);
+            $perSiteSettings->setUser($user);
+            $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+            if( count($params) != 1 ) {
+                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+            }
+            $param = $params[0];
+            $institution = $param->getAutoAssignInstitution();
+            $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
+            $em->persist($perSiteSettings);
+            $em->flush();
+            //**************** EOF create PerSiteSettings for this user **************//
+
+            //record user log create
+            $event = "User ".$user." has been created by ".$systemuser."<br>";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
+
+            $em->persist($user);
+            $em->flush();
+
+            $count++;
+        }
+
+        return $count;
     }
 
 }

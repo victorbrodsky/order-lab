@@ -952,6 +952,11 @@ class User extends BaseUser
     }
 
 
+    public function setUsernameForce($username)
+    {
+        $this->username = $username;
+        return $this;
+    }
     //do not overwrite username when user id is set (user already exists in DB)
     public function setUsername($username)
     {

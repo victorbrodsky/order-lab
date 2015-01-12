@@ -138,27 +138,36 @@ class LdapManager extends BaseLdapManager
 
     public function bind(UserInterface $user, $password)
     {
-
         //echo "before: user's username=".$user->getUsername()." <br>";
 
-        //always clean username before bind, use primaryPublicUserId
-        $user->setUsername( $user->getPrimaryPublicUserId() );
+        $originalUsername = $user->getUsername();
 
-//        //don't authenticate users without WCMC CWID keytype
-//        if( $user->getKeytype()->getAbbreviation() != $this->supportedUsertype ) {
-//            throw new BadCredentialsException('The usertype '.$user->getKeytype()->getAbbreviation().' can not be authenticated by ldap.');
-//        }
+        //don't authenticate users without WCMC CWID keytype
+        $userSecUtil = $this->container->get('user_security_utility');
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($originalUsername);
+        if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
+            //exit('not valid, usernamePrefix='.$usernamePrefix);
+            throw new BadCredentialsException('LDAP Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
+        }
+
+        //always clean username before bind, use primaryPublicUserId
+        $user->setUsernameForce( $user->getPrimaryPublicUserId() );
 
         $bindRes = parent::bind($user, $password);
 
+        //echo "bindRes=".$bindRes."<br>";
+        //exit();
+
         if( $bindRes ) {
+            //replace back original username
+            $user->setUsernameForce( $originalUsername );
             //replace only username
             $user->setUniqueUsername();
         }
 
-//        echo "after: user's username=".$user->getUsername()." <br>";
-//        echo "<br>bindRes=".$bindRes."<br>";
-//        //exit('exit bind');
+        //echo "after: user's username=".$user->getUsername()." <br>";
+        //echo "<br>bindRes=".$bindRes."<br>";
+        //exit('exit bind');
 
         return $bindRes;
     }
