@@ -45,7 +45,7 @@ class AperioUtil {
         //echo "usernamePrefix=".$usernamePrefix."<br>";
 
         if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
-            throw new BadCredentialsException('The usertype '.$usernamePrefix.' can not be authenticated by ldap.');
+            throw new BadCredentialsException('The usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
         }
 
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
