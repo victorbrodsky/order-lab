@@ -2,10 +2,13 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\OrderformBundle\Entity\PerSiteSettings;
+use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -113,7 +116,7 @@ class AdminController extends Controller
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
-        $count_testusers = $userutil->generateTestUsers();
+        $count_testusers = $this->generateTestUsers();
 
         $count_boardSpecialties = $this->generateBoardSpecialties();
 
@@ -1389,7 +1392,7 @@ class AdminController extends Controller
         $userSecUtil = $this->container->get('user_security_utility');
         $userUtil = new UserUtil();
         $em = $this->getDoctrine()->getManager();
-        $systemuser = $this->createSystemUser($em,null,null);  //$this->get('security.context')->getToken()->getUser();
+        $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->get('security.context')->getToken()->getUser();
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
 //        $em = $this->getDoctrine()->getManager();
@@ -1404,7 +1407,8 @@ class AdminController extends Controller
         foreach( $testusers as $testusername => $role ) {
 
             $user = new User();
-            $user->setKeytype("aperio");
+            $userkeytype = $userSecUtil->getUsernameType("aperio");
+            $user->setKeytype($userkeytype);
             $user->setPrimaryPublicUserId($testusername);
 
             $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
@@ -1445,6 +1449,13 @@ class AdminController extends Controller
             $user->setLocked(false);
             $user->setExpired(false);
 
+            //record user log create
+            $event = "User ".$user." has been created by ".$systemuser."<br>";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
+
+            $em->persist($user);
+            $em->flush();
+
             //**************** create PerSiteSettings for this user **************//
             //TODO: ideally, this should be located on scanorder site
             $perSiteSettings = new PerSiteSettings($systemuser);
@@ -1459,13 +1470,6 @@ class AdminController extends Controller
             $em->persist($perSiteSettings);
             $em->flush();
             //**************** EOF create PerSiteSettings for this user **************//
-
-            //record user log create
-            $event = "User ".$user." has been created by ".$systemuser."<br>";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
-
-            $em->persist($user);
-            $em->flush();
 
             $count++;
         }
