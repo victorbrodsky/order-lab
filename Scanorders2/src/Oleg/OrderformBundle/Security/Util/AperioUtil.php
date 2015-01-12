@@ -27,7 +27,7 @@ class AperioUtil {
     private $ldap = true;
     private $test = false;
 
-    private $supportedUsertypes = array('aperio','wcmc-cwid');
+    private $supportedUsertypes = array('aperio');  //array('aperio','wcmc-cwid');
 
     public function __construct() {
         //
@@ -45,7 +45,7 @@ class AperioUtil {
         //echo "usernamePrefix=".$usernamePrefix."<br>";
 
         if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
-            throw new BadCredentialsException('The usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
+            throw new BadCredentialsException('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
         }
 
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());

@@ -68,7 +68,7 @@ class LdapManager extends BaseLdapManager
         //don't authenticate users without WCMC CWID keytype
         $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
         if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
-            throw new BadCredentialsException('The usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
+            throw new BadCredentialsException('LDAP Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
         }
 
         $this->usernamePrefix = $usernamePrefix;
