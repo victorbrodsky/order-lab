@@ -953,13 +953,26 @@ class User extends BaseUser
 
 
     //do not overwrite username when user id is set (user already exists in DB)
+    public function setUsername($username)
+    {
+        if( $this->getId() && $username != $this->getUsername() ) {
+            //continue without error
+            return;
+            //exit('Can not change username when user is in DB: username='.$username.', existing username='.$this->getUsername().', id='.$this->getId());
+            //throw new \Exception( 'Can not change username when user is in DB: username='.$username.', existing username='.$this->getUsername().', id='.$this->getId() );
+        }
+
+        $this->username = $username;
+
+        return $this;
+    }
     public function setUsernameCanonical($usernameCanonical)
     {
         if( $this->getId() && $usernameCanonical != $this->getUsernameCanonical() ) {
             //continue without error
             return;
-            //exit('Can not change canonical username when user is in DB: username='.$usernameCanonical.', id='.$this->getId());
-            //throw new \Exception( 'Can not change canonical username when user is in DB: new usernameCanonical='.$usernameCanonical.', old usernameCanonical='.$this->getUsernameCanonical().', id='.$this->getId() );
+            //exit('Can not change canonical username when user is in DB: username='.$usernameCanonical.', existing canonical username='.$this->getUsername().', id='.$this->getId());
+            //throw new \Exception( 'Can not change canonical username when user is in DB: username='.$usernameCanonical.', existing canonical username='.$this->getUsername().', id='.$this->getId() );
         }
 
         $this->usernameCanonical = $usernameCanonical;
