@@ -51,7 +51,7 @@ class SecurityController extends Controller
         $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
             array(
                 'type' => array('default', 'user-added'),
-                'abbreviation' => array('wcmc-cwid', 'aperio', 'local-user')
+                'abbreviation' => array('wcmc-cwid')
             ),
             array('orderinlist' => 'ASC')
         );

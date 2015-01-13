@@ -36,7 +36,14 @@ class ScanSecurityController extends SecurityController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
+        //$usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
+        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
+            array(
+                'type' => array('default', 'user-added'),
+                'abbreviation' => array('wcmc-cwid', 'aperio')
+            ),
+            array('orderinlist' => 'ASC')
+        );
 
         $formArr['usernametypes'] = $usernametypes;
 
