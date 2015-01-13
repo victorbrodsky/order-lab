@@ -1377,8 +1377,8 @@ class AdminController extends Controller
     public function generateTestUsers() {
 
         $testusers = array(
-            "testsuperadministrator" => array("ROLE_SUPER_ADMIN"),
-            "testdeputyadministrator" => array("ROLE_ADMIN"),
+            "testplatformadministrator" => array("ROLE_SUPER_ADMIN"),
+            "testdeputyplatformadministrator" => array("ROLE_ADMIN"),
 
             "testscanadministrator" => array("ROLE_SCANORDER_ADMIN"),
             "testscanprocessor" => array("ROLE_SCANORDER_PROCESSOR"),
@@ -1410,7 +1410,7 @@ class AdminController extends Controller
             $user->setKeytype($userkeytype);
             $user->setPrimaryPublicUserId($testusername);
 
-            echo "username=".$user->getPrimaryPublicUserId()."<br>";
+            //echo "username=".$user->getPrimaryPublicUserId()."<br>";
             $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId( $user->getPrimaryPublicUserId() );
             if( $found_user ) {
                 //add scanorder Roles
