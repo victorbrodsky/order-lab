@@ -41,9 +41,22 @@ class Department extends ListAbstract
     private $heads;
 
 
+    /**
+     * @ORM\ManyToMany(targetEntity="SuiteList", mappedBy="departments")
+     **/
+    private $suites;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="RoomList", mappedBy="departments")
+     **/
+    private $rooms;
+
+
     public function __construct() {
         $this->divisions = new ArrayCollection();
         $this->heads = new ArrayCollection();
+        $this->suites = new ArrayCollection();
+        $this->rooms = new ArrayCollection();
         parent::__construct();
     }
 
@@ -55,15 +68,46 @@ class Department extends ListAbstract
         }
         return $this;
     }
-
     public function removeHead($head)
     {
         $this->heads->removeElement($head);
     }
-
     public function getHeads()
     {
         return $this->heads;
+    }
+
+
+    public function addSuite($suite)
+    {
+        if( !$this->suites->contains($suite) ) {
+            $this->suites->add($suite);
+        }
+        return $this;
+    }
+    public function removeSuite($suite)
+    {
+        $this->suites->removeElement($suite);
+    }
+    public function getSuites()
+    {
+        return $this->suites;
+    }
+
+    public function addRoom($room)
+    {
+        if( !$this->rooms->contains($room) ) {
+            $this->rooms->add($room);
+        }
+        return $this;
+    }
+    public function removeRoom($room)
+    {
+        $this->rooms->removeElement($room);
+    }
+    public function getRooms()
+    {
+        return $this->rooms;
     }
 
 

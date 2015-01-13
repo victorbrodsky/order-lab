@@ -135,6 +135,7 @@
                 <td>{{ entity.updatedby }}</td>
                 <td>{% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}</td>
 
+
                 {#<td class="rowlink-skip">#}
                     {#<a class="btn btn-xs btn-default" href="{{ path(pathbase~'_edit', { 'id': entity.id }) }}">Edit</a>#}
                 {#</td>#}
@@ -311,6 +312,33 @@
         {{ listmacros.showResearchLabPi( entity.researchlab, true ) }}
         </p>
     {% endif %}
+
+
+    {#additional attributes#}
+
+    {#suites display for: floor#}
+    {% if edit_form.suites is defined %}
+        {{ formmacros.field(edit_form.suites) }}
+    {% endif %}
+
+    {#rooms display for: floor, suite#}
+    {% if edit_form.rooms is defined %}
+        {{ formmacros.field(edit_form.rooms) }}
+    {% endif %}
+
+    {#buildings display for: suite, room#}
+    {% if edit_form.buildings is defined %}
+        {{ formmacros.field(edit_form.buildings) }}
+    {% endif %}
+
+    {#departments display for: suite, room#}
+    {% if edit_form.departments is defined %}
+        {{ formmacros.field(edit_form.departments) }}
+    {% endif %}
+
+
+
+
 
     {% if edit_form.submit is defined %}
         <br />

@@ -24,6 +24,7 @@ class RoomList extends ListAbstract
     protected $original;
 
 
+    //TODO: make many to many ?
     /**
      * @ORM\ManyToOne(targetEntity="SuiteList", inversedBy="rooms")
      * @ORM\JoinColumn(name="suite_id", referencedColumnName="id")
@@ -36,15 +37,23 @@ class RoomList extends ListAbstract
     private $floors;
 
     /**
-     * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="rooms")
+     * @ORM\ManyToMany(targetEntity="BuildingList", inversedBy="rooms")
+     * @ORM\JoinTable(name="user_rooms_buildings")
      **/
     private $buildings;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Department", inversedBy="suites")
+     * @ORM\JoinTable(name="user_rooms_departments")
+     **/
+    private $departments;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->floors = new ArrayCollection();
         $this->buildings = new ArrayCollection();
+        $this->departments = new ArrayCollection();
     }
 
 
@@ -91,6 +100,7 @@ class RoomList extends ListAbstract
     {
         if( !$this->buildings->contains($building) ) {
             $this->buildings->add($building);
+            $building->addRoom($this);
         }
         return $this;
     }
@@ -100,6 +110,40 @@ class RoomList extends ListAbstract
     }
 
 
+    public function getDepartments()
+    {
+        return $this->departments;
+    }
+    public function addDepartment($department)
+    {
+        if( !$this->departments->contains($department) ) {
+            $this->departments->add($department);
+            $department->addRoom($this);
+        }
 
+        return $this;
+    }
+    public function removeDepartment($department)
+    {
+        $this->departments->removeElement($department);
+    }
+
+
+    public function getFullName() {
+        $names = array();
+        foreach( $this->getBuildings() as $building ) {
+            $names[] = $building."";
+        }
+
+        $namesStr = implode(",", $names);
+
+        if( $namesStr ) {
+            $fullName = $this->getName() . " (" . implode(",", $names) . ")";
+        } else {
+            $fullName = $this->getName();
+        }
+
+        return $fullName;
+    }
 
 }

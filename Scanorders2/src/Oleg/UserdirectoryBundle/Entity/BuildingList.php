@@ -44,14 +44,12 @@ class BuildingList extends ListAbstract
     private $locations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="SuiteList", inversedBy="buildings")
-     * @ORM\JoinTable(name="user_buildings_suites")
+     * @ORM\ManyToMany(targetEntity="SuiteList", mappedBy="buildings")
      **/
     private $suites;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RoomList", inversedBy="buildings")
-     * @ORM\JoinTable(name="user_buildings_rooms")
+     * @ORM\ManyToMany(targetEntity="RoomList", mappedBy="buildings")
      **/
     private $rooms;
 
@@ -100,7 +98,6 @@ class BuildingList extends ListAbstract
         if( $suite ) {
             if( !$this->suites->contains($suite) ) {
                 $this->suites->add($suite);
-                $suite->addBuilding($this);
             }
         }
 
@@ -122,7 +119,6 @@ class BuildingList extends ListAbstract
         if( $room ) {
             if( !$this->rooms->contains($room) ) {
                 $this->rooms->add($room);
-                $room->addBuilding($this);
             }
         }
 

@@ -24,30 +24,29 @@ class SuiteList extends ListAbstract
     protected $original;
 
 
-
+    //TODO: make many to many ?
     /**
      * @ORM\OneToMany(targetEntity="RoomList", mappedBy="suite")
      **/
     private $rooms;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="FloorList", inversedBy="suites")
-//     * @ORM\JoinColumn(name="floor_id", referencedColumnName="id")
-//     **/
-//    protected $floor;
+
     /**
      * @ORM\ManyToMany(targetEntity="FloorList", mappedBy="suites")
      **/
     private $floors;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="suites")
-//     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
-//     **/
     /**
-     * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="suites")
+     * @ORM\ManyToMany(targetEntity="BuildingList", inversedBy="suites")
+     * @ORM\JoinTable(name="user_suites_buildings")
      **/
     private $buildings;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Department", inversedBy="suites")
+     * @ORM\JoinTable(name="user_suites_departments")
+     **/
+    private $departments;
 
 
     public function __construct() {
@@ -55,6 +54,7 @@ class SuiteList extends ListAbstract
         $this->rooms = new ArrayCollection();
         $this->floors = new ArrayCollection();
         $this->buildings = new ArrayCollection();
+        $this->departments = new ArrayCollection();
     }
 
 
@@ -63,7 +63,6 @@ class SuiteList extends ListAbstract
     {
         if( $room && !$this->rooms->contains($room) ) {
             $this->rooms->add($room);
-            $room->setSuite($this);
         }
 
         return $this;
@@ -103,6 +102,7 @@ class SuiteList extends ListAbstract
     {
         if( !$this->buildings->contains($building) ) {
             $this->buildings->add($building);
+            $building->addSuite($this);
         }
 
         return $this;
@@ -113,6 +113,40 @@ class SuiteList extends ListAbstract
     }
 
 
+    public function getDepartments()
+    {
+        return $this->departments;
+    }
+    public function addDepartment($department)
+    {
+        if( !$this->departments->contains($department) ) {
+            $this->departments->add($department);
+            $department->addSuite($this);
+        }
+
+        return $this;
+    }
+    public function removeDepartment($department)
+    {
+        $this->departments->removeElement($department);
+    }
+
+    public function getFullName() {
+        $names = array();
+        foreach( $this->getBuildings() as $building ) {
+            $names[] = $building."";
+        }
+
+        $namesStr = implode(",", $names);
+
+        if( $namesStr ) {
+            $fullName = $this->getName() . " (" . implode(",", $names) . ")";
+        } else {
+            $fullName = $this->getName();
+        }
+
+        return $fullName;
+    }
 
 
 }

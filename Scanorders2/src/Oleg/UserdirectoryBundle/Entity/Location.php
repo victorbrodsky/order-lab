@@ -790,12 +790,23 @@ class Location extends ListAbstract //extends BaseLocation
         //add room and suite to building
         if( $this->building ) {
             if( $this->room ) {
-                $this->building->addRoom($this->room);
+                $this->room->addBuilding($this->building);
             }
             if( $this->suite ) {
-                $this->building->addSuite($this->suite);
+                $this->suite->addBuilding($this->building);
             }
         }
+
+        //add room and suite to department
+        if( $this->department ) {
+            if( $this->room ) {
+                $this->room->addDepartment($this->department);
+            }
+            if( $this->suite ) {
+                $this->suite->addDepartment($this->department);
+            }
+        }
+
         //echo "set room suite floor building <br>";
     }
 

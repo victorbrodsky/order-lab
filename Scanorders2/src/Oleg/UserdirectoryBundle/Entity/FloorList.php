@@ -24,18 +24,12 @@ class FloorList extends ListAbstract
     protected $original;
 
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="SuiteList", mappedBy="floor")
-//     **/
     /**
      * @ORM\ManyToMany(targetEntity="SuiteList", inversedBy="floors")
      * @ORM\JoinTable(name="user_floors_suites")
      **/
     protected $suites;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="floor")
-//     **/
     /**
      * @ORM\ManyToMany(targetEntity="RoomList", inversedBy="floors")
      * @ORM\JoinTable(name="user_floors_rooms")
