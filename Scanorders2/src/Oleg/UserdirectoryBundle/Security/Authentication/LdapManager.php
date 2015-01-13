@@ -85,7 +85,9 @@ class LdapManager extends BaseLdapManager
         //exit('after find');
 
         //set original username with prefix
-        $user->setUsernameForce( $username );
+        if( $user ) {
+            $user->setUsernameForce( $username );
+        }
 
         return $user;
     }
