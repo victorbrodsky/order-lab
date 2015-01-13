@@ -39,7 +39,7 @@ class UserType extends AbstractType
         $this->em = $params['em'];
 
         //echo "cycle=".$cycle."<br>";
-        if( $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->sc->isGranted('ROLE_ADMIN') ) {
+        if( $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //echo "role ADMIN<br>";
             $this->roleAdmin = true;
         } else {

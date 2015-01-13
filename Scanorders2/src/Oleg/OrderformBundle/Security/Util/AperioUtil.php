@@ -129,7 +129,7 @@ class AperioUtil {
 
                 //TODO: remove this on production!
                 if( $user->getPrimaryPublicUserId() == "oli2002" || $user->getPrimaryPublicUserId() == "vib9020" ) {
-                    $user->addRole('ROLE_SUPER_ADMIN');
+                    $user->addRole('ROLE_PLATFORM_ADMIN');
                 }
                 if( $this->test ) {
                     $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');

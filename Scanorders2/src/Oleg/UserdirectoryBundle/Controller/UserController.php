@@ -551,7 +551,7 @@ class UserController extends Controller
         //$criteriastr .= "locations.associatedCode LIKE '%".$search."%' OR ";
         $criteriastr .= "locations.associatedCode='".$search."' OR ";
 
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+        if( $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //WCMC Employee Identification Number (EIN)
             //NPI
             $dql->leftJoin("credentials.identifiers", "identifiers");
@@ -1393,19 +1393,19 @@ class UserController extends Controller
         if( count($entity->getPublicComments()) == 0 ) {
             $entity->addPublicComment( new PublicComment($user) );
         }
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
+        if( $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
             $entity->getId() && $entity->getId() == $user->getId()
         ) {
             if( count($entity->getPrivateComments()) == 0 ) {
                 $entity->addPrivateComment( new PrivateComment($user) );
             }
         }
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             if( count($entity->getAdminComments()) == 0 ) {
                 $entity->addAdminComment( new AdminComment($user) );
             }
         }
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             if( count($entity->getConfidentialComments()) == 0 ) {
                 $entity->addConfidentialComment( new ConfidentialComment($user) );
             }
@@ -1586,7 +1586,7 @@ class UserController extends Controller
 
             //check 1: if the roles are changed by non admin user
             if( count($resultRoles) > 0 ) {
-                if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') &&
+                if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
                     false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
                     false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')
                 ) {
@@ -1597,8 +1597,8 @@ class UserController extends Controller
             }
             //check 2: if the roles "Platform Administrator" or "Deputy Platform Administrator" are changed by non super admin user
             foreach( $resultRoles as $role ) {
-                if( $role == "ROLE_ADMIN" || $role == "ROLE_SUPER_ADMIN" ) {
-                    if( false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') ) {
+                if( $role == "ROLE_PLATFORM_DEPUTY_ADMIN" || $role == "ROLE_PLATFORM_ADMIN" ) {
+                    if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
                         $this->setSessionForbiddenNote("Change Role ".$role);
                         //throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Role ".$role);
                         return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );

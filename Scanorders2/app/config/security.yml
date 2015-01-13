@@ -24,8 +24,8 @@ security:
 #        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED_SUBMITTER]
         ROLE_EDITOR: [ROLE_SCANORDER_PROCESSOR, ROLE_USERDIRECTORY_EDITOR]  #permission to edit the content of DB such as change access request status
 #        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
-        ROLE_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN]
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN]
+        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN]
+        ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
 
     providers:
@@ -44,7 +44,7 @@ security:
 #            memory:
 #                users:
 #                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-#                    admin: { password: adminpass123, roles: [ 'ROLE_ADMIN' ] }
+#                    admin: { password: adminpass123, roles: [ 'ROLE_PLATFORM_DEPUTY_ADMIN' ] }
 
     firewalls:
 
@@ -113,7 +113,7 @@ security:
      - { path: ^/directory/admin/genall, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
-     - { path: ^/directory/site-settings/, role: ROLE_ADMIN }
+     - { path: ^/directory/site-settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
 
      ############################## SCAN SITE SETTINGS ##############################
@@ -128,7 +128,7 @@ security:
      - { path: ^/scan/admin/genall, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
-     - { path: ^/scan/site-settings/, role: ROLE_ADMIN }
+     - { path: ^/scan/site-settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
      - { path: ^/scan/user-directory, role: ROLE_SCANORDER_PROCESSOR }
      - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }

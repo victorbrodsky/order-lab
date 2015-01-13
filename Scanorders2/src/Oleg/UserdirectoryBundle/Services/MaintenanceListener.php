@@ -101,7 +101,7 @@ class MaintenanceListener {
                     return;
                 }
 
-                if( $this->sc->isGranted('ROLE_ADMIN') ) {
+                if( $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                     //don't kick out already logged in users
                     //exit('do not kick out already logged in users');
                     return;

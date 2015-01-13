@@ -52,8 +52,8 @@
         {{ form_widget(form._token) }}
 
 
-        {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_ADMIN#}
-        {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_ADMIN') %}
+        {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_PLATFORM_DEPUTY_ADMIN#}
+        {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
             {% set userEditor = true %}
         {% else %}
             {% set userEditor = false %}

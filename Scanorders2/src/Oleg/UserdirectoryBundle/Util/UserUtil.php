@@ -309,7 +309,7 @@ class UserUtil {
         $maintenance = $param->getMaintenance();
 
         //do not use maintenance for admin
-        if( $sc->isGranted('ROLE_ADMIN') ) {
+        if( $sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             $maintenance = false;
         }
 

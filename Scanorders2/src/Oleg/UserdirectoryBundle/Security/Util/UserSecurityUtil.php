@@ -216,7 +216,7 @@ class UserSecurityUtil {
 
         if( $userRole == "Platform Administrator" ) {
 
-            $role = "ROLE_ADMIN";
+            $role = "ROLE_PLATFORM_DEPUTY_ADMIN";
 
         } else if( $userRole == "Administrator" ) {
 

@@ -68,10 +68,12 @@ class LdapManager extends BaseLdapManager
         //don't authenticate users without WCMC CWID keytype
         $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
         if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
+            //exit('LDAP Authentication error');
             throw new BadCredentialsException('LDAP Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
         }
 
         $this->usernamePrefix = $usernamePrefix;
+        //echo "usernamePrefix=".$usernamePrefix."<br>";
 
         //clean username
         $usernameClean = $userSecUtil->createCleanUsername($username);
@@ -79,8 +81,11 @@ class LdapManager extends BaseLdapManager
 
         $user =  parent::findUserByUsername($usernameClean);
 
-        //echo "user=".$user->getUsername()."<br>";
+        //echo "<br>user=".$user->getUsername()."<br>";
         //exit('after find');
+
+        //set original username with prefix
+        $user->setUsernameForce( $username );
 
         return $user;
     }
@@ -119,7 +124,7 @@ class LdapManager extends BaseLdapManager
             ||  $user->getPrimaryPublicUserId() == "vib9020"
             //||  $user->getPrimaryPublicUserId() == "svc_aperio_spectrum"
         ) {
-            $user->addRole('ROLE_SUPER_ADMIN');
+            $user->addRole('ROLE_PLATFORM_ADMIN');
         }
 
         //add default locations
@@ -128,10 +133,10 @@ class LdapManager extends BaseLdapManager
         //replace admin title by object
         $userUtil->replaceAdminTitleByObject($user,null,$this->em,$this->container);
 
-//        echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
-//        echo "user's username=".$user->getUsername()." <br>";
-//        echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
-//        print_r($user->getRoles());
+        //echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
+        //echo "user's username=".$user->getUsername()." <br>";
+        //echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
+        //print_r($user->getRoles());
         //exit('exit hydrate');
 
     }
