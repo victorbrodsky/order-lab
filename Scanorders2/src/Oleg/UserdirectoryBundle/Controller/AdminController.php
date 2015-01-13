@@ -1377,16 +1377,16 @@ class AdminController extends Controller
     public function generateTestUsers() {
 
         $testusers = array(
-            "testsuperadministrator" => "ROLE_SUPER_ADMIN",
-            "testdeputyadministrator" => "ROLE_ADMIN",
+            "testsuperadministrator" => array("ROLE_SUPER_ADMIN"),
+            "testdeputyadministrator" => array("ROLE_ADMIN"),
 
-            "testscanadministrator" => "ROLE_SCANORDER_ADMIN",
-            "testscanprocessor" => "ROLE_SCANORDER_PROCESSOR",
-            "testscansubmitter" => "ROLE_SCANORDER_SUBMITTER",
+            "testscanadministrator" => array("ROLE_SCANORDER_ADMIN"),
+            "testscanprocessor" => array("ROLE_SCANORDER_PROCESSOR"),
+            "testscansubmitter" => array("ROLE_SCANORDER_SUBMITTER"),
 
-            "testuseradministrator" => "ROLE_USERDIRECTORY_ADMIN",
-            "testusereditor" => "ROLE_USERDIRECTORY_EDITOR",
-            "testuserobserver" => "ROLE_USERDIRECTORY_OBSERVER"
+            "testuseradministrator" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_ADMIN"),
+            "testusereditor" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_EDITOR"),
+            "testuserobserver" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_OBSERVER")
         );
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1402,17 +1402,22 @@ class AdminController extends Controller
 //            return -1;
 //        }
 
-
         $count = 1;
-        foreach( $testusers as $testusername => $role ) {
+        foreach( $testusers as $testusername => $roles ) {
 
             $user = new User();
             $userkeytype = $userSecUtil->getUsernameType("aperio");
             $user->setKeytype($userkeytype);
             $user->setPrimaryPublicUserId($testusername);
 
-            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
+            echo "username=".$user->getPrimaryPublicUserId()."<br>";
+            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId( $user->getPrimaryPublicUserId() );
             if( $found_user ) {
+                //add scanorder Roles
+                foreach( $roles as $role ) {
+                    $found_user->addRole($role);
+                }
+                $em->flush();
                 continue;
             }
 
@@ -1443,7 +1448,9 @@ class AdminController extends Controller
             $user->addAdministrativeTitle($administrativeTitle);
 
             //add scanorder Roles
-            $user->addRole($role);
+            foreach( $roles as $role ) {
+                $user->addRole($role);
+            }
 
             $user->setEnabled(true);
             $user->setLocked(false);
