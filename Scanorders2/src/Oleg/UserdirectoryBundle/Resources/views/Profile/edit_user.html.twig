@@ -515,12 +515,14 @@
             </td>
             <td>
                 {% for email in user.getAllEmail() %}
-                    <p>{{ email['prefix'] }}: <a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
+                    <p>
+                        {{ email['prefix'] }}<a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a>
+                    </p>
                 {% endfor %}
             </td>
             <td>
                 {% for phone in user.getAllPhones() %}
-                    <p>{{ phone['prefix'] }}: {{ usermacros.phoneHref(phone['phone']) }}</p>
+                    <p>{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
                 {% endfor %}
             </td>
             <td>
@@ -551,16 +553,26 @@
                             {% for assistant in location.assistant %}
                                 <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
                                 ({{ location.name }}):
-                                {#{{ usermacros.phoneHref(assistant.preferredPhone) }}#}
-                                {% for phone in assistant.getAllPhones() %}
-                                    <p>{{ phone['prefix'] }}: {{ usermacros.phoneHref(phone['phone']) }}</p>
-                                {% endfor %}
-                                {% if assistant.preferredPhone and assistant.email %}
-                                    ,
+                                {# phones #}
+                                {% set phones = assistant.getAllPhones() %}
+                                {% if phones|length > 0 %}
+                                    <div class="well well-sm" style="margin-bottom: 5px;">
+                                        {#<h5>Phone(s):</h5>#}
+                                        {% for phone in phones %}
+                                            <p>{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
+                                        {% endfor %}
+                                    </div>
                                 {% endif %}
-                                {% for email in assistant.getAllEmail() %}
-                                    <p>{{ email['prefix'] }}: <a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
-                                {% endfor %}
+                                {# emails #}
+                                {% set emails = assistant.getAllEmail() %}
+                                {% if emails|length > 0 %}
+                                    <div class="well well-sm">
+                                        {#<h5>Email(s):</h5>#}
+                                        {% for email in emails %}
+                                            <p>{{ email['prefix'] }}<a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                                 <br>
                             {% endfor %}
                         {% endif %}

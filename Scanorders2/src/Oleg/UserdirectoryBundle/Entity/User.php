@@ -892,30 +892,23 @@ class User extends BaseUser
     public function getAllPhones() {
         $phonesArr = array();
         //get all locations phones
-        if( $this->getPreferredPhone() ) {
-            $phone = array();
-            $phone['prefix'] = "Preferred";
-            $phone['phone'] = $this->getPreferredPhone();
-            $phonesArr[] = $phone;
-        }
-
         foreach( $this->getLocations() as $location ) {
-            if( $location->getLocationType() && $location->getLocationType()->getName() != "Employee Home" ) {
+            if( !$location->getLocationType() || $location->getLocationType()->getName() != "Employee Home" ) {
                 if( $location->getPhone() ) {
                     $phone = array();
-                    $phone['prefix'] = $location->getName()." Line";
+                    $phone['prefix'] = $location->getName()." Line: ";
                     $phone['phone'] = $location->getPhone();
                     $phonesArr[] = $phone;
                 }
                 if( $location->getMobile() ) {
                     $phone = array();
-                    $phone['prefix'] = $location->getName()." Mobile";
+                    $phone['prefix'] = $location->getName()." Mobile: ";
                     $phone['phone'] = $location->getMobile();
                     $phonesArr[] = $phone;
                 }
                 if( $location->getPager() ) {
                     $phone = array();
-                    $phone['prefix'] = $location->getName()." Pager";
+                    $phone['prefix'] = $location->getName()." Pager: ";
                     $phone['phone'] = $location->getPager();
                     $phonesArr[] = $phone;
                 }
@@ -924,29 +917,51 @@ class User extends BaseUser
             }
         }
 
+        if( $this->getPreferredPhone() ) {
+            $phone = array();
+            if( count($phonesArr) > 0 ) {
+                $phone['prefix'] = "Preferred: ";
+            } else {
+                $phone['prefix'] = "";
+            }
+            $phone['phone'] = $this->getPreferredPhone();
+            $phonesArr[] = $phone;
+        }
+
+        rsort($phonesArr);
+
         return $phonesArr;
     }
 
     public function getAllEmail() {
         $emailArr = array();
+        //echo "count loc=".count($this->getLocations())."<br>";
         //get all locations phones
-        if( $this->getEmail() ) {
-            $email = array();
-            $email['prefix'] = "Preferred";
-            $email['email'] = $this->getEmail();
-            $emailArr[] = $email;
-        }
-
         foreach( $this->getLocations() as $location ) {
-            if( $location->getLocationType() && $location->getLocationType()->getName() != "Employee Home" ) {
+            //echo "loc=".$location."<br>";
+            if( !$location->getLocationType() || $location->getLocationType()->getName() != "Employee Home" ) {
+                //echo "email:".$location->getEmail()."<br>";
                 if( $location->getEmail() ) {
                     $email = array();
-                    $email['prefix'] = $location->getName();
+                    $email['prefix'] = $location->getName().": ";
                     $email['email'] = $this->getEmail();
                     $emailArr[] = $email;
                 }
             }
         }
+
+        if( $this->getEmail() ) {
+            $email = array();
+            if( count($emailArr) > 0 ) {
+                $email['prefix'] = "Preferred: ";
+            } else {
+                $email['prefix'] = "";
+            }
+            $email['email'] = $this->getEmail();
+            $emailArr[] = $email;
+        }
+
+        rsort($emailArr);
 
         return $emailArr;
     }

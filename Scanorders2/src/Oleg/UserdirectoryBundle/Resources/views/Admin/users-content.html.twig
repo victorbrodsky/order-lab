@@ -128,13 +128,13 @@
                 <td class="rowlink-skip">
                     {#<a href="mailto:{{ entity.email }}" target="_top">{{ entity.email }}</a>#}
                     {% for email in entity.getAllEmail() %}
-                        <p>{{ email['prefix'] }}: <a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
+                        <p>{{ email['prefix'] }}<a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
                     {% endfor %}
                 </td>
                 <td class="rowlink-skip">
                     {#{{ usermacros.phoneHref(entity.preferredPhone) }}#}
                     {% for phone in entity.getAllPhones() %}
-                        <p>{{ phone['prefix'] }}: {{ usermacros.phoneHref(phone['phone']) }}</p>
+                        <p>{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
                     {% endfor %}
                 </td>
                 <td>
@@ -166,14 +166,14 @@
                                 ({{ location.name }}):
                                 {#{{ usermacros.phoneHref(assistant.preferredPhone) }}#}
                                 {% for phone in assistant.getAllPhones() %}
-                                    <p>{{ phone['prefix'] }}: {{ usermacros.phoneHref(phone['phone']) }}</p>
+                                    <p>{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
                                 {% endfor %}
                                 {% if assistant.email %}
                                 ,
                                 {% endif %}
                                 {#<a href="mailto:{{ assistant.email }}" target="_top">{{ assistant.email }}</a>#}
                                 {% for email in assistant.getAllEmail() %}
-                                    <p>{{ email['prefix'] }}: <a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
+                                    <p>{{ email['prefix'] }}<a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
                                 {% endfor %}
                                 <br>
                             {% endfor %}
