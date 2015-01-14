@@ -60,7 +60,7 @@
             <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Updated On', 'ent.updatedon') }}</th>
             {#<th>Actions</th>#}
-        </trC>
+        </tr>
         </thead>
         <tbody data-link="row" class="rowlink">
 
@@ -179,6 +179,7 @@
 {% macro listNew( form, pathbase ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as listmacros %}
 
     {#{{ form(form) }}#}
     {{ form_start(form) }}
@@ -231,6 +232,11 @@
         {{ formmacros.field(form.list.updatedby) }}
         {{ formmacros.field(form.list.updatedon) }}
     {% endif %}
+
+
+    {#additional attributes#}
+    {{ listmacros.additionalRelationships( form ) }}
+
 
     {{ form_widget(form.submit) }}
     <a class="btn btn-info" type="button" href="{{ path(pathbase~'-list') }}">Cancel</a>
@@ -315,29 +321,7 @@
 
 
     {#additional attributes#}
-
-    {#suites display for: floor#}
-    {% if edit_form.suites is defined %}
-        {{ formmacros.field(edit_form.suites) }}
-    {% endif %}
-
-    {#rooms display for: floor, suite#}
-    {% if edit_form.rooms is defined %}
-        {{ formmacros.field(edit_form.rooms) }}
-    {% endif %}
-
-    {#buildings display for: suite, room#}
-    {% if edit_form.buildings is defined %}
-        {{ formmacros.field(edit_form.buildings) }}
-    {% endif %}
-
-    {#departments display for: suite, room#}
-    {% if edit_form.departments is defined %}
-        {{ formmacros.field(edit_form.departments) }}
-    {% endif %}
-
-
-
+    {{ listmacros.additionalRelationships( edit_form ) }}
 
 
     {% if edit_form.submit is defined %}
@@ -375,4 +359,37 @@
         <a href="{{ path(pathbase~'-list') }}">Back to the list</a>
     </p>
 
+{% endmacro %}
+
+
+{#additional attributes#}
+{% macro additionalRelationships( form ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <hr>
+
+    {#floors display for: suites, rooms#}
+    {% if form.floors is defined %}
+        {{ formmacros.field(form.floors) }}
+    {% endif %}
+
+    {#suites display for: floor, rooms#}
+    {% if form.suites is defined %}
+        {{ formmacros.field(form.suites) }}
+    {% endif %}
+
+    {#rooms display for: floor#}
+    {% if form.rooms is defined %}
+        {{ formmacros.field(form.rooms) }}
+    {% endif %}
+
+    {#buildings display for: suite, room#}
+    {% if form.buildings is defined %}
+        {{ formmacros.field(form.buildings) }}
+    {% endif %}
+
+    {#departments display for: suite, room#}
+    {% if form.departments is defined %}
+        {{ formmacros.field(form.departments) }}
+    {% endif %}
 {% endmacro %}

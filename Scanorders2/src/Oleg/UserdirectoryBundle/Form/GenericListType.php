@@ -68,14 +68,20 @@ class GenericListType extends AbstractType
 
 
 
-        //Floor: suites, rooms
-        if( strtolower($this->mapper['className']) == strtolower("FloorList") ) {
+
+
+        ///////////////// Many To Many relationship /////////////////
+
+        //Department:
+        //not editable: suites, rooms
+        if( strtolower($this->mapper['className']) == strtolower("Department") ) {
             $builder->add('suites','entity',array(
                 'class' => 'OlegUserdirectoryBundle:SuiteList',
                 'property' => 'FullName',
                 'label'=>'Suite(s):',
                 'required'=> false,
                 'multiple' => true,
+                'disabled' => true,
                 'attr' => array('class' => 'combobox combobox-width')
             ));
 
@@ -85,12 +91,37 @@ class GenericListType extends AbstractType
                 'label'=>'Room(s):',
                 'required'=> false,
                 'multiple' => true,
+                'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
+
+        //Floor:
+        //not editable: suites, rooms
+        if( strtolower($this->mapper['className']) == strtolower("FloorList") ) {
+            $builder->add('suites','entity',array(
+                'class' => 'OlegUserdirectoryBundle:SuiteList',
+                'property' => 'FullName',
+                'label'=>'Suite(s):',
+                'required'=> false,
+                'multiple' => true,
+                'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+
+            $builder->add('rooms','entity',array(
+                'class' => 'OlegUserdirectoryBundle:RoomList',
+                'property' => 'FullName',
+                'label'=>'Room(s):',
+                'required'=> false,
+                'multiple' => true,
+                'disabled' => true,
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }
 
 
-        //Suite: rooms, departments, buildings
+        //Suite: departments, buildings, floors
         if( strtolower($this->mapper['className']) == strtolower("SuiteList") ) {
             $builder->add('buildings','entity',array(
                 'class' => 'OlegUserdirectoryBundle:BuildingList',
@@ -105,21 +136,20 @@ class GenericListType extends AbstractType
                 'label'=>'Department(s):',
                 'required'=> false,
                 'multiple' => true,
-                'by_reference' => false,
+                //'by_reference' => false,
                 'attr' => array('class' => 'combobox combobox-width')
             ));
 
-            $builder->add('rooms','entity',array(
-                'class' => 'OlegUserdirectoryBundle:RoomList',
-                'property' => 'FullName',
-                'label'=>'Room(s):',
+            $builder->add('floors','entity',array(
+                'class' => 'OlegUserdirectoryBundle:FloorList',
+                'label'=>'Floor(s):',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }
 
-        //Room: departments, buildings
+        //Room: departments, buildings, suite
         if( strtolower($this->mapper['className']) == strtolower("RoomList") ) {
             $builder->add('buildings','entity',array(
                 'class' => 'OlegUserdirectoryBundle:BuildingList',
@@ -135,12 +165,28 @@ class GenericListType extends AbstractType
                 'label'=>'Department(s):',
                 'required'=> false,
                 'multiple' => true,
-                //'by_reference' => false,
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+
+            $builder->add('suites','entity',array(
+                'class' => 'OlegUserdirectoryBundle:SuiteList',
+                'property' => 'FullName',
+                'label'=>'Suite(s):',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+
+            $builder->add('floors','entity',array(
+                'class' => 'OlegUserdirectoryBundle:FloorList',
+                'label'=>'Floor(s):',
+                'required'=> false,
+                'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }
 
-
+        ///////////////// EOF Many To Many relationship /////////////////
 
 
 

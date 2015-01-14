@@ -24,15 +24,15 @@ class RoomList extends ListAbstract
     protected $original;
 
 
-    //TODO: make many to many ?
     /**
-     * @ORM\ManyToOne(targetEntity="SuiteList", inversedBy="rooms")
-     * @ORM\JoinColumn(name="suite_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="SuiteList", inversedBy="rooms")
+     * @ORM\JoinTable(name="user_rooms_suites")
      **/
-    private $suite;
+    private $suites;
 
     /**
-     * @ORM\ManyToMany(targetEntity="FloorList", mappedBy="rooms")
+     * @ORM\ManyToMany(targetEntity="FloorList", inversedBy="rooms")
+     * @ORM\JoinTable(name="user_rooms_floors")
      **/
     private $floors;
 
@@ -43,7 +43,7 @@ class RoomList extends ListAbstract
     private $buildings;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Department", inversedBy="suites")
+     * @ORM\ManyToMany(targetEntity="Department", inversedBy="rooms")
      * @ORM\JoinTable(name="user_rooms_departments")
      **/
     private $departments;
@@ -52,36 +52,40 @@ class RoomList extends ListAbstract
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->floors = new ArrayCollection();
+        $this->suites = new ArrayCollection();
         $this->buildings = new ArrayCollection();
         $this->departments = new ArrayCollection();
     }
 
 
-    /**
-     * @param mixed $suite
-     */
-    public function setSuite($suite)
-    {
-        $this->suite = $suite;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getSuite()
+    public function getSuites()
     {
-        return $this->suite;
+        return $this->suites;
+    }
+    public function addSuite($suite)
+    {
+        if( $suite && !$this->suites->contains($suite) ) {
+            $this->suites->add($suite);
+            $suite->addRoom($this);
+        }
+        return $this;
+    }
+    public function removeSuite($suite)
+    {
+        $this->suites->removeElement($suite);
     }
 
 
     public function getFloors()
     {
-        return $this->floor;
+        return $this->floors;
     }
     public function addFloor($floor)
     {
-        if( !$this->floors->contains($floor) ) {
+        if( $floor && !$this->floors->contains($floor) ) {
             $this->floors->add($floor);
+            $floor->addRoom($this);
         }
         return $this;
     }

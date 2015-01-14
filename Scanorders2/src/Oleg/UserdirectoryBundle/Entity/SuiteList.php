@@ -24,15 +24,14 @@ class SuiteList extends ListAbstract
     protected $original;
 
 
-    //TODO: make many to many ?
     /**
-     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="suite")
+     * @ORM\ManyToMany(targetEntity="RoomList", mappedBy="suites")
      **/
     private $rooms;
 
-
     /**
-     * @ORM\ManyToMany(targetEntity="FloorList", mappedBy="suites")
+     * @ORM\ManyToMany(targetEntity="FloorList", inversedBy="suites")
+     * @ORM\JoinTable(name="user_suites_floors")
      **/
     private $floors;
 
@@ -83,8 +82,9 @@ class SuiteList extends ListAbstract
     }
     public function addFloor($floor)
     {
-        if( !$this->floors->contains($floor) ) {
+        if( $floor && !$this->floors->contains($floor) ) {
             $this->floors->add($floor);
+            $floor->addSuite($this);
         }
         return $this;
     }
@@ -100,7 +100,7 @@ class SuiteList extends ListAbstract
     }
     public function addBuilding($building)
     {
-        if( !$this->buildings->contains($building) ) {
+        if( $building && !$this->buildings->contains($building) ) {
             $this->buildings->add($building);
             $building->addSuite($this);
         }
@@ -119,7 +119,7 @@ class SuiteList extends ListAbstract
     }
     public function addDepartment($department)
     {
-        if( !$this->departments->contains($department) ) {
+        if( $department && !$this->departments->contains($department) ) {
             $this->departments->add($department);
             $department->addSuite($this);
         }

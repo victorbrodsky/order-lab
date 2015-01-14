@@ -25,14 +25,12 @@ class FloorList extends ListAbstract
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="SuiteList", inversedBy="floors")
-     * @ORM\JoinTable(name="user_floors_suites")
+     * @ORM\ManyToMany(targetEntity="SuiteList", mappedBy="floors")
      **/
     protected $suites;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RoomList", inversedBy="floors")
-     * @ORM\JoinTable(name="user_floors_rooms")
+     * @ORM\ManyToMany(targetEntity="RoomList", mappedBy="floors")
      **/
     protected $rooms;
 
@@ -49,7 +47,6 @@ class FloorList extends ListAbstract
     {
         if( $suite && !$this->suites->contains($suite) ) {
             $this->suites->add($suite);
-            $suite->addFloor($this);
         }
 
         return $this;
@@ -69,7 +66,6 @@ class FloorList extends ListAbstract
     {
         if( $room && !$this->rooms->contains($room) ) {
             $this->rooms->add($room);
-            $room->addFloor($this);
         }
 
         return $this;
