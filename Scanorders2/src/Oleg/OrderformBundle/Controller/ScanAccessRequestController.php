@@ -192,6 +192,8 @@ class ScanAccessRequestController extends AccessRequestController
         $em->persist($accReq);
         $em->flush();
 
+        $this->createAccessRequestUserNotification( $entity, $status, $this->container->getParameter('scan.sitename') );
+
         return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_accessrequest_list'));
     }
     

@@ -551,27 +551,28 @@
                     {% for location in user.locations %}
                         {% if location.assistant %}
                             {% for assistant in location.assistant %}
+                                <p><i>{{ location.name }}:</i></p>
                                 <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
-                                ({{ location.name }}):
+
                                 {# phones #}
                                 {% set phones = assistant.getAllPhones() %}
                                 {% if phones|length > 0 %}
-                                    <div class="well well-sm" style="margin-bottom: 5px;">
+                                    {#<div class="well well-sm" style="margin-bottom: 5px;">#}
                                         {#<h5>Phone(s):</h5>#}
                                         {% for phone in phones %}
-                                            <p>{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
+                                            <p style="padding-top:0; padding-bottom:0; margin-top:0; margin-bottom:0;">{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
                                         {% endfor %}
-                                    </div>
+                                    {#</div>#}
                                 {% endif %}
                                 {# emails #}
                                 {% set emails = assistant.getAllEmail() %}
                                 {% if emails|length > 0 %}
-                                    <div class="well well-sm">
+                                    {#<div class="well well-sm">#}
                                         {#<h5>Email(s):</h5>#}
                                         {% for email in emails %}
-                                            <p>{{ email['prefix'] }}<a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
+                                            <p style="padding-top:0; padding-bottom:0; margin-top:0; margin-bottom:0;">{{ email['prefix'] }}<a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
                                         {% endfor %}
-                                    </div>
+                                    {#</div>#}
                                 {% endif %}
                                 <br>
                             {% endfor %}

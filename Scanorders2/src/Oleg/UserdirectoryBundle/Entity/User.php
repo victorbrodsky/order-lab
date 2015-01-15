@@ -928,6 +928,10 @@ class User extends BaseUser
             $phonesArr[] = $phone;
         }
 
+        if( count($phonesArr) == 1 ) {
+            $phonesArr[0]['prefix'] = "";
+        }
+
         rsort($phonesArr);
 
         return $phonesArr;
@@ -959,6 +963,10 @@ class User extends BaseUser
             }
             $email['email'] = $this->getEmail();
             $emailArr[] = $email;
+        }
+
+        if( count($emailArr) == 1 ) {
+            $emailArr[0]['prefix'] = "";
         }
 
         rsort($emailArr);

@@ -427,10 +427,36 @@ class AccessRequestController extends Controller
         $em->persist($accReq);
         $em->flush();
 
+        //////// When the user's Access Request has been approved, send an email to the user from the email address in Site Settings with... ////
+        $this->createAccessRequestUserNotification( $entity, $status, $this->container->getParameter('employees.sitename') );
+        //////////////////// EOF ////////////////////
+
         return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_accessrequest_list'));
     }
 
+    public function createAccessRequestUserNotification( $subjectUser, $status, $sitename ) {
 
+        if( $status != "approved" && $status != "approve" ) {
+            return;
+        }
+
+        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+            $sitenameFull = "Employee Directory";
+        }
+        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+            $sitenameFull = "Scan Orders";
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $siteLink = $this->generateUrl( $sitename.'_home', array(), true );
+        $subject = "Access granted to site: ".$sitenameFull;
+        $msg = "You have been granted access to the " . $sitenameFull . ": " . $siteLink;
+
+        $email = $subjectUser->getEmail();
+
+        $emailUtil = new EmailUtil();
+        $emailUtil->sendEmail( $email, $subject, $msg, $em );
+    }
 
 
 }
