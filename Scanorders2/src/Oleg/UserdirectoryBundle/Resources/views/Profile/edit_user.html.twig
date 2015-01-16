@@ -499,6 +499,7 @@
             {% endif %}
 
             <th>Room Number(s)</th>
+
             {% if assistExist %}
                 <th>Assistant(s)</th>
             {% endif %}
@@ -585,33 +586,7 @@
 
             {% if assistExist %}
                 <td>
-                    {% for location in user.locations %}
-                        {% if location.assistant %}
-                            {% if location.assistant|length > 0 %}
-                                <p style="margin-bottom:0;"><i>{{ location.name }}:</i></p>
-                            {% endif %}
-                            {% for assistant in location.assistant %}
-                                <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameShortest() }}</a>
-                                {# phones #}
-                                {% set phones = assistant.getAllPhones() %}
-                                {% if phones|length > 0 %}
-                                    {% for phone in phones %}
-                                        <p style="margin-bottom:0;">{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
-                                    {% endfor %}
-                                {% endif %}
-                                {# emails #}
-                                {% set emails = assistant.getAllEmail() %}
-                                {% if emails|length > 0 %}
-                                    {% for email in emails %}
-                                        <p style="margin-bottom:0;">{{ email['prefix'] }}<a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
-                                    {% endfor %}
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                        {% if location.assistant|length > 0 %}
-                            <br>
-                        {% endif %}
-                    {% endfor %}
+                    {{ usermacros.showAssistantes( user, sitename ) }}
                 </td>
             {% endif %}
 
