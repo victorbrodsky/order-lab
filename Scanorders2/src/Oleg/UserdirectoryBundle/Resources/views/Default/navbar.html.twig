@@ -88,10 +88,12 @@
                         {{ usernavbar.listUsers(employees_sitename~'_listusers',employees_sitename~'_list_common_locations') }}
                     </li>
 
-                    <li id="nav-bar-userlist-previous" class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Previous<b class="caret"></b></a>
-                        {{ usernavbar.listUsers(employees_sitename~'_listusers_previous',null) }}
-                    </li>
+                    {% if is_granted('ROLE_EDITOR') %}
+                        <li id="nav-bar-userlist-previous" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Previous<b class="caret"></b></a>
+                            {{ usernavbar.listUsers(employees_sitename~'_listusers_previous',null) }}
+                        </li>
+                    {% endif %}
 
                     {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 

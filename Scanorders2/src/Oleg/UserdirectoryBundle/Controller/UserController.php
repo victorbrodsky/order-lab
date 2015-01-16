@@ -184,9 +184,7 @@ class UserController extends Controller
         }
 
         if( $tablename == "institution" ) {
-            $em = $this->getDoctrine()->getManager();
-            $instName = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation($objectname);
-            $title = 'Current employees of the '.$instName;
+            $title = 'Current employees of the '.$objectname;
         }
 
         if( $tablename == "division" ) {
@@ -344,6 +342,8 @@ class UserController extends Controller
         $objectname = ( array_key_exists('objectname', $params) ? $params['objectname'] : null);
         $objectid = ( array_key_exists('objectid', $params) ? $params['objectid'] : null);
         $excludeCurrentUser = ( array_key_exists('excludeCurrentUser', $params) ? $params['excludeCurrentUser'] : null);
+
+        //echo "filter=".$filter."<br>";
 
         $request = $this->get('request');
         $postData = $request->query->all();
