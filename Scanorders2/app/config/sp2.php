@@ -1,6 +1,9 @@
 <?php
 
+//echo "test<br>";
+
 //include_once('setparameters_function.php');
+//echo "set parameters<br>";
 
 //$dtz = $this->container->getParameter('default_time_zone');
 //echo "dtz=".$dtz."<br>";
@@ -11,6 +14,10 @@ $dbname = $container->getParameter('database_name');
 $user = $container->getParameter('database_user');
 $password = $container->getParameter('database_password');
 //echo "host=".$host."<br>";
+//echo "dbname=".$dbname."<br>";
+//echo "user=".$user."<br>";
+//echo "password=".$password."<br>";
+//exit('1');
 
 //setLDAPParametersFromDB_ScanOrder($container,$host,$driver,$dbname,$user,$password);
 
@@ -151,3 +158,4 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
     //exit("table false<br>");
     //echo("table false<br>");
 }
+

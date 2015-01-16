@@ -3,7 +3,8 @@ imports:
     - { resource: security.yml }
     - { resource: "@OlegUserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
-    - { resource: "@OlegUserdirectoryBundle/SetParameters/setparameters.php" }  #must be located (i.e. run) after importing services
+    - { resource: "@OlegUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
+
 #    - { resource: assets_version.php }
 
 framework:
