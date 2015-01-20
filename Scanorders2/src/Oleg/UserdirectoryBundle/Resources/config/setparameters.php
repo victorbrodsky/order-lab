@@ -104,7 +104,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $contentabout_page = $row['contentAboutPage'];
             //$underlogin_msg_user = $row['underLoginMsgUser'];
             //$underlogin_msg_scan = $row['underLoginMsgScan'];
-            echo "mainhome_title=".$mainhome_title."<br>";
+            //echo "mainhome_title=".$mainhome_title."<br>";
 
 //            $maintenance = $row['maintenance'];
 //            $maintenanceenddate = $row['maintenanceenddate'];
