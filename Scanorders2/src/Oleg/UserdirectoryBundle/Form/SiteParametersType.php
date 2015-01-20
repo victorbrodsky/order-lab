@@ -261,6 +261,38 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+
+        //titles and messages
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mainHomeTitle' )
+            $builder->add('mainHomeTitle',null,array(
+                'label'=>'Main Home Title:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'listManagerTitle' )
+            $builder->add('listManagerTitle',null,array(
+                'label'=>'List Manager Title:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'eventLogTitle' )
+            $builder->add('eventLogTitle',null,array(
+                'label'=>'Event Log Title:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'siteSettingsTitle' )
+            $builder->add('siteSettingsTitle',null,array(
+                'label'=>'Site Settings Title:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'contentAboutPage' )
+            $builder->add('contentAboutPage',null,array(
+                'label'=>'About Page Content:',
+                'attr' => array('class'=>'form-control')
+            ));
+
     }
     
     /**

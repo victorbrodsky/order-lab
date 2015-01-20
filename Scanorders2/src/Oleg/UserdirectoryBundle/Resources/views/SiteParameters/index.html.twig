@@ -8,12 +8,13 @@
 
 
 {% block title %}
-    Site Settings
+    {{ sitesettings_title }} {#Site Settings#}
 {% endblock %}
 
 {% block content %}
 
-    <h3 class="text-info">Site Settings</h3>
+    <h3 class="text-info">{{ sitesettings_title }}</h3>
+    <br>
 
     <table class="records_list table table-bordered table-hover table-condensed text-left">
         <thead>
@@ -275,6 +276,39 @@
                 <td>Employee Directory Avatar Upload Folder (example: directory/Avatars)</td>
                 <td>{{ entity.avataruploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'avataruploadpath'}) }}">Edit</a></td>
+            </tr>
+
+
+            {#Titles and Messages#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Titles and Messages:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Main Home Title</td>
+                <td>{{ entity.mainHomeTitle }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mainHomeTitle'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>List Manager Title</td>
+                <td>{{ entity.listManagerTitle }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'listManagerTitle'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Event Log Title</td>
+                <td>{{ entity.eventLogTitle }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'eventLogTitle'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Site Settings Title</td>
+                <td>{{ entity.siteSettingsTitle }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'siteSettingsTitle'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>About Page Content</td>
+                <td>{{ entity.contentAboutPage }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'contentAboutPage'}) }}">Edit</a></td>
             </tr>
 
 

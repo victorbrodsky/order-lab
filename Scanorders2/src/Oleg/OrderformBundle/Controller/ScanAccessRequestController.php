@@ -34,12 +34,11 @@ class ScanAccessRequestController extends AccessRequestController
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_SUBMITTER',$user) ) {
             //exit('adding unapproved');
             $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
-
-            //save user role in DB
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($user);
-//            $em->flush();
         }
+
+//        if( true === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_SUBMITTER',$user) ) {
+//            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+//        }
 
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$user) ) {
 
@@ -50,7 +49,7 @@ class ScanAccessRequestController extends AccessRequestController
 
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                "You don't have permission to visit Scan Order site."."<br>".
+                "You don't have permission to visit this page on Scan Order site."."<br>".
                 "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );

@@ -39,6 +39,10 @@ class AccessRequestController extends Controller
             $user->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
         }
 
+//        if( true === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_OBSERVER',$user) ) {
+//            return $this->redirect($this->generateUrl('employees-order-nopermission'));
+//        }
+
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED',$user) ) {
 
             //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
@@ -46,8 +50,8 @@ class AccessRequestController extends Controller
 
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                "You don't have permission to visit Employee Directory site."."<br>".
-                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+                "You don't have permission to visit this page on Employee Directory site."."<br>".
+                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('employees.sitename').'_logout',true).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -215,6 +219,16 @@ class AccessRequestController extends Controller
         //echo "sitename=".$sitename."<br>";
 
         if( $userAccessReq ) {
+
+            if( $userAccessReq->getStatus() == AccessRequest::STATUS_APPROVED ) {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "The status of your request is " . $userAccessReq->getStatusStr() . ". " .
+                    "Please re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
+                );
+                return $this->redirect( $this->generateUrl('main_common_home') );
+            }
+
             //throw $this->createNotFoundException('AccessRequest is already created for this user');
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
@@ -288,6 +302,14 @@ class AccessRequestController extends Controller
         return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
     }
 
+//    public function reLoginUser($sitename) {
+//        echo "relogin sitename=".$sitename."<br>";
+//        $this->get('session')->getFlashBag()->add(
+//            'warning',
+//            "You must re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
+//        );
+//        return $this->redirect( $this->generateUrl('main_common_home') );
+//    }
 
 
 

@@ -8,7 +8,7 @@
 
 
 {% block title %}
-    Update Site Parameter: {{ param }}
+    Update {{ sitesettings_title }}: {{ param }}
 {% endblock %}
 
 
@@ -39,7 +39,7 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-    <h3 class="text-info">Update Site Parameter: {{ param }}</h3>
+    <h3 class="text-info">Update {{ sitesettings_title }}: {{ param }}</h3>
 
     <br>
 
@@ -194,6 +194,31 @@
         {{ formmacros.field(edit_form.maintenancelogoutmsg) }}
     {% endif %}
 
+
+    {% if cycle == 'show' %}
+        <hr>
+        <h3 class="text-info">Titles and Messages</h3>
+    {% endif %}
+
+    {% if edit_form.mainHomeTitle is defined %}
+        {{ formmacros.field(edit_form.mainHomeTitle) }}
+    {% endif %}
+
+    {% if edit_form.listManagerTitle is defined %}
+        {{ formmacros.field(edit_form.listManagerTitle) }}
+    {% endif %}
+
+    {% if edit_form.eventLogTitle is defined %}
+        {{ formmacros.field(edit_form.eventLogTitle) }}
+    {% endif %}
+
+    {% if edit_form.siteSettingsTitle is defined %}
+        {{ formmacros.field(edit_form.siteSettingsTitle) }}
+    {% endif %}
+
+    {% if edit_form.contentAboutPage is defined %}
+        {{ formmacros.field(edit_form.contentAboutPage) }}
+    {% endif %}
 
 
     {% if cycle == 'show' %}

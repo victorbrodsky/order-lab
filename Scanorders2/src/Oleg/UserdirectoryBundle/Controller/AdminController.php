@@ -319,7 +319,184 @@ class AdminController extends Controller
             //uploads
             "avataruploadpath" => "directory/Avatars",
             "employeesuploadpath" => "directory/Documents",
-            "scanuploadpath" => "scan-order/Documents"
+            "scanuploadpath" => "scan-order/Documents",
+
+            "mainHomeTitle" => "Welcome to the O R D E R platform!",
+            "listManagerTitle" => "List Manager",
+            "eventLogTitle" => "Event Log",
+            "siteSettingsTitle" => "Site Settings",
+            "contentAboutPage" => '
+                <p>
+                    This site is built on the platform titled "O R D E R" (as in the opposite of disorder).
+                </p>
+
+                <p>
+                    Designers: Victor Brodsky, Oleg Ivanov
+                </p>
+
+                <p>
+                    Developer: Oleg Ivanov
+                </p>
+
+                <p>
+                    Quality Assurance Testers: Oleg Ivanov, Steven Bowe, Emilio Madrigal
+                </p>
+
+                <p>
+                    We are continuing to improve this software. If you have a suggestion or believe you have encountered an issue, please don\'t hesitate to email
+                <a href="mailto:slidescan@med.cornell.edu" target="_top">slidescan@med.cornell.edu</a> and attach relevant screenshots.
+                </p>
+
+                <br>
+
+                <p>
+                O R D E R is made possible by:
+                </p>
+
+                <br>
+
+                <p>
+
+                        <ul>
+
+
+                    <li>
+                        <a href="http://php.net">PHP</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://symfony.com">Symfony</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://doctrine-project.org">Doctrine</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/Maks3w/FR3DLdapBundle">Active Directory / LDAP Bundle - FR3DLdapBundle</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/symfony/SwiftmailerBundle">SwiftmailerBundle</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/symfony/AsseticBundle">AsseticBundle</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://phpexcel.codeplex.com/">PHP Excel</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+
+                        <a href="https://github.com/1up-lab/OneupUploaderBundle">OneupUploaderBundle</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://www.dropzonejs.com/">Dropzone JS</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/1up-lab/OneupUploaderBundle">KnpPaginatorBundle</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://twig.sensiolabs.org/doc/advanced.html">Twig</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://getbootstrap.com/">Bootstrap</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/kriskowal/q">JS promises Q</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://jquery.com">jQuery</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://jqueryui.com/">jQuery UI</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/RobinHerbots/jquery.inputmask">jQuery Inputmask</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://ivaynberg.github.io/select2/">Select2</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://www.eyecon.ro/bootstrap-datepicker/">Bootstrap Datepicker</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/twitter/typeahead.js/">Typeahead with Bloodhound</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://fengyuanchen.github.io/cropper/">Image Cropper</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://handsontable.com/">Handsontable</a>
+                    </li>
+
+
+                </ul>
+                </p>
+            '
+            //"underLoginMsgUser" => "",
+            //"underLoginMsgScan => ""
 
         );
 
@@ -1313,10 +1490,10 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $locations = array(
             "Surgical Pathology Filing Room" => array('street1'=>'520 East 70th Street','phone'=>'222-0059','room'=>'ST-1012','inst'=>'NYP'),
@@ -1331,6 +1508,10 @@ class AdminController extends Controller
 
         $count = 1;
         foreach( $locations as $location => $attr ) {
+
+            if( $em->getRepository('OlegUserdirectoryBundle:Location')->findOneByName($location) ) {
+                continue;
+            }
 
             $listEntity = new Location();
             $this->setDefaultList($listEntity,$count,$username,$location);

@@ -61,6 +61,15 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $department_url = null;
         $department_name = null;
 
+        //titles
+        $mainhome_title = null;
+        $listmanager_title = null;
+        $eventlog_title = null;
+        $sitesettings_title = null;
+        $contentabout_page = null;
+        //$underlogin_msg_user = null;
+        //$underlogin_msg_scan = null;
+
         //maintenance
 //        $maintenance = null;
 //        $maintenanceenddate = null;
@@ -85,6 +94,17 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $employeesuploadpath = $row['employeesuploadpath'];
             $scanuploadpath = $row['scanuploadpath'];
             $employeesavataruploadpath = $row['avataruploadpath'];
+
+
+            //titles
+            $mainhome_title = $row['mainHomeTitle'];
+            $listmanager_title = $row['listManagerTitle'];
+            $eventlog_title = $row['eventLogTitle'];
+            $sitesettings_title = $row['siteSettingsTitle'];
+            $contentabout_page = $row['contentAboutPage'];
+            //$underlogin_msg_user = $row['underLoginMsgUser'];
+            //$underlogin_msg_scan = $row['underLoginMsgScan'];
+            echo "mainhome_title=".$mainhome_title."<br>";
 
 //            $maintenance = $row['maintenance'];
 //            $maintenanceenddate = $row['maintenanceenddate'];
@@ -134,6 +154,13 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
         $container->setParameter('employees.uploadpath',$employeesuploadpath);
         $container->setParameter('scan.uploadpath',$scanuploadpath);
+
+        //titles
+        $container->setParameter('mainhome_title',$mainhome_title);
+        $container->setParameter('listmanager_title',$listmanager_title);
+        $container->setParameter('eventlog_title',$eventlog_title);
+        $container->setParameter('sitesettings_title',$sitesettings_title);
+        $container->setParameter('contentabout_page',$contentabout_page);
 
         //maintenance
 //        $container->setParameter('maintenance',$maintenance);

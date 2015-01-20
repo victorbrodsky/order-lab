@@ -31,13 +31,18 @@
 
 
         {#display search result for locations #}
-        {% if locations and locations|length > 0 %}
-            {% include 'OlegUserdirectoryBundle::Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
+        {% if locations %}
+            {% if locations|length > 0 %}
+                {% include 'OlegUserdirectoryBundle::Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
+            {% endif %}
         {% endif %}
-        {#{{ render( controller( 'OlegUserdirectoryBundle:Location:getSearchLocation', {'search':search, 'page':page} ) ) }}#}
 
         {% if (entities and entities|length > 0) or (sameusers is defined and sameusers) %}
             {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}
+        {% endif %}
+        {% if entities and entities|length == 0 %}
+            <br><br>
+            <h5 class="text-info">No results are found</h5>
         {% endif %}
 
 
@@ -51,7 +56,7 @@
 
 {% block contentleft %}
 
-    {% if (entities is not defined or entities|length == 0) and (locations is not defined or locations|length == 0) and (sameusers is not defined) %}
+    {% if not entities and not locations and sameusers is not defined %}
 
         <div style="margin-top:50px;">
 

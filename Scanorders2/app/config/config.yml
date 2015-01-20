@@ -41,6 +41,15 @@ twig:
         employees_sitename: %employees.sitename%
         default_system_email: %default_system_email%
 
+        #titles and messages
+        mainhome_title: %mainhome_title%
+        listmanager_title: %listmanager_title%
+        eventlog_title: %eventlog_title%
+        sitesettings_title: %sitesettings_title%
+        contentabout_page: %contentabout_page%
+#        underlogin_msg_user: %underlogin_msg_user%
+#        underlogin_msg_scan: %underlogin_msg_scan%
+
 #    form:
 #      resources: ['form_table_layout.html.twig']
 

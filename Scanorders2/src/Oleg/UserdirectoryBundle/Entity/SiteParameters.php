@@ -17,192 +17,232 @@ class SiteParameters {
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $maxIdleTime;
+    private $maxIdleTime;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $environment;
+    private $environment;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $siteEmail;
+    private $siteEmail;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $dbServerAddress;
+    private $dbServerAddress;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $dbServerPort;
+    private $dbServerPort;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $dbServerAccountUserName;
+    private $dbServerAccountUserName;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $dbServerAccountPassword;
+    private $dbServerAccountPassword;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $dbDatabaseName;
+    private $dbDatabaseName;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $smtpServerAddress;
+    private $smtpServerAddress;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aDLDAPServerAddress;
+    private $aDLDAPServerAddress;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aDLDAPServerPort;
+    private $aDLDAPServerPort;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aDLDAPServerOu;
+    private $aDLDAPServerOu;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aDLDAPServerAccountUserName;
+    private $aDLDAPServerAccountUserName;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aDLDAPServerAccountPassword;
+    private $aDLDAPServerAccountPassword;
 
     /**
      * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      */
-    protected $autoAssignInstitution;
+    private $autoAssignInstitution;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $coPathDBServerAddress;
+    private $coPathDBServerAddress;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $coPathDBServerPort;
+    private $coPathDBServerPort;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $coPathDBAccountUserName;
+    private $coPathDBAccountUserName;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $coPathDBAccountPassword;
+    private $coPathDBAccountPassword;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $coPathDBName;
+    private $coPathDBName;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aperioeSlideManagerDBServerAddress;
+    private $aperioeSlideManagerDBServerAddress;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aperioeSlideManagerDBServerPort;
+    private $aperioeSlideManagerDBServerPort;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aperioeSlideManagerDBUserName;
+    private $aperioeSlideManagerDBUserName;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aperioeSlideManagerDBPassword;
+    private $aperioeSlideManagerDBPassword;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $aperioeSlideManagerDBName;
+    private $aperioeSlideManagerDBName;
 
 
     //Footer
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $institutionurl;
+    private $institutionurl;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $institutionname;
+    private $institutionname;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $departmenturl;
+    private $departmenturl;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $departmentname;
+    private $departmentname;
 
 
     //Maintanence mode
     /**
      * @ORM\Column(type="boolean",nullable=true)
      */
-    protected $maintenance;
+    private $maintenance;
 
     /**
-     * @ORM\Column(type="datetime",nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $maintenanceenddate;
+    private $maintenanceenddate;
 
     /**
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    protected $maintenancelogoutmsg;
+    private $maintenancelogoutmsg;
 
     /**
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    protected $maintenanceloginmsg;
+    private $maintenanceloginmsg;
 
     //uploads path
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $scanuploadpath;
+    private $scanuploadpath;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $employeesuploadpath;
+    private $employeesuploadpath;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $avataruploadpath;
+    private $avataruploadpath;
+
+
+    //site titles and messages
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $mainHomeTitle;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $listManagerTitle;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $eventLogTitle;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $siteSettingsTitle;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $contentAboutPage;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $underLoginMsgUser;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $underLoginMsgScan;
+
+
+
 
 
 
@@ -833,6 +873,120 @@ class SiteParameters {
     {
         return $this->avataruploadpath;
     }
+
+    /**
+     * @param mixed $listManagerTitle
+     */
+    public function setListManagerTitle($listManagerTitle)
+    {
+        $this->listManagerTitle = $listManagerTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getListManagerTitle()
+    {
+        return $this->listManagerTitle;
+    }
+
+    /**
+     * @param mixed $mainHomeTitle
+     */
+    public function setMainHomeTitle($mainHomeTitle)
+    {
+        $this->mainHomeTitle = $mainHomeTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMainHomeTitle()
+    {
+        return $this->mainHomeTitle;
+    }
+
+    /**
+     * @param mixed $eventLogTitle
+     */
+    public function setEventLogTitle($eventLogTitle)
+    {
+        $this->eventLogTitle = $eventLogTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEventLogTitle()
+    {
+        return $this->eventLogTitle;
+    }
+
+    /**
+     * @param mixed $siteSettingsTitle
+     */
+    public function setSiteSettingsTitle($siteSettingsTitle)
+    {
+        $this->siteSettingsTitle = $siteSettingsTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteSettingsTitle()
+    {
+        return $this->siteSettingsTitle;
+    }
+
+    /**
+     * @param mixed $contentAboutPage
+     */
+    public function setContentAboutPage($contentAboutPage)
+    {
+        $this->contentAboutPage = $contentAboutPage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContentAboutPage()
+    {
+        return $this->contentAboutPage;
+    }
+
+    /**
+     * @param mixed $underLoginMsgScan
+     */
+    public function setUnderLoginMsgScan($underLoginMsgScan)
+    {
+        $this->underLoginMsgScan = $underLoginMsgScan;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnderLoginMsgScan()
+    {
+        return $this->underLoginMsgScan;
+    }
+
+    /**
+     * @param mixed $underLoginMsgUser
+     */
+    public function setUnderLoginMsgUser($underLoginMsgUser)
+    {
+        $this->underLoginMsgUser = $underLoginMsgUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnderLoginMsgUser()
+    {
+        return $this->underLoginMsgUser;
+    }
+
+
 
 
 }

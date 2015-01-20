@@ -90,7 +90,7 @@ security:
             anonymous:  true
             access_denied_url: /directory/access-requests/new/create
 
-          
+    #Note: first match is used, the later would be ignored
     access_control:
 
      - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
@@ -105,18 +105,16 @@ security:
      - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/directory/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-     #make all /employees accessible only limited special roles
-     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
-
      - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-     - { path: ^/directory/user-directory, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/directory/user-directory/previous, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-#     - { path: ^/directory/admin/lists, role: ROLE_USERDIRECTORY_EDITOR }
-#     - { path: ^/directory/admin/list, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/directory/admin/genall, role: ROLE_USERDIRECTORY_ADMIN }
-     - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/site-settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+
+     #All other urls: make all /employees accessible only limited special roles
+     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
 
 
      ############################## SCAN SITE SETTINGS ##############################
@@ -125,15 +123,12 @@ security:
      - { path: ^/scan/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-     #make all sure /scan is protected from accessing the users with not sufficient roles
-     - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') and !has_role('ROLE_SCANORDER_BANNED')" }
-
      - { path: ^/scan/admin/genall, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
-     - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
+#     - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/site-settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
-     - { path: ^/scan/user-directory, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/user-directory/previous, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
      - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
      - { path: ^/scan/settings/, role: ROLE_SCANORDER_PROCESSOR }
@@ -145,12 +140,12 @@ security:
      - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
      - { path: ^/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
 
-     - { path: ^/scan/users/, role: ROLE_SCANORDER_SUBMITTER }
-     - { path: ^/scan/edit-user-profile/, role: [ROLE_SCANORDER_SUBMITTER] }
-
      - { path: ^/scan/scan-order, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
      - { path: ^/scan/my-scan-orders, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
 
      - { path: ^/scan/slide-return-request, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
      - { path: ^/scan/my-slide-return-requests, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+
+     #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
+     - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') and !has_role('ROLE_SCANORDER_BANNED')" }
 
