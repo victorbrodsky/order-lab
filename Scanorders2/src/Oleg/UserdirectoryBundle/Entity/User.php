@@ -110,6 +110,13 @@ class User extends BaseUser
     private $credentials;
 
     /**
+     * @ORM\OneToMany(targetEntity="Training", mappedBy="user", cascade={"persist","remove"})
+     * @ORM\OrderBy({"graduationDate" = "ASC", "orderinlist" = "ASC"})
+     */
+    private $trainings;
+
+    /////////////////// TODO: mappedBy. Should it be inversedBy? ///////////////////
+    /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
      */
     private $locations;
@@ -157,6 +164,7 @@ class User extends BaseUser
      */
     private $adminComments;
 
+
     /**
      * @ORM\OneToOne(targetEntity="Document")
      * @ORM\JoinColumn(name="avatar_id", referencedColumnName="id")
@@ -174,6 +182,7 @@ class User extends BaseUser
         $this->appointmentTitles = new ArrayCollection();
         $this->employmentStatus = new ArrayCollection();
         $this->researchLabs = new ArrayCollection();
+        $this->trainings = new ArrayCollection();
 
         $this->privateComments = new ArrayCollection();
         $this->publicComments = new ArrayCollection();
@@ -469,6 +478,26 @@ class User extends BaseUser
     {
         return $this->id;
     }
+
+
+    public function addTraining($training)
+    {
+        if( $training && !$this->trainings->contains($training) ) {
+            $this->trainings->add($training);
+            $training->setUser($this);
+        }
+
+        return $this;
+    }
+    public function removeTraining($training)
+    {
+        $this->trainings->removeElement($training);
+    }
+    public function getTrainings()
+    {
+        return $this->trainings;
+    }
+
 
     public function addLocation($location)
     {
