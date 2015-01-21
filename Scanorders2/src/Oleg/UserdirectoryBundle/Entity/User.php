@@ -115,7 +115,6 @@ class User extends BaseUser
      */
     private $trainings;
 
-    /////////////////// TODO: mappedBy. Should it be inversedBy? ///////////////////
     /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
      */

@@ -711,6 +711,7 @@
         <div id="form-prototype-data"
              data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cycle,'user-administrativeTitles','prototype', sitename)|e }}"
              data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cycle,'user-appointmentTitles','prototype', sitename)|e }}"
+             data-prototype-user-trainings = "{{ usermacros.trainingObject(form.trainings,cycle,'user-trainings','prototype',sitename,entity)|e }}"
              data-prototype-user-locations = "{{ usermacros.locationObject(form.locations,cycle,'user-locations','prototype',sitename,entity)|e }}"
              data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
              data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
@@ -984,6 +985,31 @@
                         {% endfor %}
                         {% if cycle != 'show_user' %}
                             <button class="btn btn-default" onClick="addNewObject(this,'user-locations')" type='button'>Add Location</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {#Educations: Trainings#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#Trainings">
+                        Education(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="Trainings" class="panel-collapse collapse {{ collapsein }}">
+                <div class="panel-body">
+
+                    <div class="user-trainings-holder">
+                        {% for training in form.trainings %}
+                            {{ usermacros.trainingObject(training,cycle,'user-trainings','noprototype',sitename,entity) }}
+                        {% endfor %}
+                        {% if cycle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addNewObject(this,'user-trainings')" type='button'>Add Training</button>
                         {% endif %}
                     </div>
 

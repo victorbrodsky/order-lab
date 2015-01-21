@@ -11,7 +11,7 @@ function addNewObject(btn,classname) {
     var holder = $('.'+classname+'-holder');
 
     var titles = holder.find('.'+classname);
-    //console.log('titles='+titles.length);
+    console.log('titles='+titles.length);
 
     var newForm = getBaseTitleForm( classname );
 

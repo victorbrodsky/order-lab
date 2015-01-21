@@ -224,6 +224,18 @@ class UserType extends AbstractType
         ));
 
         $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+        $builder->add('trainings', 'collection', array(
+            'type' => new TrainingType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__trainings__',
+        ));
+
+        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
         $builder->add('locations', 'collection', array(
             'type' => new LocationType($params),
             'label' => false,

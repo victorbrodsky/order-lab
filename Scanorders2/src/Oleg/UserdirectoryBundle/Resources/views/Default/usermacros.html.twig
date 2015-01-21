@@ -1217,3 +1217,68 @@
 
 {% endmacro %}
 
+
+
+
+{% macro trainingObject( field, cycle, classname, prototype, sitename, entity ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as usermacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if formfield.vars.value and formfield.vars.value.status == constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') or prototype == 'prototype' %}
+        {% set wellclass = "user-alert-warning" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" >
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.id) }}
+
+        {{ usermacros.statusVerifiedField(formfield,cycle) }}
+
+        {{ formmacros.fieldDateLabel(formfield.completionDate,'allow-future-date') }}
+        {{ formmacros.field(formfield.completionReason) }}
+
+        {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cycle,'allow-future-date') }}
+
+        {{ formmacros.field(formfield.degree) }}
+        {{ formmacros.field(formfield.appendDegreeToName) }}
+
+        {{ formmacros.field(formfield.major) }}
+
+        {{ formmacros.field(formfield.minor) }}
+
+        {{ formmacros.field(formfield.honors) }}
+
+        {{ formmacros.field(formfield.fellowshipTitle) }}
+        {{ formmacros.field(formfield.appendFellowshipTitleToName) }}
+
+        {{ formmacros.field(formfield.residencySpecialty) }}
+
+    </div>
+
+
+    {% do formfield.setRendered %}
+
+{% endmacro %}

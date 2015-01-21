@@ -1,0 +1,157 @@
+<?php
+
+namespace Oleg\UserdirectoryBundle\Form;
+
+
+
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+
+use Oleg\UserdirectoryBundle\Entity\Training;
+
+class TrainingType extends AbstractType
+{
+
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
+    {
+        $this->params = $params;
+        $this->entity = $entity;
+
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+
+        $builder->add('id','hidden',array(
+            'label'=>false,
+            'attr' => array('class'=>'user-object-id-field')
+        ));
+
+        //status
+        $baseUserAttr = new Training();
+        $builder->add('status', 'choice', array(
+            'disabled' => ($this->params['read_only'] ? true : false),
+            'choices' => array(
+                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
+                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
+            ),
+            'label' => "Status:",
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width'),
+        ));
+
+
+        $builder->add('startDate', 'date', array(
+            'label' => 'Start Date:',
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM-dd-yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+        ));
+
+        $builder->add('completionDate', 'date', array(
+            'label' => 'Completion Date:',
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM-dd-yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+        ));
+
+        $builder->add('completionReason', null, array(
+            'label' => 'Completion Reason:',
+            'attr' => array('class'=>'combobox combobox-width')
+        ));
+
+        $builder->add('degree', 'employees_custom_selector', array(
+            'label' => 'Degree:',
+            'attr' => array('class' => 'ajax-combobox-trainingdegree', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'trainingdegree'
+        ));
+
+        $builder->add('appendDegreeToName', 'checkbox', array(
+            'label'     => 'Append degree to name:',
+            'required'  => false,
+        ));
+
+        $builder->add('major', 'employees_custom_selector', array(
+            'label' => 'Major:',
+            'attr' => array('class' => 'ajax-combobox-trainingmajor', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'trainingmajor'
+        ));
+
+        $builder->add('minor', 'employees_custom_selector', array(
+            'label' => 'Minor:',
+            'attr' => array('class' => 'ajax-combobox-trainingmajor', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'trainingminor'
+        ));
+
+        $builder->add('honors', 'employees_custom_selector', array(
+            'label' => 'Honors:',
+            'attr' => array('class' => 'ajax-combobox-traininghonors', 'type' => 'hidden'),
+            'required' => false,
+            //'multiple' => true,
+            'classtype' => 'traininghonors'
+        ));
+
+        $builder->add('fellowshipTitle', 'employees_custom_selector', array(
+            'label' => 'Professional Fellowship Title:',
+            'attr' => array('class' => 'ajax-combobox-trainingfellowshiptitle', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'trainingfellowshiptitle'
+        ));
+
+        $builder->add('appendFellowshipTitleToName', 'checkbox', array(
+            'label'     => 'Append professional fellowship to name:',
+            'required'  => false,
+        ));
+
+//        $builder->add('residencySpecialty', new ResidencySpecialtyType($this->params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResidencySpecialtyList',
+//            'label' => false
+//        ));
+        //residencySpecialty
+        $builder->add('residencySpecialty', 'employees_custom_selector', array(
+            'label' => 'Residency Specialty:',
+            'attr' => array('class' => 'ajax-combobox-residencyspecialty', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'residencyspecialty'
+        ));
+        //fellowshipSubspecialty
+        $builder->add('fellowshipSubspecialty', 'employees_custom_selector', array(
+            'mapped' => false,
+            'label' => "Fellowship Subspecialty:",
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden'),
+            'classtype' => 'fellowshipsubspecialty'
+        ));
+
+
+
+
+
+
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Training',
+        ));
+    }
+
+    public function getName()
+    {
+        return 'oleg_userdirectorybundle_training';
+    }
+}

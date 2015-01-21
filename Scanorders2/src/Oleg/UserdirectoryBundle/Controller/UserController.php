@@ -5,6 +5,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\Location;
+use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Util\CropAvatar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -1413,6 +1414,10 @@ class UserController extends Controller
 
         if( count($entity->getResearchLabs()) == 0 ) {
             $entity->addResearchLab(new ResearchLab($user));
+        }
+
+        if( count($entity->getTrainings()) == 0 ) {
+            $entity->addTraining(new Training($user));
         }
 
         //Identifier EIN

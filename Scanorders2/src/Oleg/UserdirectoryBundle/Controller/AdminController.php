@@ -5,9 +5,11 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
+use Oleg\UserdirectoryBundle\Entity\CompletionReasonList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
+use Oleg\UserdirectoryBundle\Entity\TrainingDegreeList;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -120,6 +122,15 @@ class AdminController extends Controller
 
         $count_boardSpecialties = $this->generateBoardSpecialties();
 
+        //training
+        $count_completionReasons = $this->generateCompletionReasons();
+        $count_trainingDegrees = $this->generateTrainingDegrees();
+        $count_residencySpecialties = $this->generateResidencySpecialties();
+        $count_majorTrainings = $this->generateMajorTrainings();
+        $count_minorTrainings = $this->generateMinorTrainings();
+        $count_HonorTrainings = $this->generateHonorTrainings();
+        $count_FellowshipTitles = $this->generateFellowshipTitles();
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
@@ -143,7 +154,15 @@ class AdminController extends Controller
             'Countries='.$count_countryList.', '.
             'Locations ='.$count_locations.', '.
             'Buildings ='.$count_buildings.', '.
-            'Reaserch Labs='.$count_reslabs.' '.
+            'Reaserch Labs='.$count_reslabs.', '.
+            'Completion Reasons ='.$count_completionReasons.', '.
+            'Training Degrees ='.$count_trainingDegrees.', '.
+            'Residency Specialties ='.$count_residencySpecialties.', '.
+            'Major Trainings ='.$count_majorTrainings.', '.
+            'Minor Trainings ='.$count_minorTrainings.', '.
+            'Honor Trainings ='.$count_HonorTrainings.', '.
+            'Fellowship Titles ='.$count_FellowshipTitles.' '.
+
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1663,6 +1682,70 @@ class AdminController extends Controller
         }
 
         return $count;
+    }
+
+
+
+    public function generateCompletionReasons() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:CompletionReasonList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Graduated",
+            "Transferred"
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new CompletionReasonList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTrainingDegrees() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:TrainingDegreeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Graduated",
+            "Transferred"
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new TrainingDegreeList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
     }
 
 }

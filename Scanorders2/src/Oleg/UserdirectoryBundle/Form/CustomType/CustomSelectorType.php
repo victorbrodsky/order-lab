@@ -102,6 +102,30 @@ class CustomSelectorType extends AbstractType {
             case "appointmenttitletype":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'AppTitleList');
                 break;
+
+            //training
+            case "trainingdegree":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'Training');
+                break;
+            case "trainingmajor":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'MajorTrainingList');
+                break;
+            case "trainingminor":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'MinorTrainingList');
+                break;
+//            case "traininghonors":
+//                $transformer = new GenericTreeTransformer($this->om, $username, 'HonorTrainingList');
+//                break;
+            case "trainingfellowshiptitle":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipTitleList');
+                break;
+            case "residencyspecialty":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'ResidencySpecialtyList');
+                break;
+            case "fellowshipsubspecialty":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipSubspecialtyType');
+                break;
+
             default:
                 $transformer = new StringTransformer($this->om, $username);
         }
