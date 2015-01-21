@@ -77,6 +77,7 @@ class ListController extends Controller
         //get object name: stain-list => stain
         $pieces = explode("-", $type);
         $pathbase = $pieces[0];
+        echo "pathbase=".$pathbase."<br>";
 
         $mapper= $this->classListMapper($pathbase);
 
@@ -256,7 +257,7 @@ class ListController extends Controller
 
         $options['entity'] = $entity;
 
-        $newForm = new GenericListType($options, $mapper);
+        $newForm = new GenericListType($options,$mapper);
 
         $form = $this->createForm($newForm, $entity, array(
             'action' => $this->generateUrl($pathbase.'_create'),
@@ -710,6 +711,9 @@ class ListController extends Controller
             case "Service":
                 $parentClassName = "Division";
                 break;
+            case "FellowshipSubspecialtyList":
+                $parentClassName = "ResidencySpecialtyList";
+                break;
             default:
                 //$parentClassName = null;
                 return null;
@@ -747,9 +751,9 @@ class ListController extends Controller
                 $displayName = "Institutions";
                 break;
             case "departments":
-            $className = "Department";
-            $displayName = "Departments";
-            break;
+                $className = "Department";
+                $displayName = "Departments";
+                break;
             case "divisions":
                 $className = "Division";
                 $displayName = "Divisions";
@@ -850,8 +854,6 @@ class ListController extends Controller
                 $className = "AppTitleList";
                 $displayName = "Academic Appointment Titles";
                 break;
-
-            //training
             case "completionreasons":
                 $className = "CompletionReasonList";
                 $displayName = "Completion Reasons";
@@ -884,7 +886,6 @@ class ListController extends Controller
                 $className = "FellowshipSubspecialtyList";
                 $displayName = "Fellowship Subspecialties";
                 break;
-
             default:
                 $className = null;
                 $displayName = null;

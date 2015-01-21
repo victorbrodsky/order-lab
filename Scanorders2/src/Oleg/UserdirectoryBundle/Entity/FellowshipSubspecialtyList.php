@@ -75,6 +75,10 @@ class FellowshipSubspecialtyList extends ListAbstract
         return $this->boardCertificateAvailable;
     }
 
+    public function getClassName()
+    {
+        return "FellowshipSubspecialtyList";
+    }
 
 
 }
