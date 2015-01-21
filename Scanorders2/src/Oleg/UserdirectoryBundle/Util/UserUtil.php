@@ -40,7 +40,7 @@ class UserUtil {
         //var_dump($sheetData);
 
         $count = 0;
-        $serviceCount = 0;
+        //$serviceCount = 0;
 
         $default_time_zone = $serviceContainer->getParameter('default_time_zone');
 

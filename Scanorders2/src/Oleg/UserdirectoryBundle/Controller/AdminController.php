@@ -6,9 +6,13 @@ use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
 use Oleg\UserdirectoryBundle\Entity\CompletionReasonList;
+use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialtyList;
+use Oleg\UserdirectoryBundle\Entity\FellowshipTitleList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
+use Oleg\UserdirectoryBundle\Entity\HonorTrainingList;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
+use Oleg\UserdirectoryBundle\Entity\ResidencySpecialtyList;
 use Oleg\UserdirectoryBundle\Entity\TrainingDegreeList;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -125,11 +129,11 @@ class AdminController extends Controller
         //training
         $count_completionReasons = $this->generateCompletionReasons();
         $count_trainingDegrees = $this->generateTrainingDegrees();
-        $count_residencySpecialties = $this->generateResidencySpecialties();
-        $count_majorTrainings = $this->generateMajorTrainings();
-        $count_minorTrainings = $this->generateMinorTrainings();
+        //$count_majorTrainings = $this->generateMajorTrainings();
+        //$count_minorTrainings = $this->generateMinorTrainings();
         $count_HonorTrainings = $this->generateHonorTrainings();
         $count_FellowshipTitles = $this->generateFellowshipTitles();
+        $count_residencySpecialties = $this->generateResidencySpecialties();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -158,8 +162,8 @@ class AdminController extends Controller
             'Completion Reasons ='.$count_completionReasons.', '.
             'Training Degrees ='.$count_trainingDegrees.', '.
             'Residency Specialties ='.$count_residencySpecialties.', '.
-            'Major Trainings ='.$count_majorTrainings.', '.
-            'Minor Trainings ='.$count_minorTrainings.', '.
+            //'Major Trainings ='.$count_majorTrainings.', '.
+            //'Minor Trainings ='.$count_minorTrainings.', '.
             'Honor Trainings ='.$count_HonorTrainings.', '.
             'Fellowship Titles ='.$count_FellowshipTitles.' '.
 
@@ -1729,14 +1733,137 @@ class AdminController extends Controller
         }
 
         $types = array(
-            "Graduated",
-            "Transferred"
+            "MD", "DO", "PhD", "JD", "MBA", "MHA", "MA", "MS", "BS", "BA", "MBBS", "MDCM", "MBChB", "BMed",
+            "Dr.Med", "Dr.MuD", "Cand.med", "DMD", "BDent", "DDS", "BDS", "BDSc", "BChD", "CD", "Cand.Odont.",
+            "Dr.Med.Dent.", "DNP", "DNAP", "DNS", "DNSc", "OTD", "DrOT", "MSOT", "MOT", "OD", "B.Optom", "BEd",
+            "BME", "BSE", "BSocSc", "BSc", "BPharm", "BScPhm", "PharmB", "MPharm", "PharmD", "DPT", "DPhysio",
+            "MPT", "BSPT", "MPAS", "MPS", "DPM", "DP", "BPod", "PodB", "PodD", "MPA", "MPS", "PsyD",
+            "ClinPsyD", "EdS", "BSN", "DVM", "VMD", "BVS", "BVSc", "BVMS", "MLIS", "MLS", "MSLIS", "BSW"
         );
 
         $count = 1;
         foreach( $types as $type ) {
 
             $listEntity = new TrainingDegreeList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $listEntity->setAbbreviation($type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateResidencySpecialties() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialtyList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $inputFileName = __DIR__ . '/../Util/SpecialtiesResidenciesFellowshipsCertified.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $count = 1;
+        $subcount = 1;
+
+        //for each row in excel
+        for ($row = 2; $row <= $highestRow; $row++){
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
+
+            //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
+            $residencySpecialty = $rowData[0][0];
+            $fellowshipSubspecialty = $rowData[0][2];
+            $boardCertificationAvailable = $rowData[0][2];
+
+            if( $residencySpecialty ) {
+
+                $listEntity = new ResidencySpecialtyList();
+                $this->setDefaultList($listEntity,$count,$username,$residencySpecialty);
+
+
+                if( $boardCertificationAvailable && $boardCertificationAvailable == "Yes" ) {
+                    $listEntity->setBoardCertificateAvailable(true);
+                }
+
+                $em->persist($listEntity);
+                $em->flush();
+
+                $count = $count + 10;
+            }
+
+            if( $fellowshipSubspecialty ) {
+
+                $subEntity = new FellowshipSubspecialtyList();
+                $this->setDefaultList($subEntity,$subcount,$username,$fellowshipSubspecialty);
+
+
+                if( $boardCertificationAvailable && $boardCertificationAvailable == "Yes" ) {
+                    $subEntity->setBoardCertificateAvailable(true);
+                }
+
+                if( $listEntity ) {
+                    $listEntity->addChild($subEntity);
+                }
+
+                $em->persist($subEntity);
+                $em->flush();
+
+                $subcount = $subcount + 10;
+            }
+
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateHonorTrainings() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:HonorTrainingList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Magna Cum Laude", "Summa Cum Laude", "Cum Laude", "AOA Member"
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new HonorTrainingList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);
@@ -1747,5 +1874,56 @@ class AdminController extends Controller
 
         return round($count/10);
     }
+
+    //Professional Fellowship Title
+    public function generateFellowshipTitles() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:FellowshipTitleList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "F.C.A.P." => "Fellow of the College of American Pathologists",
+            "F.A.A.E.M." => "Fellow of the American Academy of Emergency Medicine",
+            "F.A.A.F.P." => "Fellow of the American Academy of Family Physicians",
+            "F.A.C.C." => "Fellow of the American College of Cardiologists",
+            "F.A.C.E." => "Fellow of the American College of Endocrinology",
+            "F.A.C.E.P." => "Fellow of the American College of Emergency Physicians",
+            "F.A.C.G." => "Fellow of the American College of Gastroenterology",
+            "F.A.C.F.A.S." => "Fellow of the American College of Foot and Ankle Surgeons",
+            "F.A.C.O.G." => "Fellow of the American College of Obstetrics and Gynecologists",
+            "F.A.C.O.S." => "Fellow of the American College of Osteopathic Surgeons",
+            "F.A.C.P." => "Fellow of the American College of Physicians",
+            "F.A.C.C.P." => "Fellow of the American College of Chest Physicians",
+            "F.A.C.S." => "Fellow of the American College of Surgeons",
+            "F.A.S.P.S." => "Fellow of the American Society of Podiatric Surgeons",
+            "F.H.M." => "Fellow in Hospital Medicine",
+            "F.I.C.S." => "Fellow of the International College of Surgeons",
+            "F.S.C.A.I." => "Fellow of the Society for Cardiovascular Angiography and Interventions",
+            "F.S.T.S." => "Fellow of the Society of Thoracic Surgeons"
+        );
+
+        $count = 1;
+        foreach( $types as $abbr => $name ) {
+
+            $listEntity = new FellowshipTitleList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setAbbreviation($abbr);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
 
 }

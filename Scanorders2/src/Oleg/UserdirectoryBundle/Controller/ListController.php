@@ -51,6 +51,14 @@ class ListController extends Controller
      * @Route("/efforts/", name="efforts-list")
      * @Route("/admintitles/", name="admintitles-list")
      * @Route("/apptitles/", name="apptitles-list")
+     * @Route("/completionreasons/", name="completionreasons-list")
+     * @Route("/trainingdegrees/", name="trainingdegrees-list")
+     * @Route("/trainingmajors/", name="trainingmajors-list")
+     * @Route("/trainingminors/", name="trainingminors-list")
+     * @Route("/traininghonors/", name="traininghonors-list")
+     * @Route("/fellowshiptitles/", name="fellowshiptitles-list")
+     * @Route("/residencyspecialty/", name="residencyspecialty-list")
+     * @Route("/fellowshipsubspecialty/", name="fellowshipsubspecialty-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -171,6 +179,14 @@ class ListController extends Controller
      * @Route("/efforts/", name="efforts_create")
      * @Route("/admintitles/", name="admintitles_create")
      * @Route("/apptitles/", name="apptitles_create")
+     * @Route("/completionreasons/", name="completionreasons_create")
+     * @Route("/trainingdegrees/", name="trainingdegrees_create")
+     * @Route("/trainingmajors/", name="trainingmajors_create")
+     * @Route("/trainingminors/", name="trainingminors_create")
+     * @Route("/traininghonors/", name="traininghonors_create")
+     * @Route("/fellowshiptitles/", name="fellowshiptitles_create")
+     * @Route("/residencyspecialty/", name="residencyspecialty_create")
+     * @Route("/fellowshipsubspecialty/", name="fellowshipsubspecialty_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -283,6 +299,14 @@ class ListController extends Controller
      * @Route("/efforts/new", name="efforts_new")
      * @Route("/admintitles/new", name="admintitles_new")
      * @Route("/apptitles/new", name="apptitles_new")
+     * @Route("/completionreasons/new", name="completionreasons_new")
+     * @Route("/trainingdegrees/new", name="trainingdegrees_new")
+     * @Route("/trainingmajors/new", name="trainingmajors_new")
+     * @Route("/trainingminors/new", name="trainingminors_new")
+     * @Route("/traininghonors/new", name="traininghonors_new")
+     * @Route("/fellowshiptitles/new", name="fellowshiptitles_new")
+     * @Route("/residencyspecialty/new", name="residencyspecialty_new")
+     * @Route("/fellowshipsubspecialty/new", name="fellowshipsubspecialty_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -366,6 +390,14 @@ class ListController extends Controller
      * @Route("/efforts/{id}", name="efforts_show")
      * @Route("/admintitles/{id}", name="admintitles_show")
      * @Route("/apptitles/{id}", name="apptitles_show")
+     * @Route("/completionreasons/{id}", name="completionreasons_show")
+     * @Route("/trainingdegrees/{id}", name="trainingdegrees_show")
+     * @Route("/trainingmajors/{id}", name="trainingmajors_show")
+     * @Route("/trainingminors/{id}", name="trainingminors_show")
+     * @Route("/traininghonors/{id}", name="traininghonors_show")
+     * @Route("/fellowshiptitles/{id}", name="fellowshiptitles_show")
+     * @Route("/residencyspecialty/{id}", name="residencyspecialty_show")
+     * @Route("/fellowshipsubspecialty/{id}", name="fellowshipsubspecialty_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -439,6 +471,14 @@ class ListController extends Controller
      * @Route("/efforts/{id}/edit", name="efforts_edit")
      * @Route("/admintitles/{id}/edit", name="admintitles_edit")
      * @Route("/apptitles/{id}/edit", name="apptitles_edit")
+     * @Route("/completionreasons/{id}/edit", name="completionreasons_edit")
+     * @Route("/trainingdegrees/{id}/edit", name="trainingdegrees_edit")
+     * @Route("/trainingmajors/{id}/edit", name="trainingmajors_edit")
+     * @Route("/trainingminors/{id}/edit", name="trainingminors_edit")
+     * @Route("/traininghonors/{id}/edit", name="traininghonors_edit")
+     * @Route("/fellowshiptitles/{id}/edit", name="fellowshiptitles_edit")
+     * @Route("/residencyspecialty/{id}/edit", name="residencyspecialty_edit")
+     * @Route("/fellowshipsubspecialty/{id}/edit", name="fellowshipsubspecialty_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -544,6 +584,14 @@ class ListController extends Controller
      * @Route("/efforts/{id}", name="efforts_update")
      * @Route("/admintitles/{id}", name="admintitles_update")
      * @Route("/apptitles/{id}", name="apptitles_update")
+     * @Route("/completionreasons/{id}", name="completionreasons_update")
+     * @Route("/trainingdegrees/{id}", name="trainingdegrees_update")
+     * @Route("/trainingmajors/{id}", name="trainingmajors_update")
+     * @Route("/trainingminors/{id}", name="trainingminors_update")
+     * @Route("/traininghonors/{id}", name="traininghonors_update")
+     * @Route("/fellowshiptitles/{id}", name="fellowshiptitles_update")
+     * @Route("/residencyspecialty/{id}", name="residencyspecialty_update")
+     * @Route("/fellowshipsubspecialty/{id}", name="fellowshipsubspecialty_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -802,6 +850,41 @@ class ListController extends Controller
                 $className = "AppTitleList";
                 $displayName = "Academic Appointment Titles";
                 break;
+
+            //training
+            case "completionreasons":
+                $className = "CompletionReasonList";
+                $displayName = "Completion Reasons";
+                break;
+            case "trainingdegrees":
+                $className = "TrainingDegreeList";
+                $displayName = "Training Degrees";
+                break;
+            case "trainingmajors":
+                $className = "MajorTrainingList";
+                $displayName = "Training Majors";
+                break;
+            case "trainingminors":
+                $className = "MinorTrainingList";
+                $displayName = "Training Minors";
+                break;
+            case "traininghonors":
+                $className = "HonorTrainingList";
+                $displayName = "Training Honors";
+                break;
+            case "fellowshiptitles":
+                $className = "FellowshipTitleList";
+                $displayName = "Professional Fellowship Titles";
+                break;
+            case "residencyspecialty":
+                $className = "ResidencySpecialtyList";
+                $displayName = "Residency Specialties";
+                break;
+            case "fellowshipsubspecialty":
+                $className = "FellowshipSubspecialtyList";
+                $displayName = "Fellowship Subspecialties";
+                break;
+
             default:
                 $className = null;
                 $displayName = null;
@@ -858,6 +941,14 @@ class ListController extends Controller
      * @Route("/efforts/{id}", name="efforts_delete")
      * @Route("/admintitles/{id}", name="admintitles_delete")
      * @Route("/apptitles/{id}", name="apptitles_delete")
+     * @Route("/completionreasons/{id}", name="completionreasons_delete")
+     * @Route("/trainingdegrees/{id}", name="trainingdegrees_delete")
+     * @Route("/trainingmajors/{id}", name="trainingmajors_delete")
+     * @Route("/trainingminors/{id}", name="trainingminors_delete")
+     * @Route("/traininghonors/{id}", name="traininghonors_delete")
+     * @Route("/fellowshiptitles/{id}", name="fellowshiptitles_delete")
+     * @Route("/residencyspecialty/{id}", name="residencyspecialty_delete")
+     * @Route("/fellowshipsubspecialty/{id}", name="fellowshipsubspecialty_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
