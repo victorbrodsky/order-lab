@@ -662,17 +662,17 @@ class UserUtil {
 
         $residencySpecialty = $treeholder->getResidencySpecialty();
         $fellowshipSubspecialty = $treeholder->getFellowshipSubspecialty();
-        //echo "service: name=".$service->getName().", id=".$service->getId()."<br>";
+        //echo "fellowshipSubspecialty: name=".$fellowshipSubspecialty->getName().", id=".$fellowshipSubspecialty->getId()."<br>";
         //exit();
 
         $user = $sc->getToken()->getUser();
 
+        //use Institution tree set parent method for residency specialty-subspecialty because it's the same logic
         $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
 
         //set author if not set
         $this->setUpdateInfo($treeholder,$em,$sc);
 
-        //exit('eof tree');
     }
 
     public function processInstTree( $treeholder, $em, $sc ) {

@@ -114,10 +114,6 @@ class TrainingType extends AbstractType
             'required'  => false,
         ));
 
-//        $builder->add('residencySpecialty', new ResidencySpecialtyType($this->params), array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResidencySpecialty',
-//            'label' => false
-//        ));
         //residencySpecialty
         $builder->add('residencySpecialty', 'employees_custom_selector', array(
             'label' => 'Residency Specialty:',
