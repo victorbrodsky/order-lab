@@ -1260,7 +1260,9 @@
         {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cycle,'allow-future-date') }}
 
         {{ formmacros.fieldDateLabel(formfield.completionDate,'allow-future-date') }}
-        {{ formmacros.field(formfield.completionReason) }}
+        {% if formfield.completionReason is defined %}
+            {{ formmacros.field(formfield.completionReason) }}
+        {% endif %}
 
         {{ formmacros.field(formfield.degree) }}
         {{ formmacros.field(formfield.appendDegreeToName) }}

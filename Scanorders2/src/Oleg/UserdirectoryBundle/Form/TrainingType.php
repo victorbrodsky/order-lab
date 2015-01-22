@@ -3,8 +3,6 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
-
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -57,18 +55,65 @@ class TrainingType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('completionDate', 'date', array(
-            'label' => 'Completion Date:',
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-        ));
+        //If value ="Graduated" display the title of the field "Completion Date" as "Graduation Date" and hide this field and title
+        if( $this->params['cycle'] == 'show' ) {
 
-        $builder->add('completionReason', null, array(
-            'label' => 'Completion Reason:',
-            'attr' => array('class'=>'combobox combobox-width')
-        ));
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+
+                $training = $event->getData();
+                $form = $event->getForm();
+
+                $completionReason = NULL;
+
+                if( $training ) {
+                    $completionReason = $training->getCompletionReason();
+                }
+
+                if( $completionReason == "Graduated" ) {
+
+                    $form->add('completionDate', 'date', array(
+                        'label' => 'Graduation Date:',
+                        'widget' => 'single_text',
+                        'required' => false,
+                        'format' => 'MM-dd-yyyy',
+                        'attr' => array('class' => 'datepicker form-control'),
+                    ));
+
+                } else {
+
+                    $form->add('completionDate', 'date', array(
+                        'label' => 'Completion Date:',
+                        'widget' => 'single_text',
+                        'required' => false,
+                        'format' => 'MM-dd-yyyy',
+                        'attr' => array('class' => 'datepicker form-control'),
+                    ));
+
+                    $form->add('completionReason', null, array(
+                        'label' => 'Completion Reason:',
+                        'attr' => array('class'=>'combobox combobox-width')
+                    ));
+
+                }
+
+            });
+
+        } else {
+
+            $builder->add('completionDate', 'date', array(
+                'label' => 'Completion Date:',
+                'widget' => 'single_text',
+                'required' => false,
+                'format' => 'MM-dd-yyyy',
+                'attr' => array('class' => 'datepicker form-control'),
+            ));
+
+            $builder->add('completionReason', null, array(
+                'label' => 'Completion Reason:',
+                'attr' => array('class'=>'combobox combobox-width')
+            ));
+
+        }
 
         $builder->add('degree', null, array(
             'label' => 'Degree:',
