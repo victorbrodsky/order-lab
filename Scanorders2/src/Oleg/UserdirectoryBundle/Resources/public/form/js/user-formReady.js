@@ -33,6 +33,8 @@ $(document).ready(function() {
 
     getComboboxInstitution();
 
+    getComboboxResidencyspecialty();
+
     getComboboxCommentType();
 
     //init generic comboboxes

@@ -70,11 +70,9 @@ class TrainingType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width')
         ));
 
-        $builder->add('degree', 'employees_custom_selector', array(
+        $builder->add('degree', null, array(
             'label' => 'Degree:',
-            'attr' => array('class' => 'ajax-combobox-trainingdegree', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'trainingdegree'
+            'attr' => array('class'=>'combobox combobox-width')
         ));
 
         $builder->add('appendDegreeToName', 'checkbox', array(
@@ -82,18 +80,18 @@ class TrainingType extends AbstractType
             'required'  => false,
         ));
 
-        $builder->add('major', 'employees_custom_selector', array(
+        $builder->add('majors', 'employees_custom_selector', array(
             'label' => 'Major:',
-            'attr' => array('class' => 'ajax-combobox-trainingmajor', 'type' => 'hidden'),
+            'attr' => array('class' => 'ajax-combobox-trainingmajors', 'type' => 'hidden'),
             'required' => false,
-            'classtype' => 'trainingmajor'
+            'classtype' => 'trainingmajors'
         ));
 
-        $builder->add('minor', 'employees_custom_selector', array(
+        $builder->add('minors', 'employees_custom_selector', array(
             'label' => 'Minor:',
-            'attr' => array('class' => 'ajax-combobox-trainingmajor', 'type' => 'hidden'),
+            'attr' => array('class' => 'ajax-combobox-trainingminors', 'type' => 'hidden'),
             'required' => false,
-            'classtype' => 'trainingminor'
+            'classtype' => 'trainingminors'
         ));
 
         $builder->add('honors', 'employees_custom_selector', array(
@@ -117,7 +115,7 @@ class TrainingType extends AbstractType
         ));
 
 //        $builder->add('residencySpecialty', new ResidencySpecialtyType($this->params), array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResidencySpecialtyList',
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResidencySpecialty',
 //            'label' => false
 //        ));
         //residencySpecialty
@@ -129,7 +127,6 @@ class TrainingType extends AbstractType
         ));
         //fellowshipSubspecialty
         $builder->add('fellowshipSubspecialty', 'employees_custom_selector', array(
-            'mapped' => false,
             'label' => "Fellowship Subspecialty:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden'),

@@ -658,7 +658,22 @@ class UserUtil {
 
 
 
+    public function processResidencySpecialtyTree( $treeholder, $em, $sc ) {
 
+        $residencySpecialty = $treeholder->getResidencySpecialty();
+        $fellowshipSubspecialty = $treeholder->getFellowshipSubspecialty();
+        //echo "service: name=".$service->getName().", id=".$service->getId()."<br>";
+        //exit();
+
+        $user = $sc->getToken()->getUser();
+
+        $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
+
+        //set author if not set
+        $this->setUpdateInfo($treeholder,$em,$sc);
+
+        //exit('eof tree');
+    }
 
     public function processInstTree( $treeholder, $em, $sc ) {
 

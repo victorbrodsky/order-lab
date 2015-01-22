@@ -37,7 +37,7 @@ class FellowshipSubspecialtyType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialtyList',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty',
         ));
     }
 

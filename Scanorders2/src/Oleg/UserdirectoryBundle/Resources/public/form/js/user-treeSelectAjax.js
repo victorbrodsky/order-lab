@@ -262,6 +262,11 @@ function initTreeSelect(clearFlag) {
     $('.ajax-combobox-commenttype').on('change', function(e){
         getComboboxTreeByPid($(this),'ajax-combobox-commentsubtype',null,clearFlag);
     });
+
+    //residencyspecialty and fellowshipsubspecialty
+    $('.ajax-combobox-residencyspecialty').on('change', function(e){
+        getComboboxTreeByPid($(this),'ajax-combobox-fellowshipsubspecialty',null,clearFlag);
+    });
 }
 
 function getChildrenTargetClass(fieldClass) {
@@ -315,8 +320,6 @@ function setInstitutionTreeChildren(holder) {
 
 
 
-
-
 ///////////////// Comments Types Tree - initialize the children to null ///////////////////
 function setCommentTypeTreeChildren(holder) {
 
@@ -331,6 +334,20 @@ function setCommentTypeTreeChildren(holder) {
 }
 ///////////////// EOF Comments Types ///////////////////
 
+
+///////////////// Residency Specialty Tree - initialize the children to null ///////////////////
+function setResidencyspecialtyTreeChildren(holder) {
+
+    if( typeof holder == 'undefined' ) {
+        holder = $('body');
+    }
+
+    var targetId = holder.find(".ajax-combobox-fellowshipsubspecialty");
+
+    //subTypes
+    populateSelectCombobox( targetId, null, "Select an option or type in a new value", false );
+}
+///////////////// EOF Comments Types ///////////////////
 
 
 ///////////////// Tree managemenet ///////////////////

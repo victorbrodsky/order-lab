@@ -9,18 +9,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_fellowshipSubspecialtyList")
+ * @ORM\Table(name="user_fellowshipSubspecialty")
  */
-class FellowshipSubspecialtyList extends ListAbstract
+class FellowshipSubspecialty extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="FellowshipSubspecialtyList", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="FellowshipSubspecialty", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialtyList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
@@ -28,9 +28,9 @@ class FellowshipSubspecialtyList extends ListAbstract
 
 
 
-    //ResidencySpecialtyList - parent
+    //ResidencySpecialty - parent
     /**
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialtyList", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="ResidencySpecialty", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      **/
     protected $parent;
@@ -77,7 +77,7 @@ class FellowshipSubspecialtyList extends ListAbstract
 
     public function getClassName()
     {
-        return "FellowshipSubspecialtyList";
+        return "FellowshipSubspecialty";
     }
 
 

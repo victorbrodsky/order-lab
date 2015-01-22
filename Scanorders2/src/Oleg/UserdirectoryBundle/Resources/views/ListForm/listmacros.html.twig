@@ -20,7 +20,9 @@
             {% endif %}
 
             {% if entities|first.parent is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Parent(s)', 'parent.name') }}</th>
+                <th>
+                    {{ knp_pagination_sortable(entities, 'Parent(s)', 'parent.name') }}
+                </th>
             {% endif %}
 
             {% if entities|first.attributes is defined %}

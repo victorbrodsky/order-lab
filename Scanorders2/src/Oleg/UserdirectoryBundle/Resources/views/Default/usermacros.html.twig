@@ -1257,17 +1257,17 @@
 
         {{ usermacros.statusVerifiedField(formfield,cycle) }}
 
+        {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cycle,'allow-future-date') }}
+
         {{ formmacros.fieldDateLabel(formfield.completionDate,'allow-future-date') }}
         {{ formmacros.field(formfield.completionReason) }}
-
-        {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cycle,'allow-future-date') }}
 
         {{ formmacros.field(formfield.degree) }}
         {{ formmacros.field(formfield.appendDegreeToName) }}
 
-        {{ formmacros.field(formfield.major) }}
+        {{ formmacros.field(formfield.majors) }}
 
-        {{ formmacros.field(formfield.minor) }}
+        {{ formmacros.field(formfield.minors) }}
 
         {{ formmacros.field(formfield.honors) }}
 
@@ -1275,6 +1275,7 @@
         {{ formmacros.field(formfield.appendFellowshipTitleToName) }}
 
         {{ formmacros.field(formfield.residencySpecialty) }}
+        {{ formmacros.field(formfield.fellowshipSubspecialty) }}
 
     </div>
 

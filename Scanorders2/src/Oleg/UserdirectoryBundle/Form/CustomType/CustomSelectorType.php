@@ -9,6 +9,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManytomanyTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -103,27 +104,24 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericTreeTransformer($this->om, $username, 'AppTitleList');
                 break;
 
-            //training
-            case "trainingdegree":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Training');
+            //training (6 from 8)
+            case "trainingmajors":
+                $transformer = new GenericManytomanyTransformer($this->om, $username, 'MajorTrainingList');
                 break;
-            case "trainingmajor":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'MajorTrainingList');
+            case "trainingminors":
+                $transformer = new GenericManytomanyTransformer($this->om, $username, 'MinorTrainingList');
                 break;
-            case "trainingminor":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'MinorTrainingList');
+            case "traininghonors":
+                $transformer = new GenericManytomanyTransformer($this->om, $username, 'HonorTrainingList');
                 break;
-//            case "traininghonors":
-//                $transformer = new GenericTreeTransformer($this->om, $username, 'HonorTrainingList');
-//                break;
             case "trainingfellowshiptitle":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipTitleList');
                 break;
             case "residencyspecialty":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'ResidencySpecialtyList');
+                $transformer = new GenericTreeTransformer($this->om, $username, 'ResidencySpecialty');
                 break;
             case "fellowshipsubspecialty":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipSubspecialtyType');
+                $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipSubspecialty');
                 break;
 
             default:

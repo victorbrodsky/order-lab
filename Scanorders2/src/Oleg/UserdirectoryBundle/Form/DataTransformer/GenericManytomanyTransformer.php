@@ -10,7 +10,6 @@
 namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
 
-
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -18,7 +17,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
-class GenericTreeTransformer implements DataTransformerInterface
+class GenericManytomanyTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager
@@ -43,42 +42,44 @@ class GenericTreeTransformer implements DataTransformerInterface
 
 
     /**
-     * Transforms an object or name string to id.
-     *
-     * @param  Issue|null $issue
-     * @return string
+     * Transforms an array of objects or name strings to ids.
      */
-    public function transform($entity)
+    public function transform( $entities )
     {
+        //echo $entities->first()->getName()."<br>";
+        //echo "transform: entities=".$entities."<br>";
+        //echo $this->className.": transform: count=".count($entities)."<br>";
+        //var_dump($entities);
 
-        //echo "transform: entity=".$entity."<br>";
+        $array = new \Doctrine\Common\Collections\ArrayCollection();
 
-        if( null === $entity || $entity == "" ) {
-            return "";
+        if( !$entities || null === $entities->toArray() ) {
+            //echo $this->className.": return empty array";
+            return $array;
         }
 
-        //echo "data transformer entity=".$entity."<br>";
-        //echo "data transformer entity id=".$entity->getId()."<br>";
-
-        if( is_int($entity) ) {
-            //echo "transform by id=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($entity);
-            //echo "findOneById entity=".$entity."<br>";
-        }
-//        else {
-//            //echo "transform by name=".$entity." ????????????????<br>";
-//            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($entity);
-//        }
-
-        if( null === $entity ) {
-            return "";
+        if( count($entities) == 0 ) {
+            return null;
         }
 
-        //return $entity->getId();
+        if( count($entities) > 0 ) {
+            $idArr = [];
+            foreach( $entities as $entity ) {
+                if( $entity ) {
+                    //echo $entity;
+                    $idArr[] = $entity->getId();
+                }
+            }
 
-        //echo "count=".count($entity)."<br>";
+            //return array with primaryPrincipal as the first element
+            //echo "idArr:<br>";
+            //var_dump($idArr);
+            //echo "return:".implode(",", $idArr)."<br>";
 
-        return $entity->getId();
+            return implode(",", $idArr);
+        }
+
+        return $entities->first()->getId();
     }
 
     /**
@@ -96,36 +97,60 @@ class GenericTreeTransformer implements DataTransformerInterface
         //echo "data reverse transformer text=".$text."<br>";
         //exit();
 
+        $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
+
         if( !$text ) {
-            //exit('text is null');
-            //echo "data transformer text is null <br>";
-            return null;
+            //echo "return empty array <br>";
+            return $newListArr;
         }
 
-        if( is_numeric ( $text ) ) {    //number => most probably it is id
+        //echo "text array<br>";
+        //exit();
+        $textArr = explode(",", $text);
+        foreach( $textArr as $entity ) {
+            $newListArr = $this->addEntity( $newListArr, $entity );
+        }
 
-            //echo 'text is id <br>';
+        //echo "reverseTransform: return count:".count($newListArr)."<br>";
+        return $newListArr;
+    }
 
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($text);
+    public function addEntity( $newListArr, $entity ) {
+
+        if( is_numeric ( $entity ) ) {    //number => most probably it is id
+
+            //echo "principal=".$username." => numeric => most probably it is id<br>";
+
+            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($entity);
 
             if( null === $entity ) {
 
-                //exit('create new???');
-                return $this->createNew($text); //create a new record in db
+                $newList = $this->createNew($entity); //create a new record in db
+
+                $newListArr->add($newList);
+
+                return $newListArr;
 
             } else {
 
-                //echo "found:".$entity->getName()."<br>";
-                //exit('use found object <br>');
-                return $entity; //use found object
+                $newListArr->add($entity);
+
+                return $newListArr;
 
             }
 
-        } else {    //text => most probably it is new name
+        } else {    //text => most probably it is new name or multiple ids
 
-            //exit('text is a new record name='.$text);
-            //echo "text is a new record name=".$text."<br>";
-            return $this->createNew($text); //create a new record in db
+            //echo "principal=".$username." => text => most probably it is new name or multiple ids<br>";
+
+            $newList = $this->createNew($entity); //create a new record in db
+
+            if( $newList ) {
+                //echo "newList=".$newList."<br>";
+                $newListArr->add($newList);
+            }
+
+            return $newListArr;
 
         }
 
@@ -142,7 +167,6 @@ class GenericTreeTransformer implements DataTransformerInterface
         }
 
         //check if it is already exists in db
-        //echo "className=".$this->className."<br>";
         $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name."");
         
         if( null === $entity ) {

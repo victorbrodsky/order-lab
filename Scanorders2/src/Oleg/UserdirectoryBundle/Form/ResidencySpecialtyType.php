@@ -33,7 +33,7 @@ class ResidencySpecialtyType extends AbstractType
         ));
 
         $builder->add('children', new FellowshipSubspecialtyType($this->params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialtyList',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty',
             'label' => false
         ));
 
@@ -43,7 +43,7 @@ class ResidencySpecialtyType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResidencySpecialtyList',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResidencySpecialty',
         ));
     }
 

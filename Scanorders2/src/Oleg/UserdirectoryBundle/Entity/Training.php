@@ -45,25 +45,27 @@ class Training extends BaseUserAttributes
     private $appendDegreeToName;
 
     /**
-     * Contains children - FellowshipSubspecialtyList
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialtyList",cascade={"persist"})
+     * Contains children - FellowshipSubspecialty
+     * @ORM\ManyToOne(targetEntity="ResidencySpecialty",cascade={"persist"})
      */
     private $residencySpecialty;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialtyList",cascade={"persist"})
-//     */
-//    private $fellowshipSubspecialty;
+    /**
+     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty",cascade={"persist"})
+     */
+    private $fellowshipSubspecialty;
 
     /**
-     * @ORM\ManyToOne(targetEntity="MajorTrainingList",cascade={"persist"})
-     */
-    private $major;
+     * @ORM\ManyToMany(targetEntity="MajorTrainingList")
+     * @ORM\JoinTable(name="user_trainings_majors")
+     **/
+    private $majors;
 
     /**
-     * @ORM\ManyToOne(targetEntity="MinorTrainingList",cascade={"persist"})
-     */
-    private $minor;
+     * @ORM\ManyToMany(targetEntity="MinorTrainingList")
+     * @ORM\JoinTable(name="user_trainings_minors")
+     **/
+    private $minors;
 
     /**
      * @ORM\ManyToMany(targetEntity="HonorTrainingList")
@@ -89,6 +91,8 @@ class Training extends BaseUserAttributes
 
     public function __construct($author=null) {
 
+        $this->majors = new ArrayCollection();
+        $this->minors = new ArrayCollection();
         $this->honors = new ArrayCollection();
 
         parent::__construct($author);
@@ -210,6 +214,23 @@ class Training extends BaseUserAttributes
     }
 
     /**
+     * @param mixed $fellowshipSubspecialty
+     */
+    public function setFellowshipSubspecialty($fellowshipSubspecialty)
+    {
+        $this->fellowshipSubspecialty = $fellowshipSubspecialty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellowshipSubspecialty()
+    {
+        return $this->fellowshipSubspecialty;
+    }
+
+
+    /**
      * @param mixed $appendFellowshipTitleToName
      */
     public function setAppendFellowshipTitleToName($appendFellowshipTitleToName)
@@ -241,36 +262,38 @@ class Training extends BaseUserAttributes
         return $this->fellowshipTitle;
     }
 
-    /**
-     * @param mixed $major
-     */
-    public function setMajor($major)
+    public function getMajors()
     {
-        $this->major = $major;
+        return $this->majors;
+    }
+    public function addMajor($major)
+    {
+        if( $major && !$this->majors->contains($major) ) {
+            $this->majors->add($major);
+        }
+
+        return $this;
+    }
+    public function removeMajor($major)
+    {
+        $this->majors->removeElement($major);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMajor()
+    public function getMinors()
     {
-        return $this->major;
+        return $this->minors;
     }
-
-    /**
-     * @param mixed $minor
-     */
-    public function setMinor($minor)
+    public function addMinor($minor)
     {
-        $this->minor = $minor;
+        if( $minor && !$this->minors->contains($minor) ) {
+            $this->minors->add($minor);
+        }
+
+        return $this;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getMinor()
+    public function removeMinor($minor)
     {
-        return $this->minor;
+        $this->minors->removeElement($minor);
     }
 
 

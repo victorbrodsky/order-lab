@@ -46,6 +46,7 @@ function initBaseAdd(newForm) {
     //init comboboxes
     getComboboxInstitution(newForm);   //init institution for administrative and appointnment titles
     getComboboxCommentType(newForm);
+    getComboboxResidencyspecialty(newForm);
 
     //init generic comboboxes
     initAllComboboxGeneric(newForm);

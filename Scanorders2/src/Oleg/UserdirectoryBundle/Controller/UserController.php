@@ -3,11 +3,6 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\Training;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Util\CropAvatar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,6 +39,11 @@ use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
 use Oleg\UserdirectoryBundle\Entity\ConfidentialComment;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
+use Oleg\UserdirectoryBundle\Entity\Document;
+use Oleg\UserdirectoryBundle\Entity\Location;
+use Oleg\UserdirectoryBundle\Entity\Training;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Util\CropAvatar;
 
 
 
@@ -1493,6 +1493,11 @@ class UserController extends Controller
             $originalLocations->add($loc);
         }
 
+        $originalTrainings = new ArrayCollection();
+        foreach( $entity->getTrainings() as $training) {
+            $originalTrainings->add($training);
+        }
+
         //Credentials collections
         $originalIdentifiers = new ArrayCollection();
         foreach( $entity->getCredentials()->getIdentifiers() as $subitem) {
@@ -1619,6 +1624,9 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
 
+            //set parents for residencySpecialty tree for Trainings
+            $this->setParentsForresidencySpecialtyTree($entity);
+
             //set avatar
             $this->processSetAvatar($entity);
 
@@ -1645,6 +1653,11 @@ class UserController extends Controller
             }
 
             $removedInfo = $this->removeCollection($originalLocations,$entity->getLocations());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalTrainings,$entity->getTrainings());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
@@ -1789,6 +1802,19 @@ class UserController extends Controller
 //        $em->persist($eventLog);
 //        $em->flush();
 //    }
+
+
+    //Process all holder containing Residency Specialty tree
+    public function setParentsForResidencySpecialtyTree($entity) {
+
+        $em = $this->getDoctrine()->getManager();
+        $sc = $this->get('security.context');
+        $userUtil = new UserUtil();
+
+        foreach( $entity->getTrainings() as $training) {
+            $userUtil->processResidencySpecialtyTree($training,$em,$sc);
+        }
+    }
 
     //Process all holder containing institutional tree
     public function setParentsForInstitutionTree($entity) {

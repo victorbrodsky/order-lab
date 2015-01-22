@@ -31,40 +31,7 @@ class UtilController extends Controller {
     public function getGenericAction( $name ) {
 
         //echo "name=".$name."<br>";
-
-        switch( $name ) {
-            case "identifierkeytype":
-                $className = "IdentifierTypeList";
-                break;
-            case "room":
-                $className = "RoomList";
-                break;
-            case "suite":
-                $className = "SuiteList";
-                break;
-            case "floor":
-                $className = "FloorList";
-                break;
-            case "floor":
-                $className = "FloorList";
-            case "mailbox":
-                $className = "MailboxList";
-                break;
-            case "effort":
-                $className = "EffortList";
-                break;
-            case "administrativetitletype":
-                $className = "AdminTitleList";
-                break;
-            case "appointmenttitletype":
-                $className = "AppTitleList";
-                break;
-            case "researchlab":
-                $className = "ResearchLab";
-                break;
-            default:
-                $className = null;
-        }
+        $className = $this->getClassByName($name);
 
         //echo "className=".$className."<br>";
 
@@ -100,6 +67,7 @@ class UtilController extends Controller {
      * @Route("/common/division", name="get-divisions-by-parent")
      * @Route("/common/service", name="get-services-by-parent")
      * @Route("/common/commentsubtype", name="get-commentsubtype-by-parent")
+     * @Route("/common/fellowshipsubspecialty", name="get-fellowshipsubspecialty-by-parent")
      * @Method({"GET", "POST"})
      */
     public function getDepartmentAction(Request $request) {
@@ -113,24 +81,13 @@ class UtilController extends Controller {
 
         $routeName = $request->get('_route');
 
-        $className = "";
-
-        if( $routeName == "get-departments-by-parent") {
-            $className = 'Department';
-        }
-        if( $routeName == "get-divisions-by-parent") {
-            $className = 'Division';
-        }
-        if( $routeName == "get-services-by-parent") {
-            $className = 'Service';
-        }
-        if( $routeName == "get-commentsubtype-by-parent") {
-            $className = 'CommentSubTypeList';
-        }
+        $name = str_replace("get-", "", $routeName);
+        $name = str_replace("-by-parent", "", $name);
+        $className = $this->getClassByName($name);
 
         //echo "className=".$className."<br>";
 
-        if( $className != "" && is_numeric($pid) ) {
+        if( $className && is_numeric($pid) ) {
             //echo "className=".$className."<br>";
             $query = $em->createQueryBuilder()
                 ->from('OlegUserdirectoryBundle:'.$className, 'list')
@@ -777,4 +734,79 @@ class UtilController extends Controller {
         $response->setContent(json_encode($output));
         return $response;
     }
+
+
+    public function getClassByName($name) {
+        switch( $name ) {
+            case "identifierkeytype":
+                $className = "IdentifierTypeList";
+                break;
+            case "room":
+                $className = "RoomList";
+                break;
+            case "suite":
+                $className = "SuiteList";
+                break;
+            case "floor":
+                $className = "FloorList";
+                break;
+            case "mailbox":
+                $className = "MailboxList";
+                break;
+            case "effort":
+                $className = "EffortList";
+                break;
+            case "administrativetitletype":
+                $className = "AdminTitleList";
+                break;
+            case "appointmenttitletype":
+                $className = "AppTitleList";
+                break;
+            case "researchlab":
+                $className = "ResearchLab";
+                break;
+
+            //training
+            case "trainingmajors":
+                $className = "MajorTrainingList";
+                break;
+            case "trainingminors":
+                $className = "MinorTrainingList";
+                break;
+            case "traininghonors":
+                $className = "HonorTrainingList";
+                break;
+            case "trainingfellowshiptitle":
+                $className = "FellowshipTitleList";
+                break;
+
+            //training tree
+            case "residencyspecialty":
+                $className = "ResidencySpecialty";
+                break;
+            case "fellowshipsubspecialty":
+                $className = "FellowshipSubspecialty";
+                break;
+
+            //tree
+            case "departments":
+                $className = "Department";
+                break;
+            case "divisions":
+                $className = "Division";
+                break;
+            case "services":
+                $className = "Service";
+                break;
+            case "commentsubtype":
+                $className = "CommentSubTypeList";
+                break;
+
+            default:
+                $className = null;
+        }
+
+        return $className;
+    }
+
 }

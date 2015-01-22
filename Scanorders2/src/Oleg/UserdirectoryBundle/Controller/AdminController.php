@@ -6,13 +6,13 @@ use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
 use Oleg\UserdirectoryBundle\Entity\CompletionReasonList;
-use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialtyList;
+use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use Oleg\UserdirectoryBundle\Entity\FellowshipTitleList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\HonorTrainingList;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
-use Oleg\UserdirectoryBundle\Entity\ResidencySpecialtyList;
+use Oleg\UserdirectoryBundle\Entity\ResidencySpecialty;
 use Oleg\UserdirectoryBundle\Entity\TrainingDegreeList;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -176,6 +176,36 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('user_admin_index'));
     }
 
+
+    /**
+     * @Route("/genresidencyspecialties", name="generate_residencyspecialties")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generateResidencySpecialtiesAction()
+    {
+
+        $count = $this->generateResidencySpecialties();
+        if( $count >= 0 ) {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Created '.$count. ' Residency Specialties'
+            );
+
+            return $this->redirect($this->generateUrl('user_admin_index'));
+
+        } else {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'This table is already exists!'
+            );
+
+            return $this->redirect($this->generateUrl('user_admin_index'));
+        }
+
+    }
 
 
 
@@ -1763,10 +1793,14 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialtyList')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findAll();
 
         if( $entities ) {
             return -1;
+//            $query = $em->createQuery('DELETE OlegUserdirectoryBundle:FellowshipSubspecialty c WHERE c.id > 0');
+//            $query->execute();
+//            $query = $em->createQuery('DELETE OlegUserdirectoryBundle:ResidencySpecialty c WHERE c.id > 0');
+//            $query->execute();
         }
 
         $inputFileName = __DIR__ . '/../Util/SpecialtiesResidenciesFellowshipsCertified.xlsx';
@@ -1800,12 +1834,17 @@ class AdminController extends Controller
 
             //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
             $residencySpecialty = $rowData[0][0];
-            $fellowshipSubspecialty = $rowData[0][2];
+            $fellowshipSubspecialty = $rowData[0][1];
             $boardCertificationAvailable = $rowData[0][2];
+            //echo "residencySpecialty=".$residencySpecialty."<br>";
+            //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
+            //echo "boardCertificationAvailable=".$boardCertificationAvailable."<br>";
 
             if( $residencySpecialty ) {
 
-                $listEntity = new ResidencySpecialtyList();
+                //echo "residencySpecialty=".$residencySpecialty."<br>";
+
+                $listEntity = new ResidencySpecialty();
                 $this->setDefaultList($listEntity,$count,$username,$residencySpecialty);
 
 
@@ -1821,7 +1860,9 @@ class AdminController extends Controller
 
             if( $fellowshipSubspecialty ) {
 
-                $subEntity = new FellowshipSubspecialtyList();
+                //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
+
+                $subEntity = new FellowshipSubspecialty();
                 $this->setDefaultList($subEntity,$subcount,$username,$fellowshipSubspecialty);
 
 

@@ -33,9 +33,16 @@ class GenericListType extends AbstractType
 
         //tree classes
         if( method_exists($this->params['entity'],'getParent') ) {
+            //echo "cycle=".$this->params['cycle']."<br>";
+            if( $this->params['cycle'] == "show" ) {
+                $attr = array('class' => 'combobox combobox-width', 'readonly'=>'readonly');
+            } else {
+                $attr = array('class' => 'combobox combobox-width');
+            }
             $builder->add('parent',null,array(
-                'label' => $this->mapper['parentClassName'].':',
-                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>'readonly')
+                'label' => $this->mapper['parentClassName'].' (Parent):',
+                //'attr' => array('class' => 'combobox combobox-width')
+                'attr' => $attr
             ));
         }
 

@@ -9,18 +9,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_residencySpecialtyList")
+ * @ORM\Table(name="user_residencySpecialty")
  */
-class ResidencySpecialtyList extends ListAbstract
+class ResidencySpecialty extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="ResidencySpecialtyList", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ResidencySpecialty", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialtyList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ResidencySpecialty", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
@@ -29,7 +29,7 @@ class ResidencySpecialtyList extends ListAbstract
 
     //fellowshipSubspecialty - children
     /**
-     * @ORM\OneToMany(targetEntity="FellowshipSubspecialtyList", mappedBy="parent", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="FellowshipSubspecialty", mappedBy="parent", cascade={"persist"})
      */
     private $children;
 
@@ -66,6 +66,14 @@ class ResidencySpecialtyList extends ListAbstract
         return $this->children;
     }
 
+    //mapper functions to deal with tree logic
+    public function addFellowshipSubspecialty($child) {
+        $this->addChild($child);
+    }
+    public function removeFellowshipSubspecialty($child) {
+        $this->removeChild($child);
+    }
+
     /**
      * @param mixed $boardCertificateAvailable
      */
@@ -84,7 +92,7 @@ class ResidencySpecialtyList extends ListAbstract
 
     public function getClassName()
     {
-        return "ResidencySpecialtyList";
+        return "ResidencySpecialty";
     }
 
 

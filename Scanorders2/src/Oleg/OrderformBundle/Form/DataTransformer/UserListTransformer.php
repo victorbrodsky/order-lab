@@ -114,13 +114,12 @@ class UserListTransformer implements DataTransformerInterface
 //            //exit();
 //        }
 
+        $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
+
         if( !$text ) {
-            $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
             //echo "return empty array <br>";
             return $newListArr;
         }
-
-        $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
 
         //$newListArr = $this->addSingleService( $newListArr, $text );
         //return $newListArr;
