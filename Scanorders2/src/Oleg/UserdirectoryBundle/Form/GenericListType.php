@@ -46,6 +46,20 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //types
+        if( method_exists($this->params['entity'],'getTypes') ) {
+            //echo "cycle=".$this->params['cycle']."<br>";
+            if( $this->params['cycle'] == "show" ) {
+                $attr = array('class' => 'combobox combobox-width', 'readonly'=>'readonly');
+            } else {
+                $attr = array('class' => 'combobox combobox-width');
+            }
+            $builder->add('types',null,array(
+                'label' => $this->mapper['className'].' Type(s):',
+                'attr' => $attr
+            ));
+        }
+
         //Roles
         if( strtolower($this->mapper['className']) == strtolower("Roles") ) {
             $builder->add('alias',null,array(

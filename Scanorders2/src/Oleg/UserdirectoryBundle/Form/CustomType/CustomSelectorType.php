@@ -50,7 +50,8 @@ class CustomSelectorType extends AbstractType {
          
         switch( $classtype ) {
             case "institution":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Institution');
+                $params = array('type'=>'Medical');
+                $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', $params);
                 break;
             case "department":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Department');
@@ -104,7 +105,11 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericTreeTransformer($this->om, $username, 'AppTitleList');
                 break;
 
-            //training (6 from 8)
+            //training (7 from 9)
+            case "traininginstitution":
+                $params = array('type'=>'Educational');
+                $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', $params);
+                break;
             case "trainingmajors":
                 $transformer = new GenericManytomanyTransformer($this->om, $username, 'MajorTrainingList');
                 break;

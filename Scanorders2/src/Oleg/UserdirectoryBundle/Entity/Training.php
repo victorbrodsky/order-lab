@@ -83,10 +83,11 @@ class Training extends BaseUserAttributes
      */
     private $appendFellowshipTitleToName;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="EducationalInstituteList",cascade={"persist"})
-//     */
-//    private $educationalInstitute;
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution",cascade={"persist"})
+     */
+    private $institution;
+
 
 
     public function __construct($author=null) {
@@ -313,6 +314,23 @@ class Training extends BaseUserAttributes
     {
         return $this->honors;
     }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
 
 
 

@@ -188,6 +188,10 @@
     {#{{ form(form) }}#}
     {{ form_start(form) }}
 
+    {% if form.types is defined and form.vars.value.types is defined %}
+        {{ formmacros.field(form.types) }}
+    {% endif %}
+
     {{ formmacros.field(form.list.name) }}
     {{ formmacros.field(form.list.shortname) }}
     {{ formmacros.field(form.list.abbreviation) }}
@@ -270,6 +274,10 @@
 
     {% if edit_form.parent is defined and entity.parent is defined %}
         {{ formmacros.field(edit_form.parent) }}
+    {% endif %}
+
+    {% if edit_form.types is defined and edit_form.vars.value.types is defined %}
+        {{ formmacros.field(edit_form.types) }}
     {% endif %}
 
     {{ formmacros.field(edit_form.list.name) }}

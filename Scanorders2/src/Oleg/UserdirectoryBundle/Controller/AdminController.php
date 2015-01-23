@@ -10,6 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use Oleg\UserdirectoryBundle\Entity\FellowshipTitleList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\HonorTrainingList;
+use Oleg\UserdirectoryBundle\Entity\InstitutionType;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
 use Oleg\UserdirectoryBundle\Entity\ResidencySpecialty;
@@ -94,7 +95,8 @@ class AdminController extends Controller
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
-        $count_institution = $this->generateInstitutions();         //must be first
+        $count_institutiontypes = $this->generateInstitutionTypes();         //must be first
+        $count_institution = $this->generateInstitutions();                  //must be first
 
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
 
@@ -140,6 +142,7 @@ class AdminController extends Controller
             'Generated Tables: '.
             'Roles='.$count_roles.', '.
             'Site Settings='.$count_siteParameters.', '.
+            'Institution Types='.$count_institutiontypes.', '.
             'Institutions='.$count_institution.', '.
             'Users='.$count_users.', '.
             'Test Users='.$count_testusers.', '.
@@ -577,6 +580,41 @@ class AdminController extends Controller
     }
 
 
+
+    public function generateInstitutionTypes() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Medical',
+            'Educational'
+        );
+
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $name ) {
+
+            $entity = new InstitutionType();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
     //https://bitbucket.org/weillcornellpathology/scanorder/issue/221/multiple-office-locations-and-phone
     public function generateInstitutions() {
 
@@ -792,11 +830,15 @@ class AdminController extends Controller
         );
 
 
+        $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+
         $instCount = 1;
         foreach( $institutions as $institutionname=>$infos ) {
             $institution = new Institution();
             $this->setDefaultList($institution,$instCount,$username,$institutionname);
             $institution->setAbbreviation( trim($infos['abbreviation']) );
+
+            $institution->addType($medicalType);
 
             if( array_key_exists('departments', $infos) && $infos['departments'] && is_array($infos['departments'])  ) {
 
@@ -1778,6 +1820,12 @@ class AdminController extends Controller
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $listEntity->setAbbreviation($type);
+
+            //set "MBBS" and "DO" to be synonyms of "MD" in the List Manager for Degrees
+            if( $type == "DO" || $type == "MBBS" ) {
+                $mdOriginal = $em->getRepository('OlegUserdirectoryBundle:TrainingDegreeList')->findOneByName("MD");
+                $listEntity->setOriginal($mdOriginal);
+            }
 
             $em->persist($listEntity);
             $em->flush();

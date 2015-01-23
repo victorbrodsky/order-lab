@@ -159,6 +159,13 @@ class TrainingType extends AbstractType
             'required'  => false,
         ));
 
+        $builder->add('institution', 'employees_custom_selector', array(
+            'label' => 'Educational Institution:',
+            'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'traininginstitution'
+        ));
+
         //residencySpecialty
         $builder->add('residencySpecialty', 'employees_custom_selector', array(
             'label' => 'Residency Specialty:',

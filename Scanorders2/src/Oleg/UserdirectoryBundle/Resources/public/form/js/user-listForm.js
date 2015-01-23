@@ -9,8 +9,6 @@
 $(document).ready(function() {
 
 
-    $(".select2-list-creator").select2("readonly", true);
-
     if( $('.select2-list-type').select2('val') == "default" ) {
         $(".select2-list-original").select2("readonly", true);
         $('.select2-list-original').select2('val',null);

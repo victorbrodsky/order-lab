@@ -44,11 +44,18 @@ class Institution extends ListAbstract
      **/
     private $buildings;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="InstitutionType", inversedBy="institutions")
+     * @ORM\JoinTable(name="user_institutions_types")
+     **/
+    private $types;
+
 
     public function __construct() {
         $this->departments = new ArrayCollection();
         $this->heads = new ArrayCollection();
         $this->buildings = new ArrayCollection();
+        $this->types = new ArrayCollection();
 
         parent::__construct();
     }
@@ -121,6 +128,24 @@ class Institution extends ListAbstract
     public function removeBuilding($building)
     {
         $this->buildings->removeElement($building);
+    }
+
+    public function addType($type)
+    {
+        if( !$this->types->contains($type) ) {
+            $this->types->add($type);
+        }
+        return $this;
+    }
+
+    public function removeType($type)
+    {
+        $this->types->removeElement($type);
+    }
+
+    public function getTypes()
+    {
+        return $this->types;
     }
 
 

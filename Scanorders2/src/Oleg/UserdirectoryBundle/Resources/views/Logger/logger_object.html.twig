@@ -22,11 +22,9 @@
     {#{{ formmacros.simplefield( "Logger id:", updateLogger.id, "input", "disabled" ) }}#}
     {{ formmacros.simplefield( "Last Updated by user:", updateLogger.user.getUsernameOptimal, "input", "disabled" ) }}
 
-    {#roleslen:{{ updateLogger.roles|length }}<br>#}
     {% set rolesArr = {} %}
     {% for role in updateLogger.roles %}
         {% if role != "ROLE_USER" %}
-            {#"{{ attribute(roles, role) }}"#}
             {% set rolesArr = rolesArr|merge([attribute(roles, role)]) %}
         {% endif %}
     {% endfor %}

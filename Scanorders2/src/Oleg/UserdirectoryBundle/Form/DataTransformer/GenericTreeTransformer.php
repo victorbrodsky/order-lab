@@ -26,15 +26,17 @@ class GenericTreeTransformer implements DataTransformerInterface
     protected $em;
     protected $user;
     protected $className;
+    protected $params;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null, $className=null)
+    public function __construct(ObjectManager $em=null, $user=null, $className=null, $params=null)
     {
         $this->em = $em;
         $this->user = $user;
         $this->className = $className;
+        $this->params = $params;
     }
 
     public function getThisEm() {
@@ -187,6 +189,10 @@ class GenericTreeTransformer implements DataTransformerInterface
         $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
         $newEntity = new $fullClassName();
 
+        //add default type
+        $userSecUtil = new UserSecurityUtil($this->em,null,null);
+        $newEntity = $userSecUtil->addDefaultType($newEntity,$this->params);
+
         $newEntity = $this->populateEntity($newEntity);
 
         $newEntity->setName($name."");
@@ -211,5 +217,6 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         return $entity;
     }
+
 
 }

@@ -300,4 +300,21 @@ class UserSecurityUtil {
         $em->flush();
     }
 
+    //add type to tree entity if exists
+    public function addDefaultType($entity,$params) {
+        $fullClassName = new \ReflectionClass($entity);
+        $className = $fullClassName->getShortName();
+
+        //add institutional type
+        if( $className == "Institution" ) {
+            if( array_key_exists('type',$params) && $params['type'] ) {
+                $type = $this->em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName($params['type']);
+                $entity->addType($type);
+            }
+        }
+
+        return $entity;
+    }
+
+
 }

@@ -29,6 +29,7 @@ var _trainingmajors = new Array();
 var _trainingminors = new Array();
 var _traininghonors = new Array();
 var _fellowshipTitles = new Array();
+var _traininginstitution = new Array();
 
 
 function initAllComboboxGeneric(newForm) {
@@ -52,6 +53,7 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'trainingminors',_trainingminors,true);
     getComboboxGeneric(newForm,'traininghonors',_traininghonors,true);
     getComboboxGeneric(newForm,'trainingfellowshiptitle',_fellowshipTitles,false);
+    getComboboxGeneric(newForm,'traininginstitution',_traininginstitution,false);
     //getComboboxGeneric(newForm,'residencyspecialty',_residencySpecialtys,false);
     //getComboboxGeneric(newForm,'fellowshipsubspecialty',_fellowshipSubspecialtys,false);
 

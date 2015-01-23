@@ -629,6 +629,18 @@ class UserController extends Controller
             $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty')";
         }
 
+        //list all people with MD, MBBS, and DO degrees (using all current synonym links) and only with Administrative or Academic title in institution "WCMC" and department of "Pathology"
+        if( $filter && $filter == "WCMC Pathology Physicians" ) {
+            $dql->leftJoin("user.trainings", "trainings");
+            $dql->leftJoin("trainings.degree", "degree");
+            $dql->leftJoin("degree.original", "original");
+            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College' OR appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(administrativeDepartment.name = 'Pathology and Laboratory Medicine' OR appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(original.name = 'MD')";
+        }
+
         //Academic Appointment Title exists + Research Faculty
         if( $filter && $filter == "WCMC Pathology Research Faculty" ) {
             $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
@@ -1190,6 +1202,9 @@ class UserController extends Controller
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($user);
+
+            //set parents for residencySpecialty tree for Trainings
+            $this->setParentsForresidencySpecialtyTree($user);
 
             //set avatar
             $this->processSetAvatar($user);
@@ -1811,8 +1826,19 @@ class UserController extends Controller
         $sc = $this->get('security.context');
         $userUtil = new UserUtil();
 
+        $educationalType = null;
+
         foreach( $entity->getTrainings() as $training) {
             $userUtil->processResidencySpecialtyTree($training,$em,$sc);
+
+            //set Educational type for training Institution
+            $institution = $training->getInstitution();
+            if( $institution && $educationalType == null ) {
+                $educationalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName("Educational");
+            }
+            if( $institution && $educationalType) {
+                $institution->addType($educationalType);
+            }
         }
     }
 

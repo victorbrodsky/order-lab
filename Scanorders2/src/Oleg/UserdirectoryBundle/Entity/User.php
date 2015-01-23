@@ -1113,24 +1113,52 @@ class User extends BaseUser
     //if the user has no last name, use the first name; if the user has none of the three names, start with the User ID:
     public function getUsernameOptimal() {
 
+        $degrees = array();
+        $titles = array();
+
+        //get appended degrees
+        foreach( $this->getTrainings() as $training ) {
+            if( $training->getAppendDegreeToName() && $training->getDegree() ) {
+                $degrees[] = $training->getDegree();
+            }
+            if( $training->getAppendFellowshipTitleToName() && $training->getFellowshipTitle() ) {
+                if( $training->getFellowshipTitle()->getAbbreviation() ) {
+                    $titles[] = $training->getFellowshipTitle()->getAbbreviation();
+                }
+            }
+        }
+
+        $degreesStr = implode(", ", $degrees);
+        $titlesStr = implode(", ", $titles);
+
+        $degreesAndTitlesStr = $degreesStr;
+        if( $titlesStr ) {
+            $degreesAndTitlesStr = $degreesAndTitlesStr . ", " . $titlesStr;
+        }
+
+        if( $degreesAndTitlesStr ) {
+            $degreesAndTitlesStr = ", " . $degreesAndTitlesStr;
+        }
+
+
         if( $this->getDisplayName() ) {
-            return $this->getDisplayName();
+            return $this->getDisplayName() . $degreesAndTitlesStr;
         }
 
         if( $this->getLastName() && $this->getFirstName() ) {
-            return $this->getLastName() . " " . $this->getFirstName();
+            return $this->getLastName() . " " . $this->getFirstName() . $degreesAndTitlesStr;
         }
 
         if( $this->getLastName() ) {
-            return $this->getLastName();
+            return $this->getLastName() . $degreesAndTitlesStr;
         }
 
         if( $this->getFirstName() ) {
-            return $this->getFirstName();
+            return $this->getFirstName() . $degreesAndTitlesStr;
         }
 
         if( $this->getPrimaryPublicUserId() ) {
-            return $this->getPrimaryPublicUserId();
+            return $this->getPrimaryPublicUserId() . $degreesAndTitlesStr;
         }
 
         return $this->getId();

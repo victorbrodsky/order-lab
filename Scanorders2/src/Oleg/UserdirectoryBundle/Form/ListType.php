@@ -76,7 +76,7 @@ class ListType extends AbstractType
         $builder->add('creator',null,array(
             'label'=>'Creator:',
             'required'=>true,
-            'attr' => array('class'=>'combobox combobox-width select2-list-creator')
+            'attr' => array('class'=>'combobox combobox-width select2-list-creator', 'readonly'=>'readonly')
         ));
 
         $builder->add( 'createdate', 'date', array(
@@ -97,7 +97,7 @@ class ListType extends AbstractType
                 'label'=>'Updated by:',
                 'required'=>false,
                 'read_only'=>true,
-                'attr' => array('class'=>'combobox combobox-width select2-list-creator')
+                'attr' => array('class'=>'combobox combobox-width select2-list-creator', 'readonly'=>'readonly')
             ));
 
             $builder->add( 'updatedon', 'date', array(

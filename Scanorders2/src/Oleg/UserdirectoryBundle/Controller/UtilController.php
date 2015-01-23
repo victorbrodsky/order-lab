@@ -779,6 +779,9 @@ class UtilController extends Controller {
             case "trainingfellowshiptitle":
                 $className = "FellowshipTitleList";
                 break;
+            case "traininginstitution":
+                $className = "Institution";
+                break;
 
             //training tree
             case "residencyspecialty":

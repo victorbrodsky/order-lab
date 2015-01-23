@@ -59,6 +59,7 @@ class ListController extends Controller
      * @Route("/fellowshiptitles/", name="fellowshiptitles-list")
      * @Route("/residencyspecialty/", name="residencyspecialtys-list")
      * @Route("/fellowshipsubspecialty/", name="fellowshipsubspecialtys-list")
+     * @Route("/institutiontypes/", name="institutiontypes-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -188,6 +189,7 @@ class ListController extends Controller
      * @Route("/fellowshiptitles/", name="fellowshiptitles_create")
      * @Route("/residencyspecialty/", name="residencyspecialtys_create")
      * @Route("/fellowshipsubspecialty/", name="fellowshipsubspecialtys_create")
+     * @Route("/institutiontypes/", name="institutiontypes_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -308,6 +310,7 @@ class ListController extends Controller
      * @Route("/fellowshiptitles/new", name="fellowshiptitles_new")
      * @Route("/residencyspecialty/new", name="residencyspecialtys_new")
      * @Route("/fellowshipsubspecialty/new", name="fellowshipsubspecialtys_new")
+     * @Route("/institutiontypes/new", name="institutiontypes_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -399,6 +402,7 @@ class ListController extends Controller
      * @Route("/fellowshiptitles/{id}", name="fellowshiptitles_show")
      * @Route("/residencyspecialty/{id}", name="residencyspecialtys_show")
      * @Route("/fellowshipsubspecialty/{id}", name="fellowshipsubspecialtys_show")
+     * @Route("/institutiontypes/{id}", name="institutiontypes_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -480,6 +484,7 @@ class ListController extends Controller
      * @Route("/fellowshiptitles/{id}/edit", name="fellowshiptitles_edit")
      * @Route("/residencyspecialty/{id}/edit", name="residencyspecialtys_edit")
      * @Route("/fellowshipsubspecialty/{id}/edit", name="fellowshipsubspecialtys_edit")
+     * @Route("/institutiontypes/{id}/edit", name="institutiontypes_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -593,6 +598,7 @@ class ListController extends Controller
      * @Route("/fellowshiptitles/{id}", name="fellowshiptitles_update")
      * @Route("/residencyspecialty/{id}", name="residencyspecialtys_update")
      * @Route("/fellowshipsubspecialty/{id}", name="fellowshipsubspecialtys_update")
+     * @Route("/institutiontypes/{id}", name="institutiontypes_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -887,6 +893,10 @@ class ListController extends Controller
                 $className = "FellowshipSubspecialty";
                 $displayName = "Fellowship Subspecialties";
                 break;
+            case "institutiontypes":
+                $className = "InstitutionType";
+                $displayName = "Institution Types";
+                break;
             default:
                 $className = null;
                 $displayName = null;
@@ -951,6 +961,7 @@ class ListController extends Controller
      * @Route("/fellowshiptitles/{id}", name="fellowshiptitles_delete")
      * @Route("/residencyspecialty/{id}", name="residencyspecialtys_delete")
      * @Route("/fellowshipsubspecialty/{id}", name="fellowshipsubspecialtys_delete")
+     * @Route("/institutiontypes/{id}", name="institutiontypes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

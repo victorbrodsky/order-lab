@@ -1257,15 +1257,28 @@
 
         {{ usermacros.statusVerifiedField(formfield,cycle) }}
 
+        {{ formmacros.field(formfield.degree) }}
+
+        {% if formfield.appendDegreeToName is defined %}
+            {% if formfield.vars.value and formfield.vars.value.appendDegreeToName == 1 %}
+                {% set value = 1 %}
+            {% else %}
+                {% set value = 0 %}
+            {% endif %}
+            {{ usermacros.checkbox_notempty(formfield.appendDegreeToName,value,cycle) }}
+        {% endif %}
+
+        {{ formmacros.field(formfield.residencySpecialty) }}
+        {{ formmacros.field(formfield.fellowshipSubspecialty) }}
+
+        {{ formmacros.field(formfield.institution) }}
+
         {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cycle,'allow-future-date') }}
 
         {{ formmacros.fieldDateLabel(formfield.completionDate,'allow-future-date') }}
         {% if formfield.completionReason is defined %}
             {{ formmacros.field(formfield.completionReason) }}
         {% endif %}
-
-        {{ formmacros.field(formfield.degree) }}
-        {{ formmacros.field(formfield.appendDegreeToName) }}
 
         {{ formmacros.field(formfield.majors) }}
 
@@ -1274,10 +1287,19 @@
         {{ formmacros.field(formfield.honors) }}
 
         {{ formmacros.field(formfield.fellowshipTitle) }}
-        {{ formmacros.field(formfield.appendFellowshipTitleToName) }}
 
-        {{ formmacros.field(formfield.residencySpecialty) }}
-        {{ formmacros.field(formfield.fellowshipSubspecialty) }}
+        {% if formfield.appendFellowshipTitleToName is defined %}
+            {% if formfield.vars.value and formfield.vars.value.appendFellowshipTitleToName == 1 %}
+                {% set value = 1 %}
+            {% else %}
+                {% set value = 0 %}
+            {% endif %}
+            {{ usermacros.checkbox_notempty(formfield.appendFellowshipTitleToName,value,cycle) }}
+        {% endif %}
+
+
+
+
 
     </div>
 

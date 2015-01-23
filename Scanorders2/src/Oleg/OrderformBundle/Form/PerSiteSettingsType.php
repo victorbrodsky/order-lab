@@ -32,11 +32,13 @@ class PerSiteSettingsType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->leftJoin("list.types","institutiontype")
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
+                            'medicalInstitution' => 'Medical'
                         ));
                 },
             ));
@@ -85,11 +87,13 @@ class PerSiteSettingsType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->leftJoin("list.types","institutiontype")
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
+                            'medicalInstitution' => 'Medical'
                         ));
                 },
         ));
