@@ -39,6 +39,13 @@ class UtilController extends Controller {
 
             $em = $this->getDoctrine()->getManager();
 
+            //TODO: abbr - name
+            if( $className == "FellowshipTitleList" ) {
+
+            } else {
+
+            }
+
             $query = $em->createQueryBuilder()->from('OlegUserdirectoryBundle:'.$className, 'list')
                 ->select("list.id as id, list.name as text")
                 ->orderBy("list.orderinlist","ASC");

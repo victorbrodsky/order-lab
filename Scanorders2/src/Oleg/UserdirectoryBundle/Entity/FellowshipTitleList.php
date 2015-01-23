@@ -26,7 +26,12 @@ class FellowshipTitleList extends ListAbstract
     protected $original;
 
 
-
+    public function __toString() {
+        if( $this->getAbbreviation() ) {
+            return $this->getAbbreviation() . " - " . $this->getName();
+        }
+        return $this->getName()."";
+    }
     
 
 

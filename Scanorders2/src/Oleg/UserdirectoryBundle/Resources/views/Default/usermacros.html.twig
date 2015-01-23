@@ -1257,19 +1257,35 @@
 
         {{ usermacros.statusVerifiedField(formfield,cycle) }}
 
-        {{ formmacros.field(formfield.degree) }}
+        {{ formmacros.field_notempty(formfield.degree,cycle) }}
 
-        {% if formfield.appendDegreeToName is defined %}
-            {% if formfield.vars.value and formfield.vars.value.appendDegreeToName == 1 %}
-                {% set value = 1 %}
-            {% else %}
-                {% set value = 0 %}
-            {% endif %}
-            {{ usermacros.checkbox_notempty(formfield.appendDegreeToName,value,cycle) }}
+        {#do not hide if itself is empty/unchecked, however hide on the profile view page if the Degree field is empty#}
+        {#if the user selects Degree="MD", this checkmark should get automatically get checked, but allow the user to uncheck it#}
+        {#{% if formfield.appendDegreeToName is defined %}#}
+            {#{% if formfield.vars.value and (formfield.vars.value.appendDegreeToName == 1 or not formfield.vars.value.degree) %}#}
+                {#{% set value = 0 %}#}
+            {#{% else %}#}
+                {#{% set value = 1 %}#}
+            {#{% endif %}#}
+            {#{{ usermacros.checkbox_notempty(formfield.appendDegreeToName,value,cycle) }}#}
+        {#{% endif %}#}
+        {% if not showFlag %}
+            {{ formmacros.field(formfield.appendDegreeToName) }}
         {% endif %}
 
-        {{ formmacros.field(formfield.residencySpecialty) }}
-        {{ formmacros.field(formfield.fellowshipSubspecialty) }}
+        {#hide residency Specialty on view if fellowship Subspecialty is not empty#}
+        {% if not showFlag or (showFlag and formfield.vars.value and not formfield.vars.value.fellowshipSubspecialty) %}
+            {{ formmacros.field_notempty(formfield.residencySpecialty,cycle) }}
+        {% endif %}
+        {#{% if showFlag %}#}
+            {#&#123;&#35;{{ formmacros.field_notempty(formfield.residencySpecialty,cycle) }}&#35;&#125;#}
+            {#{% if formfield.vars.value and formfield.vars.value.fellowshipSubspecialty %}#}
+                {#{% do formfield.residencySpecialty.setRendered %}#}
+            {#{% endif %}#}
+        {#{% else %}#}
+            {#{{ formmacros.field_notempty(formfield.residencySpecialty,cycle) }}#}
+        {#{% endif %}#}
+        {{ formmacros.field_notempty(formfield.fellowshipSubspecialty,cycle) }}
 
         {{ formmacros.field(formfield.institution) }}
 
@@ -1277,24 +1293,28 @@
 
         {{ formmacros.fieldDateLabel(formfield.completionDate,'allow-future-date') }}
         {% if formfield.completionReason is defined %}
-            {{ formmacros.field(formfield.completionReason) }}
+            {{ formmacros.field_notempty(formfield.completionReason,cycle) }}
         {% endif %}
 
-        {{ formmacros.field(formfield.majors) }}
+        {{ formmacros.field_notempty(formfield.majors,cycle) }}
 
-        {{ formmacros.field(formfield.minors) }}
+        {{ formmacros.field_notempty(formfield.minors,cycle) }}
 
-        {{ formmacros.field(formfield.honors) }}
+        {{ formmacros.field_notempty(formfield.honors,cycle) }}
 
         {{ formmacros.field(formfield.fellowshipTitle) }}
 
-        {% if formfield.appendFellowshipTitleToName is defined %}
-            {% if formfield.vars.value and formfield.vars.value.appendFellowshipTitleToName == 1 %}
-                {% set value = 1 %}
-            {% else %}
-                {% set value = 0 %}
-            {% endif %}
-            {{ usermacros.checkbox_notempty(formfield.appendFellowshipTitleToName,value,cycle) }}
+        {#do not hide if itself is empty/unchecked, however hide on the profile view page if the Professional Fellowship field is empty#}
+        {#{% if formfield.appendFellowshipTitleToName is defined %}#}
+            {#{% if formfield.vars.value and (formfield.vars.value.appendFellowshipTitleToName == 1 or not formfield.vars.value.fellowshipTitle) %}#}
+                {#{% set value = 0 %}#}
+            {#{% else %}#}
+                {#{% set value = 1 %}#}
+            {#{% endif %}#}
+            {#{{ usermacros.checkbox_notempty(formfield.appendFellowshipTitleToName,value,cycle) }}#}
+        {#{% endif %}#}
+        {% if not showFlag %}
+            {{ formmacros.field(formfield.appendFellowshipTitleToName) }}
         {% endif %}
 
 

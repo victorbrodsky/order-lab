@@ -111,7 +111,7 @@ class User extends BaseUser
 
     /**
      * @ORM\OneToMany(targetEntity="Training", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"completionDate" = "ASC", "orderinlist" = "ASC"})
+     * @ORM\OrderBy({"completionDate" = "DESC", "orderinlist" = "ASC"})
      */
     private $trainings;
 
