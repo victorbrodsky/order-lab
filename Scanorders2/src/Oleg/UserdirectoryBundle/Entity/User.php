@@ -55,7 +55,6 @@ class User extends BaseUser
      */
     private $primaryPublicUserId;
 
-
     /**
      * includes 7+2 fields: suffix, firstName, middleName, lastName, displayName, initials, preferredPhone, email/emailCanonical (used instead of extended user's email)
      *
@@ -64,42 +63,6 @@ class User extends BaseUser
      * )
      */
     private $infos;
-
-//    /**
-//     * @ORM\Column(name="suffix", type="string", nullable=true)
-//     */
-//    private $suffix;
-
-//    /**
-//     * @ORM\Column(name="firstName", type="string", nullable=true)
-//     */
-//    private $firstName;
-
-//    /**
-//     * @ORM\Column(name="middleName", type="string", nullable=true)
-//     */
-//    private $middleName;
-
-//    /**
-//     * @ORM\Column(name="lastName", type="string", nullable=true)
-//     */
-//    private $lastName;
-
-//    /**
-//     * @ORM\Column(name="displayName", type="string", nullable=true)
-//     */
-//    private $displayName;
-
-//    /**
-//     * @ORM\Column(name="preferredPhone", type="string", nullable=true)
-//     */
-//    private $preferredPhone;
-
-//    /**
-//     * @ORM\Column(name="initials", type="string", nullable=true)
-//     */
-//    private $initials;
-
 
     /**
      * @ORM\Column(name="createdby", type="string", nullable=true)
