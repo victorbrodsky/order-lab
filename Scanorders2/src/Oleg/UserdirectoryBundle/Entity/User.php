@@ -28,11 +28,7 @@ use FOS\UserBundle\Model\User as BaseUser;
  *  indexes={
  *      @ORM\Index( name="keytype_idx", columns={"keytype"} ),
  *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} ),
- *      @ORM\Index( name="username_idx", columns={"username"} ),
- *      @ORM\Index( name="displayName_idx", columns={"displayName"} ),
- *      @ORM\Index( name="firstName_idx", columns={"firstName"} ),
- *      @ORM\Index( name="lastName_idx", columns={"lastName"} ),
- *      @ORM\Index( name="email_idx", columns={"email"} )
+ *      @ORM\Index( name="username_idx", columns={"username"} )
  *  }
  * )
  * @ORM\AttributeOverrides({ @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) ) })
@@ -59,40 +55,51 @@ class User extends BaseUser
      */
     private $primaryPublicUserId;
 
-    /**
-     * @ORM\Column(name="suffix", type="string", nullable=true)
-     */
-    private $suffix;
 
     /**
-     * @ORM\Column(name="firstName", type="string", nullable=true)
+     * includes 7+2 fields: suffix, firstName, middleName, lastName, displayName, initials, preferredPhone, email/emailCanonical (used instead of extended user's email)
+     *
+     * @ORM\OneToMany(targetEntity="UserInfo", mappedBy="user", cascade={"persist","remove"},
+     *  indexBy="firstName,middleName,lastName,displayName,email"
+     * )
      */
-    private $firstName;
+    private $infos;
 
-    /**
-     * @ORM\Column(name="middleName", type="string", nullable=true)
-     */
-    private $middleName;
+//    /**
+//     * @ORM\Column(name="suffix", type="string", nullable=true)
+//     */
+//    private $suffix;
 
-    /**
-     * @ORM\Column(name="lastName", type="string", nullable=true)
-     */
-    private $lastName;
+//    /**
+//     * @ORM\Column(name="firstName", type="string", nullable=true)
+//     */
+//    private $firstName;
 
-    /**
-     * @ORM\Column(name="displayName", type="string", nullable=true)
-     */
-    private $displayName;
+//    /**
+//     * @ORM\Column(name="middleName", type="string", nullable=true)
+//     */
+//    private $middleName;
 
-    /**
-     * @ORM\Column(name="preferredPhone", type="string", nullable=true)
-     */
-    private $preferredPhone;
+//    /**
+//     * @ORM\Column(name="lastName", type="string", nullable=true)
+//     */
+//    private $lastName;
 
-    /**
-     * @ORM\Column(name="initials", type="string", nullable=true)
-     */
-    private $initials;
+//    /**
+//     * @ORM\Column(name="displayName", type="string", nullable=true)
+//     */
+//    private $displayName;
+
+//    /**
+//     * @ORM\Column(name="preferredPhone", type="string", nullable=true)
+//     */
+//    private $preferredPhone;
+
+//    /**
+//     * @ORM\Column(name="initials", type="string", nullable=true)
+//     */
+//    private $initials;
+
 
     /**
      * @ORM\Column(name="createdby", type="string", nullable=true)
@@ -100,12 +107,12 @@ class User extends BaseUser
     private $createdby;
 
     /**
-     * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist","remove"})
      */
     private $preferences;
 
     /**
-     * @ORM\OneToOne(targetEntity="Credentials", inversedBy="user", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Credentials", inversedBy="user", cascade={"persist","remove"})
      */
     private $credentials;
 
@@ -176,6 +183,7 @@ class User extends BaseUser
 
     function __construct()
     {
+        $this->infos = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->administrativeTitles = new ArrayCollection();
         $this->appointmentTitles = new ArrayCollection();
@@ -187,6 +195,10 @@ class User extends BaseUser
         $this->publicComments = new ArrayCollection();
         $this->confidentialComments = new ArrayCollection();
         $this->adminComments = new ArrayCollection();
+
+        //create user info
+        $userInfo = new UserInfo();
+        $this->addInfo($userInfo);
 
         //create preferences
         $userPref = new UserPreferences();
@@ -262,70 +274,6 @@ class User extends BaseUser
     }
 
     /**
-     * @param mixed $suffix
-     */
-    public function setSuffix($suffix)
-    {
-        $this->suffix = $suffix;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSuffix()
-    {
-        return $this->suffix;
-    }
-
-    /**
-     * @param mixed $firstName
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * @param mixed $middleName
-     */
-    public function setMiddleName($middleName)
-    {
-        $this->middleName = $middleName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMiddleName()
-    {
-        return $this->middleName;
-    }
-
-    /**
-     * @param mixed $lastName
-     */
-    public function setLastName($lastName)
-    {
-        $this->lastName = $lastName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    /**
      * @param mixed $title
      */
     public function setTitle($title)
@@ -338,54 +286,6 @@ class User extends BaseUser
             $this->getAdministrativeTitles()->first()->setName($title);
         }
 
-    }
-
-    /**
-     * @param mixed $displayName
-     */
-    public function setDisplayName($displayName)
-    {
-        $this->displayName = $displayName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDisplayName()
-    {
-        return $this->displayName;
-    }
-
-    /**
-     * @param mixed $preferredPhone
-     */
-    public function setPreferredPhone($preferredPhone)
-    {
-        $this->preferredPhone = $preferredPhone;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPreferredPhone()
-    {
-        return $this->preferredPhone;
-    }
-
-    /**
-     * @param mixed $initials
-     */
-    public function setInitials($initials)
-    {
-        $this->initials = $initials;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInitials()
-    {
-        return $this->initials;
     }
 
 
@@ -1173,5 +1073,235 @@ class User extends BaseUser
             $this->setDisplayname( $this->getUsernameOptimal() );
         }
     }
+
+
+
+
+
+    public function addInfo($info)
+    {
+        if( $info && !$this->infos->contains($info) ) {
+            $this->infos->add($info);
+            $info->setUser($this);
+        }
+
+        return $this;
+    }
+    public function removeInfo($info)
+    {
+        $this->infos->removeElement($info);
+    }
+    public function getInfos()
+    {
+        return $this->infos;
+    }
+
+    /////////////////////////// user's info mapper 7+2: //////////////////////////////////////
+    /// suffix, firstName, middleName, lastName, displayName, initials, preferredPhone, preferredEmail/emailCanonical (used instead of extended user's email) ///
+    /**
+     * @param mixed $suffix
+     */
+    public function setSuffix($suffix)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setSuffix($suffix);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSuffix()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getSuffix();
+        }
+        return $value;
+    }
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setFirstName($firstName);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getFirstName();
+        }
+        return $value;
+    }
+
+    /**
+     * @param mixed $middleName
+     */
+    public function setMiddleName($middleName)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setMiddleName($middleName);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMiddleName()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getMiddleName();
+        }
+        return $value;
+    }
+
+    /**
+     * @param mixed $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setLastName($lastName);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastName()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getLastName();
+        }
+        return $value;
+    }
+
+    /**
+     * @param mixed $displayName
+     */
+    public function setDisplayName($displayName)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setDisplayName($displayName);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayName()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getDisplayName();
+        }
+        return $value;
+    }
+
+    /**
+     * @param mixed $preferredPhone
+     */
+    public function setPreferredPhone($preferredPhone)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setPreferredPhone($preferredPhone);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreferredPhone()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getPreferredPhone();
+        }
+        return $value;
+    }
+
+    /**
+     * @param mixed $initials
+     */
+    public function setInitials($initials)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setInitials($initials);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInitials()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getInitials();
+        }
+        return $value;
+    }
+
+   //overwrite email
+    public function setEmail($email)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setEmail($email);
+        }
+    }
+    //overwrite email
+    public function getEmail()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getEmail();
+        }
+        return $value;
+    }
+    //overwrite canonical email
+    public function setEmailCanonical($emailCanonical)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setEmailCanonical($emailCanonical);
+        }
+    }
+    //overwrite canonical email
+    public function getEmailCanonical()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getEmailCanonical();
+        }
+        return $value;
+    }
+    /////////////////////////////////////////////////////////////////
 
 }

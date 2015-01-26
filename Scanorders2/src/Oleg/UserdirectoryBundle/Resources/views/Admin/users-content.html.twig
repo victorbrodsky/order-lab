@@ -58,18 +58,18 @@
             <th>
                 {{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}
             </th>
-            <th>{{ knp_pagination_sortable(entities, 'Name', 'user.displayName') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Name', 'infos.displayName') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Administrative Title(s)', 'administrativeName.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Academic Title(s)', 'appointmentName.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Training Year', 'appointmentTitles.pgylevel') }}</th>
             {#<th>{{ knp_pagination_sortable(entities, 'User ID (CWID)', 'user.username') }}</th>#}
-            <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Email', 'infos.email') }}</th>
             {#style="min-width: 120px"#}
             <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'user.preferredPhone') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'IC(s)', 'locations.ic') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Pager(s)', 'locations.pager') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Room Number(s)', 'locationroom.name') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Assistant(s)', 'assistant.displayName') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Assistant(s)', 'assistantinfos.displayName') }}</th>
 
 
             {% if sitename != employees_sitename %}

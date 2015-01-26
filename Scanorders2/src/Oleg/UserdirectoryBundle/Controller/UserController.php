@@ -363,6 +363,7 @@ class UserController extends Controller
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
 
+        $dql->leftJoin("user.infos", "infos");
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
 
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
@@ -382,6 +383,7 @@ class UserController extends Controller
         $dql->leftJoin("user.locations", "locations");
         $dql->leftJoin("locations.room", "locationroom");
         $dql->leftJoin("locations.assistant", "assistant");
+        $dql->leftJoin("assistant.infos", "assistantinfos");
 
         $dql->leftJoin("user.credentials", "credentials");
 
@@ -392,15 +394,15 @@ class UserController extends Controller
 
         if( $sort == null ) {
             if( $time == 'current_only' ) {
-                $dql->orderBy("user.lastName","ASC");
+                $dql->orderBy("infos.lastName","ASC");
                 $dql->addOrderBy("administrativeInstitution.name","ASC");
                 $dql->addOrderBy("administrativeService.name","ASC");
                 $dql->addOrderBy("appointmentService.name","ASC");
             } else if( $time == 'past_only' ) {
                 $dql->orderBy("employmentStatus.terminationDate","DESC");
-                $dql->addOrderBy("user.lastName","ASC");
+                $dql->addOrderBy("infos.lastName","ASC");
             } else {
-                $dql->orderBy("user.lastName","ASC");
+                $dql->orderBy("infos.lastName","ASC");
             }
         }
 
@@ -489,26 +491,26 @@ class UserController extends Controller
         }
 
         //last name
-        $criteriastr .= "user.lastName LIKE '%".$search."%' OR ";
+        $criteriastr .= "infos.lastName LIKE '%".$search."%' OR ";
         //$criteriastr .= "user.lastName='".$search."' OR ";
 
         //first name
-        $criteriastr .= "user.firstName LIKE '%".$search."%' OR ";
+        $criteriastr .= "infos.firstName LIKE '%".$search."%' OR ";
         //$criteriastr .= "user.firstName='".$search."' OR ";
 
         //Middle Name
-        $criteriastr .= "user.middleName LIKE '%".$search."%' OR ";
+        $criteriastr .= "infos.middleName LIKE '%".$search."%' OR ";
         //$criteriastr .= "user.middleName='".$search."' OR ";
 
         //Preferred Full Name for Display
-        $criteriastr .= "user.displayName LIKE '%".$search."%' OR ";
+        $criteriastr .= "infos.displayName LIKE '%".$search."%' OR ";
 
         //Abbreviated Name/Initials field
         //$criteriastr .= "user.initials LIKE '%".$search."%' OR ";
-        $criteriastr .= "user.initials='".$search."' OR ";
+        $criteriastr .= "infos.initials='".$search."' OR ";
 
         //preferred email
-        $criteriastr .= "user.email LIKE '%".$search."%' OR ";
+        $criteriastr .= "infos.email LIKE '%".$search."%' OR ";
         //$criteriastr .= "user.email='".$search."' OR ";
 
         //email in locations
@@ -1164,12 +1166,12 @@ class UserController extends Controller
 
         if( $user->getLastName() == "" ) {
             $error = new FormError("Last Name is empty");
-            $form->get('lastName')->addError($error);
+            $form->get('infos')->get('lastName')->addError($error);
         }
 
         if( $user->getFirstName() == "" ) {
             $error = new FormError("First Name is empty");
-            $form->get('firstName')->addError($error);
+            $form->get('infos')->get('firstName')->addError($error);
         }
 
         if( $user->getKeytype() == "" ) {

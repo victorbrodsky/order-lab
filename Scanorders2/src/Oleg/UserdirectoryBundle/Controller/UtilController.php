@@ -35,28 +35,32 @@ class UtilController extends Controller {
 
         //echo "className=".$className."<br>";
 
+        $output = array();
+
         if( $className ) {
 
             $em = $this->getDoctrine()->getManager();
 
-            //TODO: abbr - name
-            if( $className == "FellowshipTitleList" ) {
+            switch( $className ) {
 
-            } else {
+                case "FellowshipTitleList": //show this object as "abbreviation - name"
+                    $entities = $em->getRepository('OlegUserdirectoryBundle:'.$className)->findBy(
+                        array('type' => array('default','user-added'))
+                    );
+                    foreach( $entities as $entity ) {
+                        $element = array('id'=>$entity->getId(), 'text'=>$entity."");
+                        $output[] = $element;
+                    }
+                    break;
 
-            }
+                default:
+                    $query = $em->createQueryBuilder()->from('OlegUserdirectoryBundle:'.$className, 'list')
+                        ->select("list.id as id, list.name as text")
+                        ->orderBy("list.orderinlist","ASC");
+                    $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+                    $output = $query->getQuery()->getResult();
 
-            $query = $em->createQueryBuilder()->from('OlegUserdirectoryBundle:'.$className, 'list')
-                ->select("list.id as id, list.name as text")
-                ->orderBy("list.orderinlist","ASC");
-
-            $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-
-            $output = $query->getQuery()->getResult();
-
-        } else {
-
-            $output = array();
+            } //switch
 
         }
 
@@ -599,21 +603,22 @@ class UtilController extends Controller {
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
-        $dql->select("user.id as id, user.displayName as text, user.username as username, keytype.id as keytypeid");
+        $dql->select("user.id as id, infos.displayName as text, user.username as username, keytype.id as keytypeid");
         $dql->leftJoin("user.keytype", "keytype");
+        $dql->leftJoin("user.infos", "infos");
         //$dql->leftJoin("user.researchLabs", "researchLabs");
         $dql->groupBy('user');
         $dql->addGroupBy('keytype');
-        $dql->orderBy("user.displayName","ASC");
+        $dql->orderBy("infos.displayName","ASC");
 
 
         $object = null;
 
         if( $type == "user" ) {
             if( $search == "min" ) {
-                $criteriastr = "user.displayName IS NOT NULL";
+                $criteriastr = "infos.displayName IS NOT NULL";
             } else {
-                $criteriastr = "user.displayName LIKE '%".$search."%'";
+                $criteriastr = "infos.displayName LIKE '%".$search."%'";
             }
         }
 

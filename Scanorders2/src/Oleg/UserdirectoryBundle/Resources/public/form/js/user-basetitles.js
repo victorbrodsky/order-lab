@@ -58,6 +58,8 @@ function initBaseAdd(newForm) {
     identifierTypeListener(newForm);
 
     researchLabListener(newForm);
+
+    degreeListener(newForm);
 }
 
 //get input field only

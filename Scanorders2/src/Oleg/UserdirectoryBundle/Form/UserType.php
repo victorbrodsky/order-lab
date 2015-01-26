@@ -136,37 +136,15 @@ class UserType extends AbstractType
             'label' => false
         ));
 
-        $builder->add('suffix', null, array(
-            'label' => 'Name Suffix:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
-        $builder->add('firstName', null, array(
-            'label' => '* First Name:',
-            'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'
-        ));
-        $builder->add('middleName', null, array(
-            'label' => 'Middle Name:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
-        $builder->add('lastName', null, array(
-            'label' => '* Last Name:',
-            'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'
-        ));
-        $builder->add('email', 'email', array(
-            'label' => 'Preferred Email:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
-        $builder->add('displayName', null, array(
-            'label' => 'Preferred Full Name for Display:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
-        $builder->add('preferredPhone', null, array(
-            'label' => 'Preferred Phone Number:',
-            'attr' => array('class'=>'form-control form-control-modif phone-mask')
-        ));
-        $builder->add('initials', null, array(
-            'label' => 'Abbreviated name/Initials used by lab staff for deliveries:',
-            'attr' => array('class'=>'form-control form-control-modif')
+        $builder->add('infos', 'collection', array(
+            'type' => new UserInfoType(),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__infos__',
         ));
 
         $builder->add('preferences', new UserPreferencesType(), array(

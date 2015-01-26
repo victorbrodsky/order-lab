@@ -351,6 +351,40 @@ function identifierTypeListener( holder ) {
 
 }
 
+function degreeListener( holder ) {
+
+    var targetClass = ".ajax-combobox-trainingdegree";
+
+    var degrees = $(targetClass);
+
+    if( degrees.length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        degrees = holder.find(targetClass);
+
+        if( degrees.length == 0 ) {
+            return;
+        }
+    }
+
+    degrees.on("change", function(e) {
+        var degree = $(this);
+        var degreeObject = degree.select2('data');
+
+        if( degreeObject ) {
+            if( degreeObject.text == "MD" || degreeObject.text == "PhD" ) {
+                var subject = degree.closest('.user-trainings').find('.training-field-appenddegreetoname');
+                subject.prop('checked', true);
+            } else {
+                //subject.prop('checked', false);
+            }
+        }
+    });
+
+}
+
 //identifier type listener
 function researchLabListener( holder ) {
 

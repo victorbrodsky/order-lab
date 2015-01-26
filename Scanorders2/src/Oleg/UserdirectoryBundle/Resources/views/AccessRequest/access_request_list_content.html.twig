@@ -7,15 +7,15 @@
             <th>{{ knp_pagination_sortable(entities, 'Request ID', 'accreq.id') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Request Date', 'accreq.createdate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Request Status', 'accreq.status') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Full Name', 'user.displayName') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Full Name', 'infos.displayName') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'User ID Type', 'keytype.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'User ID', 'user.primaryPublicUserId') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'user.preferredPhone') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Email', 'infos.email') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'infos.preferredPhone') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Status Updated On', 'accreq.updatedate') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Status Updated By', 'updatedby.displayName') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Status Updated By', 'updatedbyinfos.displayName') }}</th>
             <th>Actions</th>
         </tr>
     </thead>

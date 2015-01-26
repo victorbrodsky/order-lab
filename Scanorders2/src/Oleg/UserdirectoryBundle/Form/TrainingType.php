@@ -117,11 +117,12 @@ class TrainingType extends AbstractType
 
         $builder->add('degree', null, array(
             'label' => 'Degree:',
-            'attr' => array('class'=>'combobox combobox-width')
+            'attr' => array('class'=>'combobox combobox-width ajax-combobox-trainingdegree')
         ));
 
         $builder->add('appendDegreeToName', 'checkbox', array(
             'label'     => 'Append degree to name:',
+            'attr' => array('class'=>'training-field-appenddegreetoname'),
             'required'  => false,
         ));
 

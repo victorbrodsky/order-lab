@@ -1277,14 +1277,7 @@
         {% if not showFlag or (showFlag and formfield.vars.value and not formfield.vars.value.fellowshipSubspecialty) %}
             {{ formmacros.field_notempty(formfield.residencySpecialty,cycle) }}
         {% endif %}
-        {#{% if showFlag %}#}
-            {#&#123;&#35;{{ formmacros.field_notempty(formfield.residencySpecialty,cycle) }}&#35;&#125;#}
-            {#{% if formfield.vars.value and formfield.vars.value.fellowshipSubspecialty %}#}
-                {#{% do formfield.residencySpecialty.setRendered %}#}
-            {#{% endif %}#}
-        {#{% else %}#}
-            {#{{ formmacros.field_notempty(formfield.residencySpecialty,cycle) }}#}
-        {#{% endif %}#}
+
         {{ formmacros.field_notempty(formfield.fellowshipSubspecialty,cycle) }}
 
         {{ formmacros.field(formfield.institution) }}

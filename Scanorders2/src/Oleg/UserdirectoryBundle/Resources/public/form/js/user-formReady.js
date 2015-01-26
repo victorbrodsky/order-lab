@@ -62,6 +62,8 @@ $(document).ready(function() {
 
     initTypeaheadUserSiteSerach();
 
+    degreeListener();
+
 });
 
 

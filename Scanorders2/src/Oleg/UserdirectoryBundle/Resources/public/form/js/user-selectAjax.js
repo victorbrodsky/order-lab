@@ -205,9 +205,18 @@ function getComboboxCommentType(holder) {
 
 function getComboboxResidencyspecialty(holder) {
 
+    //hide residency Specialty on view if fellowship Subspecialty is not empty => get all residencyspecialty and fellowshipsubspecialty
+    if( cycle == "show_user" ) {
+        getComboboxGeneric(holder,'residencyspecialty',_residencySpecialtys,false);
+        getComboboxGeneric(holder,'fellowshipsubspecialty',_fellowshipSubspecialtys,false);
+        return;
+    }
+
     setResidencyspecialtyTreeChildren(holder);
 
     var targetid = ".ajax-combobox-residencyspecialty";
+
+    var residencySpecialtyFound = false;
 
     if( $(targetid).length == 0 ) {
         return;
@@ -216,8 +225,9 @@ function getComboboxResidencyspecialty(holder) {
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
 
-        if( targetid.length == 0 )
+        if( targetid.length == 0 ) {
             return;
+        }
     }
 
     var url = getCommonBaseUrl("util/common/generic/"+"residencyspecialty","employees");

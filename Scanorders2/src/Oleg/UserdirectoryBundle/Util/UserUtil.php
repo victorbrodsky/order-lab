@@ -552,6 +552,7 @@ class UserUtil {
         $dql->leftJoin("location.user", "locationuser");
         $dql->leftJoin("location.service", "service");
         $dql->leftJoin("service.heads", "heads");
+        $dql->leftJoin("heads.infos", "headsinfos");
 
         $postData = $request->query->all();
 

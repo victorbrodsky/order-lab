@@ -155,12 +155,13 @@ class LocationType extends AbstractType
                 'query_builder' => function(EntityRepository $er) {
                         if( array_key_exists('subjectUser', $this->params) ) {
                             return $er->createQueryBuilder('list')
-                                ->where( "list.id != :userid" )
-                                ->orderBy("list.displayName","ASC")
+                                ->where("list.id != :userid")
+                                ->leftJoin("list.infos", "infos")
+                                ->orderBy("infos.displayName","ASC")
                                 ->setParameters( array('userid' => $this->params['subjectUser']->getId()) );
                         } else {
                             return $er->createQueryBuilder('list')
-                                ->orderBy("list.displayName","ASC");
+                                ->orderBy("infos.displayName","ASC");
                         }
                     },
             ));
@@ -252,7 +253,8 @@ class LocationType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('list')
-                            ->orderBy("list.displayName","ASC");
+                            ->leftJoin("list.infos", "infos")
+                            ->orderBy("infos.displayName","ASC");
                     },
             ));
         }
