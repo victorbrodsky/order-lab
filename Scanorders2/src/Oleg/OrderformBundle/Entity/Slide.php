@@ -97,7 +97,7 @@ class Slide extends ObjectAbstract
     
     public function __construct( $withfields=false, $status='valid', $provider=null, $source=null )
     {
-        parent::__construct($status,$provider);
+        parent::__construct($status,$provider,$source);
         $this->scan = new ArrayCollection();
         $this->stain = new ArrayCollection();
         $this->relevantScans = new ArrayCollection();
@@ -276,6 +276,7 @@ class Slide extends ObjectAbstract
 
         return "Slide: id=".$this->getId().", title=".$this->getTitle().", slidetype=".$this->getSlidetype().
                 ", provider=".$this->getProvider().
+                ", source=".$this->getSource().
                 ", parentId=".$this->getParent()->getId().
                 ", orderinfo count=".count($this->getOrderinfo()).", first orderinfo:=".$this->getOrderinfo()->first().
                 ", scan count=".count($this->getScan()).", firstscanid=".$this->getScan()->first()->getId().

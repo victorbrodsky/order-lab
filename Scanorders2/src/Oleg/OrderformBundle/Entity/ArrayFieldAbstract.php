@@ -37,9 +37,14 @@ abstract class ArrayFieldAbstract {
      */
     protected $status;
 
+//    /**
+//     * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $source;
     /**
-     * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
      */
     protected $source;
 
@@ -67,11 +72,7 @@ abstract class ArrayFieldAbstract {
     {
         $this->status = $status;
         $this->provider = $provider;
-        if( $source ) {
-            $this->source = $source;
-        } else {
-            $this->source = "scanorder";
-        }
+        $this->source = $source;
     }
 
     public function __clone() {

@@ -123,7 +123,7 @@ class OrderUtil {
         $history->setRoles($user->getRoles());
 
         //change status for all orderinfo children to "deleted-by-canceled-order"
-        //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
+        //IF their source is ='scanorder' AND there are no child objects with status == 'valid'
         //AND there are no fields that belong to this object that were added by another order
         if( $status == 'Cancel' ) {
 
@@ -374,6 +374,9 @@ class OrderUtil {
         $className = $class->getShortName();
         //echo "class name=".$className."<br>";
 
+        $securityUtil = $this->container->get('order_security_utility');
+        $source = $source = $securityUtil->getDefaultSourceSystem();
+
         $count = 0;
 
         foreach( $children as $child ) {
@@ -396,7 +399,10 @@ class OrderUtil {
 
             //echo "noOtherOrderinfo=".$noOtherOrderinfo."<br>";
 
-            if( $child->getSource() == 'scanorder' && $noOtherOrderinfo ) {
+            //TODO: is it logical to check if source == scanorder? Why we have to limit to scanorder source?
+            //Change status to a new $statusStr if the field is not used by other orders
+            //if( $child->getSource()->getId() == $source->getId() && $noOtherOrderinfo ) {
+            if( $noOtherOrderinfo ) {
                 //echo "change status to (".$statusStr.") <br>";
                 $child->setStatus($statusStr);
                 $em->getRepository('OlegOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);

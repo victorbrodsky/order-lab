@@ -14,6 +14,7 @@ use Oleg\UserdirectoryBundle\Entity\InstitutionType;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
 use Oleg\UserdirectoryBundle\Entity\ResidencySpecialty;
+use Oleg\UserdirectoryBundle\Entity\SourceSystemList;
 use Oleg\UserdirectoryBundle\Entity\TrainingDegreeList;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -128,6 +129,8 @@ class AdminController extends Controller
 
         $count_boardSpecialties = $this->generateBoardSpecialties();
 
+        $count_sourcesystems = $this->generateSourceSystems();
+
         //training
         $count_completionReasons = $this->generateCompletionReasons();
         $count_trainingDegrees = $this->generateTrainingDegrees();
@@ -140,6 +143,7 @@ class AdminController extends Controller
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
+            'Source Systems='.$count_sourcesystems.', '.
             'Roles='.$count_roles.', '.
             'Site Settings='.$count_siteParameters.', '.
             'Institution Types='.$count_institutiontypes.', '.
@@ -1098,6 +1102,42 @@ class AdminController extends Controller
 
     }
 
+
+    public function generateSourceSystems() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Scan Order',
+            'WCMC Epic Practice Management',
+            'WCMC Epic Ambulatory EMR',
+            'Written or oral referral'
+        );
+
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new SourceSystemList();
+            $this->setDefaultList($entity,$count,$username,$value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
 
     public function generateTerminationTypes() {

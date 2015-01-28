@@ -9,6 +9,7 @@ use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\DataQualityAge;
 use Oleg\OrderformBundle\Entity\PatientSuffix;
+use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
 /**
  * ProcedureRepository
@@ -170,7 +171,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         $patient = $procedure->getParent();
 
-        $source = "scanorder";
+        $securityUtil = new SecurityUtil($this->_em,null,null);
+        $source = $securityUtil->getDefaultSourceSystem();  //'scanorder';
         $status = self::STATUS_VALID;
 
         //suffix

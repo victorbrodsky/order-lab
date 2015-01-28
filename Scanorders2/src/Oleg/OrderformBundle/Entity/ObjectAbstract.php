@@ -45,9 +45,14 @@ abstract class ObjectAbstract
      */
     protected $provider;
 
+//    /**
+//     * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $source;
     /**
-     * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
      */
     protected $source;
 
@@ -59,9 +64,9 @@ abstract class ObjectAbstract
 
 
 
-    public function __construct( $status='invalid', $provider=null ) {
+    public function __construct( $status='invalid', $provider=null, $source = null ) {
         $this->status = $status;
-        $this->source = "scanorder";
+        $this->source = $source;
         $this->provider = $provider;
         $this->orderinfo = new ArrayCollection();
     }

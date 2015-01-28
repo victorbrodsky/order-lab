@@ -23,6 +23,7 @@ class ListController extends Controller
     /**
      * Lists all entities.
      *
+     * @Route("/sourcesystems/", name="sourcesystems-list")
      * @Route("/roles/", name="role-list")
      * @Route("/institutions/", name="institutions-list")
      * @Route("/departments/", name="departments-list")
@@ -153,6 +154,7 @@ class ListController extends Controller
     /**
      * Creates a new entity.
      *
+     * @Route("/sourcesystems/", name="sourcesystems_create")
      * @Route("/roles/", name="role_create")
      * @Route("/institutions/", name="institutions_create")
      * @Route("/departments/", name="departments_create")
@@ -274,6 +276,7 @@ class ListController extends Controller
     /**
      * Displays a form to create a new entity.
      *
+     * @Route("/sourcesystems/new", name="sourcesystems_new")
      * @Route("/roles/new", name="role_new")
      * @Route("/departments/new", name="departments_new")
      * @Route("/divisions/new", name="divisions_new")
@@ -366,6 +369,7 @@ class ListController extends Controller
     /**
      * Finds and displays a entity.
      *
+     * @Route("/sourcesystems/{id}", name="sourcesystems_show")
      * @Route("/roles/{id}", name="role_show")
      * @Route("/departments/{id}", name="departments_show")
      * @Route("/divisions/{id}", name="divisions_show")
@@ -448,6 +452,7 @@ class ListController extends Controller
     /**
      * Displays a form to edit an existing entity.
      *
+     * @Route("/sourcesystems/{id}/edit", name="sourcesystems_edit")
      * @Route("/roles/{id}/edit", name="role_edit")
      * @Route("/departments/{id}/edit", name="departments_edit")
      * @Route("/divisions/{id}/edit", name="divisions_edit")
@@ -562,6 +567,7 @@ class ListController extends Controller
     /**
      * Edits an existing entity.
      *
+     * @Route("/sourcesystems/{id}", name="sourcesystems_update")
      * @Route("/roles/{id}", name="role_update")
      * @Route("/departments/{id}", name="departments_update")
      * @Route("/divisions/{id}", name="divisions_update")
@@ -749,8 +755,12 @@ class ListController extends Controller
 
         switch( $route ) {
 
+            case "sourcesystems":
+                $className = "SourceSystemList";
+                $displayName = "Source Systems";
+                break;
             case "role":
-                $className = "roles";
+                $className = "Roles";
                 $displayName = "Roles";
                 break;
             case "institutions":
@@ -925,6 +935,7 @@ class ListController extends Controller
     /**
      * Deletes a entity.
      *
+     * @Route("/sourcesystems/{id}", name="sourcesystems_delete")
      * @Route("/roles/{id}", name="role_delete")
      * @Route("/departments/{id}", name="departments_delete")
      * @Route("/divisions/{id}", name="divisions_delete")

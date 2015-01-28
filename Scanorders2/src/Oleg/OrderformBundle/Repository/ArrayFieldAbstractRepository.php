@@ -4,16 +4,13 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-//use Monolog\Logger;
-//use Monolog\Handler\StreamHandler;
-//use Doctrine\ORM\Mapping\ClassMetadata;
-
 use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
 
 class ArrayFieldAbstractRepository extends EntityRepository {
 
-    private $log;
+    protected $source;
 
     const STATUS_RESERVED = "reserved";
     const STATUS_VALID = "valid";
@@ -22,9 +19,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function __construct($em, $class)
     {
         parent::__construct($em, $class);
-        //$this->log = new Logger('FieldAbstractRep');
-        //$this->log->pushHandler(new StreamHandler('./Scanorder.log', Logger::WARNING));
 
+        $securityUtil = new SecurityUtil($em,null,null);
+        $this->source = $securityUtil->getDefaultSourceSystem();
     }
 
     public function processEntity( $entity, $orderinfo, $original=null ) {
@@ -46,6 +43,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //$addClassMethod = "add".$className;
         //$orderinfo->getInstitution()->$addClassMethod($entity);
         $entity->setInstitution($orderinfo->getInstitution());
+
+        //set default source if empty
+        if( !$entity->getSource() ) {
+            $entity->setSource($this->source);
+        }
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -525,6 +527,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo "provider=".$provider."<br>";
         }
 
+        //default source
+        $securityUtil = new SecurityUtil($this->_em,null,null);
+        $source = $securityUtil->getDefaultSourceSystem();
+
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
         //echo "Process Array Fields: className=".$className."<br>";
@@ -550,8 +556,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             if( strpos($methodShortName,'get') !== false ) {    //filter in only "get" methods
 
                 //echo "methodShortName=".$methodShortName."<br>";
-
-                //$this->log->addInfo( " method=".$methodShortName."=>" );
 
                 //get array of fields (i.e. getMrn, getClinicalHistory ... )
                 if( $original ) {
@@ -582,9 +586,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                             //echo "<br>Method:".$methodShortName.", field=".$field.", fieldId=".$field->getId().", status=".$field->getStatus()."<br>";
 
                             if( $parent ) {
-
-                                //$this->log->addInfo( "###parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>" );
-                                //$this->log->addInfo( "field id=".$field->getId()."<br>" );
 
                                 //assign orderinfo to the field if orderinfo is null
                                 if( !$field->getOrderinfo() ) {
@@ -621,6 +622,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                 }
                                 //############# EOF set provider to the fields from submitted form #############//
 
+                                //############# set default source if empty #############//
+                                if( !$field->getSource() ) {
+                                    $field->setSource($source);
+                                }
+                                //############# EOF set default source if empty #############//
+
 
                                 //############# set validity to the fields from submitted form #############//
                                 $validIsSet = $this->validFieldIsSet($entity->$methodShortName(),$exceptionArr);
@@ -646,7 +653,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                         //echo "entity:".$entity;
                                         //echo "original:".$original;
                                         //echo "field=".$field."<br>";
-                                    //$this->log->addInfo( "original yes: original field=".$field."<br>" );
                                     $methodBaseName = str_replace("get", "", $methodShortName);
                                     $entity = $this->copyField( $entity, $orderinfo, $field, $className, $methodBaseName, $exceptionArr );
                                 }

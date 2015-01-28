@@ -105,6 +105,7 @@ class MultiScanOrderController extends Controller {
 
         $form->handleRequest($request);
 
+
 //        echo "provider2=".$entity->getProvider()."<br>";
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_field
 //        $patient = $form["patient"][0]->getData();
@@ -116,7 +117,7 @@ class MultiScanOrderController extends Controller {
 //        $accessionType = $accession->getAccession()->first()->getKeytype();
 //        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_keytype
 //        echo "accessionNum=".$accessionNum.", accessionType=".$accessionType."<br>";
-//        exit();
+        //exit();
 
         //$dataq = $form["dataquality"][0]["accession"]->getData();
         //echo "dataq=".$dataq."<br>";
@@ -155,15 +156,15 @@ class MultiScanOrderController extends Controller {
         }
         
         //exit("Before validation main entity:<br>");
-       if( $form->isValid() ) {
-           echo "form is valid !!! <br>";
-       } else {
-           echo "form is not valid ??? <br>";
-       }
-        print_r($form->getErrors());
-        echo "<br>errors:<br>";
-        print_r($form->getErrorsAsString());
-        echo "<br>";
+//       if( $form->isValid() ) {
+//           echo "form is valid !!! <br>";
+//       } else {
+//           echo "form is not valid ??? <br>";
+//       }
+//        print_r($form->getErrors());
+//        echo "<br>errors:<br>";
+//        print_r($form->getErrorsAsString());
+//        echo "<br>";
         //exit("controller exit");
 
         if( $form->isValid() ) {
@@ -338,7 +339,7 @@ class MultiScanOrderController extends Controller {
         //echo "MultiScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
 
-        $source = 'scanorder';
+        $source = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
 
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");

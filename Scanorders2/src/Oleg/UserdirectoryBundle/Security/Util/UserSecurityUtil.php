@@ -316,5 +316,18 @@ class UserSecurityUtil {
         return $entity;
     }
 
+    public function getDefaultSourceSystem() {
+        $defaultSourceSystemName = 'Scan Order';
+        $source = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
+        if( !$source ) {
+            if( $this->container ) {
+                $logger = $this->container->get('logger');
+                $logger->warning('Warning (Not Found): Default Source System with name '.$defaultSourceSystemName);
+            }
+        }
+        //echo "source=".$source."<br>";
+        return $source;
+    }
+
 
 }

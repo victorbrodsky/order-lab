@@ -2,8 +2,10 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Entity\Slide;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -92,7 +94,10 @@ class SlideType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Slide'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Slide',
+//            'empty_data' => function (FormInterface $form) {
+//                    return new Slide(true,'valid',null,'111');
+//            }
         ));
     }
 

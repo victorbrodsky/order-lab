@@ -489,7 +489,7 @@ class TableController extends Controller {
         }
         //***************** end of get ordering provider from most recent order ***************************//
 
-        $source = 'scanorder';
+        $source = $securityUtil->getDefaultSourceSystem();  //'scanorder';
 
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
 
@@ -734,7 +734,8 @@ class TableController extends Controller {
         $force = true; //true - create fields even if the value is empty
         $status = "valid";
         $provider = $this->get('security.context')->getToken()->getUser();
-        $source = "scanorder";
+        $securityUtil = $this->get('order_security_utility');
+        $source = $source = $securityUtil->getDefaultSourceSystem();    //'scanorder';
         $em = $this->getDoctrine()->getManager();
 
         /////////////// Patient ///////////////////

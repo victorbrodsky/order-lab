@@ -83,7 +83,7 @@ class Part extends ObjectAbstract
     protected $slide;
     
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
-        parent::__construct($status,$provider);
+        parent::__construct($status,$provider,$source);
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
 

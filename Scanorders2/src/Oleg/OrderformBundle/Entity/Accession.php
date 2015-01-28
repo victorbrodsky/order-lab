@@ -54,7 +54,7 @@ class Accession extends ObjectAbstract {
 
 
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
-        parent::__construct($status,$provider);
+        parent::__construct($status,$provider,$source);
         $this->part = new ArrayCollection();
 
         //fields:

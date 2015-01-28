@@ -10,6 +10,12 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
     //Make new - no requirements for uniqueness.
     public function processEntity( $entity, $orderinfo=null, $original=null ) {
+
+        //set default source if empty
+        if( !$entity->getSource() ) {
+            $entity->setSource($this->source);
+        }
+
         return $this->setResult( $entity, $orderinfo, null );
     }
     

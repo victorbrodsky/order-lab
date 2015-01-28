@@ -6,6 +6,7 @@ use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\Accession;
+use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
 /**
  * AccessionRepository
@@ -221,11 +222,14 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         $acctype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
 
+        $securityUtil = new SecurityUtil($em,null,null);
+        $source = $securityUtil->getDefaultSourceSystem();
+
         //we should have only one key field !!!
         $key = $accession->obtainValidKeyField();
         $key->setKeytype($acctype);
         $key->setStatus(self::STATUS_VALID);
-        $key->setSource('scanorder');
+        $key->setSource($source);
         $key->setProvider($orderinfo->getProvider());
 
         if( !$accession->getInstitution() ) {
