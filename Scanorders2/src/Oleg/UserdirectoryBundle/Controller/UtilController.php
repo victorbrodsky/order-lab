@@ -609,6 +609,7 @@ class UtilController extends Controller {
         //$dql->leftJoin("user.researchLabs", "researchLabs");
         $dql->groupBy('user');
         $dql->addGroupBy('keytype');
+        $dql->addGroupBy('infos');
         $dql->orderBy("infos.displayName","ASC");
 
 

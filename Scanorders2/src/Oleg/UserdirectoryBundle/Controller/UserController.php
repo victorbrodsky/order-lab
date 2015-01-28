@@ -94,7 +94,7 @@ class UserController extends Controller
         $postData = $request->get('postData');
 
         //user search
-        $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid,'excludeCurrentUser'=>true);
+        $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid,'excludeCurrentUser'=>false);
         $res = $this->indexUser( $params ); //use function getTheSameObject
         $pagination = $res['entities'];
 
@@ -981,6 +981,7 @@ class UserController extends Controller
             }
         }
 
+        //exclude current user
         if( $excludeCurrentUser ) {
             if( $criteriastr != "" ) {
                 $criteriastr = "user.id != " . $user->getId() . " AND (" . $criteriastr . ")";
