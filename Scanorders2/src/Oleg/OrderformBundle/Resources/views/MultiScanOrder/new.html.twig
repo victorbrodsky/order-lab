@@ -36,7 +36,11 @@
         {% set changestatus = false %}
     {% endif %}
 
-    {{ order.orderheader( form, formtype, type, showpath, amendpath, amendable, changestatus ) }}
+    {% if not datastructure %}
+        {{ order.orderheader( form, formtype, type, showpath, amendpath, amendable, changestatus ) }}
+    {% else %}
+        {{ order.ordertitle(form, formtype) }}
+    {% endif %}
 
     {#history#}
     {% if history is defined and history %}
@@ -213,7 +217,7 @@
 
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
 
-                {{ formmacros.patientForm(patient,"check",uid,type,form.vars.value.status) }}
+                {{ formmacros.patientForm(patient,datastructure,uid,type,form.vars.value.status) }}
 
                 {#procedure/procedure#}
                 {% set procedureCount = 0 %}

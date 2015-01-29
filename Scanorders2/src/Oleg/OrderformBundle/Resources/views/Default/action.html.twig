@@ -139,6 +139,13 @@
                     </li>
                 {% endif %}
 
+                {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+                    <li class="divider"></li>
+                    <li>
+                        <a href="{{ path('scan_datastructure', { 'id': entity.oid }) }}">Data Structure View</a>
+                    </li>
+                {% endif %}
+
            {% endif %} {#admin#}
 
         </ul>

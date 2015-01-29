@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
+use Oleg\OrderformBundle\Entity\RaceList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -96,6 +97,8 @@ class ScanAdminController extends AdminController
         $count_urgency = $this->generateUrgency();
         $count_progressCommentsEventType = $this->generateProgressCommentsEventType();
 
+        $count_race = $this->generateRace();
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
@@ -115,6 +118,7 @@ class ScanAdminController extends AdminController
             'Processor Comments='.$count_comments.', '.
             'Urgency='.$count_urgency.' '.
             'Progress and Comments EventTypes='.$count_progressCommentsEventType.' '.
+            'Races='.$count_race.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -357,7 +361,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateOrgans() {
@@ -388,7 +392,7 @@ class ScanAdminController extends AdminController
         }
 
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateProcedures() {
@@ -418,7 +422,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateStatuses() {
@@ -498,7 +502,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         } //foreach
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateSlideType() {
@@ -532,7 +536,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateMrnType() {
@@ -575,7 +579,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateFormType() {
@@ -606,7 +610,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         } //foreach
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -650,7 +654,7 @@ class ScanAdminController extends AdminController
 
         } //foreach
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -683,7 +687,7 @@ class ScanAdminController extends AdminController
 
         } //foreach
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -760,7 +764,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -793,7 +797,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -824,7 +828,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateProgressCommentsEventType() {
@@ -862,8 +866,45 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
-        return $count;
+        return round($count/10);
     }
 
+
+
+    public function generateRace() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:RaceList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        //http://nces.ed.gov/ipeds/reic/definitions.asp
+        $types = array(
+            'Hispanic or Latino',
+            'American Indian or Alaska Native',
+            'Asian',
+            'Black or African American',
+            'Native Hawaiian or Other Pacific Islander',
+            'White'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new RaceList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
 }

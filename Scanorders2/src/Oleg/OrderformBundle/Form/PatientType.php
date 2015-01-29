@@ -122,6 +122,36 @@ class PatientType extends AbstractType
 
         }
 
+
+        //extra data-structure fields
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+
+            echo "flag datastructure=".$this->params['datastructure']."<br>";
+
+            $builder->add('race', 'collection', array(
+                'type' => new RaceType($this->params, null),
+                'read_only' => $flag,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patientrace__',
+            ));
+
+            $builder->add('deceased', 'collection', array(
+                'type' => new DeceasedType($this->params, null),
+                'read_only' => $flag,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patientdeceased__',
+            ));
+        }
+
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

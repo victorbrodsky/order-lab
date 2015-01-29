@@ -41,6 +41,9 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
  */
 class MultiScanOrderController extends Controller {
 
+    //for testing full data structure
+    private $datastructure = 'datastructure';
+
 
     /**
      * Creates a new OrderInfo entity.
@@ -99,7 +102,14 @@ class MultiScanOrderController extends Controller {
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        $params = array('type'=>$type, 'cycle'=>'create', 'user'=>$user, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices);
+        $params = array(
+            'type'=>$type,
+            'cycle'=>'create',
+            'user'=>$user,
+            'institutions'=>$permittedInstitutions,
+            'services'=>$permittedServices,
+            'datastructure'=>$this->datastructure
+        );
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
 
@@ -422,7 +432,8 @@ class MultiScanOrderController extends Controller {
             'user'=>$user,
             'division'=>$division,
             'department'=>$department,
-            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($entity)
+            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($entity),
+            'datastructure'=>$this->datastructure
         );
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
@@ -430,14 +441,16 @@ class MultiScanOrderController extends Controller {
             return $this->render('OlegOrderformBundle:MultiScanOrder:new.html.twig', array(
                 'form' => $form->createView(),
                 'type' => 'new',
-                'formtype' => $type
+                'formtype' => $type,
+                'datastructure' => $this->datastructure
             ));
         } else {
             //echo "newsingle: <br>";
             return $this->render('OlegOrderformBundle:MultiScanOrder:newsingle.html.twig', array(
                 'form' => $form->createView(),
                 'cycle' => 'new',
-                'formtype' => $type
+                'formtype' => $type,
+                'datastructure' => $this->datastructure
             ));
         }
 
@@ -449,6 +462,7 @@ class MultiScanOrderController extends Controller {
      * @Route("/scan-order/{id}/edit", name="multy_edit", requirements={"id" = "\d+"})
      * @Route("/scan-order/{id}/amend", name="order_amend", requirements={"id" = "\d+"})
      * @Route("/scan-order/{id}/show", name="multy_show", requirements={"id" = "\d+"})
+     * @Route("/scan-order/data-structure/{id}/show", name="scan_datastructure", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
      */
@@ -506,6 +520,14 @@ class MultiScanOrderController extends Controller {
             $entity = $entities[0];
         }
 
+        //order memory usage
+        $mem = memory_get_usage(true);
+        $entity_tmp = clone $entity;
+        $mem = memory_get_usage(true) - $mem;
+        echo "order mem old = 2.36 Mb<br>";
+        echo "order mem = ".$mem. " => " .round($mem/1000000,2)." Mb<br>";
+        unset($entity_tmp);
+
         $routeName = $request->get('_route');
 
         if( $routeName == "multy_show") {
@@ -518,7 +540,13 @@ class MultiScanOrderController extends Controller {
             $actions = array('edit');
         }
 
-        $securityUtil = $this->get('order_security_utility');
+        $datastructure = null;
+        if( $routeName == "scan_datastructure") {
+            $actions = array('edit'); //show
+            $datastructure = "datastructure";
+            $source = $securityUtil->getDefaultSourceSystem();
+        }
+
         if( $entity && !$securityUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
@@ -551,6 +579,10 @@ class MultiScanOrderController extends Controller {
             if( !$securityUtil->hasUserPermission($patient, $user) ) {
                 $entity->removePatient($patient);
                 continue;
+            }
+
+            if( $datastructure ) {
+                $patient->addExtraFields('valid',$user,$source);
             }
 
             //procedure
@@ -651,6 +683,11 @@ class MultiScanOrderController extends Controller {
             $type = "amend";
         }
 
+        if( $routeName == "scan_datastructure") {
+            $disable = false;
+            $type = "edit";
+        }
+
         //echo "show id=".$entity->getId()."<br>";
         //use always multy because we use nested forms to display single and multy slide orders
         $single_multy = $entity->getType();
@@ -675,7 +712,8 @@ class MultiScanOrderController extends Controller {
             'services'=>$permittedServices,
             'user'=>$user,
             'division'=>$division,
-            'department'=>$department
+            'department'=>$department,
+            'datastructure' => $datastructure
         );
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
 
@@ -710,7 +748,8 @@ class MultiScanOrderController extends Controller {
             'formtype' => $entity->getType(),
             'history' => $history,
             'amendable' => $securityUtil->isUserAllowOrderActions($entity, $user, array('amend')),
-            'changestatus' => $securityUtil->isUserAllowOrderActions($entity, $user, array('changestatus'))
+            'changestatus' => $securityUtil->isUserAllowOrderActions($entity, $user, array('changestatus')),
+            'datastructure' => $datastructure
         );
 
 
@@ -744,6 +783,8 @@ class MultiScanOrderController extends Controller {
         return $html;
 
     }
+
+
 
 
 }

@@ -1,8 +1,5 @@
 
-
-{% macro orderheader( form, formtype, type, showpath, amendpath, amendable, changestatus ) %}
-
-
+{% macro ordertitle( form, formtype ) %}
     <h3 class="text-info">
         {{ formtype }}
         {% if form.vars.value.oid != "" %}
@@ -10,6 +7,19 @@
             ({{ form.vars.value.status }})
         {% endif %}
     </h3>
+{% endmacro %}
+
+{% macro orderheader( form, formtype, type, showpath, amendpath, amendable, changestatus ) %}
+
+    {% import _self as ordercommon %}
+    {#<h3 class="text-info">#}
+        {#{{ formtype }}#}
+        {#{% if form.vars.value.oid != "" %}#}
+            {#{{ form.vars.value.oid }}#}
+            {#({{ form.vars.value.status }})#}
+        {#{% endif %}#}
+    {#</h3>#}
+    {{ ordercommon.ordertitle(form, formtype) }}
 
     {#set status. used to show action buttons#}
     {% if type != 'new' %}

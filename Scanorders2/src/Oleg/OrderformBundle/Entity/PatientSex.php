@@ -26,27 +26,5 @@ class PatientSex extends PatientArrayFieldAbstract
      */
     protected $field;
 
-//    /**
-//     * Link to the object, the source of field data
-//     * @ORM\ManyToOne(targetEntity="Procedure")
-//     */
-//    protected $procedure;
-//
-//
-//    /**
-//     * @param mixed $procedure
-//     */
-//    public function setProcedure($procedure)
-//    {
-//        $this->procedure = $procedure;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getProcedure()
-//    {
-//        return $this->procedure;
-//    }
 
 }

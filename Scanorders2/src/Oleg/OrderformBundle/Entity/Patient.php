@@ -72,6 +72,22 @@ class Patient extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
      */
     private $procedure;
+
+
+
+    ///////////////// additional extra fields not shown on scan order /////////////////
+    /**
+     * @ORM\OneToMany(targetEntity="PatientRace", mappedBy="patient", cascade={"persist"})
+     */
+    private $race;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PatientDeceased", mappedBy="patient", cascade={"persist"})
+     */
+    private $deceased;
+
+
+
     
     /**
      * Constructor
@@ -92,15 +108,24 @@ class Patient extends ObjectAbstract
         //$this->age = new ArrayCollection();
         $this->clinicalHistory = new ArrayCollection();
 
+        //extra
+        $this->race = new ArrayCollection();
+        $this->deceased = new ArrayCollection();
+
         if( $withfields ) {
             $this->addMrn( new PatientMrn($status,$provider,$source) );
             $this->addDob( new PatientDob($status,$provider,$source) );
             $this->addClinicalHistory( new PatientClinicalHistory($status,$provider,$source) );
+
             //$this->addLastname( new PatientLastname($status,$provider,$source) );
             //$this->addFirstname( new PatientFirstname($status,$provider,$source) );
             //$this->addMiddlename( new PatientMiddlename($status,$provider,$source) );
             //$this->addSex( new PatientSex($status,$provider,$source) );
             //$this->addAge( new PatientAge($status,$provider,$source) );
+
+            //testing data structure
+            $this->addRace( new PatientRace($status,$provider,$source) );
+            $this->addDeceased( new PatientDeceased($status,$provider,$source) );
         }
 
     }
@@ -115,6 +140,10 @@ class Patient extends ObjectAbstract
         $this->dob = $this->cloneDepend($this->dob,$this);
         //$this->age = $this->cloneDepend($this->age,$this);
         $this->clinicalHistory = $this->cloneDepend($this->clinicalHistory,$this);
+
+        //extra fields
+        $this->race = $this->cloneDepend($this->race,$this);
+        $this->deceased = $this->cloneDepend($this->deceased,$this);
     }
 
     /**
@@ -666,6 +695,55 @@ class Patient extends ObjectAbstract
         $this->dob->removeElement($dob);
     }
 
+
+    ///////////////////////// Extra fields /////////////////////////
+    public function addExtraFields($status,$provider,$source) {
+        $this->addRace( new PatientRace($status,$provider,$source) );
+        $this->addDeceased( new PatientDeceased($status,$provider,$source) );
+    }
+
+    public function getRace()
+    {
+        return $this->race;
+    }
+    public function addRace($race)
+    {
+        if( !$this->race->contains($race) ) {
+            $this->race->add($race);
+            $race->setPatient($this);
+        }
+
+        return $this;
+    }
+    public function removeRace($race)
+    {
+        $this->race->removeElement($race);
+    }
+
+
+    public function getDeceased()
+    {
+        return $this->deceased;
+    }
+    public function addDeceased($deceased)
+    {
+        if( !$this->deceased->contains($deceased) ) {
+            $this->deceased->add($deceased);
+            $deceased->setPatient($this);
+        }
+
+        return $this;
+    }
+    public function removeDeceased($deceased)
+    {
+        $this->deceased->removeElement($deceased);
+    }
+    ///////////////////////// Extra fields /////////////////////////
+
+
+
+
+
     public function __toString()
     {
         $mrns = ", mrnCount=".count($this->mrn).": ";
@@ -865,7 +943,11 @@ class Patient extends ObjectAbstract
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Mrn','Suffix','Lastname','Firstname','Middlename','Sex','Dob','ClinicalHistory');
+        $fieldsArr = array(
+            'Mrn','Suffix','Lastname','Firstname','Middlename','Sex','Dob','ClinicalHistory',
+            //extra fields
+            'Race'
+        );
         return $fieldsArr;
     }
 
