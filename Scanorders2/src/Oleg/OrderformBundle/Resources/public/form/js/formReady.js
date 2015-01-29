@@ -86,6 +86,8 @@ $(document).ready(function() {
     setInstitutionTreeChildren();
     initDefaultServiceManually();
 
+    initDatetimepicker();
+
 });
 
 

@@ -462,6 +462,8 @@
         {% set fieldThis = field %}
     {% endif %}
 
+    {#classname:{{ classname }}#}
+
     {% if fieldtype == "diseaseType" %}
 
         {{ formmacros.diseaseTypeForm(fieldThis) }}
@@ -583,11 +585,6 @@
                     {{ form_widget(fieldThis.firstName) }}
                 {% elseif fieldtype == "procedurepatmiddlename" %}
                     {{ form_widget(fieldThis.middleName) }}
-
-                {% elseif classname == "patientdeceased" %}
-                    0 patientdeceased!!!
-                    {{ formmacros.fieldDeceased(fieldThis,cycle) }}
-
                 {% else %}
                     {% if fieldThis.field is defined %}
                         {{ form_widget(fieldThis.field) }}
@@ -634,14 +631,16 @@
 {############# custom array fields #############}
 
 {% macro fieldDeceased(field,cycle) %}
-    fieldDeceased!!!
-    {{ form_errors(field) }}
+    {% import _self as formmacros %}
+    {% if field.vars.value.status == 'valid' %}
+        {{ form_errors(field) }}
 
-    {{ form_widget(field.deceasedothers) }}
-    {{ form_widget(field.deceased) }}
-    {{ form_widget(field.deathdate) }}
-    {{ form_widget(field.deathtime) }}
+        {{ form_widget(field.deceasedothers) }}
 
+        {{ formmacros.field(field.deceased) }}
+        {{ formmacros.fieldDateLabel(field.deathdate,'regular-datepicker') }}
+        {{ formmacros.field(field.deathtime) }}
+    {% endif %}
 {% endmacro %}
 
 {% macro fieldCollectionInput(field, cycle, prototype, widget, nobtn, btntype) %}
@@ -905,7 +904,11 @@
         {% endif %}
 
         {% if patient.deceased is defined %}
-            {{ formmacros.inputArrayField(patient.deceased,cycle,"patientdeceased","","","","",status) }}
+            {#{{ formmacros.inputArrayField(patient.deceased,cycle,"patientdeceased","","","","",status) }}#}
+            {% for deceased in patient.deceased %}
+                {{ formmacros.fieldDeceased(deceased,cycle) }}
+            {% endfor %}
+
         {% endif %}
 
 

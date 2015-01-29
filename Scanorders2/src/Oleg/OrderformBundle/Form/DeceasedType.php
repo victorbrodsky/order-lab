@@ -35,16 +35,18 @@ class DeceasedType extends AbstractType
             //'data' => $scandeadline,
             'label'=>'Date of Death:',
         ));
+//        $builder->add('deathdate', 'date', array(
+//            'input'  => 'datetime',
+//            'widget' => 'single_text',
+//            'label'=>'Date of Death:',
+//            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
+//        ));
 
-        $builder->add('deathtime','date',array(
-            'widget' => 'single_text',
-            'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
-            'required' => false,
-            //'data' => $scandeadline,
-            'label'=>'Time of Death:',
+        $builder->add('deathtime', 'time', array(
+            'input'  => 'datetime',
+            'widget' => 'choice',
+            'label'=>'Time of Death:'
         ));
-
 
         //other fields from abstract
         $builder->add('deceasedothers', new ArrayFieldType(), array(

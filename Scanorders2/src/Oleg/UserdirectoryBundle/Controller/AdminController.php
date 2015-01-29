@@ -536,6 +536,12 @@ class AdminController extends Controller
                     <br>
 
                     <li>
+                        <a href="http://www.malot.fr/bootstrap-datetimepicker/demo.php">Bootstrap DateTime Picker</a>
+                    </li>
+
+                    <br>
+
+                    <li>
                         <a href="https://github.com/twitter/typeahead.js/">Typeahead with Bloodhound</a>
                     </li>
 

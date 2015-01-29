@@ -86,6 +86,11 @@ class Patient extends ObjectAbstract
      */
     private $deceased;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PatientContactinfo", mappedBy="patient", cascade={"persist"})
+     */
+    private $contactinfo;
+
 
 
     
@@ -111,6 +116,7 @@ class Patient extends ObjectAbstract
         //extra
         $this->race = new ArrayCollection();
         $this->deceased = new ArrayCollection();
+        $this->contactinfo = new ArrayCollection();
 
         if( $withfields ) {
             $this->addMrn( new PatientMrn($status,$provider,$source) );
@@ -124,8 +130,7 @@ class Patient extends ObjectAbstract
             //$this->addAge( new PatientAge($status,$provider,$source) );
 
             //testing data structure
-            $this->addRace( new PatientRace($status,$provider,$source) );
-            $this->addDeceased( new PatientDeceased($status,$provider,$source) );
+            $this->addExtraFields($status,$provider,$source);
         }
 
     }
@@ -144,6 +149,8 @@ class Patient extends ObjectAbstract
         //extra fields
         $this->race = $this->cloneDepend($this->race,$this);
         $this->deceased = $this->cloneDepend($this->deceased,$this);
+        $this->contactinfo = $this->cloneDepend($this->contactinfo,$this);
+
     }
 
     /**
@@ -700,6 +707,8 @@ class Patient extends ObjectAbstract
     public function addExtraFields($status,$provider,$source) {
         $this->addRace( new PatientRace($status,$provider,$source) );
         $this->addDeceased( new PatientDeceased($status,$provider,$source) );
+        $this->addContactinfo( new PatientContactinfo($status,$provider,$source) );
+
     }
 
     public function getRace()
@@ -737,6 +746,24 @@ class Patient extends ObjectAbstract
     public function removeDeceased($deceased)
     {
         $this->deceased->removeElement($deceased);
+    }
+
+    public function getContactinfo()
+    {
+        return $this->contactinfo;
+    }
+    public function addContactinfo($contactinfo)
+    {
+        if( !$this->contactinfo->contains($contactinfo) ) {
+            $this->contactinfo->add($contactinfo);
+            $contactinfo->setPatient($this);
+        }
+
+        return $this;
+    }
+    public function removeContactinfo($contactinfo)
+    {
+        $this->contactinfo->removeElement($contactinfo);
     }
     ///////////////////////// Extra fields /////////////////////////
 
@@ -946,7 +973,7 @@ class Patient extends ObjectAbstract
         $fieldsArr = array(
             'Mrn','Suffix','Lastname','Firstname','Middlename','Sex','Dob','ClinicalHistory',
             //extra fields
-            'Race'
+            'Race','Deceased','Contactinfo'
         );
         return $fieldsArr;
     }

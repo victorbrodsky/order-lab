@@ -98,9 +98,9 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 function initDatetimepicker() {
 
     var datetimepicker = $('.form_datetime');
-    //console.log('initDatetimepicker');
-    if( datetimepicker.length ) {
-        printF(datetimepicker,"init:");
+    //console.log('initDatetimepicker datetimepicker.length='+datetimepicker.length);
+    if( datetimepicker.length > 0 ) {
+        //printF(datetimepicker,"init:");
         datetimepicker.datetimepicker({
             format: 'mm-dd-yyyy hh:i'
         });
