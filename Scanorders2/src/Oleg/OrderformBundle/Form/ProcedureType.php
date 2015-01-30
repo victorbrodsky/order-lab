@@ -176,6 +176,16 @@ class ProcedureType extends AbstractType
                 'prototype_name' => '__procedureprocedureorder__',
             ));
 
+            $builder->add('inpatientinfo', 'collection', array(
+                'type' => new ProcedureInpatientinfoType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__procedureinpatientinfo__',
+            ));
+
         }
 
         

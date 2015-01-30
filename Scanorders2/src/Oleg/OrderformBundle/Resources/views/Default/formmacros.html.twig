@@ -837,6 +837,22 @@
     {% endif %}
 {% endmacro %}
 
+{% macro fieldInpatientinfo(field,cycle) %}
+    {% import _self as formmacros %}
+    {% if field.vars.value.status == 'valid' %}
+        {{ form_errors(field) }}
+        {{ form_widget(field.others) }}
+        {{ formmacros.field(field.source) }}
+        {{ formmacros.fieldDateLabel(field.admissiondate,'regular-datepicker') }}
+        {{ formmacros.field(field.admissiontime) }}
+        {{ formmacros.field(field.admissiondiagnosis) }}
+        {{ formmacros.fieldDateLabel(field.dischargedate,'regular-datepicker') }}
+        {{ formmacros.field(field.dischargetime) }}
+        {{ formmacros.field(field.dischargediagnosis) }}
+    {% endif %}
+{% endmacro %}
+
+
 {############################ Objects ###########################}
 
 {% macro patientForm( patient, flag, uid, cycle, status, mrnHtml, dobHtml, clinicalhistoryHtml ) %}
@@ -1202,6 +1218,12 @@
         {% if procedure.procedureorder is defined %}
             {% for procedureorder in procedure.procedureorder %}
                 {{ formmacros.fieldEncounterorder(procedureorder,cycle) }}
+            {% endfor %}
+        {% endif %}
+
+        {% if procedure.inpatientinfo is defined %}
+            {% for inpatientinfo in procedure.inpatientinfo %}
+                {{ formmacros.fieldInpatientinfo(inpatientinfo,cycle) }}
             {% endfor %}
         {% endif %}
 
