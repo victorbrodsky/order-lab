@@ -1359,10 +1359,15 @@ class AdminController extends Controller
             'Sign Out Room',
             'Clinical Laboratory',
             'Research Laboratory',
-            'Patient Contact Information',
             'Medical Office',
+            'Surgical Pathology Filing Room',
             'Inpatient Room',
-            'Surgical Pathology Filing Room'
+            'Patient Contact Information',
+            'Pick Up',
+            'Accessioning',
+            'Storage',
+            'Filing Room',
+            'Off Site Slide Storage'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

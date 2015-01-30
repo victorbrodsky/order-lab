@@ -161,6 +161,7 @@ class LocationType extends AbstractType
                                 ->setParameters( array('userid' => $this->params['subjectUser']->getId()) );
                         } else {
                             return $er->createQueryBuilder('list')
+								->leftJoin("list.infos", "infos")
                                 ->orderBy("infos.displayName","ASC");
                         }
                     },

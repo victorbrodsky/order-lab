@@ -635,7 +635,7 @@
     {% if field.vars.value.status == 'valid' %}
         {{ form_errors(field) }}
 
-        {{ form_widget(field.deceasedothers) }}
+        {{ form_widget(field.others) }}
 
         {{ formmacros.field(field.deceased) }}
         {{ formmacros.fieldDateLabel(field.deathdate,'regular-datepicker') }}
@@ -904,11 +904,13 @@
         {% endif %}
 
         {% if patient.deceased is defined %}
-            {#{{ formmacros.inputArrayField(patient.deceased,cycle,"patientdeceased","","","","",status) }}#}
             {% for deceased in patient.deceased %}
                 {{ formmacros.fieldDeceased(deceased,cycle) }}
             {% endfor %}
+        {% endif %}
 
+        {% if patient.contactinfo is defined %}
+            {{ formmacros.inputArrayField(patient.contactinfo,cycle,"patientcontactinfo","","","","",status) }}
         {% endif %}
 
 

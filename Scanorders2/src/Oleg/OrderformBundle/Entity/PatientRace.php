@@ -28,25 +28,4 @@ class PatientRace extends PatientArrayFieldAbstract
     protected $field;
 
 
-
-
-    /**
-     * @param mixed $race
-     */
-    public function setRace($race)
-    {
-        $this->race = $race;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRace()
-    {
-        return $this->race;
-    }
-
-
-
-
 }
