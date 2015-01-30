@@ -19,6 +19,7 @@ class Procedure extends ObjectAbstract
     protected $name;
 
     /**
+     * Encounter Number
      * @ORM\OneToMany(targetEntity="ProcedureEncounter", mappedBy="procedure", cascade={"persist"})
      */
     protected $encounter;
@@ -44,10 +45,6 @@ class Procedure extends ObjectAbstract
 
 
     //Patient's info: age, name, sex
-//    /**
-//     * @ORM\Column(type="datetime", nullable=true)
-//     */
-//    protected $encounterDate;
     /**
      * @ORM\OneToMany(targetEntity="ProcedureEncounterDate", mappedBy="procedure", cascade={"persist"})
      */
@@ -73,33 +70,44 @@ class Procedure extends ObjectAbstract
      */
     protected $patmiddlename;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $patsex;
     /**
      * @ORM\OneToMany(targetEntity="ProcedurePatsex", mappedBy="procedure", cascade={"persist"})
      */
     protected $patsex;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $patage;
     /**
      * @ORM\OneToMany(targetEntity="ProcedurePatage", mappedBy="procedure", cascade={"persist"})
      */
     protected $patage;
 
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    protected $pathistory;
     /**
      * @ORM\OneToMany(targetEntity="ProcedurePathistory", mappedBy="procedure", cascade={"persist"})
      */
     protected $pathistory;
 
+
+    ///////////////// additional extra fields not shown on scan order /////////////////
+    /**
+     * @ORM\OneToMany(targetEntity="ProcedureLocation", mappedBy="procedure", cascade={"persist"})
+     */
+    private $location;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProcedureEncounterorder", mappedBy="procedure", cascade={"persist"})
+     */
+    private $encounterorder;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProcedureProcedureorder", mappedBy="procedure", cascade={"persist"})
+     */
+    private $procedureorder;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProcedureInpatientinfo", mappedBy="procedure", cascade={"persist"})
+     */
+    private $inpatientinfo;
+
+    ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
@@ -121,6 +129,12 @@ class Procedure extends ObjectAbstract
 
         $this->pathistory = new ArrayCollection();
 
+        //extra
+        $this->location = new ArrayCollection();
+        $this->encounterorder = new ArrayCollection();
+        $this->procedureorder = new ArrayCollection();
+        $this->inpatientinfo = new ArrayCollection();
+
         if( $withfields ) {
             $this->addName( new ProcedureName($status,$provider,$source) );
             $this->addEncounter( new ProcedureEncounter($status,$provider,$source) );
@@ -132,6 +146,9 @@ class Procedure extends ObjectAbstract
             $this->addPatsex( new ProcedurePatsex($status,$provider,$source) );
             $this->addPatage( new ProcedurePatage($status,$provider,$source) );
             $this->addPathistory( new ProcedurePathistory($status,$provider,$source) );
+
+            //testing data structure
+            $this->addExtraFields($status,$provider,$source);
         }
     }
 
@@ -146,6 +163,12 @@ class Procedure extends ObjectAbstract
         $this->patsex = $this->cloneDepend($this->patsex,$this);
         $this->patage = $this->cloneDepend($this->patage,$this);
         $this->pathistory = $this->cloneDepend($this->pathistory,$this);
+
+        //extra fields
+        $this->location = $this->cloneDepend($this->location,$this);
+        $this->encounterorder = $this->cloneDepend($this->encounterorder,$this);
+        $this->procedureorder = $this->cloneDepend($this->procedureorder,$this);
+        $this->inpatientinfo = $this->cloneDepend($this->inpatientinfo,$this);
     }
 
     /**
@@ -539,6 +562,89 @@ class Procedure extends ObjectAbstract
 
 
 
+    ///////////////////////// Extra fields /////////////////////////
+    public function addExtraFields($status,$provider,$source) {
+        $this->addLocation( new ProcedureLocation($status,$provider,$source) );
+        $this->addEncounterorder( new ProcedureEncounterorder($status,$provider,$source) );
+        $this->addProcedureorder( new ProcedureProcedureorder($status,$provider,$source) );
+        $this->addInpatientinfo( new ProcedureInpatientinfo($status,$provider,$source) );
+
+    }
+
+    public function getLocation()
+    {
+        return $this->location;
+    }
+    public function addLocation($location)
+    {
+        if( $location && !$this->location->contains($location) ) {
+            $this->location->add($location);
+            $location->setProcedure($this);
+        }
+
+        return $this;
+    }
+    public function removeLocation($location)
+    {
+        $this->location->removeElement($location);
+    }
+
+    public function getEncounterorder()
+    {
+        return $this->encounterorder;
+    }
+    public function addEncounterorder($encounterorder)
+    {
+        if( $encounterorder && !$this->encounterorder->contains($encounterorder) ) {
+            $this->encounterorder->add($encounterorder);
+            $encounterorder->setProcedure($this);
+        }
+
+        return $this;
+    }
+    public function removeEncounterorder($encounterorder)
+    {
+        $this->encounterorder->removeElement($encounterorder);
+    }
+
+    public function getProcedureorder()
+    {
+        return $this->procedureorder;
+    }
+    public function addProcedureorder($procedureorder)
+    {
+        if( $procedureorder && !$this->procedureorder->contains($procedureorder) ) {
+            $this->procedureorder->add($procedureorder);
+            $procedureorder->setProcedure($this);
+        }
+
+        return $this;
+    }
+    public function removeProcedureorder($procedureorder)
+    {
+        $this->procedureorder->removeElement($procedureorder);
+    }
+
+    public function getInpatientinfo()
+    {
+        return $this->inpatientinfo;
+    }
+    public function addInpatientinfo($inpatientinfo)
+    {
+        if( $inpatientinfo && !$this->inpatientinfo->contains($inpatientinfo) ) {
+            $this->inpatientinfo->add($inpatientinfo);
+            $inpatientinfo->setProcedure($this);
+        }
+
+        return $this;
+    }
+    public function removeInpatientinfo($inpatientinfo)
+    {
+        $this->inpatientinfo->removeElement($inpatientinfo);
+    }
+    ///////////////////////// EOF Extra fields /////////////////////////
+
+
     public function __toString() {
 
         $procNames = "";
@@ -619,7 +725,11 @@ class Procedure extends ObjectAbstract
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Encounter','Name','EncounterDate','Patsuffix','Patlastname','Patfirstname','Patmiddlename','Patage','Patsex','Pathistory');
+        $fieldsArr = array(
+            'Encounter','Name','EncounterDate','Patsuffix','Patlastname','Patfirstname','Patmiddlename','Patage','Patsex','Pathistory',
+            //extra fields
+            'Location', 'Encounterorder', 'Procedureorder', 'Inpatientinfo'
+        );
         return $fieldsArr;
     }
 

@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class DeceasedType extends AbstractType
+class PatientDeceasedType extends AbstractType
 {
 
     protected $params;
@@ -27,12 +27,11 @@ class DeceasedType extends AbstractType
             'required'  => false,
         ));
 
-        $builder->add('deathdate','date',array(
+        $builder->add('deathdate','datetime',array(
             'widget' => 'single_text',
             'format' => 'MM-dd-yyyy',
             'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
             'required' => false,
-            //'data' => $scandeadline,
             'label'=>'Date of Death:',
         ));
 //        $builder->add('deathdate', 'date', array(
@@ -66,6 +65,6 @@ class DeceasedType extends AbstractType
 
     public function getName()
     {
-        return 'oleg_orderformbundle_patientdeceased';
+        return 'oleg_orderformbundle_patientdeceasedtype';
     }
 }

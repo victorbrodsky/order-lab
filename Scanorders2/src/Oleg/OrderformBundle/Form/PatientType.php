@@ -126,10 +126,10 @@ class PatientType extends AbstractType
         //extra data-structure fields
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
 
-            echo "flag datastructure=".$this->params['datastructure']."<br>";
+            //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
             $builder->add('race', 'collection', array(
-                'type' => new RaceType($this->params, null),
+                'type' => new PatientRaceType($this->params, null),
                 'read_only' => $flag,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -140,7 +140,7 @@ class PatientType extends AbstractType
             ));
 
             $builder->add('deceased', 'collection', array(
-                'type' => new DeceasedType($this->params, null),
+                'type' => new PatientDeceasedType($this->params, null),
                 'read_only' => $flag,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -151,7 +151,7 @@ class PatientType extends AbstractType
             ));
 
             $builder->add('contactinfo', 'collection', array(
-                'type' => new ContactinfoType($this->params, null),
+                'type' => new PatientContactinfoType($this->params, null),
                 'read_only' => $flag,
                 'allow_add' => true,
                 'allow_delete' => true,

@@ -41,7 +41,7 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
  */
 class MultiScanOrderController extends Controller {
 
-    //for testing full data structure
+    //for testing data structure
     private $datastructure = 'datastructure';
 
 
@@ -582,7 +582,7 @@ class MultiScanOrderController extends Controller {
             }
 
             if( $datastructure ) {
-                $patient->addExtraFields('valid',$user,$source);
+                $patient->addExtraFields('valid',$user,$source); //invalid - to not show on view
             }
 
             //procedure
@@ -596,6 +596,10 @@ class MultiScanOrderController extends Controller {
                 if( !$securityUtil->hasUserPermission($procedure, $user) ) {
                     $patient->removeChildren($procedure);
                     continue;
+                }
+
+                if( $datastructure ) {
+                    $procedure->addExtraFields('valid',$user,$source); //invalid - to not show on view
                 }
 
                 //accession

@@ -236,93 +236,91 @@
                         {% for accession in procedure.accession %}
                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
 
-                            {#{{ formmacros.accessionForm(procedure,accession,"check",uid) }}#}
-                                    {{ formmacros.accessionForm(procedure,accession,"check",uid,type,form.vars.value.status) }}
+                                {{ formmacros.accessionForm(procedure,accession,datastructure,uid,type,form.vars.value.status) }}
+
+                                {#part#}
+                                {% set partCount = 0 %}
+                                {% for part in accession.part %}
+                                    {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
+
+                                    <div id="formpanel_part_{{ uid }}" class="panel panel-part panel-multi-form">
+                                        {{ formmacros.orderinfo_panel_header(
+                                        'part', type, formtype, partCount, accession.part|length, uid,
+                                        patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
+                                        }}
+
+                                        <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
+
+                                            {{ formmacros.partForm( part, "check", uid, type, form.vars.value.status, "","","","","","","") }}
 
 
-                                    {#part#}
-                                    {% set partCount = 0 %}
-                                    {% for part in accession.part %}
-                                        {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
+                                            {#block#}
+                                            {% set blockCount = 0 %}
+                                            {% for block in part.block %}
+                                                {#block id={{ block.vars.value.id }}#}
+                                                {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
+                                                <div id="formpanel_block_{{ uid }}" class="panel panel-block panel-multi-form">
+                                                    {{ formmacros.orderinfo_panel_header(
+                                                    'block', type, formtype, blockCount, part.block|length, uid,
+                                                    patientCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
+                                                    }}
 
-                                        <div id="formpanel_part_{{ uid }}" class="panel panel-part panel-multi-form">
-                                            {{ formmacros.orderinfo_panel_header(
-                                            'part', type, formtype, partCount, accession.part|length, uid,
-                                            patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
-                                            }}
-
-                                            <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
-
-                                                {{ formmacros.partForm( part, "check", uid, type, form.vars.value.status, "","","","","","","") }}
-
-
-                                                {#block#}
-                                                {% set blockCount = 0 %}
-                                                {% for block in part.block %}
-                                                    {#block id={{ block.vars.value.id }}#}
-                                                    {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
-                                                    <div id="formpanel_block_{{ uid }}" class="panel panel-block panel-multi-form">
-                                                        {{ formmacros.orderinfo_panel_header(
-                                                        'block', type, formtype, blockCount, part.block|length, uid,
-                                                        patientCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
-                                                        }}
-
-                                                        <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
-                                                            {#{{ formmacros.field(block.name) }}#}
-                                                            {{ formmacros.blockForm( block, "check", uid, type, form.vars.value.status) }}
+                                                    <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
+                                                        {#{{ formmacros.field(block.name) }}#}
+                                                        {{ formmacros.blockForm( block, "check", uid, type, form.vars.value.status) }}
 
 
-                                                            {#slide#}
-                                                            {% set slideCount = 0 %}
-                                                            {% for slide in block.slide %}
-                                                                {#slide id={{ slide.vars.value.id }}#}
-                                                                {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
-                                                                <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
-                                                                    {{ formmacros.orderinfo_panel_header(
-                                                                    'slide', type, formtype, slideCount, block.slide|length, uid,
-                                                                    patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
-                                                                    }}
+                                                        {#slide#}
+                                                        {% set slideCount = 0 %}
+                                                        {% for slide in block.slide %}
+                                                            {#slide id={{ slide.vars.value.id }}#}
+                                                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
+                                                            <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
+                                                                {{ formmacros.orderinfo_panel_header(
+                                                                'slide', type, formtype, slideCount, block.slide|length, uid,
+                                                                patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
+                                                                }}
 
-                                                                    <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
+                                                                <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
 
-                                                                        {{ formmacros.slideForm( slide, "check", uid, type ) }}
+                                                                    {{ formmacros.slideForm( slide, "check", uid, type ) }}
 
-                                                                    </div>
-                                                                </div> {#end of slide#}
-                                                                {% set slideCount = slideCount + 1 %}
-                                                            {% endfor %}
+                                                                </div>
+                                                            </div> {#end of slide#}
+                                                            {% set slideCount = slideCount + 1 %}
+                                                        {% endfor %}
 
 
-                                                        </div>
-                                                        {% set blockCount = blockCount + 1 %}
-                                                    </div> {#end of block#}
-                                                {% endfor %}
+                                                    </div>
+                                                    {% set blockCount = blockCount + 1 %}
+                                                </div> {#end of block#}
+                                            {% endfor %}
 
-                                                {#part's slide#}
-                                                {% set slideCount = 0 %}
-                                                {% for slide in part.slide %}
-                                                    {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
-                                                    <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
-                                                        {{ formmacros.orderinfo_panel_header(
-                                                        'slide', type, formtype, slideCount, part.slide|length, uid,
-                                                        patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
-                                                        }}
+                                            {#part's slide#}
+                                            {% set slideCount = 0 %}
+                                            {% for slide in part.slide %}
+                                                {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
+                                                <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
+                                                    {{ formmacros.orderinfo_panel_header(
+                                                    'slide', type, formtype, slideCount, part.slide|length, uid,
+                                                    patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
+                                                    }}
 
-                                                        <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
+                                                    <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
 
-                                                            {{ formmacros.slideForm( slide, "check", uid, type ) }}
+                                                        {{ formmacros.slideForm( slide, "check", uid, type ) }}
 
-                                                        </div>
-                                                    </div> {#end of slide#}
-                                                    {% set slideCount = slideCount + 1 %}
-                                                {% endfor %}
+                                                    </div>
+                                                </div> {#end of slide#}
+                                                {% set slideCount = slideCount + 1 %}
+                                            {% endfor %}
 
 
 
-                                            </div>
-                                        </div> {#end of part#}
-                                        {% set partCount = partCount + 1 %}
-                                    {% endfor %}
+                                        </div>
+                                    </div> {#end of part#}
+                                    {% set partCount = partCount + 1 %}
+                                {% endfor %}
 
 
                                 {#</div>#}

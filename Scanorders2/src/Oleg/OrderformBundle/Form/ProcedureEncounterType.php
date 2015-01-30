@@ -45,6 +45,27 @@ class ProcedureEncounterType extends AbstractType
 			'attr' => array('style'=>'display:none;')
         ));
 
+
+
+        //extra data-structure fields
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+
+            $builder->add('source', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+                'label' => 'Encounter Number Source',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("list.name = 'WCMC Epic Practice Management'")
+                            ->orderBy("list.orderinlist","ASC");
+
+                    },
+            ));
+
+        }
+
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -32,16 +32,12 @@ abstract class ArrayFieldAbstract {
     protected $provider;
 
     /**
-     * status: valid, invalid
+     * status: valid, invalid, alias
      * @ORM\Column(type="string", nullable=true)
      */
     protected $status;
 
-//    /**
-//     * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $source;
+    //default: 'scanorder'. Other values (old): "import_from_Epic", "import_from_CoPath"
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)

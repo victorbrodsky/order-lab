@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class ContactinfoType extends AbstractType
+class ProcedureEncounterorderType extends AbstractType
 {
 
     protected $params;
@@ -22,43 +22,51 @@ class ContactinfoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add( 'field', null, array(
-//            'label' => 'Contact Info',
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
-        $builder->add('field', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Location',
-            'label' => 'Contact Info',
+        $builder->add('source', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            'label' => 'Encounter Order Source:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->leftJoin("list.locationType", "locationType")
-                        ->where("locationType.name = 'Patient Contact Information'")
+                        ->where("list.name = 'WCMC Epic Ambulatory EMR' OR list.name = 'Written or oral referral'")
                         ->orderBy("list.orderinlist","ASC");
+
                 },
         ));
 
+        $builder->add('orderinfo', 'entity', array(
+            'class' => 'OlegOrderformBundle:OrderInfo',
+            'label' => 'Encounter Order ID:',
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'property' => 'oid',
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->orderBy("list.oid","ASC");
 
-        //other fields from abstract
+            },
+        ));
+
+
         $builder->add('others', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientContactinfo',
+            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounterorder',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
+
 
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientContactinfo',
+            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounterorder',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_patientcontactinfo';
+        return 'oleg_orderformbundle_procedureencounterordertype';
     }
 }

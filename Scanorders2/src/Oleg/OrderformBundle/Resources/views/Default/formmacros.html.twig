@@ -630,18 +630,6 @@
 
 {############# custom array fields #############}
 
-{% macro fieldDeceased(field,cycle) %}
-    {% import _self as formmacros %}
-    {% if field.vars.value.status == 'valid' %}
-        {{ form_errors(field) }}
-
-        {{ form_widget(field.others) }}
-
-        {{ formmacros.field(field.deceased) }}
-        {{ formmacros.fieldDateLabel(field.deathdate,'regular-datepicker') }}
-        {{ formmacros.field(field.deathtime) }}
-    {% endif %}
-{% endmacro %}
 
 {% macro fieldCollectionInput(field, cycle, prototype, widget, nobtn, btntype) %}
 
@@ -826,6 +814,28 @@
 
 {% endmacro %}
 
+{% macro fieldDeceased(field,cycle) %}
+    {% import _self as formmacros %}
+    {% if field.vars.value.status == 'valid' %}
+        {{ form_errors(field) }}
+
+        {{ form_widget(field.others) }}
+
+        {{ formmacros.field(field.deceased) }}
+        {{ formmacros.fieldDateLabel(field.deathdate,'regular-datepicker') }}
+        {{ formmacros.field(field.deathtime) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro fieldEncounterorder(field,cycle) %}
+    {% import _self as formmacros %}
+    {% if field.vars.value.status == 'valid' %}
+        {{ form_errors(field) }}
+        {{ form_widget(field.others) }}
+        {{ formmacros.field(field.source) }}
+        {{ formmacros.field(field.orderinfo) }}
+    {% endif %}
+{% endmacro %}
 
 {############################ Objects ###########################}
 
@@ -889,33 +899,6 @@
         {{ formmacros.patientExtraForm(patient,flag,uid,cycle,status) }}
 
     </div>
-{% endmacro %}
-
-{% macro patientExtraForm( patient, datastructure, uid, cycle, status ) %}
-
-    {% if datastructure and datastructure == "datastructure" %}
-
-        {% import _self as formmacros %}
-
-        <h5>Extra data structure fields:</h5>
-
-        {% if patient.race is defined %}
-            {{ formmacros.inputArrayField(patient.race,cycle,"patientrace","","","","",status) }}
-        {% endif %}
-
-        {% if patient.deceased is defined %}
-            {% for deceased in patient.deceased %}
-                {{ formmacros.fieldDeceased(deceased,cycle) }}
-            {% endfor %}
-        {% endif %}
-
-        {% if patient.contactinfo is defined %}
-            {{ formmacros.inputArrayField(patient.contactinfo,cycle,"patientcontactinfo","","","","",status) }}
-        {% endif %}
-
-
-    {% endif %}
-
 {% endmacro %}
 
 
@@ -1013,10 +996,10 @@
         {% endif %}
 
 
+        {{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}
+
     </div>
 {% endmacro %}
-
-
 
 {% macro partForm( part, flag, uid, cycle, status, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml,diseaseTypeHtml ) %}
 
@@ -1168,8 +1151,62 @@
 
 {############################ END OF Objects ###########################}
 
+{############################ Extra Fields ###########################}
+{% macro patientExtraForm( patient, datastructure, uid, cycle, status ) %}
+
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% import _self as formmacros %}
+
+        <h5>Extra data structure fields:</h5>
+
+        {% if patient.race is defined %}
+            {{ formmacros.inputArrayField(patient.race,cycle,"patientrace","","","","",status) }}
+        {% endif %}
+
+        {% if patient.deceased is defined %}
+            {% for deceased in patient.deceased %}
+                {{ formmacros.fieldDeceased(deceased,cycle) }}
+            {% endfor %}
+        {% endif %}
+
+        {% if patient.contactinfo is defined %}
+            {{ formmacros.inputArrayField(patient.contactinfo,cycle,"patientcontactinfo","","","","",status) }}
+        {% endif %}
 
 
+    {% endif %}
+
+{% endmacro %}
 
 
+{% macro procedureExtraForm( procedure, datastructure, uid, cycle, status ) %}
+
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% import _self as formmacros %}
+
+        <h5>Extra data structure fields:</h5>
+
+        {% if procedure.location is defined %}
+            {{ formmacros.inputArrayField(procedure.location,cycle,"procedurelocation","","","","",status) }}
+        {% endif %}
+
+        {% if procedure.encounterorder is defined %}
+            {#{{ formmacros.inputArrayField(procedure.ordersource,cycle,"procedureordersource","","","","",status) }}#}
+            {% for encounterorder in procedure.encounterorder %}
+                {{ formmacros.fieldEncounterorder(encounterorder,cycle) }}
+            {% endfor %}
+        {% endif %}
+
+        {% if procedure.procedureorder is defined %}
+            {% for procedureorder in procedure.procedureorder %}
+                {{ formmacros.fieldEncounterorder(procedureorder,cycle) }}
+            {% endfor %}
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+{############################ EOF Extra Fields ###########################}
 

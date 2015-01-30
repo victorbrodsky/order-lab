@@ -54,15 +54,6 @@ class ProcedureType extends AbstractType
             'prototype_name' => '__accession__',
         ));
 
-        //simple fields
-
-//        $builder->add('encounterDate', 'date', array(
-//            'label' => "Encounter Date:",
-//            'widget' => 'single_text',
-//            'required' => false,
-//            'format' => 'MM-dd-yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
-//            'attr' => array('class' => 'datepicker form-control patientdob-mask proceduredate-field', 'style'=>'margin-top: 0;'),
-//        ));
         $builder->add('encounterDate', 'collection', array(
             'type' => new ProcedureEncounterDateType($this->params, null),
             'allow_add' => true,
@@ -133,12 +124,7 @@ class ProcedureType extends AbstractType
             'prototype_name' => '__procedurepatage__',
         ));
 
-//        $builder->add('pathistory', 'textarea', array(
-//            'max_length'=>10000,
-//            'required'=>false,
-//            'label'=>'Clinical History (at the time of encounter):',
-//            'attr' => array('class'=>'textarea form-control procedurehistory-field'),
-//        ));
+        //pathistory'
         $attr = array('class'=>'textarea form-control procedurehistory-field');
         $gen_attr = array('label'=>"Clinical History (at the time of encounter)",'class'=>'Oleg\OrderformBundle\Entity\ProcedurePathistory','type'=>null);
         $builder->add('pathistory', 'collection', array(
@@ -151,6 +137,47 @@ class ProcedureType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__procedurepathistory__',
         ));
+
+
+
+        //extra data-structure fields
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+
+            //echo "flag datastructure=".$this->params['datastructure']."<br>";
+
+            $builder->add('location', 'collection', array(
+                'type' => new ProcedureLocationType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__procedurelocation__',
+            ));
+
+
+            $builder->add('encounterorder', 'collection', array(
+                'type' => new ProcedureEncounterorderType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__procedureencounterorder__',
+            ));
+
+            $builder->add('procedureorder', 'collection', array(
+                'type' => new ProcedureProcedureorderType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__procedureprocedureorder__',
+            ));
+
+        }
+
         
     }
 

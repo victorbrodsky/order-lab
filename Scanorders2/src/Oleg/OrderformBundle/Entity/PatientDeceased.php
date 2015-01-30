@@ -28,7 +28,7 @@ class PatientDeceased extends PatientArrayFieldAbstract
     private $deceased;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $deathdate;
 

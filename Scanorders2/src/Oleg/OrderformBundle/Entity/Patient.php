@@ -90,6 +90,7 @@ class Patient extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="PatientContactinfo", mappedBy="patient", cascade={"persist"})
      */
     private $contactinfo;
+    ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
 
@@ -717,7 +718,7 @@ class Patient extends ObjectAbstract
     }
     public function addRace($race)
     {
-        if( !$this->race->contains($race) ) {
+        if( $race && !$this->race->contains($race) ) {
             $this->race->add($race);
             $race->setPatient($this);
         }
@@ -736,7 +737,7 @@ class Patient extends ObjectAbstract
     }
     public function addDeceased($deceased)
     {
-        if( !$this->deceased->contains($deceased) ) {
+        if( $deceased && !$this->deceased->contains($deceased) ) {
             $this->deceased->add($deceased);
             $deceased->setPatient($this);
         }
@@ -754,7 +755,7 @@ class Patient extends ObjectAbstract
     }
     public function addContactinfo($contactinfo)
     {
-        if( !$this->contactinfo->contains($contactinfo) ) {
+        if( $contactinfo && !$this->contactinfo->contains($contactinfo) ) {
             $this->contactinfo->add($contactinfo);
             $contactinfo->setPatient($this);
         }
