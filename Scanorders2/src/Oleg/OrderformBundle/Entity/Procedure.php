@@ -110,6 +110,8 @@ class Procedure extends ObjectAbstract
      */
     private $inpatientinfo;
 
+    //TODO: and add just general location?
+
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
