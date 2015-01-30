@@ -88,16 +88,19 @@ class Procedure extends ObjectAbstract
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
+     * Encounter location
      * @ORM\OneToMany(targetEntity="ProcedureLocation", mappedBy="procedure", cascade={"persist"})
      */
     private $location;
 
     /**
+     * Encounter order
      * @ORM\OneToMany(targetEntity="ProcedureEncounterorder", mappedBy="procedure", cascade={"persist"})
      */
     private $encounterorder;
 
     /**
+     * Procedure order
      * @ORM\OneToMany(targetEntity="ProcedureProcedureorder", mappedBy="procedure", cascade={"persist"})
      */
     private $procedureorder;
