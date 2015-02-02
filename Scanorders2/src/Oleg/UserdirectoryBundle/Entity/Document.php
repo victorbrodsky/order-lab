@@ -60,6 +60,31 @@ class Document {
     private  $file;
 
     /**
+     * @ORM\ManyToOne(targetEntity="DocumentTypeList")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=true)
+     */
+    private $type;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", nullable=true)
+     */
+    protected $creator;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="createdate", type="datetime", nullable=true)
+     */
+    private $createdate;
+
+
+
+    public function __construct($creator=null) {
+        $this->setCreator($creator);
+    }
+
+
+    /**
      * @param mixed $id
      */
     public function setId($id)
@@ -157,6 +182,53 @@ class Document {
     {
         return $this->uploadDirectory;
     }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setCreatedate()
+    {
+        $this->createdate = new \DateTime();
+    }
+    public function getCreatedate()
+    {
+        return $this->createdate;
+    }
+
+    /**
+     * @param mixed $creator
+     */
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+
+
 
 
     public function __toString() {

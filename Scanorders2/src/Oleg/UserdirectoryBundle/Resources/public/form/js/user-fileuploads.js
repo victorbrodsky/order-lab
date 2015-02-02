@@ -438,6 +438,8 @@ function getElementInfoById_Scan( id, name ) {
     var idDel = null;
     var nameDel = null;
 
+    console.log('id='+id);
+
     if( id.indexOf("_documents_") !== -1 ) {
         idDel = "_paper_";  //"_documents_";
         nameDel = "[paper]";    //"[documents]";

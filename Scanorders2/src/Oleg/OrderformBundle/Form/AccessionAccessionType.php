@@ -65,6 +65,8 @@ class AccessionAccessionType extends AbstractType
 			'attr' => array('style'=>'display:none;')
         ));
 
+
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

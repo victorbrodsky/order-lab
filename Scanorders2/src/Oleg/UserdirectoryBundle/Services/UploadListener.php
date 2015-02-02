@@ -50,7 +50,10 @@ class UploadListener {
         //echo "filename=".$filename."<br>";
         $size = $file->getSize();
 
-        $object = new Document();
+        //creator: subjectUser
+        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+
+        $object = new Document($user);
         $object->setOriginalname($originalfilename);
         $object->setUniquename($uniquefilename);
         $object->setUploadDirectory($path);

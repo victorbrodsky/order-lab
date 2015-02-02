@@ -16,8 +16,15 @@ class DocumentRepository extends EntityRepository {
             return $documentHolder;
         }
 
+        if( count($documentHolder->getDocuments()) == 0 ) {
+            return $documentHolder;
+        }
+
         //echo $documentHolder. ", id=".$documentHolder->getId()."<br>";
         //echo "<br>before processing holder count=".count($documentHolder->getDocuments())."<br>";
+
+        //get type by $documentHolder class
+        $docType = $this->getDocumentTypeByHolder($documentHolder);
 
         foreach( $documentHolder->getDocuments() as $doc ) {
             //echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
@@ -26,8 +33,17 @@ class DocumentRepository extends EntityRepository {
 
                 $documentHolder->removeDocument($doc);
 
+                //echo "before get doc: id=".$doc->getId()."<br>";
+
                 $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
+
                 if( $docDb ) {
+
+                    //set type if not set
+                    if( !$docDb->getType() && $docType ) {
+                        $docDb->setType($docType);
+                    }
+
                     //echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
                     $documentHolder->addDocument($docDb);
                 }
@@ -42,6 +58,47 @@ class DocumentRepository extends EntityRepository {
         //exit('eof documents processing');
 
         return $documentHolder;
+    }
+
+
+    public function getDocumentTypeByHolder( $documentHolder ) {
+
+        if( $documentHolder == null ) {
+            return null;
+        }
+
+        $class = new \ReflectionClass($documentHolder);
+        $className = $class->getShortName();
+
+        $documentType = null;
+        $doctypeStr = null;
+
+        switch( $className ) {
+            case 'AdminComment':
+            case 'ConfidentialComment':
+            case 'PrivateComment':
+            case 'PublicComment':
+                $doctypeStr = 'Comment Document';
+                break;
+            case 'PartPaper':
+                $doctypeStr = 'Part Document';
+                break;
+            case 'User':
+                $doctypeStr = 'Avatar Image';
+                break;
+            default:
+                //
+        }
+
+        if( $doctypeStr ) {
+            $documentType = $this->_em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName($doctypeStr);
+        }
+
+        //echo "documentType=".$documentType."<br>";
+        //exit('className='.$className);
+
+        return $documentType;
+
     }
 
 }

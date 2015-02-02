@@ -852,6 +852,38 @@
     {% endif %}
 {% endmacro %}
 
+{% macro fieldLaborder(field,cycle) %}
+    {% import _self as formmacros %}
+    {% if field.vars.value.status == 'valid' %}
+        {{ form_errors(field) }}
+        {{ form_widget(field.others) }}
+        {{ formmacros.field(field.source) }}
+        {{ formmacros.field(field.orderinfo) }}
+
+        {#images#}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {{form_label(field.documents)}}
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formmacros.fieldpaper(field,cycle,'prototype') }}
+            </div>
+        </div>
+
+        {{ formmacros.field(field.imageTitle) }}
+
+        {% for imageComment in field.imageComments %}
+            {{ formmacros.field(field.imageComments) }}
+        {% endfor %}
+
+        {{ formmacros.field(field.imageDevice) }}
+        {{ formmacros.fieldDateLabel(field.imageDatetime,'regular-datepicker') }}
+        {{ formmacros.field(field.imageProvider) }}
+
+
+    {% endif %}
+{% endmacro %}
+
 
 {############################ Objects ###########################}
 
@@ -1013,6 +1045,8 @@
 
 
         {{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}
+
+        {{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}
 
     </div>
 {% endmacro %}
@@ -1202,7 +1236,7 @@
 
         {% import _self as formmacros %}
 
-        <h5>Extra data structure fields:</h5>
+        <h5>Extra data structure fields for Procedure/Encounter:</h5>
 
         {% if procedure.location is defined %}
             {{ formmacros.inputArrayField(procedure.location,cycle,"procedurelocation","","","","",status) }}
@@ -1230,5 +1264,25 @@
     {% endif %}
 
 {% endmacro %}
+
+{% macro accessionExtraForm( accession, datastructure, uid, cycle, status ) %}
+
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% import _self as formmacros %}
+
+        <h5>Extra data structure fields for Accession:</h5>
+
+        {% if accession.laborder is defined %}
+            {#{{ formmacros.inputArrayField(procedure.ordersource,cycle,"procedureordersource","","","","",status) }}#}
+            {% for laborder in accession.laborder %}
+                {{ formmacros.fieldLaborder(laborder,cycle) }}
+            {% endfor %}
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
 {############################ EOF Extra Fields ###########################}
 

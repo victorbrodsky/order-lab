@@ -56,7 +56,7 @@ class PartPaper extends PartArrayFieldAbstract
     public function addDocument($document)
     {
         if( $document == null ) {
-            $document = new Document();
+            $document = new Document($this->getProvider());
         }
 
         if( !$this->documents->contains($document) ) {

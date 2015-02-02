@@ -105,7 +105,7 @@ abstract class BaseComment extends BaseUserAttributes {
     public function addDocument($document)
     {
         if( $document == null ) {
-            $document = new Document();
+            $document = new Document($this->getAuthor());
         }
 
         if( !$this->documents->contains($document) ) {

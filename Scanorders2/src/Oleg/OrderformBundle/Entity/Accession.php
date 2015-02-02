@@ -45,11 +45,15 @@ class Accession extends ObjectAbstract {
      **/
     protected $orderinfo;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="accessions")
-//     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-//     */
-//    protected $institution;
+
+
+    ///////////////// additional extra fields not shown on scan order /////////////////
+    /**
+     * Encounter order
+     * @ORM\OneToMany(targetEntity="AccessionLaborder", mappedBy="accession", cascade={"persist"})
+     */
+    private $laborder;
+    ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
 
@@ -61,15 +65,24 @@ class Accession extends ObjectAbstract {
         $this->accession = new ArrayCollection();
         $this->accessionDate = new ArrayCollection();
 
+        //extra
+        $this->laborder = new ArrayCollection();
+
         if( $withfields ) {
             $this->addAccession( new AccessionAccession($status,$provider,$source) );
             $this->addAccessionDate( new AccessionAccessionDate($status,$provider,$source) );
+
+            //testing data structure
+            $this->addExtraFields($status,$provider,$source);
         }
     }
 
     public function makeDependClone() {
         $this->accession = $this->cloneDepend($this->accession,$this);
         $this->accessionDate = $this->cloneDepend($this->accessionDate,$this);
+
+        //extra fields
+        $this->laborder = $this->cloneDepend($this->laborder,$this);
     }
 
     public function __toString()
@@ -232,6 +245,34 @@ class Accession extends ObjectAbstract {
     }
 
 
+
+
+    ///////////////////////// Extra fields /////////////////////////
+    public function addExtraFields($status,$provider,$source) {
+        $this->addLaborder( new AccessionLaborder($status,$provider,$source) );
+    }
+
+    public function getLaborder()
+    {
+        return $this->laborder;
+    }
+    public function addLaborder($laborder)
+    {
+        if( $laborder && !$this->laborder->contains($laborder) ) {
+            $this->laborder->add($laborder);
+            $laborder->setAccession($this);
+        }
+
+        return $this;
+    }
+    public function removeLaborder($laborder)
+    {
+        $this->laborder->removeElement($laborder);
+    }
+    ///////////////////////// EOF Extra fields /////////////////////////
+
+
+
     //parent, children, key field methods
     public function setParent($parent) {
         $this->setProcedure($parent);
@@ -288,7 +329,11 @@ class Accession extends ObjectAbstract {
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Accession', 'AccessionDate');
+        $fieldsArr = array(
+            'Accession', 'AccessionDate',
+            //extra fields
+            'Laborder'
+        );
         return $fieldsArr;
     }
 

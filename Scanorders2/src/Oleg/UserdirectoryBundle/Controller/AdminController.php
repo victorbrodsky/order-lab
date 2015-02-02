@@ -6,6 +6,7 @@ use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
 use Oleg\UserdirectoryBundle\Entity\CompletionReasonList;
+use Oleg\UserdirectoryBundle\Entity\DocumentTypeList;
 use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use Oleg\UserdirectoryBundle\Entity\FellowshipTitleList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
@@ -131,6 +132,8 @@ class AdminController extends Controller
 
         $count_sourcesystems = $this->generateSourceSystems();
 
+        $count_documenttypes = $this->generateDocumentTypes();
+
         //training
         $count_completionReasons = $this->generateCompletionReasons();
         $count_trainingDegrees = $this->generateTrainingDegrees();
@@ -173,6 +176,7 @@ class AdminController extends Controller
             //'Minor Trainings ='.$count_minorTrainings.', '.
             'Honor Trainings ='.$count_HonorTrainings.', '.
             'Fellowship Titles ='.$count_FellowshipTitles.' '.
+            'Document Types ='.$count_documenttypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -1122,6 +1126,7 @@ class AdminController extends Controller
             'Scan Order',
             'WCMC Epic Practice Management',
             'WCMC Epic Ambulatory EMR',
+            'NYH Paper Requisition',
             'Written or oral referral'
         );
 
@@ -1145,6 +1150,48 @@ class AdminController extends Controller
 
     }
 
+
+    public function generateDocumentTypes() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Avatar Image',
+            'Comment Document',
+            'Autopsy Image',
+            'Gross Image',
+            'Part Document',
+            'Block Image',
+            'Microscopic Image',
+            'Whole Slide Image',
+            'Requisition Form Image',
+            'Outside Report Reference Representation'
+        );
+
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new DocumentTypeList();
+            $this->setDefaultList($entity,$count,$username,$value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
     public function generateTerminationTypes() {
 

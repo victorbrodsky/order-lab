@@ -58,6 +58,24 @@ class AccessionType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__part__',
         ));
+
+
+        //extra data-structure fields
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+
+            echo "accession flag datastructure=".$this->params['datastructure']."<br>";
+
+            $builder->add('laborder', 'collection', array(
+                'type' => new AccessionLaborderType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__accessionlaborder__',
+            ));
+
+        }
         
     }
 

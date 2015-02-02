@@ -2374,12 +2374,21 @@ class UserController extends Controller
 
             $uploadDir = $uploadPath . "/" .$crop->getAvatarPostfix();
 
-            $object = new Document();
+            $em = $this->getDoctrine()->getManager();
+
+            //document's creator
+            $user = $this->get('security.context')->getToken()->getUser();
+
+            $object = new Document($user);
             $object->setOriginalname(NULL);
             $object->setUniquename($uniquefilename);
             $object->setUploadDirectory($uploadDir);
             $object->setSize($size);
-            $em = $this->getDoctrine()->getManager();
+
+            //document's type
+            $documentType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Avatar Image');
+            $object->setType($documentType);
+
             $em->persist($object);
             $em->flush($object);
 

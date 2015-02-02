@@ -614,6 +614,10 @@ class MultiScanOrderController extends Controller {
                         continue;
                     }
 
+                    if( $datastructure ) {
+                        $accession->addExtraFields('valid',$user,$source); //invalid - to not show on view
+                    }
+
                     //part
                     foreach( $accession->getPart() as $part ) {
                        if( !$this->hasOrderInfo($part,$id) ) {
