@@ -188,6 +188,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //exit('exit part doc');
         }
 
+        if( $className == 'Accession' ) {
+            //process images
+        }
+
 
         //Check if institution of orderinfo and entity are match.
         //Since we set institution of entity from orderinfo on the previous step, the institution of orderinfo and entity must be the same.

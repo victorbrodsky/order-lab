@@ -53,6 +53,14 @@ class Accession extends ObjectAbstract {
      * @ORM\OneToMany(targetEntity="AccessionLaborder", mappedBy="accession", cascade={"persist"})
      */
     private $laborder;
+
+    //TODO: requisition form location
+
+    /**
+     * Encounter order
+     * @ORM\OneToMany(targetEntity="AccessionOutsidereport", mappedBy="accession", cascade={"persist"})
+     */
+    private $outsidereport;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
@@ -67,6 +75,7 @@ class Accession extends ObjectAbstract {
 
         //extra
         $this->laborder = new ArrayCollection();
+        $this->outsidereport = new ArrayCollection();
 
         if( $withfields ) {
             $this->addAccession( new AccessionAccession($status,$provider,$source) );
@@ -83,6 +92,7 @@ class Accession extends ObjectAbstract {
 
         //extra fields
         $this->laborder = $this->cloneDepend($this->laborder,$this);
+        $this->outsidereport = $this->cloneDepend($this->outsidereport,$this);
     }
 
     public function __toString()
@@ -250,6 +260,7 @@ class Accession extends ObjectAbstract {
     ///////////////////////// Extra fields /////////////////////////
     public function addExtraFields($status,$provider,$source) {
         $this->addLaborder( new AccessionLaborder($status,$provider,$source) );
+        $this->addOutsidereport( new AccessionOutsidereport($status,$provider,$source) );
     }
 
     public function getLaborder()
@@ -268,6 +279,24 @@ class Accession extends ObjectAbstract {
     public function removeLaborder($laborder)
     {
         $this->laborder->removeElement($laborder);
+    }
+
+    public function getOutsidereport()
+    {
+        return $this->outsidereport;
+    }
+    public function addOutsidereport($outsidereport)
+    {
+        if( $outsidereport && !$this->outsidereport->contains($outsidereport) ) {
+            $this->outsidereport->add($outsidereport);
+            $outsidereport->setAccession($this);
+        }
+
+        return $this;
+    }
+    public function removeOutsidereport($outsidereport)
+    {
+        $this->outsidereport->removeElement($outsidereport);
     }
     ///////////////////////// EOF Extra fields /////////////////////////
 
@@ -332,7 +361,7 @@ class Accession extends ObjectAbstract {
         $fieldsArr = array(
             'Accession', 'AccessionDate',
             //extra fields
-            'Laborder'
+            'Laborder', 'Outsidereport'
         );
         return $fieldsArr;
     }

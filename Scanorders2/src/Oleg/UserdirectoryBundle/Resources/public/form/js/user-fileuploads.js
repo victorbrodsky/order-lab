@@ -377,6 +377,16 @@ function getElementInfoById( id, name ) {
         var res = getElementInfoById_User( id, name );
     }
 
+    //check document count
+//    var holder = $('#'+id).closest('.file-upload-dropzone');
+//    var documents = holder.find('.dz-image-preview');
+//    var documentCount = documents.length;
+//    console.log( parseInt(res['documentCount']) + "<" + parseInt(documentCount) );
+//    if( parseInt(res['documentCount']) < parseInt(documentCount) ) {
+//        res['documentCount'] = documentCount;
+//        console.log( "documentCount=" + res['documentCount'] );
+//    }
+
     return res;
 }
 
@@ -425,6 +435,9 @@ function getElementInfoById_User( id, name ) {
 
 function getElementInfoById_Scan( id, name ) {
 
+    //console.log('id='+id);
+    //console.log('name='+name);
+
     //id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_paper_0_name
 
     //  0           1           2           3    4    5      6      7    8   9  10   11     12   13     14  15
@@ -433,16 +446,24 @@ function getElementInfoById_Scan( id, name ) {
     var bundleName = idArr[1];
     //var commentType = idArr[3];
     //var commentCount = idArr[4];
-    var documentCount = idArr[14];
+    //var documentCount = idArr[14];
+    var documentCount = 0;
 
     var idDel = null;
     var nameDel = null;
-
-    console.log('id='+id);
+    var docname = "[paper][0]";
+    var docid = "_paper_0";
 
     if( id.indexOf("_documents_") !== -1 ) {
         idDel = "_paper_";  //"_documents_";
         nameDel = "[paper]";    //"[documents]";
+
+        //get documentcount
+        var docArr = id.split("_documents_");
+        var documentId = docArr[1];
+        documentCount = documentId.replace("_id", "");
+        documentCount = parseInt(documentCount);
+
     } else {
         //when collection does not have a file => use first collection field
         if( id.indexOf("_partname_") !== -1 ) {
@@ -455,7 +476,25 @@ function getElementInfoById_Scan( id, name ) {
             idDel = "_sourceOrgan_";
             nameDel = "[sourceOrgan]";
         }
+        if( id.indexOf("_imageTitle") !== -1 ) {
+            //id: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_laborder_0_imageTitle
+            //name: oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][laborder][0][imageTitle]
+            idDel = "_imageTitle";
+            nameDel = "[imageTitle]";
+            docname = "";
+            docid = "";
+        }
     }
+
+    if( id.indexOf("_laborder_") !== -1 && id.indexOf("_documents_") !== -1 ) {
+        //id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_laborder_0_documents_0_id
+        //name=oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][laborder][0][documents][0][id]
+        idDel = "_laborder_";
+        nameDel = "[laborder]";
+        docname = "[laborder][0]";
+        docid = "_laborder_0";
+    }
+
 
     if( idDel == null || nameDel == null ) {
         throw new Error("id or name delimeter is empty, idDel="+idDel+", nameDel="+nameDel);
@@ -464,7 +503,7 @@ function getElementInfoById_Scan( id, name ) {
     //up to documents string: oleg_userdirectorybundle_user_publicComments_0_
     var idArr = id.split(idDel);
     var beginIdStr = idArr[0];
-    beginIdStr = beginIdStr + "_paper_0";
+    beginIdStr = beginIdStr + docid;
 
     var res = new Array();
     res['bundleName'] = bundleName;
@@ -477,7 +516,7 @@ function getElementInfoById_Scan( id, name ) {
         //up to documents string: oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][part][0]
         var nameArr = name.split(nameDel);
         var beginNameStr = nameArr[0];
-        beginNameStr = beginNameStr + "[paper][0]";
+        beginNameStr = beginNameStr + docname;
         res['beginNameStr'] = beginNameStr;
     }
 

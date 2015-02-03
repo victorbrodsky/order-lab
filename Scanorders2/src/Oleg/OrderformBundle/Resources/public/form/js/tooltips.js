@@ -252,21 +252,23 @@ function highlightBtnAndKey( element, fieldParentName ) {
 
     var keyfield = elementObj.keyfield;
 
-    elementObj.element.on('show.bs.tooltip', function () {
-        //printF(element,"showing input:");
-        //printF(parent,"showing parent:");
-        btn.removeClass('btn-default');
-        btn.addClass('btn-info');
-        keyfield.addClass('alert-info');
-    })
+    if( keyfield ) {
+        elementObj.element.on('show.bs.tooltip', function () {
+            //printF(element,"showing input:");
+            //printF(parent,"showing parent:");
+            btn.removeClass('btn-default');
+            btn.addClass('btn-info');
+            keyfield.addClass('alert-info');
+        })
 
-    elementObj.element.on('hide.bs.tooltip', function () {
-        //printF(element,"hiding input:");
-        //printF(parent,"hiding parent:");
-        btn.removeClass('btn-info');
-        btn.addClass('btn-default');
-        keyfield.removeClass('alert-info');
-    })
+        elementObj.element.on('hide.bs.tooltip', function () {
+            //printF(element,"hiding input:");
+            //printF(parent,"hiding parent:");
+            btn.removeClass('btn-info');
+            btn.addClass('btn-default');
+            keyfield.removeClass('alert-info');
+        })
+    }
 
 }
 
@@ -357,11 +359,13 @@ function keyAndBtnObject( element, fieldParentName ) {
         }
     } else {
         //printF(this.keyfield,'regular input keyfield:');
-        var readonly = this.keyfield.attr("readonly");
-        if( readonly && readonly.toLowerCase()!=='false' ) {
-            this.readonly = true;
-        } else {
-            this.readonly = false;
+        if( this.keyfield ) {
+            var readonly = this.keyfield.attr("readonly");
+            if( readonly && readonly.toLowerCase()!=='false' ) {
+                this.readonly = true;
+            } else {
+                this.readonly = false;
+            }
         }
     }
 

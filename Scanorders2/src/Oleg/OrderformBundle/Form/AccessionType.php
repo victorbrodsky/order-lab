@@ -63,7 +63,7 @@ class AccessionType extends AbstractType
         //extra data-structure fields
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
 
-            echo "accession flag datastructure=".$this->params['datastructure']."<br>";
+            //echo "accession flag datastructure=".$this->params['datastructure']."<br>";
 
             $builder->add('laborder', 'collection', array(
                 'type' => new AccessionLaborderType($this->params, null),
@@ -73,6 +73,16 @@ class AccessionType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__accessionlaborder__',
+            ));
+
+            $builder->add('outsidereport', 'collection', array(
+                'type' => new AccessionOutsidereportType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__accessionoutsidereport__',
             ));
 
         }

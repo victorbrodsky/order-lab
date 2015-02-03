@@ -41,8 +41,9 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
  */
 class MultiScanOrderController extends Controller {
 
+    private $datastructure = null;
     //for testing data structure
-    private $datastructure = 'datastructure';
+    //private $datastructure = 'datastructure';
 
 
     /**
@@ -356,6 +357,8 @@ class MultiScanOrderController extends Controller {
 
         $entity->setProvider($user);
 
+        $entity->setSource($source);
+
         if( $lastProxy ) {
             $entity->setProxyuser($lastProxy);
         } else {
@@ -542,7 +545,7 @@ class MultiScanOrderController extends Controller {
 
         $datastructure = null;
         if( $routeName == "scan_datastructure") {
-            $actions = array('edit'); //show
+            $actions = array('edit'); //show extra fields
             $datastructure = "datastructure";
             $source = $securityUtil->getDefaultSourceSystem();
         }
@@ -567,6 +570,8 @@ class MultiScanOrderController extends Controller {
         //echo $entity->getStatus();
         //echo "<br>Patient count=".count( $entity->getPatient() );
 
+        $extraStatus = 'valid'; //invalid - to not show extra fields on view
+
         //patient
         foreach( $entity->getPatient() as $patient ) {
 
@@ -582,7 +587,7 @@ class MultiScanOrderController extends Controller {
             }
 
             if( $datastructure ) {
-                $patient->addExtraFields('valid',$user,$source); //invalid - to not show on view
+                $patient->addExtraFields($extraStatus,$user,$source);
             }
 
             //procedure
@@ -599,7 +604,7 @@ class MultiScanOrderController extends Controller {
                 }
 
                 if( $datastructure ) {
-                    $procedure->addExtraFields('valid',$user,$source); //invalid - to not show on view
+                    $procedure->addExtraFields($extraStatus,$user,$source);
                 }
 
                 //accession
@@ -615,7 +620,7 @@ class MultiScanOrderController extends Controller {
                     }
 
                     if( $datastructure ) {
-                        $accession->addExtraFields('valid',$user,$source); //invalid - to not show on view
+                        $accession->addExtraFields($extraStatus,$user,$source);
                     }
 
                     //part
@@ -692,8 +697,11 @@ class MultiScanOrderController extends Controller {
         }
 
         if( $routeName == "scan_datastructure") {
-            $disable = false;
-            $type = "edit";
+            $disable = true;
+            $type = "show";
+            //testing data structure
+            //$disable = false;
+            //$type = "edit";
         }
 
         //echo "show id=".$entity->getId()."<br>";

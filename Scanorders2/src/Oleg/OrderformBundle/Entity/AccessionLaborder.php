@@ -156,7 +156,7 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
         }
         return $this;
     }
-    public function removeDocuments($document)
+    public function removeDocument($document)
     {
         $this->documents->removeElement($document);
     }

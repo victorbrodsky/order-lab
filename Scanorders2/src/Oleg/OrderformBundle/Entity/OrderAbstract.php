@@ -61,6 +61,11 @@ class OrderAbstract {
      */
     protected $institution;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
+     */
+    protected $source;
 
 
     /**
@@ -151,6 +156,22 @@ class OrderAbstract {
     public function getInstitution()
     {
         return $this->institution;
+    }
+
+    /**
+     * @param mixed $source
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 
 

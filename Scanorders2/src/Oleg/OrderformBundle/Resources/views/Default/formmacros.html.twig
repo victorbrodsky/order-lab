@@ -861,14 +861,18 @@
         {{ formmacros.field(field.orderinfo) }}
 
         {#images#}
-        <div class="row">
-            <div class="col-xs-6" align="right">
-                {{form_label(field.documents)}}
-            </div>
-            <div class="col-xs-6" align="left">
-                {{ formmacros.fieldpaper(field,cycle,'prototype') }}
+        <p>
+        <div class="accessionlaborder">
+            <div class="row">
+                <div class="col-xs-6" align="right">
+                    {{form_label(field.documents)}}
+                </div>
+                <div class="col-xs-6" align="left">
+                    {{ formmacros.fieldpaper(field,cycle,'prototype') }}
+                </div>
             </div>
         </div>
+        </p>
 
         {{ formmacros.field(field.imageTitle) }}
 
@@ -879,6 +883,18 @@
         {{ formmacros.field(field.imageDevice) }}
         {{ formmacros.fieldDateLabel(field.imageDatetime,'regular-datepicker') }}
         {{ formmacros.field(field.imageProvider) }}
+
+
+    {% endif %}
+{% endmacro %}
+
+{% macro fieldOutsidereport(field,cycle) %}
+    {% import _self as formmacros %}
+    {% if field.vars.value.status == 'valid' %}
+        {{ form_errors(field) }}
+        {{ form_widget(field.others) }}
+        {{ formmacros.field(field.source) }}
+        {{ formmacros.field(field.orderinfo) }}
 
 
     {% endif %}
@@ -1271,13 +1287,24 @@
 
         {% import _self as formmacros %}
 
-        <h5>Extra data structure fields for Accession:</h5>
-
         {% if accession.laborder is defined %}
+            <h5>Extra data structure fields for Accession's Lab Order:</h5>
             {#{{ formmacros.inputArrayField(procedure.ordersource,cycle,"procedureordersource","","","","",status) }}#}
-            {% for laborder in accession.laborder %}
-                {{ formmacros.fieldLaborder(laborder,cycle) }}
-            {% endfor %}
+            <div class="form-element-holder">
+                {% for laborder in accession.laborder %}
+                    {{ formmacros.fieldLaborder(laborder,cycle) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if accession.outsidereport is defined %}
+            <h5>Extra data structure fields for Accession's Outside Report:</h5>
+            {#{{ formmacros.inputArrayField(procedure.ordersource,cycle,"procedureordersource","","","","",status) }}#}
+            <div class="form-element-holder">
+                {% for outsidereport in accession.outsidereport %}
+                    {{ formmacros.fieldOutsidereport(outsidereport,cycle) }}
+                {% endfor %}
+            </div>
         {% endif %}
 
     {% endif %}
