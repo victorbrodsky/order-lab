@@ -179,10 +179,10 @@
     border-top-left-radius: 0px;
 }
 
-.panel-procedure {
+.panel-encounter {
     border-color: #71B0E4;
 }
-.panel-procedure .panel-heading {
+.panel-encounter .panel-heading {
     color: #ffffff;
     background-color: #71B0E4;
     border-color: #71B0E4;

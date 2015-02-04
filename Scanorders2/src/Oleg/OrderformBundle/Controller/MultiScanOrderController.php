@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
+use Oleg\OrderformBundle\Entity\Encounter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -368,8 +369,11 @@ class MultiScanOrderController extends Controller {
         $patient = new Patient(true,$status,$user,$source);
         $entity->addPatient($patient);
 
+        $encounter = new Encounter(true,$status,$user,$source);
+        $patient->addEncounter($encounter);
+
         $procedure = new Procedure(true,$status,$user,$source);
-        $patient->addProcedure($procedure);
+        $encounter->addProcedure($procedure);
 
         $accession = new Accession(true,$status,$user,$source);
         $procedure->addAccession($accession);

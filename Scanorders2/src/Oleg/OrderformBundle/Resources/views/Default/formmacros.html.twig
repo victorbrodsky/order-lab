@@ -237,6 +237,7 @@
 {% macro orderinfo_panel_header(
     name, type, formtype, count, toatlLength, uid,
     patientCount,
+    encounterCount,
     procedureCount,
     accessionCount,
     partCount,
@@ -254,7 +255,7 @@
              data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}">
         </button>
 
-        {% if name == 'procedure' %}
+        {% if name == 'encounter' %}
             {% set title = 'accession' %}
         {% else %}
             {% set title = name %}
@@ -272,6 +273,7 @@
                             onclick="addSameForm(
                                 '{{ name }}',
                                 '{{ patientCount }}',
+                                '{{ encounterCount }}',
                                 '{{ procedureCount }}',
                                 '{{ accessionCount }}',
                                 '{{ partCount }}',
@@ -437,10 +439,10 @@
                 {% set btntype = 'none' %}
             {% endif %}
 
-            {% if classname == "procedurepatname" %}
+            {% if classname == "encounterpatname" %}
                 {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
-                {{ formmacros.inputField(field,cycle,"procedurepatfirstname","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
-                {{ formmacros.inputField(field,cycle,"procedurepatmiddlename","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
+                {{ formmacros.inputField(field,cycle,"encounterpatfirstname","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
+                {{ formmacros.inputField(field,cycle,"encounterpatmiddlename","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
             {% else %}
                 {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}
             {% endif %}
@@ -504,9 +506,9 @@
 
 
                     {% if showInfoDate == 0 and showInfoProvider == 0 %}
-                        {% if fieldtype == "procedurepatfirstname" %}
+                        {% if fieldtype == "encounterpatfirstname" %}
                             {{form_label(fieldThis.firstName)}}<strong>:</strong>
-                        {% elseif fieldtype == "procedurepatmiddlename" %}
+                        {% elseif fieldtype == "encounterpatmiddlename" %}
                             {{form_label(fieldThis.middleName)}}<strong>:</strong>
                         {% elseif fieldtype == "paper" %}
                             {{form_label(fieldThis.documents)}}<strong>:</strong>
@@ -519,9 +521,9 @@
                             {% endif %}
                         {% endif %}
                     {% else %}
-                        {% if fieldtype == "procedurepatfirstname" %}
+                        {% if fieldtype == "encounterpatfirstname" %}
                             {{form_label(fieldThis.firstName)}}
-                        {% elseif fieldtype == "procedurepatmiddlename" %}
+                        {% elseif fieldtype == "encounterpatmiddlename" %}
                             {{form_label(fieldThis.middleName)}}
                         {% elseif fieldtype == "paper" %}
                             {{form_label(fieldThis.documents)}}
@@ -581,9 +583,9 @@
                     {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
                 {% elseif fieldtype == "blockspecialStains" %}
                     {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
-                {% elseif fieldtype == "procedurepatfirstname" %}
+                {% elseif fieldtype == "encounterpatfirstname" %}
                     {{ form_widget(fieldThis.firstName) }}
-                {% elseif fieldtype == "procedurepatmiddlename" %}
+                {% elseif fieldtype == "encounterpatmiddlename" %}
                     {{ form_widget(fieldThis.middleName) }}
                 {% else %}
                     {% if fieldThis.field is defined %}
@@ -827,13 +829,13 @@
     {% endif %}
 {% endmacro %}
 
-{% macro fieldEncounterorder(field,cycle) %}
+{% macro fieldGeneralOrder(field,cycle) %}
     {% import _self as formmacros %}
     {% if field.vars.value.status == 'valid' %}
         {{ form_errors(field) }}
         {{ form_widget(field.others) }}
         {{ formmacros.field(field.source) }}
-        {{ formmacros.field(field.orderinfo) }}
+        {{ formmacros.field(field.field) }}
     {% endif %}
 {% endmacro %}
 
@@ -966,7 +968,20 @@
 {% endmacro %}
 
 
-{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml, accessiondateHtml, encounterdateHtml, patsuffixHtml, patlastnameHtml,patfirstnameHtml,patmiddlenameHtml, patageHtml,patsexHtml,patpathistoryHtml ) %}
+{% macro accessionForm( encounter, procedure, accession, flag, uid, cycle, status,
+                        procedurenameHtml,
+                        accessionHtml,
+                        accessiondateHtml,
+                        encounterdateHtml,
+                        patsuffixHtml,
+                        patlastnameHtml,
+                        patfirstnameHtml,
+                        patmiddlenameHtml,
+                        patageHtml,
+                        patsexHtml,
+                        patpathistoryHtml
+) %}
+
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}
@@ -989,80 +1004,79 @@
         {% endif %}
 
         {#{{ formmacros.field(procedure.name) }}#}
-        {% if procedureHtml is not defined or procedureHtml == "" %}
+        {% if procedurenameHtml is not defined or procedurenameHtml == "" %}
             {{ formmacros.inputArrayField(procedure.name,cycle,"procedurename","","","","",status) }}
         {% else  %}
-            <p><div class="procedurename">{{ procedureHtml }}</div></p>
+            <p><div class="procedurename">{{ procedurenameHtml }}</div></p>
         {% endif %}
 
         {% if encounterHtml is not defined or encounterHtml == "" %}
-            {#{{ formmacros.inputArrayField(procedure.encounter,cycle,"procedureencounter","","","nolabel") }}#}
-            {#{{ form_widget(procedure.encounter|first) }}#}
-            {% for encounter in procedure.encounter %}
-                {% if encounter.vars.value.status == 'valid' %}
-                    {{ form_row(encounter, {'label': false}) }}
+            {% for number in encounter.number %}
+                {% if number.vars.value.status == 'valid' %}
+                    {{ form_row(number, {'label': false}) }}
                 {% endif %}
             {% endfor %}
         {% else  %}
-            <p><div class="procedureencounter">{{ encounterHtml }}</div></p>
+            <p><div class="encounternumber">{{ encounterHtml }}</div></p>
         {% endif %}
 
         {#patient's data: single simple fields#}
         {% if encounterdateHtml is not defined or encounterdateHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.encounterDate,cycle,"procedureencounterdate","date","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
         {% else  %}
-            <p><div class="procedureencounterdate">{{ encounterdateHtml }}</div></p>
+            <p><div class="encounterdate">{{ encounterdateHtml }}</div></p>
         {% endif %}
 
         {% if patsuffixHtml is not defined or patsuffixHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.patsuffix,cycle,"procedurepatsuffix","","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepatsuffix">{{ patsuffixHtml }}</div></p>
+            <p><div class="encounterpatsuffix">{{ patsuffixHtml }}</div></p>
         {% endif %}
 
         {% if patlastnameHtml is not defined or patlastnameHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.patlastname,cycle,"procedurepatlastname","","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepatlastname">{{ patlastnameHtml }}</div></p>
+            <p><div class="encounterpatlastname">{{ patlastnameHtml }}</div></p>
         {% endif %}
 
         {% if patfirstameHtml is not defined or patfirstnameHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.patfirstname,cycle,"procedurepatfirstname","","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepatfirstname">{{ patfirstnameHtml }}</div></p>
+            <p><div class="encounterpatfirstname">{{ patfirstnameHtml }}</div></p>
         {% endif %}
 
         {% if patmiddlenameHtml is not defined or patmiddlenameHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.patmiddlename,cycle,"procedurepatmiddlename","","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepatmiddlename">{{ patmiddlenameHtml }}</div></p>
+            <p><div class="encounterpatmiddlename">{{ patmiddlenameHtml }}</div></p>
         {% endif %}
 
-        {#{{ formmacros.field(procedure.patsex) }}#}
+        {#{{ formmacros.field(encounter.patsex) }}#}
         {% if patsexHtml is not defined or patsexHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.patsex,cycle,"procedurepatsex","","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepatsex">{{ patsexHtml }}</div></p>
+            <p><div class="encounterpatsex">{{ patsexHtml }}</div></p>
         {% endif %}
 
-        {#{{ formmacros.field(procedure.patage) }}#}
+        {#{{ formmacros.field(encounter.patage) }}#}
         {% if patageHtml is not defined or patageHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.patage,cycle,"procedurepatage","","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.patage,cycle,"encounterpatage","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepatage">{{ patageHtml }}</div></p>
+            <p><div class="encounterpatage">{{ patageHtml }}</div></p>
         {% endif %}
 
-        {#{{ formmacros.field(procedure.pathistory) }}#}
+        {#{{ formmacros.field(encounter.pathistory) }}#}
         {% if patpathistoryHtml is not defined or patpathistoryHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.pathistory,cycle,"procedurepathistory","","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.pathistory,cycle,"encounterpathistory","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepathistory">{{ patpathistoryHtml }}</div></p>
+            <p><div class="encounterpathistory">{{ patpathistoryHtml }}</div></p>
         {% endif %}
 
+        {#{{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}#}
 
-        {{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}
+        {#{{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}#}
 
-        {{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}
+        {#{{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}#}
 
     </div>
 {% endmacro %}
@@ -1246,28 +1260,49 @@
 {% endmacro %}
 
 
+{% macro encounterExtraForm( encounter, datastructure, uid, cycle, status ) %}
+
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% import _self as formmacros %}
+
+        <h5>Extra data structure fields for Encounter:</h5>
+
+        {% if encounter.location is defined %}
+            {{ formmacros.inputArrayField(encounter.location,cycle,"encounterlocation","","","","",status) }}
+        {% endif %}
+
+        {% if encounter.order is defined %}
+            {% for order in encounter.order %}
+                {{ formmacros.fieldGeneralOrder(order,cycle) }}
+            {% endfor %}
+        {% endif %}
+
+        {% if encounter.inpatientinfo is defined %}
+            {% for inpatientinfo in encounter.inpatientinfo %}
+                {{ formmacros.fieldInpatientinfo(inpatientinfo,cycle) }}
+            {% endfor %}
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
 {% macro procedureExtraForm( procedure, datastructure, uid, cycle, status ) %}
 
     {% if datastructure and datastructure == "datastructure" %}
 
         {% import _self as formmacros %}
 
-        <h5>Extra data structure fields for Procedure/Encounter:</h5>
+        <h5>Extra data structure fields for Procedure:</h5>
 
         {% if procedure.location is defined %}
             {{ formmacros.inputArrayField(procedure.location,cycle,"procedurelocation","","","","",status) }}
         {% endif %}
 
-        {% if procedure.encounterorder is defined %}
-            {#{{ formmacros.inputArrayField(procedure.ordersource,cycle,"procedureordersource","","","","",status) }}#}
-            {% for encounterorder in procedure.encounterorder %}
-                {{ formmacros.fieldEncounterorder(encounterorder,cycle) }}
-            {% endfor %}
-        {% endif %}
-
-        {% if procedure.procedureorder is defined %}
-            {% for procedureorder in procedure.procedureorder %}
-                {{ formmacros.fieldEncounterorder(procedureorder,cycle) }}
+        {% if procedure.order is defined %}
+            {% for order in procedure.order %}
+                {{ formmacros.fieldGeneralOrder(order,cycle) }}
             {% endfor %}
         {% endif %}
 

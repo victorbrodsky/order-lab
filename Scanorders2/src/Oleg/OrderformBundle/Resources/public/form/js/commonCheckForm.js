@@ -404,7 +404,7 @@ function setPatientAndProcedureAgeListener() {
         checkDobEncdateEncageConflict( $(this) );
     });
 
-    $('.patient-dob-date, .procedure-encounter-date').on("change", function(e) {
+    $('.encounter-dob-date, .encounter-date').on("change", function(e) {
 
         //printF($(this),"listener: ");
 
@@ -437,9 +437,9 @@ function setPatientAndProcedureAgeListener() {
             }
 
             //find all children procedure's encounter date
-            var procEncDates = $(this).closest('.panel-patient').find(".procedure-encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
+            var procEncDates = $(this).closest('.panel-patient').find(".encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
             if( orderformtype == "single") {
-                procEncDates = $('.singleorderinfo').find(".procedure-encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
+                procEncDates = $('.singleorderinfo').find(".encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
             }
 
             procEncDates.each( function() {
@@ -471,7 +471,7 @@ function setPatientAndProcedureAgeListener() {
         }
 
         //procedure encounter date
-        if( $(this).hasClass('procedure-encounter-date') ) {
+        if( $(this).hasClass('encounter-date') ) {
 
             //find patient dob element
             var patientdob = $(this).closest('.panel-patient').find('.form-element-holder').find('.patient-dob-date');
@@ -508,11 +508,11 @@ function setPatientAndProcedureAgeListener() {
 
     });
 
-    //element: any element from procedure object
-    function checkDobEncdateEncageConflict( procedureElement ) {
+    //element: any element from encounter object
+    function checkDobEncdateEncageConflict( encounterElement ) {
 
         //find patient dob element
-        var patientdob = procedureElement.closest('.panel-patient').find('.form-element-holder').find('.patient-dob-date');
+        var patientdob = encounterElement.closest('.panel-patient').find('.form-element-holder').find('.patient-dob-date');
         if( orderformtype == "single" ) {
             patientdob = $('.singleorderinfo').find('.patient-dob-date');
         }
@@ -520,16 +520,16 @@ function setPatientAndProcedureAgeListener() {
 
 
         //find encounter date element
-        var encdate = procedureElement.closest('.panel-patient').find('.form-element-holder').find('.procedure-encounter-date');
+        var encdate = encounterElement.closest('.panel-patient').find('.form-element-holder').find('.encounter-date');
         if( orderformtype == "single" ) {
-            encdate = $('.singleorderinfo').find('.procedure-encounter-date');
+            encdate = $('.singleorderinfo').find('.encounter-date');
         }
         var encdateValue = encdate.val();
 
         //find encounter age element
-        var encage = procedureElement.closest('.panel-patient').find('.form-element-holder').find('.procedureage-field');
+        var encage = encounterElement.closest('.panel-patient').find('.form-element-holder').find('.encounterage-field');
         if( orderformtype == "single" ) {
-            encage = $('.singleorderinfo').find('.procedureage-field');
+            encage = $('.singleorderinfo').find('.encounterage-field');
         }
         var encageValue = encage.val();
 
@@ -550,7 +550,7 @@ function setPatientAndProcedureAgeListener() {
             return;
         }
 
-        //Case 2: if encounter date is empty, but age and dob are set, verify procedure age with patient age by current date
+        //Case 2: if encounter date is empty, but age and dob are set, verify encounter age with patient age by current date
         if( encdateValue == "" && patientdobValue != "" && encageValue != "" ) {
             var dobage = getAge(patientdobValue);
             //console.log('check: parseInt(encageValue)='+parseInt(encageValue)+', parseInt(dobage)='+parseInt(dobage));
@@ -575,35 +575,35 @@ function setPatientAndProcedureAgeListener() {
 
     }
 
-    function setAgeConflictWarningMessage(procedureAgeEl,msg,expectedAge) {
+    function setAgeConflictWarningMessage(encounterAgeEl,msg,expectedAge) {
         //set if not existed
-        var warningmsg = procedureAgeEl.parent().find('.age-conflict-added');
+        var warningmsg = encounterAgeEl.parent().find('.age-conflict-added');
         if( warningmsg.length > 0 ) {
             return;
         }
         var errorHtml = '<div class="age-conflict-added alert alert-warning">' +
                         msg +
-                        '<p><button type="button" onclick="autoCorrectProcedureAge(this,'+expectedAge+')">Auto-correct the age at the time of the encounter</button></p>' +
+                        '<p><button type="button" onclick="autoCorrectencounterAge(this,'+expectedAge+')">Auto-correct the age at the time of the encounter</button></p>' +
                         '</div>';
-        procedureAgeEl.after(errorHtml);
+        encounterAgeEl.after(errorHtml);
     }
 
 }
 
-function removeAgeConflictWarningMessage(procedureAgeEl) {
-    //printF(procedureAgeEl,"cleanning:");
-    var warningmsg = procedureAgeEl.parent().find('.age-conflict-added');
+function removeAgeConflictWarningMessage(encounterAgeEl) {
+    //printF(encounterAgeEl,"cleanning:");
+    var warningmsg = encounterAgeEl.parent().find('.age-conflict-added');
     warningmsg.remove();
 }
 
-function autoCorrectProcedureAge(msgEl,expectedAge) {
-    var procedureAgeEl = $(msgEl).closest('.procedurepatage').find('.procedureage-field');
-    //printF(procedureAgeEl,"auto correct procedcure expectedAge="+expectedAge+", :");
-    removeAgeConflictWarningMessage(procedureAgeEl);
-    procedureAgeEl.val(expectedAge);
+function autoCorrectencounterAge(msgEl,expectedAge) {
+    var encounterAgeEl = $(msgEl).closest('.encounterpatage').find('.encounterage-field');
+    //printF(encounterAgeEl,"auto correct procedcure expectedAge="+expectedAge+", :");
+    removeAgeConflictWarningMessage(encounterAgeEl);
+    encounterAgeEl.val(expectedAge);
 }
 
-//use this function to set procedure age when clicking accession check button. Currently not used.
+//use this function to set encounter age when clicking accession check button. Currently not used.
 function calculateAgeByDob( btn ) {
     var accessionBtnObj = new btnObject(btn,'full');
     //console.log("accessionBtnObj.name="+accessionBtnObj.name);
@@ -621,9 +621,9 @@ function calculateAgeByDob( btn ) {
     var dobValue = dob.val();
     //console.log("dobValue="+dobValue);
 
-    var procedureEl = getButtonElementParent(btn);
-    //console.log(procedureEl);
-    var ageEl = procedureEl.find('.procedureage-field');
+    var encounterEl = getButtonElementParent(btn);
+    //console.log(encounterEl);
+    var ageEl = encounterEl.find('.encounterage-field');
 
     //var dobDate = new Date(dobValue);
     var curAge = getAge(dobValue);
@@ -1654,17 +1654,6 @@ function disableElement(parentname,element, flag) {
     if( fieldParentName == "procedure" ) {
         fieldParentName = "accession";
     }
-
-    //exception for simple fields; used for tooltip
-//    if(
-//        element.hasClass('procedurename-field') ||
-//        element.hasClass('proceduresex-field') ||
-//        element.hasClass('procedureage-field') ||
-//        element.hasClass('proceduredate-field') ||
-//        element.hasClass('procedurehistory-field')
-//    ) {
-//        fieldParentName = "accession";
-//    }
 
     //console.log("fieldParentName="+fieldParentName+", parentname="+parentname);
     if( parentname == "" || parentname == fieldParentName ) {

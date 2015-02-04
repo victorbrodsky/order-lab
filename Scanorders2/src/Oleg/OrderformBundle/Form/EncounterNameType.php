@@ -5,8 +5,10 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Entity\ProcedureList;
 
-class ProcedurePatsexType extends AbstractType
+class EncounterNameType extends AbstractType
 {
 
     protected $params;
@@ -21,16 +23,10 @@ class ProcedurePatsexType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'field', 'choice', array(
-            'label'=>"Patient's Sex (at the time of encounter)",
-            'choices' => array("Female"=>"Female", "Male"=>"Male", "Unspecified"=>"Unspecified"),
-            'multiple' => false,
-            'expanded' => true,
-            'attr' => array('class' => 'horizontal_type proceduresex-field')
-        ));
+        $builder->add('field', 'hidden', array('label'=>false));
 
-        $builder->add('procedurepatsexothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatsex',
+        $builder->add('others', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterName',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -40,12 +36,12 @@ class ProcedurePatsexType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatsex',
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterName',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_procedurepatsex';
+        return 'oleg_orderformbundle_encounternametype';
     }
 }

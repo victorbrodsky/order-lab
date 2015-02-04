@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class ProcedureEncounterType extends AbstractType
+class ProcedureNumberType extends AbstractType
 {
 
     protected $params;
@@ -26,7 +26,7 @@ class ProcedureEncounterType extends AbstractType
 
         //$builder->add('keytype', 'hidden', array('label'=>false));
         $builder->add('keytype', 'entity', array(
-            'class' => 'OlegOrderformBundle:EncounterType',
+            'class' => 'OlegOrderformBundle:ProcedureType',
             'label'=>false,
             'required' => true,
             'data' => 1,
@@ -39,8 +39,8 @@ class ProcedureEncounterType extends AbstractType
                 },
         ));
 
-        $builder->add('procedureencounterothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounter',
+        $builder->add('others', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureNumber',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -52,12 +52,12 @@ class ProcedureEncounterType extends AbstractType
 
             $builder->add('source', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:SourceSystemList',
-                'label' => 'Encounter Number Source',
+                'label' => 'Procedure Order Source',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('list')
-                            ->where("list.name = 'WCMC Epic Practice Management'")
+                            ->where("list.name = 'WCMC Epic Ambulatory EMR' OR list.name = 'Written or oral referral'")
                             ->orderBy("list.orderinlist","ASC");
 
                     },
@@ -71,12 +71,12 @@ class ProcedureEncounterType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounter',
+            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureNumber',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_procedureencountertype';
+        return 'oleg_orderformbundle_procedurenumbertype';
     }
 }

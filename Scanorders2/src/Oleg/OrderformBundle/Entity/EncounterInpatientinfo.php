@@ -7,16 +7,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_procedureInpatientinfo")
+ * @ORM\Table(name="scan_encounterInpatientinfo")
  */
-class ProcedureInpatientinfo extends ProcedureArrayFieldAbstract
+class EncounterInpatientinfo extends EncounterArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="inpatientinfo")
-     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="inpatientinfo")
+     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", nullable=true)
      */
-    protected $procedure;
+    protected $encounter;
 
 
     //Inpatient Info Source: [Select2, pull from "Source Systems" list]

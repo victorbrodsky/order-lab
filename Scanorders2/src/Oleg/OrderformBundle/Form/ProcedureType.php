@@ -21,15 +21,15 @@ class ProcedureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('encounter', 'collection', array(
-            'type' => new ProcedureEncounterType($this->params, $this->entity),
+        $builder->add('number', 'collection', array(
+            'type' => new ProcedureNumberType($this->params, $this->entity),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
             'label' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__procedureencounter__',
+            'prototype_name' => '__procedurenumber__',
         ));
 
         $builder->add('name', 'collection', array(
@@ -43,6 +43,17 @@ class ProcedureType extends AbstractType
             'prototype_name' => '__procedurename__',
         ));
 
+        $builder->add('date', 'collection', array(
+            'type' => new ProcedureDateType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__procedureencounterDate__',
+        ));
+
+        //children
         $builder->add('accession', 'collection', array(
             'type' => new AccessionType($this->params),
             'allow_add' => true,
@@ -53,91 +64,6 @@ class ProcedureType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__accession__',
         ));
-
-        $builder->add('encounterDate', 'collection', array(
-            'type' => new ProcedureEncounterDateType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedureencounterDate__',
-        ));
-
-        $builder->add('patsuffix', 'collection', array(
-            'type' => new ProcedurePatsuffixType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedurepatsuffix__',
-        ));
-        $builder->add('patlastname', 'collection', array(
-            'type' => new ProcedurePatlastnameType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedurepatlastname__',
-        ));
-        $builder->add('patfirstname', 'collection', array(
-            'type' => new ProcedurePatfirstnameType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedurepatfirstname__',
-        ));
-        $builder->add('patmiddlename', 'collection', array(
-            'type' => new ProcedurePatmiddlenameType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedurepatmiddlename__',
-        ));
-
-        $builder->add('patsex', 'collection', array(
-            'type' => new ProcedurePatsexType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedurepatsex__',
-        ));
-
-        $attr = array('class'=>'form-control procedureage-field patientage-mask');
-        $gen_attr = array('label'=>"Patient's Age (at the time of encounter)",'class'=>'Oleg\OrderformBundle\Entity\ProcedurePatage','type'=>'text');
-        $builder->add('patage', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Patient's Age (at the time of encounter):",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedurepatage__',
-        ));
-
-        //pathistory'
-        $attr = array('class'=>'textarea form-control procedurehistory-field');
-        $gen_attr = array('label'=>"Clinical History (at the time of encounter)",'class'=>'Oleg\OrderformBundle\Entity\ProcedurePathistory','type'=>null);
-        $builder->add('pathistory', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Clinical History (at the time of encounter):",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedurepathistory__',
-        ));
-
 
 
         //extra data-structure fields
@@ -155,35 +81,16 @@ class ProcedureType extends AbstractType
                 'prototype_name' => '__procedurelocation__',
             ));
 
-
-            $builder->add('encounterorder', 'collection', array(
-                'type' => new ProcedureEncounterorderType($this->params, null),
+            $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
+            $params = array('name'=>'Encounter','dataClass'=>'Oleg\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
+            $builder->add('order', 'collection', array(
+                'type' => new GeneralOrderType($params, null),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
                 'by_reference' => false,
                 'prototype' => true,
-                'prototype_name' => '__procedureencounterorder__',
-            ));
-
-            $builder->add('procedureorder', 'collection', array(
-                'type' => new ProcedureProcedureorderType($this->params, null),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__procedureprocedureorder__',
-            ));
-
-            $builder->add('inpatientinfo', 'collection', array(
-                'type' => new ProcedureInpatientinfoType($this->params, null),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__procedureinpatientinfo__',
+                'prototype_name' => '__procedureorder__',
             ));
 
         }

@@ -32,45 +32,48 @@ class ProcedureList extends ListAbstract
     /**
      * @ORM\OneToMany(targetEntity="ProcedureName", mappedBy="field")
      */
-    protected $procedure;
+    protected $procedurename;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->procedure = new ArrayCollection();
+        $this->procedurename = new ArrayCollection();
     }   
 
     /**
-     * Add procedure
+     * Add procedurename
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
+     * @param \Oleg\OrderformBundle\Entity\ProcedureName $procedurename
      * @return ProcedureList
      */
-    public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
+    public function addProcedurename(\Oleg\OrderformBundle\Entity\ProcedureName $procedurename)
     {
-        $this->procedure->add($procedure);
+        if( $procedurename && !$this->procedurename->contains($procedurename) ) {
+            $this->procedurename->add($procedurename);
+            $procedurename->setField($this);
+        }
     
         return $this;
     }
 
     /**
-     * Remove procedure
+     * Remove procedurename
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
+     * @param \Oleg\OrderformBundle\Entity\ProcedureName $procedurename
      */
-    public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
+    public function removeProcedurename(\Oleg\OrderformBundle\Entity\ProcedureName $procedurename)
     {
-        $this->procedure->removeElement($procedure);
+        $this->procedurename->removeElement($procedurename);
     }
 
     /**
-     * Get procedure
+     * Get procedurename
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getProcedure()
+    public function getProcedurename()
     {
-        return $this->procedure;
+        return $this->procedurename;
     }
 
 

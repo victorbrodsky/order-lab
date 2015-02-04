@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ProcedureEncounterDateType extends AbstractType
+class EncounterDateType extends AbstractType
 {
 
     protected $params;
@@ -26,11 +26,11 @@ class ProcedureEncounterDateType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
-            'attr' => array('class' => 'datepicker form-control patientdob-mask procedure-encounter-date', 'style'=>'margin-top: 0;'),
+            'attr' => array('class' => 'datepicker form-control patientdob-mask encounter-date', 'style'=>'margin-top: 0;'),
         ));
 
-        $builder->add('dobothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounterDate',
+        $builder->add('others', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterDate',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -52,12 +52,12 @@ class ProcedureEncounterDateType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounterDate',
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterDate',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_procedureencounterdatetype';
+        return 'oleg_orderformbundle_encounterdatetype';
     }
 }

@@ -7,16 +7,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_procedureencounter")
+ * @ORM\Table(name="scan_encounterNumber")
  */
-class ProcedureEncounter extends ProcedureArrayFieldAbstract
+class EncounterNumber extends EncounterArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="encounter", cascade={"persist"})
-     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="number", cascade={"persist"})
+     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $procedure;
+    protected $encounter;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -30,7 +30,7 @@ class ProcedureEncounter extends ProcedureArrayFieldAbstract
     protected $original;
 
     /**
-     * @ORM\ManyToOne(targetEntity="EncounterType", inversedBy="procedureencounter", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="EncounterType", inversedBy="encounternumber", cascade={"persist"})
      * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
      */
     protected $keytype;
@@ -70,17 +70,6 @@ class ProcedureEncounter extends ProcedureArrayFieldAbstract
 
     public function obtainExtraKey()
     {
-//        $extra = array();
-//
-//        if( !$this->getKeytype() ) {
-//            $keytypeid = '';
-//        } else {
-//            $keytypeid = $this->getKeytype()->getId();
-//        }
-//
-//        $extra['keytype'] = $keytypeid;
-//        return $extra;
-
         $extra = array();
         $extra['keytype'] = $this->getKeytype()->getId();
         return $extra;

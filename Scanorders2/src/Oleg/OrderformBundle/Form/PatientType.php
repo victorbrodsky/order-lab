@@ -67,15 +67,15 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientclinicalhistory__',
         ));
 
-        $builder->add('procedure', 'collection', array(
-            'type' => new ProcedureType($this->params,$this->entity),
+        $builder->add('encounter', 'collection', array(
+            'type' => new EncounterType($this->params,$this->entity),
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,//" ",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__procedure__',
+            'prototype_name' => '__encounter__',
         ));
 
         //use these fields only for data reviewer and for view

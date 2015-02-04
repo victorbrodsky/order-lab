@@ -8,13 +8,13 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_procedureEncounterDate")
+ * @ORM\Table(name="scan_procedureDate")
  */
-class ProcedureEncounterDate extends ProcedureArrayFieldAbstract
+class ProcedureDate extends ProcedureArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="encounterDate", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="date", cascade={"persist"})
      * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $procedure;
@@ -24,7 +24,7 @@ class ProcedureEncounterDate extends ProcedureArrayFieldAbstract
      */
     protected $field;
 
-
+    //TODO: we can use datetime for date and time, so time is not needed.
     /**
      * @ORM\Column(type="time", nullable=true)
      */

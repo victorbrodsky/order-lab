@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_encountertype")
+ * @ORM\Table(name="scan_encounterType")
  */
 class EncounterType extends ListAbstract
 {
@@ -27,34 +27,35 @@ class EncounterType extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="ProcedureEncounter", mappedBy="keytype")
+     * @ORM\OneToMany(targetEntity="EncounterNumber", mappedBy="keytype")
      */
-    protected $procedureencounter;
+    protected $encounternumber;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->procedureencounter = new ArrayCollection();
+        $this->encounternumber = new ArrayCollection();
     }
 
 
 
-    public function addProcedureencounter(\Oleg\OrderformBundle\Entity\ProcedureEncounter $procedureencounter)
+    public function addEncounternumber(\Oleg\OrderformBundle\Entity\EncounterNumber $encounternumber)
     {
-        if( !$this->procedureencounter->contains($procedureencounter) ) {
-            $this->procedureencounter->add($procedureencounter);
+        if( !$this->encounternumber->contains($encounternumber) ) {
+            $this->encounternumber->add($encounternumber);
+            $encounternumber->setKeytype($this);
         }
         return $this;
     }
 
-    public function removeProcedureencounter(\Oleg\OrderformBundle\Entity\ProcedureEncounter $procedureencounter)
+    public function removeEncounternumber(\Oleg\OrderformBundle\Entity\EncounterNumber $encounternumber)
     {
-        $this->procedureencounter->removeElement($procedureencounter);
+        $this->encounternumber->removeElement($encounternumber);
     }
 
-    public function getProcedureencounter()
+    public function getEncounternumber()
     {
-        return $this->procedureencounter;
+        return $this->encounternumber;
     }
 
 

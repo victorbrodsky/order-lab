@@ -45,11 +45,6 @@ abstract class ObjectAbstract
      */
     protected $provider;
 
-//    /**
-//     * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $source;
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
@@ -71,14 +66,10 @@ abstract class ObjectAbstract
         $this->orderinfo = new ArrayCollection();
     }
 
-//    public function __destruct() {
-//        exit("abstract destruct");
-//    }
 
     public function __clone() {
         if( $this->getId() ) {
             $this->setId(null);
-            //$this->clearOrderinfo();
             $this->orderinfo = new ArrayCollection();
             $this->makeDependClone();
         }

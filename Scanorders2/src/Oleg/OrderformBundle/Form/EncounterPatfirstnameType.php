@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ProcedurePatsuffixType extends AbstractType
+class EncounterPatfirstnameType extends AbstractType
 {
 
     protected $params;
@@ -22,13 +22,13 @@ class ProcedurePatsuffixType extends AbstractType
     {
 
         $builder->add( 'field', 'text', array(
-            'label'=>"Patient's Suffix (at the time of encounter)",
+            'label'=>"Patient's First Name (at the time of encounter)",
             'required' => false,
-            'attr' => array('class' => 'form-control form-control-modif procedure-suffix')
+            'attr' => array('class' => 'form-control form-control-modif encounter-firstName')
         ));
 
-        $builder->add('procedurepatsuffixothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatsuffix',
+        $builder->add('others', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterPatfirstname',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -38,12 +38,12 @@ class ProcedurePatsuffixType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatsuffix',
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterPatfirstname',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_procedurepatsuffix';
+        return 'oleg_orderformbundle_encounterpatfirstname';
     }
 }

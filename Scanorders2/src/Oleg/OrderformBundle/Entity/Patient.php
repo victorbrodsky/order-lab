@@ -66,12 +66,18 @@ class Patient extends ObjectAbstract
     protected $orderinfo;
     
     //, cascade={"persist"}
+//    /**
+//     * Patient might have many Procedures or Procedures (children)
+//     *
+//     * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
+//     */
+//    private $procedure;
     /**
-     * Patient might have many Procedures or Procedures (children)
-     * 
-     * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
+     * Patient might have many encounters (children)
+     *
+     * @ORM\OneToMany(targetEntity="Encounter", mappedBy="patient")
      */
-    private $procedure;
+    private $encounter;
 
 
 
@@ -101,7 +107,7 @@ class Patient extends ObjectAbstract
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source = null )
     {
         parent::__construct($status,$provider,$source);
-        $this->procedure = new ArrayCollection();
+        $this->encounter = new ArrayCollection();
 
         //fields:
         $this->mrn = new ArrayCollection();
@@ -337,49 +343,45 @@ class Patient extends ObjectAbstract
     }
 
     /**
-     * Add Procedure
+     * Add encounter
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $Procedure
+     * @param \Oleg\OrderformBundle\Entity\Encounter $Encounter
      * @return Patient
      */
-    public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
+    public function addEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
     {
-        //echo "add procedure: ".$procedure."<br>";
-        if( !$this->procedure->contains($procedure) ) {
-            $procedure->setPatient($this);
-            $this->procedure->add($procedure);
+        //echo "add encounter: ".$encounter."<br>";
+        if( !$this->encounter->contains($encounter) ) {
+            $this->encounter->add($encounter);
+            $encounter->setPatient($this);
         }
 
         return $this;
     }
-
     /**
-     * Remove procedure
+     * Remove encounter
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
+     * @param \Oleg\OrderformBundle\Entity\Encounter $encounter
      */
-    public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
+    public function removeEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
     {
-        $this->procedure->removeElement($procedure);
+        $this->encounter->removeElement($encounter);
     }
-
     /**
-     * Get procedure
+     * Get encounter
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getProcedure()
+    public function getEncounter()
     {
-        return $this->procedure;
+        return $this->encounter;
     }
-    
-    public function setProcedure(\Doctrine\Common\Collections\ArrayCollection $procedure)
+    public function setEncounter(\Doctrine\Common\Collections\ArrayCollection $encounter)
     {
-        $this->procedure = $procedure;
+        $this->encounter = $encounter;
     }
-
-    public function clearProcedure(){
-        $this->procedure->clear();
+    public function clearEncounter(){
+        $this->encounter->clear();
     }
 
     /**
@@ -824,8 +826,8 @@ class Patient extends ObjectAbstract
 //        ", ages=".$ages.
         //", age=".$this->age->first().", nameID=".$this->age->first()->getId().
         ", status=".$this->status.
-        ", procedureCount=".count($this->procedure).
-        //", firstprocedureID=".$this->procedure->first()->getId().
+        ", encounterCount=".count($this->encounter).
+        //", firstencounterID=".$this->encounter->first()->getId().
         ", orderinfo=".$orders.
         $mrns."<br>";
     }
@@ -842,19 +844,19 @@ class Patient extends ObjectAbstract
     }
 
     public function getChildren() {
-        return $this->getProcedure();
+        return $this->getEncounter();
     }
 
     public function addChildren($child) {
-        $this->addProcedure($child);
+        $this->addEncounter($child);
     }
 
     public function removeChildren($child) {
-        $this->removeProcedure($child);
+        $this->removeEncounter($child);
     }
 
     public function setChildren($children) {
-        $this->setProcedure($children);
+        $this->setEncounter($children);
     }
 
     public function getFullPatientName() {

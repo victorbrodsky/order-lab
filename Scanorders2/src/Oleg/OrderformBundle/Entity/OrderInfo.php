@@ -133,7 +133,14 @@ class OrderInfo extends OrderAbstract {
      * )
      */
     private $research;
-       
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Encounter", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_encounter_orderinfo")
+     **/
+    private $encounter;
+
     /**
      * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="orderinfo")
      * @ORM\JoinTable(name="scan_procedure_orderinfo")
@@ -176,6 +183,7 @@ class OrderInfo extends OrderAbstract {
     public function __construct()
     {
         $this->patient = new ArrayCollection();
+        $this->encounter = new ArrayCollection();
         $this->procedure = new ArrayCollection();
         $this->accession = new ArrayCollection();
         $this->part = new ArrayCollection();      
@@ -197,6 +205,7 @@ class OrderInfo extends OrderAbstract {
             if( !$children ) return;
 
             $this->patient = new ArrayCollection();
+            $this->encounter = new ArrayCollection();
             $this->procedure = new ArrayCollection();
             $this->accession = new ArrayCollection();
             $this->part = new ArrayCollection();
@@ -646,7 +655,23 @@ class OrderInfo extends OrderAbstract {
                 ", res=".$this->research.", patientCount=".count($this->patient).
                 ", slideCount=".count($this->slide)."<br>";
     }
-    
+
+
+
+    public function addEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
+    {
+        if( !$this->encounter->contains($encounter) ) {
+            $this->encounter->add($encounter);
+        }
+    }
+    public function removeEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
+    {
+        $this->encounter->removeElement($encounter);
+    }
+    public function getEncounter()
+    {
+        return $this->encounter;
+    }
 
     /**
      * Add procedure

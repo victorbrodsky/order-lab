@@ -31,11 +31,6 @@ class OrderAbstract {
      */
     protected $orderdate;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
-//     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
-//     */
-//    private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})

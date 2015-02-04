@@ -34,6 +34,7 @@ class ScanListController extends ListController
      * @Route("/encounter-types/", name="encountertype-list")
      * @Route("/stains/", name="stain-list")
      * @Route("/organs/", name="organ-list")
+     * @Route("/encounters/", name="encounter-list")
      * @Route("/procedures/", name="procedure-list")
      * @Route("/pathology-services/", name="pathservice-list")
      * @Route("/slide-types/", name="slidetype-list")
@@ -73,6 +74,7 @@ class ScanListController extends ListController
      * @Route("/encounter-types/", name="encountertype_create")
      * @Route("/stains/", name="stain_create")
      * @Route("/organs/", name="organ_create")
+     * @Route("/encounters/", name="encounter_create")
      * @Route("/procedures/", name="procedure_create")
      * @Route("/pathology-services/", name="pathservice_create")
      * @Route("/slide-types/", name="slidetype_create")
@@ -112,6 +114,7 @@ class ScanListController extends ListController
      * @Route("/encounter-types/new", name="encountertype_new")
      * @Route("/stains/new", name="stain_new")
      * @Route("/organs/new", name="organ_new")
+     * @Route("/encounters/new", name="encounter_new")
      * @Route("/procedures/new", name="procedure_new")
      * @Route("/pathology-services/new", name="pathservice_new")
      * @Route("/slide-types/new", name="slidetype_new")
@@ -151,6 +154,7 @@ class ScanListController extends ListController
      * @Route("/encounter-types/{id}", name="encountertype_show")
      * @Route("/stains/{id}", name="stain_show")
      * @Route("/organs/{id}", name="organ_show")
+     * @Route("/encounters/{id}", name="encounter_show")
      * @Route("/procedures/{id}", name="procedure_show")
      * @Route("/pathology-services/{id}", name="pathservice_show")
      * @Route("/slide-types/{id}", name="slidetype_show")
@@ -190,6 +194,7 @@ class ScanListController extends ListController
      * @Route("/encounter-types/{id}/edit", name="encountertype_edit")
      * @Route("/stains/{id}/edit", name="stain_edit")
      * @Route("/organs/{id}/edit", name="organ_edit")
+     * @Route("/encounters/{id}/edit", name="encounter_edit")
      * @Route("/procedures/{id}/edit", name="procedure_edit")
      * @Route("/pathology-services/{id}/edit", name="pathservice_edit")
      * @Route("/slide-types/{id}/edit", name="slidetype_edit")
@@ -229,6 +234,7 @@ class ScanListController extends ListController
      * @Route("/encounter-types/{id}", name="encountertype_update")
      * @Route("/stains/{id}", name="stain_update")
      * @Route("/organs/{id}", name="organ_update")
+     * @Route("/encounters/{id}", name="encounter_update")
      * @Route("/procedures/{id}", name="procedure_update")
      * @Route("/pathology-services/{id}", name="pathservice_update")
      * @Route("/slide-types/{id}", name="slidetype_update")
@@ -306,8 +312,12 @@ class ScanListController extends ListController
             $className = "organlist";
             $displayName = "Organs";
             break;
+        case "encounter":
+            $className = "EncounterList";
+            $displayName = "Encounters";
+            break;
         case "procedure":
-            $className = "procedurelist";
+            $className = "ProcedureList";
             $displayName = "Procedures";
             break;
         case "slidetype":
@@ -389,6 +399,7 @@ class ScanListController extends ListController
      * @Route("/encounter-types/{id}", name="encountertype_delete")
      * @Route("/stains/{id}", name="stain_delete")
      * @Route("/organs/{id}", name="organ_delete")
+     * @Route("/encounters/{id}", name="encounter_delete")
      * @Route("/procedures/{id}", name="procedure_delete")
      * @Route("/pathology-services/{id}", name="pathservice_delete")
      * @Route("/slide-types/{id}", name="slidetype_delete")
