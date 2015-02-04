@@ -88,7 +88,7 @@
 
         {% set procedurenameHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
         {% set procedurenumberHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}
-        {% set proceduredateHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype") %}
+        {#{% set proceduredateHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype") %}#}
 
         {% set patsuffixHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.patsuffix,type,"","prototype") %}
         {% set patlastnameHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.patlastname,type,"","prototype") %}
@@ -164,7 +164,7 @@
          data-prototype-accessionaccessiondate= "{{ accessiondateHtml|e }}"
          data-prototype-procedurename= "{{ procedurenameHtml|e }}"
          data-prototype-procedurenumber= "{{ procedurenumberHtml|e }}"
-         data-prototype-proceduredate= "{{ proceduredateHtml|e }}"
+         data-prototype-encounterdate= "{{ encounterdateHtml|e }}"
          data-prototype-encounterpatsuffix= "{{ patsuffixHtml|e }}"
          data-prototype-encounterpatlastname= "{{ patlastnameHtml|e }}"
          data-prototype-encounterpatage= "{{ patageHtml|e }}"
