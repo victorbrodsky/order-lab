@@ -66,12 +66,14 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
     //replace child of patient if duplicated
-    //$parent: orderinfo
+    //$parent: patient
+    //$orderinfo: orderinfo
     public function replaceDuplicateEntities( $parent, $orderinfo ) {
 
-        echo "Patient replace duplicates:".$parent;
+        echo "Patient replace duplicates: parent: ".$parent;
+        echo "Patient replace duplicates: orderinfo: ".$orderinfo;
 
-        $children = $parent->getChildren();
+        $children = $parent->getChildren(); //encounters
 
         if( !$children ) {
             return $parent;

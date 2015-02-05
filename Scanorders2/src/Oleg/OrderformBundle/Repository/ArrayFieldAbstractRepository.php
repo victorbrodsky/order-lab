@@ -331,7 +331,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //find similar child and return the first one
     //return false if no similar children are found
+    //Overwritten in EncounterRepository
     public function findSimilarChild($parent,$newChild) {
+
+        echo "Find similar child in parent:".$parent;
+        echo "Find child:".$newChild;
+
         $children = $parent->getChildren();
 
         //echo "<br>";
@@ -1279,6 +1284,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //replace child if duplicated
     public function replaceDuplicateEntities( $parent, $orderinfo ) {
 
+        echo "abstract replace duplicate parent=".$parent;
+        echo "abstract replace duplicate orderinfo=".$orderinfo;
+
         if( $parent === $orderinfo ) {
             $children = $orderinfo->getChildren();
         } else {
@@ -1290,12 +1298,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         if( count($children) <= 1 ) {
+            echo "return on children <= 1<br>";
             return $parent;
         }
 
         $count = 0;
         foreach( $children as $child ) {
-            //echo $count.": Testing child=".$child."<br>";
+            echo $count.": Testing child=".$child."<br>";
 
             $sameChild = $this->findSimilarChild($parent,$child);
 

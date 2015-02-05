@@ -70,7 +70,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     }
 
 
-
+    //TODO: remove: it's not used because this function is called from replaceDuplicateEntities, but here replaceDuplicateEntities does not do anything
     //find similar procedure in encounter.
     //However, procedure is identified by accession number
     //$parent: encounter
