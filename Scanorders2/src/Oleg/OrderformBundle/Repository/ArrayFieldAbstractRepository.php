@@ -144,8 +144,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        //Procedure only: add procedure's name, sex, age to the corresponding patient fields
-        if( $className == 'Procedure' ) {
+        //Encounter only: add encounter's name, sex, age to the corresponding patient fields
+        if( $className == 'Encounter' ) {
             if( $original ) {
                 $formEntity = $original;
             } else {
@@ -1119,7 +1119,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
         $fieldName = $entity->obtainKeyFieldName();
-        $name = "NO".strtoupper($fieldName)."PROVIDED";
+        $name = "NO".strtoupper($className)."PROVIDED";
 
         //get extra key by $extra optional parameter or get it from entity
         $extraStr = "";
@@ -1144,16 +1144,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "name=".$name.", fieldName=".$fieldName.", className=".$className."<br>";
         //echo "extraStr=".$extraStr.",<br>";
 
+        $queryStr = 'SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.
+                    ' c JOIN c.'.$fieldName.
+                    ' cfield WHERE '.$extraStr.'cfield.field LIKE :field'.$inst;
+
+        echo "queryStr=".$queryStr."<br>";
+
         $query = $this->getEntityManager()
-        ->createQuery('
-        SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.' c
-        JOIN c.'.$fieldName.' cfield
-        WHERE '.$extraStr.'cfield.field LIKE :field'.$inst
-        )->setParameter('field', '%'.$name.'%');
-        
+        ->createQuery($queryStr)->setParameter('field', '%'.$name.'%');
+
+        echo "query=".$query->getSql()."<br>";
+
         $lastField = $query->getSingleResult();
         $index = 'max'.$fieldName;
         $lastFieldStr = $lastField[$index];
+
         //echo "lastFieldStr=".$lastFieldStr."<br>";
         //$fieldIndexArr = explode("-",$lastFieldStr);
         //echo "count=".count($fieldIndexArr)."<br>";
@@ -1174,6 +1179,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
         //echo "maxKey=".$maxKey."<br>";
+        //if( $className == 'Encounter') {
+        //    exit();
+        //}
         //return $this->getNextByMax($lastFieldStr, $name);
         return $maxKey;
     }

@@ -19,10 +19,10 @@ class DataQualityAge extends DataQuality
     protected $orderinfo;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Procedure")
-     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Encounter")
+     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $procedure;
+    protected $encounter;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -59,19 +59,19 @@ class DataQualityAge extends DataQuality
     }
 
     /**
-     * @param mixed $procedure
+     * @param mixed $encounter
      */
-    public function setProcedure($procedure)
+    public function setEncounter($encounter)
     {
-        $this->procedure = $procedure;
+        $this->encounter = $encounter;
     }
 
     /**
      * @return mixed
      */
-    public function getProcedure()
+    public function getEncounter()
     {
-        return $this->procedure;
+        return $this->encounter;
     }
 
     /**

@@ -969,6 +969,8 @@
 
 
 {% macro accessionForm( encounter, procedure, accession, flag, uid, cycle, status,
+                        encounternumberHtml,
+                        procedurenumberHtml,
                         procedurenameHtml,
                         accessionHtml,
                         accessiondateHtml,
@@ -1010,14 +1012,24 @@
             <p><div class="procedurename">{{ procedurenameHtml }}</div></p>
         {% endif %}
 
-        {% if encounterHtml is not defined or encounterHtml == "" %}
+        {% if encounternumberHtml is not defined or encounternumberHtml == "" %}
             {% for number in encounter.number %}
                 {% if number.vars.value.status == 'valid' %}
                     {{ form_row(number, {'label': false}) }}
                 {% endif %}
             {% endfor %}
         {% else  %}
-            <p><div class="encounternumber">{{ encounterHtml }}</div></p>
+            <p><div class="encounternumber">{{ encounternumberHtml }}</div></p>
+        {% endif %}
+
+        {% if procedurenumberHtml is not defined or procedurenumberHtml == "" %}
+            {% for number in procedure.number %}
+                {% if number.vars.value.status == 'valid' %}
+                    {{ form_row(number, {'label': false}) }}
+                {% endif %}
+            {% endfor %}
+        {% else  %}
+            <p><div class="procedurenumber">{{ procedurenumberHtml }}</div></p>
         {% endif %}
 
         {#patient's data: single simple fields#}
@@ -1025,18 +1037,6 @@
             {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
         {% else  %}
             <p><div class="encounterdate">{{ encounterdateHtml }}</div></p>
-        {% endif %}
-
-        {% if patsuffixHtml is not defined or patsuffixHtml == "" %}
-            {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
-        {% else  %}
-            <p><div class="encounterpatsuffix">{{ patsuffixHtml }}</div></p>
-        {% endif %}
-
-        {% if patlastnameHtml is not defined or patlastnameHtml == "" %}
-            {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
-        {% else  %}
-            <p><div class="encounterpatlastname">{{ patlastnameHtml }}</div></p>
         {% endif %}
 
         {% if patfirstameHtml is not defined or patfirstnameHtml == "" %}
@@ -1049,6 +1049,18 @@
             {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
         {% else  %}
             <p><div class="encounterpatmiddlename">{{ patmiddlenameHtml }}</div></p>
+        {% endif %}
+
+        {% if patlastnameHtml is not defined or patlastnameHtml == "" %}
+            {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+        {% else  %}
+            <p><div class="encounterpatlastname">{{ patlastnameHtml }}</div></p>
+        {% endif %}
+
+        {% if patsuffixHtml is not defined or patsuffixHtml == "" %}
+            {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+        {% else  %}
+            <p><div class="encounterpatsuffix">{{ patsuffixHtml }}</div></p>
         {% endif %}
 
         {#{{ formmacros.field(encounter.patsex) }}#}

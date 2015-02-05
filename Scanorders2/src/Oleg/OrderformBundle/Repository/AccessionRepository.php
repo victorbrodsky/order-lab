@@ -166,9 +166,14 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 throw new \Exception( 'Accession does not belong to Procedure' );
             }
 
-            $patient = $procedure->getParent();
-            if( !$patient ) {
+            $encounter = $procedure->getParent();
+            if( !$encounter ) {
                 throw new \Exception( 'Procedure does not belong to Patient' );
+            }
+
+            $patient = $encounter->getParent();
+            if( !$patient ) {
+                throw new \Exception( 'Encounter does not belong to Patient' );
             }
 
             $mrnKey = $patient->obtainValidKeyField();

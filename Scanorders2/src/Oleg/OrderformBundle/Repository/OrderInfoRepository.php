@@ -31,7 +31,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $this->container = $container;
 
         //replace duplicate entities to filter the similar entities.
-        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->replaceDuplicateProcedures( $entity, $entity );
         $entity = $this->replaceDuplicateEntities( $entity, $entity );
 
         if( $type ) {
@@ -134,7 +133,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //echo $entity->getSlide()->first();
 
         //throw new \Exception('TESTING');
-        //exit('orderinfo repoexit testing');
+        exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;

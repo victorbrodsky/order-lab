@@ -677,15 +677,15 @@ class Encounter extends ObjectAbstract
     
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
-        return $this->getEncounter();
+        return $this->getNumber();
     }
 
     public function obtainKeyFieldName() {
-        return "encounter";
+        return "number";
     }
 
     public function createKeyField() {
-        $this->addEncounter( new EncounterNumber() );
+        $this->addNumber( new EncounterNumber() );
         return $this->obtainKeyField();
     }
 

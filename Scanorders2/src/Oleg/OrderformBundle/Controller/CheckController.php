@@ -314,16 +314,23 @@ class CheckController extends Controller {
 
         //echo "entity=".$entity."<br>";
 
-        if( $entity ) {
+        if( $entity ) { //$entity - Accession
 
             $parentKey = null;
+            $encounter = null;
 
-            if( $entity->getProcedure() ) {
+            $procedure = $entity->getProcedure();
+
+            if( $procedure ) {
+                $encounter = $procedure->getEncounter();
+            }
+
+            if( $procedure && $encounter ) {
 
                 $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
                 //find patient mrn
-                $patient = $entity->getProcedure()->getPatient();
+                $patient = $encounter->getPatient();
                 //if( !$permission ) {
                 //    $patient->filterArrayFields($user,true);
                 //}
@@ -350,17 +357,20 @@ class CheckController extends Controller {
                     $orderinfoString = "Order ".$patient->getOrderinfo()->first()->getId()." submitted on ".$transformer->transform($patient->getOrderinfo()->first()->getOrderdate()). " by ". $patient->getOrderinfo()->first()->getProvider();
                 }
 
-                $procedureName = $entity->getProcedure()->getName();
+                //procedure's fields: Procedure Type (Name)
+                $procedureName = $procedure->getName();
+                $procedureNumber = $procedure->getNumber();
 
-                //$encDate = $transformer->transform( $entity->getProcedure()->getEncounterDate()->first() );
-                $encDate = $entity->getProcedure()->getEncounterDate();
-                $patSuffix = $entity->getProcedure()->getPatsuffix();
-                $patLastName = $entity->getProcedure()->getPatlastname();
-                $patFirstName = $entity->getProcedure()->getPatfirstname();
-                $patMiddleName = $entity->getProcedure()->getPatmiddlename();
-                $patSex = $entity->getProcedure()->getPatsex();
-                $patAge = $entity->getProcedure()->getPatage();
-                $patHist = $entity->getProcedure()->getPathistory();
+                //encounter's fields: date, suffix, lastname, firstname, middlename, sex, age, history
+                $encounterName = $encounter->getName();
+                $encounterDate = $encounter->getDate();
+                $patSuffix = $encounter->getPatsuffix();
+                $patLastName = $encounter->getPatlastname();
+                $patFirstName = $encounter->getPatfirstname();
+                $patMiddleName = $encounter->getPatmiddlename();
+                $patSex = $encounter->getPatsex();
+                $patAge = $encounter->getPatage();
+                $patHist = $encounter->getPathistory();
 
             }//if $entity->getProcedure()
 
@@ -370,9 +380,10 @@ class CheckController extends Controller {
                 $extraid = "";
                 $parentDob = "";
                 $orderinfoString = "";
+                $encounterName = array();
                 $procedureName = array();
 
-                $encDate = array();
+                $encounterDate = array();
                 $patSuffix = array();
                 $patLastName = array();
                 $patFirstName = array();
@@ -391,9 +402,11 @@ class CheckController extends Controller {
                 'parentdob'=>$parentDob."",
                 'mrnstring'=>$mrnstring,
                 'orderinfo'=>$orderinfoString,
+                //'encounter'=>$this->getArrayFieldJson($encounterName),
                 'procedure'=>$this->getArrayFieldJson($procedureName),
+                //'procedurenumber'=>$this->getArrayFieldJson($procedureNumber),
 
-                'encounterDate'=>$this->getArrayFieldJson($encDate),
+                'date'=>$this->getArrayFieldJson($encounterDate),
                 'patsuffix'=>$this->getArrayFieldJson($patSuffix),
                 'patlastname'=>$this->getArrayFieldJson($patLastName),
                 'patfirstname'=>$this->getArrayFieldJson($patFirstName),

@@ -32,6 +32,7 @@ class ScanListController extends ListController
      * @Route("/mrn-types/", name="mrntype-list")
      * @Route("/accession-types/", name="accessiontype-list")
      * @Route("/encounter-types/", name="encountertype-list")
+     * @Route("/procedure-types/", name="proceduretype-list")
      * @Route("/stains/", name="stain-list")
      * @Route("/organs/", name="organ-list")
      * @Route("/encounters/", name="encounter-list")
@@ -72,6 +73,7 @@ class ScanListController extends ListController
      * @Route("/mrn-types/", name="mrntype_create")
      * @Route("/accession-types/", name="accessiontype_create")
      * @Route("/encounter-types/", name="encountertype_create")
+     * @Route("/procedure-types/", name="proceduretype_create")
      * @Route("/stains/", name="stain_create")
      * @Route("/organs/", name="organ_create")
      * @Route("/encounters/", name="encounter_create")
@@ -112,6 +114,7 @@ class ScanListController extends ListController
      * @Route("/mrn-types/new", name="mrntype_new")
      * @Route("/accession-types/new", name="accessiontype_new")
      * @Route("/encounter-types/new", name="encountertype_new")
+     * @Route("/procedure-types/new", name="proceduretype_new")
      * @Route("/stains/new", name="stain_new")
      * @Route("/organs/new", name="organ_new")
      * @Route("/encounters/new", name="encounter_new")
@@ -152,6 +155,7 @@ class ScanListController extends ListController
      * @Route("/mrn-types/{id}", name="mrntype_show")
      * @Route("/accession-types/{id}", name="accessiontype_show")
      * @Route("/encounter-types/{id}", name="encountertype_show")
+     * @Route("/procedure-types/{id}", name="proceduretype_show")
      * @Route("/stains/{id}", name="stain_show")
      * @Route("/organs/{id}", name="organ_show")
      * @Route("/encounters/{id}", name="encounter_show")
@@ -192,6 +196,7 @@ class ScanListController extends ListController
      * @Route("/mrn-types/{id}/edit", name="mrntype_edit")
      * @Route("/accession-types/{id}/edit", name="accessiontype_edit")
      * @Route("/encounter-types/{id}/edit", name="encountertype_edit")
+     * @Route("/procedure-types/{id}/edit", name="proceduretype_edit")
      * @Route("/stains/{id}/edit", name="stain_edit")
      * @Route("/organs/{id}/edit", name="organ_edit")
      * @Route("/encounters/{id}/edit", name="encounter_edit")
@@ -232,6 +237,7 @@ class ScanListController extends ListController
      * @Route("/mrn-types/{id}", name="mrntype_update")
      * @Route("/accession-types/{id}", name="accessiontype_update")
      * @Route("/encounter-types/{id}", name="encountertype_update")
+     * @Route("/procedure-types/{id}", name="proceduretype_update")
      * @Route("/stains/{id}", name="stain_update")
      * @Route("/organs/{id}", name="organ_update")
      * @Route("/encounters/{id}", name="encounter_update")
@@ -301,8 +307,12 @@ class ScanListController extends ListController
             $displayName = "Accession Types";
             break;
         case "encountertype":
-            $className = "encountertype";
+            $className = "EncounterType";
             $displayName = "Encounter Types";
+            break;
+        case "proceduretype":
+            $className = "ProcedureType";
+            $displayName = "Procedure Types";
             break;
         case "stain":
             $className = "stainlist";
@@ -397,6 +407,7 @@ class ScanListController extends ListController
      * @Route("/mrn-types/{id}", name="mrntype_delete")
      * @Route("/accession-types/{id}", name="accessiontype_delete")
      * @Route("/encounter-types/{id}", name="encountertype_delete")
+     * @Route("/procedure-types/{id}", name="proceduretype_delete")
      * @Route("/stains/{id}", name="stain_delete")
      * @Route("/organs/{id}", name="organ_delete")
      * @Route("/encounters/{id}", name="encounter_delete")

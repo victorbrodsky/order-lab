@@ -22,7 +22,11 @@ class ProcedureNumberType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('field', 'hidden', array('label'=>false));
+        //$builder->add('field', 'hidden', array('label'=>false));
+        $builder->add('field', null, array(
+            'label'=>'Procedure Number:',
+            'attr' => array('class'=>'form-control')
+        ));
 
         //$builder->add('keytype', 'hidden', array('label'=>false));
         $builder->add('keytype', 'entity', array(

@@ -594,90 +594,108 @@ class MultiScanOrderController extends Controller {
                 $patient->addExtraFields($extraStatus,$user,$source);
             }
 
-            //procedure
-            foreach( $patient->getProcedure() as $procedure ) {
+            //encounter
+            foreach( $patient->getEncounter() as $encounter ) {
 
-                if( !$this->hasOrderInfo($procedure,$id) ) {
-                    $patient->removeProcedure($procedure);
+                if( !$this->hasOrderInfo($encounter,$id) ) {
+                    $patient->removeEncounter($encounter);
                     continue;
                 }
 
-                if( !$securityUtil->hasUserPermission($procedure, $user) ) {
-                    $patient->removeChildren($procedure);
+                if( !$securityUtil->hasUserPermission($encounter, $user) ) {
+                    $patient->removeChildren($encounter);
                     continue;
                 }
 
                 if( $datastructure ) {
-                    $procedure->addExtraFields($extraStatus,$user,$source);
+                    $encounter->addExtraFields($extraStatus,$user,$source);
                 }
 
-                //accession
-                foreach( $procedure->getAccession() as $accession ) {
-                    if( !$this->hasOrderInfo($accession,$id) ) {
-                        $procedure->removeAccession($accession);
+                //procedure
+                foreach( $encounter->getProcedure() as $procedure ) {
+
+                    if( !$this->hasOrderInfo($procedure,$id) ) {
+                        $encounter->removeProcedure($procedure);
                         continue;
                     }
 
-                    if( !$securityUtil->hasUserPermission($accession, $user) ) {
-                        $procedure->removeChildren($accession);
+                    if( !$securityUtil->hasUserPermission($procedure, $user) ) {
+                        $encounter->removeChildren($procedure);
                         continue;
                     }
 
                     if( $datastructure ) {
-                        $accession->addExtraFields($extraStatus,$user,$source);
+                        $procedure->addExtraFields($extraStatus,$user,$source);
                     }
 
-                    //part
-                    foreach( $accession->getPart() as $part ) {
-                       if( !$this->hasOrderInfo($part,$id) ) {
-                            $accession->removePart($part);
+                    //accession
+                    foreach( $procedure->getAccession() as $accession ) {
+                        if( !$this->hasOrderInfo($accession,$id) ) {
+                            $procedure->removeAccession($accession);
                             continue;
                         }
 
-                        if( !$securityUtil->hasUserPermission($part, $user) ) {
-                            $accession->removeChildren($part);
+                        if( !$securityUtil->hasUserPermission($accession, $user) ) {
+                            $procedure->removeChildren($accession);
                             continue;
                         }
 
-                        //block
-                        foreach( $part->getBlock() as $block ) {
-                            if( !$this->hasOrderInfo($block,$id) ) {
-                                $part->removeBlock($block);
+                        if( $datastructure ) {
+                            $accession->addExtraFields($extraStatus,$user,$source);
+                        }
+
+                        //part
+                        foreach( $accession->getPart() as $part ) {
+                           if( !$this->hasOrderInfo($part,$id) ) {
+                                $accession->removePart($part);
                                 continue;
                             }
 
-                            if( ! $securityUtil->hasUserPermission($block, $user) ) {
-                                $part->removeChildren($block);
+                            if( !$securityUtil->hasUserPermission($part, $user) ) {
+                                $accession->removeChildren($part);
                                 continue;
                             }
 
-                            //slide
-                            foreach( $block->getSlide() as $slide ) {
-
-                                //check if this slides can be viewed by this user
-                                $permission = true;
-                                if( !$securityUtil->hasUserPermission($slide, $user) ) {
-                                    //echo " (".$slide->getProvider()->getId().") ?= (".$user->getId().") => ";
-                                    if( $slide->getProvider()->getId() != $user->getId() ) {
-                                        $permission = false;
-                                    }
-                                }
-
-                                //echo "permission=".$permission;
-
-                                if( !$this->hasOrderInfo($slide,$id) || !$permission ) {
-                                    $block->removeSlide($slide);
-                                    $entity->removeSlide($slide);
+                            //block
+                            foreach( $part->getBlock() as $block ) {
+                                if( !$this->hasOrderInfo($block,$id) ) {
+                                    $part->removeBlock($block);
                                     continue;
                                 }
 
+                                if( ! $securityUtil->hasUserPermission($block, $user) ) {
+                                    $part->removeChildren($block);
+                                    continue;
+                                }
 
-                            }//slide
+                                //slide
+                                foreach( $block->getSlide() as $slide ) {
 
-                        }//block
-                    }//part
-                }//accession
-            }//procedure
+                                    //check if this slides can be viewed by this user
+                                    $permission = true;
+                                    if( !$securityUtil->hasUserPermission($slide, $user) ) {
+                                        //echo " (".$slide->getProvider()->getId().") ?= (".$user->getId().") => ";
+                                        if( $slide->getProvider()->getId() != $user->getId() ) {
+                                            $permission = false;
+                                        }
+                                    }
+
+                                    //echo "permission=".$permission;
+
+                                    if( !$this->hasOrderInfo($slide,$id) || !$permission ) {
+                                        $block->removeSlide($slide);
+                                        $entity->removeSlide($slide);
+                                        continue;
+                                    }
+
+
+                                }//slide
+
+                            }//block
+                        }//part
+                    }//accession
+                }//procedure
+            }//encounter
         }//patient
 
         //echo "<br>Procedure count=".count( $entity->getProcedure() );

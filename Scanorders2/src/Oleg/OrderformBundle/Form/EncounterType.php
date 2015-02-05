@@ -46,7 +46,7 @@ class EncounterType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__encounternumber__',
         ));
-//
+
 //        $builder->add('name', 'collection', array(
 //            'type' => new EncounterNameType($this->params, $this->entity),
 //            'allow_add' => true,

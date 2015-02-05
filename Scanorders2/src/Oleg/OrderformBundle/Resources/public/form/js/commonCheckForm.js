@@ -390,13 +390,13 @@ function setPatientAndProcedureAgeListener() {
 
     //console.log("setPatientAndProcedureAgeListener set!");
 
-    $('.procedureage-field').on("change", function(e) {
+    $('.encounterage-field').on("change", function(e) {
         //printF($(this),"listener: ");
 
         //clear warning message
-        var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+        var procedureAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
         if( orderformtype == "single") {
-            procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
+            procedureAgeEl = $(this).closest('.singleorderinfo').find('.encounterage-field');
         }
         removeAgeConflictWarningMessage(procedureAgeEl);
 
@@ -409,9 +409,9 @@ function setPatientAndProcedureAgeListener() {
         //printF($(this),"listener: ");
 
         //clear warning message
-        var procedureAgeEl = $(this).closest('.panel-patient').find('.procedureage-field');
+        var procedureAgeEl = $(this).closest('.panel-patient').find('.encounterage-field');
         if( orderformtype == "single") {
-            procedureAgeEl = $('.singleorderinfo').find('.procedureage-field');
+            procedureAgeEl = $('.singleorderinfo').find('.encounterage-field');
         }
         removeAgeConflictWarningMessage(procedureAgeEl);
 
@@ -454,9 +454,9 @@ function setPatientAndProcedureAgeListener() {
                     //console.log('patientdob: age='+age);
 
                     //find procedure age element
-                    var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+                    var procedureAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
                     if( orderformtype == "single") {
-                        procedureAgeEl = $('.singleorderinfo').find('.procedureage-field');
+                        procedureAgeEl = $('.singleorderinfo').find('.encounterage-field');
                     }
 
                     if( procedureAgeEl.val() == "" ) {  //don't override age
@@ -491,9 +491,9 @@ function setPatientAndProcedureAgeListener() {
                 //console.log('encounterdate: age='+age);
 
                 //find procedure age element
-                var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+                var procedureAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
                 if( orderformtype == "single") {
-                    procedureAgeEl = $('.singleorderinfo').find('.procedureage-field');
+                    procedureAgeEl = $('.singleorderinfo').find('.encounterage-field');
                 }
 
                 if( procedureAgeEl.val() == "" ) {  //don't override age

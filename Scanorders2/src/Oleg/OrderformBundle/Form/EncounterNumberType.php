@@ -61,13 +61,19 @@ class EncounterNumberType extends AbstractType
                     },
             ));
 
-            $builder->add('field', null, array('label'=>false));
+            $builder->add('field', null, array(
+                'label'=>'Encounter Number:',
+                'attr' => array('class'=>'form-control')
+            ));
 
         } else {
 
-            $builder->add('field', 'hidden', array(
-                'label'=>'Encounter Number:'
+            $builder->add('field', null, array(
+                    'label'=>'Encounter Number:',
+                'attr' => array('class'=>'form-control')
             ));
+
+            //$builder->add('field', 'hidden', array('label'=>false));
 
         }
 

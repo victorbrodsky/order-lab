@@ -3,7 +3,7 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
-use Oleg\OrderformBundle\Entity\RaceList;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 use Oleg\OrderformBundle\Entity\AccessionType;
 use Oleg\OrderformBundle\Entity\EncounterType;
+use Oleg\OrderformBundle\Entity\ProcedureType;
 use Oleg\OrderformBundle\Entity\FormType;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
@@ -27,6 +28,8 @@ use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
 use Oleg\OrderformBundle\Entity\Urgency;
 use Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList;
+use Oleg\OrderformBundle\Entity\RaceList;
+
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Controller\AdminController;
@@ -83,6 +86,7 @@ class ScanAdminController extends AdminController
 
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
+        $count_proceduretype = $this->generateProcedureType();
         $count_formtype = $this->generateFormType();
         $count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
@@ -104,7 +108,8 @@ class ScanAdminController extends AdminController
             'Generated Tables: '.
             //'Roles='.$count_roles.', '.
             'Accession Types='.$count_acctype.', '.
-            'Encounter Types='.$count_enctype.', '.
+            'Encounter Types='.$count_proceduretype.', '.
+            'Procedure Types='.$count_enctype.', '.
             'Form Types='.$count_formtype.', '.
             'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
@@ -678,6 +683,38 @@ class ScanAdminController extends AdminController
         foreach( $types as $type ) {
 
             $encType = new EncounterType();
+            $this->setDefaultList($encType,$count,$username,$type);
+
+            $em->persist($encType);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
+    public function generateProcedureType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:ProcedureType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Auto-generated Procedure Number',
+            'Existing Auto-generated Procedure Number'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $encType = new ProcedureType();
             $this->setDefaultList($encType,$count,$username,$type);
 
             $em->persist($encType);

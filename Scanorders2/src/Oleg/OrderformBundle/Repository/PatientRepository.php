@@ -69,7 +69,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
     //$parent: orderinfo
     public function replaceDuplicateEntities( $parent, $orderinfo ) {
 
-        //echo "Patient replace duplicates:".$parent;
+        echo "Patient replace duplicates:".$parent;
 
         $children = $parent->getChildren();
 
@@ -78,31 +78,35 @@ class PatientRepository extends ArrayFieldAbstractRepository
         }
 
         $count = 0;
-        foreach( $children as $child ) {    //child is Procedure object
-            //echo $count.": Testing child(procedure)=".$child."<br>";
+        foreach( $children as $child ) {    //child is Encounter object
+            echo $count.": Testing child(Encounter)=".$child."<br>";
 
-            if( count($child->getAccession()) != 1 ) {
-                throw new \Exception( 'This entity must have only one child. Number of children=' . count($child->getAccession()) );
+            if( count($child->getChildren()) != 1 ) {
+                throw new \Exception( 'This entity must have only one child. Number of children=' . count($child->getChildren()) );
             }
 
-            //$sameChild = $this->findSimilarChild($parent,$child->getAccession()->first());
+            //$sameChild = $this->findSimilarChild($parent,$child->getChildren()->first());
             $em = $this->_em;
-            $sameChild = $em->getRepository('OlegOrderformBundle:Procedure')->findSimilarChild( $parent, $child->getAccession()->first() );
+            $sameChild = $em->getRepository('OlegOrderformBundle:Encounter')->findSimilarChild( $parent, $child->getChildren()->first() );
+
+            echo "similar child=".$sameChild."<br>";
 
             if( $sameChild ) {
-                //echo "Found similar child=".$child."<br>";
+                echo "Found similar child=".$child."<br>";
+
+                exit('process same child');
 
                 $thisChildren = $child->getChildren();
                 foreach( $thisChildren as $thisChild ) {
                     $sameChild->addChildren($thisChild);
                 }
 
-                //Copy Fields for Procedure
+                //Copy Fields for Encounter
                 //echo "<br>######################################## Process similar fields ########################################<br>";
                 $sameChild = $this->processFieldArrays($sameChild,$orderinfo,$child);
                 //echo "######################################## EOF Process similar fields ########################################<br>";
 
-                //copy parts to the found same accession
+                //copy parts to the found same accession. getAccession==(getChildren)
                 $sameAccession = $sameChild->getAccession()->first();
                 $parts = $child->getAccession()->first()->getChildren();
                 foreach( $parts as $part ) {
@@ -120,9 +124,9 @@ class PatientRepository extends ArrayFieldAbstractRepository
                 $accession->clearOrderinfo();
                 //unset($accession);
 
-                //clear procedure
+                //clear encounter
                 $parent->removeChildren($child);
-                $orderinfo->removeProcedure($child);
+                $orderinfo->removeEncounter($child);
                 $child->setParent(null);
                 $child->clearOrderinfo();
                 unset($child);

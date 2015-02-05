@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class ProcedureInpatientinfoType extends AbstractType
+class EncounterInpatientinfoType extends AbstractType
 {
 
     protected $params;
@@ -79,7 +79,7 @@ class ProcedureInpatientinfoType extends AbstractType
 
 
         $builder->add('others', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureInpatientinfo',
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterInpatientinfo',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -90,12 +90,12 @@ class ProcedureInpatientinfoType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureInpatientinfo',
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterInpatientinfo',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_procedureinpatientinfotype';
+        return 'oleg_orderformbundle_encounterinpatientinfotype';
     }
 }
