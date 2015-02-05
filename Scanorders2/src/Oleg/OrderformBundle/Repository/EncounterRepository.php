@@ -263,7 +263,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
 
     //find similar encounter in patient.
-    //However, encounter is identified by procedure number
+    //However, encounter is identified by encounter number
     //$parent: patient
     //$newChild: procedure
     //find similar child and return the first one

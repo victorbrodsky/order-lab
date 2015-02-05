@@ -359,10 +359,10 @@ class CheckController extends Controller {
 
                 //procedure's fields: Procedure Type (Name)
                 $procedureName = $procedure->getName();
-                $procedureNumber = $procedure->getNumber();
+                //$procedureNumber = $procedure->getNumber();
 
                 //encounter's fields: date, suffix, lastname, firstname, middlename, sex, age, history
-                $encounterName = $encounter->getName();
+                //$encounterName = $encounter->getName();
                 $encounterDate = $encounter->getDate();
                 $patSuffix = $encounter->getPatsuffix();
                 $patLastName = $encounter->getPatlastname();
@@ -380,7 +380,7 @@ class CheckController extends Controller {
                 $extraid = "";
                 $parentDob = "";
                 $orderinfoString = "";
-                $encounterName = array();
+                //$encounterName = array();
                 $procedureName = array();
 
                 $encounterDate = array();
@@ -402,10 +402,11 @@ class CheckController extends Controller {
                 'parentdob'=>$parentDob."",
                 'mrnstring'=>$mrnstring,
                 'orderinfo'=>$orderinfoString,
-                //'encounter'=>$this->getArrayFieldJson($encounterName),
-                'procedure'=>$this->getArrayFieldJson($procedureName),
-                //'procedurenumber'=>$this->getArrayFieldJson($procedureNumber),
 
+                //procedure data
+                'procedure'=>$this->getArrayFieldJson($procedureName),
+
+                //encounter data
                 'date'=>$this->getArrayFieldJson($encounterDate),
                 'patsuffix'=>$this->getArrayFieldJson($patSuffix),
                 'patlastname'=>$this->getArrayFieldJson($patLastName),
@@ -415,6 +416,7 @@ class CheckController extends Controller {
                 'patage'=>$this->getArrayFieldJson($patAge),
                 'pathistory'=>$this->getArrayFieldJson($patHist),
 
+                //accession data
                 'accession'=>$this->getArrayFieldJson($entity->getAccession(),array('keytype')),
                 'accessionDate'=>$this->getArrayFieldJson($entity->getAccessionDate())
             );

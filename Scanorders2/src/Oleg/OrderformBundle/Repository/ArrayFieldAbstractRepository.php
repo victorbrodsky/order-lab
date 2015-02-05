@@ -60,8 +60,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $keys = $entity->obtainAllKeyfield();
 
-        //echo "count keys=".count($keys)."<br>";
-        //echo "key=".$keys->first()."<br>";
+        echo "count keys=".count($keys)."<br>";
+        echo "key=".$keys->first()."<br>";
 
         if( count($keys) == 0 ) {
             $entity->createKeyField();  //this should never execute in normal situation. This happens when form submit with empty fields added by js
@@ -1148,12 +1148,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                     ' c JOIN c.'.$fieldName.
                     ' cfield WHERE '.$extraStr.'cfield.field LIKE :field'.$inst;
 
-        echo "queryStr=".$queryStr."<br>";
+        //echo "queryStr=".$queryStr."<br>";
 
         $query = $this->getEntityManager()
         ->createQuery($queryStr)->setParameter('field', '%'.$name.'%');
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $lastField = $query->getSingleResult();
         $index = 'max'.$fieldName;

@@ -78,6 +78,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     //find similar child and return the first one
     //return false if no similar children are found
     public function findSimilarChild($parent,$newChild) {
+
+        exit('This function is not used. '.$newChild);
+
         //echo "Procedure: find similar Child to: ".$newChild." <br>";
 
         $children = $parent->getChildren();

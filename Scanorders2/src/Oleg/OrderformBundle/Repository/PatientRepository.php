@@ -91,7 +91,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
             echo "similar child=".$sameChild."<br>";
 
-            if( $sameChild ) {
+            if( $sameChild ) {  //encounter
                 echo "Found similar child=".$child."<br>";
 
                 exit('process same child');

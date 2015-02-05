@@ -84,6 +84,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             throw new \Exception( 'Provided entity is not Accession, entity:'.$accession );
         }
 
+        //echo $accession;
+
         $em = $this->_em;
 
         //process data quality
@@ -288,6 +290,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $extra          //$extra
         );
 
+        //echo "accessions count=".count($accessions)."<br>";
+
         foreach( $accessions as $acc ){
             echo $acc;
         }
@@ -308,7 +312,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             return false;
         }
 
-        $patient = $procedure->getParent();
+        $patient = $procedure->getParent()->getParent();
         if( !$patient ) {
             return false;
         }
