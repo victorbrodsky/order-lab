@@ -259,9 +259,10 @@ function deleteError(btnObj,single) {
     }
 }
 
-//check if parent has checked sublings with the same key value
-function checkParent(element,keyValue,name,fieldName,extra) {
-    var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+//check if parent has checked sublings with the same key value. Use only for multi form
+function checkParent(element,keyValue,inputEl,name,fieldName,extra) {
+    //var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    var parentEl = element.closest('.panel-patient');
     //console.log("checkParent parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
 
     //if this patient has already another checked accession, then check current accession is not possible
@@ -273,10 +274,17 @@ function checkParent(element,keyValue,name,fieldName,extra) {
     var sublingsKey = parentEl.find('.'+name+fieldName).each(function() {
 
         //printF($(this),"check sublings keys=");
+        var thisInputEl = $(this).find('input.keyfield');
+
+        //ignore if this element is the same as source element: use id
+        //console.log("compare: " + thisInputEl.attr('id') + "==" + inputEl.attr('id'));
+        if( thisInputEl.attr('id') == inputEl.attr('id') ) {
+            //console.log('the same element!!! => return');
+            return; //continue
+        }
 
         var keyField = $(this).find('.keyfield');
 
-        //if( $(this).val() == "" ) {
         if( keyField.hasClass('select2') ) {
             var sublingsKeyValue = keyField.val();
         } else {
@@ -290,11 +298,28 @@ function checkParent(element,keyValue,name,fieldName,extra) {
 
         //console.log("checkParent sublingsKeyValue=" + sublingsKeyValue + ", keyValue="+keyValue + ", keytype="+keytype+", extra="+extra);
 
-        if( $(this).find('#check_btn').hasClass('removebtn') && trimWithCheck(sublingsKeyValue) == trimWithCheck(keyValue) ) {
-            alert("This keyfield is already in use and it is checked");
+        var cleankeyValue = trimWithCheck(keyValue);
+        var cleansublingsKeyValue = trimWithCheck(sublingsKeyValue);
+
+        var sameValue = false;
+        if( cleansublingsKeyValue != "" && cleankeyValue != "" ) {
+            if( cleansublingsKeyValue.toLowerCase() == cleankeyValue.toLowerCase() ) {
+                sameValue = true;
+            }
+        }
+
+        if( $(this).find('#check_btn').hasClass('removebtn') && sameValue && keytype == extra ) {
+            alert("This keyfield "+cleankeyValue+" is already in use and it is checked");
             retval = 0;
             return false;   //break each
         }
+
+        if( sameValue && keytype == extra ) {
+            alert("This keyfield " + cleankeyValue + " is already in use");
+            retval = 0;
+            return false;   //break each
+        }
+
     });
 
     if( retval == 0 ) {
@@ -1097,9 +1122,22 @@ function checkExistingKey(name) {
         var eltypeValue = keyElement.type;
         var eltypeValueText = keyElement.typename;
 
-        //printF(elInput,"input element:");
+        printF(elInput,"input element:");
         //console.log("elValue="+elValue + ", eltypeValue=" + eltypeValue );
 
+        //check if patient or accession has the same key field value repeated in the entire form
+        if( name == 'patient' || name == 'accession' ) {
+            if( ifExistsSameSiblingsInForm(keyElement) ) {
+                var errMsg = 'Error: repeated key ' + keyElement.key;
+                //alert(errMsg);
+                var errorHtml = createErrorWell(keyElement.element,null,errMsg);
+                $('#validationerror').append(errorHtml);
+                return false;
+            }
+        }
+        //testing
+        //var errorHtml = createErrorWell(keyElement.element,null,"No error");
+        //$('#validationerror').append(errorHtml);
         //return false;
 
         if(
@@ -1141,6 +1179,30 @@ function checkExistingKey(name) {
 
     //return false;
     return true;
+}
+
+function ifExistsSameSiblingsInForm( keyObj ) {
+    var key = keyObj.key;
+    var type = keyObj.type;
+    var name = keyObj.name;
+    var fieldname = keyObj.fieldname;
+    //console.log("key="+key+", type="+type+", name="+name+", fieldname="+fieldname);
+
+    var exist = false;
+
+    $('#scanorderform').find('.'+name+fieldname).each( function(){
+        var btnEl = $(this).find('.checkbtn');
+        var btnObj = new btnObject(btnEl);
+
+        if( key != "" && btnObj.key != "" ) {
+            if( key == btnObj.key && type == btnObj.type ) {
+                exist = true;
+            }
+        }
+
+    });
+
+    return exist;
 }
 
 function checkSpecifyAnotherIssuer( name ) {

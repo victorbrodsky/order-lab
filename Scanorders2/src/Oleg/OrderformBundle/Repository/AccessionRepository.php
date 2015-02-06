@@ -80,7 +80,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     public function processDuplicationKeyField( $accession, $orderinfo ) {
 
         if( !($accession instanceof Accession) ) {
-            echo 'Provided entity is not Accession, entity:'.$accession;
+            //echo 'Provided entity is not Accession, entity:'.$accession;
             throw new \Exception( 'Provided entity is not Accession, entity:'.$accession );
         }
 
@@ -91,7 +91,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //process data quality
         $currentDataquality = null;
 
-        echo "dataquality count=".count($orderinfo->getDataqualityMrnAcc())."<br>";
+        //echo "dataquality count=".count($orderinfo->getDataqualityMrnAcc())."<br>";
 
         //loop through all conflicts to find out if this accession is conflicted
         //To determine if this accession has geberated conflict: 1) compare accession number/type and mrn number/type of dataquality and form
@@ -106,8 +106,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $validMrn = $accession->getParent()->getParent()->obtainValidKeyfield();
             $accmrn = $validMrn->getField();
             $accmrntype = $validMrn->getKeytype();
-            echo "compare patient: (".$mrn .")==(". $accmrn .") && (". $mrntype .")==(". $accmrntype.")<br>";
-            echo "acc patient:". $accession->getParent()->getParent();
+            //echo "compare patient: (".$mrn .")==(". $accmrn .") && (". $mrntype .")==(". $accmrntype.")<br>";
+            //echo "acc patient:". $accession->getParent()->getParent();
 
             if( $mrntype == "" || $accmrntype == "" ) {
                 throw new \Exception( 'Conflicting MRN Type is not provided: mrntype=' . $mrntype . ", accmrntype=" .$accmrntype );
@@ -137,8 +137,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 throw new \Exception( 'Conflicting Accession Type is not provided: ' . $conflictAccessionType );
             }
 
-            echo $currentAccessionNum."?=".$conflictAccessionNum.", newAccession=".$dataquality->getNewaccession()."<br>";
-            echo $currentAccessionType."?=".$conflictAccessionType."<br>";
+            //echo $currentAccessionNum."?=".$conflictAccessionNum.", newAccession=".$dataquality->getNewaccession()."<br>";
+            //echo $currentAccessionType."?=".$conflictAccessionType."<br>";
 
             if( $currentAccessionNum == $conflictAccessionNum && $currentAccessionType == $conflictAccessionType ) { //only for match accessions and if this accession was not processed yet
                 if( !$dataquality->getNewaccession() ) {
@@ -215,7 +215,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         ///////////////// EOF check DB directly for conflict, just in case JS fails to catch conflict and orderinfo's Dataquality is empty ////////////////////
 
         if( $currentDataquality == null && $dbconflict == false ) {
-            echo "#####this is not conflict accession => return !!!!!! <br>";
+            //echo "#####this is not conflict accession => return !!!!!! <br>";
             return $accession;
         }
 
@@ -257,10 +257,10 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $currentDataquality->setDescription($desc);
         }
 
-        echo "<br>-----------------Original Accession:<br>";
-        $this->printTree( $accession );
-        echo "--------------------------<br>";
-        echo "finish process Accession: ".$accession."<br>";
+        //echo "<br>-----------------Original Accession:<br>";
+        //$this->printTree( $accession );
+        //echo "--------------------------<br>";
+        //echo "finish process Accession: ".$accession."<br>";
 
         return $accession;
 
@@ -292,9 +292,9 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         //echo "accessions count=".count($accessions)."<br>";
 
-        foreach( $accessions as $acc ){
-            echo $acc;
-        }
+        //foreach( $accessions as $acc ){
+        //    echo $acc;
+        //}
 
         if( count($accessions) > 1 ) {
             //throw new \Exception( 'More than one Accession found, but single entity is expected:  key='. $accValue. ', type=' . $accKeytype . ', found=' . count($accessions) );
@@ -361,8 +361,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     //find similar child and return the first one
     //return false if no similar children are found
     public function findSimilarChild($parent,$newChild) {
-        echo "Accession: find similar parent: ".$parent." <br>";
-        echo "Accession: find similar Child to: ".$newChild." <br>";
+        //echo "Accession: find similar parent: ".$parent." <br>";
+        //echo "Accession: find similar Child to: ".$newChild." <br>";
 
         $encounters = $parent->getChildren();
 
@@ -398,10 +398,10 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
             $accession = $accessions->first();
 
-//            if( $accession === $newChild ) {
-//                echo "the same child: continue<br>";
-//                return false;
-//            }
+            if( $accession === $newChild ) {
+                //echo "the same child: continue<br>";
+                return false;
+            }
 
             if( $this->entityEqualByComplexKey($accession, $newChild) ) {
                 //echo "MATCH!: ".$child." <br>";

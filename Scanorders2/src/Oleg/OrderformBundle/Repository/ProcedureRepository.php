@@ -70,58 +70,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     }
 
 
-    //TODO: remove: it's not used because this function is called from replaceDuplicateEntities, but here replaceDuplicateEntities does not do anything
-    //find similar procedure in encounter.
-    //However, procedure is identified by accession number
-    //$parent: encounter
-    //$newChild: accession
-    //find similar child and return the first one
-    //return false if no similar children are found
-    public function findSimilarChild($parent,$newChild) {
-
-        exit('This function is not used. '.$newChild);
-
-        //echo "Procedure: find similar Child to: ".$newChild." <br>";
-
-        $children = $parent->getChildren();
-
-        //echo "<br>";
-        //echo $newChild;
-        //echo "newChild key=".$newChild->obtainValidKeyfield()."<br>";
-        if( $newChild->obtainValidKeyfield()."" == "" ) {   //no name is provided, so can't compare => does not exist
-            //echo "false: no name <br>";
-            return false;
-        }
-
-        if( !$children || count($children) == 0 ) { //no children => does not exist
-            //echo "false: no children <br>";
-            return false;
-        }
-
-        foreach( $children as $child ) {
-            //echo $child;
-
-            if( count($child->getAccession()) != 1 ) {
-                throw new \Exception( 'This entity must have only one child. Number of children=' . count($child->getAccession()) );
-            }
-
-            if( $child->getAccession()->first() === $newChild ) {
-                //echo "the same child: continue<br>";
-                return false;
-            }
-
-            if( $this->entityEqualByComplexKey($child->getAccession()->first(), $newChild) ) {
-                //echo "MATCH!: ".$child." <br>";
-                return $child;
-            } else {
-                //echo "NO MATCH! <br>";
-            }
-
-        }//foreach
-
-        return false;
-    }
-
 
     //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
     //This function redirects to the same overrided function by Accession Repository

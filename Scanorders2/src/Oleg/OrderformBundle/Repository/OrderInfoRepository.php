@@ -138,7 +138,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //echo $entity->getSlide()->first();
 
         //throw new \Exception('TESTING');
-        //exit('orderinfo repoexit testing');
+        exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;
@@ -227,7 +227,9 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
     }
 
     public function setSlides($orderinfo) {
+        //echo "orderinfo=".$orderinfo."<br>";
         $patients = $orderinfo->getPatient();
+        //echo "patient count=".count($patients)."<br>";
         foreach( $patients as $patient ) {
             $this->addSlidesToOrderinfo($orderinfo, $patient);
         }

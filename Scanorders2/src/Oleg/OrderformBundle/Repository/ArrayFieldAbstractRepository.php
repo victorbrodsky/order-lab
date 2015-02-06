@@ -60,8 +60,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $keys = $entity->obtainAllKeyfield();
 
-        echo "count keys=".count($keys)."<br>";
-        echo "key=".$keys->first()."<br>";
+        //echo "count keys=".count($keys)."<br>";
+        //echo "key=".$keys->first()."<br>";
 
         if( count($keys) == 0 ) {
             $entity->createKeyField();  //this should never execute in normal situation. This happens when form submit with empty fields added by js
@@ -159,10 +159,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $className == 'Part' ) {
 
             if( $original ) {
-                echo " ############ original ############ <br>";
+                //echo " ############ original ############ <br>";
                 $formEntity = $original;
             } else {
-                echo " ############ entity ############ <br>";
+                //echo " ############ entity ############ <br>";
                 $formEntity = $entity;
             }
 //            echo "<br>paper count=".count($formEntity->getPaper())."<br>";
@@ -184,7 +184,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 }
             }
 
-            echo "papers count=".count($entity->getPaper())."<br>";
+            //echo "papers count=".count($entity->getPaper())."<br>";
             //exit('exit part doc');
         }
 
@@ -355,10 +355,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         foreach( $children as $child ) {
             //echo $child;
 
-//            if( $child === $newChild ) {
-//                //echo "the same child: continue<br>";
-//                return false;
-//            }
+            if( $child === $newChild ) {
+                //echo "the same child: continue<br>";
+                return false;
+            }
 
             if( $this->entityEqualByComplexKey($child, $newChild) ) {
                 return $child;
@@ -1301,13 +1301,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         if( count($children) <= 1 ) {
-            echo "return on children <= 1<br>";
+            //echo "return on children <= 1<br>";
             return $parent;
         }
 
         $count = 0;
         foreach( $children as $child ) {
-            echo $count.": Testing child=".$child."<br>";
+            //echo $count.": Testing child=".$child."<br>";
 
             //don't remove slides
             $class = new \ReflectionClass($child);

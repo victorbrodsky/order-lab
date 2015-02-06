@@ -550,7 +550,7 @@ function executeClick( btnObjInit ) {
                             var gonext = 1;
 
                             if( !single ) {
-                                gonext = checkParent(btn,key,btnObj.name,btnObj.fieldname,btnObj.type); //check if this key is not used yet, when a new key field is checked in the added entity
+                                gonext = checkParent(btn,key,btnObj.element,btnObj.name,btnObj.fieldname,btnObj.type); //check if this key is not used yet, when a new key field is checked in the added entity
                                 //console.debug("0 gonext="+gonext);
                             }
 
@@ -580,12 +580,21 @@ function executeClick( btnObjInit ) {
                             resolve("ajax key value data is found");
 
                         } else {
-                            //console.debug("not found");
-                            disableInElementBlock(btn, false, null, "notkey", null);
-                            invertButton(btn);
-                            //calculateAgeByDob(btn);
-                            setObjectInfo(btnObj,0);
-                            resolve("data is null");
+
+                            var gonext = 1;
+
+                            if( !single ) {
+                                gonext = checkParent(btn,key,btnObj.element,btnObj.name,btnObj.fieldname,btnObj.type); //check if this key is not used yet, when a new key field is checked in the added entity
+                            }
+
+                            if( gonext == 1 ) {
+                                //console.debug("not found");
+                                disableInElementBlock(btn, false, null, "notkey", null);
+                                invertButton(btn);
+                                //calculateAgeByDob(btn);
+                                setObjectInfo(btnObj,0);
+                                resolve("data is null");
+                            }
                         }
 
                     } //check

@@ -112,11 +112,9 @@ class PatientRepository extends ArrayFieldAbstractRepository
             $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findSimilarChild( $parent, $accession );
 
             //echo "similar child=".$foundAccession."<br>";
-            //echo "0 foundAcc slide count=".count($foundAccession->getPart()->first()->getBlock()->first()->getSlide())."<br>";
 
             if( $foundAccession ) {  //accession
                 //echo "Found similar child to:".$accession."<br>";
-                //exit('process same child');
 
                 //Note: assume that js will not submit two similar accession with different contest. JS must check for existing accession in DB and in the form!
                 //Copy all children element from checked $accession to found accession $foundAccession
@@ -162,8 +160,6 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
                 //add $foundAccession to orderinfo
                 $orderinfo->addAccession($foundAccession);
-
-                //echo "1 foundAcc slide count=".count($foundAccession->getPart()->first()->getBlock()->first()->getSlide())."<br>";
 
             }
 
