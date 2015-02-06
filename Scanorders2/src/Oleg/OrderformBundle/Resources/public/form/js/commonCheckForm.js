@@ -1136,8 +1136,6 @@ function checkExistingKey(name) {
             }
         }
         //testing
-        //var errorHtml = createErrorWell(keyElement.element,null,"No error");
-        //$('#validationerror').append(errorHtml);
         //return false;
 
         if(
@@ -1193,6 +1191,11 @@ function ifExistsSameSiblingsInForm( keyObj ) {
     $('#scanorderform').find('.'+name+fieldname).each( function(){
         var btnEl = $(this).find('.checkbtn');
         var btnObj = new btnObject(btnEl);
+
+        //continue if the same object
+        if( keyObj.element.attr('id') == btnObj.element.attr('id') ) {
+            return;
+        }
 
         if( key != "" && btnObj.key != "" ) {
             if( key == btnObj.key && type == btnObj.type ) {
