@@ -111,9 +111,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
 //        echo "<br>################################## Finish:<br>";
 //        echo "patients=".count($entity->getPatient())."<br>";
+//        echo "encounters=".count($entity->getEncounter())."<br>";
+//        echo "pat: encounters=".count($entity->getPatient()->first()->getEncounter())."<br>";
 //        echo "procedures=".count($entity->getProcedure())."<br>";
+//        echo "pat: procedures=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure())."<br>";
 //        echo "accessions=".count($entity->getAccession())."<br>";
+//        echo "pat: accessions=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession())."<br>";
 //        echo "parts=".count($entity->getPart())."<br>";
+//        echo "pat: parts=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
 //        echo "blocks=".count($entity->getBlock())."<br>";;
 //        echo "slides=".count($entity->getSlide())."<br>";
 
@@ -133,7 +138,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //echo $entity->getSlide()->first();
 
         //throw new \Exception('TESTING');
-        exit('orderinfo repoexit testing');
+        //exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;

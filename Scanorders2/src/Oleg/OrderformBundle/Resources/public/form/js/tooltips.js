@@ -17,7 +17,7 @@ function attachPatientNameSexAgeLockedTooltip() {
 
     var sexname = "Accession";
     if( orderformtype == "single") {
-        sexname = "Procedure";
+        sexname = "Encounter";
     }
 
     //patient's sex
@@ -25,25 +25,25 @@ function attachPatientNameSexAgeLockedTooltip() {
     patsex.parent().tooltip({
         'title': "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the "+sexname+" section."
     });
-    highlightProcedureSexElement( patsex.parent(), '.proceduresex-field' );
+    highlightEncounterSexElement( patsex.parent(), '.encountersex-field' );
 
     //patient's age
     var patage = $('.patientage').find('.not-mapped-simplefield');
     patage.parent().tooltip({
         'title': "This is the current age of the patient (if known). To enter a new age, either supply a date of birth or enter the patient's age at the time of the encounter below."
     });
-    highlightProcedureAgeElement( patage.parent(), '.patient-dob-date' );
+    highlightEncounterAgeElement( patage.parent(), '.patient-dob-date' );
 
     //patient's name
     var patname = $('.patientname').find('.not-mapped-simplefield');
     patname.parent().tooltip({
         'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's [Last, First, Middle] Name (at the time of encounter)\" in the "+sexname+" section."
     });
-    highlightProcedureNameElement( patname.parent(), '.procedure-suffix', '.procedure-lastName', '.procedure-firstName', '.procedure-middleName' );
+    highlightEncounterNameElement( patname.parent(), '.encounter-suffix', '.encounter-lastName', '.encounter-firstName', '.encounter-middleName' );
 
 }
 
-function highlightProcedureAgeElement( element, parentTarget) {
+function highlightEncounterAgeElement( element, parentTarget) {
     element.on('show.bs.tooltip', function () {
         $(parentTarget).css("background-color","#d9edf7");
     });
@@ -52,7 +52,7 @@ function highlightProcedureAgeElement( element, parentTarget) {
     });
 }
 
-function highlightProcedureNameElement( element, parentTarget0, parentTarget1, parentTarget2, parentTarget3 ) {
+function highlightEncounterNameElement( element, parentTarget0, parentTarget1, parentTarget2, parentTarget3 ) {
     element.on('show.bs.tooltip', function () {
         $(parentTarget0).css("background-color","#d9edf7");
         $(parentTarget1).css("background-color","#d9edf7");
@@ -67,7 +67,7 @@ function highlightProcedureNameElement( element, parentTarget0, parentTarget1, p
     });
 }
 
-function highlightProcedureSexElement( element, parentTarget ) {
+function highlightEncounterSexElement( element, parentTarget ) {
     element.on('show.bs.tooltip', function () {
         var parent = $(parentTarget);
         parent.addClass("alert-info");

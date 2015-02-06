@@ -70,68 +70,101 @@ class PatientRepository extends ArrayFieldAbstractRepository
     //$orderinfo: orderinfo
     public function replaceDuplicateEntities( $parent, $orderinfo ) {
 
-        echo "Patient replace duplicates: parent: ".$parent;
-        echo "Patient replace duplicates: orderinfo: ".$orderinfo;
+        //echo "Patient replace duplicates: parent: ".$parent;
+        //echo "Patient replace duplicates: orderinfo: ".$orderinfo;
 
-        $children = $parent->getChildren(); //encounters
+        $encounters = $parent->getChildren(); //encounters
 
-        if( !$children ) {
+        if( !$encounters ) {
             return $parent;
         }
 
         $count = 0;
-        foreach( $children as $child ) {    //child is Encounter object
-            echo $count.": Testing child(Encounter)=".$child."<br>";
+        foreach( $encounters as $encounter ) {    //child is Encounter object
+            //echo $count.": Testing child(Encounter)=".$encounter."<br>";
 
-            if( count($child->getChildren()) != 1 ) {
-                throw new \Exception( 'This entity must have only one child. Number of children=' . count($child->getChildren()) );
+            if( count($encounter->getChildren()) != 1 ) {
+                throw new \Exception( 'This entity must have only one child. Number of children=' . count($encounter->getChildren()) );
             }
 
-            //$sameChild = $this->findSimilarChild($parent,$child->getChildren()->first());
+            //get procedure
+            $procedure = $encounter->getChildren()->first(); //in scanorder, encounter has only one procedure
+            //echo "must be procedure:".$procedure;
+
+            //get accession
+            $accessions = null;
+            $accession = null;
+            if( $procedure ) {
+                $accessions = $procedure->getChildren();
+                $accession = $accessions->first(); //in scanorder, procedure has only one accession
+            }
+
+            if( !$accession ) {
+                continue;
+            }
+
+            //echo "must be accession:".$accession;
+            //echo "0 accession slide count=".count($accession->getPart()->first()->getBlock()->first()->getSlide())."<br>";
+
+            //$sameChild = $this->findSimilarChild($parent,$encounter->getChildren()->first());
             $em = $this->_em;
-            $sameChild = $em->getRepository('OlegOrderformBundle:Encounter')->findSimilarChild( $parent, $child->getChildren()->first() );
+            //$sameChild = $em->getRepository('OlegOrderformBundle:Encounter')->findSimilarChild( $parent, $encounter->getChildren()->first() );
+            $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findSimilarChild( $parent, $accession );
 
-            echo "similar child=".$sameChild."<br>";
+            //echo "similar child=".$foundAccession."<br>";
+            //echo "0 foundAcc slide count=".count($foundAccession->getPart()->first()->getBlock()->first()->getSlide())."<br>";
 
-            if( $sameChild ) {  //encounter
-                echo "Found similar child=".$child."<br>";
+            if( $foundAccession ) {  //accession
+                //echo "Found similar child to:".$accession."<br>";
+                //exit('process same child');
 
-                exit('process same child');
+                //Note: assume that js will not submit two similar accession with different contest. JS must check for existing accession in DB and in the form!
+                //Copy all children element from checked $accession to found accession $foundAccession
 
-                $thisChildren = $child->getChildren();
-                foreach( $thisChildren as $thisChild ) {
-                    $sameChild->addChildren($thisChild);
+                $foundProcedure = $foundAccession->getParent();
+                $foundEncounter = $foundAccession->getParent()->getParent();
+
+                //copy accessions from checked $accession to found accession $foundAccession
+                foreach( $accession->getChildren() as $accessionChild ) {
+                    $foundAccession->addChildren($accessionChild);
                 }
 
                 //Copy Fields for Encounter
                 //echo "<br>######################################## Process similar fields ########################################<br>";
-                $sameChild = $this->processFieldArrays($sameChild,$orderinfo,$child);
+                $foundEncounter = $this->processFieldArrays($foundEncounter,$orderinfo,$encounter);
                 //echo "######################################## EOF Process similar fields ########################################<br>";
 
-                //copy parts to the found same accession. getAccession==(getChildren)
-                $sameAccession = $sameChild->getAccession()->first();
-                $parts = $child->getAccession()->first()->getChildren();
-                foreach( $parts as $part ) {
-                    $sameAccession->addChildren($part);
-                }
+                //Copy Fields for Procedure
+                //echo "<br>######################################## Process similar fields ########################################<br>";
+                $foundProcedure = $this->processFieldArrays($foundProcedure,$orderinfo,$procedure);
+                //echo "######################################## EOF Process similar fields ########################################<br>";
 
-                $accession = $child->getAccession()->first();
-                $sameAccession = $this->processFieldArrays($sameAccession,$orderinfo,$accession);
+                //Copy Fields for Accession
+                //echo "<br>######################################## Process similar fields ########################################<br>";
+                $foundAccession = $this->processFieldArrays($foundAccession,$orderinfo,$accession);
+                //echo "######################################## EOF Process similar fields ########################################<br>";
 
-                //clear accession
-                //echo "Clear Duplicated Accession:".$accession;
-                $sameChild->removeAccession($accession);
+                //clear encounter-procedure-accession from patient (parent) and from orderinfo
+                //$foundProcedure->removeAccession($accession);
+                //$foundEncounter->removeProcedure($procedure);
+                $parent->removeEncounter($encounter);
+
                 $orderinfo->removeAccession($accession);
-                $accession->setParent(null);
-                $accession->clearOrderinfo();
-                //unset($accession);
+                $orderinfo->removeProcedure($procedure);
+                $orderinfo->removeEncounter($encounter);
 
-                //clear encounter
-                $parent->removeChildren($child);
-                $orderinfo->removeEncounter($child);
-                $child->setParent(null);
-                $child->clearOrderinfo();
-                unset($child);
+                //add foundEncounter to patient
+                $parent->addEncounter($foundEncounter);
+                $orderinfo->addEncounter($foundEncounter);
+
+                //add $foundProcedure to orderinfo
+                $orderinfo->addProcedure($foundProcedure);
+
+                //add $foundAccession to orderinfo
+                $orderinfo->addAccession($foundAccession);
+
+                //echo "1 foundAcc slide count=".count($foundAccession->getPart()->first()->getBlock()->first()->getSlide())."<br>";
+
             }
 
             $count++;

@@ -14,9 +14,9 @@ var findCollectionStr = 'input[type=text],.ajax-combobox-staintype';
 var findCollectionEnabledStr = 'input[type=text]:enabled:not([readonly])';  //,.ajax-combobox-staintype:enabled:not([readonly])';
 
 //get input field only
-function getCollField( ident, patient, procedure, accession, part, block, slide, coll, prefix ) {
+function getCollField( ident, patient, encounter, procedure, accession, part, block, slide, coll, prefix ) {
 
-    //console.log("coll field input:"+ident+"_"+patient+"_"+procedure+"_"+accession+"_"+part+"_"+block+"_"+slide+"_"+coll+"_"+prefix);
+    //console.log("coll field input:"+ident+"_"+patient+"_"+encounter+"_"+procedure+"_"+accession+"_"+part+"_"+block+"_"+slide+"_"+coll+"_"+prefix);
     //diffDisident_field_0_0_0_0_0_0_0_0_diffdiag_0
     var dataholder = "#form-prototype-data"; //fixed data holder
 
@@ -31,6 +31,7 @@ function getCollField( ident, patient, procedure, accession, part, block, slide,
     //console.log("prototype="+prototype);
 
     var newForm = prototype.replace(/__patient__/g, patient);
+    newForm = newForm.replace(/__encounter__/g, encounter);
     newForm = newForm.replace(/__procedure__/g, procedure);
     newForm = newForm.replace(/__accession__/g, accession);
     newForm = newForm.replace(/__part__/g, part);
@@ -51,7 +52,7 @@ function addCollectionField( elem, btnpos ) {
     var element = $(elem);
     //console.log("element.class="+element.attr('class'));
 
-    //make sure to get only one element with correct id containing patient, procedure ... indexes
+    //make sure to get only one element with correct id containing patient, encounter, procedure ... indexes
     var elementInputFind = element.closest('.fieldInputColl').find(findCollectionStr).not("*[id^='s2id_']");
 
     var elementInput =  elementInputFind.first();
@@ -75,15 +76,16 @@ function addCollectionField( elem, btnpos ) {
     //console.log("name="+name+",fieldName="+fieldName);
 
     var patient = idsArr[4];
-    var procedure = idsArr[6];
-    var accession = idsArr[8];
-    var part = idsArr[10];
-    var block = idsArr[12];
-    var slide = idsArr[14];
+    var encounter = idsArr[6];
+    var procedure = idsArr[8];
+    var accession = idsArr[10];
+    var part = idsArr[12];
+    //var block = idsArr[14];
+    //var slide = idsArr[16];
 
     if( inputId && inputId.indexOf("_slide_") != -1 ) {
-        var block = idsArr[12];
-        var slide = idsArr[14];
+        var block = idsArr[14];
+        var slide = idsArr[16];
     } else {
         var block = 0;
         var slide = 0;
@@ -107,8 +109,8 @@ function addCollectionField( elem, btnpos ) {
 
     var prefix = "add"; //indicate that this field is added by + button, so we can get different data prototype
 
-    //var newForm = getDiffdiagField( fieldName, type, patient, procedure, accession, part, block, slide, collInputsCount, false );
-    var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, maxId+1, prefix );
+    //var newForm = getDiffdiagField( fieldName, type, patient, encounter, procedure, accession, part, block, slide, collInputsCount, false );
+    var newForm = getCollField( ident, patient, encounter, procedure, accession, part, block, slide, maxId+1, prefix );
     //console.log("newForm="+newForm);
 
     if( btnpos && btnpos == "bottom" ) {    //TEXTAREA with button at the bottom
@@ -168,7 +170,7 @@ function addCollectionField( elem, btnpos ) {
 
     //populate the combobox by Ajax
     if( btnpos && btnpos == "bottom" ) {
-        getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,maxId+1),true);
+        getComboboxSpecialStain(new Array(patient,encounter,procedure,accession,part,block,maxId+1),true);
     }
 }
 
@@ -195,9 +197,9 @@ function getMaxIdFromRows( elements, field ) {
 }
 
 //get input field only
-function getDiffdiagField( name, type, patient, procedure, accession, part, block, slide, diffdiag, noDelBtn ) {
+function getDiffdiagField( name, type, patient, encounter, procedure, accession, part, block, slide, diffdiag, noDelBtn ) {
 
-    //inputGroupId_patient_0_procedure_0_accession_0_part_0_diffDisident_0_diffDisident
+    //inputGroupId_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_0_diffDisident
     var ending = "_" + name + "_" + diffdiag + "_" + name;
 
     var dataholder = "#form-prototype-data"; //fixed data holder
@@ -208,6 +210,7 @@ function getDiffdiagField( name, type, patient, procedure, accession, part, bloc
         var prototype = collectionHolder.data('prototype-diffdisident');
         //console.log("diffDisident prototype="+prototype);
         var newForm = prototype.replace(/__patient__/g, patient);
+        newForm = newForm.replace(/__encounter__/g, encounter);
         newForm = newForm.replace(/__procedure__/g, procedure);
         newForm = newForm.replace(/__accession__/g, accession);
         newForm = newForm.replace(/__part__/g, part);
@@ -218,6 +221,7 @@ function getDiffdiagField( name, type, patient, procedure, accession, part, bloc
         var prototype = collectionHolder.data('prototype-relevantscans');
         //console.log("prototype="+prototype);
         var newForm = prototype.replace(/__patient__/g, patient);
+        newForm = newForm.replace(/__encounter__/g, encounter);
         newForm = newForm.replace(/__procedure__/g, procedure);
         newForm = newForm.replace(/__accession__/g, accession);
         newForm = newForm.replace(/__part__/g, part);
@@ -226,7 +230,7 @@ function getDiffdiagField( name, type, patient, procedure, accession, part, bloc
         newForm = newForm.replace(/__relevantScans__/g, diffdiag);
     }
 
-    var inputGroupId = 'inputGroupId_patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+ending;
+    var inputGroupId = 'inputGroupId_patient_'+patient+'_encounter_'+encounter+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+ending;
     //console.log("inputGroupId="+inputGroupId);
 
     var header = '<div class="input-group input-group-reg" id="'+inputGroupId+'">';
@@ -304,7 +308,7 @@ function delCollectionField( elem, btnpos ) {
 }
 
 function getAddBtn(btnpos) {
-    //var addbtnId = 'addbtn_patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_'+ident+'_'+collInt+'_'+ident;
+    //var addbtnId = 'addbtn_patient_'+patient+'_encounter_'+encounter+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_'+ident+'_'+collInt+'_'+ident;
     if( btnpos && btnpos == "bottom" ) {
         var btn = '<button onClick="addCollectionField(this,\''+btnpos+'\')" type="button" class="btn btn-sm addbtnCollField"><span class="glyphicon glyphicon-plus-sign"></span></button>';
     } else {

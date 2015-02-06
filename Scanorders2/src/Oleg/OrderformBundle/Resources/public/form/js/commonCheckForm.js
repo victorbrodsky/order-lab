@@ -386,19 +386,19 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 //calculate patient age (at the time of encounter)
 //listen for dob and encounter date changes, do not override age
-function setPatientAndProcedureAgeListener() {
+function setPatientAndEncounterAgeListener() {
 
-    //console.log("setPatientAndProcedureAgeListener set!");
+    //console.log("setPatientAndEncounterAgeListener set!");
 
     $('.encounterage-field').on("change", function(e) {
         //printF($(this),"listener: ");
 
         //clear warning message
-        var procedureAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
+        var encounterAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
         if( orderformtype == "single") {
-            procedureAgeEl = $(this).closest('.singleorderinfo').find('.encounterage-field');
+            encounterAgeEl = $(this).closest('.singleorderinfo').find('.encounterage-field');
         }
-        removeAgeConflictWarningMessage(procedureAgeEl);
+        removeAgeConflictWarningMessage(encounterAgeEl);
 
         //check for age conflict
         checkDobEncdateEncageConflict( $(this) );
@@ -409,11 +409,11 @@ function setPatientAndProcedureAgeListener() {
         //printF($(this),"listener: ");
 
         //clear warning message
-        var procedureAgeEl = $(this).closest('.panel-patient').find('.encounterage-field');
+        var encounterAgeEl = $(this).closest('.panel-patient').find('.encounterage-field');
         if( orderformtype == "single") {
-            procedureAgeEl = $('.singleorderinfo').find('.encounterage-field');
+            encounterAgeEl = $('.singleorderinfo').find('.encounterage-field');
         }
-        removeAgeConflictWarningMessage(procedureAgeEl);
+        removeAgeConflictWarningMessage(encounterAgeEl);
 
         //patient's dob
         if( $(this).hasClass('patient-dob-date') ) {
@@ -436,7 +436,7 @@ function setPatientAndProcedureAgeListener() {
 
             }
 
-            //find all children procedure's encounter date
+            //find all children encounter's encounter date
             var procEncDates = $(this).closest('.panel-patient').find(".encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
             if( orderformtype == "single") {
                 procEncDates = $('.singleorderinfo').find(".encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
@@ -447,20 +447,20 @@ function setPatientAndProcedureAgeListener() {
                 var encdateValue = $(this).val();
                 //console.log('patdob: patientdobValue='+patientdobValue+', encdateValue='+encdateValue);
 
-                //set procedure's age
+                //set encounter's age
                 if( patientdobValue != "" && encdateValue != "" ) {
 
                     var age = getAgeByDiff(patientdobValue,encdateValue);
                     //console.log('patientdob: age='+age);
 
-                    //find procedure age element
-                    var procedureAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
+                    //find encounter age element
+                    var encounterAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
                     if( orderformtype == "single") {
-                        procedureAgeEl = $('.singleorderinfo').find('.encounterage-field');
+                        encounterAgeEl = $('.singleorderinfo').find('.encounterage-field');
                     }
 
-                    if( procedureAgeEl.val() == "" ) {  //don't override age
-                        procedureAgeEl.val(age);    //when age is set, then  check DobEncdateEncage Conflict will be triggered by procedure age listener
+                    if( encounterAgeEl.val() == "" ) {  //don't override age
+                        encounterAgeEl.val(age);    //when age is set, then  check DobEncdateEncage Conflict will be triggered by encounter age listener
                     } else {
                         checkDobEncdateEncageConflict( $(this) );
                     }
@@ -470,7 +470,7 @@ function setPatientAndProcedureAgeListener() {
             });
         }
 
-        //procedure encounter date
+        //encounter encounter date
         if( $(this).hasClass('encounter-date') ) {
 
             //find patient dob element
@@ -490,14 +490,14 @@ function setPatientAndProcedureAgeListener() {
                 var age = getAgeByDiff(patientdobValue,encdateValue);
                 //console.log('encounterdate: age='+age);
 
-                //find procedure age element
-                var procedureAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
+                //find encounter age element
+                var encounterAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
                 if( orderformtype == "single") {
-                    procedureAgeEl = $('.singleorderinfo').find('.encounterage-field');
+                    encounterAgeEl = $('.singleorderinfo').find('.encounterage-field');
                 }
 
-                if( procedureAgeEl.val() == "" ) {  //don't override age
-                    procedureAgeEl.val(age);   //when age is set, then  check DobEncdateEncage Conflict will be triggered by procedure age listener
+                if( encounterAgeEl.val() == "" ) {  //don't override age
+                    encounterAgeEl.val(age);   //when age is set, then  check DobEncdateEncage Conflict will be triggered by encounter age listener
                 } else {
                     checkDobEncdateEncageConflict( $(this) );
                 }
@@ -1455,15 +1455,17 @@ function createDropzoneHolder(existingDropzoneHolder) {
 
     var idArr = id.split("_");
 
-    //  0       1               2           3    4     5     6     7     8  9   10  11  12      13
-    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_paper_0_partpaperothers
+    //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14       15
+    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_partpaperothers
     var patientid = idArr[4];
-    var procedureid = idArr[6];
-    var accessionid = idArr[8];
-    var partid = idArr[10];
-    var paperid = idArr[12];
+    var encounterid = idArr[6];
+    var procedureid = idArr[8];
+    var accessionid = idArr[10];
+    var partid = idArr[12];
+    var paperid = idArr[14];
 
     var newForm = prototype.replace(/__patient__/g, patientid);
+    newForm = newForm.replace(/__encounter__/g, encounterid);
     newForm = newForm.replace(/__procedure__/g, procedureid);
     newForm = newForm.replace(/__accession__/g, accessionid);
     newForm = newForm.replace(/__part__/g, partid);
@@ -1651,7 +1653,7 @@ function disableElement(parentname,element, flag) {
     //return if this element does not belong to a pressed key element
     var idArr = element.attr('id').split("_");
     var fieldParentName = idArr[idArr.length-holderIndex];
-    if( fieldParentName == "procedure" ) {
+    if( fieldParentName == "encounter"  || fieldParentName == "procedure" ) {
         fieldParentName = "accession";
     }
 
@@ -1922,15 +1924,16 @@ function setArrayField(element, dataArr, parent) {
 
             //var name = idsArr[0];
             var patient = idsArr[1];
-            var procedure = idsArr[2];
-            var accession = idsArr[3];
-            var part = idsArr[4];
-            var block = idsArr[5];
-            var slide = idsArr[6];
+            var encounter = idsArr[2];
+            var procedure = idsArr[3];
+            var accession = idsArr[4];
+            var part = idsArr[5];
+            var block = idsArr[6];
+            var slide = idsArr[7];
 
             //console.log("Create array empty field, fieldName=" + fieldName + ", patient="+patient+", part="+part + ", id="+id + ", text="+text );
 
-            var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, coll );
+            var newForm = getCollField( ident, patient, encounter, procedure, accession, part, block, slide, coll );
             //console.log("newForm="+newForm);
 
 //            if( fieldName == "specialStains" ) {
@@ -1961,7 +1964,7 @@ function setArrayField(element, dataArr, parent) {
 
             if( fieldName == "specialStains" ) {
                 //pre-populate select2 with stains
-                getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,coll),true,dataArr[i]["staintype"]);
+                getComboboxSpecialStain(new Array(patient,encounter,procedure,accession,part,block,coll),true,dataArr[i]["staintype"]);
             }
 
         } else {    //show the valid field (with validity=1)
@@ -2095,7 +2098,7 @@ function setArrayField(element, dataArr, parent) {
 }
 
 //set key type field. Used by set and clean functions
-//element - is key type element (combobox): id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_keytype
+//element - is key type element (combobox): id=oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_accession_0_keytype
 function setKeyGroup( element, data ) {
     //console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
 
@@ -2238,8 +2241,8 @@ function fieldBelongsToButton(btn,fieldEl) {
         return true;
     }
 
-    //excemption: procedure does not have its own button; it is triggered by accession
-    if( btnObj.name == 'accession' && holdername == 'procedure' ) {
+    //excemption: encounter/procedure does not have its own button; it is triggered by accession
+    if( btnObj.name == 'accession' && (holdername == 'procedure' || holdername == 'encounter') ) {
         return true;
     }
 
@@ -2290,15 +2293,16 @@ function cleanBlockSpecialStains( element, field, single ) {
 
     //construct new 0 special stain group
     var patient = idsArr[4];
-    var procedure = idsArr[6];
-    var accession = idsArr[8];
-    var part = idsArr[10];
-    var block = idsArr[12];
+    var encounter = idsArr[6];
+    var procedure = idsArr[8];
+    var accession = idsArr[10];
+    var part = idsArr[12];
+    var block = idsArr[14];
     var slide = null;
     var ident = "block"+"specialStains";
-    var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
+    var newForm = getCollField( ident, patient, encounter, procedure, accession, part, block, slide, 0 );
     fieldHolder.prepend(newForm);
-    getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,0),true);
+    getComboboxSpecialStain(new Array(patient,encounter,procedure,accession,part,block,0),true);
 
 //    //set to the first item
 //    if( field == "specialStains" ) {
@@ -2326,15 +2330,16 @@ function cleanPartDiffDisident( element, field, single ) {
     });
 
     //construct new 0 special stain group
-    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_1_field
+    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_1_field
     var patient = idsArr[4];
-    var procedure = idsArr[6];
-    var accession = idsArr[8];
-    var part = idsArr[10];
+    var encounter = idsArr[6];
+    var procedure = idsArr[8];
+    var accession = idsArr[10];
+    var part = idsArr[12];
     var block = null;
     var slide = null;
     var ident = "part"+"diffDisident";
-    var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
+    var newForm = getCollField( ident, patient, encounter, procedure, accession, part, block, slide, 0 );
     fieldHolder.prepend(newForm);
 }
 
@@ -2407,7 +2412,7 @@ function cleanArrayField( element, field, single ) {
     }
 
 
-    //clean array field id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_2_field
+    //clean array field id=oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_2_field
     //console.log( "\nclean array element id=" + element.attr("id") + ", field=" + field );
     //delete if id != 0 or its not the last element
 
@@ -2574,10 +2579,10 @@ function cleanFieldsInElementBlock( element, all, single ) {
             continue;
         }
         //don't process patient fields if the form was submitted by single form: click on accession,part,block delete button
-        if( single && id && id.indexOf("_procedure_") == -1 ) {
+        //if( single && id && id.indexOf("_procedure_") == -1 ) {
             //console.log("don't process patient fields if the form was submitted by single form");
             //continue;
-        }
+        //}
 
         //console.log("clean id="+id+", type="+type+", tagName="+tagName);
 

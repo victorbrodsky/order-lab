@@ -100,7 +100,7 @@ function initAdd() {
     $(".element-with-tooltip").tooltip();
 
     //attach dob-encounter date calculation
-    setPatientAndProcedureAgeListener();
+    setPatientAndEncounterAgeListener();
 
 }
 
@@ -141,9 +141,9 @@ function deleteItem(id) {
 }
 
 //main input form from html button: add parent form (always type='multi')
-function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
+function addSameForm( name, patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
-    var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid+"_"+scanid+"_"+stainid;  //+"_"+diffdiag+"_"+specstain+"_"+image;
+    var uid = patientid+"_"+encounterid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid+"_"+scanid+"_"+stainid;  //+"_"+diffdiag+"_"+specstain+"_"+image;
     //console.log("addSameForm="+name+"_"+uid);
 
     //get total number of existing similar elements in the holder => get next index
@@ -176,7 +176,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //prepare form ids and pass it as array
     //increment by 1 current object id
-    var btnids = getIds(name, countTotal, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid);
+    var btnids = getIds(name, countTotal, patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid);
     var id = btnids['id'];
     var idsorig = btnids['orig'];
     var ids = btnids['ids'];
@@ -225,7 +225,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //create children nested forms
     //var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
-    var nameArray = ['patient', 'procedure', 'part', 'block', 'slide' ];
+    var nameArray = ['patient', 'encounter', 'part', 'block', 'slide' ];
     var length = nameArray.length
     var index = nameArray.indexOf(name);
     //console.log("index="+index+" len="+length);
@@ -234,10 +234,10 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
         //console.log("=> name="+nameArray[i]);
 
         if( nameArray[i] == 'stain_scan' ) {
-            addChildForms( parentName, idsNext, 'stain', nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
-            addChildForms( parentName, idsNext, 'scan', nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+            addChildForms( parentName, idsNext, 'stain', nameArray[i-1], patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+            addChildForms( parentName, idsNext, 'scan', nameArray[i-1], patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
         } else {
-            addChildForms( parentName, idsNext, nameArray[i], nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+            addChildForms( parentName, idsNext, nameArray[i], nameArray[i-1], patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
         }
 
     }
@@ -263,10 +263,10 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 }
 
 //add children forms triggered by parent form
-function addChildForms( parentName, parentIds, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
+function addChildForms( parentName, parentIds, name, prevName, patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
 //    //attach to previous object (prevName)
-//    var btnids = getIds( parentName, null, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+//    var btnids = getIds( parentName, null, patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
 //    //var idsorig = btnids['orig'];
 //    var ids = btnids['ids'];
 //    var idsm = btnids['idsm'];
@@ -308,7 +308,7 @@ function getForm( name, ids, withDelBtn ) {
     var idsu = ids.join("_");
 
     //increment by 1 current object id
-    var formbody = getFormBody( name, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7] );
+    var formbody = getFormBody( name, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7], ids[8] );
 
     //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm+", withDelBtn="+withDelBtn);
 
@@ -330,7 +330,7 @@ function getForm( name, ids, withDelBtn ) {
     //console.log('itemCount='+itemCount);
 
     var title = name;
-    if( name == "procedure" ) {
+    if( name == "encounter" || name == "procedure" ) {
         title = "accession";
     }
 
@@ -361,9 +361,9 @@ function getForm( name, ids, withDelBtn ) {
     return formhtml;
 }
 
-function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
+function getFormBody( name, patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
-    //console.log("name="+name+",patient="+patientid+ ",procedure="+procedureid+",accession="+accessionid+",part="+partid+",block="+blockid+",slide="+slideid);
+    //console.log("name="+name+",patient="+patientid+",encounter="+encounterid+",procedure="+procedureid+",accession="+accessionid+",part="+partid+",block="+blockid+",slide="+slideid);
 
     var collectionHolder =  $('#form-prototype-data');
 
@@ -374,6 +374,7 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
     //console.log("before replace patient...");
     var newForm = prototype.replace(/__patient__/g, patientid);
     //console.log("before replace procedure... NewForm="+newForm);
+    newForm = newForm.replace(/__encounter__/g, encounterid);
     newForm = newForm.replace(/__procedure__/g, procedureid);
     newForm = newForm.replace(/__accession__/g, accessionid);
     newForm = newForm.replace(/__part__/g, partid);
@@ -387,8 +388,8 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
 
     //replace origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag with correct ids
     //origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag
-    var newOriginId = "origin_option_multi_patient_"+patientid+"_procedure_"+procedureid+"_accession_"+accessionid+"_part_"+partid+"_origintag";
-    newForm = newForm.replace(/origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag/g, newOriginId);
+    var newOriginId = "origin_option_multi_patient_"+patientid+"_encounter_"+encounterid+"_procedure_"+procedureid+"_accession_"+accessionid+"_part_"+partid+"_origintag";
+    newForm = newForm.replace(/origin_option_multi_patient_0_encounter_0_procedure_0_accession_0_part_0_origintag/g, newOriginId);
 
     newForm = newForm.replace(/__[a-zA-Z0-9]+__/g, 0); //replace everything what is left __*__ by 0 => replace all array fields by 0
 
@@ -415,11 +416,22 @@ function getHeaderDeleteBtn( name, ids, deleteStr ) {
     return deletebtn;
 }
 
-function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
+function getIds( name, nextIndex, patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
     var id = 0;
     var nextName = "";
 
+    patientid = parseInt(patientid);
+    encounterid = parseInt(encounterid);
+    procedureid = parseInt(procedureid);
+    accessionid = parseInt(accessionid);
+    partid = parseInt(partid);
+    blockid = parseInt(blockid);
+    slideid = parseInt(slideid);
+    scanid = parseInt(scanid);
+    stainid = parseInt(stainid);
+
     var patientidm = patientid;
+    var encounteridm = encounterid;
     var procedureidm = procedureid;
     var accessionidm = accessionid;
     var partidm = partid;
@@ -429,6 +441,7 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
     var stainidm = stainid;
 
     var patientidp = patientid;
+    var encounteridp = encounterid;
     var procedureidp = procedureid;
     var accessionidp = accessionid;
     var partidp = partid;
@@ -438,6 +451,7 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
     var stainidp = stainid;
 
     var patientNext = patientid;
+    var encounterNext = encounterid;
     var procedureNext = procedureid;
     var accessionNext = accessionid;
     var partNext = partid;
@@ -448,7 +462,7 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
 
     var partialId = "";
 
-    var orig = [patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
+    var orig = [patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
 
     switch(name)
     {
@@ -457,9 +471,18 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
             patientid++;
             patientidp = patientid+1;
             id = patientid;
-            nextName = "procedure";
+            nextName = "encounter";
             partialId = "";
             patientNext = nextIndex;
+            break;
+        case "encounter":
+            encounteridm = encounterid-1;
+            encounterid++;
+            encounteridp = encounterid+1;
+            id = encounterid;
+            nextName = "procedure";
+            partialId = patientid;
+            encounterNext = nextIndex;
             break;
         case "procedure":
             procedureidm = procedureid-1;
@@ -476,7 +499,7 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
             accessionidp = accessionid+1;
             id = accessionid;
             nextName = "part";
-            partialId = patientid+"_"+procedureid;
+            partialId = patientid+"_"+encounterid+"_"+procedureid;
             accessionNext = nextIndex;
             break;
         case "part":
@@ -485,7 +508,7 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
             partidp = partid+1;
             id = partid;
             nextName = "block";
-            partialId = patientid+"_"+procedureid+"_"+accessionid;
+            partialId = patientid+"_"+encounterid+"_"+procedureid+"_"+accessionid;
             partNext = nextIndex;
             break;
         case "block":
@@ -494,7 +517,7 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
             blockidp = blockid+1;
             id = blockid;
             nextName = "slide";
-            partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid;
+            partialId = patientid+"_"+encounterid+"_"+procedureid+"_"+accessionid+"_"+partid;
             blockNext = nextIndex;
             break;
         case "slide":
@@ -503,7 +526,7 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
             slideidp = slideid+1;
             id = slideid;
             nextName = "";
-            partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
+            partialId = patientid+"_"+encounterid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
             slideNext = nextIndex;
             break;
         case "scan":
@@ -512,7 +535,7 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
             scanidp = scanid+1;
             id = scanid;
             nextName = "";
-            partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
+            partialId = patientid+"_"+encounterid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
             scanNext = nextIndex;
             break;
         case "stain":
@@ -521,17 +544,17 @@ function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, b
             stainidp = stainid+1;
             id = stainid;
             nextName = "";
-            partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
+            partialId = patientid+"_"+encounterid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
             stainNext = nextIndex;
             break;
         default:
             id = 0;
     }
 
-    var idsArray = [patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
-    var idsArrayM = [patientidm, procedureidm, accessionidm, partidm, blockidm, slideidm, scaniddm, stainidm];
-    var idsArrayP = [patientidp, procedureidp, accessionidp, partidp, blockidp, slideidp, scanidp, stainidp];
-    var idsArrayNext = [patientNext, procedureNext, accessionNext, partNext, blockNext, slideNext, scanNext, stainidp];
+    var idsArray = [patientid, encounterid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
+    var idsArrayM = [patientidm, encounteridm, procedureidm, accessionidm, partidm, blockidm, slideidm, scaniddm, stainidm];
+    var idsArrayP = [patientidp, encounteridp, procedureidp, accessionidp, partidp, blockidp, slideidp, scanidp, stainidp];
+    var idsArrayNext = [patientNext, encounterNext, procedureNext, accessionNext, partNext, blockNext, slideNext, scanNext, stainidp];
 
     var res_array = {
         'id' : id,
@@ -555,20 +578,23 @@ function getIdByName( name, ids ) {
         case "patient":
             id = ids[0];
             break;
-        case "procedure":
+        case "encounter":
             id = ids[1];
             break;
-        case "accession":
+        case "procedure":
             id = ids[2];
             break;
-        case "part":
+        case "accession":
             id = ids[3];
             break;
-        case "block":
+        case "part":
             id = ids[4];
             break;
-        case "slide":
+        case "block":
             id = ids[5];
+            break;
+        case "slide":
+            id = ids[6];
             break;
         default:
             id = 0;

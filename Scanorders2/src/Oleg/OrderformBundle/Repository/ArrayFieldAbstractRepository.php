@@ -334,8 +334,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //Overwritten in EncounterRepository
     public function findSimilarChild($parent,$newChild) {
 
-        echo "Find similar child in parent:".$parent;
-        echo "Find child:".$newChild;
+        //echo "Find similar child in parent:".$parent;
+        //echo "Find child:".$newChild;
 
         $children = $parent->getChildren();
 
@@ -355,10 +355,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         foreach( $children as $child ) {
             //echo $child;
 
-            if( $child === $newChild ) {
-                //echo "the same child: continue<br>";
-                return false;
-            }
+//            if( $child === $newChild ) {
+//                //echo "the same child: continue<br>";
+//                return false;
+//            }
 
             if( $this->entityEqualByComplexKey($child, $newChild) ) {
                 return $child;
@@ -1282,10 +1282,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
     //replace child if duplicated
+    //This abstract method will execute only for Orderinfo, Accession and Part.
+    //Encounter and Procedure will be processed by Patient repository's overwrite method
+    //Block is not processed, because block never remove slides
     public function replaceDuplicateEntities( $parent, $orderinfo ) {
 
-        echo "abstract replace duplicate parent=".$parent;
-        echo "abstract replace duplicate orderinfo=".$orderinfo;
+        //echo "abstract replace duplicate parent=".$parent;
+        //echo "abstract replace duplicate orderinfo=".$orderinfo;
 
         if( $parent === $orderinfo ) {
             $children = $orderinfo->getChildren();
@@ -1305,6 +1308,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $count = 0;
         foreach( $children as $child ) {
             echo $count.": Testing child=".$child."<br>";
+
+            //don't remove slides
+            $class = new \ReflectionClass($child);
+            $className = $class->getShortName();
+            if( $className == "Slide" ) {
+                continue;
+            }
 
             $sameChild = $this->findSimilarChild($parent,$child);
 
