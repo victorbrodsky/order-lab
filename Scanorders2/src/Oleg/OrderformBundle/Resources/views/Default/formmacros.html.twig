@@ -1,7 +1,5 @@
 {#macro for form label input inline#}
 
-{% form_theme field 'OlegOrderformBundle::Default/common_widget.html.twig' %}
-
 {% macro checkbox( value ) %}
     <p>
     <div class="row">
@@ -126,7 +124,6 @@
 {% endmacro %}
 {% macro fielddate( field, classname, attr ) %}
     <div class="input-group input-group-reg date {{ classname }}">
-        field date
         {% if attr == "disabled" %}
             {#value of disabled field will be ignored#}
             {{ form_widget(field,{ 'disabled':'disabled' }) }}
@@ -603,15 +600,16 @@
                     {% endif %}
                 {% endif %}
 
-                {{ form_rest(fieldThis) }}
-                {% if cycle != 'show' %}
-                    {% if norest is not defined or norest == "" %}
-                        {{ form_rest(fieldThis) }}
-                    {% endif %}
-                {% endif %}
             </div>
 
         </div>
+
+        {{ form_rest(fieldThis) }}
+        {% if cycle != 'show' %}
+            {% if norest is not defined or norest == "" %}
+                {{ form_rest(fieldThis) }}
+            {% endif %}
+        {% endif %}
 
     {% endif %}
 

@@ -9,7 +9,6 @@
 
 {% block form_row %}
     {% spaceless %}
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         <div>
             <p>
                 <div class="row">
@@ -35,7 +34,7 @@
     {% endspaceless %}
 {% endblock form_row %}
 
-{% block form_row111 %}
+{% block form_row1 %}
     {% spaceless %}
         <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {{ form_label(form) }}
@@ -45,7 +44,7 @@
             </div>
         </div>
     {% endspaceless %}
-{% endblock form_row %}
+{% endblock form_row1 %}
 
 {% block form_errors %}
     {% if errors|length > 0 -%}
