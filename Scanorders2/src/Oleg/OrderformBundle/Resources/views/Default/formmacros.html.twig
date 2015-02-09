@@ -1,5 +1,7 @@
 {#macro for form label input inline#}
 
+{% form_theme field 'OlegOrderformBundle::Default/common_widget.html.twig' %}
+
 {% macro checkbox( value ) %}
     <p>
     <div class="row">
@@ -124,6 +126,7 @@
 {% endmacro %}
 {% macro fielddate( field, classname, attr ) %}
     <div class="input-group input-group-reg date {{ classname }}">
+        field date
         {% if attr == "disabled" %}
             {#value of disabled field will be ignored#}
             {{ form_widget(field,{ 'disabled':'disabled' }) }}
@@ -566,6 +569,13 @@
                     {% endif %}
                 {% elseif fieldtype == "date" %}
                     {{ formmacros.fielddate(fieldThis.field,'regular-datepicker') }}
+
+                    {#{% if fieldThis.time is defined %}#}
+                        {#{{ formmacros.field(fieldThis.time) }}#}
+                        {#{{ form_label(fieldThis.time) }}#}
+                        {#{{ form_widget(fieldThis.time) }}#}
+                    {#{% endif %}#}
+
                 {% elseif fieldtype == "lockdate" %}
                     {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
                 {% elseif fieldtype == "paper" %}
@@ -592,6 +602,8 @@
                         {{ form_widget(fieldThis.field) }}
                     {% endif %}
                 {% endif %}
+
+                {{ form_rest(fieldThis) }}
                 {% if cycle != 'show' %}
                     {% if norest is not defined or norest == "" %}
                         {{ form_rest(fieldThis) }}
@@ -621,6 +633,8 @@
 {% macro fieldWidgetNoOther(field) %}
     {{ form_widget(field.vars.prototype.field) }}
 {% endmacro %}
+
+
 {#{% macro fieldProcedurePatnameWidget(field) %}#}
     {#{% import _self as formmacros %}#}
                           {#&#123;&#35; field, cycle, fieldtype,   prototype,   widget, nobtn, nolabel, classname, withspace, btntype, norest       &#35;&#125;#}
@@ -1012,15 +1026,15 @@
             <p><div class="procedurename">{{ procedurenameHtml }}</div></p>
         {% endif %}
 
-        {% if encounternumberHtml is not defined or encounternumberHtml == "" %}
-            {% for number in encounter.number %}
-                {% if number.vars.value.status == 'valid' %}
-                    {{ form_row(number, {'label': false}) }}
-                {% endif %}
-            {% endfor %}
-        {% else  %}
-            <p><div class="encounternumber">{{ encounternumberHtml }}</div></p>
-        {% endif %}
+        {#{% if encounternumberHtml is not defined or encounternumberHtml == "" %}#}
+            {#{% for number in encounter.number %}#}
+                {#{% if number.vars.value.status == 'valid' %}#}
+                    {#{{ form_row(number, {'label': false}) }}#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
+        {#{% else  %}#}
+            {#<p><div class="encounternumber">{{ encounternumberHtml }}</div></p>#}
+        {#{% endif %}#}
 
         {% if procedurenumberHtml is not defined or procedurenumberHtml == "" %}
             {% for number in procedure.number %}
@@ -1084,11 +1098,11 @@
             <p><div class="encounterpathistory">{{ patpathistoryHtml }}</div></p>
         {% endif %}
 
-        {#{{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}#}
+        {{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}
 
-        {#{{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}#}
+        {{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}
 
-        {#{{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}#}
+        {{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}
 
     </div>
 {% endmacro %}
@@ -1279,6 +1293,16 @@
         {% import _self as formmacros %}
 
         <h5>Extra data structure fields for Encounter:</h5>
+
+        {% if encounter.number is defined %}
+            {{ formmacros.inputArrayField(encounter.number,cycle,"encounternumber","","","","",status) }}
+        {% endif %}
+
+        {#{{ formmacros.field(encounter.date.time) }}#}
+        {#{% if encounter.date.time is defined %}#}
+            {#time11111111111111111111111#}
+            {#{{ formmacros.inputArrayField(encounter.date.time,cycle,"encountertime","","","","",status) }}#}
+        {#{% endif %}#}
 
         {% if encounter.location is defined %}
             {{ formmacros.inputArrayField(encounter.location,cycle,"encounterlocation","","","","",status) }}

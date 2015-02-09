@@ -39,7 +39,7 @@ class GeneralOrderType extends AbstractType
                     foreach( $this->params['sources'] as $source ) {
                         $whereArr[] = "list.name = '".$source."'";
                     }
-                    $where = implode('OR',$whereArr);
+                    $where = implode(' OR ',$whereArr);
                     return $er->createQueryBuilder('list')
                         ->where($where)
                         ->orderBy("list.orderinlist","ASC");

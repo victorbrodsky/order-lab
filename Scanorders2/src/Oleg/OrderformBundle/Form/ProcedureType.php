@@ -82,7 +82,7 @@ class ProcedureType extends AbstractType
             ));
 
             $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
-            $params = array('name'=>'Encounter','dataClass'=>'Oleg\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
+            $params = array('name'=>'Procedure','dataClass'=>'Oleg\OrderformBundle\Entity\ProcedureOrder','typename'=>'procedureorder','sources'=>$sources);
             $builder->add('order', 'collection', array(
                 'type' => new GeneralOrderType($params, null),
                 'allow_add' => true,

@@ -467,12 +467,12 @@ class Slide extends ObjectAbstract
         $parentClass = new \ReflectionClass($parent);
         $parentClassName = $parentClass->getShortName();
         if( $parentClassName == "Block" ) {
-                        //block    part        acc           proc        patient
-            $patient = $parent->getParent()->getParent()->getParent()->getParent();
+                        //block    part        acc           proc        encounter   patient
+            $patient = $parent->getParent()->getParent()->getParent()->getParent()->getParent();
         } else
         if( $parentClassName == "Part") {
-                        //part     acc         proc        patient
-            $patient = $parent->getParent()->getParent()->getParent();
+                        //part     acc         proc        encounter     patient
+            $patient = $parent->getParent()->getParent()->getParent()->getParent();
         } else {
             throw new \Exception('Parent can not be set of the class ' . $parentClassName );
         }
@@ -484,7 +484,7 @@ class Slide extends ObjectAbstract
         $parentClass = new \ReflectionClass($parent);
         $parentClassName = $parentClass->getShortName();
         if( $parentClassName == "Block" ) {
-                       //block     part        acc
+                        //block     part        acc
             $accession = $parent->getParent()->getParent();
         } else
             if( $parentClassName == "Part") {

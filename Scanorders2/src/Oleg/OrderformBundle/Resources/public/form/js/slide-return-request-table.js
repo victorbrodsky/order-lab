@@ -137,9 +137,9 @@ var _columnData_scanorder = [
     { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
     { header:"Patient's MRN", columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn, allowInvalid: true} },
 
-    { header:"Patient's Last Name", columns:{} },
     { header:"Patient's First Name", columns:{} },
-    { header:"Patient's Middle Name", columns:{} }
+    { header:"Patient's Middle Name", columns:{} },
+    { header:"Patient's Last Name", columns:{} }
 
 ];
 

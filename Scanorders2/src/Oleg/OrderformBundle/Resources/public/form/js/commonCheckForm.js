@@ -1122,13 +1122,14 @@ function checkExistingKey(name) {
         var eltypeValue = keyElement.type;
         var eltypeValueText = keyElement.typename;
 
-        printF(elInput,"input element:");
+        //printF(elInput,"input element:");
         //console.log("elValue="+elValue + ", eltypeValue=" + eltypeValue );
 
         //check if patient or accession has the same key field value repeated in the entire form
         if( name == 'patient' || name == 'accession' ) {
+            $('.maskerror-added').remove();
             if( ifExistsSameSiblingsInForm(keyElement) ) {
-                var errMsg = 'Error: repeated key ' + keyElement.key;
+                var errMsg = 'Error: repeated '+name+' key ' + keyElement.key;
                 //alert(errMsg);
                 var errorHtml = createErrorWell(keyElement.element,null,errMsg);
                 $('#validationerror').append(errorHtml);
@@ -1136,7 +1137,7 @@ function checkExistingKey(name) {
             }
         }
         //testing
-        //return false;
+        return false;
 
         if(
             elValue && elValue != "" && eltypeValueText && eltypeValueText.indexOf("Existing Auto-generated") != -1
@@ -1189,8 +1190,11 @@ function ifExistsSameSiblingsInForm( keyObj ) {
     var exist = false;
 
     $('#scanorderform').find('.'+name+fieldname).each( function(){
-        var btnEl = $(this).find('.checkbtn');
+        var btnEl = $(this).find('.btn.'+name+fieldname+'btn');
+        //printF(btnEl,"btnEl:");
+        //console.log(btnEl);
         var btnObj = new btnObject(btnEl);
+        //console.log(btnObj);
 
         //continue if the same object
         if( keyObj.element.attr('id') == btnObj.element.attr('id') ) {

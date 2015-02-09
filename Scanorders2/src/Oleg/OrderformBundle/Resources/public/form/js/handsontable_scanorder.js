@@ -243,13 +243,15 @@ var _columnData_scanorder = [
     //accession: 1
     { header:'Accession Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
 
-    //procedure: 6
+    //procedure: 1
     { header:'Procedure Type', default:0, columns:{type:'dropdown', source:_procedures_simple, strict:true} },
+
+    //encounter 8
     { header:'Encounter Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
-    { header:"Patient's Suffix", columns:{} },
-    { header:"Patient's Last Name", columns:{} },
     { header:"Patient's First Name", columns:{} },
     { header:"Patient's Middle Name", columns:{} },
+    { header:"Patient's Last Name", columns:{} },
+    { header:"Patient's Suffix", columns:{} },
     { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
     { header:'Patient Age', columns:{validator: age_validator_fn, allowInvalid: true} },
     { header:'Clinical History', columns:{} },

@@ -207,7 +207,9 @@ class OrderUtil {
             $validity = array('valid');
             $conflict = false;
             foreach( $entity->getAccession() as $accession ) {
-                $patient = $accession->getParent()->getParent();
+
+                //                     procedure    encounter     patient
+                $patient = $accession->getParent()->getParent()->getParent();
 
                 $patientKey = $patient->obtainValidKeyField();
                 if( !$patientKey ) {

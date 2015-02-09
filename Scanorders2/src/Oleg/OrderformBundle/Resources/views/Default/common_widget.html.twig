@@ -1,0 +1,61 @@
+
+{#{%- block form_row -%}#}
+    {#<div>#}
+        {#{{- form_label(form) -}}#}
+        {#{{- form_errors(form) -}}#}
+        {#{{- form_widget(form) -}}#}
+    {#</div>#}
+{#{%- endblock form_row -%}#}
+
+{% block form_row %}
+    {% spaceless %}
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        <div>
+            <p>
+                <div class="row">
+                    {{ form_errors(form) }}
+                    <div class="col-xs-6" align="right">
+                        {{ form_label(form) }}
+                    </div>
+                    <div class="col-xs-6" align="left">
+                        {% if attr == "disabled" %}
+                            {#value of disabled field will be ignored#}
+                            {{ form_widget(form,{ 'disabled':'disabled' }) }}
+                        {% elseif attr == "readonly" %}
+                            {{ form_widget(form, { 'attr': {'readonly': 'readonly'} }) }}
+                        {% elseif attr == "required" %}
+                            {{ form_widget(form, { 'attr': {'required': 'true'} }) }}
+                        {% else %}
+                            {{ form_widget(form) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </p>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block form_row111 %}
+    {% spaceless %}
+        <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+            {{ form_label(form) }}
+            <div class="{{ block('form_group_class') }}">
+                {{ form_widget(form) }}
+                {{ form_errors(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block form_errors %}
+    {% if errors|length > 0 -%}
+        {%- for error in errors -%}
+            <p class="text-danger">
+                {{ error.message|raw }}
+            </p>
+        {%- endfor -%}
+    {%- endif %}
+{% endblock form_errors %}
+
+
+

@@ -84,7 +84,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             throw new \Exception( 'Provided entity is not Accession, entity:'.$accession );
         }
 
-        //echo $accession;
+        //echo "Must be accession: ".$accession;
 
         $em = $this->_em;
 
@@ -103,7 +103,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             //check if this dataquality's patient is corresponds to accession patient
             $mrn = $dataquality->getMrn();
             $mrntype = $dataquality->getMrntype();
-            $validMrn = $accession->getParent()->getParent()->obtainValidKeyfield();
+            //                       procedure   encounter     patient
+            $validMrn = $accession->getParent()->getParent()->getParent()->obtainValidKeyfield();
             $accmrn = $validMrn->getField();
             $accmrntype = $validMrn->getKeytype();
             //echo "compare patient: (".$mrn .")==(". $accmrn .") && (". $mrntype .")==(". $accmrntype.")<br>";
@@ -312,6 +313,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             return false;
         }
 
+        //                     encounter     patient
         $patient = $procedure->getParent()->getParent();
         if( !$patient ) {
             return false;
@@ -353,67 +355,6 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
     }
 
-
-
-    //find similar accession in patient.
-    //$parent: patient
-    //$newChild: accession
-    //find similar child and return the first one
-    //return false if no similar children are found
-    public function findSimilarChild($parent,$newChild) {
-        //echo "Accession: find similar parent: ".$parent." <br>";
-        //echo "Accession: find similar Child to: ".$newChild." <br>";
-
-        $encounters = $parent->getChildren();
-
-        //echo "<br>";
-        //echo $newChild;
-        //echo "newChild key=".$newChild->obtainValidKeyfield()."<br>";
-        if( $newChild->obtainValidKeyfield()."" == "" ) {   //no name is provided, so can't compare => does not exist
-            //echo "false: no name <br>";
-            return false;
-        }
-
-        if( !$encounters || count($encounters) == 0 ) { //no children => does not exist
-            //echo "false: no children <br>";
-            return false;
-        }
-
-        foreach( $encounters as $encounter ) {
-            //echo $child;
-
-            $procedures = $encounter->getProcedure();
-
-            if( count($procedures) != 1 ) {
-                throw new \Exception( 'Encounter must have only one Procedure child. Number of children=' . count($procedures) );
-            }
-
-            $procedure = $procedures->first();
-
-            $accessions = $procedure->getAccession();
-
-            if( count($accessions) != 1 ) {
-                throw new \Exception( 'Procedure must have only one Accession child. Number of children=' . count($procedures) );
-            }
-
-            $accession = $accessions->first();
-
-            if( $accession === $newChild ) {
-                //echo "the same child: continue<br>";
-                return false;
-            }
-
-            if( $this->entityEqualByComplexKey($accession, $newChild) ) {
-                //echo "MATCH!: ".$child." <br>";
-                return $accession;
-            } else {
-                //echo "NO MATCH! <br>";
-            }
-
-        }//foreach
-
-        return false;
-    }
 
 }
 ?>

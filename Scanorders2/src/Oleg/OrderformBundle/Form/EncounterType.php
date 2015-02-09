@@ -34,19 +34,6 @@ class EncounterType extends AbstractType
         ));
 
 
-
-
-        $builder->add('number', 'collection', array(
-            'type' => new EncounterNumberType($this->params, $this->entity),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounternumber__',
-        ));
-
 //        $builder->add('name', 'collection', array(
 //            'type' => new EncounterNameType($this->params, $this->entity),
 //            'allow_add' => true,
@@ -148,6 +135,18 @@ class EncounterType extends AbstractType
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
 
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
+
+            //number and source
+            $builder->add('number', 'collection', array(
+                'type' => new EncounterNumberType($this->params, $this->entity),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounternumber__',
+            ));
 
             $builder->add('location', 'collection', array(
                 'type' => new EncounterLocationType($this->params, null),

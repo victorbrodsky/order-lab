@@ -411,8 +411,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $key1."" == $key2."" ) {   //key values are the same
             //compare keytype if exists
             if( $key1 && method_exists($key1,'getKeytype') ) {
-                $keytype1 = $key1->getKeytype();
-                $keytype2 = $key2->getKeytype();
+                $keytype1 = $key1->getKeytype()->getId();
+                $keytype2 = $key2->getKeytype()->getId();
                 if( $keytype1 == $keytype2 ) {
                     return true;
                 } else {

@@ -71,10 +71,12 @@ function addKeyListener() {
     //remove has-error class from mrn and accession inputs
     $('.accessionaccession').find('.keyfield').parent().keypress(function() {
         $(this).removeClass('has-error');
+        cleanValidationAlert();
     });
     $('.patientmrn').find('.keyfield').parent().keypress(function() {
         //console.log("remove has-error on keypress");
         $(this).removeClass('has-error');
+        cleanValidationAlert();
     });
 
     $('.ajax-combobox-partname').on("change", function(e) {

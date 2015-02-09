@@ -549,7 +549,7 @@ class Encounter extends ObjectAbstract
     ///////////////////////// Extra fields /////////////////////////
     public function addExtraFields($status,$provider,$source) {
         $this->addLocation( new EncounterLocation($status,$provider,$source) );
-        $this->addorder( new EncounterOrder($status,$provider,$source) );
+        $this->addOrder( new EncounterOrder($status,$provider,$source) );
         $this->addInpatientinfo( new EncounterInpatientinfo($status,$provider,$source) );
 
     }

@@ -9,6 +9,17 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\EncounterDate;
+use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
+use Oleg\OrderformBundle\Entity\EncounterPathistory;
+use Oleg\OrderformBundle\Entity\EncounterPatlastname;
+use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
+use Oleg\OrderformBundle\Entity\EncounterPatsex;
+use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
+use Oleg\OrderformBundle\Entity\ProcedureDate;
+use Oleg\OrderformBundle\Entity\ProcedureNumber;
+use Oleg\OrderformBundle\Entity\EncounterPatage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,14 +41,14 @@ use Oleg\OrderformBundle\Entity\Procedure;
 use Oleg\OrderformBundle\Entity\ProcedureEncounter;
 use Oleg\OrderformBundle\Entity\ProcedureName;
 
-use Oleg\OrderformBundle\Entity\ProcedurePatsuffix;
-use Oleg\OrderformBundle\Entity\ProcedurePatlastname;
-use Oleg\OrderformBundle\Entity\ProcedurePatfirstname;
-use Oleg\OrderformBundle\Entity\ProcedurePatmiddlename;
-use Oleg\OrderformBundle\Entity\ProcedurePatsex;
-use Oleg\OrderformBundle\Entity\ProcedurePatage;
-use Oleg\OrderformBundle\Entity\ProcedurePathistory;
-use Oleg\OrderformBundle\Entity\ProcedureEncounterDate;
+//use Oleg\OrderformBundle\Entity\ProcedurePatsuffix;
+//use Oleg\OrderformBundle\Entity\ProcedurePatlastname;
+//use Oleg\OrderformBundle\Entity\ProcedurePatfirstname;
+//use Oleg\OrderformBundle\Entity\ProcedurePatmiddlename;
+//use Oleg\OrderformBundle\Entity\ProcedurePatsex;
+//use Oleg\OrderformBundle\Entity\ProcedurePatage;
+//use Oleg\OrderformBundle\Entity\ProcedurePathistory;
+//use Oleg\OrderformBundle\Entity\ProcedureEncounterDate;
 
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\AccessionAccession;
@@ -209,7 +220,8 @@ class TableController extends Controller {
             $part = $block->getPart();
             $accession = $part->getAccession();
             $procedure = $accession->getProcedure();
-            $patient = $procedure->getPatient();
+            $encounter = $procedure->getEncounter();
+            $patient = $encounter->getPatient();
 
             //accession: 2
             $acckey = $accession->obtainValidKeyField();
@@ -280,54 +292,55 @@ class TableController extends Controller {
                 $rowArr['Accession Date']['value'] = $transformer->transform($accessionDate->getField());
             }
 
-            //procedure: 6
+            //procedure: 1
             $proceduretype = $procedure->getName()->first();
             $rowArr['Procedure Type']['id'] = $proceduretype->getId();
             $rowArr['Procedure Type']['value'] = ( $proceduretype->getField() ? $proceduretype->getField()->getId() : null );
 
-            $encounterdate = $procedure->obtainStatusField('encounterDate',$fieldstatus,$id);
+            //encounter: 8
+            $encounterdate = $encounter->obtainStatusField('date',$fieldstatus,$id);
             if( $encounterdate ) {
                 $rowArr['Encounter Date']['id'] = $encounterdate->getId();
                 $rowArr['Encounter Date']['value'] = $transformer->transform($encounterdate->getField());
             }
 
-            $patsuffix = $procedure->obtainStatusField('patsuffix',$fieldstatus,$id);
+            $patsuffix = $encounter->obtainStatusField('patsuffix',$fieldstatus,$id);
             if( $patsuffix ) {
                 $rowArr["Patient's Suffix"]['id'] = $patsuffix->getId();
                 $rowArr["Patient's Suffix"]['value'] = $patsuffix->getField();
             }
 
-            $patlastname = $procedure->obtainStatusField('patlastname',$fieldstatus,$id);
+            $patlastname = $encounter->obtainStatusField('patlastname',$fieldstatus,$id);
             if( $patlastname ) {
                 $rowArr["Patient's Last Name"]['id'] = $patlastname->getId();
                 $rowArr["Patient's Last Name"]['value'] = $patlastname->getField();
             }
 
-            $patfirstname = $procedure->obtainStatusField('patfirstname',$fieldstatus,$id);
+            $patfirstname = $encounter->obtainStatusField('patfirstname',$fieldstatus,$id);
             if( $patfirstname ) {
                 $rowArr["Patient's First Name"]['id'] = $patfirstname->getId();
                 $rowArr["Patient's First Name"]['value'] = $patfirstname->getField();
             }
 
-            $patmiddlename = $procedure->obtainStatusField('patmiddlename',$fieldstatus,$id);
+            $patmiddlename = $encounter->obtainStatusField('patmiddlename',$fieldstatus,$id);
             if( $patmiddlename ) {
                 $rowArr["Patient's Middle Name"] = $patmiddlename->getId();
                 $rowArr["Patient's Middle Name"] = $patmiddlename->getField();
             }
 
-            $patsex = $procedure->obtainStatusField('patsex',$fieldstatus,$id);
+            $patsex = $encounter->obtainStatusField('patsex',$fieldstatus,$id);
             if( $patsex ) {
                 $rowArr['Patient Sex']['id'] = $patsex->getId();
                 $rowArr['Patient Sex']['value'] = $patsex->getField();
             }
 
-            $patage = $procedure->obtainStatusField('patage',$fieldstatus,$id);
+            $patage = $encounter->obtainStatusField('patage',$fieldstatus,$id);
             if( $patage ) {
                 $rowArr['Patient Age']['id'] = $patage->getId();
                 $rowArr['Patient Age']['value'] = $patage->getField();
             }
 
-            $pathistory = $procedure->obtainStatusField('pathistory',$fieldstatus,$id);
+            $pathistory = $encounter->obtainStatusField('pathistory',$fieldstatus,$id);
             if( $pathistory ) {
                 $rowArr['Clinical History']['id'] = $pathistory->getId();
                 $rowArr['Clinical History']['value'] = $pathistory->getField();
@@ -777,6 +790,88 @@ class TableController extends Controller {
             $patient->addClinicalHistory($patientch);
         }
 
+        ///////////////// Encounter /////////////////
+        $encounter = new Encounter(false, $status, $provider, $source);
+        $patient->addEncounter($encounter);
+
+        //add encounter simple fields
+        //Encounter Date
+        $encounterDateArr = $this->getValueByHeaderName('Encounter Date',$row,$columnData);
+        if( $force || $encounterDateArr['val'] && $encounterDateArr['val'] != '' ) {
+            if( $encounterDateArr['val'] == "" ) {
+                $encounterDateFormat = NULL;
+            } else {
+                $encounterDateFormat = new \DateTime($encounterDateArr['val']);
+            }
+            $encounterDateObj = new EncounterDate($status,$provider,$source);
+            $encounterDateObj->setField($encounterDateFormat);
+            $encounterDateObj->setId($encounterDateArr['id']);
+            $encounter->addDate($encounterDateObj);
+        }
+
+        //Encounter Suffix
+        $patsuffixArr = $this->getValueByHeaderName("Patient's Suffix",$row,$columnData);
+        if( $force || $patsuffixArr['val'] && $patsuffixArr['val'] != '' ) {
+            $patsuffixObj = new EncounterPatsuffix($status,$provider,$source);
+            $patsuffixObj->setField($patsuffixArr['val']);
+            $patsuffixObj->setId($patsuffixArr['id']);
+            $encounter->addPatsuffix($patsuffixObj);
+        }
+
+        //Encounter Last Name
+        $patlastnameArr = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
+        if( $force || $patlastnameArr['val'] && $patlastnameArr['val'] != '' ) {
+            $patlastnameObj = new EncounterPatlastname($status,$provider,$source);
+            $patlastnameObj->setField($patlastnameArr['val']);
+            $patlastnameObj->setId($patlastnameArr['id']);
+            $encounter->addPatlastname($patlastnameObj);
+        }
+
+        //Encounter First Name
+        $patfirstnameArr = $this->getValueByHeaderName("Patient's First Name",$row,$columnData);
+        if( $force || $patfirstnameArr['val'] && $patfirstnameArr['val'] != '' ) {
+            $patfirstnameObj = new EncounterPatfirstname($status,$provider,$source);
+            $patfirstnameObj->setField($patfirstnameArr['val']);
+            $patfirstnameObj->setId($patfirstnameArr['id']);
+            $encounter->addPatfirstname($patfirstnameObj);
+        }
+
+        //Encounter Middle Name
+        $patmiddlenameArr = $this->getValueByHeaderName("Patient's Middle Name",$row,$columnData);
+        if( $force || $patmiddlenameArr['val'] && $patmiddlenameArr['val'] != '' ) {
+            $patmiddlenameObj = new EncounterPatmiddlename($status,$provider,$source);
+            $patmiddlenameObj->setField($patmiddlenameArr['val']);
+            $patmiddlenameObj->setId($patmiddlenameArr['id']);
+            $encounter->addPatmiddlename($patmiddlenameObj);
+        }
+
+        //Encounter Sex
+        $patsexArr = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
+        if( $force || $patsexArr['val'] && $patsexArr['val'] != '' ) {
+            $patsexObj = new EncounterPatsex($status,$provider,$source);
+            $patsexObj->setField($patsexArr['val']);
+            $patsexObj->setId($patsexArr['id']);
+            $encounter->addPatsex($patsexObj);
+        }
+
+        //Encounter Age
+        $patageArr = $this->getValueByHeaderName('Patient Age',$row,$columnData);
+        if( $force || $patageArr['val'] && $patageArr['id'] != '' ) {
+            $patageObj = new EncounterPatage($status,$provider,$source);
+            $patageObj->setField($patageArr['val']);
+            $patageObj->setId($patageArr['id']);
+            $encounter->addPatage($patageObj);
+        }
+
+        //Encounter Clinical History
+        $pathistoryArr = $this->getValueByHeaderName('Clinical History',$row,$columnData);
+        if( $force || $pathistoryArr['val'] && $pathistoryArr['val'] != '' ) {
+            $pathistoryObj = new EncounterPathistory($status,$provider,$source);
+            $pathistoryObj->setField($pathistoryArr['val']);
+            $pathistoryObj->setId($pathistoryArr['id']);
+            $encounter->addPathistory($pathistoryObj);
+        }
+
         ///////////////// Procedure /////////////////
         $procedure = new Procedure(false, $status, $provider, $source);
 
@@ -791,89 +886,12 @@ class TableController extends Controller {
             $procedure->addName($procedureName);
         }
 
-        //Procedure Encounter
-        $procedureenc = new ProcedureEncounter($status,$provider,$source);
-        $procedure->addEncounter($procedureenc);
+        //Procedure Encounter Number
+        $procedureenc = new ProcedureNumber($status,$provider,$source);
+        $procedure->addNumber($procedureenc);
 
-        $patient->addProcedure($procedure);
+        $encounter->addProcedure($procedure);
 
-        //add procedure simple fields
-        //Encounter Date
-        $encounterDateArr = $this->getValueByHeaderName('Encounter Date',$row,$columnData);
-        if( $force || $encounterDateArr['val'] && $encounterDateArr['val'] != '' ) {
-            if( $encounterDateArr['val'] == "" ) {
-                $encounterDateFormat = NULL;
-            } else {
-                $encounterDateFormat = new \DateTime($encounterDateArr['val']);
-            }
-            $encounterDateObj = new ProcedureEncounterDate($status,$provider,$source);
-            $encounterDateObj->setField($encounterDateFormat);
-            $encounterDateObj->setId($encounterDateArr['id']);
-            $procedure->addEncounterDate($encounterDateObj);
-        }
-
-        //Procedure Suffix
-        $patsuffixArr = $this->getValueByHeaderName("Patient's Suffix",$row,$columnData);
-        if( $force || $patsuffixArr['val'] && $patsuffixArr['val'] != '' ) {
-            $patsuffixObj = new ProcedurePatsuffix($status,$provider,$source);
-            $patsuffixObj->setField($patsuffixArr['val']);
-            $patsuffixObj->setId($patsuffixArr['id']);
-            $procedure->addPatsuffix($patsuffixObj);
-        }
-
-        //Procedure Last Name
-        $patlastnameArr = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
-        if( $force || $patlastnameArr['val'] && $patlastnameArr['val'] != '' ) {
-            $patlastnameObj = new ProcedurePatlastname($status,$provider,$source);
-            $patlastnameObj->setField($patlastnameArr['val']);
-            $patlastnameObj->setId($patlastnameArr['id']);
-            $procedure->addPatlastname($patlastnameObj);
-        }
-
-        //Procedure First Name
-        $patfirstnameArr = $this->getValueByHeaderName("Patient's First Name",$row,$columnData);
-        if( $force || $patfirstnameArr['val'] && $patfirstnameArr['val'] != '' ) {
-            $patfirstnameObj = new ProcedurePatfirstname($status,$provider,$source);
-            $patfirstnameObj->setField($patfirstnameArr['val']);
-            $patfirstnameObj->setId($patfirstnameArr['id']);
-            $procedure->addPatfirstname($patfirstnameObj);
-        }
-
-        //Procedure Middle Name
-        $patmiddlenameArr = $this->getValueByHeaderName("Patient's Middle Name",$row,$columnData);
-        if( $force || $patmiddlenameArr['val'] && $patmiddlenameArr['val'] != '' ) {
-            $patmiddlenameObj = new ProcedurePatmiddlename($status,$provider,$source);
-            $patmiddlenameObj->setField($patmiddlenameArr['val']);
-            $patmiddlenameObj->setId($patmiddlenameArr['id']);
-            $procedure->addPatmiddlename($patmiddlenameObj);
-        }
-
-        //Procedure Sex
-        $patsexArr = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
-        if( $force || $patsexArr['val'] && $patsexArr['val'] != '' ) {
-            $patsexObj = new ProcedurePatsex($status,$provider,$source);
-            $patsexObj->setField($patsexArr['val']);
-            $patsexObj->setId($patsexArr['id']);
-            $procedure->addPatsex($patsexObj);
-        }
-
-        //Procedure Age
-        $patageArr = $this->getValueByHeaderName('Patient Age',$row,$columnData);
-        if( $force || $patageArr['val'] && $patageArr['id'] != '' ) {
-            $patageObj = new ProcedurePatage($status,$provider,$source);
-            $patageObj->setField($patageArr['val']);
-            $patageObj->setId($patageArr['id']);
-            $procedure->addPatage($patageObj);
-        }
-
-        //Clinical History
-        $pathistoryArr = $this->getValueByHeaderName('Clinical History',$row,$columnData);
-        if( $force || $pathistoryArr['val'] && $pathistoryArr['val'] != '' ) {
-            $pathistoryObj = new ProcedurePathistory($status,$provider,$source);
-            $pathistoryObj->setField($pathistoryArr['val']);
-            $pathistoryObj->setId($pathistoryArr['id']);
-            $procedure->addPathistory($pathistoryObj);
-        }
 
 
         ///////////////// Accession /////////////////

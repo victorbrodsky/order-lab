@@ -37,46 +37,30 @@ class EncounterNumberType extends AbstractType
 //                },
 //        ));
 
-        $builder->add('others', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterNumber',
-            'label' => false,
-			'attr' => array('style'=>'display:none;')
+        $builder->add('source', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            'label' => 'Encounter Number Source:',
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.name = 'WCMC Epic Practice Management'")
+                        ->orderBy("list.orderinlist","ASC");
+
+                },
+        ));
+
+        $builder->add('field', null, array(
+            'label'=>'Encounter Number',
+            'attr' => array('class'=>'form-control')
         ));
 
 
-
-        //extra data-structure fields
-        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-
-            $builder->add('source', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:SourceSystemList',
-                'label' => 'Encounter Number Source:',
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->where("list.name = 'WCMC Epic Practice Management'")
-                            ->orderBy("list.orderinlist","ASC");
-
-                    },
-            ));
-
-            $builder->add('field', null, array(
-                'label'=>'Encounter Number:',
-                'attr' => array('class'=>'form-control')
-            ));
-
-        } else {
-
-//            $builder->add('field', null, array(
-//                    'label'=>'Encounter Number:',
-//                'attr' => array('class'=>'form-control')
-//            ));
-
-            $builder->add('field', 'hidden', array('label'=>false));
-
-        }
-
+        $builder->add('others', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterNumber',
+            'label' => false,
+            'attr' => array('style'=>'display:none;')
+        ));
 
     }
 

@@ -109,7 +109,8 @@ class PatientRepository extends ArrayFieldAbstractRepository
             //$sameChild = $this->findSimilarChild($parent,$encounter->getChildren()->first());
             $em = $this->_em;
             //$sameChild = $em->getRepository('OlegOrderformBundle:Encounter')->findSimilarChild( $parent, $encounter->getChildren()->first() );
-            $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findSimilarChild( $parent, $accession );
+            //$foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findSimilarChild( $parent, $accession );
+            $foundAccession = $em->getRepository('OlegOrderformBundle:Encounter')->findSimilarChild( $parent, $accession );
 
             //echo "similar child=".$foundAccession."<br>";
 
