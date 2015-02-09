@@ -566,13 +566,6 @@
                     {% endif %}
                 {% elseif fieldtype == "date" %}
                     {{ formmacros.fielddate(fieldThis.field,'regular-datepicker') }}
-
-                    {#{% if fieldThis.time is defined %}#}
-                        {#{{ formmacros.field(fieldThis.time) }}#}
-                        {#{{ form_label(fieldThis.time) }}#}
-                        {#{{ form_widget(fieldThis.time) }}#}
-                    {#{% endif %}#}
-
                 {% elseif fieldtype == "lockdate" %}
                     {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
                 {% elseif fieldtype == "paper" %}
@@ -981,8 +974,6 @@
 
 
 {% macro accessionForm( encounter, procedure, accession, flag, uid, cycle, status,
-                        encounternumberHtml,
-                        procedurenumberHtml,
                         procedurenameHtml,
                         accessionHtml,
                         accessiondateHtml,
@@ -1034,15 +1025,15 @@
             {#<p><div class="encounternumber">{{ encounternumberHtml }}</div></p>#}
         {#{% endif %}#}
 
-        {% if procedurenumberHtml is not defined or procedurenumberHtml == "" %}
-            {% for number in procedure.number %}
-                {% if number.vars.value.status == 'valid' %}
-                    {{ form_row(number, {'label': false}) }}
-                {% endif %}
-            {% endfor %}
-        {% else  %}
-            <p><div class="procedurenumber">{{ procedurenumberHtml }}</div></p>
-        {% endif %}
+        {#{% if procedurenumberHtml is not defined or procedurenumberHtml == "" %}#}
+            {#{% for number in procedure.number %}#}
+                {#{% if number.vars.value.status == 'valid' %}#}
+                    {#{{ form_row(number, {'label': false}) }}#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
+        {#{% else  %}#}
+            {#<p><div class="procedurenumber">{{ procedurenumberHtml }}</div></p>#}
+        {#{% endif %}#}
 
         {#patient's data: single simple fields#}
         {% if encounterdateHtml is not defined or encounterdateHtml == "" %}
@@ -1296,12 +1287,6 @@
             {{ formmacros.inputArrayField(encounter.number,cycle,"encounternumber","","","","",status) }}
         {% endif %}
 
-        {#{{ formmacros.field(encounter.date.time) }}#}
-        {#{% if encounter.date.time is defined %}#}
-            {#time11111111111111111111111#}
-            {#{{ formmacros.inputArrayField(encounter.date.time,cycle,"encountertime","","","","",status) }}#}
-        {#{% endif %}#}
-
         {% if encounter.location is defined %}
             {{ formmacros.inputArrayField(encounter.location,cycle,"encounterlocation","","","","",status) }}
         {% endif %}
@@ -1329,6 +1314,10 @@
         {% import _self as formmacros %}
 
         <h5>Extra data structure fields for Procedure:</h5>
+
+        {% if procedure.number is defined %}
+            {{ formmacros.inputArrayField(procedure.number,cycle,"procedurenumber","","","","",status) }}
+        {% endif %}
 
         {% if procedure.location is defined %}
             {{ formmacros.inputArrayField(procedure.location,cycle,"procedurelocation","","","","",status) }}

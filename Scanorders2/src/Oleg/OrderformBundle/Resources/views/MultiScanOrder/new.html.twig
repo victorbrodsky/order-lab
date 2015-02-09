@@ -84,11 +84,11 @@
         {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
 
         {#{% set encounterHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.name,type,"","prototype") %}#}
-        {% set encounternumberHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.number,type,"","prototype","","","nolabel") %}
+        {#{% set encounternumberHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
         {% set encounterdateHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.date,type,"date","prototype") %}
 
         {% set procedurenameHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
-        {% set procedurenumberHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}
+        {#{% set procedurenumberHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
         {#{% set proceduredateHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype") %}#}
 
         {% set patsuffixHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.patsuffix,type,"","prototype") %}
@@ -148,8 +148,6 @@
                 form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype,
                 form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype,
                 "check",uid,type,form.vars.value.status,
-                 encounternumberHtml,
-                 procedurenumberHtml,
                  procedurenameHtml,
                  accessionHtml,
                  accessiondateHtml,
@@ -165,9 +163,9 @@
          "
          data-prototype-accessionaccession= "{{ accessionHtml|e }}"
          data-prototype-accessionaccessiondate= "{{ accessiondateHtml|e }}"
-         data-prototype-encounternumber= "{{ encounternumberHtml|e }}"
+         {#data-prototype-encounternumber= "{{ encounternumberHtml|e }}"#}
          data-prototype-procedurename= "{{ procedurenameHtml|e }}"
-         data-prototype-procedurenumber= "{{ procedurenumberHtml|e }}"
+         {#data-prototype-procedurenumber= "{{ procedurenumberHtml|e }}"#}
          data-prototype-encounterdate= "{{ encounterdateHtml|e }}"
          data-prototype-encounterpatsuffix= "{{ patsuffixHtml|e }}"
          data-prototype-encounterpatlastname= "{{ patlastnameHtml|e }}"

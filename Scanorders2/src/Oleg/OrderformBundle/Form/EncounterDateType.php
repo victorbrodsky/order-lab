@@ -39,7 +39,7 @@ class EncounterDateType extends AbstractType
         //extra data-structure fields
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
 
-            echo "datastructure time <br>";
+            //echo "datastructure time <br>";
 
             $builder->add('time', 'time', array(
                 'input'  => 'datetime',

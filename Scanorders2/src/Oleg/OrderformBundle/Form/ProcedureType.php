@@ -21,16 +21,16 @@ class ProcedureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('number', 'collection', array(
-            'type' => new ProcedureNumberType($this->params, $this->entity),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedurenumber__',
-        ));
+//        $builder->add('number', 'collection', array(
+//            'type' => new ProcedureNumberType($this->params, $this->entity),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__procedurenumber__',
+//        ));
 
         $builder->add('name', 'collection', array(
             'type' => new ProcedureNameType($this->params, $this->entity),
@@ -62,6 +62,7 @@ class ProcedureType extends AbstractType
             'label' => false,//" ",
             'by_reference' => false,
             'prototype' => true,
+            'prototype' => true,
             'prototype_name' => '__accession__',
         ));
 
@@ -70,6 +71,17 @@ class ProcedureType extends AbstractType
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
 
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
+
+            $builder->add('number', 'collection', array(
+                'type' => new ProcedureNumberType($this->params, $this->entity),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__procedurenumber__',
+            ));
 
             $builder->add('location', 'collection', array(
                 'type' => new ProcedureLocationType($this->params, null),

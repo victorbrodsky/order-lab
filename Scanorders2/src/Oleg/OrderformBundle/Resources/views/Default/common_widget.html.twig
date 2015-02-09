@@ -17,16 +17,7 @@
                         {{ form_label(form) }}
                     </div>
                     <div class="col-xs-6" align="left">
-                        {% if attr == "disabled" %}
-                            {#value of disabled field will be ignored#}
-                            {{ form_widget(form,{ 'disabled':'disabled' }) }}
-                        {% elseif attr == "readonly" %}
-                            {{ form_widget(form, { 'attr': {'readonly': 'readonly'} }) }}
-                        {% elseif attr == "required" %}
-                            {{ form_widget(form, { 'attr': {'required': 'true'} }) }}
-                        {% else %}
-                            {{ form_widget(form) }}
-                        {% endif %}
+                        {{ form_widget(form) }}
                     </div>
                 </div>
             </p>

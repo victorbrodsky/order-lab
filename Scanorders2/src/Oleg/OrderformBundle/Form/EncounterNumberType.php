@@ -37,18 +37,18 @@ class EncounterNumberType extends AbstractType
 //                },
 //        ));
 
-        $builder->add('source', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
-            'label' => 'Encounter Number Source:',
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.name = 'WCMC Epic Practice Management'")
-                        ->orderBy("list.orderinlist","ASC");
-
-                },
-        ));
+//        $builder->add('source', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+//            'label' => 'Encounter Number Source:',
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.name = 'WCMC Epic Practice Management'")
+//                        ->orderBy("list.orderinlist","ASC");
+//
+//                },
+//        ));
 
         $builder->add('field', null, array(
             'label'=>'Encounter Number',
