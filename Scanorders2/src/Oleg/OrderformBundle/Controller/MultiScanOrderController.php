@@ -42,9 +42,9 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
  */
 class MultiScanOrderController extends Controller {
 
-    private $datastructure = null;
+    //private $datastructure = null;
     //for testing data structure
-    //private $datastructure = 'datastructure';
+    private $datastructure = 'datastructure';
 
 
     /**
@@ -719,11 +719,16 @@ class MultiScanOrderController extends Controller {
         }
 
         if( $routeName == "scan_datastructure") {
-            $disable = true;
-            $type = "show";
-            //testing data structure
-            //$disable = false;
-            //$type = "edit";
+            if( $datastructure == 'datastructure' ) {
+                //testing data structure
+                $disable = false;
+                $type = "edit";
+            } else {
+                $disable = true;
+                $type = "show";
+            }
+
+
         }
 
         //echo "show id=".$entity->getId()."<br>";

@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+//use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 use Oleg\OrderformBundle\Entity\ProcedureList;
@@ -23,12 +24,13 @@ class GeneralOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('field',null,array(
-            'required' => false,
-            'label'=>$this->params['name'] . ' Order ID:',
-            'attr' => array('class'=>'form-control')
+        //general order field
+        $builder->add('field', new GeneralOrderAbstractType($this->params), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\GeneralOrder',
+            'label' => false
         ));
 
+        //array field source
         $builder->add('source', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:SourceSystemList',
             'label' => $this->params['name'] . ' Order Source:',
@@ -47,7 +49,6 @@ class GeneralOrderType extends AbstractType
                 },
         ));
 
-
         $builder->add('others', new ArrayFieldType(), array(
             'data_class' => $this->params['dataClass'],
             'label' => false,
@@ -56,10 +57,11 @@ class GeneralOrderType extends AbstractType
 
     }
 
+    //public function configureOptions(OptionsResolver $resolver)   //setDefaultOptions OptionsResolverInterface
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => $this->params['dataClass'],
+            'data_class' => $this->params['dataClass']
         ));
     }
 

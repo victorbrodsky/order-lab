@@ -834,13 +834,14 @@
     {% endif %}
 {% endmacro %}
 
-{% macro fieldGeneralOrder(field,cycle) %}
+{% macro fieldGeneralOrder(order,cycle) %}
     {% import _self as formmacros %}
-    {% if field.vars.value.status == 'valid' %}
-        {{ form_errors(field) }}
-        {{ form_widget(field.others) }}
-        {{ formmacros.field(field.source) }}
-        {{ formmacros.field(field.field) }}
+    {% if order.vars.value.status == 'valid' %}
+        {{ form_errors(order) }}
+        {{ form_widget(order.others) }}
+        {{ formmacros.field(order.source) }}
+        {{ formmacros.field(order.field.type) }}
+        {{ formmacros.field(order.field.ordernumber) }}
     {% endif %}
 {% endmacro %}
 

@@ -602,7 +602,16 @@ class ScanAdminController extends AdminController
             'One-Slide Scan Order',
             'Multi-Slide Scan Order',
             'Table-View Scan Order',
-            'Slide Return Request'
+            'Slide Return Request',
+            'Encounter Order',
+            'Procedure Order',
+            'Referral',
+            'Tissue Examination',
+            'Block Order',
+            'Slide Order',
+            'Scan Order',
+            'Outside Lab Order - Comprehansive',
+            'Outside Lab Order on Part'
         );
 
         $count = 1;

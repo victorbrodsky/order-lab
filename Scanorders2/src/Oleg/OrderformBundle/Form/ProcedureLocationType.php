@@ -22,6 +22,23 @@ class ProcedureLocationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        //Location Source System - array field location source
+        $builder->add('source', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            'label' => 'Location Source System:',
+            'required' => false,
+            'data' => null,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->orderBy("list.orderinlist","ASC");
+                },
+        ));
+
+        //Location Timestamp - property of location object
+        //Location Provider - property of location object
+        //Location Role - property of location object (use as a filter)
+
         $builder->add('field', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Location',
             'label' => 'Procedure Location',
@@ -30,7 +47,7 @@ class ProcedureLocationType extends AbstractType
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->leftJoin("list.locationType", "locationType")
-                        ->where("locationType.name = 'Medical Office'")
+                        ->where("locationType.name = 'Inpatient Room'")
                         ->orderBy("list.orderinlist","ASC");
                 },
         ));
