@@ -617,9 +617,14 @@ class Encounter extends ObjectAbstract
             $encNames = $encNames . " name=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
+        $patfirstname = "";
+        foreach( $this->getpatfirstname() as $name ) {
+            $patfirstname = $patfirstname . " patfirstname=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().", alias=".$name->getAlias().") ";
+        }
+
         $patlastname = "";
         foreach( $this->getpatlastname() as $name ) {
-            $patlastname = $patlastname . " patlastname=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+            $patlastname = $patlastname . " patlastname=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().", alias=".$name->getAlias().") ";
         }
 
         $patAge = "";
@@ -638,7 +643,9 @@ class Encounter extends ObjectAbstract
         }
 
         return 'Encounter: id=' . $this->id . ", patientFirstName=".$this->getPatient()->getFirstname()->first().
-            ", patlastname=" . $patlastname . ", patage=" . $patAge . ", patsex=".$patSex.", Clinical History=".$hist.
+            ", patfirstname=" . $patfirstname .
+            ", patlastname=" . $patlastname .
+            ", patage=" . $patAge . ", patsex=".$patSex.", Clinical History=".$hist.
             ", encounterNameCount=" . count($this->getName()) . " => Names=".$encNames.
             ", encounterCount=" . count($this->number) .
             ": encounter->first=" . $this->number->first() .

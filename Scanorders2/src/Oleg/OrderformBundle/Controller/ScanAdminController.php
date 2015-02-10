@@ -610,7 +610,7 @@ class ScanAdminController extends AdminController
             'Block Order',
             'Slide Order',
             'Scan Order',
-            'Outside Lab Order - Comprehansive',
+            'Outside Lab Order - Comprehensive',
             'Outside Lab Order on Part'
         );
 

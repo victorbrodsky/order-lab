@@ -58,7 +58,11 @@ class EncounterInpatientinfo extends EncounterArrayFieldAbstract
      */
     private $dischargediagnosis;
 
-
+    /**
+     * Dummy field required by abstract
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $field;
 
 
 
@@ -160,5 +164,12 @@ class EncounterInpatientinfo extends EncounterArrayFieldAbstract
         return $this->dischargetime;
     }
 
+
+
+    public function __toString() {
+        $diagnosisAdmission = $this->getAdmissiondiagnosis();
+        $diagnosisDischarge = $this->getDischargediagnosis();
+        return "Inaptient Info:".$diagnosisAdmission. " ".$diagnosisDischarge."<br>";
+    }
 
 }

@@ -27,6 +27,11 @@ class EncounterPatmiddlenameType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif encounter-middleName')
         ));
 
+        $builder->add('alias', 'checkbox', array(
+            'required' => false,
+            'label' => 'Alias',
+        ));
+
         $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterPatmiddlename',
             'label' => false,

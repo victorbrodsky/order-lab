@@ -23,5 +23,34 @@ class EncounterPatlastname extends EncounterArrayFieldAbstract
      */
     protected $field;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $alias;
+
+
+
+
+
+    /**
+     * @param mixed $alias
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+//        if( $alias ) {
+//            $this->setStatus('alias');
+//        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+
 
 }

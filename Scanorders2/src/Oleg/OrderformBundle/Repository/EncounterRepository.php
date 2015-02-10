@@ -42,15 +42,21 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         $securityUtil = new SecurityUtil($this->_em,null,null);
         $source = $securityUtil->getDefaultSourceSystem();  //'scanorder';
-        $status = self::STATUS_VALID;
+        //$status = self::STATUS_VALID;
 
         //suffix
         if( count($encounter->getPatsuffix()) > 0 ) {
-            $suffix = $this->validFieldIsSet( $patient->getSuffix() );
-            if( $suffix ) {
-                //$suffix->setStatus(self::STATUS_INVALID);
-                $status = self::STATUS_INVALID;
+            $status = self::STATUS_VALID;
+            $alias = $encounter->getPatsuffix()->first()->getAlias();
+            if( $alias === true ) {
+                $status = self::STATUS_ALIAS;
+            } else {
+                $name = $this->validFieldIsSet( $patient->getSuffix() );
+                if( $name ) {
+                    $status = self::STATUS_INVALID;
+                }
             }
+            //echo "encounter suffix status=".$status."<br>";
             $patientsuffix = new PatientSuffix($status,$user,$source);
             $patientsuffix->setField($encounter->getPatsuffix()->first()->getField());
             $patient->addSuffix($patientsuffix);
@@ -59,10 +65,15 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         //lastname
         //echo "proc last name count=".count($encounter->getPatlastname())."<br>";
         if( count($encounter->getPatlastname()) > 0 ) {
-            $lastname = $this->validFieldIsSet( $patient->getLastname() );
-            if( $lastname ) {
-                //$lastname->setStatus(self::STATUS_INVALID);
-                $status = self::STATUS_INVALID;
+            $status = self::STATUS_VALID;
+            $alias = $encounter->getPatlastname()->first()->getAlias();
+            if( $alias === true ) {
+                $status = self::STATUS_ALIAS;
+            } else {
+                $name = $this->validFieldIsSet( $patient->getLastname() );
+                if( $name ) {
+                    $status = self::STATUS_INVALID;
+                }
             }
             $patientlastname = new PatientLastName($status,$user,$source);
             $patientlastname->setField($encounter->getPatlastname()->first()->getField());
@@ -71,10 +82,15 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         //firstname
         if( count($encounter->getPatfirstname()) > 0 ) {
-            $firstname = $this->validFieldIsSet( $patient->getFirstname() );
-            if( $firstname ) {
-                //$firstname->setStatus(self::STATUS_INVALID);
-                $status = self::STATUS_INVALID;
+            $status = self::STATUS_VALID;
+            $alias = $encounter->getPatfirstname()->first()->getAlias();
+            if( $alias === true ) {
+                $status = self::STATUS_ALIAS;
+            } else {
+                $name = $this->validFieldIsSet( $patient->getFirstname() );
+                if( $name ) {
+                    $status = self::STATUS_INVALID;
+                }
             }
             $patientfirstname = new PatientFirstName($status,$user,$source);
             $patientfirstname->setField($encounter->getPatfirstname()->first()->getField());
@@ -83,10 +99,15 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         //middlename
         if( count($encounter->getPatmiddlename()) > 0 ) {
-            $middlename = $this->validFieldIsSet( $patient->getMiddlename() );
-            if( $middlename ) {
-                //$middlename->setStatus(self::STATUS_INVALID);
-                $status = self::STATUS_INVALID;
+            $status = self::STATUS_VALID;
+            $alias = $encounter->getPatmiddlename()->first()->getAlias();
+            if( $alias === true ) {
+                $status = self::STATUS_ALIAS;
+            } else {
+                $name = $this->validFieldIsSet( $patient->getMiddlename() );
+                if( $name ) {
+                    $status = self::STATUS_INVALID;
+                }
             }
             $patientmiddlename = new PatientMiddleName($status,$user,$source);
             $patientmiddlename->setField($encounter->getPatmiddlename()->first()->getField());
@@ -95,6 +116,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         //sex
         if( count($encounter->getPatsex()) > 0 ) {
+            $status = self::STATUS_VALID;
             $sex = $this->validFieldIsSet( $patient->getSex() );
             if( $sex ) {
                 //$sex->setStatus(self::STATUS_INVALID);
@@ -107,6 +129,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         }
 
 
+        //echo "patient after copy encounter fields: ".$patient."<br>";
     }
 
     //age conflict is based on 3 values: dob, encounter date and encounter age

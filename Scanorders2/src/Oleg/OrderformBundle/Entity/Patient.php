@@ -786,6 +786,11 @@ class Patient extends ObjectAbstract
             $orders = $orders . "id=".$order->getId().", oid=".$order->getOid();
         }
 
+        $firstnames = ", firstnameCount=".count($this->firstname).": ";
+        foreach( $this->firstname as $firstname ) {
+            $firstnames = $firstnames . $firstname->getField()." (provider=".$firstname->getProvider().", status=".$firstname->getStatus().") ";
+        }
+
         $lastnames = ", lastnameCount=".count($this->lastname).": ";
         foreach( $this->lastname as $lastname ) {
             $lastnames = $lastnames . $lastname->getField()." (provider=".$lastname->getProvider().", status=".$lastname->getStatus().") ";
@@ -821,6 +826,7 @@ class Patient extends ObjectAbstract
         ", mrnCount=".count($this->mrn).
         ", dobs=".$dobs.
         ", clinhists=".$clinhists.
+        ", firstnames=".$firstnames.
         ", lastnames=".$lastnames.
         ", sexs=".$sexs.
 //        ", ages=".$ages.
@@ -860,51 +866,138 @@ class Patient extends ObjectAbstract
     }
 
     public function getFullPatientName() {
-        $patientFullName = "";
+
+        $patientFullNameValid = "";
+        $patientFullNameAlias = "";
+
+        $patientFullNameValidArr = $this->patientName('valid');
+        $patientFullNameAliasArr = $this->patientName('alias');
+
+        if( $patientFullNameValidArr && count($patientFullNameValidArr) > 0 ) {
+            $patientFullNameValid = implode("; ",$patientFullNameValidArr);
+        }
+        if( $patientFullNameAliasArr && count($patientFullNameAliasArr) > 0 ) {
+            $patientFullNameAlias = implode("; ",$patientFullNameAliasArr);
+        }
+
+        $patientFullName = $patientFullNameValid;
+
+        if( $patientFullNameAlias ) {
+            $patientFullName = $patientFullNameValid . " (" . $patientFullNameAlias . ")";
+        }
+
+        return $patientFullName ;
+    }
+
+
+    public function patientName($status) {
+
+        $patientFullNameArr = array();
 
         if( !$this->getId() || $this->getId() == "" ) {
-            return $patientFullName;
+            return "";
         }
 
-        if( $this->getSuffix() && $this->getSuffix()->first() && $this->getSuffix()->first()->getField() ) {
-            $patientFullName .= $this->getSuffix()->first()->getField();
-        } else {
-            $patientFullName .= "No Suffix Provided";
-        }
+        $firstNameArr = $this->obtainStatusFieldArray('firstname', $status);
+        $middleNameArr = $this->obtainStatusFieldArray('middlename', $status);
+        $lastNameArr = $this->obtainStatusFieldArray('lastname', $status);
+        $suffixArr = $this->obtainStatusFieldArray('suffix', $status);
 
-        if( $this->getLastname() && $this->getLastname()->first() && $this->getLastname()->first()->getField() ) {
-            if( $patientFullName != '' ) {
-                $patientFullName .= ' ';
+        //echo "count firstnameArr=".count($firstNameArr)."<br>";
+        //echo "count middleNameArr=".count($middleNameArr)."<br>";
+        //echo "count lastNameArr=".count($lastNameArr)."<br>";
+        //echo "count suffixArr=".count($suffixArr)."<br>";
+
+        $firstNameArrOrder = array();
+        $middleNameArrOrder = array();
+        $lastNameArrOrder = array();
+        $suffixArrOrder = array();
+
+        //get order id array
+        $orderArr = array();
+
+        //rearange by orderid as key
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$firstNameArr,$firstNameArrOrder);
+        $orderArr = $resArr['orderArr'];
+        $firstNameArrOrder = $resArr['destArr'];
+
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$middleNameArr,$middleNameArrOrder);
+        $orderArr = $resArr['orderArr'];
+        $middleNameArrOrder = $resArr['destArr'];
+
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$lastNameArr,$lastNameArrOrder);
+        $orderArr = $resArr['orderArr'];
+        $lastNameArrOrder = $resArr['destArr'];
+
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$suffixArr,$suffixArrOrder);
+        $orderArr = $resArr['orderArr'];
+        $suffixArrOrder = $resArr['destArr'];
+
+        //echo "count orderArr=".count($orderArr)."<br>";
+
+        foreach( $orderArr as $orderId ) {
+
+            //echo "orderId=".$orderId."<br>";
+
+            $patientFullName = "";
+
+            $patientFullName = $this->patientPartialName($patientFullName,$firstNameArrOrder,$orderId,"No First Name Provided");
+            $patientFullName = $this->patientPartialName($patientFullName,$middleNameArrOrder,$orderId,"No Middle Name Provided");
+            $patientFullName = $this->patientPartialName($patientFullName,$lastNameArrOrder,$orderId,"No Last Name Provided");
+            $patientFullName = $this->patientPartialName($patientFullName,$suffixArrOrder,$orderId,"");
+
+            if( $patientFullName != "" ) {
+                $patientFullNameArr[] = $patientFullName;
             }
-            $patientFullName .= '<b>'.$this->getLastname()->first()->getField().'</b>';
-        } else {
-            if( $patientFullName != '' ) {
-                $patientFullName .= ' ';
-            }
-            $patientFullName .= "No Last Name Provided";
-        }
 
-        if( $this->getFirstname() && $this->getFirstname()->first() && $this->getFirstname()->first()->getField() ) {
-            if( $patientFullName != '' ) {
+        } //foreach order key
+
+        //echo "count patientFullNameArr=".count($patientFullNameArr)."<br>";
+
+        return $patientFullNameArr;
+    }
+
+    public function rearangeNameArrByOrder( $orderArr, $sourceArr, $destArr ) {
+        $resArr = array();
+        foreach( $sourceArr as $name ) {
+            $orderId = $name->getOrderinfo()->getId();
+            //echo "orderId=".$orderId."<br>";
+            if( !in_array($orderId,$orderArr) ) {
+                //echo "!!!!!!!!!add orderId=".$orderId."<br>";
+                if( $name."" != "" ) {
+                    $orderArr[] = $orderId;
+                }
+            }
+            if( $name."" != "" ) {
+                //$status = "[".$name->getStatus()."]";
+                $destArr[$orderId] = $name."";  //.$status;
+            }
+        }
+        $resArr['orderArr'] = $orderArr;
+        $resArr['sourceArr'] = $sourceArr;
+        $resArr['destArr'] = $destArr;
+        return $resArr;
+    }
+
+    public function patientPartialName($patientFullName,$sourceArr,$orderId,$defaultName) {
+        if( array_key_exists($orderId, $sourceArr) ) {
+            if( $sourceArr[$orderId] != "" ) {
+                if( $patientFullName != '' ) {
+                    $patientFullName .= ', ';
+                }
+                $patientFullName .= $sourceArr[$orderId];
+            }
+        } else {
+            if( $patientFullName != '' && $defaultName != '' ) {
                 $patientFullName .= ', ';
             }
-            $patientFullName .= $this->getFirstname()->first()->getField();
-        } else {
-            if( $patientFullName != '' ) {
-                $patientFullName .= ', ';
+            if( $defaultName != '' ) {
+                $patientFullName .= $defaultName;
             }
-            $patientFullName .= "No First Name Provided";
         }
-
-        if( $this->getMiddlename() && $this->getMiddlename()->first() && $this->getMiddlename()->first()->getField() ) {
-            if( $patientFullName != '' ) {
-                $patientFullName .= ' ';
-            }
-            $patientFullName .= '<i>'.$this->getMiddlename()->first()->getField().'</i>';
-        }
-
         return $patientFullName;
     }
+
 
     //if simple field already exists. Compare by field name. This is to prevent creating similar fields
     public function hasSimpleField( $field, $getMethod ) {

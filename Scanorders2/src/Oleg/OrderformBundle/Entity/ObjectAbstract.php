@@ -425,6 +425,21 @@ abstract class ObjectAbstract
     public function obtainStatusField( $fieldname, $status, $orderid=null ) {
 
         $res = null;
+
+        $resArr = $this->obtainStatusFieldArray($fieldname, $status, $orderid);
+
+        if( count($resArr) > 0 ) {
+            $res = $resArr[0];
+        }
+
+        //echo "res=".$res."<br>";
+        return $res;
+    }
+
+    //get array of fields with $status belongs to order with id $orderid
+    public function obtainStatusFieldArray( $fieldname, $status, $orderid=null ) {
+
+        $res = array();
         $getMethod = "get".$fieldname;
 
         foreach( $this->$getMethod() as $entity ) {
@@ -434,9 +449,10 @@ abstract class ObjectAbstract
                 if( $orderid != null ) {
                     //echo "field order id=".$entity->getOrderinfo()->getOid()." =? ".$orderid."<br>";
                     if( $entity->getOrderinfo()->getOid() == $orderid ) {
-                        $res = $entity;
-                        break;
+                        $res[] = $entity;
                     }
+                } else {
+                    $res[] = $entity;
                 }
 
             } else {
@@ -444,18 +460,13 @@ abstract class ObjectAbstract
                 //echo $entity->getStatus()."?=".$status."<br>";
                 if( $entity->getStatus() == $status ) {
 
-                    $res = $entity;
-
-                    //if orderid is not given, then return the first $status field
-                    if( $orderid == null ) {
-                        break;
-                    }
-
                     //if orderid is given, then return the first $status field with provided orderid
                     if( $orderid != null ) {
                         if( $entity->getOrderinfo()->getOid() == $orderid ) {
-                            break;
+                            $res[] = $entity;
                         }
+                    } else {
+                        $res[] = $entity;
                     }
 
                 }//if
@@ -464,7 +475,7 @@ abstract class ObjectAbstract
 
         } //foreach
 
-        //echo "res=".$res."<br>";
+        //echo "res count=".count($res)."<br>";
         return $res;
     }
 

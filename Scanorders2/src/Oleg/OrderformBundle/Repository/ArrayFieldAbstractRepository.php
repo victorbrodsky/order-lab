@@ -15,6 +15,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     const STATUS_RESERVED = "reserved";
     const STATUS_VALID = "valid";
     const STATUS_INVALID = "invalid";
+    const STATUS_ALIAS = "alias";
 
     public function __construct($em, $class)
     {
@@ -242,25 +243,25 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( !$entity instanceof Patient ) {
 
             $parent = $entity->getParent();
-            echo "Parent: ".$parent."<br>";
+            //echo "Parent: ".$parent."<br>";
 
             //form's auto generated accession does not have parent
             if( $original && $parent == null ) {
                 $parent = $original->getParent();
-                echo "originalParent: ".$parent."<br>";
+                //echo "originalParent: ".$parent."<br>";
                 $parent->setOneChild($entity);
             }
 
             $originalParent = null;
             if( $original ) {
                 $originalParent = $original->getParent();
-                echo "original parent=".$originalParent;
+                //echo "original parent=".$originalParent;
             }
 
             $parentClass = new \ReflectionClass($parent);
             $parentClassName = $parentClass->getShortName();
             $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity( $parent, $orderinfo, $originalParent );
-            echo "processed parent:".$processedParent;
+            //echo "processed parent:".$processedParent;
 
             $entity->setParent($processedParent);
             //echo "processed entity:".$entity;
@@ -796,8 +797,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             //change status of the field to invalid if valid field is already exists for this entity
             if( $validField ) {
-                //requirement: last added field is invalid
-                $field->setStatus(self::STATUS_INVALID);
+
+                //echo "fields status=".$field->getStatus()."<br>";
+
+                //requirement: last added field is invalid if not alias
+                if( $field->getStatus() != self::STATUS_ALIAS ) {
+                    $field->setStatus(self::STATUS_INVALID);
+                }
 
                 //requirement: last added field is valid, change status of previous valid field to invalid
                 //$field->setStatus(self::STATUS_VALID);

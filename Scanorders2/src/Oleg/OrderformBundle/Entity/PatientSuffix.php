@@ -25,4 +25,5 @@ class PatientSuffix extends PatientArrayFieldAbstract
      */
     protected $field;
 
+
 }

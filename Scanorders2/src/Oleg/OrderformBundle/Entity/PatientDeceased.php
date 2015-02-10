@@ -37,6 +37,11 @@ class PatientDeceased extends PatientArrayFieldAbstract
      */
     private $deathtime;
 
+    /**
+     * Dummy field required by abstract
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $field;
 
 
 
@@ -88,6 +93,13 @@ class PatientDeceased extends PatientArrayFieldAbstract
         return $this->deceased;
     }
 
-
+    public function __toString() {
+        $deceased = "alive";
+        if( $this->getDeceased() ) {
+            $deceased = "deceased";
+        }
+        return $deceased;
+        //return $this->field."";
+    }
 
 }

@@ -23,4 +23,29 @@ class EncounterPatsuffix extends EncounterArrayFieldAbstract
      */
     protected $field;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $alias;
+
+
+
+
+    /**
+     * @param mixed $alias
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+
 }
