@@ -22,8 +22,12 @@ class AccessionOutsidereport extends AccessionArrayFieldAbstract
     //Outside Report Source
     //$source field - already exists in base abstract class
 
-    //Outside Report ID
-    //$orderinfo - already exists in base abstract class
+    //Outside Report contains: Outside Report Order ID Source, Outside Report Order ID
+    /**
+     * @ORM\ManyToOne(targetEntity="GeneralOrder")
+     * @ORM\JoinColumn(name="generalorder_id", referencedColumnName="id", nullable=true)
+     */
+    protected $order;
 
     //Outside Accession ID: [plain text]
 
@@ -50,6 +54,28 @@ class AccessionOutsidereport extends AccessionArrayFieldAbstract
 
 
     }
+
+
+
+
+
+    /**
+     * @param mixed $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+
 
 
 
