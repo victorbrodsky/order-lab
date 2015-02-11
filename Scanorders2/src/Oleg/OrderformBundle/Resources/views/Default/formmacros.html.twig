@@ -26,7 +26,7 @@
                 {#<div class="well well-sm" style="margin-bottom:0; min-height:40px">#}
                     {#{{ value|raw }}#}
                 {#</div>#}
-                <div class="form-control form-control-modif not-mapped-simplefield" {{ disabled }}>
+                <div class="form-control form-control-modif not-mapped-simplefield" style="min-height:34px; height:auto;" {{ disabled }}>
                     {{ value|raw }}
                 </div>
             {% endif %}
@@ -790,7 +790,10 @@
 
 {% macro encounterNameWithAlias(field) %}
     {% if field.alias is defined %}
-        <div class="form-group">
+        {% import _self as formmacros %}
+        {{ form_errors(field) }}
+        {{ form_widget(field.others) }}
+        <div class="form-group oleg-form-nomargin-bottom">
             <div class="input-group">
                 {{ form_widget(field.field) }}
                 {#<span class="input-group-addon">{{ form_widget(field.alias) }} {{ form_label(field.alias) }}</span>#}
@@ -925,8 +928,6 @@
         {{ form_widget(field.others) }}
         {{ formmacros.field(field.source) }}
         {{ formmacros.field(field.orderinfo) }}
-
-
     {% endif %}
 {% endmacro %}
 

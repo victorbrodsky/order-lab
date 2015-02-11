@@ -408,10 +408,10 @@ class CheckController extends Controller {
 
                 //encounter data
                 'date'=>$this->getArrayFieldJson($encounterDate),
-                'patsuffix'=>$this->getArrayFieldJson($patSuffix),
-                'patlastname'=>$this->getArrayFieldJson($patLastName),
-                'patfirstname'=>$this->getArrayFieldJson($patFirstName),
-                'patmiddlename'=>$this->getArrayFieldJson($patMiddleName),
+                'patsuffix'=>$this->getArrayFieldJson($patSuffix,array('alias')),
+                'patlastname'=>$this->getArrayFieldJson($patLastName,array('alias')),
+                'patfirstname'=>$this->getArrayFieldJson($patFirstName,array('alias')),
+                'patmiddlename'=>$this->getArrayFieldJson($patMiddleName,array('alias')),
                 'patsex'=>$this->getArrayFieldJson($patSex),
                 'patage'=>$this->getArrayFieldJson($patAge),
                 'pathistory'=>$this->getArrayFieldJson($patHist),

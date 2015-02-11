@@ -42,9 +42,9 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
  */
 class MultiScanOrderController extends Controller {
 
-    //private $datastructure = null;
+    private $datastructure = null;
     //for testing data structure
-    private $datastructure = 'datastructure';
+    //private $datastructure = 'datastructure';
 
 
     /**

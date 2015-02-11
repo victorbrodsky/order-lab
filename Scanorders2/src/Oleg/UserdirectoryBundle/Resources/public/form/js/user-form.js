@@ -450,7 +450,7 @@ function populateResearchlabData( data, elementName ) {
     var piDummy = holder.find('.researchlab-piDummy-field');
 
     //commentDummy.attr("readonly", false);
-    //isableCheckbox(piDummy,false);
+    //disableCheckbox(piDummy,false);
 
     if( data && data.length > 1 ) {
         throw new Error('More than 1 object found. count='+data.length);

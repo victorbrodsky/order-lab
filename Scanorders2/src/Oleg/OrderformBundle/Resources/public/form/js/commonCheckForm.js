@@ -1711,7 +1711,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 }
 
 //disable or enable element
-function disableElement(parentname,element, flag) {
+function disableElement( parentname, element, flag) {
 
     var type = element.attr('type');
     var classs = element.attr('class');
@@ -1756,6 +1756,9 @@ function disableElement(parentname,element, flag) {
         }
         return;
     }
+
+    //process complex fields
+    processInputGroupCheckboxFields(element,null,flag,'disable');
 
     if( flag ) {
 
@@ -2044,6 +2047,9 @@ function setArrayField(element, dataArr, parent) {
         if( tagName == "INPUT" ) {
             //console.log("input tagName: fieldName="+fieldName);
 
+            //process input-group such as encounter-firstName
+            processInputGroupCheckboxFields(element,dataArr[i],null,'set');
+
             if( type == "file" ) {
 
                 element.hide();
@@ -2280,6 +2286,52 @@ function processGroup( element, data, disableFlag ) {
                 localElement.prop("disabled", false);
             }
         }
+
+    }
+
+}
+
+//process fields that part of input-group class
+function processInputGroupCheckboxFields(element,data,disableFlag,action) {
+
+    var parent = element.parent();
+
+    if( parent.hasClass('input-group') ) {
+
+        var value = null;
+        var alias = null;
+
+        if( data ) {
+            value = data['text'];
+            if( 'alias' in data ) {
+                alias = data['alias'];
+            }
+        }
+
+        parent.find('input:checkbox').each( function() {
+
+            //printF($(this),"process input group checkbox:");
+
+            var type = $(this).attr('type');
+            //console.log("type="+type+"value="+value+", alias="+alias+", action="+action);
+
+            //assign value
+            if( action == 'set' && alias == 1 ) {
+                //console.log("checkbox set true !!!");
+                $(this).prop('checked', true);
+            }
+
+            //enable/disable
+            if( action == 'disable' ) {
+                $(this).prop('disabled', disableFlag);
+            }
+
+            if( action == 'clear' ) {
+                //console.log("checkbox set false");
+                $(this).prop('checked', false);
+            }
+
+        });
 
     }
 
@@ -2627,6 +2679,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
         var classs = elements.eq(i).attr('class');
 
         //console.log("\n\nClean Element id="+id+", classs="+classs+", type="+type+", tagName="+tagName);
+
+        processInputGroupCheckboxFields(elements.eq(i),null,null,'clear');
 
         //don't process elements not belonging to this button
         if( fieldBelongsToButton( element, elements.eq(i) ) === false ) {

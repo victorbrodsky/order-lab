@@ -147,6 +147,10 @@
     width: 100%;
 }
 
+.oleg-form-nomargin-bottom {
+    margin-bottom: 0;
+}
+
 /*.activetr {*/
     /*background-color: rgb(217, 237, 247);*/
 /*}*/
