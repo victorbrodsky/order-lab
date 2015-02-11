@@ -388,6 +388,7 @@ class ComplexListController extends Controller
         $method = null;
 
         //echo "cycle=".$cycle."<br>";
+        //echo "formType=".$mapper['fullFormType']."<br>";
 
         $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.$cycle;
 

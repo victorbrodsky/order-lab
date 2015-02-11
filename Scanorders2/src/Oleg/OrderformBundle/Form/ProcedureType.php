@@ -21,17 +21,6 @@ class ProcedureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add('number', 'collection', array(
-//            'type' => new ProcedureNumberType($this->params, $this->entity),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'label' => false,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__procedurenumber__',
-//        ));
-
         $builder->add('name', 'collection', array(
             'type' => new ProcedureNameType($this->params, $this->entity),
             'allow_add' => true,
@@ -41,16 +30,6 @@ class ProcedureType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__procedurename__',
-        ));
-
-        $builder->add('date', 'collection', array(
-            'type' => new ProcedureDateType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedureencounterDate__',
         ));
 
         //children
@@ -81,6 +60,16 @@ class ProcedureType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__procedurenumber__',
+            ));
+
+            $builder->add('date', 'collection', array(
+                'type' => new ProcedureDateType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__proceduredate__',
             ));
 
             $builder->add('location', 'collection', array(

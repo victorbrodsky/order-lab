@@ -29,23 +29,17 @@ class ProcedureDateType extends AbstractType
             'attr' => array('class' => 'datepicker form-control patientdob-mask procedure-date', 'style'=>'margin-top: 0;'),
         ));
 
+        $builder->add('time', 'time', array(
+            'input'  => 'datetime',
+            'widget' => 'choice',
+            'label'=>'Procedure Time:'
+        ));
+
         $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureDate',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
-
-
-        //extra data-structure fields
-        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-
-            $builder->add('time', 'time', array(
-                'input'  => 'datetime',
-                'widget' => 'choice',
-                'label'=>'Procedure Time:'
-            ));
-
-        }
 
     }
 

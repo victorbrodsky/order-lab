@@ -642,7 +642,7 @@ class ListController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id,$pathbase);
-        $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit');
+        $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit_put_list');
         $editForm->handleRequest($request);
 
         if( $editForm->isValid() ) {

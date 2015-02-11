@@ -44,11 +44,6 @@ class Procedure extends ObjectAbstract
     protected $orderinfo;
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="ProcedureDate", mappedBy="procedure", cascade={"persist"})
-     */
-    protected $date;
-
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
@@ -62,6 +57,11 @@ class Procedure extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="ProcedureOrder", mappedBy="procedure", cascade={"persist"})
      */
     private $order;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProcedureDate", mappedBy="procedure", cascade={"persist"})
+     */
+    private $date;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
@@ -72,16 +72,16 @@ class Procedure extends ObjectAbstract
         //fields:
         $this->name = new ArrayCollection();
         $this->number = new ArrayCollection();
-        $this->date = new ArrayCollection();
 
         //extra
         $this->location = new ArrayCollection();
         $this->order = new ArrayCollection();
+        $this->date = new ArrayCollection();
 
         if( $withfields ) {
             $this->addName( new ProcedureName($status,$provider,$source) );
             $this->addNumber( new ProcedureNumber($status,$provider,$source) );
-            $this->addDate( new ProcedureDate($status,$provider,$source) );
+            //$this->addDate( new ProcedureDate($status,$provider,$source) );
 
             //testing data structure
             $this->addExtraFields($status,$provider,$source);
@@ -91,44 +91,14 @@ class Procedure extends ObjectAbstract
     public function makeDependClone() {
         $this->name = $this->cloneDepend($this->name,$this);
         $this->number = $this->cloneDepend($this->number,$this);
-        $this->date = $this->cloneDepend($this->date,$this);
 
         //extra fields
         $this->location = $this->cloneDepend($this->location,$this);
         $this->order = $this->cloneDepend($this->order,$this);
+        $this->date = $this->cloneDepend($this->date,$this);
     }
 
-    /**
-     * @param mixed $date
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-    }
-    /**
-     * @return mixed
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-    public function addDate($date)
-    {
-        if( $date == null ) {
-            $date = new ProcedureDate();
-        }
 
-        if( !$this->date->contains($date) ) {
-            $date->setProcedure($this);
-            $this->date->add($date);
-        }
-
-        return $this;
-    }
-    public function removeDate($date)
-    {
-        $this->date->removeElement($date);
-    }
 
     //Name
     public function getName() {
@@ -265,6 +235,7 @@ class Procedure extends ObjectAbstract
     public function addExtraFields($status,$provider,$source) {
         $this->addLocation( new ProcedureLocation($status,$provider,$source) );
         $this->addOrder( new ProcedureOrder($status,$provider,$source) );
+        $this->addDate( new ProcedureDate($status,$provider,$source) );
     }
 
     public function getLocation()
@@ -301,6 +272,37 @@ class Procedure extends ObjectAbstract
     public function removeOrder($order)
     {
         $this->order->removeElement($order);
+    }
+
+//    /**
+//     * @param mixed $date
+//     */
+//    public function setDate($date)
+//    {
+//        $this->date = $date;
+//    }
+    /**
+     * @return mixed
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+    public function addDate($date)
+    {
+//        if( $date == null ) {
+//            $date = new ProcedureDate();
+//        }
+        if( $date && !$this->date->contains($date) ) {
+            $this->date->add($date);
+            $date->setProcedure($this);
+        }
+
+        return $this;
+    }
+    public function removeDate($date)
+    {
+        $this->date->removeElement($date);
     }
     ///////////////////////// EOF Extra fields /////////////////////////
 
@@ -366,7 +368,6 @@ class Procedure extends ObjectAbstract
     public function getArrayFields() {
         $fieldsArr = array(
             'Number','Name','Date',
-            //'Patsuffix','Patlastname','Patfirstname','Patmiddlename','Patage','Patsex','Pathistory',
             //extra fields
             'Location', 'Order'
         );

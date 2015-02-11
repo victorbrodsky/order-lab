@@ -352,7 +352,7 @@ abstract class ListAbstract
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedon()
+    public function setUpdatedon($date=null)
     {
         if( $this->id ) {
             $this->updatedon = new \DateTime();

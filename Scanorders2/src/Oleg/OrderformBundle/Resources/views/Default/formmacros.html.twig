@@ -613,6 +613,8 @@
 
 {% endmacro %}
 
+
+
 {#simple field widget. i.e. diffDiagnoses field widget#}
 {% macro fieldWidget(field) %}
     {{ form_widget(field.vars.prototype.other) }}
@@ -1341,6 +1343,10 @@
 
         {% if procedure.number is defined %}
             {{ formmacros.inputArrayField(procedure.number,cycle,"procedurenumber","","","","",status) }}
+        {% endif %}
+
+        {% if procedure.date is defined %}
+            {{ formmacros.inputArrayField(procedure.date,cycle,"proceduredate","date","","","",status) }}
         {% endif %}
 
         {% if procedure.location is defined %}

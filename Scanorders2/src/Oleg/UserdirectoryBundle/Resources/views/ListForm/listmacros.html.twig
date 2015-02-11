@@ -238,6 +238,9 @@
 
     {% if form.list.updatedby is defined %}
         {{ formmacros.field(form.list.updatedby) }}
+    {% endif %}
+
+    {% if form.list.updatedon is defined %}
         {{ formmacros.field(form.list.updatedon) }}
     {% endif %}
 
@@ -320,9 +323,13 @@
 
     {{ formmacros.field(edit_form.list.createdate) }}
 
-    {{ formmacros.field(edit_form.list.updatedby) }}
+    {% if edit_form.list.updatedby is defined %}
+        {{ formmacros.field(edit_form.list.updatedby) }}
+    {% endif %}
 
-    {{ formmacros.field(edit_form.list.updatedon) }}
+    {% if edit_form.list.updatedon is defined %}
+        {{ formmacros.field(edit_form.list.updatedon) }}
+    {% endif %}
 
     {% if entity.researchlab is defined %}
         <br>
