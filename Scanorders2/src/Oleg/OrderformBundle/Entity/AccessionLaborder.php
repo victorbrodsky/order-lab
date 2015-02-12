@@ -21,9 +21,15 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
 
     //Lab Order Source
     //$source field - already exists in base abstract class
-
     //Lab Order ID
     //$orderinfo - already exists in base abstract class
+
+    //Lab Order contains: Lab Order ID Source, Lab Order ID
+    /**
+     * @ORM\ManyToOne(targetEntity="GeneralOrder")
+     * @ORM\JoinColumn(name="generalorder_id", referencedColumnName="id", nullable=true)
+     */
+    private $order;
 
     //Requisition Form Image(s): [upload multiple JPEGs]
     /**
@@ -69,6 +75,12 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
     //Attach "Progress & Comments" page to the Lab Order
     //TODO: History (Progress & Comments) object is linked to the order
 
+    //Requisition Form Location
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
+     */
+    private $location;
 
 
     public function __construct( $status = 'valid', $provider = null, $source = null ) {
@@ -177,6 +189,41 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
     {
         $this->imageComments->removeElement($imageComment);
     }
+
+
+    /**
+     * @param mixed $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param mixed $location
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+
 
 
 }

@@ -37,15 +37,16 @@ class GeneralOrderType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                    $whereArr = array();
-                    foreach( $this->params['sources'] as $source ) {
-                        $whereArr[] = "list.name = '".$source."'";
+                    $query = $er->createQueryBuilder('list')->orderBy("list.orderinlist","ASC");
+                    if( count($this->params['sources']) > 0 ) {
+                        $whereArr = array();
+                        foreach( $this->params['sources'] as $source ) {
+                            $whereArr[] = "list.name = '".$source."'";
+                        }
+                        $where = implode(' OR ',$whereArr);
+                        $query->andWhere($where);
                     }
-                    $where = implode(' OR ',$whereArr);
-                    return $er->createQueryBuilder('list')
-                        ->where($where)
-                        ->orderBy("list.orderinlist","ASC");
-
+                    return $query;
                 },
         ));
 

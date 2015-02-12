@@ -49,6 +49,7 @@ class ScanListController extends ListController
      * @Route("/progress-and-comments-event-types/", name="progresscommentseventtypes-list")
      * @Route("/event-log-event-types/", name="scanloggereventtypes-list")
      * @Route("/races/", name="races-list")
+     * @Route("/outsidereporttypes/", name="outsidereporttype-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -90,6 +91,7 @@ class ScanListController extends ListController
      * @Route("/progress-and-comments-event-types/", name="progresscommentseventtypes_create")
      * @Route("/event-log-event-types/", name="scanloggereventtypes_create")
      * @Route("/races/", name="races_create")
+     * @Route("/outsidereporttypes/", name="outsidereporttype_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -131,6 +133,7 @@ class ScanListController extends ListController
      * @Route("/progress-and-comments-event-types/new", name="progresscommentseventtypes_new")
      * @Route("/event-log-event-types/new", name="scanloggereventtypes_new")
      * @Route("/races/new", name="races_new")
+     * @Route("/outsidereporttypes/new", name="outsidereporttype_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -172,6 +175,7 @@ class ScanListController extends ListController
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_show")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_show")
      * @Route("/races/{id}", name="races_show")
+     * @Route("/outsidereporttypes/{id}", name="outsidereporttype_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -213,6 +217,7 @@ class ScanListController extends ListController
      * @Route("/progress-and-comments-event-types/{id}/edit", name="progresscommentseventtypes_edit")
      * @Route("/event-log-event-types/{id}/edit", name="scanloggereventtypes_edit")
      * @Route("/races/{id}/edit", name="races_edit")
+     * @Route("/outsidereporttypes/{id}/edit", name="outsidereporttype_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -254,6 +259,7 @@ class ScanListController extends ListController
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_update")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_update")
      * @Route("/races/{id}", name="races_update")
+     * @Route("/outsidereporttypes/{id}", name="outsidereporttype_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -378,6 +384,11 @@ class ScanListController extends ListController
             $displayName = "Races";
             break;
 
+        case "outsidereporttype":
+            $className = "OutsideReportTypeList";
+            $displayName = "Outside Report Types";
+            break;
+
         default:
             $className = null;
             $displayName = null;
@@ -424,6 +435,7 @@ class ScanListController extends ListController
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_delete")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_delete")
      * @Route("/races/{id}", name="races_delete")
+     * @Route("/outsidereporttypes/{id}", name="outsidereporttype_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

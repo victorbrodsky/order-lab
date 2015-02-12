@@ -19,64 +19,36 @@ class AccessionOutsidereport extends AccessionArrayFieldAbstract
      */
     protected $accession;
 
-    //Outside Report Source
-    //$source field - already exists in base abstract class
-
     //Outside Report contains: Outside Report Order ID Source, Outside Report Order ID
     /**
-     * @ORM\ManyToOne(targetEntity="GeneralOrder")
-     * @ORM\JoinColumn(name="generalorder_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="OutsideReport")
+     * @ORM\JoinColumn(name="outsidereport_id", referencedColumnName="id", nullable=true)
      */
-    protected $order;
-
-    //Outside Accession ID: [plain text]
-
-    //Outside Accession ID: [plain text]
-
-    //Outside Report Type: [select2, empty for now, add to List Manager]
-
-    //Outside Report Text: [plain text multi-line field]
-
-    //Outside Report Reference Representation (PDF): [upload of a PDF file] (actually a set of 5 fields - links to the Images table where Autopsy Images are)
-
-    //Outside Report Pathologist(s): [Select2, can add new value, separate list in List Manager]
-
-    //Outside Report Issued On (Date & Time):
-
-    //Outside Report Received On (Date & TIme):
-
-    //Attach "Progress & Comments" page to the Outside Report Order
+    protected $outsidereport;
 
 
 
-    public function __construct( $status = 'valid', $provider = null, $source = null ) {
-        parent::__construct($status,$provider,$source);
-
-
-    }
-
-
+//    public function __construct( $status = 'valid', $provider = null, $source = null ) {
+//        parent::__construct($status,$provider,$source);
+//    }
 
 
 
     /**
-     * @param mixed $order
+     * @param mixed $outsidereport
      */
-    public function setOrder($order)
+    public function setOutsidereport($outsidereport)
     {
-        $this->order = $order;
+        $this->outsidereport = $outsidereport;
     }
 
     /**
      * @return mixed
      */
-    public function getOrder()
+    public function getOutsidereport()
     {
-        return $this->order;
+        return $this->outsidereport;
     }
-
-
-
 
 
 

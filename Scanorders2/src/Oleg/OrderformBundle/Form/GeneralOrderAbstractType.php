@@ -32,7 +32,7 @@ class GeneralOrderAbstractType extends AbstractType
         //order number
         $builder->add('ordernumber',null,array(
             'required' => false,
-            'label'=>"Order's " . $this->params['name'] . ' ID:',
+            'label'=> $this->params['name'] . ' Order ID:',
             'attr' => array('class'=>'form-control')
         ));
 

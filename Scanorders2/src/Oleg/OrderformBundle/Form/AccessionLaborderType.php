@@ -23,29 +23,29 @@ class AccessionLaborderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('source', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
-            'label' => 'Lab Order Source:',
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.name = 'WCMC Epic Ambulatory EMR' OR list.name = 'NYH Paper Requisition'")
-                        ->orderBy("list.orderinlist","ASC");
-                },
-        ));
+//        $builder->add('source', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+//            'label' => 'Lab Order Source:',
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.name = 'WCMC Epic Ambulatory EMR' OR list.name = 'NYH Paper Requisition'")
+//                        ->orderBy("list.orderinlist","ASC");
+//                },
+//        ));
 
-        $builder->add('orderinfo', 'entity', array(
-            'class' => 'OlegOrderformBundle:OrderInfo',
-            'label' => 'Lab Order ID:',
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'property' => 'oid',
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->orderBy("list.oid","ASC");
-            },
-        ));
+//        $builder->add('orderinfo', 'entity', array(
+//            'class' => 'OlegOrderformBundle:OrderInfo',
+//            'label' => 'Lab Order ID:',
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//            'property' => 'oid',
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->orderBy("list.oid","ASC");
+//            },
+//        ));
 
         $builder->add('documents', 'collection', array(
             'type' => new DocumentType($this->params),
@@ -86,6 +86,18 @@ class AccessionLaborderType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
+        $builder->add('location', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Location',
+            'label' => 'Requisition Form Location:',
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        //->leftJoin("list.locationType", "locationType")
+                        //->where("locationType.name = 'Medical Office'")
+                        ->orderBy("list.orderinlist","ASC");
+                },
+        ));
 
         $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\AccessionLaborder',

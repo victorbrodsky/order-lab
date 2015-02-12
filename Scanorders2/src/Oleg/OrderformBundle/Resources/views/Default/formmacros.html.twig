@@ -863,13 +863,13 @@
 
 {% macro fieldGeneralOrder(order,cycle) %}
     {% import _self as formmacros %}
-    {% if order.vars.value.status == 'valid' %}
+    {#{% if order.vars.value and order.vars.value.status == 'valid' %}#}
         {{ form_errors(order) }}
         {{ form_widget(order.others) }}
         {{ formmacros.field(order.source) }}
         {{ formmacros.field(order.field.type) }}
         {{ formmacros.field(order.field.ordernumber) }}
-    {% endif %}
+    {#{% endif %}#}
 {% endmacro %}
 
 {% macro fieldInpatientinfo(field,cycle) %}
@@ -892,8 +892,8 @@
     {% if field.vars.value.status == 'valid' %}
         {{ form_errors(field) }}
         {{ form_widget(field.others) }}
-        {{ formmacros.field(field.source) }}
-        {{ formmacros.field(field.orderinfo) }}
+        {#{{ formmacros.field(field.source) }}#}
+        {#{{ formmacros.field(field.order) }}#}
 
         {#images#}
         <p>
@@ -928,8 +928,25 @@
     {% if field.vars.value.status == 'valid' %}
         {{ form_errors(field) }}
         {{ form_widget(field.others) }}
-        {{ formmacros.field(field.source) }}
-        {{ formmacros.field(field.orderinfo) }}
+
+        {% if field.outsidereport.order is defined %}
+            {{ formmacros.fieldGeneralOrder(field.outsidereport.order,cycle) }}
+        {% endif %}
+
+        {{ formmacros.field(field.outsidereport.source) }}
+        {{ formmacros.field(field.outsidereport.outsideReportType) }}
+        {{ formmacros.field(field.outsidereport.outsideReportText) }}
+
+        {#Outside Report Reference Representation (PDF)#}
+        {#Outside Report Pathologist(s)#}
+
+        {{ formmacros.fieldDateLabel(field.outsidereport.issuedonDate,'regular-datepicker') }}
+        {{ formmacros.field(field.outsidereport.issuedonTime) }}
+
+        {#Progress & Comments#}
+
+        {{ formmacros.field(field.outsidereport.location) }}
+
     {% endif %}
 {% endmacro %}
 

@@ -49,15 +49,11 @@ class Accession extends ObjectAbstract {
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
-     * Encounter order
      * @ORM\OneToMany(targetEntity="AccessionLaborder", mappedBy="accession", cascade={"persist"})
      */
     private $laborder;
 
-    //TODO: requisition form location
-
     /**
-     * Encounter order
      * @ORM\OneToMany(targetEntity="AccessionOutsidereport", mappedBy="accession", cascade={"persist"})
      */
     private $outsidereport;
