@@ -29,8 +29,8 @@ class EncounterLocationType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->leftJoin("list.locationType", "locationType")
-                        ->where("locationType.name = 'Medical Office'")
+                        ->leftJoin("list.locationTypes", "locationTypes")
+                        ->where("locationTypes.name = 'Medical Office'")
                         ->orderBy("list.orderinlist","ASC");
                 },
         ));

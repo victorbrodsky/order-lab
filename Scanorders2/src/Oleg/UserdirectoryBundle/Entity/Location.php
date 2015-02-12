@@ -40,11 +40,16 @@ class Location extends ListAbstract //extends BaseLocation
      */
     protected $removable;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="LocationTypeList",cascade={"persist"})
+//     * @ORM\JoinColumn(name="locationType", referencedColumnName="id")
+//     */
+//    protected $locationType;
     /**
-     * @ORM\ManyToOne(targetEntity="LocationTypeList",cascade={"persist"})
-     * @ORM\JoinColumn(name="locationType", referencedColumnName="id")
-     */
-    protected $locationType;
+     * @ORM\ManyToMany(targetEntity="LocationTypeList", inversedBy="locations", cascade={"persist"})
+     * @ORM\JoinTable(name="location_locationtype")
+     **/
+    protected $locationTypes;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -183,6 +188,8 @@ class Location extends ListAbstract //extends BaseLocation
         $this->synonyms = new ArrayCollection();
         $this->assistant = new ArrayCollection();
 
+        $this->locationTypes = new ArrayCollection();
+
         $this->setRemovable(true);
         $this->setStatus(self::STATUS_UNVERIFIED);
 
@@ -277,20 +284,22 @@ class Location extends ListAbstract //extends BaseLocation
         return $this->geoLocation;
     }
 
-    /**
-     * @param mixed $locationType
-     */
-    public function setLocationType($locationType)
-    {
-        $this->locationType = $locationType;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getLocationType()
+    public function getLocationTypes()
     {
-        return $this->locationType;
+        return $this->locationTypes;
+    }
+    public function addLocationType($type)
+    {
+        if( $type && !$this->locationTypes->contains($type) ) {
+            $this->locationTypes->add($type);
+        }
+
+        return $this;
+    }
+    public function removeLocationType($type)
+    {
+        $this->locationTypes->removeElement($type);
     }
 
     /**
@@ -715,12 +724,17 @@ class Location extends ListAbstract //extends BaseLocation
         }
 
         // If the location type = "Employee Desk", add " (Desk)" after the location name
-        if( $this->getLocationType() == "Employee Desk" ) {
-            $name = $name . " (Desk)";
+        $locnameArr = array();
+        foreach( $this->getLocationTypes() as $loctype ) {
+            if( $loctype->getName()."" == "Employee Desk" ) {
+                $locnameArr[] = "Desk";
+            }
+            if( $loctype->getName()."" == "Employee Cubicle" ) {
+                $locnameArr[] = "Cubicle";
+            }
         }
-        //If the location type = "Employee Cubicle", add " (Cubicle)" after the location name
-        if( $this->getLocationType() == "Employee Cubicle" ) {
-            $name = $name . " (Cubicle)";
+        if( count($locnameArr) > 0 ) {
+            $name = $name . " (" . implode(",",$locnameArr);
         }
 
         $detailsArr = array();
@@ -753,6 +767,15 @@ class Location extends ListAbstract //extends BaseLocation
         }
 
         return $name;
+    }
+
+    public function hasLocationTypeName( $typeName ) {
+        foreach( $this->getLocationTypes() as $loctype ) {
+            if( $loctype->getName()."" == $typeName ) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

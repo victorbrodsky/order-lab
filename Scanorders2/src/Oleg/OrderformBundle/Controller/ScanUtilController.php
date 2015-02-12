@@ -974,15 +974,15 @@ class ScanUtilController extends Controller {
         $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
         //Exclude from the list locations of type "Patient Contact Information", "Medical Office", and "Inpatient location".
-        $andWhere = "locationType.name IS NULL OR ".
+        $andWhere = "locationTypes.name IS NULL OR ".
             "(" .
-                "locationType.name !='Patient Contact Information' AND ".
-                "locationType.name !='Medical Office' AND ".
-                "locationType.name !='Inpatient location' AND ".
-                "locationType.name !='Employee Home'" .
+                "locationTypes.name !='Patient Contact Information' AND ".
+                "locationTypes.name !='Medical Office' AND ".
+                "locationTypes.name !='Inpatient location' AND ".
+                "locationTypes.name !='Employee Home'" .
             ")";
 
-        $query->leftJoin("list.locationType", "locationType");
+        $query->leftJoin("list.locationTypes", "locationTypes");
         $query->leftJoin("list.user", "user");
         $query->andWhere($andWhere);
 

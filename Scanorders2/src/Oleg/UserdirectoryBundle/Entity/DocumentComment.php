@@ -1,20 +1,17 @@
 <?php
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
-use Oleg\UserdirectoryBundle\Entity\User;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_laborderComment")
+ * @ORM\Table(name="scan_documentComment")
  */
-class LaborderComment
-{
+class DocumentComment {
 
     /**
      * @var integer
@@ -26,10 +23,10 @@ class LaborderComment
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AccessionLaborder", inversedBy="imageComments")
+     * @ORM\ManyToOne(targetEntity="DocumentContainer", inversedBy="comments")
      * @ORM\JoinColumn(name="laborder_id", referencedColumnName="id")
      */
-    private $laborder;
+    private $documentContainer;
 
 
 
@@ -51,20 +48,22 @@ class LaborderComment
     }
 
     /**
-     * @param mixed $laborder
+     * @param mixed $documentContainer
      */
-    public function setLaborder($laborder)
+    public function setDocumentContainer($documentContainer)
     {
-        $this->laborder = $laborder;
+        $this->documentContainer = $documentContainer;
     }
 
     /**
      * @return mixed
      */
-    public function getLaborder()
+    public function getDocumentContainer()
     {
-        return $this->laborder;
+        return $this->documentContainer;
     }
+
+
 
 
 }

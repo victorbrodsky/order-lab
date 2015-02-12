@@ -46,8 +46,8 @@ class ProcedureLocationType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->leftJoin("list.locationType", "locationType")
-                        ->where("locationType.name = 'Inpatient Room'")
+                        ->leftJoin("list.locationTypes", "locationTypes")
+                        ->where("locationTypes.name = 'Inpatient Room'")
                         ->orderBy("list.orderinlist","ASC");
                 },
         ));

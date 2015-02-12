@@ -1730,7 +1730,7 @@ class AdminController extends Controller
             $listEntity->setPhone($phone);
             $listEntity->setRoom($room);
             $listEntity->setStatus($listEntity::STATUS_VERIFIED);
-            $listEntity->setLocationType($locationType);
+            $listEntity->addLocationType($locationType);
             $listEntity->setPrivacy($locationPrivacy);
             $listEntity->setBuilding($building);
 
@@ -1755,11 +1755,11 @@ class AdminController extends Controller
             "testdeputyplatformadministrator" => array("ROLE_PLATFORM_DEPUTY_ADMIN"),
 
             "testscanadministrator" => array("ROLE_SCANORDER_ADMIN"),
-            "testscanprocessor" => array("ROLE_SCANORDER_PROCESSOR"),
+            "testscanprocessor" => array("ROLE_SCANORDER_PROCESSOR"), //TODO: check auth logic: it ask for access request for scan site
             "testscansubmitter" => array("ROLE_SCANORDER_SUBMITTER"),
 
             "testuseradministrator" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_ADMIN"),
-            "testusereditor" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_EDITOR"),
+            "testusereditor" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_EDITOR"),  //TODO: check auth logic: it ask for access request for directory site
             "testuserobserver" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_OBSERVER")
         );
 

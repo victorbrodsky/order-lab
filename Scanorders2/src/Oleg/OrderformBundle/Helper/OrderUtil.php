@@ -695,8 +695,19 @@ class OrderUtil {
         }
 
         //2) get "Surgical Pathology Filing Room" location
-        $defaultLocationType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Surgical Pathology Filing Room");
-        $surgicalPathLocation = $this->em->getRepository('OlegUserdirectoryBundle:Location')->findOneByLocationType($defaultLocationType);
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Location');
+        $dql =  $repository->createQueryBuilder("location");
+        $dql->select('location');
+        $dql->leftJoin("location.locationTypes", "locationTypes");
+        $dql->where("locationTypes.name = 'Surgical Pathology Filing Room'");
+        $query = $this->em->createQuery($dql);
+        $surgicalPathLocations = $query->getResult();
+        if( $surgicalPathLocations && count($surgicalPathLocations) == 1 ) {
+            $surgicalPathLocation = $surgicalPathLocations[0];
+        } else {
+            $surgicalPathLocation = null;
+        }
+        //echo "surgicalPathLocation=".$surgicalPathLocation."<br>";
 
         //3) orderring provider location
         if( $proxy ) {

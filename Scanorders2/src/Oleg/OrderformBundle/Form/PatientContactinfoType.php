@@ -30,8 +30,8 @@ class PatientContactinfoType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->leftJoin("list.locationType", "locationType")
-                        ->where("locationType.name = 'Patient Contact Information'")
+                        ->leftJoin("list.locationTypes", "locationTypes")
+                        ->where("locationTypes.name = 'Patient Contact Information'")
                         ->orderBy("list.orderinlist","ASC");
                 },
         ));

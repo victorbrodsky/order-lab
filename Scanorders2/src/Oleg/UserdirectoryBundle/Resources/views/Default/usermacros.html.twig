@@ -283,8 +283,8 @@
                     {% do formfield.privacy.setRendered %}
                 {% endif %}
 
-                {% if formfield.locationType is defined %}
-                    {{ formmacros.field(formfield.locationType) }}
+                {% if formfield.locationTypes is defined %}
+                    {{ formmacros.field(formfield.locationTypes) }}
                 {% endif %}
             {% endif %}{#showRegularFields1#}
 

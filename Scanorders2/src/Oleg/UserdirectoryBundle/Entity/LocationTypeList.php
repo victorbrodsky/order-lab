@@ -26,8 +26,36 @@ class LocationTypeList extends ListAbstract
     protected $original;
 
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Location", mappedBy="locationTypes")
+     **/
+    private $locations;
 
-    
 
+    public function __construct($creator=null) {
+
+        $this->synonyms = new ArrayCollection();
+        $this->assistant = new ArrayCollection();
+
+        $this->locations = new ArrayCollection();
+    }
+
+
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+    public function addLocation($location)
+    {
+        if( !$this->locations->contains($location) ) {
+            $this->locations->add($location);
+        }
+
+        return $this;
+    }
+    public function removeLocation($location)
+    {
+        $this->locations->removeElement($location);
+    }
 
 }

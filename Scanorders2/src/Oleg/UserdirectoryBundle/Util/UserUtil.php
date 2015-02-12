@@ -742,7 +742,7 @@ class UserUtil {
         $mainLocation->setName('Main Office');
         $mainLocation->setRemovable(false);
         $mainLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
-        $mainLocation->setLocationType($mainLocType);
+        $mainLocation->addLocationType($mainLocType);
         $entity->addLocation($mainLocation);
 
         //Home Location
@@ -750,7 +750,7 @@ class UserUtil {
         $homeLocation->setName('Home');
         $homeLocation->setRemovable(false);
         $homeLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Home");
-        $homeLocation->setLocationType($homeLocType);
+        $homeLocation->addLocationType($homeLocType);
         $entity->addLocation($homeLocation);
 
         return $entity;
@@ -840,14 +840,14 @@ class UserUtil {
         //1) remove all locations
         $homeLocations = new ArrayCollection();
         foreach( $duser->getLocations() as $object ) {
-            if( $object->getLocationType() && $object->getLocationType()->getName() == "Employee Home" ) {
+            if( $object->hasLocationTypeName("Employee Home") ) {
                 $homeLocations->add($object);
             }
             $duser->removeLocation($object);
         }
         //2) add cloned locations
         foreach( $suser->getLocations() as $object ) {
-            if( $object->getLocationType() && $object->getLocationType()->getName() != "Employee Home" ) {
+            if( $object->hasLocationTypeName("Employee Home") ) {
                 $clone = clone $object;
                 $duser->addLocation( $clone );
             }

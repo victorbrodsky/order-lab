@@ -273,12 +273,12 @@ class User extends BaseUser
 
         $loc = $this->getLocations()->get(0);
 
-        if( $loc->getLocationType() && $loc->getLocationType()->getName() == "Employee Office" ) {
+        if( $loc->hasLocationTypeName("Employee Office") ) {
             return $loc;
         }
 
         foreach( $this->getLocations() as $loc ) {
-            if( $loc->getLocationType() && $loc->getLocationType()->getName() == "Employee Office" ) {
+            if( $loc->hasLocationTypeName("Employee Office") ) {
                 return $loc;
             }
             if( $loc->getName() == "Main Office" ) {
@@ -293,12 +293,12 @@ class User extends BaseUser
 
         $loc = $this->getLocations()->get(1);
 
-        if( $loc->getLocationType()->getName() == "Employee Office" ) {
+        if( $loc->hasLocationTypeName("Employee Home") ) {
             return $loc;
         }
 
         foreach( $this->getLocations() as $loc ) {
-            if( $loc->getLocationType()->getName() == "Employee Home" ) {
+            if( $loc->hasLocationTypeName("Employee Home") ) {
                 return $loc;
             }
             if( $loc->getName() == "Home" ) {
@@ -784,7 +784,7 @@ class User extends BaseUser
         $phonesArr = array();
         //get all locations phones
         foreach( $this->getLocations() as $location ) {
-            if( !$location->getLocationType() || $location->getLocationType()->getName() != "Employee Home" ) {
+            if( count($location->getLocationTypes()) == 0 || $location->hasLocationTypeName("Employee Home") ) {
                 if( $location->getPhone() ) {
                     $phone = array();
                     $phone['prefix'] = $location->getName()." Line: ";
@@ -834,7 +834,7 @@ class User extends BaseUser
         //get all locations phones
         foreach( $this->getLocations() as $location ) {
             //echo "loc=".$location."<br>";
-            if( !$location->getLocationType() || $location->getLocationType()->getName() != "Employee Home" ) {
+            if( count($location->getLocationTypes()) == 0 || $location->hasLocationTypeName("Employee Home") ) {
                 //echo "email:".$location->getEmail()."<br>";
                 if( $location->getEmail() ) {
                     $email = array();

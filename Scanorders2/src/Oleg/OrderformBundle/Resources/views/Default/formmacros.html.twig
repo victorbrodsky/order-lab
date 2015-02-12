@@ -892,32 +892,39 @@
     {% if field.vars.value.status == 'valid' %}
         {{ form_errors(field) }}
         {{ form_widget(field.others) }}
+
         {#{{ formmacros.field(field.source) }}#}
-        {#{{ formmacros.field(field.order) }}#}
+
+        {% if field.order is defined %}
+            {{ formmacros.fieldGeneralOrder(field.order,cycle) }}
+        {% endif %}
+
+        {{ formmacros.field(field.sourceLocation) }}
+        {{ formmacros.field(field.trackLocations) }}
 
         {#images#}
-        <p>
-        <div class="accessionlaborder">
-            <div class="row">
-                <div class="col-xs-6" align="right">
-                    {{form_label(field.documents)}}
-                </div>
-                <div class="col-xs-6" align="left">
-                    {{ formmacros.fieldpaper(field,cycle,'prototype') }}
-                </div>
-            </div>
-        </div>
-        </p>
+        {#<p>#}
+        {#<div class="accessionlaborder">#}
+            {#<div class="row">#}
+                {#<div class="col-xs-6" align="right">#}
+                    {#{{form_label(field.documents)}}#}
+                {#</div>#}
+                {#<div class="col-xs-6" align="left">#}
+                    {#{{ formmacros.fieldpaper(field,cycle,'prototype') }}#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+        {#</p>#}
 
-        {{ formmacros.field(field.imageTitle) }}
+        {#{{ formmacros.field(field.imageTitle) }}#}
 
-        {% for imageComment in field.imageComments %}
-            {{ formmacros.field(field.imageComments) }}
-        {% endfor %}
+        {#{% for imageComment in field.imageComments %}#}
+            {#{{ formmacros.field(field.imageComments) }}#}
+        {#{% endfor %}#}
 
-        {{ formmacros.field(field.imageDevice) }}
-        {{ formmacros.fieldDateLabel(field.imageDatetime,'regular-datepicker') }}
-        {{ formmacros.field(field.imageProvider) }}
+        {#{{ formmacros.field(field.imageDevice) }}#}
+        {#{{ formmacros.fieldDateLabel(field.imageDatetime,'regular-datepicker') }}#}
+        {#{{ formmacros.field(field.imageProvider) }}#}
 
 
     {% endif %}

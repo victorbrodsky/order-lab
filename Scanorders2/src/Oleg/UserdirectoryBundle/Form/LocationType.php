@@ -182,15 +182,14 @@ class LocationType extends AbstractType
             ));
         }
 
-        //if( $this->params['cycle'] != "show_standalone" ) {
-            $builder->add('locationType','entity',array(
-                'class' => 'OlegUserdirectoryBundle:LocationTypeList',
-                'label' => "Location Type:",
-                'multiple' => false,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'required' => false
-            ));
-        //}
+        //locationTypes
+        $builder->add('locationTypes','entity',array(
+            'class' => 'OlegUserdirectoryBundle:LocationTypeList',
+            'label' => "Location Type:",
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'required' => false
+        ));
 
         //institution. User should be able to add institution to administrative or appointment titles
         $builder->add('institution', 'employees_custom_selector', array(
