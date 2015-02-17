@@ -34,9 +34,6 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
      **/
     private $documentContainer;
 
-    //Attach "Progress & Comments" page to the Lab Order
-    //TODO: History (Progress & Comments) object is linked to the order
-
     //Requisition Form Source Location: single
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
@@ -53,6 +50,7 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
      *      )
      **/
     private $trackLocations;
+
 
 
 

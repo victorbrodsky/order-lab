@@ -19,11 +19,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class OrderInfo extends OrderAbstract {
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="PathServiceList", inversedBy="orderinfo", cascade={"persist"})
-//     * @ORM\JoinColumn(name="pathservicelist_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $pathologyService;
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
      * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
@@ -95,9 +90,17 @@ class OrderInfo extends OrderAbstract {
      */
     private $dataqualitymrnacc;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
+//     */
+//    private $history;
     /**
-     * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
-     */
+     * @ORM\ManyToMany(targetEntity="History")
+     * @ORM\JoinTable(name="scan_orderinfo_history",
+     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
     private $history;
 
     /////////////////    OBJECTS    //////////////////////
@@ -285,69 +288,6 @@ class OrderInfo extends OrderAbstract {
     }
 
 
-//    /**
-//     * Get id
-//     *
-//     * @return integer
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
-//
-//    public function setId($id)
-//    {
-//        $this->id = $id;
-//        return $id;
-//    }
-
-//    /**
-//    * @ORM\PrePersist
-//    */
-//    public function setOrderdate($date=null) {
-//        if( $date ) {
-//            $this->orderdate = $date;
-//        } else {
-//            $this->orderdate = new \DateTime();
-//        }
-//    }
-
-//    /**
-//     * Get orderdate
-//     *
-//     * @return \DateTime
-//     */
-//    public function getOrderdate()
-//    {
-//        return $this->orderdate;
-//    }
-
-//    /**
-//     * Set pathologyService
-//     *
-//     * @param string $pathologyService
-//     * @return OrderInfo
-//     */
-//    public function setPathologyService($pathologyService)
-//    {
-//        $this->pathologyService = $pathologyService;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get pathologyService
-//     *
-//     * @return string
-//     */
-//    public function getPathologyService()
-//    {
-//        return $this->pathologyService;
-//    }
-
-
-
-
     /**
      * Set priority
      *
@@ -417,14 +357,13 @@ class OrderInfo extends OrderAbstract {
     {
         return $this->history;
     }
-
     public function addHistory($history)
     {
         if( !$this->history->contains($history) ) {
             $this->history->add($history);
+            $history->setOrder($this);
         }
     }
-
     public function removeHistory($history)
     {
         $this->history->removeElement($history);

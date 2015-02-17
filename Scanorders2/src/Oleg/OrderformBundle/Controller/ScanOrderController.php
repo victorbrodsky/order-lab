@@ -567,6 +567,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
         $dql =  $repository->createQueryBuilder("orderinfo");
         $dql->innerJoin("orderinfo.status", "status");
+        $dql->innerJoin("orderinfo.institution", "institution");
         $dql->where("status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'" . $instStr);
         $query = $em->createQuery($dql);
         $unprocessedOrders = $query->getResult();
@@ -612,6 +613,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("req");
         $dql->innerJoin("req.orderinfo", "orderinfo");
+        $dql->innerJoin("orderinfo.institution", "institution");
         $dql->where("req.status='active'" . $instStr);
         //echo "dql=".$dql;
         $query = $em->createQuery($dql);
@@ -1298,6 +1300,7 @@ class ScanOrderController extends Controller {
                 }
                 $crituser .= "principal.principal=".$user->getId();
             }
+            //use history to get amended author
             if( $service == "Where I am the Amendment Author" ) {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";

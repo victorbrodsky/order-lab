@@ -33,6 +33,21 @@ class GeneralOrder extends OrderAbstract {
      */
     private $comment;
 
+    //Attach "Progress & Comments" page to the Lab Order
+    /**
+     * @ORM\ManyToMany(targetEntity="History")
+     * @ORM\JoinTable(name="scan_generalorder_history",
+     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $history;
+
+
+
+    public function __construct() {
+        $this->history = new ArrayCollection();
+    }
 
 
 
@@ -98,6 +113,23 @@ class GeneralOrder extends OrderAbstract {
     public function getComment()
     {
         return $this->comment;
+    }
+
+
+    public function getHistory()
+    {
+        return $this->history;
+    }
+    public function addHistory($history)
+    {
+        if( !$this->history->contains($history) ) {
+            $this->history->add($history);
+            $history->setOrder($this);
+        }
+    }
+    public function removeHistory($history)
+    {
+        $this->history->removeElement($history);
     }
 
 

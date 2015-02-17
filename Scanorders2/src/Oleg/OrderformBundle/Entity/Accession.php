@@ -48,6 +48,7 @@ class Accession extends ObjectAbstract {
 
 
     ///////////////// additional extra fields not shown on scan order /////////////////
+    //TODO: manytomany
     /**
      * @ORM\OneToMany(targetEntity="AccessionLaborder", mappedBy="accession", cascade={"persist"})
      */

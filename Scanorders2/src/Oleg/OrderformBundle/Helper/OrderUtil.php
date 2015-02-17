@@ -429,12 +429,15 @@ class OrderUtil {
         $dql =  $repository->createQueryBuilder('history');
         //$dql->select('COUNT(history) as historycount');
         $dql->select('history');
-        //$dql->groupBy('history');
-        //$dql->innerJoin("history.provider", "history-provider");
-        $dql->innerJoin("history.orderinfo", "orderinfo");
         $dql->leftJoin("history.eventtype", "eventtype");
-        $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+
+        //$dql->innerJoin("history.orderinfo", "orderinfo");
+        //$dql->innerJoin("orderinfo.provider", "provider");
+        //$dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+
+        $dql->innerJoin("history.orderProvider", "provider");
+        $dql->leftJoin("history.orderProxyuser", "proxyuser");
+        $dql->leftJoin("history.orderInstitution", "institution");
 
         $criteriastr = $this->getCommentsCriteriaStr(null, $flag);
 
@@ -517,7 +520,8 @@ class OrderUtil {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }
-            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+            //$instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+            $instStr = $instStr . 'institution='.$inst->getId();
         }
         if( $instStr == "" ) {
             $instStr = "1=0";
