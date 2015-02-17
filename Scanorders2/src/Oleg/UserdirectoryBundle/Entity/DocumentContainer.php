@@ -10,6 +10,7 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -70,7 +71,14 @@ class DocumentContainer {
 
     public function __construct() {
         $this->documents = new ArrayCollection();
-        $this->imageComments = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+
+        //testing
+        //echo "comments count=".count($this->getComments())."<br>";
+        if( count($this->getComments()) == 0 ) {
+            $newcomment = new DocumentComment();
+            $this->addComment($newcomment);
+        }
     }
 
 
@@ -93,37 +101,22 @@ class DocumentContainer {
     }
 
 
-    public function getImageComments()
-    {
-        return $this->imageComments;
-    }
-    public function addImageComment($imageComment)
-    {
-        if( $imageComment && !$this->imageComments->contains($imageComment) ) {
-            $this->imageComments->add($imageComment);
-        }
-        return $this;
-    }
-    public function removeImageComment($imageComment)
-    {
-        $this->imageComments->removeElement($imageComment);
-    }
-
-    /**
-     * @param mixed $comments
-     */
-    public function setComments($comments)
-    {
-        $this->comments = $comments;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getComments()
     {
         return $this->comments;
     }
+    public function addComment($comment)
+    {
+        if( $comment && !$this->comments->contains($comment) ) {
+            $this->comments->add($comment);
+        }
+        return $this;
+    }
+    public function removeComment($comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
 
     /**
      * @param \DateTime $datetime
@@ -207,5 +200,7 @@ class DocumentContainer {
 
 
 
-
+    public function __toString() {
+        return "DocumentContainer: "."comments count=".count($this->getComments())."<br>";
+    }
 }

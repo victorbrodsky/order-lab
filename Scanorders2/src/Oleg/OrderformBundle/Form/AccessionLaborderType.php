@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +36,7 @@ class AccessionLaborderType extends AbstractType
 //                },
 //        ));
 
-        //order
+        //Lab Order: source, type, id
         $sources = array('WCMC Epic Ambulatory EMR','NYH Paper Requisition');
         $params = array('name'=>'Lab','dataClass'=>'Oleg\OrderformBundle\Entity\GeneralOrder','typename'=>'laborder','sources'=>$sources);
         $builder->add('order', new GeneralOrderType($params, null), array(
@@ -43,6 +44,7 @@ class AccessionLaborderType extends AbstractType
             'label' => false,
         ));
 
+        //Lab Order source location
         $builder->add('sourceLocation', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Location',
             'label' => 'Lab Order Source Location:',
@@ -57,6 +59,7 @@ class AccessionLaborderType extends AbstractType
                 },
         ));
 
+        //Lab Order track locations
         $builder->add('trackLocations', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Location',
             'label' => 'Lab Order Tracking Location(s):',
@@ -71,64 +74,13 @@ class AccessionLaborderType extends AbstractType
                 },
         ));
 
+        //Requisition Form Image container
+        $params = array('labelPrefix'=>'Requisition Form Image');
+        $builder->add('documentContainer', new DocumentContainerType($params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+            'label' => false
+        ));
 
-
-//        $builder->add('documentContainer', new DocumentContainerType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\DocumentContainer',
-//            'label' => false
-//        ));
-
-
-//        $builder->add('orderinfo', 'entity', array(
-//            'class' => 'OlegOrderformBundle:OrderInfo',
-//            'label' => 'Lab Order ID:',
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width'),
-//            'property' => 'oid',
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->orderBy("list.oid","ASC");
-//            },
-//        ));
-
-//        $builder->add('documents', 'collection', array(
-//            'type' => new DocumentType($this->params),
-//            'label' => 'Requisition Form Image(s):',
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__document__',
-//        ));
-
-//        $builder->add('imageTitle', null, array(
-//            'label' => "Requisition Form Image Title:",
-//            'attr' => array('class' => 'form-control'),
-//        ));
-//
-//        $builder->add('imageComments', null, array(
-//            'label' => "Requisition Form Image Comment(s):",
-//            'attr' => array('class' => 'combobox combobox-width'),
-//        ));
-//
-//        $builder->add('imageDevice', null, array(
-//            'label' => "Requisition Form Image Device:",
-//            'attr' => array('class' => 'combobox combobox-width'),
-//        ));
-//
-//        $builder->add('imageDatetime','date',array(
-//            'widget' => 'single_text',
-//            'format' => 'MM-dd-yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
-//            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
-//            'required' => false,
-//            'label'=>'Requisition Form Image Date & Time:',
-//        ));
-//
-//        $builder->add('imageProvider', null, array(
-//            'label' => "Requisition Form Image Scanned By:",
-//            'attr' => array('class' => 'combobox combobox-width'),
-//        ));
 
 
 

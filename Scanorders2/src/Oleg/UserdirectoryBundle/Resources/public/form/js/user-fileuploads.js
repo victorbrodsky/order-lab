@@ -345,8 +345,14 @@ function getNewDocumentInfoByHolder( commentHolder ) {
     var uploadid = commentHolder.find('input.file-upload-id');
 
     if( uploadid.length == 0 ) {
+        //no existing documents in comment => use hidden document container container id
+        //console.log('upload id does not exist: try class=documentcontainer-field-id');
+        uploadid = commentHolder.find('.documentcontainer-field-id');
+    }
+
+    if( uploadid.length == 0 ) {
         //no existing documents in comment => use alternative id (i.e. first input id)
-        //console.log('upload id does not exist');
+        //console.log('upload id does not exist: try alternative id');
         uploadid = commentHolder.find('input').filter(':visible').not("*[id^='s2id_']"); //.ajax-combobox-partname
     }
 
@@ -486,15 +492,15 @@ function getElementInfoById_Scan( id, name ) {
         }
     }
 
-    if( id.indexOf("_laborder_") !== -1 && id.indexOf("_documents_") !== -1 ) {
-        //id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_laborder_0_documents_0_id
-        //name=oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][laborder][0][documents][0][id]
-        idDel = "_laborder_";
-        nameDel = "[laborder]";
-        docname = "[laborder][0]";
-        docid = "_laborder_0";
+    //document is part of the document container
+    if( id.indexOf("_documentContainer_") !== -1 ) {
+        //id=oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_laborder_0_documentContainer_id,
+        //name=oleg_orderformbundle_orderinfotype[patient][0][encounter][0][procedure][0][accession][0][laborder][0][documentContainer][id]
+        idDel = "_documentContainer_";
+        nameDel = "[documentContainer]";
+        docname = "[documentContainer]";
+        docid = "_documentContainer";
     }
-
 
     if( idDel == null || nameDel == null ) {
         throw new Error("id or name delimeter is empty, idDel="+idDel+", nameDel="+nameDel);

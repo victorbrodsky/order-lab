@@ -11,41 +11,44 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="scan_documentComment")
  */
-class DocumentComment {
+class DocumentComment extends BaseUserAttributes {
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+//    /**
+//     * @var integer
+//     *
+//     * @ORM\Column(name="id", type="integer")
+//     * @ORM\Id
+//     * @ORM\GeneratedValue(strategy="AUTO")
+//     */
+//    private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="DocumentContainer", inversedBy="comments")
-     * @ORM\JoinColumn(name="laborder_id", referencedColumnName="id")
      */
     private $documentContainer;
 
-
-
-
     /**
-     * @param int $id
+     * @ORM\Column(type="text", nullable=true)
      */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+    private $comment;
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+
+
+//    /**
+//     * @param int $id
+//     */
+//    public function setId($id)
+//    {
+//        $this->id = $id;
+//    }
+//
+//    /**
+//     * @return int
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * @param mixed $documentContainer
@@ -61,6 +64,22 @@ class DocumentComment {
     public function getDocumentContainer()
     {
         return $this->documentContainer;
+    }
+
+    /**
+     * @param mixed $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComment()
+    {
+        return $this->comment;
     }
 
 

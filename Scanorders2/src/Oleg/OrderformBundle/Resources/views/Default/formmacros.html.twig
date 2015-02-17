@@ -903,31 +903,46 @@
         {{ formmacros.field(field.trackLocations) }}
 
         {#images#}
-        {#<p>#}
-        {#<div class="accessionlaborder">#}
-            {#<div class="row">#}
-                {#<div class="col-xs-6" align="right">#}
-                    {#{{form_label(field.documents)}}#}
-                {#</div>#}
-                {#<div class="col-xs-6" align="left">#}
-                    {#{{ formmacros.fieldpaper(field,cycle,'prototype') }}#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-        {#</p>#}
-
-        {#{{ formmacros.field(field.imageTitle) }}#}
-
-        {#{% for imageComment in field.imageComments %}#}
-            {#{{ formmacros.field(field.imageComments) }}#}
-        {#{% endfor %}#}
-
-        {#{{ formmacros.field(field.imageDevice) }}#}
-        {#{{ formmacros.fieldDateLabel(field.imageDatetime,'regular-datepicker') }}#}
-        {#{{ formmacros.field(field.imageProvider) }}#}
-
+        {{ formmacros.fieldDocumentContainer(field.documentContainer,cycle) }}
 
     {% endif %}
+{% endmacro %}
+
+{% macro fieldDocumentContainer(container,cycle) %}
+    {% import _self as formmacros %}
+
+    {{ form_errors(container) }}
+
+    {#hidden id: used as a reference to get objects count#}
+    {{ form_widget(container.id) }}
+
+    {#documents/images in container#}
+    <p>
+    <div class="documentcontainer">
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {{form_label(container.documents)}}
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formmacros.fieldpaper(container,cycle,'prototype') }}
+            </div>
+        </div>
+    </div>
+    </p>
+
+    {{ formmacros.field(container.title) }}
+
+    {% if container.comments|length > 0 %}
+        Comment(s):
+    {% endif %}
+    {% for comment in container.comments %}
+        {{ formmacros.field(comment.comment) }}
+    {% endfor %}
+
+    {{ formmacros.field(container.device) }}
+    {{ formmacros.fieldDateLabel(container.datetime,'regular-datepicker') }}
+    {{ formmacros.field(container.provider) }}
+
 {% endmacro %}
 
 {% macro fieldOutsidereport(field,cycle) %}

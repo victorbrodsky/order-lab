@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -36,7 +37,7 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
     //Attach "Progress & Comments" page to the Lab Order
     //TODO: History (Progress & Comments) object is linked to the order
 
-    //Requisition Form Source Location
+    //Requisition Form Source Location: single
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
      * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
@@ -44,7 +45,7 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
     private $sourceLocation;
 
     /**
-     * Track Locations
+     * Track Locations: can be many
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
      * @ORM\JoinTable(name="scan_laborder_location",
      *      joinColumns={@ORM\JoinColumn(name="laborder_id", referencedColumnName="id")},
@@ -59,6 +60,12 @@ class AccessionLaborder extends AccessionArrayFieldAbstract
         parent::__construct($status,$provider,$source);
 
         $this->trackLocations = new ArrayCollection();
+
+        //testing
+        //echo "doc container=".$this->getDocumentContainer()."<br>";
+        if( !$this->getDocumentContainer() ) {
+            $this->setDocumentContainer( new DocumentContainer() );
+        }
     }
 
 
