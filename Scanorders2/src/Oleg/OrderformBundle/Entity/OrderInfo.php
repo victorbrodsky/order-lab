@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * OrderInfo might have many slides
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrderInfoRepository")
  * @ORM\Table(name="scan_orderinfo",
  *  indexes={
@@ -104,39 +103,11 @@ class OrderInfo extends OrderAbstract {
     private $history;
 
     /////////////////    OBJECTS    //////////////////////
-
     /**
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo" )
      * @ORM\JoinTable(name="scan_patient_orderinfo")
      **/
     private $patient;
-
-    /**
-     * @ORM\OneToOne(
-     *      targetEntity="Educational",
-     *      inversedBy="orderinfo",
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(
-     *      name="educational_id",
-     *      referencedColumnName="id"
-     * )
-     */
-    private $educational;
-
-    /**
-     * @ORM\OneToOne(
-     *      targetEntity="Research",
-     *      inversedBy="orderinfo",
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(
-     *      name="research_id",
-     *      referencedColumnName="id"
-     * )
-     */
-    private $research;
-
 
     /**
      * @ORM\ManyToMany(targetEntity="Encounter", inversedBy="orderinfo")
@@ -174,11 +145,40 @@ class OrderInfo extends OrderAbstract {
      **/
     private $slide;
 
+
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
      * @ORM\JoinColumn(name="scanner", referencedColumnName="id")
      */
     private $scanner;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="Educational",
+     *      inversedBy="orderinfo",
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(
+     *      name="educational_id",
+     *      referencedColumnName="id"
+     * )
+     */
+    private $educational;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="Research",
+     *      inversedBy="orderinfo",
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(
+     *      name="research_id",
+     *      referencedColumnName="id"
+     * )
+     */
+    private $research;
+
+
     
     /**
      * Constructor

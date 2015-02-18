@@ -31,7 +31,6 @@ class OrderAbstract {
      */
     protected $orderdate;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
      * @ORM\JoinColumn(name="formtype", referencedColumnName="id")

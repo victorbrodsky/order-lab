@@ -1110,6 +1110,8 @@ class ScanOrderController extends Controller {
         //$dql->having("( (COUNT(orderinfo) > 1) AND (COUNT(status.name) > 1) AND (COUNT(formtype.name) > 1) AND (COUNT(provider.username) > 1) )");
         //$dql->having("( COUNT(orderinfo) > 1 )");
 
+        $dql->innerJoin("orderinfo.institution", "institution");
+
         $dql->innerJoin("orderinfo.provider", "provider");
         $dql->innerJoin("orderinfo.type", "formtype");
 
