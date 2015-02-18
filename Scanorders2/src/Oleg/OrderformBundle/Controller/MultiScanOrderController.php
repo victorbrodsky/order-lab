@@ -414,7 +414,7 @@ class MultiScanOrderController extends Controller {
             $previousOrder = $orderUtil->getPreviousOrderinfo();
             //$this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
             if( $previousOrder ) {
-                $entity->setService($previousOrder->getService());
+                $entity->getScanOrder()->setService($previousOrder->getScanOrder()->getService());
                 //echo "prev service set<br>";
             }
         }
