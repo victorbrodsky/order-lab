@@ -262,21 +262,21 @@ class ScanUtilController extends Controller {
     
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/delivery", name="get-slidedelivery")
+     * @Route("/delivery", name="get-orderdelivery")
      * @Method("GET")
      */
-    public function getSlideDeliveryAction() {
+    public function getOrderDeliveryAction() {
 
         $arr = array();
 
         $user = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        //$entities = $em->getRepository('OlegOrderformBundle:SlideDelivery')->findByType('default');
+        //$entities = $em->getRepository('OlegOrderformBundle:OrderDelivery')->findByType('default');
 
         //////////////////////////////////// 1) get all default list ////////////////////////////////////
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:SlideDelivery', 'list')
+            ->from('OlegOrderformBundle:OrderDelivery', 'list')
             ->select("list.name")
             ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
             ->groupBy('list')
@@ -292,7 +292,7 @@ class ScanUtilController extends Controller {
         foreach( $entities as $entity ) {
             $arr[] = $entity["name"];
             $parametersArr['text'.$count] = $entity["name"];
-            $addwhere = $addwhere . "list.slideDelivery != :text".$count;
+            $addwhere = $addwhere . "list.delivery != :text".$count;
             if( count($entities) > $count ) {
                 $addwhere = $addwhere . " AND ";
             }
@@ -312,7 +312,7 @@ class ScanUtilController extends Controller {
         if( $id ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
-                $arr[] = $orderinfo->getSlideDelivery();
+                $arr[] = $orderinfo->getDelivery();
             }
         }
         //////////////////////////////////// END OF 3 ///////////////////////////////////////////
@@ -322,9 +322,9 @@ class ScanUtilController extends Controller {
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:OrderInfo', 'list')
-            ->select("list.slideDelivery")
+            ->select("list.delivery")
             ->innerJoin("list.provider","provider")
-            ->groupBy('list.slideDelivery')
+            ->groupBy('list.delivery')
             ->where( "provider = :user ".$addwhere )
             ->setParameters( $parametersArr );
 
@@ -334,7 +334,7 @@ class ScanUtilController extends Controller {
 
         foreach( $myOrders as $scanreg ) {
             //echo $scanreg['scanregion']." => ";
-            $arr[] = $scanreg['slideDelivery'];
+            $arr[] = $scanreg['delivery'];
         }
         //////////////////////////////////// END OF 4 ///////////////////////////////////////////
 
@@ -942,7 +942,7 @@ class ScanUtilController extends Controller {
     }
 
     /**
-     * @Route("/returnslideslocation", name="scan_get_returnslideslocation")
+     * @Route("/returnlocation", name="scan_get_returnlocation")
      * @Method("GET")
      */
     public function getLocationAction(Request $request) {
@@ -958,10 +958,10 @@ class ScanUtilController extends Controller {
             $proxyid = null;
         }
 
-        //get default returnSlide option
+        //get default returnLocation option
         $orderUtil = $this->get('scanorder_utility');
-        $returnSlideLocations = $orderUtil->getOrderReturnSlidesLocation(null,$providerid,$proxyid);
-        $preferredLocations = $returnSlideLocations['preferred_choices'];
+        $returnLocations = $orderUtil->getOrderReturnLocations(null,$providerid,$proxyid);
+        $preferredLocations = $returnLocations['preferred_choices'];
 
         $em = $this->getDoctrine()->getManager();
 

@@ -667,7 +667,7 @@ class OrderUtil {
     }
 
 
-    public function getOrderReturnSlidesLocation( $orderinfo, $providerid=null, $proxyid=null ) {
+    public function getOrderReturnLocations( $orderinfo, $providerid=null, $proxyid=null ) {
 
         $provider = null;
         $proxy = null;
@@ -684,7 +684,7 @@ class OrderUtil {
             }
         }
 
-        //get default returnSlide option
+        //get default returnLocation option
         //the top three choices should be the Submitter's Main Office location (from the user who is logged in; selected by default),
         //followed by the "Surgical Pathology Filing Room",
         //followed by the Ordering Provider's Main Office location, and then everyone else in alphabetical order.

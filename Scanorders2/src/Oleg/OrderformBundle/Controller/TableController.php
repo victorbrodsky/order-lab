@@ -553,7 +553,7 @@ class TableController extends Controller {
             'user'=>$user,
             'division'=>$division,
             'department'=>$department,
-            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($entity)
+            'returnLocation'=>$orderUtil->getOrderReturnLocations($entity)
         );
         $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
 

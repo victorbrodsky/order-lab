@@ -31,12 +31,12 @@ var _scanregion = new Array();
 var _procedure = new Array();
 var _organ = new Array();
 var _delivery = new Array();
-var _returnslide = new Array();
+var _returnLocation = new Array();
 var _projectTitle = new Array();
 var _courseTitle = new Array();
 var _account = new Array();
 var _urgency = new Array();
-var _returnslidelocations = new Array();
+
 
 
 //function regularCombobox() {
@@ -95,7 +95,7 @@ function customCombobox() {
         getCourseTitle(new Array("0","0","0","0","0","0"));
 
         getComboboxAccount(new Array("0","0","0","0","0","0"));
-        getComboboxReturnSlidesLocations();
+        getComboboxReturnLocations();
     }
 
 }
@@ -500,41 +500,6 @@ function getComboboxDelivery(ids) {
 
 }
 
-////#############  return slides to  ##############//
-//function getComboboxReturn(ids) {
-//    //var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-//    //var id= "#oleg_orderformbundle_orderinfotype_";
-//    var url = getCommonBaseUrl("util/"+"return"); //urlCommon+"return";
-//    //var targetid = id+"returnSlide";
-//
-//    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-//        url = url + "?opt="+orderinfoid;
-//    }
-//
-//    //console.log("scanregion.length="+organ.length);
-//    if( _returnslide.length == 0 ) {
-//        $.ajax({
-//            url: url,
-//            timeout: _ajaxTimeout,
-//            async: asyncflag
-//        }).success(function(data) {
-//                _returnslide = data;
-//            populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
-//            if( cycle == "new"  ) {
-//                //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-//                setElementToId( ".ajax-combobox-return", _returnslide );
-//            }
-//        });
-//    } else {
-//        populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
-//        if( cycle == "new"  ) {
-//            //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-//            setElementToId( ".ajax-combobox-return", _returnslide );
-//        }
-//    }
-//
-//}
-
 
 //#############  Research Project  ##############//
 function getProjectTitle(ids,holder) {
@@ -814,8 +779,8 @@ function getComboboxAccount(ids,holder) {
 
 }
 
-//#############  return slides to  ##############//
-function getComboboxReturnSlidesLocations(holder) {
+//#############  return locations to  ##############//
+function getComboboxReturnLocations(holder) {
 
     var targetid = ".ajax-combobox-location";
 
@@ -830,19 +795,19 @@ function getComboboxReturnSlidesLocations(holder) {
             return;
     }
 
-    var url = getCommonBaseUrl("util/"+"returnslideslocation"+"?providerid="+user_id+"&proxyid="+proxyuser_id);
+    var url = getCommonBaseUrl("util/"+"returnlocation"+"?providerid="+user_id+"&proxyid="+proxyuser_id);
 
-    if( _returnslidelocations.length == 0 ) {
+    if( _returnLocation.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            _returnslidelocations = data;
-            populateSelectCombobox( targetid, _returnslidelocations, "Select an option or type in a new value", false );
+            _returnLocation = data;
+            populateSelectCombobox( targetid, _returnLocation, "Select an option or type in a new value", false );
         });
     } else {
-        populateSelectCombobox( targetid, _returnslidelocations, "Select an option or type in a new value", false );
+        populateSelectCombobox( targetid, _returnLocation, "Select an option or type in a new value", false );
     }
 
 }
@@ -905,7 +870,7 @@ function initComboboxJs(ids, holder) {
         getProjectTitle(ids,holder);
         getCourseTitle(ids,holder);
         getComboboxAccount(ids,holder);
-        getComboboxReturnSlidesLocations(holder);
+        getComboboxReturnLocations(holder);
     }
 }
 

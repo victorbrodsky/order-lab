@@ -9,18 +9,18 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_slidedelivery")
+ * @ORM\Table(name="scan_orderDelivery")
  */
-class SlideDelivery extends ListAbstract
+class OrderDelivery extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="SlideDelivery", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="OrderDelivery", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SlideDelivery", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OrderDelivery", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;

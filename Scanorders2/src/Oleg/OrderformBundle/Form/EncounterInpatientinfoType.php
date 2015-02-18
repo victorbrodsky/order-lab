@@ -39,7 +39,7 @@ class EncounterInpatientinfoType extends AbstractType
         $builder->add('admissiondate','datetime',array(
             'widget' => 'single_text',
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
+            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'label'=>'Admission Date:',
         ));
@@ -60,7 +60,7 @@ class EncounterInpatientinfoType extends AbstractType
         $builder->add('dischargedate','datetime',array(
             'widget' => 'single_text',
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
+            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'label'=>'Discharge Date:',
         ));

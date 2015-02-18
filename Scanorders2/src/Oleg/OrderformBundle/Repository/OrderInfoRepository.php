@@ -39,7 +39,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
         
         if( $entity->getPriority() == "Routine" ) {      
-            $entity->setScandeadline(NULL);
+            $entity->setDeadline(NULL);
         }
 
         //********** take care of educational and research director and principal investigator ***********//

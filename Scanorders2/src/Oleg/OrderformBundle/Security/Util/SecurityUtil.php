@@ -236,7 +236,7 @@ class SecurityUtil extends UserSecurityUtil {
     }
 
     public function getDefaultDepartmentDivision($orderinfo,$userSiteSettings) {
-        if( $service = $orderinfo->getService() ) {
+        if( $service = $orderinfo->getScanorder()->getService() ) {
             $division = $service->getParent();
             $department = $division->getParent();
         } else {

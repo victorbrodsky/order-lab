@@ -105,32 +105,32 @@ class OrderInfoType extends AbstractType
         }
         $builder->add( 'priority', 'choice', $priorityArr);
 
-        //slideDelivery
+        //delivery
         $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
-        $builder->add('slideDelivery', 'custom_selector', array(
+        $builder->add('delivery', 'custom_selector', array(
             'label' => 'Slide Delivery:',
             'attr' => $attr,
             'required'=>true,
-            'classtype' => 'slideDelivery'
+            'classtype' => 'delivery'
         ));
 
-        //scandeadline
+        //deadline
         if( $this->params['cycle'] == 'new' ) {
-            $scandeadline = date_modify(new \DateTime(), '+2 week');
+            $deadline = date_modify(new \DateTime(), '+2 week');
         } else {
-            $scandeadline = null;
+            $deadline = null;
         }
 
-        if( $this->entity && $this->entity->getScandeadline() != '' ) {
-            $scandeadline = $this->entity->getScandeadline();
+        if( $this->entity && $this->entity->getDeadline() != '' ) {
+            $deadline = $this->entity->getDeadline();
         }
 
-        $builder->add('scandeadline','date',array(
+        $builder->add('deadline','date',array(
             'widget' => 'single_text',
             'format' => 'MM-dd-yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
-            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
+            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
-            'data' => $scandeadline,
+            'data' => $deadline,
             'label'=>'Scan Deadline:',
         ));
 
@@ -139,13 +139,6 @@ class OrderInfoType extends AbstractType
             'required'  => false,
         ));
 
-
-        //$builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
-//        $builder->add( 'provider', null, array(
-//            'label'=>'Submitter:',
-//            'read_only' => true,
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
 
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -160,13 +153,13 @@ class OrderInfoType extends AbstractType
             },
         ));
 
-        $builder->add( 'scanner', 'entity', array(
+        $builder->add( 'equipment', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Equipment',
             'property' => 'name',
             'label'=>'Scanner:',
             'required'=> true,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width combobox-scanner'),
+            'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('i')
                         ->leftJoin('i.keytype','keytype')
@@ -193,8 +186,8 @@ class OrderInfoType extends AbstractType
         ));
 
 
-        ////////////// returnSlide //////////////////////
-        $returnSlidesOptions = array(
+        ////////////// returnLocation //////////////////////
+        $returnLocationsOptions = array(
             'label' => "Return Slides to:",
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
@@ -202,13 +195,13 @@ class OrderInfoType extends AbstractType
         );
 
         //locations default and preferred choices
-        if( $this->params['cycle'] == 'new' && array_key_exists('returnSlide', $this->params) ) {
-            $returnSlide = $this->params['returnSlide'];
-            $returnSlidesOptions['data'] = $returnSlide['data']->getId();
+        if( $this->params['cycle'] == 'new' && array_key_exists('returnLocation', $this->params) ) {
+            $returnLocation = $this->params['returnLocation'];
+            $returnLocationsOptions['data'] = $returnLocation['data']->getId();
         }
 
         if( $this->params['cycle'] == 'show' ) {
-            $builder->add('returnSlide', 'entity', array(
+            $builder->add('returnLocation', 'entity', array(
                 'label' => 'Return Slides to:',
                 'required'=> false,
                 'multiple' => false,
@@ -216,9 +209,9 @@ class OrderInfoType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         } else {
-            $builder->add('returnSlide', 'employees_custom_selector', $returnSlidesOptions);
+            $builder->add('returnLocation', 'employees_custom_selector', $returnLocationsOptions);
         }
-        ////////////// EOF returnSlide //////////////////////
+        ////////////// EOF returnLocation //////////////////////
 
         //Institution Tree
         if( array_key_exists('institutions', $this->params) ) {
@@ -273,25 +266,15 @@ class OrderInfoType extends AbstractType
             ));
         }
 
-        if( $this->params['cycle'] == 'show' ) {
-            //echo "entity service";
-            $builder->add('service', 'entity', array(
-                'label' => 'Service:',
-                'required'=> false,
-                'multiple' => false,
-                'class' => 'OlegUserdirectoryBundle:Service',
-                //'choices' => $this->params['services'],
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
-        } else {
-            //service. User should be able to add institution to administrative or appointment titles
-            $builder->add('service', 'employees_custom_selector', array(
-                'label' => "Service:",
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-service combobox-without-add', 'type' => 'hidden'),
-                'classtype' => 'service'
-            ));
-        }
+
+        ////////////////////////// Specific Orders //////////////////////////
+
+        $builder->add('scanorder', new ScanOrderType($this->params), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\ScanOrder',
+            'label' => false
+        ));
+
+        ////////////////////////// EOF Specific Orders //////////////////////////
         
     }
 

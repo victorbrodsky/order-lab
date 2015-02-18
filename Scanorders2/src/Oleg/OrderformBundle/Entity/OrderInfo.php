@@ -19,12 +19,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 class OrderInfo extends OrderAbstract {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
-     */
-    private $service;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
      * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
      */
@@ -37,63 +31,50 @@ class OrderInfo extends OrderAbstract {
      * @ORM\Column(type="integer", nullable=true)
      */
     private $oid;
-    
+
     /**
-     * @var string
+     * Account of the order
      *
-     * @ORM\Column(name="priority", type="string")
-     * @Assert\NotBlank
-     */
-    private $priority;
-    
-    /**
-     * @ORM\Column(name="scandeadline", nullable=true, type="datetime")
-     */
-    private $scandeadline;
-    
-    /**
-     * Return slide(s) by this date even if not scanned
-     * @ORM\Column(name="returnoption", type="boolean")
-     */
-    private $returnoption;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="slideDelivery", type="string", nullable=true)
-     * @Assert\NotBlank
-     */
-    private $slideDelivery;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
-     * @Assert\NotBlank
-     **/
-    private $returnSlide;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $purpose;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="orderinfo", cascade={"persist"})
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id", nullable=true)
      */
-    protected $account;
+    private $account;
 
     /**
-     * conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the orderinfo (unlike to dataqualityage)
-     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="orderinfo", cascade={"persist"})
+     * @ORM\OneToOne(
+     *      targetEntity="Educational",
+     *      inversedBy="orderinfo",
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(
+     *      name="educational_id",
+     *      referencedColumnName="id"
+     * )
      */
-    private $dataqualitymrnacc;
+    private $educational;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
-//     */
-//    private $history;
     /**
+     * @ORM\OneToOne(
+     *      targetEntity="Research",
+     *      inversedBy="orderinfo",
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(
+     *      name="research_id",
+     *      referencedColumnName="id"
+     * )
+     */
+    private $research;
+
+//    //private $scanner;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
+//     */
+//    private $equipment;
+
+    /**
+     * History of the order
+     *
      * @ORM\ManyToMany(targetEntity="History")
      * @ORM\JoinTable(name="scan_orderinfo_history",
      *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
@@ -101,6 +82,63 @@ class OrderInfo extends OrderAbstract {
      *      )
      **/
     private $history;
+
+
+    //    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+//     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $service;
+
+//    /**
+//     * @ORM\Column(type="string",nullable=true)
+//     */
+//    private $priority;
+
+    //private $scandeadline;
+//    /**
+//     * @ORM\Column(type="datetime", nullable=true)
+//     */
+//    private $deadline;
+
+    //Return slide(s) by this date even if not scanned
+//    /**
+//     * @ORM\Column(name="returnoption", type="boolean")
+//     */
+//    private $returnoption;
+
+    //private $slideDelivery;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $delivery;
+
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+//     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
+//     * @Assert\NotBlank
+//     **/
+//    private $returnSlide;
+
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $purpose;
+
+//    /**
+//     * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the orderinfo (unlike to dataqualityage)
+//     *
+//     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="orderinfo", cascade={"persist"})
+//     */
+//    private $dataqualitymrnacc;
+
+//    /**
+//     * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
+//     */
+//    private $history;
+
+
+
 
     /////////////////    OBJECTS    //////////////////////
     /**
@@ -146,40 +184,24 @@ class OrderInfo extends OrderAbstract {
     private $slide;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
-     * @ORM\JoinColumn(name="scanner", referencedColumnName="id")
-     */
-    private $scanner;
+
+
+
+    ////////////////////////// Specific Orders //////////////////////////
 
     /**
-     * @ORM\OneToOne(
-     *      targetEntity="Educational",
-     *      inversedBy="orderinfo",
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(
-     *      name="educational_id",
-     *      referencedColumnName="id"
-     * )
-     */
-    private $educational;
-
-    /**
-     * @ORM\OneToOne(
-     *      targetEntity="Research",
-     *      inversedBy="orderinfo",
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(
-     *      name="research_id",
-     *      referencedColumnName="id"
-     * )
-     */
-    private $research;
+     * @ORM\OneToOne(targetEntity="ScanOrder", inversedBy="orderinfo", cascade={"persist","remove"})
+     **/
+    private $scanorder;
 
 
-    
+
+
+    ////////////////////////// EOF Specific Orders //////////////////////////
+
+
+
+
     /**
      * Constructor
      */
@@ -192,8 +214,14 @@ class OrderInfo extends OrderAbstract {
         $this->part = new ArrayCollection();      
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
-        $this->dataqualitymrnacc = new ArrayCollection();
+        //$this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
+
+        //Initialize specific orders
+        if( !$this->getScanorder() ) {
+            $this->setScanorder(new ScanOrder());
+        }
+
     }
 
     public function __clone() {
@@ -218,20 +246,20 @@ class OrderInfo extends OrderAbstract {
             //
             $provider = $this->getProvider();
             $proxyuser = $this->getProxyuser();
-            $dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
+            //$dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
             $histories = $this->getHistory();
 
             //$this->setProvider( new ArrayCollection() );
             //$this->proxyuser = new ArrayCollection();
-            $this->dataqualitymrnacc = new ArrayCollection();
+            //$this->dataqualitymrnacc = new ArrayCollection();
             $this->history = new ArrayCollection();
 
             $this->setProvider( $provider );
             $this->setProxyuser( $proxyuser );
 
-            foreach( $dataqualitiesmrnacc as $dataqualitymrnacc ) {
-                $this->addDataqualityMrnAcc($dataqualitymrnacc);
-            }
+            //foreach( $dataqualitiesmrnacc as $dataqualitymrnacc ) {
+            //    $this->addDataqualityMrnAcc($dataqualitymrnacc);
+            //}
 
             foreach( $histories as $history ) {
                 $this->addHistory($history);
@@ -252,6 +280,11 @@ class OrderInfo extends OrderAbstract {
                 //$cloneChild->addOrderInfo($this);
                 //echo "2 cloned Children: ".$cloneChild;
             }
+
+
+            //Specific Orders
+//            $scanorder = $this->getScanorder();
+//            $this->setScanorder($scanorder);
               
         }
 
@@ -271,87 +304,88 @@ class OrderInfo extends OrderAbstract {
         $this->$addMethod($depend);
     }
 
-    /**
-     * @param mixed $service
-     */
-    public function setService($service)
-    {
-        $this->service = $service;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
 
 
-    /**
-     * Set priority
-     *
-     * @param string $priority
-     * @return OrderInfo
-     */
-    public function setPriority($priority)
-    {
-        $this->priority = $priority;
+//    /**
+//     * @param mixed $service
+//     */
+//    public function setService($service)
+//    {
+//        $this->service = $service;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getService()
+//    {
+//        return $this->service;
+//    }
+
+//    /**
+//     * Set priority
+//     *
+//     * @param string $priority
+//     * @return OrderInfo
+//     */
+//    public function setPriority($priority)
+//    {
+//        $this->priority = $priority;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get priority
+//     *
+//     * @return string
+//     */
+//    public function getPriority()
+//    {
+//        return $this->priority;
+//    }
     
-        return $this;
-    }
-
-    /**
-     * Get priority
-     *
-     * @return string 
-     */
-    public function getPriority()
-    {
-        return $this->priority;
-    }
-    
-    public function getScandeadline() {
-        return $this->scandeadline;
-    }
-
-    public function getReturnoption() {
-        return $this->returnoption;
-    }
-
-    public function setScandeadline($scandeadline) {
-        $this->scandeadline = $scandeadline;
-    }
-
-    public function setReturnoption($returnoption) {
-        $this->returnoption = $returnoption;
-    }
+//    public function getScandeadline() {
+//        return $this->scandeadline;
+//    }
+//
+//    public function getReturnoption() {
+//        return $this->returnoption;
+//    }
+//
+//    public function setScandeadline($scandeadline) {
+//        $this->scandeadline = $scandeadline;
+//    }
+//
+//    public function setReturnoption($returnoption) {
+//        $this->returnoption = $returnoption;
+//    }
 
 
-    public function getDataqualityMrnAcc()
-    {
-        return $this->dataqualitymrnacc;
-    }
-
-    public function setDataqualityMrnAcc($dataqualitiesmrnacc)
-    {
-        if( $dataqualitiesmrnacc == null ) {
-            $dataqualitiesmrnacc = new ArrayCollection();
-        }
-        $this->dataqualitymrnacc = $dataqualitiesmrnacc;
-    }
-
-    public function addDataqualityMrnAcc($dataqualitymrnacc)
-    {
-        if( !$this->dataqualitymrnacc->contains($dataqualitymrnacc) ) {
-            $this->dataqualitymrnacc->add($dataqualitymrnacc);
-        }
-    }
-
-    public function removeDataqualityMrnAcc($dataqualitymrnacc)
-    {
-        $this->dataqualitymrnacc->removeElement($dataqualitymrnacc);
-    }
+//    public function getDataqualityMrnAcc()
+//    {
+//        return $this->dataqualitymrnacc;
+//    }
+//
+//    public function setDataqualityMrnAcc($dataqualitiesmrnacc)
+//    {
+//        if( $dataqualitiesmrnacc == null ) {
+//            $dataqualitiesmrnacc = new ArrayCollection();
+//        }
+//        $this->dataqualitymrnacc = $dataqualitiesmrnacc;
+//    }
+//
+//    public function addDataqualityMrnAcc($dataqualitymrnacc)
+//    {
+//        if( !$this->dataqualitymrnacc->contains($dataqualitymrnacc) ) {
+//            $this->dataqualitymrnacc->add($dataqualitymrnacc);
+//        }
+//    }
+//
+//    public function removeDataqualityMrnAcc($dataqualitymrnacc)
+//    {
+//        $this->dataqualitymrnacc->removeElement($dataqualitymrnacc);
+//    }
 
     public function getHistory()
     {
@@ -370,41 +404,41 @@ class OrderInfo extends OrderAbstract {
     }
 
 
-    /**
-     * Set slideDelivery
-     *
-     * @param string $slideDelivery
-     * @return OrderInfo
-     */
-    public function setSlideDelivery($slideDelivery)
-    {
-        $this->slideDelivery = $slideDelivery;
-    
-        return $this;
-    }
-
-    /**
-     * Get slideDelivery
-     *
-     * @return string 
-     */
-    public function getSlideDelivery()
-    {
-        return $this->slideDelivery;
-    }
-
-
-    public function setReturnSlide($returnSlide)
-    {
-        $this->returnSlide = $returnSlide;
-    
-        return $this;
-    }
-
-    public function getReturnSlide()
-    {
-        return $this->returnSlide;
-    }
+//    /**
+//     * Set slideDelivery
+//     *
+//     * @param string $slideDelivery
+//     * @return OrderInfo
+//     */
+//    public function setSlideDelivery($slideDelivery)
+//    {
+//        $this->slideDelivery = $slideDelivery;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get slideDelivery
+//     *
+//     * @return string
+//     */
+//    public function getSlideDelivery()
+//    {
+//        return $this->slideDelivery;
+//    }
+//
+//
+//    public function setReturnSlide($returnSlide)
+//    {
+//        $this->returnSlide = $returnSlide;
+//
+//        return $this;
+//    }
+//
+//    public function getReturnSlide()
+//    {
+//        return $this->returnSlide;
+//    }
 
     public function getStatus() {
         return $this->status;
@@ -430,21 +464,21 @@ class OrderInfo extends OrderAbstract {
         return $this->account;
     }
 
-    /**
-     * @param mixed $purpose
-     */
-    public function setPurpose($purpose)
-    {
-        $this->purpose = $purpose;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPurpose()
-    {
-        return $this->purpose;
-    }
+//    /**
+//     * @param mixed $purpose
+//     */
+//    public function setPurpose($purpose)
+//    {
+//        $this->purpose = $purpose;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getPurpose()
+//    {
+//        return $this->purpose;
+//    }
 
 
 
@@ -467,6 +501,41 @@ class OrderInfo extends OrderAbstract {
         return $this->oid;
     }
 
+
+    /**
+     * @param mixed $educational
+     */
+    public function setEducational($educational)
+    {
+        $this->educational = $educational;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEducational()
+    {
+        return $this->educational;
+    }
+
+    /**
+     * @param mixed $research
+     */
+    public function setResearch($research)
+    {
+        $this->research = $research;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResearch()
+    {
+        return $this->research;
+    }
+
+
+    ///////////////////// Hierarchy objects /////////////////////
     /**
      * Add patient
      *
@@ -541,61 +610,6 @@ class OrderInfo extends OrderAbstract {
     {
         return $this->slide;
     }
-
-    /**
-     * @param mixed $educational
-     */
-    public function setEducational($educational)
-    {
-        $this->educational = $educational;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEducational()
-    {
-        return $this->educational;
-    }
-
-    /**
-     * @param mixed $research
-     */
-    public function setResearch($research)
-    {
-        $this->research = $research;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResearch()
-    {
-        return $this->research;
-    }
-
-    
-    
-    public function __toString(){
-        
-//        $patient_info = "(";
-//        $count = 0;
-//        foreach( $this->patient as $patient ) {
-//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
-//            $patient_info .= $count.":" . $patient. "; ";
-//            $count++;
-//        }
-//        $patient_info .= ")";
-
-//        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
-        return "OrderInfo: id=".$this->getId().", oid=".$this->oid.", status=".$this->getStatus().
-                ", provider=".$this->getProvider().", providerName=".$this->getProvider()->getUsername().", providerId=".$this->getProvider()->getId().
-                ", edu=".$this->educational.
-                ", res=".$this->research.", patientCount=".count($this->patient).
-                ", slideCount=".count($this->slide)."<br>";
-    }
-
-
 
     public function addEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
     {
@@ -743,21 +757,43 @@ class OrderInfo extends OrderAbstract {
     {
         return $this->block;
     }
+    ///////////////////// EOF Hierarchy objects /////////////////////
 
-    /**
-     * @param mixed $scanner
-     */
-    public function setScanner($scanner)
-    {
-        $this->scanner = $scanner;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getScanner()
-    {
-        return $this->scanner;
+//    /**
+//     * @param mixed $scanner
+//     */
+//    public function setScanner($scanner)
+//    {
+//        $this->scanner = $scanner;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getScanner()
+//    {
+//        return $this->scanner;
+//    }
+
+
+    public function __toString(){
+
+//        $patient_info = "(";
+//        $count = 0;
+//        foreach( $this->patient as $patient ) {
+//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+//            $patient_info .= $count.":" . $patient. "; ";
+//            $count++;
+//        }
+//        $patient_info .= ")";
+
+//        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
+        return "OrderInfo: id=".$this->getId().", oid=".$this->oid.", status=".$this->getStatus().
+        ", provider=".$this->getProvider().", providerName=".$this->getProvider()->getUsername().", providerId=".$this->getProvider()->getId().
+        ", edu=".$this->educational.
+        ", res=".$this->research.", patientCount=".count($this->patient).
+        ", slideCount=".count($this->slide)."<br>";
     }
 
 
@@ -771,6 +807,31 @@ class OrderInfo extends OrderAbstract {
     public function removeChildren($child) {
         $this->removePatient($child);
     }
+
+
+
+
+
+
+    /////////////////////// Getters and Setters of Specific Orders ///////////////////////
+
+    /**
+     * @param mixed $scanorder
+     */
+    public function setScanorder($scanorder)
+    {
+        $this->scanorder = $scanorder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScanorder()
+    {
+        return $this->scanorder;
+    }
+
+    /////////////////////// EOF Getters and Setters of Specific Orders ///////////////////////
 
 
 }

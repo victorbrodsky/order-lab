@@ -29,14 +29,14 @@
                 {% if routename == 'incoming-scan-orders' %}
                        
                     <th>{{ knp_pagination_sortable(pagination, 'ID', 'orderinfo.oid') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Stat', 'orderinfo.scandeadline') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Stat', 'orderinfo.deadline') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>
                     {% if showproxyuser is defined and showproxyuser == 'true' %}
                         <th>{{ knp_pagination_sortable(pagination, 'Ordering Provider', 'proxyuser.username') }}</th>
                     {% endif %}
                     <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Return To', 'orderinfo.returnSlide') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Return To', 'orderinfo.returnLocation') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>                   
                     
                 {% endif %}
@@ -131,7 +131,7 @@
                     {{ entity.slide|length }}
                 </td>
                 <td>{{ entity.priority }}</td>            
-                <td>{{ entity.returnSlide }}</td>
+                <td>{{ entity.returnLocation }}</td>
                 <td>{{ entity.type }}</td>
                 {% if showprovider is defined and showprovider == 'true' %}
                     <td>
@@ -148,8 +148,8 @@
                 <td>
                     <a href="{{ path('multy_show', { 'id': entity.oid }) }}">{{ entity.oid }}</a>
                 </td>
-                {% if entity.scandeadline != '' %}
-                    <td>{{ entity.scandeadline|date('m/d') }}</td>
+                {% if entity.deadline != '' %}
+                    <td>{{ entity.deadline|date('m/d') }}</td>
                 {% else %}    
                     <td></td>
                 {% endif %}
@@ -163,7 +163,7 @@
                     </td>
                 {% endif %}
                 <td>{{ entity.slide|length }}</td> 
-                <td>{{ entity.returnSlide }}</td>
+                <td>{{ entity.returnLocation }}</td>
                 <td>{{ entity.type }}</td>
                     
             {% endif %}

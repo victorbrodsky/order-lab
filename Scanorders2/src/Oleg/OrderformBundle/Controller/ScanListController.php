@@ -41,7 +41,7 @@ class ScanListController extends ListController
      * @Route("/slide-types/", name="slidetype-list")
      * @Route("/form-types/", name="formtype-list")
      * @Route("/statuses/", name="status-list")
-     * @Route("/slide-delivery-options/", name="slidedelivery-list")
+     * @Route("/order-delivery-options/", name="orderdelivery-list")
      * @Route("/region-to-scan-options/", name="regiontoscan-list")
      * @Route("/scan-order-processor-comments/", name="processorcomment-list")
      * @Route("/accounts/", name="accounts-list")
@@ -83,7 +83,7 @@ class ScanListController extends ListController
      * @Route("/slide-types/", name="slidetype_create")
      * @Route("/form-types/", name="formtype_create")
      * @Route("/statuses/", name="status_create")
-     * @Route("/slide-delivery-options/", name="slidedelivery_create")
+     * @Route("/order-delivery-options/", name="orderdelivery_create")
      * @Route("/region-to-scan-options/", name="regiontoscan_create")
      * @Route("/scan-order-processor-comments/", name="processorcomment_create")
      * @Route("/accounts/", name="accounts_create")
@@ -125,7 +125,7 @@ class ScanListController extends ListController
      * @Route("/slide-types/new", name="slidetype_new")
      * @Route("/form-types/new", name="formtype_new")
      * @Route("/statuses/new", name="status_new")
-     * @Route("/slide-delivery-options/new", name="slidedelivery_new")
+     * @Route("/order-delivery-options/new", name="orderdelivery_new")
      * @Route("/region-to-scan-options/new", name="regiontoscan_new")
      * @Route("/scan-order-processor-comments/new", name="processorcomment_new")
      * @Route("/accounts/new", name="accounts_new")
@@ -167,7 +167,7 @@ class ScanListController extends ListController
      * @Route("/slide-types/{id}", name="slidetype_show")
      * @Route("/form-types/{id}", name="formtype_show")
      * @Route("/statuses/{id}", name="status_show")
-     * @Route("/slide-delivery-options/{id}", name="slidedelivery_show")
+     * @Route("/order-delivery-options/{id}", name="orderdelivery_show")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_show")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_show")
      * @Route("/accounts/{id}", name="accounts_show")
@@ -209,7 +209,7 @@ class ScanListController extends ListController
      * @Route("/slide-types/{id}/edit", name="slidetype_edit")
      * @Route("/form-types/{id}/edit", name="formtype_edit")
      * @Route("/statuses/{id}/edit", name="status_edit")
-     * @Route("/slide-delivery-options/{id}/edit", name="slidedelivery_edit")
+     * @Route("/order-delivery-options/{id}/edit", name="orderdelivery_edit")
      * @Route("/region-to-scan-options/{id}/edit", name="regiontoscan_edit")
      * @Route("/scan-order-processor-comments/{id}/edit", name="processorcomment_edit")
      * @Route("/accounts/{id}/edit", name="accounts_edit")
@@ -251,7 +251,7 @@ class ScanListController extends ListController
      * @Route("/slide-types/{id}", name="slidetype_update")
      * @Route("/form-types/{id}", name="formtype_update")
      * @Route("/statuses/{id}", name="status_update")
-     * @Route("/slide-delivery-options/{id}", name="slidedelivery_update")
+     * @Route("/order-delivery-options/{id}", name="orderdelivery_update")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_update")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_update")
      * @Route("/accounts/{id}", name="accounts_update")
@@ -348,9 +348,9 @@ class ScanListController extends ListController
             $className = "status";
             $displayName = "Statuses";
             break;
-        case "slidedelivery":
-            $className = "slidedelivery";
-            $displayName = "Slide Delivery Options";
+        case "orderdelivery":
+            $className = "OrderDelivery";
+            $displayName = "Order Delivery Options";
             break;
         case "regiontoscan":
             $className = "regiontoscan";
@@ -427,7 +427,7 @@ class ScanListController extends ListController
      * @Route("/slide-types/{id}", name="slidetype_delete")
      * @Route("/form-types/{id}", name="formtype_delete")
      * @Route("/statuses/{id}", name="status_delete")
-     * @Route("/slide-delivery-options/{id}", name="slidedelivery_delete")
+     * @Route("/order-delivery-options/{id}", name="orderdelivery_delete")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_delete")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_delete")
      * @Route("/accounts/{id}", name="accounts_delete")

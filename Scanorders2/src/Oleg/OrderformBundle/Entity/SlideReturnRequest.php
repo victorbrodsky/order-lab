@@ -19,12 +19,12 @@ class SlideReturnRequest extends OrderAbstract {
      */
     protected $status;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
-     * @Assert\NotBlank
-     **/
-    private $returnSlide;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+//     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
+//     * @Assert\NotBlank
+//     **/
+//    private $returnSlide;
 
     /**
      * @var string
@@ -53,11 +53,11 @@ class SlideReturnRequest extends OrderAbstract {
      */
     private $comment;
 
-    /**
-     * Return slide(s) by this date even if not scanned
-     * @ORM\Column(name="returnoption", type="boolean", nullable=true)
-     */
-    private $returnoption;
+//    /**
+//     * Return slide(s) by this date even if not scanned
+//     * @ORM\Column(name="returnoption", type="boolean", nullable=true)
+//     */
+//    private $returnoption;
 
     /**
      * @ORM\OneToMany(targetEntity="SlideText", mappedBy="slideReturnRequest", cascade={"persist"})
@@ -75,17 +75,17 @@ class SlideReturnRequest extends OrderAbstract {
     }
 
 
-    public function setReturnSlide($returnSlide)
-    {
-        $this->returnSlide = $returnSlide;
-
-        return $this;
-    }
-
-    public function getReturnSlide()
-    {
-        return $this->returnSlide;
-    }
+//    public function setReturnSlide($returnSlide)
+//    {
+//        $this->returnSlide = $returnSlide;
+//
+//        return $this;
+//    }
+//
+//    public function getReturnSlide()
+//    {
+//        return $this->returnSlide;
+//    }
 
     public function getStatus() {
         return $this->status;
@@ -201,21 +201,21 @@ class SlideReturnRequest extends OrderAbstract {
         $this->comment = $commentFull . "<br>" . $this->comment;
     }
 
-    /**
-     * @param mixed $returnoption
-     */
-    public function setReturnoption($returnoption)
-    {
-        $this->returnoption = $returnoption;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReturnoption()
-    {
-        return $this->returnoption;
-    }
+//    /**
+//     * @param mixed $returnoption
+//     */
+//    public function setReturnoption($returnoption)
+//    {
+//        $this->returnoption = $returnoption;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getReturnoption()
+//    {
+//        return $this->returnoption;
+//    }
 
     public function getSlidetext()
     {

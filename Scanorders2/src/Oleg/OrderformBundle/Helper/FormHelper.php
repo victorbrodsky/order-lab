@@ -743,7 +743,7 @@ Translational Research"
 //        return $arr;
 //    }
     
-    public function getReturnSlide() {        
+    public function getReturnLocation() {        
         $arr = array( 'Filing Room', "Me" );
         
         return $arr;

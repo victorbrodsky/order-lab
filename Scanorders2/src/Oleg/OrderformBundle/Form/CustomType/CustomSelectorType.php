@@ -88,7 +88,7 @@ class CustomSelectorType extends AbstractType {
 //                $transformer = new  GenericTreeTransformer($this->om, $username, 'Location');
 //                break;
             case "scanRegion":
-            case "slideDelivery":
+            case "delivery":
             case "partname":
             case "blockname":
             case "projectTitle":

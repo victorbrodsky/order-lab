@@ -13,11 +13,11 @@ class DataQualityMrnAcc extends DataQuality
 {
 
     /**
-     * conflicting accession number is replaced, so keep the reference to dataqualityaccmrn object in the orderinfo (unlike to dataqualityage)
-     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="dataqualitymrnacc")
-     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * conflicting accession number is replaced, so keep the reference to dataqualityaccmrn object in the scanorder (unlike to dataqualityage)
+     * @ORM\ManyToOne(targetEntity="ScanOrder", inversedBy="dataqualitymrnacc")
+     * @ORM\JoinColumn(name="scanorder", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $orderinfo;
+    protected $scanorder;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -54,20 +54,22 @@ class DataQualityMrnAcc extends DataQuality
 
 
 
+
+
     /**
-     * @param mixed $orderinfo
+     * @param mixed $scanorder
      */
-    public function setOrderinfo($orderinfo)
+    public function setScanorder($scanorder)
     {
-        $this->orderinfo = $orderinfo;
+        $this->scanorder = $scanorder;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getScanorder()
     {
-        return $this->orderinfo;
+        return $this->scanorder;
     }
 
     /**

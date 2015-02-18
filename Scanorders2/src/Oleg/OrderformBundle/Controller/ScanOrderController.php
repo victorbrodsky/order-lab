@@ -169,7 +169,7 @@ class ScanOrderController extends Controller {
         if( $routeName == "incoming-scan-orders" ) {
             if( $sort == '' ) {
                 $dql->orderBy("orderinfo.priority","DESC");
-                $dql->addOrderBy("orderinfo.scandeadline","ASC");
+                $dql->addOrderBy("orderinfo.deadline","ASC");
                 $dql->addOrderBy("orderinfo.orderdate","DESC");
             }
         }
@@ -1011,7 +1011,7 @@ class ScanOrderController extends Controller {
         if( $routeName == "incoming-scan-orders" ) {
             if( $sort == '' ) {
                 $dql->orderBy("orderinfo.priority","DESC");
-                $dql->addOrderBy("orderinfo.scandeadline","ASC");
+                $dql->addOrderBy("orderinfo.deadline","ASC");
                 $dql->addOrderBy("orderinfo.orderdate","DESC");
             }
         }

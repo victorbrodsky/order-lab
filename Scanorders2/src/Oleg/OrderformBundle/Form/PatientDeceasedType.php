@@ -30,7 +30,7 @@ class PatientDeceasedType extends AbstractType
         $builder->add('deathdate','datetime',array(
             'widget' => 'single_text',
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
+            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'label'=>'Date of Death:',
         ));
@@ -38,7 +38,7 @@ class PatientDeceasedType extends AbstractType
 //            'input'  => 'datetime',
 //            'widget' => 'single_text',
 //            'label'=>'Date of Death:',
-//            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
+//            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
 //        ));
 
         $builder->add('deathtime', 'time', array(

@@ -63,10 +63,60 @@ class OrderAbstract {
 
 
 
+
+    /**
+     * Order priority: routine, stat
+     *
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $priority;
+
+    /**
+     * Order completetion deadline
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $deadline;
+
+    /**
+     * Return order if not completed by deadline
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $returnoption;
+
+    /**
+     * Order delivery: I'll give slides to ...
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $delivery;
+
+    /**
+     * Return Location
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     **/
+    protected $returnLocation;
+
+    /**
+     * Purpose of Order
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $purpose;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
+     */
+    protected $equipment;
+
+
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -93,7 +143,7 @@ class OrderAbstract {
     /**
      * Get orderdate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getOrderdate()
     {
@@ -168,6 +218,119 @@ class OrderAbstract {
     {
         return $this->source;
     }
+
+    /**
+     * @param mixed $deadline
+     */
+    public function setDeadline($deadline)
+    {
+        $this->deadline = $deadline;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeadline()
+    {
+        return $this->deadline;
+    }
+
+    /**
+     * @param mixed $delivery
+     */
+    public function setDelivery($delivery)
+    {
+        $this->delivery = $delivery;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDelivery()
+    {
+        return $this->delivery;
+    }
+
+    /**
+     * @param mixed $priority
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param mixed $purpose
+     */
+    public function setPurpose($purpose)
+    {
+        $this->purpose = $purpose;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPurpose()
+    {
+        return $this->purpose;
+    }
+
+    /**
+     * @param mixed $returnLocation
+     */
+    public function setReturnLocation($returnLocation)
+    {
+        $this->returnLocation = $returnLocation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReturnLocation()
+    {
+        return $this->returnLocation;
+    }
+
+    /**
+     * @param mixed $returnoption
+     */
+    public function setReturnoption($returnoption)
+    {
+        $this->returnoption = $returnoption;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReturnoption()
+    {
+        return $this->returnoption;
+    }
+
+    /**
+     * @param mixed $equipment
+     */
+    public function setEquipment($equipment)
+    {
+        $this->equipment = $equipment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEquipment()
+    {
+        return $this->equipment;
+    }
+
 
 
 

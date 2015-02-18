@@ -182,10 +182,10 @@
             {{ formmacros.field(form.division) }}
         {% endif %}
 
-        {{ formmacros.field(form.service) }}
+        {{ formmacros.field(form.scanorder.service) }}
     </div>
 
-    {{ formmacros.field(form.scanner) }}
+    {{ formmacros.field(form.equipment) }}
 
     {{ formmacros.field(form.purpose) }}
 
@@ -201,14 +201,14 @@
     <div id="priority_option" class="collapse">
         <div class="well" align='center'>
 
-            {{ formmacros.fieldDateLabel(form.scandeadline,'allow-future-date') }}
+            {{ formmacros.fieldDateLabel(form.deadline,'allow-future-date') }}
             {{ formmacros.field(form.returnoption) }}
 
         </div>
     </div>
 
-    {{ formmacros.field(form.slideDelivery) }}
-    {{ formmacros.field(form.returnSlide) }}
+    {{ formmacros.field(form.delivery) }}
+    {{ formmacros.field(form.returnLocation) }}
 
 {% endmacro %}
 

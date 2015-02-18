@@ -66,7 +66,7 @@ class SlideReturnRequestController extends Controller
             'type'=>'table',
             'institutions'=>$permittedInst,
             'cycle' => 'new',
-            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($slideReturnRequest)
+            'returnLocation'=>$orderUtil->getOrderReturnLocations($slideReturnRequest)
         );
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
@@ -216,7 +216,7 @@ class SlideReturnRequestController extends Controller
             'user'=>$user,
             'institutions'=>$permittedInst,
             'cycle' => 'new',
-            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($slideReturnRequest)
+            'returnLocation'=>$orderUtil->getOrderReturnLocations($slideReturnRequest)
         );
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
@@ -345,14 +345,14 @@ class SlideReturnRequestController extends Controller
         $dql->leftJoin('list.orderinfo','orderinfo');
         $dql->leftJoin('list.institution','institution');
         $dql->leftJoin('list.proxyuser','proxyuser');
-        $dql->leftJoin("list.returnSlide", "returnSlide");
+        $dql->leftJoin("list.returnLocation", "returnLocation");
 
         $dql->groupBy('list');
         $dql->addGroupBy('provider.username');
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
         $dql->addGroupBy('institution.name');
-        $dql->addGroupBy('returnSlide.name');
+        $dql->addGroupBy('returnLocation.name');
 
 		$postData = $request->query->all();
 		
@@ -465,14 +465,14 @@ class SlideReturnRequestController extends Controller
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
         $dql->addGroupBy('institution.name');
-        $dql->addGroupBy('returnSlide.name');
+        $dql->addGroupBy('returnLocation.name');
 
         $dql->leftJoin("list.slide", "slides");
         $dql->innerJoin('list.provider','provider');
         $dql->leftJoin('list.orderinfo','orderinfo');
         $dql->innerJoin('list.institution','institution');
         $dql->leftJoin('list.proxyuser','proxyuser');
-        $dql->leftJoin("list.returnSlide", "returnSlide");
+        $dql->leftJoin("list.returnLocation", "returnLocation");
 
 		$postData = $request->query->all();
 		

@@ -177,13 +177,13 @@ function addCollectionField( elem, btnpos ) {
 //elements is a row element
 function getMaxIdFromRows( elements, field ) {
     var maxId = 0;
-    //console.log("elements.length="+elements.length + ", field="+field);
+    console.log("elements.length="+elements.length + ", field="+field);
     for( var i = 0; i < elements.length; i++ ) {
 
         var element = elements.eq(i);
         var inputField = element.find(findCollectionStr);
         var fieldId = inputField.attr("id");
-        //console.log("get Max: inputField id="+fieldId+",class="+inputField.attr("class"));
+        console.log("get Max: inputField id="+fieldId+",class="+inputField.attr("class"));
         var idArr = fieldId.split("_"+field+"_");
         var idValueStr = idArr[1].split("_")[0];
         var idValue = parseInt(idValueStr);

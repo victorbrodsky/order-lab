@@ -215,7 +215,7 @@ class MultiScanOrderController extends Controller {
             if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 
                 $conflictStr = "";
-                foreach( $entity->getDataqualityMrnAcc() as $dq ) {
+                foreach( $entity->getScanOrder()->getDataqualityMrnAcc() as $dq ) {
                     $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
                 }
 
@@ -239,9 +239,9 @@ class MultiScanOrderController extends Controller {
                     return $this->redirect($this->generateUrl('scan_idlelogout-saveorder',array('flag'=>'saveorder')));
                 }
 
-                if( count($entity->getDataqualityMrnAcc()) > 0 ) {
+                if( count($entity->getScanOrder()->getDataqualityMrnAcc()) > 0 ) {
                     $conflictsStr = "MRN-Accession Conflict Resolved by Replacing:";
-                    foreach( $entity->getDataqualityMrnAcc() as $dq ) {
+                    foreach( $entity->getScanOrder()->getDataqualityMrnAcc() as $dq ) {
                         $conflictsStr .= "<br>".$dq->getAccession()." => ".$dq->getNewaccession();
                     }
                 } else {
@@ -406,7 +406,7 @@ class MultiScanOrderController extends Controller {
         }
 
         //set the default service
-        $entity->setService($userSiteSettings->getDefaultService());
+        $entity->getScanorder()->setService($userSiteSettings->getDefaultService());
 
         ////////////////// set previous service from the last order if default is null //////////////////
         if( !$userSiteSettings->getDefaultService() ) {
@@ -439,7 +439,7 @@ class MultiScanOrderController extends Controller {
             'user'=>$user,
             'division'=>$division,
             'department'=>$department,
-            'returnSlide'=>$orderUtil->getOrderReturnSlidesLocation($entity),
+            'returnLocation'=>$orderUtil->getOrderReturnLocations($entity),
             'datastructure'=>$this->datastructure
         );
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );

@@ -79,8 +79,8 @@ class SlideReturnRequestType extends AbstractType
         }
 
 
-        ////////////// returnSlide //////////////////////
-        $returnSlidesOptions = array(
+        ////////////// returnLocation //////////////////////
+        $returnLocationsOptions = array(
             'label' => "Return Slides to:",
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
@@ -88,15 +88,15 @@ class SlideReturnRequestType extends AbstractType
         );
 
         //locations default and preferred choices
-        if( array_key_exists('returnSlide', $this->params) ) {
+        if( array_key_exists('returnLocation', $this->params) ) {
             if( array_key_exists('cycle', $this->params) && $this->params['cycle'] == 'new' ) {
-                $returnSlide = $this->params['returnSlide'];
-                $returnSlidesOptions['data'] = $returnSlide['data']->getId();
+                $returnLocation = $this->params['returnLocation'];
+                $returnLocationsOptions['data'] = $returnLocation['data']->getId();
             }
         }
 
         if( array_key_exists('cycle', $this->params) === false || $this->params['cycle'] != 'new' ) {
-            $builder->add('returnSlide', 'entity', array(
+            $builder->add('returnLocation', 'entity', array(
                 'label' => 'Return Slides to:',
                 'required'=> false,
                 'multiple' => false,
@@ -104,9 +104,9 @@ class SlideReturnRequestType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         } else {
-            $builder->add('returnSlide', 'employees_custom_selector', $returnSlidesOptions);
+            $builder->add('returnLocation', 'employees_custom_selector', $returnLocationsOptions);
         }
-        ////////////// EOF returnSlide //////////////////////
+        ////////////// EOF returnLocation //////////////////////
         
     }
 

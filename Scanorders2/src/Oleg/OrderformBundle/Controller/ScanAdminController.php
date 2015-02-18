@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,11 +25,11 @@ use Oleg\OrderformBundle\Entity\SlideType;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Entity\RegionToScan;
-use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
 use Oleg\OrderformBundle\Entity\Urgency;
 use Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList;
 use Oleg\OrderformBundle\Entity\RaceList;
+use Oleg\OrderformBundle\Entity\OrderDelivery;
 
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -95,7 +96,7 @@ class ScanAdminController extends AdminController
         //$count_pathservice = $this->generatePathServices();
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
-        $count_SlideDelivery = $this->generateSlideDelivery();
+        $count_OrderDelivery = $this->generateOrderDelivery();
         $count_RegionToScan = $this->generateRegionToScan();
         $count_comments = $this->generateProcessorComments();
         $count_urgency = $this->generateUrgency();
@@ -118,7 +119,7 @@ class ScanAdminController extends AdminController
             //'Pathology Services='.$count_pathservice.', '.
             'Slide Types='.$count_slidetype.', '.
             'MRN Types='.$count_mrntype.', '.
-            'Slide Delivery='.$count_SlideDelivery.', '.
+            'Order Delivery='.$count_OrderDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
             'Processor Comments='.$count_comments.', '.
             'Urgency='.$count_urgency.' '.
@@ -738,12 +739,12 @@ class ScanAdminController extends AdminController
 
 
 
-    public function generateSlideDelivery() {
+    public function generateOrderDelivery() {
 
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:SlideDelivery')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:OrderDelivery')->findAll();
 
         if( $entities ) {
             return -1;
@@ -767,7 +768,7 @@ class ScanAdminController extends AdminController
         $rescount = 0;
         foreach( $types as $type ) {
 
-            $listEntity = new SlideDelivery();
+            $listEntity = new OrderDelivery();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);
