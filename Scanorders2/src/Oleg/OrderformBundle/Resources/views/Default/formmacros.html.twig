@@ -602,9 +602,12 @@
 
         </div>
 
-        {{ form_rest(fieldThis) }}
+        {#{{ form_rest(fieldThis) }}#}
         {% if cycle != 'show' %}
             {% if norest is not defined or norest == "" %}
+                {% if fieldThis.others is defined %}
+                    {{ form_widget(fieldThis.others) }}
+                {% endif %}
                 {{ form_rest(fieldThis) }}
             {% endif %}
         {% endif %}
@@ -617,13 +620,13 @@
 
 {#simple field widget. i.e. diffDiagnoses field widget#}
 {% macro fieldWidget(field) %}
-    {{ form_widget(field.vars.prototype.other) }}
+    {{ form_widget(field.vars.prototype.others) }}
     {{ form_widget(field.vars.prototype.field) }}
 {% endmacro %}
 
 {% macro fieldSpecialStainsWidget(field) %}
-    {#added other#}
-    {{ form_widget(field.vars.prototype.stainothers) }}
+    {#added others#}
+    {{ form_widget(field.vars.prototype.others) }}
     {{ form_widget(field.vars.prototype.staintype) }}
     {{ form_widget(field.vars.prototype.field) }}
 {% endmacro %}

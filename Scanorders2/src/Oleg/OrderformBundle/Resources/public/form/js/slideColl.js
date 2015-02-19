@@ -52,30 +52,30 @@ function getCollField( ident, patient, encounter, procedure, accession, part, bl
 function addCollectionField( elem, btnpos ) {
 
     var element = $(elem);
-    console.log("element.class="+element.attr('class'));
+    //console.log("element.class="+element.attr('class'));
 
     //make sure to get only one element with correct id containing patient, encounter, procedure ... indexes
     var elementInputFind = element.closest('.fieldInputColl').find(findCollectionStr).not("*[id^='s2id_']");
 
     var elementInput =  elementInputFind.first();
     for( var i = 0; i < elementInputFind.length; i++ ) {
-        console.log("id="+elementInputFind.eq(i).attr('id')+", class="+elementInputFind.eq(i).attr('class'));
+        //console.log("id="+elementInputFind.eq(i).attr('id')+", class="+elementInputFind.eq(i).attr('class'));
         if( elementInputFind.eq(i).attr('id') && elementInputFind.eq(i).attr('id').indexOf("_patient_") != -1 ) {
             elementInput = elementInputFind.eq(i);
             break;
         }
     }
 
-    console.log("elementInput.class="+elementInput.attr('class')+", id="+elementInput.attr('id'));
+    //console.log("elementInput.class="+elementInput.attr('class')+", id="+elementInput.attr('id'));
     var inputId = elementInput.attr('id');
-    console.log("inputId="+inputId+", elementInput.length="+elementInput.length);
+    //console.log("inputId="+inputId+", elementInput.length="+elementInput.length);
 
     var idsArr = inputId.split("_");
 
     var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
     var fieldName = idsArr[idsArr.length-fieldIndex];
 
-    console.log("name="+name+",fieldName="+fieldName);
+    //console.log("name="+name+",fieldName="+fieldName);
 
     var patient = idsArr[4];
     var encounter = idsArr[6];
@@ -99,12 +99,12 @@ function addCollectionField( elem, btnpos ) {
         var elementHolder = element.parent().parent().parent().parent().parent().parent();
     }
 
-    console.log("elementHolder id="+elementHolder.attr("id")+",class="+elementHolder.attr("class"));
+    //console.log("elementHolder id="+elementHolder.attr("id")+",class="+elementHolder.attr("class"));
 
     var collHolders = elementHolder.find('.row');
     var collHoldersCount = collHolders.length;  //TODO: this will be used as id of this element, however, the input field with this id might already exist (solution: get the max id for this element for all existing fields)
     var maxId = getMaxIdFromRows(collHolders,fieldName);
-    console.log("maxId="+maxId);
+    //console.log("maxId="+maxId);
 
     var ident = name+fieldName;
     //console.log("ident=" + ident + ", collHoldersCount="+collHoldersCount + ", patient="+patient );
@@ -179,13 +179,13 @@ function addCollectionField( elem, btnpos ) {
 //elements is a row element
 function getMaxIdFromRows( elements, field ) {
     var maxId = 0;
-    console.log("elements.length="+elements.length + ", field="+field);
+    //console.log("elements.length="+elements.length + ", field="+field);
     for( var i = 0; i < elements.length; i++ ) {
 
         var element = elements.eq(i);
         var inputField = element.find(findCollectionStr);
         var fieldId = inputField.attr("id");
-        console.log("get Max: inputField id="+fieldId+",class="+inputField.attr("class"));
+        //console.log("get Max: inputField id="+fieldId+",class="+inputField.attr("class"));
         if( typeof fieldId !== 'undefined' ) {
             var idArr = fieldId.split("_"+field+"_");
             var idValueStr = idArr[1].split("_")[0];

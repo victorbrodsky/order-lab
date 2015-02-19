@@ -29,7 +29,7 @@ class AccessionDateType extends AbstractType
             'attr' => array('class' => 'datepicker form-control patientdob-mask'),  //, 'style'=>'margin-top: 0;'
         ));
 
-        $builder->add('dobothers', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccessionDate',
             'label' => false,
             'attr' => array('style'=>'display:none;')

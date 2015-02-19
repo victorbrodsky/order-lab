@@ -1524,8 +1524,8 @@ function createDropzoneHolder(existingDropzoneHolder) {
 
     var idArr = id.split("_");
 
-    //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14       15
-    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_partpaperothers
+    //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14  15
+    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
     var patientid = idArr[4];
     var encounterid = idArr[6];
     var procedureid = idArr[8];

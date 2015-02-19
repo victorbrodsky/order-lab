@@ -37,7 +37,7 @@ class BlockNameType extends AbstractType
             'classtype' => 'blockname'
         ));
 
-        $builder->add('blocknameothers', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\BlockBlockname',
             'label' => false,
             'attr' => array('style'=>'display:none;')

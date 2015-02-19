@@ -50,7 +50,7 @@ class PartDiseaseTypeType extends AbstractType
             'classtype' => 'sourceOrgan'
         ));
 
-        $builder->add('partothers', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartDiseaseType',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

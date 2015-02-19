@@ -29,7 +29,7 @@ class PatientDobType extends AbstractType
             'attr' => array('class' => 'datepicker form-control patientdob-mask patient-dob-date'), //, 'style'=>'margin-top: 0;'
         ));
 
-        $builder->add('dobothers', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientDob',
             'label' => false,
 			'attr' => array('style'=>'display:none;')

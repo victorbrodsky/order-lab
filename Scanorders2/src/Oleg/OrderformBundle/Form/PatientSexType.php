@@ -32,7 +32,7 @@ class PatientSexType extends AbstractType
             'attr' => array('class' => 'horizontal_type patientsex-field', 'disabled' => 'disabled')
         ));
 
-        $builder->add('sexothers', new ArrayFieldType(), array(
+        $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientSex',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
