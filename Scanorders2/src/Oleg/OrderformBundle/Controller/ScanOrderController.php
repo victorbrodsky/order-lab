@@ -567,7 +567,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
         $dql =  $repository->createQueryBuilder("orderinfo");
         $dql->innerJoin("orderinfo.status", "status");
-        $dql->innerJoin("orderinfo.institution", "institution");
+        //$dql->innerJoin("orderinfo.institution", "institution");
         $dql->where("status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'" . $instStr);
         $query = $em->createQuery($dql);
         $unprocessedOrders = $query->getResult();
@@ -613,7 +613,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("req");
         $dql->innerJoin("req.orderinfo", "orderinfo");
-        $dql->innerJoin("orderinfo.institution", "institution");
+        //$dql->innerJoin("orderinfo.institution", "institution");
         $dql->where("req.status='active'" . $instStr);
         //echo "dql=".$dql;
         $query = $em->createQuery($dql);
@@ -1110,7 +1110,7 @@ class ScanOrderController extends Controller {
         //$dql->having("( (COUNT(orderinfo) > 1) AND (COUNT(status.name) > 1) AND (COUNT(formtype.name) > 1) AND (COUNT(provider.username) > 1) )");
         //$dql->having("( COUNT(orderinfo) > 1 )");
 
-        $dql->innerJoin("orderinfo.institution", "institution");
+        //$dql->innerJoin("orderinfo.institution", "institution");
 
         $dql->innerJoin("orderinfo.provider", "provider");
         $dql->innerJoin("orderinfo.type", "formtype");

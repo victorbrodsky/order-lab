@@ -85,42 +85,12 @@ class History
     private $eventtype;
 
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="history", cascade={"persist"})
-//     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-//     */
-//    private $orderinfo;
-    //Fields specifying a subject entity
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="history", cascade={"persist"})
+     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    private $orderNamespace;
+    private $orderinfo;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $orderName;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $orderId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     */
-    private $orderProvider;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     */
-    private $orderProxyuser;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
-     */
-    private $orderInstitution;
 
 
 
@@ -278,44 +248,15 @@ class History
         return $this->vieweddate;
     }
 
-    //set and get order object as object's simple fields
+
     public function setOrderinfo($order)
     {
-        $this->setOrder($order);
+        $this->orderinfo = $order;
     }
+
     public function getOrderinfo()
     {
-        return $this->getOrder();
-    }
-    public function setOrder($order)
-    {
-        //$this->orderinfo = $order;
-
-        //get classname, order name and id of subject order
-        $class = new \ReflectionClass($order);
-        $className = $class->getShortName();
-        $classNamespace = $class->getNamespaceName();
-
-        //set classname, order name, id, provider and proxyuser of subject order
-        $this->setOrderNamespace($classNamespace);
-        $this->setOrderName($className);
-        $this->setOrderId($order->getId());
-        $this->setOrderProvider($order->getProvider());
-        $this->setOrderProxyuser($order->getProxyuser());
-        $this->setOrderInstitution($order->getInstitution());
-    }
-    public function getOrder()
-    {
-        //return $this->orderinfo;
-        $res = array(
-            'orderNamespace' => $this->getOrderNamespace(),
-            'orderName' => $this->getOrderName(),
-            'orderId' => $this->getOrderId(),
-            'orderProvider' => $this->getOrderProvider(),
-            'orderProxyuser' => $this->getOrderProxyuser(),
-            'orderInstitution' => $this->getOrderInstitution()
-        );
-        return $res;
+        return $this->orderinfo;
     }
 
 
@@ -350,105 +291,6 @@ class History
     {
         return $this->eventtype;
     }
-
-    /**
-     * @param mixed $orderId
-     */
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $orderId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    /**
-     * @param mixed $orderName
-     */
-    public function setOrderName($orderName)
-    {
-        $this->orderName = $orderName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderName()
-    {
-        return $this->orderName;
-    }
-
-    /**
-     * @param mixed $orderNamespace
-     */
-    public function setOrderNamespace($orderNamespace)
-    {
-        $this->orderNamespace = $orderNamespace;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderNamespace()
-    {
-        return $this->orderNamespace;
-    }
-
-    /**
-     * @param mixed $orderProvider
-     */
-    public function setOrderProvider($orderProvider)
-    {
-        $this->orderProvider = $orderProvider;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderProvider()
-    {
-        return $this->orderProvider;
-    }
-
-    /**
-     * @param mixed $orderProxyuser
-     */
-    public function setOrderProxyuser($orderProxyuser)
-    {
-        $this->orderProxyuser = $orderProxyuser;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderProxyuser()
-    {
-        return $this->orderProxyuser;
-    }
-
-    /**
-     * @param mixed $orderInstitution
-     */
-    public function setOrderInstitution($orderInstitution)
-    {
-        $this->orderInstitution = $orderInstitution;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderInstitution()
-    {
-        return $this->orderInstitution;
-    }
-
-
-
 
 
 

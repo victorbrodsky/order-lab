@@ -45,7 +45,10 @@ class Accession extends ObjectAbstract {
      **/
     protected $orderinfo;
 
-
+//    /**
+//     * @ORM\ManyToMany(targetEntity="ResultInfo", mappedBy="accession")
+//     **/
+//    protected $resultinfo;
 
     ///////////////// additional extra fields not shown on scan order /////////////////
     //TODO: manytomany

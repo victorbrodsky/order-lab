@@ -431,13 +431,13 @@ class OrderUtil {
         $dql->select('history');
         $dql->leftJoin("history.eventtype", "eventtype");
 
-        //$dql->innerJoin("history.orderinfo", "orderinfo");
-        //$dql->innerJoin("orderinfo.provider", "provider");
-        //$dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+        $dql->innerJoin("history.orderinfo", "orderinfo");
+        $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
-        $dql->innerJoin("history.orderProvider", "provider");
-        $dql->leftJoin("history.orderProxyuser", "proxyuser");
-        $dql->leftJoin("history.orderInstitution", "institution");
+        //$dql->innerJoin("history.orderProvider", "provider");
+        //$dql->leftJoin("history.orderProxyuser", "proxyuser");
+        //$dql->leftJoin("history.orderInstitution", "institution");
 
         $criteriastr = $this->getCommentsCriteriaStr(null, $flag);
 
@@ -520,8 +520,8 @@ class OrderUtil {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }
-            //$instStr = $instStr . 'orderinfo.institution='.$inst->getId();
-            $instStr = $instStr . 'institution='.$inst->getId();
+            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+            //$instStr = $instStr . 'institution='.$inst->getId();
         }
         if( $instStr == "" ) {
             $instStr = "1=0";

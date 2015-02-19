@@ -72,16 +72,16 @@ class OrderInfo extends OrderAbstract {
 //     */
 //    private $equipment;
 
-    /**
-     * History of the order
-     *
-     * @ORM\ManyToMany(targetEntity="History")
-     * @ORM\JoinTable(name="scan_orderinfo_history",
-     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id", unique=true)}
-     *      )
-     **/
-    private $history;
+//    /**
+//     * History of the order
+//     *
+//     * @ORM\ManyToMany(targetEntity="History")
+//     * @ORM\JoinTable(name="scan_orderinfo_history",
+//     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id", unique=true)}
+//     *      )
+//     **/
+//    private $history;
 
 
     //    /**
@@ -132,10 +132,10 @@ class OrderInfo extends OrderAbstract {
 //     */
 //    private $dataqualitymrnacc;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
-//     */
-//    private $history;
+    /**
+     * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
+     */
+    private $history;
 
 
 
@@ -395,7 +395,6 @@ class OrderInfo extends OrderAbstract {
     {
         if( !$this->history->contains($history) ) {
             $this->history->add($history);
-            $history->setOrder($this);
         }
     }
     public function removeHistory($history)
