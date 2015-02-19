@@ -8,6 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
+ * Holder of different orders (i.e. scanorder, laborder)
+ *
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrderInfoRepository")
  * @ORM\Table(name="scan_orderinfo",
  *  indexes={
@@ -18,11 +20,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class OrderInfo extends OrderAbstract {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
-     * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
-     */
-    private $status;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
+//     * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $status;
 
     /**
      * oid - id of the original order.
@@ -137,7 +139,17 @@ class OrderInfo extends OrderAbstract {
      */
     private $history;
 
-
+    /**
+     * Tracking: can be many
+     * One-To-Many unidirectional with Join table
+     *
+     * @ORM\ManyToMany(targetEntity="Tracking")
+     * @ORM\JoinTable(name="scan_orderinfo_tracking",
+     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="tracking_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $tracking;
 
 
     /////////////////    OBJECTS    //////////////////////
@@ -194,7 +206,10 @@ class OrderInfo extends OrderAbstract {
      **/
     private $scanorder;
 
-
+    /**
+     * @ORM\OneToOne(targetEntity="LabOrder", inversedBy="orderinfo", cascade={"persist","remove"})
+     */
+    private $laborder;
 
 
     ////////////////////////// EOF Specific Orders //////////////////////////
@@ -216,12 +231,15 @@ class OrderInfo extends OrderAbstract {
         $this->slide = new ArrayCollection();
         //$this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
+        $this->tracking = new ArrayCollection();
 
         //Initialize specific orders
         if( !$this->getScanorder() ) {
             $this->setScanorder(new ScanOrder());
         }
-
+        if( !$this->getLaborder() ) {
+            $this->setLaborder(new LabOrder());
+        }
     }
 
     public function __clone() {
@@ -248,11 +266,13 @@ class OrderInfo extends OrderAbstract {
             $proxyuser = $this->getProxyuser();
             //$dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
             $histories = $this->getHistory();
+            $trackings = $this->getTracking();
 
             //$this->setProvider( new ArrayCollection() );
             //$this->proxyuser = new ArrayCollection();
             //$this->dataqualitymrnacc = new ArrayCollection();
             $this->history = new ArrayCollection();
+            $this->tracking = new ArrayCollection();
 
             $this->setProvider( $provider );
             $this->setProxyuser( $proxyuser );
@@ -263,6 +283,10 @@ class OrderInfo extends OrderAbstract {
 
             foreach( $histories as $history ) {
                 $this->addHistory($history);
+            }
+
+            foreach( $trackings as $tracking ) {
+                $this->addTracking($tracking);
             }
 
             foreach( $children as $child ) {
@@ -402,6 +426,22 @@ class OrderInfo extends OrderAbstract {
         $this->history->removeElement($history);
     }
 
+    public function getTracking()
+    {
+        return $this->tracking;
+    }
+    public function addTracking($tracking)
+    {
+        if( $tracking && !$this->tracking->contains($tracking) ) {
+            $this->tracking->add($tracking);
+        }
+        return $this;
+    }
+    public function removeTracking($tracking)
+    {
+        $this->tracking->removeElement($tracking);
+    }
+
 
 //    /**
 //     * Set slideDelivery
@@ -439,13 +479,13 @@ class OrderInfo extends OrderAbstract {
 //        return $this->returnSlide;
 //    }
 
-    public function getStatus() {
-        return $this->status;
-    }
-
-    public function setStatus($status) {
-        $this->status = $status;
-    }
+//    public function getStatus() {
+//        return $this->status;
+//    }
+//
+//    public function setStatus($status) {
+//        $this->status = $status;
+//    }
 
     /**
      * @param mixed $account
@@ -829,6 +869,23 @@ class OrderInfo extends OrderAbstract {
     {
         return $this->scanorder;
     }
+
+    /**
+     * @param mixed $laborder
+     */
+    public function setLaborder($laborder)
+    {
+        $this->laborder = $laborder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLaborder()
+    {
+        return $this->laborder;
+    }
+
 
     /////////////////////// EOF Getters and Setters of Specific Orders ///////////////////////
 

@@ -52,11 +52,11 @@ class Procedure extends ObjectAbstract
      */
     private $location;
 
-    /**
-     * Procedure order
-     * @ORM\OneToMany(targetEntity="ProcedureOrder", mappedBy="procedure", cascade={"persist"})
-     */
-    private $order;
+//    /**
+//     * Procedure order
+//     * @ORM\OneToMany(targetEntity="ProcedureOrder", mappedBy="procedure", cascade={"persist"})
+//     */
+//    private $order;
 
     /**
      * @ORM\OneToMany(targetEntity="ProcedureDate", mappedBy="procedure", cascade={"persist"})
@@ -75,7 +75,7 @@ class Procedure extends ObjectAbstract
 
         //extra
         $this->location = new ArrayCollection();
-        $this->order = new ArrayCollection();
+        //$this->order = new ArrayCollection();
         $this->date = new ArrayCollection();
 
         if( $withfields ) {
@@ -94,7 +94,7 @@ class Procedure extends ObjectAbstract
 
         //extra fields
         $this->location = $this->cloneDepend($this->location,$this);
-        $this->order = $this->cloneDepend($this->order,$this);
+        //$this->order = $this->cloneDepend($this->order,$this);
         $this->date = $this->cloneDepend($this->date,$this);
     }
 
@@ -234,7 +234,7 @@ class Procedure extends ObjectAbstract
     ///////////////////////// Extra fields /////////////////////////
     public function addExtraFields($status,$provider,$source) {
         $this->addLocation( new ProcedureLocation($status,$provider,$source) );
-        $this->addOrder( new ProcedureOrder($status,$provider,$source) );
+        //$this->addOrder( new ProcedureOrder($status,$provider,$source) );
         $this->addDate( new ProcedureDate($status,$provider,$source) );
     }
 
@@ -256,31 +256,25 @@ class Procedure extends ObjectAbstract
         $this->location->removeElement($location);
     }
 
-    public function getOrder()
-    {
-        return $this->order;
-    }
-    public function addOrder($order)
-    {
-        if( $order && !$this->order->contains($order) ) {
-            $this->order->add($order);
-            $order->setProcedure($this);
-        }
-
-        return $this;
-    }
-    public function removeOrder($order)
-    {
-        $this->order->removeElement($order);
-    }
-
-//    /**
-//     * @param mixed $date
-//     */
-//    public function setDate($date)
+//    public function getOrder()
 //    {
-//        $this->date = $date;
+//        return $this->order;
 //    }
+//    public function addOrder($order)
+//    {
+//        if( $order && !$this->order->contains($order) ) {
+//            $this->order->add($order);
+//            $order->setProcedure($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeOrder($order)
+//    {
+//        $this->order->removeElement($order);
+//    }
+
+
     /**
      * @return mixed
      */
@@ -290,9 +284,6 @@ class Procedure extends ObjectAbstract
     }
     public function addDate($date)
     {
-//        if( $date == null ) {
-//            $date = new ProcedureDate();
-//        }
         if( $date && !$this->date->contains($date) ) {
             $this->date->add($date);
             $date->setProcedure($this);
@@ -367,9 +358,9 @@ class Procedure extends ObjectAbstract
 
     public function getArrayFields() {
         $fieldsArr = array(
-            'Number','Name','Date',
+            'Number','Name',
             //extra fields
-            'Location', 'Order'
+            'Location','Date'
         );
         return $fieldsArr;
     }

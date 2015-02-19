@@ -65,25 +65,26 @@ class AccessionType extends AbstractType
 
             //echo "accession flag datastructure=".$this->params['datastructure']."<br>";
 
-            $builder->add('laborder', 'collection', array(
-                'type' => new AccessionLaborderType($this->params, null),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__accessionlaborder__',
-            ));
+            //TODO: create orderinfo type to display: order id, type, source ...
+//            $builder->add('laborder', 'collection', array(
+//                'type' => new LabOrderType($this->params, null),
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'required' => false,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__accessionlaborder__',
+//            ));
 
-            $builder->add('outsidereport', 'collection', array(
-                'type' => new AccessionOutsidereportType($this->params, null),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__accessionoutsidereport__',
-            ));
+//            $builder->add('outsidereport', 'collection', array(
+//                'type' => new AccessionOutsidereportType($this->params, null),
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'required' => false,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__accessionoutsidereport__',
+//            ));
 
         }
         

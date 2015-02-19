@@ -82,17 +82,17 @@ class ProcedureType extends AbstractType
                 'prototype_name' => '__procedurelocation__',
             ));
 
-            $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
-            $params = array('name'=>'Procedure','dataClass'=>'Oleg\OrderformBundle\Entity\ProcedureOrder','typename'=>'procedureorder','sources'=>$sources);
-            $builder->add('order', 'collection', array(
-                'type' => new GeneralOrderType($params, null),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__procedureorder__',
-            ));
+//            $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
+//            $params = array('name'=>'Procedure','dataClass'=>'Oleg\OrderformBundle\Entity\ProcedureOrder','typename'=>'procedureorder','sources'=>$sources);
+//            $builder->add('order', 'collection', array(
+//                'type' => new GeneralOrderType($params, null),
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'required' => false,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__procedureorder__',
+//            ));
 
         }
 

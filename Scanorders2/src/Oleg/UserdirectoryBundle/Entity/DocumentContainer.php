@@ -31,7 +31,7 @@ class DocumentContainer {
     /**
      * @ORM\ManyToMany(targetEntity="Document")
      * @ORM\JoinTable(name="user_documentcontainer_document",
-     *      joinColumns={@ORM\JoinColumn(name="accessionlaborder_id", referencedColumnName="id")},
+     *      joinColumns={@ORM\JoinColumn(name="documentcontainer_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id")}
      *      )
      **/

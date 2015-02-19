@@ -15,6 +15,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class SlideReturnRequest extends OrderAbstract {
 
     /**
+     * Overwrite abstract status variable: Status object to string (active, declined, approved)
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     protected $status;
@@ -48,10 +50,10 @@ class SlideReturnRequest extends OrderAbstract {
      */
     protected $orderinfo;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $comment;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $comment;
 
 //    /**
 //     * Return slide(s) by this date even if not scanned

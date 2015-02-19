@@ -51,16 +51,15 @@ class Accession extends ObjectAbstract {
 //    protected $resultinfo;
 
     ///////////////// additional extra fields not shown on scan order /////////////////
-    //TODO: manytomany
-    /**
-     * @ORM\OneToMany(targetEntity="AccessionLaborder", mappedBy="accession", cascade={"persist"})
-     */
-    private $laborder;
+//    /**
+//     * @ORM\OneToMany(targetEntity="AccessionLaborder", mappedBy="accession", cascade={"persist"})
+//     */
+//    private $laborder;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AccessionOutsidereport", mappedBy="accession", cascade={"persist"})
-     */
-    private $outsidereport;
+//    /**
+//     * @ORM\OneToMany(targetEntity="AccessionOutsidereport", mappedBy="accession", cascade={"persist"})
+//     */
+//    private $outsidereport;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
@@ -74,15 +73,15 @@ class Accession extends ObjectAbstract {
         $this->accessionDate = new ArrayCollection();
 
         //extra
-        $this->laborder = new ArrayCollection();
-        $this->outsidereport = new ArrayCollection();
+        //$this->laborder = new ArrayCollection();
+        //$this->outsidereport = new ArrayCollection();
 
         if( $withfields ) {
             $this->addAccession( new AccessionAccession($status,$provider,$source) );
             $this->addAccessionDate( new AccessionAccessionDate($status,$provider,$source) );
 
             //testing data structure
-            $this->addExtraFields($status,$provider,$source);
+            //$this->addExtraFields($status,$provider,$source);
         }
     }
 
@@ -91,8 +90,8 @@ class Accession extends ObjectAbstract {
         $this->accessionDate = $this->cloneDepend($this->accessionDate,$this);
 
         //extra fields
-        $this->laborder = $this->cloneDepend($this->laborder,$this);
-        $this->outsidereport = $this->cloneDepend($this->outsidereport,$this);
+        //$this->laborder = $this->cloneDepend($this->laborder,$this);
+        //$this->outsidereport = $this->cloneDepend($this->outsidereport,$this);
     }
 
     public function __toString()
@@ -259,45 +258,45 @@ class Accession extends ObjectAbstract {
 
     ///////////////////////// Extra fields /////////////////////////
     public function addExtraFields($status,$provider,$source) {
-        $this->addLaborder( new AccessionLaborder($status,$provider,$source) );
-        $this->addOutsidereport( new AccessionOutsidereport($status,$provider,$source) );
+        //$this->addLaborder( new AccessionLaborder($status,$provider,$source) );
+        //$this->addOutsidereport( new AccessionOutsidereport($status,$provider,$source) );
     }
 
-    public function getLaborder()
-    {
-        return $this->laborder;
-    }
-    public function addLaborder($laborder)
-    {
-        if( $laborder && !$this->laborder->contains($laborder) ) {
-            $this->laborder->add($laborder);
-            $laborder->setAccession($this);
-        }
+//    public function getLaborder()
+//    {
+//        return $this->laborder;
+//    }
+//    public function addLaborder($laborder)
+//    {
+//        if( $laborder && !$this->laborder->contains($laborder) ) {
+//            $this->laborder->add($laborder);
+//            $laborder->setAccession($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeLaborder($laborder)
+//    {
+//        $this->laborder->removeElement($laborder);
+//    }
 
-        return $this;
-    }
-    public function removeLaborder($laborder)
-    {
-        $this->laborder->removeElement($laborder);
-    }
-
-    public function getOutsidereport()
-    {
-        return $this->outsidereport;
-    }
-    public function addOutsidereport($outsidereport)
-    {
-        if( $outsidereport && !$this->outsidereport->contains($outsidereport) ) {
-            $this->outsidereport->add($outsidereport);
-            $outsidereport->setAccession($this);
-        }
-
-        return $this;
-    }
-    public function removeOutsidereport($outsidereport)
-    {
-        $this->outsidereport->removeElement($outsidereport);
-    }
+//    public function getOutsidereport()
+//    {
+//        return $this->outsidereport;
+//    }
+//    public function addOutsidereport($outsidereport)
+//    {
+//        if( $outsidereport && !$this->outsidereport->contains($outsidereport) ) {
+//            $this->outsidereport->add($outsidereport);
+//            $outsidereport->setAccession($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeOutsidereport($outsidereport)
+//    {
+//        $this->outsidereport->removeElement($outsidereport);
+//    }
     ///////////////////////// EOF Extra fields /////////////////////////
 
 
@@ -361,7 +360,7 @@ class Accession extends ObjectAbstract {
         $fieldsArr = array(
             'Accession', 'AccessionDate',
             //extra fields
-            'Laborder', 'Outsidereport'
+            //'Laborder', 'Outsidereport'
         );
         return $fieldsArr;
     }

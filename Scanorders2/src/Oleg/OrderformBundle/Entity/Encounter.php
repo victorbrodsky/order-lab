@@ -93,11 +93,11 @@ class Encounter extends ObjectAbstract
      */
     private $location;
 
-    /**
-     * Encounter order
-     * @ORM\OneToMany(targetEntity="EncounterOrder", mappedBy="encounter", cascade={"persist"})
-     */
-    private $order;
+//    /**
+//     * Encounter order
+//     * @ORM\OneToMany(targetEntity="EncounterOrder", mappedBy="encounter", cascade={"persist"})
+//     */
+//    private $order;
 
     /**
      * @ORM\OneToMany(targetEntity="EncounterInpatientinfo", mappedBy="encounter", cascade={"persist"})
@@ -127,7 +127,7 @@ class Encounter extends ObjectAbstract
 
         //extra
         $this->location = new ArrayCollection();
-        $this->order = new ArrayCollection();
+        //$this->order = new ArrayCollection();
         $this->inpatientinfo = new ArrayCollection();
 
         if( $withfields ) {
@@ -161,7 +161,7 @@ class Encounter extends ObjectAbstract
 
         //extra fields
         $this->location = $this->cloneDepend($this->location,$this);
-        $this->order = $this->cloneDepend($this->order,$this);
+        //$this->order = $this->cloneDepend($this->order,$this);
         $this->inpatientinfo = $this->cloneDepend($this->inpatientinfo,$this);
     }
 
@@ -549,7 +549,7 @@ class Encounter extends ObjectAbstract
     ///////////////////////// Extra fields /////////////////////////
     public function addExtraFields($status,$provider,$source) {
         $this->addLocation( new EncounterLocation($status,$provider,$source) );
-        $this->addOrder( new EncounterOrder($status,$provider,$source) );
+        //$this->addOrder( new EncounterOrder($status,$provider,$source) );
         $this->addInpatientinfo( new EncounterInpatientinfo($status,$provider,$source) );
 
     }
@@ -572,23 +572,23 @@ class Encounter extends ObjectAbstract
         $this->location->removeElement($location);
     }
 
-    public function getOrder()
-    {
-        return $this->order;
-    }
-    public function addOrder($order)
-    {
-        if( $order && !$this->order->contains($order) ) {
-            $this->order->add($order);
-            $order->setEncounter($this);
-        }
-
-        return $this;
-    }
-    public function removeOrder($order)
-    {
-        $this->order->removeElement($order);
-    }
+//    public function getOrder()
+//    {
+//        return $this->order;
+//    }
+//    public function addOrder($order)
+//    {
+//        if( $order && !$this->order->contains($order) ) {
+//            $this->order->add($order);
+//            $order->setEncounter($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeOrder($order)
+//    {
+//        $this->order->removeElement($order);
+//    }
 
     public function getInpatientinfo()
     {
@@ -700,7 +700,7 @@ class Encounter extends ObjectAbstract
         $fieldsArr = array(
             'Name','Number','Date','Patsuffix','Patlastname','Patfirstname','Patmiddlename','Patage','Patsex','Pathistory',
             //extra fields
-            'Location', 'Order', 'Inpatientinfo'
+            'Location', 'Inpatientinfo' //'Order'
         );
         return $fieldsArr;
     }

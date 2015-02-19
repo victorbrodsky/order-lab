@@ -21,10 +21,10 @@ class Status extends ListAbstract
      */
     protected $action;
 
-    /**
-     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="status")
-     */
-    protected $orderinfo;
+//    /**
+//     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="status")
+//     */
+//    protected $orderinfo;
 
     /**
      * @ORM\OneToMany(targetEntity="Status", mappedBy="original", cascade={"persist"})
@@ -38,14 +38,14 @@ class Status extends ListAbstract
     protected $original;
 
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->orderinfo = new ArrayCollection();
-        $this->synonyms = new ArrayCollection();
-    }
+//    /**
+//     * Constructor
+//     */
+//    public function __construct()
+//    {
+//        //$this->orderinfo = new ArrayCollection();
+//        $this->synonyms = new ArrayCollection();
+//    }
 
     public function __toString() {
         return $this->name;
@@ -74,37 +74,37 @@ class Status extends ListAbstract
         return $this->action;
     }
 
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Status
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        //echo "Status addOrderinfo=".$orderinfo."<br>";
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
+//    /**
+//     * Add orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     * @return Status
+//     */
+//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        //echo "Status addOrderinfo=".$orderinfo."<br>";
+//        if( !$this->orderinfo->contains($orderinfo) ) {
+//            $this->orderinfo->add($orderinfo);
+//        }
+//    }
+//
+//    /**
+//     * Remove orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     */
+//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        $this->orderinfo->removeElement($orderinfo);
+//    }
+//
+//    /**
+//     * Get orderinfo
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getOrderinfo()
+//    {
+//        return $this->orderinfo;
+//    }
 }

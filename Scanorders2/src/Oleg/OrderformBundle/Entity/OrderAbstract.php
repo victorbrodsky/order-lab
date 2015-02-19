@@ -24,6 +24,21 @@ class OrderAbstract {
     protected $id;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $ordername;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $ordernumber;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $comment;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="orderdate", type="datetime", nullable=true)
@@ -61,8 +76,20 @@ class OrderAbstract {
      */
     protected $source;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Status")
+     * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
+     */
+    protected $status;
 
 
+
+    /**
+     * Order source location
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     */
+    private $sourceLocation;
 
     /**
      * Order priority: routine, stat
@@ -86,27 +113,29 @@ class OrderAbstract {
     protected $returnoption;
 
     /**
-     * Order delivery: I'll give slides to ...
+     * Order delivery (string): I'll give slides to ...
      *
      * @ORM\Column(type="string", nullable=true)
      */
     protected $delivery;
 
     /**
-     * Return Location
+     * Return Location (object)
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
      **/
     protected $returnLocation;
 
     /**
-     * Purpose of Order
+     * Purpose of Order (string)
      *
      * @ORM\Column(type="string", nullable=true)
      */
     protected $purpose;
 
     /**
+     * Equipment associated with this order (object)
+     *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
      */
     protected $equipment;
@@ -127,6 +156,54 @@ class OrderAbstract {
     {
         $this->id = $id;
         return $id;
+    }
+
+    /**
+     * @param mixed $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param mixed $ordername
+     */
+    public function setOrdername($ordername)
+    {
+        $this->ordername = $ordername;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrdername()
+    {
+        return $this->ordername;
+    }
+
+    /**
+     * @param mixed $ordernumber
+     */
+    public function setOrdernumber($ordernumber)
+    {
+        $this->ordernumber = $ordernumber;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrdernumber()
+    {
+        return $this->ordernumber;
     }
 
     /**
@@ -329,6 +406,38 @@ class OrderAbstract {
     public function getEquipment()
     {
         return $this->equipment;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $sourceLocation
+     */
+    public function setSourceLocation($sourceLocation)
+    {
+        $this->sourceLocation = $sourceLocation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSourceLocation()
+    {
+        return $this->sourceLocation;
     }
 
 

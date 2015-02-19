@@ -1159,7 +1159,7 @@
 
         {{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}
 
-        {{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}
+        {#{{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}#}
 
     </div>
 {% endmacro %}
@@ -1359,9 +1359,9 @@
             {{ formmacros.inputArrayField(encounter.location,cycle,"encounterlocation","","","","",status) }}
         {% endif %}
 
-        {% if encounter.order is defined %}
-            {% for order in encounter.order %}
-                {{ formmacros.fieldGeneralOrder(order,cycle) }}
+        {% if encounter.orderinfo is defined %}
+            {% for orderinfo in encounter.orderinfo %}
+                {{ formmacros.fieldGeneralOrder(orderinfo,cycle) }}
             {% endfor %}
         {% endif %}
 
@@ -1395,9 +1395,9 @@
             {{ formmacros.inputArrayField(procedure.location,cycle,"procedurelocation","","","","",status) }}
         {% endif %}
 
-        {% if procedure.order is defined %}
-            {% for order in procedure.order %}
-                {{ formmacros.fieldGeneralOrder(order,cycle) }}
+        {% if procedure.orderinfo is defined %}
+            {% for orderinfo in procedure.orderinfo %}
+                {{ formmacros.fieldGeneralOrder(orderinfo,cycle) }}
             {% endfor %}
         {% endif %}
 

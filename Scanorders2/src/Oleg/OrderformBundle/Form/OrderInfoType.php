@@ -274,6 +274,11 @@ class OrderInfoType extends AbstractType
             'label' => false
         ));
 
+//        $builder->add('laborder', new LabOrderType($this->params), array(
+//            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
+//            'label' => false
+//        ));
+
         ////////////////////////// EOF Specific Orders //////////////////////////
         
     }

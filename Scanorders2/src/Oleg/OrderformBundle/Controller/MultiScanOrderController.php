@@ -775,7 +775,7 @@ class MultiScanOrderController extends Controller {
             //$history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
             $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
             $dql = $repository->createQueryBuilder("h");
-            //$dql->innerJoin("h.orderinfo", "orderinfo");
+            $dql->innerJoin("h.orderinfo", "orderinfo");
             $dql->innerJoin("h.eventtype", "eventtype");
             $dql->where("h.currentid = :oid AND (eventtype.name = 'Initial Order Submission' OR eventtype.name = 'Status Changed' OR eventtype.name = 'Amended Order Submission')");
             $dql->orderBy('h.changedate','DESC');
