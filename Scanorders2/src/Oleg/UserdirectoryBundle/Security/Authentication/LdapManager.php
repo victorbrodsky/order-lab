@@ -29,6 +29,8 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 class LdapManager extends BaseLdapManager
 {
 
+    private $logger;
+
     private $timezone;
     private $em;
     private $container;
@@ -42,6 +44,8 @@ class LdapManager extends BaseLdapManager
         //print_r($params);
         //exit("constractor ldap <br>");
 
+        $this->logger = $container->get('logger');
+
         parent::__construct($driver,$userManager,$params);
 
         $this->timezone = $container->getParameter('default_time_zone');
@@ -51,22 +55,25 @@ class LdapManager extends BaseLdapManager
 
 
 
-
+    //username can be in form of nyh\cap9083, so it must purify for DB lookup
     public function findUserByUsername($username)
     {
 
-        //exit('username='.$username);
+        //exit('findUserByUsername: username='.$username);
 
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $pureName = $this->cleanUsernamePrefix($username);
+        echo "pureName=".$pureName."<br>";
+
         //check if username is valid (has prefix)
-        if( $userSecUtil->usernameIsValid($username) !== true ) {
+        if( $userSecUtil->usernameIsValid($pureName) !== true ) {
             //exit('not valid');
-            throw new BadCredentialsException('The usertype '.$username.' is not valid.');
+            throw new BadCredentialsException('The username '.$pureName.' is not valid.');
         }
 
         //don't authenticate users without WCMC CWID keytype
-        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($pureName);
         if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
             //exit('LDAP Authentication error');
             throw new BadCredentialsException('LDAP Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
@@ -76,12 +83,17 @@ class LdapManager extends BaseLdapManager
         //echo "usernamePrefix=".$usernamePrefix."<br>";
 
         //clean username
-        $usernameClean = $userSecUtil->createCleanUsername($username);
-        //echo "usernameClean=".$usernameClean."<br>";
+        $usernameClean = $userSecUtil->createCleanUsername($pureName);
+        echo "usernameClean=".$usernameClean."<br>";
 
         $user =  parent::findUserByUsername($usernameClean);
 
-        //echo "<br>user=".$user->getUsername()."<br>";
+        if( !$user ) {
+            $this->logger->warning('User not found with username='.$usernameClean);
+            exit('User not found with username='.$usernameClean);
+        }
+
+        echo "<br>found user=".$user->getUsername()."<br>";
         //exit('after find');
 
         //set original username with prefix
@@ -135,9 +147,9 @@ class LdapManager extends BaseLdapManager
         //replace admin title by object
         $userUtil->replaceAdminTitleByObject($user,null,$this->em,$this->container);
 
-        //echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
-        //echo "user's username=".$user->getUsername()." <br>";
-        //echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
+        echo "<br>hydrate: user's keytype=".$user->getKeytype()." <br>";
+        echo "user's username=".$user->getUsername()." <br>";
+        echo "user's primaryPublicUserId=".$user->getPrimaryPublicUserId()." <br>";
         //print_r($user->getRoles());
         //exit('exit hydrate');
 
@@ -145,7 +157,8 @@ class LdapManager extends BaseLdapManager
 
     public function bind(UserInterface $user, $password)
     {
-        //echo "before: user's username=".$user->getUsername()." <br>";
+        //exit('<br>bind: username='.$user->getUsername());
+        echo "<br>before: user's username=".$user->getUsername()." <br>";
 
         $originalUsername = $user->getUsername();
 
@@ -160,9 +173,11 @@ class LdapManager extends BaseLdapManager
         //always clean username before bind, use primaryPublicUserId
         $user->setUsernameForce( $user->getPrimaryPublicUserId() );
 
+        echo "<br>before parent bind: user's username=[".$user->getUsername()."]<br>";
+
         $bindRes = parent::bind($user, $password);
 
-        //echo "bindRes=".$bindRes."<br>";
+        echo "bindRes=".$bindRes."<br>";
         //exit();
 
         if( $bindRes ) {
@@ -170,11 +185,14 @@ class LdapManager extends BaseLdapManager
             $user->setUsernameForce( $originalUsername );
             //replace only username
             $user->setUniqueUsername();
+        } else {
+            $this->logger->warning('Bind failed. bindRes='.$bindRes.", username=".$user->getUsername());
         }
 
+        //testing: check the user's bind result
         //echo "after: user's username=".$user->getUsername()." <br>";
-        //echo "<br>bindRes=".$bindRes."<br>";
-        //exit('exit bind');
+        echo "<br>bindRes=".$bindRes."<br>";
+        exit('exit bind');
 
         return $bindRes;
     }
@@ -186,6 +204,18 @@ class LdapManager extends BaseLdapManager
 //        $count_usernameTypeList = $userutil->generateUsernameTypes($this->em);
 //        echo "generated user types=".$count_usernameTypeList."<br>";
 //    }
+
+    //get rid of "nyh/" prefix
+     public function cleanUsernamePrefix( $username ) {
+         //return $username;
+         $separator = "\\";
+         if( strpos($username,$separator) !== false ) {
+            $usernameArr = explode($separator,$username);
+            return $usernameArr[1];
+         } else {
+             return $username;
+         }
+    }
 
 
 }

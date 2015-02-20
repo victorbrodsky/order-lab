@@ -116,6 +116,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         //echo "aDLDAPServerAddress=".$aDLDAPServerAddress."<br>";
         //exit("aDLDAPServerAddress=".$aDLDAPServerAddress);
 
+        //testing
+        $aDLDAPServerAddress = null;
+
         if( $aDLDAPServerAddress && $aDLDAPServerAddress != "" ) {
 
             //get baseDn from $aDLDAPServerOu or $aDLDAPServerAddress: a.wcmc-ad.net => dc=a,dc=wcmc-ad,dc=net

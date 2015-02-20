@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping\AttributeOverrides;
 use Doctrine\ORM\Mapping\AttributeOverride;
 
 use FOS\UserBundle\Model\User as BaseUser;
+use FR3D\LdapBundle\Model\LdapUserInterface;
 
 //Use FOSUser bundle: https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md
 //User is a reserved keyword in SQL so you cannot use it as table name
@@ -33,7 +34,7 @@ use FOS\UserBundle\Model\User as BaseUser;
  * )
  * @ORM\AttributeOverrides({ @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) ) })
  */
-class User extends BaseUser
+class User extends BaseUser implements LdapUserInterface
 {
     /**
      * @ORM\Id
@@ -41,6 +42,12 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * Ldap Object Distinguished Name
+     * @var string $dn
+     */
+    private $dn;
 
     /**
      * Primary Public User ID Type
@@ -180,8 +187,21 @@ class User extends BaseUser
         parent::__construct();
     }
 
+    /**
+     * @param string $dn
+     */
+    public function setDn($dn)
+    {
+        $this->dn = $dn;
+    }
 
-
+    /**
+     * @return string
+     */
+    public function getDn()
+    {
+        return $this->dn;
+    }
 
     public function setIdNull() {
         $this->id = null;
