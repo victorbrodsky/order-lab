@@ -50,28 +50,30 @@ parameters:
 #experimental
 fr3d_ldap:
     driver:
-        #host: cumcdcp02.a.wcmc-ad.net
-        host: a.wcmc-ad.net
+        host: cumcdcp02.a.wcmc-ad.net
+        #host: a.wcmc-ad.net
         #       port:         389    # Optional
+        #version:  3
         username: svc_aperio_spectrum
         password: Aperi0,123
         accountDomainName: a.wcmc-ad.net
-        #       optReferrals: false  # Optional
+        optReferrals: 0  # Optional
         #useSsl:       true   # Enable SSL negotiation. Optional
         #useStartTls:  true   # Enable TLS negotiation. Optional
     user:
-        #baseDn: CN=Users,dc=a,dc=wcmc-ad,dc=net
+        #baseDn: CN=Users,dc=a,dc=wcmc-ad    ,dc=net
         baseDn: CN=Users,DC=a,DC=wcmc-ad,DC=net
-        filter: (&(ObjectClass=Person))
+        #baseDn: DC=a,DC=wcmc-ad,DC=net
+        filter: (&(ObjectClass=user))
         #filter: (&(cn=%s))
         attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
-                - { ldap_attr: cn,   user_method: setUsername }
+                - { ldap_attr: samaccountname,   user_method: setUsername }
+                #- { ldap_attr: cn,   user_method: setUsername }
                 - { ldap_attr: mail,   user_method: setEmail }
                 - { ldap_attr: title,   user_method: setTitle }
                 - { ldap_attr: sn,   user_method: setLastName }
                 - { ldap_attr: givenname,   user_method: setFirstName }
                 - { ldap_attr: displayname,   user_method: setDisplayName }
-                #- { ldap_attr: samaccountname,   user_method: setUsername }
     service:
         ldap_manager:  oleg.security.ldap_manager
 

@@ -50,6 +50,10 @@ class AperioUtil {
 
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
+        //check if user exists in LDAP using cDataClient AddNewUser
+        $AuthResult = $this->AperioAddNewUser( $usernameClean, $token->getCredentials() );
+
+        //check if user exists in Aperio DB
         $AuthResult = $this->AperioAuth( $usernameClean, $token->getCredentials() );
 
         //print_r($AuthResult);
@@ -378,5 +382,70 @@ class AperioUtil {
     public function errorTest() {
         trigger_error("DataServer timed-out after 10 seconds when trying to load this page.  Please wait a moment and try again by pressing the refresh button.", E_USER_ERROR);
     }
+
+
+
+
+
+    public function AperioAddNewUser($loginName, $password) {
+        //AddNewUser ($FullName, $PhoneNumber, $Email, $LoginName, $Password, $UserMustChangePassword, $DisableLicenseWarning, $ViewingMode)
+
+        $DataServerURL = GetDataServerURL();
+        echo "DataServerURL=".$DataServerURL."<br>";  //$DataServerURL = "http://127.0.0.1:86";
+
+        $client = new \Aperio_Aperio($DataServerURL);
+
+        $FullName = "testFullName1";
+        $PhoneNumber = "testPhoneNumber";
+        $Email = "testEmail";
+        $LoginName = $loginName;
+        $Password = $password;
+        $UserMustChangePassword = GetParm('UserMustChangePassword', 'False');
+        $DisableLicenseWarning = GetParm('DisableLicenseWarning', 'False');
+        $ViewingMode = GetParm('ViewingMode', '');
+
+        $StartPage = "";
+        $ExpireTime = GetParm('ExpireTime', '');
+        $ImageTransferNotificationEmail = "";
+        $AuthType = "Spectrum"; //"Negotiate";
+        $ExternalId = '';
+        $ExternalLoginName = $LoginName;
+        $DisableAutoSlideFlip = '';
+        $DisableWorkflowEmailNotification = '';
+
+        $UserId = $client->AddNewUser($FullName, $PhoneNumber, $Email, $LoginName, $Password, $UserMustChangePassword, $DisableLicenseWarning, $ViewingMode);
+
+//        $UserId = ADB_AddNewUser(
+//            $FullName, $PhoneNumber, $Email, $LoginName, $Password,
+//            $UserMustChangePassword, urldecode($StartPage), $DisableLicenseWarning, $ExpireTime,
+//            $ImageTransferNotificationEmail,
+//            $AuthType,
+//            $ExternalId, $ExternalLoginName,
+//            $ViewingMode, $DisableAutoSlideFlip, $DisableWorkflowEmailNotification
+//        );
+
+        print_r($UserId);
+
+        if (is_object($UserId))
+        {
+            ReturnError($UserId->ASMessage);
+        }
+
+    }
+//    // Try to return the requested parameter.
+//    // If the parameter was not found, either return the supplied Default, or throw an error
+//    function GetParm($parmKey, $Default = NULL)
+//    {
+//        if (isset($_SESSION['CurrentParms'][$parmKey]))
+//            return $_SESSION['CurrentParms'][$parmKey];
+//
+//        // Return the supplied default or blow up
+//        if (isset($Default))
+//            return $Default;
+//        // else
+//        trigger_error("Required parameter '$parmKey' not passed to page");
+//    }
+
+
 
 }

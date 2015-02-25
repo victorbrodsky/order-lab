@@ -15,13 +15,29 @@ $SearchField="cn";	//"samaccountname";   		//In what Active Directory field do y
   //Try user credentials
   $LDAPUser = "svc_aperio_spectrum";        			
   $LDAPUserPassword = "Aperi0,123";
+  $username = $LDAPUser.$LDAPUserDomain;
   
   $LDAPFieldsToFind = array("cn", "samaccountname", "mail");
   
   $cnx = ldap_connect($LDAPHost) or die("Could not connect to LDAP");
   
-  //ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);  //Set the LDAP Protocol used by your AD service
-  //ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);         //This was necessary for my AD to do anything
+  
+  ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);  //Set the LDAP Protocol used by your AD service
+  ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);         //This was necessary for my AD to do anything
+  
+  
+  $mechs = array("GSSAPI","GSS-SPNEGO","SPNEGO");
+  
+  foreach( $mechs as $mech ) {
+	  $res = ldap_sasl_bind($cnx,NULL,$LDAPUserPassword,$mech,NULL,$username,NULL);
+	  if( !$res ) {
+		echo $mech." - could not bind to LDAP by SASL<br>";
+	  } else {
+		$rescount++;
+		exit("!!!!!!!!!!!! Logged in with ".$mech);
+	  }  
+  }
+  
   
   ldap_bind($cnx,$LDAPUser.$LDAPUserDomain,$LDAPUserPassword) or die("Could not bind to LDAP");
   

@@ -90,10 +90,10 @@ class LdapManager extends BaseLdapManager
 
         if( !$user ) {
             $this->logger->warning('User not found with username='.$usernameClean);
-            exit('User not found with username='.$usernameClean);
+            //exit('User not found with username='.$usernameClean);
         }
 
-        echo "<br>found user=".$user->getUsername()."<br>";
+        //echo "<br>found user=".$user->getUsername()."<br>";
         //exit('after find');
 
         //set original username with prefix
@@ -172,6 +172,7 @@ class LdapManager extends BaseLdapManager
 
         //always clean username before bind, use primaryPublicUserId
         $user->setUsernameForce( $user->getPrimaryPublicUserId() );
+        //$user->setUsernameForce( 'nyh\cap9083' );
 
         echo "<br>before parent bind: user's username=[".$user->getUsername()."]<br>";
 
