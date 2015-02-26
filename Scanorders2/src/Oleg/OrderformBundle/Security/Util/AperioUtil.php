@@ -395,25 +395,78 @@ class AperioUtil {
 
         $client = new \Aperio_Aperio($DataServerURL);
 
-        $FullName = "testFullName1";
-        $PhoneNumber = "testPhoneNumber";
-        $Email = "testEmail";
+        $FullName = "";//"testFullName1";
+        $PhoneNumber = "";//"testPhoneNumber";
+        $Email = "";//"testEmail";
         $LoginName = $loginName;
         $Password = $password;
-        $UserMustChangePassword = GetParm('UserMustChangePassword', 'False');
-        $DisableLicenseWarning = GetParm('DisableLicenseWarning', 'False');
-        $ViewingMode = GetParm('ViewingMode', '');
+        $UserMustChangePassword = 'False';  //GetParm('UserMustChangePassword', 'False');
+        $DisableLicenseWarning = '0';    //GetParm('DisableLicenseWarning', '0');
+        $ViewingMode = '0';  //GetParm('ViewingMode', '0');
 
-        $StartPage = "";
-        $ExpireTime = GetParm('ExpireTime', '');
-        $ImageTransferNotificationEmail = "";
-        $AuthType = "Spectrum"; //"Negotiate";
+        $StartPage = "/Welcome.php";
+        $ExpireTime = '';   //GetParm('ExpireTime', '');
+        $ImageTransferNotificationEmail = '1';
+        $AuthType = "Active Directory"; //"Spectrum"; //"Negotiate";
         $ExternalId = '';
         $ExternalLoginName = $LoginName;
-        $DisableAutoSlideFlip = '';
-        $DisableWorkflowEmailNotification = '';
+        $DisableAutoSlideFlip = '0';
+        $DisableWorkflowEmailNotification = '0';
 
-        $UserId = $client->AddNewUser($FullName, $PhoneNumber, $Email, $LoginName, $Password, $UserMustChangePassword, $DisableLicenseWarning, $ViewingMode);
+/*
+    2015-02-26 10:28:28.5539||ERROR|WebMethod call failed|AddUser|<?xml version="1.0" encoding="UTF-8"?>
+    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.aperio.com/webservices/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<SOAP-ENV:Body>
+<ns1:AddUser>
+<Token xsi:type="xsd:string">kPxkBhnkaPUsTmp8wkH2UpSNIVz-fCQY6fGTaI9gYpVjF17yEA1_Pw==</Token>
+<UserData>
+    <LoginName>oli2002</LoginName>
+    <ExternalLoginName>oli2002</ExternalLoginName>
+    <FullName></FullName>
+    <Phone></Phone>
+    <E_Mail></E_Mail>
+    <Password>obfuscated</Password>
+    <StartPage>/Welcome.php</StartPage>
+    <ExpireDate></ExpireDate>
+    <DisableLicenseWarning>0</DisableLicenseWarning>
+    <AuthType>Active Directory</AuthType>
+    <ImageTransferNotificationEmail>1</ImageTransferNotificationEmail>
+    <ExternalId></ExternalId>
+    <ViewingMode>0</ViewingMode>
+    <DisableAutoSlideFlip>0</DisableAutoSlideFlip>
+    <DisableWorkflowEmailNotification>0</DisableWorkflowEmailNotification>
+    <Privileges/>
+    <AccountStatus>
+        <LockOnInvalidPass>False</LockOnInvalidPass>
+        <LockIfUnused>False</LockIfUnused>
+        <PasswordCanExpire>False</PasswordCanExpire>
+        <UserMustChangePassword>False</UserMustChangePassword>
+    </AccountStatus>
+</UserData>
+</ns1:AddUser>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+    |127.0.0.1:49215; UA: PHP-SOAP/5.4.9||Exception=System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+    ---> System.DirectoryServices.Protocols.LdapException: The supplied credential is invalid.
+    at System.DirectoryServices.Protocols.LdapConnection.BindHelper(NetworkCredential newCredential, Boolean needSetCredential)
+    at Aperio.LDAPIntf.LDAPInterface.BindLDAP(LdapConnection ldapConnection, AuthType bindAuthType, Boolean useDefaultCredentials, String Username, String Password)
+    at Aperio.LDAPIntf.LDAPInterface.GetUserInfo(IList`1 externalLoginNames)
+    at Aperio.DataServer.Services.SecurityServices.UpdateUserInternal(AddUserParameter input, Boolean updateUserCache)
+    at DataServer.SecurityProxy2.AddUserInternal(AddUserParameter input)
+    at DataServer.SecurityProxy2.AddUser(AddUserParameter input, String& RetXml)
+    --- End of inner exception stack trace ---
+    at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+    at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at Aperio.DataServer.SOAP.BaseProxy.CallMethod(String methodName, String parms, String& retXml)|
+    Token=kPxkBhnkaPUsTmp8wkH2UpSNIVz-fCQY6fGTaI9gYpVjF17yEA1_Pw==|UserId=3|CurrentRoleId=1|DataServer.SecurityProxy2
+*/
+
+
+    $UserId = $client->AddNewUser($FullName, $PhoneNumber, $Email, $LoginName, $Password, $UserMustChangePassword, $DisableLicenseWarning, $ViewingMode);
 
 //        $UserId = ADB_AddNewUser(
 //            $FullName, $PhoneNumber, $Email, $LoginName, $Password,
