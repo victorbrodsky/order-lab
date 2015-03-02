@@ -193,7 +193,7 @@ class LdapManager extends BaseLdapManager
         //testing: check the user's bind result
         //echo "after: user's username=".$user->getUsername()." <br>";
         echo "<br>bindRes=".$bindRes."<br>";
-        exit('exit bind');
+        //exit('exit bind');
 
         return $bindRes;
     }
