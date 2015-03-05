@@ -354,9 +354,9 @@ class AdminController extends Controller
 
             "smtpServerAddress" => "smtp.med.cornell.edu",
 
-            "aDLDAPServerAddress" => "a.wcmc-ad.net",
-            "aDLDAPServerOu" => "a.wcmc-ad.net",
-            "aDLDAPServerAccountUserName" => "svc_aperio_spectrum@a.wcmc-ad.net",
+            "aDLDAPServerAddress" => "cumcdcp02.a.wcmc-ad.net",
+            "aDLDAPServerOu" => "cumcdcp02.a.wcmc-ad.net",
+            "aDLDAPServerAccountUserName" => "svc_aperio_spectrum",
             "aDLDAPServerAccountPassword" => "Aperi0,123",
 
             "dbServerAddress" => "127.0.0.1",
@@ -440,10 +440,10 @@ class AdminController extends Controller
                         <a href="http://doctrine-project.org">Doctrine</a>
                     </li>
 
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/Maks3w/FR3DLdapBundle">Active Directory / LDAP Bundle - FR3DLdapBundle</a>
+                    <br>                  
+					
+					<li>
+                        <a href="https://msdn.microsoft.com/en-us/library/aa366156%28v=vs.85%29.aspx">MSDN library: ldap_bind_s</a>
                     </li>
 
                     <br>

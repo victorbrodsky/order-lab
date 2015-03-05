@@ -330,4 +330,41 @@ class UserSecurityUtil {
     }
 
 
+    //username - full username including user type ie svc_aperio_spectrum_@_wcmc-cwid
+    public function constractNewUser($username) {
+
+        $serviceContainer = $this->container;
+        $em = $this->em;
+        $userManager = $serviceContainer->get('fos_user.user_manager');
+        $userSecUtil = $serviceContainer->get('user_security_utility');
+
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
+        $usernameClean = $userSecUtil->createCleanUsername($username);
+
+        //echo "No user found. Create a new User<br>";
+        $default_time_zone = $serviceContainer->getParameter('default_time_zone');
+
+        $user = $userManager->createUser();
+
+        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+        //echo "keytype=".$userkeytype."<br>";
+
+        $user->setKeytype($userkeytype);
+        $user->setPrimaryPublicUserId($usernameClean);
+        $user->setUniqueUsername();
+
+        $user->setEnabled(true);
+        $user->getPreferences()->setTimezone($default_time_zone);
+
+        //add default locations
+        $userUtil = new UserUtil();
+        $userUtil->addDefaultLocations($user,null,$em,$serviceContainer);
+
+        $user->setPassword("");
+
+        //$userManager->updateUser($user);
+
+        return $user;
+    }
+
 }

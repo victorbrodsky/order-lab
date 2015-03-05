@@ -11,6 +11,18 @@ parameters:
   department_url:
   department_name:
 
+  #ldap
+  ldaphost:
+  ldapusername:
+  ldappassword:
+
+  #titles
+  mainhome_title:
+  listmanager_title:
+  eventlog_title:
+  sitesettings_title:
+  contentabout_page:
+
 #  maintenance:
 #  maintenanceenddate:
 #  maintenanceloginmsg:
@@ -48,50 +60,27 @@ parameters:
 #        ldap_manager:  oleg.security.ldap_manager
 
 #experimental
-fr3d_ldap:
-    driver:
-        host: cumcdcp02.a.wcmc-ad.net
-        #host: a.wcmc-ad.net
-        #       port:         389    # Optional
-        #version:  3
-        username: svc_aperio_spectrum
-        password: Aperi0,123
-        accountDomainName: a.wcmc-ad.net
-        optReferrals: 0  # Optional
-        #useSsl:       true   # Enable SSL negotiation. Optional
-        #useStartTls:  true   # Enable TLS negotiation. Optional
-    user:
-        #baseDn: CN=Users,dc=a,dc=wcmc-ad    ,dc=net
-        baseDn: CN=Users,DC=a,DC=wcmc-ad,DC=net
-        #baseDn: DC=a,DC=wcmc-ad,DC=net
-        filter: (&(ObjectClass=user))
-        #filter: (&(cn=%s))
-        attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
-                - { ldap_attr: samaccountname,   user_method: setUsername }
-                #- { ldap_attr: cn,   user_method: setUsername }
-                - { ldap_attr: mail,   user_method: setEmail }
-                - { ldap_attr: title,   user_method: setTitle }
-                - { ldap_attr: sn,   user_method: setLastName }
-                - { ldap_attr: givenname,   user_method: setFirstName }
-                - { ldap_attr: displayname,   user_method: setDisplayName }
-    service:
-        ldap_manager:  oleg.security.ldap_manager
+#fr3d_ldap:
+#    driver:
+#        host: cumcdcp02.a.wcmc-ad.net
+#        username: svc_aperio_spectrum
+#        password: Aperi0,123
+#        accountDomainName: a.wcmc-ad.net
+#        optReferrals: 0  # Optional
+#    user:
+#        baseDn: CN=Users,DC=a,DC=wcmc-ad,DC=net
+#        filter: (&(ObjectClass=user))
+#        #filter: (&(cn=%s))
+#        attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
+#                - { ldap_attr: cn,   user_method: setUsername }
+#                - { ldap_attr: mail,   user_method: setEmail }
+#                - { ldap_attr: title,   user_method: setTitle }
+#                - { ldap_attr: sn,   user_method: setLastName }
+#                - { ldap_attr: givenname,   user_method: setFirstName }
+#                - { ldap_attr: displayname,   user_method: setDisplayName }
+#    service:
+#        ldap_manager:  oleg.security.ldap_manager
 
-
-#<LDAPInterfaceConfig Description="Active Directory" HostName="cumcdcp02.a.wcmc-ad.net"
-#  Username="svc_aperio_spectrum" Password="71hLsDDdQvRwRZGdQuj06Ef6at1D3rHB"
-#  AppendDNtoUsername="false" PrefixUsername="false" PasswordEncrypted="true"
-#  UseDefaultCredentials="true" LDAPAuthType="Negotiate" UserLDAPAuthType="Negotiate"
-#  DistinguishedName="CN=Users,DC=a,DC=wcmc-ad,DC=net" SearchFilter="(objectClass=user)"
-#  AttributeNameUUID="objectGuid" AttributeNameUser="sAMAccountName" PageSize="10">
-#
-#  <Mapping>
-#    <add LDAP="telephoneNumber" Spectrum="Phone" />
-#    <add LDAP="cn" Spectrum="FullName" />
-#    <add LDAP="mail" Spectrum="E_Mail" />
-#    <add LDAP="objectGUID" Spectrum="ExternalId" />
-#  </Mapping>
-#</LDAPInterfaceConfig>
 
 #fos user bundle
 fos_user:
@@ -100,6 +89,10 @@ fos_user:
     user_class: Oleg\UserdirectoryBundle\Entity\User
 
 services:
+
+    custom_authenticator:
+        class:     Oleg\UserdirectoryBundle\Security\Authentication\CustomAuthenticator
+        arguments: ["@security.password_encoder",@service_container,@doctrine.orm.entity_manager]
 
     oleg.listener.maintenance:
         class: Oleg\UserdirectoryBundle\Services\MaintenanceListener
@@ -122,9 +115,9 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     #Override Ldap Manager
-    oleg.security.ldap_manager:
-        class: Oleg\UserdirectoryBundle\Security\Authentication\LdapManager
-        arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%, @service_container, @doctrine.orm.entity_manager ]
+#    oleg.security.ldap_manager:
+#        class: Oleg\UserdirectoryBundle\Security\Authentication\LdapManager
+#        arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%, @service_container, @doctrine.orm.entity_manager ]
 
     #Redirect admin to index
     employees_authentication_handler:

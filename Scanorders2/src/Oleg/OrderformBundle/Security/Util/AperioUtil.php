@@ -45,13 +45,11 @@ class AperioUtil {
         //echo "usernamePrefix=".$usernamePrefix."<br>";
 
         if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
-            throw new BadCredentialsException('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
+            return NULL;
+            //throw new BadCredentialsException('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
         }
 
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
-
-        //check if user exists in LDAP using cDataClient AddNewUser
-        $AuthResult = $this->AperioAddNewUser( $usernameClean, $token->getCredentials() );
 
         //check if user exists in Aperio DB
         $AuthResult = $this->AperioAuth( $usernameClean, $token->getCredentials() );
@@ -68,30 +66,12 @@ class AperioUtil {
 
             if( !$user ) {
 
-                //echo "No user found. Create a new User<br>";
-                $default_time_zone = $serviceContainer->getParameter('default_time_zone');
-
-                $user = $userManager->createUser();
-
-                $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
-                //echo "keytype=".$userkeytype."<br>";
-
-                $user->setKeytype($userkeytype);
-                $user->setPrimaryPublicUserId($usernameClean);
-                $user->setUniqueUsername();
-
+                $user = $userSecUtil->constractNewUser($token->getUsername());
                 $user->setEmail($AuthResult['E_Mail']);
-                $user->setEnabled(true);
                 $user->setCreatedby('aperio');
-                $user->getPreferences()->setTimezone($default_time_zone);
-
-                //add default locations
-                $userUtil = new UserUtil();
-                $userUtil->addDefaultLocations($user,null,$em,$serviceContainer);
-
-                $perSiteSettings = null;
 
                 ////////// assign Institution //////////
+                $perSiteSettings = null;
                 $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
                 if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
                     if( count($params) != 1 ) {
@@ -173,10 +153,12 @@ class AperioUtil {
 
         } else {
             //exit('Aperio Auth failed');
-            throw new AuthenticationException('The Aperio authentication failed. Authentication Result:'.implode(";",$AuthResult));
+            //throw new AuthenticationException('The Aperio authentication failed. Authentication Result:'.implode(";",$AuthResult));
+            return NULL;
         }
 
-        throw new AuthenticationException('Aperio: Invalid username or password');
+        //throw new AuthenticationException('Aperio: Invalid username or password');
+        return NULL;
     }
 
 
@@ -382,122 +364,6 @@ class AperioUtil {
     public function errorTest() {
         trigger_error("DataServer timed-out after 10 seconds when trying to load this page.  Please wait a moment and try again by pressing the refresh button.", E_USER_ERROR);
     }
-
-
-
-
-
-    public function AperioAddNewUser($loginName, $password) {
-        //AddNewUser ($FullName, $PhoneNumber, $Email, $LoginName, $Password, $UserMustChangePassword, $DisableLicenseWarning, $ViewingMode)
-
-        $DataServerURL = GetDataServerURL();
-        echo "DataServerURL=".$DataServerURL."<br>";  //$DataServerURL = "http://127.0.0.1:86";
-
-        $client = new \Aperio_Aperio($DataServerURL);
-
-        $FullName = "";//"testFullName1";
-        $PhoneNumber = "";//"testPhoneNumber";
-        $Email = "";//"testEmail";
-        $LoginName = $loginName;
-        $Password = $password;
-        $UserMustChangePassword = 'False';  //GetParm('UserMustChangePassword', 'False');
-        $DisableLicenseWarning = '0';    //GetParm('DisableLicenseWarning', '0');
-        $ViewingMode = '0';  //GetParm('ViewingMode', '0');
-
-        $StartPage = "/Welcome.php";
-        $ExpireTime = '';   //GetParm('ExpireTime', '');
-        $ImageTransferNotificationEmail = '1';
-        $AuthType = "Active Directory"; //"Spectrum"; //"Negotiate";
-        $ExternalId = '';
-        $ExternalLoginName = $LoginName;
-        $DisableAutoSlideFlip = '0';
-        $DisableWorkflowEmailNotification = '0';
-
-/*
-    2015-02-26 10:28:28.5539||ERROR|WebMethod call failed|AddUser|<?xml version="1.0" encoding="UTF-8"?>
-    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.aperio.com/webservices/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
-SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-<SOAP-ENV:Body>
-<ns1:AddUser>
-<Token xsi:type="xsd:string">kPxkBhnkaPUsTmp8wkH2UpSNIVz-fCQY6fGTaI9gYpVjF17yEA1_Pw==</Token>
-<UserData>
-    <LoginName>oli2002</LoginName>
-    <ExternalLoginName>oli2002</ExternalLoginName>
-    <FullName></FullName>
-    <Phone></Phone>
-    <E_Mail></E_Mail>
-    <Password>obfuscated</Password>
-    <StartPage>/Welcome.php</StartPage>
-    <ExpireDate></ExpireDate>
-    <DisableLicenseWarning>0</DisableLicenseWarning>
-    <AuthType>Active Directory</AuthType>
-    <ImageTransferNotificationEmail>1</ImageTransferNotificationEmail>
-    <ExternalId></ExternalId>
-    <ViewingMode>0</ViewingMode>
-    <DisableAutoSlideFlip>0</DisableAutoSlideFlip>
-    <DisableWorkflowEmailNotification>0</DisableWorkflowEmailNotification>
-    <Privileges/>
-    <AccountStatus>
-        <LockOnInvalidPass>False</LockOnInvalidPass>
-        <LockIfUnused>False</LockIfUnused>
-        <PasswordCanExpire>False</PasswordCanExpire>
-        <UserMustChangePassword>False</UserMustChangePassword>
-    </AccountStatus>
-</UserData>
-</ns1:AddUser>
-</SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-    |127.0.0.1:49215; UA: PHP-SOAP/5.4.9||Exception=System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
-    ---> System.DirectoryServices.Protocols.LdapException: The supplied credential is invalid.
-    at System.DirectoryServices.Protocols.LdapConnection.BindHelper(NetworkCredential newCredential, Boolean needSetCredential)
-    at Aperio.LDAPIntf.LDAPInterface.BindLDAP(LdapConnection ldapConnection, AuthType bindAuthType, Boolean useDefaultCredentials, String Username, String Password)
-    at Aperio.LDAPIntf.LDAPInterface.GetUserInfo(IList`1 externalLoginNames)
-    at Aperio.DataServer.Services.SecurityServices.UpdateUserInternal(AddUserParameter input, Boolean updateUserCache)
-    at DataServer.SecurityProxy2.AddUserInternal(AddUserParameter input)
-    at DataServer.SecurityProxy2.AddUser(AddUserParameter input, String& RetXml)
-    --- End of inner exception stack trace ---
-    at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
-    at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
-    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
-    at Aperio.DataServer.SOAP.BaseProxy.CallMethod(String methodName, String parms, String& retXml)|
-    Token=kPxkBhnkaPUsTmp8wkH2UpSNIVz-fCQY6fGTaI9gYpVjF17yEA1_Pw==|UserId=3|CurrentRoleId=1|DataServer.SecurityProxy2
-*/
-
-
-    $UserId = $client->AddNewUser($FullName, $PhoneNumber, $Email, $LoginName, $Password, $UserMustChangePassword, $DisableLicenseWarning, $ViewingMode);
-
-//        $UserId = ADB_AddNewUser(
-//            $FullName, $PhoneNumber, $Email, $LoginName, $Password,
-//            $UserMustChangePassword, urldecode($StartPage), $DisableLicenseWarning, $ExpireTime,
-//            $ImageTransferNotificationEmail,
-//            $AuthType,
-//            $ExternalId, $ExternalLoginName,
-//            $ViewingMode, $DisableAutoSlideFlip, $DisableWorkflowEmailNotification
-//        );
-
-        print_r($UserId);
-
-        if (is_object($UserId))
-        {
-            ReturnError($UserId->ASMessage);
-        }
-
-    }
-//    // Try to return the requested parameter.
-//    // If the parameter was not found, either return the supplied Default, or throw an error
-//    function GetParm($parmKey, $Default = NULL)
-//    {
-//        if (isset($_SESSION['CurrentParms'][$parmKey]))
-//            return $_SESSION['CurrentParms'][$parmKey];
-//
-//        // Return the supplied default or blow up
-//        if (isset($Default))
-//            return $Default;
-//        // else
-//        trigger_error("Required parameter '$parmKey' not passed to page");
-//    }
 
 
 

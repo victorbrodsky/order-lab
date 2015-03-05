@@ -32,7 +32,8 @@ class AperioProvider implements AuthenticationProviderInterface {
     //it is called only if the user does not exist in User table
     public function authenticate( TokenInterface $token )
     {
-        //exit("using Aperio Authentication Provider!!!");
+        echo "using Aperio Authentication Provider!!!<br>";
+        //exit('aperio auth');
 
         $aperioUtil = new AperioUtil();
 
@@ -41,6 +42,7 @@ class AperioProvider implements AuthenticationProviderInterface {
         //echo "token username=".$token->getUsername()."<br>";
 
         if( $user !== null ) {
+            echo "Aprerio user ok! <br>";
             return new UsernamePasswordToken($user, null, $this->providerKey, $user->getRoles());
         }
 

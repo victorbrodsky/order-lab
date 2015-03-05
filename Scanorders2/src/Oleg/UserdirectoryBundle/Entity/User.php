@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping\AttributeOverrides;
 use Doctrine\ORM\Mapping\AttributeOverride;
 
 use FOS\UserBundle\Model\User as BaseUser;
-use FR3D\LdapBundle\Model\LdapUserInterface;
 
 //Use FOSUser bundle: https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md
 //User is a reserved keyword in SQL so you cannot use it as table name
@@ -34,8 +33,7 @@ use FR3D\LdapBundle\Model\LdapUserInterface;
  * )
  * @ORM\AttributeOverrides({ @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) ) })
  */
-class User extends BaseUser implements LdapUserInterface
-{
+class User extends BaseUser {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

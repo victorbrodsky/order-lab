@@ -12,7 +12,6 @@ $user = $container->getParameter('database_user');
 $password = $container->getParameter('database_password');
 //echo "host=".$host."<br>";
 
-//setLDAPParametersFromDB_ScanOrder($container,$host,$driver,$dbname,$user,$password);
 
 $config = new \Doctrine\DBAL\Configuration();
 
@@ -117,33 +116,33 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         //exit("aDLDAPServerAddress=".$aDLDAPServerAddress);
 
         //testing
-        $aDLDAPServerAddress = null;
-
-        if( $aDLDAPServerAddress && $aDLDAPServerAddress != "" ) {
-
-            //get baseDn from $aDLDAPServerOu or $aDLDAPServerAddress: a.wcmc-ad.net => dc=a,dc=wcmc-ad,dc=net
-            $pieces = explode(".", $aDLDAPServerOu);
-            $baseDn = "dc=".$pieces[0].",dc=".$pieces[1].",dc=".$pieces[2];
-            //echo "baseDn=".$baseDn."<br>";
-
-            //set fr3d_ldap
-            $container->loadFromExtension('fr3d_ldap', array(
-                'driver' => array(
-                    'host'   => $aDLDAPServerAddress,               //'a.wcmc-ad.net',
-                    'username'   => $aDLDAPServerAccountUserName,   //'svc_aperio_spectrum@a.wcmc-ad.net',
-                    'password'     => $aDLDAPServerAccountPassword, //'Aperi0,123',
-                    'accountDomainName' => $aDLDAPServerOu,         //'a.wcmc-ad.net',
-                ),
-                'user' => array(
-                    'baseDn'   => $baseDn                           //'dc=a,dc=wcmc-ad,dc=net'
-                )
-            ));
-
-            //set $smtpServerAddress
-            $container->setParameter('mailer_host',$smtpServerAddress);
-        } else {
-            //exit(" aDLDAPServerAddress is empty ");
-        }
+//        $aDLDAPServerAddress = null;
+//
+//        if( $aDLDAPServerAddress && $aDLDAPServerAddress != "" ) {
+//
+//            //get baseDn from $aDLDAPServerOu or $aDLDAPServerAddress: a.wcmc-ad.net => dc=a,dc=wcmc-ad,dc=net
+//            $pieces = explode(".", $aDLDAPServerOu);
+//            $baseDn = "dc=".$pieces[0].",dc=".$pieces[1].",dc=".$pieces[2];
+//            //echo "baseDn=".$baseDn."<br>";
+//
+//            //set fr3d_ldap
+//            $container->loadFromExtension('fr3d_ldap', array(
+//                'driver' => array(
+//                    'host'   => $aDLDAPServerAddress,
+//                    'username'   => $aDLDAPServerAccountUserName,
+//                    'password'     => $aDLDAPServerAccountPassword,
+//                    'accountDomainName' => $aDLDAPServerOu,         //'a.wcmc-ad.net',
+//                ),
+//                'user' => array(
+//                    'baseDn'   => $baseDn                           //'dc=a,dc=wcmc-ad,dc=net'
+//                )
+//            ));
+//
+//            //set $smtpServerAddress
+//            $container->setParameter('mailer_host',$smtpServerAddress);
+//        } else {
+//            //exit(" aDLDAPServerAddress is empty ");
+//        }
 
         $container->setParameter('default_system_email',$defaultSiteEmail);
 
@@ -164,6 +163,11 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('eventlog_title',$eventlog_title);
         $container->setParameter('sitesettings_title',$sitesettings_title);
         $container->setParameter('contentabout_page',$contentabout_page);
+
+        //ldap
+        $container->setParameter('ldaphost',$aDLDAPServerAddress);
+        $container->setParameter('ldapusername',$aDLDAPServerAccountUserName);
+        $container->setParameter('ldappassword',$aDLDAPServerAccountPassword);
 
         //maintenance
 //        $container->setParameter('maintenance',$maintenance);
