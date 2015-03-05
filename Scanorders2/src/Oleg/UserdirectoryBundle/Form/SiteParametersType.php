@@ -121,6 +121,19 @@ class SiteParametersType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExePath' )
+            $builder->add('ldapExePath',null,array(
+                'label'=>'LDAP/AD Authenticator Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExeFilename' )
+            $builder->add('ldapExeFilename',null,array(
+                'label'=>'LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ):',
+                'attr' => array('class'=>'form-control')
+            ));
+
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )
             $builder->add('autoAssignInstitution',null,array(
                 'label'=>'Auto-Assign Institution name:',

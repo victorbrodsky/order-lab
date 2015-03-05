@@ -16,6 +16,8 @@ parameters:
   ldapou: a.wcmc-ad.net
   ldapusername: svc_aperio_spectrum
   ldappassword: Aperi0,123
+  ldapexepath: ../src/Oleg/UserdirectoryBundle/Util/
+  ldapexefilename: LdapSaslCustom.exe
 
   #titles
   mainhome_title:

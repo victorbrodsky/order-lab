@@ -358,6 +358,8 @@ class AdminController extends Controller
             "aDLDAPServerOu" => "a.wcmc-ad.net",    //used for DC
             "aDLDAPServerAccountUserName" => "svc_aperio_spectrum",
             "aDLDAPServerAccountPassword" => "Aperi0,123",
+            "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",
+            "ldapExeFilename" => "LdapSaslCustom.exe",
 
             "dbServerAddress" => "127.0.0.1",
             "dbServerPort" => "null",

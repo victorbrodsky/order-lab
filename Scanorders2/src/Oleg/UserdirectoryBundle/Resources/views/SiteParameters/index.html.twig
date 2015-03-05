@@ -125,6 +125,16 @@
                 <td>{{ entity.aDLDAPServerAccountPassword }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountPassword'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>LDAP/AD Authenticator Relative Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" )</td>
+                <td>{{ entity.ldapExePath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExePath'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ):</td>
+                <td>{{ entity.ldapExeFilename }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExeFilename'}) }}">Edit</a></td>
+            </tr>
 
             {#CoPath#}
             <tr>

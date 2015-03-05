@@ -172,9 +172,12 @@ class AuthUtil {
 
         //Ldap authentication using exe script
         $LDAPHost = $this->sc->getParameter('ldaphost');
-        $exePath = "../src/Oleg/UserdirectoryBundle/Util/";
 
-        $exeFile = "LdapSaslCustom.exe";
+        //$exePath = "../src/Oleg/UserdirectoryBundle/Util/";
+        $exePath = $this->sc->getParameter('ldapexepath');
+        //$exeFile = "LdapSaslCustom.exe";
+        $exeFile = $this->sc->getParameter('ldapexefilename');
+
         $command = $exePath.$exeFile;
         //$command = $exeFile;
         //echo "command=".$command."<br>";

@@ -52,7 +52,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $aDLDAPServerOu = null;
         $aDLDAPServerAccountUserName = null;
         $aDLDAPServerAccountPassword = null;
-        $baseDn = null;
+        $ldapExePath = null;
+        $ldapExeFilename = null;
+
         $smtpServerAddress = null;
         $defaultSiteEmail = null;
         $institution_url = null;
@@ -81,6 +83,14 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $aDLDAPServerOu = $row['aDLDAPServerOu'];
             $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
             $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
+
+            if (array_key_exists('ldapExePath', $row)) {
+                $ldapExePath = $row['ldapExePath'];
+            }
+            if (array_key_exists('ldapExeFilename', $row)) {
+                $ldapExeFilename = $row['ldapExeFilename'];
+            }
+
             $smtpServerAddress = $row['smtpServerAddress'];
 
             $defaultSiteEmail = $row['siteEmail'];
@@ -111,38 +121,6 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //            $maintenancelogoutmsg = $row['maintenancelogoutmsg'];
             //echo "department_url=".$department_url."<br>";
         }
-
-        //echo "aDLDAPServerAddress=".$aDLDAPServerAddress."<br>";
-        //exit("aDLDAPServerAddress=".$aDLDAPServerAddress);
-
-        //testing
-//        $aDLDAPServerAddress = null;
-//
-//        if( $aDLDAPServerAddress && $aDLDAPServerAddress != "" ) {
-//
-//            //get baseDn from $aDLDAPServerOu or $aDLDAPServerAddress: a.wcmc-ad.net => dc=a,dc=wcmc-ad,dc=net
-//            $pieces = explode(".", $aDLDAPServerOu);
-//            $baseDn = "dc=".$pieces[0].",dc=".$pieces[1].",dc=".$pieces[2];
-//            //echo "baseDn=".$baseDn."<br>";
-//
-//            //set fr3d_ldap
-//            $container->loadFromExtension('fr3d_ldap', array(
-//                'driver' => array(
-//                    'host'   => $aDLDAPServerAddress,
-//                    'username'   => $aDLDAPServerAccountUserName,
-//                    'password'     => $aDLDAPServerAccountPassword,
-//                    'accountDomainName' => $aDLDAPServerOu,         //'a.wcmc-ad.net',
-//                ),
-//                'user' => array(
-//                    'baseDn'   => $baseDn                           //'dc=a,dc=wcmc-ad,dc=net'
-//                )
-//            ));
-//
-//            //set $smtpServerAddress
-//            $container->setParameter('mailer_host',$smtpServerAddress);
-//        } else {
-//            //exit(" aDLDAPServerAddress is empty ");
-//        }
 
         $container->setParameter('default_system_email',$defaultSiteEmail);
 
@@ -180,6 +158,10 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $container->setParameter('ldappassword',$aDLDAPServerAccountPassword);
         if( $aDLDAPServerOu )
             $container->setParameter('ldapou',$aDLDAPServerOu);
+        if( $ldapExePath )
+            $container->setParameter('ldapexepath',$ldapExePath);
+        if( $ldapExeFilename )
+            $container->setParameter('ldapexefilename',$ldapExeFilename);
 
         //maintenance
 //        $container->setParameter('maintenance',$maintenance);

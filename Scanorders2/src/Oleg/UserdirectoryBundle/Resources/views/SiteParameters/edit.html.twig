@@ -130,6 +130,14 @@
             {{ formmacros.field(edit_form.aDLDAPServerAccountPassword) }}
         {% endif %}
 
+        {% if edit_form.ldapExePath is defined %}
+            {{ formmacros.field(edit_form.ldapExePath) }}
+        {% endif %}
+
+        {% if edit_form.ldapExeFilename is defined %}
+            {{ formmacros.field(edit_form.ldapExeFilename) }}
+        {% endif %}
+
 
     {% if cycle == 'show' %}
         <hr>

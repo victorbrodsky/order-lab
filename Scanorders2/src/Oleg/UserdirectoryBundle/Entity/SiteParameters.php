@@ -64,6 +64,7 @@ class SiteParameters {
      */
     private $smtpServerAddress;
 
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -88,6 +89,17 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $aDLDAPServerAccountPassword;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ldapExePath;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ldapExeFilename;
+
 
     /**
      * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
@@ -984,6 +996,38 @@ class SiteParameters {
     public function getUnderLoginMsgUser()
     {
         return $this->underLoginMsgUser;
+    }
+
+    /**
+     * @param mixed $ldapExeFilename
+     */
+    public function setLdapExeFilename($ldapExeFilename)
+    {
+        $this->ldapExeFilename = $ldapExeFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLdapExeFilename()
+    {
+        return $this->ldapExeFilename;
+    }
+
+    /**
+     * @param mixed $ldapExePath
+     */
+    public function setLdapExePath($ldapExePath)
+    {
+        $this->ldapExePath = $ldapExePath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLdapExePath()
+    {
+        return $this->ldapExePath;
     }
 
 
