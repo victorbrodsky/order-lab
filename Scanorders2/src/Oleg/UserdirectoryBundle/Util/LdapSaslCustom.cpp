@@ -1,0 +1,239 @@
+// LdapSaslCustom.cpp : Defines the entry point for the console application.
+//
+//  Add Wldap32.lib to your project.
+
+#include "stdafx.h"
+
+#include "windows.h"
+#include "winldap.h"
+#include "stdio.h"
+
+#include <sstream>
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+const size_t newsize = 100;
+char* getErrorName(ULONG returnCode);
+
+//  Entry point for application
+int main(int argc, char* argv[]) {
+
+    PWCHAR hostName = NULL;
+	PWCHAR dn = NULL;
+	char* domain = "";	//"a.wcmc-ad.net";
+	char* userName = NULL;
+	char* pwd = NULL;
+    LDAP* pLdapConnection = NULL;
+    ULONG version = LDAP_VERSION3;
+	ULONG numReturns = 1;
+    ULONG getOptSuccess = 0;
+    ULONG connectSuccess = 0;
+    INT returnCode = -1;
+	char* returnCodeString;
+	SEC_WINNT_AUTH_IDENTITY auth;
+
+    //  Verify that the user passed a hostname.
+    if (argc > 1)
+    {
+        //  Convert argv[] to a wchar_t*       
+		size_t origsize = strlen(argv[1]) + 1;
+        size_t convertedChars = 0;
+        wchar_t wcstring[newsize];
+        mbstowcs_s(&convertedChars, wcstring, origsize, argv[1], _TRUNCATE);
+        wcscat_s(wcstring, L" (wchar_t *)");
+        hostName = wcstring;
+		
+		userName = argv[2];
+		pwd = argv[3];
+    }
+    else
+    {
+        hostName = NULL;
+    }
+
+	// check hostName
+	if( hostName == NULL ) {
+		cout << "hostName is not provided" << endl;
+		goto end_exit;
+	}
+
+	//cout << "host= " << hostName << ", userName=" << userName << endl;
+
+    //  Initialize a session. LDAP_PORT is the default port, 389.
+    pLdapConnection = ldap_init(
+		hostName, 
+		LDAP_PORT
+	);
+	
+
+    if( pLdapConnection == NULL ) {
+        //  Set the HRESULT based on the Windows error code.
+        char hr = HRESULT_FROM_WIN32(GetLastError());
+        printf( "ldap_init failed with 0x%x.\n",hr);
+        goto end_exit;
+    }
+    else {
+        //printf("ldap_init succeeded \n");
+	}
+
+    //  Set the version to 3.0 (default is 2.0).
+    returnCode = ldap_set_option(pLdapConnection, LDAP_OPT_PROTOCOL_VERSION, (void*)&version);
+    if( returnCode == LDAP_SUCCESS ) {
+        //printf("ldap_set_option succeeded - version set to 3\n");
+	} else {
+        printf("SetOption Error:%0X\n", returnCode);
+        goto end_exit;
+    }
+
+	// Set the limit on the number of entries returned to 1.
+	returnCode = ldap_set_option(pLdapConnection, LDAP_OPT_SIZELIMIT, (void*) &numReturns);
+    if( returnCode == LDAP_SUCCESS ) {
+        //printf("ldap_set_option succeeded - limit set to 1\n");
+	} else {
+        printf("SetOption Error:%0X\n", returnCode);
+        goto end_exit;
+    }
+
+    // Connect to the server.
+    connectSuccess = ldap_connect(pLdapConnection, NULL);
+
+    if(connectSuccess == LDAP_SUCCESS) {
+        //printf("ldap_connect succeeded \n");
+	} else {
+        printf("ldap_connect failed with 0x%x.\n",connectSuccess);
+        goto end_exit;
+    }
+
+	// check userName and pwd
+	if( userName == "" || userName == NULL ) {
+		cout << "userName is not provided" << endl;
+		goto end_exit;
+	}
+
+	if( pwd == "" || pwd == NULL ) {
+		cout << "password is not provided" << endl;
+		goto end_exit;
+	}
+    
+	////////////////////////// ldap //////////////////////////
+	//printf("Binding ...\n");	
+	//cout << "userName=" << userName << endl;
+	
+	//auth.Domain = (unsigned short *)domain;
+	auth.Domain         = reinterpret_cast<unsigned short*>( domain );
+	auth.DomainLength   = strlen( domain );
+	auth.User           = reinterpret_cast<unsigned short*>( userName );
+	auth.UserLength     = strlen( userName );
+	auth.Password       = reinterpret_cast<unsigned short*>( pwd );
+	auth.PasswordLength = strlen( pwd );
+	auth.Flags          = SEC_WINNT_AUTH_IDENTITY_ANSI;
+		 
+	returnCode = ldap_bind_s(
+		pLdapConnection, 
+		dn,						//dn
+		(PWCHAR) &auth,			//cred		
+		LDAP_AUTH_NEGOTIATE		//LDAP_AUTH_SIMPLE - work as simple
+	);
+	//cout << "returnCode=" << returnCode << endl;
+
+	returnCodeString = getErrorName(returnCode);
+	cout << returnCodeString << endl;
+
+	if( returnCode == LDAP_SUCCESS )
+    {
+        //printf("ldap_bind_s succeeded \n");
+        auth.Password = NULL;	// Remove password pointer
+        pwd = NULL;				// Remove password pointer
+    }
+    else
+    {
+        printf("ldap_bind_s failed with 0x%lx.\n",returnCode);
+        ldap_unbind(pLdapConnection);
+        return -1;
+    }
+
+	if(0) {
+		//----------------------------------------------------------
+		// Perform a synchronous search of fabrikam.com for 
+		// all user objects that have a "person" category.
+		//----------------------------------------------------------
+		ULONG errorCode = LDAP_SUCCESS;
+		LDAPMessage* pSearchResult;
+		PCHAR pMyFilter = "(objectClass=*)";
+		PCHAR pMyAttributes[6];
+		PCHAR pMyDN = "DC=a,DC=wcmc-ad,DC=net";
+
+		pMyAttributes[0] = "cn";
+		pMyAttributes[1] = "mail";
+		pMyAttributes[2] = "firstName";
+		pMyAttributes[3] = "lastName";
+		pMyAttributes[4] = "displayName";
+		pMyAttributes[5] = "telephoneNumber";
+    	
+		errorCode = ldap_search_s(
+						pLdapConnection,			// Session handle
+						(PWCHAR) pMyDN,				// DN to start search
+						LDAP_SCOPE_SUBTREE,			// Scope
+						(PWCHAR) pMyFilter,         // Filter
+						(PZPWSTR) pMyAttributes,    // Retrieve list of attributes
+						0,							// Get both attributes and values
+						&pSearchResult);			// [out] Search results
+    
+		if (errorCode != LDAP_SUCCESS)
+		{
+			printf("ldap_search_s failed with 0x%0lx \n",errorCode);
+			ldap_unbind_s(pLdapConnection);
+			if(pSearchResult != NULL)
+				ldap_msgfree(pSearchResult);
+			return -1;
+		}
+		else {
+			printf("ldap_search succeeded \n");
+		}
+	}
+
+
+
+	//On error cleanup and exit.
+	end_exit:
+
+	ldap_unbind(pLdapConnection);
+
+	if( returnCode == LDAP_SUCCESS ) {
+		return 1;
+	} else {		
+		return -1;
+	}
+
+	////////////////////////// EOF ldap //////////////////////////
+}
+
+
+char* getErrorName( ULONG code ) {
+	char* res;
+
+	switch( code ) {
+		case LDAP_SUCCESS:
+			res = "LDAP_SUCCESS";
+			break;
+		case LDAP_INVALID_CREDENTIALS:
+			res = "LDAP_INVALID_CREDENTIALS";
+			break;
+		case LDAP_INAPPROPRIATE_AUTH:
+			res = "LDAP_INAPPROPRIATE_AUTH";
+			break;
+		case LDAP_AUTH_METHOD_NOT_SUPPORTED:
+			res = "LDAP_INAPPROPRIATE_AUTH";
+			break;
+		case LDAP_PARAM_ERROR:
+			res = "LDAP_PARAM_ERROR";
+			break;
+		default:
+			res = "Uknown Error";
+	}
+
+	return res;
+}
+
