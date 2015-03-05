@@ -262,7 +262,7 @@ class AuthUtil {
         	//echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
         }
 
-        $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber"); //sn - lastName
+        $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
         //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
         //$LDAPFieldsToFind = array("cn", "samaccountname");
 
@@ -286,6 +286,7 @@ class AuthUtil {
             $searchRes['lastName'] = $info[$x]['sn'][0];
             $searchRes['displayName'] = $info[$x]['displayname'][0];
             $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
+            $searchRes['company'] = $info[$x]['company'][0];    //not used currently
 
             if( !$searchRes['givenName'] ) {
                 $searchRes['givenName'] = "";   //$username;

@@ -21,7 +21,6 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "friendsofsymfony/user-bundle": "2.0.*@dev",
         "knplabs/knp-paginator-bundle": "~2.4",
-        "fr3d/ldap-bundle": "2.0.*@dev",
         "phpexcel/phpexcel": "dev-master",
         "phpunit/phpunit": "4.1.*",
         "oneup/uploader-bundle": "~1.3"
