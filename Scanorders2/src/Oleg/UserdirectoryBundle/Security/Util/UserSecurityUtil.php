@@ -341,13 +341,25 @@ class UserSecurityUtil {
         $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
         $usernameClean = $userSecUtil->createCleanUsername($username);
 
-        //echo "No user found. Create a new User<br>";
         $default_time_zone = $serviceContainer->getParameter('default_time_zone');
 
         $user = $userManager->createUser();
 
+        //////////////////////////////// get usertype ////////////////////////////////
         $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
         //echo "keytype=".$userkeytype."<br>";
+
+        //first time login when DB is clean
+        if( !$userkeytype ) {
+            $userUtil = new UserUtil();
+            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
+            $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+        }
+
+        if( !$userkeytype ) {
+            throw new \Exception('User keytype is empty for prefix '.$usernamePrefix);
+        }
+        //////////////////////////////// EOF get usertype ////////////////////////////////
 
         $user->setKeytype($userkeytype);
         $user->setPrimaryPublicUserId($usernameClean);

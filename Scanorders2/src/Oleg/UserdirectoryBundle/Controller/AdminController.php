@@ -355,7 +355,7 @@ class AdminController extends Controller
             "smtpServerAddress" => "smtp.med.cornell.edu",
 
             "aDLDAPServerAddress" => "cumcdcp02.a.wcmc-ad.net",
-            "aDLDAPServerOu" => "cumcdcp02.a.wcmc-ad.net",
+            "aDLDAPServerOu" => "a.wcmc-ad.net",    //used for DC
             "aDLDAPServerAccountUserName" => "svc_aperio_spectrum",
             "aDLDAPServerAccountPassword" => "Aperi0,123",
 
@@ -443,7 +443,7 @@ class AdminController extends Controller
                     <br>                  
 					
 					<li>
-                        <a href="https://msdn.microsoft.com/en-us/library/aa366156%28v=vs.85%29.aspx">MSDN library: ldap_bind_s</a>
+                        <a href="https://msdn.microsoft.com/en-us/library/aa366156.aspx">MSDN library: ldap_bind_s</a>
                     </li>
 
                     <br>

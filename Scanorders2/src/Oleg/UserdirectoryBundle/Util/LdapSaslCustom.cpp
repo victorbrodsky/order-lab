@@ -22,12 +22,12 @@ int main(int argc, char* argv[]) {
 
     PWCHAR hostName = NULL;
 	PWCHAR dn = NULL;
-	char* domain = "";	//"a.wcmc-ad.net";
+	char* domain = "";	//use empty domain, because nyh users don't have it
 	char* userName = NULL;
 	char* pwd = NULL;
     LDAP* pLdapConnection = NULL;
-    ULONG version = LDAP_VERSION3;
-	ULONG numReturns = 1;
+    ULONG version = LDAP_VERSION3;	//ldap vesrion
+	ULONG numReturns = 1;			//number of return query results
     ULONG getOptSuccess = 0;
     ULONG connectSuccess = 0;
     INT returnCode = -1;
@@ -153,48 +153,6 @@ int main(int argc, char* argv[]) {
         ldap_unbind(pLdapConnection);
         return -1;
     }
-
-	if(0) {
-		//----------------------------------------------------------
-		// Perform a synchronous search of fabrikam.com for 
-		// all user objects that have a "person" category.
-		//----------------------------------------------------------
-		ULONG errorCode = LDAP_SUCCESS;
-		LDAPMessage* pSearchResult;
-		PCHAR pMyFilter = "(objectClass=*)";
-		PCHAR pMyAttributes[6];
-		PCHAR pMyDN = "DC=a,DC=wcmc-ad,DC=net";
-
-		pMyAttributes[0] = "cn";
-		pMyAttributes[1] = "mail";
-		pMyAttributes[2] = "firstName";
-		pMyAttributes[3] = "lastName";
-		pMyAttributes[4] = "displayName";
-		pMyAttributes[5] = "telephoneNumber";
-    	
-		errorCode = ldap_search_s(
-						pLdapConnection,			// Session handle
-						(PWCHAR) pMyDN,				// DN to start search
-						LDAP_SCOPE_SUBTREE,			// Scope
-						(PWCHAR) pMyFilter,         // Filter
-						(PZPWSTR) pMyAttributes,    // Retrieve list of attributes
-						0,							// Get both attributes and values
-						&pSearchResult);			// [out] Search results
-    
-		if (errorCode != LDAP_SUCCESS)
-		{
-			printf("ldap_search_s failed with 0x%0lx \n",errorCode);
-			ldap_unbind_s(pLdapConnection);
-			if(pSearchResult != NULL)
-				ldap_msgfree(pSearchResult);
-			return -1;
-		}
-		else {
-			printf("ldap_search succeeded \n");
-		}
-	}
-
-
 
 	//On error cleanup and exit.
 	end_exit:

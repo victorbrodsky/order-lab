@@ -12,9 +12,10 @@ parameters:
   department_name:
 
   #ldap
-  ldaphost:
-  ldapusername:
-  ldappassword:
+  ldaphost: cumcdcp02.a.wcmc-ad.net
+  ldapou: a.wcmc-ad.net
+  ldapusername: svc_aperio_spectrum
+  ldappassword: Aperi0,123
 
   #titles
   mainhome_title:

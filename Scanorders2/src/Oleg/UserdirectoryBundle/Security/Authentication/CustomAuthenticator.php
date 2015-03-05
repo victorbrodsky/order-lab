@@ -39,26 +39,29 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
 
         $authUtil = new AuthUtil($this->sc,$this->em);
 
-        //$userSecUtil = $this->sc->get('user_security_utility');
-        //$usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
 
-        ///////////////////// first aperio authentication /////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //                       1) aperio authentication                   //
+        //////////////////////////////////////////////////////////////////////
         $user = $authUtil->AperioAuthentication($token, $userProvider);
-
         if( $user ) {
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
+        ////////////////////EOF first aperio authentication //////////////////
 
 
-        ///////////////////// second ldap authentication /////////////////////
+
+        //////////////////////////////////////////////////////////////////////
+        //                       2) ldap authentication                     //
+        //////////////////////////////////////////////////////////////////////
         $user = $authUtil->LdapAuthentication($token, $userProvider);
-
         if( $user ) {
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
+        ////////////////////EOF first ldap authentication ////////////////////
+
 
         //exit('all failed');
-
         throw new AuthenticationException('Invalid username or password');
     }
 

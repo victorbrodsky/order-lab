@@ -104,7 +104,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerOu' )
         $builder->add('aDLDAPServerOu',null,array(
-            'label'=>'AD/LDAP Server OU:',
+            'label'=>'AD/LDAP Server OU (DCs):',
             'attr' => array('class'=>'form-control')
         ));
 

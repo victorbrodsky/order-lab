@@ -158,16 +158,28 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('scan.uploadpath',$scanuploadpath);
 
         //titles
+        $mainhome_title = str_replace("%","%%",$mainhome_title);
         $container->setParameter('mainhome_title',$mainhome_title);
+        $listmanager_title = str_replace("%","%%",$listmanager_title);
         $container->setParameter('listmanager_title',$listmanager_title);
+        $eventlog_title = str_replace("%","%%",$eventlog_title);
         $container->setParameter('eventlog_title',$eventlog_title);
+        $sitesettings_title = str_replace("%","%%",$sitesettings_title);
         $container->setParameter('sitesettings_title',$sitesettings_title);
+
+        //The percent sign inside a parameter or argument, as part of the string, must be escaped with another percent sign: % -> %%
+        $contentabout_page = str_replace("%","%%",$contentabout_page);
         $container->setParameter('contentabout_page',$contentabout_page);
 
         //ldap
-        $container->setParameter('ldaphost',$aDLDAPServerAddress);
-        $container->setParameter('ldapusername',$aDLDAPServerAccountUserName);
-        $container->setParameter('ldappassword',$aDLDAPServerAccountPassword);
+        if( $aDLDAPServerAddress )
+            $container->setParameter('ldaphost',$aDLDAPServerAddress);
+        if( $aDLDAPServerAccountUserName )
+            $container->setParameter('ldapusername',$aDLDAPServerAccountUserName);
+        if( $aDLDAPServerAccountPassword )
+            $container->setParameter('ldappassword',$aDLDAPServerAccountPassword);
+        if( $aDLDAPServerOu )
+            $container->setParameter('ldapou',$aDLDAPServerOu);
 
         //maintenance
 //        $container->setParameter('maintenance',$maintenance);
