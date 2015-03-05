@@ -28,7 +28,7 @@ class AuthUtil {
     }
 
 
-
+    //TODO: remove unused classes related to aperio provider: AperioProvider, AperioFactory, AperioListener and all classes that use them
     public function AperioAuthentication($token, $userProvider) {
 
         echo "AperioAuthentication<br>";

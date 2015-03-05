@@ -1,4 +1,25 @@
 
+{% macro siteSwitch() %}
+    <li id="nav-bar-siteswitch" class="dropdown">
+        {#bug:https://github.com/twbs/bootstrap/issues/13657 style="font-size:18px;" or multiple by 12#}
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th" style="font-size:18px;"></span><b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{ path('scan_home') }}">
+                    <img src="{{ asset('bundles/oleguserdirectory/form/img/favicon.ico') }}" alt="Glass Slide Scan Orders" height="18" width="18">
+                    Glass Slide Scan Orders
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('employees_home') }}">
+                    <img src="{{ asset('bundles/oleguserdirectory/form/img/users-1-64x64.png') }}" alt="Employee Directory" height="18" width="18">
+                    Employee Directory
+                </a>
+            </li>
+        </ul>
+    </li>
+{% endmacro %}
+
 {% macro fileupload( comment, cycle, classname, prototype ) %}
 
 

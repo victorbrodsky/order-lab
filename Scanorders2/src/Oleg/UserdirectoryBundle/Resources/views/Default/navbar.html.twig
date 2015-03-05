@@ -71,13 +71,23 @@
             {% endif %}
         </div>
 
+
         <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
 
             {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
 
                 <ul class="nav navbar-nav">
 
-                    <li id="nav-bar-userhome" class="hidden-xs divider-vertical"><a href="{{ path(employees_sitename~'_home') }}">Home</a></li>
+                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {{ usermacros.siteSwitch() }}
+
+                    <li id="nav-bar-userhome" class="hidden-xs divider-vertical">
+                        <a href="{{ path(employees_sitename~'_home') }}">
+                            <img src="{{ asset('bundles/oleguserdirectory/form/img/users-1-64x64.png') }}" alt="Employee Directory" height="18" width="18">
+                            Home
+                        </a>
+                    </li>
 
                     <li id="nav-bar-userlist" class="dropdown">
                         {% if pendingadminreview is defined and pendingadminreview > 0 %}
