@@ -18,10 +18,11 @@ use Oleg\OrderformBundle\Form\PatientType;
 class PatientController extends Controller
 {
 
+
     /**
-     * Lists all Patient entities.
+     * Lists all Accession entities.
      *
-     * @Route("/", name="patient")
+     * @Route("/", name="scan-patient-list")
      * @Method("GET")
      * @Template()
      */
@@ -35,61 +36,25 @@ class PatientController extends Controller
             'entities' => $entities,
         );
     }
-    /**
-     * Creates a new Patient entity.
-     *
-     * @Route("/", name="patient_create")
-     * @Method("POST")
-     * @Template("OlegOrderformBundle:Patient:new_orig.html.twig")
-     */
-    public function createAction(Request $request)
-    {
-        $entity  = new Patient();
-        $form = $this->createForm(new PatientType(), $entity);
-        $form->bind($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('patient_show', array('id' => $entity->getId())));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to create a new Patient entity.
-     *
-     * @Route("/new", name="patient_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction()
-    {
-        $entity = new Patient();
-        $form   = $this->createForm(new PatientType(), $entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
 
     /**
      * Finds and displays a Patient entity.
      *
-     * @Route("/{id}", name="patient_show")
+     * @Route("/{id}", name="scan-patient-show")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
     public function showAction($id)
     {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
 
@@ -97,18 +62,28 @@ class PatientController extends Controller
             throw $this->createNotFoundException('Unable to find Patient entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $params = array(
+            'type' => 'multy',
+            'cycle' => "show",
+            'user' => $user,
+            'datastructure' => 'datastructure'
+        );
+
+        $form = $this->createForm( new PatientType($params,$entity) );
 
         return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'formtype' => 'multy',
+            'type' => 'show',
+            'datastructure' => 'datastructure'
         );
     }
 
     /**
      * Displays a form to edit an existing Patient entity.
      *
-     * @Route("/{id}/edit", name="patient_edit")
+     * @Route("/{id}/edit", name="scan-patient-edit")
      * @Method("GET")
      * @Template()
      */
@@ -166,31 +141,7 @@ class PatientController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
-    /**
-     * Deletes a Patient entity.
-     *
-     * @Route("/{id}", name="patient_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->bind($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Patient entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('patient'));
-    }
 
     /**
      * Creates a form to delete a Patient entity by id.

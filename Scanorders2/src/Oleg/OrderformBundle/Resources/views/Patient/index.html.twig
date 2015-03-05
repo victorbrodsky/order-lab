@@ -7,28 +7,24 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Mrn</th>
-                <th>Name</th>
+                <th>Patient</th>
+                {#<th>Date</th>#}
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('patient_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>
-                    {{ entity.mrn|first }}
-                </td>
-                <td>
-                    {{ entity.name|first }}
-                </td>
+                <td><a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.mrn|first }}</td>
+                {#<td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>#}
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('patient_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">show</a>
                     </li>
                     <li>
-                        <a href="{{ path('patient_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('scan-patient-edit', { 'id': entity.id }) }}">edit</a>
                     </li>
                 </ul>
                 </td>
@@ -37,11 +33,5 @@
         </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('patient_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+
     {% endblock %}
