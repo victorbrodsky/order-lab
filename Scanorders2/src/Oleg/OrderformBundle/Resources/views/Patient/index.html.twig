@@ -14,6 +14,7 @@
             <tr>
                 <th>ID</th>
                 <th>MRN</th>
+                <th>Accession(s)</th>
                 <th>Name</th>
                 <th>DOB</th>
                 <th>Calculated Age</th>
@@ -33,6 +34,16 @@
                         {#{{ mrn }} (status={{ mrn.status }})<br>#}
                     {#{% endfor %}#}
                     {{ entity.obtainValidField('mrn') }}
+                </td>
+
+                <td>
+                    {% for encounter in entity.encounter %}
+                        {% for procedure in encounter.procedure %}
+                            {% for accession in procedure.accession %}
+                                {{ accession.obtainValidField('accession') }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
                 </td>
 
                 <td>
