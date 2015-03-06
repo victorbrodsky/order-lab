@@ -69,12 +69,12 @@ class PatientController extends Controller
             'datastructure' => 'datastructure'
         );
 
-        $form = $this->createForm( new PatientType($params,$entity) );
+        $form = $this->createForm( new PatientType($params,$entity), $entity, array('disabled' => true) );
 
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'formtype' => 'multy',
+            'formtype' => 'Patient Data Structure',
             'type' => 'show',
             'datastructure' => 'datastructure'
         );

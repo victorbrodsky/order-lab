@@ -2,7 +2,7 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-{% import "OlegOrderformBundle::Default/patient.html.twig" as patient %}
+{% import "OlegOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
 
 {% import "OlegOrderformBundle::Default/ordercommon.html.twig" as order %}
 
@@ -227,8 +227,17 @@
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
 
 
-    {#Patient hierarchy form#}
-    {{ patient.displayPatient(form,datastructure,type,formtype) }}
+    {#patient; form - is order form#}
+    {% set patientCount = 0 %}
+    {% for patient in form.patient %}
+
+        {% set patientCount = 0 %}
+
+        {#Patient hierarchy form#}
+        {{ patientmacros.displayPatient(patient,patientCount,form.vars.value.status,datastructure,type,formtype) }}
+
+        {% set patientCount = patientCount + 1 %}
+    {% endfor %} {# patient loop #}
 
 
     {% if type == 'new' or type == 'edit' or type == 'amend' %}

@@ -1,37 +1,67 @@
-{% extends '::base.html.twig' %}
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
-{% block body -%}
-    <h1>Patient list</h1>
+{% block title %}
+    List of Patients
+{% endblock %}
 
-    <table class="records_list">
+{% block content %}
+
+    <h3>List of Patients</h3>
+
+    <table class="table table-hover table-condensed text-left">
+    {#<table class="records_list">#}
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Patient</th>
+                <th>ID</th>
+                <th>MRN</th>
+                <th>Name</th>
+                <th>DOB</th>
+                <th>Calculated Age</th>
+                <th>Sex</th>
                 {#<th>Date</th>#}
-                <th>Actions</th>
+                {#<th>Actions</th>#}
             </tr>
         </thead>
-        <tbody>
+        <tbody class="rowlink" data-link="row">
         {% for entity in entities %}
             <tr>
+
                 <td><a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.mrn|first }}</td>
-                {#<td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>#}
+
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('scan-patient-edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                    {#{% for mrn in entity.mrn %}#}
+                        {#{{ mrn }} (status={{ mrn.status }})<br>#}
+                    {#{% endfor %}#}
+                    {{ entity.obtainValidField('mrn') }}
                 </td>
+
+                <td>
+                    {{ entity.getFullPatientName|raw }}
+                </td>
+
+                <td>
+                    {{ entity.obtainValidField('dob') }}
+                </td>
+
+                <td>
+                    {{ entity.calculateAge }}
+                </td>
+
+                <td>
+                    {{ entity.obtainValidField('sex') }}
+                </td>
+
+                {#<td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>#}
+
+                {#<td class="rowlink-skip">             #}
+                    {#<a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">show</a>                  #}
+                    {#<a href="{{ path('scan-patient-edit', { 'id': entity.id }) }}">edit</a>                 #}
+                {#</td>#}
+
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
 
-    {% endblock %}
+{% endblock %}

@@ -921,11 +921,11 @@ class Patient extends ObjectAbstract
         $orderArr = $resArr['orderArr'];
         $firstNameArrOrder = $resArr['destArr'];
 
-        $resArr = $this->rearangeNameArrByOrder($orderArr,$middleNameArr,$middleNameArrOrder);
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$middleNameArr,$middleNameArrOrder,array('<i>','</i>'));
         $orderArr = $resArr['orderArr'];
         $middleNameArrOrder = $resArr['destArr'];
 
-        $resArr = $this->rearangeNameArrByOrder($orderArr,$lastNameArr,$lastNameArrOrder);
+        $resArr = $this->rearangeNameArrByOrder($orderArr,$lastNameArr,$lastNameArrOrder,array('<b>','</b>'));
         $orderArr = $resArr['orderArr'];
         $lastNameArrOrder = $resArr['destArr'];
 
@@ -957,7 +957,7 @@ class Patient extends ObjectAbstract
         return $patientFullNameArr;
     }
 
-    public function rearangeNameArrByOrder( $orderArr, $sourceArr, $destArr ) {
+    public function rearangeNameArrByOrder( $orderArr, $sourceArr, $destArr, $htmlTags = null ) {
         $resArr = array();
         foreach( $sourceArr as $name ) {
             $orderId = $name->getOrderinfo()->getId();
@@ -970,7 +970,11 @@ class Patient extends ObjectAbstract
             }
             if( $name."" != "" ) {
                 //$status = "[".$name->getStatus()."]";
-                $destArr[$orderId] = $name."";  //.$status;
+                $nameStr = $name."";
+                if( $htmlTags && count($htmlTags) == 2 ) {
+                    $nameStr = $htmlTags[0] . $nameStr . $htmlTags[1];
+                }
+                $destArr[$orderId] = $nameStr;
             }
         }
         $resArr['orderArr'] = $orderArr;

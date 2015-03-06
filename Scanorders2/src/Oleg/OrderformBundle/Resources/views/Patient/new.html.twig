@@ -2,7 +2,7 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-{% import "OlegOrderformBundle::Default/patient.html.twig" as patient %}
+{% import "OlegOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
 
 {% import "OlegOrderformBundle::Default/ordercommon.html.twig" as order %}
 
@@ -22,7 +22,12 @@
     <input type="hidden" id="orderformtype" value="multi" />
     <input type="hidden" id="formcycle" value="{{ type }}" />
 
+    <div id="form-prototype-data"
+         data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
+         data-userid = "{{ app.security.getToken().getUser().getId() }}"
+    ></div>
 
-    {{ patient.displayPatient(form.patient,datastructure,type,formtype) }}
+
+    {{ patientmacros.displayPatient(form,0,'Submitted',datastructure,type,formtype) }}
 
 {% endblock %}
