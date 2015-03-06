@@ -47,6 +47,7 @@ class OrderAbstract {
     protected $orderdate;
 
     /**
+     * Type or better: Category with subcategory (parent-children hierarchy)
      * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
      * @ORM\JoinColumn(name="formtype", referencedColumnName="id")
      */
@@ -82,14 +83,19 @@ class OrderAbstract {
      */
     protected $status;
 
-
-
     /**
      * Order source location
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
      */
     private $sourceLocation;
+
+    /**
+     * Return Location (object)
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     **/
+    protected $returnLocation;
 
     /**
      * Order priority: routine, stat
@@ -119,12 +125,7 @@ class OrderAbstract {
      */
     protected $delivery;
 
-    /**
-     * Return Location (object)
-     *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-     **/
-    protected $returnLocation;
+
 
     /**
      * Purpose of Order (string)
