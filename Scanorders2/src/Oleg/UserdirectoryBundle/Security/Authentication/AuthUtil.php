@@ -283,19 +283,34 @@ class AuthUtil {
         $searchRes = array();
 
         for ($x=0; $x<$info["count"]; $x++) {
-            $searchRes['mail'] = $info[$x]['mail'][0];
-            $searchRes['title'] = $info[$x]['title'][0];
-            $searchRes['givenName'] = $info[$x]['givenname'][0];
-            $searchRes['lastName'] = $info[$x]['sn'][0];
-            $searchRes['displayName'] = $info[$x]['displayname'][0];
-            $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
-            $searchRes['company'] = $info[$x]['company'][0];    //not used currently
 
-            if( !$searchRes['givenName'] ) {
+            if( array_key_exists('mail', $info[$x]) ) {
+                $searchRes['mail'] = $info[$x]['mail'][0];
+            }
+            if( array_key_exists('title', $info[$x]) ) {
+                $searchRes['title'] = $info[$x]['title'][0];
+            }
+            if( array_key_exists('givenname', $info[$x]) ) {
+                $searchRes['givenName'] = $info[$x]['givenname'][0];
+            }
+            if( array_key_exists('sn', $info[$x]) ) {
+                $searchRes['lastName'] = $info[$x]['sn'][0];
+            }
+            if( array_key_exists('displayname', $info[$x]) ) {
+                $searchRes['displayName'] = $info[$x]['displayname'][0];
+            }
+            if( array_key_exists('telephonenumber', $info[$x]) ) {
+                $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
+            }
+            if( array_key_exists('company', $info[$x]) ) {
+                $searchRes['company'] = $info[$x]['company'][0];    //not used currently
+            }
+
+            if( array_key_exists('givenName',$searchRes) && !$searchRes['givenName'] ) {
                 $searchRes['givenName'] = "";   //$username;
             }
 
-            if( !$searchRes['lastName'] ) {
+            if( array_key_exists('lastName',$searchRes) && !$searchRes['lastName'] ) {
                 $searchRes['lastName'] = "";    //$username;
             }
 

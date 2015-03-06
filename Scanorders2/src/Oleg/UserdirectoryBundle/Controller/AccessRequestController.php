@@ -295,6 +295,7 @@ class AccessRequestController extends Controller
 
         //echo "user emails=".$emails."<br>";
         //echo "user headers=".$headers."<br>";
+        //exit('1');
 
         $emailUtil->sendEmail( $emails, $subject, $msg, $em, $headers );
         ///////////////// EOF /////////////////

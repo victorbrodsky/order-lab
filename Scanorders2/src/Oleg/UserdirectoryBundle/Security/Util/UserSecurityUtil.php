@@ -216,23 +216,23 @@ class UserSecurityUtil {
 
         if( $userRole == "Platform Administrator" ) {
 
-            $role = "ROLE_PLATFORM_DEPUTY_ADMIN";
+            $roles = array("ROLE_PLATFORM_ADMIN","ROLE_PLATFORM_DEPUTY_ADMIN");
 
         } else if( $userRole == "Administrator" ) {
 
             if( $sitename == $this->container->getParameter('scan.sitename') ) {
-                $role = "ROLE_SCANORDER_ADMIN";
+                $roles = array("ROLE_SCANORDER_ADMIN");
             }
 
             if( $sitename == $this->container->getParameter('employees.sitename') ) {
-                $role = "ROLE_USERDIRECTORY_ADMIN";
+                $roles = array("ROLE_USERDIRECTORY_ADMIN");
             }
 
         } else {
             return null;
         }
 
-        $users = $this->findByRole($role);
+        $users = $this->findByRoles($roles);
 
         //echo "user count=".count($users)."<br>";
 
@@ -240,7 +240,10 @@ class UserSecurityUtil {
         if( $users && count($users) > 0 ) {
 
             foreach( $users as $user ) {
-                $emails[] = $user->getEmail();
+                //echo "user=".$user."<br>";
+                if( $user->getEmail() ) {
+                    $emails[] = $user->getEmail();
+                }
             }
 
         }
@@ -249,12 +252,20 @@ class UserSecurityUtil {
         return implode(", ", $emails);
     }
 
-    public function findByRole($role) {
+    public function findByRoles($roles) {
+
+        $whereArr = array();
+        foreach($roles as $role) {
+            $whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
+        }
+
         $qb = $this->em->createQueryBuilder();
         $qb->select('u')
             ->from('OlegUserdirectoryBundle:User', 'u')
-            ->where('u.roles LIKE :roles')
-            ->setParameter('roles', '%"' . $role . '"%');
+            ->where( implode(' OR ',$whereArr) );
+
+        //echo "query=".$qb."<br>";
+
         return $qb->getQuery()->getResult();
     }
 
