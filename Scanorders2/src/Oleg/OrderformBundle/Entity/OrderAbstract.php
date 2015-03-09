@@ -24,11 +24,13 @@ class OrderAbstract {
     protected $id;
 
     /**
+     * TODO: remove it
      * @ORM\Column(type="string", nullable=true)
      */
     protected $ordername;
 
     /**
+     * TODO: remove it
      * @ORM\Column(type="string", nullable=true)
      */
     protected $ordernumber;
@@ -47,7 +49,9 @@ class OrderAbstract {
     protected $orderdate;
 
     /**
+     * TODO: rename it to Category.
      * Type or better: Category with subcategory (parent-children hierarchy)
+     *
      * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
      * @ORM\JoinColumn(name="formtype", referencedColumnName="id")
      */
@@ -72,10 +76,20 @@ class OrderAbstract {
     protected $institution;
 
     /**
+     * TODO: manytomany
+     * Source System
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
      */
-    protected $source;
+    protected $sourceSystem;
+
+    /**
+     * TODO: manytomany
+     * Destination System
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\JoinColumn(name="destination_id", referencedColumnName="id", nullable=true)
+     */
+    protected $destinationSystem;
 
     /**
      * @ORM\ManyToOne(targetEntity="Status")
@@ -140,7 +154,6 @@ class OrderAbstract {
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
      */
     protected $equipment;
-
 
 
     /**
@@ -282,19 +295,35 @@ class OrderAbstract {
     }
 
     /**
-     * @param mixed $source
+     * @param mixed $destinationSystem
      */
-    public function setSource($source)
+    public function setDestinationSystem($destinationSystem)
     {
-        $this->source = $source;
+        $this->destinationSystem = $destinationSystem;
     }
 
     /**
      * @return mixed
      */
-    public function getSource()
+    public function getDestinationSystem()
     {
-        return $this->source;
+        return $this->destinationSystem;
+    }
+
+    /**
+     * @param mixed $sourceSystem
+     */
+    public function setSourceSystem($sourceSystem)
+    {
+        $this->sourceSystem = $sourceSystem;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSourceSystem()
+    {
+        return $this->sourceSystem;
     }
 
     /**

@@ -196,7 +196,20 @@ class OrderInfo extends OrderAbstract {
     private $slide;
 
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity")
+     */
+    protected $inputs;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity")
+     */
+    protected $outputs;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo")
+     */
+    protected $associations;
 
 
     ////////////////////////// Specific Orders //////////////////////////
@@ -233,6 +246,11 @@ class OrderInfo extends OrderAbstract {
         $this->history = new ArrayCollection();
         $this->tracking = new ArrayCollection();
 
+        //links
+        $this->inputs = new ArrayCollection();
+        $this->outputs = new ArrayCollection();
+        $this->associations = new ArrayCollection();
+
         //Initialize specific orders
         if( !$this->getScanorder() ) {
             $this->setScanorder(new ScanOrder());
@@ -260,6 +278,11 @@ class OrderInfo extends OrderAbstract {
             $this->part = new ArrayCollection();
             $this->block = new ArrayCollection();
             $this->slide = new ArrayCollection();
+
+            //links
+            $this->inputs = new ArrayCollection();
+            $this->outputs = new ArrayCollection();
+            $this->associations = new ArrayCollection();
 
             //
             $provider = $this->getProvider();
@@ -797,6 +820,53 @@ class OrderInfo extends OrderAbstract {
         return $this->block;
     }
     ///////////////////// EOF Hierarchy objects /////////////////////
+
+
+    //Links
+    public function getInputs()
+    {
+        return $this->inputs;
+    }
+    public function addInput($input)
+    {
+        if( !$this->inputs->contains($input) ) {
+            $this->inputs->add($input);
+        }
+    }
+    public function removeInput($input)
+    {
+        $this->inputs->removeElement($input);
+    }
+
+    public function getOutputs()
+    {
+        return $this->outputs;
+    }
+    public function addOutput($output)
+    {
+        if( !$this->outputs->contains($output) ) {
+            $this->outputs->add($output);
+        }
+    }
+    public function removeOutput($output)
+    {
+        $this->outputs->removeElement($output);
+    }
+
+    public function getAssociations()
+    {
+        return $this->associations;
+    }
+    public function addAssociation($item)
+    {
+        if( !$this->associations->contains($item) ) {
+            $this->associations->add($item);
+        }
+    }
+    public function removeAssociation($item)
+    {
+        $this->associations->removeElement($item);
+    }
 
 
 //    /**
