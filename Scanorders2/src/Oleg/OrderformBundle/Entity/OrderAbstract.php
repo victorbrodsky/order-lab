@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
+ * TODO: create source and destination object referring to the same object
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  */
