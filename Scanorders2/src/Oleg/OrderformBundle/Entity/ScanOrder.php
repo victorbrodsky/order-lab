@@ -114,6 +114,7 @@ class ScanOrder {
     public function setOrderinfo($orderinfo)
     {
         $this->orderinfo = $orderinfo;
+        $orderinfo->setScanorder($this);
     }
 
     /**
@@ -124,6 +125,13 @@ class ScanOrder {
         return $this->orderinfo;
     }
 
+    public function __toString() {
+        $res = "Scan Order";
+        if( $this->getId() ) {
+            $res = $res . " with ID=" . $this->getId();
+        }
+        return $res;
+    }
 
 
 }

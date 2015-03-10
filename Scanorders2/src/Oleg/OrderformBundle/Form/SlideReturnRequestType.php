@@ -44,28 +44,28 @@ class SlideReturnRequestType extends AbstractType
 
         //$builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
 
-        $builder->add('proxyuser', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label'=>'Ordering Provider:',
-            'required' => false,
-            //'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->where('u.roles LIKE :roles OR u=:user')
-                        ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
-                },
-        ));
+//        $builder->add('proxyuser', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:User',
+//            'label'=>'Ordering Provider:',
+//            'required' => false,
+//            //'multiple' => true,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('u')
+//                        ->where('u.roles LIKE :roles OR u=:user')
+//                        ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+//                },
+//        ));
 
-        $builder->add('institution', 'entity', array(
-            'label' => 'Institution:',
-            'required'=> true,
-            'multiple' => false,
-            'empty_value' => false,
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $this->params['institutions'],
-            'attr' => array('class' => 'combobox combobox-width combobox-institution')
-        ));
+//        $builder->add('institution', 'entity', array(
+//            'label' => 'Institution:',
+//            'required'=> true,
+//            'multiple' => false,
+//            'empty_value' => false,
+//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'choices' => $this->params['institutions'],
+//            'attr' => array('class' => 'combobox combobox-width combobox-institution')
+//        ));
 
 
         if( array_key_exists('type', $this->params) &&  $this->params['type'] == 'table' ) {
@@ -74,38 +74,40 @@ class SlideReturnRequestType extends AbstractType
                 'required'  => false,
             ));
             $builder->add('datalocker','hidden', array(
-                "mapped" => false
+                'mapped' => false,
+                'label' => false,
+                //'required'  => false,
             ));
         }
 
 
         ////////////// returnLocation //////////////////////
-        $returnLocationsOptions = array(
-            'label' => "Return Slides to:",
-            'required' => true,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
-            'classtype' => 'location',
-        );
-
-        //locations default and preferred choices
-        if( array_key_exists('returnLocation', $this->params) ) {
-            if( array_key_exists('cycle', $this->params) && $this->params['cycle'] == 'new' ) {
-                $returnLocation = $this->params['returnLocation'];
-                $returnLocationsOptions['data'] = $returnLocation['data']->getId();
-            }
-        }
-
-        if( array_key_exists('cycle', $this->params) === false || $this->params['cycle'] != 'new' ) {
-            $builder->add('returnLocation', 'entity', array(
-                'label' => 'Return Slides to:',
-                'required'=> false,
-                'multiple' => false,
-                'class' => 'OlegUserdirectoryBundle:Location',
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
-        } else {
-            $builder->add('returnLocation', 'employees_custom_selector', $returnLocationsOptions);
-        }
+//        $returnLocationsOptions = array(
+//            'label' => "Return Slides to:",
+//            'required' => true,
+//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
+//            'classtype' => 'location',
+//        );
+//
+//        //locations default and preferred choices
+//        if( array_key_exists('returnLocation', $this->params) ) {
+//            if( array_key_exists('cycle', $this->params) && $this->params['cycle'] == 'new' ) {
+//                $returnLocation = $this->params['returnLocation'];
+//                $returnLocationsOptions['data'] = $returnLocation['data']->getId();
+//            }
+//        }
+//
+//        if( array_key_exists('cycle', $this->params) === false || $this->params['cycle'] != 'new' ) {
+//            $builder->add('returnLocation', 'entity', array(
+//                'label' => 'Return Slides to:',
+//                'required'=> false,
+//                'multiple' => false,
+//                'class' => 'OlegUserdirectoryBundle:Location',
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
+//        } else {
+//            $builder->add('returnLocation', 'employees_custom_selector', $returnLocationsOptions);
+//        }
         ////////////// EOF returnLocation //////////////////////
         
     }

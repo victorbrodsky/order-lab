@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Holder of different orders (i.e. scanorder, laborder)
+ * Message, Holder of different orders (i.e. scanorder, laborder)
  *
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrderInfoRepository")
  * @ORM\Table(name="scan_orderinfo",
@@ -18,16 +18,104 @@ use Doctrine\Common\Collections\ArrayCollection;
  * )
  * @ORM\HasLifecycleCallbacks
  */
-class OrderInfo extends OrderAbstract {
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
-//     * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $status;
+class OrderInfo {
 
     /**
-     * oid - id of the original order.
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="orderdate", type="datetime", nullable=true)
+     *
+     */
+    private $orderdate;
+
+    /**
+     * TODO: rename it to Category.
+     * Type or better: Category with subcategory (parent-children hierarchy)
+     *
+     * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
+     * @ORM\JoinColumn(name="formtype", referencedColumnName="id")
+     */
+    private $type;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     */
+    private $provider;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     */
+    private $proxyuser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $institution;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Status")
+     */
+    private $status;
+
+    /**
+     * Equipment associated with this order (object)
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
+     */
+    private $equipment;
+
+    /**
+     * Purpose of Order (string)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $purpose;
+
+    /**
+     * Order priority: routine, stat
+     *
+     * @ORM\Column(type="string",nullable=true)
+     */
+    private $priority;
+
+    /**
+     * Order completetion deadline
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deadline;
+
+    /**
+     * Return order if not completed by deadline
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $returnoption;
+
+    /**
+     * Order delivery (string): I'll give slides to ...
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $delivery;
+
+
+    /**
+     * oid - id of the original order. Required for amend logic.
      * When Amend order, switch orders to keep the original id and at newly created order set oid of the original order
      * @var string
      * @ORM\Column(type="integer", nullable=true)
@@ -125,7 +213,7 @@ class OrderInfo extends OrderAbstract {
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
 //     */
-//    protected $purpose;
+//    private $purpose;
 
 //    /**
 //     * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the orderinfo (unlike to dataqualityage)
@@ -152,7 +240,7 @@ class OrderInfo extends OrderAbstract {
     private $tracking;
 
 
-    /////////////////    OBJECTS    //////////////////////
+    /////////////////    HIERARCHY OBJECTS    //////////////////////
     /**
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo" )
      * @ORM\JoinTable(name="scan_patient_orderinfo")
@@ -194,30 +282,85 @@ class OrderInfo extends OrderAbstract {
      * @ORM\JoinTable(name="scan_slide_orderinfo")
      **/
     private $slide;
+    /////////////////   EOF  HIERARCHY OBJECTS    //////////////////////
 
 
     /**
+     * One-To-Many Unidirectional
+     *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity")
+     * @ORM\JoinTable(name="scan_orderinfo_input",
+     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="input_id", referencedColumnName="id", unique=true)}
+     *      )
      */
-    protected $inputs;
+    private $inputs;
 
     /**
+     * One-To-Many Unidirectional
+     *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity")
+     * @ORM\JoinTable(name="scan_orderinfo_output",
+     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="output_id", referencedColumnName="id", unique=true)}
+     *      )
      */
-    protected $outputs;
+    private $outputs;
+
 
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo")
-     */
-    protected $associations;
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="associations")
+     **/
+    private $backAssociations;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", inversedBy="backAssociations")
+     * @ORM\JoinTable(name="associations",
+     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="association_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $associations;
+
+
+    /**
+     * Source: can be many
+     * One-To-Many unidirectional with Join table
+     *
+     * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist"})
+     * @ORM\JoinTable(name="scan_source_orderinfo",
+     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="source_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $sources;
+
+    /**
+     * Destinations: can be many
+     * One-To-Many unidirectional with Join table
+     *
+     * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist"})
+     * @ORM\JoinTable(name="scan_destination_orderinfo",
+     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="destination_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $destinations;
+
 
 
     ////////////////////////// Specific Orders //////////////////////////
 
+    //cascade={"persist","remove"}
     /**
      * @ORM\OneToOne(targetEntity="ScanOrder", inversedBy="orderinfo", cascade={"persist","remove"})
      **/
     private $scanorder;
+
+    /**
+     * @ORM\OneToOne(targetEntity="SlideReturnRequest", inversedBy="orderinfo", cascade={"persist","remove"})
+     **/
+    private $slideReturnRequest;
 
     /**
      * @ORM\OneToOne(targetEntity="LabOrder", inversedBy="orderinfo", cascade={"persist","remove"})
@@ -246,18 +389,28 @@ class OrderInfo extends OrderAbstract {
         $this->history = new ArrayCollection();
         $this->tracking = new ArrayCollection();
 
+        //TODO: test cloning
+        $this->sources = new ArrayCollection();
+        $this->destinations = new ArrayCollection();
+
         //links
+        //TODO: test cloning
         $this->inputs = new ArrayCollection();
         $this->outputs = new ArrayCollection();
         $this->associations = new ArrayCollection();
+        $this->backAssociations = new ArrayCollection();
 
         //Initialize specific orders
-        if( !$this->getScanorder() ) {
-            $this->setScanorder(new ScanOrder());
-        }
-        if( !$this->getLaborder() ) {
-            $this->setLaborder(new LabOrder());
-        }
+//        if( !$this->getScanorder() ) {
+//            $this->setScanorder(new ScanOrder());
+//        }
+//        if( !$this->getLaborder() ) {
+//            $this->setLaborder(new LabOrder());
+//        }
+        $this->setScanorder(null);
+        $this->setLaborder(null);
+        $this->setSlideReturnRequest(null);
+
     }
 
     public function __clone() {
@@ -283,6 +436,10 @@ class OrderInfo extends OrderAbstract {
             $this->inputs = new ArrayCollection();
             $this->outputs = new ArrayCollection();
             $this->associations = new ArrayCollection();
+            $this->backAssociations = new ArrayCollection();
+
+            $this->sources = new ArrayCollection();
+            $this->destinations = new ArrayCollection();
 
             //
             $provider = $this->getProvider();
@@ -350,6 +507,244 @@ class OrderInfo extends OrderAbstract {
         $addMethod = "add".$className;
         $this->$addMethod($depend);
     }
+
+
+
+
+
+    /**
+     * @param mixed $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param mixed $deadline
+     */
+    public function setDeadline($deadline)
+    {
+        $this->deadline = $deadline;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeadline()
+    {
+        return $this->deadline;
+    }
+
+    /**
+     * @param mixed $delivery
+     */
+    public function setDelivery($delivery)
+    {
+        $this->delivery = $delivery;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDelivery()
+    {
+        return $this->delivery;
+    }
+
+    /**
+     * @param mixed $equipment
+     */
+    public function setEquipment($equipment)
+    {
+        $this->equipment = $equipment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEquipment()
+    {
+        return $this->equipment;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setOrderdate($date=null) {
+        if( $date ) {
+            $this->orderdate = $date;
+        } else {
+            $this->orderdate = new \DateTime();
+        }
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getOrderdate()
+    {
+        return $this->orderdate;
+    }
+
+    /**
+     * @param mixed $priority
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param mixed $provider
+     */
+    public function setProvider($provider)
+    {
+        $this->provider = $provider;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    /**
+     * @param mixed $proxyuser
+     */
+    public function setProxyuser($proxyuser)
+    {
+        $this->proxyuser = $proxyuser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProxyuser()
+    {
+        return $this->proxyuser;
+    }
+
+    /**
+     * @param mixed $purpose
+     */
+    public function setPurpose($purpose)
+    {
+        $this->purpose = $purpose;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPurpose()
+    {
+        return $this->purpose;
+    }
+
+    /**
+     * @param mixed $returnoption
+     */
+    public function setReturnoption($returnoption)
+    {
+        $this->returnoption = $returnoption;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReturnoption()
+    {
+        return $this->returnoption;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+
+
+
+
+
 
 
 
@@ -463,6 +858,38 @@ class OrderInfo extends OrderAbstract {
     public function removeTracking($tracking)
     {
         $this->tracking->removeElement($tracking);
+    }
+
+    public function getSources()
+    {
+        return $this->sources;
+    }
+    public function addSource($item)
+    {
+        if( $item && !$this->sources->contains($item) ) {
+            $this->sources->add($item);
+        }
+        return $this;
+    }
+    public function removeSource($item)
+    {
+        $this->sources->removeElement($item);
+    }
+
+    public function getDestinations()
+    {
+        return $this->destinations;
+    }
+    public function addDestination($item)
+    {
+        if( $item && !$this->destinations->contains($item) ) {
+            $this->destinations->add($item);
+        }
+        return $this;
+    }
+    public function removeDestination($item)
+    {
+        $this->destinations->removeElement($item);
     }
 
 
@@ -868,6 +1295,21 @@ class OrderInfo extends OrderAbstract {
         $this->associations->removeElement($item);
     }
 
+    public function getBackAssociations()
+    {
+        return $this->backAssociations;
+    }
+    public function addBackAssociation($item)
+    {
+        if( !$this->backAssociations->contains($item) ) {
+            $this->backAssociations->add($item);
+        }
+    }
+    public function removeBackAssociation($item)
+    {
+        $this->backAssociations->removeElement($item);
+    }
+
 
 //    /**
 //     * @param mixed $scanner
@@ -939,6 +1381,24 @@ class OrderInfo extends OrderAbstract {
     {
         return $this->scanorder;
     }
+
+
+    /**
+     * @param mixed $slideReturnRequest
+     */
+    public function setSlideReturnRequest($slideReturnRequest)
+    {
+        $this->slideReturnRequest = $slideReturnRequest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlideReturnRequest()
+    {
+        return $this->slideReturnRequest;
+    }
+
 
     /**
      * @param mixed $laborder

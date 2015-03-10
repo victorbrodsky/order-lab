@@ -1099,6 +1099,8 @@ class ScanOrderController extends Controller {
         $dql = $repository->createQueryBuilder("orderinfo");
 
         $dql->innerJoin("orderinfo.slide", "slides");
+        $dql->leftJoin("orderinfo.destinations", "destinations");
+        //$dql->leftJoin("destinations.location", "destinationlocation");
 
         $dql->select('orderinfo, COUNT(slides.id) AS slidecount');
 

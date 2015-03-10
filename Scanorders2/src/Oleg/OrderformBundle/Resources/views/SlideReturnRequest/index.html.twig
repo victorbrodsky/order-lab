@@ -97,14 +97,14 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(sliderequests, 'ID', 'list.id') }}</th>
-                <th>{{ knp_pagination_sortable(sliderequests, 'Date', 'list.orderdate') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Date', 'orderinfo.orderdate') }}</th>
                 {% if routename == 'incoming-slide-return-requests' %}
                     <th>{{ knp_pagination_sortable(sliderequests, 'Submitter', 'provider.username') }}</th>
                 {% endif %}
                 <th>{{ knp_pagination_sortable(sliderequests, 'Ordering Provider', 'proxyuser.username') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Institution', 'institution.name') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Status', 'list.status') }}</th>
-                <th>{{ knp_pagination_sortable(sliderequests, 'Return Slides to', 'returnLocation.name') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Return Slides to', 'destinationslocation.name') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Urgency', 'list.urgency') }}</th>
                 <th class="col-xs-3">{{ knp_pagination_sortable(sliderequests, 'Slides', 'slidecount') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Scan Order ID', 'orderinfo.id') }}</th>
@@ -139,21 +139,21 @@
                 </td>
 
                 <td>
-                    {{ sliderequest.orderdate|date('m/d/Y H:i') }}
+                    {{ sliderequest.orderinfo.orderdate|date('m/d/Y H:i') }}
                 </td>
 
                 {% if routename == 'incoming-slide-return-requests' %}
                     <td>
-                        <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
+                        <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.orderinfo.provider.id }) }}">{{ sliderequest.orderinfo.provider }}</a>
                     </td>
                 {% endif %}
 
                 <td>
-                    <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.orderinfo.proxyuser.id }) }}">{{ sliderequest.orderinfo.proxyuser }}</a>
                 </td>
 
                 <td>
-                    {{ sliderequest.institution }}
+                    {{ sliderequest.orderinfo.institution }}
                 </td>
 
                 <td>
@@ -169,7 +169,10 @@
                 </td>
 
                 <td>
-                    {{ sliderequest.returnLocation }}
+                    {#{{ sliderequest.returnLocation }}#}
+                    {% for destination in sliderequest.orderinfo.destinations %}
+                        {{ destination.location }}
+                    {% endfor %}
                 </td>
 
                 <td>
@@ -202,7 +205,7 @@
                 </td>
 
                 <td>
-                    {% if sliderequest.orderinfo != NULL %}
+                    {% if sliderequest.orderinfo != NULL and sliderequest.orderinfo.oid %}
                         <a href="{{ path('multy_show', { 'id': sliderequest.orderinfo.oid }) }}">{{ sliderequest.orderinfo.oid }}</a>
                     {% endif %}
                 </td>

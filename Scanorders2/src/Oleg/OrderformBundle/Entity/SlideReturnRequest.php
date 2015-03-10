@@ -12,14 +12,28 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="scan_slideReturnRequest")
  */
-class SlideReturnRequest extends OrderAbstract {
+class SlideReturnRequest {
 
     /**
-     * Overwrite abstract status variable: Status object to string (active, declined, approved)
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="slideReturnRequest", cascade={"persist"})
+     **/
+    private $orderinfo;
+
+    /**
+     * Additional status variable: Status object to string (active, declined, approved)
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $status;
+    private $status;
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
@@ -33,7 +47,7 @@ class SlideReturnRequest extends OrderAbstract {
      * @ORM\Column(name="urgency", type="string", nullable=true)
      * @Assert\NotBlank
      */
-    protected $urgency;
+    private $urgency;
 
     /**
      * @ORM\ManyToMany(targetEntity="Slide")
@@ -44,27 +58,30 @@ class SlideReturnRequest extends OrderAbstract {
      */
     private $slide;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="OrderInfo")
+//     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", nullable=true)
+//     */
+//    protected $orderinfo;
+
     /**
-     * @ORM\ManyToOne(targetEntity="OrderInfo")
-     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    protected $orderinfo;
+    private $comment;
 
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $comment;
-
-//    /**
-//     * Return slide(s) by this date even if not scanned
-//     * @ORM\Column(name="returnoption", type="boolean", nullable=true)
-//     */
-//    private $returnoption;
+    /**
+     * Return slide(s) by this date even if not scanned
+     * @ORM\Column(name="returnoption", type="boolean", nullable=true)
+     */
+    private $returnoption;
 
     /**
      * @ORM\OneToMany(targetEntity="SlideText", mappedBy="slideReturnRequest", cascade={"persist"})
      */
     private $slidetext;
+
+
+
 
 
     /**
@@ -77,17 +94,24 @@ class SlideReturnRequest extends OrderAbstract {
     }
 
 
-//    public function setReturnSlide($returnSlide)
-//    {
-//        $this->returnSlide = $returnSlide;
-//
-//        return $this;
-//    }
-//
-//    public function getReturnSlide()
-//    {
-//        return $this->returnSlide;
-//    }
+
+
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function getStatus() {
         return $this->status;
@@ -177,6 +201,22 @@ class SlideReturnRequest extends OrderAbstract {
     }
 
     /**
+     * @param mixed $returnoption
+     */
+    public function setReturnoption($returnoption)
+    {
+        $this->returnoption = $returnoption;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReturnoption()
+    {
+        return $this->returnoption;
+    }
+
+    /**
      * @param mixed $comment
      */
     public function setComment($comment)
@@ -202,22 +242,6 @@ class SlideReturnRequest extends OrderAbstract {
 
         $this->comment = $commentFull . "<br>" . $this->comment;
     }
-
-//    /**
-//     * @param mixed $returnoption
-//     */
-//    public function setReturnoption($returnoption)
-//    {
-//        $this->returnoption = $returnoption;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getReturnoption()
-//    {
-//        return $this->returnoption;
-//    }
 
     public function getSlidetext()
     {
@@ -303,6 +327,14 @@ class SlideReturnRequest extends OrderAbstract {
         }
 
         return $description;
+    }
+
+    public function __toString() {
+        $res = "SlideReturnRequest";
+        if( $this->getId() ) {
+            $res = $res . " with ID=" . $this->getId();
+        }
+        return $res;
     }
 
 }

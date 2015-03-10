@@ -186,32 +186,19 @@ class OrderInfoType extends AbstractType
         ));
 
 
-        ////////////// returnLocation //////////////////////
-        $returnLocationsOptions = array(
-            'label' => "Return Slides to:",
-            'required' => true,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
-            'classtype' => 'location',
-        );
 
-        //locations default and preferred choices
-        if( $this->params['cycle'] == 'new' && array_key_exists('returnLocation', $this->params) ) {
-            $returnLocation = $this->params['returnLocation'];
-            $returnLocationsOptions['data'] = $returnLocation['data']->getId();
-        }
-
-        if( $this->params['cycle'] == 'show' ) {
-            $builder->add('returnLocation', 'entity', array(
-                'label' => 'Return Slides to:',
-                'required'=> false,
-                'multiple' => false,
-                'class' => 'OlegUserdirectoryBundle:Location',
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
-        } else {
-            $builder->add('returnLocation', 'employees_custom_selector', $returnLocationsOptions);
-        }
-        ////////////// EOF returnLocation //////////////////////
+        //Endpoint object: destination - location
+        $this->params['label'] = 'Return Slides to:';
+        $builder->add('destinations', 'collection', array(
+            'type' => new EndpointType($this->params,$this->entity),    //$this->type),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__destinations__',
+        ));
 
         //Institution Tree
         if( array_key_exists('institutions', $this->params) ) {
@@ -274,10 +261,15 @@ class OrderInfoType extends AbstractType
             'label' => false
         ));
 
-//        $builder->add('laborder', new LabOrderType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
-//            'label' => false
-//        ));
+        $builder->add('laborder', new LabOrderType($this->params), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
+            'label' => false
+        ));
+
+        $builder->add('slideReturnRequest', new SlideReturnRequestType($this->params), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\SlideReturnRequest',
+            'label' => false
+        ));
 
         ////////////////////////// EOF Specific Orders //////////////////////////
         

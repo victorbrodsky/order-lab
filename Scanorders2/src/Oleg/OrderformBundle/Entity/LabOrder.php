@@ -183,4 +183,12 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
 //        $this->trackLocations->removeElement($trackLocation);
 //    }
 
+    public function __toString() {
+        $res = "Lab Order";
+        if( $this->getId() ) {
+            $res = $res . " with ID=" . $this->getId();
+        }
+        return $res;
+    }
+
 }

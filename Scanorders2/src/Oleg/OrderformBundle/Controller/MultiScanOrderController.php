@@ -4,6 +4,8 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\Endpoint;
+use Oleg\OrderformBundle\Entity\ScanOrder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -321,6 +323,8 @@ class MultiScanOrderController extends Controller {
         }
 
         $entity = new OrderInfo();
+        $scanOrder = new ScanOrder();
+        $scanOrder->setOrderinfo($entity);
 
         //***************** get ordering provider from most recent order ***************************//
         $lastProxy = null;
@@ -351,14 +355,22 @@ class MultiScanOrderController extends Controller {
         //echo "MultiScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
 
-        $source = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
 
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
 
         $entity->setProvider($user);
 
-        $entity->setSource($source);
+        //set Source object
+        $source = new Endpoint();
+        $source->setSystem($system);
+        $entity->addSource($source);
+
+        //set Destination object
+        $destination = new Endpoint();
+        //$destination->setSystem($system);
+        $entity->addDestination($destination);
 
         if( $lastProxy ) {
             $entity->setProxyuser($lastProxy);
@@ -366,25 +378,25 @@ class MultiScanOrderController extends Controller {
             $entity->setProxyuser($user);
         }
 
-        $patient = new Patient(true,$status,$user,$source);
+        $patient = new Patient(true,$status,$user,$system);
         $entity->addPatient($patient);
 
-        $encounter = new Encounter(true,$status,$user,$source);
+        $encounter = new Encounter(true,$status,$user,$system);
         $patient->addEncounter($encounter);
 
-        $procedure = new Procedure(true,$status,$user,$source);
+        $procedure = new Procedure(true,$status,$user,$system);
         $encounter->addProcedure($procedure);
 
-        $accession = new Accession(true,$status,$user,$source);
+        $accession = new Accession(true,$status,$user,$system);
         $procedure->addAccession($accession);
 
-        $part = new Part(true,$status,$user,$source);
+        $part = new Part(true,$status,$user,$system);
         $accession->addPart($part);
 
-        $block = new Block(true,$status,$user,$source);
+        $block = new Block(true,$status,$user,$system);
         $part->addBlock($block);
 
-        $slide = new Slide(true,'valid',$user,$source); //Slides are always valid by default
+        $slide = new Slide(true,'valid',$user,$system); //Slides are always valid by default
         $block->addSlide($slide);
 
         $edu = new Educational();
@@ -439,7 +451,7 @@ class MultiScanOrderController extends Controller {
             'user'=>$user,
             'division'=>$division,
             'department'=>$department,
-            'returnLocation'=>$orderUtil->getOrderReturnLocations($entity),
+            'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity),
             'datastructure'=>$this->datastructure
         );
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
@@ -551,7 +563,7 @@ class MultiScanOrderController extends Controller {
         if( $routeName == "scan_datastructure") {
             $actions = array('edit'); //show extra fields
             $datastructure = "datastructure";
-            $source = $securityUtil->getDefaultSourceSystem();
+            $system = $securityUtil->getDefaultSourceSystem();
         }
 
         if( $entity && !$securityUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
@@ -591,7 +603,7 @@ class MultiScanOrderController extends Controller {
             }
 
             if( $datastructure ) {
-                $patient->addExtraFields($extraStatus,$user,$source);
+                $patient->addExtraFields($extraStatus,$user,$system);
             }
 
             //encounter
@@ -608,7 +620,7 @@ class MultiScanOrderController extends Controller {
                 }
 
                 if( $datastructure ) {
-                    $encounter->addExtraFields($extraStatus,$user,$source);
+                    $encounter->addExtraFields($extraStatus,$user,$system);
                 }
 
                 //procedure
@@ -625,7 +637,7 @@ class MultiScanOrderController extends Controller {
                     }
 
                     if( $datastructure ) {
-                        $procedure->addExtraFields($extraStatus,$user,$source);
+                        $procedure->addExtraFields($extraStatus,$user,$system);
                     }
 
                     //accession
@@ -641,7 +653,7 @@ class MultiScanOrderController extends Controller {
                         }
 
                         if( $datastructure ) {
-                            $accession->addExtraFields($extraStatus,$user,$source);
+                            $accession->addExtraFields($extraStatus,$user,$system);
                         }
 
                         //part

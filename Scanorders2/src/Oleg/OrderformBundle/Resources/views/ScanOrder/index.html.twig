@@ -90,8 +90,8 @@
                         <th>{{ knp_pagination_sortable(pagination, 'Ordering Provider', 'proxyuser.username') }}</th>
                     {% endif %}
                     <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Return To', 'orderinfo.returnLocation') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>                   
+                    <th>{{ knp_pagination_sortable(pagination, 'Return To', 'destinations.location') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>
                     
                 {% endif %}
                    
@@ -186,7 +186,11 @@
                     {{ entity.slide|length }}
                 </td>
                 <td>{{ entity.priority }}</td>            
-                <td>{{ entity.returnLocation }}</td>
+                <td>
+                    {% for destination in entity.destinations %}
+                        {{ destination.location }}
+                    {% endfor %}
+                </td>
                 <td>{{ entity.type }}</td>
                 {% if showprovider is defined and showprovider == 'true' %}
                     <td>
@@ -220,7 +224,11 @@
                     </td>
                 {% endif %}
                 <td>{{ entity.slide|length }}</td> 
-                <td>{{ entity.returnLocation }}</td>
+                <td>
+                    {% for destination in entity.destinations %}
+                        {{ destination.location }}
+                    {% endfor %}
+                </td>
                 <td>{{ entity.type }}</td>
                     
             {% endif %}

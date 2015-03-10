@@ -24,17 +24,17 @@ class OrderAbstract {
      */
     protected $id;
 
-    /**
-     * TODO: remove it
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $ordername;
-
-    /**
-     * TODO: remove it
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $ordernumber;
+//    /**
+//     * TODO: remove it
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $ordername;
+//
+//    /**
+//     * TODO: remove it
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $ordernumber;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -76,21 +76,21 @@ class OrderAbstract {
      */
     protected $institution;
 
-    /**
-     * TODO: manytomany
-     * Source System
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
-     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
-     */
-    protected $sourceSystem;
-
-    /**
-     * TODO: manytomany
-     * Destination System
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
-     * @ORM\JoinColumn(name="destination_id", referencedColumnName="id", nullable=true)
-     */
-    protected $destinationSystem;
+//    /**
+//     * TODO: manytomany
+//     * Source System
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+//     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $sourceSystem;
+//
+//    /**
+//     * TODO: manytomany
+//     * Destination System
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+//     * @ORM\JoinColumn(name="destination_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $destinationSystem;
 
     /**
      * @ORM\ManyToOne(targetEntity="Status")
@@ -98,19 +98,19 @@ class OrderAbstract {
      */
     protected $status;
 
-    /**
-     * Order source location
-     *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-     */
-    private $sourceLocation;
-
-    /**
-     * Return Location (object)
-     *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-     **/
-    protected $returnLocation;
+//    /**
+//     * Order source location
+//     *
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+//     */
+//    private $sourceLocation;
+//
+//    /**
+//     * Return Location (object)
+//     *
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+//     **/
+//    protected $returnLocation;
 
     /**
      * Order priority: routine, stat
@@ -142,19 +142,19 @@ class OrderAbstract {
 
 
 
-    /**
-     * Purpose of Order (string)
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $purpose;
+//    /**
+//     * Purpose of Order (string)
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $purpose;
 
-    /**
-     * Equipment associated with this order (object)
-     *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
-     */
-    protected $equipment;
+//    /**
+//     * Equipment associated with this order (object)
+//     *
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
+//     */
+//    protected $equipment;
 
 
     /**

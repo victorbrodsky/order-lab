@@ -64,14 +64,7 @@ class Patient extends ObjectAbstract
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
      **/
     protected $orderinfo;
-    
-    //, cascade={"persist"}
-//    /**
-//     * Patient might have many Procedures or Procedures (children)
-//     *
-//     * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
-//     */
-//    private $procedure;
+
     /**
      * Patient might have many encounters (children)
      *

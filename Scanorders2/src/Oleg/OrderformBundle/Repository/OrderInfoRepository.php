@@ -37,6 +37,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
             $entity->setType($formtype);
         }
+
+        //persist specific orders if exists
+        $entity = $this->processSpecificOrders($entity);
+        //echo "scanorder=".$entity->getScanorder()."<br>";
+        //echo "laborder=".$entity->getLaborder()."<br>";
+        //echo "slideReturnRequest=".$entity->getSlideReturnRequest()."<br>";
+        //exit('exit');
+
         
         if( $entity->getPriority() == "Routine" ) {      
             $entity->setDeadline(NULL);
@@ -258,5 +266,31 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
     }
 
+    public function processSpecificOrders( $orderinfo ) {
+
+        $category = $orderinfo->getType();
+
+        if( !$category ) {
+            $orderinfo->setScanorder(null);
+            $orderinfo->setLaborder(null);
+            $orderinfo->setSlideReturnRequest(null);
+            return $orderinfo;
+        }
+
+        if( strpos($category,'Scan Order') !== false ) {
+            //$orderinfo->setScanorder(null);
+            $orderinfo->setLaborder(null);
+            $orderinfo->setSlideReturnRequest(null);
+        } else
+        if( strpos($category,'Lab Order') !== false ) {
+            $orderinfo->setScanorder(null);
+            //$orderinfo->setLaborder(null);
+            $orderinfo->setSlideReturnRequest(null);
+        } else {
+
+        }
+
+        return $orderinfo;
+    }
 
 }

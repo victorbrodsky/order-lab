@@ -2,6 +2,9 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+use Oleg\OrderformBundle\Entity\Endpoint;
+use Oleg\OrderformBundle\Entity\OrderInfo;
+use Oleg\OrderformBundle\Form\OrderInfoType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -52,23 +55,42 @@ class SlideReturnRequestController extends Controller
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
+        $orderinfo = new OrderInfo();
+
+        //set destination
+        $destination = new Endpoint();
+        $orderinfo->addDestination($destination);
+
         $slideReturnRequest  = new SlideReturnRequest();
 
-        $slideReturnRequest->setProvider($user);
-        $slideReturnRequest->setProxyuser($user);
-        $slideReturnRequest->setReturnoption(true);
+        //$orderinfo->setSlideReturnRequest($slideReturnRequest);
+        $slideReturnRequest->setOrderinfo($orderinfo);
+
+        $slideReturnRequest->getOrderinfo()->setProvider($user);
+        $slideReturnRequest->getOrderinfo()->setProxyuser($user);
+        $slideReturnRequest->getOrderinfo()->setReturnoption(true);
 
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
+//        $params = array(
+//            'user'=>$user,
+//            'type'=>'table',
+//            'institutions'=>$permittedInst,
+//            'cycle' => 'new',
+//            'destinationLocation'=>$orderUtil->getOrderReturnLocations($orderinfo)
+//        );
+//        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+
         $params = array(
-            'user'=>$user,
             'type'=>'table',
+            'cycle'=>'new',
             'institutions'=>$permittedInst,
-            'cycle' => 'new',
-            'returnLocation'=>$orderUtil->getOrderReturnLocations($slideReturnRequest)
+            'user'=>$user,
+            'destinationLocation'=>$orderUtil->getOrderReturnLocations($orderinfo),
+            'datastructure'=>null
         );
-        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+        $form   = $this->createForm( new OrderInfoType($params, $orderinfo), $orderinfo );
 
         return array(
             'form' => $form->createView(),
@@ -86,28 +108,49 @@ class SlideReturnRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName("Slide Return Request");
+        $orderUtil = $this->get('scanorder_utility');
 
+        $orderinfo = new OrderInfo();
         $slideReturnRequest  = new SlideReturnRequest();
+        $orderinfo->setSlideReturnRequest($slideReturnRequest);
 
-        $slideReturnRequest->setProvider($user);
+        $slideReturnRequest->getOrderinfo()->setProvider($user);
 
         $slideReturnRequest->setStatus('active');
 
-        $slideReturnRequest->setType($formtype);
+        $slideReturnRequest->getOrderinfo()->setType($formtype);
 
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
-        $params = array('user'=>$user,'type'=>'table', 'institutions'=>$permittedInst);
-        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+        //$params = array('user'=>$user,'type'=>'table', 'institutions'=>$permittedInst);
+        //$form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+
+        $params = array(
+            'type'=>'table',
+            'cycle'=>'create',
+            'institutions'=>$permittedInst,
+            'user'=>$user,
+            'destinationLocation'=>$orderUtil->getOrderReturnLocations($orderinfo),
+            'datastructure'=>null
+        );
+        $form   = $this->createForm( new OrderInfoType($params, $orderinfo), $orderinfo );
 
         $form->handleRequest($request);
+
+        //echo "<br>errors:<br>";
+        //print_r($form->getErrors());
+        //var_dump($form->getErrors());die;
+        //echo "<br>errors:<br>";
+        //print_r($form->getErrorsAsString());
+        //echo "<br>";
+        //exit("controller exit");
 
         if( $form->isValid() ) {
             //echo "form is valid !!! <br>";
 
             //////////////// process handsontable rows ////////////////
-            $datajson = $form->get('datalocker')->getData();
+            $datajson = $form->get('slideReturnRequest')->get('datalocker')->getData();
 
             $data = json_decode($datajson, true);
             //var_dump($data);
@@ -148,6 +191,7 @@ class SlideReturnRequestController extends Controller
                 $rowCount++;
 
             }//foreach row
+
 
             if( $rowCount > 0 ) {
                 $em->persist($slideReturnRequest);
@@ -202,10 +246,13 @@ class SlideReturnRequestController extends Controller
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
+        //TODO: test it
+        //$orderinfo = new OrderInfo();
         $slideReturnRequest  = new SlideReturnRequest();
+        $orderinfo->setSlideReturnRequest($slideReturnRequest);
 
-        $slideReturnRequest->setProvider($user);
-        $slideReturnRequest->setProxyuser($user);
+        $slideReturnRequest->getOrderinfo()->setProvider($user);
+        $slideReturnRequest->getOrderinfo()->setProxyuser($user);
 
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
@@ -216,13 +263,13 @@ class SlideReturnRequestController extends Controller
             'user'=>$user,
             'institutions'=>$permittedInst,
             'cycle' => 'new',
-            'returnLocation'=>$orderUtil->getOrderReturnLocations($slideReturnRequest)
+            'destinationLocation'=>$orderUtil->getOrderReturnLocations($orderinfo)
         );
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         return array(
             'orderinfo' => $orderinfo,
-            'form' => $form->createView(),
+            'form' => $form->createView(),  //SlideReturnRequest form
             'cycle' => 'new'
         );
     }
@@ -242,12 +289,12 @@ class SlideReturnRequestController extends Controller
         $slideReturnRequest  = new SlideReturnRequest();
 
         $user = $this->get('security.context')->getToken()->getUser();
-        $slideReturnRequest->setProvider($user);
+        $slideReturnRequest->getOrderinfo()->setProvider($user);
 
         $slideReturnRequest->setStatus('active');
 
         $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName("Slide Return Request");
-        $slideReturnRequest->setType($formtype);
+        $slideReturnRequest->getOrderinfo()->setType($formtype);
 
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
@@ -463,21 +510,22 @@ class SlideReturnRequestController extends Controller
         $dql->groupBy('list');
         $dql->addGroupBy('provider.username');
         $dql->addGroupBy('proxyuser.username');
-        $dql->addGroupBy('orderinfo.id');
+        $dql->addGroupBy('orderinfo');
         $dql->addGroupBy('institution.name');
-        $dql->addGroupBy('returnLocation.name');
+        $dql->addGroupBy('destinationslocation');
 
         $dql->leftJoin("list.slide", "slides");
-        $dql->innerJoin('list.provider','provider');
         $dql->leftJoin('list.orderinfo','orderinfo');
-        $dql->innerJoin('list.institution','institution');
-        $dql->leftJoin('list.proxyuser','proxyuser');
-        $dql->leftJoin("list.returnLocation", "returnLocation");
+        $dql->innerJoin('orderinfo.provider','provider');
+        $dql->innerJoin('orderinfo.institution','institution');
+        $dql->leftJoin('orderinfo.proxyuser','proxyuser');
+        $dql->leftJoin("orderinfo.destinations", "destinations");
+        $dql->leftJoin("destinations.location", "destinationslocation");
 
 		$postData = $request->query->all();
 		
 		if( !isset($postData['sort']) ) { 
-			$dql->orderBy('list.orderdate','DESC');
+			$dql->orderBy('orderinfo.orderdate','DESC');
 		}
 
         $setParameter = false;

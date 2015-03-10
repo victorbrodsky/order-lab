@@ -159,15 +159,24 @@
                 </div>
                 <div class="panel-body collapse in">
 
-                    {{ formmacros.field(form.returnoption) }}
+                    {{ formmacros.field(form.slideReturnRequest.returnoption) }}
                     {#{{ formmacros.field(form.provider) }}#}
                     {{ formmacros.simplefield( "Submitter:", form.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
                     {{ formmacros.field(form.proxyuser) }}
                     {{ formmacros.field(form.institution) }}
-                    {{ formmacros.field(form.returnLocation) }}
-                    {{ formmacros.field(form.urgency) }}
 
-                    {{ form_rest(form) }}
+                    {% for destination in form.destinations %}
+                        {{ formmacros.field(destination.location) }}
+                    {% endfor %}
+
+                    {{ formmacros.field(form.slideReturnRequest.urgency) }}
+
+                    {#hidden, not mapped holder for table data#}
+                    {{ formmacros.field(form.slideReturnRequest.datalocker) }}
+
+                    {% do form.setRendered %}
+                    {{ form_row(form._token) }}
+                    {#{{ form_rest(form) }}#}
                 </div>
             </div>
 

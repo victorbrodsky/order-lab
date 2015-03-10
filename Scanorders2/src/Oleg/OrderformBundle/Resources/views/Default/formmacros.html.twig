@@ -208,7 +208,9 @@
     </div>
 
     {{ formmacros.field(form.delivery) }}
-    {{ formmacros.field(form.returnLocation) }}
+    {% for destination in form.destinations %}
+        {{ formmacros.field(destination.location) }}
+    {% endfor %}
 
 {% endmacro %}
 
