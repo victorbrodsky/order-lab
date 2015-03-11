@@ -431,10 +431,14 @@ class MultiScanOrderController extends Controller {
         ////////////////// set previous service from the last order if default is null //////////////////
         if( !$userSiteSettings->getDefaultService() ) {
             //echo "find prev service <br>";
-            $previousOrder = $orderUtil->getPreviousOrderinfo();
+            $previousOrder = $orderUtil->getPreviousOrderinfo('Scan Order');
+            //echo $previousOrder;
             //$this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
             if( $previousOrder ) {
-                $entity->getScanOrder()->setService($previousOrder->getScanOrder()->getService());
+                if( $previousOrder->getScanOrder() ) {
+                    //echo "prev service=".$previousOrder->getScanOrder()->getService()->getName()."<br>";
+                    $entity->getScanOrder()->setService($previousOrder->getScanOrder()->getService());
+                }
                 //echo "prev service set<br>";
             }
         }

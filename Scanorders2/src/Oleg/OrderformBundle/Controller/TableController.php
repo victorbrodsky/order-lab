@@ -536,10 +536,12 @@ class TableController extends Controller {
         ////////////////// set previous service from the last order if default is null //////////////////
         if( !$userSiteSettings->getDefaultService() ) {
             //echo "find prev service <br>";
-            $previousOrder = $orderUtil->getPreviousOrderinfo();
+            $previousOrder = $orderUtil->getPreviousOrderinfo('Scan Order');
             //$this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
             if( $previousOrder ) {
-                $entity->getScanorder()->setService($previousOrder->getScanorder()->getService());
+                if( $previousOrder->getScanOrder() ) {
+                    $entity->getScanorder()->setService($previousOrder->getScanorder()->getService());
+                }
                 //echo "prev service set<br>";
             }
         }

@@ -826,9 +826,11 @@ class ScanUtilController extends Controller {
         } else {
             //add service from previous order for this user
             $orderUtil = $this->get('scanorder_utility');
-            $previousOrder = $orderUtil->getPreviousOrderinfo();
+            $previousOrder = $orderUtil->getPreviousOrderinfo('Scan Order');
             if( $previousOrder ) {
-                $service = $previousOrder->getScanOrder()->getService();
+				if( $previousOrder->getScanOrder() ) {
+					$service = $previousOrder->getScanOrder()->getService();
+				}
                 //echo "prev service=".$service." => ";
             }
         }

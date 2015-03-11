@@ -650,12 +650,32 @@ class OrderUtil {
     }
 
     //get the last order
-    public function getPreviousOrderinfo() {
+    public function getPreviousOrderinfo( $categoryStr=null ) {
         $previousOrder = null;
 
         $user = $this->sc->getToken()->getUser();
 
-        $previousOrders = $this->em->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array('provider'=>$user), array('orderdate' => 'DESC'),1); //limit to one result
+//        $previousOrders = $this->em->getRepository('OlegOrderformBundle:OrderInfo')->findBy(
+//            array('provider'=>$user),
+//            array('orderdate' => 'DESC'),
+//            1                                   //limit to one result
+//        );
+
+        $repository = $this->em->getRepository('OlegOrderformBundle:OrderInfo');
+        $dql =  $repository->createQueryBuilder("orderinfo");
+        $dql->leftJoin('orderinfo.provider','provider');
+        $dql->leftJoin('orderinfo.type','category');
+
+        $criteria = "provider=".$user->getId(); //." AND category LIKE '%".$categoryStr."%'";
+        if( $categoryStr && $categoryStr != "" ) {
+            $criteria = $criteria . " AND category.name LIKE '%".$categoryStr."%'";
+        }
+
+        $dql->where($criteria);
+        $dql->orderBy('orderinfo.orderdate','DESC');
+
+        $query = $this->em->createQuery($dql)->setMaxResults(1);
+        $previousOrders = $query->getResult();
 
         if( $previousOrders && count($previousOrders) > 0 ) {
             $previousOrder = $previousOrders[0];

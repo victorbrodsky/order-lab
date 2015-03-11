@@ -1506,17 +1506,22 @@ function createDropzoneHolder(existingDropzoneHolder) {
 
     //console.log('prototype='+prototype);
 
+    //printF(existingDropzoneHolder,"existingDropzoneHolder:");
     //console.log(existingDropzoneHolder);
 
-    var paperidElement = existingDropzoneHolder.parent().find('.field-partpaperothers').last();
+    var paperidElement = existingDropzoneHolder.parent().find('.field-partpaperothers');
+    //var paperidElement = existingDropzoneHolder.closest('.partpaper').find('.field-partpaperothers'); //this will get incorrect paperid
 
-    if( !paperidElement ) {
+    //console.log('count paperidElement='+paperidElement.length);
+
+    if( !paperidElement || paperidElement.length == 0 ) {
         throw new Error("Paper element is not found");
     }
 
+    //printF(paperidElement,"paperidElement:");
     //console.log(paperidElement);
 
-    var id = paperidElement.attr('id');
+    var id = paperidElement.last().attr('id');
 
     if( !id || id == "" ) {
         throw new Error("Paper id element is not found");

@@ -788,6 +788,14 @@
 
             {{ usermacros.document( paper, cycle, prototype ) }}
 
+            {#render field "other". id of this field will be used to get the paperid in js#}
+            {% if cycle != 'show' %}
+                {% if paper.others is defined %}
+                    {{ form_widget(paper.others) }}
+                {% endif %}
+                {{ form_rest(paper) }}
+            {% endif %}
+
         </div>
         
     {% endif %}
