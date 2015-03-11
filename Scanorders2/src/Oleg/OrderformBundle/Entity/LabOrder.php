@@ -103,6 +103,7 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
     public function setOrderinfo($orderinfo)
     {
         $this->orderinfo = $orderinfo;
+        $orderinfo->setLaborder($this);
     }
 
     /**

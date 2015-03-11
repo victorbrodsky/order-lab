@@ -107,7 +107,7 @@ class ScanOrderController extends Controller {
 
 //        $adminemail = $this->container->getParameter('scanorder.adminemail');
 //        echo "adminemail=".$adminemail."<br>";
-//        exit();
+        //exit();
         //throw new \Exception( 'Test' );
         //http://knpbundles.com/craue/CraueConfigBundle
         //$this->get('craue_config')->set('ldap_driver_host', 'a.wcmc-ad.net');
@@ -127,6 +127,7 @@ class ScanOrderController extends Controller {
         //service
         //echo "<br>service=".$service."<br>";
         //exit();
+        //echo "<br>search=".$search."<br>";
 
         $increaseMaxExecTime = false;
 
@@ -137,7 +138,6 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
 
         $withSearch = true;
-
         $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $this->get('security.context'), $withSearch );
 
         $dql = $res['dql'];
@@ -501,7 +501,7 @@ class ScanOrderController extends Controller {
                     if( $criteriastr != "" ) {
                         $criteriastr .= " OR ";
                     }
-                    $criteriastr .= " orderinfo.service=".$service->getId();
+                    $criteriastr .= " scanorder.service=".$service->getId();
                 }
             }//foreach
 
@@ -518,7 +518,7 @@ class ScanOrderController extends Controller {
                     throw new \Exception( 'Unable to find Service '.$service );
                 }
 
-                $criteriastr = " orderinfo.service=".$siteUserService->getId();
+                $criteriastr = " scanorder.service=".$siteUserService->getId();
 
             }
 
@@ -613,7 +613,6 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("req");
         $dql->innerJoin("req.orderinfo", "orderinfo");
-        //$dql->innerJoin("orderinfo.institution", "institution");
         $dql->where("req.status='active'" . $instStr);
         //echo "dql=".$dql;
         $query = $em->createQuery($dql);
@@ -728,7 +727,7 @@ class ScanOrderController extends Controller {
                 $count = $count . "+";
             }
 
-            $logger = new Logger($this->container->getParameter('scan.sitename'));           
+            $logger = new Logger($this->container->getParameter('scan.sitename'));
             $logger->setUser($user);
             $logger->setRoles($roles);
             $logger->setUsername($user."");
@@ -830,6 +829,8 @@ class ScanOrderController extends Controller {
 
         $searchStr = " LIKE '%" . $search . "%'";
 
+        //echo "<br>searchObject=".$searchObject."<br>";
+
         switch( $searchObject ) {
             case 'orderinfo.oid':
                 //orderinfo oid
@@ -859,24 +860,26 @@ class ScanOrderController extends Controller {
                 break;
             case 'provider':
                 $criteriastr .= "provider.username".$searchStr;
-                $criteriastr .= " OR provider.displayName".$searchStr;
+                $criteriastr .= " OR providerinfos.displayName".$searchStr;
                 $searchObjectName = "Submitter";
                 break;
             case 'proxyuser':
                 $criteriastr .= "proxyuser.username".$searchStr;
-                $criteriastr .= " OR proxyuser.displayName".$searchStr;
+                $criteriastr .= " OR proxyuserinfos.displayName".$searchStr;
                 $searchObjectName = "Ordering Provider";
                 break;
             case 'directorUser':
                 $dql->leftJoin("director.director", "directorUser");
+                $dql->leftJoin("directorUser.infos", "directorUserInfos");
                 $criteriastr .= "directorUser.username".$searchStr;
-                $criteriastr .= "OR directorUser.displayName".$searchStr;
+                $criteriastr .= "OR directorUserInfos.displayName".$searchStr;
                 $searchObjectName = "Course Director";
                 break;
             case 'principalUser':
                 $dql->leftJoin("principal.principal", "principalUser");
+                $dql->leftJoin("principalUser.infos", "principalUserInfos");
                 $criteriastr .= "principalUser.username".$searchStr;
-                $criteriastr .= " OR principalUser.displayName".$searchStr;
+                $criteriastr .= " OR principalUserInfos.displayName".$searchStr;
                 $searchObjectName = "Principal Investigator";
                 break;
             case 'accession':
@@ -919,8 +922,8 @@ class ScanOrderController extends Controller {
                 $searchObjectName = "Reason for Scan/Note";
                 break;
             case 'pathistory.field':
-                $dql->innerJoin("orderinfo.procedure", "procedure");
-                $dql->leftJoin("procedure.pathistory", "pathistory");
+                $dql->innerJoin("orderinfo.encounter", "encounter");
+                $dql->leftJoin("encounter.pathistory", "pathistory");
                 $criteriastr .= "pathistory.field".$searchStr;
                 $searchObjectName = "Clinical History";
                 break;
@@ -996,6 +999,9 @@ class ScanOrderController extends Controller {
             $dql->where($criteriastrOrig);
         }
 
+        //$dql->where($criteriastrOrig);
+        //$dql->where("1=1");
+
         $params = $this->get('request_stack')->getCurrentRequest()->query->all();
         $sort = $this->get('request_stack')->getCurrentRequest()->query->get('sort');
 
@@ -1023,7 +1029,6 @@ class ScanOrderController extends Controller {
             ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         }
 
-
         $limit = $this->limit;
 
         if( !$page && $page == "" ) {
@@ -1031,12 +1036,16 @@ class ScanOrderController extends Controller {
         }
 
         $query = $em->createQuery($dql);
+
         $paginator  = $this->get('knp_paginator');
+
         $pagination = $paginator->paginate(
             $query,
             $this->get('request')->query->get('page', $page), /*page number*/
-            $limit/*limit per page*/
+            $limit  /*limit per page*/
         );
+
+        //echo "<br>".$searchObjectName.": count=".count($pagination)."<br>";
 
         //check for active user requests
         $accountreqs = $this->getActiveAccountReq();
@@ -1054,7 +1063,8 @@ class ScanOrderController extends Controller {
 //            //echo "dql=".$dql."<br>";
 //
 //        }
-        //echo $searchObjectName.": count=".count($pagination)."<br>";
+        //echo "<br>".$searchObjectName.": count=".count($pagination)."<br>";
+
 
         $viewArr = array(
             'showprovider' => $showprovider,
@@ -1098,8 +1108,18 @@ class ScanOrderController extends Controller {
 
         $dql = $repository->createQueryBuilder("orderinfo");
 
+        //innerJoin must exist, otherwise empty result will be returned
         $dql->innerJoin("orderinfo.slide", "slides");
+        $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->innerJoin("orderinfo.type", "formtype");
+        $dql->innerJoin("orderinfo.status", "status");
+
+        $dql->leftJoin("provider.infos", "providerinfos");
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+        $dql->leftJoin("proxyuser.infos", "proxyuserinfos");
+
         $dql->leftJoin("orderinfo.destinations", "destinations");
+        $dql->leftJoin("orderinfo.scanorder", "scanorder");
         //$dql->leftJoin("destinations.location", "destinationlocation");
 
         $dql->select('orderinfo, COUNT(slides.id) AS slidecount');
@@ -1112,14 +1132,8 @@ class ScanOrderController extends Controller {
         //$dql->having("( (COUNT(orderinfo) > 1) AND (COUNT(status.name) > 1) AND (COUNT(formtype.name) > 1) AND (COUNT(provider.username) > 1) )");
         //$dql->having("( COUNT(orderinfo) > 1 )");
 
-        //$dql->innerJoin("orderinfo.institution", "institution");
-
-        $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->innerJoin("orderinfo.type", "formtype");
-
         $dql->leftJoin("orderinfo.history", "history"); //history might not exist, so use leftJoin
         $dql->leftJoin("history.eventtype", "eventtype");
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
         $dql->leftJoin("orderinfo.educational", "educational");
         $dql->leftJoin("educational.directorWrappers", "directorWrappers");
@@ -1129,7 +1143,7 @@ class ScanOrderController extends Controller {
         $dql->leftJoin("research.principalWrappers", "principalWrappers");
         $dql->leftJoin("principalWrappers.principal", "principal");
 
-        $dql->innerJoin("orderinfo.status", "status");
+
 
         //$increaseMaxExecTime = false;
 
@@ -1319,7 +1333,7 @@ class ScanOrderController extends Controller {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= "orderinfo.service=".$service;
+                $crituser .= "scanorder.service=".$service;
             }
 
             if( $criteriastr != "" && $crituser != "" ) {
@@ -1343,7 +1357,7 @@ class ScanOrderController extends Controller {
             if( is_int($service) ) {
                 //echo "service=".$service."<br>";
                 $showproxyuser = 'true';
-                $critservice = "orderinfo.service=".$service;
+                $critservice = "scanorder.service=".$service;
             }
 
             if( $criteriastr != "" && $critservice != "" ) {
@@ -1356,6 +1370,7 @@ class ScanOrderController extends Controller {
 
         //***************** Search filetr ***************************//
         if( $withSearch && $search != "" ) {
+            //echo "withSearch=".$withSearch.", search=".$search;
 
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
@@ -1390,11 +1405,11 @@ class ScanOrderController extends Controller {
 
             //Submitter
             $criteriastr .= " OR provider.username".$searchStr;
-            $criteriastr .= " OR provider.displayName".$searchStr;
+            $criteriastr .= " OR providerinfos.displayName".$searchStr;
 
             //Ordering Provider
             $criteriastr .= " OR proxyuser.username".$searchStr;
-            $criteriastr .= " OR proxyuser.displayName".$searchStr;
+            $criteriastr .= " OR proxyuserinfos.displayName".$searchStr;
 
             //accession
             $dql->leftJoin("orderinfo.accession", "accessionObj");
@@ -1428,11 +1443,12 @@ class ScanOrderController extends Controller {
             $criteriastr .= " OR scan.note".$searchStr;
 
             //Clinical History
-            $dql->innerJoin("orderinfo.procedure", "procedure");
-            $dql->leftJoin("procedure.pathistory", "pathistory");
+            $dql->leftJoin("orderinfo.encounter", "encounter");
+            $dql->leftJoin("encounter.pathistory", "pathistory");
             $criteriastr .= " OR pathistory.field".$searchStr;
 
             //Procedure Type
+            $dql->leftJoin("orderinfo.procedure", "procedure");
             $dql->leftJoin("procedure.name", "procedureName");
             $dql->leftJoin("procedureName.field", "procedureType");
             $criteriastr .= " OR procedureType.name".$searchStr;
@@ -1454,7 +1470,7 @@ class ScanOrderController extends Controller {
             $criteriastr .= " OR diseaseType.field".$searchStr;
 
             //Stain Name
-            $dql->innerJoin("slides.stain", "stain");
+            $dql->leftJoin("slides.stain", "stain");
             $dql->leftJoin("stain.field", "StainList");
             $criteriastr .= " OR StainList.name".$searchStr;
 

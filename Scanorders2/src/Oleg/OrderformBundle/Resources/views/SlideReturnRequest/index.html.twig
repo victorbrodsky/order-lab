@@ -107,7 +107,7 @@
                 <th>{{ knp_pagination_sortable(sliderequests, 'Return Slides to', 'destinationslocation.name') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Urgency', 'list.urgency') }}</th>
                 <th class="col-xs-3">{{ knp_pagination_sortable(sliderequests, 'Slides', 'slidecount') }}</th>
-                <th>{{ knp_pagination_sortable(sliderequests, 'Scan Order ID', 'orderinfo.id') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Scan Order ID', 'associations.id') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Comment', 'list.comment') }}</th>
                 <th>Actions</th>
             </tr>
@@ -205,9 +205,11 @@
                 </td>
 
                 <td>
-                    {% if sliderequest.orderinfo != NULL and sliderequest.orderinfo.oid %}
-                        <a href="{{ path('multy_show', { 'id': sliderequest.orderinfo.oid }) }}">{{ sliderequest.orderinfo.oid }}</a>
-                    {% endif %}
+                    {% for associatedorder in sliderequest.orderinfo.associations %}
+                        {% if associatedorder != NULL and associatedorder.oid %}
+                            <a href="{{ path('multy_show', { 'id': associatedorder.oid }) }}">{{ associatedorder.oid }}</a>
+                        {% endif %}
+                    {% endfor %}
                 </td>
 
                 <td>

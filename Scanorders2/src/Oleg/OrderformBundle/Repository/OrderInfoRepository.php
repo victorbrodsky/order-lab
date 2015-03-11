@@ -33,13 +33,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //replace duplicate entities to filter the similar entities.
         $entity = $this->replaceDuplicateEntities( $entity, $entity );
 
-        if( $type ) {
+        if( $type && !$entity->getType() ) {
             $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
             $entity->setType($formtype);
         }
 
         //persist specific orders if exists
-        $entity = $this->processSpecificOrders($entity);
+//        $entity = $this->processSpecificOrders($entity);
         //echo "scanorder=".$entity->getScanorder()."<br>";
         //echo "laborder=".$entity->getLaborder()."<br>";
         //echo "slideReturnRequest=".$entity->getSlideReturnRequest()."<br>";

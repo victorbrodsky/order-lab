@@ -28,6 +28,8 @@ class SlideReturnRequest {
      **/
     private $orderinfo;
 
+
+
     /**
      * Additional status variable: Status object to string (active, declined, approved)
      *
@@ -190,6 +192,7 @@ class SlideReturnRequest {
     public function setOrderinfo($orderinfo)
     {
         $this->orderinfo = $orderinfo;
+        $orderinfo->setSlideReturnRequest($this);
     }
 
     /**

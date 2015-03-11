@@ -124,10 +124,10 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
-    <input type="hidden" id="user_name" value="{{ form.vars.value.provider.getUserNameStr() }}" />
-    <input type="hidden" id="user_id" value="{{ form.vars.value.provider.id }}" />
-    <input type="hidden" id="proxyuser_name" value="{{ form.vars.value.proxyuser.getUserNameStr() }}" />
-    <input type="hidden" id="proxyuser_id" value="{{ form.vars.value.proxyuser.id }}" />
+    <input type="hidden" id="user_name" value="{{ form.orderinfo.vars.value.provider.getUserNameStr() }}" />
+    <input type="hidden" id="user_id" value="{{ form.orderinfo.vars.value.provider.id }}" />
+    <input type="hidden" id="proxyuser_name" value="{{ form.orderinfo.vars.value.proxyuser.getUserNameStr() }}" />
+    <input type="hidden" id="proxyuser_id" value="{{ form.orderinfo.vars.value.proxyuser.id }}" />
 
     <h3 class="text-info">Please enter the information about the slides you would like to be returned</h3>
 
@@ -159,20 +159,20 @@
                 </div>
                 <div class="panel-body collapse in">
 
-                    {{ formmacros.field(form.slideReturnRequest.returnoption) }}
+                    {{ formmacros.field(form.returnoption) }}
                     {#{{ formmacros.field(form.provider) }}#}
-                    {{ formmacros.simplefield( "Submitter:", form.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
-                    {{ formmacros.field(form.proxyuser) }}
-                    {{ formmacros.field(form.institution) }}
+                    {{ formmacros.simplefield( "Submitter:", form.orderinfo.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
+                    {{ formmacros.field(form.orderinfo.proxyuser) }}
+                    {{ formmacros.field(form.orderinfo.institution) }}
 
-                    {% for destination in form.destinations %}
+                    {% for destination in form.orderinfo.destinations %}
                         {{ formmacros.field(destination.location) }}
                     {% endfor %}
 
-                    {{ formmacros.field(form.slideReturnRequest.urgency) }}
+                    {{ formmacros.field(form.urgency) }}
 
                     {#hidden, not mapped holder for table data#}
-                    {{ formmacros.field(form.slideReturnRequest.datalocker) }}
+                    {{ formmacros.field(form.datalocker) }}
 
                     {% do form.setRendered %}
                     {{ form_row(form._token) }}

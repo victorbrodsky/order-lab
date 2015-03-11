@@ -104,6 +104,10 @@ class MultiScanOrderController extends Controller {
             $new_order = "single_new";
         }
 
+        //set order category
+        $category = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
+        $entity->setType($category);
+
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
         $params = array(
@@ -417,6 +421,10 @@ class MultiScanOrderController extends Controller {
             $type = "One-Slide Scan Order";
         }
 
+        //set order category
+        $category = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
+        $entity->setType($category);
+
         //set the default service
         $entity->getScanorder()->setService($userSiteSettings->getDefaultService());
 
@@ -522,8 +530,8 @@ class MultiScanOrderController extends Controller {
         $query = $em->createQuery('
             SELECT orderinfo
             FROM OlegOrderformBundle:OrderInfo orderinfo
-            WHERE orderinfo.oid = :id'
-        )->setParameter('id', $id);
+            WHERE orderinfo.oid = :oid'
+        )->setParameter('oid', $id);
 
         $entities = $query->getResult();
 
@@ -539,13 +547,14 @@ class MultiScanOrderController extends Controller {
             $entity = $entities[0];
         }
 
-        //order memory usage
+        //////////////// testing: order memory usage ////////////////
         $mem = memory_get_usage(true);
         $entity_tmp = clone $entity;
         $mem = memory_get_usage(true) - $mem;
         echo "order mem old = 2.36 Mb<br>";
         echo "order mem = ".$mem. " => " .round($mem/1000000,2)." Mb<br>";
         unset($entity_tmp);
+        //////////////// EOF order memory usage ////////////////
 
         $routeName = $request->get('_route');
 

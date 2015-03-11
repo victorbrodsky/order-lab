@@ -17,9 +17,11 @@ use Oleg\OrderformBundle\Entity\EncounterPatlastname;
 use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
 use Oleg\OrderformBundle\Entity\EncounterPatsex;
 use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
+use Oleg\OrderformBundle\Entity\Endpoint;
 use Oleg\OrderformBundle\Entity\ProcedureDate;
 use Oleg\OrderformBundle\Entity\ProcedureNumber;
 use Oleg\OrderformBundle\Entity\EncounterPatage;
+use Oleg\OrderformBundle\Entity\ScanOrder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -471,6 +473,8 @@ class TableController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $entity = new OrderInfo();
+        $scanOrder = new ScanOrder();
+        $scanOrder->setOrderinfo($entity);
 
         //***************** get ordering provider from most recent order ***************************//
         $lastProxy = null;
@@ -502,14 +506,22 @@ class TableController extends Controller {
         }
         //***************** end of get ordering provider from most recent order ***************************//
 
-        $source = $securityUtil->getDefaultSourceSystem();  //'scanorder';
+        $system = $securityUtil->getDefaultSourceSystem();  //'scanorder';
+
+        //set Source object
+        $source = new Endpoint();
+        $source->setSystem($system);
+        $entity->addSource($source);
+        //set Destination object
+        $destination = new Endpoint();
+        $entity->addDestination($destination);
 
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
 
         $entity->setProvider($user);
         $entity->setProxyuser($user);
 
-        $patient = new Patient(true,'invalid',$user,$source);
+        $patient = new Patient(true,'invalid',$user,$system);
         $entity->addPatient($patient);
 
         $edu = new Educational();
@@ -519,7 +531,7 @@ class TableController extends Controller {
         $entity->setResearch($res);
 
         //set the default service
-        $entity->setService($userSiteSettings->getDefaultService());
+        $entity->getScanorder()->setService($userSiteSettings->getDefaultService());
 
         ////////////////// set previous service from the last order if default is null //////////////////
         if( !$userSiteSettings->getDefaultService() ) {
@@ -527,7 +539,7 @@ class TableController extends Controller {
             $previousOrder = $orderUtil->getPreviousOrderinfo();
             //$this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
             if( $previousOrder ) {
-                $entity->setService($previousOrder->getService());
+                $entity->getScanorder()->setService($previousOrder->getScanorder()->getService());
                 //echo "prev service set<br>";
             }
         }
@@ -542,6 +554,10 @@ class TableController extends Controller {
         $division = $defaultsDepDiv['division'];
 
         $type = "Table-View Scan Order";
+
+        //set order category
+        $category = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
+        $entity->setType($category);
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
@@ -590,6 +606,10 @@ class TableController extends Controller {
         $entity = new OrderInfo();
 
         $type = "Table-View Scan Order";
+
+        //set order category
+        $category = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
+        $entity->setType($category);
 
         $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user);
 
@@ -694,7 +714,7 @@ class TableController extends Controller {
 //        return $response;
 
         $conflictStr = "";
-        foreach( $entity->getDataqualityMrnAcc() as $dq ) {
+        foreach( $entity->getScanorder()->getDataqualityMrnAcc() as $dq ) {
             $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
         }
 
@@ -716,9 +736,9 @@ class TableController extends Controller {
             return $this->redirect($this->generateUrl('scan_idlelogout-saveorder',array('flag'=>'saveorder')));
         }
 
-        if( count($entity->getDataqualityMrnAcc()) > 0 ) {
+        if( count($entity->getScanorder()->getDataqualityMrnAcc()) > 0 ) {
             $conflictsStr = "MRN-Accession Conflict Resolved by Replacing:";
-            foreach( $entity->getDataqualityMrnAcc() as $dq ) {
+            foreach( $entity->getScanorder()->getDataqualityMrnAcc() as $dq ) {
                 $conflictsStr .= "<br>".$dq->getAccession()." => ".$dq->getNewaccession();
             }
         } else {
@@ -748,14 +768,14 @@ class TableController extends Controller {
         $status = "valid";
         $provider = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        $source = $source = $securityUtil->getDefaultSourceSystem();    //'scanorder';
+        $system = $securityUtil->getDefaultSourceSystem();    //'scanorder';
         $em = $this->getDoctrine()->getManager();
 
         /////////////// Patient ///////////////////
-        $patient = new Patient(false, $status, $provider, $source);
+        $patient = new Patient(false, $status, $provider, $system);
 
         //mrn
-        $patientmrn = new PatientMrn($status,$provider,$source);
+        $patientmrn = new PatientMrn($status,$provider,$system);
         $mrnTransformer = new MrnTypeTransformer($em,$provider);
         $mrntypeArr = $this->getValueByHeaderName('MRN Type',$row,$columnData);
         $mrntype = $mrnTransformer->reverseTransform($mrntypeArr['val']);
@@ -769,7 +789,7 @@ class TableController extends Controller {
         //dob
         $dobArr = $this->getValueByHeaderName('Patient DOB',$row,$columnData);
         if( $force || $dobArr['val'] && $dobArr['val'] != '' ) {
-            $patientdob = new PatientDob($status,$provider,$source);
+            $patientdob = new PatientDob($status,$provider,$system);
             if( $dobArr['val'] == "" ) {
                 $dobFormat = NULL;
             } else {
@@ -784,14 +804,14 @@ class TableController extends Controller {
         //Clinical History
         $clsumArr = $this->getValueByHeaderName('Clinical Summary',$row,$columnData);
         if( $force || $clsumArr['val'] && $clsumArr['val'] != '' ) {
-            $patientch = new PatientClinicalHistory($status,$provider,$source);
+            $patientch = new PatientClinicalHistory($status,$provider,$system);
             $patientch->setField($clsumArr['val']);
             $patientch->setId($clsumArr['id']);
             $patient->addClinicalHistory($patientch);
         }
 
         ///////////////// Encounter /////////////////
-        $encounter = new Encounter(false, $status, $provider, $source);
+        $encounter = new Encounter(false, $status, $provider, $system);
         $patient->addEncounter($encounter);
 
         //add encounter simple fields
@@ -803,7 +823,7 @@ class TableController extends Controller {
             } else {
                 $encounterDateFormat = new \DateTime($encounterDateArr['val']);
             }
-            $encounterDateObj = new EncounterDate($status,$provider,$source);
+            $encounterDateObj = new EncounterDate($status,$provider,$system);
             $encounterDateObj->setField($encounterDateFormat);
             $encounterDateObj->setId($encounterDateArr['id']);
             $encounter->addDate($encounterDateObj);
@@ -812,7 +832,7 @@ class TableController extends Controller {
         //Encounter Suffix
         $patsuffixArr = $this->getValueByHeaderName("Patient's Suffix",$row,$columnData);
         if( $force || $patsuffixArr['val'] && $patsuffixArr['val'] != '' ) {
-            $patsuffixObj = new EncounterPatsuffix($status,$provider,$source);
+            $patsuffixObj = new EncounterPatsuffix($status,$provider,$system);
             $patsuffixObj->setField($patsuffixArr['val']);
             $patsuffixObj->setId($patsuffixArr['id']);
             $encounter->addPatsuffix($patsuffixObj);
@@ -821,7 +841,7 @@ class TableController extends Controller {
         //Encounter Last Name
         $patlastnameArr = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
         if( $force || $patlastnameArr['val'] && $patlastnameArr['val'] != '' ) {
-            $patlastnameObj = new EncounterPatlastname($status,$provider,$source);
+            $patlastnameObj = new EncounterPatlastname($status,$provider,$system);
             $patlastnameObj->setField($patlastnameArr['val']);
             $patlastnameObj->setId($patlastnameArr['id']);
             $encounter->addPatlastname($patlastnameObj);
@@ -830,7 +850,7 @@ class TableController extends Controller {
         //Encounter First Name
         $patfirstnameArr = $this->getValueByHeaderName("Patient's First Name",$row,$columnData);
         if( $force || $patfirstnameArr['val'] && $patfirstnameArr['val'] != '' ) {
-            $patfirstnameObj = new EncounterPatfirstname($status,$provider,$source);
+            $patfirstnameObj = new EncounterPatfirstname($status,$provider,$system);
             $patfirstnameObj->setField($patfirstnameArr['val']);
             $patfirstnameObj->setId($patfirstnameArr['id']);
             $encounter->addPatfirstname($patfirstnameObj);
@@ -839,7 +859,7 @@ class TableController extends Controller {
         //Encounter Middle Name
         $patmiddlenameArr = $this->getValueByHeaderName("Patient's Middle Name",$row,$columnData);
         if( $force || $patmiddlenameArr['val'] && $patmiddlenameArr['val'] != '' ) {
-            $patmiddlenameObj = new EncounterPatmiddlename($status,$provider,$source);
+            $patmiddlenameObj = new EncounterPatmiddlename($status,$provider,$system);
             $patmiddlenameObj->setField($patmiddlenameArr['val']);
             $patmiddlenameObj->setId($patmiddlenameArr['id']);
             $encounter->addPatmiddlename($patmiddlenameObj);
@@ -848,7 +868,7 @@ class TableController extends Controller {
         //Encounter Sex
         $patsexArr = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
         if( $force || $patsexArr['val'] && $patsexArr['val'] != '' ) {
-            $patsexObj = new EncounterPatsex($status,$provider,$source);
+            $patsexObj = new EncounterPatsex($status,$provider,$system);
             $patsexObj->setField($patsexArr['val']);
             $patsexObj->setId($patsexArr['id']);
             $encounter->addPatsex($patsexObj);
@@ -857,7 +877,7 @@ class TableController extends Controller {
         //Encounter Age
         $patageArr = $this->getValueByHeaderName('Patient Age',$row,$columnData);
         if( $force || $patageArr['val'] && $patageArr['id'] != '' ) {
-            $patageObj = new EncounterPatage($status,$provider,$source);
+            $patageObj = new EncounterPatage($status,$provider,$system);
             $patageObj->setField($patageArr['val']);
             $patageObj->setId($patageArr['id']);
             $encounter->addPatage($patageObj);
@@ -866,28 +886,28 @@ class TableController extends Controller {
         //Encounter Clinical History
         $pathistoryArr = $this->getValueByHeaderName('Clinical History',$row,$columnData);
         if( $force || $pathistoryArr['val'] && $pathistoryArr['val'] != '' ) {
-            $pathistoryObj = new EncounterPathistory($status,$provider,$source);
+            $pathistoryObj = new EncounterPathistory($status,$provider,$system);
             $pathistoryObj->setField($pathistoryArr['val']);
             $pathistoryObj->setId($pathistoryArr['id']);
             $encounter->addPathistory($pathistoryObj);
         }
 
         ///////////////// Procedure /////////////////
-        $procedure = new Procedure(false, $status, $provider, $source);
+        $procedure = new Procedure(false, $status, $provider, $system);
 
         //Procedure name
         $ptypeArr = $this->getValueByHeaderName('Procedure Type',$row,$columnData);
         if( $force || $ptypeArr['val'] && $ptypeArr['val'] != '' ) {
             $procedureTransform = new ProcedureTransformer($em,$provider);
             $procedurenameList = $procedureTransform->reverseTransform($ptypeArr['val']); //ProcedureList
-            $procedureName = new ProcedureName($status,$provider,$source);
+            $procedureName = new ProcedureName($status,$provider,$system);
             $procedureName->setField($procedurenameList);
             $procedureName->setId($ptypeArr['id']);
             $procedure->addName($procedureName);
         }
 
         //Procedure Encounter Number
-        $procedureenc = new ProcedureNumber($status,$provider,$source);
+        $procedureenc = new ProcedureNumber($status,$provider,$system);
         $procedure->addNumber($procedureenc);
 
         $encounter->addProcedure($procedure);
@@ -895,11 +915,11 @@ class TableController extends Controller {
 
 
         ///////////////// Accession /////////////////
-        $accession = new Accession(false, $status, $provider, $source);
+        $accession = new Accession(false, $status, $provider, $system);
 
         //AccessionAccession
         $accArr = $this->getValueByHeaderName('Accession Number',$row,$columnData);
-        $accacc = new AccessionAccession($status,$provider,$source);
+        $accacc = new AccessionAccession($status,$provider,$system);
         $accacc->setField($accArr['val']);
         $accacc->setOriginal($accArr['val']);
         $accacc->setId($accArr['id']);
@@ -916,7 +936,7 @@ class TableController extends Controller {
             } else {
                 $accessionDateFormat = new \DateTime($accessionDateArr['val']);
             }
-            $accessionDateObj = new AccessionAccessionDate($status,$provider,$source);
+            $accessionDateObj = new AccessionAccessionDate($status,$provider,$system);
             $accessionDateObj->setField($accessionDateFormat);
             $accessionDateObj->setId($accessionDateArr['id']);
             $accession->addAccessionDate($accessionDateObj);
@@ -925,10 +945,10 @@ class TableController extends Controller {
         $procedure->addAccession($accession);
 
         ///////////////// Part /////////////////
-        $part = new Part(false, $status, $provider, $source);
+        $part = new Part(false, $status, $provider, $system);
 
         //part name
-        $partname = new PartPartname($status,$provider,$source);
+        $partname = new PartPartname($status,$provider,$system);
         $pnameArr = $this->getValueByHeaderName('Part Name',$row,$columnData);
         //echo "pname=".$pname."<br>";
         $partname->setField($pnameArr['val']);
@@ -940,7 +960,7 @@ class TableController extends Controller {
         if( $force || $partsoArr['val'] && $partsoArr['val'] != '' ) {
             $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
             $sourceOrganList = $sourceOrganTransformer->reverseTransform($partsoArr['val']); //OrganList
-            $partSourceOrgan = new PartSourceOrgan($status,$provider,$source);
+            $partSourceOrgan = new PartSourceOrgan($status,$provider,$system);
             $partSourceOrgan->setField($sourceOrganList);
             $partSourceOrgan->setId($partsoArr['id']);
             $part->addSourceOrgan($partSourceOrgan);
@@ -949,7 +969,7 @@ class TableController extends Controller {
         //Gross Description
         $partgdArr = $this->getValueByHeaderName('Gross Description',$row,$columnData);
         if( $force || $partgdArr['val'] && $partgdArr['val'] != '' ) {
-            $partDescription = new PartDescription($status,$provider,$source);
+            $partDescription = new PartDescription($status,$provider,$system);
             $partDescription->setField($partgdArr['val']);
             $partDescription->setId($partgdArr['id']);
             $part->addDescription($partDescription);
@@ -958,7 +978,7 @@ class TableController extends Controller {
         //Diagnosis
         $partdiagArr = $this->getValueByHeaderName('Diagnosis',$row,$columnData);
         if( $force || $partdiagArr['val'] && $partdiagArr['val'] != '' ) {
-            $partDisident = new PartDisident($status,$provider,$source);
+            $partDisident = new PartDisident($status,$provider,$system);
             $partDisident->setField($partdiagArr['val']);
             $partDisident->setId($partdiagArr['id']);
             $part->addDisident($partDisident);
@@ -967,7 +987,7 @@ class TableController extends Controller {
         //Differential Diagnoses
         $partdiffdiagArr = $this->getValueByHeaderName('Differential Diagnoses',$row,$columnData);
         if( $force || $partdiffdiagArr['val'] && $partdiffdiagArr['val'] != '' ) {
-            $partDiffDisident = new PartDiffDisident($status,$provider,$source);
+            $partDiffDisident = new PartDiffDisident($status,$provider,$system);
             $partDiffDisident->setField($partdiffdiagArr['val']);
             $partDiffDisident->setId($partdiffdiagArr['id']);
             $part->addDiffDisident($partDiffDisident);
@@ -976,7 +996,7 @@ class TableController extends Controller {
         //Type of Disease
         $partdistypeArr = $this->getValueByHeaderName('Type of Disease',$row,$columnData);
         if( $force || $partdistypeArr['val'] && $partdistypeArr['val'] != '' ) {
-            $partDiseaseType = new PartDiseaseType($status,$provider,$source);
+            $partDiseaseType = new PartDiseaseType($status,$provider,$system);
             $partDiseaseType->setField($partdistypeArr['val']);
             $partDiseaseType->setId($partdistypeArr['id']);
             //Origin of Disease
@@ -989,16 +1009,16 @@ class TableController extends Controller {
         }
 
         //paper
-        $partPaper = new PartPaper($status,$provider,$source);
+        $partPaper = new PartPaper($status,$provider,$system);
         $part->addPaper( $partPaper );
 
         $accession->addPart($part);
 
         ///////////////// Block /////////////////
-        $block = new Block(false, $status, $provider, $source);
+        $block = new Block(false, $status, $provider, $system);
 
         //block name
-        $blockname = new BlockBlockname($status,$provider,$source);
+        $blockname = new BlockBlockname($status,$provider,$system);
         $blocknameArr = $this->getValueByHeaderName('Block Name',$row,$columnData);
         $blockname->setId($blocknameArr['id']);
         $blockname->setField($blocknameArr['val']);
@@ -1007,7 +1027,7 @@ class TableController extends Controller {
         //Block: Section Source
         $sectionsArr = $this->getValueByHeaderName('Block Section Source',$row,$columnData);
         if( $force || $sectionsArr['val'] && $sectionsArr['val'] != '' ) {
-            $blocksection = new BlockSectionsource($status,$provider,$source);
+            $blocksection = new BlockSectionsource($status,$provider,$system);
             $blocksection->setField($sectionsArr['val']);
             $blocksection->setId($sectionsArr['id']);
             $block->addSectionsource($blocksection);
@@ -1025,7 +1045,7 @@ class TableController extends Controller {
                 $specialstainList = $stainList[0];
             }
 
-            $specialstain = new BlockSpecialStains($status,$provider,$source);
+            $specialstain = new BlockSpecialStains($status,$provider,$system);
             $specialstain->setStaintype($specialstainList); //StainList
             $specialstain->setField($specialStainValueArr['val']);    //field
             $specialstain->setId($specialStainValueArr['id']);
@@ -1035,7 +1055,7 @@ class TableController extends Controller {
         $part->addBlock($block);
 
         ////////////////// Slide /////////////////
-        $slide = new Slide(false, $status, $provider, $source);
+        $slide = new Slide(false, $status, $provider, $system);
 
         $slide->setId($this->getValueByHeaderName('Slide Title',$row,$columnData)['id']);
 
@@ -1058,7 +1078,7 @@ class TableController extends Controller {
             $stainTransformer = new StainTransformer($em,$provider);
             $stainList = $stainTransformer->reverseTransform($stainArr['val']);
 
-            $stain = new Stain($status,$provider,$source);
+            $stain = new Stain($status,$provider,$system);
             $stain->setField($stainList);
             $stain->setId($stainArr['id']);
 
@@ -1066,7 +1086,7 @@ class TableController extends Controller {
         }
 
         ///// Scan /////
-        $scan = new Scan($status,$provider,$source);
+        $scan = new Scan($status,$provider,$system);
 
         //Scan: Scan Magnificaiton
         $magArr = $this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData);
@@ -1091,7 +1111,7 @@ class TableController extends Controller {
         //Link(s) to related image(s)
         $relevantScansArr = $this->getValueByHeaderName('Link(s) to related image(s)',$row,$columnData);
         if( $force || $relevantScansArr['val'] && $relevantScansArr['val'] != '' ) {
-            $relScan = new RelevantScans($status,$provider,$source);
+            $relScan = new RelevantScans($status,$provider,$system);
             $relScan->setField($relevantScansArr['val']);
             $relScan->setId($relevantScansArr['id']);
             $slide->addRelevantScan($relScan);

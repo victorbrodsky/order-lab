@@ -12,17 +12,12 @@ use Doctrine\ORM\EntityRepository;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
 
-class OrderInfoType extends AbstractType
+class MessageType extends AbstractType
 {
 
     protected $entity;
     protected $params;
-    
-//    public function __construct( $type = null, $service = null, $entity = null )
-    //params: type: single or clinical, educational, research
-    //params: cycle: new, edit, show
-    //params: service: pathology service
-    //params: entity: entity itself
+
     public function __construct( $params=null, $entity=null )
     {
         if( $params ) $this->params = $params;
@@ -31,71 +26,32 @@ class OrderInfoType extends AbstractType
         if( !array_key_exists('type', $this->params) ) {
             $this->params['type'] = 'Unknown Order';
         }
-
     }
         
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        echo "orderinfo params=";
-        //echo "type=".$this->params['type']."<br>";
-        //echo "cycle=".$this->params['cycle']."<br>";
-//        echo "<br>";
 
-        $helper = new FormHelper();
+//            //echo "orderinfo type: show patient <br>";
+//            $builder->add('patient', 'collection', array(
+//                'type' => new PatientType($this->params,$this->entity),    //$this->type),
+//                'label' => false,
+//                'required' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__patient__',
+//            ));
 
-        $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'orderinfo-id')) );
-
-        //unmapped data quality form to record the MRN-Accession conflicts
-        $builder->add('conflicts', 'collection', array(
-            'mapped' => false,
-            'type' => new DataQualityMrnAccType($this->params, null),
-            'label' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__dataqualitymrnacc__',
-        ));
-
-        //add children
-        if( $this->params['type'] != 'Table-View Scan Order' ) {
-
-            //echo "orderinfo type: show patient <br>";
-            $builder->add('patient', 'collection', array(
-                'type' => new PatientType($this->params,$this->entity),    //$this->type),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__patient__',
-            ));
-
-        } else {
-
-            //echo "orderinfo type: show datalocker <br>";
-
-            $builder->add('datalocker','hidden', array(
-                "mapped" => false
-            ));
-
-            $builder->add('clickedbtn','hidden', array(
-                "mapped" => false
-            ));
-
-        }
-
-        //echo "<br>type=".$this->type."<br>";
 
         $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>'Educational:') );
 
         $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>'Research:') );
 
         //priority
+        $helper = new FormHelper();
         $priorityArr = array(
             'label' => 'Priority:',
             'choices' => $helper->getPriority(),
@@ -135,7 +91,7 @@ class OrderInfoType extends AbstractType
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'data' => $deadline,
-            'label'=>'Scan Deadline:',
+            'label'=>'Deadline:',
         ));
 
         $builder->add('returnoption', 'checkbox', array(
@@ -172,24 +128,6 @@ class OrderInfoType extends AbstractType
                 },
         ));
 
-        $builder->add( 'purpose', 'choice', array(
-            'label'=>'Purpose:',
-            'required' => true,
-            'choices' => array("For Internal Use by WCMC Department of Pathology"=>"For Internal Use by WCMC Department of Pathology", "For External Use (Invoice Fund Number)"=>"For External Use (Invoice Fund Number)"),
-            'multiple' => false,
-            'expanded' => true,
-            'attr' => array('class' => 'horizontal_type')
-        ));
-
-        $attr = array('class' => 'ajax-combobox-account', 'type' => 'hidden');
-        $builder->add('account', 'custom_selector', array(
-            'label' => 'Debit Fund WBS Account Number:',
-            'attr' => $attr,
-            'required' => false,
-            'classtype' => 'account'
-        ));
-
-
 
         //Endpoint object: destination - location
         $this->params['label'] = 'Return Slides to:';
@@ -221,65 +159,6 @@ class OrderInfoType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
         ));
 
-        if( $this->params['cycle'] != 'show' ) {
-
-            if( array_key_exists('department', $this->params) ) {
-                $departmentId = $this->params['department']->getId();
-            } else {
-                $departmentId = null;
-            }
-
-            //department. User should be able to add institution to administrative or appointment titles
-            $builder->add('department', 'employees_custom_selector', array(
-                'label' => "Department:",
-                "mapped" => false,
-                'required' => false,
-                'data' => $departmentId,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
-                'classtype' => 'department'
-            ));
-
-
-            if( array_key_exists('division', $this->params) ) {
-                $divisionId = $this->params['division']->getId();
-            } else {
-                $divisionId = null;
-            }
-
-            //division. User should be able to add institution to administrative or appointment titles
-            $builder->add('division', 'employees_custom_selector', array(
-                'label' => "Division:",
-                "mapped" => false,
-                'required' => false,
-                'data' => $divisionId,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
-                'classtype' => 'division'
-            ));
-        }
-
-
-        ////////////////////////// Specific Orders //////////////////////////
-
-        //Exception for scan order form, to avoid complications of changing html twig view
-        if( $this->hasSpecificOrders($this->entity,'Scan Order') ) {
-            $builder->add('scanorder', new ScanOrderType($this->params), array(
-                'data_class' => 'Oleg\OrderformBundle\Entity\ScanOrder',
-                'label' => false
-            ));
-        }
-
-//        $builder->add('laborder', new LabOrderType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
-//            'label' => false
-//        ));
-//
-//        $builder->add('slideReturnRequest', new SlideReturnRequestType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\SlideReturnRequest',
-//            'label' => false
-//        ));
-
-        ////////////////////////// EOF Specific Orders //////////////////////////
-        
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

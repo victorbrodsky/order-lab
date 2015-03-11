@@ -618,7 +618,8 @@ function assignDataToDatalocker() {
     //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
     var jsonstr = JSON.stringify(data);
     //console.log("jsonstr="+jsonstr);
-    $("#oleg_orderformbundle_orderinfotype_slideReturnRequest_datalocker").val( jsonstr );
+    //$("#oleg_orderformbundle_slidereturnrequesttype_datalocker").val( jsonstr );
+    $('.slidereturnrequest-datalocker-field').val( jsonstr );
 }
 
 function validateEmptyHandsonRow( row ) {
