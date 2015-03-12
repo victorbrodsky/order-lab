@@ -130,7 +130,7 @@ class Patient extends ObjectAbstract
             //$this->addAge( new PatientAge($status,$provider,$source) );
 
             //testing data structure
-            $this->addExtraFields($status,$provider,$source);
+            //$this->addExtraFields($status,$provider,$source);
         }
 
     }

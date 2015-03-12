@@ -208,7 +208,8 @@ class ScanUtilController extends Controller {
         //////////////// 3) add custom added values by order id (if id is set) //////////////////////
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
-        if( $id ) {
+
+        if( $id && $id != "undefined" ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $slides = $orderinfo->getSlide();
@@ -309,7 +310,8 @@ class ScanUtilController extends Controller {
         //////////////// 3) add custom added values by order id (if id is set) //////////////////////
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
-        if( $id ) {
+
+        if( $id && $id != "undefined" ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $arr[] = $orderinfo->getDelivery();
@@ -366,7 +368,8 @@ class ScanUtilController extends Controller {
         //add custom added values by order id
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
-        if( $id ) {
+
+        if( $id && $id != "undefined" ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $parts = $orderinfo->getPart();
@@ -403,7 +406,8 @@ class ScanUtilController extends Controller {
         //add custom added values by order id
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
-        if( $id ) {
+
+        if( $id && $id != "undefined" ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $blocks = $orderinfo->getBlock();
@@ -450,12 +454,12 @@ class ScanUtilController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         if( $type == "single" ) {
-            if( $opt ) {
+            if( $opt && $opt != "undefined" ) {
                 $query->where("list.type = :type OR list.type = :typetma OR ( list.type = 'user-added' AND list.creator = :user)");    //->setParameter('type', 'default')->setParameter('typetma', 'TMA');
                 $query->setParameters( array('type' => 'default', 'typetma' => 'TMA', 'user' => $user) );
             }
         } else {
-            if( $opt ) {
+            if( $opt && $opt != "undefined" ) {
                 $query->where("list.type = :type AND list.type != :typetma OR ( list.type = 'user-added' AND list.creator = :user)");   //->setParameter('type', 'default')->setParameter('typetma', 'TMA');
                 $query->setParameters( array('type' => 'default', 'typetma' => 'TMA', 'user' => $user) );
             } else {
@@ -494,7 +498,7 @@ class ScanUtilController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        if( $opt ) {
+        if( $opt && $opt != "undefined" ) {
             $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
             $query->setParameters( array('type' => 'default', 'user' => $user) );
         }
@@ -566,7 +570,7 @@ class ScanUtilController extends Controller {
         $output = $query->getQuery()->getResult();
 
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
-        if( $opt ) {
+        if( $opt && $opt != "undefined" ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($opt);
             if( $orderinfo->getResearch() ) {
                 $strEneterd = $orderinfo->getResearch()->getProjectTitleStr();
@@ -659,7 +663,7 @@ class ScanUtilController extends Controller {
         //$output = array();
 
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
-        if( $opt ) {
+        if( $opt && $opt != "undefined" ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($opt);
             if( $strEneterd = $orderinfo->getEducational() ) {
                 $strEneterd = $orderinfo->getEducational()->getCourseTitleStr();
@@ -689,20 +693,24 @@ class ScanUtilController extends Controller {
         $orderoid = trim( $request->get('orderoid') );
         //echo 'opt='.$opt.' => ';
 
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:LessonTitleList', 'list')
-            ->select("list.name as id, list.name as text")
-            ->leftJoin("list.courseTitle","parent")
-            ->where("parent.name = :pname AND list.type = :type")
-            ->orderBy("list.orderinlist","ASC")
-            ->setParameters( array(
-                'pname' => $opt,
-                'type' => 'default'
-            ));
+        if( $opt && $opt != "undefined" ) {
+            $query = $em->createQueryBuilder()
+                ->from('OlegOrderformBundle:LessonTitleList', 'list')
+                ->select("list.name as id, list.name as text")
+                ->leftJoin("list.courseTitle","parent")
+                ->where("parent.name = :pname AND list.type = :type")
+                ->orderBy("list.orderinlist","ASC")
+                ->setParameters( array(
+                    'pname' => $opt,
+                    'type' => 'default'
+                ));
 
-        //echo "query=".$query."<br>";
+            //echo "query=".$query."<br>";
 
-        $output = $query->getQuery()->getResult();
+            $output = $query->getQuery()->getResult();
+        } else {
+            $output = array();
+        }
 
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $orderoid ) {
@@ -757,19 +765,23 @@ class ScanUtilController extends Controller {
         }
 
         //1) add PIList with parent name = $opt
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:'.$className, 'list')
-            ->select("list.name as id, list.name as text")
-            ->leftJoin("list.".$pname,"parents")
-            ->where("parents.name = :pname AND (list.type = :type OR list.type = :type2)")
-            ->orderBy("list.orderinlist","ASC")
-            ->setParameters( array(
-                'pname' => $opt,
-                'type' => 'default',
-                'type2' => 'user-added'
-            ));
+        if( $opt && $opt != "undefined" ) {
+            $query = $em->createQueryBuilder()
+                ->from('OlegOrderformBundle:'.$className, 'list')
+                ->select("list.name as id, list.name as text")
+                ->leftJoin("list.".$pname,"parents")
+                ->where("parents.name = :pname AND (list.type = :type OR list.type = :type2)")
+                ->orderBy("list.orderinlist","ASC")
+                ->setParameters( array(
+                    'pname' => $opt,
+                    'type' => 'default',
+                    'type2' => 'user-added'
+                ));
 
-        $output = $query->getQuery()->getResult();
+            $output = $query->getQuery()->getResult();
+        } else {
+            $output = array();
+        }
 
         //var_dump($output);
 

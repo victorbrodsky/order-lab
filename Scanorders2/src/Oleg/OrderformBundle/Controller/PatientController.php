@@ -7,8 +7,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Form\PatientType;
+use Oleg\OrderformBundle\Entity\Procedure;
+use Oleg\OrderformBundle\Entity\Accession;
+use Oleg\OrderformBundle\Entity\Part;
+use Oleg\OrderformBundle\Entity\Block;
+use Oleg\OrderformBundle\Entity\Slide;
 
 /**
  * Patient controller.
@@ -20,7 +27,7 @@ class PatientController extends Controller
 
 
     /**
-     * Lists all Accession entities.
+     * Lists all Patient entities.
      *
      * @Route("/", name="scan-patient-list")
      * @Method("GET")
@@ -34,6 +41,67 @@ class PatientController extends Controller
 
         return array(
             'entities' => $entities,
+        );
+    }
+
+    /**
+     * New Patient.
+     *
+     * @Route("/patient/datastructure", name="scan-patient-new")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     */
+    public function newPatientAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $securityUtil = $this->get('order_security_utility');
+
+        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $status = 'valid';
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $patient = new Patient(true,$status,$user,$system);
+        $patient->addExtraFields($status,$user,$system);
+
+        $encounter = new Encounter(true,$status,$user,$system);
+        $encounter->addExtraFields($status,$user,$system);
+        $patient->addEncounter($encounter);
+
+        $procedure = new Procedure(true,$status,$user,$system);
+        $procedure->addExtraFields($status,$user,$system);
+        $encounter->addProcedure($procedure);
+
+        $accession = new Accession(true,$status,$user,$system);
+        $accession->addExtraFields($status,$user,$system);
+        $procedure->addAccession($accession);
+
+        $part = new Part(true,$status,$user,$system);
+        //$part->addExtraFields($status,$user,$system);
+        $accession->addPart($part);
+
+        $block = new Block(true,$status,$user,$system);
+        //$block->addExtraFields($status,$user,$system);
+        $part->addBlock($block);
+
+        $slide = new Slide(true,'valid',$user,$system); //Slides are always valid by default
+        //$slide->addExtraFields($status,$user,$system);
+        $block->addSlide($slide);
+
+        $params = array(
+            'type' => 'multy',
+            'cycle' => 'new',
+            'user' => $user,
+            'datastructure' => 'datastructure'
+        );
+
+        $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => true) );
+
+        return array(
+            'entity' => $patient,
+            'form' => $form->createView(),
+            'formtype' => 'Patient Data Structure',
+            'type' => 'show',
+            'datastructure' => 'datastructure'
         );
     }
 
