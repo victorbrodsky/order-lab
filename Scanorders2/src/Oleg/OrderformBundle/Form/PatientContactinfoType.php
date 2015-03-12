@@ -46,12 +46,6 @@ class PatientContactinfoType extends AbstractType
 //            'attr' => array('class'=>'form-control')
 //        ));
 
-        $builder->add('others', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientContactinfo',
-            'label' => false,
-            'attr' => array('style'=>'display:none;')
-        ));
-
         //other fields from abstract
         $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientContactinfo',

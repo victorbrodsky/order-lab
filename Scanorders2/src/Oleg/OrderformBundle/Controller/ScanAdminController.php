@@ -5,6 +5,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,6 +31,7 @@ use Oleg\OrderformBundle\Entity\Urgency;
 use Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList;
 use Oleg\OrderformBundle\Entity\RaceList;
 use Oleg\OrderformBundle\Entity\OrderDelivery;
+use Oleg\OrderformBundle\Entity\MessageCategory;
 
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -88,7 +90,8 @@ class ScanAdminController extends AdminController
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
         $count_proceduretype = $this->generateProcedureType();
-        $count_formtype = $this->generateFormType();
+        //$count_formtype = $this->generateFormType();
+        $count_orderCategory = $this->generateOrderCategory();
         $count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
         $count_procedure = $this->generateProcedures();
@@ -111,7 +114,8 @@ class ScanAdminController extends AdminController
             'Accession Types='.$count_acctype.', '.
             'Encounter Types='.$count_proceduretype.', '.
             'Procedure Types='.$count_enctype.', '.
-            'Form Types='.$count_formtype.', '.
+            //'Form Types='.$count_formtype.', '.
+            'Message Category'.$count_orderCategory.', '.
             'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
@@ -588,44 +592,112 @@ class ScanAdminController extends AdminController
         return round($count/10);
     }
 
-    public function generateFormType() {
+    public function generateOrderCategory() {
 
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:FormType')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:MessageCategory')->findAll();
 
         if( $entities ) {
             return -1;
         }
 
-        $types = array(
-            'One-Slide Scan Order',
-            'Multi-Slide Scan Order',
-            'Table-View Scan Order',
-            'Slide Return Request',
-            'Encounter Order',
-            'Procedure Order',
-            'Referral',
-            'Tissue Examination',
-            'Block Order',
-            'Slide Order',
-            'Scan Order',
-            'Outside Lab Order - Comprehensive',
-            'Outside Lab Order on Part'
+//        $types = array(
+//            'One-Slide Scan Order',
+//            'Multi-Slide Scan Order',
+//            'Table-View Scan Order',
+//            'Slide Return Request',
+//            'Encounter Order',
+//            'Procedure Order',
+//            'Referral',
+//            'Tissue Examination',
+//            'Block Order',
+//            'Slide Order',
+//            'Scan Order',
+//            'Outside Lab Order - Comprehensive',
+//            'Outside Lab Order on Part'
+//        );
+
+        $categories = array(
+
+            'Order' => array(
+                'Scan Order' => array(
+                    'One-Slide Scan Order',
+                    'Multi-Slide Scan Order',
+                    'Table-View Scan Order'
+                ),
+                'Slide Return Request',
+                'Encounter Order',
+                'Procedure Order',
+                'Referral',
+                'Tissue Examination',
+                'Block Order',
+                'Slide Order',
+                'Lab Order' => array(
+                    'Outside Lab Order - Comprehensive',
+                    'Outside Lab Order on Part'
+                )
+            ),
+            'Report' => array(),
+            'Note' => array()
+
         );
 
         $count = 1;
-        foreach( $types as $type ) {
-            $formType = new FormType();
-            $this->setDefaultList($formType,$count,$username,$type);
+        $level = 0;
 
-            $em->persist($formType);
-            $em->flush();
-            $count = $count + 10;
-        } //foreach
+        $this->addNestedsetCategory(null,$categories,$level,$username,$count);
+
+//        foreach( $categories as $category=>$subcategory ) {
+//
+//            $messageCategory = new MessageCategory();
+//            $this->setDefaultList($messageCategory,$count,$username,$type);
+//
+//            $em->persist($messageCategory);
+//            $em->flush();
+//            $count = $count + 10;
+//
+//        } //foreach
+
+        //exit('EOF category');
 
         return round($count/10);
+    }
+    public function addNestedsetCategory($parentCategory,$categories,$level,$username,$count) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        foreach( $categories as $category=>$subcategory ) {
+
+            $messageCategory = new MessageCategory();
+
+            $name = $category;
+
+            if( $subcategory && !is_array($subcategory) ) {
+                $name = $subcategory;
+            }
+
+            $this->setDefaultList($messageCategory,$count,$username,$name);
+            $messageCategory->setLevel($level);
+            $count = $level+( $count + 10 );
+            echo $level.": category=".$name.", count=".$count."<br>";
+            echo "subcategory:<br>";
+            print_r($subcategory);
+            echo "<br><br>";
+
+            if( $parentCategory ) {
+                $parentCategory->addChild($parentCategory);
+            }
+
+            if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
+                $this->addNestedsetCategory($messageCategory,$subcategory,$level+1,$username,$count);
+            }
+
+            $em->persist($messageCategory);
+            $em->flush();
+            //$count = $count + 10;
+        }
     }
 
 

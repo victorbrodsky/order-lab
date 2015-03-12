@@ -12,8 +12,7 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
  * @ORM\Entity
  * @ORM\Table(name="scan_formtype")
  */
-class FormType extends ListAbstract
-{
+class FormType extends ListAbstract {
 
     /**
      * @ORM\OneToMany(targetEntity="FormType", mappedBy="original", cascade={"persist"})

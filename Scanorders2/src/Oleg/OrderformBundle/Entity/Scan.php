@@ -41,6 +41,8 @@ class Scan extends SlideArrayFieldAbstract
      */
     protected $scandate;
 
+    //TODO: add link to image
+
     /**
      * Set scanregion
      *

@@ -42,14 +42,20 @@ class OrderInfo {
      */
     private $orderdate;
 
+//    /**
+//     * TODO: rename it to Category.
+//     * Type or better: Category with subcategory (parent-children hierarchy)
+//     *
+//     * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
+//     * @ORM\JoinColumn(name="formtype", referencedColumnName="id")
+//     */
+//    private $type;
     /**
-     * TODO: rename it to Category.
-     * Type or better: Category with subcategory (parent-children hierarchy)
+     * MessageCategory with subcategory (parent-children hierarchy)
      *
-     * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
-     * @ORM\JoinColumn(name="formtype", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="MessageCategory", cascade={"persist"})
      */
-    private $type;
+    private $messageCategory;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
@@ -88,7 +94,7 @@ class OrderInfo {
     /**
      * Order priority: routine, stat
      *
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $priority;
 
@@ -107,6 +113,7 @@ class OrderInfo {
     private $returnoption;
 
     /**
+     * TODO: move it to scan order
      * Order delivery (string): I'll give slides to ...
      *
      * @ORM\Column(type="string", nullable=true)
@@ -366,6 +373,12 @@ class OrderInfo {
      * @ORM\OneToOne(targetEntity="LabOrder", inversedBy="orderinfo", cascade={"persist","remove"})
      */
     private $laborder;
+
+    //TODO: Lab Order has many Requisition Form
+//    /**
+//     * @ORM\OneToOne(targetEntity="RequisitionForm", inversedBy="orderinfo", cascade={"persist","remove"})
+//     */
+//    private $requisitionForm;
 
     ////////////////////////// EOF Specific Orders //////////////////////////
 
@@ -724,21 +737,37 @@ class OrderInfo {
     }
 
     /**
-     * @param mixed $type
+     * @param mixed $messageCategory
      */
-    public function setType($type)
+    public function setMessageCategory($messageCategory)
     {
-        $this->type = $type;
+        $this->messageCategory = $messageCategory;
     }
 
     /**
      * @return mixed
      */
-    public function getType()
+    public function getMessageCategory()
     {
-        return $this->type;
+        return $this->messageCategory;
     }
 
+
+//    /**
+//     * @param mixed $type
+//     */
+//    public function setType($type)
+//    {
+//        $this->type = $type;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getType()
+//    {
+//        return $this->type;
+//    }
 
 
 

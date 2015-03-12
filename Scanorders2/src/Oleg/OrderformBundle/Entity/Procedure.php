@@ -84,7 +84,7 @@ class Procedure extends ObjectAbstract
             //$this->addDate( new ProcedureDate($status,$provider,$source) );
 
             //testing data structure
-            $this->addExtraFields($status,$provider,$source);
+            //$this->addExtraFields($status,$provider,$source);
         }
     }
 

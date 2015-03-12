@@ -47,7 +47,7 @@ class PatientController extends Controller
     /**
      * New Patient.
      *
-     * @Route("/patient/datastructure", name="scan-patient-new")
+     * @Route("/datastructure", name="scan-patient-new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
@@ -94,7 +94,7 @@ class PatientController extends Controller
             'datastructure' => 'datastructure'
         );
 
-        $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => true) );
+        $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => false) );
 
         return array(
             'entity' => $patient,

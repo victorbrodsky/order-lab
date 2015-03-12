@@ -22,7 +22,7 @@ class AppKernel extends Kernel
             new Oleg\OrderformBundle\OlegOrderformBundle(),
             new Acme\DemoBundle\AcmeDemoBundle(),
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
-            new Oneup\UploaderBundle\OneupUploaderBundle(),
+            new Oneup\UploaderBundle\OneupUploaderBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
