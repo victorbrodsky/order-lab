@@ -207,7 +207,7 @@
         </div>
     </div>
 
-    {{ formmacros.field(form.delivery) }}
+    {{ formmacros.field(form.scanorder.delivery) }}
     {% for destination in form.destinations %}
         {{ formmacros.field(destination.location) }}
     {% endfor %}

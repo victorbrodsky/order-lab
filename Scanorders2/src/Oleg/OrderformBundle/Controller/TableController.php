@@ -193,7 +193,7 @@ class TableController extends Controller {
         $division = $defaultsDepDiv['division'];
 
         $params = array(
-            'type'=>$orderinfo->getMessageCategory(),
+            'type'=>$orderinfo->getMessageCategory()->getName(),
             'cycle'=>$type,
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
@@ -433,7 +433,7 @@ class TableController extends Controller {
             'entity' => $orderinfo,
             'form' => $form->createView(),
             'type' => $type,
-            'formtype' => $orderinfo->getMessageCategory(),
+            'formtype' => $orderinfo->getMessageCategory()->getName(),
             'history' => $history,
             'amendable' => $secUtil->isUserAllowOrderActions($orderinfo, $user, array('amend')),
             'changestatus' => $secUtil->isUserAllowOrderActions($orderinfo, $user, array('changestatus'))
@@ -716,7 +716,7 @@ class TableController extends Controller {
 //        return $response;
 
         $conflictStr = "";
-        foreach( $entity->getScanorder()->getDataqualityMrnAcc() as $dq ) {
+        foreach( $entity->getDataqualityMrnAcc() as $dq ) {
             $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
         }
 
@@ -738,9 +738,9 @@ class TableController extends Controller {
             return $this->redirect($this->generateUrl('scan_idlelogout-saveorder',array('flag'=>'saveorder')));
         }
 
-        if( count($entity->getScanorder()->getDataqualityMrnAcc()) > 0 ) {
+        if( count($entity->getDataqualityMrnAcc()) > 0 ) {
             $conflictsStr = "MRN-Accession Conflict Resolved by Replacing:";
-            foreach( $entity->getScanorder()->getDataqualityMrnAcc() as $dq ) {
+            foreach( $entity->getDataqualityMrnAcc() as $dq ) {
                 $conflictsStr .= "<br>".$dq->getAccession()." => ".$dq->getNewaccession();
             }
         } else {

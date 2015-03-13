@@ -37,20 +37,27 @@ class ScanOrder {
      */
     private $service;
 
+//    /**
+//     * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the scanorder (unlike to dataqualityage)
+//     *
+//     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="scanorder", cascade={"persist"})
+//     */
+//    private $dataqualitymrnacc;
+
     /**
-     * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the scanorder (unlike to dataqualityage)
+     * Order delivery (string): I'll give slides to ...
      *
-     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="scanorder", cascade={"persist"})
+     * @ORM\Column(type="string", nullable=true)
      */
-    private $dataqualitymrnacc;
+    private $delivery;
 
 
 
 
-    public function __construct()
-    {
-        $this->dataqualitymrnacc = new ArrayCollection();
-    }
+//    public function __construct()
+//    {
+//        $this->dataqualitymrnacc = new ArrayCollection();
+//    }
 
 
 
@@ -72,23 +79,23 @@ class ScanOrder {
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getDataqualitymrnacc()
-    {
-        return $this->dataqualitymrnacc;
-    }
-    public function addDataqualityMrnAcc($dataqualitymrnacc)
-    {
-        if( !$this->dataqualitymrnacc->contains($dataqualitymrnacc) ) {
-            $this->dataqualitymrnacc->add($dataqualitymrnacc);
-        }
-    }
-    public function removeDataqualityMrnAcc($dataqualitymrnacc)
-    {
-        $this->dataqualitymrnacc->removeElement($dataqualitymrnacc);
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getDataqualitymrnacc()
+//    {
+//        return $this->dataqualitymrnacc;
+//    }
+//    public function addDataqualityMrnAcc($dataqualitymrnacc)
+//    {
+//        if( !$this->dataqualitymrnacc->contains($dataqualitymrnacc) ) {
+//            $this->dataqualitymrnacc->add($dataqualitymrnacc);
+//        }
+//    }
+//    public function removeDataqualityMrnAcc($dataqualitymrnacc)
+//    {
+//        $this->dataqualitymrnacc->removeElement($dataqualitymrnacc);
+//    }
 
 
 
@@ -124,6 +131,25 @@ class ScanOrder {
     {
         return $this->orderinfo;
     }
+
+    /**
+     * @param mixed $delivery
+     */
+    public function setDelivery($delivery)
+    {
+        $this->delivery = $delivery;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDelivery()
+    {
+        return $this->delivery;
+    }
+
+
+
 
     public function __toString() {
         $res = "Scan Order";

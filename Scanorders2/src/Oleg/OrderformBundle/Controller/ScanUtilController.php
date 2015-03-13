@@ -293,7 +293,7 @@ class ScanUtilController extends Controller {
         foreach( $entities as $entity ) {
             $arr[] = $entity["name"];
             $parametersArr['text'.$count] = $entity["name"];
-            $addwhere = $addwhere . "list.delivery != :text".$count;
+            $addwhere = $addwhere . "scanorder.delivery != :text".$count;
             if( count($entities) > $count ) {
                 $addwhere = $addwhere . " AND ";
             }
@@ -314,7 +314,7 @@ class ScanUtilController extends Controller {
         if( $id && $id != "undefined" ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
-                $arr[] = $orderinfo->getDelivery();
+                $arr[] = $orderinfo->getScanorder()->getDelivery();
             }
         }
         //////////////////////////////////// END OF 3 ///////////////////////////////////////////
@@ -324,9 +324,10 @@ class ScanUtilController extends Controller {
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:OrderInfo', 'list')
-            ->select("list.delivery")
+            ->select("scanorder.delivery")
             ->innerJoin("list.provider","provider")
-            ->groupBy('list.delivery')
+            ->innerJoin("list.scanorder","scanorder")
+            ->groupBy('scanorder.delivery')
             ->where( "provider = :user ".$addwhere )
             ->setParameters( $parametersArr );
 

@@ -42,14 +42,6 @@ class OrderInfo {
      */
     private $orderdate;
 
-//    /**
-//     * TODO: rename it to Category.
-//     * Type or better: Category with subcategory (parent-children hierarchy)
-//     *
-//     * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
-//     * @ORM\JoinColumn(name="formtype", referencedColumnName="id")
-//     */
-//    private $type;
     /**
      * MessageCategory with subcategory (parent-children hierarchy)
      *
@@ -112,13 +104,12 @@ class OrderInfo {
      */
     private $returnoption;
 
-    /**
-     * TODO: move it to scan order
-     * Order delivery (string): I'll give slides to ...
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $delivery;
+//    /**
+//     * Order delivery (string): I'll give slides to ...
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $delivery;
 
 
     /**
@@ -222,12 +213,13 @@ class OrderInfo {
 //     */
 //    private $purpose;
 
-//    /**
-//     * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the orderinfo (unlike to dataqualityage)
-//     *
-//     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="orderinfo", cascade={"persist"})
-//     */
-//    private $dataqualitymrnacc;
+    /**
+     * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the orderinfo (unlike to dataqualityage)
+     * Any message (order) has referenece to patient and accession, hence can create conflict
+     *
+     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="orderinfo", cascade={"persist"})
+     */
+    private $dataqualitymrnacc;
 
     /**
      * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
@@ -397,7 +389,7 @@ class OrderInfo {
         $this->part = new ArrayCollection();      
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
-        //$this->dataqualitymrnacc = new ArrayCollection();
+        $this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
         $this->tracking = new ArrayCollection();
 
@@ -456,22 +448,22 @@ class OrderInfo {
             //
             $provider = $this->getProvider();
             $proxyuser = $this->getProxyuser();
-            //$dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
+            $dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
             $histories = $this->getHistory();
             $trackings = $this->getTracking();
 
             //$this->setProvider( new ArrayCollection() );
             //$this->proxyuser = new ArrayCollection();
-            //$this->dataqualitymrnacc = new ArrayCollection();
+            $this->dataqualitymrnacc = new ArrayCollection();
             $this->history = new ArrayCollection();
             $this->tracking = new ArrayCollection();
 
             $this->setProvider( $provider );
             $this->setProxyuser( $proxyuser );
 
-            //foreach( $dataqualitiesmrnacc as $dataqualitymrnacc ) {
-            //    $this->addDataqualityMrnAcc($dataqualitymrnacc);
-            //}
+            foreach( $dataqualitiesmrnacc as $dataqualitymrnacc ) {
+                $this->addDataqualityMrnAcc($dataqualitymrnacc);
+            }
 
             foreach( $histories as $history ) {
                 $this->addHistory($history);
@@ -556,21 +548,21 @@ class OrderInfo {
         return $this->deadline;
     }
 
-    /**
-     * @param mixed $delivery
-     */
-    public function setDelivery($delivery)
-    {
-        $this->delivery = $delivery;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDelivery()
-    {
-        return $this->delivery;
-    }
+//    /**
+//     * @param mixed $delivery
+//     */
+//    public function setDelivery($delivery)
+//    {
+//        $this->delivery = $delivery;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDelivery()
+//    {
+//        return $this->delivery;
+//    }
 
     /**
      * @param mixed $equipment
@@ -753,22 +745,6 @@ class OrderInfo {
     }
 
 
-//    /**
-//     * @param mixed $type
-//     */
-//    public function setType($type)
-//    {
-//        $this->type = $type;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getType()
-//    {
-//        return $this->type;
-//    }
-
 
 
 
@@ -832,30 +808,30 @@ class OrderInfo {
 //    }
 
 
-//    public function getDataqualityMrnAcc()
-//    {
-//        return $this->dataqualitymrnacc;
-//    }
-//
-//    public function setDataqualityMrnAcc($dataqualitiesmrnacc)
-//    {
-//        if( $dataqualitiesmrnacc == null ) {
-//            $dataqualitiesmrnacc = new ArrayCollection();
-//        }
-//        $this->dataqualitymrnacc = $dataqualitiesmrnacc;
-//    }
-//
-//    public function addDataqualityMrnAcc($dataqualitymrnacc)
-//    {
-//        if( !$this->dataqualitymrnacc->contains($dataqualitymrnacc) ) {
-//            $this->dataqualitymrnacc->add($dataqualitymrnacc);
-//        }
-//    }
-//
-//    public function removeDataqualityMrnAcc($dataqualitymrnacc)
-//    {
-//        $this->dataqualitymrnacc->removeElement($dataqualitymrnacc);
-//    }
+    public function getDataqualityMrnAcc()
+    {
+        return $this->dataqualitymrnacc;
+    }
+
+    public function setDataqualityMrnAcc($dataqualitiesmrnacc)
+    {
+        if( $dataqualitiesmrnacc == null ) {
+            $dataqualitiesmrnacc = new ArrayCollection();
+        }
+        $this->dataqualitymrnacc = $dataqualitiesmrnacc;
+    }
+
+    public function addDataqualityMrnAcc($dataqualitymrnacc)
+    {
+        if( !$this->dataqualitymrnacc->contains($dataqualitymrnacc) ) {
+            $this->dataqualitymrnacc->add($dataqualitymrnacc);
+        }
+    }
+
+    public function removeDataqualityMrnAcc($dataqualitymrnacc)
+    {
+        $this->dataqualitymrnacc->removeElement($dataqualitymrnacc);
+    }
 
     public function getHistory()
     {
@@ -1368,7 +1344,7 @@ class OrderInfo {
 //        $patient_info .= ")";
 
 //        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
-        return "OrderInfo: id=".$this->getId().", oid=".$this->oid.", status=".$this->getStatus().", category=".$this->getType().
+        return "OrderInfo: id=".$this->getId().", oid=".$this->oid.", status=".$this->getStatus().", category=".$this->getMessageCategory().
         ", provider=".$this->getProvider().", providerName=".$this->getProvider()->getUsername().", providerId=".$this->getProvider()->getId().
         ", edu=".$this->educational.
         ", res=".$this->research.", patientCount=".count($this->patient).

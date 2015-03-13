@@ -268,21 +268,21 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
     public function processSpecificOrders( $orderinfo ) {
 
-        $category = $orderinfo->getMessageCategory();
+        $categoryName = $orderinfo->getMessageCategory()->getName();
 
-        if( !$category ) {
+        if( !$categoryName ) {
             $orderinfo->setScanorder(null);
             $orderinfo->setLaborder(null);
             $orderinfo->setSlideReturnRequest(null);
             return $orderinfo;
         }
 
-        if( strpos($category,'Scan Order') !== false ) {
+        if( strpos($categoryName,'Scan Order') !== false ) {
             //$orderinfo->setScanorder(null);
             $orderinfo->setLaborder(null);
             $orderinfo->setSlideReturnRequest(null);
         } else
-        if( strpos($category,'Lab Order') !== false ) {
+        if( strpos($categoryName,'Lab Order') !== false ) {
             $orderinfo->setScanorder(null);
             //$orderinfo->setLaborder(null);
             $orderinfo->setSlideReturnRequest(null);

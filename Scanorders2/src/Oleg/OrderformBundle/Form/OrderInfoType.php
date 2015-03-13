@@ -109,14 +109,14 @@ class OrderInfoType extends AbstractType
         }
         $builder->add( 'priority', 'choice', $priorityArr);
 
-        //delivery
-        $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
-        $builder->add('delivery', 'custom_selector', array(
-            'label' => 'Slide Delivery:',
-            'attr' => $attr,
-            'required'=>true,
-            'classtype' => 'delivery'
-        ));
+//        //delivery
+//        $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
+//        $builder->add('delivery', 'custom_selector', array(
+//            'label' => 'Slide Delivery:',
+//            'attr' => $attr,
+//            'required'=>true,
+//            'classtype' => 'delivery'
+//        ));
 
         //deadline
         if( $this->params['cycle'] == 'new' ) {

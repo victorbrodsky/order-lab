@@ -95,7 +95,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         //loop through all conflicts to find out if this accession is conflicted
         //To determine if this accession has geberated conflict: 1) compare accession number/type and mrn number/type of dataquality and form
-        foreach( $orderinfo->getScanOrder()->getDataqualityMrnAcc() as $dataquality) {
+        foreach( $orderinfo->getDataqualityMrnAcc() as $dataquality) {
 
             $accessionConflict = false;
             $patientConflict = false;
@@ -118,7 +118,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 //valid values are not empty
             } else {
                 //echo "skip!!! <br>";
-                $orderinfo->getScanOrder()->removeDataqualityMrnAcc($dataquality);
+                $orderinfo->removeDataqualityMrnAcc($dataquality);
                 continue;   //remove and skip this dataquality
             }
 
@@ -209,7 +209,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 $currentDataquality->setProvider($orderinfo->getProvider());
                 $currentDataquality->setStatus('active');
 
-                $orderinfo->getScanOrder()->addDataqualityMrnAcc($currentDataquality);
+                $orderinfo->addDataqualityMrnAcc($currentDataquality);
 
             }
         }

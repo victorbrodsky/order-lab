@@ -65,15 +65,6 @@ class MessageType extends AbstractType
         }
         $builder->add( 'priority', 'choice', $priorityArr);
 
-        //delivery
-        $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
-        $builder->add('delivery', 'custom_selector', array(
-            'label' => 'Slide Delivery:',
-            'attr' => $attr,
-            'required'=>true,
-            'classtype' => 'delivery'
-        ));
-
         //deadline
         if( $this->params['cycle'] == 'new' ) {
             $deadline = date_modify(new \DateTime(), '+2 week');

@@ -42,6 +42,16 @@ class ScanOrderType extends AbstractType
                 'classtype' => 'service'
             ));
         }
+
+        //delivery
+        $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
+        $builder->add('delivery', 'custom_selector', array(
+            'label' => 'Slide Delivery:',
+            'attr' => $attr,
+            'required'=>true,
+            'classtype' => 'delivery'
+        ));
+
         
     }
 

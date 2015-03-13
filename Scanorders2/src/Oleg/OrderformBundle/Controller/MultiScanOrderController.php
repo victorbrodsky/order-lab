@@ -220,7 +220,7 @@ class MultiScanOrderController extends Controller {
             if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 
                 $conflictStr = "";
-                foreach( $entity->getScanOrder()->getDataqualityMrnAcc() as $dq ) {
+                foreach( $entity->getDataqualityMrnAcc() as $dq ) {
                     $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
                 }
 
@@ -244,9 +244,9 @@ class MultiScanOrderController extends Controller {
                     return $this->redirect($this->generateUrl('scan_idlelogout-saveorder',array('flag'=>'saveorder')));
                 }
 
-                if( count($entity->getScanOrder()->getDataqualityMrnAcc()) > 0 ) {
+                if( count($entity->getDataqualityMrnAcc()) > 0 ) {
                     $conflictsStr = "MRN-Accession Conflict Resolved by Replacing:";
-                    foreach( $entity->getScanOrder()->getDataqualityMrnAcc() as $dq ) {
+                    foreach( $entity->getDataqualityMrnAcc() as $dq ) {
                         $conflictsStr .= "<br>".$dq->getAccession()." => ".$dq->getNewaccession();
                     }
                 } else {
@@ -551,12 +551,12 @@ class MultiScanOrderController extends Controller {
         }
 
         //////////////// testing: order memory usage ////////////////
-        $mem = memory_get_usage(true);
-        $entity_tmp = clone $entity;
-        $mem = memory_get_usage(true) - $mem;
-        echo "order mem old = 2.36 Mb<br>";
-        echo "order mem = ".$mem. " => " .round($mem/1000000,2)." Mb<br>";
-        unset($entity_tmp);
+//        $mem = memory_get_usage(true);
+//        $entity_tmp = clone $entity;
+//        $mem = memory_get_usage(true) - $mem;
+//        echo "order mem old = 2.36 Mb<br>";
+//        echo "order mem = ".$mem. " => " .round($mem/1000000,2)." Mb<br>";
+//        unset($entity_tmp);
         //////////////// EOF order memory usage ////////////////
 
         $routeName = $request->get('_route');
@@ -583,7 +583,7 @@ class MultiScanOrderController extends Controller {
         }
 
         //redirect to show table view controller if form type is "Table-View Scan Order"
-        if( $entity->getMessageCategory() == "Table-View Scan Order" ) {
+        if( $entity->getMessageCategory()->getName() == "Table-View Scan Order" ) {
             return $this->redirect($this->generateUrl('table_show',array('id'=>$entity->getOid())));
         }
 
@@ -757,7 +757,7 @@ class MultiScanOrderController extends Controller {
 
         //echo "show id=".$entity->getId()."<br>";
         //use always multy because we use nested forms to display single and multy slide orders
-        $single_multy = $entity->getMessageCategory();
+        $single_multy = $entity->getMessageCategory()->getName();
 
         if( $single_multy == 'single' ) {
             $single_multy = 'multy';
@@ -812,7 +812,7 @@ class MultiScanOrderController extends Controller {
             'entity' => $entity,
             'form' => $form->createView(),
             'type' => $type,    //form cycle: new, show, amend ...
-            'formtype' => $entity->getMessageCategory(),
+            'formtype' => $entity->getMessageCategory()->getName(),
             'history' => $history,
             'amendable' => $securityUtil->isUserAllowOrderActions($entity, $user, array('amend')),
             'changestatus' => $securityUtil->isUserAllowOrderActions($entity, $user, array('changestatus')),

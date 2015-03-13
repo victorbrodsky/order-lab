@@ -112,7 +112,7 @@
     <input type="hidden" id="orderformtype" value="multi" />
     <input type="hidden" id="formcycle" value="{{ type }}" />
 
-    {% if entity is defined and entity.scanorder.dataqualitymrnacc|length > 0 %}
+    {% if entity is defined and entity.dataqualitymrnacc|length > 0 %}
         <div class="alert alert-danger">
             <p>This order contained an MRN-Accession Number association that conflicted with an already existing MRN-Accession Number association.</p>
             <a href="#existing_validation_error">Please see the note below for details.</a>
@@ -170,7 +170,7 @@
 
         {% if entity is defined and entity is not null %}
             <div id="existing_validation_error" style="padding-top: 2%">
-                {% for dataqualitymrnacc in entity.scanorder.dataqualitymrnacc %}
+                {% for dataqualitymrnacc in entity.dataqualitymrnacc %}
                     <div class="alert alert-danger">
                         <br>
                         Conflict Resolved by Replacement:

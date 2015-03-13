@@ -33,7 +33,7 @@ class OrderUtil {
 
     public function redirectOrderByStatus($order,$routeName) {
 
-        if( $order->getMessageCategory() == "Table-View Scan Order" ) {
+        if( $order->getMessageCategory()->getName() == "Table-View Scan Order" ) {
             $edit = "table_edit";
             $amend = "table_amend";
             $show = "table_show";
