@@ -15,7 +15,7 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
 
     /**
      * @var integer
-     *
+     *OrderInfo
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -28,51 +28,25 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
     private $orderinfo;
 
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="laborder")
-//     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", nullable=true)
-//     */
-//    protected $accession;
 
-
-//    //Lab Order contains: Lab Order ID Source, Lab Order ID
-//    /**
-//     * @ORM\ManyToOne(targetEntity="GeneralOrder")
-//     * @ORM\JoinColumn(name="generalorder_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $order;
-
-    ///////////////////// This order (scanorder) specific, unique fields /////////////////////
-
-    //Requisition Form Images
     /**
      * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
      **/
     private $documentContainer;
 
-    //Requisition Form Source Location: single
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-//     * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $sourceLocation;
+    /**
+     * Lab Order might have many Requisition Form
+     * @ORM\OneToMany(targetEntity="RequisitionForm", mappedBy="laborder", cascade={"persist","remove"})
+     */
+    private $requisitionForms;
 
-//    /**
-//     * Track Locations: can be many
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-//     * @ORM\JoinTable(name="scan_laborder_location",
-//     *      joinColumns={@ORM\JoinColumn(name="laborder_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id", unique=true)}
-//     *      )
-//     **/
-//    private $trackLocations;
 
 
 
 
     public function __construct() {
 
-        //$this->trackLocations = new ArrayCollection();
+        $this->requisitionForms = new ArrayCollection();
 
         //testing
         //echo "doc container=".$this->getDocumentContainer()."<br>";
@@ -80,6 +54,10 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
             $this->setDocumentContainer( new DocumentContainer() );
         }
     }
+
+
+
+
 
     /**
      * @param int $id
@@ -115,25 +93,6 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
     }
 
 
-
-//    /**
-//     * @param mixed $order
-//     */
-//    public function setOrder($order)
-//    {
-//        $this->order = $order;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getOrder()
-//    {
-//        return $this->order;
-//    }
-
-
-
     /**
      * @param mixed $documentContainer
      */
@@ -150,39 +109,23 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
         return $this->documentContainer;
     }
 
-//    /**
-//     * @param mixed $sourceLocation
-//     */
-//    public function setSourceLocation($sourceLocation)
-//    {
-//        $this->sourceLocation = $sourceLocation;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getSourceLocation()
-//    {
-//        return $this->sourceLocation;
-//    }
+
+    public function getRequisitionForms()
+    {
+        return $this->requisitionForms;
+    }
+    public function addRequisitionForm($item)
+    {
+        if( !$this->requisitionForms->contains($item) ) {
+            $this->requisitionForms->add($item);
+        }
+    }
+    public function removeRequisitionForm($item)
+    {
+        $this->requisitionForms->removeElement($item);
+    }
 
 
-
-//    public function getTrackLocations()
-//    {
-//        return $this->trackLocations;
-//    }
-//    public function addTrackLocation($trackLocation)
-//    {
-//        if( $trackLocation && !$this->trackLocations->contains($trackLocation) ) {
-//            $this->trackLocations->add($trackLocation);
-//        }
-//        return $this;
-//    }
-//    public function removeTrackLocation($trackLocation)
-//    {
-//        $this->trackLocations->removeElement($trackLocation);
-//    }
 
     public function __toString() {
         $res = "Lab Order";

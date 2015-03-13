@@ -366,11 +366,10 @@ class OrderInfo {
      */
     private $laborder;
 
-    //TODO: Lab Order has many Requisition Form
-//    /**
-//     * @ORM\OneToOne(targetEntity="RequisitionForm", inversedBy="orderinfo", cascade={"persist","remove"})
-//     */
-//    private $requisitionForm;
+    /**
+     * @ORM\OneToOne(targetEntity="Report", inversedBy="orderinfo", cascade={"persist","remove"})
+     */
+    private $report;
 
     ////////////////////////// EOF Specific Orders //////////////////////////
 
@@ -1419,6 +1418,24 @@ class OrderInfo {
     {
         return $this->laborder;
     }
+
+    /**
+     * @param mixed $report
+     */
+    public function setReport($report)
+    {
+        $this->report = $report;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReport()
+    {
+        return $this->report;
+    }
+
+
 
 
     /////////////////////// EOF Getters and Setters of Specific Orders ///////////////////////
