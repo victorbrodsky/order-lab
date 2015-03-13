@@ -33,9 +33,9 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //replace duplicate entities to filter the similar entities.
         $entity = $this->replaceDuplicateEntities( $entity, $entity );
 
-        if( $type && !$entity->getType() ) {
-            $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
-            $entity->setType($formtype);
+        if( $type && !$entity->getMessageCategory() ) {
+            $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+            $entity->setMessageCategory($category);
         }
 
         //persist specific orders if exists
@@ -268,7 +268,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
     public function processSpecificOrders( $orderinfo ) {
 
-        $category = $orderinfo->getType();
+        $category = $orderinfo->getMessageCategory();
 
         if( !$category ) {
             $orderinfo->setScanorder(null);

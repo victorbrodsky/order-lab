@@ -296,7 +296,7 @@ class OrderInfoType extends AbstractType
 
     //return true if substring is found: 'Scan Order', 'Lab Order' ...
     public function hasSpecificOrders( $orderinfo, $substring ) {
-        $category = $orderinfo->getType();
+        $category = $orderinfo->getMessageCategory();
         //echo "category=".$category."<br>";
         if( strpos($category,$substring) !== false ) {
             //echo "has <br>";

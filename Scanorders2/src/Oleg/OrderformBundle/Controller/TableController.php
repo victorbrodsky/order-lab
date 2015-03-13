@@ -193,7 +193,7 @@ class TableController extends Controller {
         $division = $defaultsDepDiv['division'];
 
         $params = array(
-            'type'=>$orderinfo->getType(),
+            'type'=>$orderinfo->getMessageCategory(),
             'cycle'=>$type,
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
@@ -433,7 +433,7 @@ class TableController extends Controller {
             'entity' => $orderinfo,
             'form' => $form->createView(),
             'type' => $type,
-            'formtype' => $orderinfo->getType(),
+            'formtype' => $orderinfo->getMessageCategory(),
             'history' => $history,
             'amendable' => $secUtil->isUserAllowOrderActions($orderinfo, $user, array('amend')),
             'changestatus' => $secUtil->isUserAllowOrderActions($orderinfo, $user, array('changestatus'))
@@ -558,8 +558,8 @@ class TableController extends Controller {
         $type = "Table-View Scan Order";
 
         //set order category
-        $category = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
-        $entity->setType($category);
+        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+        $entity->setMessageCategory($category);
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
@@ -610,8 +610,8 @@ class TableController extends Controller {
         $type = "Table-View Scan Order";
 
         //set order category
-        $category = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
-        $entity->setType($category);
+        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+        $entity->setMessageCategory($category);
 
         $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user);
 

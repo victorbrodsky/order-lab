@@ -39,7 +39,7 @@ class ScanListController extends ListController
      * @Route("/procedures/", name="procedure-list")
      * @Route("/pathology-services/", name="pathservice-list")
      * @Route("/slide-types/", name="slidetype-list")
-     * @Route("/form-types/", name="formtype-list")
+     * @Route("/messagecategorys/", name="messagecategorys-list")
      * @Route("/statuses/", name="status-list")
      * @Route("/order-delivery-options/", name="orderdelivery-list")
      * @Route("/region-to-scan-options/", name="regiontoscan-list")
@@ -81,7 +81,7 @@ class ScanListController extends ListController
      * @Route("/procedures/", name="procedure_create")
      * @Route("/pathology-services/", name="pathservice_create")
      * @Route("/slide-types/", name="slidetype_create")
-     * @Route("/form-types/", name="formtype_create")
+     * @Route("/messagecategorys/", name="messagecategorys_create")
      * @Route("/statuses/", name="status_create")
      * @Route("/order-delivery-options/", name="orderdelivery_create")
      * @Route("/region-to-scan-options/", name="regiontoscan_create")
@@ -123,7 +123,7 @@ class ScanListController extends ListController
      * @Route("/procedures/new", name="procedure_new")
      * @Route("/pathology-services/new", name="pathservice_new")
      * @Route("/slide-types/new", name="slidetype_new")
-     * @Route("/form-types/new", name="formtype_new")
+     * @Route("/messagecategorys/new", name="messagecategorys_new")
      * @Route("/statuses/new", name="status_new")
      * @Route("/order-delivery-options/new", name="orderdelivery_new")
      * @Route("/region-to-scan-options/new", name="regiontoscan_new")
@@ -165,7 +165,7 @@ class ScanListController extends ListController
      * @Route("/procedures/{id}", name="procedure_show")
      * @Route("/pathology-services/{id}", name="pathservice_show")
      * @Route("/slide-types/{id}", name="slidetype_show")
-     * @Route("/form-types/{id}", name="formtype_show")
+     * @Route("/messagecategorys/{id}", name="messagecategorys_show")
      * @Route("/statuses/{id}", name="status_show")
      * @Route("/order-delivery-options/{id}", name="orderdelivery_show")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_show")
@@ -207,7 +207,7 @@ class ScanListController extends ListController
      * @Route("/procedures/{id}/edit", name="procedure_edit")
      * @Route("/pathology-services/{id}/edit", name="pathservice_edit")
      * @Route("/slide-types/{id}/edit", name="slidetype_edit")
-     * @Route("/form-types/{id}/edit", name="formtype_edit")
+     * @Route("/messagecategorys/{id}/edit", name="messagecategorys_edit")
      * @Route("/statuses/{id}/edit", name="status_edit")
      * @Route("/order-delivery-options/{id}/edit", name="orderdelivery_edit")
      * @Route("/region-to-scan-options/{id}/edit", name="regiontoscan_edit")
@@ -249,7 +249,7 @@ class ScanListController extends ListController
      * @Route("/procedures/{id}", name="procedure_update")
      * @Route("/pathology-services/{id}", name="pathservice_update")
      * @Route("/slide-types/{id}", name="slidetype_update")
-     * @Route("/form-types/{id}", name="formtype_update")
+     * @Route("/messagecategorys/{id}", name="messagecategorys_update")
      * @Route("/statuses/{id}", name="status_update")
      * @Route("/order-delivery-options/{id}", name="orderdelivery_update")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_update")
@@ -340,9 +340,9 @@ class ScanListController extends ListController
             $className = "slidetype";
             $displayName = "Slide Types";
             break;
-        case "formtype":
-            $className = "formtype";
-            $displayName = "Form Types";
+        case "messagecategorys":
+            $className = "MessageCategory";
+            $displayName = "Message categories";
             break;
         case "status":
             $className = "status";
@@ -425,7 +425,7 @@ class ScanListController extends ListController
      * @Route("/procedures/{id}", name="procedure_delete")
      * @Route("/pathology-services/{id}", name="pathservice_delete")
      * @Route("/slide-types/{id}", name="slidetype_delete")
-     * @Route("/form-types/{id}", name="formtype_delete")
+     * @Route("/messagecategorys/{id}", name="messagecategorys_delete")
      * @Route("/statuses/{id}", name="status_delete")
      * @Route("/order-delivery-options/{id}", name="orderdelivery_delete")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_delete")

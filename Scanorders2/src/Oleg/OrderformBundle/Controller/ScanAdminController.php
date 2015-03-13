@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Oleg\OrderformBundle\Entity\AccessionType;
 use Oleg\OrderformBundle\Entity\EncounterType;
 use Oleg\OrderformBundle\Entity\ProcedureType;
-use Oleg\OrderformBundle\Entity\FormType;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
 use Oleg\OrderformBundle\Entity\ProcedureList;
@@ -90,7 +89,6 @@ class ScanAdminController extends AdminController
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
         $count_proceduretype = $this->generateProcedureType();
-        //$count_formtype = $this->generateFormType();
         $count_orderCategory = $this->generateOrderCategory();
         $count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
@@ -114,7 +112,6 @@ class ScanAdminController extends AdminController
             'Accession Types='.$count_acctype.', '.
             'Encounter Types='.$count_proceduretype.', '.
             'Procedure Types='.$count_enctype.', '.
-            //'Form Types='.$count_formtype.', '.
             'Message Category'.$count_orderCategory.', '.
             'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
@@ -647,18 +644,7 @@ class ScanAdminController extends AdminController
         $count = 1;
         $level = 0;
 
-        $this->addNestedsetCategory(null,$categories,$level,$username,$count);
-
-//        foreach( $categories as $category=>$subcategory ) {
-//
-//            $messageCategory = new MessageCategory();
-//            $this->setDefaultList($messageCategory,$count,$username,$type);
-//
-//            $em->persist($messageCategory);
-//            $em->flush();
-//            $count = $count + 10;
-//
-//        } //foreach
+        $count = $this->addNestedsetCategory(null,$categories,$level,$username,$count);
 
         //exit('EOF category');
 
@@ -670,6 +656,7 @@ class ScanAdminController extends AdminController
 
         foreach( $categories as $category=>$subcategory ) {
 
+            //make category
             $messageCategory = new MessageCategory();
 
             $name = $category;
@@ -680,25 +667,34 @@ class ScanAdminController extends AdminController
 
             $this->setDefaultList($messageCategory,$count,$username,$name);
             $messageCategory->setLevel($level);
-            $count = $level+( $count + 10 );
-            echo $level.": category=".$name.", count=".$count."<br>";
-            echo "subcategory:<br>";
-            print_r($subcategory);
-            echo "<br><br>";
+            $count = $count + 10;
 
+//            echo $level.": category=".$name.", count=".$count."<br>";
+//            echo "subcategory:<br>";
+//            print_r($subcategory);
+//            echo "<br><br>";
+//            echo "messageCategory=".$messageCategory->getName()."<br>";
+
+            //add to parent
             if( $parentCategory ) {
-                $parentCategory->addChild($parentCategory);
+                $em->persist($parentCategory);
+                $parentCategory->addChild($messageCategory);
             }
 
+            $messageCategory->printTree();
+
+            //make children
             if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {
-                $this->addNestedsetCategory($messageCategory,$subcategory,$level+1,$username,$count);
+                $count = $this->addNestedsetCategory($messageCategory,$subcategory,$level+1,$username,$count);
             }
 
             $em->persist($messageCategory);
             $em->flush();
-            //$count = $count + 10;
         }
+
+        return $count;
     }
+
 
 
     public function generateAccessionType() {

@@ -48,15 +48,15 @@ class MessageCategory extends ListAbstract implements ComponentCategoryInterface
 
     //left
     /**
-     * @ORM\ManyToOne(targetEntity="MessageCategory")
-     **/
-    private $left;
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $lft;
 
     //right
     /**
-     * @ORM\ManyToOne(targetEntity="MessageCategory")
-     **/
-    private $right;
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $rgt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -110,21 +110,7 @@ class MessageCategory extends ListAbstract implements ComponentCategoryInterface
         return $this->parent;
     }
 
-    /**
-     * @param mixed $left
-     */
-    public function setLeft($left)
-    {
-        $this->left = $left;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getLeft()
-    {
-        return $this->left;
-    }
 
     /**
      * @param mixed $level
@@ -143,23 +129,69 @@ class MessageCategory extends ListAbstract implements ComponentCategoryInterface
     }
 
     /**
-     * @param mixed $right
+     * @param mixed $lft
      */
-    public function setRight($right)
+    public function setLft($lft)
     {
-        $this->right = $right;
+        $this->lft = $lft;
     }
 
     /**
      * @return mixed
      */
-    public function getRight()
+    public function getLft()
     {
-        return $this->right;
+        return $this->lft;
+    }
+
+    /**
+     * @param mixed $rgt
+     */
+    public function setRgt($rgt)
+    {
+        $this->rgt = $rgt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRgt()
+    {
+        return $this->rgt;
     }
 
 
 
+    public function getClassName() {
+        return "MessageCategory";
+    }
+    public function getParentClassName () {
+        return $this->getClassName();
+    }
 
+
+    public function printTree() {
+
+        echo $this;
+
+        foreach( $this->getChildren() as $subCategory ) {
+
+            if( count($subCategory->getChildren()) > 0 ) {
+                $subCategory->printTree();
+            } else {
+                echo $subCategory;
+            }
+
+        }
+
+    }
+
+    public function __toString() {
+        $parentName = "";
+        if( $this->getParent() ) {
+            $parentName = ", parent=".$this->getParent()->getName();
+        }
+        return "Category:: ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName;
+    }
 
 }

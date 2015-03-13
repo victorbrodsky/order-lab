@@ -140,6 +140,37 @@
     {% endif %}
 {% endmacro %}
 
+{% macro getNestedTree( entity, linktype ) %}
+
+    {% if entity %}
+
+        {% import _self as usermacros %}
+
+        {% if linktype is defined and linktype == 'userlink' %}
+        {% else %}
+            {% set linktype = 'nodelink' %}
+        {% endif %}
+
+        <ol class="breadcrumb">
+            {{ usermacros.nestedTree(entity,linktype) }}
+        </ol>
+
+    {% endif %}
+
+{% endmacro %}
+
+{% macro nestedTree( entity, linktype ) %}
+
+    {% import _self as usermacros %}
+
+    {% if entity and entity.parent %}
+        {{ usermacros.nestedTree(entity.parent, linktype) }}
+    {% endif %}
+
+    <li>{{ usermacros.hrefLinkToNode(entity,linktype) }}</li><br>
+
+{% endmacro %}
+
 
 {% macro locationObject( field, cycle, classname, prototype, sitename, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}

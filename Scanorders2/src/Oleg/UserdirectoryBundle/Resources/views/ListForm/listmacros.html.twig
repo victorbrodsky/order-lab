@@ -83,7 +83,11 @@
 
                 {% if entity.parent is defined %}
                     <td class="rowlink-skip">
-                        {{ usermacros.getInstitutionalTree(entity.parent,'nodelink') }}
+                        {% if entity.level is defined %}
+                            {{ usermacros.getNestedTree(entity.parent,'nodelink') }}
+                        {% else %}
+                            {{ usermacros.getInstitutionalTree(entity.parent,'nodelink') }}
+                        {% endif %}
                     </td>
                 {% endif %}
 
@@ -196,7 +200,7 @@
     {{ formmacros.field(form.list.shortname) }}
     {{ formmacros.field(form.list.abbreviation) }}
 
-    {% if form.parent is defined and form.vars.value.parent is defined %}
+    {% if form.parent is defined and entity.level is not defined and form.vars.value.parent is defined %}
         {{ formmacros.field(form.parent) }}
     {% endif %}
 
@@ -275,7 +279,7 @@
 
     {{ form_start(edit_form) }}
 
-    {% if edit_form.parent is defined and entity.parent is defined %}
+    {% if edit_form.parent is defined and entity.parent is defined and entity.level is not defined %}
         {{ formmacros.field(edit_form.parent) }}
     {% endif %}
 

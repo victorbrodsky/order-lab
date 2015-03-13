@@ -25,9 +25,9 @@ interface ComponentCategoryInterface {
     public function setLevel($level);
     public function getLevel();
 
-    public function setRight($component);
-    public function getRight();
+    public function setRgt($component);
+    public function getRgt();
 
-    public function setLeft($component);
-    public function getLeft();
+    public function setLft($component);
+    public function getLft();
 } 

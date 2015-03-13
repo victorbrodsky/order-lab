@@ -3,9 +3,7 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\ScanOrder;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,9 +27,10 @@ use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\OrderformBundle\Entity\Research;
-
 use Oleg\OrderformBundle\Form\SlideMultiType;
-
+use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\Endpoint;
+use Oleg\OrderformBundle\Entity\ScanOrder;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\ScanEmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -105,13 +104,13 @@ class MultiScanOrderController extends Controller {
         }
 
         //set order category
-        $category = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
-        $entity->setType($category);
+        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+        $entity->setMessageCategory($category);
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
         $params = array(
-            'type'=>$type,
+            'type'=>$type,  //category
             'cycle'=>'create',
             'user'=>$user,
             'institutions'=>$permittedInstitutions,
@@ -422,8 +421,8 @@ class MultiScanOrderController extends Controller {
         }
 
         //set order category
-        $category = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
-        $entity->setType($category);
+        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+        $entity->setMessageCategory($category);
 
         //set the default service
         $entity->getScanorder()->setService($userSiteSettings->getDefaultService());
@@ -584,7 +583,7 @@ class MultiScanOrderController extends Controller {
         }
 
         //redirect to show table view controller if form type is "Table-View Scan Order"
-        if( $entity->getType() == "Table-View Scan Order" ) {
+        if( $entity->getMessageCategory() == "Table-View Scan Order" ) {
             return $this->redirect($this->generateUrl('table_show',array('id'=>$entity->getOid())));
         }
 
@@ -758,7 +757,7 @@ class MultiScanOrderController extends Controller {
 
         //echo "show id=".$entity->getId()."<br>";
         //use always multy because we use nested forms to display single and multy slide orders
-        $single_multy = $entity->getType();
+        $single_multy = $entity->getMessageCategory();
 
         if( $single_multy == 'single' ) {
             $single_multy = 'multy';
@@ -785,7 +784,7 @@ class MultiScanOrderController extends Controller {
         );
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
 
-        //echo "type=".$entity->getType();
+        //echo "type=".$entity->getMessageCategory();
         //exit();
 
 //        $id = $form["id"]->getData();
@@ -813,7 +812,7 @@ class MultiScanOrderController extends Controller {
             'entity' => $entity,
             'form' => $form->createView(),
             'type' => $type,    //form cycle: new, show, amend ...
-            'formtype' => $entity->getType(),
+            'formtype' => $entity->getMessageCategory(),
             'history' => $history,
             'amendable' => $securityUtil->isUserAllowOrderActions($entity, $user, array('amend')),
             'changestatus' => $securityUtil->isUserAllowOrderActions($entity, $user, array('changestatus')),

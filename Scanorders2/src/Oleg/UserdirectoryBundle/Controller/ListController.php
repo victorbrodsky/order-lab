@@ -721,6 +721,8 @@ class ListController extends Controller
 
     public function getParentName( $className ) {
 
+        //echo "className=".$className."<br>";
+
         switch( $className ) {
             case "Department":
                 $parentClassName = "Institution";

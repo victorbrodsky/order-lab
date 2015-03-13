@@ -33,7 +33,7 @@ class OrderUtil {
 
     public function redirectOrderByStatus($order,$routeName) {
 
-        if( $order->getType() == "Table-View Scan Order" ) {
+        if( $order->getMessageCategory() == "Table-View Scan Order" ) {
             $edit = "table_edit";
             $amend = "table_amend";
             $show = "table_show";
@@ -664,7 +664,7 @@ class OrderUtil {
         $repository = $this->em->getRepository('OlegOrderformBundle:OrderInfo');
         $dql =  $repository->createQueryBuilder("orderinfo");
         $dql->leftJoin('orderinfo.provider','provider');
-        $dql->leftJoin('orderinfo.type','category');
+        $dql->leftJoin('orderinfo.messageCategory','category');
 
         $criteria = "provider=".$user->getId(); //." AND category LIKE '%".$categoryStr."%'";
         if( $categoryStr && $categoryStr != "" ) {

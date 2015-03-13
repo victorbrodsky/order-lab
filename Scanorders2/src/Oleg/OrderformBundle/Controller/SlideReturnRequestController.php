@@ -96,7 +96,7 @@ class SlideReturnRequestController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
-        $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName("Slide Return Request");
+        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
 
         $orderinfo = new OrderInfo();
         $slideReturnRequest  = new SlideReturnRequest();
@@ -106,7 +106,7 @@ class SlideReturnRequestController extends Controller
 
         $slideReturnRequest->setStatus('active');
 
-        $slideReturnRequest->getOrderinfo()->setType($formtype);
+        $slideReturnRequest->getOrderinfo()->setMessageCategory($category);
 
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
@@ -274,8 +274,8 @@ class SlideReturnRequestController extends Controller
 
         $slideReturnRequest->setStatus('active');
 
-        $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName("Slide Return Request");
-        $slideReturnRequest->getOrderinfo()->setType($formtype);
+        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
+        $slideReturnRequest->getOrderinfo()->setMessageCategory($category);
 
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);

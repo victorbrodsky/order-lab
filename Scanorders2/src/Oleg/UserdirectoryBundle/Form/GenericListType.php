@@ -16,6 +16,10 @@ class GenericListType extends AbstractType
     {
         $this->params = $params;
         $this->mapper = $mapper;
+
+        if( !array_key_exists('parentClassName', $this->mapper) ) {
+            $this->mapper['parentClassName'] = $this->mapper['className'];
+        }
     }
 
         /**

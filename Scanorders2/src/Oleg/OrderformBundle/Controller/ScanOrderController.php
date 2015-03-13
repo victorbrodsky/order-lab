@@ -1111,7 +1111,7 @@ class ScanOrderController extends Controller {
         //innerJoin must exist, otherwise empty result will be returned
         $dql->innerJoin("orderinfo.slide", "slides");
         $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->innerJoin("orderinfo.type", "formtype");
+        $dql->innerJoin("orderinfo.messageCategory", "formtype");
         $dql->innerJoin("orderinfo.status", "status");
 
         $dql->leftJoin("provider.infos", "providerinfos");
