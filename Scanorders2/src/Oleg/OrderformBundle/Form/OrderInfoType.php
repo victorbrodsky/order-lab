@@ -12,6 +12,9 @@ use Doctrine\ORM\EntityRepository;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
 
+//This form type is used strictly only for scan order: orderinfo (message) form has scan order
+//Originally it was made the way that orderinfo has scanorder.
+//All other order's form should have aggregated message type form: order form has message form.
 class OrderInfoType extends AbstractType
 {
 

@@ -17,6 +17,7 @@ class MessageType extends AbstractType
 
     protected $entity;
     protected $params;
+    protected $labels;
 
     public function __construct( $params=null, $entity=null )
     {
@@ -26,6 +27,34 @@ class MessageType extends AbstractType
         if( !array_key_exists('type', $this->params) ) {
             $this->params['type'] = 'Unknown Order';
         }
+
+        //default labels
+        $labels = array(
+            'educational' => 'Educational:',
+            'research' => 'Research:',
+            'institution' => 'Institution:',
+            'destinations' => 'Return Slides to:',
+            'equipment' => 'Scanner:',
+            'proxyuser' => '',
+            'returnoption' => 'Return slide(s) by this date even if not scanned:',
+            'priority' => 'Priority:',
+            'deadline' => 'Deadline:',
+        );
+
+        //over write labels
+        if( array_key_exists('labels', $this->params) ) {
+            $overLabels = $this->params['labels'];
+            foreach($labels as $field=>$label) {
+                //echo $field."=>".$label."<br>";
+                if( array_key_exists($field, $overLabels) ) {
+                    //echo $field." exists!<br>";
+                    $labels[$field] = $overLabels[$field];
+                }
+            }
+
+            $this->labels = $labels;
+        }
+
     }
         
     
@@ -46,14 +75,14 @@ class MessageType extends AbstractType
 //            ));
 
 
-        $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>'Educational:') );
+        $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>$this->labels['educational']) );
 
-        $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>'Research:') );
+        $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>$this->labels['research']) );
 
         //priority
         $helper = new FormHelper();
         $priorityArr = array(
-            'label' => 'Priority:',
+            'label' => $this->labels['priority'],
             'choices' => $helper->getPriority(),
             'required' => true,
             'multiple' => false,
@@ -82,18 +111,18 @@ class MessageType extends AbstractType
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'data' => $deadline,
-            'label'=>'Deadline:',
+            'label'=>$this->labels['deadline'],
         ));
 
         $builder->add('returnoption', 'checkbox', array(
-            'label'     => 'Return slide(s) by this date even if not scanned:',
+            'label'     => $this->labels['returnoption'],
             'required'  => false,
         ));
 
 
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=>'Ordering Provider:',
+            'label'=>$this->labels['equipment'],
             'required' => false,
             //'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -107,7 +136,7 @@ class MessageType extends AbstractType
         $builder->add( 'equipment', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Equipment',
             'property' => 'name',
-            'label'=>'Scanner:',
+            'label'=>$this->labels['equipment'],
             'required'=> true,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -121,7 +150,7 @@ class MessageType extends AbstractType
 
 
         //Endpoint object: destination - location
-        $this->params['label'] = 'Return Slides to:';
+        $this->params['label'] = $this->labels['destinations'];
         $builder->add('destinations', 'collection', array(
             'type' => new EndpointType($this->params,$this->entity),    //$this->type),
             'label' => false,
@@ -141,7 +170,7 @@ class MessageType extends AbstractType
         }
 
         $builder->add('institution', 'entity', array(
-            'label' => 'Institution:',
+            'label' => $this->labels['institution'],
             'required'=> true,
             'multiple' => false,
             'empty_value' => false,

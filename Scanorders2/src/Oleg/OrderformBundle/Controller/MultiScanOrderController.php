@@ -326,6 +326,8 @@ class MultiScanOrderController extends Controller {
         }
 
         $entity = new OrderInfo();
+
+        //set scan order
         $scanOrder = new ScanOrder();
         $scanOrder->setOrderinfo($entity);
 

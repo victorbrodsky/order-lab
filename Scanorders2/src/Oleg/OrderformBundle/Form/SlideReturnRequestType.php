@@ -18,6 +18,13 @@ class SlideReturnRequestType extends AbstractType
     {
         if( $params ) $this->params = $params;
         if( $entity ) $this->entity = $entity;
+
+        $labels = array(
+            'institution' => 'Institution:',
+            'destinations' => 'Return Slides to:'
+        );
+
+        $this->params['labels'] = $labels;
     }
         
     

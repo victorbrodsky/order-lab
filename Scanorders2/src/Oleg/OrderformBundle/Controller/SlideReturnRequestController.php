@@ -73,6 +73,7 @@ class SlideReturnRequestController extends Controller
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
         $params = array(
+            'em' => $this->getDoctrine()->getManager(),
             'user'=>$user,
             'type'=>'table',
             'institutions'=>$permittedInst,
@@ -111,7 +112,7 @@ class SlideReturnRequestController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
-        $params = array( 'user'=>$user, 'type'=>'table', 'institutions'=>$permittedInst, 'cycle'=>'create');
+        $params = array( 'em' => $this->getDoctrine()->getManager(),'user'=>$user, 'type'=>'table', 'institutions'=>$permittedInst, 'cycle'=>'create');
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         $form->handleRequest($request);
@@ -238,6 +239,7 @@ class SlideReturnRequestController extends Controller
         $orderUtil = $this->get('scanorder_utility');
 
         $params = array(
+            'em' => $this->getDoctrine()->getManager(),
             'user'=>$user,
             'institutions'=>$permittedInst,
             'cycle' => 'new',
@@ -280,7 +282,7 @@ class SlideReturnRequestController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
-        $params = array( 'user'=>$user, 'institutions'=>$permittedInst, 'cycle'=>'create' );
+        $params = array( 'em' => $this->getDoctrine()->getManager(),'user'=>$user, 'institutions'=>$permittedInst, 'cycle'=>'create' );
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         $form->handleRequest($request);
