@@ -3,9 +3,11 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Helper\OrderUtil;
 use Oleg\OrderformBundle\Entity\History;
+use Oleg\UserdirectoryBundle\Entity\GeneralEntity;
 
 /**
  * OrderInfoRepository
@@ -148,10 +150,21 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //throw new \Exception('TESTING');
         //exit('orderinfo repoexit testing');
 
-        //create new orderinfo
+
+        ////////////////////// create new orderinfo //////////////////////
         //$em = $this->_em;
         $em->persist($entity);
         $em->flush();
+        ////////////////////// EOF create new orderinfo //////////////////////
+
+
+        //set all slides as inputs
+        foreach($entity->getSlide() as $slide) {
+            //set this slide as order input
+            $orderInput = new GeneralEntity();
+            $orderInput->setObject($slide);
+            $entity->addInput($orderInput);
+        }
 
         //insert oid to entity
         if( !$entity->getOid() ) {

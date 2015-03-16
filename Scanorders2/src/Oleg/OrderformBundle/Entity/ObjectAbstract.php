@@ -517,6 +517,18 @@ abstract class ObjectAbstract
         return $res;
     }
 
+    public function obtainClassName() {
+        $class = new \ReflectionClass($this);
+        $className = $class->getShortName();
+        return $className;
+    }
+
+    public function obtainFullClassName() {
+        $class = new \ReflectionClass($this);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+        return $classNamespace."\\".$className;
+    }
 
 //    //replace contains in AddChild
 //    public function childAlreadyExist( $newChild ) {

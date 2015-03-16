@@ -105,4 +105,17 @@ class GeneralEntity
         return $this->id;
     }
 
+    public function setObject($object) {
+        $class = new \ReflectionClass($object);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+
+        $this->setEntityName($className);
+        $this->setEntityNamespace($classNamespace);
+
+        if( $object->getId() ) {
+            $this->setEntityId($object->getId());
+        }
+    }
+
 }

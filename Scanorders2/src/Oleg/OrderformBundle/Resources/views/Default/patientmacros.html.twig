@@ -59,7 +59,7 @@
 
                                         <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
 
-                                            {{ formmacros.partForm( part, "check", uid, type, status, "","","","","","","") }}
+                                            {{ formmacros.partForm( part, datastructure, uid, type, status, "","","","","","","") }}
 
 
                                             {#block#}
@@ -75,7 +75,7 @@
 
                                                     <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
                                                         {#{{ formmacros.field(block.name) }}#}
-                                                        {{ formmacros.blockForm( block, "check", uid, type, status) }}
+                                                        {{ formmacros.blockForm( block, datastructure, uid, type, status) }}
 
 
                                                         {#slide#}
@@ -91,7 +91,7 @@
 
                                                                 <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
 
-                                                                    {{ formmacros.slideForm( slide, "check", uid, type ) }}
+                                                                    {{ formmacros.slideForm( slide, datastructure, uid, type ) }}
 
                                                                 </div>
                                                             </div> {#end of slide#}
@@ -116,7 +116,7 @@
 
                                                     <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
 
-                                                        {{ formmacros.slideForm( slide, "check", uid, type ) }}
+                                                        {{ formmacros.slideForm( slide, datastructure, uid, type ) }}
 
                                                     </div>
                                                 </div> {#end of slide#}

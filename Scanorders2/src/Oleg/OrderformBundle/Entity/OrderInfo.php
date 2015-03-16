@@ -29,6 +29,52 @@ class OrderInfo {
      */
     private $id;
 
+    /////////////////    HIERARCHY OBJECTS    //////////////////////
+    /**
+     * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo" )
+     * @ORM\JoinTable(name="scan_patient_orderinfo")
+     **/
+    private $patient;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Encounter", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_encounter_orderinfo")
+     **/
+    private $encounter;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_procedure_orderinfo")
+     **/
+    private $procedure;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Accession", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_accession_orderinfo")
+     **/
+    private $accession;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Part", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_part_orderinfo")
+     **/
+    private $part;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Block", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_block_orderinfo")
+     **/
+    private $block;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Slide", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_slide_orderinfo")
+     **/
+    private $slide;
+    /////////////////   EOF  HIERARCHY OBJECTS    //////////////////////
+
+
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
@@ -104,13 +150,6 @@ class OrderInfo {
      */
     private $returnoption;
 
-//    /**
-//     * Order delivery (string): I'll give slides to ...
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $delivery;
-
 
     /**
      * oid - id of the original order. Required for amend logic.
@@ -154,11 +193,7 @@ class OrderInfo {
      */
     private $research;
 
-//    //private $scanner;
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
-//     */
-//    private $equipment;
+
 
 //    /**
 //     * History of the order
@@ -171,47 +206,6 @@ class OrderInfo {
 //     **/
 //    private $history;
 
-
-    //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-//     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $service;
-
-//    /**
-//     * @ORM\Column(type="string",nullable=true)
-//     */
-//    private $priority;
-
-    //private $scandeadline;
-//    /**
-//     * @ORM\Column(type="datetime", nullable=true)
-//     */
-//    private $deadline;
-
-    //Return slide(s) by this date even if not scanned
-//    /**
-//     * @ORM\Column(name="returnoption", type="boolean")
-//     */
-//    private $returnoption;
-
-    //private $slideDelivery;
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $delivery;
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-//     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
-//     * @Assert\NotBlank
-//     **/
-//    private $returnSlide;
-
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $purpose;
 
     /**
      * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the orderinfo (unlike to dataqualityage)
@@ -239,55 +233,13 @@ class OrderInfo {
     private $tracking;
 
 
-    /////////////////    HIERARCHY OBJECTS    //////////////////////
-    /**
-     * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo" )
-     * @ORM\JoinTable(name="scan_patient_orderinfo")
-     **/
-    private $patient;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Encounter", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_encounter_orderinfo")
-     **/
-    private $encounter;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_procedure_orderinfo")
-     **/
-    private $procedure;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Accession", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_accession_orderinfo")
-     **/
-    private $accession;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Part", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_part_orderinfo")
-     **/
-    private $part;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Block", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_block_orderinfo")
-     **/
-    private $block;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Slide", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_slide_orderinfo")
-     **/
-    private $slide;
-    /////////////////   EOF  HIERARCHY OBJECTS    //////////////////////
 
 
     /**
      * One-To-Many Unidirectional
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_orderinfo_input",
      *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="input_id", referencedColumnName="id", unique=true)}
@@ -298,7 +250,7 @@ class OrderInfo {
     /**
      * One-To-Many Unidirectional
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_orderinfo_output",
      *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="output_id", referencedColumnName="id", unique=true)}
@@ -313,7 +265,7 @@ class OrderInfo {
     private $backAssociations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", inversedBy="backAssociations")
+     * @ORM\ManyToMany(targetEntity="OrderInfo", inversedBy="backAssociations", cascade={"persist","remove"})
      * @ORM\JoinTable(name="associations",
      *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="association_id", referencedColumnName="id")}
@@ -326,7 +278,7 @@ class OrderInfo {
      * Source: can be many
      * One-To-Many unidirectional with Join table
      *
-     * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_source_orderinfo",
      *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="source_id", referencedColumnName="id", unique=true)}
@@ -338,7 +290,7 @@ class OrderInfo {
      * Destinations: can be many
      * One-To-Many unidirectional with Join table
      *
-     * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_destination_orderinfo",
      *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="destination_id", referencedColumnName="id", unique=true)}
@@ -546,22 +498,6 @@ class OrderInfo {
     {
         return $this->deadline;
     }
-
-//    /**
-//     * @param mixed $delivery
-//     */
-//    public function setDelivery($delivery)
-//    {
-//        $this->delivery = $delivery;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getDelivery()
-//    {
-//        return $this->delivery;
-//    }
 
     /**
      * @param mixed $equipment
@@ -894,51 +830,6 @@ class OrderInfo {
     {
         $this->destinations->removeElement($item);
     }
-
-
-//    /**
-//     * Set slideDelivery
-//     *
-//     * @param string $slideDelivery
-//     * @return OrderInfo
-//     */
-//    public function setSlideDelivery($slideDelivery)
-//    {
-//        $this->slideDelivery = $slideDelivery;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get slideDelivery
-//     *
-//     * @return string
-//     */
-//    public function getSlideDelivery()
-//    {
-//        return $this->slideDelivery;
-//    }
-//
-//
-//    public function setReturnSlide($returnSlide)
-//    {
-//        $this->returnSlide = $returnSlide;
-//
-//        return $this;
-//    }
-//
-//    public function getReturnSlide()
-//    {
-//        return $this->returnSlide;
-//    }
-
-//    public function getStatus() {
-//        return $this->status;
-//    }
-//
-//    public function setStatus($status) {
-//        $this->status = $status;
-//    }
 
     /**
      * @param mixed $account

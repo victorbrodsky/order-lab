@@ -6,6 +6,7 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+
 class SlideRepository extends ArrayFieldAbstractRepository {
 
     //Make new - no requirements for uniqueness.

@@ -25,8 +25,6 @@ class SlideType extends AbstractType
     {      
         $builder->add( 'id', 'hidden' );
 
-        //TODO: replace by generic form type
-        //$builder->add( 'stain', new StainType(), array('label'=>'Stain:') ); \
         $builder->add('stain', 'collection', array(
             'type' => new StainType($this->params),
             'allow_add' => true,
@@ -89,6 +87,25 @@ class SlideType extends AbstractType
                     ->orderBy('s.id', 'ASC');
             },
         ));
+
+
+        //messages
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+            //echo "slide datastructure <br>";
+
+            $builder->add('orderinfo', 'collection', array(
+                'type' => new MessageType($this->params),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__slideorderinfo__',
+            ));
+
+        }
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

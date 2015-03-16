@@ -21,20 +21,30 @@ class PartNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        //echo "cycle=".$this->params['cycle']."<br>";
+
         if( $this->params['cycle'] != 'show' && $this->params['type'] == 'One-Slide Scan Order' && $this->params['cycle'] != 'amend' && $this->params['cycle'] != 'edit' ) {
             $label = false;
         } else {
             $label = 'Part Name';
         }
 
-        $attr = array('class' => 'ajax-combobox ajax-combobox-partname keyfield partname-mask', 'type' => 'hidden' );
-
-        $builder->add('field', 'custom_selector', array(
-            'label' => $label,
-            'attr' => $attr,
-            'required'=>false,
-            'classtype' => 'partname'
-        ));
+        if( $this->params['cycle'] != "show" ) {
+            $attr = array('class' => 'ajax-combobox ajax-combobox-partname keyfield partname-mask', 'type' => 'hidden' );
+            $builder->add('field', 'custom_selector', array(
+                'label' => $label,
+                'attr' => $attr,
+                'required'=>false,
+                'classtype' => 'partname'
+            ));
+        } else {
+            $attr = array('class' => 'form-control keyfield partname-mask');
+            $builder->add('field', null, array(
+                'label' => $label,
+                'attr' => $attr,
+                'required'=>false,
+            ));
+        }
 
         $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',

@@ -29,10 +29,10 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
 
 
 
-    /**
-     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
-     **/
-    private $documentContainer;
+//    /**
+//     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+//     **/
+//    private $documentContainer;
 
     /**
      * Lab Order might have many Requisition Form
@@ -48,11 +48,11 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
 
         $this->requisitionForms = new ArrayCollection();
 
-        //testing
-        //echo "doc container=".$this->getDocumentContainer()."<br>";
-        if( !$this->getDocumentContainer() ) {
-            $this->setDocumentContainer( new DocumentContainer() );
-        }
+//        //testing
+//        //echo "doc container=".$this->getDocumentContainer()."<br>";
+//        if( !$this->getDocumentContainer() ) {
+//            $this->setDocumentContainer( new DocumentContainer() );
+//        }
     }
 
 
@@ -93,21 +93,21 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
     }
 
 
-    /**
-     * @param mixed $documentContainer
-     */
-    public function setDocumentContainer($documentContainer)
-    {
-        $this->documentContainer = $documentContainer;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDocumentContainer()
-    {
-        return $this->documentContainer;
-    }
+//    /**
+//     * @param mixed $documentContainer
+//     */
+//    public function setDocumentContainer($documentContainer)
+//    {
+//        $this->documentContainer = $documentContainer;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDocumentContainer()
+//    {
+//        return $this->documentContainer;
+//    }
 
 
     public function getRequisitionForms()

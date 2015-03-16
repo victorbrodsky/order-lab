@@ -296,7 +296,70 @@
 
 {% endmacro %}
 
+{#render messages#}
+{#show order if order's input.entityName is the same as object#}
+{% macro renderMessages( object, datastructure, cycle ) %}
 
+    {% import _self as formmacros %}
+
+    {% if datastructure and datastructure == "datastructure" and object.orderinfo is defined %}
+
+        {% for message in object.orderinfo %}
+
+            {#decide if this object is the same as input object #}
+            {%  set showMessage = false %}
+            {% for input in message.vars.value.inputs %}
+                {% if input.entityNamespace~"\\"~input.entityName == object.vars.value.obtainFullClassName and input.entityId == object.vars.value.id %}
+                    {%  set showMessage = true %}
+                {% endif %}
+            {% endfor %}
+
+            {% if showMessage %}
+
+                <div class="well well-sm">
+                    <h4>{{ message.vars.value.messageCategory.name }}</h4>
+                    <p>
+                        {{ formmacros.simplefield( "ID:", message.vars.value.oid, "", "disabled" ) }}
+                        {{ formmacros.simplefield( "Date:", message.vars.value.orderdate|date('Y-m-d')~" at "~message.vars.value.orderdate|date('h:i a'), "", "disabled" ) }}
+                        {{ formmacros.simplefield( "Provider:", message.vars.value.provider, "", "disabled" ) }}
+
+                        <p>
+                            {% for input in message.vars.value.inputs %}
+                                {{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "", "disabled" ) }}
+                            {% endfor %}
+                        </p>
+
+                        <p>
+                            {% for output in message.vars.value.outputs %}
+                                {{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "", "disabled" ) }}
+                            {% endfor %}
+                        </p>
+
+                        <p>
+                            {% for source in message.vars.value.sources %}
+                                {{ formmacros.simplefield( "Source System:", source.system, "", "disabled" ) }}
+                                {{ formmacros.simplefield( "Source Location:", source.location, "", "disabled" ) }}
+                            {% endfor %}
+                        </p>
+
+                        <p>
+                            {% for destination in message.vars.value.destinations %}
+                                {{ formmacros.simplefield( "Destination System:", destination.system, "", "disabled" ) }}
+                                {{ formmacros.simplefield( "Destination Location:", destination.location, "", "disabled" ) }}
+                            {% endfor %}
+                        </p>
+
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endmacro %}
 
 {#history info#}
 {% macro history_info(histories, form) %}
@@ -997,6 +1060,9 @@
         {% set key = "" %}
     {% endif %}
 
+    {#messages#}
+    {{ formmacros.renderMessages(patient,flag,cycle) }}
+
     <div id="patient_{{ uid }}" class="form-element-holder">
 
         {% if mrnHtml is not defined or mrnHtml == "" %}
@@ -1072,6 +1138,9 @@
     {% else %}
         {% set key = "" %}
     {% endif %}
+
+    {#messages#}
+    {{ formmacros.renderMessages(accession,flag,cycle) }}
 
     <div id="accession_{{ uid }}" class="form-element-holder">
         {% if accessionHtml is not defined or accessionHtml == "" %}
@@ -1184,6 +1253,9 @@
         {% set key = "" %}
     {% endif %}
 
+    {#messages#}
+    {{ formmacros.renderMessages(part,flag,cycle) }}
+
     <div id="part_{{ uid }}" class="form-element-holder scan-partpaper">
 
         {% if partnameHtml is not defined or partnameHtml == "" %}
@@ -1244,6 +1316,9 @@
         {% set key = "" %}
     {% endif %}
 
+    {#messages#}
+    {{ formmacros.renderMessages(block,flag,cycle) }}
+
     <div id="block_{{ uid }}" class="form-element-holder">
 
         {% if blocknameHtml is not defined or blocknameHtml == "" %}
@@ -1274,6 +1349,9 @@
 
 {% macro slideForm( slide, flag, uid, cycle, slidetypeHtml, stainHtml, scanHtml, scanregionHtml, noteHtml, microscopicdescrHtml, relevantScansHtml ) %}
     {% import _self as formmacros %}
+
+    {#messages#}
+    {{ formmacros.renderMessages(slide,flag,cycle) }}
 
     <div id="slide_{{ uid }}" class="form-element-holder">
 

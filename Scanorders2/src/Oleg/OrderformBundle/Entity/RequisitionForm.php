@@ -27,7 +27,10 @@ class RequisitionForm {
      **/
     private $laborder;
 
-
+    /**
+     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+     **/
+    private $documentContainer;
 
 
 
@@ -63,6 +66,22 @@ class RequisitionForm {
     public function getLaborder()
     {
         return $this->laborder;
+    }
+
+    /**
+     * @param mixed $documentContainer
+     */
+    public function setDocumentContainer($documentContainer)
+    {
+        $this->documentContainer = $documentContainer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentContainer()
+    {
+        return $this->documentContainer;
     }
 
 

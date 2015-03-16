@@ -28,14 +28,22 @@ class BlockNameType extends AbstractType
             $label = 'Block Name';
         }
 
-        $attr = array('class' => 'ajax-combobox ajax-combobox-blockname keyfield blockname-mask', 'type' => 'hidden');
-
-        $builder->add('field', 'custom_selector', array(
-            'label' => $label,
-            'attr' => $attr,
-            'required'=>false,
-            'classtype' => 'blockname'
-        ));
+        if( $this->params['cycle'] != "show" ) {
+            $attr = array('class' => 'ajax-combobox ajax-combobox-blockname keyfield blockname-mask', 'type' => 'hidden');
+            $builder->add('field', 'custom_selector', array(
+                'label' => $label,
+                'attr' => $attr,
+                'required'=>false,
+                'classtype' => 'blockname'
+            ));
+        } else {
+            $attr = array('class' => 'form-control keyfield blockname-mask');
+            $builder->add('field', null, array(
+                'label' => $label,
+                'attr' => $attr,
+                'required'=>false,
+            ));
+        }
 
         $builder->add('others', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\BlockBlockname',

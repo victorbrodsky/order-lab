@@ -23,8 +23,8 @@ class Report {
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo")
-     */
+     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="report")
+     **/
     private $orderinfo;
 
 
