@@ -75,6 +75,10 @@ class OrderInfo {
     /////////////////   EOF  HIERARCHY OBJECTS    //////////////////////
 
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $idnumber;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -464,9 +468,21 @@ class OrderInfo {
         $this->$addMethod($depend);
     }
 
+    /**
+     * @param mixed $idnumber
+     */
+    public function setIdnumber($idnumber)
+    {
+        $this->idnumber = $idnumber;
+    }
 
-
-
+    /**
+     * @return mixed
+     */
+    public function getIdnumber()
+    {
+        return $this->idnumber;
+    }
 
     /**
      * @param mixed $comment

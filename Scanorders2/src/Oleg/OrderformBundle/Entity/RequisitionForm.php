@@ -3,9 +3,11 @@
 namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
-use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity
@@ -31,7 +33,6 @@ class RequisitionForm {
      * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
      **/
     private $documentContainer;
-
 
 
 
@@ -83,6 +84,8 @@ class RequisitionForm {
     {
         return $this->documentContainer;
     }
+
+
 
 
 

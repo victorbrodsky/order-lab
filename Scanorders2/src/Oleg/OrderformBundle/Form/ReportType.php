@@ -23,10 +23,7 @@ class ReportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('orderinfo', new MessageType($this->params), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\OrderInfo',
-            'label' => false
-        ));
+
 
 
 

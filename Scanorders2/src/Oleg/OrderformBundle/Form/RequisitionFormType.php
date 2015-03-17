@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class LabOrderType extends AbstractType
+class RequisitionFormType extends AbstractType
 {
 
     protected $params;
@@ -24,25 +24,19 @@ class LabOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-
-        $builder->add('requisitionForms', 'collection', array(
-            'type' => new RequisitionFormType($this->params,$this->entity),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__requisitionForm__',
+        //Requisition Form Image container
+        $params = array('labelPrefix'=>'Requisition Form Image');
+        $builder->add('documentContainer', new DocumentContainerType($params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+            'label' => false
         ));
 
 
-
-//        $builder->add('others', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
-//            'label' => false,
-//			'attr' => array('style'=>'display:none;')
-//        ));
+        $builder->add('others', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\RequisitionForm',
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
+        ));
 
 
     }
@@ -50,12 +44,12 @@ class LabOrderType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
+            'data_class' => 'Oleg\OrderformBundle\Entity\RequisitionForm',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_labordertype';
+        return 'oleg_orderformbundle_requisitionformtype';
     }
 }

@@ -46,18 +46,6 @@ class SlideReturnRequestType extends AbstractType
             'classtype' => 'urgency'
         ));
 
-//        $builder->add('slide', 'collection', array(
-//            'type' => new SlideSimpleType($this->params),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'label' => false,//" ",
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__slides__',
-//        ));
-
-
 
         if( array_key_exists('type', $this->params) &&  $this->params['type'] == 'table' ) {
 

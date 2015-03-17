@@ -304,50 +304,76 @@
 
     {% if datastructure and datastructure == "datastructure" and object.orderinfo is defined %}
 
+        {%  set disabled = "disabled" %}
+        {#{%  set disabled = "" %}#}
+
         {% for message in object.orderinfo %}
 
             {#decide if this object is the same as input object #}
             {%  set showMessage = false %}
             {% for input in message.vars.value.inputs %}
-                {% if input.entityNamespace~"\\"~input.entityName == object.vars.value.obtainFullClassName and input.entityId == object.vars.value.id %}
+                {% if
+                        input.entityNamespace~"\\"~input.entityName == object.vars.value.obtainFullClassName
+                        and input.entityId == object.vars.value.id
+                %}
                     {%  set showMessage = true %}
                 {% endif %}
             {% endfor %}
 
             {% if showMessage %}
 
+                {% if message.vars.value.oid %}
+                    {% set orderId = message.vars.value.oid %}
+                {% else %}
+                    {% set orderId = message.vars.value.id %}
+                {% endif %}
+
                 <div class="well well-sm">
                     <h4>{{ message.vars.value.messageCategory.name }}</h4>
                     <p>
-                        {{ formmacros.simplefield( "ID:", message.vars.value.oid, "", "disabled" ) }}
-                        {{ formmacros.simplefield( "Date:", message.vars.value.orderdate|date('Y-m-d')~" at "~message.vars.value.orderdate|date('h:i a'), "", "disabled" ) }}
-                        {{ formmacros.simplefield( "Provider:", message.vars.value.provider, "", "disabled" ) }}
+                        {{ formmacros.simplefield( "ID:", orderId, "input", disabled ) }}
+
+                        {% if message.idnumber %}
+                            {#{{ formmacros.field( message.idnumber ) }}#}
+                            {{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}
+                        {% endif %}
+
+                        {{ formmacros.simplefield( "Date:", message.vars.value.orderdate|date('Y-m-d')~" at "~message.vars.value.orderdate|date('h:i a'), "input", disabled ) }}
+                        {{ formmacros.simplefield( "Provider:", message.vars.value.provider, "input", disabled ) }}
 
                         <p>
                             {% for input in message.vars.value.inputs %}
-                                {{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "", "disabled" ) }}
+                                {{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "input", disabled ) }}
                             {% endfor %}
                         </p>
 
                         <p>
                             {% for output in message.vars.value.outputs %}
-                                {{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "", "disabled" ) }}
+                                {{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "input", disabled ) }}
                             {% endfor %}
                         </p>
 
                         <p>
                             {% for source in message.vars.value.sources %}
-                                {{ formmacros.simplefield( "Source System:", source.system, "", "disabled" ) }}
-                                {{ formmacros.simplefield( "Source Location:", source.location, "", "disabled" ) }}
+                                {{ formmacros.simplefield( "Source System:", source.system, "input", disabled ) }}
+                                {{ formmacros.simplefield( "Source Location:", source.location, "input", disabled ) }}
                             {% endfor %}
                         </p>
 
                         <p>
                             {% for destination in message.vars.value.destinations %}
-                                {{ formmacros.simplefield( "Destination System:", destination.system, "", "disabled" ) }}
-                                {{ formmacros.simplefield( "Destination Location:", destination.location, "", "disabled" ) }}
+                                {{ formmacros.simplefield( "Destination System:", destination.system, "input", disabled ) }}
+                                {{ formmacros.simplefield( "Destination Location:", destination.location, "input", disabled ) }}
                             {% endfor %}
                         </p>
+
+                        {% if message.laborder is defined %}
+                            <p>
+                                {% for requisitionForm in message.laborder.requisitionForms %}
+                                    {{ formmacros.fieldDocumentContainer(requisitionForm.documentContainer,cycle) }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
 
                     </p>
 

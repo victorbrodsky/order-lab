@@ -61,6 +61,14 @@ class MessageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        if( array_key_exists('idnumber', $this->params) &&  $this->params['idnumber'] == true ) {
+            $builder->add('idnumber', null, array(
+                'label' => "Identification Number:",
+                'attr' => array('class' => 'form-control'),
+                'required'=>false,
+            ));
+        }
+
         if( array_key_exists('educational', $this->params) &&  $this->params['educational'] == true ) {
             $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>$this->labels['educational']) );
         }
@@ -142,7 +150,7 @@ class MessageType extends AbstractType
         //Endpoint object: destination - location
         $this->params['label'] = $this->labels['destinations'];
         $builder->add('destinations', 'collection', array(
-            'type' => new EndpointType($this->params,$this->entity),    //$this->type),
+            'type' => new EndpointType($this->params,$this->entity),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -181,6 +189,22 @@ class MessageType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__slide__',
+            ));
+        }
+
+        //message's laborder
+        if( array_key_exists('laborder', $this->params) &&  $this->params['laborder'] == true ) {
+            $builder->add('laborder', new LabOrderType($this->params,$this->entity), array(
+                'required' => false,
+                'label' => false
+            ));
+        }
+
+        //message's laborder
+        if( array_key_exists('message.report', $this->params) &&  $this->params['message.report'] == true ) {
+            $builder->add('report', new ReportType($this->params,$this->entity), array(
+                'required' => false,
+                'label' => false
             ));
         }
 

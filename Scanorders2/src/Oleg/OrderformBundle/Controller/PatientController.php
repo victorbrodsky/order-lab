@@ -2,6 +2,11 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+
+use Oleg\OrderformBundle\Entity\Endpoint;
+use Oleg\OrderformBundle\Entity\OrderInfo;
+use Oleg\OrderformBundle\Entity\RequisitionForm;
+use Oleg\UserdirectoryBundle\Entity\Document;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -16,6 +21,9 @@ use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\Part;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\Slide;
+
+use Oleg\OrderformBundle\Entity\LabOrder;
+use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
 
 /**
  * Patient controller.
@@ -87,6 +95,10 @@ class PatientController extends Controller
         //$slide->addExtraFields($status,$user,$system);
         $block->addSlide($slide);
 
+
+        $disabled = true;
+        //$disabled = false;
+
         $params = array(
             'type' => 'multy',
             'cycle' => 'new',
@@ -94,7 +106,15 @@ class PatientController extends Controller
             'datastructure' => 'datastructure'
         );
 
-        $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => false) );
+        /////////////////////// testing: create specific messages ///////////////////////
+        $this->createAndAddSpecificMessage($slide,"Lab Order");
+        $params['laborder'] = true;
+        $params['idnumber'] = true;
+        $this->createAndAddSpecificMessage($slide,"Report");
+        $params['message.report'] = true;
+        /////////////////////// EOF create lab order ///////////////////////
+
+        $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => $disabled) );
 
         return array(
             'entity' => $patient,
@@ -103,6 +123,43 @@ class PatientController extends Controller
             'type' => 'show',
             'datastructure' => 'datastructure'
         );
+    }
+
+    public function createAndAddSpecificMessage($object,$messageTypeStr) {
+        $em = $this->getDoctrine()->getManager();
+        $message = new OrderInfo();
+
+        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageTypeStr);
+        $message->setMessageCategory($category);
+
+
+
+        $source = new Endpoint();
+        $message->addSource($source);
+
+        $destination = new Endpoint();
+        $message->addDestination($destination);
+
+
+        //add slide to message and input
+        //$message->addSlide($object);
+        $object->addOrderinfo($message);
+        //set this slide as order input
+        $message->addInputObject($object);
+
+        if( $messageTypeStr == "Lab Order" ) {
+
+            $laborder = new LabOrder();
+            $laborder->setOrderinfo($message);
+            $reqForm = new RequisitionForm();
+            $documentContainer = new DocumentContainer();
+            //$documentContainer->addDocument(new Document());
+            $reqForm->setDocumentContainer($documentContainer);
+            $laborder->addRequisitionForm($reqForm);
+            $message->setLaborder($laborder);
+
+        }
+
     }
 
     /**

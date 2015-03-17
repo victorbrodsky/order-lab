@@ -95,20 +95,6 @@ class PatientType extends AbstractType
                 'prototype_name' => '__patientlastname__',
             ));
 
-//            $attr = array('class'=>'form-control patientage-field patientage-mask', 'disabled' => 'disabled');
-//            $gen_attr = array('label'=>'Age','class'=>'Oleg\OrderformBundle\Entity\PatientAge','type'=>'text');
-//            $builder->add('age', 'collection', array(
-//                'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-//                'read_only' => $flag,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'required' => false,
-//                'label' => "Age:",
-//                'by_reference' => false,
-//                'prototype' => true,
-//                'prototype_name' => '__patientage__',
-//            ));
-
             $builder->add('sex', 'collection', array(
                 'type' => new PatientSexType($this->params, null),
                 'read_only' => $flag,
