@@ -1,7 +1,7 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
 {% block title %}
-    Slide Return Request for Order# {{ orderinfo.oid }}
+    Slide Return Request for Order# {{ form.vars.value.orderinfo.oid }}
 {% endblock %}
 
 
@@ -122,7 +122,7 @@
         <tbody>
 
 
-        {% for slide in orderinfo.slide %}
+        {% for slide in form.vars.value.orderinfo.slide %}
 
             {% set patient =  slide.obtainPatient %}
             {% set patientkey =  patient.obtainValidKeyfield %}
@@ -141,7 +141,10 @@
             <tr>
 
                 <td>
-                    <input type="checkbox" value="{{ slide.id }}" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}][id]" id="oleg_orderformbundle_slidereturnrequesttype_slide_{{ slide.id }}_id" checked onClick="toggleSelectAllCheckbox(this)"/>
+                    <input type="checkbox" value="{{ slide.id }}"
+                           name="oleg_orderformbundle_orderinfotype[slide][{{ slide.id }}][id]"
+                           id="oleg_orderformbundle_orderinfotype_slide_{{ slide.id }}_id"
+                           checked onClick="toggleSelectAllCheckbox(this)"/>
                 </td>
 
                 <td>
@@ -178,36 +181,36 @@
     </table>
 
 
-        <div  class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h4 class="panel-title">Slide Return Request</h4>
-                    </div>
+    <div  class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4 class="panel-title">Slide Return Request</h4>
                 </div>
             </div>
-            <div class="panel-body collapse in">
-                {#{{ formmacros.field(form.provider) }}#}
-                {{ formmacros.simplefield( "Submitter:", form.orderinfo.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
-                {{ formmacros.field(form.orderinfo.proxyuser) }}
-                {{ formmacros.field(form.orderinfo.institution) }}
-
-                {% for destination in form.orderinfo.destinations %}
-                    {{ formmacros.field(destination.location) }}
-                {% endfor %}
-
-                {{ formmacros.field(form.urgency) }}
-
-                {% do form.orderinfo.setRendered %}
-                {% do form.setRendered %}
-                {{ form_row(form._token) }}
-                {#{{ form_rest(form) }}#}
-            </div>
         </div>
+        <div class="panel-body collapse in">
+            {#{{ formmacros.field(form.provider) }}#}
+            {{ formmacros.simplefield( "Submitter:", form.orderinfo.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
+            {{ formmacros.field(form.orderinfo.proxyuser) }}
+            {{ formmacros.field(form.orderinfo.institution) }}
 
-        <p>
-            <button class="btn btn-success" type="submit">Submit</button>
-        </p>
+            {% for destination in form.orderinfo.destinations %}
+                {{ formmacros.field(destination.location) }}
+            {% endfor %}
+
+            {{ formmacros.field(form.urgency) }}
+
+            {% do form.orderinfo.setRendered %}
+            {% do form.setRendered %}
+            {{ form_row(form._token) }}
+            {#{{ form_rest(form) }}#}
+        </div>
+    </div>
+
+    <p>
+        <button class="btn btn-success" type="submit">Submit</button>
+    </p>
 
 {{ form_end(form) }}
 

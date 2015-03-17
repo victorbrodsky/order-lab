@@ -61,23 +61,13 @@ class MessageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        if( array_key_exists('educational', $this->params) &&  $this->params['educational'] == true ) {
+            $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>$this->labels['educational']) );
+        }
 
-//            //echo "orderinfo type: show patient <br>";
-//            $builder->add('patient', 'collection', array(
-//                'type' => new PatientType($this->params,$this->entity),    //$this->type),
-//                'label' => false,
-//                'required' => false,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'by_reference' => false,
-//                'prototype' => true,
-//                'prototype_name' => '__patient__',
-//            ));
-
-
-        $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>$this->labels['educational']) );
-
-        $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>$this->labels['research']) );
+        if( array_key_exists('research', $this->params) &&  $this->params['research'] == true ) {
+            $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>$this->labels['research']) );
+        }
 
         //priority
         $helper = new FormHelper();
@@ -178,6 +168,21 @@ class MessageType extends AbstractType
             'choices' => $institutions,
             'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
         ));
+
+
+        //message's slide
+        if( array_key_exists('slide', $this->params) &&  $this->params['slide'] == true ) {
+            $builder->add('slide', 'collection', array(
+                'type' => new SlideSimpleType($this->params,$this->entity),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__slide__',
+            ));
+        }
 
     }
 

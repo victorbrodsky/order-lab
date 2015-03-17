@@ -4,6 +4,7 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
 
@@ -98,6 +99,89 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         ////////////// EOF process parent //////////////
 
         return $slide;
+    }
+
+
+    public function findSlidesByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr) {
+
+        $slides = new ArrayCollection();
+
+        $block = $this->_em->getRepository('OlegOrderformBundle:Block')->findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
+
+        if( $block ) {
+            foreach( $block->getSlide() as $slide ) {
+                if( !$slides->contains($slide) ) {
+                    $slides->add($slide);
+                }
+            }
+        }
+
+        //echo "bloc's slide count=".count($slides)."<br>";
+
+        $part = $this->_em->getRepository('OlegOrderformBundle:Part')->findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr);
+
+        if( $part ) {
+            foreach( $part->getSlide() as $slide ) {
+                if( !$slides->contains($slide) ) {
+                    $slides->add($slide);
+                }
+            }
+        }
+
+        //echo "part's slide count=".count($slides)."<br>";
+
+        return $slides;
+    }
+
+    public function findSlidesByInstAccession($institution,$accessionTypeStr,$accessionStr) {
+
+        $slides = new ArrayCollection();
+
+        $accessiontype = $this->_em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
+
+        $extra = array();
+        $extra["keytype"] = $accessiontype->getId();
+
+        $institutions = array();
+        $institutions[] = $institution;
+        $validity = array(self::STATUS_VALID,self::STATUS_RESERVED);
+        $single = true;
+
+        $accession = $this->_em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField(
+            $institutions,
+            $accessionStr,
+            "Accession",
+            "accession",
+            $validity,
+            $single,
+            $extra
+        );
+
+        if( $accession ) {
+
+            foreach( $accession->getPart() as $part ) {
+
+                //get part's slides
+                foreach( $part->getSlide() as $slide ) {
+                    if( !$slides->contains($slide) ) {
+                        $slides->add($slide);
+                    }
+                }
+
+                //get block's slides
+                foreach( $part->getBlock() as $block ) {
+                    foreach( $block->getSlide() as $slide ) {
+                        if( !$slides->contains($slide) ) {
+                            $slides->add($slide);
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        return $slides;
     }
 
     //$parent is slide. Slide does not have children.

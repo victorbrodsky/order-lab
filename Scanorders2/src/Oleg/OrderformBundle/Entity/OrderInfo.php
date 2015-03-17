@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Oleg\UserdirectoryBundle\Entity\GeneralEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -1239,6 +1240,13 @@ class OrderInfo {
         ", edu=".$this->educational.
         ", res=".$this->research.", patientCount=".count($this->patient).
         ", slideCount=".count($this->slide)."<br>";
+    }
+
+
+    public function addInputObject($object) {
+        $input = new GeneralEntity();
+        $input->setObject($object);
+        $this->addInput($input);
     }
 
 

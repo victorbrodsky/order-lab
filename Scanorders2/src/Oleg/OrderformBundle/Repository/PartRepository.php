@@ -335,4 +335,29 @@ class PartRepository extends ArrayFieldAbstractRepository
 
     }
 
+
+    public function findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr) {
+
+        $accessiontype = $this->_em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
+
+        $institutions = array();
+        $institutions[] = $institution;
+        $validity = array(self::STATUS_VALID,self::STATUS_RESERVED);
+        $single = true;
+
+        //$institutions, $accession, $keytype, $partname, $validities=null, $single=true
+        $part = $this->_em->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField(
+            $institutions,
+            $accessionStr,
+            $accessiontype->getId(),
+            $partStr,
+            $validity,
+            $single
+        );
+
+        return $part;
+    }
+
+
+
 }

@@ -51,14 +51,14 @@ class SlideReturnRequest {
      */
     private $urgency;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Slide")
-     * @ORM\JoinTable(name="scan_returnrequest_slide",
-     *      joinColumns={@ORM\JoinColumn(name="slideReturnRequest", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="slide", referencedColumnName="id")}
-     * )
-     */
-    private $slide;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Slide")
+//     * @ORM\JoinTable(name="scan_returnrequest_slide",
+//     *      joinColumns={@ORM\JoinColumn(name="slideReturnRequest", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="slide", referencedColumnName="id")}
+//     * )
+//     */
+//    private $slide;
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="OrderInfo")
@@ -91,7 +91,7 @@ class SlideReturnRequest {
      */
     public function __construct()
     {
-        $this->slide = new ArrayCollection();
+        //$this->slide = new ArrayCollection();
         $this->slidetext = new ArrayCollection();
     }
 
@@ -125,50 +125,50 @@ class SlideReturnRequest {
 
 
 
-    /**
-     * Add slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     * @return SlideReturnRequest
-     */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        if( !$this->slide->contains($slide) ) {
-            $this->slide->add($slide);
-        }
-        return $this;
-    }
-
-    /**
-     * Remove slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        $this->slide->removeElement($slide);
-    }
-
-    /**
-     * Get slide
-     *
-     * @return SlideReturnRequest
-     */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
-
-    /**
-     * Get slide
-     * @param Doctrine\Common\Collections\Collection
-     * @return SlideReturnRequest
-     */
-    public function setSlide( $slides)
-    {
-        $this->slide = $slides;
-        return $this;
-    }
+//    /**
+//     * Add slide
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+//     * @return SlideReturnRequest
+//     */
+//    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        if( !$this->slide->contains($slide) ) {
+//            $this->slide->add($slide);
+//        }
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove slide
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+//     */
+//    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        $this->slide->removeElement($slide);
+//    }
+//
+//    /**
+//     * Get slide
+//     *
+//     * @return SlideReturnRequest
+//     */
+//    public function getSlide()
+//    {
+//        return $this->slide;
+//    }
+//
+//    /**
+//     * Get slide
+//     * @param Doctrine\Common\Collections\Collection
+//     * @return SlideReturnRequest
+//     */
+//    public function setSlide( $slides)
+//    {
+//        $this->slide = $slides;
+//        return $this;
+//    }
 
     /**
      * @param string $urgency
@@ -270,7 +270,7 @@ class SlideReturnRequest {
     public function getSlideDescription( $user ) {
 
         $description = array();
-        foreach( $this->slide as $slide ) {
+        foreach( $this->getOrderinfo()->getSlide() as $slide ) {
 
             $patient =  $slide->obtainPatient();//->filterArrayFields($user,true);
             $patientkey =  $patient->obtainValidKeyfield();

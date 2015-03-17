@@ -176,6 +176,28 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
     }
 
+    public function findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr) {
+
+        $accessiontype = $this->_em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
+
+        $institutions = array();
+        $institutions[] = $institution;
+        $validity = array(self::STATUS_VALID,self::STATUS_RESERVED);
+        $single = true;
+
+        $block = $this->_em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField(
+            $institutions,
+            $accessionStr,
+            $accessiontype->getId(),
+            $partStr,
+            $blockStr,
+            $validity,
+            $single
+        );
+
+        return $block;
+    }
+
     //create new Block by provided accession number and part name. Called only by check controller
     public function createBlockByPartnameAccession( $institution, $accessionNumber, $keytype, $partname, $provider ) {
 
@@ -295,5 +317,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
     public function replaceDuplicateEntities($parent,$orderinfo) {
         return $parent;
     }
+
+
 
 }

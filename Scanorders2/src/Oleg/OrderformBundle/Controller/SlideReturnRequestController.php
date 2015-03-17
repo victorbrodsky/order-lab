@@ -55,32 +55,10 @@ class SlideReturnRequestController extends Controller
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-        $orderinfo = new OrderInfo();
-
-        //set destination
-        $destination = new Endpoint();
-        $orderinfo->addDestination($destination);
-
+        $params = array( 'type'=>'table', 'cycle'=>'new');
         $slideReturnRequest  = new SlideReturnRequest();
 
-        $slideReturnRequest->setOrderinfo($orderinfo);
-
-        $slideReturnRequest->getOrderinfo()->setProvider($user);
-        $slideReturnRequest->getOrderinfo()->setProxyuser($user);
-        $slideReturnRequest->getOrderinfo()->setReturnoption(true);
-
-        $securityUtil = $this->get('order_security_utility');
-        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
-
-        $params = array(
-            'em' => $this->getDoctrine()->getManager(),
-            'user'=>$user,
-            'type'=>'table',
-            'institutions'=>$permittedInst,
-            'cycle' => 'new',
-            'destinationLocation'=>$orderUtil->getOrderReturnLocations($orderinfo)
-        );
-        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+        $form = $this->constractSlideRequestForm($slideReturnRequest,$params,null);
 
         return array(
             'form' => $form->createView(),
@@ -96,33 +74,16 @@ class SlideReturnRequestController extends Controller
     public function submitRequestSlideReturnTableAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
 
-        $orderinfo = new OrderInfo();
-        $slideReturnRequest  = new SlideReturnRequest();
-        $slideReturnRequest->setOrderinfo($orderinfo);
-
-        $slideReturnRequest->getOrderinfo()->setProvider($user);
-
+        $slideReturnRequest = new SlideReturnRequest();
         $slideReturnRequest->setStatus('active');
 
-        $slideReturnRequest->getOrderinfo()->setMessageCategory($category);
-
-        $securityUtil = $this->get('order_security_utility');
-        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
-
-        $params = array( 'em' => $this->getDoctrine()->getManager(),'user'=>$user, 'type'=>'table', 'institutions'=>$permittedInst, 'cycle'=>'create');
-        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+        $params = array( 'type'=>'table', 'cycle'=>'create');
+        $form = $this->constractSlideRequestForm($slideReturnRequest,$params,null);
 
         $form->handleRequest($request);
 
-        //echo "<br>errors:<br>";
-        //print_r($form->getErrors());
-        //var_dump($form->getErrors());die;
-        //echo "<br>errors:<br>";
-        //print_r($form->getErrorsAsString());
-        //echo "<br>";
+        //echo $form->getErrors()."<br>";
         //exit("controller exit");
 
         if( $form->isValid() ) {
@@ -153,19 +114,41 @@ class SlideReturnRequestController extends Controller
                     continue;   //skip row if accession number is empty
                 }
 
+                $accessionTypeStr = $this->getValueByHeaderName("Accession Type",$row,$headers);
+                $accessionStr = $this->getValueByHeaderName("Accession Number",$row,$headers);
+                $partStr = $this->getValueByHeaderName("Part",$row,$headers);
+                $blockStr = $this->getValueByHeaderName("Block",$row,$headers);
+
                 $slideText = new SlideText();
                 $slideText->setMrntype( $this->getValueByHeaderName('MRN Type',$row,$headers) );
                 $slideText->setMrn( $this->getValueByHeaderName("Patient's MRN",$row,$headers) );
                 $slideText->setPatientlastname( $this->getValueByHeaderName("Patient's Last Name",$row,$headers) );
                 $slideText->setPatientfirstname( $this->getValueByHeaderName("Patient's First Name",$row,$headers) );
                 $slideText->setPatientmiddlename( $this->getValueByHeaderName("Patient's Middle Name",$row,$headers) );
-                $slideText->setAccessiontype( $this->getValueByHeaderName("Accession Type",$row,$headers) );
-                $slideText->setAccession( $this->getValueByHeaderName("Accession Number",$row,$headers) );
-                $slideText->setPart( $this->getValueByHeaderName("Part",$row,$headers) );
-                $slideText->setBlock( $this->getValueByHeaderName("Block",$row,$headers) );
+                $slideText->setAccessiontype( $accessionTypeStr );
+                $slideText->setAccession( $accessionStr );
+                $slideText->setPart( $partStr );
+                $slideText->setBlock( $blockStr );
                 $slideText->setStain( $this->getValueByHeaderName("Stain",$row,$headers) );
 
                 $slideReturnRequest->addSlidetext($slideText);
+
+                //set this slide as order input
+                $institution = $slideReturnRequest->getOrderinfo()->getInstitution()->getId();
+
+
+                if( $slideReturnRequest->getReturnoption() ) {
+                    $slides = $em->getRepository('OlegOrderformBundle:Slide')->findSlidesByInstAccession($institution,$accessionTypeStr,$accessionStr);
+                } else {
+                    $slides = $em->getRepository('OlegOrderformBundle:Slide')->findSlidesByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
+                }
+
+                //echo "slides count=".count($slides)."<br>";
+                //exit('1');
+
+                foreach( $slides as $slide ) {
+                    $slideReturnRequest->getOrderinfo()->addInputObject($slide);
+                }
 
                 //echo $rowCount.": accType=".$row[0].", acc=".$row[1]." \n ";
                 $rowCount++;
@@ -211,46 +194,14 @@ class SlideReturnRequestController extends Controller
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
-
-        $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
-
-        if( !$orderinfo ) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity with id='.$id);
-        }
-
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $securityUtil = $this->get('order_security_utility');
-        if( $orderinfo && !$securityUtil->isUserAllowOrderActions($orderinfo, $user, array('show')) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
-
-        //assign orderinfo
         $slideReturnRequest  = new SlideReturnRequest();
-        $slideReturnRequest->setOrderinfo($orderinfo);
 
-        $slideReturnRequest->getOrderinfo()->setProvider($user);
-        $slideReturnRequest->getOrderinfo()->setProxyuser($user);
-
-        $securityUtil = $this->get('order_security_utility');
-        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
-
-        $orderUtil = $this->get('scanorder_utility');
-
-        $params = array(
-            'em' => $this->getDoctrine()->getManager(),
-            'user'=>$user,
-            'institutions'=>$permittedInst,
-            'cycle' => 'new',
-            'destinationLocation'=>$orderUtil->getOrderReturnLocations($orderinfo)
-        );
-        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+        $params = array( 'cycle'=>'new');
+        $form = $this->constractSlideRequestForm($slideReturnRequest,$params,$id);
 
         return array(
-            'orderinfo' => $orderinfo,
             'form' => $form->createView(),  //SlideReturnRequest form
-            'cycle' => 'new'
+            'cycle' => $params['cycle']
         );
     }
 
@@ -264,54 +215,43 @@ class SlideReturnRequestController extends Controller
     public function createSlideReturnRequestAction(Request $request, $id)
     {
 
-        $em = $this->getDoctrine()->getManager();
-
         $slideReturnRequest  = new SlideReturnRequest();
-
-        $orderinfo = new OrderInfo();
-        $slideReturnRequest->setOrderinfo($orderinfo);
-
-        $user = $this->get('security.context')->getToken()->getUser();
-        $slideReturnRequest->getOrderinfo()->setProvider($user);
-
         $slideReturnRequest->setStatus('active');
 
-        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
-        $slideReturnRequest->getOrderinfo()->setMessageCategory($category);
-
-        $securityUtil = $this->get('order_security_utility');
-        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
-
-        $params = array( 'em' => $this->getDoctrine()->getManager(),'user'=>$user, 'institutions'=>$permittedInst, 'cycle'=>'create' );
-        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+        $params = array( 'cycle'=>'create');
+        $form = $this->constractSlideRequestForm($slideReturnRequest,$params,null);
 
         $form->handleRequest($request);
 
+//        echo $form->getErrors()."<br>";
+        //exit("controller exit");
+
         if( $form->isValid() ) {
             //echo "form is valid !!! <br>";
+
+            $user = $this->get('security.context')->getToken()->getUser();
+            $em = $this->getDoctrine()->getManager();
 
             //add orderinfo with specified id to associated objects to orderinfo
             $associationOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             $slideReturnRequest->getOrderinfo()->addAssociation($associationOrderinfo);
 
-            $slides = $slideReturnRequest->getSlide();
+            $slides = $associationOrderinfo->getSlide();
+            //echo "slide request slide count=".count($slides)."<br>";
 
             //replace form's slide with DB slide => this way new slide will not be created
-            $fullStainArr = array();
             foreach( $slides as $slide ) {
-                //echo "slide=".$slide->getId()."<br>";
-                $slideReturnRequest->removeSlide($slide);
-                $slideDb =  $em->getRepository('OlegOrderformBundle:Slide')->findOneById($slide->getId());
-                $slideReturnRequest->addSlide($slideDb);
 
-                //stains string
-                $stainArr = array();
-                foreach( $slideDb->getStain() as $stain ) {
-                    $stainArr[] = $stain."";
-                }
-                //echo "implode1:".implode(",", $stainArr)."<br>";
-                $fullStainArr[] = implode(",", $stainArr);
+                //add slide to slide return request order (however, we have these slides in $associationOrderinfo)
+                $slideReturnRequest->getOrderinfo()->removeSlide($slide);
+                $slideDb =  $em->getRepository('OlegOrderformBundle:Slide')->findOneById($slide->getId());
+                $slideReturnRequest->getOrderinfo()->addSlide($slideDb);
+
+                //set this slide as order input
+                $slideReturnRequest->getOrderinfo()->addInputObject($slide);
             }
+
+            //exit('1');
 
             if( $slides && count($slides) > 0 ) {
                 $em->persist($slideReturnRequest);
@@ -344,7 +284,68 @@ class SlideReturnRequestController extends Controller
             throw new \Exception( 'Form was altered' );
         }
 
+        //return $this->redirect($this->generateUrl('slide-return-request_create',array('id'=>$id)));
     }
+
+    public function constractSlideRequestForm($slideReturnRequest,$params,$scanorderId) {
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        if( $scanorderId ) {
+
+            $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($scanorderId);
+
+            if( !$orderinfo ) {
+                throw $this->createNotFoundException('Unable to find Message (Scan Order) entity with id='.$scanorderId);
+            }
+
+            $securityUtil = $this->get('order_security_utility');
+            if( $orderinfo && !$securityUtil->isUserAllowOrderActions($orderinfo, $user, array('show')) ) {
+                return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            }
+        } else {
+            $orderinfo = new OrderInfo();
+
+            //set category
+            $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
+            $orderinfo->setMessageCategory($category);
+
+            //set destination
+            $destination = new Endpoint();
+            $orderinfo->addDestination($destination);
+        }
+
+//        echo "slide count=".count($orderinfo->getSlide())."<br>";
+//        foreach( $orderinfo->getSlide() as $slide ) {
+//            echo $slide->getId()."<br>";
+//        }
+
+        //assign orderinfo
+        $slideReturnRequest->setOrderinfo($orderinfo);
+
+        $slideReturnRequest->getOrderinfo()->setProvider($user);
+        $slideReturnRequest->getOrderinfo()->setProxyuser($user);
+
+        $securityUtil = $this->get('order_security_utility');
+        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
+
+        $orderUtil = $this->get('scanorder_utility');
+
+        $params['em'] = $this->getDoctrine()->getManager();
+        $params['user'] = $user;
+        $params['institutions'] = $permittedInst;
+        $params['destinationLocation'] = $orderUtil->getOrderReturnLocations($orderinfo);
+
+
+        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+
+        return $form;
+    }
+
+
+
 
 
 
@@ -371,8 +372,8 @@ class SlideReturnRequestController extends Controller
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list, COUNT(slides) as slidecount');
 
-        $dql->leftJoin("list.slide", "slides");
         $dql->leftJoin('list.orderinfo','orderinfo');
+        $dql->leftJoin("orderinfo.slide", "slides");
         $dql->leftJoin('orderinfo.provider','provider');
         $dql->leftJoin('orderinfo.institution','institution');
         $dql->leftJoin('orderinfo.proxyuser','proxyuser');
@@ -502,8 +503,8 @@ class SlideReturnRequestController extends Controller
         $dql->addGroupBy('destinationslocation');
         $dql->addGroupBy('associations');
 
-        $dql->leftJoin("list.slide", "slides");
         $dql->leftJoin('list.orderinfo','orderinfo');
+        $dql->leftJoin("orderinfo.slide", "slides");
         $dql->innerJoin('orderinfo.provider','provider');
         $dql->innerJoin('orderinfo.institution','institution');
         $dql->leftJoin('orderinfo.proxyuser','proxyuser');
@@ -605,7 +606,9 @@ class SlideReturnRequestController extends Controller
             $history->setCurrentstatus($orderinfo->getStatus());
             $history->setProvider($user);
             $history->setRoles($user->getRoles());
-            $notemsg = 'Status Changed to "'.ucfirst($status).'" for Slide Return Request ' . $entity->getId() . ' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $entity->getSlideDescription($user));
+            $notemsg = 'Status Changed to "'.ucfirst($status).'" for Slide Return Request ' .
+                        $entity->getId() . ' for '.count($slides) . ' slide(s):<br>'.
+                        implode("<br>", $entity->getSlideDescription($user));
             $history->setNote($notemsg);
             $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Status Changed');
             $history->setEventtype($eventtype);
@@ -737,7 +740,8 @@ class SlideReturnRequestController extends Controller
                 $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y \a\t G:i');
                 $dateStr = $transformer->transform(new \DateTime());
                 $commentFull = $user . " on " . $dateStr. ": " . $text_value;
-                $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
+                $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) .
+                            ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
                 $history->setNote($notemsg."<br>".$commentFull);
 
                 $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Comment Added');
