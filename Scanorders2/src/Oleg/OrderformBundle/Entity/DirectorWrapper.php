@@ -98,6 +98,11 @@ class DirectorWrapper {
         return $this->educational;
     }
 
+    public function getUserStr()
+    {
+        return $this->getDirectorStr();
+    }
+
     public function __toString(){
         return "DirectorWrapper: id=".$this->getDirector()->getId().", directorStr=".$this->directorStr."<br>";
     }

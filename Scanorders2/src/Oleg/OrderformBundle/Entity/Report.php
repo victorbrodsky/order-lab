@@ -28,62 +28,59 @@ class Report {
     private $orderinfo;
 
 
-//    //Outside Report Source
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
-//     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $source;
 
-//    //Outside Report Type
-//    /**
-//     * @ORM\ManyToOne(targetEntity="OutsideReportTypeList", cascade={"persist"})
-//     * @ORM\JoinColumn(name="outsideReportType", referencedColumnName="id")
-//     */
-//    private $outsideReportType;
-
-//    //Outside Report Text: [plain text multi-line field]
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $outsideReportText;
 
     //Outside Report Reference Representation (PDF) (actually a set of 5 fields - links to the Images table where Autopsy Images are)
-    //TODO: 5 fields ???
+    /**
+     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+     **/
+    private $documentContainer;
 
-    //Outside Report Pathologist(s): [Select2, can add new value, separate list in List Manager]
-    //TODO: create a new user
+    //Outside Report Pathologist(s) - Signing Pathologist(s): [Select2, can add new value, separate list in List Manager]
+    //Should be able to create a new user
+    //Pathologist names are entered. Use a wrapper because report can have multiple Pathologists
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper")
+     * @ORM\JoinTable(name="scan_reports_signingPathologists",
+     *      joinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $signingPathologists;
 
-//    //Outside Report Issued On (Date & Time)
-//    /**
-//     * @ORM\Column(type="datetime", nullable=true)
-//     */
-//    private $issuedonDate;
-//    /**
-//     * @ORM\Column(type="time", nullable=true)
-//     */
-//    private $issuedonTime;
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper")
+     * @ORM\JoinTable(name="scan_reports_consultedPathologists",
+     *      joinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $consultedPathologists;
+
+    //Outside Report Issued On (Date & Time)
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $issuedDate;
+
+    //Outside Report Received On (Date & TIme)
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $receivedDate;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $signatureDate;
 
 
-//    //Outside Report Received On (Date & TIme)
-//    /**
-//     * @ORM\Column(type="datetime", nullable=true)
-//     */
-//    private $receivedonDate;
-//    /**
-//     * @ORM\Column(type="time", nullable=true)
-//     */
-//    private $receivedonTime;
 
-    //Attach "Progress & Comments" page to the Outside Report Order
-    //TODO: implement this
 
-//    //Outside Report Location
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
-//     * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $location;
+    public function __construct() {
+        $this->signingPathologists = new ArrayCollection();
+        $this->consultedPathologists = new ArrayCollection();
+    }
 
 
 
@@ -120,8 +117,105 @@ class Report {
         return $this->orderinfo;
     }
 
+    /**
+     * @param mixed $issuedDate
+     */
+    public function setIssuedDate($issuedDate)
+    {
+        $this->issuedDate = $issuedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIssuedDate()
+    {
+        return $this->issuedDate;
+    }
+
+    /**
+     * @param mixed $receivedDate
+     */
+    public function setReceivedDate($receivedDate)
+    {
+        $this->receivedDate = $receivedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
+    }
+
+    /**
+     * @param mixed $signatureDate
+     */
+    public function setSignatureDate($signatureDate)
+    {
+        $this->signatureDate = $signatureDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSignatureDate()
+    {
+        return $this->signatureDate;
+    }
 
 
+
+    /**
+     * @param mixed $documentContainer
+     */
+    public function setDocumentContainer($documentContainer)
+    {
+        $this->documentContainer = $documentContainer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentContainer()
+    {
+        return $this->documentContainer;
+    }
+
+
+
+    public function getSigningPathologists()
+    {
+        return $this->signingPathologists;
+    }
+    public function addSigningPathologist($item)
+    {
+        if( $item && !$this->signingPathologists->contains($item) ) {
+            $this->signingPathologists->add($item);
+        }
+        return $this;
+    }
+    public function removeSigningPathologist($item)
+    {
+        $this->signingPathologists->removeElement($item);
+    }
+
+    public function getConsultedPathologists()
+    {
+        return $this->consultedPathologists;
+    }
+    public function addConsultedPathologist($item)
+    {
+        if( $item && !$this->consultedPathologists->contains($item) ) {
+            $this->consultedPathologists->add($item);
+        }
+        return $this;
+    }
+    public function removeConsultedPathologist($item)
+    {
+        $this->consultedPathologists->removeElement($item);
+    }
 
 
 

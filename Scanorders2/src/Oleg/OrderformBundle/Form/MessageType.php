@@ -192,15 +192,16 @@ class MessageType extends AbstractType
             ));
         }
 
+
         //message's laborder
-        if( array_key_exists('laborder', $this->params) &&  $this->params['laborder'] == true ) {
+        if( array_key_exists('message.laborder', $this->params) &&  $this->params['message.laborder'] == true ) {
             $builder->add('laborder', new LabOrderType($this->params,$this->entity), array(
                 'required' => false,
                 'label' => false
             ));
         }
 
-        //message's laborder
+        //message's report
         if( array_key_exists('message.report', $this->params) &&  $this->params['message.report'] == true ) {
             $builder->add('report', new ReportType($this->params,$this->entity), array(
                 'required' => false,

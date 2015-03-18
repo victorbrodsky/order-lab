@@ -5,8 +5,10 @@ namespace Oleg\OrderformBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\Endpoint;
 use Oleg\OrderformBundle\Entity\OrderInfo;
+use Oleg\OrderformBundle\Entity\Report;
 use Oleg\OrderformBundle\Entity\RequisitionForm;
 use Oleg\UserdirectoryBundle\Entity\Document;
+use Oleg\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -107,10 +109,10 @@ class PatientController extends Controller
         );
 
         /////////////////////// testing: create specific messages ///////////////////////
-        $this->createAndAddSpecificMessage($slide,"Lab Order");
-        $params['laborder'] = true;
+        $slide = $this->createAndAddSpecificMessage($slide,"Lab Order");
+        $params['message.laborder'] = true;
         $params['idnumber'] = true;
-        $this->createAndAddSpecificMessage($slide,"Report");
+        $slide = $this->createAndAddSpecificMessage($slide,"Report");
         $params['message.report'] = true;
         /////////////////////// EOF create lab order ///////////////////////
 
@@ -126,13 +128,17 @@ class PatientController extends Controller
     }
 
     public function createAndAddSpecificMessage($object,$messageTypeStr) {
+
         $em = $this->getDoctrine()->getManager();
         $message = new OrderInfo();
 
+        $user = $this->get('security.context')->getToken()->getUser();
+        $message->setProvider($user);
+
+//        $message->setIdnumber($messageTypeStr.' id number');
+
         $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageTypeStr);
         $message->setMessageCategory($category);
-
-
 
         $source = new Endpoint();
         $message->addSource($source);
@@ -142,24 +148,41 @@ class PatientController extends Controller
 
 
         //add slide to message and input
-        //$message->addSlide($object);
+        $message->addSlide($object);
         $object->addOrderinfo($message);
         //set this slide as order input
         $message->addInputObject($object);
+
 
         if( $messageTypeStr == "Lab Order" ) {
 
             $laborder = new LabOrder();
             $laborder->setOrderinfo($message);
+            $message->setLaborder($laborder);
+
             $reqForm = new RequisitionForm();
             $documentContainer = new DocumentContainer();
             //$documentContainer->addDocument(new Document());
             $reqForm->setDocumentContainer($documentContainer);
             $laborder->addRequisitionForm($reqForm);
-            $message->setLaborder($laborder);
 
         }
 
+        if( $messageTypeStr == "Report" ) {
+
+            $report = new Report();
+            $report->setOrderinfo($message);
+            $message->setReport($report);
+
+            $signingPathologist = new UserWrapper();
+            $report->addSigningPathologist($signingPathologist);
+
+            $consultedPathologist = new UserWrapper();
+            $report->addConsultedPathologist($consultedPathologist);
+
+        }
+
+        return $object;
     }
 
     /**

@@ -98,6 +98,11 @@ class PrincipalWrapper {
         return $this->research;
     }
 
+    public function getUserStr()
+    {
+        return $this->getPrincipalStr();
+    }
+
     public function __toString(){
         return "PrincipalWrapper: id=".$this->getPrincipal()->getId().", principalStr=".$this->principalStr."<br>";
     }

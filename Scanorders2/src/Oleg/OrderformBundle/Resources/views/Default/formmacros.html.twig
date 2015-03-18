@@ -309,6 +309,8 @@
 
         {% for message in object.orderinfo %}
 
+            {#message:{{ message.vars.value }}#}
+
             {#decide if this object is the same as input object #}
             {%  set showMessage = false %}
             {% for input in message.vars.value.inputs %}
@@ -367,11 +369,25 @@
                             {% endfor %}
                         </p>
 
-                        {% if message.laborder is defined %}
+                        {#specific fields#}
+                        {% if message.laborder is defined and message.laborder.vars.value %}
                             <p>
                                 {% for requisitionForm in message.laborder.requisitionForms %}
                                     {{ formmacros.fieldDocumentContainer(requisitionForm.documentContainer,cycle) }}
                                 {% endfor %}
+                            </p>
+                        {% endif %}
+
+                        {% if message.report is defined and message.report.vars.value %}
+                            <p>
+                                {{ formmacros.fieldDateLabel(message.report.issuedDate,'allow-future-date') }}
+                                {{ formmacros.fieldDateLabel(message.report.receivedDate,'allow-future-date') }}
+                                {{ formmacros.fieldDateLabel(message.report.signatureDate,'allow-future-date') }}
+
+                                {{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle) }}
+
+                                {{ formmacros.fieldUserWrapper(message.report.signingPathologists,cycle) }}
+                                {{ formmacros.fieldUserWrapper(message.report.consultedPathologists,cycle) }}
                             </p>
                         {% endif %}
 
@@ -384,6 +400,17 @@
         {% endfor %}
 
     {% endif %}
+
+{% endmacro %}
+
+{% macro fieldUserWrapper(userWrappers,cycle) %}
+    {% import _self as formmacros %}
+    <p>
+        {% for userWrapper in userWrappers %}
+            {{ formmacros.field( userWrapper.userStr ) }}
+            {{ formmacros.field( userWrapper.user ) }}
+        {% endfor %}
+    </p>
 
 {% endmacro %}
 

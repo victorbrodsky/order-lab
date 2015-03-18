@@ -280,7 +280,8 @@ class OrderInfo {
 
 
     /**
-     * Source: can be many
+     * Sources: can be many
+     * Source: Location, System, comment(string)
      * One-To-Many unidirectional with Join table
      *
      * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist","remove"})
@@ -1250,12 +1251,25 @@ class OrderInfo {
 //        }
 //        $patient_info .= ")";
 
+        $laborder = "no";
+        if( $this->getLaborder() ) {
+            $laborder = $this->getLaborder()->getId();
+        }
+
+        $report = "no";
+        if( $this->getReport() ) {
+            $report = $this->getReport()->getId();
+        }
+
 //        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
         return "OrderInfo: id=".$this->getId().", oid=".$this->oid.", status=".$this->getStatus().", category=".$this->getMessageCategory().
         ", provider=".$this->getProvider().", providerName=".$this->getProvider()->getUsername().", providerId=".$this->getProvider()->getId().
         ", edu=".$this->educational.
         ", res=".$this->research.", patientCount=".count($this->patient).
-        ", slideCount=".count($this->slide)."<br>";
+        ", slideCount=".count($this->slide).
+        ", laborder=".$laborder.
+        ", report=".$report.
+        "<br>";
     }
 
 

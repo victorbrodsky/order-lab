@@ -68,13 +68,15 @@ class UserListTransformer implements DataTransformerInterface
                     //echo $entity;
 
                     //entity is PrincipalWrapper class => order will show the same order as entered by a user
-                    if( $this->className == 'PIList' ) {
-                        $idArr[] = $entity->getPrincipalStr();
-                    }
+//                    if( $this->className == 'PIList' ) {
+//                        $idArr[] = $entity->getPrincipalStr();
+//                    }
+//
+//                    if( $this->className == 'DirectorList' ) {
+//                        $idArr[] = $entity->getDirectorStr();
+//                    }
 
-                    if( $this->className == 'DirectorList' ) {
-                        $idArr[] = $entity->getDirectorStr();
-                    }
+                    $idArr[] = $entity->getUserStr();
 
                     //entity is PIList class => we can shows Primary PI as the first principal
                     //$idArr[] = $entity->getName();
