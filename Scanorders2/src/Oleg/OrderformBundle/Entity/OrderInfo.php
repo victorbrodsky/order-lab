@@ -329,6 +329,11 @@ class OrderInfo {
      */
     private $report;
 
+    /**
+     * @ORM\OneToOne(targetEntity="EmbedBlockOrder", inversedBy="orderinfo", cascade={"persist","remove"})
+     */
+    private $embedBlockOrder;
+
     ////////////////////////// EOF Specific Orders //////////////////////////
 
 
@@ -1362,6 +1367,22 @@ class OrderInfo {
     public function getReport()
     {
         return $this->report;
+    }
+
+    /**
+     * @param mixed $embedBlockOrder
+     */
+    public function setEmbedBlockOrder($embedBlockOrder)
+    {
+        $this->embedBlockOrder = $embedBlockOrder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbedBlockOrder()
+    {
+        return $this->embedBlockOrder;
     }
 
 
