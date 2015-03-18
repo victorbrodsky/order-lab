@@ -330,9 +330,14 @@ class OrderInfo {
     private $report;
 
     /**
-     * @ORM\OneToOne(targetEntity="EmbedBlockOrder", inversedBy="orderinfo", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="BlockOrder", inversedBy="orderinfo", cascade={"persist","remove"})
      */
-    private $embedBlockOrder;
+    private $blockorder;
+
+//    /**
+//     * @ORM\OneToOne(targetEntity="SlideOrder", inversedBy="orderinfo", cascade={"persist","remove"})
+//     */
+//    private $slideorder;
 
     ////////////////////////// EOF Specific Orders //////////////////////////
 
@@ -1370,20 +1375,24 @@ class OrderInfo {
     }
 
     /**
-     * @param mixed $embedBlockOrder
+     * @param mixed $blockorder
      */
-    public function setEmbedBlockOrder($embedBlockOrder)
+    public function setBlockorder($blockorder)
     {
-        $this->embedBlockOrder = $embedBlockOrder;
+        $this->blockorder = $blockorder;
     }
 
     /**
      * @return mixed
      */
-    public function getEmbedBlockOrder()
+    public function getBlockorder()
     {
-        return $this->embedBlockOrder;
+        return $this->blockorder;
     }
+
+
+
+
 
 
 

@@ -209,6 +209,14 @@ class MessageType extends AbstractType
             ));
         }
 
+        //message's blockorder
+        if( array_key_exists('message.blockorder', $this->params) &&  $this->params['message.blockorder'] == true ) {
+            $builder->add('blockorder', new BlockOrderType($this->params,$this->entity), array(
+                'required' => false,
+                'label' => false
+            ));
+        }
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

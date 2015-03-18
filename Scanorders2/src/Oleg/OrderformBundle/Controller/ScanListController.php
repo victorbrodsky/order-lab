@@ -50,6 +50,7 @@ class ScanListController extends ListController
      * @Route("/event-log-event-types/", name="scanloggereventtypes-list")
      * @Route("/races/", name="races-list")
      * @Route("/outsidereporttypes/", name="outsidereporttype-list")
+     * @Route("/instructions/", name="instruction-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -92,6 +93,7 @@ class ScanListController extends ListController
      * @Route("/event-log-event-types/", name="scanloggereventtypes_create")
      * @Route("/races/", name="races_create")
      * @Route("/outsidereporttypes/", name="outsidereporttype_create")
+     * @Route("/instructions/", name="instruction_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -134,6 +136,7 @@ class ScanListController extends ListController
      * @Route("/event-log-event-types/new", name="scanloggereventtypes_new")
      * @Route("/races/new", name="races_new")
      * @Route("/outsidereporttypes/new", name="outsidereporttype_new")
+     * @Route("/instructions/new", name="instruction_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -176,6 +179,7 @@ class ScanListController extends ListController
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_show")
      * @Route("/races/{id}", name="races_show")
      * @Route("/outsidereporttypes/{id}", name="outsidereporttype_show")
+     * @Route("/instructions/{id}", name="instruction_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -218,6 +222,7 @@ class ScanListController extends ListController
      * @Route("/event-log-event-types/{id}/edit", name="scanloggereventtypes_edit")
      * @Route("/races/{id}/edit", name="races_edit")
      * @Route("/outsidereporttypes/{id}/edit", name="outsidereporttype_edit")
+     * @Route("/instructions/{id}/edit", name="instruction_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -260,6 +265,7 @@ class ScanListController extends ListController
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_update")
      * @Route("/races/{id}", name="races_update")
      * @Route("/outsidereporttypes/{id}", name="outsidereporttype_update")
+     * @Route("/instructions/{id}", name="instruction_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -378,15 +384,17 @@ class ScanListController extends ListController
             $classPath = "Oleg\\UserdirectoryBundle\\Entity\\";
             $bundleName = "OlegUserdirectoryBundle";
             break;
-
         case "races":
             $className = "RaceList";
             $displayName = "Races";
             break;
-
         case "outsidereporttype":
             $className = "OutsideReportTypeList";
             $displayName = "Outside Report Types";
+            break;
+        case "instruction":
+            $className = "InstructionList";
+            $displayName = "Instructions for Embedder";
             break;
 
         default:
@@ -436,6 +444,7 @@ class ScanListController extends ListController
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_delete")
      * @Route("/races/{id}", name="races_delete")
      * @Route("/outsidereporttypes/{id}", name="outsidereporttype_delete")
+     * @Route("/instructions/{id}", name="instruction_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

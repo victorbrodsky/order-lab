@@ -3,11 +3,15 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
+use Oleg\OrderformBundle\Entity\BlockOrder;
+use Oleg\OrderformBundle\Entity\EmbedBlockOrder;
 use Oleg\OrderformBundle\Entity\Endpoint;
+use Oleg\OrderformBundle\Entity\InstructionList;
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Entity\Report;
 use Oleg\OrderformBundle\Entity\RequisitionForm;
 use Oleg\UserdirectoryBundle\Entity\Document;
+use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -109,11 +113,15 @@ class PatientController extends Controller
         );
 
         /////////////////////// testing: create specific messages ///////////////////////
-        $slide = $this->createAndAddSpecificMessage($slide,"Lab Order");
+        $this->createAndAddSpecificMessage($slide,"Lab Order");
         $params['message.laborder'] = true;
         $params['idnumber'] = true;
-        $slide = $this->createAndAddSpecificMessage($slide,"Report");
+
+        $this->createAndAddSpecificMessage($slide,"Report");
         $params['message.report'] = true;
+
+        $this->createAndAddSpecificMessage($slide,"Block Order");
+        $params['message.blockorder'] = true;
         /////////////////////// EOF create lab order ///////////////////////
 
         $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => $disabled) );
@@ -166,6 +174,12 @@ class PatientController extends Controller
             $reqForm->setDocumentContainer($documentContainer);
             $laborder->addRequisitionForm($reqForm);
 
+            $reqForm = new RequisitionForm();
+            $documentContainer = new DocumentContainer();
+            //$documentContainer->addDocument(new Document());
+            $reqForm->setDocumentContainer($documentContainer);
+            $laborder->addRequisitionForm($reqForm);
+
         }
 
         if( $messageTypeStr == "Report" ) {
@@ -182,7 +196,18 @@ class PatientController extends Controller
 
         }
 
-        return $object;
+        if( $messageTypeStr == "Block Order" ) {
+            $blockorder = new BlockOrder();
+            $blockorder->setOrderinfo($message);
+            $message->setBlockorder($blockorder);
+
+            $documentContainer = new DocumentContainer();
+            $blockorder->setDocumentContainer($documentContainer);
+
+            $instruction = new InstructionList();
+            $blockorder->setInstruction($instruction);
+        }
+
     }
 
     /**

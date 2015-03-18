@@ -391,6 +391,23 @@
                             </p>
                         {% endif %}
 
+                        {% if message.blockorder is defined and message.blockorder.vars.value %}
+                            <p>
+                                {{ formmacros.fieldDateLabel(message.blockorder.instruction.createdate,'allow-future-date') }}
+                                {{ formmacros.field( message.blockorder.instruction.creator ) }}
+                                {{ formmacros.field( message.blockorder.instruction.instruction ) }}
+
+                                {{ formmacros.fieldDateLabel(message.blockorder.processedDate,'allow-future-date') }}
+                                {{ formmacros.field( message.blockorder.processedByUser ) }}
+
+                                {{ formmacros.fieldDateLabel(message.blockorder.embeddedDate,'allow-future-date') }}
+                                {{ formmacros.field( message.blockorder.embeddedByUser ) }}
+
+                                {{ formmacros.fieldDocumentContainer(message.blockorder.documentContainer,cycle) }}
+
+                            </p>
+                        {% endif %}
+
                     </p>
 
                 </div>
