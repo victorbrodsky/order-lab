@@ -174,12 +174,6 @@ class PatientController extends Controller
             $reqForm->setDocumentContainer($documentContainer);
             $laborder->addRequisitionForm($reqForm);
 
-            $reqForm = new RequisitionForm();
-            $documentContainer = new DocumentContainer();
-            //$documentContainer->addDocument(new Document());
-            $reqForm->setDocumentContainer($documentContainer);
-            $laborder->addRequisitionForm($reqForm);
-
         }
 
         if( $messageTypeStr == "Report" ) {
@@ -187,6 +181,9 @@ class PatientController extends Controller
             $report = new Report();
             $report->setOrderinfo($message);
             $message->setReport($report);
+
+            $documentContainer = new DocumentContainer();
+            $report->setDocumentContainer($documentContainer);
 
             $signingPathologist = new UserWrapper();
             $report->addSigningPathologist($signingPathologist);

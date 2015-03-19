@@ -176,7 +176,7 @@
 .panel-patient {
     border-color: #90BEE4;
 }
-.panel-patient .panel-heading {
+.panel-patient .panel-heading-hierarchy {
     color: #ffffff;
     background-color: #90BEE4;
     border-color: #90BEE4;
@@ -186,7 +186,17 @@
 .panel-encounter {
     border-color: #71B0E4;
 }
-.panel-encounter .panel-heading {
+.panel-encounter .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #71B0E4;
+    border-color: #71B0E4;
+    border-top-left-radius: 0px;
+}
+
+.panel-procedure {
+    border-color: #71B0E4;
+}
+.panel-procedure .panel-heading-hierarchy {
     color: #ffffff;
     background-color: #71B0E4;
     border-color: #71B0E4;
@@ -196,7 +206,7 @@
 .panel-accession {
     border-color: #3F98C8;
 }
-.panel-accession .panel-heading {
+.panel-accession .panel-heading-hierarchy {
     color: #ffffff;
     background-color: #3F98C8;
     border-color: #3F98C8;
@@ -206,7 +216,7 @@
 .panel-part {
      border-color: #428CCA;
  }
-.panel-part .panel-heading {
+.panel-part .panel-heading-hierarchy {
     color: #ffffff;
     background-color: #428CCA;
     border-color: #428CCA;
@@ -216,7 +226,7 @@
 .panel-block {
     border-color: #1268B3;
 }
-.panel-block .panel-heading {
+.panel-block .panel-heading-hierarchy {
     color: #ffffff;
     background-color: #1268B3;
     border-color: #1268B3;
@@ -226,7 +236,7 @@
 .panel-slide {
     border-color: #FF9933;
 }
-.panel-slide .panel-heading {
+.panel-slide .panel-heading-hierarchy {
     color: #ffffff;
     background-color: #FF9933;
     border-color: #FF9933;
@@ -236,7 +246,7 @@
 .panel-stain {
     border-color: #155183; //35478C
 }
-.panel-stain .panel-heading {
+.panel-stain .panel-heading-hierarchy {
     color: #ffffff;
     background-color: #155183;
     border-color: #155183;
@@ -246,7 +256,7 @@
 .panel-scan {
     border-color: #FF9933; //35478C
 }
-.panel-scan .panel-heading {
+.panel-scan .panel-heading-hierarchy {
     color: #ffffff;
     background-color: #FF9933;
     border-color: #FF9933;
