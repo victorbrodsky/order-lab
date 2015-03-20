@@ -336,7 +336,7 @@ function getForm( name, ids, withDelBtn ) {
 
     var formhtml =
         '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+' panel-multi-form">' +
-            '<div class="panel-heading">' +
+            '<div class="panel-heading panel-heading-hierarchy">' +
 
                 '<button id="form_body_toggle_'+ name + '_' + idsu +'" type="button"' +
                     'class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"' +
