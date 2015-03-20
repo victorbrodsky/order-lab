@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 //(repositoryClass="Oleg\OrderformBundle\Repository\ScanRepository")
 /**
+ * TODO: rename to Imaging
  * @ORM\Entity
  * @ORM\Table(name="scan_scan")
  */
@@ -58,9 +59,39 @@ class Scan extends SlideArrayFieldAbstract
      */
     private $equipment;
 
+    //Microscopic Image
+    /**
+     * Microscopic Image
+     * device: Microscopic Image Device: [select2, one choice for now - "Olympus Camera" - link to Equipment table, filter by Type="Microscope Camera"]
+     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+     **/
+    private $documentContainer;
+
+
+    //Microscopic Image Magnification: [select2, 100X, 83X, 60X, 40X, 20X, 10X, 4X, 2X]
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $imageMagnification;
 
 
 
+
+    /**
+     * @param mixed $documentContainer
+     */
+    public function setDocumentContainer($documentContainer)
+    {
+        $this->documentContainer = $documentContainer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentContainer()
+    {
+        return $this->documentContainer;
+    }
 
     /**
      * @param mixed $equipment

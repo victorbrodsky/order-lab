@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -55,7 +56,7 @@ class ScanType extends AbstractType
         ));
 
 
-        //mag
+        ///////////// mag /////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
             $scan = $event->getData();
@@ -83,33 +84,32 @@ class ScanType extends AbstractType
 
             $form->add( 'field', 'choice', $magArr );
 
-
-
         });
+        ///////////// EOF mag /////////////
 
         if( array_key_exists('datastructure', $this->params) &&  $this->params['datastructure'] == true ) {
 
             $builder->add('imageId', 'text', array(
                 'required'=>false,
-                'label'=>'Whole Slide Image ID:',
+                'label'=>'Image ID:',
                 'attr' => array('class'=>'form-control'),
             ));
 
             $builder->add('imageLink', 'text', array(
                 'required'=>false,
-                'label'=>'Whole Slide Image Link:',
+                'label'=>'Image Link:',
                 'attr' => array('class'=>'form-control'),
             ));
 
             $builder->add('source', null, array(
                 'required'=>false,
-                'label'=>'Whole Slide Image ID Source:',
+                'label'=>'Image ID Source System:',
                 'attr' => array('class' => 'combobox combobox-width'),
             ));
 
             $builder->add('provider', null, array(
                 'required'=>false,
-                'label'=>'Whole Slide Scanned By:',
+                'label'=>'Image Acquired By:',
                 'attr' => array('class' => 'combobox combobox-width'),
             ));
 
@@ -118,13 +118,13 @@ class ScanType extends AbstractType
                 'format' => 'MM-dd-yyyy, H:mm:ss',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
-                'label'=>'Whole Slide Scan Date & Time:',
+                'label'=>'Image Acquisition Date & Time:',
             ));
 
             $builder->add( 'equipment', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Equipment',
                 'property' => 'name',
-                'label' => 'Whole Slide Scanner Device:',
+                'label' => 'Image Acquisition Device:',
                 'required'=> true,
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -134,6 +134,15 @@ class ScanType extends AbstractType
                             ->where("keytype.name = :keytype AND i.type != :type")
                             ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
                     },
+            ));
+
+            //Image container
+            $params = array('labelPrefix'=>'Microscopic Image');
+            $equipmentTypes = array('Whole Slide Scanners','Microscope Camera');
+            $params['device.types'] = $equipmentTypes;
+            $builder->add('documentContainer', new DocumentContainerType($params), array(
+                'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+                'label' => false
             ));
 
         }

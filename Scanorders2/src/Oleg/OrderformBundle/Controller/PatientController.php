@@ -233,9 +233,6 @@ class PatientController extends Controller
             $stainorder->setOrderinfo($message);
             $message->setStainorder($stainorder);
 
-            $documentContainer = new DocumentContainer();
-            $stainorder->setDocumentContainer($documentContainer);
-
             $instruction = new InstructionList();
             $stainorder->setInstruction($instruction);
         }

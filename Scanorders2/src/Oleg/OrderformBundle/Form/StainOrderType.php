@@ -38,14 +38,14 @@ class StainOrderType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
-        //Microscopic Image container
-        $params = array('labelPrefix'=>'Microscopic Image');
-        $equipmentTypes = array('Microscope Camera');
-        $params['device.types'] = $equipmentTypes;
-        $builder->add('documentContainer', new DocumentContainerType($params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
-            'label' => false
-        ));
+//        //Microscopic Image container
+//        $params = array('labelPrefix'=>'Microscopic Image');
+//        $equipmentTypes = array('Microscope Camera');
+//        $params['device.types'] = $equipmentTypes;
+//        $builder->add('documentContainer', new DocumentContainerType($params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+//            'label' => false
+//        ));
 
         $params = array('labelPrefix'=>' for Slide Stainer');
         $builder->add('instruction', new InstructionType($params), array(
@@ -54,14 +54,14 @@ class StainOrderType extends AbstractType
         ));
 
 
-        $builder->add('imageMagnification', 'choice', array(
-            'label' => 'Microscopic Image Magnification:',
-            'choices' => array('100X', '83X', '60X', '40X', '20X', '10X', '4X', '2X'),
-            'required' => false,
-            'multiple' => false,
-            'expanded' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
+//        $builder->add('imageMagnification', 'choice', array(
+//            'label' => 'Microscopic Image Magnification:',
+//            'choices' => array('100X', '83X', '60X', '40X', '20X', '10X', '4X', '2X'),
+//            'required' => false,
+//            'multiple' => false,
+//            'expanded' => false,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//        ));
 
     }
 

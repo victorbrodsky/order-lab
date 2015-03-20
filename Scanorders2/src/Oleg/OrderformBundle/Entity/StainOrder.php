@@ -48,38 +48,38 @@ class StainOrder {
 
     //Slide Stainer Device [select2, empty for now; link to Equipment table, filter by Type="Slide Stainer"]
 
-    //Microscopic Image
-    /**
-     * Microscopic Image
-     * device: Microscopic Image Device: [select2, one choice for now - "Olympus Camera" - link to Equipment table, filter by Type="Microscope Camera"]
-     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
-     **/
-    private $documentContainer;
-
-    //Microscopic Image Magnification: [select2, 100X, 83X, 60X, 40X, 20X, 10X, 4X, 2X]
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $imageMagnification;
-
-
+//    //Microscopic Image
+//    /**
+//     * Microscopic Image
+//     * device: Microscopic Image Device: [select2, one choice for now - "Olympus Camera" - link to Equipment table, filter by Type="Microscope Camera"]
+//     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+//     **/
+//    private $documentContainer;
+//
+//    //Microscopic Image Magnification: [select2, 100X, 83X, 60X, 40X, 20X, 10X, 4X, 2X]
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $imageMagnification;
 
 
-    /**
-     * @param mixed $documentContainer
-     */
-    public function setDocumentContainer($documentContainer)
-    {
-        $this->documentContainer = $documentContainer;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getDocumentContainer()
-    {
-        return $this->documentContainer;
-    }
+
+//    /**
+//     * @param mixed $documentContainer
+//     */
+//    public function setDocumentContainer($documentContainer)
+//    {
+//        $this->documentContainer = $documentContainer;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDocumentContainer()
+//    {
+//        return $this->documentContainer;
+//    }
 
     /**
      * @param int $id
@@ -161,21 +161,21 @@ class StainOrder {
         return $this->processedDate;
     }
 
-    /**
-     * @param mixed $imageMagnification
-     */
-    public function setImageMagnification($imageMagnification)
-    {
-        $this->imageMagnification = $imageMagnification;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImageMagnification()
-    {
-        return $this->imageMagnification;
-    }
+//    /**
+//     * @param mixed $imageMagnification
+//     */
+//    public function setImageMagnification($imageMagnification)
+//    {
+//        $this->imageMagnification = $imageMagnification;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getImageMagnification()
+//    {
+//        return $this->imageMagnification;
+//    }
 
 
 
