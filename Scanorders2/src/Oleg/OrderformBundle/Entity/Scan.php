@@ -41,7 +41,74 @@ class Scan extends SlideArrayFieldAbstract
      */
     protected $scandate;
 
-    //TODO: add link to image
+
+    //Extra fields for datastructure: Whole Slide Image
+    //Fields existing in this abstract object: Whole Slide Scan Date & Time, Whole Slide Scanned By, Whole Slide Image Magnification
+    //Fields existing in message: Scan Order Source, Order ID, Whole Slide Scanner Device
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $imageId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $imageLink;
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
+     */
+    private $equipment;
+
+
+
+
+
+    /**
+     * @param mixed $equipment
+     */
+    public function setEquipment($equipment)
+    {
+        $this->equipment = $equipment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEquipment()
+    {
+        return $this->equipment;
+    }
+
+    /**
+     * @param mixed $imageId
+     */
+    public function setImageId($imageId)
+    {
+        $this->imageId = $imageId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageId()
+    {
+        return $this->imageId;
+    }
+
+    /**
+     * @param mixed $imageLink
+     */
+    public function setImageLink($imageLink)
+    {
+        $this->imageLink = $imageLink;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageLink()
+    {
+        return $this->imageLink;
+    }
 
     /**
      * Set scanregion

@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Doctrine\ORM\EntityRepository;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -82,22 +83,60 @@ class ScanType extends AbstractType
 
             $form->add( 'field', 'choice', $magArr );
 
+
+
         });
 
-        //        //mag
-//        $helper = new FormHelper();
-//        $magArr = array(
-//            'label' => 'Magnification:',
-//            'choices' => $helper->getMags(),
-//            'required' => true,
-//            'multiple' => false,
-//            'expanded' => true,
-//            'attr' => array('class' => 'horizontal_type', 'required'=>'required', 'title'=>'40X Scan Batch is run Fri-Mon. Some slide may have to be rescanned once or more. We will do our best to expedite the scanning.')
-//        );
-//        if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' ) {
-//            $magArr['data'] = '20X';    //new
-//        }
-//        $builder->add( 'field', 'choice', $magArr );
+        if( array_key_exists('datastructure', $this->params) &&  $this->params['datastructure'] == true ) {
+
+            $builder->add('imageId', 'text', array(
+                'required'=>false,
+                'label'=>'Whole Slide Image ID:',
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('imageLink', 'text', array(
+                'required'=>false,
+                'label'=>'Whole Slide Image Link:',
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('source', null, array(
+                'required'=>false,
+                'label'=>'Whole Slide Image ID Source:',
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+
+            $builder->add('provider', null, array(
+                'required'=>false,
+                'label'=>'Whole Slide Scanned By:',
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+
+            $builder->add('creationdate','date',array(
+                'widget' => 'single_text',
+                'format' => 'MM-dd-yyyy, H:mm:ss',
+                'attr' => array('class' => 'datepicker form-control'),
+                'required' => false,
+                'label'=>'Whole Slide Scan Date & Time:',
+            ));
+
+            $builder->add( 'equipment', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Equipment',
+                'property' => 'name',
+                'label' => 'Whole Slide Scanner Device:',
+                'required'=> true,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('i')
+                            ->leftJoin('i.keytype','keytype')
+                            ->where("keytype.name = :keytype AND i.type != :type")
+                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
+                    },
+            ));
+
+        }
 
 
     }

@@ -1474,9 +1474,8 @@
                 <p><div class="encounterpathistory">{{ patpathistoryHtml }}</div></p>
             {% endif %}
 
-            {{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}
-
-            {{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}
+            {#{{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}#}
+            {#{{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}#}
 
         {% endif %}
 
@@ -1617,6 +1616,7 @@
                 {{ formmacros.field(scan.field) }}
                 {{ formmacros.field(scan.scanregion) }}
                 {{ formmacros.field(scan.note) }}
+                {{ formmacros.scanExtraForm(scan,flag,uid,cycle) }}
             {% endfor %}
 
         {% else  %} {#prototype#}
@@ -1639,6 +1639,7 @@
         {% endif %}
 
     </div>
+
 
 {% endmacro %}
 
@@ -1741,30 +1742,34 @@
 
 {% endmacro %}
 
-{% macro accessionExtraForm( accession, datastructure, uid, cycle, status ) %}
+{% macro scanExtraForm( scan, datastructure, uid, cycle ) %}
 
     {% if datastructure and datastructure == "datastructure" %}
 
         {% import _self as formmacros %}
 
-        {% if accession.laborder is defined %}
-            {#<h5>Extra data structure fields for Accession's Lab Order:</h5>#}
-            {#{{ formmacros.inputArrayField(procedure.ordersource,cycle,"procedureordersource","","","","",status) }}#}
-            <div class="form-element-holder">
-                {% for laborder in accession.laborder %}
-                    {{ formmacros.fieldLaborder(laborder,cycle) }}
-                {% endfor %}
-            </div>
+        {% if scan.creationdate is defined %}
+            {{ formmacros.fieldDateLabel(scan.creationdate,'allow-future-date') }}
         {% endif %}
 
-        {% if accession.outsidereport is defined %}
-            {#<h5>Extra data structure fields for Accession's Outside Report:</h5>#}
-            {#{{ formmacros.inputArrayField(procedure.ordersource,cycle,"procedureordersource","","","","",status) }}#}
-            <div class="form-element-holder">
-                {% for outsidereport in accession.outsidereport %}
-                    {{ formmacros.fieldOutsidereport(outsidereport,cycle) }}
-                {% endfor %}
-            </div>
+        {% if scan.provider is defined %}
+            {{ formmacros.field(scan.provider) }}
+        {% endif %}
+
+        {% if scan.equipment is defined %}
+            {{ formmacros.field(scan.equipment) }}
+        {% endif %}
+
+        {% if scan.source is defined %}
+            {{ formmacros.field(scan.source) }}
+        {% endif %}
+
+        {% if scan.imageId is defined %}
+            {{ formmacros.field(scan.imageId) }}
+        {% endif %}
+
+        {% if scan.imageLink is defined %}
+            {{ formmacros.field(scan.imageLink) }}
         {% endif %}
 
     {% endif %}
