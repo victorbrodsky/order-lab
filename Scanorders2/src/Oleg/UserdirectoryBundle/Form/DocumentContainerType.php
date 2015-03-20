@@ -59,10 +59,35 @@ class DocumentContainerType extends AbstractType
             'prototype_name' => '__comments__',
         ));
 
-        $builder->add('device', null, array(
-            'label' => $this->params['labelPrefix'] . ' Device:',
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
+        if( array_key_exists('device.types', $this->params) &&  $this->params['device.types'] == true ) {
+            $builder->add( 'device', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Equipment',
+                'property' => 'name',
+                'label' => $this->params['labelPrefix'] . ' Device:',
+                'required'=> true,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+
+                        $equipmentTypes = $this->params['device.types'];
+                        $whereArr = array();
+                        foreach($equipmentTypes as $equipmentType) {
+                            $whereArr[] = "keytype.name = '" . $equipmentType . "'";
+                        }
+                        $where = implode(' OR ', $whereArr);
+
+                        return $er->createQueryBuilder('i')
+                            ->leftJoin('i.keytype','keytype')
+                            ->where($where . " AND i.type != :type")
+                            ->setParameters( array('type' => 'disabled') );
+                    },
+            ));
+        } else {
+            $builder->add('device', null, array(
+                'label' => $this->params['labelPrefix'] . ' Device:',
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        }
 
         $builder->add('datetime','date',array(
             'widget' => 'single_text',

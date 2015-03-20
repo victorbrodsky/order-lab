@@ -1446,18 +1446,33 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $types = array(
-            'Whole Slide Scanner'
+            'Whole Slide Scanner',
+            'Microtome',
+            'Centrifuge',
+            'Slide Stainer',
+            'Microscope Camera',
+            'Autopsy Camera',
+            'Gross Image Camera',
+            'Tissue Processor',
+            'Xray Machine',
+            'Block Imaging Camera',
+            'Requisition Form Scanner'
         );
 
         $count = 1;
         foreach( $types as $type ) {
+
+            if( $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findOneByName($type) ) {
+                continue;
+            }
 
             $listEntity = new EquipmentType();
             $this->setDefaultList($listEntity,$count,$username,$type);
@@ -1476,28 +1491,45 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Equipment')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:Equipment')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $types = array(
-            'Aperio ScanScope AT'
+            'Aperio ScanScope AT' => 'Whole Slide Scanner',
+            'Lumix LX5' => 'Autopsy Camera',
+            'Canon 60D' => 'Autopsy Camera',
+            'Milestone MacroPath D' => 'Gross Image Camera',
+            'Block Processing Device' => 'Tissue Processor',
+            'Faxitron' => 'Xray Machine',
+            'Block Image Device' => 'Block Imaging Camera',
+            'Microtome Device' => 'Microtome',
+            'Microtome Device' => 'Centrifuge',
+            'Slide Stainer Device' => 'Slide Stainer',
+            'Olympus Camera' => 'Microscope Camera',
+            'Generic Desktop Scanner' => 'Requisition Form Scanner'
         );
 
         $count = 1;
-        foreach( $types as $type ) {
+        foreach( $types as $device => $keytype ) {
 
-            $listEntity = new Equipment();
-            $this->setDefaultList($listEntity,$count,$username,$type);
+            if( $em->getRepository('OlegUserdirectoryBundle:Equipment')->findOneByName($device) ) {
+                continue;
+            }
 
-            $keytype = $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findOneByName('Whole Slide Scanner');
+            $keytype = $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findOneByName($keytype);
 
             if( !$keytype ) {
-               //exit('equipment keytype is null');
-               throw new \Exception( 'Equipment keytype is null' );
+                //continue;
+                //exit('equipment keytype is null');
+                throw new \Exception( 'Equipment keytype is null, name="' . $keytype .'"' );
             }
+
+            $listEntity = new Equipment();
+            $this->setDefaultList($listEntity,$count,$username,$device);
 
             $keytype->addEquipment($listEntity);
 

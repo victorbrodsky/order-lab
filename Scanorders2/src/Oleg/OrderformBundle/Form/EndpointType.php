@@ -23,17 +23,18 @@ class EndpointType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        ////////////// Location //////////////////////
-        //use Endpoint object: destination - location
-
-        $label = "Location:";
+        $label = "";
 
         if( array_key_exists('label', $this->params) ) {
+            //echo "EndpointType: label exists=".$this->params['label']."<br>";
             $label = $this->params['label'];
         }
 
+        ////////////// Location //////////////////////
+        //use Endpoint object: destination - location
+
         $destinationLocationsOptions = array(
-            'label' => $label,
+            'label' => $label . "Location:",
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
             'classtype' => 'location',
@@ -47,7 +48,7 @@ class EndpointType extends AbstractType
 
         if( $this->params['cycle'] == 'show' ) {
             $builder->add('location', 'entity', array(
-                'label' => $label,
+                'label' => $label . "Location:",
                 'required'=> false,
                 'multiple' => false,
                 'class' => 'OlegUserdirectoryBundle:Location',
@@ -62,7 +63,15 @@ class EndpointType extends AbstractType
 
 
         ////////////// System //////////////////////
-
+        if( array_key_exists('system', $this->params) &&  $this->params['system'] == true ) {
+            $builder->add('system', 'entity', array(
+                'label' => $label . "System:",
+                'required'=> false,
+                'multiple' => false,
+                'class' => 'OlegUserdirectoryBundle:Location',
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
         ////////////// EOF System //////////////////////
         
     }

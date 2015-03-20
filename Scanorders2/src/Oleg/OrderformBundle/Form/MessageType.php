@@ -33,9 +33,11 @@ class MessageType extends AbstractType
             'educational' => 'Educational:',
             'research' => 'Research:',
             'institution' => 'Institution:',
-            'destinations' => 'Return Slides to:',
+            'sources' => 'Source ',
+            'destinations' => 'Destination ',
             'equipment' => 'Scanner:',
             'proxyuser' => '',
+            'provider' => '',
             'returnoption' => 'Return slide(s) by this date even if not scanned:',
             'priority' => 'Priority:',
             'deadline' => 'Deadline:',
@@ -51,9 +53,9 @@ class MessageType extends AbstractType
                     $labels[$field] = $overLabels[$field];
                 }
             }
-
-            $this->labels = $labels;
         }
+
+        $this->labels = $labels;
 
     }
         
@@ -66,6 +68,31 @@ class MessageType extends AbstractType
                 'label' => "Identification Number:",
                 'attr' => array('class' => 'form-control'),
                 'required'=>false,
+            ));
+        }
+
+        if( array_key_exists('orderdate', $this->params) &&  $this->params['orderdate'] == true ) {
+            $builder->add('orderdate','date',array(
+                'widget' => 'single_text',
+                //'format' => 'MM-dd-yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
+                'format' => 'MM-dd-yyyy, H:mm:ss',
+                'attr' => array('class' => 'datepicker form-control'),
+                'required' => false,
+                'label'=>'Date:',
+            ));
+        }
+
+        if( array_key_exists('provider', $this->params) &&  $this->params['provider'] == true ) {
+            $builder->add('provider', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => $this->labels['provider'],
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                            ->where('u.roles LIKE :roles OR u=:user')
+                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                    },
             ));
         }
 
@@ -120,7 +147,7 @@ class MessageType extends AbstractType
 
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=>$this->labels['equipment'],
+            'label'=>$this->labels['proxyuser'],
             'required' => false,
             //'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -146,6 +173,21 @@ class MessageType extends AbstractType
                 },
         ));
 
+
+        if( array_key_exists('sources', $this->params) &&  $this->params['sources'] == true ) {
+            $this->params['label'] = $this->labels['sources'];
+            //echo "MessageType: sources label exists=".$this->labels['sources']."<br>";
+            $builder->add('sources', 'collection', array(
+                'type' => new EndpointType($this->params,$this->entity),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__sources__',
+            ));
+        }
 
         //Endpoint object: destination - location
         $this->params['label'] = $this->labels['destinations'];
@@ -192,7 +234,7 @@ class MessageType extends AbstractType
             ));
         }
 
-
+        /////////////////////////// specific orders //////////////////////////
         //message's laborder
         if( array_key_exists('message.laborder', $this->params) &&  $this->params['message.laborder'] == true ) {
             $builder->add('laborder', new LabOrderType($this->params,$this->entity), array(
@@ -214,6 +256,73 @@ class MessageType extends AbstractType
             $builder->add('blockorder', new BlockOrderType($this->params,$this->entity), array(
                 'required' => false,
                 'label' => false
+            ));
+        }
+
+        //message's slideorder
+        if( array_key_exists('message.slideorder', $this->params) &&  $this->params['message.slideorder'] == true ) {
+
+            $builder->add('slideorder', new SlideOrderType($this->params,$this->entity), array(
+                'required' => false,
+                'label' => false
+            ));
+
+            $builder->remove('equipment');
+            $builder->add( 'equipment', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Equipment',
+                'property' => 'name',
+                'label' => 'Microtome Device:',
+                'required'=> true,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+
+                        $equipmentTypes = array('Microtome','Centrifuge');
+                        $whereArr = array();
+                        foreach($equipmentTypes as $equipmentType) {
+                            $whereArr[] = "keytype.name = '" . $equipmentType . "'";
+                        }
+                        $where = implode(' OR ', $whereArr);
+
+                        return $er->createQueryBuilder('i')
+                            ->leftJoin('i.keytype','keytype')
+                            ->where($where . " AND i.type != :type")
+                            ->setParameters( array('type' => 'disabled') );
+                    },
+            ));
+
+        }
+
+        //message's stainorder
+        if( array_key_exists('message.stainorder', $this->params) &&  $this->params['message.stainorder'] == true ) {
+
+            $builder->add('stainorder', new StainOrderType($this->params,$this->entity), array(
+                'required' => false,
+                'label' => false
+            ));
+
+            $builder->remove('equipment');
+            $builder->add( 'equipment', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Equipment',
+                'property' => 'name',
+                'label' => 'Slide Stainer Device:',
+                'required'=> true,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+
+                        $equipmentTypes = array('Slide Stainer');
+                        $whereArr = array();
+                        foreach($equipmentTypes as $equipmentType) {
+                            $whereArr[] = "keytype.name = '" . $equipmentType . "'";
+                        }
+                        $where = implode(' OR ', $whereArr);
+
+                        return $er->createQueryBuilder('i')
+                            ->leftJoin('i.keytype','keytype')
+                            ->where($where . " AND i.type != :type")
+                            ->setParameters( array('type' => 'disabled') );
+                    },
             ));
         }
 

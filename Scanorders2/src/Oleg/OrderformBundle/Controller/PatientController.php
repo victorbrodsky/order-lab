@@ -10,6 +10,8 @@ use Oleg\OrderformBundle\Entity\InstructionList;
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Entity\Report;
 use Oleg\OrderformBundle\Entity\RequisitionForm;
+use Oleg\OrderformBundle\Entity\SlideOrder;
+use Oleg\OrderformBundle\Entity\StainOrder;
 use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\UserWrapper;
@@ -113,6 +115,11 @@ class PatientController extends Controller
         );
 
         /////////////////////// testing: create specific messages ///////////////////////
+        $params['sources'] = true;
+        $params['system'] = true;
+        $params['orderdate'] = true;
+        $params['provider'] = true;
+
         $this->createAndAddSpecificMessage($slide,"Lab Order");
         $params['message.laborder'] = true;
         $params['idnumber'] = true;
@@ -122,6 +129,12 @@ class PatientController extends Controller
 
         $this->createAndAddSpecificMessage($slide,"Block Order");
         $params['message.blockorder'] = true;
+
+        $this->createAndAddSpecificMessage($slide,"Slide Order");
+        $params['message.slideorder'] = true;
+
+        $this->createAndAddSpecificMessage($slide,"Stain Order");
+        $params['message.stainorder'] = true;
         /////////////////////// EOF create lab order ///////////////////////
 
         $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => $disabled) );
@@ -203,6 +216,28 @@ class PatientController extends Controller
 
             $instruction = new InstructionList();
             $blockorder->setInstruction($instruction);
+        }
+
+        if( $messageTypeStr == "Slide Order" ) {
+            $slideorder = new SlideOrder();
+            $slideorder->setOrderinfo($message);
+            $message->setSlideorder($slideorder);
+
+
+            $instruction = new InstructionList();
+            $slideorder->setInstruction($instruction);
+        }
+
+        if( $messageTypeStr == "Stain Order" ) {
+            $stainorder = new StainOrder();
+            $stainorder->setOrderinfo($message);
+            $message->setStainorder($stainorder);
+
+            $documentContainer = new DocumentContainer();
+            $stainorder->setDocumentContainer($documentContainer);
+
+            $instruction = new InstructionList();
+            $stainorder->setInstruction($instruction);
         }
 
     }

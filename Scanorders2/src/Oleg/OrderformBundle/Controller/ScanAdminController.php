@@ -631,6 +631,7 @@ class ScanAdminController extends AdminController
                 'Tissue Examination',
                 'Block Order',
                 'Slide Order',
+                'Stain Order',
                 'Lab Order' => array(
                     'Outside Lab Order - Comprehensive',
                     'Outside Lab Order on Part'

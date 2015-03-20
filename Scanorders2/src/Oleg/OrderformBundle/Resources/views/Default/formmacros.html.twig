@@ -381,7 +381,7 @@
 
                         <button
                                 id="form_body_toggle_message_{{ orderUniqueId }}" type="button"
-                                class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
+                                class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
                                 data-toggle="collapse" data-target="#form_body_message_{{ orderUniqueId }}">
                         </button>
 
@@ -396,12 +396,14 @@
                         {{ formmacros.simplefield( "ID:", orderId, "input", disabled ) }}
 
                         {% if message.idnumber %}
-                            {#{{ formmacros.field( message.idnumber ) }}#}
-                            {{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}
+                            {{ formmacros.field( message.idnumber ) }}
+                            {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
                         {% endif %}
 
-                        {{ formmacros.simplefield( "Date:", message.vars.value.orderdate|date('Y-m-d')~" at "~message.vars.value.orderdate|date('h:i a'), "input", disabled ) }}
-                        {{ formmacros.simplefield( "Provider:", message.vars.value.provider, "input", disabled ) }}
+                        {#{{ formmacros.simplefield( "Date:", message.vars.value.orderdate|date('Y-m-d')~" at "~message.vars.value.orderdate|date('h:i a'), "input", disabled ) }}#}
+                        {#{{ formmacros.simplefield( "Provider:", message.vars.value.provider, "input", disabled ) }}#}
+                        {{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}
+                        {{ formmacros.field(message.provider) }}
 
                         <p>
                             {% for input in message.vars.value.inputs %}
@@ -416,16 +418,28 @@
                         </p>
 
                         <p>
-                            {% for source in message.vars.value.sources %}
-                                {{ formmacros.simplefield( "Source System:", source.system, "input", disabled ) }}
-                                {{ formmacros.simplefield( "Source Location:", source.location, "input", disabled ) }}
+                            {% for source in message.sources %}
+                                {#{{ formmacros.simplefield( "Source System:", source.system, "input", disabled ) }}#}
+                                {#{{ formmacros.simplefield( "Source Location:", source.location, "input", disabled ) }}#}
+                                {% if source.system is defined %}
+                                    {{ formmacros.field( source.system ) }}
+                                {% endif %}
+                                {% if source.location is defined %}
+                                    {{ formmacros.field( source.location ) }}
+                                {% endif %}
                             {% endfor %}
                         </p>
 
                         <p>
-                            {% for destination in message.vars.value.destinations %}
-                                {{ formmacros.simplefield( "Destination System:", destination.system, "input", disabled ) }}
-                                {{ formmacros.simplefield( "Destination Location:", destination.location, "input", disabled ) }}
+                            {% for destination in message.destinations %}
+                                {#{{ formmacros.simplefield( "Destination System:", destination.system, "input", disabled ) }}#}
+                                {#{{ formmacros.simplefield( "Destination Location:", destination.location, "input", disabled ) }}#}
+                                {% if destination.system is defined %}
+                                    {{ formmacros.field( destination.system ) }}
+                                {% endif %}
+                                {% if destination.location is defined %}
+                                    {{ formmacros.field( destination.location ) }}
+                                {% endif %}
                             {% endfor %}
                         </p>
 
@@ -481,6 +495,45 @@
                                 {{ formmacros.fieldDocumentContainer(message.blockorder.documentContainer,cycle) }}
                                 </div>
 
+                            </p>
+                        {% endif %}
+
+                        {% if message.slideorder is defined and message.slideorder.vars.value %}
+                            <p>
+                                {{ formmacros.field( message.equipment ) }}
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.slideorder.instruction.createdate,'allow-future-date') }}
+                                    {{ formmacros.field( message.slideorder.instruction.creator ) }}
+                                    {{ formmacros.field( message.slideorder.instruction.instruction ) }}
+                                </div>
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.slideorder.processedDate,'allow-future-date') }}
+                                    {{ formmacros.field( message.slideorder.processedByUser ) }}
+                                </div>
+                            </p>
+                        {% endif %}
+
+                        {% if message.stainorder is defined and message.stainorder.vars.value %}
+                            <p>
+                                {{ formmacros.field( message.equipment ) }}
+                                {{ formmacros.field( message.stainorder.imageMagnification ) }}
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.stainorder.instruction.createdate,'allow-future-date') }}
+                                    {{ formmacros.field( message.stainorder.instruction.creator ) }}
+                                    {{ formmacros.field( message.stainorder.instruction.instruction ) }}
+                                </div>
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.stainorder.processedDate,'allow-future-date') }}
+                                    {{ formmacros.field( message.stainorder.processedByUser ) }}
+                                </div>
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDocumentContainer(message.stainorder.documentContainer,cycle) }}
+                                </div>
                             </p>
                         {% endif %}
 

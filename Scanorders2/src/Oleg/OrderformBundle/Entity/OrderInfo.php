@@ -334,10 +334,15 @@ class OrderInfo {
      */
     private $blockorder;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="SlideOrder", inversedBy="orderinfo", cascade={"persist","remove"})
-//     */
-//    private $slideorder;
+    /**
+     * @ORM\OneToOne(targetEntity="SlideOrder", inversedBy="orderinfo", cascade={"persist","remove"})
+     */
+    private $slideorder;
+
+    /**
+     * @ORM\OneToOne(targetEntity="StainOrder", inversedBy="orderinfo", cascade={"persist","remove"})
+     */
+    private $stainorder;
 
     ////////////////////////// EOF Specific Orders //////////////////////////
 
@@ -1388,6 +1393,38 @@ class OrderInfo {
     public function getBlockorder()
     {
         return $this->blockorder;
+    }
+
+    /**
+     * @param mixed $slideorder
+     */
+    public function setSlideorder($slideorder)
+    {
+        $this->slideorder = $slideorder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlideorder()
+    {
+        return $this->slideorder;
+    }
+
+    /**
+     * @param mixed $stainorder
+     */
+    public function setStainorder($stainorder)
+    {
+        $this->stainorder = $stainorder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStainorder()
+    {
+        return $this->stainorder;
     }
 
 
