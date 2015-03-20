@@ -1601,7 +1601,7 @@
     <div id="slide_{{ uid }}" class="form-element-holder">
 
         {% if flag and flag == "datastructure" %}
-            {{ formmacros.scanForm(slide,flag) }}
+            {{ formmacros.scanForm(slide,flag,uid,cycle) }}
         {% endif %}
 
         {{ formmacros.field(slide.title) }}
@@ -1621,45 +1621,8 @@
             {% endfor %}
 
             {% if not (flag and flag == "datastructure") %}
-                {{ formmacros.scanForm(slide,flag) }}
+                {{ formmacros.scanForm(slide,flag,uid,cycle) }}
             {% endif %}
-
-            {#{% set scanCount = 0 %}#}
-            {#{% for scan in slide.scan %}#}
-                {#{% if flag and flag == "datastructure" %}#}
-                    {#<div class="panel panel-default">#}
-
-                        {#<div class="panel-heading">#}
-
-                            {#{% if scan.vars.value.id %}#}
-                                {#{% set orderUniqueId = scan.vars.value.id %}#}
-                            {#{% else %}#}
-                                {#{% set orderUniqueId = scanCount %}#}
-                            {#{% endif %}#}
-
-                            {#<button#}
-                                    {#id="form_body_toggle_imaging_{{ orderUniqueId }}" type="button"#}
-                                    {#class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"#}
-                                    {#data-toggle="collapse" data-target="#form_body_imaging_{{ orderUniqueId }}">#}
-                            {#</button>#}
-
-                            {#<h4 class="panel-title">Imaging</h4>#}
-                        {#</div>#}
-
-                        {#<div id="form_body_imaging_{{ orderUniqueId }}" class="panel-body collapse in">#}
-                            {#{{ formmacros.field(scan.field) }}#}
-                            {#{{ formmacros.field(scan.scanregion) }}#}
-                            {#{{ formmacros.field(scan.note) }}#}
-                            {#{{ formmacros.scanExtraForm(scan,flag,uid,cycle) }}#}
-                        {#</div>#}
-                    {#</div>#}
-                {#{% else %}#}
-                    {#{{ formmacros.field(scan.field) }}#}
-                    {#{{ formmacros.field(scan.scanregion) }}#}
-                    {#{{ formmacros.field(scan.note) }}#}
-                {#{% endif %}#}
-                {#{% set scanCount = scanCount + 1 %}#}
-            {#{% endfor %}#}
 
 
         {% else  %} {#prototype#}
@@ -1686,7 +1649,7 @@
 
 {% endmacro %}
 
-{% macro scanForm(slide, flag) %}
+{% macro scanForm(slide,flag,uid,cycle) %}
 
     {% import _self as formmacros %}
 
@@ -1716,7 +1679,7 @@
                     {{ formmacros.field(scan.field) }}
                     {{ formmacros.field(scan.scanregion) }}
                     {{ formmacros.field(scan.note) }}
-                    {{ formmacros.scanExtraForm(scan,flag) }}
+                    {{ formmacros.scanExtraForm(scan,flag,uid,cycle) }}
                 </div>
             </div>
         {% else %}
@@ -1828,7 +1791,7 @@
 
 {% endmacro %}
 
-{% macro scanExtraForm( scan, datastructure ) %}
+{% macro scanExtraForm( scan, datastructure, uid, cycle ) %}
 
     {% if datastructure and datastructure == "datastructure" %}
 
@@ -1856,6 +1819,10 @@
 
         {% if scan.imageLink is defined %}
             {{ formmacros.field(scan.imageLink) }}
+        {% endif %}
+
+        {% if scan.documentContainer is defined %}
+            {{ formmacros.fieldDocumentContainer(scan.documentContainer,cycle) }}
         {% endif %}
 
     {% endif %}

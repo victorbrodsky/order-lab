@@ -4,9 +4,9 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+//TODO: rename to Imaging
 //(repositoryClass="Oleg\OrderformBundle\Repository\ScanRepository")
 /**
- * TODO: rename to Imaging
  * @ORM\Entity
  * @ORM\Table(name="scan_scan")
  */

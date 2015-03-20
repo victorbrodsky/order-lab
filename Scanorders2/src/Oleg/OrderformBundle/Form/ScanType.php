@@ -137,7 +137,7 @@ class ScanType extends AbstractType
             ));
 
             //Image container
-            $params = array('labelPrefix'=>'Microscopic Image');
+            $params = array('labelPrefix'=>'Acquired Image');
             $equipmentTypes = array('Whole Slide Scanners','Microscope Camera');
             $params['device.types'] = $equipmentTypes;
             $builder->add('documentContainer', new DocumentContainerType($params), array(
