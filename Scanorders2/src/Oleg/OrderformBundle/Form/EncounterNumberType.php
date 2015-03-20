@@ -22,20 +22,23 @@ class EncounterNumberType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
 //        //$builder->add('keytype', 'hidden', array('label'=>false));
-//        $builder->add('keytype', 'entity', array(
-//            'class' => 'OlegOrderformBundle:EncounterType',
-//            'label'=>false,
-//            'required' => true,
-//            'data' => 1,
-//            'attr' => array('style'=>'display:none;'),
-//            'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->orderBy("list.orderinlist","ASC")
-//                        ->setMaxResults(1);
-//
-//                },
-//        ));
+            echo "show encounter type <br>";
+            $builder->add('keytype', 'entity', array(
+                'class' => 'OlegOrderformBundle:EncounterType',
+                'label' => 'Encounter Type:',
+                'required' => true,
+                'data' => 1,
+                'attr' => array('style'=>'display:none;'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setMaxResults(1);
+
+                    },
+            ));
+        }
 
 //        $builder->add('source', 'entity', array(
 //            'class' => 'OlegUserdirectoryBundle:SourceSystemList',

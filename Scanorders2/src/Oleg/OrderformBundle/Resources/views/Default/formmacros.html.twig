@@ -1336,6 +1336,8 @@
 
     <div id="encounter_{{ uid }}" class="form-element-holder">
 
+        {{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}
+
         {#{{ formmacros.inputArrayField(encounter.number,cycle,"encounternumber",key,"","","",status) }}#}
         {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
         {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
@@ -1345,8 +1347,6 @@
         {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
         {{ formmacros.inputArrayField(encounter.patage,cycle,"encounterpatage","","","","",status) }}
         {{ formmacros.inputArrayField(encounter.pathistory,cycle,"encounterpathistory","","","","",status) }}
-
-        {{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}
 
     </div>
 
@@ -1731,6 +1731,10 @@
 
         {#<h5>Extra data structure fields for Encounter:</h5>#}
 
+        {% if encounter.number.keytype is defined %}
+            {{ formmacros.inputArrayField(encounter.number.keytype,cycle,"encounterkeytype","","","","",status) }}
+        {% endif %}
+
         {% if encounter.number is defined %}
             {{ formmacros.inputArrayField(encounter.number,cycle,"encounternumber","","","","",status) }}
         {% endif %}
@@ -1746,6 +1750,7 @@
         {% endif %}
 
         {% if encounter.inpatientinfo is defined %}
+            {#TODO: make as panel#}
             {% for inpatientinfo in encounter.inpatientinfo %}
                 {{ formmacros.fieldInpatientinfo(inpatientinfo,cycle) }}
             {% endfor %}

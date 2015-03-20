@@ -24,7 +24,7 @@ class EncounterInpatientinfoType extends AbstractType
 
         $builder->add('source', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:SourceSystemList',
-            'label' => 'Inpatient Info Source:',
+            'label' => 'Inpatient Info Source System:',
             'required' => false,
             'data'  => null,
             'attr' => array('class' => 'combobox combobox-width'),

@@ -5,6 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class EncounterType extends AbstractType
 {
@@ -135,6 +136,20 @@ class EncounterType extends AbstractType
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
 
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
+
+//            $builder->add('keytype', 'entity', array(
+//                'class' => 'OlegOrderformBundle:EncounterType',
+//                'label' => 'Encounter Type:',
+//                'required' => true,
+//                'data' => 1,
+//                'attr' => array('style'=>'display:none;'),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('list')
+//                            ->orderBy("list.orderinlist","ASC")
+//                            ->setMaxResults(1);
+//
+//                    },
+//            ));
 
             //number and source
             $builder->add('number', 'collection', array(
