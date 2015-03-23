@@ -10,8 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
-use Oleg\OrderformBundle\Entity\Scan;
-use Oleg\OrderformBundle\Form\ScanType;
+use Oleg\OrderformBundle\Entity\Imaging;
+use Oleg\OrderformBundle\Form\ImagingType;
 //use Oleg\OrderformBundle\Entity\Slide;
 //use Oleg\OrderformBundle\Form\SlideType;
 use Oleg\OrderformBundle\Helper\FormHelper;
@@ -34,7 +34,7 @@ class OrderInfoController extends Controller {
      */
     public function testAction() {
     
-//        $scan = new Scan();
+//        $scan = new Imaging();
 //        $scan->setMag('20X');
 //
 //        $order = new OrderInfo();
@@ -54,7 +54,7 @@ class OrderInfoController extends Controller {
 //        echo 'Created scan id: '.$scan->getId().' and order id: '.$order->getId();
         
         $scan2 = $this->getDoctrine()
-        ->getRepository('OlegOrderformBundle:Scan')
+        ->getRepository('OlegOrderformBundle:Imaging')
         ->findAll();
 
         $order_status = $scan2[0]->getOrderinfo()->getStatus();
@@ -124,8 +124,8 @@ class OrderInfoController extends Controller {
         $form = $this->createForm(new OrderInfoType(), $entity);
         $form->bind($request);
         
-        $scan_entity = new Scan();
-        $scan_form = $this->createForm(new ScanType(), $scan_entity);
+        $scan_entity = new Imaging();
+        $scan_form = $this->createForm(new ImagingType(), $scan_entity);
         $scan_form->bind($request);
         
         if( $form->isValid() && $scan_form->isValid() ) {
@@ -187,8 +187,8 @@ class OrderInfoController extends Controller {
         $entity = new OrderInfo();      
         $form   = $this->createForm(new OrderInfoType(), $entity);
 
-        $scan_entity = new Scan();      
-        $form_scan   = $this->createForm(new ScanType(), $scan_entity);
+        $scan_entity = new Imaging();      
+        $form_scan   = $this->createForm(new ImagingType(), $scan_entity);
         
         return array(
             //'entity' => $entity,
@@ -302,10 +302,10 @@ class OrderInfoController extends Controller {
                 throw $this->createNotFoundException('Unable to find OrderInfo entity.');
             }
             
-//            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->
+//            $scan_entities = $em->getRepository('OlegOrderformBundle:Imaging')->
 //                    findBy(array('orderinfo_id'=>$id));
             
-//            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->findBy(
+//            $scan_entities = $em->getRepository('OlegOrderformBundle:Imaging')->findBy(
 //                array('orderinfo' => $id)            
 //            );
             $entity->removeAllChildren();          

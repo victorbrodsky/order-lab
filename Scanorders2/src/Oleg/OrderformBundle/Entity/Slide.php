@@ -61,7 +61,7 @@ class Slide extends ObjectAbstract
     protected $slidetype;
 
     /**
-     * @ORM\OneToMany(targetEntity="Scan", mappedBy="slide", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Imaging", mappedBy="slide", cascade={"persist"})
      */
     protected $scan;
 
@@ -104,7 +104,7 @@ class Slide extends ObjectAbstract
 
         if( $withfields ) {
             $this->addRelevantScan( new RelevantScans($status,$provider,$source) );
-            $this->addScan( new Scan($status,$provider,$source) );
+            $this->addScan( new Imaging($status,$provider,$source) );
             $this->addStain( new Stain($status,$provider,$source) );
         }
     }
@@ -193,13 +193,8 @@ class Slide extends ObjectAbstract
         return $this->barcode;
     }
 
-    /**
-     * Add scan
-     *
-     * @param \Oleg\OrderformBundle\Entity\Scan $scan
-     * @return Slide
-     */
-    public function addScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+
+    public function addScan($scan)
     {
         if( !$this->scan->contains($scan) ) {
             $scan->setSlide($this);
@@ -208,22 +203,10 @@ class Slide extends ObjectAbstract
     
         return $this;
     }
-
-    /**
-     * Remove scan
-     *
-     * @param \Oleg\OrderformBundle\Entity\Scan $scan
-     */
-    public function removeScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+    public function removeScan($scan)
     {
         $this->scan->removeElement($scan);
     }
-
-    /**
-     * Get scan
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
     public function getScan()
     {
         return $this->scan;

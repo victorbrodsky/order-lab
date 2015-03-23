@@ -299,7 +299,8 @@ function initSingleDatepicker( datepickerElement ) {
             clearBtn: true,
             todayBtn: "linked",
             todayHighlight: true,
-            endDate: endDate
+            endDate: endDate,
+            //minDate: new Date(1902, 1, 1)   //null
         });
 
     }

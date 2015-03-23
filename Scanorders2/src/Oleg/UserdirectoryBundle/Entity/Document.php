@@ -77,6 +77,11 @@ class Document {
      */
     private $createdate;
 
+    /**
+     * Image title
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $title;
 
 
     public function __construct($creator=null) {
@@ -225,6 +230,22 @@ class Document {
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
 

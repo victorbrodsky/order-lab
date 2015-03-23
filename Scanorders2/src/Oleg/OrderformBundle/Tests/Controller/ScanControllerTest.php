@@ -19,7 +19,7 @@ class ScanControllerTest extends WebTestCase
 
         // Fill in the form and submit it
         $form = $crawler->selectButton('Create')->form(array(
-            'oleg_orderformbundle_scantype[field_name]'  => 'Test',
+            'oleg_orderformbundle_imagingtype[field_name]'  => 'Test',
             // ... other fields to fill
         ));
 
@@ -33,7 +33,7 @@ class ScanControllerTest extends WebTestCase
         $crawler = $client->click($crawler->selectLink('Edit')->link());
 
         $form = $crawler->selectButton('Edit')->form(array(
-            'oleg_orderformbundle_scantype[field_name]'  => 'Foo',
+            'oleg_orderformbundle_imagingtype[field_name]'  => 'Foo',
             // ... other fields to fill
         ));
 

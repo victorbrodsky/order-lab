@@ -10,7 +10,7 @@ use Oleg\OrderformBundle\Entity\InstructionList;
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Entity\Report;
 use Oleg\OrderformBundle\Entity\RequisitionForm;
-use Oleg\OrderformBundle\Entity\Scan;
+use Oleg\OrderformBundle\Entity\Imaging;
 use Oleg\OrderformBundle\Entity\SlideOrder;
 use Oleg\OrderformBundle\Entity\StainOrder;
 use Oleg\UserdirectoryBundle\Entity\Document;
@@ -139,8 +139,8 @@ class PatientController extends Controller
         $params['message.stainorder'] = true;
 
         //testing: add scan
-        //$newScan = new Scan(true,'valid',$user,$system);
-        //$slide->addScan($newScan);
+        $newScan = new Imaging(true,'valid',$user,$system);
+        $slide->addScan($newScan);
         /////////////////////// EOF create lab order ///////////////////////
 
         $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => $disabled) );

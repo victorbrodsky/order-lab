@@ -279,10 +279,10 @@ class ScanOrderController extends Controller {
                 throw $this->createNotFoundException('Unable to find OrderInfo entity.');
             }
 
-//            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->
+//            $scan_entities = $em->getRepository('OlegOrderformBundle:Imaging')->
 //                    findBy(array('scanorder_id'=>$id));
 
-//            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->findBy(
+//            $scan_entities = $em->getRepository('OlegOrderformBundle:Imaging')->findBy(
 //                array('scanorder' => $id)
 //            );
             $entity->removeAllChildren();

@@ -799,7 +799,7 @@ class Patient extends ObjectAbstract
             $clinhists = $clinhists . "value=".$name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
-        $dobs = ", dob=".count($this->dob).": ";
+        $dobs = " dobCount=".count($this->dob).": ";
         foreach( $this->dob as $name ) {
             $dobs = $dobs . "value=".$name." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
@@ -817,7 +817,7 @@ class Patient extends ObjectAbstract
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$mrnId.
         ", mrnCount=".count($this->mrn).
-        ", dobs=".$dobs.
+        ", dobs:".$dobs.
         ", clinhists=".$clinhists.
         ", firstnames=".$firstnames.
         ", lastnames=".$lastnames.

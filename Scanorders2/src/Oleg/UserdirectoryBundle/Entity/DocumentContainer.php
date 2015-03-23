@@ -39,12 +39,14 @@ class DocumentContainer {
 
     //Image Title: [plain text]
     /**
+     * Document Container title
      * @ORM\Column(type="string", nullable=true)
      */
     private $title;
 
     //Image Comment(s): [plain text]
     /**
+     * Document Container comment
      * @ORM\OneToMany(targetEntity="DocumentComment", mappedBy="documentContainer", cascade={"persist"})
      */
     private $comments;

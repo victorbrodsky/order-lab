@@ -200,7 +200,7 @@ class ScanUtilController extends Controller {
 //        //add custom added values
 //        //TODO: add custom values, added by ordering provider
 //        $user = $this->get('security.context')->getToken()->getUser();
-//        $entities = $this->getDoctrine()->getRepository('OlegOrderformBundle:Scan')->findByProvider($user);
+//        $entities = $this->getDoctrine()->getRepository('OlegOrderformBundle:Imaging')->findByProvider($user);
 //        foreach( $entities as $entity ) {
 //            $arr[] = $entity->getScanregion();
 //        }

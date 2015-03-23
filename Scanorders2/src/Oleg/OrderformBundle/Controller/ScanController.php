@@ -8,9 +8,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\OrderformBundle\Entity\Scan;
+use Oleg\OrderformBundle\Entity\Imaging;
 use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Form\ScanType;
+use Oleg\OrderformBundle\Form\ImagingType;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
 /**
@@ -32,7 +32,7 @@ class ScanController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:Scan')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:Imaging')->findAll();
 
         return array(
             'entities' => $entities,
@@ -43,12 +43,12 @@ class ScanController extends Controller
      *
      * @Route("/", name="scan_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Scan:new_orig.html.twig")
+     * @Template("OlegOrderformBundle:Imaging:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new Scan();
-        $form = $this->createForm(new ScanType(), $entity);
+        $entity  = new Imaging();
+        $form = $this->createForm(new ImagingType(), $entity);
         $form->bind($request);
 
         $mag = $form["mag"]->getData();
@@ -103,14 +103,14 @@ class ScanController extends Controller
     public function newAction()
     {
         $helper = new FormHelper();
-        $entity = new Scan();
+        $entity = new Imaging();
         
         //$slide= new Slide(); 
         //$entity->setSlide($slide);
                 
         $entity->setMag( key($helper->getMags()) );       
         
-        $form   = $this->createForm(new ScanType(), $entity);
+        $form   = $this->createForm(new ImagingType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -129,10 +129,10 @@ class ScanController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Scan')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Imaging')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Scan entity.');
+            throw $this->createNotFoundException('Unable to find Imaging entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -144,7 +144,7 @@ class ScanController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Scan entity.
+     * Displays a form to edit an existing Imaging entity.
      *
      * @Route("/{id}/edit", name="scan_edit")
      * @Method("GET")
@@ -154,13 +154,13 @@ class ScanController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Scan')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Imaging')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Scan entity.');
+            throw $this->createNotFoundException('Unable to find Imaging entity.');
         }
 
-        $editForm = $this->createForm(new ScanType(), $entity);
+        $editForm = $this->createForm(new ImagingType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -171,24 +171,24 @@ class ScanController extends Controller
     }
 
     /**
-     * Edits an existing Scan entity.
+     * Edits an existing Imaging entity.
      *
      * @Route("/{id}", name="scan_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Scan:edit.html.twig")
+     * @Template("OlegOrderformBundle:Imaging:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Scan')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Imaging')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Scan entity.');
+            throw $this->createNotFoundException('Unable to find Imaging entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new ScanType(), $entity);
+        $editForm = $this->createForm(new ImagingType(), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
@@ -205,7 +205,7 @@ class ScanController extends Controller
         );
     }
     /**
-     * Deletes a Scan entity.
+     * Deletes a Imaging entity.
      *
      * @Route("/{id}", name="scan_delete")
      * @Method("DELETE")
@@ -217,10 +217,10 @@ class ScanController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:Scan')->find($id);
+            $entity = $em->getRepository('OlegOrderformBundle:Imaging')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Scan entity.');
+                throw $this->createNotFoundException('Unable to find Imaging entity.');
             }
 
             $em->remove($entity);
@@ -231,7 +231,7 @@ class ScanController extends Controller
     }
 
     /**
-     * Creates a form to delete a Scan entity by id.
+     * Creates a form to delete a Imaging entity by id.
      *
      * @param mixed $id The entity id
      *

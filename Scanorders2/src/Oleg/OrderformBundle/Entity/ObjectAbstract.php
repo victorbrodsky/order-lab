@@ -57,6 +57,12 @@ abstract class ObjectAbstract
      */
     protected $institution;
 
+    /**
+     * DocumentContainer can have many Documents; each Document has document type (DocumentTypeList)
+     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+     **/
+    protected $documentContainer;
+
 
 
     public function __construct( $status='invalid', $provider=null, $source = null ) {
@@ -246,6 +252,24 @@ abstract class ObjectAbstract
     {
         return $this->institution;
     }
+
+    /**
+     * @param mixed $documentContainer
+     */
+    public function setDocumentContainer($documentContainer)
+    {
+        $this->documentContainer = $documentContainer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentContainer()
+    {
+        return $this->documentContainer;
+    }
+
+
 
 
 

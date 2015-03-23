@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -64,6 +65,14 @@ class AccessionType extends AbstractType
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
 
             //echo "accession flag datastructure=".$this->params['datastructure']."<br>";
+
+            $params = array('labelPrefix'=>'Autopsy Image');
+            $equipmentTypes = array('Autopsy Camera');
+            $params['device.types'] = $equipmentTypes;
+            $builder->add('documentContainer', new DocumentContainerType($params), array(
+                'required' => false,
+                'label' => false
+            ));
 
             //TODO: create orderinfo type to display: order id, type, source ...
 //            $builder->add('laborder', 'collection', array(

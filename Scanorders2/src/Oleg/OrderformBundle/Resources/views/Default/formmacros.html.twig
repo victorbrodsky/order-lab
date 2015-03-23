@@ -455,7 +455,7 @@
                             <div class="well well-sm">
                             <p>
                                 {% for requisitionForm in message.laborder.requisitionForms %}
-                                    {{ formmacros.fieldDocumentContainer(requisitionForm.documentContainer,cycle) }}
+                                    {{ formmacros.fieldDocumentContainer(requisitionForm.documentContainer,cycle,'requisitionForm'~orderUniqueId) }}
                                 {% endfor %}
                             </p>
                             </div>
@@ -470,7 +470,7 @@
                                 </div>
 
                                 <div class="well well-sm">
-                                {{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle) }}
+                                {{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId) }}
                                 </div>
 
                                 <div class="well well-sm">
@@ -499,7 +499,7 @@
                                 </div>
 
                                 <div class="well well-sm">
-                                {{ formmacros.fieldDocumentContainer(message.blockorder.documentContainer,cycle) }}
+                                {{ formmacros.fieldDocumentContainer(message.blockorder.documentContainer,cycle,'blockorder'~orderUniqueId) }}
                                 </div>
 
                             </p>
@@ -1151,10 +1151,16 @@
     {% import _self as formmacros %}
     {#{% if order.vars.value and order.vars.value.status == 'valid' %}#}
         {{ form_errors(order) }}
-        {{ form_widget(order.others) }}
-        {{ formmacros.field(order.source) }}
-        {{ formmacros.field(order.field.type) }}
-        {{ formmacros.field(order.field.ordernumber) }}
+        {% if order.others is defined %}
+            {{ form_widget(order.others) }}
+        {% endif %}
+        {% if order.source is defined %}
+            {{ formmacros.field(order.source) }}
+        {% endif %}
+        {% if order.field is defined %}
+            {{ formmacros.field(order.field.type) }}
+        {   { formmacros.field(order.field.ordernumber) }}
+        {% endif %}
     {#{% endif %}#}
 {% endmacro %}
 
@@ -1189,12 +1195,46 @@
         {{ formmacros.field(field.trackLocations) }}
 
         {#images#}
-        {{ formmacros.fieldDocumentContainer(field.documentContainer,cycle) }}
+        {{ formmacros.fieldDocumentContainer(field.documentContainer,cycle,'laborder') }}
 
     {% endif %}
 {% endmacro %}
 
-{% macro fieldDocumentContainer(container,cycle) %}
+{% macro fieldDocumentContainer(container,cycle,prefix,renderType) %}
+    {% import _self as formmacros %}
+
+    {% if renderType is defined and renderType == "panel" %}
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+
+                {% if container.vars.value and container.vars.value.id %}
+                    {% set uniqueId = container.vars.value.id %}
+                {% else %}
+                    {% set uniqueId = 0 %}
+                {% endif %}
+
+                <button
+                        id="form_body_toggle_{{ prefix }}_documentContainer_{{ uniqueId }}" type="button"
+                        class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
+                        data-toggle="collapse" data-target="#form_body_{{ prefix }}_documentContainer_{{ uniqueId }}">
+                </button>
+
+                <h4 class="panel-title">Document(s)</h4>
+            </div>
+
+            <div id="form_body_{{ prefix }}_documentContainer_{{ uniqueId }}" class="panel-body collapse in">
+                {{ formmacros.fieldDocumentContainerPlain(container,cycle) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="well well-sm">
+            {{ formmacros.fieldDocumentContainerPlain(container,cycle) }}
+        </div>
+    {% endif %}
+
+{% endmacro %}
+{% macro fieldDocumentContainerPlain(container,cycle) %}
     {% import _self as formmacros %}
 
     {{ form_errors(container) }}
@@ -1221,11 +1261,11 @@
     {#comments#}
     {% if container.comments|length > 0 %}
         <div class="well well-sm">
-    {% endif %}
-    {% for comment in container.comments %}
-        {{ formmacros.field(comment.comment) }}
-    {% endfor %}
-    {% if container.comments|length > 0 %}
+            {% endif %}
+            {% for comment in container.comments %}
+                {{ formmacros.field(comment.comment) }}
+            {% endfor %}
+            {% if container.comments|length > 0 %}
         </div>
     {% endif %}
 
@@ -1234,6 +1274,7 @@
     {{ formmacros.field(container.provider) }}
 
 {% endmacro %}
+
 
 {% macro fieldOutsidereport(field,cycle) %}
     {% import _self as formmacros %}
@@ -1489,7 +1530,7 @@
 
         {% endif %}
 
-        {#{{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}#}
+        {{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}
 
     </div>
 {% endmacro %}
@@ -1553,6 +1594,8 @@
         {% endif %}
 
     </div>
+
+    {{ formmacros.partExtraForm(part,flag,uid,cycle,status) }}
 
 {% endmacro %}
 
@@ -1843,6 +1886,35 @@
 
 {% endmacro %}
 
+{% macro accessionExtraForm( accession, datastructure, uid, cycle, status ) %}
+
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% import _self as formmacros %}
+
+        {% if accession.documentContainer is defined %}
+            {{ formmacros.fieldDocumentContainer(accession.documentContainer,cycle,'accession') }}
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
+{% macro partExtraForm( part, datastructure, uid, cycle, status ) %}
+
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% import _self as formmacros %}
+
+        {% if part.documentContainer is defined %}
+            {{ formmacros.fieldDocumentContainer(part.documentContainer,cycle,'part') }}
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
+
 {% macro scanExtraForm( scan, datastructure, uid, cycle ) %}
 
     {% if datastructure and datastructure == "datastructure" %}
@@ -1874,7 +1946,7 @@
         {% endif %}
 
         {% if scan.documentContainer is defined %}
-            {{ formmacros.fieldDocumentContainer(scan.documentContainer,cycle) }}
+            {{ formmacros.fieldDocumentContainer(scan.documentContainer,cycle,'scan') }}
         {% endif %}
 
     {% endif %}

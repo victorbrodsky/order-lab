@@ -126,6 +126,7 @@ class MultiScanOrderController extends Controller {
 //        echo "provider2=".$entity->getProvider()."<br>";
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_field
 //        $patient = $form["patient"][0]->getData();
+//        echo "patient=".$patient."<br>";
 //        $mrn = $patient->getMrn()->first()->getField();
 //        echo "mrn=".$mrn."<br>";
 //
@@ -178,10 +179,9 @@ class MultiScanOrderController extends Controller {
 //       } else {
 //           echo "form is not valid ??? <br>";
 //       }
-//        print_r($form->getErrors());
-//        echo "<br>errors:<br>";
-//        print_r($form->getErrorsAsString());
-//        echo "<br>";
+        //echo "<br>errors:<br>".$form->getErrors()."<br>";
+        //echo "errors as string=".$form->getErrorsAsString()."<br>";
+        //echo "order patient=".$entity->getPatient()->first();
         //exit("controller exit");
 
         if( $form->isValid() ) {

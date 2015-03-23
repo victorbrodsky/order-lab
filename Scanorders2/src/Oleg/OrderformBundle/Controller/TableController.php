@@ -9,19 +9,7 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\EncounterDate;
-use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
-use Oleg\OrderformBundle\Entity\EncounterPathistory;
-use Oleg\OrderformBundle\Entity\EncounterPatlastname;
-use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
-use Oleg\OrderformBundle\Entity\EncounterPatsex;
-use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
-use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\ProcedureDate;
-use Oleg\OrderformBundle\Entity\ProcedureNumber;
-use Oleg\OrderformBundle\Entity\EncounterPatage;
-use Oleg\OrderformBundle\Entity\ScanOrder;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -72,7 +60,6 @@ use Oleg\OrderformBundle\Entity\BlockSectionsource;
 use Oleg\OrderformBundle\Entity\RelevantScans;
 use Oleg\OrderformBundle\Entity\BlockSpecialStains;
 use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Entity\Stain;
 
 use Oleg\OrderformBundle\Entity\Educational;
@@ -92,6 +79,21 @@ use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 
 use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
+
+use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Entity\EncounterDate;
+use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
+use Oleg\OrderformBundle\Entity\EncounterPathistory;
+use Oleg\OrderformBundle\Entity\EncounterPatlastname;
+use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
+use Oleg\OrderformBundle\Entity\EncounterPatsex;
+use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
+use Oleg\OrderformBundle\Entity\Endpoint;
+use Oleg\OrderformBundle\Entity\Imaging;
+use Oleg\OrderformBundle\Entity\ProcedureDate;
+use Oleg\OrderformBundle\Entity\ProcedureNumber;
+use Oleg\OrderformBundle\Entity\EncounterPatage;
+use Oleg\OrderformBundle\Entity\ScanOrder;
 
 
 class TableController extends Controller {
@@ -1088,7 +1090,7 @@ class TableController extends Controller {
         }
 
         ///// Scan /////
-        $scan = new Scan($status,$provider,$system);
+        $scan = new Imaging($status,$provider,$system);
 
         //Scan: Scan Magnificaiton
         $magArr = $this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData);

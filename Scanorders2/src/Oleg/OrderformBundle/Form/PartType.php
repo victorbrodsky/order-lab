@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -139,6 +140,17 @@ class PartType extends AbstractType
         ));
 
 
+
+        //extra data-structure fields
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+            $params = array('labelPrefix'=>'Gross Image');
+            $equipmentTypes = array('Gross Image Camera');
+            $params['device.types'] = $equipmentTypes;
+            $builder->add('documentContainer', new DocumentContainerType($params), array(
+                'required' => false,
+                'label' => false
+            ));
+        }
 
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {

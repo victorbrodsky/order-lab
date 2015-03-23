@@ -2,12 +2,14 @@
 
 namespace Oleg\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Entity\Slide;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+
+use Oleg\OrderformBundle\Entity\Slide;
 
 class SlideType extends AbstractType
 {
@@ -37,11 +39,11 @@ class SlideType extends AbstractType
         ));
 
         $builder->add('scan', 'collection', array(
-            'type' => new ScanType($this->params),
+            'type' => new ImagingType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => false,//" ",
+            'label' => false,
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__slidescan__',

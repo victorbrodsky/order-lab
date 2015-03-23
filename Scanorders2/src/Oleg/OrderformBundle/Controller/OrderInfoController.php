@@ -10,8 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
-use Oleg\OrderformBundle\Entity\Scan;
-use Oleg\OrderformBundle\Form\ScanType;
+use Oleg\OrderformBundle\Entity\Imaging;
+use Oleg\OrderformBundle\Form\ImagingType;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Entity\Block;
