@@ -22,8 +22,14 @@ class DocumentCommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $label = "Comment:";
+
+        if( array_key_exists('documentContainer.comments.comment.label', $this->params) &&  $this->params['documentContainer.comments.comment.label'] != "") {
+            $label = $this->params['documentContainer.comments.comment.label'];
+        }
+
         $builder->add( 'comment', 'textarea', array(
-            'label'=>'Comment:',
+            'label' => $label,
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')
         ));

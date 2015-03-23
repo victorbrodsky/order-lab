@@ -7,9 +7,9 @@
     </h3>
 {% endif %}
 
-    {% if filter is defined and filter != "" %}
-        <h3 class="text-info">{{ filter }}</h3>
-    {% endif %}
+{% if filter is defined and filter != "" %}
+    <h3 class="text-info">{{ filter }}</h3>
+{% endif %}
 
 {% if sameusers is defined and sameusers != "" %}
     <h3 class="text-info">{{ sameusers }}</h3>
@@ -21,6 +21,9 @@
 
     {# show all emails #}
     {% if entities|length > 1 %}
+
+        <br>
+
         {% set emailsArr = {} %}
         {% for entity in entities %}
             {% set emailsArr = emailsArr|merge({ (loop.index0): entity.getUsernameOptimal~" <"~entity.email~">"}) %}
@@ -47,6 +50,7 @@
     {% endif %}
     {# EOF show all emails #}
 
+    <br>
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>

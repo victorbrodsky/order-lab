@@ -75,6 +75,13 @@ class Report {
     private $signatureDate;
 
 
+    /**
+     * @ORM\ManyToOne(targetEntity="ReportType", cascade={"persist"})
+     */
+    private $reportType;
+
+    //report full text must be associated with document image.
+    //So, report full text is array of comments in documentContainer (documentContainer->comments(DocumentComment)->comment)
 
 
     public function __construct() {
@@ -216,6 +223,23 @@ class Report {
     {
         $this->consultedPathologists->removeElement($item);
     }
+
+    /**
+     * @param mixed $reportType
+     */
+    public function setReportType($reportType)
+    {
+        $this->reportType = $reportType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReportType()
+    {
+        return $this->reportType;
+    }
+
 
 
 

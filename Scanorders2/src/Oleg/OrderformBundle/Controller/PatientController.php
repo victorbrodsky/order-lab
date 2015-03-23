@@ -139,8 +139,8 @@ class PatientController extends Controller
         $params['message.stainorder'] = true;
 
         //testing: add scan
-        $newScan = new Imaging(true,'valid',$user,$system);
-        $slide->addScan($newScan);
+        //$newScan = new Imaging('valid',$user,$system);
+        //$slide->addScan($newScan);
         /////////////////////// EOF create lab order ///////////////////////
 
         $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => $disabled) );

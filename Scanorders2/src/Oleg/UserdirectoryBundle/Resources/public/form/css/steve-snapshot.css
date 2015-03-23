@@ -1,0 +1,404 @@
+
+
+
+.snapshot-all {
+    width: 80%;
+    min-width: 800px;
+    max-width: 1042px;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+a {
+    color: #B31B1B;
+    text-decoration: none;
+}
+<!--
+.section {
+    font-family: 'Oxygen', sans-serif;
+    width: 20%;
+    max-width: 210px;
+    height: 1em;
+    font-size: 1.25em;
+    letter-spacing: .1em;
+    font-weight: 100;
+    text-transform: uppercase;
+    text-align: center;
+    background-color: #B31B1B;
+    color: white;
+    display: block;
+    margin: 0;
+    padding: 8px;
+    position: relative;
+    left: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+-->
+
+.snapshot {
+    width: auto;
+    height: 150px;
+    font-family: Lato, helvetica, sans-serif;
+    position: relative;
+    display: table;	
+    border: 2px solid #B5B5B5;
+    border-radius: 10px;
+    overflow: hidden;
+    
+}
+
+
+.left {
+    width: 60%;
+    background-color: #F7f7f7;
+    display: table-cell;
+    white-space: normal;
+    clear: both;
+}
+
+
+.image-box {
+    width: 116px;
+    height: 126px;
+    border: 1px solid #B5B5B5;
+    border-radius: 8px;
+    margin-right: 1.5em;
+    margin-left: .5em;
+    margin-top: .6em;
+    float: left;
+    position: relative;
+    top: 2px;
+    left: 6px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('profile-pic.jpg');
+    
+}
+
+.left-text {
+    display: inline-block;
+    width: 68%;
+    position: relative;
+    
+}
+
+
+.left-text h2 {
+    text-transform: uppercase; 
+    font-size: 1.75em;
+
+}
+
+    /* Adds red background */
+.left-text h2 {    
+    background-color: #B31B1B;
+    color: white;
+    font-weight: 400;
+    margin: 0;
+    margin-bottom: 10px;
+    margin-left: -5px;
+    margin-right: 10px;
+    padding: .5em;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;    
+}
+
+.left-text h4 {
+	font-style: italic;
+	margin: 0;
+    font-size: 1.25em;
+    line-height: 1.4em;
+}
+
+
+
+.right {
+    width: 40%;
+    background-color: #e8e8e8;
+    font-size: .9em;
+    padding: 1em;
+    display: table-cell;
+    vertical-align: top;
+     }
+
+.right-text {
+    width: 85%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+
+.left-column {
+	text-align: right;
+	font-weight: 100;
+	font-size: .8em;
+	color: #4F4F4F;
+	padding-right: .25em;
+    padding-left: 1em
+}
+
+
+.contact {
+	padding-bottom: 1em;	
+}
+
+.assistant {
+	padding-bottom: 1em;	
+}
+
+.right-text h4 {
+	margin: 0;
+    font-variant: small-caps;
+    font-weight: bold; 
+    font-size: 1.15em;    
+}
+
+.clearfix:before .clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+.clearfix:after {
+    clear: both;
+}
+.clearfix {
+    *zoom: 1;
+}
+
+
+/* Mobile Phone Styles */
+@media only screen and (max-width:480px) {
+
+body {
+    margin: 0;
+    padding-top: 0;
+    
+}
+    
+.snapshot-all {
+    width: 100%;
+    min-width: 300px;
+    margin: 0;
+    padding: 0;
+}
+
+.section {
+    position: relative;
+    width: auto;
+    max-width: 100%;
+    
+    border-radius: 0;
+    height: 1.25em;
+    left: 0;
+    margin-top: 0;
+    border-radius: 5px;
+}
+
+.snapshot {
+    width: 100%;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+    
+    
+}
+.left {
+    display: block;
+    width: 100%;
+    margin: 0; 
+    
+    
+}
+
+.image-box {
+    border-radius: 5px;
+    position: relative;
+    float: right;
+    left: 0;
+    margin: 0;
+    margin-left: 5px;
+    margin-right: .5em;
+    margin-top: .25em;
+    display: block;
+    width: 80px;
+    height: 87px;
+    
+}
+
+.left-text {
+    display: block;
+    width: auto;
+    
+
+}
+
+.left-text h2 {
+    font-size: 1.25em;
+    margin-bottom: .25em;
+    
+    /* Red box background */
+    width: auto;
+    margin-right: 100px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+
+.left-text h4 {
+    font-size: 1.1em;
+    margin-left: 12px ;
+    margin-right: 12px;
+    margin-top: .15em
+}
+    
+.left-text p {
+    margin-left: 12px ;
+    margin-right: 12px;
+    padding-bottom: .75em;
+    
+}
+
+
+.right {
+    display: block;
+    width: 100%;
+    
+}
+
+.right-text {
+    margin-left: 5px
+}
+}
+
+
+/* Tablet Styles */
+@media only screen and (min-width:481px) and (max-width:900px) {
+
+    body {
+    margin: 0;
+    padding-top: 0;
+        
+}
+    
+.snapshot-all {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+}
+<!--
+    /* XXXXXXXX */
+.section {
+    position: relative;
+    width: auto;
+    max-width: 100%;
+    border: 0;
+    border-radius: 0;
+    height: 1.25em;
+    left: 0;
+    margin-top: 0;
+    border-radius: 5px;
+}
+-->
+    
+.snapshot {
+    width: 100%;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+    padding-top: 0;
+    
+}
+.left {
+    display: block;
+    width: 100%;
+    margin: 0;    
+    padding-top: 0;
+}
+
+.image-box {
+    margin-right: 20px;
+    margin-top: 10px; 
+    margin-left: .75em;
+    border-radius: 5px;
+    position: relative;
+    float: right;
+    display: block;
+    
+    
+}
+
+.left-text {
+    display: block;
+    width: auto;
+    padding: 0 0 0 10px;
+    margin-left: 0px;
+    
+}
+
+.left-text h2 {
+    font-size: 1.75em;
+    margin-bottom: .25em;
+    
+    /* red box background */
+    width: auto;
+    margin-right: 150px;
+    margin-left: 3px;
+       
+}
+
+.left-text h4 {
+    font-size: 1.25em;
+    margin-left: .6em ;
+    padding-top: .1em;
+    margin-right: .75em
+}
+
+.left-text p {
+    margin-left: .75em ;
+    margin-right: .75em;
+    padding-bottom: .75em
+}
+    
+.right {
+    display: block;
+    width: 100%;
+    float: left;
+    padding: 0;
+    margin: 0;
+    
+}
+
+.right-text {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+    
+.contact {
+    float: left;
+    width: 45%;
+    margin-left: 3%;
+    margin-right: 1.5%;
+    margin-top: 10px;
+    
+}
+.assistant {
+    float: left;
+    width: 45%;
+    margin-left: 3%;
+    margin-right: 1.5%;
+    margin-top: 10px;
+}
+
+    
+}
+
+
+
+

@@ -463,6 +463,9 @@
 
                         {% if message.report is defined and message.report.vars.value %}
                             <p>
+
+                                {{ formmacros.field( message.report.reportType ) }}
+
                                 <div class="well well-sm">
                                 {{ formmacros.fieldDateLabel(message.report.issuedDate,'allow-future-date') }}
                                 {{ formmacros.fieldDateLabel(message.report.receivedDate,'allow-future-date') }}

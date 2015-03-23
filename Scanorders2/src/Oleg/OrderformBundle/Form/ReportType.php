@@ -53,7 +53,10 @@ class ReportType extends AbstractType
 
 
         //Requisition Form Image container
-        $params = array('labelPrefix'=>'Reference Representation');
+        $params = array(
+            'labelPrefix' => 'Reference Representation',
+            'documentContainer.comments.comment.label' => "Full Text:"
+        );
         $builder->add('documentContainer', new DocumentContainerType($params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
             'label' => false
@@ -80,6 +83,14 @@ class ReportType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__consultedpathologists__',
+        ));
+
+
+        $builder->add('reportType', null, array(
+            'label' => "Report Type:",
+            'required' => false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
         ));
 
 

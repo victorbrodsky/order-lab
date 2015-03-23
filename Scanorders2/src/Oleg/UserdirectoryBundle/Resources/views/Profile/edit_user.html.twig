@@ -3,6 +3,15 @@
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 
+{#Snapshot css#}
+{% block additionalcss %}
+    {% stylesheets
+    'bundles/oleguserdirectory/form/css/typeahead.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
 {###################      Begin macros      ####################}
 
 {% macro baseTitle( field, cycle, classname, prototype, sitename ) %}
@@ -593,6 +602,154 @@
         </tr>
     </tbody>
     </table>
+
+{% endmacro %}
+
+{% macro stevesnapshot( user, sitename ) %}
+
+    <div class="snapshot-all">
+        <!--<div class="section">Profile
+          </div>
+-->
+        <div class="snapshot clearfix">
+
+            <div class="left">
+                <div class="image-box">
+                </div>
+
+                <!--<img src="profile-pic.jpg"> -->
+
+                <div class="left-text">
+                    <h2>
+                        Shivakumar Test Testing Subramaniyam, MD, PhD
+                    </h2>
+                    <h4>
+                        Chief, Eyebrow Pathology
+                    </h4>
+                    <h4>
+                        Assistant Professor of Pathology and Laboratory Medicine
+                    </h4>
+
+                    <div class="service">
+                        <p>Eyebrow Pathology<br>
+                            Anatomic Pathology<br>
+                            Department of Pathology and Laboratory Medicine<br>
+                            Weill Cornell Medical College
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <div class="right-text">
+                    <div class="contact">
+                        <h4>Location Name #1:</h4>
+                        <table>
+                            <tr>
+                                <td class="left-column">room:</td>
+                                <td>K-123</td>
+                            </tr>
+                            <tr>
+                                <td class="left-column">ph:</td>
+                                <td>212.555.1212</td>
+                            </tr>
+
+                            <tr>
+                                <td class="left-column">pager:</td>
+                                <td>12345</td>
+                            </tr>
+
+                            <tr>
+                                <td class="left-column">i/c:</td>
+                                <td>99</td>
+                            </tr>
+                            <tr>
+                                <td class="left-column">fax:</td>
+                                <td>212.555.1212</td>
+                            </tr>
+
+                            <tr>
+                                <td class="left-column">email:</td>
+                                <td><a href="mailto:name123@med.cornell.edu">name123@med.cornell.edu</a></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="contact">
+                        <h4>Location Name #2:</h4>
+                        <table>
+                            <tr>
+                                <td class="left-column">room:</td>
+                                <td>K-456</td>
+                            </tr>
+                            <tr>
+                                <td class="left-column">ph:</td>
+                                <td>212.555.1212</td>
+                            </tr>
+
+                            <tr>
+                                <td class="left-column">pager:</td>
+                                <td>12345</td>
+                            </tr>
+
+                            <tr>
+                                <td class="left-column">i/c:</td>
+                                <td>99</td>
+                            </tr>
+                            <tr>
+                                <td class="left-column">fax:</td>
+                                <td>212.555.1212</td>
+                            </tr>
+
+                            <tr>
+                                <td class="left-column">email:</td>
+                                <td><a href="mailto:name123@med.cornell.edu">name123@med.cornell.edu</a></td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                    <div class="assistant">
+                        <h4>Assistant, Location Name #1:</h4>
+                        <table>
+                            <tr>
+                                <td class="left-column">name:</td>
+                                <td>John Smith</td>
+                            </tr>
+                            <tr>
+                                <td class="left-column">ph:</td>
+                                <td>212.555.1212</td>
+                            </tr>
+
+                            <tr>
+                                <td class="left-column">email:</td>
+                                <td><a href="mailto:name123@med.cornell.edu">name123@med.cornell.edu</a></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="assistant">
+                        <h4>Assistant, Location Name #2:</h4>
+                        <table>
+                            <tr>
+                                <td class="left-column">name:</td>
+                                <td>Jane Smith</td>
+                            </tr>
+                            <tr>
+                                <td class="left-column">ph:</td>
+                                <td>212.555.1212</td>
+                            </tr>
+
+                            <tr>
+                                <td class="left-column">email:</td>
+                                <td><a href="mailto:name123@med.cornell.edu">name123@med.cornell.edu</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endmacro %}
 

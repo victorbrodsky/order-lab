@@ -29,18 +29,28 @@
             {#<button class="btn btn-lg" type="submit" style="height: 50px">Search</button>#}
         </form>
 
+        <br>
+
 
         {#display search result for locations #}
+        {% set locationShowed = false %}
         {% if locations %}
             {% if locations|length > 0 %}
                 {% include 'OlegUserdirectoryBundle::Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
+                <br>
+                {% set locationShowed = true %}
             {% endif %}
         {% endif %}
 
+        {#display search result for users #}
+        {% set userShowed = false %}
         {% if (entities and entities|length > 0) or (sameusers is defined and sameusers) %}
             {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}
+            {% set userShowed = true %}
         {% endif %}
-        {% if entities and entities|length == 0 %}
+
+        {#display No results are found #}
+        {% if not userShowed and not locationShowed %}
             <br><br>
             <h5 class="text-info">No results are found</h5>
         {% endif %}
