@@ -101,7 +101,7 @@ class SlideType extends AbstractType
                 'label' => false,
                 'by_reference' => false,
                 'prototype' => true,
-                'prototype_name' => '__slideorderinfo__',
+                'prototype_name' => '__slidemessage__',
             ));
 
         }

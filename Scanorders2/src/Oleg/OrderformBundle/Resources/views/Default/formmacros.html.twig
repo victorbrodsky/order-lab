@@ -395,15 +395,20 @@
                     <p>
                         {{ formmacros.simplefield( "ID:", orderId, "input", disabled ) }}
 
-                        {% if message.idnumber %}
+                        {% if message.idnumber is defined %}
                             {{ formmacros.field( message.idnumber ) }}
                             {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
                         {% endif %}
 
                         {#{{ formmacros.simplefield( "Date:", message.vars.value.orderdate|date('Y-m-d')~" at "~message.vars.value.orderdate|date('h:i a'), "input", disabled ) }}#}
                         {#{{ formmacros.simplefield( "Provider:", message.vars.value.provider, "input", disabled ) }}#}
-                        {{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}
-                        {{ formmacros.field(message.provider) }}
+                        {% if message.idnumber is defined %}
+                            {{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}
+                        {% endif %}
+
+                        {% if message.provider is defined %}
+                            {{ formmacros.field(message.provider) }}
+                        {% endif %}
 
                         <p>
                             {% for input in message.vars.value.inputs %}
@@ -417,18 +422,20 @@
                             {% endfor %}
                         </p>
 
-                        <p>
-                            {% for source in message.sources %}
-                                {#{{ formmacros.simplefield( "Source System:", source.system, "input", disabled ) }}#}
-                                {#{{ formmacros.simplefield( "Source Location:", source.location, "input", disabled ) }}#}
-                                {% if source.system is defined %}
-                                    {{ formmacros.field( source.system ) }}
-                                {% endif %}
-                                {% if source.location is defined %}
-                                    {{ formmacros.field( source.location ) }}
-                                {% endif %}
-                            {% endfor %}
-                        </p>
+                        {% if message.sources is defined %}
+                            <p>
+                                {% for source in message.sources %}
+                                    {#{{ formmacros.simplefield( "Source System:", source.system, "input", disabled ) }}#}
+                                    {#{{ formmacros.simplefield( "Source Location:", source.location, "input", disabled ) }}#}
+                                    {% if source.system is defined %}
+                                        {{ formmacros.field( source.system ) }}
+                                    {% endif %}
+                                    {% if source.location is defined %}
+                                        {{ formmacros.field( source.location ) }}
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
 
                         <p>
                             {% for destination in message.destinations %}
@@ -823,6 +830,8 @@
             <div class="col-xs-6" align="left">
                 {% if fieldtype == "key" and ( cycle == 'new' or cycle == 'amend' ) %}
                     {% if classname == "patientmrn" %}
+                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.keytype,classname) }}
+                    {% elseif classname == "encounternumber" %}
                         {{ formmacros.fieldicon(fieldThis.field,fieldThis.keytype,classname) }}
                     {% elseif classname == "accessionaccession" %}
                         {{ formmacros.fieldicon(fieldThis.field,fieldThis.keytype,classname) }}
@@ -1478,9 +1487,6 @@
                 <p><div class="encounterpathistory">{{ patpathistoryHtml }}</div></p>
             {% endif %}
 
-            {#{{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}#}
-            {#{{ formmacros.procedureExtraForm(procedure,flag,uid,cycle,status) }}#}
-
         {% endif %}
 
         {#{{ formmacros.accessionExtraForm(accession,flag,uid,cycle,status) }}#}
@@ -1707,14 +1713,37 @@
             {{ formmacros.inputArrayField(patient.race,cycle,"patientrace","","","","",status) }}
         {% endif %}
 
-        {% if patient.deceased is defined %}
-            {% for deceased in patient.deceased %}
-                {{ formmacros.fieldDeceased(deceased,cycle) }}
-            {% endfor %}
-        {% endif %}
-
         {% if patient.contactinfo is defined %}
             {{ formmacros.inputArrayField(patient.contactinfo,cycle,"patientcontactinfo","","","","",status) }}
+        {% endif %}
+
+
+        {% if patient.deceased is defined and patient.deceased|length > 0 %}
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+
+                    {% if patient.vars.value.id %}
+                        {% set orderUniqueId = patient.vars.value.id %}
+                    {% else %}
+                        {% set orderUniqueId = 0 %}
+                    {% endif %}
+
+                    <button
+                            id="form_body_toggle_patientdeath_{{ orderUniqueId }}" type="button"
+                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
+                            data-toggle="collapse" data-target="#form_body_patientdeath_{{ orderUniqueId }}">
+                    </button>
+
+                    <h4 class="panel-title">Patient's Extra Info</h4>
+                </div>
+
+                <div id="form_body_patientdeath_{{ orderUniqueId }}" class="panel-body collapse">
+                    {% for deceased in patient.deceased %}
+                        {{ formmacros.fieldDeceased(deceased,cycle) }}
+                    {% endfor %}
+                </div>
+            </div>
         {% endif %}
 
 
@@ -1731,12 +1760,8 @@
 
         {#<h5>Extra data structure fields for Encounter:</h5>#}
 
-        {% if encounter.number.keytype is defined %}
-            {{ formmacros.inputArrayField(encounter.number.keytype,cycle,"encounterkeytype","","","","",status) }}
-        {% endif %}
-
         {% if encounter.number is defined %}
-            {{ formmacros.inputArrayField(encounter.number,cycle,"encounternumber","","","","",status) }}
+            {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
         {% endif %}
 
         {% if encounter.location is defined %}
@@ -1749,11 +1774,33 @@
             {% endfor %}
         {% endif %}
 
-        {% if encounter.inpatientinfo is defined %}
-            {#TODO: make as panel#}
-            {% for inpatientinfo in encounter.inpatientinfo %}
-                {{ formmacros.fieldInpatientinfo(inpatientinfo,cycle) }}
-            {% endfor %}
+        {% if encounter.inpatientinfo is defined and encounter.inpatientinfo|length > 0 %}
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+
+                    {% if encounter.vars.value.id %}
+                        {% set uniqueId = encounter.vars.value.id %}
+                    {% else %}
+                        {% set uniqueId = 0 %}
+                    {% endif %}
+
+                    <button
+                            id="form_body_toggle_inpatientinfo_{{ uniqueId }}" type="button"
+                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
+                            data-toggle="collapse" data-target="#form_body_inpatientinfo_{{ uniqueId }}">
+                    </button>
+
+                    <h4 class="panel-title">Inpatient Info</h4>
+                </div>
+
+                <div id="form_body_inpatientinfo_{{ uniqueId }}" class="panel-body collapse in">
+                    {% for inpatientinfo in encounter.inpatientinfo %}
+                        {{ formmacros.fieldInpatientinfo(inpatientinfo,cycle) }}
+                    {% endfor %}
+                </div>
+
+            </div>
         {% endif %}
 
     {% endif %}

@@ -138,6 +138,22 @@ class PartType extends AbstractType
             'prototype_name' => '__partdiseaseType__',
         ));
 
+
+
+        //messages
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+            $builder->add('orderinfo', 'collection', array(
+                'type' => new MessageType($this->params),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__partmessage__',
+            ));
+        }
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

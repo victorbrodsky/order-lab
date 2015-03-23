@@ -125,13 +125,14 @@ class PatientController extends Controller
         $params['message.laborder'] = true;
         $params['idnumber'] = true;
 
+        //$this->createAndAddSpecificMessage($part,"Report");
         $this->createAndAddSpecificMessage($slide,"Report");
         $params['message.report'] = true;
 
-        $this->createAndAddSpecificMessage($slide,"Block Order");
+        $this->createAndAddSpecificMessage($part,"Block Order");
         $params['message.blockorder'] = true;
 
-        $this->createAndAddSpecificMessage($slide,"Slide Order");
+        $this->createAndAddSpecificMessage($block,"Slide Order");
         $params['message.slideorder'] = true;
 
         $this->createAndAddSpecificMessage($slide,"Stain Order");
@@ -174,7 +175,7 @@ class PatientController extends Controller
 
 
         //add slide to message and input
-        $message->addSlide($object);
+        //$message->addSlide($object);
         $object->addOrderinfo($message);
         //set this slide as order input
         $message->addInputObject($object);
