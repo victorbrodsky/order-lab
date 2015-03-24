@@ -237,10 +237,10 @@ class BaseTitle extends BaseUserAttributes
             return;
         }
 
-        echo "supervisorDepartment=".$supervisorDepartment."<br>";
+        //echo "supervisorDepartment=".$supervisorDepartment."<br>";
         $this->supervisorDepartment = $supervisorDepartment;
 
-        echo "user=".$this->getUser()."<br>";
+        //echo "user=".$this->getUser()."<br>";
         if( $supervisorDepartment ) {
             if( $this->getDepartment() ) {
                 //$this->getDepartment()->addHead( $this->getUser() );

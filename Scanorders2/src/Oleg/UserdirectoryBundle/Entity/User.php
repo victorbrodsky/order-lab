@@ -609,279 +609,7 @@ class User extends BaseUser {
     }
 
 
-    //If the person is a head of a Department, list all people who belong in that department.
-    public function getDepartments($head=false,$type=null) {
-        $departments = new ArrayCollection();
-        if( $type == null or $type == "AdministrativeTitle" ) {
-            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-                if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getId() && $adminTitles->getDepartment()->getName() != "" ) {
-                    if( $head == true ) {
-                        if( $adminTitles->getDepartment()->getHeads()->contains($this) ) {
-                            if( !$departments->contains($adminTitles->getDepartment()) ) {
-                                $departments->add($adminTitles->getDepartment());
-                            }
-                        }
-                    } else {
-                        if( !$departments->contains($adminTitles->getDepartment()) ) {
-                            $departments->add($adminTitles->getDepartment());
-                        }
-                    }
-                }
-            }
-        }
-        if( $type == null or $type == "AppointmentTitle" ) {
-            if( $head == false ) {
-                foreach( $this->getAppointmentTitles() as $appTitles ) {
-                    if( $appTitles->getDepartment() && $appTitles->getDepartment()->getId() && $appTitles->getDepartment()->getName() != "" ) {
-                        if( !$departments->contains($appTitles->getDepartment()) ) {
-                            $departments->add($appTitles->getDepartment());
-                        }
-                    }
-                }
-            }
-        }
-        return $departments;
-    }
 
-    //If the person is a head of a Division, list all people who belong in that division.
-    //$emptyService=true => divisions with empty service
-    public function getDivisions($head=false,$emptyService=false,$type=null) {
-
-        $divisions = new ArrayCollection();
-
-        if( $type == null or $type == "AdministrativeTitle" ) {
-            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-                if( $adminTitles->getDivision() && $adminTitles->getDivision()->getId() && $adminTitles->getDivision()->getName() != "" ) {
-                    //echo "division=".$adminTitles->getDivision()->getName()."<br>";
-                    if( $emptyService && $adminTitles->getDivision() && count($adminTitles->getDivision()->getServices()) == 0 ) {
-                        //echo "set head true <br>";
-                        $head = false;
-                    }
-                    if( $head == true ) {
-                        if( $adminTitles->getDivision()->getHeads()->contains($this) ) {
-                            if( !$divisions->contains($adminTitles->getDivision()) ) {
-                                $divisions->add($adminTitles->getDivision());
-                            }
-                        }
-                    } else {
-                        if( !$divisions->contains($adminTitles->getDivision()) ) {
-                            $divisions->add($adminTitles->getDivision());
-                        }
-                    }
-                }
-            }
-        }
-
-        if( $type == null or $type == "AppointmentTitle" ) {
-            foreach( $this->getAppointmentTitles() as $appTitles ) {
-                if( $appTitles->getDivision() && $appTitles->getDivision()->getId() && $appTitles->getDivision()->getName() != "" ) {
-                    if( $emptyService && $appTitles->getDivision() && count($appTitles->getDivision()->getServices()) == 0 ) {
-                        $head = false;
-                    }
-                    if( $head == true ) {
-                        if( !$divisions->contains($appTitles->getDivision()) ) {
-                            $divisions->add($appTitles->getDivision());
-                        }
-                    } else {
-                        if( !$divisions->contains($appTitles->getDivision()) ) {
-                            $divisions->add($appTitles->getDivision());
-                        }
-                    }
-                }
-            }
-        }
-
-        return $divisions;
-    }
-
-    //get all services from administrative and appointment titles.
-    public function getServices($type=null) {
-        $services = new ArrayCollection();
-        if( $type == null or $type == "AdministrativeTitle" ) {
-            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-                if( $adminTitles->getService() && $adminTitles->getService()->getId() && $adminTitles->getService()->getName() != "" )
-                    $services->add($adminTitles->getService());
-            }
-        }
-        if( $type == null or $type == "AppointmentTitle" ) {
-            foreach( $this->getAppointmentTitles() as $appTitles ) {
-                if( $appTitles->getService() && $appTitles->getService()->getId() && $appTitles->getService()->getName() != "" )
-                    $services->add($appTitles->getService());
-            }
-        }
-        return $services;
-    }
-
-    //get all institutions from administrative and appointment titles.
-    public function getInstitutions($type=null) {
-        $institutions = new ArrayCollection();
-        if( $type == null or $type == "AdministrativeTitle" ) {
-            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-                if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
-                    $institutions->add($adminTitles->getInstitution());
-            }
-        }
-        if( $type == null or $type == "AppointmentTitle" ) {
-            foreach( $this->getAppointmentTitles() as $appTitles ) {
-                if( $appTitles->getInstitution() && $appTitles->getInstitution()->getId() && $appTitles->getInstitution()->getName() != "" )
-                    $institutions->add($appTitles->getInstitution());
-            }
-        }
-        //echo "inst count=".count($institutions)."<br>";
-        return $institutions;
-    }
-
-    //TODO: check performance of foreach. It might be replaced by direct DB query
-    public function getBosses() {
-        $res = array();
-        //$bosses = new ArrayCollection();
-        foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-            $bosses = new ArrayCollection();
-            foreach( $adminTitles->getBoss() as $boss ) {
-                $bosses->add($boss);
-                //$res[$adminTitles->getId()][] = $boss;
-            }
-            $res[$adminTitles->getId()]['bosses'] = $bosses;
-            $res[$adminTitles->getId()]['titleobject'] = $adminTitles;
-        }
-        //return $bosses;
-        return $res;
-    }
-
-    //returns: [Medical Director of Informatics] Victor Brodsky
-    public function getTitleAndNameByTitle( $admintitle ) {
-        return "[" . $admintitle->getName() . "] " . $this->getUsernameOptimal();
-    }
-
-    //Testing
-    public function getMemoryUsage() {
-        //return round(memory_get_usage() / 1024);
-        return memory_get_usage();
-    }
-
-    //TODO: check performance of foreach. It might be replaced by direct DB query
-    public function getAssistants() {
-        $assistants = new ArrayCollection();
-        $ids = array();
-        foreach( $this->getLocations() as $location ) {
-            foreach( $location->getAssistant() as $assistant ) {
-                $assistants->add($assistant);
-                $ids[] = $assistant->getId();
-            }
-        }
-
-        $res = array();
-        $res['entities'] = $assistants;
-        $res['ids'] = $ids;
-        //print_r($ids);
-
-        return $res;
-    }
-
-    public function getSiteRoles($sitename) {
-
-        $roles = array();
-
-        if( $sitename == 'employees' ) {
-            $sitename = 'userdirectory';
-        }
-
-        foreach( $this->getRoles() as $role ) {
-            if( stristr($role, $sitename) ) {
-                $roles[] = $role;
-            }
-        }
-
-        return $roles;
-    }
-
-    //Preferred: (646) 555-5555
-    //Main Office Line: (212) 444-4444
-    //Main Office Mobile: (123) 333-3333
-    public function getAllPhones() {
-        $phonesArr = array();
-        //get all locations phones
-        foreach( $this->getLocations() as $location ) {
-            if( count($location->getLocationTypes()) == 0 || $location->hasLocationTypeName("Employee Home") ) {
-                if( $location->getPhone() ) {
-                    $phone = array();
-                    $phone['prefix'] = $location->getName()." Line: ";
-                    $phone['phone'] = $location->getPhone();
-                    $phonesArr[] = $phone;
-                }
-                if( $location->getMobile() ) {
-                    $phone = array();
-                    $phone['prefix'] = $location->getName()." Mobile: ";
-                    $phone['phone'] = $location->getMobile();
-                    $phonesArr[] = $phone;
-                }
-                if( $location->getPager() ) {
-                    $phone = array();
-                    $phone['prefix'] = $location->getName()." Pager: ";
-                    $phone['phone'] = $location->getPager();
-                    $phonesArr[] = $phone;
-                }
-//                if( $location->getIc() )
-//                    $phonesArr[] = $location->getName()." Intercom: ".$location->getIc();
-            }
-        }
-
-        if( $this->getPreferredPhone() ) {
-            $phone = array();
-            if( count($phonesArr) > 0 ) {
-                $phone['prefix'] = "Preferred: ";
-            } else {
-                $phone['prefix'] = "";
-            }
-            $phone['phone'] = $this->getPreferredPhone();
-            $phonesArr[] = $phone;
-        }
-
-        if( count($phonesArr) == 1 ) {
-            $phonesArr[0]['prefix'] = "";
-        }
-
-        rsort($phonesArr);
-
-        return $phonesArr;
-    }
-
-    public function getAllEmail() {
-        $emailArr = array();
-        //echo "count loc=".count($this->getLocations())."<br>";
-        //get all locations phones
-        foreach( $this->getLocations() as $location ) {
-            //echo "loc=".$location."<br>";
-            if( count($location->getLocationTypes()) == 0 || $location->hasLocationTypeName("Employee Home") ) {
-                //echo "email:".$location->getEmail()."<br>";
-                if( $location->getEmail() ) {
-                    $email = array();
-                    $email['prefix'] = $location->getName().": ";
-                    $email['email'] = $this->getEmail();
-                    $emailArr[] = $email;
-                }
-            }
-        }
-
-        if( $this->getEmail() ) {
-            $email = array();
-            if( count($emailArr) > 0 ) {
-                $email['prefix'] = "Preferred: ";
-            } else {
-                $email['prefix'] = "";
-            }
-            $email['email'] = $this->getEmail();
-            $emailArr[] = $email;
-        }
-
-        if( count($emailArr) == 1 ) {
-            $emailArr[0]['prefix'] = "";
-        }
-
-        rsort($emailArr);
-
-        return $emailArr;
-    }
 
 
     public function setUsernameForce($username)
@@ -955,95 +683,7 @@ class User extends BaseUser {
         return false;
     }
 
-    public function getCleanUsername() {
-        return $this->createCleanUsername( $this->getUsername() );
-    }
 
-    public function getUserNameStr() {
-        if( $this->getDisplayName() ) {
-            return $this->getPrimaryUseridKeytypeStr()." - ".$this->getDisplayName();
-        } else {
-            return $this->getPrimaryUseridKeytypeStr();
-        }
-    }
-
-    public function getUserNameShortStr() {
-        return $this->getPrimaryPublicUserId();
-    }
-
-    public function getPrimaryUseridKeytypeStr() {
-        if( $this->getKeytype() ) {
-            return $this->getPrimaryPublicUserId()." (".$this->getKeytype()->getName().")";
-        } else {
-            return $this->getPrimaryPublicUserId();
-        }
-    }
-
-
-    public function getUsernameShortest() {
-        if( $this->getDisplayName() ) {
-            return $this->getDisplayName();
-        } else {
-            return $this->getPrimaryPublicUserId();
-        }
-    }
-
-    //the user has a Preferred Name, start with preferred name;
-    //If the user has no preferred name, but does have a first and last name, concatenate them
-    //and start with the first and last name combo; if the user has no first name, use just the last name;
-    //if the user has no last name, use the first name; if the user has none of the three names, start with the User ID:
-    public function getUsernameOptimal() {
-
-        $degrees = array();
-        $titles = array();
-
-        //get appended degrees
-        foreach( $this->getTrainings() as $training ) {
-            if( $training->getAppendDegreeToName() && $training->getDegree() ) {
-                $degrees[] = $training->getDegree();
-            }
-            if( $training->getAppendFellowshipTitleToName() && $training->getFellowshipTitle() ) {
-                if( $training->getFellowshipTitle()->getAbbreviation() ) {
-                    $titles[] = $training->getFellowshipTitle()->getAbbreviation();
-                }
-            }
-        }
-
-        $degreesStr = implode(", ", $degrees);
-        $titlesStr = implode(", ", $titles);
-
-        $degreesAndTitlesStr = $degreesStr;
-        if( $titlesStr ) {
-            $degreesAndTitlesStr = $degreesAndTitlesStr . ", " . $titlesStr;
-        }
-
-        if( $degreesAndTitlesStr ) {
-            $degreesAndTitlesStr = ", " . $degreesAndTitlesStr;
-        }
-
-
-        if( $this->getDisplayName() ) {
-            return $this->getDisplayName() . $degreesAndTitlesStr;
-        }
-
-        if( $this->getLastName() && $this->getFirstName() ) {
-            return $this->getLastName() . " " . $this->getFirstName() . $degreesAndTitlesStr;
-        }
-
-        if( $this->getLastName() ) {
-            return $this->getLastName() . $degreesAndTitlesStr;
-        }
-
-        if( $this->getFirstName() ) {
-            return $this->getFirstName() . $degreesAndTitlesStr;
-        }
-
-        if( $this->getPrimaryPublicUserId() ) {
-            return $this->getPrimaryPublicUserId() . $degreesAndTitlesStr;
-        }
-
-        return $this->getId();
-    }
 
     /**
      * @ORM\PrePersist
@@ -1054,8 +694,6 @@ class User extends BaseUser {
             $this->setDisplayname( $this->getUsernameOptimal() );
         }
     }
-
-
 
 
 
@@ -1284,5 +922,426 @@ class User extends BaseUser {
         return $value;
     }
     /////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    //////////////////// util methods ////////////////////////
+
+    public function getCleanUsername() {
+        return $this->createCleanUsername( $this->getUsername() );
+    }
+
+    public function getUserNameStr() {
+        if( $this->getDisplayName() ) {
+            return $this->getPrimaryUseridKeytypeStr()." - ".$this->getDisplayName();
+        } else {
+            return $this->getPrimaryUseridKeytypeStr();
+        }
+    }
+
+    public function getUserNameShortStr() {
+        return $this->getPrimaryPublicUserId();
+    }
+
+    public function getPrimaryUseridKeytypeStr() {
+        if( $this->getKeytype() ) {
+            return $this->getPrimaryPublicUserId()." (".$this->getKeytype()->getName().")";
+        } else {
+            return $this->getPrimaryPublicUserId();
+        }
+    }
+
+
+    public function getUsernameShortest() {
+        if( $this->getDisplayName() ) {
+            return $this->getDisplayName();
+        } else {
+            return $this->getPrimaryPublicUserId();
+        }
+    }
+
+    //the user has a Preferred Name, start with preferred name;
+    //If the user has no preferred name, but does have a first and last name, concatenate them
+    //and start with the first and last name combo; if the user has no first name, use just the last name;
+    //if the user has no last name, use the first name; if the user has none of the three names, start with the User ID:
+    public function getUsernameOptimal() {
+
+        $degrees = array();
+        $titles = array();
+
+        //get appended degrees
+        foreach( $this->getTrainings() as $training ) {
+            if( $training->getAppendDegreeToName() && $training->getDegree() ) {
+                $degrees[] = $training->getDegree();
+            }
+            if( $training->getAppendFellowshipTitleToName() && $training->getFellowshipTitle() ) {
+                if( $training->getFellowshipTitle()->getAbbreviation() ) {
+                    $titles[] = $training->getFellowshipTitle()->getAbbreviation();
+                }
+            }
+        }
+
+        $degreesStr = implode(", ", $degrees);
+        $titlesStr = implode(", ", $titles);
+
+        $degreesAndTitlesStr = $degreesStr;
+        if( $titlesStr ) {
+            $degreesAndTitlesStr = $degreesAndTitlesStr . ", " . $titlesStr;
+        }
+
+        if( $degreesAndTitlesStr ) {
+            $degreesAndTitlesStr = ", " . $degreesAndTitlesStr;
+        }
+
+
+        if( $this->getDisplayName() ) {
+            return $this->getDisplayName() . $degreesAndTitlesStr;
+        }
+
+        if( $this->getLastName() && $this->getFirstName() ) {
+            return $this->getLastName() . " " . $this->getFirstName() . $degreesAndTitlesStr;
+        }
+
+        if( $this->getLastName() ) {
+            return $this->getLastName() . $degreesAndTitlesStr;
+        }
+
+        if( $this->getFirstName() ) {
+            return $this->getFirstName() . $degreesAndTitlesStr;
+        }
+
+        if( $this->getPrimaryPublicUserId() ) {
+            return $this->getPrimaryPublicUserId() . $degreesAndTitlesStr;
+        }
+
+        return $this->getId();
+    }
+
+
+    //If the person is a head of a Department, list all people who belong in that department.
+    public function getDepartments($head=false,$type=null) {
+        $departments = new ArrayCollection();
+        if( $type == null or $type == "AdministrativeTitle" ) {
+            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+                if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getId() && $adminTitles->getDepartment()->getName() != "" ) {
+                    if( $head == true ) {
+                        if( $adminTitles->getDepartment()->getHeads()->contains($this) ) {
+                            if( !$departments->contains($adminTitles->getDepartment()) ) {
+                                $departments->add($adminTitles->getDepartment());
+                            }
+                        }
+                    } else {
+                        if( !$departments->contains($adminTitles->getDepartment()) ) {
+                            $departments->add($adminTitles->getDepartment());
+                        }
+                    }
+                }
+            }
+        }
+        if( $type == null or $type == "AppointmentTitle" ) {
+            if( $head == false ) {
+                foreach( $this->getAppointmentTitles() as $appTitles ) {
+                    if( $appTitles->getDepartment() && $appTitles->getDepartment()->getId() && $appTitles->getDepartment()->getName() != "" ) {
+                        if( !$departments->contains($appTitles->getDepartment()) ) {
+                            $departments->add($appTitles->getDepartment());
+                        }
+                    }
+                }
+            }
+        }
+        return $departments;
+    }
+
+    //If the person is a head of a Division, list all people who belong in that division.
+    //$emptyService=true => divisions with empty service
+    public function getDivisions($head=false,$emptyService=false,$type=null) {
+
+        $divisions = new ArrayCollection();
+
+        if( $type == null or $type == "AdministrativeTitle" ) {
+            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+                if( $adminTitles->getDivision() && $adminTitles->getDivision()->getId() && $adminTitles->getDivision()->getName() != "" ) {
+                    //echo "division=".$adminTitles->getDivision()->getName()."<br>";
+                    if( $emptyService && $adminTitles->getDivision() && count($adminTitles->getDivision()->getServices()) == 0 ) {
+                        //echo "set head true <br>";
+                        $head = false;
+                    }
+                    if( $head == true ) {
+                        if( $adminTitles->getDivision()->getHeads()->contains($this) ) {
+                            if( !$divisions->contains($adminTitles->getDivision()) ) {
+                                $divisions->add($adminTitles->getDivision());
+                            }
+                        }
+                    } else {
+                        if( !$divisions->contains($adminTitles->getDivision()) ) {
+                            $divisions->add($adminTitles->getDivision());
+                        }
+                    }
+                }
+            }
+        }
+
+        if( $type == null or $type == "AppointmentTitle" ) {
+            foreach( $this->getAppointmentTitles() as $appTitles ) {
+                if( $appTitles->getDivision() && $appTitles->getDivision()->getId() && $appTitles->getDivision()->getName() != "" ) {
+                    if( $emptyService && $appTitles->getDivision() && count($appTitles->getDivision()->getServices()) == 0 ) {
+                        $head = false;
+                    }
+                    if( $head == true ) {
+                        if( !$divisions->contains($appTitles->getDivision()) ) {
+                            $divisions->add($appTitles->getDivision());
+                        }
+                    } else {
+                        if( !$divisions->contains($appTitles->getDivision()) ) {
+                            $divisions->add($appTitles->getDivision());
+                        }
+                    }
+                }
+            }
+        }
+
+        return $divisions;
+    }
+
+    //get all services from administrative and appointment titles.
+    public function getServices($type=null) {
+        $services = new ArrayCollection();
+        if( $type == null or $type == "AdministrativeTitle" ) {
+            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+                if( $adminTitles->getService() && $adminTitles->getService()->getId() && $adminTitles->getService()->getName() != "" )
+                    if( !$services->contains($adminTitles->getService()) ) {
+                        $services->add($adminTitles->getService());
+                    }
+            }
+        }
+        if( $type == null or $type == "AppointmentTitle" ) {
+            foreach( $this->getAppointmentTitles() as $appTitles ) {
+                if( $appTitles->getService() && $appTitles->getService()->getId() && $appTitles->getService()->getName() != "" )
+                    if( !$services->contains($appTitles->getService()) ) {
+                        $services->add($appTitles->getService());
+                    }
+            }
+        }
+        return $services;
+    }
+
+    //get all institutions from administrative and appointment titles.
+    public function getInstitutions($type=null) {
+        $institutions = new ArrayCollection();
+        if( $type == null or $type == "AdministrativeTitle" ) {
+            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+                if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
+                    if( !$institutions->contains($adminTitles->getInstitution()) ) {
+                        $institutions->add($adminTitles->getInstitution());
+                    }
+            }
+        }
+        if( $type == null or $type == "AppointmentTitle" ) {
+            foreach( $this->getAppointmentTitles() as $appTitles ) {
+                if( $appTitles->getInstitution() && $appTitles->getInstitution()->getId() && $appTitles->getInstitution()->getName() != "" )
+                    if( !$institutions->contains($appTitles->getInstitution()) ) {
+                        $institutions->add($appTitles->getInstitution());
+                    }
+            }
+        }
+        //echo "inst count=".count($institutions)."<br>";
+        return $institutions;
+    }
+
+    //TODO: check performance of foreach. It might be replaced by direct DB query
+    public function getBosses() {
+        $res = array();
+        //$bosses = new ArrayCollection();
+        foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+            $bosses = new ArrayCollection();
+            foreach( $adminTitles->getBoss() as $boss ) {
+                $bosses->add($boss);
+                //$res[$adminTitles->getId()][] = $boss;
+            }
+            $res[$adminTitles->getId()]['bosses'] = $bosses;
+            $res[$adminTitles->getId()]['titleobject'] = $adminTitles;
+        }
+        //return $bosses;
+        return $res;
+    }
+
+    //returns: [Medical Director of Informatics] Victor Brodsky
+    public function getTitleAndNameByTitle( $admintitle ) {
+        return "[" . $admintitle->getName() . "] " . $this->getUsernameOptimal();
+    }
+
+    //Testing
+    public function getMemoryUsage() {
+        //return round(memory_get_usage() / 1024);
+        return memory_get_usage();
+    }
+
+    //TODO: check performance of foreach. It might be replaced by direct DB query
+    public function getAssistants() {
+        $assistants = new ArrayCollection();
+        $ids = array();
+        foreach( $this->getLocations() as $location ) {
+            foreach( $location->getAssistant() as $assistant ) {
+                $assistants->add($assistant);
+                $ids[] = $assistant->getId();
+            }
+        }
+
+        $res = array();
+        $res['entities'] = $assistants;
+        $res['ids'] = $ids;
+        //print_r($ids);
+
+        return $res;
+    }
+
+
+    public function getSiteRoles($sitename) {
+
+        $roles = array();
+
+        if( $sitename == 'employees' ) {
+            $sitename = 'userdirectory';
+        }
+
+        foreach( $this->getRoles() as $role ) {
+            if( stristr($role, $sitename) ) {
+                $roles[] = $role;
+            }
+        }
+
+        return $roles;
+    }
+
+    //Preferred: (646) 555-5555
+    //Main Office Line: (212) 444-4444
+    //Main Office Mobile: (123) 333-3333
+    public function getAllPhones() {
+        $phonesArr = array();
+        //get all locations phones
+        foreach( $this->getLocations() as $location ) {
+            if( count($location->getLocationTypes()) == 0 || $location->hasLocationTypeName("Employee Home") ) {
+                if( $location->getPhone() ) {
+                    $phone = array();
+                    $phone['prefix'] = $location->getName()." Line: ";
+                    $phone['phone'] = $location->getPhone();
+                    $phonesArr[] = $phone;
+                }
+                if( $location->getMobile() ) {
+                    $phone = array();
+                    $phone['prefix'] = $location->getName()." Mobile: ";
+                    $phone['phone'] = $location->getMobile();
+                    $phonesArr[] = $phone;
+                }
+                if( $location->getPager() ) {
+                    $phone = array();
+                    $phone['prefix'] = $location->getName()." Pager: ";
+                    $phone['phone'] = $location->getPager();
+                    $phonesArr[] = $phone;
+                }
+//                if( $location->getIc() )
+//                    $phonesArr[] = $location->getName()." Intercom: ".$location->getIc();
+            }
+        }
+
+        if( $this->getPreferredPhone() ) {
+            $phone = array();
+            if( count($phonesArr) > 0 ) {
+                $phone['prefix'] = "Preferred: ";
+            } else {
+                $phone['prefix'] = "";
+            }
+            $phone['phone'] = $this->getPreferredPhone();
+            $phonesArr[] = $phone;
+        }
+
+        if( count($phonesArr) == 1 ) {
+            $phonesArr[0]['prefix'] = "";
+        }
+
+        rsort($phonesArr);
+
+        return $phonesArr;
+    }
+
+    public function getAllEmail() {
+        $emailArr = array();
+        //echo "count loc=".count($this->getLocations())."<br>";
+        //get all locations phones
+        foreach( $this->getLocations() as $location ) {
+            //echo "loc=".$location."<br>";
+            if( count($location->getLocationTypes()) == 0 || $location->hasLocationTypeName("Employee Home") ) {
+                //echo "email:".$location->getEmail()."<br>";
+                if( $location->getEmail() ) {
+                    $email = array();
+                    $email['prefix'] = $location->getName().": ";
+                    $email['email'] = $this->getEmail();
+                    $emailArr[] = $email;
+                }
+            }
+        }
+
+        if( $this->getEmail() ) {
+            $email = array();
+            if( count($emailArr) > 0 ) {
+                $email['prefix'] = "Preferred: ";
+            } else {
+                $email['prefix'] = "";
+            }
+            $email['email'] = $this->getEmail();
+            $emailArr[] = $email;
+        }
+
+        if( count($emailArr) == 1 ) {
+            $emailArr[0]['prefix'] = "";
+        }
+
+        rsort($emailArr);
+
+        return $emailArr;
+    }
+
+    //Return: Chief, Eyebrow Pathology
+    public function getHeadInfo() {
+
+        $headInfo = array();
+
+        $institutions = $this->getInstitutions("AdministrativeTitle");
+        foreach( $institutions as $institution ) {
+            if( $institution->getHeads()->contains($this) ) {
+                $headInfo[] = "Head of " . $institution->getName();
+            }
+        }
+
+        $departments = $this->getDepartments(true,"AdministrativeTitle");
+        foreach( $departments as $department ) {
+            if( $department->getHeads()->contains($this) ) {
+                $headInfo[] = "Head of " . $department->getName();
+            }
+        }
+
+        $divisions = $this->getDivisions(true,false,"AdministrativeTitle");
+        foreach( $divisions as $division ) {
+            if( $division->getHeads()->contains($this) ) {
+                $headInfo[] = "Head of " . $division->getName();
+            }
+        }
+
+        $services = $this->getServices("AdministrativeTitle");
+        foreach( $services as $service ) {
+            if( $service->getHeads()->contains($this) ) {
+                $headInfo[] = "Head of " . $service->getName();
+            }
+        }
+
+        return implode("<br>",$headInfo);
+
+    }
+
+
+
 
 }

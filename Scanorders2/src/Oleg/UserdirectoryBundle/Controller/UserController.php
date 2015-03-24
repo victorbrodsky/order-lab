@@ -1117,7 +1117,8 @@ class UserController extends Controller
             'user_id' => '',
             'sitename' => $this->container->getParameter('employees.sitename'),
             'userclone' => $subjectUser,
-            'postData' => $request->query->all()
+            'postData' => $request->query->all(),
+            'title' => 'Create New User'
         );
 
     }
@@ -1316,7 +1317,8 @@ class UserController extends Controller
             'user_id' => $id,
             'sitename' => $sitename,
             'roleobjects' => $roleobjects,
-            'postData' => $request->query->all()
+            'postData' => $request->query->all(),
+            'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
         );
     }
 
@@ -1375,7 +1377,8 @@ class UserController extends Controller
             'cycle' => 'edit_user',
             'user_id' => $id,
             'sitename' => $sitename,
-            'postData' => $request->query->all()
+            'postData' => $request->query->all(),
+            'title' => 'Edit Employee Profile ' . $entity->getUsernameOptimal()
         );
     }
 

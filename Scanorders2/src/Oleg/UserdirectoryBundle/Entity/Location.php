@@ -717,6 +717,24 @@ class Location extends ListAbstract //extends BaseLocation
             $name = $name . $this->user->getUsernameOptimal() . "'s ";
         }
 
+//        if( $html ) {
+//            $name = $name . "<strong>" . $this->name . "</strong>";
+//        } else {
+//            $name = $name . $this->name;
+//        }
+
+        $locationFullname = $this->getLocationFullName($html);
+
+        $name = $name . $locationFullname;
+
+        return $name;
+    }
+
+    public function getLocationFullName($html=false) {
+
+        $name = "";
+        $locnameArr = array();
+
         if( $html ) {
             $name = $name . "<strong>" . $this->name . "</strong>";
         } else {
@@ -724,7 +742,6 @@ class Location extends ListAbstract //extends BaseLocation
         }
 
         // If the location type = "Employee Desk", add " (Desk)" after the location name
-        $locnameArr = array();
         foreach( $this->getLocationTypes() as $loctype ) {
             if( $loctype->getName()."" == "Employee Desk" ) {
                 $locnameArr[] = "Desk";

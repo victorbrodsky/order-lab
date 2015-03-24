@@ -11,12 +11,12 @@
     padding-top: 0;
 }
 
-a {
+.snapshot-all a {
     color: #B31B1B;
     text-decoration: none;
 }
 <!--
-.section {
+.snapshot-all .section {
     font-family: 'Oxygen', sans-serif;
     width: 20%;
     max-width: 210px;
@@ -38,7 +38,7 @@ a {
 }
 -->
 
-.snapshot {
+.snapshot-all .snapshot {
     width: auto;
     height: 150px;
     font-family: Lato, helvetica, sans-serif;
@@ -51,7 +51,7 @@ a {
 }
 
 
-.left {
+.snapshot-all .left {
     width: 60%;
     background-color: #F7f7f7;
     display: table-cell;
@@ -60,11 +60,11 @@ a {
 }
 
 
-.image-box {
-    width: 116px;
-    height: 126px;
-    border: 1px solid #B5B5B5;
-    border-radius: 8px;
+.snapshot-all .image-box {
+    /*width: 117px;*/
+    /*height: 127px;*/
+    /*border: 1px solid #B5B5B5;*/
+    /*border-radius: 8px;*/
     margin-right: 1.5em;
     margin-left: .5em;
     margin-top: .6em;
@@ -74,11 +74,10 @@ a {
     left: 6px;
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url('profile-pic.jpg');
-    
+    //background-image: url('profile-pic.jpg');
 }
 
-.left-text {
+.snapshot-all .left-text {
     display: inline-block;
     width: 68%;
     position: relative;
@@ -86,14 +85,14 @@ a {
 }
 
 
-.left-text h2 {
+.snapshot-all .left-text h2 {
     text-transform: uppercase; 
     font-size: 1.75em;
 
 }
 
     /* Adds red background */
-.left-text h2 {    
+.snapshot-all .left-text h2 {
     background-color: #B31B1B;
     color: white;
     font-weight: 400;
@@ -106,7 +105,7 @@ a {
     border-bottom-right-radius: 8px;    
 }
 
-.left-text h4 {
+.snapshot-all .left-text h4 {
 	font-style: italic;
 	margin: 0;
     font-size: 1.25em;
@@ -115,7 +114,7 @@ a {
 
 
 
-.right {
+.snapshot-all .right {
     width: 40%;
     background-color: #e8e8e8;
     font-size: .9em;
@@ -124,7 +123,7 @@ a {
     vertical-align: top;
      }
 
-.right-text {
+.snapshot-all .right-text {
     width: 85%;
     margin-right: auto;
     margin-left: auto;
@@ -132,7 +131,7 @@ a {
 
 
 
-.left-column {
+.snapshot-all .left-column {
 	text-align: right;
 	font-weight: 100;
 	font-size: .8em;
@@ -142,29 +141,29 @@ a {
 }
 
 
-.contact {
+.snapshot-all .contact {
 	padding-bottom: 1em;	
 }
 
-.assistant {
+.snapshot-all .assistant {
 	padding-bottom: 1em;	
 }
 
-.right-text h4 {
+.snapshot-all .right-text h4 {
 	margin: 0;
     font-variant: small-caps;
     font-weight: bold; 
     font-size: 1.15em;    
 }
 
-.clearfix:before .clearfix:after {
+.snapshot-all .clearfix:before .clearfix:after {
     content: " "; /* 1 */
     display: table; /* 2 */
 }
-.clearfix:after {
+.snapshot-all .clearfix:after {
     clear: both;
 }
-.clearfix {
+.snapshot-all .clearfix {
     *zoom: 1;
 }
 
