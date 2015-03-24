@@ -751,7 +751,7 @@ class Location extends ListAbstract //extends BaseLocation
             }
         }
         if( count($locnameArr) > 0 ) {
-            $name = $name . " (" . implode(",",$locnameArr);
+            $name = $name . " (" . implode(",",$locnameArr) . ")";
         }
 
         $detailsArr = array();

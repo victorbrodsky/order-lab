@@ -1042,8 +1042,9 @@
 
 {% block content %}
 
-
-    <h4 class="text-info" align="center">{{ title }}</h4>
+    {% if not showFlag %}
+        <h4 class="text-info" align="center">{{ title }}</h4>
+    {% endif %}
 
     {% if form.userclone is defined %}
         <div style="margin-bottom: 20px; margin-top: 20px">
