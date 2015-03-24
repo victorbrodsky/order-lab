@@ -1337,6 +1337,8 @@ class User extends BaseUser {
             }
         }
 
+        echo "headInfo=".implode(", ",$headInfo)."<br>";
+
         return implode("<br>",$headInfo);
 
     }
