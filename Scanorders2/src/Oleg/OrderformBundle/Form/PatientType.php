@@ -147,6 +147,17 @@ class PatientType extends AbstractType
                 'prototype_name' => '__patientcontactinfo__',
             ));
 
+            $builder->add('patientType', 'collection', array(
+                'type' => new PatientTypeType($this->params, null),
+                'read_only' => $flag,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patienttype__',
+            ));
+
         }
 
 

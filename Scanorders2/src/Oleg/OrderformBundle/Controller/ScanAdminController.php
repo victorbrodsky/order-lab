@@ -6,6 +6,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -31,6 +32,7 @@ use Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList;
 use Oleg\OrderformBundle\Entity\RaceList;
 use Oleg\OrderformBundle\Entity\OrderDelivery;
 use Oleg\OrderformBundle\Entity\MessageCategory;
+use Oleg\OrderformBundle\Entity\PatientTypeList;
 
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -86,6 +88,7 @@ class ScanAdminController extends AdminController
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
+        $count_pattype = $this->generatePatientType();
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
         $count_proceduretype = $this->generateProcedureType();
@@ -109,6 +112,7 @@ class ScanAdminController extends AdminController
             'notice',
             'Generated Tables: '.
             //'Roles='.$count_roles.', '.
+            'Patient Types='.$count_pattype.', '.
             'Accession Types='.$count_acctype.', '.
             'Encounter Types='.$count_proceduretype.', '.
             'Procedure Types='.$count_enctype.', '.
@@ -696,6 +700,62 @@ class ScanAdminController extends AdminController
         return $count;
     }
 
+
+    public function generatePatientType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:PatientType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Adolescent Methodon',
+            'Adult Methodon',
+            'Cardiac Rehab',
+            'Clinic Ambulatory',
+            'Dental Clinic',
+            'Dialysis',
+            'Emergency Room',
+            'Inpatient',
+            'Institutional',
+            'Lower Manhattan Hospital',
+            'Manual Charge',
+            'Non Patient',
+            'Outpatient Hospital',
+            'Outpatient Surgery',
+            'Phys Hand Children',
+            'PreAdmission Testing',
+            'Pre-Admit',
+            'Private Amb Lab',
+            'Private Radiology',
+            'QUALITY CONTROL',
+            'Queens Center',
+            'Radiation Therapy',
+            'Rehab Medicine',
+            'Research',
+            'Single Visit',
+            'Special Hematology'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $accType = new PatientTypeList();
+            $this->setDefaultList($accType,$count,$username,$type);
+
+            $em->persist($accType);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
 
 
     public function generateAccessionType() {

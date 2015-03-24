@@ -89,6 +89,12 @@ class Patient extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="PatientContactinfo", mappedBy="patient", cascade={"persist"})
      */
     private $contactinfo;
+
+    /**
+     * Hierarchy Tree
+     * @ORM\OneToMany(targetEntity="PatientType", mappedBy="patient", cascade={"persist"})
+     */
+    private $patientType;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
@@ -117,6 +123,7 @@ class Patient extends ObjectAbstract
         $this->race = new ArrayCollection();
         $this->deceased = new ArrayCollection();
         $this->contactinfo = new ArrayCollection();
+        $this->patientType = new ArrayCollection();
 
         if( $withfields ) {
             $this->addMrn( new PatientMrn($status,$provider,$source) );
@@ -150,6 +157,7 @@ class Patient extends ObjectAbstract
         $this->race = $this->cloneDepend($this->race,$this);
         $this->deceased = $this->cloneDepend($this->deceased,$this);
         $this->contactinfo = $this->cloneDepend($this->contactinfo,$this);
+        $this->patientType = $this->cloneDepend($this->patientType,$this);
 
     }
 
@@ -704,7 +712,7 @@ class Patient extends ObjectAbstract
         $this->addRace( new PatientRace($status,$provider,$source) );
         $this->addDeceased( new PatientDeceased($status,$provider,$source) );
         $this->addContactinfo( new PatientContactinfo($status,$provider,$source) );
-
+        $this->addPatientType( new PatientType($status,$provider,$source) );
     }
 
     public function getRace()
@@ -760,6 +768,22 @@ class Patient extends ObjectAbstract
     public function removeContactinfo($contactinfo)
     {
         $this->contactinfo->removeElement($contactinfo);
+    }
+
+    public function getPatientType()
+    {
+        return $this->patientType;
+    }
+    public function addPatientType($item)
+    {
+        if( $item && !$this->patientType->contains($item) ) {
+            $this->patientType->add($item);
+        }
+        return $this;
+    }
+    public function removePatientType($item)
+    {
+        $this->patientType->removeElement($item);
     }
     ///////////////////////// Extra fields /////////////////////////
 

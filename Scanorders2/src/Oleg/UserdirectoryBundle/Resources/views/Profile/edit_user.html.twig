@@ -4,13 +4,13 @@
 
 
 {#Snapshot css#}
-{#{% block additionalcss %}#}
-    {#{% stylesheets#}
-        {#'bundles/oleguserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'#}
-    {#%}#}
-        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-{#{% endblock %}#}
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/oleguserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
 
 {###################      Begin macros      ####################}
 
@@ -1056,6 +1056,8 @@
 
     {#user's snapshot#}
     {% if showFlag %}
+        {{ userform.snapshot_steve(entity,sitename,cycle) }}
+        <br>
         {{ userform.snapshot(entity,sitename,cycle) }}
     {% else %}
         {#avatar form modal#}

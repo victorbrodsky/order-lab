@@ -1755,6 +1755,10 @@
 
         {#<h5>Extra data structure fields:</h5>#}
 
+        {% if patient.patientType is defined %}
+            {{ formmacros.inputArrayField(patient.patientType,cycle,"patienttype","","","","",status) }}
+        {% endif %}
+
         {% if patient.race is defined %}
             {{ formmacros.inputArrayField(patient.race,cycle,"patientrace","","","","",status) }}
         {% endif %}
