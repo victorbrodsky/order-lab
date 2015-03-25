@@ -638,6 +638,7 @@ function setNavBar() {
     $('ul.li').removeClass('active');
 
     var full = window.location.pathname;
+    //console.log("full="+full);
 
     var id = 'scanorderhome';
 
@@ -665,6 +666,10 @@ function setNavBar() {
         id = 'myrequesthistory';
     }
 
+    if( full.indexOf("scan/patient/") !== -1 ) {
+        id = 'patients';
+    }
+
     //Admin
     if( full.indexOf("/user/listusers") !== -1 ) {
         id = 'admin';
@@ -687,7 +692,7 @@ function setNavBar() {
     if( full.indexOf("/listusers") !== -1 ) {
         id = 'admin';
     }
-    if( full.indexOf("/users/") !== -1 ) {
+    if( full.indexOf("/users") !== -1 ) {
         id = 'admin';
     }
     if( full.indexOf("/event-log") !== -1 ) {
@@ -696,11 +701,11 @@ function setNavBar() {
     if( full.indexOf("/settings") !== -1 ) {
         id = 'admin';
     }
-    if( full.indexOf("/user-directory") !== -1 ) {
-        id = 'admin';
+    if( full.indexOf("/about") !== -1 ) {
+        id = 'user';
     }
     
-    if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
+    if( full.indexOf("/user/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
            id = 'admin';
         } else {
@@ -708,7 +713,7 @@ function setNavBar() {
         }
     }
 
-    //console.log("id="+id);
+    //console.log("scan id="+id);
     //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
 
     $('#nav-bar-'+id).addClass('active');

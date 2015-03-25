@@ -293,8 +293,8 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/user-directory", name="employees_listusers")
-     * @Route("/user-directory/previous", name="employees_listusers_previous")
+     * @Route("/users", name="employees_listusers")
+     * @Route("/users/previous", name="employees_listusers_previous")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */
@@ -1037,8 +1037,8 @@ class UserController extends Controller
 
     ////////////////////// Create New User //////////////////////
     /**
-     * @Route("/users/new", name="employees_new_user")
-     * @Route("/users/new/clone/{id}", name="employees_new_user_clone", requirements={"id" = "\d+"})
+     * @Route("/user/new", name="employees_new_user")
+     * @Route("/user/new/clone/{id}", name="employees_new_user_clone", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
@@ -1125,7 +1125,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/users/new", name="employees_create_user")
+     * @Route("/user/new", name="employees_create_user")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
      */
@@ -1247,8 +1247,8 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/users/show/ee", name="employees_showuser_notstrict")
-     * @Route("/users/{id}", name="employees_showuser", requirements={"id" = "\d+"})
+     * @Route("/user/show/ee", name="employees_showuser_notstrict")
+     * @Route("/user/{id}", name="employees_showuser", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
@@ -2056,7 +2056,7 @@ class UserController extends Controller
     /**
      * Generate users from excel
      *
-     * @Route("/users/generate", name="generate_users")
+     * @Route("/user/generate", name="generate_users")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */
@@ -2327,7 +2327,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/users/save-avatar", name="employees_save_avatar")
+     * @Route("/user/save-avatar", name="employees_save_avatar")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */

@@ -304,10 +304,10 @@ function userCloneListener() {
         //console.log('userid='+userid);
         if( userid && userid != "" ) {
             //reload page with userid
-            var urlCreateUser = getCommonBaseUrl("users/new/clone/"+userid,"employees");
+            var urlCreateUser = getCommonBaseUrl("user/new/clone/"+userid,"employees");
         } else {
             //reload page regular new user
-            var urlCreateUser = getCommonBaseUrl("users/new","employees");
+            var urlCreateUser = getCommonBaseUrl("user/new","employees");
         }
         window.location = urlCreateUser;
     });

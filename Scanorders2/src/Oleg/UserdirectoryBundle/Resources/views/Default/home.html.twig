@@ -50,9 +50,9 @@
         {% endif %}
 
         {#display No results are found #}
-        {% if not userShowed and not locationShowed %}
+        {% if search and (not userShowed and not locationShowed) %}
             <br><br>
-            <h5 class="text-info">No results are found</h5>
+            <h5 class="text-info">No results found.</h5>
         {% endif %}
 
 

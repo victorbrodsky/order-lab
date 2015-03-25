@@ -23,8 +23,8 @@ class ScanUserController extends UserController
 {
 
     /**
-     * @Route("/user-directory", name="scan_listusers")
-     * @Route("/user-directory/previous", name="scan_listusers_previous")
+     * @Route("/users", name="scan_listusers")
+     * @Route("/users/previous", name="scan_listusers_previous")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Admin:users.html.twig")
      */
@@ -51,7 +51,7 @@ class ScanUserController extends UserController
 
 
     /**
-     * @Route("/users/{id}", name="scan_showuser", requirements={"id" = "\d+"})
+     * @Route("/user/{id}", name="scan_showuser", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
      */

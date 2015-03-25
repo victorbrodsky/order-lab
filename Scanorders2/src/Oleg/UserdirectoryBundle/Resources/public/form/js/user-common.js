@@ -363,7 +363,7 @@ function setNavBar() {
     if( full.indexOf("/listusers") !== -1 ) {
         id = 'admin';
     }
-    if( full.indexOf("/users/") !== -1 ) {
+    if( full.indexOf("/user/") !== -1 ) {
         id = 'user';
     }
     if( full.indexOf("/event-log") !== -1 ) {
@@ -372,34 +372,35 @@ function setNavBar() {
     if( full.indexOf("/settings") !== -1 ) {
         id = 'admin';
     }
-//    if( full.indexOf("/user-directory") !== -1 ) {
-//        id = 'admin';
-//    }
 
-    if( full.indexOf("/users/new") !== -1 ) {
+    if( full.indexOf("/user/new") !== -1 ) {
         id = 'add';
     }
     if( full.indexOf("/locations/new") !== -1 ) {
         id = 'add';
     }
 
-    if( full.indexOf("/user-directory") !== -1 ) {
+    if( full.indexOf("/users") !== -1 ) {
         id = 'userlist';
     }
 
-    if( full.indexOf("/user-directory/previous") !== -1 ) {
+    if( full.indexOf("/users/previous") !== -1 ) {
         id = 'userlist-previous';
     }
 
-    if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
+    if( full.indexOf("/about") !== -1 ) {
+        id = 'user';
+    }
+
+    if( full.indexOf("scan/user/") !== -1 || full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
-            //id = 'admin';
+            id = 'admin';
         } else {
             id = 'user';
         }
     }
 
-    //console.log("id="+id);
+    //console.log("user id="+id);
     //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
 
     $('#nav-bar-'+id).addClass('active');

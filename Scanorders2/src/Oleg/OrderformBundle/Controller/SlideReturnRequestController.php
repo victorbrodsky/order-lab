@@ -31,7 +31,7 @@ class SlideReturnRequestController extends Controller
     /**
      * Creates a new Request Slide Return with just slide names such as Accession Number
      *
-     * @Route("/slide-return-request", name="slide-return-request-table")
+     * @Route("/slide-return-request/new", name="slide-return-request-table")
      * @Method("GET")
      * @Template("OlegOrderformBundle:SlideReturnRequest:create-table.html.twig")
      */
