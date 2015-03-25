@@ -1409,7 +1409,6 @@ class AdminController extends Controller
             'Clinical Laboratory',
             'Research Laboratory',
             'Medical Office',
-            'Surgical Pathology Filing Room',
             'Inpatient Room',
             'Patient Contact Information',
             'Pick Up',
@@ -1729,7 +1728,7 @@ class AdminController extends Controller
         $city = "New York";
         $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
         $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
-        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Surgical Pathology Filing Room");
+        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Filing Room");
         $locationPrivacy = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
         $building = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findOneByName("Starr Pavilion");
 

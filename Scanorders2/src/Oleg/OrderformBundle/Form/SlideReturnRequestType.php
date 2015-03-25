@@ -21,7 +21,7 @@ class SlideReturnRequestType extends AbstractType
 
         $labels = array(
             'institution' => 'Institution:',
-            'destinations' => 'Return Slides to:'
+            'destinations.location' => 'Return Slides to:',
         );
 
         $this->params['labels'] = $labels;

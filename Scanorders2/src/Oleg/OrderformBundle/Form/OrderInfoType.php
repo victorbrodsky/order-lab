@@ -195,7 +195,8 @@ class OrderInfoType extends AbstractType
 
 
         //Endpoint object: destination - location
-        $this->params['label'] = 'Return Slides to:';
+        //$this->params['label'] = 'Return Slides to:';
+        $this->params['endpoint.location'] = 'Return Slides to:';
         $builder->add('destinations', 'collection', array(
             'type' => new EndpointType($this->params,$this->entity),    //$this->type),
             'label' => false,

@@ -1013,7 +1013,9 @@ class ScanUtilController extends Controller {
             $prefLocs = $prefLocs . " list.id != " .$loc->getId();
         }
         //echo "prefLocs=".$prefLocs."<br>";
-        $query->andWhere($prefLocs);
+        if( $prefLocs ) {
+            $query->andWhere($prefLocs);
+        }
 
         //do not show (exclude) all locations that are tied to a user who has no current employment periods (all of whose employment periods have an end date)
         $curdate = date("Y-m-d", time());

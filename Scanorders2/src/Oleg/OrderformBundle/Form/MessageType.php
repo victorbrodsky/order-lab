@@ -33,8 +33,12 @@ class MessageType extends AbstractType
             'educational' => 'Educational:',
             'research' => 'Research:',
             'institution' => 'Institution:',
-            'sources' => 'Source ',
-            'destinations' => 'Destination ',
+
+            'sources.location' => 'Source Location:',
+            'sources.system' => 'Source System:',
+            'destinations.location' => 'Destination Location:',
+            'destinations.system' => 'Destination System:',
+
             'equipment' => 'Scanner:',
             'proxyuser' => '',
             'provider' => '',
@@ -175,8 +179,8 @@ class MessageType extends AbstractType
 
 
         if( array_key_exists('sources', $this->params) &&  $this->params['sources'] == true ) {
-            $this->params['label'] = $this->labels['sources'];
-            //echo "MessageType: sources label exists=".$this->labels['sources']."<br>";
+            $this->params['endpoint.location'] = $this->labels['sources.location'];
+            $this->params['endpoint.system'] = $this->labels['sources.system'];
             $builder->add('sources', 'collection', array(
                 'type' => new EndpointType($this->params,$this->entity),
                 'label' => false,
@@ -190,7 +194,8 @@ class MessageType extends AbstractType
         }
 
         //Endpoint object: destination - location
-        $this->params['label'] = $this->labels['destinations'];
+        $this->params['endpoint.location'] = $this->labels['destinations.location'];
+        $this->params['endpoint.system'] = $this->labels['destinations.system'];
         $builder->add('destinations', 'collection', array(
             'type' => new EndpointType($this->params,$this->entity),
             'label' => false,

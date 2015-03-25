@@ -707,7 +707,7 @@ class OrderUtil {
 
         //get default returnLocation option
         //the top three choices should be the Submitter's Main Office location (from the user who is logged in; selected by default),
-        //followed by the "Surgical Pathology Filing Room",
+        //followed by the "Filing Room",
         //followed by the Ordering Provider's Main Office location, and then everyone else in alphabetical order.
 
         $mainOfficeLocation = null;
@@ -719,12 +719,12 @@ class OrderUtil {
             $mainOfficeLocation = $provider->getMainLocation();
         }
 
-        //2) get "Surgical Pathology Filing Room" location
+        //2) get "Filing Room" location
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:Location');
         $dql =  $repository->createQueryBuilder("location");
         $dql->select('location');
         $dql->leftJoin("location.locationTypes", "locationTypes");
-        $dql->where("locationTypes.name = 'Surgical Pathology Filing Room'");
+        $dql->where("locationTypes.name = 'Filing Room'");
         $query = $this->em->createQuery($dql);
         $surgicalPathLocations = $query->getResult();
         if( $surgicalPathLocations && count($surgicalPathLocations) == 1 ) {
@@ -760,9 +760,13 @@ class OrderUtil {
             $preferredChoices[] = $orderingProviderMainOfficeLocation;
         }
 
+        //echo "defaultLocation=".$defaultLocation."<br>";
+
         $res = array();
         $res['data'] = $defaultLocation;
         $res['preferred_choices'] = $preferredChoices;
+
+        //print_r($res);
 
         return $res;
     }

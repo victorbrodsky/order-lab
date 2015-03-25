@@ -23,18 +23,23 @@ class EndpointType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $label = "";
+        $labelLocation = "";
+        $labelSystem = "";
 
-        if( array_key_exists('label', $this->params) ) {
+        if( array_key_exists('endpoint.location', $this->params) ) {
             //echo "EndpointType: label exists=".$this->params['label']."<br>";
-            $label = $this->params['label'];
+            $labelLocation = $this->params['endpoint.location'];
+        }
+
+        if( array_key_exists('endpoint.system', $this->params) ) {
+            $labelSystem = $this->params['endpoint.system'];
         }
 
         ////////////// Location //////////////////////
         //use Endpoint object: destination - location
 
         $destinationLocationsOptions = array(
-            'label' => $label . "Location:",
+            'label' => $labelLocation,
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
             'classtype' => 'location',
@@ -48,7 +53,7 @@ class EndpointType extends AbstractType
 
         if( $this->params['cycle'] == 'show' ) {
             $builder->add('location', 'entity', array(
-                'label' => $label . "Location:",
+                'label' => $labelLocation,
                 'required'=> false,
                 'multiple' => false,
                 'class' => 'OlegUserdirectoryBundle:Location',
@@ -65,7 +70,7 @@ class EndpointType extends AbstractType
         ////////////// System //////////////////////
         if( array_key_exists('system', $this->params) &&  $this->params['system'] == true ) {
             $builder->add('system', 'entity', array(
-                'label' => $label . "System:",
+                'label' => $labelSystem,
                 'required'=> false,
                 'multiple' => false,
                 'class' => 'OlegUserdirectoryBundle:Location',
