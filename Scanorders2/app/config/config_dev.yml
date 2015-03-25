@@ -1,6 +1,6 @@
 imports:
     - { resource: config.yml }
-    - { resource: "@AcmeDemoBundle/Resources/config/routing.yml" }
+#    - { resource: "@AcmeDemoBundle/Resources/config/routing.yml" }
 
 framework:
     router:

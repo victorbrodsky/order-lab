@@ -13,10 +13,10 @@ oleg_userdirectory:
     type:     annotation
     prefix:   /directory
 
-acme_demo:
-    resource: "@AcmeDemoBundle/Controller/"
-    type:     annotation
-    prefix:   /demo
+#acme_demo:
+#    resource: "@AcmeDemoBundle/Controller/"
+#    type:     annotation
+#    prefix:   /demo
 
 
 

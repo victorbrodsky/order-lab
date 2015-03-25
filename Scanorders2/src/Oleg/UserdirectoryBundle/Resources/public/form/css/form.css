@@ -264,8 +264,17 @@
 }
 
 .user-alert-warning {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
     background-color: #F8ECE0;
 }
+
+.user-margin-block {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 
 /*shift left the buttons on the each form menu*/
 .element-title {

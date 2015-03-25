@@ -38,6 +38,14 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'environment'}) }}">Edit</a></td>
             </tr>
             <tr>
+                <td>Current Environment:</td>
+                <td class="rowlink-skip" colspan="2">{{ app.environment }}</td>
+            </tr>
+            <tr>
+                <td>Current Hostname:</td>
+                <td class="rowlink-skip" colspan="2">{{ phphostname }}; {{ app.request.schemeAndHttpHost }}</td>
+            </tr>
+            <tr>
                 <td>Site Email</td>
                 <td>{{ entity.siteEmail }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'siteEmail'}) }}">Edit</a></td>

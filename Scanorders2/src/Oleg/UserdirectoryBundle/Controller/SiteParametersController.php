@@ -69,12 +69,14 @@ class SiteParametersController extends Controller
         $link = realpath($_SERVER['DOCUMENT_ROOT']).'\order\scanorder\Scanorders2\app\config\parameters.yml';
         //echo "link=".$link."<br>";
 
+
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'cycle' => 'show',
             'link' => $link,
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'phphostname' => gethostname()
         );
     }
 

@@ -20,11 +20,14 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
-            new Acme\DemoBundle\AcmeDemoBundle(),
+            //new Acme\DemoBundle\AcmeDemoBundle(),
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle()
         );
 
+		//echo "environment:<br>";
+		//print_r($this->getEnvironment());
+		
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             //$bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();

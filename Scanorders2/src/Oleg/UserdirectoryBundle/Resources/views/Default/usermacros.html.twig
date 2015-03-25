@@ -292,8 +292,15 @@
         {% endif %}
     {% endif %}
 
+    {#don't use alert class for standAloneLocation#}
+    {#{% if standAloneLocation %}#}
+        {#{% set alertClass = "" %}#}
+    {#{% else %}#}
+        {#{% set alertClass = "alert" %}#}
+    {#{% endif %}#}
+
     {% if showRegularFields1 or showRegularFields2 %}
-        <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+        <div class="user-collection-holder {{ classname }} {{ wellclass }}">
 
             {% if cycle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
                 {% if not standAloneLocation and cycle != "new_standalone" %}
@@ -371,12 +378,15 @@
                                 {{ formmacros.field(formfield.assistant) }}
                             {% else %}
                                 {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL and formfield.vars.value.assistant|length > 0 %}
-                                    <p>
-                                        <strong>Assistant(s):</strong>
-                                    </p>
-                                    {% for assistant in formfield.vars.value.assistant %}
-                                        {{ usermacros.personInfo(assistant,cycle,sitename) }}
-                                    {% endfor %}
+                                        <div style="text-align: center;">
+                                            <p>
+                                                <strong>Assistant(s):</strong>
+                                            </p>
+                                        </div>
+                                        {% for assistant in formfield.vars.value.assistant %}
+                                            {{ usermacros.personInfo(assistant,cycle,sitename) }}
+                                        {% endfor %}
+
                                 {% endif %}
                             {% endif %}
                         {% endif %}
@@ -567,7 +577,7 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
     <p>
-    <div class="well">
+    <div class="well well-sm user-margin-block">
         {% set bossurl = path(sitename~'_showuser',{'id':person.id}) %}
         {% set bosslink = '<a href="'~bossurl~'">'~person.getUsernameOptimal()~'</a>'  %}
         {{ formmacros.simplefield( "Name:", bosslink, "", "disabled" ) }}
@@ -580,7 +590,7 @@
 
 {% macro listProperties(formfield) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    <div class="well">
+    <div class="well well-sm">
         <p>
         <h4 class="text-muted" align="center">List properties:</h4>
         </p>
