@@ -355,6 +355,7 @@ class AdminController extends Controller
             "smtpServerAddress" => "smtp.med.cornell.edu",
 
             "aDLDAPServerAddress" => "cumcdcp02.a.wcmc-ad.net",
+            "aDLDAPServerPort" => "389",
             "aDLDAPServerOu" => "a.wcmc-ad.net",    //used for DC
             "aDLDAPServerAccountUserName" => "svc_aperio_spectrum",
             "aDLDAPServerAccountPassword" => "Aperi0,123",
@@ -383,9 +384,9 @@ class AdminController extends Controller
                                         'it was saved as an "Unsubmitted" order and you should be able to submit that order after the maintenance is complete.',
 
             //uploads
-            "avataruploadpath" => "directory/Avatars",
-            "employeesuploadpath" => "directory/Documents",
-            "scanuploadpath" => "scan-order/Documents",
+            "avataruploadpath" => "directory/avatars",
+            "employeesuploadpath" => "directory/documents",
+            "scanuploadpath" => "scan-order/documents",
 
             "mainHomeTitle" => "Welcome to the O R D E R platform!",
             "listManagerTitle" => "List Manager",

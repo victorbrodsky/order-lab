@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
 	char* userName = NULL;
 	char* pwd = NULL;
     LDAP* pLdapConnection = NULL;
+	ULONG ldap_port = LDAP_PORT;	//LDAP_PORT is the default port, 389.
     ULONG version = LDAP_VERSION3;	//ldap vesrion
 	ULONG numReturns = 1;			//number of return query results
     ULONG getOptSuccess = 0;
@@ -45,8 +46,9 @@ int main(int argc, char* argv[]) {
         wcscat_s(wcstring, L" (wchar_t *)");
         hostName = wcstring;
 		
-		userName = argv[2];
-		pwd = argv[3];
+		ldap_port = strtoul(argv[2],NULL,0);
+		userName = argv[3];
+		pwd = argv[4];
     }
     else
     {
@@ -59,13 +61,14 @@ int main(int argc, char* argv[]) {
 		goto end_exit;
 	}
 
-	//cout << "host= " << hostName << ", userName=" << userName << endl;
+	//cout << "host= " << hostName << ", ldap_port=" << ldap_port << ", userName=" << userName << endl;
 
-    //  Initialize a session. LDAP_PORT is the default port, 389.
+    //  Initialize a session. 
     pLdapConnection = ldap_init(
 		hostName, 
-		LDAP_PORT
+		ldap_port
 	);
+
 	
 
     if( pLdapConnection == NULL ) {

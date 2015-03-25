@@ -24,9 +24,9 @@ $connectionParams = array(
 );
  
 //upload paths can't be NULL
-$employeesuploadpath = "directory/Documents";
-$scanuploadpath = "scan-order/Documents";
-$employeesavataruploadpath = "directory/Avatars";
+$employeesuploadpath = "directory/documents";
+$scanuploadpath = "scan-order/documents";
+$employeesavataruploadpath = "directory/avatars";
 $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
 $container->setParameter('employees.uploadpath',$employeesuploadpath);
 $container->setParameter('scan.uploadpath',$scanuploadpath);
@@ -49,6 +49,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
     if( $params && count($params) >= 1 ) {
 
         $aDLDAPServerAddress = null;
+        $aDLDAPServerPort = null;
         $aDLDAPServerOu = null;
         $aDLDAPServerAccountUserName = null;
         $aDLDAPServerAccountPassword = null;
@@ -80,6 +81,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         while( $row = $params->fetch() ) {
 
             $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
+            $aDLDAPServerPort = $row['aDLDAPServerPort'];
             $aDLDAPServerOu = $row['aDLDAPServerOu'];
             $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
             $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
@@ -152,6 +154,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         //ldap
         if( $aDLDAPServerAddress )
             $container->setParameter('ldaphost',$aDLDAPServerAddress);
+        if( $aDLDAPServerPort )
+            $container->setParameter('ldapport',$aDLDAPServerPort);
         if( $aDLDAPServerAccountUserName )
             $container->setParameter('ldapusername',$aDLDAPServerAccountUserName);
         if( $aDLDAPServerAccountPassword )

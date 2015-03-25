@@ -13,6 +13,7 @@ parameters:
 
   #ldap
   ldaphost: cumcdcp02.a.wcmc-ad.net
+  ldapport: 389
   ldapou: a.wcmc-ad.net
   ldapusername: svc_aperio_spectrum
   ldappassword: Aperi0,123

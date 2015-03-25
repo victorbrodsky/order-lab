@@ -172,6 +172,7 @@ class AuthUtil {
 
         //Ldap authentication using exe script
         $LDAPHost = $this->sc->getParameter('ldaphost');
+        $LDAPPort = $this->sc->getParameter('ldapport');
 
         //$exePath = "../src/Oleg/UserdirectoryBundle/Util/";
         $exePath = $this->sc->getParameter('ldapexepath');
@@ -184,10 +185,11 @@ class AuthUtil {
 
         $command = escapeshellarg($command);
         $LDAPHost = escapeshellarg($LDAPHost);
+        $LDAPPort = escapeshellarg($LDAPPort);
         $username = escapeshellarg($username);
         $password = escapeshellarg($password);
 
-        $commandParams = escapeshellcmd($command.' '.$LDAPHost.' '.$username.' '.$password);
+        $commandParams = escapeshellcmd($command.' '.$LDAPHost.' '.$LDAPPort.' '.$username.' '.$password);
         //echo "commandParams=".$commandParams."<br>";
 
         exec(

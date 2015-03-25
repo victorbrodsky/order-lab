@@ -1,5 +1,7 @@
 Visual Studio 2012 has been used to compile LdapSaslCustom.exe
 
+LdapSaslCustom.exe hostname ldapport username password
+
 1) Add Wldap32.lib to your project:
 
 Put a reference to the *.lib in the project. 

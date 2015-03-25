@@ -114,7 +114,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAddress'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>AD/LDAP Server Port</td>
+                <td>AD/LDAP Server Port (Default: 389)</td>
                 <td>{{ entity.aDLDAPServerPort }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerPort'}) }}">Edit</a></td>
             </tr>
@@ -281,17 +281,17 @@
                 </td>
             </tr>
             <tr>
-                <td>Scan Orders Upload Folder (example: scan-order/Documents)</td>
+                <td>Scan Orders Upload Folder (example: scan-order/documents)</td>
                 <td>{{ entity.scanuploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'scanuploadpath'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Employee Directory Upload Folder (example: directory/Documents)</td>
+                <td>Employee Directory Upload Folder (example: directory/documents)</td>
                 <td>{{ entity.employeesuploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'employeesuploadpath'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Employee Directory Avatar Upload Folder (example: directory/Avatars)</td>
+                <td>Employee Directory Avatar Upload Folder (example: directory/avatars)</td>
                 <td>{{ entity.avataruploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'avataruploadpath'}) }}">Edit</a></td>
             </tr>
