@@ -24,7 +24,6 @@ class EncounterDate extends EncounterArrayFieldAbstract
      */
     protected $field;
 
-    //TODO: we can use datetime for date and time, so time is not needed.
     /**
      * @ORM\Column(type="time", nullable=true)
      */

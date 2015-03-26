@@ -882,7 +882,7 @@ class ListController extends Controller
                 break;
             case "completionreasons":
                 $className = "CompletionReasonList";
-                $displayName = "Completion Reasons";
+                $displayName = "Training Completion Reasons";
                 break;
             case "trainingdegrees":
                 $className = "TrainingDegreeList";

@@ -31,27 +31,27 @@ class ScanListController extends ListController
      * @Route("/course-directors/", name="coursedirectors-list")
      * @Route("/mrn-types/", name="mrntype-list")
      * @Route("/accession-types/", name="accessiontype-list")
-     * @Route("/encounter-types/", name="encountertype-list")
+     * @Route("/encounter-number-types/", name="encountertype-list")
      * @Route("/procedure-number-types/", name="proceduretype-list")
      * @Route("/stains/", name="stain-list")
      * @Route("/organs/", name="organ-list")
-     * @Route("/encounters/", name="encounter-list")
+     * @Route("/encounter-types/", name="encounter-list")
      * @Route("/procedure-types/", name="procedure-list")
      * @Route("/pathology-services/", name="pathservice-list")
      * @Route("/slide-types/", name="slidetype-list")
-     * @Route("/messagecategorys/", name="messagecategorys-list")
+     * @Route("/message-categories/", name="messagecategorys-list")
      * @Route("/statuses/", name="status-list")
-     * @Route("/order-delivery-options/", name="orderdelivery-list")
+     * @Route("/scan-order-delivery-options/", name="orderdelivery-list")
      * @Route("/region-to-scan-options/", name="regiontoscan-list")
      * @Route("/scan-order-processor-comments/", name="processorcomment-list")
-     * @Route("/accounts/", name="accounts-list")
-     * @Route("/urgency/", name="urgency-list")
+     * @Route("/account-numbers/", name="accounts-list")
+     * @Route("/urgency-types/", name="urgency-list")
      * @Route("/progress-and-comments-event-types/", name="progresscommentseventtypes-list")
      * @Route("/event-log-event-types/", name="scanloggereventtypes-list")
      * @Route("/races/", name="races-list")
-     * @Route("/reporttypes/", name="reporttype-list")
-     * @Route("/instructions/", name="instruction-list")
-     * @Route("/patienttypes/", name="patienttype-list")
+     * @Route("/report-types/", name="reporttype-list")
+     * @Route("/instructions-for-embedder/", name="instruction-list")
+     * @Route("/patient-types/", name="patienttype-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -75,27 +75,27 @@ class ScanListController extends ListController
      * @Route("/course-directors/", name="coursedirectors_create")
      * @Route("/mrn-types/", name="mrntype_create")
      * @Route("/accession-types/", name="accessiontype_create")
-     * @Route("/encounter-types/", name="encountertype_create")
+     * @Route("/encounter-number-types/", name="encountertype_create")
      * @Route("/procedure-number-types/", name="proceduretype_create")
      * @Route("/stains/", name="stain_create")
      * @Route("/organs/", name="organ_create")
-     * @Route("/encounters/", name="encounter_create")
+     * @Route("/encounter-types/", name="encounter_create")
      * @Route("/procedure-types/", name="procedure_create")
      * @Route("/pathology-services/", name="pathservice_create")
      * @Route("/slide-types/", name="slidetype_create")
-     * @Route("/messagecategorys/", name="messagecategorys_create")
+     * @Route("/message-categories/", name="messagecategorys_create")
      * @Route("/statuses/", name="status_create")
-     * @Route("/order-delivery-options/", name="orderdelivery_create")
+     * @Route("/scan-order-delivery-options/", name="orderdelivery_create")
      * @Route("/region-to-scan-options/", name="regiontoscan_create")
      * @Route("/scan-order-processor-comments/", name="processorcomment_create")
-     * @Route("/accounts/", name="accounts_create")
-     * @Route("/urgency/", name="urgency_create")
+     * @Route("/account-numbers/", name="accounts_create")
+     * @Route("/urgency-types/", name="urgency_create")
      * @Route("/progress-and-comments-event-types/", name="progresscommentseventtypes_create")
      * @Route("/event-log-event-types/", name="scanloggereventtypes_create")
      * @Route("/races/", name="races_create")
-     * @Route("/reporttypes/", name="reporttype_create")
-     * @Route("/instructions/", name="instruction_create")
-     * @Route("/patienttypes/", name="patienttype_create")
+     * @Route("/report-types/", name="reporttype_create")
+     * @Route("/instructions-for-embedder/", name="instruction_create")
+     * @Route("/patient-types/", name="patienttype_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -119,27 +119,27 @@ class ScanListController extends ListController
      * @Route("/course-directors/new", name="coursedirectors_new")
      * @Route("/mrn-types/new", name="mrntype_new")
      * @Route("/accession-types/new", name="accessiontype_new")
-     * @Route("/encounter-types/new", name="encountertype_new")
+     * @Route("/encounter-number-types/new", name="encountertype_new")
      * @Route("/procedure-number-types/new", name="proceduretype_new")
      * @Route("/stains/new", name="stain_new")
      * @Route("/organs/new", name="organ_new")
-     * @Route("/encounters/new", name="encounter_new")
+     * @Route("/encounter-types/new", name="encounter_new")
      * @Route("/procedure-types/new", name="procedure_new")
      * @Route("/pathology-services/new", name="pathservice_new")
      * @Route("/slide-types/new", name="slidetype_new")
-     * @Route("/messagecategorys/new", name="messagecategorys_new")
+     * @Route("/message-categories/new", name="messagecategorys_new")
      * @Route("/statuses/new", name="status_new")
-     * @Route("/order-delivery-options/new", name="orderdelivery_new")
+     * @Route("/scan-order-delivery-options/new", name="orderdelivery_new")
      * @Route("/region-to-scan-options/new", name="regiontoscan_new")
      * @Route("/scan-order-processor-comments/new", name="processorcomment_new")
-     * @Route("/accounts/new", name="accounts_new")
-     * @Route("/urgency/new", name="urgency_new")
+     * @Route("/account-numbers/new", name="accounts_new")
+     * @Route("/urgency-types/new", name="urgency_new")
      * @Route("/progress-and-comments-event-types/new", name="progresscommentseventtypes_new")
      * @Route("/event-log-event-types/new", name="scanloggereventtypes_new")
      * @Route("/races/new", name="races_new")
-     * @Route("/reporttypes/new", name="reporttype_new")
-     * @Route("/instructions/new", name="instruction_new")
-     * @Route("/patienttypes/new", name="patienttype_new")
+     * @Route("/report-types/new", name="reporttype_new")
+     * @Route("/instructions-for-embedder/new", name="instruction_new")
+     * @Route("/patient-types/new", name="patienttype_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -163,27 +163,27 @@ class ScanListController extends ListController
      * @Route("/course-directors/{id}", name="coursedirectors_show")
      * @Route("/mrn-types/{id}", name="mrntype_show")
      * @Route("/accession-types/{id}", name="accessiontype_show")
-     * @Route("/encounter-types/{id}", name="encountertype_show")
+     * @Route("/encounter-number-types/{id}", name="encountertype_show")
      * @Route("/procedure-number-types/{id}", name="proceduretype_show")
      * @Route("/stains/{id}", name="stain_show")
      * @Route("/organs/{id}", name="organ_show")
-     * @Route("/encounters/{id}", name="encounter_show")
+     * @Route("/encounter-types/{id}", name="encounter_show")
      * @Route("/procedure-types/{id}", name="procedure_show")
      * @Route("/pathology-services/{id}", name="pathservice_show")
      * @Route("/slide-types/{id}", name="slidetype_show")
-     * @Route("/messagecategorys/{id}", name="messagecategorys_show")
+     * @Route("/message-categories/{id}", name="messagecategorys_show")
      * @Route("/statuses/{id}", name="status_show")
-     * @Route("/order-delivery-options/{id}", name="orderdelivery_show")
+     * @Route("/scan-order-delivery-options/{id}", name="orderdelivery_show")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_show")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_show")
-     * @Route("/accounts/{id}", name="accounts_show")
-     * @Route("/urgency/{id}", name="urgency_show")
+     * @Route("/account-numbers/{id}", name="accounts_show")
+     * @Route("/urgency-types/{id}", name="urgency_show")
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_show")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_show")
      * @Route("/races/{id}", name="races_show")
-     * @Route("/reporttypes/{id}", name="reporttype_show")
-     * @Route("/instructions/{id}", name="instruction_show")
-     * @Route("/patienttypes/{id}", name="patienttype_show")
+     * @Route("/report-types/{id}", name="reporttype_show")
+     * @Route("/instructions-for-embedder/{id}", name="instruction_show")
+     * @Route("/patient-types/{id}", name="patienttype_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -207,27 +207,27 @@ class ScanListController extends ListController
      * @Route("/course-directors/{id}/edit", name="coursedirectors_edit")
      * @Route("/mrn-types/{id}/edit", name="mrntype_edit")
      * @Route("/accession-types/{id}/edit", name="accessiontype_edit")
-     * @Route("/encounter-types/{id}/edit", name="encountertype_edit")
+     * @Route("/encounter-number-types/{id}/edit", name="encountertype_edit")
      * @Route("/procedure-number-types/{id}/edit", name="proceduretype_edit")
      * @Route("/stains/{id}/edit", name="stain_edit")
      * @Route("/organs/{id}/edit", name="organ_edit")
-     * @Route("/encounters/{id}/edit", name="encounter_edit")
+     * @Route("/encounter-types/{id}/edit", name="encounter_edit")
      * @Route("/procedure-types/{id}/edit", name="procedure_edit")
      * @Route("/pathology-services/{id}/edit", name="pathservice_edit")
      * @Route("/slide-types/{id}/edit", name="slidetype_edit")
-     * @Route("/messagecategorys/{id}/edit", name="messagecategorys_edit")
+     * @Route("/message-categories/{id}/edit", name="messagecategorys_edit")
      * @Route("/statuses/{id}/edit", name="status_edit")
-     * @Route("/order-delivery-options/{id}/edit", name="orderdelivery_edit")
+     * @Route("/scan-order-delivery-options/{id}/edit", name="orderdelivery_edit")
      * @Route("/region-to-scan-options/{id}/edit", name="regiontoscan_edit")
      * @Route("/scan-order-processor-comments/{id}/edit", name="processorcomment_edit")
-     * @Route("/accounts/{id}/edit", name="accounts_edit")
-     * @Route("/urgency/{id}/edit", name="urgency_edit")
+     * @Route("/account-numbers/{id}/edit", name="accounts_edit")
+     * @Route("/urgency-types/{id}/edit", name="urgency_edit")
      * @Route("/progress-and-comments-event-types/{id}/edit", name="progresscommentseventtypes_edit")
      * @Route("/event-log-event-types/{id}/edit", name="scanloggereventtypes_edit")
      * @Route("/races/{id}/edit", name="races_edit")
-     * @Route("/reporttypes/{id}/edit", name="reporttype_edit")
-     * @Route("/instructions/{id}/edit", name="instruction_edit")
-     * @Route("/patienttypes/{id}/edit", name="patienttype_edit")
+     * @Route("/report-types/{id}/edit", name="reporttype_edit")
+     * @Route("/instructions-for-embedder/{id}/edit", name="instruction_edit")
+     * @Route("/patient-types/{id}/edit", name="patienttype_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -251,27 +251,27 @@ class ScanListController extends ListController
      * @Route("/course-directors/{id}", name="coursedirectors_update")
      * @Route("/mrn-types/{id}", name="mrntype_update")
      * @Route("/accession-types/{id}", name="accessiontype_update")
-     * @Route("/encounter-types/{id}", name="encountertype_update")
+     * @Route("/encounter-number-types/{id}", name="encountertype_update")
      * @Route("/procedure-number-types/{id}", name="proceduretype_update")
      * @Route("/stains/{id}", name="stain_update")
      * @Route("/organs/{id}", name="organ_update")
-     * @Route("/encounters/{id}", name="encounter_update")
+     * @Route("/encounter-types/{id}", name="encounter_update")
      * @Route("/procedure-types/{id}", name="procedure_update")
      * @Route("/pathology-services/{id}", name="pathservice_update")
      * @Route("/slide-types/{id}", name="slidetype_update")
-     * @Route("/messagecategorys/{id}", name="messagecategorys_update")
+     * @Route("/message-categories/{id}", name="messagecategorys_update")
      * @Route("/statuses/{id}", name="status_update")
-     * @Route("/order-delivery-options/{id}", name="orderdelivery_update")
+     * @Route("/scan-order-delivery-options/{id}", name="orderdelivery_update")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_update")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_update")
-     * @Route("/accounts/{id}", name="accounts_update")
-     * @Route("/urgency/{id}", name="urgency_update")
+     * @Route("/account-numbers/{id}", name="accounts_update")
+     * @Route("/urgency-types/{id}", name="urgency_update")
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_update")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_update")
      * @Route("/races/{id}", name="races_update")
-     * @Route("/reporttypes/{id}", name="reporttype_update")
-     * @Route("/instructions/{id}", name="instruction_update")
-     * @Route("/patienttypes/{id}", name="patienttype_update")
+     * @Route("/report-types/{id}", name="reporttype_update")
+     * @Route("/instructions-for-embedder/{id}", name="instruction_update")
+     * @Route("/patient-types/{id}", name="patienttype_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -326,11 +326,11 @@ class ScanListController extends ListController
             break;
         case "encountertype":
             $className = "EncounterType";
-            $displayName = "Encounter Types";
+            $displayName = "Encounter Number Types";
             break;
         case "proceduretype":
             $className = "ProcedureType";
-            $displayName = "Procedure Types";
+            $displayName = "Procedure Number Types";
             break;
         case "stain":
             $className = "stainlist";
@@ -342,11 +342,11 @@ class ScanListController extends ListController
             break;
         case "encounter":
             $className = "EncounterList";
-            $displayName = "Encounters";
+            $displayName = "Encounter Types";
             break;
         case "procedure":
             $className = "ProcedureList";
-            $displayName = "Procedures";
+            $displayName = "Procedure Types";
             break;
         case "slidetype":
             $className = "slidetype";
@@ -362,7 +362,7 @@ class ScanListController extends ListController
             break;
         case "orderdelivery":
             $className = "OrderDelivery";
-            $displayName = "Order Delivery Options";
+            $displayName = "Scan Order Delivery Options";
             break;
         case "regiontoscan":
             $className = "regiontoscan";
@@ -374,11 +374,11 @@ class ScanListController extends ListController
             break;
         case "accounts":
             $className = "Account";
-            $displayName = "Accounts";
+            $displayName = "Account Numbers";
             break;
         case "urgency":
             $className = "Urgency";
-            $displayName = "Urgencies";
+            $displayName = "Urgency Types";
             break;
         case "progresscommentseventtypes":
             $className = "ProgressCommentsEventTypeList";
@@ -395,7 +395,7 @@ class ScanListController extends ListController
             $displayName = "Races";
             break;
         case "reporttype":
-            $className = "ReportTypeList";
+            $className = "ReportType";
             $displayName = "Report Types";
             break;
         case "instruction":
@@ -435,27 +435,27 @@ class ScanListController extends ListController
      * @Route("/course-directors/{id}", name="coursedirectors_delete")
      * @Route("/mrn-types/{id}", name="mrntype_delete")
      * @Route("/accession-types/{id}", name="accessiontype_delete")
-     * @Route("/encounter-types/{id}", name="encountertype_delete")
+     * @Route("/encounter-number-types/{id}", name="encountertype_delete")
      * @Route("/procedure-number-types/{id}", name="proceduretype_delete")
      * @Route("/stains/{id}", name="stain_delete")
      * @Route("/organs/{id}", name="organ_delete")
-     * @Route("/encounters/{id}", name="encounter_delete")
+     * @Route("/encounter-types/{id}", name="encounter_delete")
      * @Route("/procedure-types/{id}", name="procedure_delete")
      * @Route("/pathology-services/{id}", name="pathservice_delete")
      * @Route("/slide-types/{id}", name="slidetype_delete")
-     * @Route("/messagecategorys/{id}", name="messagecategorys_delete")
+     * @Route("/message-categories/{id}", name="messagecategorys_delete")
      * @Route("/statuses/{id}", name="status_delete")
-     * @Route("/order-delivery-options/{id}", name="orderdelivery_delete")
+     * @Route("/scan-order-delivery-options/{id}", name="orderdelivery_delete")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_delete")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_delete")
-     * @Route("/accounts/{id}", name="accounts_delete")
-     * @Route("/urgency/{id}", name="urgency_delete")
+     * @Route("/account-numbers/{id}", name="accounts_delete")
+     * @Route("/urgency-types/{id}", name="urgency_delete")
      * @Route("/progress-and-comments-event-types/{id}", name="progresscommentseventtypes_delete")
      * @Route("/event-log-event-types/{id}", name="scanloggereventtypes_delete")
      * @Route("/races/{id}", name="races_delete")
-     * @Route("/reporttypes/{id}", name="reporttype_delete")
-     * @Route("/instructions/{id}", name="instruction_delete")
-     * @Route("/patienttypes/{id}", name="patienttype_delete")
+     * @Route("/report-types/{id}", name="reporttype_delete")
+     * @Route("/instructions-for-embedder/{id}", name="instruction_delete")
+     * @Route("/patient-types/{id}", name="patienttype_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

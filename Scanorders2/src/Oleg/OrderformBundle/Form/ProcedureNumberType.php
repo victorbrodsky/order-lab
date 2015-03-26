@@ -28,20 +28,18 @@ class ProcedureNumberType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        //$builder->add('keytype', 'hidden', array('label'=>false));
-//        $builder->add('keytype', 'entity', array(
-//            'class' => 'OlegOrderformBundle:ProcedureType',
-//            'label'=>false,
-//            'required' => true,
-//            'data' => 1,
-//            'attr' => array('style'=>'display:none;'),
-//            'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->orderBy("list.orderinlist","ASC")
-//                        ->setMaxResults(1);
-//
-//                },
-//        ));
+        $builder->add('keytype', 'entity', array(
+            'class' => 'OlegOrderformBundle:ProcedureType',
+            'label'=>false,
+            'required' => true,
+            'data' => 1,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->orderBy("list.orderinlist","ASC");
+                },
+        ));
+
 
 
         $builder->add('others', new ArrayFieldType(), array(

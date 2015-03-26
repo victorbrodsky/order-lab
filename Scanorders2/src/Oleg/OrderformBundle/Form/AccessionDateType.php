@@ -35,6 +35,16 @@ class AccessionDateType extends AbstractType
             'attr' => array('style'=>'display:none;')
         ));
 
+
+        //extra data-structure fields
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+            $builder->add('time', 'time', array(
+                'input'  => 'datetime',
+                'widget' => 'choice',
+                'label'=>'Accession Time:'
+            ));
+        }
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

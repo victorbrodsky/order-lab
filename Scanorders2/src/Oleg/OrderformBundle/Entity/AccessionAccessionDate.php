@@ -30,10 +30,37 @@ class AccessionAccessionDate extends AccessionArrayFieldAbstract
      */
     protected $field;
 
+    /**
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $time;
+
 
     public function __toString() {
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
         return $dateStr = $transformer->transform($this->field);
     }
+
+
+
+
+    /**
+     * @param mixed $time
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+
+
 
 }
