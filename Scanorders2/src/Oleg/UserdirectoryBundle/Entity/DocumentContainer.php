@@ -29,6 +29,12 @@ class DocumentContainer {
     private  $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AttachmentContainer", inversedBy="documentContainers")
+     * @ORM\JoinColumn(name="attachmentContainer_id", referencedColumnName="id", nullable=true)
+     */
+    private $attachmentContainer;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Document")
      * @ORM\JoinTable(name="user_documentcontainer_document",
      *      joinColumns={@ORM\JoinColumn(name="documentcontainer_id", referencedColumnName="id")},
@@ -70,6 +76,11 @@ class DocumentContainer {
      */
     private $provider;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="DocumentTypeList")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=true)
+     */
+    private $type;
 
 
     public function __construct() {
@@ -83,6 +94,43 @@ class DocumentContainer {
             $this->addComment($newcomment);
         }
     }
+
+
+
+
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $attachmentContainer
+     */
+    public function setAttachmentContainer($attachmentContainer)
+    {
+        $this->attachmentContainer = $attachmentContainer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttachmentContainer()
+    {
+        return $this->attachmentContainer;
+    }
+
 
 
 

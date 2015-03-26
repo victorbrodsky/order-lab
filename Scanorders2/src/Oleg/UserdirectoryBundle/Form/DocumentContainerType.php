@@ -48,9 +48,11 @@ class DocumentContainerType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
+        //comments
+        $docParams = array('documentContainer.comments.comment.label' => $this->params['labelPrefix'] );
         $builder->add('comments', 'collection', array(
-            'type' => new DocumentCommentType($this->params),
-            'label' => $this->params['labelPrefix'] . ' Comment(s):',
+            'type' => new DocumentCommentType($docParams),
+            'label' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

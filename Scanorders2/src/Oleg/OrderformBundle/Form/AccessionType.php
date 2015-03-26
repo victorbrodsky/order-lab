@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -63,38 +64,14 @@ class AccessionType extends AbstractType
 
         //extra data-structure fields
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-
             //echo "accession flag datastructure=".$this->params['datastructure']."<br>";
-
             $params = array('labelPrefix'=>'Autopsy Image');
             $equipmentTypes = array('Autopsy Camera');
             $params['device.types'] = $equipmentTypes;
-            $builder->add('documentContainer', new DocumentContainerType($params), array(
+            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
                 'required' => false,
                 'label' => false
             ));
-
-            //TODO: create orderinfo type to display: order id, type, source ...
-//            $builder->add('laborder', 'collection', array(
-//                'type' => new LabOrderType($this->params, null),
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'required' => false,
-//                'by_reference' => false,
-//                'prototype' => true,
-//                'prototype_name' => '__accessionlaborder__',
-//            ));
-
-//            $builder->add('outsidereport', 'collection', array(
-//                'type' => new AccessionOutsidereportType($this->params, null),
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'required' => false,
-//                'by_reference' => false,
-//                'prototype' => true,
-//                'prototype_name' => '__accessionoutsidereport__',
-//            ));
-
         }
 
         //messages

@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_documentComment")
+ * @ORM\Table(name="user_documentComment")
  */
 class DocumentComment extends BaseUserAttributes {
 

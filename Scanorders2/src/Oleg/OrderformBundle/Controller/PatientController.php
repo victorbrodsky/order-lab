@@ -13,6 +13,7 @@ use Oleg\OrderformBundle\Entity\RequisitionForm;
 use Oleg\OrderformBundle\Entity\Imaging;
 use Oleg\OrderformBundle\Entity\SlideOrder;
 use Oleg\OrderformBundle\Entity\StainOrder;
+use Oleg\UserdirectoryBundle\Entity\AttachmentContainer;
 use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\UserWrapper;
@@ -91,6 +92,17 @@ class PatientController extends Controller
         $accession = new Accession(true,$status,$user,$system);
         $accession->addExtraFields($status,$user,$system);
         $procedure->addAccession($accession);
+
+        //add 5 autopsy fields: add 5 documentContainers to attachmentContainer
+        $attachmentContainer = $accession->getAttachmentContainer();
+        if( !$attachmentContainer ) {
+            $attachmentContainer = new AttachmentContainer();
+            $accession->setAttachmentContainer($attachmentContainer);
+        }
+        for( $i=0; $i<5; $i++) {
+            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
+        }
+
 
         $part = new Part(true,$status,$user,$system);
         //$part->addExtraFields($status,$user,$system);

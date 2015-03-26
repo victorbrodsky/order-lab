@@ -25,7 +25,7 @@ class DocumentCommentType extends AbstractType
         $label = "Comment:";
 
         if( array_key_exists('documentContainer.comments.comment.label', $this->params) &&  $this->params['documentContainer.comments.comment.label'] != "") {
-            $label = $this->params['documentContainer.comments.comment.label'];
+            $label = $this->params['documentContainer.comments.comment.label'] . " " . $label;
         }
 
         $builder->add( 'comment', 'textarea', array(

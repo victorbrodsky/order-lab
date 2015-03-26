@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -146,7 +147,7 @@ class PartType extends AbstractType
             $params = array('labelPrefix'=>'Gross Image');
             $equipmentTypes = array('Gross Image Camera');
             $params['device.types'] = $equipmentTypes;
-            $builder->add('documentContainer', new DocumentContainerType($params), array(
+            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
                 'required' => false,
                 'label' => false
             ));

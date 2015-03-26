@@ -57,11 +57,17 @@ abstract class ObjectAbstract
      */
     protected $institution;
 
+//    /**
+//     * DocumentContainer can have many Documents; each Document has document type (DocumentTypeList)
+//     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+//     **/
+//    protected $documentContainer;
+
     /**
-     * DocumentContainer can have many Documents; each Document has document type (DocumentTypeList)
-     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+     * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
+     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
      **/
-    protected $documentContainer;
+    protected $attachmentContainer;
 
 
 
@@ -254,20 +260,36 @@ abstract class ObjectAbstract
     }
 
     /**
-     * @param mixed $documentContainer
+     * @param mixed $attachmentContainer
      */
-    public function setDocumentContainer($documentContainer)
+    public function setAttachmentContainer($attachmentContainer)
     {
-        $this->documentContainer = $documentContainer;
+        $this->attachmentContainer = $attachmentContainer;
     }
 
     /**
      * @return mixed
      */
-    public function getDocumentContainer()
+    public function getAttachmentContainer()
     {
-        return $this->documentContainer;
+        return $this->attachmentContainer;
     }
+
+//    /**
+//     * @param mixed $documentContainer
+//     */
+//    public function setDocumentContainer($documentContainer)
+//    {
+//        $this->documentContainer = $documentContainer;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDocumentContainer()
+//    {
+//        return $this->documentContainer;
+//    }
 
 
 

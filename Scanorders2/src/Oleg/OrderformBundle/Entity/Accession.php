@@ -262,6 +262,8 @@ class Accession extends ObjectAbstract {
         //$this->addOutsidereport( new AccessionOutsidereport($status,$provider,$source) );
     }
 
+
+
 //    public function getLaborder()
 //    {
 //        return $this->laborder;

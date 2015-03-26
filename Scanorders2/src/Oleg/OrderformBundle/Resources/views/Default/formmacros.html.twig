@@ -1280,13 +1280,13 @@
 
     {#comments#}
     {% if container.comments|length > 0 %}
-        <div class="well well-sm">
+        {#<div class="well well-sm">#}
             {% endif %}
             {% for comment in container.comments %}
                 {{ formmacros.field(comment.comment) }}
             {% endfor %}
             {% if container.comments|length > 0 %}
-        </div>
+        {#</div>#}
     {% endif %}
 
     {{ formmacros.field(container.device) }}
@@ -1937,8 +1937,10 @@
 
         {% import _self as formmacros %}
 
-        {% if accession.documentContainer is defined %}
-            {{ formmacros.fieldDocumentContainer(accession.documentContainer,cycle,'accession') }}
+        {% if accession.attachmentContainer is defined %}
+            {% for documentContainer in accession.attachmentContainer.documentContainers %}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'accession') }}
+            {% endfor %}
         {% endif %}
 
     {% endif %}
@@ -1951,8 +1953,10 @@
 
         {% import _self as formmacros %}
 
-        {% if part.documentContainer is defined %}
-            {{ formmacros.fieldDocumentContainer(part.documentContainer,cycle,'part') }}
+        {% if part.attachmentContainer is defined %}
+            {% for documentContainer in part.attachmentContainer.documentContainers %}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'part') }}
+            {% endfor %}
         {% endif %}
 
     {% endif %}
