@@ -24,4 +24,9 @@ class EncounterName extends EncounterArrayFieldAbstract
      */
     protected $field;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $field;
+
 }

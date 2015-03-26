@@ -28,7 +28,7 @@ class ComplexListController extends Controller
     /**
      * @Route("/list/locations/", name="employees_locations_pathaction_list")
      * @Route("/list/buildings/", name="employees_buildings_pathaction_list")
-     * @Route("/list/researchlabs/", name="employees_researchlabs_pathaction_list")
+     * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:index.html.twig")
      */
@@ -120,8 +120,8 @@ class ComplexListController extends Controller
      * @Route("/buildings/show/{id}", name="employees_buildings_pathaction_show_standalone", requirements={"id" = "\d+"})
      * @Route("/admin/buildings/edit/{id}", name="employees_buildings_pathaction_edit_standalone", requirements={"id" = "\d+"})
      *
-     * @Route("/researchlabs/show/{id}", name="employees_researchlabs_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/admin/researchlabs/edit/{id}", name="employees_researchlabs_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/research-labs/show/{id}", name="employees_researchlabs_pathaction_show_standalone", requirements={"id" = "\d+"})
+     * @Route("/admin/research-labs/edit/{id}", name="employees_researchlabs_pathaction_edit_standalone", requirements={"id" = "\d+"})
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
@@ -168,7 +168,7 @@ class ComplexListController extends Controller
     /**
      * @Route("/locations/new", name="employees_locations_pathaction_new_standalone")
      * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_standalone")
-     * @Route("/admin/researchlabs/new", name="employees_researchlabs_pathaction_new_standalone")
+     * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_standalone")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -208,7 +208,7 @@ class ComplexListController extends Controller
     /**
      * @Route("/locations/new", name="employees_locations_pathaction_new_post_standalone")
      * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_post_standalone")
-     * @Route("/admin/researchlabs/new", name="employees_researchlabs_pathaction_new_post_standalone")
+     * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_post_standalone")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -299,7 +299,7 @@ class ComplexListController extends Controller
     /**
      * @Route("/locations/update/{id}", name="employees_locations_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Route("/admin/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
-     * @Route("/admin/researchlabs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * @Route("/admin/research-labs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */

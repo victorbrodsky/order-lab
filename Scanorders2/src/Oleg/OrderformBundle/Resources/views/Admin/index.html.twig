@@ -52,9 +52,9 @@
     <p>
     <a href="{{ path('stain-list') }}">List of Stains</a>
     </p>
-    <p>
-        <a href="{{ path('generate_stain') }}">Generate Stains</a>
-    </p>
+    {#<p>#}
+        {#<a href="{{ path('generate_stain') }}">Generate Stains</a>#}
+    {#</p>#}
 
     <br>
 
@@ -62,20 +62,20 @@
     <p>
     <a href="{{ path('organ-list') }}">List of Organs</a>
     </p>
-    <p>
-        <a href="{{ path('generate_organ') }}">Generate Organs</a>
-    </p>
+    {#<p>#}
+        {#<a href="{{ path('generate_organ') }}">Generate Organs</a>#}
+    {#</p>#}
 
 
     <br>
 
-    <h3 class="text-info">Procedures</h3>
+    <h3 class="text-info">Procedure Types</h3>
     <p>
-        <a href="{{ path('procedure-list') }}">List of Procedures</a>
+        <a href="{{ path('procedure-list') }}">List of Procedure Types</a>
     </p>
-    <p>
-        <a href="{{ path('generate_procedure') }}">Generate Procedures</a>
-    </p>
+    {#<p>#}
+        {#<a href="{{ path('generate_procedure') }}">Generate Procedures</a>#}
+    {#</p>#}
 
     {#EncounterList#}
     <h3 class="text-info">Encounters</h3>
@@ -100,9 +100,9 @@
     <p>
         <a href="{{ path('slidetype-list') }}">List of Slide Types</a>
     </p>
-    <p>
-        <a href="{{ path('generate_slidetype') }}">Generate Slide Types</a>
-    </p>
+    {#<p>#}
+        {#<a href="{{ path('generate_slidetype') }}">Generate Slide Types</a>#}
+    {#</p>#}
 
     <br>
 
@@ -115,9 +115,9 @@
     <p>
         <a href="{{ path('mrntype-list') }}">List of MRN Types</a>
     </p>
-    <p>
-        <a href="{{ path('generate_mrntype') }}">Generate MRN Types</a>
-    </p>
+    {#<p>#}
+        {#<a href="{{ path('generate_mrntype') }}">Generate MRN Types</a>#}
+    {#</p>#}
 
     <br>
 
@@ -140,9 +140,9 @@
         <a href="{{ path('encountertype-list') }}">List of Encounter Types</a>
     </p>
 
-    <h3 class="text-info">Procedure Types</h3>
+    <h3 class="text-info">Procedure Number Types</h3>
     <p>
-        <a href="{{ path('proceduretype-list') }}">List of Procedure Types</a>
+        <a href="{{ path('proceduretype-list') }}">List of Procedure Number Types</a>
     </p>
 
     <br>
@@ -234,8 +234,8 @@
 
     <!--show this only for dev. Don't show for live-->
     {% if is_granted('ROLE_SCANORDER_ADMIN') and environment == 'dev' %}
-        <p><a  data-confirm="Are you sure you want to overwrite all data?"
-               href="{{ path('generate_all') }}">Generate All</a>
+        <p><a  data-confirm="Are you sure? This action will overwrite all values on all lists with defaults."
+               href="{{ path('generate_all') }}">Populate All Lists With Default Values</a>
         </p>
     {% endif %}
 

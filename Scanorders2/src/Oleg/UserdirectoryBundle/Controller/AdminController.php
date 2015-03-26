@@ -83,7 +83,7 @@ class AdminController extends Controller
     /**
      * Populate DB
      *
-     * @Route("/genall", name="user_generate_all")
+     * @Route("/populate-all-lists-with-default-values", name="user_generate_all")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Admin:index.html.twig")
      */
@@ -1976,7 +1976,7 @@ class AdminController extends Controller
         $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findAll();
 
         if( $entities ) {
-            return -1;
+            //return -1;
 //            $query = $em->createQuery('DELETE OlegUserdirectoryBundle:FellowshipSubspecialty c WHERE c.id > 0');
 //            $query->execute();
 //            $query = $em->createQuery('DELETE OlegUserdirectoryBundle:ResidencySpecialty c WHERE c.id > 0');
@@ -2024,6 +2024,11 @@ class AdminController extends Controller
 
                 //echo "residencySpecialty=".$residencySpecialty."<br>";
 
+                if( $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
+                    continue;
+                }
+
+
                 $listEntity = new ResidencySpecialty();
                 $this->setDefaultList($listEntity,$count,$username,$residencySpecialty);
 
@@ -2041,6 +2046,9 @@ class AdminController extends Controller
             if( $fellowshipSubspecialty ) {
 
                 //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
+                if( $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."") ) {
+                    continue;
+                }
 
                 $subEntity = new FellowshipSubspecialty();
                 $this->setDefaultList($subEntity,$subcount,$username,$fellowshipSubspecialty);

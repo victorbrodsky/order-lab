@@ -76,7 +76,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/genall", name="generate_all")
+     * @Route("/populate-all-lists-with-default-values", name="generate_all")
      * @Method("GET")
      * @Template()
      */
@@ -143,7 +143,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/genstain", name="generate_stain")
+     * @Route("/populate-stain-list-with-default-values", name="generate_stain")
      * @Method("GET")
      * @Template()
      */
@@ -176,7 +176,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/genorgan", name="generate_organ")
+     * @Route("/populate-organ-list-with-default-values", name="generate_organ")
      * @Method("GET")
      * @Template()
      */
@@ -211,7 +211,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/genprocedure", name="generate_procedure")
+     * @Route("/populate-procedure-types-list-with-default-values", name="generate_procedure")
      * @Method("GET")
      * @Template()
      */

@@ -112,7 +112,7 @@ security:
      - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
      - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-     - { path: ^/directory/admin/genall, role: ROLE_USERDIRECTORY_ADMIN }
+     - { path: ^/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/site-settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
@@ -126,7 +126,7 @@ security:
      - { path: ^/scan/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-     - { path: ^/scan/admin/genall, role: ROLE_SCANORDER_ADMIN }
+     - { path: ^/scan/admin/populate-all-lists-with-default-values, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
 #     - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/site-settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
