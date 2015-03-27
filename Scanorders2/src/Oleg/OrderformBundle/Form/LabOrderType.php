@@ -25,16 +25,16 @@ class LabOrderType extends AbstractType
     {
 
 
-        $builder->add('requisitionForms', 'collection', array(
-            'type' => new RequisitionFormType($this->params,$this->entity),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__requisitionForm__',
-        ));
+//        $builder->add('requisitionForms', 'collection', array(
+//            'type' => new RequisitionFormType($this->params,$this->entity),
+//            'label' => false,
+//            'required' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__requisitionForm__',
+//        ));
 
 
 

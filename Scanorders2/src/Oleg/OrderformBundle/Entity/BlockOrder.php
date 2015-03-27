@@ -27,14 +27,6 @@ class BlockOrder {
      **/
     private $orderinfo;
 
-
-    /**
-     * Block Image
-     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
-     **/
-    private $documentContainer;
-
-
     //Instruction for Embedder (List manager: datetime, author, author roles)
     /**
      * @ORM\ManyToOne(targetEntity="InstructionList", cascade={"persist"})
@@ -101,24 +93,6 @@ class BlockOrder {
     {
         return $this->orderinfo;
     }
-
-
-    /**
-     * @param mixed $documentContainer
-     */
-    public function setDocumentContainer($documentContainer)
-    {
-        $this->documentContainer = $documentContainer;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDocumentContainer()
-    {
-        return $this->documentContainer;
-    }
-
 
 
     /**

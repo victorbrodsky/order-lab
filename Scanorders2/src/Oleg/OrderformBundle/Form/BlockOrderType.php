@@ -53,11 +53,11 @@ class BlockOrderType extends AbstractType
 
 
         //Block Image container
-        $params = array('labelPrefix'=>'Block Image');
-        $builder->add('documentContainer', new DocumentContainerType($params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
-            'label' => false
-        ));
+//        $params = array('labelPrefix'=>'Block Image');
+//        $builder->add('documentContainer', new DocumentContainerType($params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+//            'label' => false
+//        ));
 
         $params = array('labelPrefix'=>' for Embedder');
         $builder->add('instruction', new InstructionType($params), array(

@@ -29,13 +29,6 @@ class Report {
 
 
 
-
-    //Outside Report Reference Representation (PDF) (actually a set of 5 fields - links to the Images table where Autopsy Images are)
-    /**
-     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
-     **/
-    private $documentContainer;
-
     //Outside Report Pathologist(s) - Signing Pathologist(s): [Select2, can add new value, separate list in List Manager]
     //Should be able to create a new user
     //Pathologist names are entered. Use a wrapper because report can have multiple Pathologists
@@ -80,15 +73,12 @@ class Report {
      */
     private $reportType;
 
-    //report full text must be associated with document image.
-    //So, report full text is array of comments in documentContainer (documentContainer->comments(DocumentComment)->comment)
 
 
     public function __construct() {
         $this->signingPathologists = new ArrayCollection();
         $this->consultedPathologists = new ArrayCollection();
     }
-
 
 
 
@@ -172,23 +162,6 @@ class Report {
         return $this->signatureDate;
     }
 
-
-
-    /**
-     * @param mixed $documentContainer
-     */
-    public function setDocumentContainer($documentContainer)
-    {
-        $this->documentContainer = $documentContainer;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDocumentContainer()
-    {
-        return $this->documentContainer;
-    }
 
 
 

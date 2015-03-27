@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -45,6 +46,9 @@ class MessageType extends AbstractType
             'returnoption' => 'Return slide(s) by this date even if not scanned:',
             'priority' => 'Priority:',
             'deadline' => 'Deadline:',
+
+            'labelPrefix' => 'Image',
+            'device.types' => array()
         );
 
         //over write labels
@@ -162,22 +166,6 @@ class MessageType extends AbstractType
             },
         ));
 
-        $builder->add( 'equipment', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Equipment',
-            'property' => 'name',
-            'label'=>$this->labels['equipment'],
-            'required'=> true,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('i')
-                        ->leftJoin('i.keytype','keytype')
-                        ->where("keytype.name = :keytype AND i.type != :type")
-                        ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
-                },
-        ));
-
-
         if( array_key_exists('sources', $this->params) &&  $this->params['sources'] == true ) {
             $this->params['endpoint.location'] = $this->labels['sources.location'];
             $this->params['endpoint.system'] = $this->labels['sources.system'];
@@ -239,10 +227,51 @@ class MessageType extends AbstractType
             ));
         }
 
+
+        if( !$builder->has('attachmentContainer') ) {
+            $params = array('labelPrefix'=>'Image');
+            $params['device.types'] = array();
+            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+                'required' => false,
+                'label' => false
+            ));
+        }
+
+        if( !$builder->has('equipment') ) {
+            $builder->add('equipment', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Equipment',
+                'property' => 'name',
+                'label'=>$this->labels['equipment'],
+                'required'=> true,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('i')
+                            ->leftJoin('i.keytype','keytype')
+                            ->where("keytype.name = :keytype AND i.type != :type")
+                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
+                    },
+            ));
+        }
+
+
         /////////////////////////// specific orders //////////////////////////
         //message's laborder
         if( array_key_exists('message.laborder', $this->params) &&  $this->params['message.laborder'] == true ) {
             $builder->add('laborder', new LabOrderType($this->params,$this->entity), array(
+                'required' => false,
+                'label' => false
+            ));
+
+            //TODO: to get correct this specific properties (i.e label), add listener to determine if this object has this specific order
+            //Or use laborder object to query DB util table containg label, equipment etc.
+
+            //overwrite laborder's attachmentContainer
+            $builder->remove('attachmentContainer');
+            $params = array('labelPrefix'=>'Requisition Form Image');
+            $equipmentTypes = array('Requisition Form Scanner');
+            $params['device.types'] = $equipmentTypes;
+            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
                 'required' => false,
                 'label' => false
             ));
@@ -254,11 +283,31 @@ class MessageType extends AbstractType
                 'required' => false,
                 'label' => false
             ));
+
+            //overwrite report's attachmentContainer
+            $builder->remove('attachmentContainer');
+            $params = array('labelPrefix'=>'Reference Representation');
+            $equipmentTypes = array();
+            $params['device.types'] = $equipmentTypes;
+            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+                'required' => false,
+                'label' => false
+            ));
         }
 
         //message's blockorder
         if( array_key_exists('message.blockorder', $this->params) &&  $this->params['message.blockorder'] == true ) {
             $builder->add('blockorder', new BlockOrderType($this->params,$this->entity), array(
+                'required' => false,
+                'label' => false
+            ));
+
+            //overwrite blockorder's attachmentContainer
+            $builder->remove('attachmentContainer');
+            $params = array('labelPrefix'=>'Block Image');
+            $equipmentTypes = array('Xray Machine','Block Imaging Camera');
+            $params['device.types'] = $equipmentTypes;
+            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
                 'required' => false,
                 'label' => false
             ));
@@ -273,7 +322,7 @@ class MessageType extends AbstractType
             ));
 
             $builder->remove('equipment');
-            $builder->add( 'equipment', 'entity', array(
+            $builder->add('equipment', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Equipment',
                 'property' => 'name',
                 'label' => 'Microtome Device:',
@@ -307,7 +356,7 @@ class MessageType extends AbstractType
             ));
 
             $builder->remove('equipment');
-            $builder->add( 'equipment', 'entity', array(
+            $builder->add('equipment', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Equipment',
                 'property' => 'name',
                 'label' => 'Slide Stainer Device:',
@@ -330,6 +379,11 @@ class MessageType extends AbstractType
                     },
             ));
         }
+        /////////////////////////// specific orders //////////////////////////
+
+
+
+
 
     }
 

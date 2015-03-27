@@ -27,32 +27,18 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
      **/
     private $orderinfo;
 
-
-
 //    /**
-//     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
-//     **/
-//    private $documentContainer;
-
-    /**
-     * Lab Order might have many Requisition Form
-     * @ORM\OneToMany(targetEntity="RequisitionForm", mappedBy="laborder", cascade={"persist","remove"})
-     */
-    private $requisitionForms;
+//     * Lab Order might have many Requisition Form
+//     * @ORM\OneToMany(targetEntity="RequisitionForm", mappedBy="laborder", cascade={"persist","remove"})
+//     */
+//    private $requisitionForms;
 
 
 
 
 
     public function __construct() {
-
-        $this->requisitionForms = new ArrayCollection();
-
-//        //testing
-//        //echo "doc container=".$this->getDocumentContainer()."<br>";
-//        if( !$this->getDocumentContainer() ) {
-//            $this->setDocumentContainer( new DocumentContainer() );
-//        }
+        //$this->requisitionForms = new ArrayCollection();
     }
 
 
@@ -93,37 +79,20 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
     }
 
 
-//    /**
-//     * @param mixed $documentContainer
-//     */
-//    public function setDocumentContainer($documentContainer)
+//    public function getRequisitionForms()
 //    {
-//        $this->documentContainer = $documentContainer;
+//        return $this->requisitionForms;
 //    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getDocumentContainer()
+//    public function addRequisitionForm($item)
 //    {
-//        return $this->documentContainer;
+//        if( !$this->requisitionForms->contains($item) ) {
+//            $this->requisitionForms->add($item);
+//        }
 //    }
-
-
-    public function getRequisitionForms()
-    {
-        return $this->requisitionForms;
-    }
-    public function addRequisitionForm($item)
-    {
-        if( !$this->requisitionForms->contains($item) ) {
-            $this->requisitionForms->add($item);
-        }
-    }
-    public function removeRequisitionForm($item)
-    {
-        $this->requisitionForms->removeElement($item);
-    }
+//    public function removeRequisitionForm($item)
+//    {
+//        $this->requisitionForms->removeElement($item);
+//    }
 
 
 

@@ -53,14 +53,14 @@ class ReportType extends AbstractType
 
 
         //Requisition Form Image container
-        $params = array(
-            'labelPrefix' => 'Reference Representation',
-            'documentContainer.comments.comment.label' => "Full Text:"
-        );
-        $builder->add('documentContainer', new DocumentContainerType($params), array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
-            'label' => false
-        ));
+//        $params = array(
+//            'labelPrefix' => 'Reference Representation',
+//            'documentContainer.comments.comment.label' => "Full Text:"
+//        );
+//        $builder->add('documentContainer', new DocumentContainerType($params), array(
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+//            'label' => false
+//        ));
 
         //$paramsNew = new ArrayObject($params);
         $params = array('labelPrefix'=>'Signing Pathologist(s):');

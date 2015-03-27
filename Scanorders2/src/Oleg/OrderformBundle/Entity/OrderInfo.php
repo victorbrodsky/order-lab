@@ -305,6 +305,12 @@ class OrderInfo {
     private $destinations;
 
 
+    /**
+     * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
+     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
+     **/
+    private $attachmentContainer;
+
 
     ////////////////////////// Specific Orders //////////////////////////
 
@@ -712,9 +718,21 @@ class OrderInfo {
         return $this->messageCategory;
     }
 
+    /**
+     * @param mixed $attachmentContainer
+     */
+    public function setAttachmentContainer($attachmentContainer)
+    {
+        $this->attachmentContainer = $attachmentContainer;
+    }
 
-
-
+    /**
+     * @return mixed
+     */
+    public function getAttachmentContainer()
+    {
+        return $this->attachmentContainer;
+    }
 
 
 

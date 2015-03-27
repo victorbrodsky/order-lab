@@ -197,6 +197,16 @@ class PatientController extends Controller
         $destination = new Endpoint();
         $message->addDestination($destination);
 
+        //add attachment with 1 documentContainer
+        $attachmentContainerPart = $message->getAttachmentContainer();
+        if( !$attachmentContainerPart ) {
+            $attachmentContainerPart = new AttachmentContainer();
+            $message->setAttachmentContainer($attachmentContainerPart);
+        }
+        for( $i = 0; $i < 1; $i++ ) {
+            $attachmentContainerPart->addDocumentContainer( new DocumentContainer() );
+        }
+
 
         //add slide to message and input
         //$message->addSlide($object);
@@ -211,12 +221,6 @@ class PatientController extends Controller
             $laborder->setOrderinfo($message);
             $message->setLaborder($laborder);
 
-            $reqForm = new RequisitionForm();
-            $documentContainer = new DocumentContainer();
-            //$documentContainer->addDocument(new Document());
-            $reqForm->setDocumentContainer($documentContainer);
-            $laborder->addRequisitionForm($reqForm);
-
         }
 
         if( $messageTypeStr == "Report" ) {
@@ -224,9 +228,6 @@ class PatientController extends Controller
             $report = new Report();
             $report->setOrderinfo($message);
             $message->setReport($report);
-
-            $documentContainer = new DocumentContainer();
-            $report->setDocumentContainer($documentContainer);
 
             $signingPathologist = new UserWrapper();
             $report->addSigningPathologist($signingPathologist);
@@ -240,9 +241,6 @@ class PatientController extends Controller
             $blockorder = new BlockOrder();
             $blockorder->setOrderinfo($message);
             $message->setBlockorder($blockorder);
-
-            $documentContainer = new DocumentContainer();
-            $blockorder->setDocumentContainer($documentContainer);
 
             $instruction = new InstructionList();
             $blockorder->setInstruction($instruction);

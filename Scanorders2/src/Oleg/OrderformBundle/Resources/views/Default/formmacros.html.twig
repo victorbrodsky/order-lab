@@ -463,15 +463,19 @@
                             {% endfor %}
                         </p>
 
+
                         {#specific fields#}
                         {% if message.laborder is defined and message.laborder.vars.value %}
-                            <div class="well well-sm">
-                            <p>
-                                {% for requisitionForm in message.laborder.requisitionForms %}
-                                    {{ formmacros.fieldDocumentContainer(requisitionForm.documentContainer,cycle,'requisitionForm'~orderUniqueId) }}
-                                {% endfor %}
-                            </p>
-                            </div>
+                            {#<p>#}
+                                {#{% for requisitionForm in message.laborder.requisitionForms %}#}
+                                    {#{{ formmacros.fieldDocumentContainer(requisitionForm.documentContainer,cycle,'requisitionForm'~orderUniqueId) }}#}
+                                {#{% endfor %}#}
+                            {#</p>#}
+                            {#message's attachmentContainer#}
+                            {% for documentContainer in message.attachmentContainer.documentContainers %}
+                                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'laborder'~orderUniqueId) }}
+                            {% endfor %}
+
                         {% endif %}
 
                         {% if message.report is defined and message.report.vars.value %}
@@ -485,10 +489,7 @@
                                 {{ formmacros.fieldDateLabel(message.report.signatureDate,'allow-future-date') }}
                                 </div>
 
-                                <div class="well well-sm">
-                                {{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId) }}
-                                </div>
-
+                                {#{{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId) }}#}
                                 <div class="well well-sm">
                                 {{ formmacros.fieldUserWrapper(message.report.signingPathologists,cycle) }}
                                 {{ formmacros.fieldUserWrapper(message.report.consultedPathologists,cycle) }}
@@ -514,9 +515,11 @@
                                 {{ formmacros.field( message.blockorder.embeddedByUser ) }}
                                 </div>
 
-                                <div class="well well-sm">
-                                {{ formmacros.fieldDocumentContainer(message.blockorder.documentContainer,cycle,'blockorder'~orderUniqueId) }}
-                                </div>
+                                {#{{ formmacros.fieldDocumentContainer(message.blockorder.documentContainer,cycle,'blockorder'~orderUniqueId) }}#}
+                                {#message's attachmentContainer#}
+                                {% for documentContainer in message.attachmentContainer.documentContainers %}
+                                    {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'blockorder'~orderUniqueId) }}
+                                {% endfor %}
 
                             </p>
                         {% endif %}
@@ -557,8 +560,16 @@
                                 {#<div class="well well-sm">#}
                                     {#{{ formmacros.fieldDocumentContainer(message.stainorder.documentContainer,cycle) }}#}
                                 {#</div>#}
+
+                                {#message's attachmentContainer#}
+                                {% for documentContainer in message.attachmentContainer.documentContainers %}
+                                    {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId) }}
+                                {% endfor %}
+
                             </p>
                         {% endif %}
+
+
 
                     </p>
 
