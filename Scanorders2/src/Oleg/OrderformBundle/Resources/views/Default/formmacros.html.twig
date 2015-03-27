@@ -423,13 +423,15 @@
 
                         <p>
                             {% for input in message.vars.value.inputs %}
-                                {{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "input", disabled ) }}
+                                {#{{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "input", disabled ) }}#}
+                                {{ formmacros.simplefield( "Input:", input.entityName, "input", disabled ) }}
                             {% endfor %}
                         </p>
 
                         <p>
                             {% for output in message.vars.value.outputs %}
-                                {{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "input", disabled ) }}
+                                {#{{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "input", disabled ) }}#}
+                                {{ formmacros.simplefield( "Output:", output.entityName, "input", disabled ) }}
                             {% endfor %}
                         </p>
 
@@ -1675,10 +1677,6 @@
 
     <div id="slide_{{ uid }}" class="form-element-holder">
 
-        {% if flag and flag == "datastructure" %}
-            {{ formmacros.scanForm(slide,flag,uid,cycle) }}
-        {% endif %}
-
         {{ formmacros.field(slide.title) }}
 
         <p><div class="slideslidetype">     
@@ -1719,11 +1717,16 @@
             <p><div class="sliderelevantscans">{{ relevantScansHtml }}</div></p>
         {% endif %}
 
+        {% if flag and flag == "datastructure" %}
+            {{ formmacros.scanForm(slide,flag,uid,cycle) }}
+        {% endif %}
+
     </div>
 
 
 {% endmacro %}
 
+{#used bu datastructure#}
 {% macro scanForm(slide,flag,uid,cycle) %}
 
     {% import _self as formmacros %}
@@ -1751,6 +1754,15 @@
                 </div>
 
                 <div id="form_body_imaging_{{ orderUniqueId }}" class="panel-body collapse in">
+
+                    {% if scan.source is defined %}
+                        {{ formmacros.field(scan.source) }}
+                    {% endif %}
+
+                    {% if scan.imageId is defined %}
+                        {{ formmacros.field(scan.imageId) }}
+                    {% endif %}
+
                     {{ formmacros.field(scan.field) }}
                     {{ formmacros.field(scan.scanregion) }}
                     {{ formmacros.field(scan.note) }}
@@ -1937,10 +1949,35 @@
 
         {% import _self as formmacros %}
 
-        {% if accession.attachmentContainer is defined %}
-            {% for documentContainer in accession.attachmentContainer.documentContainers %}
-                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'accession') }}
-            {% endfor %}
+        {% if accession.attachmentContainer is defined and accession.attachmentContainer.documentContainers|length > 0 %}
+
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+
+                    {% if accession.vars.value.id %}
+                        {% set uniqueId = accession.attachmentContainer.vars.value.id %}
+                    {% else %}
+                        {% set uniqueId = 0 %}
+                    {% endif %}
+
+                    <button
+                            id="form_body_toggle_accession_autopsyimages_{{ uniqueId }}" type="button"
+                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
+                            data-toggle="collapse" data-target="#form_body_accession_autopsyimages_{{ uniqueId }}">
+                    </button>
+
+                    <h4 class="panel-title">Autopsy Images</h4>
+                </div>
+
+                <div id="form_body_accession_autopsyimages_{{ uniqueId }}" class="panel-body collapse">
+                    {% for documentContainer in accession.attachmentContainer.documentContainers %}
+                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'accession') }}
+                    {% endfor %}
+                </div>
+
+            </div>
+
         {% endif %}
 
     {% endif %}
@@ -1953,10 +1990,35 @@
 
         {% import _self as formmacros %}
 
-        {% if part.attachmentContainer is defined %}
-            {% for documentContainer in part.attachmentContainer.documentContainers %}
-                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'part') }}
-            {% endfor %}
+        {% if part.attachmentContainer is defined and part.attachmentContainer.documentContainers|length > 0 %}
+
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+
+                    {% if part.vars.value.id %}
+                        {% set uniqueId = part.attachmentContainer.vars.value.id %}
+                    {% else %}
+                        {% set uniqueId = 0 %}
+                    {% endif %}
+
+                    <button
+                            id="form_body_toggle_part_grossimages_{{ uniqueId }}" type="button"
+                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
+                            data-toggle="collapse" data-target="#form_body_part_grossimages_{{ uniqueId }}">
+                    </button>
+
+                    <h4 class="panel-title">Gross Images</h4>
+                </div>
+
+                <div id="form_body_part_grossimages_{{ uniqueId }}" class="panel-body collapse">
+                    {% for documentContainer in part.attachmentContainer.documentContainers %}
+                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'part') }}
+                    {% endfor %}
+                </div>
+
+            </div>
+
         {% endif %}
 
     {% endif %}
@@ -1982,13 +2044,13 @@
             {{ formmacros.field(scan.equipment) }}
         {% endif %}
 
-        {% if scan.source is defined %}
-            {{ formmacros.field(scan.source) }}
-        {% endif %}
+        {#{% if scan.source is defined %}#}
+            {#{{ formmacros.field(scan.source) }}#}
+        {#{% endif %}#}
 
-        {% if scan.imageId is defined %}
-            {{ formmacros.field(scan.imageId) }}
-        {% endif %}
+        {#{% if scan.imageId is defined %}#}
+            {#{{ formmacros.field(scan.imageId) }}#}
+        {#{% endif %}#}
 
         {% if scan.imageLink is defined %}
             {{ formmacros.field(scan.imageLink) }}

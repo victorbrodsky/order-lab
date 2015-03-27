@@ -93,17 +93,6 @@ class PatientController extends Controller
         $accession->addExtraFields($status,$user,$system);
         $procedure->addAccession($accession);
 
-        //add 5 autopsy fields: add 5 documentContainers to attachmentContainer
-        $attachmentContainer = $accession->getAttachmentContainer();
-        if( !$attachmentContainer ) {
-            $attachmentContainer = new AttachmentContainer();
-            $accession->setAttachmentContainer($attachmentContainer);
-        }
-        for( $i=0; $i<5; $i++) {
-            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
-        }
-
-
         $part = new Part(true,$status,$user,$system);
         //$part->addExtraFields($status,$user,$system);
         $accession->addPart($part);
@@ -115,6 +104,29 @@ class PatientController extends Controller
         $slide = new Slide(true,'valid',$user,$system); //Slides are always valid by default
         //$slide->addExtraFields($status,$user,$system);
         $block->addSlide($slide);
+
+        //testing add scan (Imaging) to a slide
+        //$slide->addScan( new Imaging() );
+
+        //Accession: add 5 autopsy fields: add 5 documentContainers to attachmentContainer
+        $attachmentContainerAccession = $accession->getAttachmentContainer();
+        if( !$attachmentContainerAccession ) {
+            $attachmentContainerAccession = new AttachmentContainer();
+            $accession->setAttachmentContainer($attachmentContainerAccession);
+        }
+        for( $i=0; $i<5; $i++) {
+            $attachmentContainerAccession->addDocumentContainer( new DocumentContainer() );
+        }
+
+        //Part: add 5 gross image fields: add 5 documentContainers to attachmentContainer
+        $attachmentContainerPart = $part->getAttachmentContainer();
+        if( !$attachmentContainerPart ) {
+            $attachmentContainerPart = new AttachmentContainer();
+            $part->setAttachmentContainer($attachmentContainerPart);
+        }
+        for( $i=0; $i<5; $i++) {
+            $attachmentContainerPart->addDocumentContainer( new DocumentContainer() );
+        }
 
 
         $disabled = true;
