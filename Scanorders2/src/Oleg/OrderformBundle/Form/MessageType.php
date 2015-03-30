@@ -72,7 +72,7 @@ class MessageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( array_key_exists('idnumber', $this->params) &&  $this->params['idnumber'] == true ) {
+        if( array_key_exists('message.idnumber', $this->params) &&  $this->params['message.idnumber'] == true ) {
             $builder->add('idnumber', null, array(
                 'label' => "Identification Number:",
                 'attr' => array('class' => 'form-control'),
@@ -80,7 +80,7 @@ class MessageType extends AbstractType
             ));
         }
 
-        if( array_key_exists('orderdate', $this->params) &&  $this->params['orderdate'] == true ) {
+        if( array_key_exists('message.orderdate', $this->params) &&  $this->params['message.orderdate'] == true ) {
             $builder->add('orderdate','date',array(
                 'widget' => 'single_text',
                 //'format' => 'MM-dd-yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
@@ -91,7 +91,7 @@ class MessageType extends AbstractType
             ));
         }
 
-        if( array_key_exists('provider', $this->params) &&  $this->params['provider'] == true ) {
+        if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
             $builder->add('provider', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => $this->labels['provider'],
@@ -167,7 +167,7 @@ class MessageType extends AbstractType
             },
         ));
 
-        if( array_key_exists('sources', $this->params) &&  $this->params['sources'] == true ) {
+        if( array_key_exists('message.sources', $this->params) &&  $this->params['message.sources'] == true ) {
             $this->params['endpoint.location'] = $this->labels['sources.location'];
             $this->params['endpoint.system'] = $this->labels['sources.system'];
             $builder->add('sources', 'collection', array(
@@ -269,17 +269,15 @@ class MessageType extends AbstractType
             /* Check we're looking at the right data/form */
             if( $dataEntity && $dataEntity instanceof OrderInfo ) {
 
-                echo $dataEntity;
+                //echo $dataEntity;
 
                 //laborder
-                if( $dataEntity->getLaborder() && array_key_exists('message.laborder', $this->params) &&  $this->params['message.laborder'] == true ) {
+                if( $dataEntity->getLaborder() || (array_key_exists('message.laborder', $this->params) &&  $this->params['message.laborder'] == true) ) {
+                    //echo "laborder:".$dataEntity->getLaborder()->getId()."<br>";
                     $form->add('laborder', new LabOrderType($this->params,$this->entity), array(
                         'required' => false,
                         'label' => false
                     ));
-
-                    //TODO: to get correct this specific properties (i.e label), add listener to determine if this object has this specific order
-                    //Or use laborder object to query DB util table containing label, equipment etc.
 
                     //overwrite laborder's attachmentContainer
                     $params = array('labelPrefix'=>'Requisition Form Image');
@@ -292,7 +290,7 @@ class MessageType extends AbstractType
                 }
 
                 //report
-                if( $dataEntity->getReport() && array_key_exists('message.report', $this->params) &&  $this->params['message.report'] == true ) {
+                if( $dataEntity->getReport() || (array_key_exists('message.report', $this->params) &&  $this->params['message.report'] == true) ) {
                     //echo "Report:".$dataEntity->getReport()->getId()."<br>";
                     $form->add('report', new ReportType($this->params,$this->entity), array(
                         'required' => false,
@@ -310,7 +308,7 @@ class MessageType extends AbstractType
                 }
 
                 //blockorder
-                if( $dataEntity->getBlockorder() && array_key_exists('message.blockorder', $this->params) &&  $this->params['message.blockorder'] == true ) {
+                if( $dataEntity->getBlockorder() || (array_key_exists('message.blockorder', $this->params) &&  $this->params['message.blockorder'] == true) ) {
                     $form->add('blockorder', new BlockOrderType($this->params,$this->entity), array(
                         'required' => false,
                         'label' => false
@@ -327,7 +325,7 @@ class MessageType extends AbstractType
                 }
 
                 //slideorder
-                if( $dataEntity->getSlideorder() && array_key_exists('message.slideorder', $this->params) &&  $this->params['message.slideorder'] == true ) {
+                if( $dataEntity->getSlideorder() || (array_key_exists('message.slideorder', $this->params) &&  $this->params['message.slideorder'] == true) ) {
                     $form->add('slideorder', new SlideOrderType($this->params,$this->entity), array(
                         'required' => false,
                         'label' => false
@@ -358,8 +356,7 @@ class MessageType extends AbstractType
                 }
 
                 //stainorder
-                if( $dataEntity->getStainorder() && array_key_exists('message.stainorder', $this->params) &&  $this->params['message.stainorder'] == true ) {
-
+                if( $dataEntity->getStainorder() || (array_key_exists('message.stainorder', $this->params) &&  $this->params['message.stainorder'] == true) ) {
                     //echo "stainorder:".$dataEntity->getStainorder()->getId()."<br>";
                     $form->add('stainorder', new StainOrderType($this->params,$this->entity), array(
                         'required' => false,

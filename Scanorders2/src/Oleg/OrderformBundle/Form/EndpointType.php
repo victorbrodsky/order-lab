@@ -68,7 +68,7 @@ class EndpointType extends AbstractType
 
 
         ////////////// System //////////////////////
-        if( array_key_exists('system', $this->params) &&  $this->params['system'] == true ) {
+        if( array_key_exists('endpoint.system', $this->params) &&  $this->params['endpoint.system'] == true ) {
             $builder->add('system', 'entity', array(
                 'label' => $labelSystem,
                 'required'=> false,

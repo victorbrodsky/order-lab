@@ -29,11 +29,20 @@ class LoginTest extends WebTestCase {
         $client = static::createClient();
         $client->followRedirects();
 
-        $crawler = $client->request('GET', '/login');
-
+        $crawler = $client->request('GET', '/order/');
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Scan Order Submission")')->count()
+            $crawler->filter('html:contains("O R D E R")')->count()
+        );
+
+        $crawler = $client->request('GET', '/scan/login');
+        //print_r($crawler);
+//        foreach ($crawler as $domElement) {
+//            print $domElement->nodeName;
+//        }
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Scan Orders")')->count()
         );
 
     }
@@ -55,7 +64,7 @@ class LoginTest extends WebTestCase {
         $_SERVER['HTTP_USER_AGENT'] = 'phpunit test';
 
         // Visit user login page and login
-        $crawler = $client->request('GET', '/login');
+        $crawler = $client->request('GET', '/scan/login');
 
         //test if login page is opened
         $this->assertTrue($client->getResponse()->isSuccessful());

@@ -348,7 +348,7 @@
 
 {#render messages#}
 {#show order if order's input.entityName is the same as object#}
-{% macro renderMessages( object, datastructure, cycle ) %}
+{% macro renderMessages( object, datastructure, uid, cycle ) %}
 
     {% import _self as formmacros %}
 
@@ -391,9 +391,9 @@
                     <div class="panel-heading">
 
                         <button
-                                id="form_body_toggle_message_{{ orderUniqueId }}" type="button"
+                                id="form_body_toggle_message_{{ orderUniqueId }}_{{ uid }}" type="button"
                                 class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                                data-toggle="collapse" data-target="#form_body_message_{{ orderUniqueId }}">
+                                data-toggle="collapse" data-target="#form_body_message_{{ orderUniqueId }}_{{ uid }}">
                         </button>
 
                         <div class="panel-title">{{ message.vars.value.messageCategory.name }}</div>
@@ -401,7 +401,7 @@
                     </div> {#heading#}
 
 
-                    <div id="form_body_message_{{ orderUniqueId }}" class="panel-body collapse">
+                    <div id="form_body_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
 
                     <p>
                         {{ formmacros.simplefield( "ID:", orderId, "input", disabled ) }}
@@ -466,15 +466,6 @@
 
                         {#specific fields#}
                         {% if message.laborder is defined and message.laborder.vars.value %}
-                            {#<p>#}
-                                {#{% for requisitionForm in message.laborder.requisitionForms %}#}
-                                    {#{{ formmacros.fieldDocumentContainer(requisitionForm.documentContainer,cycle,'requisitionForm'~orderUniqueId) }}#}
-                                {#{% endfor %}#}
-                            {#</p>#}
-                            {#message's attachmentContainer#}
-                            {#{% for documentContainer in message.attachmentContainer.documentContainers %}#}
-                                {#{{ formmacros.fieldDocumentContainer(documentContainer,cycle,'laborder'~orderUniqueId) }}#}
-                            {#{% endfor %}#}
 
                         {% endif %}
 
@@ -489,7 +480,7 @@
                                 {{ formmacros.fieldDateLabel(message.report.signatureDate,'allow-future-date') }}
                                 </div>
 
-                                {#{{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId) }}#}
+                                {#{{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId~uid) }}#}
                                 <div class="well well-sm">
                                 {{ formmacros.fieldUserWrapper(message.report.signingPathologists,cycle) }}
                                 {{ formmacros.fieldUserWrapper(message.report.consultedPathologists,cycle) }}
@@ -514,12 +505,6 @@
                                 {{ formmacros.fieldDateLabel(message.blockorder.embeddedDate,'allow-future-date') }}
                                 {{ formmacros.field( message.blockorder.embeddedByUser ) }}
                                 </div>
-
-                                {#{{ formmacros.fieldDocumentContainer(message.blockorder.documentContainer,cycle,'blockorder'~orderUniqueId) }}#}
-                                {#message's attachmentContainer#}
-                                {#{% for documentContainer in message.attachmentContainer.documentContainers %}#}
-                                    {#{{ formmacros.fieldDocumentContainer(documentContainer,cycle,'blockorder'~orderUniqueId) }}#}
-                                {#{% endfor %}#}
 
                             </p>
                         {% endif %}
@@ -557,22 +542,13 @@
                                     {{ formmacros.field( message.stainorder.processedByUser ) }}
                                 </div>
 
-                                {#<div class="well well-sm">#}
-                                    {#{{ formmacros.fieldDocumentContainer(message.stainorder.documentContainer,cycle) }}#}
-                                {#</div>#}
-
-                                {#message's attachmentContainer#}
-                                {#{% for documentContainer in message.attachmentContainer.documentContainers %}#}
-                                    {#{{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId) }}#}
-                                {#{% endfor %}#}
-
                             </p>
                         {% endif %}
 
 
                         {#message's attachmentContainer#}
                         {% for documentContainer in message.attachmentContainer.documentContainers %}
-                            {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId) }}
+                            {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId~'_'~uid) }}
                         {% endfor %}
 
                     </p>
@@ -1216,26 +1192,6 @@
     {% endif %}
 {% endmacro %}
 
-{% macro fieldLaborder(field,cycle) %}
-    {% import _self as formmacros %}
-    {% if field.vars.value.status == 'valid' %}
-        {{ form_errors(field) }}
-        {{ form_widget(field.others) }}
-
-        {#{{ formmacros.field(field.source) }}#}
-
-        {% if field.order is defined %}
-            {{ formmacros.fieldGeneralOrder(field.order,cycle) }}
-        {% endif %}
-
-        {{ formmacros.field(field.sourceLocation) }}
-        {{ formmacros.field(field.trackLocations) }}
-
-        {#images#}
-        {{ formmacros.fieldDocumentContainer(field.documentContainer,cycle,'laborder') }}
-
-    {% endif %}
-{% endmacro %}
 
 {% macro fieldDocumentContainer(container,cycle,prefix,renderType) %}
     {% import _self as formmacros %}
@@ -1353,7 +1309,7 @@
     {% endif %}
 
     {#messages#}
-    {{ formmacros.renderMessages(patient,flag,cycle) }}
+    {{ formmacros.renderMessages(patient,flag,uid,cycle) }}
 
     <div id="patient_{{ uid }}" class="form-element-holder">
 
@@ -1419,7 +1375,7 @@
     {% endif %}
 
     {#messages#}
-    {{ formmacros.renderMessages(encounter,flag,cycle) }}
+    {{ formmacros.renderMessages(encounter,flag,uid,cycle) }}
 
     <div id="encounter_{{ uid }}" class="form-element-holder">
 
@@ -1451,7 +1407,7 @@
     {% endif %}
 
     {#messages#}
-    {{ formmacros.renderMessages(procedure,flag,cycle) }}
+    {{ formmacros.renderMessages(procedure,flag,uid,cycle) }}
 
     <div id="procedure_{{ uid }}" class="form-element-holder">
 
@@ -1489,7 +1445,7 @@
     {% endif %}
 
     {#messages#}
-    {{ formmacros.renderMessages(accession,flag,cycle) }}
+    {{ formmacros.renderMessages(accession,flag,uid,cycle) }}
 
     <div id="accession_{{ uid }}" class="form-element-holder">
         {% if accessionHtml is not defined or accessionHtml == "" %}
@@ -1589,7 +1545,7 @@
     {% endif %}
 
     {#messages#}
-    {{ formmacros.renderMessages(part,flag,cycle) }}
+    {{ formmacros.renderMessages(part,flag,uid,cycle) }}
 
     <div id="part_{{ uid }}" class="form-element-holder scan-partpaper">
 
@@ -1654,7 +1610,7 @@
     {% endif %}
 
     {#messages#}
-    {{ formmacros.renderMessages(block,flag,cycle) }}
+    {{ formmacros.renderMessages(block,flag,uid,cycle) }}
 
     <div id="block_{{ uid }}" class="form-element-holder">
 
@@ -1688,7 +1644,7 @@
     {% import _self as formmacros %}
 
     {#messages#}
-    {{ formmacros.renderMessages(slide,flag,cycle) }}
+    {{ formmacros.renderMessages(slide,flag,uid,cycle) }}
 
     <div id="slide_{{ uid }}" class="form-element-holder">
 
@@ -1760,15 +1716,15 @@
                     {% endif %}
 
                     <button
-                            id="form_body_toggle_imaging_{{ orderUniqueId }}" type="button"
+                            id="form_body_toggle_imaging_{{ orderUniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
-                            data-toggle="collapse" data-target="#form_body_imaging_{{ orderUniqueId }}">
+                            data-toggle="collapse" data-target="#form_body_imaging_{{ orderUniqueId }}_{{ uid }}">
                     </button>
 
                     <h4 class="panel-title">Imaging</h4>
                 </div>
 
-                <div id="form_body_imaging_{{ orderUniqueId }}" class="panel-body collapse in">
+                <div id="form_body_imaging_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse in">
 
                     {% if scan.source is defined %}
                         {{ formmacros.field(scan.source) }}
@@ -1830,15 +1786,15 @@
                     {% endif %}
 
                     <button
-                            id="form_body_toggle_patientdeath_{{ orderUniqueId }}" type="button"
+                            id="form_body_toggle_patientdeath_{{ orderUniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            data-toggle="collapse" data-target="#form_body_patientdeath_{{ orderUniqueId }}">
+                            data-toggle="collapse" data-target="#form_body_patientdeath_{{ orderUniqueId }}_{{ uid }}">
                     </button>
 
                     <h4 class="panel-title">Additional Information</h4>
                 </div>
 
-                <div id="form_body_patientdeath_{{ orderUniqueId }}" class="panel-body collapse">
+                <div id="form_body_patientdeath_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
                     {% for deceased in patient.deceased %}
                         {{ formmacros.fieldDeceased(deceased,cycle) }}
                     {% endfor %}
@@ -1890,15 +1846,15 @@
                     {% endif %}
 
                     <button
-                            id="form_body_toggle_inpatientinfo_{{ uniqueId }}" type="button"
+                            id="form_body_toggle_inpatientinfo_{{ uniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            data-toggle="collapse" data-target="#form_body_inpatientinfo_{{ uniqueId }}">
+                            data-toggle="collapse" data-target="#form_body_inpatientinfo_{{ uniqueId }}_{{ uid }}">
                     </button>
 
                     <h4 class="panel-title">Inpatient Info</h4>
                 </div>
 
-                <div id="form_body_inpatientinfo_{{ uniqueId }}" class="panel-body collapse">
+                <div id="form_body_inpatientinfo_{{ uniqueId }}_{{ uid }}" class="panel-body collapse">
                     {% for inpatientinfo in encounter.inpatientinfo %}
                         {{ formmacros.fieldInpatientinfo(inpatientinfo,cycle) }}
                     {% endfor %}
@@ -1977,17 +1933,17 @@
                     {% endif %}
 
                     <button
-                            id="form_body_toggle_accession_autopsyimages_{{ uniqueId }}" type="button"
+                            id="form_body_toggle_accession_autopsyimages_{{ uniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            data-toggle="collapse" data-target="#form_body_accession_autopsyimages_{{ uniqueId }}">
+                            data-toggle="collapse" data-target="#form_body_accession_autopsyimages_{{ uniqueId }}_{{ uid }}">
                     </button>
 
                     <h4 class="panel-title">Autopsy Images</h4>
                 </div>
 
-                <div id="form_body_accession_autopsyimages_{{ uniqueId }}" class="panel-body collapse">
+                <div id="form_body_accession_autopsyimages_{{ uniqueId }}_{{ uid }}" class="panel-body collapse">
                     {% for documentContainer in accession.attachmentContainer.documentContainers %}
-                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'accession') }}
+                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'accession'~'_'~uid) }}
                     {% endfor %}
                 </div>
 
@@ -2018,17 +1974,17 @@
                     {% endif %}
 
                     <button
-                            id="form_body_toggle_part_grossimages_{{ uniqueId }}" type="button"
+                            id="form_body_toggle_part_grossimages_{{ uniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            data-toggle="collapse" data-target="#form_body_part_grossimages_{{ uniqueId }}">
+                            data-toggle="collapse" data-target="#form_body_part_grossimages_{{ uniqueId }}_{{ uid }}">
                     </button>
 
                     <h4 class="panel-title">Gross Images</h4>
                 </div>
 
-                <div id="form_body_part_grossimages_{{ uniqueId }}" class="panel-body collapse">
+                <div id="form_body_part_grossimages_{{ uniqueId }}_{{ uid }}" class="panel-body collapse">
                     {% for documentContainer in part.attachmentContainer.documentContainers %}
-                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'part') }}
+                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'part'~'_'~uid) }}
                     {% endfor %}
                 </div>
 
@@ -2072,7 +2028,7 @@
         {% endif %}
 
         {% if scan.documentContainer is defined %}
-            {{ formmacros.fieldDocumentContainer(scan.documentContainer,cycle,'scan') }}
+            {{ formmacros.fieldDocumentContainer(scan.documentContainer,cycle,'scan'~'_'~uid) }}
         {% endif %}
 
     {% endif %}

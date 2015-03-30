@@ -71,63 +71,9 @@ class PatientController extends Controller
      */
     public function newPatientAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('order_security_utility');
-
-        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
-        $status = 'valid';
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $patient = new Patient(true,$status,$user,$system);
-        $patient->addExtraFields($status,$user,$system);
-
-        $encounter = new Encounter(true,$status,$user,$system);
-        $encounter->addExtraFields($status,$user,$system);
-        $patient->addEncounter($encounter);
-
-        $procedure = new Procedure(true,$status,$user,$system);
-        $procedure->addExtraFields($status,$user,$system);
-        $encounter->addProcedure($procedure);
-
-        $accession = new Accession(true,$status,$user,$system);
-        $accession->addExtraFields($status,$user,$system);
-        $procedure->addAccession($accession);
-
-        $part = new Part(true,$status,$user,$system);
-        //$part->addExtraFields($status,$user,$system);
-        $accession->addPart($part);
-
-        $block = new Block(true,$status,$user,$system);
-        //$block->addExtraFields($status,$user,$system);
-        $part->addBlock($block);
-
-        $slide = new Slide(true,'valid',$user,$system); //Slides are always valid by default
-        //$slide->addExtraFields($status,$user,$system);
-        $block->addSlide($slide);
-
-        //testing add scan (Imaging) to a slide
-        //$slide->addScan( new Imaging() );
-
-        //Accession: add 5 autopsy fields: add 5 documentContainers to attachmentContainer
-        $attachmentContainerAccession = $accession->getAttachmentContainer();
-        if( !$attachmentContainerAccession ) {
-            $attachmentContainerAccession = new AttachmentContainer();
-            $accession->setAttachmentContainer($attachmentContainerAccession);
-        }
-        for( $i=0; $i<5; $i++) {
-            $attachmentContainerAccession->addDocumentContainer( new DocumentContainer() );
-        }
-
-        //Part: add 5 gross image fields: add 5 documentContainers to attachmentContainer
-        $attachmentContainerPart = $part->getAttachmentContainer();
-        if( !$attachmentContainerPart ) {
-            $attachmentContainerPart = new AttachmentContainer();
-            $part->setAttachmentContainer($attachmentContainerPart);
-        }
-        for( $i=0; $i<5; $i++) {
-            $attachmentContainerPart->addDocumentContainer( new DocumentContainer() );
-        }
-
+        $patient = $this->createPatientDatastructure();
 
         $disabled = true;
         //$disabled = false;
@@ -139,33 +85,19 @@ class PatientController extends Controller
             'datastructure' => 'datastructure'
         );
 
-        /////////////////////// testing: create specific messages ///////////////////////
-        $params['sources'] = true;
-        $params['system'] = true;
-        $params['orderdate'] = true;
-        $params['provider'] = true;
+        //specific fields
+        $params['message.sources'] = true;
+        $params['endpoint.system'] = true;
+        $params['message.orderdate'] = true;
+        $params['message.provider'] = true;
+        $params['message.idnumber'] = true;
 
-        $this->createAndAddSpecificMessage($slide,"Lab Order");
-        $params['message.laborder'] = true;
-        $params['idnumber'] = true;
-
-        //$this->createAndAddSpecificMessage($part,"Report");
-        $this->createAndAddSpecificMessage($slide,"Report");
-        $params['message.report'] = true;
-
-        $this->createAndAddSpecificMessage($part,"Block Order");
-        $params['message.blockorder'] = true;
-
-        $this->createAndAddSpecificMessage($block,"Slide Order");
-        $params['message.slideorder'] = true;
-
-        $this->createAndAddSpecificMessage($slide,"Stain Order");
-        $params['message.stainorder'] = true;
-
-        //testing: add scan
-        //$newScan = new Imaging('valid',$user,$system);
-        //$slide->addScan($newScan);
-        /////////////////////// EOF create lab order ///////////////////////
+        //specific orders
+//        $params['message.laborder'] = true;
+//        $params['message.report'] = true;
+//        $params['message.blockorder'] = true;
+//        $params['message.slideorder'] = true;
+//        $params['message.stainorder'] = true;
 
         $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => $disabled) );
 
@@ -176,6 +108,88 @@ class PatientController extends Controller
             'type' => 'show',
             'datastructure' => 'datastructure'
         );
+    }
+
+    public function createPatientDatastructure( $objectNumber = 1 ) {
+
+        $securityUtil = $this->get('order_security_utility');
+
+        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+        $status = 'valid';
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $patient = new Patient(true,$status,$user,$system);
+        $patient->addExtraFields($status,$user,$system);
+
+        for( $count = 0; $count < $objectNumber; $count++ ) {
+
+            $encounter = new Encounter(true,$status,$user,$system);
+            $encounter->addExtraFields($status,$user,$system);
+            $patient->addEncounter($encounter);
+
+            $procedure = new Procedure(true,$status,$user,$system);
+            $procedure->addExtraFields($status,$user,$system);
+            $encounter->addProcedure($procedure);
+
+            $accession = new Accession(true,$status,$user,$system);
+            $accession->addExtraFields($status,$user,$system);
+            $procedure->addAccession($accession);
+
+            $part = new Part(true,$status,$user,$system);
+            //$part->addExtraFields($status,$user,$system);
+            $accession->addPart($part);
+
+            $block = new Block(true,$status,$user,$system);
+            //$block->addExtraFields($status,$user,$system);
+            $part->addBlock($block);
+
+            $slide = new Slide(true,'valid',$user,$system); //Slides are always valid by default
+            //$slide->addExtraFields($status,$user,$system);
+            $block->addSlide($slide);
+
+            //testing add scan (Imaging) to a slide
+            //$slide->addScan( new Imaging() );
+
+            //Accession: add 5 autopsy fields: add 5 documentContainers to attachmentContainer
+            $attachmentContainerAccession = $accession->getAttachmentContainer();
+            if( !$attachmentContainerAccession ) {
+                $attachmentContainerAccession = new AttachmentContainer();
+                $accession->setAttachmentContainer($attachmentContainerAccession);
+            }
+            for( $i=0; $i<5; $i++) {
+                $attachmentContainerAccession->addDocumentContainer( new DocumentContainer() );
+            }
+
+            //Part: add 5 gross image fields: add 5 documentContainers to attachmentContainer
+            $attachmentContainerPart = $part->getAttachmentContainer();
+            if( !$attachmentContainerPart ) {
+                $attachmentContainerPart = new AttachmentContainer();
+                $part->setAttachmentContainer($attachmentContainerPart);
+            }
+            for( $i=0; $i<5; $i++) {
+                $attachmentContainerPart->addDocumentContainer( new DocumentContainer() );
+            }
+
+            /////////////////////// testing: create specific messages ///////////////////////
+            $this->createAndAddSpecificMessage($slide,"Lab Order");
+
+            //$this->createAndAddSpecificMessage($part,"Report");
+            $this->createAndAddSpecificMessage($slide,"Report");
+
+            $this->createAndAddSpecificMessage($part,"Block Order");
+
+            $this->createAndAddSpecificMessage($block,"Slide Order");
+
+            $this->createAndAddSpecificMessage($slide,"Stain Order");
+
+            //testing: add scan
+            //$newScan = new Imaging('valid',$user,$system);
+            //$slide->addScan($newScan);
+            /////////////////////// EOF create lab order ///////////////////////
+
+        }
+
+        return $patient;
     }
 
     public function createAndAddSpecificMessage($object,$messageTypeStr) {
@@ -387,4 +401,24 @@ class PatientController extends Controller
             ->getForm()
         ;
     }
+
+
+
+
+
+
+    //create Test Patient
+    /**
+     * @Route("/datastructure/newtestpatient", name="patient_create")
+     * @Method("GET")
+     * @Template()
+     */
+    private function newtestpatientAction($id) {
+
+        $patient = $this->createPatientDatastructure(2);
+
+        //add two images
+
+    }
+
 }
