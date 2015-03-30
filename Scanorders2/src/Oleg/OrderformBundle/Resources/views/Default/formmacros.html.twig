@@ -472,9 +472,9 @@
                                 {#{% endfor %}#}
                             {#</p>#}
                             {#message's attachmentContainer#}
-                            {% for documentContainer in message.attachmentContainer.documentContainers %}
-                                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'laborder'~orderUniqueId) }}
-                            {% endfor %}
+                            {#{% for documentContainer in message.attachmentContainer.documentContainers %}#}
+                                {#{{ formmacros.fieldDocumentContainer(documentContainer,cycle,'laborder'~orderUniqueId) }}#}
+                            {#{% endfor %}#}
 
                         {% endif %}
 
@@ -517,9 +517,9 @@
 
                                 {#{{ formmacros.fieldDocumentContainer(message.blockorder.documentContainer,cycle,'blockorder'~orderUniqueId) }}#}
                                 {#message's attachmentContainer#}
-                                {% for documentContainer in message.attachmentContainer.documentContainers %}
-                                    {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'blockorder'~orderUniqueId) }}
-                                {% endfor %}
+                                {#{% for documentContainer in message.attachmentContainer.documentContainers %}#}
+                                    {#{{ formmacros.fieldDocumentContainer(documentContainer,cycle,'blockorder'~orderUniqueId) }}#}
+                                {#{% endfor %}#}
 
                             </p>
                         {% endif %}
@@ -562,14 +562,18 @@
                                 {#</div>#}
 
                                 {#message's attachmentContainer#}
-                                {% for documentContainer in message.attachmentContainer.documentContainers %}
-                                    {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId) }}
-                                {% endfor %}
+                                {#{% for documentContainer in message.attachmentContainer.documentContainers %}#}
+                                    {#{{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId) }}#}
+                                {#{% endfor %}#}
 
                             </p>
                         {% endif %}
 
 
+                        {#message's attachmentContainer#}
+                        {% for documentContainer in message.attachmentContainer.documentContainers %}
+                            {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId) }}
+                        {% endfor %}
 
                     </p>
 

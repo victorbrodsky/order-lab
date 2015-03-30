@@ -47,4 +47,5 @@ class AttachmentContainerType extends AbstractType
     {
         return 'oleg_userdirectorybundle_attachmentcontainertype';
     }
+
 }

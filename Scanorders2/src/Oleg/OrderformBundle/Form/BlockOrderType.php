@@ -65,7 +65,6 @@ class BlockOrderType extends AbstractType
             'label' => false
         ));
 
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

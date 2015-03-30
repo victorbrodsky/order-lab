@@ -2,7 +2,6 @@
 
 namespace Oleg\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -10,6 +9,8 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityRepository;
 
+use Oleg\OrderformBundle\Entity\OrderInfo;
+use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
 
@@ -228,157 +229,169 @@ class MessageType extends AbstractType
         }
 
 
-        if( !$builder->has('attachmentContainer') ) {
-            $params = array('labelPrefix'=>'Image');
-            $params['device.types'] = array();
-            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
-                'required' => false,
-                'label' => false
-            ));
-        }
-
-        if( !$builder->has('equipment') ) {
-            $builder->add('equipment', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:Equipment',
-                'property' => 'name',
-                'label'=>$this->labels['equipment'],
-                'required'=> true,
-                'multiple' => false,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('i')
-                            ->leftJoin('i.keytype','keytype')
-                            ->where("keytype.name = :keytype AND i.type != :type")
-                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
-                    },
-            ));
-        }
+//        if( !$builder->has('attachmentContainer') ) {
+//            $params = array('labelPrefix'=>'Image');
+//            $params['device.types'] = array();
+//            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+//                'required' => false,
+//                'label' => false
+//            ));
+//        }
+//
+//        if( !$builder->has('equipment') ) {
+//            $builder->add('equipment', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:Equipment',
+//                'property' => 'name',
+//                'label'=>$this->labels['equipment'],
+//                'required'=> true,
+//                'multiple' => false,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('i')
+//                            ->leftJoin('i.keytype','keytype')
+//                            ->where("keytype.name = :keytype AND i.type != :type")
+//                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
+//                    },
+//            ));
+//        }
 
 
         /////////////////////////// specific orders //////////////////////////
-        //message's laborder
-        if( array_key_exists('message.laborder', $this->params) &&  $this->params['message.laborder'] == true ) {
-            $builder->add('laborder', new LabOrderType($this->params,$this->entity), array(
-                'required' => false,
-                'label' => false
-            ));
 
-            //TODO: to get correct this specific properties (i.e label), add listener to determine if this object has this specific order
-            //Or use laborder object to query DB util table containg label, equipment etc.
+        //get message entity
+        //$builder->addEventListener(FormEvents::PRE_SET_DATA, function (DataEvent $event) use ($builder)
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
+        {
 
-            //overwrite laborder's attachmentContainer
-            $builder->remove('attachmentContainer');
-            $params = array('labelPrefix'=>'Requisition Form Image');
-            $equipmentTypes = array('Requisition Form Scanner');
-            $params['device.types'] = $equipmentTypes;
-            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
-                'required' => false,
-                'label' => false
-            ));
-        }
+            $form = $event->getForm();
+            $dataEntity = $event->getData();
 
-        //message's report
-        if( array_key_exists('message.report', $this->params) &&  $this->params['message.report'] == true ) {
-            $builder->add('report', new ReportType($this->params,$this->entity), array(
-                'required' => false,
-                'label' => false
-            ));
+            /* Check we're looking at the right data/form */
+            if( $dataEntity && $dataEntity instanceof OrderInfo ) {
 
-            //overwrite report's attachmentContainer
-            $builder->remove('attachmentContainer');
-            $params = array('labelPrefix'=>'Reference Representation');
-            $equipmentTypes = array();
-            $params['device.types'] = $equipmentTypes;
-            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
-                'required' => false,
-                'label' => false
-            ));
-        }
+                echo $dataEntity;
 
-        //message's blockorder
-        if( array_key_exists('message.blockorder', $this->params) &&  $this->params['message.blockorder'] == true ) {
-            $builder->add('blockorder', new BlockOrderType($this->params,$this->entity), array(
-                'required' => false,
-                'label' => false
-            ));
+                //laborder
+                if( $dataEntity->getLaborder() && array_key_exists('message.laborder', $this->params) &&  $this->params['message.laborder'] == true ) {
+                    $form->add('laborder', new LabOrderType($this->params,$this->entity), array(
+                        'required' => false,
+                        'label' => false
+                    ));
 
-            //overwrite blockorder's attachmentContainer
-            $builder->remove('attachmentContainer');
-            $params = array('labelPrefix'=>'Block Image');
-            $equipmentTypes = array('Xray Machine','Block Imaging Camera');
-            $params['device.types'] = $equipmentTypes;
-            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
-                'required' => false,
-                'label' => false
-            ));
-        }
+                    //TODO: to get correct this specific properties (i.e label), add listener to determine if this object has this specific order
+                    //Or use laborder object to query DB util table containing label, equipment etc.
 
-        //message's slideorder
-        if( array_key_exists('message.slideorder', $this->params) &&  $this->params['message.slideorder'] == true ) {
+                    //overwrite laborder's attachmentContainer
+                    $params = array('labelPrefix'=>'Requisition Form Image');
+                    $equipmentTypes = array('Requisition Form Scanner');
+                    $params['device.types'] = $equipmentTypes;
+                    $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+                        'required' => false,
+                        'label' => false
+                    ));
+                }
 
-            $builder->add('slideorder', new SlideOrderType($this->params,$this->entity), array(
-                'required' => false,
-                'label' => false
-            ));
+                //report
+                if( $dataEntity->getReport() && array_key_exists('message.report', $this->params) &&  $this->params['message.report'] == true ) {
+                    //echo "Report:".$dataEntity->getReport()->getId()."<br>";
+                    $form->add('report', new ReportType($this->params,$this->entity), array(
+                        'required' => false,
+                        'label' => false
+                    ));
 
-            $builder->remove('equipment');
-            $builder->add('equipment', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:Equipment',
-                'property' => 'name',
-                'label' => 'Microtome Device:',
-                'required'=> true,
-                'multiple' => false,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
+                    //overwrite report's attachmentContainer
+                    $params = array('labelPrefix'=>'Reference Representation');
+                    $equipmentTypes = array();
+                    $params['device.types'] = $equipmentTypes;
+                    $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+                        'required' => false,
+                        'label' => false
+                    ));
+                }
 
-                        $equipmentTypes = array('Microtome','Centrifuge');
-                        $whereArr = array();
-                        foreach($equipmentTypes as $equipmentType) {
-                            $whereArr[] = "keytype.name = '" . $equipmentType . "'";
-                        }
-                        $where = implode(' OR ', $whereArr);
+                //blockorder
+                if( $dataEntity->getBlockorder() && array_key_exists('message.blockorder', $this->params) &&  $this->params['message.blockorder'] == true ) {
+                    $form->add('blockorder', new BlockOrderType($this->params,$this->entity), array(
+                        'required' => false,
+                        'label' => false
+                    ));
 
-                        return $er->createQueryBuilder('i')
-                            ->leftJoin('i.keytype','keytype')
-                            ->where($where . " AND i.type != :type")
-                            ->setParameters( array('type' => 'disabled') );
-                    },
-            ));
+                    //overwrite blockorder's attachmentContainer
+                    $params = array('labelPrefix'=>'Block Image');
+                    $equipmentTypes = array('Xray Machine','Block Imaging Camera');
+                    $params['device.types'] = $equipmentTypes;
+                    $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+                        'required' => false,
+                        'label' => false
+                    ));
+                }
 
-        }
+                //slideorder
+                if( $dataEntity->getSlideorder() && array_key_exists('message.slideorder', $this->params) &&  $this->params['message.slideorder'] == true ) {
+                    $form->add('slideorder', new SlideOrderType($this->params,$this->entity), array(
+                        'required' => false,
+                        'label' => false
+                    ));
 
-        //message's stainorder
-        if( array_key_exists('message.stainorder', $this->params) &&  $this->params['message.stainorder'] == true ) {
+                    $form->add('equipment', 'entity', array(
+                        'class' => 'OlegUserdirectoryBundle:Equipment',
+                        'property' => 'name',
+                        'label' => 'Microtome Device:',
+                        'required'=> true,
+                        'multiple' => false,
+                        'attr' => array('class'=>'combobox combobox-width'),
+                        'query_builder' => function(EntityRepository $er) {
 
-            $builder->add('stainorder', new StainOrderType($this->params,$this->entity), array(
-                'required' => false,
-                'label' => false
-            ));
+                                $equipmentTypes = array('Microtome','Centrifuge');
+                                $whereArr = array();
+                                foreach($equipmentTypes as $equipmentType) {
+                                    $whereArr[] = "keytype.name = '" . $equipmentType . "'";
+                                }
+                                $where = implode(' OR ', $whereArr);
 
-            $builder->remove('equipment');
-            $builder->add('equipment', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:Equipment',
-                'property' => 'name',
-                'label' => 'Slide Stainer Device:',
-                'required'=> true,
-                'multiple' => false,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
+                                return $er->createQueryBuilder('i')
+                                    ->leftJoin('i.keytype','keytype')
+                                    ->where($where . " AND i.type != :type")
+                                    ->setParameters( array('type' => 'disabled') );
+                            },
+                    ));
+                }
 
-                        $equipmentTypes = array('Slide Stainer');
-                        $whereArr = array();
-                        foreach($equipmentTypes as $equipmentType) {
-                            $whereArr[] = "keytype.name = '" . $equipmentType . "'";
-                        }
-                        $where = implode(' OR ', $whereArr);
+                //stainorder
+                if( $dataEntity->getStainorder() && array_key_exists('message.stainorder', $this->params) &&  $this->params['message.stainorder'] == true ) {
 
-                        return $er->createQueryBuilder('i')
-                            ->leftJoin('i.keytype','keytype')
-                            ->where($where . " AND i.type != :type")
-                            ->setParameters( array('type' => 'disabled') );
-                    },
-            ));
-        }
+                    //echo "stainorder:".$dataEntity->getStainorder()->getId()."<br>";
+                    $form->add('stainorder', new StainOrderType($this->params,$this->entity), array(
+                        'required' => false,
+                        'label' => false
+                    ));
+
+                    $form->add('equipment', 'entity', array(
+                        'class' => 'OlegUserdirectoryBundle:Equipment',
+                        'property' => 'name',
+                        'label' => 'Slide Stainer Device:',
+                        'required'=> true,
+                        'multiple' => false,
+                        'attr' => array('class'=>'combobox combobox-width'),
+                        'query_builder' => function(EntityRepository $er) {
+
+                                $equipmentTypes = array('Slide Stainer');
+                                $whereArr = array();
+                                foreach($equipmentTypes as $equipmentType) {
+                                    $whereArr[] = "keytype.name = '" . $equipmentType . "'";
+                                }
+                                $where = implode(' OR ', $whereArr);
+
+                                return $er->createQueryBuilder('i')
+                                    ->leftJoin('i.keytype','keytype')
+                                    ->where($where . " AND i.type != :type")
+                                    ->setParameters( array('type' => 'disabled') );
+                            },
+                    ));
+                }
+
+            }//$dataEntity
+        });
         /////////////////////////// specific orders //////////////////////////
 
 
