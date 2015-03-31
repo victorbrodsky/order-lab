@@ -356,6 +356,22 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     }
 
 
+    public function findByAccessiontypeString($typeStr) {
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Accession', 'entity')
+            ->select("entity")
+            ->leftJoin("entity.accession", "accession")
+            ->leftJoin("accession.keytype", "keytype")
+            ->where("keytype.name = :keytypeStr")
+            ->setParameters( array('keytypeStr'=>$typeStr) )
+            ->getQuery();
+
+        $accessions = $query->getResult();
+        //echo "accession count=".count($accessions)." ";
+
+        return $accessions;
+    }
+
 
 }
 ?>

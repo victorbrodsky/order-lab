@@ -117,18 +117,39 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->setProvider($originalProvider);
         }
 
-//        echo "<br>################################## Finish:<br>";
-//        echo "patients=".count($entity->getPatient())."<br>";
-//        echo "encounters=".count($entity->getEncounter())."<br>";
-//        echo "pat: encounters=".count($entity->getPatient()->first()->getEncounter())."<br>";
-//        echo "procedures=".count($entity->getProcedure())."<br>";
-//        echo "pat: procedures=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure())."<br>";
-//        echo "accessions=".count($entity->getAccession())."<br>";
-//        echo "pat: accessions=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession())."<br>";
-//        echo "parts=".count($entity->getPart())."<br>";
-//        echo "pat: parts=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
-//        echo "blocks=".count($entity->getBlock())."<br>";;
-//        echo "slides=".count($entity->getSlide())."<br>";
+        echo "<br>################################## Finish:<br>";
+        echo "patients=".count($entity->getPatient())."<br>";
+        echo "first patient=".$entity->getPatient()->first()."<br>";
+        echo "encounters=".count($entity->getEncounter())."<br>";
+        echo "pat: encounters=".count($entity->getPatient()->first()->getEncounter())."<br>";
+        echo "first encounter=".$entity->getPatient()->first()->getEncounter()->first()."<br>";
+        echo "procedures=".count($entity->getProcedure())."<br>";
+        echo "pat: procedures=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure())."<br>";
+        echo "first procedure=".$entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()."<br>";
+        echo "accessions=".count($entity->getAccession())."<br>";
+        echo "pat: accessions=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession())."<br>";
+        echo "first accession=".$entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession()->first()."<br>";
+        echo "parts=".count($entity->getPart())."<br>";
+        echo "pat: parts=".count($entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
+        echo "first part=".$entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession()->first()->getPart()->first()."<br>";
+        echo "blocks=".count($entity->getBlock())."<br>";
+        $firstBlock = $entity->getPatient()->first()->getEncounter()->first()->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first();
+        echo "first block=".$firstBlock."<br>";
+        echo "slides=".count($entity->getSlide())."<br>";
+        echo "first slide=".$entity->getSlide()->first()."<br>";
+
+        echo "block staintype count=".count($firstBlock->getSpecialStains())."<br>";
+        foreach( $firstBlock->getSpecialStains() as $specialStain ) {
+            echo "block staintype field=".$specialStain->getField()."<br>";
+            echo "block staintype staintype=".$specialStain->getStaintype()."<br>";
+        }
+
+        echo "encounter count=".count($firstBlock->getSpecialStains())."<br>";
+        foreach( $firstBlock->getSpecialStains() as $specialStain ) {
+            echo "block staintype field=".$specialStain->getField()."<br>";
+            echo "block staintype staintype=".$specialStain->getStaintype()."<br>";
+        }
+
 
 //        foreach( $entity->getProcedure()->first()->getPatlastname() as $lastname ){
 //            echo "procedure lastname=".$lastname.", id=".$lastname->getId().", status=".$lastname->getStatus()."<br>";
@@ -138,12 +159,12 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "patient lastname=".$lastname.", id=".$lastname->getId().", status=".$lastname->getStatus()."<br>";
 //        }
 
-        //echo "<br>patient:".$entity->getPatient()->first()."<br>";
-        //echo "part's acc:".$entity->getPart()->first()->getAccession()."<br>";
-        //echo "projectTitle name=".$entity->getResearch()."<br>";
-        //echo "projectTitle setTitleStr=".$entity->getResearch()->getSetTitleStr()."<br>";
-        //echo $entity->getBlock()->first();
-        //echo $entity->getSlide()->first();
+//        echo "<br>patient:".$entity->getPatient()->first()."<br>";
+//        echo "part's acc:".$entity->getPart()->first()->getAccession()."<br>";
+//        //echo "projectTitle name=".$entity->getResearch()."<br>";
+//        //echo "projectTitle setTitleStr=".$entity->getResearch()->getSetTitleStr()."<br>";
+//        echo $entity->getBlock()->first();
+//        echo $entity->getSlide()->first();
 
         //throw new \Exception('TESTING');
         //exit('orderinfo repoexit testing');
@@ -275,6 +296,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
     }
 
+    //not used: TODELETE
     public function processSpecificOrders( $orderinfo ) {
 
         $categoryName = $orderinfo->getMessageCategory()->getName();

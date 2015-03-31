@@ -1149,11 +1149,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
 
-        //institution
-        $inst = " AND c.institution=".$entity->getInstitution()->getId();
-
+        //echo $orderinfo;
+        //echo $entity;
         //echo "name=".$name.", fieldName=".$fieldName.", className=".$className."<br>";
         //echo "extraStr=".$extraStr.",<br>";
+
+        //institution
+        if( !$entity->getInstitution() && $orderinfo && $orderinfo->getInstitution() ) {
+            $entity->setInstitution( $orderinfo->getInstitution() );
+        }
+
+        $inst = " AND c.institution=".$entity->getInstitution()->getId();
 
         $queryStr = 'SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.
                     ' c JOIN c.'.$fieldName.

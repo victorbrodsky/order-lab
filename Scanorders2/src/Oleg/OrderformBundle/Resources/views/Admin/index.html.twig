@@ -224,13 +224,21 @@
     </p>
 
 
+    <hr>
+
+    <p>
+        <a href="{{ path('scan_testpatient_new') }}">Create a Test Patient</a>
+    </p>
+
+
+    <hr>
+    <br />
 
     {% if environment is not defined %}
         {% set environment = 'dev' %}
     {% endif %}
 
-    <hr>
-    <br />
+
 
     <!--show this only for dev. Don't show for live-->
     {% if is_granted('ROLE_SCANORDER_ADMIN') and environment == 'dev' %}

@@ -1296,6 +1296,7 @@ class OrderInfo {
 
 //        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
         return "OrderInfo: id=".$this->getId().", oid=".$this->oid.", status=".$this->getStatus().", category=".$this->getMessageCategory().
+        ", institution=".$this->getInstitution().
         ", provider=".$this->getProvider().", providerName=".$this->getProvider()->getUsername().", providerId=".$this->getProvider()->getId().
         ", edu=".$this->educational.
         ", res=".$this->research.", patientCount=".count($this->patient).

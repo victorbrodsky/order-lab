@@ -73,7 +73,7 @@ class EndpointType extends AbstractType
                 'label' => $labelSystem,
                 'required'=> false,
                 'multiple' => false,
-                'class' => 'OlegUserdirectoryBundle:Location',
+                'class' => 'OlegUserdirectoryBundle:SourceSystemList',
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }

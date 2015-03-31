@@ -103,9 +103,9 @@ class Patient extends ObjectAbstract
     /**
      * Constructor
      */
-    public function __construct( $withfields=false, $status='invalid', $provider=null, $source = null )
+    public function __construct( $withfields=false, $status='invalid', $provider=null, $sourcesystem = null )
     {
-        parent::__construct($status,$provider,$source);
+        parent::__construct($status,$provider,$sourcesystem);
         $this->encounter = new ArrayCollection();
 
         //fields:
@@ -126,18 +126,18 @@ class Patient extends ObjectAbstract
         $this->patientType = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addMrn( new PatientMrn($status,$provider,$source) );
-            $this->addDob( new PatientDob($status,$provider,$source) );
-            $this->addClinicalHistory( new PatientClinicalHistory($status,$provider,$source) );
+            $this->addMrn( new PatientMrn($status,$provider,$sourcesystem) );
+            $this->addDob( new PatientDob($status,$provider,$sourcesystem) );
+            $this->addClinicalHistory( new PatientClinicalHistory($status,$provider,$sourcesystem) );
 
-            //$this->addLastname( new PatientLastname($status,$provider,$source) );
-            //$this->addFirstname( new PatientFirstname($status,$provider,$source) );
-            //$this->addMiddlename( new PatientMiddlename($status,$provider,$source) );
-            //$this->addSex( new PatientSex($status,$provider,$source) );
-            //$this->addAge( new PatientAge($status,$provider,$source) );
+            //$this->addLastname( new PatientLastname($status,$provider,$sourcesystem) );
+            //$this->addFirstname( new PatientFirstname($status,$provider,$sourcesystem) );
+            //$this->addMiddlename( new PatientMiddlename($status,$provider,$sourcesystem) );
+            //$this->addSex( new PatientSex($status,$provider,$sourcesystem) );
+            //$this->addAge( new PatientAge($status,$provider,$sourcesystem) );
 
             //testing data structure
-            //$this->addExtraFields($status,$provider,$source);
+            //$this->addExtraFields($status,$provider,$sourcesystem);
         }
 
     }

@@ -547,9 +547,11 @@
 
 
                         {#message's attachmentContainer#}
-                        {% for documentContainer in message.attachmentContainer.documentContainers %}
-                            {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId~'_'~uid) }}
-                        {% endfor %}
+                        {% if message.attachmentContainer is defined %}
+                            {% for documentContainer in message.attachmentContainer.documentContainers %}
+                                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'stainorder'~orderUniqueId~'_'~uid) }}
+                            {% endfor %}
+                        {% endif %}
 
                     </p>
 

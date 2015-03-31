@@ -3,16 +3,25 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
+use Oleg\OrderformBundle\Entity\AccessionAccession;
 use Oleg\OrderformBundle\Entity\BlockOrder;
 use Oleg\OrderformBundle\Entity\EmbedBlockOrder;
+use Oleg\OrderformBundle\Entity\EncounterDate;
+use Oleg\OrderformBundle\Entity\EncounterPatage;
 use Oleg\OrderformBundle\Entity\Endpoint;
 use Oleg\OrderformBundle\Entity\InstructionList;
 use Oleg\OrderformBundle\Entity\OrderInfo;
+use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
+use Oleg\OrderformBundle\Entity\PatientDob;
+use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\Report;
 use Oleg\OrderformBundle\Entity\RequisitionForm;
 use Oleg\OrderformBundle\Entity\Imaging;
+use Oleg\OrderformBundle\Entity\ScanOrder;
 use Oleg\OrderformBundle\Entity\SlideOrder;
 use Oleg\OrderformBundle\Entity\StainOrder;
+use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
 use Oleg\UserdirectoryBundle\Entity\AttachmentContainer;
 use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\Institution;
@@ -73,7 +82,13 @@ class PatientController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $patient = $this->createPatientDatastructure();
+        $thisparams = array(
+            'objectNumber' => 1,
+            'withorders' => true,
+            'accession.attachmentContainer' => 5,
+            'part.attachmentContainer' => 5,
+        );
+        $patient = $this->createPatientDatastructure($thisparams);
 
         $disabled = true;
         //$disabled = false;
@@ -110,82 +125,213 @@ class PatientController extends Controller
         );
     }
 
-    public function createPatientDatastructure( $objectNumber = 1 ) {
+    public function createPatientDatastructure( $params ) {
 
+        if( array_key_exists('withfields', $params) ) {
+            $withfields = $params['withfields'];
+        } else {
+            $withfields = true;
+        }
+
+        if( array_key_exists('persist', $params) ) {
+            $persist = $params['persist'];
+        } else {
+            $persist = false;
+        }
+
+        if( array_key_exists('specificmessage', $params) ) {
+            $specificmessage = $params['specificmessage'];
+        } else {
+            $specificmessage = false;
+        }
+
+        if( array_key_exists('objectNumber', $params) ) {
+            $objectNumber = $params['objectNumber'];
+        } else {
+            $objectNumber = 1;
+        }
+
+        if( array_key_exists('withorders', $params) ) {
+            $withorders = $params['withorders'];
+        } else {
+            $withorders = false;
+        }
+
+        if( array_key_exists('scanorder', $params) ) {
+            $scanorderType = $params['scanorder'];
+        } else {
+            $scanorderType = false;
+        }
+
+        if( array_key_exists('accession.attachmentContainer', $params) ) {
+            $attachmentContainerAccessionNumber = $params['accession.attachmentContainer'];
+        } else {
+            $attachmentContainerAccessionNumber = 0;
+        }
+
+        if( array_key_exists('part.attachmentContainer', $params) ) {
+            $attachmentContainerPartNumber = $params['part.attachmentContainer'];
+        } else {
+            $attachmentContainerPartNumber = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
         $securityUtil = $this->get('order_security_utility');
 
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $patient = new Patient(true,$status,$user,$system);
+        $patient = new Patient($withfields,$status,$user,$system);
         $patient->addExtraFields($status,$user,$system);
+
+        if( $persist ) {
+            $em->persist($patient);
+        }
+
+        if( $specificmessage ) {
+            $specificmessage->addPatient($patient);
+        }
 
         for( $count = 0; $count < $objectNumber; $count++ ) {
 
-            $encounter = new Encounter(true,$status,$user,$system);
+            $encounter = new Encounter($withfields,$status,$user,$system);
             $encounter->addExtraFields($status,$user,$system);
             $patient->addEncounter($encounter);
 
-            $procedure = new Procedure(true,$status,$user,$system);
+            if( $persist ) {
+                $em->persist($encounter);
+            }
+
+            if( $specificmessage ) {
+                $specificmessage->addEncounter($encounter);
+            }
+
+            $procedure = new Procedure($withfields,$status,$user,$system);
             $procedure->addExtraFields($status,$user,$system);
             $encounter->addProcedure($procedure);
 
-            $accession = new Accession(true,$status,$user,$system);
+            if( $persist ) {
+                $em->persist($procedure);
+            }
+
+            if( $specificmessage ) {
+                $specificmessage->addProcedure($procedure);
+            }
+
+            $accession = new Accession($withfields,$status,$user,$system);
             $accession->addExtraFields($status,$user,$system);
             $procedure->addAccession($accession);
 
-            $part = new Part(true,$status,$user,$system);
+            if( $persist ) {
+                $em->persist($accession);
+            }
+
+            if( $specificmessage ) {
+                $specificmessage->addAccession($accession);
+            }
+
+            $part = new Part($withfields,$status,$user,$system);
             //$part->addExtraFields($status,$user,$system);
             $accession->addPart($part);
 
-            $block = new Block(true,$status,$user,$system);
-            //$block->addExtraFields($status,$user,$system);
+            if( $persist ) {
+                $em->persist($part);
+            }
+
+            if( $specificmessage ) {
+                $specificmessage->addPart($part);
+            }
+
+            $block = new Block($withfields,$status,$user,$system);
+
+            //set specialStains to null
+            $blockSpecialstain = $block->getSpecialStains()->first();
+            $staintype = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
+            $blockSpecialstain->setStaintype($staintype);
+            //$blockSpecialstain->setField('stain ' . $staintype);
+            //echo "specialStain field=".$blockSpecialstain->getField()."<br>";
+            //echo "specialStain staintype=".$blockSpecialstain->getStaintype()."<br>";
+
             $part->addBlock($block);
 
-            $slide = new Slide(true,'valid',$user,$system); //Slides are always valid by default
+            if( $persist ) {
+                $em->persist($block);
+            }
+
+            if( $specificmessage ) {
+                $specificmessage->addBlock($block);
+            }
+
+//            $em = $this->getDoctrine()->getManager();
+//            $Staintype = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
+//            $block->getSpecialStains()->first()->setStaintype($Staintype);
+//            echo $block;
+//            echo "staintype=".$block->getSpecialStains()->first()->getStaintype()->getId()."<br>";
+
+
+            $slide = new Slide($withfields,'valid',$user,$system); //Slides are always valid by default
             //$slide->addExtraFields($status,$user,$system);
             $block->addSlide($slide);
 
-            //testing add scan (Imaging) to a slide
-            //$slide->addScan( new Imaging() );
+            if( $persist ) {
+                $em->persist($slide);
+            }
+
+            if( $specificmessage ) {
+                $specificmessage->addSlide($slide);
+            }
+
+            //add scan (Imaging) to a slide
+            for( $countImage = 1; $countImage < $objectNumber; $countImage++ ) {
+                $slide->addScan( new Imaging('valid',$user,$system) );
+            }
 
             //Accession: add 5 autopsy fields: add 5 documentContainers to attachmentContainer
-            $attachmentContainerAccession = $accession->getAttachmentContainer();
-            if( !$attachmentContainerAccession ) {
-                $attachmentContainerAccession = new AttachmentContainer();
-                $accession->setAttachmentContainer($attachmentContainerAccession);
-            }
-            for( $i=0; $i<5; $i++) {
-                $attachmentContainerAccession->addDocumentContainer( new DocumentContainer() );
+            if( $attachmentContainerAccessionNumber > 0 ) {
+                $attachmentContainerAccession = $accession->getAttachmentContainer();
+                if( !$attachmentContainerAccession ) {
+                    $attachmentContainerAccession = new AttachmentContainer();
+                    $accession->setAttachmentContainer($attachmentContainerAccession);
+                }
+                for( $i=0; $i<$attachmentContainerAccessionNumber; $i++) {
+                    $attachmentContainerAccession->addDocumentContainer( new DocumentContainer() );
+                }
             }
 
             //Part: add 5 gross image fields: add 5 documentContainers to attachmentContainer
-            $attachmentContainerPart = $part->getAttachmentContainer();
-            if( !$attachmentContainerPart ) {
-                $attachmentContainerPart = new AttachmentContainer();
-                $part->setAttachmentContainer($attachmentContainerPart);
-            }
-            for( $i=0; $i<5; $i++) {
-                $attachmentContainerPart->addDocumentContainer( new DocumentContainer() );
+            if( $attachmentContainerPartNumber > 0 ) {
+                $attachmentContainerPart = $part->getAttachmentContainer();
+                if( !$attachmentContainerPart ) {
+                    $attachmentContainerPart = new AttachmentContainer();
+                    $part->setAttachmentContainer($attachmentContainerPart);
+                }
+                for( $i=0; $i<$attachmentContainerPartNumber; $i++) {
+                    $attachmentContainerPart->addDocumentContainer( new DocumentContainer() );
+                }
             }
 
             /////////////////////// testing: create specific messages ///////////////////////
-            $this->createAndAddSpecificMessage($slide,"Lab Order");
+            if( $withorders ) {
 
-            //$this->createAndAddSpecificMessage($part,"Report");
-            $this->createAndAddSpecificMessage($slide,"Report");
+                $this->createAndAddSpecificMessage($slide,"Lab Order");
 
-            $this->createAndAddSpecificMessage($part,"Block Order");
+                //$this->createAndAddSpecificMessage($part,"Report");
+                $this->createAndAddSpecificMessage($slide,"Report");
 
-            $this->createAndAddSpecificMessage($block,"Slide Order");
+                $this->createAndAddSpecificMessage($part,"Block Order");
 
-            $this->createAndAddSpecificMessage($slide,"Stain Order");
+                $this->createAndAddSpecificMessage($block,"Slide Order");
 
-            //testing: add scan
-            //$newScan = new Imaging('valid',$user,$system);
-            //$slide->addScan($newScan);
-            /////////////////////// EOF create lab order ///////////////////////
+                $this->createAndAddSpecificMessage($slide,"Stain Order");
+
+            }
+
+            if( $scanorderType && $scanorderType != "" ) {
+                $message = $this->createAndAddSpecificMessage($slide,$scanorderType);
+            }
+
+            /////////////////////// EOF specific messages ///////////////////////
 
         }
 
@@ -223,8 +369,7 @@ class PatientController extends Controller
 
 
         //add slide to message and input
-        //$message->addSlide($object);
-        $object->addOrderinfo($message);
+        //$object->addOrderinfo($message);
         //set this slide as order input
         $message->addInputObject($object);
 
@@ -279,6 +424,13 @@ class PatientController extends Controller
             $stainorder->setInstruction($instruction);
         }
 
+        if( $messageTypeStr == "Multi-Slide Scan Order" ) {
+            $scanorder = new ScanOrder();
+            $scanorder->setOrderinfo($message);
+            $message->$scanorder($scanorder);
+        }
+
+        return $message;
     }
 
     /**
@@ -409,16 +561,182 @@ class PatientController extends Controller
 
     //create Test Patient
     /**
-     * @Route("/datastructure/newtestpatient", name="patient_create")
+     * @Route("/datastructure/new-test-patient", name="scan_testpatient_new")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
-    private function newtestpatientAction($id) {
+    public function newTestPatientAction() {
 
-        $patient = $this->createPatientDatastructure(2);
+        $securityUtil = $this->get('order_security_utility');
+        $status = 'valid';
+        $system = $securityUtil->getDefaultSourceSystem();
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
-        //add two images
+        ///////////////////// prepare scanorder (or Slide Order?) /////////////////////
+        $message = $this->createSpecificMessage("Multi-Slide Scan Order");
 
+        $thisparams = array(
+            'objectNumber' => 1,
+            'withorders' => false,
+            'persist' => false,
+            'specificmessage' => $message
+        );
+        $patient = $this->createPatientDatastructure($thisparams);
+
+        //add patient
+        $patient->addOrderinfo($message);
+        $message->addPatient($patient);
+
+        echo "messages=".count($patient->getOrderinfo())."<br>";
+
+        ///////////////////// populate patient with mrn, mrntype, name etc. /////////////////////
+        $mrntypeStr = 'Test Patient MRN';
+        $testpatients = $em->getRepository('OlegOrderformBundle:Patient')->findByMrntypeString($mrntypeStr);
+        $testpatientmrnIndex = count($testpatients)+1;
+
+        //mrn
+        $mrntypeTransformer = new MrnTypeTransformer($em,$user);
+        $mrntype = $mrntypeTransformer->reverseTransform($mrntypeStr);
+        echo "mrntype id=".$mrntype->getId()."<br>";
+        //$patientMrn = new PatientMrn($status,$user,$system);
+        $patientMrn = $patient->getMrn()->first();
+        $patientMrn->setKeytype($mrntype);
+        $patientMrn->setField('testmrn-'.$testpatientmrnIndex);
+        $patient->addMrn($patientMrn);
+
+        //dob
+        //$patientDob = new PatientDob($status,$user,$system);
+        $patientDob = $patient->getDob()->first();
+        $patientDob->setField( new \DateTime('01/30/1915') );
+        $patient->addDob($patientDob);
+
+        //clinical history
+        //$patientClinHist = new PatientClinicalHistory($status,$user,$system);
+        $patientClinHist = $patient->getClinicalHistory()->first();
+        $patientClinHist->setField('Test Clinical History');
+        $patient->addClinicalHistory($patientClinHist);
+        ///////////////////// EOF populate patient with mrn, mrntype, name etc. /////////////////////
+
+
+        ///////////////////// populate accession with accession number, accession type, etc. /////////////////////
+        $accessiontypeStr = 'Test Accession Number';
+
+        //accession
+        $accessiontypeTransformer = new AccessionTypeTransformer($em,$user);
+        $accessiontype = $accessiontypeTransformer->reverseTransform($accessiontypeStr);
+        echo "accessiontype id=".$accessiontype->getId()."<br>";
+
+        $encounterCount = 0;
+        foreach( $patient->getEncounter() as $encounter ) {
+
+            //set encounter age
+            //$encounterAge = new EncounterPatage($status,$user,$system);
+            //$encounterAge->setField($patient->calculateAgeInt());
+            //$encounter->addPatage($encounterAge);
+
+            //set encounter date
+            //$encounterdate = new EncounterDate($status,$user,$system);
+            //$encounter->addDate($encounterdate);
+
+            $accession = $encounter->getProcedure()->first()->getAccession()->first();
+            //echo $accession;
+
+            $testaccessions = $em->getRepository('OlegOrderformBundle:Accession')->findByAccessiontypeString($accessiontypeStr);
+            $testaccessionIndex = count($testaccessions)+$encounterCount;
+
+            //$accessionNumber = new AccessionAccession($status,$user,$system);
+            $accessionNumber = $accession->getAccession()->first();
+            $accessionNumber->setKeytype($accessiontype);
+            $accessionNumber->setField('testaccession-'.$testaccessionIndex);
+            $accession->addAccession($accessionNumber);
+
+            $encounterCount++;
+
+            //block staintype
+
+        }
+        ///////////////////// EOF populate accession with accession number, accession type, etc. /////////////////////
+
+
+        $message = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $message, $user, null, $this->get('router'), $this->container );
+
+
+        //$em->persist($patient);
+        //$em->flush();
+
+        if( $patient->getId() ) {
+            return $this->redirect( $this->generateUrl('scan-patient-show',array('id'=>$patient->getId())) );
+        } else {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Failed to create a test patient'
+            );
+            return $this->redirect( $this->generateUrl('scan-patient-list') );
+        }
+
+    }
+
+
+    public function createSpecificMessage( $messageCategoryStr ) {
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+
+        $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
+
+        //set scan order
+        $message = new OrderInfo();
+        $scanOrder = new ScanOrder();
+        $scanOrder->setOrderinfo($message);
+
+        //set provider
+        $message->setProvider($user);
+
+        //set Source object
+        $source = new Endpoint();
+        $source->setSystem($system);
+        $message->addSource($source);
+
+        //set Destination object
+        $destination = new Endpoint();
+        $message->addDestination($destination);
+
+        //type
+        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategoryStr);
+        $message->setMessageCategory($category);
+
+        //set the default institution; check if user has at least one institution
+        $orderUtil = $this->get('scanorder_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan_home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan_home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        $message->setInstitution($permittedInstitutions->first());
+
+
+        //set default department and division
+//        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
+//        $department = $defaultsDepDiv['department'];
+//        $division = $defaultsDepDiv['division'];
+
+        //set message status
+        $orderStatus = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
+        $message->setStatus($orderStatus);
+
+        echo $message;
+        echo "message institution=".$message->getInstitution()->getName()."<br>";
+        echo "message accessions count=".count($message->getAccession())."<br>";
+
+        return $message;
     }
 
 }

@@ -171,5 +171,25 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
 
+
+
+
+    public function findByMrntypeString($mrntypeStr) {
+
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Patient', 'patient')
+            ->select("patient")
+            ->leftJoin("patient.mrn", "mrn")
+            ->leftJoin("mrn.keytype", "keytype")
+            ->where("keytype.name = :keytypeStr")
+            ->setParameters( array('keytypeStr'=>$mrntypeStr) )
+            ->getQuery();
+
+        $patients = $query->getResult();
+        //echo "patient count=".count($patients)." ";
+
+        return $patients;
+    }
+
     
 }
