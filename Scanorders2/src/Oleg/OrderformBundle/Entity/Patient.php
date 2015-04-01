@@ -882,6 +882,33 @@ class Patient extends ObjectAbstract
         $this->setEncounter($children);
     }
 
+    //object info for blue strip
+    public function obtainFullObjectName() {
+
+        $fullNameArr = array();
+
+        if( $fullPatientName = $this->getFullPatientName() ) {
+            $fullNameArr[] = $fullPatientName;
+        }
+
+        if( $calculateAge = $this->calculateAge() ) {
+            $fullNameArr[] = $calculateAge;
+        }
+
+        if( $sex = $this->obtainValidField('sex') ) {
+            $fullNameArr[] = $sex;
+        }
+
+        //mrn
+        if( $mrn = $this->obtainValidField('mrn') ) {
+            $fullNameArr[] = $mrn->getKeytype()->getOptimalName() . ": " . $mrn->getField();
+        }
+
+        $fullName = implode(", ",$fullNameArr);
+
+        return $fullName;
+    }
+
     public function getFullPatientName() {
 
         $patientFullNameValid = "";

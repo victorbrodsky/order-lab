@@ -247,7 +247,7 @@
 {% endmacro %}
 
 {#wrapper for orderinfo_panel_header#}
-{% macro orderinfo_panel_header_object(object, objects, datastructure, type, formtype, uidArr) %}
+{% macro orderinfo_panel_header_object(formObject, object, objects, datastructure, type, formtype, uidArr) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
@@ -266,14 +266,14 @@
     {% set stainCount       = 0 %}
 
     {{ formmacros.orderinfo_panel_header(
-        name, datastructure, type, formtype, count, uid,
+        formObject, name, datastructure, type, formtype, count, uid,
         patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount)
     }}
 
 {% endmacro %}
 
 {% macro orderinfo_panel_header(
-    name, datastructure, type, formtype, count, uid,
+    formObject, name, datastructure, type, formtype, count, uid,
     patientCount,
     encounterCount,
     procedureCount,
@@ -314,7 +314,16 @@
         {% endif %}
 
         {#<div class="element-title text-left">{{ title | capitalize }} {{ count+1 }}</div>#}
-        <h4 class="panel-title element-title">{{ title | capitalize }} {{ count+1 }}</h4>
+        <h4 class="panel-title element-title element-title-extended-width">
+            <div class="row">
+                <div class="col-xs-2" align='left'>
+                    {{ title | capitalize }} {{ count+1 }}
+                </div>
+                <div class="col-xs-10" align='left'>
+                    {{ formObject.vars.value.obtainFullObjectName|raw }}
+                </div>
+            </div>
+        </h4>
 
         {% if name != "scan" and name != "stain" %}
             {% if type == 'new' or type == 'edit' or (type == 'amend' and formtype != 'One-Slide Scan Order' ) %}

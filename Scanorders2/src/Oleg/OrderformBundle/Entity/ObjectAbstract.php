@@ -563,6 +563,10 @@ abstract class ObjectAbstract
         return $res;
     }
 
+    public function obtainFullObjectName() {
+        return $this->obtainClassName() . " ID=" . $this->getId();
+    }
+
     public function obtainClassName() {
         $class = new \ReflectionClass($this);
         $className = $class->getShortName();

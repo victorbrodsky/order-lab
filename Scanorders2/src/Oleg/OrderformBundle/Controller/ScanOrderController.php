@@ -1111,7 +1111,7 @@ class ScanOrderController extends Controller {
         //innerJoin must exist, otherwise empty result will be returned
         $dql->innerJoin("orderinfo.slide", "slides");
         $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->innerJoin("orderinfo.messageCategory", "formtype");
+        $dql->innerJoin("orderinfo.messageCategory", "messageCategory");
         $dql->innerJoin("orderinfo.status", "status");
 
         $dql->leftJoin("provider.infos", "providerinfos");
@@ -1126,10 +1126,10 @@ class ScanOrderController extends Controller {
 
         $dql->groupBy('orderinfo');
         $dql->addGroupBy('status.name');
-        $dql->addGroupBy('formtype.name');
+        $dql->addGroupBy('messageCategory.name');
         $dql->addGroupBy('provider.username');
 
-        //$dql->having("( (COUNT(orderinfo) > 1) AND (COUNT(status.name) > 1) AND (COUNT(formtype.name) > 1) AND (COUNT(provider.username) > 1) )");
+        //$dql->having("( (COUNT(orderinfo) > 1) AND (COUNT(status.name) > 1) AND (COUNT(messageCategory.name) > 1) AND (COUNT(provider.username) > 1) )");
         //$dql->having("( COUNT(orderinfo) > 1 )");
 
         $dql->leftJoin("orderinfo.history", "history"); //history might not exist, so use leftJoin

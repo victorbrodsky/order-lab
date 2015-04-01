@@ -151,6 +151,10 @@
     margin-bottom: 0;
 }
 
+.panel-heading > .element-title-extended-width {
+    width: 90%;
+}
+
 /*.activetr {*/
     /*background-color: rgb(217, 237, 247);*/
 /*}*/

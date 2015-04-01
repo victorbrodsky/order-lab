@@ -683,6 +683,21 @@ class Encounter extends ObjectAbstract
     }
     
     //don't use 'get' because later repo functions relay on "get" keyword
+    //object info for blue strip
+    public function obtainFullObjectName() {
+
+        $fullNameArr = array();
+
+        //number
+        if( $key = $this->obtainValidField('number') ) {
+            $fullNameArr[] = $key->getKeytype()->getOptimalName() . "-" . $key->getField();
+        }
+
+        $fullName = implode(", ",$fullNameArr);
+
+        return $fullName;
+    }
+
     public function obtainKeyField() {
         return $this->getNumber();
     }

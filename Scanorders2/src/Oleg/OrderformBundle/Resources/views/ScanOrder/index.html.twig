@@ -72,7 +72,7 @@
                     <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Category', 'messageCategory.name') }}</th>
                     {% if showprovider is defined and showprovider == 'true' %}
                         <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>
                     {% endif %}
@@ -91,7 +91,7 @@
                     {% endif %}
                     <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Return To', 'destinations.location') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Category', 'messageCategory.name') }}</th>
                     
                 {% endif %}
                    
@@ -191,7 +191,7 @@
                         {{ destination.location }}
                     {% endfor %}
                 </td>
-                <td>{{ entity.type }}</td>
+                <td>{{ entity.messageCategory.name }}</td>
                 {% if showprovider is defined and showprovider == 'true' %}
                     <td>
                         {{ entity.provider }}
@@ -229,7 +229,7 @@
                         {{ destination.location }}
                     {% endfor %}
                 </td>
-                <td>{{ entity.type }}</td>
+                <td>{{ entity.messageCategory.name }}</td>
                     
             {% endif %}
                 <td class="rowlink-skip">
