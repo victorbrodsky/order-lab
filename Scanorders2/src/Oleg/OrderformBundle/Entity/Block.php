@@ -282,6 +282,13 @@ class Block extends ObjectAbstract
         //echo "specialStains count2=".count($this->specialStains)."<br>";
     }
 
+    //create and add empty array fields: BlockSpecialStains
+    public function createEmptyArrayFields() {
+        if( count($this->getSpecialStains()) == 0 ) {
+            $this->addSpecialStain( new BlockSpecialStains('valid',$this->getProvider(),$this->getSource()) );
+        }
+    }
+
     public function setParent($parent) {
         $this->setPart($parent);
         return $this;

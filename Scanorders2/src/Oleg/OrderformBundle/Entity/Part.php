@@ -348,6 +348,18 @@ class Part extends ObjectAbstract
         //echo "DiffDisident count2=".count($this->diffDisident)."<br>";
     }
 
+    //create and add empty array fields: documents, diffDisident
+    public function createEmptyArrayFields() {
+
+        if( count($this->getPaper()) == 0 ) {
+            $this->addPaper( new PartPaper('valid',$this->getProvider(),$this->getSource()) );
+        }
+
+        if( count($this->getDiffDisident()) == 0 ) {
+            $this->addDiffDisident( new PartDiffDisident('valid',$this->getProvider(),$this->getSource()) );
+        }
+    }
+
     /**
      * Add paper
      *

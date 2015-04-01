@@ -690,6 +690,8 @@ class MultiScanOrderController extends Controller {
                                 continue;
                             }
 
+                            $part->createEmptyArrayFields();
+
                             //block
                             foreach( $part->getBlock() as $block ) {
                                 if( !$this->hasOrderInfo($block,$id) ) {
@@ -701,6 +703,8 @@ class MultiScanOrderController extends Controller {
                                     $part->removeChildren($block);
                                     continue;
                                 }
+
+                                $block->createEmptyArrayFields();
 
                                 //slide
                                 foreach( $block->getSlide() as $slide ) {
