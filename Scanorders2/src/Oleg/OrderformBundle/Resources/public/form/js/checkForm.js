@@ -534,6 +534,7 @@ function executeClick( btnObjInit ) {
                             reject(Error("Delete ok with Error"));
                         }
                         removeInfoFromElement(btnObj);
+                        removeBlueStrip(btnObj);
                     }
                     //////////////// end of delete ////////////////
 
@@ -567,6 +568,7 @@ function executeClick( btnObjInit ) {
                                 disableInElementBlock(btn, true, "all", null, "notarrayfield");
                                 invertButton(btn);
                                 setObjectInfo(btnObj,1);
+                                setBlueStrip(btnObj,data);
                                 processExceptionalFields(btnObj);
 
                                 //set patient (in accession case)
@@ -619,6 +621,8 @@ function executeClick( btnObjInit ) {
                     if( casetype == 'delete' ) {
                         deleteError(btnObj,single);
                     }
+
+                    removeBlueStrip(btnObj);
 
                     //console.debug(btnObj.name+": ajax error for casetype="+casetype);
                     reject(Error(btnObj.name+": ajax error for casetype="+casetype));

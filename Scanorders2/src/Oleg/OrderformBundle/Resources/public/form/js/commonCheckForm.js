@@ -1342,6 +1342,36 @@ function setObjectInfo(btnObj,flag) {
 
 }
 
+//set blue strip info when check button is pressed
+function setBlueStrip(btnObj,data) {
+    //console.debug( "btnObj.name=" + btnObj.name );
+    var fullObjectName = data['fullObjectName'];
+    //console.log("fullObjectName=" + fullObjectName);
+    if( fullObjectName ) {
+        var parentEl = btnObj.element.closest('.panel');
+        //console.log(parentEl);
+        parentEl.find('.element-title-object-name').first().html(fullObjectName);
+    }
+}
+
+//remove object info from blue strip
+function removeBlueStrip(btnObj) {
+    var parentEl = btnObj.element.closest('.panel');
+    //console.log(parentEl);
+    parentEl.find('.element-title-object-name').first().html("");
+}
+
+function getValueAccordingToStatus(dataArr,status) {
+    for (var i = 0; i < dataArr.length; i++) {
+        if( dataArr[i]['validity'] == status ) {
+            return dataArr[i];
+        }
+    }
+    return null;
+}
+
+
+
 function attachInfoToElement( element, msg ) {
     //label label-info alert alert-success
     var html = '<div class="label label-info scanorder-element-info">'+
