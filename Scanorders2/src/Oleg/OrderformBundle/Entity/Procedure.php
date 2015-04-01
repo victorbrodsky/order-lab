@@ -343,6 +343,26 @@ class Procedure extends ObjectAbstract
     }
     
     //don't use 'get' because later repo functions relay on "get" keyword
+    //object info for blue strip
+    public function obtainFullObjectName() {
+
+        $fullNameArr = array();
+
+        //number
+        $key = $this->obtainValidField('number');
+        if( $key ) {
+            if( $key->getKeytype() ) {
+                $fullNameArr[] = $key->getKeytype()->getOptimalName() . " - " . $key->getField();
+            } else {
+                $fullNameArr[] = $key->getField();
+            }
+        }
+
+        $fullName = implode(", ",$fullNameArr);
+
+        return $fullName;
+    }
+
     public function obtainKeyField() {
         return $this->getNumber();
     }

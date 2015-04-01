@@ -325,10 +325,12 @@ class PatientController extends Controller
 
                 $this->createAndAddSpecificMessage($slide,"Stain Order");
 
+                $this->createAndAddSpecificMessage($slide,"Multi-Slide Scan Order");
+
             }
 
             if( $scanorderType && $scanorderType != "" ) {
-                $message = $this->createAndAddSpecificMessage($slide,$scanorderType);
+                $message = $this->createAndAddSpecificMessage($slide,$scanorderType,false);
             }
 
             /////////////////////// EOF specific messages ///////////////////////
@@ -338,7 +340,7 @@ class PatientController extends Controller
         return $patient;
     }
 
-    public function createAndAddSpecificMessage($object,$messageTypeStr) {
+    public function createAndAddSpecificMessage($object,$messageTypeStr,$addObjectToMessage=true) {
 
         $em = $this->getDoctrine()->getManager();
         $message = new OrderInfo();
@@ -369,9 +371,12 @@ class PatientController extends Controller
 
 
         //add slide to message and input
-        //$object->addOrderinfo($message);
+        $object->addOrderinfo($message);
+
         //set this slide as order input
-        $message->addInputObject($object);
+        if( $addObjectToMessage ) {
+            $message->addInputObject($object);
+        }
 
 
         if( $messageTypeStr == "Lab Order" ) {
@@ -427,7 +432,7 @@ class PatientController extends Controller
         if( $messageTypeStr == "Multi-Slide Scan Order" ) {
             $scanorder = new ScanOrder();
             $scanorder->setOrderinfo($message);
-            $message->$scanorder($scanorder);
+            $message->setScanorder($scanorder);
         }
 
         return $message;
@@ -577,7 +582,7 @@ class PatientController extends Controller
         $message = $this->createSpecificMessage("Multi-Slide Scan Order");
 
         $thisparams = array(
-            'objectNumber' => 1,
+            'objectNumber' => 2,
             'withorders' => false,
             'persist' => false,
             'specificmessage' => $message
@@ -598,7 +603,7 @@ class PatientController extends Controller
         //mrn
         $mrntypeTransformer = new MrnTypeTransformer($em,$user);
         $mrntype = $mrntypeTransformer->reverseTransform($mrntypeStr);
-        echo "mrntype id=".$mrntype->getId()."<br>";
+        //echo "mrntype id=".$mrntype->getId()."<br>";
         //$patientMrn = new PatientMrn($status,$user,$system);
         $patientMrn = $patient->getMrn()->first();
         $patientMrn->setKeytype($mrntype);
@@ -625,7 +630,7 @@ class PatientController extends Controller
         //accession
         $accessiontypeTransformer = new AccessionTypeTransformer($em,$user);
         $accessiontype = $accessiontypeTransformer->reverseTransform($accessiontypeStr);
-        echo "accessiontype id=".$accessiontype->getId()."<br>";
+        //echo "accessiontype id=".$accessiontype->getId()."<br>";
 
         $encounterCount = 0;
         foreach( $patient->getEncounter() as $encounter ) {

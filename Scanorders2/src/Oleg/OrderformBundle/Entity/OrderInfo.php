@@ -1310,7 +1310,9 @@ class OrderInfo {
     public function addInputObject($object) {
         $input = new GeneralEntity();
         $input->setObject($object);
-        $this->addInput($input);
+        if( !$this->getInputs()->contains($input) ) {
+            $this->addInput($input);
+        }
     }
 
 

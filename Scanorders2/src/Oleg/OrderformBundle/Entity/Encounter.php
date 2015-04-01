@@ -689,8 +689,13 @@ class Encounter extends ObjectAbstract
         $fullNameArr = array();
 
         //number
-        if( $key = $this->obtainValidField('number') ) {
-            $fullNameArr[] = $key->getKeytype()->getOptimalName() . "-" . $key->getField();
+        $key = $this->obtainValidField('number');
+        if( $key ) {
+            if( $key->getKeytype() ) {
+                $fullNameArr[] = $key->getKeytype()->getOptimalName() . " - " . $key->getField();
+            } else {
+                $fullNameArr[] = $key->getField();
+            }
         }
 
         $fullName = implode(", ",$fullNameArr);

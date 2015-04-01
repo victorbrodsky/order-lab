@@ -309,8 +309,11 @@
 
         {% if name == 'encounter' and not (datastructure and datastructure == "datastructure")%}
             {% set title = 'accession' %}
+            {% set procedure = formObject.vars.value.procedure|first %}
+            {% set formObject = procedure.accession|first %}
         {% else %}
             {% set title = name %}
+            {% set formObject = formObject.vars.value %}
         {% endif %}
 
         {#<div class="element-title text-left">{{ title | capitalize }} {{ count+1 }}</div>#}
@@ -320,7 +323,7 @@
                     {{ title | capitalize }} {{ count+1 }}
                 </div>
                 <div class="col-xs-10" align='left'>
-                    {{ formObject.vars.value.obtainFullObjectName|raw }}
+                    {{ formObject.obtainFullObjectName|raw }}
                 </div>
             </div>
         </h4>

@@ -887,21 +887,30 @@ class Patient extends ObjectAbstract
 
         $fullNameArr = array();
 
-        if( $fullPatientName = $this->getFullPatientName() ) {
+        $fullPatientName = $this->getFullPatientName();
+        if( $fullPatientName && $fullPatientName != "" ) {
+            //echo "fullPatientName=".$fullPatientName."<br>";
             $fullNameArr[] = $fullPatientName;
         }
 
-        if( $calculateAge = $this->calculateAge() ) {
+        $calculateAge = $this->calculateAge();
+        if( $calculateAge && $calculateAge != "" ) {
             $fullNameArr[] = $calculateAge;
         }
 
-        if( $sex = $this->obtainValidField('sex') ) {
+        $sex = $this->obtainValidField('sex');
+        if( $sex && $sex != "" ) {
             $fullNameArr[] = $sex;
         }
 
         //mrn
-        if( $mrn = $this->obtainValidField('mrn') ) {
-            $fullNameArr[] = $mrn->getKeytype()->getOptimalName() . ": " . $mrn->getField();
+        $mrn = $this->obtainValidField('mrn');
+        if( $mrn ) {
+            if( $mrn && $mrn->getKeytype() ) {
+                $fullNameArr[] = $mrn->getKeytype()->getOptimalName() . " - " . $mrn->getField();
+            } else {
+                $fullNameArr[] = $mrn->getField();
+            }
         }
 
         $fullName = implode(", ",$fullNameArr);

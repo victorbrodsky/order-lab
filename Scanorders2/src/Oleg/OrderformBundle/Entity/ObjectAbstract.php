@@ -564,7 +564,8 @@ abstract class ObjectAbstract
     }
 
     public function obtainFullObjectName() {
-        return $this->obtainClassName() . " ID=" . $this->getId();
+        //return $this->obtainClassName() . " ID=" . $this->getId();
+        return "";
     }
 
     public function obtainClassName() {
