@@ -118,5 +118,12 @@ class GeneralEntity
         }
     }
 
+    public function getFullName() {
+        if( $this->getId() ) {
+            return $this->getEntityName() . " ID=" . $this->getId();
+        } else {
+            return $this->getEntityName();
+        }
+    }
 
 }

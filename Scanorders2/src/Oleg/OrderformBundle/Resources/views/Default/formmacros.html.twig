@@ -436,14 +436,14 @@
                         <p>
                             {% for input in message.vars.value.inputs %}
                                 {#{{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "input", disabled ) }}#}
-                                {{ formmacros.simplefield( "Input:", input.entityName, "input", disabled ) }}
+                                {{ formmacros.simplefield( "Input:", input.getFullName, "input", disabled ) }}
                             {% endfor %}
                         </p>
 
                         <p>
                             {% for output in message.vars.value.outputs %}
                                 {#{{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "input", disabled ) }}#}
-                                {{ formmacros.simplefield( "Output:", output.entityName, "input", disabled ) }}
+                                {{ formmacros.simplefield( "Output:", output.getFullName, "input", disabled ) }}
                             {% endfor %}
                         </p>
 
