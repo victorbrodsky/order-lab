@@ -150,6 +150,14 @@ class MultiScanOrderController extends Controller {
         //print_r($paper);
         //exit();
 
+        //$part = $form["patient"][0]["encounter"][0]["procedure"][0]["accession"][0]["part"][0]->getData();
+        //echo "form diffdissident count=".count($part->getDiffDisident())."<br>";
+        //$block = $form["patient"][0]["encounter"][0]["procedure"][0]["accession"][0]["part"][0]["block"][0]->getData();
+        //echo "form special stain count=".count($block->getSpecialStains())."<br>";
+        //echo "<br>block data:<br>";
+        //print_r($block->getSpecialStains());
+        //exit();
+
         //check if the orderform already exists, so it's edit case
 //        echo "id=".$entity->getId()."<br>";
 //        echo "entity count=".count($entity)."<br>";
@@ -213,6 +221,7 @@ class MultiScanOrderController extends Controller {
             $dataqualities = $form->get('conflicts')->getData();
             $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
+
 
             /////////////////// process and save form //////////////////////////////
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router'), $this->container );
@@ -452,7 +461,6 @@ class MultiScanOrderController extends Controller {
         $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
         $department = $defaultsDepDiv['department'];
         $division = $defaultsDepDiv['division'];
-
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 

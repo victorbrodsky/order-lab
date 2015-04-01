@@ -46,7 +46,8 @@ class Block extends ObjectAbstract
 
     /**
      * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="BlockSpecialStains", mappedBy="block", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="BlockSpecialStains", mappedBy="block", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="blockspecialstain_id", referencedColumnName="id", nullable=true)
      */
     protected $specialStains;
 
@@ -204,9 +205,9 @@ class Block extends ObjectAbstract
 
     public function addSpecialStain( $specialStain )
     {
-        if( $specialStain != null ) {
-            if( !$this->specialStains->contains($specialStain) ) {
-                $this->specialStains->add($specialStain);
+        if( $specialStain && !$this->specialStains->contains($specialStain) ) {
+            $this->specialStains->add($specialStain);
+            if( $specialStain ) {
                 $specialStain->setBlock($this);
                 $specialStain->setProvider($this->getProvider());
             }
@@ -266,12 +267,16 @@ class Block extends ObjectAbstract
         //specialStains
         //echo "specialStains count1=".count($this->specialStains)."<br>";
         foreach( $this->specialStains as $field ) {
-            if( $field->getField() == "" && count($this->specialStains) > 1 ) {
-                $this->removeSpecialStain($field);
-            } else {
-                if( !$field->getStaintype() ) {
-                    $field->setStaintype($default_staintype);
+            if( $field ) {
+                if( $field->getField() == "" && count($this->specialStains) > 1 ) {
+                    $this->removeSpecialStain($field);
+                } else {
+                    if( !$field->getStaintype() ) {
+                        $field->setStaintype($default_staintype);
+                    }
                 }
+            } else {
+                $this->removeSpecialStain($field);
             }
         }
         //echo "specialStains count2=".count($this->specialStains)."<br>";

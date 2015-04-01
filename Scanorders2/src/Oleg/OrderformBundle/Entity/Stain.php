@@ -20,8 +20,8 @@ class Stain extends SlideArrayFieldAbstract
     protected $slide;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StainList", inversedBy="stain", cascade={"persist"})
-     * @ORM\JoinColumn(name="stainlist", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="StainList", cascade={"persist"})
+     * @ORM\JoinColumn(name="stainlist_id", referencedColumnName="id", nullable=true)
      */
     protected $field;
 
@@ -34,6 +34,8 @@ class Stain extends SlideArrayFieldAbstract
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $date;
+
+
 
     /**
      * Set stainer

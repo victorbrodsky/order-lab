@@ -65,7 +65,7 @@ class BlockType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => "Special Stain Results:",
+            'label' => false,
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__blockspecialstains__',

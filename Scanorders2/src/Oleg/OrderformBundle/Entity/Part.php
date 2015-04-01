@@ -317,7 +317,9 @@ class Part extends ObjectAbstract
         }
         if( !$this->diffDisident->contains($diffDisident) ) {
             $this->diffDisident->add($diffDisident);
-            $diffDisident->setPart($this);
+            if( $diffDisident ) {
+                $diffDisident->setPart($this);
+            }
         }
     
         return $this;

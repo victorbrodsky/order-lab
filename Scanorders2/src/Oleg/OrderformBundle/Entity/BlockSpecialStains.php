@@ -31,10 +31,13 @@ class BlockSpecialStains extends BlockArrayFieldAbstract
     protected $field;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StainList", inversedBy="specialstain")
+     * @ORM\ManyToOne(targetEntity="StainList", cascade={"persist"})
      * @ORM\JoinColumn(name="stainlist_id", referencedColumnName="id", nullable=true)
      */
     protected $staintype;
+
+
+
 
     /**
      * @param mixed $staintype
