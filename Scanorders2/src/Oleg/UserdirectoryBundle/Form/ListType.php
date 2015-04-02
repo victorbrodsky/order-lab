@@ -65,6 +65,11 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('description','textarea',array(
+            'label' => 'Description:',
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
         $builder->add('type','choice',array(
             'label'=>'Type:',
             'choices' => $this->types,

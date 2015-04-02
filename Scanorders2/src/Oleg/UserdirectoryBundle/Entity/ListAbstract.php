@@ -46,6 +46,11 @@ abstract class ListAbstract
     protected $shortname;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
+
+    /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank
      */
@@ -219,6 +224,22 @@ abstract class ListAbstract
     public function getShortname()
     {
         return $this->shortname;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

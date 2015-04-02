@@ -1,6 +1,4 @@
 
-
-
 .snapshot-all {
     width: 80%;
     min-width: 800px;
@@ -176,7 +174,7 @@ body {
     padding-top: 0;
     
 }
-    
+
 .snapshot-all {
     width: 100%;
     min-width: 300px;
@@ -184,7 +182,7 @@ body {
     padding: 0;
 }
 
-.section {
+.snapshot-all .section {
     position: relative;
     width: auto;
     max-width: 100%;
@@ -196,7 +194,7 @@ body {
     border-radius: 5px;
 }
 
-.snapshot {
+.snapshot-all .snapshot {
     width: 100%;
     height: auto;
     border: 0;
@@ -205,7 +203,7 @@ body {
     
     
 }
-.left {
+.snapshot-all .left {
     display: block;
     width: 100%;
     margin: 0; 
@@ -213,7 +211,7 @@ body {
     
 }
 
-.image-box {
+.snapshot-all .image-box {
     border-radius: 5px;
     position: relative;
     float: right;
@@ -228,14 +226,14 @@ body {
     
 }
 
-.left-text {
+.snapshot-all .left-text {
     display: block;
     width: auto;
     
 
 }
 
-.left-text h2 {
+.snapshot-all .left-text h2 {
     font-size: 1.25em;
     margin-bottom: .25em;
     
@@ -246,14 +244,14 @@ body {
     margin-bottom: 10px;
 }
 
-.left-text h4 {
+.snapshot-all .left-text h4 {
     font-size: 1.1em;
     margin-left: 12px ;
     margin-right: 12px;
     margin-top: .15em
 }
-    
-.left-text p {
+
+.snapshot-all .left-text p {
     margin-left: 12px ;
     margin-right: 12px;
     padding-bottom: .75em;
@@ -261,13 +259,13 @@ body {
 }
 
 
-.right {
+.snapshot-all .right {
     display: block;
     width: 100%;
     
 }
 
-.right-text {
+.snapshot-all .right-text {
     margin-left: 5px
 }
 }
@@ -276,12 +274,12 @@ body {
 /* Tablet Styles */
 @media only screen and (min-width:481px) and (max-width:900px) {
 
-    body {
+body {
     margin: 0;
     padding-top: 0;
         
 }
-    
+
 .snapshot-all {
     width: 100%;
     min-width: 0;
@@ -290,7 +288,7 @@ body {
 }
 <!--
     /* XXXXXXXX */
-.section {
+.snapshot-all .section {
     position: relative;
     width: auto;
     max-width: 100%;
@@ -302,8 +300,8 @@ body {
     border-radius: 5px;
 }
 -->
-    
-.snapshot {
+
+.snapshot-all .snapshot {
     width: 100%;
     height: auto;
     border: 0;
@@ -312,14 +310,14 @@ body {
     padding-top: 0;
     
 }
-.left {
+.snapshot-all .left {
     display: block;
     width: 100%;
     margin: 0;    
     padding-top: 0;
 }
 
-.image-box {
+.snapshot-all .image-box {
     margin-right: 20px;
     margin-top: 10px; 
     margin-left: .75em;
@@ -331,7 +329,7 @@ body {
     
 }
 
-.left-text {
+.snapshot-all .left-text {
     display: block;
     width: auto;
     padding: 0 0 0 10px;
@@ -339,7 +337,7 @@ body {
     
 }
 
-.left-text h2 {
+.snapshot-all .left-text h2 {
     font-size: 1.75em;
     margin-bottom: .25em;
     
@@ -350,20 +348,20 @@ body {
        
 }
 
-.left-text h4 {
+.snapshot-all .left-text h4 {
     font-size: 1.25em;
     margin-left: .6em ;
     padding-top: .1em;
     margin-right: .75em
 }
 
-.left-text p {
+.snapshot-all .left-text p {
     margin-left: .75em ;
     margin-right: .75em;
     padding-bottom: .75em
 }
-    
-.right {
+
+.snapshot-all .right {
     display: block;
     width: 100%;
     float: left;
@@ -372,14 +370,14 @@ body {
     
 }
 
-.right-text {
+.snapshot-all .right-text {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
     
 }
-    
-.contact {
+
+.snapshot-all .contact {
     float: left;
     width: 45%;
     margin-left: 3%;
@@ -387,7 +385,7 @@ body {
     margin-top: 10px;
     
 }
-.assistant {
+.snapshot-all .assistant {
     float: left;
     width: 45%;
     margin-left: 3%;

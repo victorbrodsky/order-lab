@@ -489,6 +489,8 @@ function executeClick( btnObjInit ) {
             //var lbtn = Ladda.create(btn[0]);
             //lbtn.start();
 
+            //remove blue strip info
+            removeBlueStrip(btnObj);
 
             $.ajax({
                 url: getCommonBaseUrl("check/"+urlcasename),	//urlCheck+urlcasename,
@@ -534,7 +536,6 @@ function executeClick( btnObjInit ) {
                             reject(Error("Delete ok with Error"));
                         }
                         removeInfoFromElement(btnObj);
-                        removeBlueStrip(btnObj);
                     }
                     //////////////// end of delete ////////////////
 
@@ -621,8 +622,6 @@ function executeClick( btnObjInit ) {
                     if( casetype == 'delete' ) {
                         deleteError(btnObj,single);
                     }
-
-                    removeBlueStrip(btnObj);
 
                     //console.debug(btnObj.name+": ajax error for casetype="+casetype);
                     reject(Error(btnObj.name+": ajax error for casetype="+casetype));

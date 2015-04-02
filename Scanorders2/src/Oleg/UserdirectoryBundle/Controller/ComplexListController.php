@@ -114,8 +114,8 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/locations/show/{id}", name="employees_locations_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/locations/edit/{id}", name="employees_locations_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/location/show/{id}", name="employees_locations_pathaction_show_standalone", requirements={"id" = "\d+"})
+     * @Route("/location/edit/{id}", name="employees_locations_pathaction_edit_standalone", requirements={"id" = "\d+"})
      *
      * @Route("/buildings/show/{id}", name="employees_buildings_pathaction_show_standalone", requirements={"id" = "\d+"})
      * @Route("/admin/buildings/edit/{id}", name="employees_buildings_pathaction_edit_standalone", requirements={"id" = "\d+"})
@@ -166,7 +166,7 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/locations/new", name="employees_locations_pathaction_new_standalone")
+     * @Route("/location/new", name="employees_locations_pathaction_new_standalone")
      * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_standalone")
      * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_standalone")
      * @Method("GET")
@@ -206,7 +206,7 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/locations/new", name="employees_locations_pathaction_new_post_standalone")
+     * @Route("/location/new", name="employees_locations_pathaction_new_post_standalone")
      * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_post_standalone")
      * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_post_standalone")
      * @Method("POST")
@@ -297,7 +297,7 @@ class ComplexListController extends Controller
 
 
     /**
-     * @Route("/locations/update/{id}", name="employees_locations_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * @Route("/location/update/{id}", name="employees_locations_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Route("/admin/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Route("/admin/research-labs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Method("PUT")

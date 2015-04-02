@@ -199,6 +199,44 @@ class UtilController extends Controller {
 
 
 
+    /**
+     * @Route("/common/locationusers", name="employees_get_locationusers")
+     * @Method("GET")
+     */
+    public function getLocationUsersAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->select("list")
+            //->select("list.id as id, infos.displayName as text")
+            ->leftJoin("list.infos", "infos")
+            ->orderBy("infos.displayName","ASC");
+
+        $locationusers = $query->getQuery()->getResult();
+
+        $output = array();
+
+        $output[] = array('id'=>null,'text'=>'None');
+        $output[] = array('id'=>null,'text'=>'Multiple');
+
+        //$output = array_merge($output, $locationusers);
+
+        foreach( $locationusers as $locationuser ) {
+            $element = array(
+                'id'        => $locationuser->getId(),
+                'text'      => $locationuser.""
+            );
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
     /**
      * @Route("/common/building", name="employees_get_building")

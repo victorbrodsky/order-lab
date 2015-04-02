@@ -595,7 +595,17 @@
         <h4 class="text-muted" align="center">List properties:</h4>
         </p>
 
-        {#{{ formmacros.field(formfield.list.abbreviation) }}#}
+        {% if formfield.list.abbreviation is defined %}
+            {{ formmacros.field(formfield.list.abbreviation) }}
+        {% endif %}
+
+        {% if formfield.list.shortname is defined %}
+            {{ formmacros.field(formfield.list.shortname) }}
+        {% endif %}
+
+        {% if formfield.list.description is defined %}
+            {{ formmacros.field(formfield.list.description) }}
+        {% endif %}
 
         {% if formfield.list.original is defined %}
             {{ formmacros.field(formfield.list.original) }}

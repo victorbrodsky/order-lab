@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -188,7 +189,14 @@ class LocationType extends AbstractType
             'label' => "Location Type:",
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
-            'required' => false
+            'required' => false,
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where('list.type != :disabletype AND list.type != :drafttype')
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
+                );
+            }
         ));
 
         //institution. User should be able to add institution to administrative or appointment titles
@@ -245,18 +253,27 @@ class LocationType extends AbstractType
         //add user (Inhabitant) for all stand alone location management by LocationController
         if( strpos($this->params['cycle'],'_standalone') !== false ) {
             //user
-            $builder->add( 'user', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:User',
-                'label'=> "Inhabitant:",
-                'required'=> false,
-                'multiple' => false,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.infos", "infos")
-                            ->orderBy("infos.displayName","ASC");
-                    },
+            $builder->add('user', 'employees_custom_selector', array(
+                'label'=> "Inhabitant / Contact:",
+                'attr' => array('class' => 'combobox combobox-width combobox-without-add ajax-combobox-locationusers', 'type' => 'hidden'),
+                'required' => false,
+                //'multiple' => false,
+                'classtype' => 'locationusers'
             ));
+//            $builder->add( 'user', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:User',
+//                'label'=> "Inhabitant / Contact:",
+//                'required'=> false,
+//                'multiple' => false,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                        $list = $er->createQueryBuilder('list')
+//                            ->select()
+//                            ->leftJoin("list.infos", "infos")
+//                            ->orderBy("infos.displayName","ASC");
+//                        return $list;
+//                    },
+//            ));
         }
 
         //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page
@@ -278,7 +295,6 @@ class LocationType extends AbstractType
 
 
 
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -292,4 +308,5 @@ class LocationType extends AbstractType
     {
         return 'oleg_userdirectorybundle_location';
     }
+
 }

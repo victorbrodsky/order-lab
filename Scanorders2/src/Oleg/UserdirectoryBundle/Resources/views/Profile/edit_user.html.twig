@@ -771,6 +771,7 @@
                                                     {% endfor %}
                                                 </td>
                                             </tr>
+
                                         </table>
 
                                     {% endfor %}
@@ -1057,8 +1058,8 @@
     {#user's snapshot#}
     {% if showFlag %}
         {{ userform.snapshot_steve(entity,sitename,cycle) }}
-        <br>
-        {{ userform.snapshot(entity,sitename,cycle) }}
+        {#<br>#}
+        {#{{ userform.snapshot(entity,sitename,cycle) }}#}
     {% else %}
         {#avatar form modal#}
         {{ usermacros.avatarForm(entity,cycle) }}

@@ -1348,7 +1348,7 @@ function setBlueStrip(btnObj,data) {
     var fullObjectName = data['fullObjectName'];
     //console.log("fullObjectName=" + fullObjectName);
     if( fullObjectName ) {
-        var parentEl = btnObj.element.closest('.panel');
+        var parentEl = btnObj.btn.closest('.panel'); //panel-multi-form
         //console.log(parentEl);
         parentEl.find('.element-title-object-name').first().html(fullObjectName);
     }
@@ -1356,8 +1356,7 @@ function setBlueStrip(btnObj,data) {
 
 //remove object info from blue strip
 function removeBlueStrip(btnObj) {
-    var parentEl = btnObj.element.closest('.panel');
-    //console.log(parentEl);
+    var parentEl = btnObj.btn.closest('.panel');
     parentEl.find('.element-title-object-name').first().html("");
 }
 

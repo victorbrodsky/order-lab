@@ -19,11 +19,6 @@ class Roles extends ListAbstract {
     private $alias;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
      * @ORM\ManyToMany(targetEntity="RoleAttributeList", inversedBy="roles", cascade={"persist"})
      * @ORM\JoinTable(name="user_roles_attributes")
      **/
@@ -60,22 +55,6 @@ class Roles extends ListAbstract {
     public function getAlias()
     {
         return $this->alias;
-    }
-
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 
 

@@ -346,7 +346,16 @@ function getForm( name, ids, withDelBtn ) {
 //            '<button id="form_body_toggle_'+ name + '_' + idsu +'" type="button" class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open black" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></button>' +
 //            '&nbsp;' +
 //            '<div class="element-title">' + capitaliseFirstLetter(title) + ' ' + itemCount + '</div>' +
-                '<h4 class="panel-title element-title">' + capitaliseFirstLetter(title) + ' ' + itemCount + '</h4>' +
+                '<h4 class="panel-title element-title element-title-extended-width">' +
+                    '<div class="row">' +
+                        '<div class="col-xs-2" align="left">' +
+                            capitaliseFirstLetter(title) + ' ' + itemCount +
+                        '</div>' +
+                        '<div class="col-xs-10 element-title-object-name" align="left">' +
+                            //to be inserted by JS
+                        '</div>' +
+                    '</div>' +
+                '</h4>' +
                 '<div class="form-btn-options">' +
                     addbtn +
                     deletebtn +

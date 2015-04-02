@@ -66,6 +66,7 @@ class User extends BaseUser {
      * @ORM\OneToMany(targetEntity="UserInfo", mappedBy="user", cascade={"persist","remove"},
      *  indexBy="firstName,middleName,lastName,displayName,email"
      * )
+     * @ORM\OrderBy({"displayName" = "ASC"})
      */
     private $infos;
 
@@ -935,10 +936,20 @@ class User extends BaseUser {
     }
 
     public function getUserNameStr() {
-        if( $this->getDisplayName() ) {
-            return $this->getPrimaryUseridKeytypeStr()." - ".$this->getDisplayName();
-        } else {
-            return $this->getPrimaryUseridKeytypeStr();
+
+        $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
+        $displayName = $this->getDisplayName();
+
+        if( $displayName && $primaryUseridKeytypeStr ) {
+            return $primaryUseridKeytypeStr." - ".$displayName;
+        }
+
+        if( $primaryUseridKeytypeStr && !$displayName ){
+            return $primaryUseridKeytypeStr."";
+        }
+
+        if( $displayName && !$primaryUseridKeytypeStr ){
+            return $displayName."";
         }
     }
 

@@ -18,6 +18,7 @@
         <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Short Name', 'ent.shortname') }}</th>
 
         {% if entities|first.geoLocation is defined %}
             <th>{{ knp_pagination_sortable(entities, 'Address', 'geoLocation.street1') }}</th>
@@ -57,6 +58,7 @@
                 <td><a href="{{ path(employees_sitename~'_'~pathname~'_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.abbreviation }}</td>
+                <td>{{ entity.shortname }}</td>
 
                 {% if entity.geoLocation is defined %}
                     <td>{{ entity.getShortName() }}</td>
@@ -104,15 +106,17 @@
                 {#<td>{{ entity.creator.getUsernameOptimal() }}</td>#}
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
-                {% if entity.updatedby is defined and entity.updatedby %}
-                    <td class="rowlink-skip">
+                <td class="rowlink-skip">
+                    {% if entity.updatedby is defined and entity.updatedby %}
                         <a href="{{ path('employees_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby.getUsernameOptimal() }}</a>
-                    </td>
-                {% endif %}
+                    {% endif %}
+                </td>
 
-                {% if entity.updatedon is defined and entity.updatedon %}
-                    <td>{% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}</td>
-                {% endif %}
+                <td>
+                    {% if entity.updatedon is defined and entity.updatedon %}
+                        {% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}
+                    {% endif %}
+                </td>
 
             </tr>
         {% endfor %}
