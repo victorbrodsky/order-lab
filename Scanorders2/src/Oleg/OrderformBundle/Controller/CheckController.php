@@ -169,7 +169,7 @@ class CheckController extends Controller {
                 'dob'=>$this->getArrayFieldJson( array($entity->obtainValidField('dob')) ), //$this->getArrayFieldJson($entity->getDob()),
                 'age'=>$entity->calculateAge(),
                 'clinicalHistory'=>$this->getArrayFieldJson($entity->obtainAllValidNotEmptyClinicalHistories()),
-                'fullObjectName'=>$entity->obtainFullObjectName()
+                'fullObjectName'=>"   ".$entity->obtainFullObjectName()
             );
         } 
 
@@ -420,7 +420,7 @@ class CheckController extends Controller {
                 'accession'=>$this->getArrayFieldJson($entity->getAccession(),array('keytype')),
                 'accessionDate'=>$this->getArrayFieldJson($entity->getAccessionDate()),
 
-                'fullObjectName'=>$entity->obtainFullObjectName()
+                'fullObjectName'=>"   ".$entity->obtainFullObjectName()
             );
         } 
 

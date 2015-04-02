@@ -974,6 +974,9 @@ class User extends BaseUser {
         }
     }
 
+    //TODO:
+    //optimal name
+
     //the user has a Preferred Name, start with preferred name;
     //If the user has no preferred name, but does have a first and last name, concatenate them
     //and start with the first and last name combo; if the user has no first name, use just the last name;

@@ -13,7 +13,11 @@ use Oleg\OrderformBundle\Entity\InstructionList;
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientDob;
+use Oleg\OrderformBundle\Entity\PatientFirstName;
+use Oleg\OrderformBundle\Entity\PatientLastName;
+use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientMrn;
+use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\Report;
 use Oleg\OrderformBundle\Entity\RequisitionForm;
 use Oleg\OrderformBundle\Entity\Imaging;
@@ -609,6 +613,24 @@ class PatientController extends Controller
         $patientMrn->setKeytype($mrntype);
         $patientMrn->setField('testmrn-'.$testpatientmrnIndex);
         $patient->addMrn($patientMrn);
+
+        //lastname
+        $patientLastname = new PatientLastName($status,$user,$system);
+        $patientLastname->setField('TestLastname');
+        $patient->addLastname($patientLastname);
+        //firstname
+        $patientFirstname = new PatientFirstName($status,$user,$system);
+        $patientFirstname->setField('TestFirstname');
+        $patient->addFirstname($patientFirstname);
+        //middlename
+        $patientMiddlename = new PatientMiddleName($status,$user,$system);
+        $patientMiddlename->setField('TestMiddlename');
+        $patient->addMiddlename($patientMiddlename);
+
+        //sex
+        $patientSex = new PatientSex($status,$user,$system);
+        $patientSex->setField('Female');
+        $patient->addSex($patientSex);
 
         //dob
         //$patientDob = new PatientDob($status,$user,$system);

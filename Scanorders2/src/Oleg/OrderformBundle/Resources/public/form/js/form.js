@@ -347,13 +347,11 @@ function getForm( name, ids, withDelBtn ) {
 //            '&nbsp;' +
 //            '<div class="element-title">' + capitaliseFirstLetter(title) + ' ' + itemCount + '</div>' +
                 '<h4 class="panel-title element-title element-title-extended-width">' +
-                    '<div class="row">' +
-                        '<div class="col-xs-2" align="left">' +
-                            capitaliseFirstLetter(title) + ' ' + itemCount +
-                        '</div>' +
-                        '<div class="col-xs-10 element-title-object-name" align="left">' +
-                            //to be inserted by JS
-                        '</div>' +
+                    '<div style="float:left;">' +
+                        capitaliseFirstLetter(title) + ' ' + itemCount +
+                    '</div>' +
+                    '<div class="element-title-object-name" style="float:left;">' +
+                        //to be inserted by JS
                     '</div>' +
                 '</h4>' +
                 '<div class="form-btn-options">' +

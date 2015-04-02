@@ -291,7 +291,7 @@ class Patient extends ObjectAbstract
 
         //If the age is less than 1 year, give the age in months and show the word "month(s)"; for example: "3 month(s)".
         if( $daysFull > 0 && $years > 0 ) {
-            return $years;
+            return $years . " yo";
         }
 
         return "";
@@ -895,7 +895,8 @@ class Patient extends ObjectAbstract
 
         $calculateAge = $this->calculateAge();
         if( $calculateAge && $calculateAge != "" ) {
-            $fullNameArr[] = $calculateAge;
+            $dob = $this->obtainValidField('dob');
+            $fullNameArr[] = "(DOB: " . $dob . "), " . $calculateAge;
         }
 
         $sex = $this->obtainValidField('sex');
@@ -907,7 +908,7 @@ class Patient extends ObjectAbstract
         $mrn = $this->obtainValidField('mrn');
         if( $mrn ) {
             if( $mrn && $mrn->getKeytype() ) {
-                $fullNameArr[] = $mrn->getKeytype()->getOptimalName() . " - " . $mrn->getField();
+                $fullNameArr[] = $mrn->getKeytype()->getOptimalName() . ": " . $mrn->getField();
             } else {
                 $fullNameArr[] = $mrn->getField();
             }

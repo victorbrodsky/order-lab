@@ -16,7 +16,9 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\PatientMrn;
 
-//TODO: optimise by removing foreach loops
+//TODO: optimise by removing foreach loops:
+//create optimalShortName: return abbr, or return short, or return name
+//optimalShortNoAbbr: return short, or return name
 
 /**
  * @Route("/util")

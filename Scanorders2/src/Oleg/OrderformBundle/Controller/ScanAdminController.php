@@ -346,7 +346,7 @@ class ScanAdminController extends AdminController
 
     //return -1 if failed
     //return number of generated records
-    public function generateStains() {
+    public function generateStains_OLD() {
 
         $helper = new FormHelper();
         $stains = $helper->getStains();
@@ -370,6 +370,75 @@ class ScanAdminController extends AdminController
             $em->flush();
 
             $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateStains() {
+
+        $helper = new FormHelper();
+        $stains = $helper->getStains();
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $inputFileName = __DIR__ . '/../Resources/Stains.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $count = 1;
+
+        //for each row in excel
+        for ($row = 2; $row <= $highestRow; $row++){
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            echo $row.": ";
+            var_dump($rowData);
+            echo "<br>";
+
+            //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
+            $stainName = $rowData[0][0];
+            $stainSynonim = $rowData[0][1];
+            $stainShortName = $rowData[0][2];
+            $stainAbbr = $rowData[0][3];
+            $stainCopathName = $rowData[0][4];
+            $stainCopathAbbr = $rowData[0][5];
+            $otherSynonims = $rowData[0][6];
+
+
+            echo "stainName=".$stainName."<br>";
+            echo "otherSynonims=".$otherSynonims."<br>";
+
+            if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName."") ) {
+                continue;
+            }
+
+            exit('stain exit');
+
+            $entity = new StainList();
+            $this->setDefaultList($entity,$count,$username,$stainName);
+
+
+            $em->persist($subEntity);
+            $em->flush();
+
+            $count = $count + 10;
+
         }
 
         return round($count/10);
