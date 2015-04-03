@@ -32,6 +32,7 @@ class ListType extends AbstractType
         if( array_key_exists('id', $this->params) ) {
             $this->addwhere = " AND list.id != ".$this->params['id'];
         }
+        //echo "addwhere=".$this->addwhere."<br>";
 
         if( $this->mapper['className'] == 'AccessionType' || $this->mapper['className'] == 'accessiontype' ) {
             $this->types['TMA'] = 'TMA';
@@ -137,8 +138,8 @@ class ListType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
-                    ->where( "list.type != :type" . $this->addwhere )
-                    ->setParameters( array( 'type'=>'default' ) );
+                    ->where( "list.type != :disabletype AND list.type != :drafttype" . $this->addwhere )
+                    ->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft') );
             },
         ));
 

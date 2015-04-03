@@ -468,17 +468,21 @@ class ScanAdminController extends AdminController
 
                 $synonymEntity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($synonym);
                 if( !$synonymEntity ) {
+
                     $count = $count + 10;
                     $synonymEntity = new StainList();
                     $this->setDefaultList($synonymEntity,$count,$username,$synonym);
+
+                    $em->persist($entity);
                     $em->persist($synonymEntity);
+                    $em->flush();
+
                 }
 
                 $entity->addSynonym($synonymEntity);
                 //echo "synonym=".$synonymEntity."<br>";
                 //exit();
             }
-
 
             $em->persist($entity);
             $em->flush();
