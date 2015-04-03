@@ -21,8 +21,14 @@ class PatientSex extends PatientArrayFieldAbstract
      */
     protected $patient;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $field;
+
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="SexList", cascade={"persist"})
+     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
      */
     protected $field;
 

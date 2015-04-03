@@ -629,7 +629,8 @@ class PatientController extends Controller
 
         //sex
         $patientSex = new PatientSex($status,$user,$system);
-        $patientSex->setField('Female');
+        $sex = $em->getRepository('OlegOrderformBundle:SexList')->findOneByName('Female');
+        $patientSex->setField($sex);
         $patient->addSex($patientSex);
 
         //dob

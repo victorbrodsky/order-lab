@@ -69,12 +69,14 @@ function highlightEncounterNameElement( element, parentTarget0, parentTarget1, p
 
 function highlightEncounterSexElement( element, parentTarget ) {
     element.on('show.bs.tooltip', function () {
-        var parent = $(parentTarget);
-        parent.addClass("alert-info");
+        //var parent = $(parentTarget);
+        //parent.addClass("alert-info");
+        $(parentTarget).css("background-color","#d9edf7");
     });
     element.on('hide.bs.tooltip', function () {
-        var parent = $(parentTarget);
-        parent.removeClass("alert-info");
+        //var parent = $(parentTarget);
+        //parent.removeClass("alert-info");
+        $(parentTarget).css("background-color","");
     });
 }
 

@@ -123,8 +123,9 @@ class EncounterRepository extends ArrayFieldAbstractRepository
                 $status = self::STATUS_INVALID;
             }
             $patientsex = new PatientSex($status,$user,$source);
-            //echo "encounter sex=".$encounter->getPatsex()->first()."<br>";
-            $patientsex->setField($encounter->getPatsex()->first());
+            $encounterSex = $encounter->getPatsex()->first()->getField();
+            //echo "encounter sex=".$encounterSex."<br>";
+            $patientsex->setField($encounterSex);
             $patient->addSex($patientsex);
         }
 

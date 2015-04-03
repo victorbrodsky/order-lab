@@ -15,7 +15,7 @@ var arrayFieldShow = new Array("clinicalHistory","diffDisident","specialStains",
 
 //var selectStr = 'input[type=file],input.form-control,div.patientsex-field,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
 //var selectStr = 'input[type=file],input.form-control,div.encountersex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
-var selectStr = 'input[type=file],input.form-control,div.encountersex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype,div.file-upload-dropzone';
+var selectStr = 'input[type=file],input.form-control,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype,div.file-upload-dropzone';
 
 var orderformtype = $("#orderformtype").val();
 

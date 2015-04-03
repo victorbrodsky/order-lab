@@ -873,7 +873,8 @@ class TableController extends Controller {
         $patsexArr = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
         if( $force || $patsexArr['val'] && $patsexArr['val'] != '' ) {
             $patsexObj = new EncounterPatsex($status,$provider,$system);
-            $patsexObj->setField($patsexArr['val']);
+            $sexlist = $em->getRepository('OlegOrderformBundle:SexList')->findOneByName($patsexArr['val']);
+            $patsexObj->setField($sexlist);
             $patsexObj->setId($patsexArr['id']);
             $encounter->addPatsex($patsexObj);
         }

@@ -901,7 +901,7 @@ class Patient extends ObjectAbstract
 
         $sex = $this->obtainValidField('sex');
         if( $sex && $sex != "" ) {
-            $fullNameArr[] = $sex;
+            $fullNameArr[] = $sex."";
         }
 
         //mrn

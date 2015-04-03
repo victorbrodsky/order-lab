@@ -189,7 +189,7 @@ class AdminController extends Controller
 
 
     /**
-     * @Route("/genresidencyspecialties", name="generate_residencyspecialties")
+     * @Route("/populate-residency-specialties-with-default-values", name="generate_residencyspecialties")
      * @Method("GET")
      * @Template()
      */
@@ -489,7 +489,7 @@ class AdminController extends Controller
                     <br>
 
                     <li>
-                        <a href="https://github.com/1up-lab/OneupUploaderBundle">KnpPaginatorBundle</a>
+                        <a href="https://github.com/KnpLabs/KnpPaginatorBundle">KnpPaginatorBundle</a>
                     </li>
 
                     <br>
@@ -1973,15 +1973,15 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findAll();
 
-        if( $entities ) {
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findAll();
+//        if( $entities ) {
             //return -1;
 //            $query = $em->createQuery('DELETE OlegUserdirectoryBundle:FellowshipSubspecialty c WHERE c.id > 0');
 //            $query->execute();
 //            $query = $em->createQuery('DELETE OlegUserdirectoryBundle:ResidencySpecialty c WHERE c.id > 0');
 //            $query->execute();
-        }
+//        }
 
         $inputFileName = __DIR__ . '/../Util/SpecialtiesResidenciesFellowshipsCertified.xlsx';
 

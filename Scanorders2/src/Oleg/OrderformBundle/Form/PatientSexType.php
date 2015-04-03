@@ -21,15 +21,18 @@ class PatientSexType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'field', 'choice', array(
-            'label'=>'Sex',
-            //'max_length'=>20,
-            //'required'=>false,
-            'disabled' => true,
-            'choices' => array("Female"=>"Female", "Male"=>"Male", "Unspecified"=>"Unspecified"),
-            'multiple' => false,
-            'expanded' => true,
-            'attr' => array('class' => 'horizontal_type patientsex-field', 'disabled' => 'disabled')
+//        $builder->add( 'field', 'entity', array(
+//            'label'=>'Sex',
+//            'disabled' => true,
+//            //'choices' => array("Female"=>"Female", "Male"=>"Male", "Unspecified"=>"Unspecified"),
+//            'multiple' => false,
+//            'expanded' => true,
+//            'attr' => array('class' => 'horizontal_type patientsex-field', 'disabled' => 'disabled')
+//        ));
+        $builder->add( 'field', null, array(
+            'label' => 'Sex',
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width patientsex-field')
         ));
 
         $builder->add('others', new ArrayFieldType(), array(
