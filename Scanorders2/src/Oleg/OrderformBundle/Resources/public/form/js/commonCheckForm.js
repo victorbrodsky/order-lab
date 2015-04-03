@@ -1751,7 +1751,7 @@ function disableElement( parentname, element, flag) {
     var classs = element.attr('class');
     var tagName = element.prop('tagName');
 
-    //console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id')+", flag="+flag);
+    console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id')+", flag="+flag);
 
     //return if this element does not belong to a pressed key element
     var idArr = element.attr('id').split("_");

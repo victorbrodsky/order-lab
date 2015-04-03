@@ -70,13 +70,13 @@ function highlightEncounterNameElement( element, parentTarget0, parentTarget1, p
 function highlightEncounterSexElement( element, parentTarget ) {
     element.on('show.bs.tooltip', function () {
         var parent = $(parentTarget);
-        parent.addClass("alert-info");
-        //$(parentTarget).css("background-color","#d9edf7");
+        var parentColoredElement = parent.find('.select2-choice');
+        parentColoredElement.css("background-color","#d9edf7");
     });
     element.on('hide.bs.tooltip', function () {
         var parent = $(parentTarget);
-        parent.removeClass("alert-info");
-        //$(parentTarget).css("background-color","");
+        var parentColoredElement = parent.find('.select2-choice');
+        parentColoredElement.css("background-color","");
     });
 }
 
@@ -190,7 +190,7 @@ function attachTooltip( element, flag, fieldParentName ) {
     var elementObj = new keyAndBtnObject(element,fieldParentName);
 
     //replace select2 (disabled) element with its parent to attach a tooltip (use parent as a wrapper). This wrap is required by bootstrap tooltip.
-    if( element.hasClass('ajax-combobox') ) {
+    if( element.hasClass('ajax-combobox') || element.hasClass('combobox') ) {
         //console.log( "select2!" );
         element = element.parent();
     }
