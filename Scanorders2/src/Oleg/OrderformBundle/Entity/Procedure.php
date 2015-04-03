@@ -352,7 +352,7 @@ class Procedure extends ObjectAbstract
         $key = $this->obtainValidField('number');
         if( $key ) {
             if( $key->getKeytype() ) {
-                $fullNameArr[] = $key->getKeytype()->getOptimalName() . " - " . $key->getField();
+                $fullNameArr[] = $key->getKeytype()->getOptimalName() . ": " . $key->getField();
             } else {
                 $fullNameArr[] = $key->getField();
             }

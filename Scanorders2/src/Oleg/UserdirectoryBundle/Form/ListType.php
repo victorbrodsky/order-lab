@@ -24,7 +24,7 @@ class ListType extends AbstractType
                             "draft"=>"draft"
                         );
 
-    public function __construct( $params=null, $mapper )
+    public function __construct( $params=null, $mapper=null )
     {
         $this->params = $params;
         $this->mapper = $mapper;
@@ -65,8 +65,15 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        //description
+        $descriptionLabel = 'Description:';
+        if( array_key_exists('labels', $this->mapper) && $this->mapper['labels'] ) {
+            if( array_key_exists('description', $this->mapper['labels']) && $this->mapper['labels']['description'] ) {
+                $descriptionLabel = $this->mapper['labels']['description'];
+            }
+        }
         $builder->add('description','textarea',array(
-            'label' => 'Description:',
+            'label' => $descriptionLabel,
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));

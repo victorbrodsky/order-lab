@@ -52,7 +52,7 @@ class ScanListController extends ListController
      * @Route("/report-types/", name="reporttype-list")
      * @Route("/instructions-for-embedder/", name="instruction-list")
      * @Route("/patient-types/", name="patienttype-list")
-     * @Route("/sexes/", name="sexes-list")
+     * @Route("/sex/", name="sexes-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -97,7 +97,7 @@ class ScanListController extends ListController
      * @Route("/report-types/", name="reporttype_create")
      * @Route("/instructions-for-embedder/", name="instruction_create")
      * @Route("/patient-types/", name="patienttype_create")
-     * @Route("/sexes/", name="sexes_create")
+     * @Route("/sex/", name="sexes_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -142,7 +142,7 @@ class ScanListController extends ListController
      * @Route("/report-types/new", name="reporttype_new")
      * @Route("/instructions-for-embedder/new", name="instruction_new")
      * @Route("/patient-types/new", name="patienttype_new")
-     * @Route("/sexes/new", name="sexes_new")
+     * @Route("/sex/new", name="sexes_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -187,7 +187,7 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}", name="reporttype_show")
      * @Route("/instructions-for-embedder/{id}", name="instruction_show")
      * @Route("/patient-types/{id}", name="patienttype_show")
-     * @Route("/sexes/{id}", name="sexes_show")
+     * @Route("/sex/{id}", name="sexes_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -232,7 +232,7 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}/edit", name="reporttype_edit")
      * @Route("/instructions-for-embedder/{id}/edit", name="instruction_edit")
      * @Route("/patient-types/{id}/edit", name="patienttype_edit")
-     * @Route("/sexes/{id}/edit", name="sexes_edit")
+     * @Route("/sex/{id}/edit", name="sexes_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -277,7 +277,7 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}", name="reporttype_update")
      * @Route("/instructions-for-embedder/{id}", name="instruction_update")
      * @Route("/patient-types/{id}", name="patienttype_update")
-     * @Route("/sexes/{id}", name="sexes_update")
+     * @Route("/sex/{id}", name="sexes_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -414,7 +414,7 @@ class ScanListController extends ListController
             break;
         case "sexes":
             $className = "SexList";
-            $displayName = "Sexes";
+            $displayName = "Sex";
             break;
 
         default:
@@ -466,7 +466,7 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}", name="reporttype_delete")
      * @Route("/instructions-for-embedder/{id}", name="instruction_delete")
      * @Route("/patient-types/{id}", name="patienttype_delete")
-     * @Route("/sexes/{id}", name="sexes_delete")
+     * @Route("/sex/{id}", name="sexes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

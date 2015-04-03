@@ -70,10 +70,6 @@ class GenericListType extends AbstractType
                 'label'=>'Alias:',
                 'attr' => array('class' => 'form-control')
             ));
-            $builder->add('description',null,array(
-                'label'=>'Explanation of Capabilities:',
-                'attr' => array('class' => 'textarea form-control')
-            ));
             $builder->add('attributes','entity',array(
                 'class' => 'OlegUserdirectoryBundle:RoleAttributeList',
                 'label' => "Attribute(s):",

@@ -762,6 +762,8 @@ class ListController extends Controller
 
     public function classListMapper( $route ) {
 
+        $labels = null;
+
         switch( $route ) {
 
             case "sourcesystems":
@@ -771,6 +773,7 @@ class ListController extends Controller
             case "role":
                 $className = "Roles";
                 $displayName = "Roles";
+                //$labels = array('description'=>'Explanation of Capabilities:');
                 break;
             case "institutions":
                 $className = "Institution";
@@ -847,6 +850,7 @@ class ListController extends Controller
             case "roleattributes":
                 $className = "RoleAttributeList";
                 $displayName = "Role Attributes";
+                //$labels = array('description'=>'Explanation of Capabilities:');
                 break;
             case "buildings":
                 $className = "BuildingList";
@@ -924,6 +928,7 @@ class ListController extends Controller
             default:
                 $className = null;
                 $displayName = null;
+                $labels = null;
         }
 
         //echo "className=".$className.", displayName=".$displayName."<br>";
@@ -933,6 +938,7 @@ class ListController extends Controller
         $res['fullClassName'] = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
         $res['bundleName'] = "OlegUserdirectoryBundle";
         $res['displayName'] = $displayName;
+        $res['labels'] = $labels;
 
         //check parent name
         $parentMapper = $this->getParentName($className);

@@ -44,7 +44,7 @@
             {% endif %}
 
             {% if entities|first.description is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Explanation of Capabilities', 'ent.description') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Description', 'ent.description') }}</th>
             {% endif %}
 
             {% if entities|first.original is defined %}

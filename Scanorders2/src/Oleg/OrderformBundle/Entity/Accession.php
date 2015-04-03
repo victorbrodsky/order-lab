@@ -340,7 +340,7 @@ class Accession extends ObjectAbstract {
         $key = $this->obtainValidField('accession');
         if( $key ) {
             if( $key->getKeytype() ) {
-                $fullNameArr[] = $key->getKeytype()->getOptimalName() . " - " . $key->getField();
+                $fullNameArr[] = $key->getKeytype()->getOptimalName() . ": " . $key->getField();
             } else {
                 $fullNameArr[] = $key->getField();
             }
