@@ -562,7 +562,8 @@ class CheckController extends Controller {
                 'disident'=>$this->getArrayFieldJson($entity->getDisident()),
                 'paper'=>$this->getArrayFieldJson($entity->getPaper(), array("documents")),
                 'diffDisident'=>$this->getArrayFieldJson($entity->getDiffDisident()),
-                'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("origin","primaryorgan") )
+                'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("origin","primaryorgan") ),
+                'fullObjectName'=>$entity->obtainFullObjectName()
             );
         } 
 
@@ -693,7 +694,8 @@ class CheckController extends Controller {
                     'id'=>$entity->getId(),
                     'blockname'=>$this->getArrayFieldJson($entity->getBlockname()),
                     'sectionsource'=>$this->getArrayFieldJson($entity->getSectionsource()),
-                    'specialStains'=>$this->getArrayFieldJson( $entity->getSpecialStains(), array("field","staintype") )
+                    'specialStains'=>$this->getArrayFieldJson( $entity->getSpecialStains(), array("field","staintype") ),
+                    'fullObjectName'=>$entity->obtainFullObjectName()
                 );
             } 
             

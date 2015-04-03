@@ -76,6 +76,7 @@ class Part extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="part")
      */
     protected $slide;
+
     
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider,$source);
@@ -538,6 +539,29 @@ class Part extends ObjectAbstract
     }
 
     //don't use 'get' because later repo functions relay on "get" keyword
+
+    //object info for blue strip
+    public function obtainFullObjectName() {
+
+        $fullNameArr = array();
+
+        //partname
+        $partname = $this->obtainValidField('partname');
+        if( $partname ) {
+            $fullNameArr[] = $partname->getField()."";
+        }
+
+        //sourceOrgan
+        $sourceOrgan = $this->obtainValidField('sourceOrgan');
+        if( $sourceOrgan && $sourceOrgan != "" ) {
+            $fullNameArr[] = $sourceOrgan;
+        }
+
+        $fullName = implode(": ",$fullNameArr);
+
+        return $fullName;
+    }
+
     public function obtainKeyField() {
         return $this->getPartname();
     }

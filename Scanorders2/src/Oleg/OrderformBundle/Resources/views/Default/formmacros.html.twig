@@ -1722,7 +1722,7 @@
         {% if flag and flag == "datastructure" %}
             <div class="panel panel-default">
 
-                <div class="panel-heading">
+                <div class="panel-heading panel-heading-min-height">
 
                     {% if scan.vars.value.id %}
                         {% set orderUniqueId = scan.vars.value.id %}
@@ -1731,12 +1731,24 @@
                     {% endif %}
 
                     <button
-                            id="form_body_toggle_imaging_{{ orderUniqueId }}_{{ uid }}" type="button"
-                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
-                            data-toggle="collapse" data-target="#form_body_imaging_{{ orderUniqueId }}_{{ uid }}">
+                        id="form_body_toggle_imaging_{{ orderUniqueId }}_{{ uid }}" type="button"
+                        class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
+                        data-toggle="collapse" data-target="#form_body_imaging_{{ orderUniqueId }}_{{ uid }}">
                     </button>
 
-                    <h4 class="panel-title">Imaging</h4>
+                    {#<h4 class="panel-title">Imaging</h4>#}
+                    <h4 class="panel-title element-title element-title-extended-width">
+                        <div style="float:left;">
+                            Imaging
+                        </div>
+                        <div class="element-title-object-name" style="float:left; margin-left:10px;">
+                            {% set obtainFullObjectName = scan.vars.value.obtainFullObjectName %}
+                            {#{% if obtainFullObjectName %}#}
+                            {{ obtainFullObjectName|raw }}
+                            {#{% endif %}#}
+                        </div>
+                    </h4>
+
                 </div>
 
                 <div id="form_body_imaging_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse in">

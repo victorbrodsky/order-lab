@@ -315,6 +315,28 @@ class Block extends ObjectAbstract
     }
     
     //don't use 'get' because later repo functions relay on "get" keyword
+    //object info for blue strip
+    public function obtainFullObjectName() {
+
+        $fullNameArr = array();
+
+        //blockname
+        $blockname = $this->obtainValidField('blockname');
+        if( $blockname ) {
+            $fullNameArr[] = $blockname->getField()."";
+        }
+
+        //sectionsource
+        $sectionsource = $this->obtainValidField('sectionsource');
+        if( $sectionsource && $sectionsource != "" ) {
+            $fullNameArr[] = $sectionsource;
+        }
+
+        $fullName = implode(": ",$fullNameArr);
+
+        return $fullName;
+    }
+
     public function obtainKeyField() {
         return $this->getBlockname();
     }

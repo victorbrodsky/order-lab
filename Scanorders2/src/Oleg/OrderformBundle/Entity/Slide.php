@@ -508,4 +508,33 @@ class Slide extends ObjectAbstract
     }
 
 
+    //object info for blue strip
+    public function obtainFullObjectName() {
+
+        $fullNameArr = array();
+
+        //stain
+        $name = $this->obtainValidField('stain');
+        //echo "name=".$name."<br>";
+        if( $name && $name != "" ) {
+            $fullNameArr[] = $name->getField()->getName()."";
+        }
+
+        //title
+        $title = $this->getTitle();
+        if( $title ) {
+            $fullNameArr[] = $title."";
+        }
+
+        //slidetype
+        $slidetype = $this->getSlidetype();
+        if( $slidetype && $slidetype."" != "" && $slidetype."" != "Permanent Section") {
+            $fullNameArr[] = $slidetype;
+        }
+
+        $fullName = implode(", ",$fullNameArr);
+
+        return $fullName;
+    }
+
 }

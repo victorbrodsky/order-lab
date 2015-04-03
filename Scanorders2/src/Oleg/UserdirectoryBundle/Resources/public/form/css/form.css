@@ -267,6 +267,7 @@
     border-top-left-radius: 0px;
 }
 
+
 .user-alert-warning {
     padding-left: 5px;
     padding-right: 5px;
@@ -284,6 +285,10 @@
 .element-title {
     float: left;
     padding-left: 1%;
+}
+
+.panel-heading-min-height {
+    min-height: 45px;
 }
 
 .safary-fix {

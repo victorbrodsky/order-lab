@@ -20,6 +20,7 @@ class Imaging extends SlideArrayFieldAbstract
      */
     protected $slide;
 
+    //TODO: convert to MagList?
     /**
      * @ORM\Column(name="mag", type="string", nullable=true)
      */
@@ -226,6 +227,29 @@ class Imaging extends SlideArrayFieldAbstract
 
     public function __toString() {
         return $this->scanregion."";
+    }
+
+
+    //object info for blue strip
+    public function obtainFullObjectName() {
+
+        $fullNameArr = array();
+
+        //field -> mag
+        $mag = $this->getField();
+        if( $mag && $mag != "" ) {
+            $fullNameArr[] = $mag."";
+        }
+
+        //imageId
+        $imageId = $this->getImageId();
+        if( $imageId ) {
+            $fullNameArr[] = $imageId."";
+        }
+
+        $fullName = implode(": ",$fullNameArr);
+
+        return $fullName;
     }
 
 }
