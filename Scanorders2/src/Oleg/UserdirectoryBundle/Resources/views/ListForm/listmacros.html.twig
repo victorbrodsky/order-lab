@@ -228,8 +228,8 @@
         {{ formmacros.field(form.alias) }}
     {% endif %}
 
-    {% if form.description is defined %}
-        {{ formmacros.field(form.description) }}
+    {% if form.list.description is defined %}
+        {{ formmacros.field(form.list.description) }}
     {% endif %}
 
     {{ formmacros.field(form.list.type) }}
@@ -311,8 +311,8 @@
         {{ formmacros.field(edit_form.alias) }}
     {% endif %}
 
-    {% if edit_form.description is defined %}
-        {{ formmacros.field(edit_form.description) }}
+    {% if edit_form.list.description is defined %}
+        {{ formmacros.field(edit_form.list.description) }}
     {% endif %}
 
     {% if edit_form.attributes is defined and entity.attributes is defined %}

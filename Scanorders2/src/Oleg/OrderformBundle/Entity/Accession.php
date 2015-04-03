@@ -346,6 +346,13 @@ class Accession extends ObjectAbstract {
             }
         }
 
+        //accessionDate
+        $date = $this->obtainValidField('accessionDate');
+        if( $date && $date != "" ) {
+            $fullNameArr[] = $date;
+        }
+
+
         $fullName = implode(", ",$fullNameArr);
 
         return $fullName;

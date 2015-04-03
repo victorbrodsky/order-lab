@@ -106,10 +106,11 @@ abstract class ListAbstract
 
 
 
-    public function addSynonym($synonyms)
+    public function addSynonym($synonym)
     {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
+        if( !$this->synonyms->contains($synonym) ) {
+            $this->synonyms->add($synonym);
+            $synonym->setOriginal($this);
         }
         return $this;
     }

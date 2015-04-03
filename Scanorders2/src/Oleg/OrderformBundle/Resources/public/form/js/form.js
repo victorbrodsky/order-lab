@@ -350,7 +350,7 @@ function getForm( name, ids, withDelBtn ) {
                     '<div style="float:left;">' +
                         capitaliseFirstLetter(title) + ' ' + itemCount +
                     '</div>' +
-                    '<div class="element-title-object-name" style="float:left;">' +
+                    '<div class="element-title-object-name" style="float:left; margin-left:10px;">' +
                         //to be inserted by JS
                     '</div>' +
                 '</h4>' +

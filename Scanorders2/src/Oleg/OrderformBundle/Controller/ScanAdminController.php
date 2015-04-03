@@ -374,10 +374,9 @@ class ScanAdminController extends AdminController
 
         return round($count/10);
     }
-    public function generateStains() {
 
-        $helper = new FormHelper();
-        $stains = $helper->getStains();
+    //populate stains from Excel sheet
+    public function generateStains() {
 
         $username = $this->get('security.context')->getToken()->getUser();
 
@@ -400,47 +399,93 @@ class ScanAdminController extends AdminController
         $count = 1;
 
         //for each row in excel
-        for ($row = 2; $row <= $highestRow; $row++){
+        for( $row = 2; $row <= $highestRow; $row++ ){
+
+            $color = $objPHPExcel->getActiveSheet()->getStyle('A'.$row)->getFill()->getStartColor()->getRGB();
+
+            if( $color != '000000' ) {
+                continue;
+            }
+
+            //echo "A cell color=".$color."<br>";
+
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
                 NULL,
                 TRUE,
                 FALSE);
 
-            echo $row.": ";
-            var_dump($rowData);
-            echo "<br>";
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
 
             //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
-            $stainName = $rowData[0][0];
-            $stainSynonim = $rowData[0][1];
-            $stainShortName = $rowData[0][2];
-            $stainAbbr = $rowData[0][3];
-            $stainCopathName = $rowData[0][4];
-            $stainCopathAbbr = $rowData[0][5];
-            $otherSynonims = $rowData[0][6];
+            //$oldStainName = trim($rowData[0][0]);
+            $stainName = trim($rowData[0][1]);
+            $stainShortName = trim($rowData[0][2]);
+            $stainAbbr = trim($rowData[0][3]);
+            //$stainCopathName = $rowData[0][4];
+            //$stainCopathAbbr = $rowData[0][5];
+            $synonyms = trim($rowData[0][6]);
 
 
-            echo "stainName=".$stainName."<br>";
-            echo "otherSynonims=".$otherSynonims."<br>";
+            //echo "stainName=".$stainName."<br>";
+            //echo "synonyms=".$synonyms."<br>";
 
-            if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName."") ) {
+            if( !$stainName || $stainName == "" ) {
                 continue;
             }
 
-            exit('stain exit');
+            if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
+                continue;
+            }
+
+            //exit('stain exit');
 
             $entity = new StainList();
             $this->setDefaultList($entity,$count,$username,$stainName);
 
+            if( $stainShortName ) {
+                $entity->setShortname($stainShortName);
+            }
 
-            $em->persist($subEntity);
+            if( $stainAbbr ) {
+                $entity->setAbbreviation($stainAbbr);
+            }
+
+            //echo "stain=".$entity.", ShortName=".$entity->getShortname().", Abbr=".$entity->getAbbreviation()."<br>";
+
+            //synonyms
+            $synonymsArr = explode(",", $synonyms);
+            foreach( $synonymsArr as $synonym ) {
+                $synonym = trim($synonym);
+
+                if( !$synonym || $synonym == "" ) {
+                    continue;
+                }
+
+                $synonymEntity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($synonym);
+                if( !$synonymEntity ) {
+                    $count = $count + 10;
+                    $synonymEntity = new StainList();
+                    $this->setDefaultList($synonymEntity,$count,$username,$synonym);
+                    $em->persist($synonymEntity);
+                }
+
+                $entity->addSynonym($synonymEntity);
+                //echo "synonym=".$synonymEntity."<br>";
+                //exit();
+            }
+
+
+            $em->persist($entity);
             $em->flush();
 
             $count = $count + 10;
 
         }
 
+        //exit('stain exit, count='.$count);
         return round($count/10);
     }
 

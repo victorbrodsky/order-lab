@@ -321,11 +321,11 @@
             <div style="float:left;">
                 {{ title | capitalize }} {{ count+1 }}
             </div>
-            <div class="element-title-object-name" style="float:left;">
+            <div class="element-title-object-name" style="float:left; margin-left:10px;">
                 {% set obtainFullObjectName = formObject.obtainFullObjectName %}
-                {% if obtainFullObjectName %}
-                    &nbsp;&nbsp;&nbsp; {{ obtainFullObjectName|raw }}
-                {% endif %}
+                {#{% if obtainFullObjectName %}#}
+                    {{ obtainFullObjectName|raw }}
+                {#{% endif %}#}
             </div>
         </h4>
 

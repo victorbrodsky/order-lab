@@ -698,6 +698,12 @@ class Encounter extends ObjectAbstract
             }
         }
 
+        //date
+        $date = $this->obtainValidField('date');
+        if( $date && $date != "" ) {
+            $fullNameArr[] = $date;
+        }
+
         $fullName = implode(", ",$fullNameArr);
 
         return $fullName;

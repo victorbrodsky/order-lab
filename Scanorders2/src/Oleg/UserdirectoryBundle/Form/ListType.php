@@ -67,6 +67,7 @@ class ListType extends AbstractType
 
         $builder->add('description','textarea',array(
             'label' => 'Description:',
+            'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
@@ -121,10 +122,11 @@ class ListType extends AbstractType
 
         $builder->add('synonyms', 'entity', array(
             'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
-            'label'=>'Synonyms:',
-            'read_only'=>true,
+            'label' => 'Synonyms:',
+            //'read_only' => true,
             'required' => false,
             'multiple' => true,
+            //'by_reference' => false,
             'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -137,11 +139,13 @@ class ListType extends AbstractType
             'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
             'label'=>'Original Synonymous Term:',
             'required' => false,
+            'multiple' => false,
+            //'by_reference' => false,
             'attr' => array('class' => 'combobox combobox-width select2-list-original'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where( "list.type = :type" . $this->addwhere )
-                    ->setParameter( 'type','default' );
+                return $er->createQueryBuilder('list');
+                    //->where( "list.type = :type" . $this->addwhere )
+                    //->setParameter( 'type','default' );
             },
         ));
 
