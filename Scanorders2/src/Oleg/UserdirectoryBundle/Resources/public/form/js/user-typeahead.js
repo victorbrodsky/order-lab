@@ -114,8 +114,8 @@ function initTypeaheadUserSiteSerach() {
         //show user by id
         if( suggestion.id != "" ) {
             console.log('user shoosen with id='+suggestion.id);
-            //var url = 'users/'+suggestion.id;
-            var url = getCommonBaseUrl('users/'+suggestion.id,"employees");
+            //var url = 'user/'+suggestion.id;
+            var url = getCommonBaseUrl('user/'+suggestion.id,"employees");
             window.open(url,"_self");
             return;
         }
