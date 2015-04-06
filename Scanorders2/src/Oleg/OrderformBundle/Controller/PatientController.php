@@ -380,7 +380,8 @@ class PatientController extends Controller
 
                     //add document to DocumentContainer
                     $document = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
-                    echo "document=".$document."<br>";
+                    //echo "document=".$document."<br>";
+
                     //exit('d');
                     if( !$document ) {
                         $document = new Document($user);
@@ -395,7 +396,12 @@ class PatientController extends Controller
                             $document->setSize($imagesize);
                         } else {
                             //echo "The file $filename does not exist<br>";
-                            throw new \Exception( 'The file'.$filename.' does not exist' );
+                            $this->get('session')->getFlashBag()->add(
+                                'notice',
+                                'The file'.$filename.' does not exist. Please copy this file to web/'.$dir
+                            );
+                            return $this->redirect( $this->generateUrl('scan-patient-list') );
+                            //throw new \Exception( 'The file'.$filename.' does not exist' );
                         }
                     }
 
