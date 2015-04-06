@@ -89,6 +89,21 @@ class PatientController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
 
+        //check if user has at least one institution
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan_home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan_home') );
+        }
+
         $thisparams = array(
             'objectNumber' => 1,
             'withorders' => true,
@@ -681,6 +696,20 @@ class PatientController extends Controller
         $system = $securityUtil->getDefaultSourceSystem();
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
+
+        //check if user has at least one institution
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan_home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan_home') );
+        }
 
         ///////////////////// prepare scanorder (or Slide Order?) /////////////////////
         $message = $this->createSpecificMessage("Multi-Slide Scan Order");
