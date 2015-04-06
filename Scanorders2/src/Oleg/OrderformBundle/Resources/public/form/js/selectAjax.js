@@ -184,6 +184,7 @@ function getComboboxSpecialStain(ids, preset, setId) {
 
     var targetid = "";
     if( cycle == "new" || (cycle == "amend" && preset) || (cycle == "edit" && preset) ) {
+        //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_block_0_specialStains_0_staintype
         var uid = 'patient_'+ids[0]+'_encounter_'+ids[1]+'_procedure_'+ids[2]+'_accession_'+ids[3]+'_part_'+ids[4]+'_block_'+ids[5];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         targetid = id+"specialStains_"+ids[6]+"_staintype";
@@ -206,9 +207,9 @@ function getComboboxSpecialStain(ids, preset, setId) {
     }
 
     //console.log("special stain preset="+preset);
-    //if( targetid != "" ) {
-        //setElementToId( targetid, _stain, setId );
-    //}
+    if( targetid != "" && typeof setId !== 'undefined' && setId ) {
+        setElementToId( targetid, _stain, setId );
+    }
 }
 
 //#############  scan regions  ##############//

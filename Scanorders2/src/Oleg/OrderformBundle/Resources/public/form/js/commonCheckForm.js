@@ -2069,6 +2069,7 @@ function setArrayField(element, dataArr, parent) {
             //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
 
             if( fieldName == "specialStains" ) {
+                //console.log('staintype='+dataArr[i]["staintype"]);
                 //pre-populate select2 with stains
                 getComboboxSpecialStain(new Array(patient,encounter,procedure,accession,part,block,coll),true,dataArr[i]["staintype"]);
             }
@@ -2146,7 +2147,7 @@ function setArrayField(element, dataArr, parent) {
                     if( classs.indexOf("select2") != -1 ) {
                         var firstAttachedElement = element;
                         //printF(firstAttachedElement,"firstAttachedElement=");
-                        console.log("!!!!!!!!!!!! Set Value as select="+text+", id="+id);
+                        //console.log("!!!!!!!!!!!! Set Value as select="+text+", id="+id);
                         firstAttachedElement.select2('data', {id: text, text: text});
                         //firstAttachedElement.select2('val', id);
                     } else {
@@ -2172,7 +2173,7 @@ function setArrayField(element, dataArr, parent) {
 
         } else if ( (tagName == "DIV" && classs.indexOf("select2") != -1) || tagName == "SELECT" ) {
 
-            console.log("### DIV select2:  select field, id="+id+",text="+text);
+            //console.log("### DIV select2:  select field, id="+id+",text="+text);
             //console.log("id="+element.attr("id"));
 
             //set mrntype
@@ -2243,7 +2244,7 @@ function setKeyGroup( element, data ) {
         //don't change type
         //console.log('dont change keytype: tosetKeytypeText='+tosetKeytypeText);
     } else {
-        console.log('change keytype: tosetKeytypeText='+tosetKeytypeText);
+        //console.log('change keytype: tosetKeytypeText='+tosetKeytypeText);
         keytypeEl.select2('val', data['keytype']);
     }
 

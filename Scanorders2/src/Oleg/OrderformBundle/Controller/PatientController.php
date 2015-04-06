@@ -382,7 +382,6 @@ class PatientController extends Controller
                     $document = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
                     //echo "document=".$document."<br>";
 
-                    //exit('d');
                     if( !$document ) {
                         $document = new Document($user);
                         $document->setOriginalname('testimage.jpg');
