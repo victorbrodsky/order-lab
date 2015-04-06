@@ -3,6 +3,24 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\Encounter;
+use Oleg\OrderformBundle\Form\PatientType;
+use Oleg\OrderformBundle\Entity\Procedure;
+use Oleg\OrderformBundle\Entity\Accession;
+use Oleg\OrderformBundle\Entity\Part;
+use Oleg\OrderformBundle\Entity\Block;
+use Oleg\OrderformBundle\Entity\Slide;
+
+use Oleg\OrderformBundle\Entity\LabOrder;
+
 use Oleg\OrderformBundle\Entity\AccessionAccession;
 use Oleg\OrderformBundle\Entity\BlockOrder;
 use Oleg\OrderformBundle\Entity\EmbedBlockOrder;
@@ -26,27 +44,12 @@ use Oleg\OrderformBundle\Entity\SlideOrder;
 use Oleg\OrderformBundle\Entity\StainOrder;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
+
 use Oleg\UserdirectoryBundle\Entity\AttachmentContainer;
+use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
 use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\UserWrapper;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Form\PatientType;
-use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Entity\Slide;
-
-use Oleg\OrderformBundle\Entity\LabOrder;
-use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
 
 /**
  * Patient controller.
@@ -179,6 +182,12 @@ class PatientController extends Controller
             $attachmentContainerPartNumber = 0;
         }
 
+        if( array_key_exists('testpatient', $params) ) {
+            $testpatient = $params['testpatient'];
+        } else {
+            $testpatient = false;
+        }
+
         $em = $this->getDoctrine()->getManager();
         $securityUtil = $this->get('order_security_utility');
 
@@ -211,6 +220,10 @@ class PatientController extends Controller
                 $specificmessage->addEncounter($encounter);
             }
 
+            if( $testpatient ) {
+                $encounter->getDate()->first()->setField(new \DateTime());
+            }
+
             $procedure = new Procedure($withfields,$status,$user,$system);
             $procedure->addExtraFields($status,$user,$system);
             $encounter->addProcedure($procedure);
@@ -221,6 +234,10 @@ class PatientController extends Controller
 
             if( $specificmessage ) {
                 $specificmessage->addProcedure($procedure);
+            }
+
+            if( $testpatient ) {
+                $procedure->getDate()->first()->setField(new \DateTime());
             }
 
             $accession = new Accession($withfields,$status,$user,$system);
@@ -235,6 +252,10 @@ class PatientController extends Controller
                 $specificmessage->addAccession($accession);
             }
 
+            if( $testpatient ) {
+                $accession->getAccessionDate()->first()->setField(new \DateTime());
+            }
+
             $part = new Part($withfields,$status,$user,$system);
             //$part->addExtraFields($status,$user,$system);
             $accession->addPart($part);
@@ -245,6 +266,14 @@ class PatientController extends Controller
 
             if( $specificmessage ) {
                 $specificmessage->addPart($part);
+            }
+
+            if( $testpatient ) {
+                $partname = $part->obtainValidField('partname');
+                $partname->setField('A');
+                $sourceOrgan = $part->obtainValidField('sourceOrgan');
+                $organList = $em->getRepository('OlegOrderformBundle:OrganList')->find(1);
+                $sourceOrgan->setField($organList);
             }
 
             $block = new Block($withfields,$status,$user,$system);
@@ -267,6 +296,13 @@ class PatientController extends Controller
                 $specificmessage->addBlock($block);
             }
 
+            if( $testpatient ) {
+                $blockname = $block->obtainValidField('blockname');
+                $blockname->setField('1');
+                $sectionsource = $block->obtainValidField('sectionsource');
+                $sectionsource->setField('Test Section Source');
+            }
+
 //            $em = $this->getDoctrine()->getManager();
 //            $Staintype = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
 //            $block->getSpecialStains()->first()->setStaintype($Staintype);
@@ -286,9 +322,73 @@ class PatientController extends Controller
                 $specificmessage->addSlide($slide);
             }
 
+            if( $testpatient ) {
+                //set stain
+                $slidestain = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
+                $slide->getStain()->first()->setField($slidestain);
+
+                //set slide title
+                $slide->setTitle('Test Slide ' . $count);
+
+                //set slide type
+                $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName('Frozen Section');
+                $slide->setSlidetype($slidetype);
+            }
+
             //add scan (Imaging) to a slide
-            for( $countImage = 1; $countImage < $objectNumber; $countImage++ ) {
-                $slide->addScan( new Imaging('valid',$user,$system) );
+            if( $objectNumber > 0 ) {
+                $slide->clearScan();
+            }
+            for( $countImage = 0; $countImage < $objectNumber; $countImage++ ) {
+                $scanimage = new Imaging('valid',$user,$system);
+
+                if( $testpatient ) {
+                    $scanimage->setField('20X');
+
+                    //set imageid
+                    $scanimage->setImageId('testimage_id_'.$countImage);
+                    $docContainer = $scanimage->getDocumentContainer();
+
+                    if( !$docContainer ) {
+                        $docContainer = new DocumentContainer();
+                        $scanimage->setDocumentContainer($docContainer);
+                    }
+
+                    $docContainer->setTitle('Test Image');
+
+                    //set image
+                    //testimage_5522979c2e736.jpg
+                    //$uniqueName = uniqid('testimage_').".jpg";
+                    $uniqueName = 'testimage_5522979c2e736.jpg';
+                    //echo "uniqueName=".$uniqueName."<br>";
+                    //exit();
+
+                    //add document to DocumentContainer
+                    $document = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
+                    echo "document=".$document."<br>";
+                    //exit('d');
+                    if( !$document ) {
+                        $document = new Document($user);
+                        $document->setOriginalname('testimage.jpg');
+                        $document->setUniquename($uniqueName);
+                        $dir = 'Uploaded/scan-order/documents';
+                        $document->setUploadDirectory($dir);
+                        $filename = $dir."/".$uniqueName;
+                        if( file_exists($filename) ) {
+                            $imagesize = filesize($filename);
+                            //echo "The imagesize=$imagesize<br>";
+                            $document->setSize($imagesize);
+                        } else {
+                            //echo "The file $filename does not exist<br>";
+                            throw new \Exception( 'The file'.$filename.' does not exist' );
+                        }
+                    }
+
+                    $docContainer->addDocument($document);
+                } //if testpatient
+
+                //add scan to slide
+                $slide->addScan($scanimage);
             }
 
             //Accession: add 5 autopsy fields: add 5 documentContainers to attachmentContainer
@@ -589,7 +689,8 @@ class PatientController extends Controller
             'objectNumber' => 2,
             'withorders' => false,
             'persist' => false,
-            'specificmessage' => $message
+            'specificmessage' => $message,
+            'testpatient' => true
         );
         $patient = $this->createPatientDatastructure($thisparams);
 

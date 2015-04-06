@@ -320,10 +320,17 @@ class Block extends ObjectAbstract
 
         $fullNameArr = array();
 
+        //partname
+        $partname = "";
+        $part = $this->getParent();
+        if( $part ) {
+            $partname = $part->obtainValidField('partname')." ";
+        }
+
         //blockname
         $blockname = $this->obtainValidField('blockname');
         if( $blockname ) {
-            $fullNameArr[] = $blockname->getField()."";
+            $fullNameArr[] = $partname . $blockname->getField()."";
         }
 
         //sectionsource

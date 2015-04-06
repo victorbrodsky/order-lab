@@ -336,20 +336,21 @@ class Accession extends ObjectAbstract {
 
         $fullNameArr = array();
 
+        //accessionDate
+        $accessionDateStr = "";
+        $accessionDate = $this->obtainValidField('accessionDate');
+        if( $accessionDate && $accessionDate != "" ) {
+            $accessionDateStr = $accessionDate." ";
+        }
+
         //accession
         $key = $this->obtainValidField('accession');
         if( $key ) {
             if( $key->getKeytype() ) {
-                $fullNameArr[] = $key->getKeytype()->getOptimalName() . ": " . $key->getField();
+                $fullNameArr[] = $accessionDateStr . $key->getKeytype()->getOptimalName() . ": " . $key->getField();
             } else {
-                $fullNameArr[] = $key->getField();
+                $fullNameArr[] = $accessionDateStr . $key->getField();
             }
-        }
-
-        //accessionDate
-        $date = $this->obtainValidField('accessionDate');
-        if( $date && $date != "" ) {
-            $fullNameArr[] = $date;
         }
 
 

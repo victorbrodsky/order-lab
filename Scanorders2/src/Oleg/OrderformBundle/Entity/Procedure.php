@@ -348,20 +348,21 @@ class Procedure extends ObjectAbstract
 
         $fullNameArr = array();
 
+        //date
+        $dateStr = "";
+        $date = $this->obtainValidField('date');
+        if( $date && $date != "" ) {
+            $dateStr = $date." ";
+        }
+
         //number
         $key = $this->obtainValidField('number');
         if( $key ) {
             if( $key->getKeytype() ) {
-                $fullNameArr[] = $key->getKeytype()->getOptimalName() . ": " . $key->getField();
+                $fullNameArr[] = $dateStr . $key->getKeytype()->getOptimalName() . ": " . $key->getField();
             } else {
-                $fullNameArr[] = $key->getField();
+                $fullNameArr[] = $dateStr . $key->getField();
             }
-        }
-
-        //date
-        $date = $this->obtainValidField('date');
-        if( $date && $date != "" ) {
-            $fullNameArr[] = $date;
         }
 
         $fullName = implode(", ",$fullNameArr);

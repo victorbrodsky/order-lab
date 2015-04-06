@@ -50,27 +50,31 @@ class UploadController extends Controller {
             //find object where document is belongs
             //$comment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
 
-            $repository = $this->getDoctrine()->getRepository($commentclass);
-            $dql = $repository->createQueryBuilder("comment");
-            $dql->select('comment');
-            $dql->innerJoin("comment.documents", "documents");
-            $dql->where("documents = :document");
-            $query = $em->createQuery($dql)->setParameter("document",$document);
-            $comments = $query->getResult();
+            if( $commentid && $commentid != 'undefined' && $commentclass && $commentclass != 'undefined' ) {
 
-            //echo "comment count=".count($comments)." ";
-            if( count($comments) > 1 ) {
-                throw new \Exception( 'More than one comment found, count='.count($comments) );
-            }
+                $repository = $this->getDoctrine()->getRepository($commentclass);
+                $dql = $repository->createQueryBuilder("comment");
+                $dql->select('comment');
+                $dql->innerJoin("comment.documents", "documents");
+                $dql->where("documents = :document");
+                $query = $em->createQuery($dql)->setParameter("document",$document);
+                $comments = $query->getResult();
 
-            if( count($comments) > 0 ) {
-                $comment = $comments[0];
-                if( $comment->getId() == $commentid ) {
-                    $comment->removeDocument($document);
-                    $em->persist($comment);
-                    $count++;
+                //echo "comment count=".count($comments)." ";
+                if( count($comments) > 1 ) {
+                    throw new \Exception( 'More than one comment found, count='.count($comments) );
                 }
-            }
+
+                if( count($comments) > 0 ) {
+                    $comment = $comments[0];
+                    if( $comment->getId() == $commentid ) {
+                        $comment->removeDocument($document);
+                        $em->persist($comment);
+                        $count++;
+                    }
+                }
+
+            } //if commentid && $commentclass
 
             $count++;
             $em->remove($document);

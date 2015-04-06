@@ -200,7 +200,6 @@ class Slide extends ObjectAbstract
             $scan->setSlide($this);
             $this->scan->add($scan);
         }
-    
         return $this;
     }
     public function removeScan($scan)
@@ -210,6 +209,13 @@ class Slide extends ObjectAbstract
     public function getScan()
     {
         return $this->scan;
+    }
+    public function clearScan()
+    {
+        foreach( $this->getScan() as $scan ) {
+            $this->removeScan($scan);
+            $scan->setSlide(null);
+        }
     }
 
     /**

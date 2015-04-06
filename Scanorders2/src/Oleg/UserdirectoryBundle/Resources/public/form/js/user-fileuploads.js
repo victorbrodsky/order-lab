@@ -3,7 +3,7 @@
  */
 
 //dropzone globals
-var _dz_maxFiles = 4;
+var _dz_maxFiles = 3;
 var _dz_maxFilesize = 10; //MB
 
 
@@ -76,7 +76,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     //console.log('addRemoveLinks='+addRemoveLinks);
 
     var previewHtml =
-        '<div class="dz-preview dz-file-preview" style="width:24%; height:220px; margin:0;">'+
+        '<div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">'+
             '<div class="dz-details">'+
             '<div class="dz-filename"><span data-dz-name></span></div>'+
             '<div class="dz-size" data-dz-size></div>'+
@@ -232,6 +232,7 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
     }
 
     if( !previewElement ) {
+        //console.log('return: no previewElement');
         return;
     }
 
@@ -265,8 +266,10 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
 //    }
 
     //if commenttype is not defined (i.e. scanorder form) don't delete from DB. Just remove from form
-    if( commenttype != null ) {
+    //if( commenttype != null ) {
+
         var url = getCommonBaseUrl("file-delete","employees");
+        //console.log('url='+url);
         //use comment id and documentid
         $.ajax({
             type: "POST",
@@ -290,14 +293,16 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
         }).fail(function(data) {
             console.log('remove failed, data='+data);
         }) ;
-    } else {
-        var _ref;
-        if( previewElement ) {
-            if( (_ref = previewElement) != null ) {
-                _ref.parentNode.removeChild(previewElement);
-            }
-        }
-    }
+
+    //}
+//    else {
+//        var _ref;
+//        if( previewElement ) {
+//            if( (_ref = previewElement) != null ) {
+//                _ref.parentNode.removeChild(previewElement);
+//            }
+//        }
+//    }
 
     return dropzone._updateMaxFilesReachedClass();
 }
