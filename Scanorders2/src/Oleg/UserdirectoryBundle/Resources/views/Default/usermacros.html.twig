@@ -1404,3 +1404,12 @@
     {% do formfield.setRendered %}
 
 {% endmacro %}
+
+
+{% macro addNewObjectBtn( cycle, classname, title ) %}
+    {% if cycle != 'show_user' %}
+        <div style="align-content: center;">
+            <button class="btn btn-default" onClick="addNewObject(this,'{{ classname }}')" type='button'>{{ title }}</button>
+        </div>
+    {% endif %}
+{% endmacro %}

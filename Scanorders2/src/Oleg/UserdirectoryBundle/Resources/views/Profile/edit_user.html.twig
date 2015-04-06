@@ -1329,9 +1329,10 @@
                         {% for administrativeTitle in form.administrativeTitles %}
                             {{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}
                         {% endfor %}
-                        {% if cycle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addNewObject(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
-                        {% endif %}
+                        {#{% if cycle != 'show_user' %}#}
+                            {#<button class="btn btn-default btn-add-collection" onClick="addNewObject(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>#}
+                        {#{% endif %}#}
+                        {{ usermacros.addNewObjectBtn(cycle,'user-administrativeTitles','Add Administrative Title') }}
                     </div>
 
                 </div>
@@ -1370,9 +1371,10 @@
                         {% for appointmentTitle in form.appointmentTitles %}
                             {{ userform.baseTitle(appointmentTitle,cycle,'user-appointmentTitles','noprototype',sitename) }}
                         {% endfor %}
-                        {% if cycle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addNewObject(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>
-                        {% endif %}
+                        {#{% if cycle != 'show_user' %}#}
+                            {#<button class="btn btn-default" onClick="addNewObject(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>#}
+                        {#{% endif %}#}
+                        {{ usermacros.addNewObjectBtn(cycle,'user-appointmentTitles','Add Academic Appointment Title') }}
                     </div>
 
                 </div>
@@ -1396,9 +1398,7 @@
                         {% for location in form.locations %}
                             {{ usermacros.locationObject(location,cycle,'user-locations','noprototype',sitename,entity) }}
                         {% endfor %}
-                        {% if cycle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addNewObject(this,'user-locations')" type='button'>Add Location</button>
-                        {% endif %}
+                        {{ usermacros.addNewObjectBtn( cycle, 'user-locations', 'Add Location' ) }}
                     </div>
 
                 </div>
@@ -1421,9 +1421,7 @@
                         {% for training in form.trainings %}
                             {{ usermacros.trainingObject(training,cycle,'user-trainings','noprototype',sitename,entity) }}
                         {% endfor %}
-                        {% if cycle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addNewObject(this,'user-trainings')" type='button'>Add Training</button>
-                        {% endif %}
+                        {{ usermacros.addNewObjectBtn( cycle, 'user-trainings', 'Add Training' ) }}
                     </div>
 
                 </div>
@@ -1456,9 +1454,10 @@
                             {% for researchLab in form.researchLabs %}
                                 {{ usermacros.researchlabObject(researchLab,cycle,'user-researchlabs','noprototype',sitename,entity) }}
                             {% endfor %}
-                            {% if cycle != 'show_user' %}
-                                <button class="btn btn-default" onClick="addNewObject(this,'user-researchlabs')" type='button'>Add Research Lab</button>
-                            {% endif %}
+                            {#{% if cycle != 'show_user' %}#}
+                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-researchlabs')" type='button'>Add Research Lab</button>#}
+                            {#{% endif %}#}
+                            {{ usermacros.addNewObjectBtn( cycle, 'user-researchlabs', 'Add Research Lab' ) }}
                         </div>
 
                     </div>
@@ -1671,9 +1670,10 @@
                                                 {% for codeNYPH in form.credentials.codeNYPH %}
                                                     {{ userform.codenyphs(codeNYPH,cycle,'user-codenyph','noprototype') }}
                                                 {% endfor %}
-                                                {% if cycle != 'show_user' %}
-                                                    <button class="btn btn-default" onClick="addNewObject(this,'user-codenyph')" type='button'>Add NYPH Code</button>
-                                                {% endif %}
+                                                {#{% if cycle != 'show_user' %}#}
+                                                    {#<button class="btn btn-default" onClick="addNewObject(this,'user-codenyph')" type='button'>Add NYPH Code</button>#}
+                                                {#{% endif %}#}
+                                                {{ usermacros.addNewObjectBtn(cycle,'user-codenyph','Add NYPH Code') }}
                                             </div>
                                         </div>
                                     </div>
@@ -1700,10 +1700,10 @@
                                             {% for stateLicense in form.credentials.stateLicense %}
                                                 {{ userform.stateLicenses(stateLicense,cycle,'user-statelicense','noprototype') }}
                                             {% endfor %}
-                                            {% if cycle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addNewObject(this,'user-statelicense')" type='button'>Add Medical License</button>
-                                            {% endif %}
-
+                                            {#{% if cycle != 'show_user' %}#}
+                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-statelicense')" type='button'>Add Medical License</button>#}
+                                            {#{% endif %}#}
+                                            {{ usermacros.addNewObjectBtn(cycle,'user-statelicense','Add Medical License') }}
                                         </div>
 
                                     </div>
@@ -1727,9 +1727,10 @@
                                             {% for boardCertification in form.credentials.boardCertification %}
                                                 {{ userform.boardCertifications(boardCertification,cycle,'user-boardcertification','noprototype') }}
                                             {% endfor %}
-                                            {% if cycle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addNewObject(this,'user-boardcertification')" type='button'>Add Board Certification</button>
-                                            {% endif %}
+                                            {#{% if cycle != 'show_user' %}#}
+                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-boardcertification')" type='button'>Add Board Certification</button>#}
+                                            {#{% endif %}#}
+                                            {{ usermacros.addNewObjectBtn(cycle,'user-boardcertification','Add Board Certification') }}
 
                                         </div>
 
@@ -1828,9 +1829,10 @@
                                             {% for publicComment in form.publicComments %}
                                                 {{ userform.comments(publicComment,cycle,'user-publiccomments','noprototype') }}
                                             {% endfor %}
-                                            {% if cycle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addNewObject(this,'user-publiccomments')" type='button'>Add Public Comment</button>
-                                            {% endif %}
+                                            {#{% if cycle != 'show_user' %}#}
+                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-publiccomments')" type='button'>Add Public Comment</button>#}
+                                            {#{% endif %}#}
+                                            {{ usermacros.addNewObjectBtn(cycle,'user-publiccomments','Add Public Comment') }}
                                         </div>
                                     </div>
                                 </div>
@@ -1854,9 +1856,10 @@
                                             {% for privateComment in form.privateComments %}
                                                 {{ userform.comments(privateComment,cycle,'user-privatecomments','noprototype') }}
                                             {% endfor %}
-                                            {% if cycle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addNewObject(this,'user-privatecomments')" type='button'>Add Private Comment</button>
-                                            {% endif %}
+                                            {#{% if cycle != 'show_user' %}#}
+                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-privatecomments')" type='button'>Add Private Comment</button>#}
+                                            {#{% endif %}#}
+                                            {{ usermacros.addNewObjectBtn(cycle,'user-privatecomments','Add Private Comment') }}
                                         </div>
                                     </div>
                                 </div>
@@ -1906,9 +1909,10 @@
                                             {% for adminComment in form.adminComments %}
                                                 {{ userform.comments(adminComment,cycle,'user-admincomments','noprototype') }}
                                             {% endfor %}
-                                            {% if cycle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addNewObject(this,'user-admincomments')" type='button'>Add Administrative Comment</button>
-                                            {% endif %}
+                                            {#{% if cycle != 'show_user' %}#}
+                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-admincomments')" type='button'>Add Administrative Comment</button>#}
+                                            {#{% endif %}#}
+                                            {{ usermacros.addNewObjectBtn(cycle,'user-admincomments','Add Administrative Comment') }}
                                         </div>
                                     </div>
                                 </div>
