@@ -35,7 +35,7 @@ class DocumentContainer {
     private $attachmentContainer;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Document")
+     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist"})
      * @ORM\JoinTable(name="user_documentcontainer_document",
      *      joinColumns={@ORM\JoinColumn(name="documentcontainer_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id")}
