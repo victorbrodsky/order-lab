@@ -523,7 +523,12 @@ class Slide extends ObjectAbstract
         $name = $this->obtainValidField('stain');
         //echo "name=".$name."<br>";
         if( $name && $name != "" ) {
-            $fullNameArr[] = $name->getField()->getName()."";
+            //pull the abbreviation for the Stain Name. Only iff abbreviation is not available, then pull the Full name (no short names).
+            if( $name->getField()->getAbbreviation() ) {
+                $fullNameArr[] = $name->getField()->getAbbreviation()."";
+            } else {
+                $fullNameArr[] = $name->getField()->getName()."";
+            }
         }
 
         //title

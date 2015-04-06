@@ -58,6 +58,15 @@
 {% macro document( comment, cycle, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+    {#get sitename#}
+    {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
+    {% if '/scan/' in currentPath %}
+        {% set sitename = scan_sitename %}
+    {% endif %}
+    {% if '/directory/' in currentPath %}
+        {% set sitename = employees_sitename %}
+    {% endif %}
+
     {% for document in comment.documents %}
 
         <div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">
@@ -75,7 +84,7 @@
             <div class="file-upload-showlink">
                 <div style="overflow:hidden; white-space:nowrap;">
                     {#<a href="{{ document.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ document.vars.value.originalname }}</a>#}
-                    <a target="_blank" href="{{ path(employees_sitename~'_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }}</a>
+                    <a target="_blank" href="{{ path(sitename~'_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }}</a>
                 </div>
             </div>
 

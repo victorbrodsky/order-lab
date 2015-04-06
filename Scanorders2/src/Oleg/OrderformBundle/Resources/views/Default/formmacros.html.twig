@@ -1746,9 +1746,12 @@
                             {#{% if obtainFullObjectName %}#}
                             {{ obtainFullObjectName|raw }}
                             {#{% endif %}#}
-                            {% for document in scan.vars.value.documentContainer.documents %}
-                                <a target="_blank" href="{{ path(employees_sitename~'_file_download', { 'id': document.id }) }}">{{ scan.vars.value.imageId }}</a>
-                            {% endfor %}
+                            {#the link to "Download" the image should only show if the "Image Link" field is empty#}
+                            {% if not scan.vars.value.imageLink %}
+                                {% for document in scan.vars.value.documentContainer.documents %}
+                                    <a target="_blank" href="{{ path(scan_sitename~'_file_download', { 'id': document.id }) }}">{{ scan.vars.value.imageId }}</a>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </h4>
 

@@ -24,7 +24,10 @@ class UploadController extends Controller {
      * @Method("POST")
      */
     public function deleteFileAction(Request $request) {
+        return $this->deleteFileMethod($request);
+    }
 
+    public function deleteFileMethod(Request $request) {
         $documentid = $request->get('documentid');
         $commentid = $request->get('commentid');
         $commentclass = $request->get('commenttype');    //comment class
@@ -99,7 +102,10 @@ class UploadController extends Controller {
      * @Method("GET")
      */
     public function downloadFileAction($id) {
+        return $this->downloadFileMethod($id);
+    }
 
+    public function downloadFileMethod($id) {
         $em = $this->getDoctrine()->getManager();
         $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
 
