@@ -242,10 +242,10 @@ class Imaging extends SlideArrayFieldAbstract
         }
 
         //imageId
-        $imageId = $this->getImageId();
-        if( $imageId ) {
-            $fullNameArr[] = $imageId."";
-        }
+//        $imageId = $this->getImageId();
+//        if( $imageId ) {
+//            $fullNameArr[] = $imageId."";
+//        }
 
         $fullName = implode(": ",$fullNameArr);
 

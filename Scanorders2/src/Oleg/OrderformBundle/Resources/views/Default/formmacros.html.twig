@@ -1746,6 +1746,9 @@
                             {#{% if obtainFullObjectName %}#}
                             {{ obtainFullObjectName|raw }}
                             {#{% endif %}#}
+                            {% for document in scan.vars.value.documentContainer.documents %}
+                                <a target="_blank" href="{{ path(employees_sitename~'_file_download', { 'id': document.id }) }}">{{ scan.vars.value.imageId }}</a>
+                            {% endfor %}
                         </div>
                     </h4>
 
