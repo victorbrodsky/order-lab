@@ -1378,7 +1378,7 @@ class UserController extends Controller
             'user_id' => $id,
             'sitename' => $sitename,
             'postData' => $request->query->all(),
-            'title' => 'Edit Employee Profile ' . $entity->getUsernameOptimal()
+            'title' => 'Edit Employee Profile for ' . $entity->getUsernameOptimal()
         );
     }
 

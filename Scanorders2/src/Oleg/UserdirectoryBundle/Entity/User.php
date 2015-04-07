@@ -109,6 +109,12 @@ class User extends BaseUser {
     private $appointmentTitles;
 
     /**
+     * @ORM\OneToMany(targetEntity="MedicalTitle", mappedBy="user", cascade={"persist"})
+     * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
+     */
+    private $medicalTitles;
+
+    /**
      * @ORM\OneToMany(targetEntity="EmploymentStatus", mappedBy="user", cascade={"persist"})
      * @ORM\OrderBy({"terminationDate" = "ASC"})
      */
@@ -156,6 +162,7 @@ class User extends BaseUser {
         $this->locations = new ArrayCollection();
         $this->administrativeTitles = new ArrayCollection();
         $this->appointmentTitles = new ArrayCollection();
+        $this->medicalTitles = new ArrayCollection();
         $this->employmentStatus = new ArrayCollection();
         $this->researchLabs = new ArrayCollection();
         $this->trainings = new ArrayCollection();
@@ -436,6 +443,24 @@ class User extends BaseUser {
     {
         return $this->appointmentTitles;
     }
+
+    public function addMedicalTitle($medicalTitle)
+    {
+        if( $medicalTitle && !$this->medicalTitles->contains($medicalTitle) ) {
+            $this->medicalTitles->add($medicalTitle);
+            $medicalTitle->setUser($this);
+        }
+        return $this;
+    }
+    public function removeMedicalTitle($medicalTitle)
+    {
+        $this->medicalTitles->removeElement($medicalTitle);
+    }
+    public function getMedicalTitles()
+    {
+        return $this->medicalTitles;
+    }
+
 
     /**
      * @param mixed $credentials
