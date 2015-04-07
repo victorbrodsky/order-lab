@@ -75,6 +75,13 @@ class UserInfo extends BaseUserAttributes {
     private $initials;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $salutation;
+
+
+
+    /**
      * @param mixed $displayName
      */
     public function setDisplayName($displayName)
@@ -216,6 +223,22 @@ class UserInfo extends BaseUserAttributes {
     public function getEmailCanonical()
     {
         return $this->emailCanonical;
+    }
+
+    /**
+     * @param mixed $salutation
+     */
+    public function setSalutation($salutation)
+    {
+        $this->salutation = $salutation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalutation()
+    {
+        return $this->salutation;
     }
 
 

@@ -265,10 +265,13 @@
 
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if cycle != 'show_user' and formfield.vars.value and formfield.vars.value.id != app.security.getToken().getUser().getId() %}
-            <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
+        {% if cycle != 'show_user' %}
+            {% if not formfield.vars.value or formfield.vars.value and formfield.vars.value.id != app.security.getToken().getUser().getId() %}
+                <div class="text-right">
+                    <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired"
+                            onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            {% endif %}
         {% endif %}
 
         {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
@@ -612,7 +615,8 @@
 
     <div class="snapshot-all">
 
-        <div class="snapshot clearfix">
+        {#clearfix#}
+        <div class="snapshot">
 
             <div class="left">
 
@@ -1150,12 +1154,10 @@
 
         {{ form_errors(form) }}
 
-        <div class="text-left">
-
         {#Name and Preferred Contact Info#}
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4 class="panel-title">
+                <h4 class="panel-title text-left">
                     <a data-toggle="collapse" href="#userinfo">
                         Name and Preferred Contact Info
                     </a>
@@ -1177,6 +1179,7 @@
 
                     {% for info in form.infos %}
                         {{ formmacros.field(info.displayName) }}
+                        {{ formmacros.field(info.salutation) }}
                         {{ formmacros.field(info.firstName) }}
                         {{ formmacros.field_notempty(info.middleName,cycle) }}
                         {{ formmacros.field(info.lastName) }}
@@ -1205,7 +1208,7 @@
         {% if showRoleattributes and roleobjects is defined %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <h4 class="panel-title text-left">
                         <a data-toggle="collapse" href="#roleattributes">
                             Role Attributes
                         </a>
@@ -1224,7 +1227,7 @@
         {#Global User Preferences#}
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4 class="panel-title">
+                <h4 class="panel-title text-left">
                     <a data-toggle="collapse" href="#userprefrences">
                         Global User Preferences
                     </a>
@@ -1271,7 +1274,7 @@
         {% if showEmploymentStatus and form.employmentStatus is defined %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <h4 class="panel-title text-left">
                         <a data-toggle="collapse" href="#EmploymentStatus">
                             Employment Period(s) [visible only to Editors and Administrators]
                         </a>
@@ -1285,7 +1288,8 @@
                                 {{ userform.employmentStatuses(employmentStatus,cycle,'user-employmentStatus','noprototype') }}
                             {% endfor %}
                             {% if cycle != 'show_user' and entity.id != app.security.getToken().getUser().getId() %}
-                                <button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-employmentStatus')" type='button'>Add Employment Period</button>
+                                {#<button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-employmentStatus')" type='button'>Add Employment Period</button>#}
+                                {{ usermacros.addNewObjectBtn( cycle, 'user-employmentStatus', 'Add Employment Period') }}
                             {% endif %}
                         </div>
 
@@ -1312,7 +1316,7 @@
 
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4 class="panel-title">
+                <h4 class="panel-title text-left">
                     <a data-toggle="collapse" href="#AdministrativeTitles">
                         Administrative Title(s)
                     </a>
@@ -1329,9 +1333,6 @@
                         {% for administrativeTitle in form.administrativeTitles %}
                             {{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}
                         {% endfor %}
-                        {#{% if cycle != 'show_user' %}#}
-                            {#<button class="btn btn-default btn-add-collection" onClick="addNewObject(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>#}
-                        {#{% endif %}#}
                         {{ usermacros.addNewObjectBtn(cycle,'user-administrativeTitles','Add Administrative Title') }}
                     </div>
 
@@ -1354,7 +1355,7 @@
 
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4 class="panel-title">
+                <h4 class="panel-title text-left">
                     <a data-toggle="collapse" href="#AppointmentTitles">
                         Academic Appointment Title(s)
                     </a>
@@ -1371,9 +1372,6 @@
                         {% for appointmentTitle in form.appointmentTitles %}
                             {{ userform.baseTitle(appointmentTitle,cycle,'user-appointmentTitles','noprototype',sitename) }}
                         {% endfor %}
-                        {#{% if cycle != 'show_user' %}#}
-                            {#<button class="btn btn-default" onClick="addNewObject(this,'user-appointmentTitles')" type='button'>Add Academic Appointment Title</button>#}
-                        {#{% endif %}#}
                         {{ usermacros.addNewObjectBtn(cycle,'user-appointmentTitles','Add Academic Appointment Title') }}
                     </div>
 
@@ -1385,7 +1383,7 @@
         {#Locations#}
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4 class="panel-title">
+                <h4 class="panel-title text-left">
                     <a data-toggle="collapse" href="#Locations">
                         Location(s)
                     </a>
@@ -1408,7 +1406,7 @@
         {#Educations: Trainings#}
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4 class="panel-title">
+                <h4 class="panel-title text-left">
                     <a data-toggle="collapse" href="#Trainings">
                         Education(s)
                     </a>
@@ -1441,7 +1439,7 @@
         {% if showResearchLabs and form.researchLabs is defined %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <h4 class="panel-title text-left">
                         <a data-toggle="collapse" href="#ResearchLabs">
                             Research Lab(s)
                         </a>
@@ -1454,9 +1452,6 @@
                             {% for researchLab in form.researchLabs %}
                                 {{ usermacros.researchlabObject(researchLab,cycle,'user-researchlabs','noprototype',sitename,entity) }}
                             {% endfor %}
-                            {#{% if cycle != 'show_user' %}#}
-                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-researchlabs')" type='button'>Add Research Lab</button>#}
-                            {#{% endif %}#}
                             {{ usermacros.addNewObjectBtn( cycle, 'user-researchlabs', 'Add Research Lab' ) }}
                         </div>
 
@@ -1471,7 +1466,7 @@
         {% if form.credentials is defined %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <h4 class="panel-title text-left">
                         <div class="row">
                             <div class="col-xs-6" align="left">
                                 <a data-toggle="collapse" href="#Credentials" style="color:#fff;">Credentials [Not publicly visible, but visible to the user]</a>
@@ -1498,7 +1493,7 @@
                             {#Identifiers#}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">
+                                    <h4 class="panel-title text-left">
                                         <a data-toggle="collapse" href="#identifiers">
                                             Identifiers
                                         </a>
@@ -1514,9 +1509,10 @@
                                                 {% for identifier in form.credentials.identifiers %}
                                                     {{ userform.identifier(identifier,cycle,'user-identifiers','noprototype') }}
                                                 {% endfor %}
-                                                {% if cycle != 'show_user' %}
-                                                    <button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-identifiers')" type='button'>Add Identifier</button>
-                                                {% endif %}
+                                                {#{% if cycle != 'show_user' %}#}
+                                                    {#<button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-identifiers')" type='button'>Add Identifier</button>#}
+                                                {#{% endif %}#}
+                                                {{ usermacros.addNewObjectBtn( cycle, 'user-identifiers', 'Add Identifier') }}
                                             </div>
 
                                         </div>
@@ -1527,7 +1523,7 @@
                             {#Personal Information#}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">
+                                    <h4 class="panel-title text-left">
                                         <a data-toggle="collapse" href="#personalinfo">
                                             Personal Information
                                         </a>
@@ -1559,7 +1555,7 @@
                             {% if showCOQ %}
                                 <div class="panel panel-info">
                                     <div class="panel-heading">
-                                        <h4 class="panel-title">
+                                        <h4 class="panel-title text-left">
                                             <a data-toggle="collapse" href="#coq">
                                                 Certificate of Qualification
                                             </a>
@@ -1593,7 +1589,7 @@
                             {% if showCLIA %}
                                 <div class="panel panel-info">
                                     <div class="panel-heading">
-                                        <h4 class="panel-title">
+                                        <h4 class="panel-title text-left">
                                             <a data-toggle="collapse" href="#clia">
                                                 Clinical Laboratory Improvement Amendments (CLIA)
                                             </a>
@@ -1627,7 +1623,7 @@
                             {% if showPFI %}
                                 <div class="panel panel-info">
                                     <div class="panel-heading">
-                                        <h4 class="panel-title">
+                                        <h4 class="panel-title text-left">
                                             <a data-toggle="collapse" href="#pfi">
                                                 NY Permanent Facility Identifier (PFI)
                                             </a>
@@ -1658,7 +1654,7 @@
                             {% if showNYPH  %}
                                 <div class="panel panel-info">
                                     <div class="panel-heading">
-                                        <h4 class="panel-title">
+                                        <h4 class="panel-title text-left">
                                             <a data-toggle="collapse" href="#codenyph">
                                                 NYPH Code(s)
                                             </a>
@@ -1670,9 +1666,6 @@
                                                 {% for codeNYPH in form.credentials.codeNYPH %}
                                                     {{ userform.codenyphs(codeNYPH,cycle,'user-codenyph','noprototype') }}
                                                 {% endfor %}
-                                                {#{% if cycle != 'show_user' %}#}
-                                                    {#<button class="btn btn-default" onClick="addNewObject(this,'user-codenyph')" type='button'>Add NYPH Code</button>#}
-                                                {#{% endif %}#}
                                                 {{ usermacros.addNewObjectBtn(cycle,'user-codenyph','Add NYPH Code') }}
                                             </div>
                                         </div>
@@ -1686,7 +1679,7 @@
                             {#Medical Licenses#}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">
+                                    <h4 class="panel-title text-left">
                                         <a data-toggle="collapse" href="#stateLicense">
                                             Medical License(s)
                                         </a>
@@ -1700,9 +1693,6 @@
                                             {% for stateLicense in form.credentials.stateLicense %}
                                                 {{ userform.stateLicenses(stateLicense,cycle,'user-statelicense','noprototype') }}
                                             {% endfor %}
-                                            {#{% if cycle != 'show_user' %}#}
-                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-statelicense')" type='button'>Add Medical License</button>#}
-                                            {#{% endif %}#}
                                             {{ usermacros.addNewObjectBtn(cycle,'user-statelicense','Add Medical License') }}
                                         </div>
 
@@ -1713,7 +1703,7 @@
                             {#Board Certification#}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">
+                                    <h4 class="panel-title text-left">
                                         <a data-toggle="collapse" href="#boardCertification">
                                             Board Certification(s)
                                         </a>
@@ -1727,9 +1717,6 @@
                                             {% for boardCertification in form.credentials.boardCertification %}
                                                 {{ userform.boardCertifications(boardCertification,cycle,'user-boardcertification','noprototype') }}
                                             {% endfor %}
-                                            {#{% if cycle != 'show_user' %}#}
-                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-boardcertification')" type='button'>Add Board Certification</button>#}
-                                            {#{% endif %}#}
                                             {{ usermacros.addNewObjectBtn(cycle,'user-boardcertification','Add Board Certification') }}
 
                                         </div>
@@ -1804,7 +1791,7 @@
         {% if showPublicComments or showPrivateComments or showConfComments or showAdminComments %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <h4 class="panel-title text-left">
                         <a data-toggle="collapse" href="#Comments">
                             Comments
                         </a>
@@ -1817,7 +1804,7 @@
                         {% if showPublicComments %}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">
+                                    <h4 class="panel-title text-left">
                                         <a data-toggle="collapse" href="#publicComment">
                                             Public Comment(s)
                                         </a>
@@ -1829,9 +1816,6 @@
                                             {% for publicComment in form.publicComments %}
                                                 {{ userform.comments(publicComment,cycle,'user-publiccomments','noprototype') }}
                                             {% endfor %}
-                                            {#{% if cycle != 'show_user' %}#}
-                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-publiccomments')" type='button'>Add Public Comment</button>#}
-                                            {#{% endif %}#}
                                             {{ usermacros.addNewObjectBtn(cycle,'user-publiccomments','Add Public Comment') }}
                                         </div>
                                     </div>
@@ -1844,7 +1828,7 @@
                         {% if form.privateComments is defined and showPrivateComments %}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">
+                                    <h4 class="panel-title text-left">
                                         <a data-toggle="collapse" href="#privatecomment">
                                             Private Comment(s) [Not publicly visible, but visible to and editable by the user]
                                         </a>
@@ -1856,9 +1840,6 @@
                                             {% for privateComment in form.privateComments %}
                                                 {{ userform.comments(privateComment,cycle,'user-privatecomments','noprototype') }}
                                             {% endfor %}
-                                            {#{% if cycle != 'show_user' %}#}
-                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-privatecomments')" type='button'>Add Private Comment</button>#}
-                                            {#{% endif %}#}
                                             {{ usermacros.addNewObjectBtn(cycle,'user-privatecomments','Add Private Comment') }}
                                         </div>
                                     </div>
@@ -1871,7 +1852,7 @@
                         {% if form.confidentialComments is defined and showConfComments %}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">
+                                    <h4 class="panel-title text-left">
                                         <a data-toggle="collapse" href="#Confidential">
                                             Confidential Comment(s) [Not publicly visible, but visible to the user]
                                         </a>
@@ -1883,9 +1864,7 @@
                                             {% for confidentialComment in form.confidentialComments %}
                                                 {{ userform.comments(confidentialComment,cycle,'user-confidentialcomment','noprototype') }}
                                             {% endfor %}
-                                            {% if cycle != 'show_user' %}
-                                                <button class="btn btn-default" onClick="addNewObject(this,'user-confidentialcomment')" type='button'>Add Confidential Comment</button>
-                                            {% endif %}
+                                            {{ usermacros.addNewObjectBtn(cycle,'user-confidentialcomment','Add Confidential Comment') }}
                                         </div>
                                     </div>
                                 </div>
@@ -1897,7 +1876,7 @@
                         {% if form.adminComments is defined and showAdminComments %}
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">
+                                    <h4 class="panel-title text-left">
                                         <a data-toggle="collapse" href="#admincomment">
                                             Administrative Comment(s) [visible only to Editors and Administrators]
                                         </a>
@@ -1909,9 +1888,6 @@
                                             {% for adminComment in form.adminComments %}
                                                 {{ userform.comments(adminComment,cycle,'user-admincomments','noprototype') }}
                                             {% endfor %}
-                                            {#{% if cycle != 'show_user' %}#}
-                                                {#<button class="btn btn-default" onClick="addNewObject(this,'user-admincomments')" type='button'>Add Administrative Comment</button>#}
-                                            {#{% endif %}#}
                                             {{ usermacros.addNewObjectBtn(cycle,'user-admincomments','Add Administrative Comment') }}
                                         </div>
                                     </div>
@@ -1937,7 +1913,6 @@
             {{ usermacros.auditLog(entity,'profile',sitename,postData,"") }}
         {% endif %}
 
-        </div>{#text-left#}
 
         <br>
 

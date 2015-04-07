@@ -15,36 +15,40 @@ class UserInfoType extends AbstractType
     {
 
         $builder->add('suffix', null, array(
-            'label' => 'Name Suffix:',
-            'attr' => array('class'=>'form-control form-control-modif')
+            'label' => 'Suffix:',
+            'attr' => array('class'=>'form-control')
         ));
         $builder->add('firstName', null, array(
             'label' => '* First Name:',
-            'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'
+            'attr' => array('class'=>'form-control') //'required'=>'required'
         ));
         $builder->add('middleName', null, array(
             'label' => 'Middle Name:',
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control')
         ));
         $builder->add('lastName', null, array(
             'label' => '* Last Name:',
-            'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'
+            'attr' => array('class'=>'form-control') //'required'=>'required'
         ));
         $builder->add('email', 'email', array(
             'label' => 'Preferred Email:',
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control')
         ));
         $builder->add('displayName', null, array(
             'label' => 'Preferred Full Name for Display:',
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control')
         ));
         $builder->add('preferredPhone', null, array(
             'label' => 'Preferred Phone Number:',
-            'attr' => array('class'=>'form-control form-control-modif phone-mask')
+            'attr' => array('class'=>'form-control phone-mask')
         ));
         $builder->add('initials', null, array(
             'label' => 'Abbreviated name/Initials used by lab staff for deliveries:',
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('salutation', null, array(
+            'label' => 'Salutation:',
+            'attr' => array('class'=>'form-control')
         ));
 
     }

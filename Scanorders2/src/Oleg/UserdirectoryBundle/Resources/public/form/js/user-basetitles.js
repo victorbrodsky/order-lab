@@ -11,7 +11,7 @@ function addNewObject(btn,classname) {
     var holder = $('.'+classname+'-holder');
 
     var titles = holder.find('.'+classname);
-    console.log('titles='+titles.length);
+    //console.log('titles='+titles.length);
 
     var newForm = getBaseTitleForm( classname );
 
@@ -29,7 +29,7 @@ function addNewObject(btn,classname) {
     //console.log(newForm);
 
     initBaseAdd(newForm);
-    processEmploymentStatusRemoveButtons(btn);
+    processEmploymentStatusRemoveButtons(btn,'add');
 
 }
 
@@ -116,10 +116,10 @@ function removeExistingObject(btn,classname,id) {
         return;
     }
 
+    processEmploymentStatusRemoveButtons(btn,'remove');
+
     var element = btnEl.closest('.'+classname);
     element.remove();
-
-    processEmploymentStatusRemoveButtons(btn);
 }
 
 function objectIsDeleteable(btn,classname,id) {
@@ -219,8 +219,8 @@ function confirmDeleteWithExpired( holder ) {
                     //delete
                     var deleted = deleteObjectFromDB(btn);
                     if( deleted ) {
+                        processEmploymentStatusRemoveButtons(btn,'remove');
                         collectionHolder.remove();
-                        processEmploymentStatusRemoveButtons(btn);
                     }
                     dialog.dialog('close');
                 },

@@ -39,34 +39,58 @@ function windowCloseAlert() {
 
 
 
-//do not show the [X] (delete) button in the right upper corner of "Employment Period(s)"
-// if it is the only one being displayed.
+//do not show the [X] (delete) button in the right upper corner of "Employment Period(s)" if it is the only one being displayed.
 // When the user adds another one, then show an [X] next to each one.
-function processEmploymentStatusRemoveButtons(btn) {
+function processEmploymentStatusRemoveButtons( btn, action ) {
 
     if( cycle == "show_user" ) {
         return;
     }
 
-    if( !btn && typeof btn != "undefined" ) {
-        var btnEl = $(this);
-        if( !btnEl.hasClass('btn-remove-minimumone-collection') && !btnEl.hasClass('btn-add-minimumone-collection') ) {
-            return;
+    var btnCountTreshold = 1;
+
+    //calculate btnCountTreshold
+    if( !action && typeof action != "undefined" ) {
+        //init
+        btnCountTreshold = 1;
+    } else {
+        if( action == 'remove' ) {
+            btnCountTreshold = 2;   //this performs before button is deleted
+        } else {
+            btnCountTreshold = 1;
         }
     }
+    //console.log('btnCountTreshold='+btnCountTreshold);
 
-    var remBtns = $('.btn-remove-minimumone-collection');
-    //console.log('remBtns.length='+remBtns.length);
+    if( typeof btn == "undefined" || !btn ) {
+        //console.log('btn is not defined');
+        $('.btn-remove-minimumone-collection').each( function(e){
+            hideShowDeleteBtn(this,btnCountTreshold);
+        });
+    } else {
+        hideShowDeleteBtn(btn,btnCountTreshold)
+    }
+}
 
-    if( remBtns.length > 1 ) {
+//btn might be add or delete button
+function hideShowDeleteBtn(btn,btnCountTreshold) {
+    var btnEl = $(btn);
+    var remBtns = btnEl.closest('.panel-body').find('.btn-remove-minimumone-collection');
+
+    //console.log(remBtns);
+    //console.log('remBtns.length='+remBtns.length+', btnCountTreshold='+btnCountTreshold);
+
+    if( remBtns.length == 0 ) {
+        return;
+    }
+
+    if( remBtns.length > btnCountTreshold ) {
         //more than one element: show all remove buttons
         remBtns.show();
-
     } else {
         //0 or 1 element: hide remove buttons
         remBtns.hide();
     }
-
 }
 
 //on user load take care of hidden wells

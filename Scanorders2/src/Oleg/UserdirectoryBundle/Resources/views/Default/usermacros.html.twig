@@ -302,14 +302,14 @@
     {% endif %}
 
     {#don't use alert class for standAloneLocation#}
-    {#{% if standAloneLocation %}#}
-        {#{% set alertClass = "" %}#}
-    {#{% else %}#}
-        {#{% set alertClass = "alert" %}#}
-    {#{% endif %}#}
+    {% if standAloneLocation %}
+        {% set alertClass = "" %}
+    {% else %}
+        {% set alertClass = "alert" %}
+    {% endif %}
 
     {% if showRegularFields1 or showRegularFields2 %}
-        <div class="user-collection-holder {{ classname }} {{ wellclass }}">
+        <div class="user-collection-holder {{ alertClass }} {{ classname }} {{ wellclass }}">
 
             {% if cycle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
                 {% if not standAloneLocation and cycle != "new_standalone" %}
@@ -694,7 +694,8 @@
 
         {% if cycle != 'show_user' %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                {#btn-remove-minimumone-collection#}
+                <button type="button" class="btn btn-default btn-sm  confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 
@@ -1394,10 +1395,6 @@
             {{ formmacros.field(formfield.appendFellowshipTitleToName) }}
         {% endif %}
 
-
-
-
-
     </div>
 
 
@@ -1406,10 +1403,16 @@
 {% endmacro %}
 
 
-{% macro addNewObjectBtn( cycle, classname, title ) %}
+{% macro addNewObjectBtn( cycle, classname, title, addClass ) %}
     {% if cycle != 'show_user' %}
+
+        {% set addClassStr = "" %}
+        {% if addClass is defined and addClass %}
+            {% set addClassStr = addClass %}
+        {% endif %}
+
         <div style="align-content: center;">
-            <button class="btn btn-default" onClick="addNewObject(this,'{{ classname }}')" type='button'>{{ title }}</button>
+            <button class="btn btn-default {{ addClassStr }}" onClick="addNewObject(this,'{{ classname }}')" type='button'>{{ title }}</button>
         </div>
     {% endif %}
 {% endmacro %}
