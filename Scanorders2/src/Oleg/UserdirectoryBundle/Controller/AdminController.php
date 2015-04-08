@@ -13,6 +13,8 @@ use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\HonorTrainingList;
 use Oleg\UserdirectoryBundle\Entity\InstitutionType;
 use Oleg\UserdirectoryBundle\Entity\Location;
+use Oleg\UserdirectoryBundle\Entity\MedicalSpecialties;
+use Oleg\UserdirectoryBundle\Entity\MedicalTitleList;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
 use Oleg\UserdirectoryBundle\Entity\ResidencySpecialty;
 use Oleg\UserdirectoryBundle\Entity\SourceSystemList;
@@ -110,6 +112,9 @@ class AdminController extends Controller
         $count_fellowshipTypeList = $this->generateFellowshipTypeList();
         $count_residencyTrackList = $this->generateResidencyTrackList();
 
+        $count_medicalTitleList = $this->generateMedicalTitleList();
+        $count_medicalSpecialties = $this->generateMedicalSpecialties();
+
         $count_equipmentType = $this->generateEquipmentType();
         $count_equipment = $this->generateEquipment();
 
@@ -155,28 +160,30 @@ class AdminController extends Controller
             'Test Users='.$count_testusers.', '.
             'Board Specialties='.$count_boardSpecialties.', '.
             'Employment Types of Termination='.$count_terminationTypes.', '.
-            'Event Log Types ='.$count_eventTypeList.', '.
-            'Username Types ='.$count_usernameTypeList.', '.
-            'Identifier Types ='.$count_identifierTypeList.', '.
-            'Residency Tracks ='.$count_residencyTrackList.', '.
-            'Fellowship Types ='.$count_fellowshipTypeList.', '.
-            'Equipment Types ='.$count_equipmentType.', '.
-            'Equipment ='.$count_equipment.', '.
-            'Location Types ='.$count_locationTypeList.', '.
-            'Location Privacy ='.$count_locprivacy.', '.
+            'Event Log Types='.$count_eventTypeList.', '.
+            'Username Types='.$count_usernameTypeList.', '.
+            'Identifier Types='.$count_identifierTypeList.', '.
+            'Residency Tracks='.$count_residencyTrackList.', '.
+            'Fellowship Types='.$count_fellowshipTypeList.', '.
+            'Medical Titles='.$count_medicalTitleList.', '.
+            'Medical Specialties='.$count_medicalSpecialties.', '.
+            'Equipment Types='.$count_equipmentType.', '.
+            'Equipment='.$count_equipment.', '.
+            'Location Types='.$count_locationTypeList.', '.
+            'Location Privacy='.$count_locprivacy.', '.
             'States='.$count_states.', '.
             'Countries='.$count_countryList.', '.
-            'Locations ='.$count_locations.', '.
-            'Buildings ='.$count_buildings.', '.
+            'Locations='.$count_locations.', '.
+            'Buildings='.$count_buildings.', '.
             'Reaserch Labs='.$count_reslabs.', '.
-            'Completion Reasons ='.$count_completionReasons.', '.
-            'Training Degrees ='.$count_trainingDegrees.', '.
-            'Residency Specialties ='.$count_residencySpecialties.', '.
+            'Completion Reasons='.$count_completionReasons.', '.
+            'Training Degrees='.$count_trainingDegrees.', '.
+            'Residency Specialties='.$count_residencySpecialties.', '.
             //'Major Trainings ='.$count_majorTrainings.', '.
             //'Minor Trainings ='.$count_minorTrainings.', '.
-            'Honor Trainings ='.$count_HonorTrainings.', '.
-            'Fellowship Titles ='.$count_FellowshipTitles.' '.
-            'Document Types ='.$count_documenttypes.' '.
+            'Honor Trainings='.$count_HonorTrainings.', '.
+            'Fellowship Titles='.$count_FellowshipTitles.' '.
+            'Document Types='.$count_documenttypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -1389,6 +1396,93 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+
+    public function generateMedicalTitleList() {
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            'Assistant Attending Pathologist',
+            'Associate Attending Pathologist',
+            'Attending Pathologist',
+            'Resident',
+            'Fellow'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $value = trim($value);
+
+            if( $em->getRepository('OlegUserdirectoryBundle:MedicalTitleList')->findOneByName($value) ) {
+                continue;
+            }
+
+            $entity = new MedicalTitleList();
+            $this->setDefaultList($entity,$count,$username,$value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
+    public function generateMedicalSpecialties() {
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            'Autopsy Pathology',
+            'Breast Pathology',
+            'Cardiopulmonary Pathology',
+            'Clinical Microbiology',
+            'Cytogenetics',
+            'Cytopathology',
+            'Dermatopathology',
+            'Gastrointestinal and Liver Pathology',
+            'Genitourinary Pathology',
+            'Gynecologic Pathology',
+            'Head and Neck Pathology',
+            'Hematopathology',
+            'Immunopathology',
+            'Molecular and Genomic Pathology',
+            'Molecular Hematopathology',
+            'Neuropathology',
+            'Pathology Informatics',
+            'Pediatric Pathology',
+            'Perinatal and Obstetric Pathology',
+            'Renal Pathology',
+            'Surgical Pathology',
+            'Transfusion Medicine'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $value = trim($value);
+
+            if( $em->getRepository('OlegUserdirectoryBundle:MedicalSpecialties')->findOneByName($value) ) {
+                continue;
+            }
+
+            $entity = new MedicalSpecialties();
+            $this->setDefaultList($entity,$count,$username,$value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
 
     public function generateLocationTypeList() {
         $em = $this->getDoctrine()->getManager();

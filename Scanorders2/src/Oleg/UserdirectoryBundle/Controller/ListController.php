@@ -62,6 +62,8 @@ class ListController extends Controller
      * @Route("/fellowship-subspecialties/", name="fellowshipsubspecialtys-list")
      * @Route("/institution-types/", name="institutiontypes-list")
      * @Route("/document-types/", name="documenttypes-list")
+     * @Route("/medical-titles/", name="medicaltitles-list")
+     * @Route("/medical-specialties/", name="medicalspecialties-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -195,6 +197,8 @@ class ListController extends Controller
      * @Route("/fellowship-subspecialties/", name="fellowshipsubspecialtys_create")
      * @Route("/institution-types/", name="institutiontypes_create")
      * @Route("/document-types/", name="documenttypes_create")
+     * @Route("/medical-titles/", name="medicaltitles_create")
+     * @Route("/medical-specialties/", name="medicalspecialties_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -318,6 +322,8 @@ class ListController extends Controller
      * @Route("/fellowship-subspecialties/new", name="fellowshipsubspecialtys_new")
      * @Route("/institution-types/new", name="institutiontypes_new")
      * @Route("/document-types/new", name="documenttypes_new")
+     * @Route("/medical-titles/new", name="medicaltitles_new")
+     * @Route("/medical-specialties/new", name="medicalspecialties_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -412,6 +418,8 @@ class ListController extends Controller
      * @Route("/fellowship-subspecialties/{id}", name="fellowshipsubspecialtys_show")
      * @Route("/institution-types/{id}", name="institutiontypes_show")
      * @Route("/document-types/{id}", name="documenttypes_show")
+     * @Route("/medical-titles/{id}", name="medicaltitles_show")
+     * @Route("/medical-specialties/{id}", name="medicalspecialties_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -496,6 +504,8 @@ class ListController extends Controller
      * @Route("/fellowship-subspecialties/{id}/edit", name="fellowshipsubspecialtys_edit")
      * @Route("/institution-types/{id}/edit", name="institutiontypes_edit")
      * @Route("/document-types/{id}/edit", name="documenttypes_edit")
+     * @Route("/medical-titles/{id}/edit", name="medicaltitles_edit")
+     * @Route("/medical-specialties/{id}/edit", name="medicalspecialties_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -612,6 +622,8 @@ class ListController extends Controller
      * @Route("/fellowship-subspecialties/{id}", name="fellowshipsubspecialtys_update")
      * @Route("/institution-types/{id}", name="institutiontypes_update")
      * @Route("/document-types/{id}", name="documenttypes_update")
+     * @Route("/medical-titles/{id}", name="medicaltitles_update")
+     * @Route("/medical-specialties/{id}", name="medicalspecialties_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -924,6 +936,15 @@ class ListController extends Controller
                 $className = "DocumentTypeList";
                 $displayName = "Document Types";
                 break;
+            case "medicaltitles":
+                $className = "MedicalTitleList";
+                $displayName = "Medical Titles";
+                break;
+            case "medicalspecialties":
+                $className = "MedicalSpecialties";
+                $displayName = "Medical Specialties";
+                break;
+
 
             default:
                 $className = null;
@@ -994,6 +1015,8 @@ class ListController extends Controller
      * @Route("/fellowship-subspecialties/{id}", name="fellowshipsubspecialtys_delete")
      * @Route("/institution-types/{id}", name="institutiontypes_delete")
      * @Route("/document-types/{id}", name="documenttypes_delete")
+     * @Route("/medical-titles/{id}", name="medicaltitles_delete")
+     * @Route("/medical-specialties/{id}", name="medicalspecialties_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

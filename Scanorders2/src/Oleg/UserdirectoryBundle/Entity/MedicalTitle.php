@@ -11,11 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 class MedicalTitle extends BaseTitle
 {
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="AppTitleList")
-//     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
-//     **/
-//    protected $name;
+    /**
+     * @ORM\ManyToOne(targetEntity="MedicalTitleList")
+     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
+     **/
+    protected $name;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="medicalTitles")
@@ -23,22 +23,25 @@ class MedicalTitle extends BaseTitle
      */
     protected $user;
 
-//    /**
-//     * @ORM\Column(name="position", type="string", nullable=true)
-//     */
-//    protected $position;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="ResidencyTrackList")
-//     * @ORM\JoinColumn(name="residencyTrack_id", referencedColumnName="id")
-//     **/
-//    private $residencyTrack;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="FellowshipTypeList")
-//     * @ORM\JoinColumn(name="fellowshipType_id", referencedColumnName="id")
-//     **/
-//    private $fellowshipType;
+    /**
+     * @ORM\ManyToMany(targetEntity="MedicalSpecialties")
+     * @ORM\JoinTable(name="user_medicaltitle_medicalspeciality",
+     *      joinColumns={@ORM\JoinColumn(name="medicaltitle_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="medicalspeciality_id", referencedColumnName="id")}
+     * )
+     **/
+    protected $specialties;
+
+
+
+
+    function __construct($author=null)
+    {
+        parent::__construct($author);
+
+        $this->specialties = new ArrayCollection();
+    }
+
 
     /**
      * @param mixed $name
@@ -72,57 +75,27 @@ class MedicalTitle extends BaseTitle
         return $this->user;
     }
 
-    /**
-     * @param mixed $position
-     */
-    public function setPosition($position)
+
+    public function getSpecialties()
     {
-        $this->position = $position;
+        return $this->specialties;
+    }
+    public function addSpecialty($specialty)
+    {
+        if( $specialty && !$this->specialties->contains($specialty) ) {
+            $this->specialties->add($specialty);
+        }
+        return $this;
+    }
+    public function removeSpecialty($specialty)
+    {
+        $this->specialties->removeElement($specialty);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * @param mixed $fellowshipType
-     */
-    public function setFellowshipType($fellowshipType)
-    {
-        $this->fellowshipType = $fellowshipType;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFellowshipType()
-    {
-        return $this->fellowshipType;
-    }
-
-    /**
-     * @param mixed $residencyTrack
-     */
-    public function setResidencyTrack($residencyTrack)
-    {
-        $this->residencyTrack = $residencyTrack;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResidencyTrack()
-    {
-        return $this->residencyTrack;
-    }
 
 
 
     public function __toString() {
-        return "Academic Appointment Title";
+        return "Medical Appointment Title";
     }
 }
