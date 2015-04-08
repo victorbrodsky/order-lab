@@ -167,9 +167,15 @@ class Logger
                 }
             }
 
-
             foreach( $user->getAppointmentTitles() as $title ) {
                 $tree = $this->setInstTree($title,"AppointmentTitle");
+                if( $tree ) {
+                    $this->addInstitutionTree($tree);
+                }
+            }
+
+            foreach( $user->getMedicalTitles() as $title ) {
+                $tree = $this->setInstTree($title,"MedicalTitle");
                 if( $tree ) {
                     $this->addInstitutionTree($tree);
                 }

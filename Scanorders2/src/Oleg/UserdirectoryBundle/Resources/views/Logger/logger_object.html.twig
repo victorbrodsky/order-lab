@@ -9,6 +9,7 @@
 
     {{ usermacros.getLoggerTreeByType(createLogger,'AdministrativeTitle','Created') }}
     {{ usermacros.getLoggerTreeByType(createLogger,'AppointmentTitle','Created') }}
+    {{ usermacros.getLoggerTreeByType(createLogger,'MedicalTitle','Created') }}
 
     {{ formmacros.simplefield( "Added on:", createLogger.creationdate|date('Y-m-d H:i:s'), "input", "disabled" ) }}
 
@@ -34,6 +35,7 @@
 
     {{ usermacros.getLoggerTreeByType(updateLogger,'AdministrativeTitle','Updated') }}
     {{ usermacros.getLoggerTreeByType(updateLogger,'AppointmentTitle','Updated') }}
+    {{ usermacros.getLoggerTreeByType(updateLogger,'MedicalTitle','Updated') }}
 
     {{ formmacros.simplefield( "Last Updated on:", updateLogger.creationdate|date('Y-m-d H:i:s'), "input", "disabled" ) }}
 

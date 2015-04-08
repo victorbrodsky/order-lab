@@ -201,6 +201,18 @@ class UserType extends AbstractType
             'prototype_name' => '__appointmenttitles__',
         ));
 
+        $params = array('read_only'=>$read_only,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
+        $builder->add('medicalTitles', 'collection', array(
+            'type' => new BaseTitleType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__medicaltitles__',
+        ));
+
         $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
         $builder->add('trainings', 'collection', array(
             'type' => new TrainingType($params),

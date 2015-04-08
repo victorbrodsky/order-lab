@@ -104,6 +104,9 @@ class CustomSelectorType extends AbstractType {
             case "appointmenttitletype":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'AppTitleList');
                 break;
+            case "medicaltitletype":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'MedicalTitleList');
+                break;
 
             //training (7 from 9)
             case "traininginstitution":

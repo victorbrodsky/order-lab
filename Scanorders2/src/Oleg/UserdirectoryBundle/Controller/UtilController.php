@@ -668,18 +668,23 @@ class UtilController extends Controller {
             $dql->leftJoin("administrativeTitles.service", "administrativeService");
             $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
             $dql->leftJoin("appointmentTitles.service", "appointmentService");
+            $dql->leftJoin("user.medicalTitles", "medicalTitles");
+            $dql->leftJoin("medicalTitles.service", "medicalService");
 
             if( $search == "min" ) {
                 $criteriastr = "administrativeService.name IS NOT NULL OR ";
-                $criteriastr .= "appointmentService.name IS NOT NULL";
+                $criteriastr .= "appointmentService.name IS NOT NULL OR ";
+                $criteriastr .= "medicalService.name IS NOT NULL";
             } else {
                 $criteriastr = "administrativeService.name LIKE '%".$search."%' OR ";
-                $criteriastr .= "appointmentService.name LIKE '%".$search."%'";
+                $criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
+                $criteriastr .= "medicalService.name LIKE '%".$search."%'";
             }
 
             //time
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
         }
 
         if( $type == "division" ) {
@@ -687,18 +692,23 @@ class UtilController extends Controller {
             $dql->leftJoin("administrativeTitles.division", "administrativeDivision");
             $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
             $dql->leftJoin("appointmentTitles.division", "appointmentDivision");
+            $dql->leftJoin("user.medicalTitles", "medicalTitles");
+            $dql->leftJoin("medicalTitles.division", "medicalDivision");
 
             if( $search == "min" ) {
                 $criteriastr = "administrativeDivision.name IS NOT NULL OR ";
-                $criteriastr .= "appointmentDivision.name IS NOT NULL";
+                $criteriastr .= "appointmentDivision.name IS NOT NULL OR ";
+                $criteriastr .= "medicalDivision.name IS NOT NULL";
             } else {
                 $criteriastr = "administrativeDivision.name LIKE '%".$search."%' OR ";
-                $criteriastr .= "appointmentDivision.name LIKE '%".$search."%'";
+                $criteriastr .= "appointmentDivision.name LIKE '%".$search."%' OR ";
+                $criteriastr .= "medicalDivision.name LIKE '%".$search."%'";
             }
 
             //time
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
         }
 
         if( $type == "cwid" ) {
@@ -709,6 +719,7 @@ class UtilController extends Controller {
             }
         }
 
+        //administrative appointment title
         if( $type == "admintitle" ) {
             $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
             $dql->leftJoin("administrativeTitles.name", "adminTitleName");
@@ -720,7 +731,38 @@ class UtilController extends Controller {
 
             //time
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
+            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
+            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
+        }
+
+        //academic title
+        if( $type == "academictitle" ) {
+            $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+            $dql->leftJoin("appointmentTitles.name", "appointmentTitleName");
+            if( $search == "min" ) {
+                $criteriastr = "appointmentTitleName.name IS NOT NULL";
+            } else {
+                $criteriastr = "appointmentTitleName.name LIKE '%".$search."%'";
+            }
+
+            //time
+            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
+            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
+        }
+
+        //medical title
+        if( $type == "medicaltitle" ) {
+            $dql->leftJoin("user.medicalTitles", "medicalTitles");
+            $dql->leftJoin("medicalTitles.name", "medicalTitleName");
+            if( $search == "min" ) {
+                $criteriastr = "medicalTitleName.name IS NOT NULL";
+            } else {
+                $criteriastr = "medicalTitleName.name LIKE '%".$search."%'";
+            }
+
+            //time
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
         }
 
 
@@ -814,6 +856,9 @@ class UtilController extends Controller {
                 break;
             case "appointmenttitletype":
                 $className = "AppTitleList";
+                break;
+            case "medicaltitletype":
+                $className = "MedicalTitleList";
                 break;
             case "researchlab":
                 $className = "ResearchLab";

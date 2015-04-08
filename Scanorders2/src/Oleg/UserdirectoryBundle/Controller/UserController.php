@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -28,6 +29,7 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Form\UserType;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
+use Oleg\UserdirectoryBundle\Entity\MedicalTitle;
 use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
 use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
@@ -178,6 +180,10 @@ class UserController extends Controller
 
         if( $tablename == "appointmentTitles" ) {
             $title = 'Current employees with the academic title of "'.$objectname.'"';
+        }
+
+        if( $tablename == "medicalTitles" ) {
+            $title = 'Current employees with the medical title of "'.$objectname.'"';
         }
 
         if( $tablename == "service" ) {
@@ -345,6 +351,7 @@ class UserController extends Controller
         $excludeCurrentUser = ( array_key_exists('excludeCurrentUser', $params) ? $params['excludeCurrentUser'] : null);
 
         //echo "filter=".$filter."<br>";
+        //echo "search=".$search."<br>";
 
         $request = $this->get('request');
         $postData = $request->query->all();
@@ -380,6 +387,13 @@ class UserController extends Controller
         $dql->leftJoin("appointmentTitles.division", "appointmentDivision");
         $dql->leftJoin("appointmentTitles.service", "appointmentService");
 
+        $dql->leftJoin("user.medicalTitles", "medicalTitles");
+        $dql->leftJoin("medicalTitles.name", "medicalName");
+        $dql->leftJoin("medicalTitles.institution", "medicalInstitution");
+        $dql->leftJoin("medicalTitles.department", "medicalDepartment");
+        $dql->leftJoin("medicalTitles.division", "medicalDivision");
+        $dql->leftJoin("medicalTitles.service", "medicalService");
+
         $dql->leftJoin("user.locations", "locations");
         $dql->leftJoin("locations.room", "locationroom");
         $dql->leftJoin("locations.assistant", "assistant");
@@ -398,6 +412,7 @@ class UserController extends Controller
                 $dql->addOrderBy("administrativeInstitution.name","ASC");
                 $dql->addOrderBy("administrativeService.name","ASC");
                 $dql->addOrderBy("appointmentService.name","ASC");
+                $dql->addOrderBy("medicalService.name","ASC");
             } else if( $time == 'past_only' ) {
                 $dql->orderBy("employmentStatus.terminationDate","DESC");
                 $dql->addOrderBy("infos.lastName","ASC");
@@ -524,31 +539,42 @@ class UserController extends Controller
         //Username
         $criteriastr .= "user.username LIKE '%".$search."%' OR ";
 
-        //administrative title
+
+        //////////////////// administrative title
         //institution
         $criteriastr .= "administrativeInstitution.name LIKE '%".$search."%' OR ";
-
         //department
         $criteriastr .= "administrativeDepartment.name LIKE '%".$search."%' OR ";
-
         //division
         $criteriastr .= "administrativeDivision.name LIKE '%".$search."%' OR ";
-
         //service
         $criteriastr .= "administrativeService.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "administrativeName.name LIKE '%".$search."%' OR ";
 
-        //academic appointment title
+
+        //////////////////// academic appointment title
         //institution
         $criteriastr .= "appointmentInstitution.name LIKE '%".$search."%' OR ";
-
         //department
         $criteriastr .= "appointmentDepartment.name LIKE '%".$search."%' OR ";
-
         //division
         $criteriastr .= "appointmentDivision.name LIKE '%".$search."%' OR ";
-
         //service
         $criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "appointmentName.name LIKE '%".$search."%' OR ";
+
+
+        //////////////////// medical appointment title
+        //institution
+        $criteriastr .= "medicalInstitution.name LIKE '%".$search."%' OR ";
+        //department
+        $criteriastr .= "medicalDepartment.name LIKE '%".$search."%' OR ";
+        //division
+        $criteriastr .= "medicalDivision.name LIKE '%".$search."%' OR ";
+        //service
+        $criteriastr .= "medicalService.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "medicalName.name LIKE '%".$search."%' OR ";
+
 
         //Associated NYPH Code in Locations
         //$criteriastr .= "locations.associatedCode LIKE '%".$search."%' OR ";
@@ -575,7 +601,11 @@ class UserController extends Controller
         }
 
         //Position Type
-        $criteriastr .= "appointmentTitles.position LIKE '%".$search."%'";
+        $criteriastr .= " appointmentTitles.position LIKE '%".$search."%' ";
+
+        //Specialties
+        $dql->leftJoin("medicalTitles.specialties", "medicalSpecialties");
+        $criteriastr .= " OR medicalSpecialties.name LIKE '%".$search."%' ";
 
 
         if( $criteriastr != "" ) {
@@ -603,14 +633,27 @@ class UserController extends Controller
         //Pending Administrative Review
         if( $filter && $filter == "Pending Administrative Review" ) {
             $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
-            $criteriastr .= "(administrativeTitles.status = ".$pendingStatus." OR appointmentTitles.status = ".$pendingStatus." OR locations.status = ".$pendingStatus.")";
+            $criteriastr .= "(".
+                "administrativeTitles.status = ".$pendingStatus.
+                " OR appointmentTitles.status = ".$pendingStatus.
+                " OR medicalTitles.status = ".$pendingStatus.
+                " OR locations.status = ".$pendingStatus.
+            ")";
         }
 
         //WCMC + Pathology
         if( $filter && $filter == "WCMC Pathology Employees" ) {
-            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College' OR appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= "(".
+                "administrativeInstitution.name = 'Weill Cornell Medical College'".
+                " OR appointmentInstitution.name = 'Weill Cornell Medical College'".
+                " OR medicalInstitution.name = 'Weill Cornell Medical College'".
+            ")";
             $criteriastr .= " AND ";
-            $criteriastr .= "(administrativeDepartment.name = 'Pathology and Laboratory Medicine' OR appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= "(".
+                "administrativeDepartment.name = 'Pathology and Laboratory Medicine'".
+                " OR appointmentDepartment.name = 'Pathology and Laboratory Medicine'".
+                " OR medicalDepartment.name = 'Pathology and Laboratory Medicine'".
+            ")";
         }
 
         //Academic Appointment Title exists + Clinical Faculty + Research Faculty
@@ -636,9 +679,9 @@ class UserController extends Controller
             $dql->leftJoin("user.trainings", "trainings");
             $dql->leftJoin("trainings.degree", "degree");
             $dql->leftJoin("degree.original", "original");
-            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College' OR appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College' OR appointmentInstitution.name = 'Weill Cornell Medical College' OR medicalInstitution.name = 'Weill Cornell Medical College')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(administrativeDepartment.name = 'Pathology and Laboratory Medicine' OR appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= "(administrativeDepartment.name = 'Pathology and Laboratory Medicine' OR appointmentDepartment.name = 'Pathology and Laboratory Medicine' OR medicalDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(original.name = 'MD')";
         }
@@ -889,6 +932,8 @@ class UserController extends Controller
                 $criteriastr .= "administrativeService.id = " . $objectid;
                 $criteriastr .= " OR ";
                 $criteriastr .= "appointmentService.id = " . $objectid;
+                $criteriastr .= " OR ";
+                $criteriastr .= "medicalService.id = " . $objectid;
             } else {
                 $criteriastr = "1=0";
             }
@@ -910,6 +955,14 @@ class UserController extends Controller
             }
         }
 
+        if( $objectname && $objectname == "medicalTitles" ) {
+            if( !$objectid || $objectid != "" ) {
+                $criteriastr .= "medicalTitles.name = '" . $objectid . "'";
+            } else {
+                $criteriastr = "1=0";
+            }
+        }
+
         if( $objectname && $objectname == "room" ) {
             if( !$objectid || $objectid != "" ) {
                 $criteriastr .= "locations.room = '" . $objectid . "'";
@@ -923,6 +976,8 @@ class UserController extends Controller
                 $criteriastr .= "administrativeDepartment.id = " . $objectid;
                 $criteriastr .= " OR ";
                 $criteriastr .= "appointmentDepartment.id = " . $objectid;
+                $criteriastr .= " OR ";
+                $criteriastr .= "medicalDepartment.id = " . $objectid;
             } else {
                 $criteriastr = "1=0";
             }
@@ -933,6 +988,8 @@ class UserController extends Controller
                 $criteriastr .= "administrativeDivision.id = " . $objectid;
                 $criteriastr .= " OR ";
                 $criteriastr .= "appointmentDivision.id = " . $objectid;
+                $criteriastr .= " OR ";
+                $criteriastr .= "medicalDivision.id = " . $objectid;
             } else {
                 $criteriastr = "1=0";
             }
@@ -1398,6 +1455,11 @@ class UserController extends Controller
             //echo "app added, type=".$appointmentTitle->getType()."<br>";
         }
 
+        if( count($entity->getMedicalTitles()) == 0 ) {
+            $medicalTitle = new MedicalTitle($user);
+            $entity->addMedicalTitle($medicalTitle);
+        }
+
         if( count($entity->getCredentials()->getStateLicense()) == 0 ) {
             $entity->getCredentials()->addStateLicense( new StateLicense() );
         }
@@ -1507,6 +1569,11 @@ class UserController extends Controller
         $originalAppTitles = new ArrayCollection();
         foreach( $entity->getAppointmentTitles() as $title) {
             $originalAppTitles->add($title);
+        }
+
+        $originalMedicalTitles = new ArrayCollection();
+        foreach( $entity->getMedicalTitles() as $title) {
+            $originalMedicalTitles->add($title);
         }
 
         $originalLocations = new ArrayCollection();
@@ -1669,6 +1736,11 @@ class UserController extends Controller
             }
 
             $removedInfo = $this->removeCollection($originalAppTitles,$entity->getAppointmentTitles());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalMedicalTitles,$entity->getMedicalTitles());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
@@ -1859,6 +1931,9 @@ class UserController extends Controller
             $userUtil->processInstTree($title,$em,$sc);
         }
         foreach( $entity->getAppointmentTitles() as $title) {
+            $userUtil->processInstTree($title,$em,$sc);
+        }
+        foreach( $entity->getMedicalTitles() as $title) {
             $userUtil->processInstTree($title,$em,$sc);
         }
         foreach( $entity->getLocations() as $location) {
@@ -2225,6 +2300,13 @@ class UserController extends Controller
         foreach( $subjectuser->getAppointmentTitles() as $title ) {
             $changeset = $uow->getEntityChangeSet($title);
             $text = "("."Academic Appointment Title ".$this->getEntityId($title).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Medical Appointment Title(s)
+        foreach( $subjectuser->getMedicalTitles() as $title ) {
+            $changeset = $uow->getEntityChangeSet($title);
+            $text = "("."Medical Appointment Title ".$this->getEntityId($title).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 

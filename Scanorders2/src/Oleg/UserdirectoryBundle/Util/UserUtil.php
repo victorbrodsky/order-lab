@@ -478,6 +478,10 @@ class UserUtil {
                     $criteriastr .= "(appointmentTitles.endDate IS NULL OR appointmentTitles.endDate > '".$curdate."')";
                     $criteriastr .= " OR ";
                 }
+                if( $searchField && $searchField == 'medicalTitles' ) {
+                    $criteriastr .= "(medicalTitles.endDate IS NULL OR medicalTitles.endDate > '".$curdate."')";
+                    $criteriastr .= " OR ";
+                }
 
                 //research lab: dissolvedDate
                 if( $searchField == null || $searchField == 'researchLabs' ) {
@@ -509,6 +513,10 @@ class UserUtil {
                     $criteriastr .= "(appointmentTitles.endDate IS NOT NULL AND appointmentTitles.endDate < '".$curdate."')";
                     $criteriastr .= " OR ";
                 }
+                if( $searchField && $searchField == 'medicalTitles' ) {
+                    $criteriastr .= "(medicalTitles.endDate IS NOT NULL AND medicalTitles.endDate < '".$curdate."')";
+                    $criteriastr .= " OR ";
+                }
 
                 //research lab: dissolvedDate
                 if( $searchField == null || $searchField == 'researchLabs' ) {
@@ -518,7 +526,7 @@ class UserUtil {
 
                 //Each group of fields in the employment status should have a non-empty Date of Termination.
                 if( $searchField == null || $searchField == 'employmentStatus' ) {
-                    //TODO: should the serach result display only users with all employment status have a non-empty Date of Termination?
+                    //TODO: should the search result display only users with all employment status have a non-empty Date of Termination?
                     $criteriastr .= "(";
                     $criteriastr .= "(employmentStatus IS NOT NULL)";
                     $criteriastr .= " AND ";
@@ -834,6 +842,12 @@ class UserUtil {
         foreach( $suser->getAppointmentTitles() as $object ) {
             $clone = clone $object;
             $duser->addAppointmentTitle( $clone );
+        }
+
+        //Medical Titles
+        foreach( $suser->getMedicalTitles() as $object ) {
+            $clone = clone $object;
+            $duser->addMedicalTitle( $clone );
         }
 
         //Locations

@@ -21,6 +21,7 @@ var _mailboxes = new Array();
 var _efforts = new Array();
 var _addmintitles = new Array();
 var _apptitles = new Array();
+var _medicaltitles = new Array();
 
 //trainings 6 from 8
 var _residencySpecialtys = new Array();
@@ -48,6 +49,7 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'effort',_efforts,false);
     getComboboxGeneric(newForm,'administrativetitletype',_addmintitles,false);
     getComboboxGeneric(newForm,'appointmenttitletype',_apptitles,false);
+    getComboboxGeneric(newForm,'medicaltitletype',_medicaltitles,false);
 
     //trainings
     getComboboxGeneric(newForm,'trainingmajors',_trainingmajors,true);

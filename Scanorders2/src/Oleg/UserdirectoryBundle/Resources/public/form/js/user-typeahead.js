@@ -58,11 +58,31 @@ function initTypeaheadUserSiteSerach() {
         limit: suggestions_limit
     });
 
+    var academictitleDB = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        //prefetch: getCommonBaseUrl("util/common/user-data-search/academictitle/min","employees"),
+        remote: getCommonBaseUrl("util/common/user-data-search/academictitle/"+suggestions_limit+"/%QUERY","employees"),
+        dupDetector: duplicationDetector,
+        limit: suggestions_limit
+    });
+
+    var medicaltitleDB = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        //prefetch: getCommonBaseUrl("util/common/user-data-search/medicaltitle/min","employees"),
+        remote: getCommonBaseUrl("util/common/user-data-search/medicaltitle/"+suggestions_limit+"/%QUERY","employees"),
+        dupDetector: duplicationDetector,
+        limit: suggestions_limit
+    });
+
     userDB.initialize();
     serviceDB.initialize();
     divisionDB.initialize();
     cwidDB.initialize();
     admintitleDB.initialize();
+    academictitleDB.initialize();
+    medicaltitleDB.initialize();
 
     var myTypeahead = $('#multiple-datasets-typeahead-search .typeahead').typeahead({
             highlight: true
@@ -81,6 +101,22 @@ function initTypeaheadUserSiteSerach() {
             source: admintitleDB.ttAdapter(),
             templates: {
                 header: '<h3 class="search-name">Administrative Title</h3>'
+            }
+        },
+        {
+            name: 'academictitle',
+            displayKey: 'text',
+            source: academictitleDB.ttAdapter(),
+            templates: {
+                header: '<h3 class="search-name">Academic Title</h3>'
+            }
+        },
+        {
+            name: 'medicaltitle',
+            displayKey: 'text',
+            source: medicaltitleDB.ttAdapter(),
+            templates: {
+                header: '<h3 class="search-name">Medical Title</h3>'
             }
         },
         {

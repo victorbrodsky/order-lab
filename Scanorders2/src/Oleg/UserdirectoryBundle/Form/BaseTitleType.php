@@ -231,6 +231,30 @@ class BaseTitleType extends AbstractType
 
         }
 
+
+        //specialties for Medical Appointment Title)
+        if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\MedicalTitle" ) {
+
+            $builder->add( 'specialties', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:MedicalSpecialties',
+                'property' => 'name',
+                'label'=>'Specialty(s):',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
+            ));
+
+        }
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
