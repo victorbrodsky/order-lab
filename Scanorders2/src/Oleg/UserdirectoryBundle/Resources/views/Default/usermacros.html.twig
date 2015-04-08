@@ -471,8 +471,25 @@
     {{ formmacros.field_notempty(formfield.country,cycle) }}
 {% endmacro %}
 
-{% macro statusVerifiedField( entity, cycle ) %}
-    {% if entity.status is defined %}
+{% macro statusVerifiedField( entity, cycle, isEntity ) %}
+
+    {% if isEntity is not defined %}
+        {% set isEntity = false %}
+    {% endif %}
+
+    {% set statusValueDefined = false %}
+
+    {% if isEntity %}
+        {% set statusValueDefined = true %}
+        {% set statusValue = entity.status %}
+    {% else %}
+        {% if entity.status is defined %}
+            {% set statusValueDefined = true %}
+            {% set statusValue = entity.status.vars.value %}
+        {% endif %}
+    {% endif %}
+
+    {% if statusValueDefined %}
 
         {#On "Common Location" view pages, (for locations where Inhabitant is not set) hide "Status" field and value if it is equal to "Verified by Administration"#}
         {% if "show" in cycle %}
@@ -481,13 +498,21 @@
             {% set showFlag = false %}
         {% endif %}
 
-        {% if not showFlag or entity.status.vars.value != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
+        {% if not showFlag or statusValue != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
             {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-            {{ formmacros.field(entity.status) }}
+            {% if isEntity %}
+                {{ formmacros.simplefield( "Status:", entity.getStatusStr, "", "disabled" ) }}
+            {% else %}
+                {{ formmacros.field(entity.status) }}
+            {% endif %}
         {% else %}
-            {% do entity.status.setRendered %}
+            {% if not isEntity %}
+                {% do entity.status.setRendered %}
+            {% endif %}
         {% endif %}
+
     {% endif %}
+
 {% endmacro %}
 
 

@@ -296,10 +296,14 @@
 
 
 
-
-{% macro identifier( field, cycle, classname, prototype ) %}
+{#isEntity inidcates if the fields should be render not as form but as pure entity object#}
+{% macro identifier( field, cycle, classname, prototype, isEntity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if isEntity is not defined %}
+        {% set isEntity = false %}
+    {% endif %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -307,7 +311,13 @@
         {% set formfield = field %}
     {% endif %}
 
-    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
+    {% if isEntity %}
+        {% set formfieldValue = field %}
+    {% else %}
+        {% set formfieldValue = formfield.vars.value %}
+    {% endif %}
+
+    {% if formfieldValue and formfieldValue.status == 0 or prototype == 'prototype' %}
         {% set wellclass = "user-alert-warning" %}
     {% else %}
         {% set wellclass = "" %}
@@ -315,20 +325,31 @@
 
     <div class="alert {{ classname }} {{ wellclass }}">
 
-        {% if cycle != 'show_user' %}
+        {% if cycle != 'show_user' and not isEntity %}
             <div class="text-right" style="padding-bottom: 10px">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm"
+                        onClick="removeExistingObject(this,'{{ classname }}')" >
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
             </div>
         {% endif %}
 
-        {{ usermacros.statusVerifiedField(formfield,cycle) }}
+        {% if cycle != 'show_user' %}
+            {{ formmacros.field(formfield.publiclyVisible) }}
+        {% endif %}
 
-        {{ formmacros.field(formfield.keytype) }}
+        {{ usermacros.statusVerifiedField(formfield,cycle,isEntity) }}
+
+        {% if isEntity %}
+            {{ formmacros.simplefield( "Identifier Type:", formfieldValue.keytype, "", "disabled" ) }}
+        {% else %}
+            {{ formmacros.field(formfield.keytype) }}
+        {% endif %}
 
         {% if formfield.keytypemrn is defined %}
             {#{% set displayNone = "display:none;" %}#}
             {#{% set hideClass = "hideComplex" %}#}
-            {% if formfield.vars.value and formfield.vars.value.keytypemrn and formfield.vars.value.keytypemrn.id %}
+            {% if formfieldValue and formfieldValue.keytypemrn and formfieldValue.keytypemrn.id %}
                 {% set displayNone = "" %}
                 {#{% set hideClass = "" %}#}
             {% else %}
@@ -337,28 +358,41 @@
             {% endif %}
 
             <div class="identifier-keytypemrn-field-holder" style="{{ displayNone }}">
-                {#<div class="identifier-keytypemrn-field-holder {{ hideClass }}">#}
-                {{ formmacros.field(formfield.keytypemrn) }}
+                {% if isEntity %}
+                    {{ formmacros.simplefield( "MRN Type:", formfieldValue.keytype, "", "disabled" ) }}
+                {% else %}
+                    {{ formmacros.field(formfield.keytypemrn) }}
+                {% endif %}
             </div>
         {% endif %}
 
         {% if cycle == 'show_user' %}
 
-            {% if formfield.link is defined and formfield.vars.value and formfield.vars.value.link != '' %}
+            {% if (isEntity or formfield.link is defined) and (formfieldValue and formfieldValue.link != '') %}
 
-                {% if "http" in formfield.vars.value.link %}
-                    {% set href = formfield.vars.value.link %}
+                {% if "http" in formfieldValue.link %}
+                    {% set href = formfieldValue.link %}
                 {% else %}
-                    {% set href = "http://"~formfield.vars.value.link %}
+                    {% set href = "http://"~formfieldValue.link %}
                 {% endif %}
 
-                {% set hreflink = '<a href="'~href|raw~'">'~formfield.field.vars.value~'</a>' %}
+                {% if isEntity %}
+                    {% set hreflink = '<a href="'~href|raw~'">'~formfield.field~'</a>' %}
+                {% else %}
+                    {% set hreflink = '<a href="'~href|raw~'">'~formfield.field.vars.value~'</a>' %}
+                {% endif %}
 
                 {{ formmacros.simplefield( "Identifier:", hreflink, "", "disabled" ) }}
 
             {% else %}
-                <br>
-                {{ formmacros.field(formfield.field) }}
+
+                {#identifier number field#}
+                {% if isEntity %}
+                    {{ formmacros.simplefield( "Identifier:", formfieldValue.field, "", "disabled" ) }}
+                 {% else %}
+                    {{ formmacros.field(formfield.field) }}
+                {% endif %}
+
             {% endif %}
 
         {% else %}
@@ -371,7 +405,9 @@
 
     </div>
 
-    {% do field.setRendered %}
+    {% if not isEntity %}
+        {% do field.setRendered %}
+    {% endif %}
 {% endmacro %}
 
 {#{% macro researchLabs( field, cycle, classname, prototype ) %}#}
@@ -1547,15 +1583,14 @@
 
                                             {#{{ formmacros.field(form.credentials.employeeId) }}#}
                                             {#{{ formmacros.field(form.credentials.nationalProviderIdentifier) }}#}
-                                            <div class="user-employmentStatus-holder">
-                                                {% for identifier in form.credentials.identifiers %}
-                                                    {{ userform.identifier(identifier,cycle,'user-identifiers','noprototype') }}
-                                                {% endfor %}
-                                                {#{% if cycle != 'show_user' %}#}
-                                                    {#<button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-identifiers')" type='button'>Add Identifier</button>#}
-                                                {#{% endif %}#}
-                                                {{ usermacros.addNewObjectBtn( cycle, 'user-identifiers', 'Add Identifier') }}
-                                            </div>
+
+                                            {% for identifier in form.credentials.identifiers %}
+                                                {{ userform.identifier(identifier,cycle,'user-identifiers','noprototype') }}
+                                            {% endfor %}
+                                            {#{% if cycle != 'show_user' %}#}
+                                                {#<button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-identifiers')" type='button'>Add Identifier</button>#}
+                                            {#{% endif %}#}
+                                            {{ usermacros.addNewObjectBtn( cycle, 'user-identifiers', 'Add Identifier') }}
 
                                         </div>
                                     </div>
@@ -1778,6 +1813,41 @@
             </div>
         {% endif %}
         {#EOF credentials#}
+
+
+        {#Public Identifiers from entity#}
+        {#If the user has no Research Labs (no array members with a research lab title), hide the whole Research Lab(s) section on the profile page.#}
+        {% set showPublicIdentifiers = false %}
+        {% for identifier in form.vars.value.credentials.identifiers %}
+            {% if showFlag and identifier and identifier.publiclyVisible == true %}
+                {% set showPublicIdentifiers = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showPublicIdentifiers %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-left">
+                        <a data-toggle="collapse" href="#PublicIdentifiers">
+                            Public Identifiers
+                        </a>
+                    </h4>
+                </div>
+                <div id="PublicIdentifiers" class="panel-collapse collapse {{ collapsein }}">
+                    <div class="panel-body">
+
+                        <div class="user-publicidentifiers-holder">
+                            <div class="user-publicidentifiers-holder">
+                                {% for identifier in form.vars.value.credentials.identifiers %}
+                                    {{ userform.identifier(identifier,cycle,'user-publicidentifiers','noprototype',true) }}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
 
 
         {#Comments#}

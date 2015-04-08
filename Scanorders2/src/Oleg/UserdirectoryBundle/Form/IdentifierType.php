@@ -48,6 +48,11 @@ class IdentifierType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('publiclyVisible', 'checkbox', array(
+            'required' => false,
+            'label' => 'Publicly visible:',
+        ));
+
         //status
         $baseUserAttr = new Identifier();
         $builder->add('status', 'choice', array(

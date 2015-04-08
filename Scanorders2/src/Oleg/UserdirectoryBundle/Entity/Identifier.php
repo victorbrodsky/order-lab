@@ -60,6 +60,12 @@ class Identifier
      */
     private $status;
 
+    /**
+     * public, private
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $publiclyVisible;
+
 
     public function __construct() {
         $this->setStatus(self::STATUS_UNVERIFIED);
@@ -161,6 +167,24 @@ class Identifier
     {
         return $this->link;
     }
+
+    /**
+     * @param mixed $publiclyVisible
+     */
+    public function setPubliclyVisible($publiclyVisible)
+    {
+        $this->publiclyVisible = $publiclyVisible;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPubliclyVisible()
+    {
+        return $this->publiclyVisible;
+    }
+
+
 
     /**
      * @param mixed $status

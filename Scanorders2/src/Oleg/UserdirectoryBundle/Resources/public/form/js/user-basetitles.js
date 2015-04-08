@@ -72,7 +72,7 @@ function getBaseTitleForm( elclass ) {
 
     var elementsHolder = $('.'+holderClass);
 
-    var elements = elementsHolder.find('.'+elclass);
+    //var elements = elementsHolder.find('.'+elclass);
     //console.log('elements='+elements.length);
 
     var identLowerCase = elclass.toLowerCase();
@@ -91,6 +91,7 @@ function getBaseTitleForm( elclass ) {
 
     //var elementCount = elements.length;
     var elementCount = getNextElementCount(elementsHolder,elclass);
+    //console.log("elementCount="+elementCount);
 
     var newForm = prototype.replace(regex, elementCount);
 
@@ -253,21 +254,32 @@ function collapseObject( button ) {
 
 function getNextElementCount( holder, elclass ) {
 
+    //console.log(holder);
+    //console.log('elclass='+elclass);
+
     var elements = holder.find('.'+elclass);
+    //console.log('elements count='+elements.length);
 
     var maxCount = 0;
 
     elements.each( function(){
 
+        //console.log($(this));
+
         //find valid input field with valid id
         var inputEl = null;
-        $(this).find('input[type=text]').not("*[id^='s2id_']").each( function(){
+        var inputElements = $(this).find('input[type=text]').not("*[id^='s2id_']");
+
+        inputElements.each( function(){
             var id = $(this).attr('id');
+            //console.log("id="+id);
             if( id ) {
                 var counter = getElementCounter( $(this) );
                 if( counter ) {
                     inputEl = $(this);
                     return;
+                } else {
+                    //console.log('no inputEl found');
                 }
             }
         });
@@ -288,12 +300,38 @@ function getNextElementCount( holder, elclass ) {
 }
 
 function getElementCounter( element ) {
+
+    if( !element ) {
+        //console.log("Error: element is null");
+        return null;
+    }
+
     var id = element.attr('id');
+    //console.log("ok id="+id);
+
     //  0           1           2       3          4
     //oleg_userdirectorybundle_user_publicComments_0
+    //oleg_userdirectorybundle_user_credentials_identifiers_1_link
+
     var idArr = id.split("_");
+
+    for( var i = 0; i < idArr.length; ++i ) {
+        //console.log( "value="+idArr[i]+" integer?="+isInt(idArr[i]) );
+        if( isInt(idArr[i]) ) {
+            return idArr[i];
+        }
+    }
+
     //var bundleName = idArr[1];
     //var commentType = idArr[3];
-    var elementCount = idArr[4];
-    return elementCount;
+    //var elementCount = idArr[4];
+
+    return null;
+}
+
+//function isInt(n) {
+//    return Number(n)===n && n%1===0;
+//}
+function isInt(n) {
+    return n % 1 === 0;
 }
