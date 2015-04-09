@@ -40,6 +40,13 @@ class EmploymentStatusType extends AbstractType
             'attr' => array('class' => 'datepicker form-control')
         ));
 
+        $builder->add('employmentType',null,array(
+            'read_only' => $readonly,
+            'label'=>"Employee Type:",
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width')
+        ));
+
         $builder->add('terminationDate',null,array(
             'read_only' => $readonly,
             'label'=>"End of Employment Date:",

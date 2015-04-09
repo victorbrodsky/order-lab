@@ -64,6 +64,7 @@ class ListController extends Controller
      * @Route("/document-types/", name="documenttypes-list")
      * @Route("/medical-titles/", name="medicaltitles-list")
      * @Route("/medical-specialties/", name="medicalspecialties-list")
+     * @Route("/employment-types/", name="employmenttypes-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -199,6 +200,7 @@ class ListController extends Controller
      * @Route("/document-types/", name="documenttypes_create")
      * @Route("/medical-titles/", name="medicaltitles_create")
      * @Route("/medical-specialties/", name="medicalspecialties_create")
+     * @Route("/employment-types/", name="employmenttypes_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -324,6 +326,7 @@ class ListController extends Controller
      * @Route("/document-types/new", name="documenttypes_new")
      * @Route("/medical-titles/new", name="medicaltitles_new")
      * @Route("/medical-specialties/new", name="medicalspecialties_new")
+     * @Route("/employment-types/new", name="employmenttypes_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -420,6 +423,7 @@ class ListController extends Controller
      * @Route("/document-types/{id}", name="documenttypes_show")
      * @Route("/medical-titles/{id}", name="medicaltitles_show")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_show")
+     * @Route("/employment-types/{id}", name="employmenttypes_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -506,6 +510,7 @@ class ListController extends Controller
      * @Route("/document-types/{id}/edit", name="documenttypes_edit")
      * @Route("/medical-titles/{id}/edit", name="medicaltitles_edit")
      * @Route("/medical-specialties/{id}/edit", name="medicalspecialties_edit")
+     * @Route("/employment-types/{id}/edit", name="employmenttypes_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -624,6 +629,7 @@ class ListController extends Controller
      * @Route("/document-types/{id}", name="documenttypes_update")
      * @Route("/medical-titles/{id}", name="medicaltitles_update")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_update")
+     * @Route("/employment-types/{id}", name="employmenttypes_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -814,6 +820,10 @@ class ListController extends Controller
             case "boardcertifications":
                 $className = "BoardCertifiedSpecialties";
                 $displayName = "Pathology Board Certified Specialties";
+                break;
+            case "employmenttypes":
+                $className = "EmploymentType";
+                $displayName = "Employment Types";
                 break;
             case "employmentterminations":
                 $className = "EmploymentTerminationType";
@@ -1017,6 +1027,7 @@ class ListController extends Controller
      * @Route("/document-types/{id}", name="documenttypes_delete")
      * @Route("/medical-titles/{id}", name="medicaltitles_delete")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_delete")
+     * @Route("/employment-types/{id}", name="employmenttypes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

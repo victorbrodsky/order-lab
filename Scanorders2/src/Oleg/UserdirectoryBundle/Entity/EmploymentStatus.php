@@ -16,6 +16,13 @@ class EmploymentStatus extends BaseUserAttributes
      */
     private $hireDate;
 
+    //Employee Type
+    /**
+     * @ORM\ManyToOne(targetEntity="EmploymentType")
+     * @ORM\JoinColumn(name="employmentType_id", referencedColumnName="id", nullable=true)
+     **/
+    private $employmentType;
+
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -124,6 +131,22 @@ class EmploymentStatus extends BaseUserAttributes
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param mixed $employmentType
+     */
+    public function setEmploymentType($employmentType)
+    {
+        $this->employmentType = $employmentType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmploymentType()
+    {
+        return $this->employmentType;
     }
 
 

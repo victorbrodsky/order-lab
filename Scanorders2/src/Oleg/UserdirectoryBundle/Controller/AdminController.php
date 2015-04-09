@@ -7,6 +7,7 @@ use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
 use Oleg\UserdirectoryBundle\Entity\CompletionReasonList;
 use Oleg\UserdirectoryBundle\Entity\DocumentTypeList;
+use Oleg\UserdirectoryBundle\Entity\EmploymentType;
 use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use Oleg\UserdirectoryBundle\Entity\FellowshipTitleList;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
@@ -105,6 +106,7 @@ class AdminController extends Controller
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
 
         $count_roles = $this->generateRoles();
+        $count_employmentTypes = $this->generateEmploymentTypes();
         $count_terminationTypes = $this->generateTerminationTypes();
         $count_eventTypeList = $this->generateEventTypeList();
         $count_usernameTypeList = $userutil->generateUsernameTypes($this->getDoctrine()->getManager(),$user);
@@ -159,6 +161,7 @@ class AdminController extends Controller
             'Users='.$count_users.', '.
             'Test Users='.$count_testusers.', '.
             'Board Specialties='.$count_boardSpecialties.', '.
+            'Employment Types='.$count_employmentTypes.', '.
             'Employment Types of Termination='.$count_terminationTypes.', '.
             'Event Log Types='.$count_eventTypeList.', '.
             'Username Types='.$count_usernameTypeList.', '.
@@ -1202,6 +1205,40 @@ class AdminController extends Controller
         return round($count/10);
 
     }
+
+    public function generateEmploymentTypes() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Full Time',
+            'Part Time'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new EmploymentType();
+            $this->setDefaultList($entity,$count,$username,$value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
 
     public function generateTerminationTypes() {
 

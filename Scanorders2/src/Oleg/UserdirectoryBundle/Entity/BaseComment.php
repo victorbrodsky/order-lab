@@ -24,9 +24,15 @@ abstract class BaseComment extends BaseUserAttributes {
     private $comment;
 
     /**
+     * This field is required for orderby functionality
      * @ORM\ManyToOne(targetEntity="CommentTypeList", cascade={"persist"})
      **/
     private $commentType;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     **/
+    private $commentTypeStr;
 
     /**
      * @ORM\ManyToOne(targetEntity="CommentSubTypeList", cascade={"persist"})
@@ -34,9 +40,14 @@ abstract class BaseComment extends BaseUserAttributes {
     private $commentSubType;
 
 
+
+
+
     public function __construct($author=null) {
         parent::__construct($author);
     }
+
+
 
 
     /**
@@ -81,6 +92,12 @@ abstract class BaseComment extends BaseUserAttributes {
     public function setCommentType($commentType)
     {
         $this->commentType = $commentType;
+
+        //set commentTypeStr
+        if( $commentType && $commentType->getName()."" != "" ) {
+            $this->setCommentTypeStr($commentType->getName()."");
+        }
+
     }
     public function setCommentTypeList($commentType)
     {
@@ -94,6 +111,24 @@ abstract class BaseComment extends BaseUserAttributes {
     {
         return $this->commentType;
     }
+
+    /**
+     * @param mixed $commentTypeStr
+     */
+    public function setCommentTypeStr($commentTypeStr)
+    {
+        $this->commentTypeStr = $commentTypeStr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCommentTypeStr()
+    {
+        return $this->commentTypeStr;
+    }
+
+
 
 
     /**
