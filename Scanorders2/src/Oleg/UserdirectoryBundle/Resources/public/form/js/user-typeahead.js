@@ -3,7 +3,7 @@
  */
 
 
-function initTypeaheadUserSiteSerach() {
+function initTypeaheadUserSiteSearch() {
 
     if( $('#multiple-datasets-typeahead-search').length == 0 ) {
         return;
@@ -158,17 +158,36 @@ function initTypeaheadUserSiteSerach() {
     });
 
 
-    $('#user-typeahead-serach-form input').keydown(function(event){
+    $('#user-typeahead-search-form input').keydown(function(event){
         if(event.keyCode == 13) {
             event.preventDefault();
             if( $(this).val() != "" ) {
                 console.log('enter pressed => submit form');
-                $('#user-typeahead-serach-form').submit();
+                $('#user-typeahead-search-form').submit();
             }
         }
     });
 
 }
+
+
+
+
+
+function initTypeaheadOrderSiteSearch() {
+    if( $('#multiple-datasets-typeahead-ordersearch').length == 0 ) {
+        return;
+    }
+
+
+
+}
+
+
+
+
+
+
 
 function duplicationDetector(remoteMatch, localMatch) {
     //console.log('dup check');

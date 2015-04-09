@@ -6,6 +6,52 @@
 {% endblock %}
 
 
+
+
+{% block content %}
+
+    <div style="margin-top:25px;">
+
+        {#<form class="navbar-form" role="search" id="user-typeahead-ordersearch-form" action="{{ path(scan_sitename~'_home') }}" method="get">#}
+            {#<div class="form-group">#}
+                {#<div id="multiple-datasets-typeahead-ordersearch">#}
+                    {#<input#}
+                            {#type="text"#}
+                            {#class="typeahead submit-on-enter-field"#}
+                            {#name="search" value="{{ search }}"#}
+                            {#placeholder="Search for a name, service, division, etc"#}
+                            {#>#}
+                {#</div>#}
+            {#</div>#}
+            {#<button type="submit" class="btn btn-lg" style="height: 50px">Search</button>#}
+            {#&#123;&#35;<button class="btn btn-lg" type="submit" style="height: 50px">Search</button>&#35;&#125;#}
+        {#</form>#}
+
+        <br>
+
+
+        {#display search result for patients #}
+        {% set patientShowed = false %}
+        {% if (entities and entities|length > 0) or (sameusers is defined and sameusers) %}
+            {% include 'OlegOrderformBundle::Admin/patients-content.html.twig' with {'sitename': scan_sitename} %}
+            {% set patientShowed = true %}
+        {% endif %}
+
+        {#display No results are found #}
+        {% if search and (not patientShowed) %}
+            <br><br>
+            <h5 class="text-info">No results found.</h5>
+        {% endif %}
+
+
+    </div>
+
+
+
+{% endblock %}
+
+
+
 {% block contentleft %}
 
     {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}

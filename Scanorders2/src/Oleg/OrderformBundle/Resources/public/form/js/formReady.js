@@ -88,6 +88,8 @@ $(document).ready(function() {
 
     initDatetimepicker();
 
+    //initTypeaheadOrderSiteSearch();
+
 });
 
 

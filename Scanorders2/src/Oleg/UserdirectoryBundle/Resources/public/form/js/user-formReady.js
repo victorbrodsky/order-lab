@@ -60,7 +60,7 @@ $(document).ready(function() {
 
     researchLabListener();
 
-    initTypeaheadUserSiteSerach();
+    initTypeaheadUserSiteSearch();
 
     degreeListener();
 

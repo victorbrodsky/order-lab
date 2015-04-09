@@ -134,7 +134,7 @@
                         {% if search is not defined %}
                             {% set search = "" %}
                         {% endif %}
-                        <form class="navbar-form navbar-left" role="search" id="user-typeahead-serach-form" name="usertypeaheadserachform" action="{{ path(employees_sitename~'_home') }}" method="get">
+                        <form class="navbar-form navbar-left" role="search" id="user-typeahead-search-form" name="usertypeaheadsearchform" action="{{ path(employees_sitename~'_home') }}" method="get">
                             <div class="form-group">
                                 <div id="multiple-datasets-typeahead-search">
 
@@ -156,7 +156,7 @@
                                             {#placeholder="Search"#}
                                             {#style="font-size: 14px !important;"#}
                                         {#/>#}
-                                        {#<span class="input-group-addon btn btn-default btn-xs" onclick="document.usertypeaheadserachform.submit();">#}
+                                        {#<span class="input-group-addon btn btn-default btn-xs" onclick="document.usertypeaheadsearchform.submit();">#}
                                             {#<i class="glyphicon glyphicon-search"></i>#}
                                         {#</span>#}
                                     {#</div>#}
@@ -170,7 +170,7 @@
                                                         placeholder="Search"
                                                         style="font-size: 14px !important;"
                                                         aria-describedby="inputSuccess2Status">
-                                                <span class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeaheadserachform.submit();" aria-hidden="true"></span>
+                                                <span class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeaheadsearchform.submit();" aria-hidden="true"></span>
                                                 <span id="inputSuccess2Status" class="sr-only">(success)</span>
                                             </div>
 

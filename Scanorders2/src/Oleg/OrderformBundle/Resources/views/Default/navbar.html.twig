@@ -76,6 +76,56 @@
 
             <ul class="nav navbar-nav navbar-right">
 
+                {#Search in navbar#}
+                {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
+
+                        <li id="nav-bar-ordersearch">
+                            {#Search for a name, service, division, etc#}
+                            {% if search is not defined %}
+                                {% set search = "" %}
+                            {% endif %}
+                            <form class="navbar-form navbar-left" role="search" id="user-typeahead-ordersearch-form" name="usertypeahead-ordersearch-form" action="{{ path(scan_sitename~'_home') }}" method="get">
+                                <div class="form-group">
+
+                                    {#<div id="multiple-datasets-typeahead-ordersearch">#}
+                                        {#&#123;&#35;version 3: input field has inside button&#35;&#125;#}
+                                        {#<div class="form-group has-feedback">#}
+                                            {#<input#}
+                                                    {#type="text"#}
+                                                    {#class="typeahead submit-on-enter-field form-control"#}
+                                                    {#name="search" value="{{ search }}"#}
+                                                    {#placeholder="Search"#}
+                                                    {#style="font-size: 14px !important;"#}
+                                                    {#aria-describedby="inputSuccess2Status">#}
+                                            {#<span class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeahead-ordersearch-form.submit();" aria-hidden="true"></span>#}
+                                            {#<span id="inputSuccess2Status" class="sr-only">(success)</span>#}
+                                        {#</div>#}
+                                    {#</div>#}
+
+                                    <div class="input-group">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a onchange="document.usertypeahead-ordersearch-form.submit();" href="#">MRN</a></li>
+                                                <li><a href="#">Patient Name</a></li>
+                                                <li><a href="#">Accession Number</a></li>
+                                                {#<li class="divider"></li>#}
+                                                <li><a href="#">Organ Source for Part</a></li>
+                                                <li><a href="#">Neoplastic Tumor Source</a></li>
+                                                <li><a href="#">Part Type</a></li>
+                                                <li><a href="#">Procedure Type</a></li>
+                                                <li><a href="#">Slide Diagnosis Summary</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+                                        <input type="text" class="form-control" aria-label="...">
+                                    </div><!-- /input-group -->
+
+                                </div>
+                            </form>
+                        </li>
+
+                {% endif %}
+
                 {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
 
                     {#admincomments - comments addressed to this processor only#}

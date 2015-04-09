@@ -62,11 +62,26 @@ class ScanOrderController extends Controller {
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
+        /////////////////// search patient ///////////////////
+        $pagination = null;
+        $search = trim( $request->get('search') );
+        $patientid = trim( $request->get('patientid') );
+        if( $search != "" || $patientid != "" ) {
+
+            //user search
+            $params = array('search'=>$search,'patientid'=>$patientid);
+            //$res = $this->indexUser($params);
+            $pagination = array();
+        }
+        /////////////////// EOF search patient ///////////////////
+
         return array(
             'unprocessed' => $unprocessed,
             'sliderequests' => $sliderequests,
             'accountreqs' => count($accountreqs),
-            'accessreqs' => count($accessreqs)
+            'accessreqs' => count($accessreqs),
+            'search' => $search,
+            'entities' => $pagination,
         );
     }
 
