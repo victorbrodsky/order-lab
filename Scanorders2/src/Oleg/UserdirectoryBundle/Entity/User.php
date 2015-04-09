@@ -127,25 +127,25 @@ class User extends BaseUser {
 
     /**
      * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "ASC", "orderinlist" = "ASC"})
+     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
     private $privateComments;
 
     /**
      * @ORM\OneToMany(targetEntity="PublicComment", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"commentTypeStr" = "ASC","updatedate" = "ASC"})
+     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
     private $publicComments;
 
     /**
      * @ORM\OneToMany(targetEntity="ConfidentialComment", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "ASC", "orderinlist" = "ASC"})
+     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
     private $confidentialComments;
 
     /**
      * @ORM\OneToMany(targetEntity="AdminComment", mappedBy="user", cascade={"persist"})
-     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "ASC", "orderinlist" = "ASC"})
+     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
     private $adminComments;
 
