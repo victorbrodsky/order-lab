@@ -323,87 +323,98 @@
         {% set wellclass = "" %}
     {% endif %}
 
-    <div class="alert {{ classname }} {{ wellclass }}">
-
-        {% if cycle != 'show_user' and not isEntity %}
-            <div class="text-right" style="padding-bottom: 10px">
-                <button type="button" class="btn btn-default btn-sm"
-                        onClick="removeExistingObject(this,'{{ classname }}')" >
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
-            </div>
+    {% set showThis = false %}
+    {% if isEntity %}
+        {% if formfieldValue.publiclyVisible == true %}
+            {% set showThis = true %}
         {% endif %}
+    {% else %}
+        {% set showThis = true %}
+    {% endif %}
 
-        {% if cycle != 'show_user' %}
-            {{ formmacros.field(formfield.publiclyVisible) }}
-        {% endif %}
+    {% if showThis %}
+        <div class="alert {{ classname }} {{ wellclass }}">
 
-        {{ usermacros.statusVerifiedField(formfield,cycle,isEntity) }}
-
-        {% if isEntity %}
-            {{ formmacros.simplefield( "Identifier Type:", formfieldValue.keytype, "", "disabled" ) }}
-        {% else %}
-            {{ formmacros.field(formfield.keytype) }}
-        {% endif %}
-
-        {% if formfield.keytypemrn is defined %}
-            {#{% set displayNone = "display:none;" %}#}
-            {#{% set hideClass = "hideComplex" %}#}
-            {% if formfieldValue and formfieldValue.keytypemrn and formfieldValue.keytypemrn.id %}
-                {% set displayNone = "" %}
-                {#{% set hideClass = "" %}#}
-            {% else %}
-                <p></p>
-                {% set displayNone = "display:none;" %}
+            {% if cycle != 'show_user' and not isEntity %}
+                <div class="text-right" style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-default btn-sm"
+                            onClick="removeExistingObject(this,'{{ classname }}')" >
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
             {% endif %}
 
-            <div class="identifier-keytypemrn-field-holder" style="{{ displayNone }}">
-                {% if isEntity %}
-                    {{ formmacros.simplefield( "MRN Type:", formfieldValue.keytype, "", "disabled" ) }}
-                {% else %}
-                    {{ formmacros.field(formfield.keytypemrn) }}
-                {% endif %}
-            </div>
-        {% endif %}
-
-        {% if cycle == 'show_user' %}
-
-            {% if (isEntity or formfield.link is defined) and (formfieldValue and formfieldValue.link != '') %}
-
-                {% if "http" in formfieldValue.link %}
-                    {% set href = formfieldValue.link %}
-                {% else %}
-                    {% set href = "http://"~formfieldValue.link %}
-                {% endif %}
-
-                {% if isEntity %}
-                    {% set hreflink = '<a href="'~href|raw~'">'~formfield.field~'</a>' %}
-                {% else %}
-                    {% set hreflink = '<a href="'~href|raw~'">'~formfield.field.vars.value~'</a>' %}
-                {% endif %}
-
-                {{ formmacros.simplefield( "Identifier:", hreflink, "", "disabled" ) }}
-
-            {% else %}
-
-                {#identifier number field#}
-                {% if isEntity %}
-                    {{ formmacros.simplefield( "Identifier:", formfieldValue.field, "", "disabled" ) }}
-                 {% else %}
-                    {{ formmacros.field(formfield.field) }}
-                {% endif %}
-
+            {% if not isEntity and formfield.publiclyVisible is defined %}
+                {{ formmacros.field(formfield.publiclyVisible) }}
             {% endif %}
 
-        {% else %}
-            {{ formmacros.field(formfield.field) }}
-        {% endif %}
+            {{ usermacros.statusVerifiedField(formfield,cycle,isEntity) }}
 
-        {% if formfield.link is defined and cycle != 'show_user' %}
-            {{ formmacros.field(formfield.link) }}
-        {% endif %}
+            {% if isEntity %}
+                {{ formmacros.simplefield( "Identifier Type:", formfieldValue.keytype, "", "disabled" ) }}
+            {% else %}
+                {{ formmacros.field(formfield.keytype) }}
+            {% endif %}
 
-    </div>
+            {% if formfield.keytypemrn is defined %}
+                {#{% set displayNone = "display:none;" %}#}
+                {#{% set hideClass = "hideComplex" %}#}
+                {% if formfieldValue and formfieldValue.keytypemrn and formfieldValue.keytypemrn.id %}
+                    {% set displayNone = "" %}
+                    {#{% set hideClass = "" %}#}
+                {% else %}
+                    <p></p>
+                    {% set displayNone = "display:none;" %}
+                {% endif %}
+
+                <div class="identifier-keytypemrn-field-holder" style="{{ displayNone }}">
+                    {% if isEntity %}
+                        {{ formmacros.simplefield( "MRN Type:", formfieldValue.keytype, "", "disabled" ) }}
+                    {% else %}
+                        {{ formmacros.field(formfield.keytypemrn) }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if cycle == 'show_user' %}
+
+                {% if (isEntity or formfield.link is defined) and (formfieldValue and formfieldValue.link != '') %}
+
+                    {% if "http" in formfieldValue.link %}
+                        {% set href = formfieldValue.link %}
+                    {% else %}
+                        {% set href = "http://"~formfieldValue.link %}
+                    {% endif %}
+
+                    {% if isEntity %}
+                        {% set hreflink = '<a href="'~href|raw~'">'~formfield.field~'</a>' %}
+                    {% else %}
+                        {% set hreflink = '<a href="'~href|raw~'">'~formfield.field.vars.value~'</a>' %}
+                    {% endif %}
+
+                    {{ formmacros.simplefield( "Identifier:", hreflink, "", "disabled" ) }}
+
+                {% else %}
+
+                    {#identifier number field#}
+                    {% if isEntity %}
+                        {{ formmacros.simplefield( "Identifier:", formfieldValue.field, "", "disabled" ) }}
+                     {% else %}
+                        {{ formmacros.field(formfield.field) }}
+                    {% endif %}
+
+                {% endif %}
+
+            {% else %}
+                {{ formmacros.field(formfield.field) }}
+            {% endif %}
+
+            {% if formfield.link is defined and cycle != 'show_user' %}
+                {{ formmacros.field(formfield.link) }}
+            {% endif %}
+
+        </div>
+    {% endif %}
 
     {% if not isEntity %}
         {% do field.setRendered %}
