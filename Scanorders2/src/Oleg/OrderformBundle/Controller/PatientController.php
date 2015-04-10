@@ -67,11 +67,17 @@ class PatientController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        //found 19
+        //$em = $this->getDoctrine()->getManager();
+        //$entities = $em->getRepository('OlegOrderformBundle:Patient')->findAll();
 
-        $entities = $em->getRepository('OlegOrderformBundle:Patient')->findAll();
+        $searchUtil = $this->get('search_utility');
+        $object = 'patient';
+        $params = array('request'=>$request,'object'=>$object);
+        $res = $searchUtil->searchAction($params);
+        $entities = $res[$object];
 
         return array(
             'entities' => $entities,

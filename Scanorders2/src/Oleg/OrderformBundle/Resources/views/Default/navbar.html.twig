@@ -1,5 +1,16 @@
 {#   navigation menu   #}
 
+{% import _self as navbarmacros %}
+
+{% macro searchBoxContent( searchtype ) %}
+    <li>
+        <a
+            {#href="{{ path(scan_sitename~'_home',{'searchtype':searchtype}) }}">{{ searchtype }}#}
+            href="#" onclick="setSearchtypeAction('{{searchtype}}');return false;">{{searchtype}}
+        </a>
+    </li>
+{% endmacro %}
+
 {% block navbar %}
 
     {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
@@ -84,7 +95,11 @@
                             {% if search is not defined %}
                                 {% set search = "" %}
                             {% endif %}
-                            <form class="navbar-form navbar-left" role="search" id="user-typeahead-ordersearch-form" name="usertypeahead-ordersearch-form" action="{{ path(scan_sitename~'_home') }}" method="get">
+                            {% if searchtype is not defined %}
+                                {% set searchtype = "" %}
+                            {% endif %}
+                            <form class="navbar-form navbar-left" role="search" id="ordersearchform" name="ordersearchform" action="{{ path(scan_sitename~'_search_patients') }}" method="get">
+                                {#<input type="hidden" id="ordersearchform-searchtype" name="searchtype" value="{{ searchtype }}">#}
                                 <div class="form-group">
 
                                     {#<div id="multiple-datasets-typeahead-ordersearch">#}
@@ -106,18 +121,17 @@
                                         <div class="input-group-btn">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a onchange="document.usertypeahead-ordersearch-form.submit();" href="#">MRN</a></li>
-                                                <li><a href="#">Patient Name</a></li>
-                                                <li><a href="#">Accession Number</a></li>
+                                                {{ navbarmacros.searchBoxContent('MRN') }}
+                                                {{ navbarmacros.searchBoxContent('Patient Name') }}
+                                                {#{{ navbarmacros.searchBoxContent('Accession Number') }}#}
+                                                {#{{ navbarmacros.searchBoxContent('Organ Source for Part') }}#}
+                                                {#{{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}#}
+                                                {#{{ navbarmacros.searchBoxContent('Part Type') }}#}
+                                                {#{{ navbarmacros.searchBoxContent('Procedure Type') }}#}
                                                 {#<li class="divider"></li>#}
-                                                <li><a href="#">Organ Source for Part</a></li>
-                                                <li><a href="#">Neoplastic Tumor Source</a></li>
-                                                <li><a href="#">Part Type</a></li>
-                                                <li><a href="#">Procedure Type</a></li>
-                                                <li><a href="#">Slide Diagnosis Summary</a></li>
                                             </ul>
                                         </div><!-- /btn-group -->
-                                        <input type="text" class="form-control" aria-label="...">
+                                        <input type="text" id="ordersearchform-search" class="form-control" aria-label="..." name="search" value="{{ search }}" placeholder="Search">
                                     </div><!-- /input-group -->
 
                                 </div>

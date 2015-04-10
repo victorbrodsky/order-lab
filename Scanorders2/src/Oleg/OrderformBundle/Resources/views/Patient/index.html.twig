@@ -1,5 +1,9 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
+{% if search is not defined %}
+    {% set search = "" %}
+{% endif %}
+
 {% block title %}
     List of Patients
 {% endblock %}
@@ -8,71 +12,89 @@
 
     <h3>List of Patients</h3>
 
-    <table class="table table-hover table-condensed text-left">
-    {#<table class="records_list">#}
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>MRN</th>
-                <th>Accession(s)</th>
-                <th>Name</th>
-                <th>DOB</th>
-                <th>Calculated Age</th>
-                <th>Sex</th>
-                {#<th>Date</th>#}
-                {#<th>Actions</th>#}
-            </tr>
-        </thead>
-        <tbody class="rowlink" data-link="row">
-        {% for entity in entities %}
-            <tr>
+    <br>
 
-                <td><a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+    {% if search and entities|length == 0 %}
 
-                <td>
-                    {#{% for mrn in entity.mrn %}#}
-                        {#{{ mrn }} (status={{ mrn.status }})<br>#}
-                    {#{% endfor %}#}
-                    {{ entity.obtainValidField('mrn') }}
-                </td>
+        <br><br>
+        <h5 class="text-info">No results found.</h5>
 
-                <td>
-                    {% for encounter in entity.encounter %}
-                        {% for procedure in encounter.procedure %}
-                            {% for accession in procedure.accession %}
-                                {{ accession.obtainValidField('accession') }}<br>
+    {% else %}
+
+        <table class="table table-hover table-condensed text-left">
+        {#<table class="records_list">#}
+            <thead>
+                <tr>
+                    {#<th>{{ knp_pagination_sortable(entities, 'ID', 'patient.id') }}</th>#}
+                    {#<th>{{ knp_pagination_sortable(entities, 'MRN', 'mrn.field') }}</th>#}
+                    {#<th>{{ knp_pagination_sortable(entities, 'Accession(s)', 'accession.field') }}</th>#}
+                    <th>ID</th>
+                    <th>MRN</th>
+                    <th>Accession(s)</th>
+                    <th>Name</th>
+                    <th>DOB</th>
+                    <th>Calculated Age</th>
+                    <th>Sex</th>
+                    {#<th>Date</th>#}
+                    {#<th>Actions</th>#}
+                </tr>
+            </thead>
+            <tbody class="rowlink" data-link="row">
+            {% for entity in entities %}
+                <tr>
+
+                    <td><a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+
+                    <td>
+                        {#{% for mrn in entity.mrn %}#}
+                            {#{{ mrn }} (status={{ mrn.status }})<br>#}
+                        {#{% endfor %}#}
+                        {{ entity.obtainValidField('mrn') }}
+                    </td>
+
+                    <td>
+                        {% for encounter in entity.encounter %}
+                            {% for procedure in encounter.procedure %}
+                                {% for accession in procedure.accession %}
+                                    {{ accession.obtainValidField('accession') }}<br>
+                                {% endfor %}
                             {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </td>
+                    </td>
 
-                <td>
-                    {{ entity.getFullPatientName|raw }}
-                </td>
+                    <td>
+                        {{ entity.getFullPatientName|raw }}
+                    </td>
 
-                <td>
-                    {{ entity.obtainValidField('dob') }}
-                </td>
+                    <td>
+                        {{ entity.obtainValidField('dob') }}
+                    </td>
 
-                <td>
-                    {{ entity.calculateAge }}
-                </td>
+                    <td>
+                        {{ entity.calculateAge }}
+                    </td>
 
-                <td>
-                    {{ entity.obtainValidField('sex') }}
-                </td>
+                    <td>
+                        {{ entity.obtainValidField('sex') }}
+                    </td>
 
-                {#<td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>#}
+                    {#<td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>#}
 
-                {#<td class="rowlink-skip">             #}
-                    {#<a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">show</a>                  #}
-                    {#<a href="{{ path('scan-patient-edit', { 'id': entity.id }) }}">edit</a>                 #}
-                {#</td>#}
+                    {#<td class="rowlink-skip">             #}
+                        {#<a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">show</a>                  #}
+                        {#<a href="{{ path('scan-patient-edit', { 'id': entity.id }) }}">edit</a>                 #}
+                    {#</td>#}
 
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(entities) }}
+        </div>
+
+    {% endif %}
 
     <br>
     <a href="{{ path('scan-patient-new') }}">Patient Data Structure</a>
