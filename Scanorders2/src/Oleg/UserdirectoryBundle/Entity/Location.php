@@ -733,26 +733,14 @@ class Location extends ListAbstract //extends BaseLocation
     public function getLocationFullName($html=false) {
 
         $name = "";
-        $locnameArr = array();
 
-        if( $html ) {
-            $name = $name . "<strong>" . $this->name . "</strong>";
-        } else {
-            $name = $name . $this->name;
-        }
+//        if( $html ) {
+//            $name = $name . "<strong>" . $this->name . "</strong>";
+//        } else {
+//            $name = $name . $this->name;
+//        }
 
-        // If the location type = "Employee Desk", add " (Desk)" after the location name
-        foreach( $this->getLocationTypes() as $loctype ) {
-            if( $loctype->getName()."" == "Employee Desk" ) {
-                $locnameArr[] = "Desk";
-            }
-            if( $loctype->getName()."" == "Employee Cubicle" ) {
-                $locnameArr[] = "Cubicle";
-            }
-        }
-        if( count($locnameArr) > 0 ) {
-            $name = $name . " (" . implode(",",$locnameArr) . ")";
-        }
+        $name = $this->getLocationTypesStr($html);
 
         $detailsArr = array();
 
@@ -793,6 +781,32 @@ class Location extends ListAbstract //extends BaseLocation
             }
         }
         return false;
+    }
+
+    public function getLocationTypesStr($html=false) {
+        $locnameArr = array();
+
+        if( $html ) {
+            $name = "<strong>" . $this->name . "</strong>";
+        } else {
+            $name = $this->name;
+        }
+
+        // If the location type = "Employee Desk", add " (Desk)" after the location name
+        foreach( $this->getLocationTypes() as $loctype ) {
+            if( $loctype->getName()."" == "Employee Desk" ) {
+                $locnameArr[] = "Desk";
+            }
+            if( $loctype->getName()."" == "Employee Cubicle" ) {
+                $locnameArr[] = "Cubicle";
+            }
+        }
+
+        if( count($locnameArr) > 0 ) {
+            $name = $name . " (" . implode(",",$locnameArr) . ")";
+        }
+
+        return $name;
     }
 
 

@@ -715,7 +715,7 @@
                     {% set headInfo = user.getHeadInfo %}
                     {% if headInfo %}
                         <h4>
-                            {{ headInfo }}
+                            {{ headInfo|raw }}
                         </h4>
                     {% endif %}
 
@@ -751,12 +751,33 @@
             <div class="right">
                 <div class="right-text">
 
+                    {#preffered phone and email#}
+                    {% if user.getEmail or user.getPreferredPhone %}
+                        <h4>Preferred Contact Info:</h4>
+                        <table>
+                            {% if user.getEmail %}
+                                <tr class="row-withspace">
+                                    <td class="left-column">email:</td>
+                                    <td>{{ user.getEmail }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if user.getPreferredPhone %}
+                                <tr>
+                                    <td class="left-column">ph:</td>
+                                    <td>{{ user.getPreferredPhone }}</td>
+                                </tr>
+                            {% endif %}
+                        </table>
+                        <br>
+                    {% endif %}
+
+
                     {% for location in user.getLocations %}
 
                         {% if location.hasLocationTypeName("Employee Home") == false %}
 
                             <div class="contact">
-                                <h4>{{ location.getLocationFullName }}:</h4>
+                                <h4>{{ location.getLocationTypesStr }}:</h4>
                                 <table>
                                     {% if location.room %}
                                         <tr>
@@ -1517,7 +1538,7 @@
             <div class="panel-heading">
                 <h4 class="panel-title text-left">
                     <a data-toggle="collapse" href="#Trainings">
-                        Education(s)
+                        Education
                     </a>
                 </h4>
             </div>

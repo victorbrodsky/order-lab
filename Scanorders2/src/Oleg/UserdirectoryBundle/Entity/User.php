@@ -1352,33 +1352,47 @@ class User extends BaseUser {
 
         $headInfo = array();
 
-        $institutions = $this->getInstitutions("AdministrativeTitle");
-        foreach( $institutions as $institution ) {
-            if( $institution->getHeads()->contains($this) ) {
-                $headInfo[] = "Head of " . $institution->getName();
-            }
+        //get all titles
+        foreach( $this->getAdministrativeTitles() as $title ) {
+            if( $title->getName() )
+                $headInfo[] = $title->getName()->getName()."";
+        }
+        foreach( $this->getAppointmentTitles() as $title ) {
+            if( $title->getName() )
+                $headInfo[] = $title->getName()->getName()."";
+        }
+        foreach( $this->getMedicalTitles() as $title ) {
+            if( $title->getName() )
+                $headInfo[] = $title->getName()->getName()."";
         }
 
-        $departments = $this->getDepartments(true,"AdministrativeTitle");
-        foreach( $departments as $department ) {
-            if( $department->getHeads()->contains($this) ) {
-                $headInfo[] = "Head of " . $department->getName();
-            }
-        }
-
-        $divisions = $this->getDivisions(true,false,"AdministrativeTitle");
-        foreach( $divisions as $division ) {
-            if( $division->getHeads()->contains($this) ) {
-                $headInfo[] = "Head of " . $division->getName();
-            }
-        }
-
-        $services = $this->getServices("AdministrativeTitle");
-        foreach( $services as $service ) {
-            if( $service->getHeads()->contains($this) ) {
-                $headInfo[] = "Head of " . $service->getName();
-            }
-        }
+//        $institutions = $this->getInstitutions("AdministrativeTitle");
+//        foreach( $institutions as $institution ) {
+//            if( $institution->getHeads()->contains($this) ) {
+//                $headInfo[] = "Head of " . $institution->getName();
+//            }
+//        }
+//
+//        $departments = $this->getDepartments(true,"AdministrativeTitle");
+//        foreach( $departments as $department ) {
+//            if( $department->getHeads()->contains($this) ) {
+//                $headInfo[] = "Head of " . $department->getName();
+//            }
+//        }
+//
+//        $divisions = $this->getDivisions(true,false,"AdministrativeTitle");
+//        foreach( $divisions as $division ) {
+//            if( $division->getHeads()->contains($this) ) {
+//                $headInfo[] = "Head of " . $division->getName();
+//            }
+//        }
+//
+//        $services = $this->getServices("AdministrativeTitle");
+//        foreach( $services as $service ) {
+//            if( $service->getHeads()->contains($this) ) {
+//                $headInfo[] = "Head of " . $service->getName();
+//            }
+//        }
 
         //echo "headInfo=".implode(", ",$headInfo)."<br>";
 

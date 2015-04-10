@@ -1,4 +1,5 @@
 
+
 .snapshot-all {
     width: 80%;
     min-width: 800px;
@@ -113,7 +114,7 @@
 	font-size: .8em;
 	color: #4F4F4F;
 	padding-right: .25em;
-    padding-left: 1em
+    padding-left: 1em;
 }
 
 
@@ -129,8 +130,19 @@
 	margin: 0;
     font-variant: small-caps;
     font-weight: bold; 
-    font-size: 1.15em;    
+    font-size: 1.15em;
+    padding-bottom: 3px; /*added by oleg css*/
 }
+
+/*oleg css*/
+.snapshot td {
+  padding-top: 3px;
+}
+
+/*tr.row-withspace  td {*/
+    /*padding-bottom: 5px;*/
+/*}*/
+
 
 .snapshot-all .clearfix:before .clearfix:after {
     /*removed by oleg*/

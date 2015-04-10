@@ -65,7 +65,7 @@ class SearchUtil {
                 $criteriastr = $this->getSearchStr('mrn.field',$search,$exactmatch);
                 break;
             case 'Patient Name':
-                echo "searchtype=".$searchtype."<br>";
+                //echo "searchtype=".$searchtype."<br>";
                 $dql->leftJoin("patient.lastname", "lastname");
                 $dql->leftJoin("patient.firstname", "firstname");
                 $dql->leftJoin("patient.middlename", "middlename");
