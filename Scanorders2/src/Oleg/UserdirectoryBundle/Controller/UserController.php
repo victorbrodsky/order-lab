@@ -1057,7 +1057,7 @@ class UserController extends Controller
             $inputCriteriastr = $criteriastr;
         }
 
-        echo "inputCriteriastr=".$inputCriteriastr."<br>";
+        //echo "inputCriteriastr=".$inputCriteriastr."<br>";
         //exit();
 
         return $inputCriteriastr;

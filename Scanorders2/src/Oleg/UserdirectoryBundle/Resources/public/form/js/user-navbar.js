@@ -27,7 +27,9 @@ function ordersearchNavbarBoxInit() {
 
 
     //set listener for searchComboboxElement onchange
-    //searchComboboxElement.onChange()
+    searchComboboxElement.on("change", function(e) {
+
+    });
 
 }
 
@@ -37,7 +39,7 @@ function setSearchtypeAction(key) {
 
     console.log('searchtype='+key);
 
-    if( key == 'undefined') {
+    if( typeof key === 'undefined' || key == "" ) {
         //return false;
         key = 'MRN';
     }
@@ -62,7 +64,7 @@ function setSearchtypeAction(key) {
 
 function setNavBar(sitename) {
 
-    console.log('sitename='+sitename);
+    //console.log('sitename='+sitename);
 
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
