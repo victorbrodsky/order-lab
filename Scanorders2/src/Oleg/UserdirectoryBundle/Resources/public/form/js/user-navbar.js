@@ -9,6 +9,11 @@ function setSearchtypeAction(key) {
 
     console.log('searchtype='+key);
 
+    if( key == 'undefined') {
+        //return false;
+        key = 'MRN';
+    }
+
     $('#ordersearchform-searchtype').val(key);
 
     var searchValue = $('#ordersearchform-search').val();

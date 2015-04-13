@@ -123,7 +123,7 @@
                                             <ul class="dropdown-menu" role="menu">
                                                 {{ navbarmacros.searchBoxContent('MRN') }}
                                                 {{ navbarmacros.searchBoxContent('Patient Name') }}
-                                                {#{{ navbarmacros.searchBoxContent('Accession Number') }}#}
+                                                {{ navbarmacros.searchBoxContent('Accession Number') }}
                                                 {#{{ navbarmacros.searchBoxContent('Organ Source for Part') }}#}
                                                 {#{{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}#}
                                                 {#{{ navbarmacros.searchBoxContent('Part Type') }}#}
@@ -133,7 +133,7 @@
                                         </div><!-- /btn-group -->
                                         <div class="form-group has-feedback">
                                             <input type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">
-                                            <span class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction('MRN');" aria-hidden="true"></span>
                                         </div>
                                     </div><!-- /input-group -->
 
