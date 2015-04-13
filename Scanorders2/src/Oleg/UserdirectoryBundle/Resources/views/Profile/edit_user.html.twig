@@ -728,19 +728,23 @@
                                 {#Anatomic Pathology<br>#}
                                 {#Department of Pathology and Laboratory Medicine<br>#}
                                 {#Weill Cornell Medical College#}
-                                {{ service.name }}<br>
+                                {#{{ service.name }}<br>#}
+                                <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.__toString() }) }}">{{ service }}</a></p>
                             {% endfor %}
                             {#divisions#}
                             {% for division in user.getDivisions %}
-                                {{ division.name }}<br>
+                                {#{{ division.name }}<br>#}
+                                <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'division','id': division.id, 'name': division.__toString() }) }}">{{ division }}</a></p>
                             {% endfor %}
                             {#departments#}
                             {% for department in user.getDepartments %}
-                                {{ department.name }}<br>
+                                {#{{ department.name }}<br>#}
+                                <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'department','id': department.id, 'name': department.__toString() }) }}">{{ department }}</a></p>
                             {% endfor %}
                             {#institutions#}
                             {% for institution in user.getInstitutions %}
-                                {{ institution.name }}
+                                {#{{ institution.name }}#}
+                                <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a></p>
                             {% endfor %}
                         </p>
                     </div>
@@ -758,13 +762,19 @@
                             {% if user.getEmail %}
                                 <tr class="row-withspace">
                                     <td class="left-column">email:</td>
-                                    <td>{{ user.getEmail }}</td>
+                                    <td>
+                                        {#{{ user.getEmail }}#}
+                                        <a href="mailto:{{ user.getEmail }}" target="_top">{{ user.getEmail }}</a>
+                                    </td>
                                 </tr>
                             {% endif %}
                             {% if user.getPreferredPhone %}
                                 <tr>
                                     <td class="left-column">ph:</td>
-                                    <td>{{ user.getPreferredPhone }}</td>
+                                    <td>
+                                        {#{{ user.getPreferredPhone }}#}
+                                        {{ usermacros.phoneHref(user.getPreferredPhone) }}
+                                    </td>
                                 </tr>
                             {% endif %}
                         </table>
@@ -782,7 +792,10 @@
                                     {% if location.room %}
                                         <tr>
                                             <td class="left-column">room:</td>
-                                            <td>{{ location.room }}</td>
+                                            <td>
+                                                {#{{ location.room }}#}
+                                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': location.room.id, 'name': location.room.name }) }}">{{ location.room }}</a>
+                                            </td>
                                         </tr>
                                     {% endif %}
 
