@@ -6,7 +6,7 @@
 function ordersearchNavbarBoxInit() {
 
     //init select2 combobox
-    var searchComboboxElement = $('.ordersearch-searchtype-combobox');
+    var searchComboboxElement = $('#ordersearch-searchtype-combobox');
     var combobox_width = '100%'; //'element'
     searchComboboxElement.select2({
         width: combobox_width,
@@ -21,31 +21,48 @@ function ordersearchNavbarBoxInit() {
     });
 
     //change height of the select2 input field
-    var holder = searchComboboxElement.closest('.ordersearch-fields-group');
+    var holder = $('#ordersearch-fields-group');
     holder.find('.select2-choice').css({ "height": "34px", "border-top-right-radius": "0", "border-bottom-right-radius": "0", "padding-top": "3px" });
     holder.find('.select2-arrow').css({ "border-radius": "0" });
 
+    //set searchtype
+    var searchtypeValue = $('#ordersearchform-searchtype').val();
+    if( searchtypeValue && searchtypeValue != "" ) {
+        searchComboboxElement.select2('val',searchtypeValue);
+    }
 
     //set listener for searchComboboxElement onchange
     searchComboboxElement.on("change", function(e) {
+        //var searchTypeValue = $(this).select2('val');
+        //console.log("change searchTypeValue="+searchTypeValue);
+        setSearchtypeAction();
+    });
 
+    //listen on enter
+    //$("#ordersearchform-search").bind("keypress", function(event) {
+    $("#ordersearchform-search").on( "keydown", function(event) {
+        if(event.which == 13) {
+            event.preventDefault();
+            //var searchtypeValue = $('#ordersearchform-searchtype').val();
+            setSearchtypeAction();
+        }
     });
 
 }
 
 //Old:set hidden input searchtype with id=ordersearchform-searchtype and submit form with id=ordersearchform
 //get search input field with id=ordersearchform-search and redirect to path /patients/search?searchtype=search
-function setSearchtypeAction(key) {
+function setSearchtypeAction() {
 
-    console.log('searchtype='+key);
+    //console.log('searchtype='+key);
 
-    if( typeof key === 'undefined' || key == "" ) {
-        //return false;
-        key = 'MRN';
-    }
+//    if( typeof key === 'undefined' || key == "" ) {
+//        //get searchtype;
+//        key = $('#ordersearch-searchtype-combobox').select2('val');
+//        //key = 'MRN';
+//    }
 
-    $('#ordersearchform-searchtype').val(key);
-
+    var searchType = $('#ordersearch-searchtype-combobox').select2('val');
     var searchValue = $('#ordersearchform-search').val();
 
     if( searchValue == '' ) {
@@ -55,7 +72,7 @@ function setSearchtypeAction(key) {
 
     //$('#ordersearchform').submit();
 
-    var searchUrl = getCommonBaseUrl("patients/search?"+key+'='+searchValue);
+    var searchUrl = getCommonBaseUrl("patients/search?"+searchType+'='+searchValue);
 
     window.location = searchUrl;
 }

@@ -348,7 +348,7 @@
                         {% if cycle != 'show_standalone' or cycle == 'show_standalone' and (userEditor or subjectuser) and formfield.vars.value.user %}
                             {{ formmacros.field(formfield.privacy) }}
                         {% else %}
-                            {% do formfield.privacy.setRendered %}
+                            {#{% do formfield.privacy.setRendered %}#}
                         {% endif %}
                     {% endif %}
                 {% else %}
