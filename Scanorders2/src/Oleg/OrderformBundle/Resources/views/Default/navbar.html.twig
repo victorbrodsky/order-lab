@@ -119,7 +119,7 @@
 
                                     <div class="input-group">
                                         <div class="input-group-btn">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Search <span class="caret"></span></button>
                                             <ul class="dropdown-menu" role="menu">
                                                 {{ navbarmacros.searchBoxContent('MRN') }}
                                                 {{ navbarmacros.searchBoxContent('Patient Name') }}
@@ -131,7 +131,10 @@
                                                 {#<li class="divider"></li>#}
                                             </ul>
                                         </div><!-- /btn-group -->
-                                        <input type="text" id="ordersearchform-search" class="form-control" aria-label="..." name="search" value="{{ search }}" placeholder="Search">
+                                        <div class="form-group has-feedback">
+                                            <input type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">
+                                            <span class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeaheadsearchform.submit();" aria-hidden="true"></span>
+                                        </div>
                                     </div><!-- /input-group -->
 
                                 </div>

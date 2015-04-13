@@ -17,7 +17,7 @@ $(document).ready(function() {
 
     initFileUpload();
 
-    setNavBar();
+    setNavBar("scan");
 
     initAdd();
 

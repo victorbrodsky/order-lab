@@ -145,7 +145,7 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
     
-    setNavBar();
+    setNavBar("scan");
     $(".element-with-tooltip").tooltip();
     attachResearchEducationalTooltip();
 
