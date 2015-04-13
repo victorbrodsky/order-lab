@@ -2,13 +2,25 @@
 
 {% import _self as navbarmacros %}
 
-{% macro searchBoxContent( searchtype ) %}
-    <li>
-        <a
-            {#href="{{ path(scan_sitename~'_home',{'searchtype':searchtype}) }}">{{ searchtype }}#}
-            href="#" onclick="setSearchtypeAction('{{searchtype}}');return false;">{{searchtype}}
-        </a>
-    </li>
+{#{% macro searchBoxContent( searchtype ) %}#}
+    {#<li>#}
+        {#<a#}
+            {#&#123;&#35;href="{{ path(scan_sitename~'_home',{'searchtype':searchtype}) }}">{{ searchtype }}&#35;&#125;#}
+            {#href="#" onclick="setSearchtypeAction('{{searchtype}}');return false;">{{searchtype}}#}
+        {#</a>#}
+    {#</li>#}
+{#{% endmacro %}#}
+
+{% macro searchSelect2BoxContent() %}
+    <select class="ordersearch-searchtype-combobox">
+        <option value="MRN">MRN</option>
+        <option value="Patient Name">Patient Name</option>
+        <option value="Accession Number">Accession Number</option>
+        <option value="Organ Source for Part">Organ Source for Part</option>
+        <option value="Neoplastic Tumor Source">Neoplastic Tumor Source</option>
+        <option value="Part Type">Part Type</option>
+        <option value="Procedure Type">Procedure Type</option>
+    </select>
 {% endmacro %}
 
 {% block navbar %}
@@ -117,19 +129,20 @@
                                         {#</div>#}
                                     {#</div>#}
 
-                                    <div class="input-group">
+                                    <div class="input-group ordersearch-fields-group">
+                                        {{ navbarmacros.searchSelect2BoxContent() }}
                                         <div class="input-group-btn">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Search <span class="caret"></span></button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                {{ navbarmacros.searchBoxContent('MRN') }}
-                                                {{ navbarmacros.searchBoxContent('Patient Name') }}
-                                                {{ navbarmacros.searchBoxContent('Accession Number') }}
+                                            {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Search <span class="caret"></span></button>#}
+                                            {#<ul class="dropdown-menu" role="menu">#}
+                                                {#{{ navbarmacros.searchBoxContent('MRN') }}#}
+                                                {#{{ navbarmacros.searchBoxContent('Patient Name') }}#}
+                                                {#{{ navbarmacros.searchBoxContent('Accession Number') }}#}
                                                 {#{{ navbarmacros.searchBoxContent('Organ Source for Part') }}#}
                                                 {#{{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}#}
                                                 {#{{ navbarmacros.searchBoxContent('Part Type') }}#}
                                                 {#{{ navbarmacros.searchBoxContent('Procedure Type') }}#}
                                                 {#<li class="divider"></li>#}
-                                            </ul>
+                                            {#</ul>#}
                                         </div><!-- /btn-group -->
                                         <div class="form-group has-feedback">
                                             <input style="border-bottom-left-radius: 0; border-top-left-radius:0" type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">

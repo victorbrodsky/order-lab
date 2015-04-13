@@ -1354,16 +1354,38 @@ class User extends BaseUser {
 
         //get all titles
         foreach( $this->getAdministrativeTitles() as $title ) {
-            if( $title->getName() )
-                $headInfo[] = $title->getName()->getName()."";
+            if( $title->getName() ) {
+                $name = $title->getName()->getName()."";
+                $titleId = null;
+                if( $title->getName()->getId() ) {
+                    $titleId = $title->getName()->getId();
+                }
+                $elementInfo = array('tablename'=>'administrativeTitle','id'=>$titleId,'name'=>$name);
+                $headInfo[] = $elementInfo;
+            }
         }
         foreach( $this->getAppointmentTitles() as $title ) {
-            if( $title->getName() )
-                $headInfo[] = $title->getName()->getName()."";
+            if( $title->getName() ) {
+                $name = $title->getName()->getName()."";
+                $titleId = null;
+                if( $title->getName()->getId() ) {
+                    $titleId = $title->getName()->getId();
+                }
+                $elementInfo = array('tablename'=>'appointmentTitle','id'=>$titleId,'name'=>$name);
+                $headInfo[] = $elementInfo;
+            }
         }
         foreach( $this->getMedicalTitles() as $title ) {
-            if( $title->getName() )
-                $headInfo[] = $title->getName()->getName()."";
+            if( $title->getName() ) {
+                $name = $title->getName()->getName()."";
+                $titleId = null;
+                if( $title->getName()->getId() ) {
+                    $titleId = $title->getName()->getId();
+                }
+                $elementInfo = array('tablename'=>'medicalTitle','id'=>$titleId,'name'=>$name);
+                $headInfo[] = $elementInfo;
+                //$headInfo[] = $title->getName()->getName()."";
+            }
         }
 
 //        $institutions = $this->getInstitutions("AdministrativeTitle");
@@ -1396,7 +1418,8 @@ class User extends BaseUser {
 
         //echo "headInfo=".implode(", ",$headInfo)."<br>";
 
-        return implode("<br>",$headInfo);
+        //return implode("<br>",$headInfo);
+        return $headInfo;
 
     }
 

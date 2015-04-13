@@ -11,8 +11,13 @@
     text-align: left; /*oleg modification to override base text-align: center;*/
 }
 
-.snapshot-all a {
+.snapshot-all .right-text a {
     color: #B31B1B;
+    text-decoration: none;
+}
+
+.snapshot-all .left-text a {
+    color: #3C3C3C;
     text-decoration: none;
 }
 

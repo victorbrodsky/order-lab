@@ -619,7 +619,7 @@
                         {% if appointmentTitles.name %}
                             <p>
                             {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
-                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name.id, 'name': appointmentTitles.name.name }) }}">{{ appointmentTitles.name }}</a>
+                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitle','id': appointmentTitles.name.id, 'name': appointmentTitles.name.name }) }}">{{ appointmentTitles.name }}</a>
                             {% else %}
                                 {{ appointmentTitles.name }}
                             {% endif %}
@@ -712,10 +712,19 @@
 
                     {#head/cheaf#}
                     {#Chief, Eyebrow Pathology, Assistant Professor of Pathology and Laboratory Medicine#}
-                    {% set headInfo = user.getHeadInfo %}
-                    {% if headInfo %}
+                    {% set headInfos = user.getHeadInfo %}
+                    {% if headInfos|length > 0 %}
                         <h4>
-                            {{ headInfo|raw }}
+                            {#{{ headInfo|raw }}#}
+                            {% for headInfoArr in headInfos %}
+                                <a href="{{
+                                        path( employees_sitename~'_search_same_object',{
+                                            'tablename':headInfoArr['tablename'],
+                                            'id': headInfoArr['id'],
+                                            'name': headInfoArr['name']
+                                        })
+                                    }}">{{ headInfoArr['name'] }}</a>
+                            {% endfor %}
                         </h4>
                     {% endif %}
 
@@ -729,22 +738,26 @@
                                 {#Department of Pathology and Laboratory Medicine<br>#}
                                 {#Weill Cornell Medical College#}
                                 {#{{ service.name }}<br>#}
-                                <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.__toString() }) }}">{{ service }}</a></p>
+                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.__toString() }) }}">{{ service }}</a>
+                                <br>
                             {% endfor %}
                             {#divisions#}
                             {% for division in user.getDivisions %}
                                 {#{{ division.name }}<br>#}
-                                <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'division','id': division.id, 'name': division.__toString() }) }}">{{ division }}</a></p>
+                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'division','id': division.id, 'name': division.__toString() }) }}">{{ division }}</a>
+                                <br>
                             {% endfor %}
                             {#departments#}
                             {% for department in user.getDepartments %}
                                 {#{{ department.name }}<br>#}
-                                <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'department','id': department.id, 'name': department.__toString() }) }}">{{ department }}</a></p>
+                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'department','id': department.id, 'name': department.__toString() }) }}">{{ department }}</a>
+                                <br>
                             {% endfor %}
                             {#institutions#}
                             {% for institution in user.getInstitutions %}
                                 {#{{ institution.name }}#}
-                                <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a></p>
+                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a>
+                                <br>
                             {% endfor %}
                         </p>
                     </div>

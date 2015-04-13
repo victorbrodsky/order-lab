@@ -300,6 +300,26 @@
     width: 100%;
 }
 
+/* ordersearch */
+.ordersearch, .ordersearch .select2-choice {
+    height: 34px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-top: 3px;
+}
+.ordersearch .select2-arrow {
+    border-radius: 0;
+}
+/*.ordersearch-fields-group > a {*/
+    /*height: 34px;*/
+    /*border-top-right-radius: 0;*/
+    /*border-bottom-right-radius: 0;*/
+    /*padding-top: 3px;*/
+/*}*/
+/*.ordersearch.select2-container .select2-results {height: 200px;}*/
+/*.ordersearch .select2-results {height: 200px;}*/
+/*.ordersearch .select2-choices {height: 200px;}*/
+
 .textarea {
     min-height: 75px;
 }

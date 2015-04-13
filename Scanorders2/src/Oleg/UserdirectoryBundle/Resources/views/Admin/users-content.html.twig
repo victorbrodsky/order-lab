@@ -116,7 +116,7 @@
                 <td class="rowlink-skip">
                     {% for appointmentTitles in entity.appointmentTitles %}
                         {% if appointmentTitles.name %}
-                            <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitles','id': appointmentTitles.name.id, 'name': appointmentTitles.name.name }) }}">{{ appointmentTitles.name }}</a></p>
+                            <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitle','id': appointmentTitles.name.id, 'name': appointmentTitles.name.name }) }}">{{ appointmentTitles.name }}</a></p>
                         {% endif %}
                     {% endfor %}
                 </td>

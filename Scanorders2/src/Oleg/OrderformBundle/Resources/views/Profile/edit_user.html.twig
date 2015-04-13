@@ -5,6 +5,7 @@
     {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
 {% endblock %}
 
+
 {% block addcontent %}
 
     {% if cycle == "show_user" %}
@@ -117,12 +118,19 @@
         {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
 
+    {#{% javascripts#}
+        {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
     <script language="Javascript">
         $(document).ready(function() {
             //set institutional tree
             initTreeSelect();
             initInstitutionManually();
             setInstitutionTreeChildren();
+            setNavBar('scan');
         });
     </script>
 {% endblock %}

@@ -174,7 +174,7 @@ class UserController extends Controller
             $title = "Current employees in ".$tablename." ".$objectname;
         }
 
-        if( $tablename == "administrativeTitle" ) {
+        if( $tablename == "administrativeTitles" ) {
             $title = 'Current employees with the administrative title of "'.$objectname.'"';
         }
 
@@ -947,7 +947,7 @@ class UserController extends Controller
             }
         }
 
-        if( $objectname && $objectname == "appointmentTitles" ) {
+        if( $objectname && $objectname == "appointmentTitle" ) {
             if( !$objectid || $objectid != "" ) {
                 $criteriastr .= "appointmentTitles.name = '" . $objectid . "'";
             } else {
@@ -955,7 +955,7 @@ class UserController extends Controller
             }
         }
 
-        if( $objectname && $objectname == "medicalTitles" ) {
+        if( $objectname && $objectname == "medicalTitle" ) {
             if( !$objectid || $objectid != "" ) {
                 $criteriastr .= "medicalTitles.name = '" . $objectid . "'";
             } else {
@@ -1057,7 +1057,7 @@ class UserController extends Controller
             $inputCriteriastr = $criteriastr;
         }
 
-        //echo "inputCriteriastr=".$inputCriteriastr."<br>";
+        echo "inputCriteriastr=".$inputCriteriastr."<br>";
         //exit();
 
         return $inputCriteriastr;

@@ -2,8 +2,36 @@
  * Created by DevServer on 4/10/15.
  */
 
-//Old:set hidden input searchtype with id=ordersearchform-searchtype and submit form with id=ordersearchform
 
+function ordersearchNavbarBoxInit() {
+
+    //init select2 combobox
+    var searchComboboxElement = $('.ordersearch-searchtype-combobox');
+    var combobox_width = '100%'; //'element'
+    searchComboboxElement.select2({
+        width: combobox_width,
+        height: '34px',
+        dropdownAutoWidth: true,
+        placeholder: "Select an option",
+        allowClear: true,
+        selectOnBlur: false
+        //containerCssClass: 'ordersearch'
+        //dropdownCssClass: "ordersearch"
+        //formatResultCssClass: 'ordersearch'
+    });
+
+    //change height of the select2 input field
+    var holder = searchComboboxElement.closest('.ordersearch-fields-group');
+    holder.find('.select2-choice').css({ "height": "34px", "border-top-right-radius": "0", "border-bottom-right-radius": "0", "padding-top": "3px" });
+    holder.find('.select2-arrow').css({ "border-radius": "0" });
+
+
+    //set listener for searchComboboxElement onchange
+    //searchComboboxElement.onChange()
+
+}
+
+//Old:set hidden input searchtype with id=ordersearchform-searchtype and submit form with id=ordersearchform
 //get search input field with id=ordersearchform-search and redirect to path /patients/search?searchtype=search
 function setSearchtypeAction(key) {
 
@@ -34,6 +62,8 @@ function setSearchtypeAction(key) {
 
 function setNavBar(sitename) {
 
+    console.log('sitename='+sitename);
+
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
     }
@@ -51,6 +81,8 @@ function setNavBar(sitename) {
 
 
 function setScanNavBar() {
+
+    ordersearchNavbarBoxInit();
 
     $('ul.li').removeClass('active');
 
