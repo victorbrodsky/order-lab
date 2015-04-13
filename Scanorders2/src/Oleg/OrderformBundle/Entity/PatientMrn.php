@@ -75,6 +75,17 @@ class PatientMrn extends PatientArrayFieldAbstract
     }
 
 
+    public function obtainOptimalName() {
+        if( $this->getKeytype() ) {
+            $keyStr = $this->getKeytype()->getOptimalName() . ": " . $this->getField();
+        } else {
+            $keyStr = $this->getField();
+        }
+
+        return $keyStr;
+    }
+
+
     public function obtainExtraKey()
     {
         $extra = array();

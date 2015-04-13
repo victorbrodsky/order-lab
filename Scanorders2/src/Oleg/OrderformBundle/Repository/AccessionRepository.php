@@ -223,7 +223,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //Now we know that this accession has MRN conflict
         echo "Now we know that this accession has MRN conflict <br>";
 
-        //1) take care of mrn-accession conflict: replace accession# with ACCESSIONNONPROVIDED:
+        //1) take care of mrn-accession conflict: replace accession# with NOACCESSIONIDPROVIDED:
         $accession->setId(null); //make sure to generate a new accession
         $accession->setStatusAllKeyfield(self::STATUS_INVALID);
         $accession->createKeyField();

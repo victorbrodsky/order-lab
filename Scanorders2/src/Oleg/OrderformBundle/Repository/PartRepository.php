@@ -1,6 +1,7 @@
 <?php
 
 namespace Oleg\OrderformBundle\Repository;
+use Oleg\OrderformBundle\Entity\Part;
 
 /**
  * PartRepository
@@ -122,7 +123,9 @@ class PartRepository extends ArrayFieldAbstractRepository
         }
 
         //echo "findNextPartnameByAccession: accessionNumber=".$accessionNumber."<br>";
-        $name = "NOPARTNAMEPROVIDED";
+        //$name = "NOPARTNAMEPROVIDED";
+        $reflPart = new Part();
+        $name = $reflPart->obtainNoprovidedKeyPrefix();
 
         //institution
         $inst = " AND p.institution=".$institution;

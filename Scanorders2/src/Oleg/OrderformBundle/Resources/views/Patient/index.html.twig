@@ -28,13 +28,13 @@
                     {#<th>{{ knp_pagination_sortable(entities, 'ID', 'patient.id') }}</th>#}
                     {#<th>{{ knp_pagination_sortable(entities, 'MRN', 'mrn.field') }}</th>#}
                     {#<th>{{ knp_pagination_sortable(entities, 'Accession(s)', 'accession.field') }}</th>#}
-                    <th>ID</th>
+                    {#<th style="display:none">ID</th>#}
                     <th>MRN</th>
-                    <th>Accession(s)</th>
                     <th>Name</th>
                     <th>DOB</th>
                     <th>Calculated Age</th>
                     <th>Sex</th>
+                    <th>Accession(s)</th>
                     {#<th>Date</th>#}
                     {#<th>Actions</th>#}
                 </tr>
@@ -43,23 +43,14 @@
             {% for entity in entities %}
                 <tr>
 
-                    <td><a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                    {#<td style="display:none"><a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
 
                     <td>
                         {#{% for mrn in entity.mrn %}#}
                             {#{{ mrn }} (status={{ mrn.status }})<br>#}
                         {#{% endfor %}#}
-                        {{ entity.obtainValidField('mrn') }}
-                    </td>
-
-                    <td>
-                        {% for encounter in entity.encounter %}
-                            {% for procedure in encounter.procedure %}
-                                {% for accession in procedure.accession %}
-                                    {{ accession.obtainValidField('accession') }}<br>
-                                {% endfor %}
-                            {% endfor %}
-                        {% endfor %}
+                        {#{{ entity.obtainValidField('mrn') }}#}
+                        <a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.obtainValidField('mrn').obtainOptimalName() }}</a>
                     </td>
 
                     <td>
@@ -76,6 +67,16 @@
 
                     <td>
                         {{ entity.obtainValidField('sex') }}
+                    </td>
+
+                    <td>
+                        {% for encounter in entity.encounter %}
+                            {% for procedure in encounter.procedure %}
+                                {% for accession in procedure.accession %}
+                                    {{ accession.obtainValidField('accession').obtainOptimalName() }}<br>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
                     </td>
 
                     {#<td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>#}

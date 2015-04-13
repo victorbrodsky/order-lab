@@ -905,18 +905,36 @@ class Patient extends ObjectAbstract
         }
 
         //mrn
-        $mrn = $this->obtainValidField('mrn');
-        if( $mrn ) {
-            if( $mrn && $mrn->getKeytype() ) {
-                $fullNameArr[] = $mrn->getKeytype()->getOptimalName() . ": " . $mrn->getField();
-            } else {
-                $fullNameArr[] = $mrn->getField();
-            }
+//        $mrn = $this->obtainValidField('mrn');
+//        if( $mrn ) {
+//            if( $mrn && $mrn->getKeytype() ) {
+//                $fullNameArr[] = $mrn->getKeytype()->getOptimalName() . ": " . $mrn->getField();
+//            } else {
+//                $fullNameArr[] = $mrn->getField();
+//            }
+//        }
+        $mrnStr = $this->obtainFullValidKeyName();
+        if( $mrnStr ) {
+            $fullNameArr[] = $mrnStr;
         }
 
         $fullName = implode(", ",$fullNameArr);
 
         return $fullName;
+    }
+
+    //soShow MRN type "shortest name" (abbreviation, if not available, then short, if empty, then full name)
+    //before each MRN value, separated by a colon and a space (example: NYH MRN: 123456)
+    public function obtainFullValidKeyName() {
+        $keyStr = "";
+
+        //mrn
+        $mrn = $this->obtainValidField('mrn');
+        if( $mrn ) {
+            $keyStr = $mrn->obtainOptimalName();
+        }
+
+        return $keyStr;
     }
 
     public function getFullPatientName() {
@@ -1112,6 +1130,10 @@ class Patient extends ObjectAbstract
 
     public function obtainKeyFieldName() {
         return "mrn";
+    }
+
+    public function obtainNoprovidedKeyPrefix() {
+        return $name = "NOMRNPROVIDED";
     }
 
     public function createKeyField() {

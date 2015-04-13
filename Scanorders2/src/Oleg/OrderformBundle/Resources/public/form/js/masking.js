@@ -8,7 +8,7 @@
 
 ///////////////////// DEFAULT MASKS //////////////////////////
 var _mrnplaceholder = "NOMRNPROVIDED-";
-var _accplaceholder = "NOACCESSIONPROVIDED-";
+var _accplaceholder = "NOACCESSIONIDPROVIDED-";
 var _maskErrorClass = "has-warning"; //"maskerror"
 var _repeatBig = 25;
 var _repeatSmall = 13;

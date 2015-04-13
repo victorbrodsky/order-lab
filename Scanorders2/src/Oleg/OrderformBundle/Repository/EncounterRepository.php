@@ -26,7 +26,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 //        $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
 //        $key->setKeytype($newkeytypeEntity);
 //
-//        $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+//        $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."IDPROVIDED", $className, $fieldName);
 //
 //        //we should have only one key field !!!
 //        $key->setField($nextKey);

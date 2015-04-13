@@ -581,6 +581,10 @@ abstract class ObjectAbstract
         return $classNamespace."\\".$className;
     }
 
+    public function obtainNoprovidedKeyPrefix() {
+        return $name = "NO".strtoupper($this->obtainClassName())."IDPROVIDED";
+    }
+
 //    //replace contains in AddChild
 //    public function childAlreadyExist( $newChild ) {
 //

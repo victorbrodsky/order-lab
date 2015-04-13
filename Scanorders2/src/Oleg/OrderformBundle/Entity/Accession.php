@@ -344,19 +344,33 @@ class Accession extends ObjectAbstract {
         }
 
         //accession
-        $key = $this->obtainValidField('accession');
-        if( $key ) {
-            if( $key->getKeytype() ) {
-                $fullNameArr[] = $accessionDateStr . $key->getKeytype()->getOptimalName() . ": " . $key->getField();
-            } else {
-                $fullNameArr[] = $accessionDateStr . $key->getField();
-            }
+//        $key = $this->obtainValidField('accession');
+//        if( $key ) {
+//            if( $key->getKeytype() ) {
+//                $fullNameArr[] = $accessionDateStr . $key->getKeytype()->getOptimalName() . ": " . $key->getField();
+//            } else {
+//                $fullNameArr[] = $accessionDateStr . $key->getField();
+//            }
+//        }
+        $keyStr = $this->obtainFullValidKeyName();
+        if( $keyStr ) {
+            $fullNameArr[] = $accessionDateStr . $keyStr;
         }
-
 
         $fullName = implode(", ",$fullNameArr);
 
         return $fullName;
+    }
+
+    public function obtainFullValidKeyName() {
+        $keyStr = "";
+
+        $key = $this->obtainValidField('accession');
+        if( $key ) {
+            $keyStr = $key->obtainOptimalName();
+        }
+
+        return $keyStr;
     }
 
 

@@ -1130,7 +1130,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
         $fieldName = $entity->obtainKeyFieldName();
-        $name = "NO".strtoupper($className)."PROVIDED";
+        //$name = "NO".strtoupper($className)."IDPROVIDED";
+        $name = $entity->obtainNoprovidedKeyPrefix();
 
         //get extra key by $extra optional parameter or get it from entity
         $extraStr = "";

@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Repository;
 //use Doctrine\ORM\EntityRepository;
 //use Oleg\OrderformBundle\Helper\FormHelper;
 //use Oleg\OrderformBundle\Entity\BlockBlockname;
+use Doctrine\Common\Reflection\StaticReflectionClass;
+use Oleg\OrderformBundle\Entity\Block;
 
 /**
  * BlockRepository
@@ -269,7 +271,9 @@ class BlockRepository extends ArrayFieldAbstractRepository
             return null;
         }
                
-        $name = "NOBLOCKNAMEPROVIDED";
+        //$name = "NOBLOCKNAMEPROVIDED";
+        $reflBlock = new Block();
+        $name = $reflBlock->obtainNoprovidedKeyPrefix();
 
         //institution
         $inst = " AND p.institution=".$institution;

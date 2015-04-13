@@ -74,6 +74,17 @@ class AccessionAccession extends AccessionArrayFieldAbstract
         return $this->original;
     }
 
+
+    public function obtainOptimalName() {
+        if( $this->getKeytype() ) {
+            $keyStr = $this->getKeytype()->getOptimalName() . ": " . $this->getField();
+        } else {
+            $keyStr = $this->getField();
+        }
+
+        return $keyStr;
+    }
+
     public function obtainExtraKey()
     {
         $extra = array();
