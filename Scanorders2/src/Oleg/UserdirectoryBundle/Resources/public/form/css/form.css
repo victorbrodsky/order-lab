@@ -301,15 +301,21 @@
 }
 
 /* ordersearch */
-.ordersearch, .ordersearch .select2-choice {
-    height: 34px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    padding-top: 3px;
+#ordersearchform-search {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
-.ordersearch .select2-arrow {
-    border-radius: 0;
-}
+/*.ordersearch, .ordersearch .select2-choice {*/
+    /*height: 34px;*/
+    /*border-top-right-radius: 0;*/
+    /*border-bottom-right-radius: 0;*/
+    /*padding-top: 3px;*/
+/*}*/
+/*.ordersearch .select2-arrow {*/
+    /*border-radius: 0;*/
+/*}*/
 /*.ordersearch-fields-group > a {*/
     /*height: 34px;*/
     /*border-top-right-radius: 0;*/

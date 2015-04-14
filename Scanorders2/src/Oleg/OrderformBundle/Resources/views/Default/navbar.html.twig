@@ -2,14 +2,14 @@
 
 {% import _self as navbarmacros %}
 
-{#{% macro searchBoxContent( searchtype ) %}#}
-    {#<li>#}
-        {#<a#}
-            {#&#123;&#35;href="{{ path(scan_sitename~'_home',{'searchtype':searchtype}) }}">{{ searchtype }}&#35;&#125;#}
-            {#href="#" onclick="setSearchtypeAction('{{searchtype}}');return false;">{{searchtype}}#}
-        {#</a>#}
-    {#</li>#}
-{#{% endmacro %}#}
+{% macro searchBoxContent( searchtype ) %}
+    <li>
+        <a
+            {#href="{{ path(scan_sitename~'_home',{'searchtype':searchtype}) }}">{{ searchtype }}#}
+            href="#" onclick="setSearchtypeAction('{{searchtype}}');return false;">{{searchtype}}
+        </a>
+    </li>
+{% endmacro %}
 
 {% macro searchSelect2BoxContent() %}
     <select id="ordersearch-searchtype-combobox" class="ordersearch-searchtype-combobox">
@@ -114,6 +114,27 @@
                                 <input type="hidden" id="ordersearchform-searchtype" name="searchtype" value="{{ searchtype }}">
                                 <div class="form-group">
 
+
+                                    <div class="input-group">
+                                        <div class="input-group-btn">
+                                            <button id="ordersearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">MRN <span class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                {{ navbarmacros.searchBoxContent('MRN') }}
+                                                {{ navbarmacros.searchBoxContent('Patient Name') }}
+                                                {{ navbarmacros.searchBoxContent('Accession Number') }}
+                                                {{ navbarmacros.searchBoxContent('Organ Source for Part') }}
+                                                {{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}
+                                                {{ navbarmacros.searchBoxContent('Part Type') }}
+                                                {{ navbarmacros.searchBoxContent('Procedure Type') }}
+                                                {#<li class="divider"></li>#}
+                                            </ul>
+                                        </div><!-- /btn-group -->
+                                        <div class="form-group has-feedback">
+                                            <input type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">
+                                            <span class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>
+                                        </div>
+                                    </div><!-- /input-group -->
+
                                     {#<div id="multiple-datasets-typeahead-ordersearch">#}
                                         {#&#123;&#35;version 3: input field has inside button&#35;&#125;#}
                                         {#<div class="form-group has-feedback">#}
@@ -129,9 +150,9 @@
                                         {#</div>#}
                                     {#</div>#}
 
-                                    <div id="ordersearch-fields-group" class="input-group ordersearch-fields-group">
-                                        {{ navbarmacros.searchSelect2BoxContent() }}
-                                        <div class="input-group-btn">
+                                    {#<div id="ordersearch-fields-group" class="input-group ordersearch-fields-group">#}
+
+                                        {#<div class="input-group-btn">#}
                                             {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Search <span class="caret"></span></button>#}
                                             {#<ul class="dropdown-menu" role="menu">#}
                                                 {#{{ navbarmacros.searchBoxContent('MRN') }}#}
@@ -143,12 +164,13 @@
                                                 {#{{ navbarmacros.searchBoxContent('Procedure Type') }}#}
                                                 {#<li class="divider"></li>#}
                                             {#</ul>#}
-                                        </div><!-- /btn-group -->
-                                        <div class="form-group has-feedback">
-                                            <input style="border-bottom-left-radius: 0; border-top-left-radius:0" type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">
-                                            <span class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>
-                                        </div>
-                                    </div><!-- /input-group -->
+                                        {#</div><!-- /btn-group -->#}
+                                        {#<div class="form-group has-feedback">#}
+                                            {#{{ navbarmacros.searchSelect2BoxContent() }}#}
+                                            {#<input style="border-bottom-left-radius: 0; border-top-left-radius:0" type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">#}
+                                            {#<span class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>#}
+                                        {#</div>#}
+                                    {#</div>#}
 
                                 </div>
                             </form>

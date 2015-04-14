@@ -5,39 +5,17 @@
 
 function ordersearchNavbarBoxInit() {
 
-    //init select2 combobox
-    var searchComboboxElement = $('#ordersearch-searchtype-combobox');
-    var combobox_width = '100%'; //'element'
-    searchComboboxElement.select2({
-        width: combobox_width,
-        height: '34px',
-        dropdownAutoWidth: true,
-        placeholder: "Select an option",
-        allowClear: true,
-        selectOnBlur: false
-        //containerCssClass: 'ordersearch'
-        //dropdownCssClass: "ordersearch"
-        //formatResultCssClass: 'ordersearch'
-    });
-
-    //change height of the select2 input field
-    var holder = $('#ordersearch-fields-group');
-    holder.find('.select2-choice').css({ "height": "34px", "border-top-right-radius": "0", "border-bottom-right-radius": "0", "padding-top": "3px" });
-    holder.find('.select2-arrow').css({ "border-radius": "0" });
-
     //set searchtype
+    var currentSearchType = getSearchType();
     var searchtypeValue = $('#ordersearchform-searchtype').val();
-    if( searchtypeValue && searchtypeValue != "" ) {
-        searchComboboxElement.select2('val',searchtypeValue);
+    //console.log('currentSearchType='+currentSearchType+ ", searchtypeValue="+searchtypeValue);
+    if( currentSearchType != searchtypeValue ) {
+        if( searchtypeValue && searchtypeValue != "" ) {
+            var searchtypeButton = $('#ordersearch-searchtype-button');
+            searchtypeButton.html(searchtypeValue+' <span class="caret"></span>');
+        }
     }
-
-    //set listener for searchComboboxElement onchange
-    searchComboboxElement.on("change", function(e) {
-        //var searchTypeValue = $(this).select2('val');
-        //console.log("change searchTypeValue="+searchTypeValue);
-        setSearchtypeAction();
-    });
-
+    
     //listen on enter
     //$("#ordersearchform-search").bind("keypress", function(event) {
     $("#ordersearchform-search").on( "keydown", function(event) {
@@ -50,19 +28,17 @@ function ordersearchNavbarBoxInit() {
 
 }
 
-//Old:set hidden input searchtype with id=ordersearchform-searchtype and submit form with id=ordersearchform
 //get search input field with id=ordersearchform-search and redirect to path /patients/search?searchtype=search
-function setSearchtypeAction() {
+function setSearchtypeAction(searchType) {
 
     //console.log('searchtype='+key);
 
-//    if( typeof key === 'undefined' || key == "" ) {
-//        //get searchtype;
-//        key = $('#ordersearch-searchtype-combobox').select2('val');
-//        //key = 'MRN';
-//    }
+    if( typeof searchType === 'undefined' || searchType == "" ) {
+        searchType = getSearchType();
+    }
 
-    var searchType = $('#ordersearch-searchtype-combobox').select2('val');
+    //console.log('searchType='+searchType);
+
     var searchValue = $('#ordersearchform-search').val();
 
     if( searchValue == '' ) {
@@ -75,6 +51,14 @@ function setSearchtypeAction() {
     var searchUrl = getCommonBaseUrl("patients/search?"+searchType+'='+searchValue);
 
     window.location = searchUrl;
+}
+
+function getSearchType() {
+    var searchType = $('#ordersearch-searchtype-button').html();
+    //remove <span class="caret"></span>
+    searchType = searchType.replace(' <span class="caret"></span>', '');
+    //console.log('searchType='+searchType);
+    return searchType;
 }
 
 
