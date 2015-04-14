@@ -15,7 +15,7 @@ function ordersearchNavbarBoxInit() {
             searchtypeButton.html(searchtypeValue+' <span class="caret"></span>');
         }
     }
-    
+
     //listen on enter
     //$("#ordersearchform-search").bind("keypress", function(event) {
     $("#ordersearchform-search").on( "keydown", function(event) {
