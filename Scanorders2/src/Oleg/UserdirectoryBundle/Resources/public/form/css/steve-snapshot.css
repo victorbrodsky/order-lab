@@ -127,6 +127,10 @@
 	padding-bottom: 1em;	
 }
 
+.snapshot-all .prefferedinfo {
+    padding-bottom: 1em;
+}
+
 .snapshot-all .assistant {
 	padding-bottom: 1em;	
 }
@@ -340,7 +344,7 @@ body {
 }
 
 .snapshot-all .left-text p {
-    margin-left: .75em ;
+    margin-left: .75em;
     margin-right: .75em;
     padding-bottom: .75em
 }
@@ -361,6 +365,14 @@ body {
     
 }
 
+.snapshot-all .prefferedinfo {
+    float: left;
+    width: 90%;
+    margin-left: 3%;
+    margin-right: 1.5%;
+    margin-top: 10px;
+
+}
 .snapshot-all .contact {
     float: left;
     width: 45%;

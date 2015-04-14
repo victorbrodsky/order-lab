@@ -773,28 +773,31 @@
 
                     {#preffered phone and email#}
                     {% if user.getEmail or user.getPreferredPhone %}
-                        <h4>Preferred Contact Info:</h4>
-                        <table>
-                            {% if user.getEmail %}
-                                <tr class="row-withspace">
-                                    <td class="left-column">email:</td>
-                                    <td>
-                                        {#{{ user.getEmail }}#}
-                                        <a href="mailto:{{ user.getEmail }}" target="_top">{{ user.getEmail }}</a>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                            {% if user.getPreferredPhone %}
-                                <tr>
-                                    <td class="left-column">ph:</td>
-                                    <td>
-                                        {#{{ user.getPreferredPhone }}#}
-                                        {{ usermacros.phoneHref(user.getPreferredPhone) }}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        </table>
-                        <br>
+
+                        <div class="prefferedinfo">
+                            <h4>Preferred Contact Info:</h4>
+                            <table>
+                                {% if user.getEmail %}
+                                    <tr class="row-withspace">
+                                        <td class="left-column">email:</td>
+                                        <td>
+                                            {#{{ user.getEmail }}#}
+                                            <a href="mailto:{{ user.getEmail }}" target="_top">{{ user.getEmail }}</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if user.getPreferredPhone %}
+                                    <tr>
+                                        <td class="left-column">ph:</td>
+                                        <td>
+                                            {#{{ user.getPreferredPhone }}#}
+                                            {{ usermacros.phoneHref(user.getPreferredPhone) }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+
                     {% endif %}
 
 
