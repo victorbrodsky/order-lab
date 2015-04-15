@@ -6,15 +6,15 @@
 function ordersearchNavbarBoxInit() {
 
     //set searchtype
-    var currentSearchType = getSearchType();
-    var searchtypeValue = $('#ordersearchform-searchtype').val();
-    //console.log('currentSearchType='+currentSearchType+ ", searchtypeValue="+searchtypeValue);
-    if( currentSearchType != searchtypeValue ) {
-        if( searchtypeValue && searchtypeValue != "" ) {
-            var searchtypeButton = $('#ordersearch-searchtype-button');
-            searchtypeButton.html(searchtypeValue+' <span class="caret"></span>');
-        }
-    }
+//    var currentSearchType = getSearchType();
+//    var searchtypeValue = $('#ordersearchform-searchtype').val();
+//    //console.log('currentSearchType='+currentSearchType+ ", searchtypeValue="+searchtypeValue);
+//    if( currentSearchType != searchtypeValue ) {
+//        if( searchtypeValue && searchtypeValue != "" ) {
+//            var searchtypeButton = $('#ordersearch-searchtype-button');
+//            searchtypeButton.html(searchtypeValue+' <span class="caret"></span>');
+//        }
+//    }
 
     //listen on enter
     //$("#ordersearchform-search").bind("keypress", function(event) {
@@ -34,7 +34,7 @@ function setSearchtypeAction(searchType) {
     //console.log('searchtype='+key);
 
     if( typeof searchType === 'undefined' || searchType == "" ) {
-        searchType = getSearchType();
+        searchType = $('#ordersearchform-searchtype').val();
     }
 
     //console.log('searchType='+searchType);
@@ -53,13 +53,14 @@ function setSearchtypeAction(searchType) {
     window.location = searchUrl;
 }
 
-function getSearchType() {
-    var searchType = $('#ordersearch-searchtype-button').html();
-    //remove <span class="caret"></span>
-    searchType = searchType.replace(' <span class="caret"></span>', '');
-    //console.log('searchType='+searchType);
-    return searchType;
-}
+
+//function getSearchType_TODEL() {
+//    var searchType = $('#ordersearch-searchtype-button').html();
+//    //remove <span class="caret"></span>
+//    searchType = searchType.replace(' <span class="caret"></span>', '');
+//    //console.log('searchType='+searchType);
+//    return searchType;
+//}
 
 
 
