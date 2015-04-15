@@ -646,7 +646,7 @@ class ListController extends Controller
      * @Route("/medical-specialties/{id}", name="medicalspecialties_update")
      * @Route("/employment-types/{id}", name="employmenttypes_update")
      * @Route("/source-organizations/{id}", name="sourceorganizations_update")
-     * @Route("/grant-titles/{id}", name="granttitles_update)
+     * @Route("/grant-titles/{id}", name="granttitles_update")
      * @Route("/grant-links/{id}", name="grantlinks_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -972,7 +972,6 @@ class ListController extends Controller
                 $className = "MedicalSpecialties";
                 $displayName = "Medical Specialties";
                 break;
-
             case "sourceorganizations":
                 $className = "SourceOrganization";
                 $displayName = "Source Organizations";
@@ -985,7 +984,6 @@ class ListController extends Controller
                 $className = "GrantLink";
                 $displayName = "Grant Links";
                 break;
-
 
 
             default:
