@@ -58,6 +58,10 @@
     background-size: contain;
     //background-image: url('profile-pic.jpg');
 }
+.snapshot-all .image-box img {
+    height: 126px;
+    width: 116px;
+}
 
 .snapshot-all .left-text {
     display: inline-block;
@@ -215,17 +219,24 @@ body {
 .snapshot-all .image-box {
     border-radius: 5px;
     position: relative;
-    float: left;    //right;
     left: 0;
     margin: 0;
     margin-left: 5px;
     margin-right: .5em;
     margin-top: .25em;
     display: block;
-    width: 100%;    //80px;
-    //height: 87px;
-    
+
+    /*float: right;*/
+    /*width: 80px;*/
+    /*height: 87px;*/
+
+    width: 100%;
+    float: left;
 }
+/*.snapshot-all .image-box img {*/
+    /*height: 80px;*/
+    /*width: 74px;*/
+/*}*/
 
 .snapshot-all .left-text {
     display: block;
@@ -268,6 +279,14 @@ body {
 
 .snapshot-all .right-text {
     margin-left: 5px
+}
+
+.snapshot-all .prefferedinfo {
+    float: left;
+    width: 90%;
+    margin-left: 3%;
+    margin-right: 1.5%;
+    margin-top: 10px;
 }
 }
 
@@ -313,6 +332,11 @@ body {
     position: relative;
     float: right;
     display: block;
+}
+
+.snapshot-all .image-box img {
+    height: 126px;
+    width: 116px;
 }
 
 .snapshot-all .left-text {
@@ -368,7 +392,6 @@ body {
     margin-left: 3%;
     margin-right: 1.5%;
     margin-top: 10px;
-
 }
 .snapshot-all .contact {
     float: left;

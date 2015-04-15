@@ -126,6 +126,11 @@ class User extends BaseUser {
     private $researchLabs;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Grants", mappedBy="user", cascade={"persist"})
+     **/
+    private $grants;
+
+    /**
      * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist"})
      * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
@@ -169,6 +174,7 @@ class User extends BaseUser {
         $this->medicalTitles = new ArrayCollection();
         $this->employmentStatus = new ArrayCollection();
         $this->researchLabs = new ArrayCollection();
+        $this->grants = new ArrayCollection();
         $this->trainings = new ArrayCollection();
 
         $this->privateComments = new ArrayCollection();
