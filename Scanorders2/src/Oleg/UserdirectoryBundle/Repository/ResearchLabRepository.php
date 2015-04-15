@@ -53,42 +53,6 @@ class ResearchLabRepository extends EntityRepository {
             } else {
                 $labFinal = $lab;
             }
-//            else {
-//
-//                echo "create a new Lab with name=".$lab->getName()."<br>";
-//
-//                //create a new Lab
-//                $labNew = new ResearchLab($user);
-//
-//                //merge db and form entity
-//                $labNew->setName($lab->getName());
-//                $labNew->setFoundedDate($lab->getFoundedDate());
-//                $labNew->setDissolvedDate($lab->getDissolvedDate());
-//                $labNew->setLocation($lab->getLocation());
-//                $labNew->setWeblink($lab->getWeblink());
-//                $labNew->setPiDummy($lab->getPiDummy());
-//                $labNew->setCommentDummy($lab->getCommentDummy());
-//                //$em->persist($labNew);
-//                //$em->flush($labNew);
-//
-//                //remove original and add new lab
-//                $user->removeResearchLab($lab);
-//
-//                //$em->clear();   //remove all persistance
-//                //$labForm = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($lab->getId());
-//                //echo "form Lab with name=".$labForm->getName().", id=".$labForm->getId()."<br>";
-//                //set name back to original
-//
-//                $this->removeDependents($user,$labForm);
-//
-//                $user->addResearchLab($labNew);
-//                //echo "form LabNew with name=".$labNew->getName().", id=".$labNew->getId()."<br>";
-//
-//                $em->detach($lab);
-//
-//                $labFinal = $labNew;
-//
-//            }
 
             //set pi
             //echo "pis1=".count($labFinal->getPis())."<br>";

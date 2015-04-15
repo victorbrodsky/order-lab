@@ -18,6 +18,7 @@ use Oleg\UserdirectoryBundle\Entity\MedicalSpecialties;
 use Oleg\UserdirectoryBundle\Entity\MedicalTitleList;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
 use Oleg\UserdirectoryBundle\Entity\ResidencySpecialty;
+use Oleg\UserdirectoryBundle\Entity\SourceOrganization;
 use Oleg\UserdirectoryBundle\Entity\SourceSystemList;
 use Oleg\UserdirectoryBundle\Entity\TrainingDegreeList;
 use Oleg\UserdirectoryBundle\Entity\User;
@@ -150,6 +151,8 @@ class AdminController extends Controller
         $count_FellowshipTitles = $this->generateFellowshipTitles();
         $count_residencySpecialties = $this->generateResidencySpecialties();
 
+        $count_sourceOrganizations = $this->generatesourceOrganizations();
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
@@ -185,8 +188,9 @@ class AdminController extends Controller
             //'Major Trainings ='.$count_majorTrainings.', '.
             //'Minor Trainings ='.$count_minorTrainings.', '.
             'Honor Trainings='.$count_HonorTrainings.', '.
-            'Fellowship Titles='.$count_FellowshipTitles.' '.
-            'Document Types='.$count_documenttypes.' '.
+            'Fellowship Titles='.$count_FellowshipTitles.', '.
+            'Document Types='.$count_documenttypes.', '.
+            'Source Organizations='.$count_sourceOrganizations.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -2285,5 +2289,37 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+
+    public function generatesourceOrganizations() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SourceOrganization')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "National Institutes of Health" => "NIH"
+        );
+
+        $count = 1;
+        foreach( $types as $name => $abbreviation ) {
+
+            $listEntity = new SourceOrganization();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setAbbreviation($abbreviation);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
 }

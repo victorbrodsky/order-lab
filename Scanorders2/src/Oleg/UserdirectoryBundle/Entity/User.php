@@ -126,7 +126,7 @@ class User extends BaseUser {
     private $researchLabs;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Grants", mappedBy="user", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Grant", mappedBy="user", cascade={"persist"})
      **/
     private $grants;
 
@@ -635,6 +635,26 @@ class User extends BaseUser {
     public function getResearchLabs()
     {
         return $this->researchLabs;
+    }
+
+
+    public function addGrant($item)
+    {
+        if( $item && !$this->grants->contains($item) ) {
+            $this->grants->add($item);
+            $item->addUser($this);
+        }
+
+        return $this;
+    }
+    public function removeGrant($item)
+    {
+        $this->grants->removeElement($item);
+        $item->removeUser($this);
+    }
+    public function getGrants()
+    {
+        return $this->grants;
     }
 
 

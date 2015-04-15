@@ -65,6 +65,9 @@ class ListController extends Controller
      * @Route("/medical-titles/", name="medicaltitles-list")
      * @Route("/medical-specialties/", name="medicalspecialties-list")
      * @Route("/employment-types/", name="employmenttypes-list")
+     * @Route("/source-organizations/", name="sourceorganizations-list")
+     * @Route("/grant-titles/", name="granttitles-list")
+     * @Route("/grant-links/", name="grantlinks-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -201,6 +204,9 @@ class ListController extends Controller
      * @Route("/medical-titles/", name="medicaltitles_create")
      * @Route("/medical-specialties/", name="medicalspecialties_create")
      * @Route("/employment-types/", name="employmenttypes_create")
+     * @Route("/source-organizations/", name="sourceorganizations_create")
+     * @Route("/grant-titles/", name="granttitles_create")
+     * @Route("/grant-links/", name="grantlinks_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -327,6 +333,9 @@ class ListController extends Controller
      * @Route("/medical-titles/new", name="medicaltitles_new")
      * @Route("/medical-specialties/new", name="medicalspecialties_new")
      * @Route("/employment-types/new", name="employmenttypes_new")
+     * @Route("/source-organizations/new", name="sourceorganizations_new")
+     * @Route("/grant-titles/new", name="granttitles_new")
+     * @Route("/grant-links/new", name="grantlinks_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -424,6 +433,9 @@ class ListController extends Controller
      * @Route("/medical-titles/{id}", name="medicaltitles_show")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_show")
      * @Route("/employment-types/{id}", name="employmenttypes_show")
+     * @Route("/source-organizations/{id}", name="sourceorganizations_show")
+     * @Route("/grant-titles/{id}", name="granttitles_show")
+     * @Route("/grant-links/{id}", name="grantlinks_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -511,6 +523,9 @@ class ListController extends Controller
      * @Route("/medical-titles/{id}/edit", name="medicaltitles_edit")
      * @Route("/medical-specialties/{id}/edit", name="medicalspecialties_edit")
      * @Route("/employment-types/{id}/edit", name="employmenttypes_edit")
+     * @Route("/source-organizations/{id}/edit", name="sourceorganizations_edit")
+     * @Route("/grant-titles/{id}/edit", name="granttitles_edit")
+     * @Route("/grant-links/{id}/edit", name="grantlinks_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -630,6 +645,9 @@ class ListController extends Controller
      * @Route("/medical-titles/{id}", name="medicaltitles_update")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_update")
      * @Route("/employment-types/{id}", name="employmenttypes_update")
+     * @Route("/source-organizations/{id}", name="sourceorganizations_update")
+     * @Route("/grant-titles/{id}", name="granttitles_update)
+     * @Route("/grant-links/{id}", name="grantlinks_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -955,6 +973,20 @@ class ListController extends Controller
                 $displayName = "Medical Specialties";
                 break;
 
+            case "sourceorganizations":
+                $className = "SourceOrganization";
+                $displayName = "Source Organizations";
+                break;
+            case "granttitles":
+                $className = "GrantTitle";
+                $displayName = "Grant Titles";
+                break;
+            case "grantlinks":
+                $className = "GrantLink";
+                $displayName = "Grant Links";
+                break;
+
+
 
             default:
                 $className = null;
@@ -1028,6 +1060,9 @@ class ListController extends Controller
      * @Route("/medical-titles/{id}", name="medicaltitles_delete")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_delete")
      * @Route("/employment-types/{id}", name="employmenttypes_delete")
+     * @Route("/source-organizations/{id}", name="sourceorganizations_delete")
+     * @Route("/grant-titles/{id}", name="granttitles_delete")
+     * @Route("/grant-links/{id}", name="grantlinks_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
