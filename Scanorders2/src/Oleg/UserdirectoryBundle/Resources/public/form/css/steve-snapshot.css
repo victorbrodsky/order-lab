@@ -215,23 +215,23 @@ body {
 .snapshot-all .image-box {
     border-radius: 5px;
     position: relative;
-    float: right;
+    float: left;    //right;
     left: 0;
     margin: 0;
     margin-left: 5px;
     margin-right: .5em;
     margin-top: .25em;
     display: block;
-    width: 80px;
-    height: 87px;
+    width: 100%;    //80px;
+    //height: 87px;
     
 }
 
 .snapshot-all .left-text {
     display: block;
     width: auto;
-    
-
+    width: 100%;
+    float: left;
 }
 
 .snapshot-all .left-text h2 {
@@ -313,8 +313,6 @@ body {
     position: relative;
     float: right;
     display: block;
-    
-    
 }
 
 .snapshot-all .left-text {
@@ -322,7 +320,6 @@ body {
     width: auto;
     padding: 0 0 0 10px;
     margin-left: 0px;
-    
 }
 
 .snapshot-all .left-text h2 {
