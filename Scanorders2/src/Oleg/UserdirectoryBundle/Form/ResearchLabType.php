@@ -40,7 +40,7 @@ class ResearchLabType extends AbstractType
             'attr' => array('class' => 'researchlab-id-field')
         ));
 
-        $builder->add('foundedDate',null,array(
+        $builder->add('foundedDate','date',array(
             'read_only' => $readonly,
             'label'=>"Founded on:",
             'widget' => 'single_text',
@@ -49,7 +49,7 @@ class ResearchLabType extends AbstractType
             'attr' => array('class' => 'datepicker form-control researchlab-foundedDate-field')
         ));
 
-        $builder->add('dissolvedDate',null,array(
+        $builder->add('dissolvedDate','date',array(
             'read_only' => $readonly,
             'label'=>"Dissolved on:",
             'widget' => 'single_text',

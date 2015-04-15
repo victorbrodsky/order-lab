@@ -46,6 +46,7 @@ use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Util\CropAvatar;
+use Oleg\UserdirectoryBundle\Entity\Grant;
 
 
 
@@ -1499,6 +1500,10 @@ class UserController extends Controller
             $entity->addResearchLab(new ResearchLab($user));
         }
 
+        if( count($entity->getGrants()) == 0 ) {
+            $entity->addGrant(new Grant($user));
+        }
+
         if( count($entity->getTrainings()) == 0 ) {
             $entity->addTraining(new Training($user));
         }
@@ -1633,6 +1638,11 @@ class UserController extends Controller
         $originalResLabs = new ArrayCollection();
         foreach( $entity->getResearchLabs() as $lab) {
             $originalResLabs->add($lab);
+        }
+
+        $originalGrants = new ArrayCollection();
+        foreach( $entity->getGrants() as $grant) {
+            $originalGrants->add($grant);
         }
 
         if( $entity->getAvatar() ) {
@@ -1803,6 +1813,11 @@ class UserController extends Controller
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
+
+            $removedInfo = $this->removeCollection($originalGrants,$entity->getGrants(),$entity);
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
             /////////////// EOF Process Removed Collections ///////////////
 
             //set Edit event log for removed collection and changed fields or added collection
@@ -1865,6 +1880,10 @@ class UserController extends Controller
         $userUtil->setUpdateInfo($subjectUser->getCredentials(),$em,$sc);
 
         foreach( $subjectUser->getResearchLabs() as $entity ) {
+            $userUtil->setUpdateInfo($entity,$em,$sc);
+        }
+
+        foreach( $subjectUser->getGrants() as $entity ) {
             $userUtil->setUpdateInfo($entity,$em,$sc);
         }
 
@@ -2321,6 +2340,13 @@ class UserController extends Controller
         foreach( $subjectuser->getResearchLabs() as $item ) {
             $changeset = $uow->getEntityChangeSet($item);
             $text = "("."Research Lab ".$this->getEntityId($item).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Grants
+        foreach( $subjectuser->getGrants() as $item ) {
+            $changeset = $uow->getEntityChangeSet($item);
+            $text = "("."Grant ".$this->getEntityId($item).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 

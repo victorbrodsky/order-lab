@@ -1210,6 +1210,7 @@
         {% set adminCommentsPrototype = null %}
         {% set employmentStatusPrototype = null %}
         {% set researchLabsPrototype = null %}
+        {% set grantsPrototype = null %}
         {% set statelicensePrototype = null %}
         {% set boardcertificationPrototype = null %}
         {% set identifiersPrototype = null %}
@@ -1230,6 +1231,9 @@
         {% if form.researchLabs is defined %}
             {#{% set researchLabsPrototype = userform.researchLabs(form.researchLabs,cycle,'user-researchlabs','prototype') %}#}
             {% set researchLabsPrototype = usermacros.researchlabObject(form.researchLabs,cycle,'user-researchlabs','prototype',sitename,entity) %}
+        {% endif %}
+        {% if form.grants is defined %}
+            {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
         {% endif %}
 
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
@@ -1267,6 +1271,7 @@
              data-prototype-user-privatecomments = "{{ privateCommentsPrototype|e }}"
              data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
              data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
+             data-prototype-user-grants = "{{ grantsPrototype|e }}"
 
              data-userurllink = "{{ userform.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
@@ -1624,6 +1629,40 @@
             </div>
         {% else %}
             {% do form.researchLabs.setRendered %}
+        {% endif %}
+
+        {#Grants#}
+        {% set showGrants = false %}
+        {% for grant in form.grants %}
+            {% if grant.vars.value or grant.amount.vars.value or grant.grantTitle.vars.value or grant.startDate.vars.value %}
+                {% set showGrants = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showGrants and form.grants is defined %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-left">
+                        <a data-toggle="collapse" href="#Grants">
+                            Grant(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="Grants" class="panel-collapse collapse {{ collapsein }}">
+                    <div class="panel-body">
+
+                        <div class="user-grants-holder">
+                            {% for grant in form.grants %}
+                                {{ usermacros.grantObject(grant,cycle,'user-grants','noprototype',sitename,entity) }}
+                            {% endfor %}
+                            {{ usermacros.addNewObjectBtn( cycle, 'user-grants', 'Add Grant' ) }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% do form.grants.setRendered %}
         {% endif %}
 
         {#Credentials#}

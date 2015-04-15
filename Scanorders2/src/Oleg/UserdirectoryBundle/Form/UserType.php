@@ -264,6 +264,18 @@ class UserType extends AbstractType
             'prototype_name' => '__researchlabs__',
         ));
 
+        $params = array('read_only'=>$read_only,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
+        $builder->add('grants', 'collection', array(
+            'type' => new GrantType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__grants__',
+        ));
+
         if( $this->roleAdmin || $currentUser ) {
             $params = array('sc'=>$this->sc,'em'=>$this->em,'cycle'=>$this->cycle,'roleAdmin'=>$this->roleAdmin);
             $builder->add('credentials', new CredentialsType($params), array(

@@ -13,12 +13,12 @@ class Grant extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="BuildingList", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Grant", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Grant", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
@@ -75,7 +75,7 @@ class Grant extends ListAbstract
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $starDate;
+    private $startDate;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -95,12 +95,16 @@ class Grant extends ListAbstract
 
 
 
-    public function __construct() {
+    public function __construct($creator=null) {
 
         parent::__construct();
 
         $this->user = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
+
+        if( $creator ) {
+            $this->setCreator($creator);
+        }
 
     }
 
@@ -254,20 +258,22 @@ class Grant extends ListAbstract
     }
 
     /**
-     * @param mixed $starDate
+     * @param mixed $startDate
      */
-    public function setStarDate($starDate)
+    public function setStartDate($startDate)
     {
-        $this->starDate = $starDate;
+        $this->startDate = $startDate;
     }
 
     /**
      * @return mixed
      */
-    public function getStarDate()
+    public function getStartDate()
     {
-        return $this->starDate;
+        return $this->startDate;
     }
+
+
 
     /**
      * @param mixed $effort

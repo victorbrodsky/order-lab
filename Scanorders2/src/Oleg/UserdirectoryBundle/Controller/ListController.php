@@ -68,6 +68,7 @@ class ListController extends Controller
      * @Route("/source-organizations/", name="sourceorganizations-list")
      * @Route("/grant-titles/", name="granttitles-list")
      * @Route("/grant-links/", name="grantlinks-list")
+     * @Route("/grants/", name="grants-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -207,6 +208,7 @@ class ListController extends Controller
      * @Route("/source-organizations/", name="sourceorganizations_create")
      * @Route("/grant-titles/", name="granttitles_create")
      * @Route("/grant-links/", name="grantlinks_create")
+     * @Route("/grants/", name="grants_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -336,6 +338,7 @@ class ListController extends Controller
      * @Route("/source-organizations/new", name="sourceorganizations_new")
      * @Route("/grant-titles/new", name="granttitles_new")
      * @Route("/grant-links/new", name="grantlinks_new")
+     * @Route("/grants/new", name="grants_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -436,6 +439,7 @@ class ListController extends Controller
      * @Route("/source-organizations/{id}", name="sourceorganizations_show")
      * @Route("/grant-titles/{id}", name="granttitles_show")
      * @Route("/grant-links/{id}", name="grantlinks_show")
+     * @Route("/grants/{id}", name="grants_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -526,6 +530,7 @@ class ListController extends Controller
      * @Route("/source-organizations/{id}/edit", name="sourceorganizations_edit")
      * @Route("/grant-titles/{id}/edit", name="granttitles_edit")
      * @Route("/grant-links/{id}/edit", name="grantlinks_edit")
+     * @Route("/grants/{id}/edit", name="grants_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -648,6 +653,7 @@ class ListController extends Controller
      * @Route("/source-organizations/{id}", name="sourceorganizations_update")
      * @Route("/grant-titles/{id}", name="granttitles_update")
      * @Route("/grant-links/{id}", name="grantlinks_update")
+     * @Route("/grants/{id}", name="grants_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -984,6 +990,10 @@ class ListController extends Controller
                 $className = "GrantLink";
                 $displayName = "Grant Links";
                 break;
+            case "grants":
+                $className = "Grant";
+                $displayName = "Grants";
+                break;
 
 
             default:
@@ -1061,6 +1071,7 @@ class ListController extends Controller
      * @Route("/source-organizations/{id}", name="sourceorganizations_delete")
      * @Route("/grant-titles/{id}", name="granttitles_delete")
      * @Route("/grant-links/{id}", name="grantlinks_delete")
+     * @Route("/grants/{id}", name="grants_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
