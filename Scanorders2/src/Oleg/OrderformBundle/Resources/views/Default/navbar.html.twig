@@ -108,7 +108,7 @@
                                 {% set search = "" %}
                             {% endif %}
                             {% if searchtype is not defined %}
-                                {% set searchtype = "" %}
+                                {% set searchtype = 'MRN' %}
                             {% endif %}
                             <form class="navbar-form navbar-left" role="search" id="ordersearchform" name="ordersearchform" action="{{ path(scan_sitename~'_search_patients') }}" method="get">
                                 <input type="hidden" id="ordersearchform-searchtype" name="searchtype" value="{{ searchtype }}">
@@ -117,7 +117,9 @@
 
                                     <div class="input-group">
                                         <div class="input-group-btn">
-                                            <button id="ordersearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">MRN <span class="caret"></span></button>
+                                            <button id="ordersearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                {{ searchtype }} <span class="caret"></span>
+                                            </button>
                                             <ul class="dropdown-menu" role="menu">
                                                 {{ navbarmacros.searchBoxContent('MRN') }}
                                                 {{ navbarmacros.searchBoxContent('Patient Name') }}
