@@ -37,6 +37,11 @@ function setSearchtypeAction(searchType) {
         searchType = $('#ordersearchform-searchtype').val();
     }
 
+    //override searchtype in dropdown menu
+    var searchtypeButton = $('#ordersearch-searchtype-button');
+    searchtypeButton.html(searchType+' <span class="caret"></span>');
+    $('#ordersearchform-searchtype').val(searchType);
+
     //console.log('searchType='+searchType);
 
     var searchValue = $('#ordersearchform-search').val();
