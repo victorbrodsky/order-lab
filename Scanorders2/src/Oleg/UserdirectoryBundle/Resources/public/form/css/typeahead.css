@@ -1,5 +1,10 @@
 /*http://twitter.github.io/typeahead.js/examples/*/
 
+/*fix for small display for navbar*/
+.form-group-typeahead .twitter-typeahead {
+    display: block !important;
+}
+
 .tt-dropdown-menu,
 .gist {
     text-align: left;
@@ -8,7 +13,6 @@
 .typeahead,
 .tt-query,
 .tt-hint {
-    width: 550px;
     /*height: 30px;*/
     padding: 8px 12px;
     font-size: 24px;

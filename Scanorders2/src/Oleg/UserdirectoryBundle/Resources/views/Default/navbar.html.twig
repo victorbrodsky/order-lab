@@ -162,17 +162,19 @@
                                     {#</div>#}
 
                                     {#version 3: input field has inside button#}
-                                            <div class="form-group has-feedback">
-                                                <input
-                                                        type="text"
-                                                        class="typeahead submit-on-enter-field form-control"
-                                                        name="search" value="{{ search }}"
-                                                        placeholder="Search"
-                                                        style="font-size: 14px !important;"
-                                                        aria-describedby="inputSuccess2Status">
-                                                <span class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeaheadsearchform.submit();" aria-hidden="true"></span>
-                                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
-                                            </div>
+                                    <div class="form-group-typeahead">
+                                        <div class="form-group has-feedback">
+                                            <input
+                                                    type="text"
+                                                    class="typeahead submit-on-enter-field form-control"
+                                                    name="search" value="{{ search }}"
+                                                    placeholder="Search"
+                                                    style="font-size: 14px !important;"
+                                                    aria-describedby="inputSuccess2Status">
+                                            <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeaheadsearchform.submit();" aria-hidden="true"></span>
+                                            <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
