@@ -57,28 +57,30 @@
 
 
 {% macro field( field, label, attr ) %}
-    {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
-    <p>
-    <div class="row">
-        {{ form_errors(field) }}
-        <div class="col-xs-6" align="right">
-            {{ form_label(field,label) }}
+    {% if field is defined %}
+        {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
+        <p>
+        <div class="row">
+            {{ form_errors(field) }}
+            <div class="col-xs-6" align="right">
+                {{ form_label(field,label) }}
+            </div>
+            <div class="col-xs-6" align="left">
+                {% if attr == "disabled" %}
+                    {#value of disabled field will be ignored#}
+                    {{ form_widget(field,{ 'disabled':'disabled' }) }}
+                {% elseif attr == "readonly" %}
+                    {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+                {% elseif attr == "required" %}
+                    {{ form_widget(field, { 'attr': {'required': 'true'} }) }}
+                {% else %}
+                    {{ form_widget(field) }}
+                {% endif %}
+            </div>
+            {{ form_rest(field) }}
         </div>
-        <div class="col-xs-6" align="left">
-            {% if attr == "disabled" %}
-                {#value of disabled field will be ignored#}
-                {{ form_widget(field,{ 'disabled':'disabled' }) }}
-            {% elseif attr == "readonly" %}
-                {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
-            {% elseif attr == "required" %}
-                {{ form_widget(field, { 'attr': {'required': 'true'} }) }}
-            {% else %}
-                {{ form_widget(field) }}
-            {% endif %}
-        </div>
-        {{ form_rest(field) }}
-    </div>
-    </p>
+        </p>
+    {% endif %}
 {% endmacro %}
 
 {% macro fieldDateLabel_notempty( field, cycle, classname, attr ) %}
@@ -1072,7 +1074,7 @@
 {% endmacro %}
 
 
-{% macro fieldpaper(paper,cycle,prototype) %}
+{% macro fieldpaper(paper,cycle,prototype,documentspercontainer) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -1082,9 +1084,21 @@
         {#part.id:{{ paper.vars.value.part.id }}#}
         {#orderid:{{ paper.vars.value.orderinfo.id }}#}
 
+        {% if documentspercontainer is not defined or documentspercontainer == "" or documentspercontainer == 0 %}
+            {% set dz_maxFiles = 3 %}
+        {% else %}
+            {% set dz_maxFiles = documentspercontainer
+            %}
+        {% endif %}
+
         <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
             {% if cycle != "show" %}
-                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 3 files, 10 MB each)</span></div>
+
+                {% if dz_maxFiles is defined %}
+                    {#<input type="hidden" id="documentcontainer-documentspercontainer" value="{{ dz_maxFiles }}">#}
+                {% endif %}
+
+                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span></div>
             {% else %}
                 <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
             {% endif %}
@@ -1210,7 +1224,7 @@
 {% endmacro %}
 
 
-{% macro fieldDocumentContainer(container,cycle,prefix,renderType) %}
+{% macro fieldDocumentContainer(container,cycle,prefix,renderType,documentspercontainer) %}
     {% import _self as formmacros %}
 
     {% if renderType is defined and renderType == "panel" %}
@@ -1234,17 +1248,17 @@
             </div>
 
             <div id="form_body_{{ prefix }}_documentContainer_{{ uniqueId }}" class="panel-body collapse in">
-                {{ formmacros.fieldDocumentContainerPlain(container,cycle) }}
+                {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer) }}
             </div>
         </div>
     {% else %}
         <div class="well well-sm">
-            {{ formmacros.fieldDocumentContainerPlain(container,cycle) }}
+            {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer) }}
         </div>
     {% endif %}
 
 {% endmacro %}
-{% macro fieldDocumentContainerPlain(container,cycle) %}
+{% macro fieldDocumentContainerPlain(container,cycle,documentspercontainer) %}
     {% import _self as formmacros %}
 
     {{ form_errors(container) }}
@@ -1255,33 +1269,45 @@
     {#documents/images in container#}
     <p>
     <div class="documentcontainer">
+
         <div class="row">
             <div class="col-xs-6" align="right">
                 {{form_label(container.documents)}}
             </div>
             <div class="col-xs-6" align="left">
-                {{ formmacros.fieldpaper(container,cycle,'prototype') }}
+                {{ formmacros.fieldpaper(container,cycle,'prototype',documentspercontainer) }}
             </div>
         </div>
+
     </div>
     </p>
 
-    {{ formmacros.field(container.title) }}
+    {% if container.title is defined %}
+        {{ formmacros.field(container.title) }}
+    {% endif %}
 
     {#comments#}
-    {% if container.comments|length > 0 %}
-        {#<div class="well well-sm">#}
+    {% if container.title is defined %}
+        {% if container.comments|length > 0 %}
             {% endif %}
             {% for comment in container.comments %}
                 {{ formmacros.field(comment.comment) }}
             {% endfor %}
             {% if container.comments|length > 0 %}
-        {#</div>#}
+        {% endif %}
     {% endif %}
 
-    {{ formmacros.field(container.device) }}
-    {{ formmacros.fieldDateLabel(container.datetime,'regular-datepicker') }}
-    {{ formmacros.field(container.provider) }}
+    {% if container.device is defined %}
+        {{ formmacros.field(container.device) }}
+    {% endif %}
+
+    {% if container.device is defined %}
+        {{ formmacros.fieldDateLabel(container.datetime,'regular-datepicker') }}
+    {% endif %}
+
+    {% if container.device is defined %}
+        {{ formmacros.field(container.provider) }}
+    {% endif %}
 
 {% endmacro %}
 

@@ -795,6 +795,8 @@
             </div>
         {% endif %}
 
+        {{ formmacros.field(formfield.id) }}
+
         {{ formmacros.field(formfield.sourceOrganization) }}
         {{ formmacros.field(formfield.grantid) }}
         {{ formmacros.field(formfield.grantTitle) }}
@@ -806,11 +808,17 @@
         {{ formmacros.field(formfield.comment) }}
 
         {#grant's attachmentContainer#}
+        documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}
+        {#documents|length:{{ formfield.attachmentContainer.documentContainers|first.vars.value.documents|length }}#}
         {% if formfield.attachmentContainer is defined %}
+            {% set count = 0 %}
             {% for documentContainer in formfield.attachmentContainer.documentContainers %}
-                {% set uniqueId = "now"|date("HHMMSSmmm") %}
-                uniqueId:{{ uniqueId }}
-                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId) }}
+                {#YMDHisu m-d-Y H:i:s.u#}
+                {% set count = count + 1 %}
+                {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
+                {#uniqueId:{{ uniqueId }}#}
+                documents|length:{{ documentContainer.documents|length }}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20) }}
             {% endfor %}
         {% endif %}
 

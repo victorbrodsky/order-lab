@@ -31,7 +31,7 @@ class AttachmentContainerType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__documentcontainer__',
+            'prototype_name' => '__documentContainers__',
         ));
 
     }

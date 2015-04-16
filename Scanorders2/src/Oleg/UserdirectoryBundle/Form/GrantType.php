@@ -27,18 +27,12 @@ class GrantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( strpos($this->params['cycle'],'_standalone') === false ) {
-            $readonly = true;
-        } else {
-            $readonly = false;
-        }
-
         //echo "cycle=".$this->params['cycle']."<br>";
 
-//        $builder->add('id','hidden',array(
-//            'label'=>false,
-//            'attr' => array('class'=>'grant-id-field')
-//        ));
+        $builder->add('id','hidden',array(
+            'label'=>false,
+            'attr' => array('class'=>'grant-id-field')
+        ));
 
         $builder->add('grantid',null,array(
             'label'=>'Grant ID Number:',
@@ -77,21 +71,21 @@ class GrantType extends AbstractType
             'label'=>"Grant Title:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-granttitle', 'type' => 'hidden'),
-            'classtype' => 'grantTitle'
+            'classtype' => 'granttitle'
         ));
 
         $builder->add('sourceOrganization', 'employees_custom_selector', array(
             'label' => "Source Organization:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-sourceorganization', 'type' => 'hidden'),
-            'classtype' => 'sourceOrganization'
+            'classtype' => 'sourceorganization'
         ));
 
         $builder->add('grantLink', 'employees_custom_selector', array(
             'label' => "Link to a page with more information:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-grantlink', 'type' => 'hidden'),
-            'classtype' => 'grantLink'
+            'classtype' => 'grantlink'
         ));
 
         $builder->add('effort', 'employees_custom_selector', array(
@@ -99,6 +93,14 @@ class GrantType extends AbstractType
             'attr' => array('class' => 'ajax-combobox-effort', 'type' => 'hidden', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),
             'required' => false,
             'classtype' => 'effort'
+        ));
+
+        //Relevant Documents
+        $params = array('labelPrefix'=>'Relevant Documents');
+        $params['document.showall'] = false;
+        $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+            'required' => false,
+            'label' => false
         ));
 
 

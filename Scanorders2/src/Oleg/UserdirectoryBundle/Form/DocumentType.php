@@ -39,6 +39,6 @@ class DocumentType extends AbstractType
 
     public function getName()
     {
-        return 'oleg_userdirectorybundle_document';
+        return 'oleg_userdirectorybundle_documenttype';
     }
 }

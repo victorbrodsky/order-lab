@@ -1273,6 +1273,9 @@ class UserController extends Controller
 
             $user = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
 
+            //set documents for grants
+            $this->setGrantsComments($user);
+
             $em->persist($user);
             $em->flush();
 
@@ -1675,13 +1678,22 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
+        //oleg_userdirectorybundle_user[grants][0][grantid]
+        //oleg_userdirectorybundle_user[grants][0][attachmentContainer][documentContainers][0][id][documents][0][id]
+        $documentContainrs = $form["grants"][0]["attachmentContainer"]["documentContainers"]->getData();
+        echo "form doc containers count=".count($documentContainrs)."<br>";
+        $documents = $form["grants"][0]["attachmentContainer"]["documentContainers"][0]["documents"]->getData();
+        echo "form docs count=".count($documents)."<br>";
+        $document = $documents->first();
+        echo $document;
+
         //exit('after handle request');
         //print_r($form->getErrors());
 //        print_r($form->getErrors());
 //        echo "<br>loc string errors:<br>";
 //        print_r($form->getErrorsAsString());
 //        echo "<br>";
-//        exit();
+        exit();
 
         if( $form->isValid() ) {
 
@@ -1715,6 +1727,9 @@ class UserController extends Controller
             }
 
             //exit('before processing');
+
+            //set documents for grants
+            $this->setGrantsComments($entity);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForInstitutionTree($entity);
@@ -1831,7 +1846,14 @@ class UserController extends Controller
             }
 
             //echo "user=".$entity."<br>";
-            //exit();
+            if( count($entity->getGrants()) > 0 ) {
+                echo "2 DocumentContainers count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers())."<br>";
+                if( count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
+                    echo "3 documents count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
+                }
+                exit('user exit');
+            }
+
 
             //$em->persist($entity);
             $em->flush($entity);
@@ -2033,6 +2055,40 @@ class UserController extends Controller
     }
 
 
+    //set documents for grants
+    public function setGrantsComments($subjectUser) {
+        //return;
+        //exit();
+        $em = $this->getDoctrine()->getManager();
+        foreach( $subjectUser->getGrants() as $grant ) {
+
+            echo "0 grant doc count=".count($grant->getAttachmentContainer()->getDocumentContainers())."<br>";
+            //exit();
+
+            //oleg_userdirectorybundle_user[grants][0][amount]
+            //oleg_userdirectorybundle_user[grants][0][attachmentContainer][documentContainers][0][id][documents][0][id]
+            //oleg_userdirectorybundle_user[publicComments][2][documents][0][id]
+
+            foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
+
+                $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+
+                if( $documentContainer ) {
+                    //$userUtil = new UserUtil();
+                    //$sc = $this->get('security.context');
+                    //$userUtil->setUpdateInfo($documentContainer,$em,$sc);
+                }
+
+            }
+
+            echo "1 doc count=".count($grant->getAttachmentContainer()->getDocumentContainers())."<br>";
+            if( count($grant->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
+                echo "1 documents count=".count($grant->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
+            }
+            //exit();
+        }
+    }
+
     //explicitly set a new avatar
     public function processSetAvatar($subjectUser) {
 
@@ -2134,6 +2190,13 @@ class UserController extends Controller
                             //remove dependents: remove comments and id from lab
                             $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->removeDependents( $subjectUser, $title );
                         }
+
+                        if( $title instanceof Grant ) {
+                            //remove dependents: remove documents
+                            //$em->getRepository('OlegUserdirectoryBundle:Grant')->removeDependents( $subjectUser, $title );
+                        }
+
+                        //TODO: remove documents from comments?
                     }
                 }
             } else {

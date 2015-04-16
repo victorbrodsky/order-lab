@@ -59,13 +59,13 @@ abstract class ObjectAbstract
 
 //    /**
 //     * DocumentContainer can have many Documents; each Document has document type (DocumentTypeList)
-//     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
 //     **/
 //    protected $documentContainer;
 
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
      **/
     protected $attachmentContainer;
 

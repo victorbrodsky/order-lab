@@ -75,6 +75,13 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     //console.log('clickable='+clickable);
     //console.log('addRemoveLinks='+addRemoveLinks);
 
+    //overwrite maxfiles
+    var documentspercontainer = $(targetid).find('#documentcontainer-documentspercontainer').val();
+    if( documentspercontainer && documentspercontainer != "undefined" ) {
+        _dz_maxFiles = documentspercontainer;
+    }
+    //console.log('_dz_maxFiles='+_dz_maxFiles);
+
     var previewHtml =
         '<div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">'+
             '<div class="dz-details">'+

@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_attachmentContainer")
+ * @ORM\Table(name="user_attachmentContainer")
  */
 class AttachmentContainer {
 
@@ -29,7 +29,7 @@ class AttachmentContainer {
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="DocumentContainer", mappedBy="attachmentContainer")
+     * @ORM\OneToMany(targetEntity="DocumentContainer", mappedBy="attachmentContainer", cascade={"persist","remove"})
      **/
     private $documentContainers;
 
@@ -68,8 +68,9 @@ class AttachmentContainer {
     }
     public function addDocumentContainer($item)
     {
-        if( !$this->documentContainers->contains($item) ) {
+        if( $item && !$this->documentContainers->contains($item) ) {
             $this->documentContainers->add($item);
+            $item->setAttachmentContainer($this);
         }
     }
     public function removeDocumentContainer($item)
@@ -78,6 +79,8 @@ class AttachmentContainer {
     }
 
 
-
+    public function __toString() {
+        return "AttachmentContainer:"."documents=".count($this->getDocumentContainers())."<br>";
+    }
 
 } 

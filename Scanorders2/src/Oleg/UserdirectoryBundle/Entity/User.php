@@ -97,25 +97,25 @@ class User extends BaseUser {
     private $locations;
 
     /**
-     * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
      */
     private $administrativeTitles;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppointmentTitle", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppointmentTitle", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
      */
     private $appointmentTitles;
 
     /**
-     * @ORM\OneToMany(targetEntity="MedicalTitle", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="MedicalTitle", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
      */
     private $medicalTitles;
 
     /**
-     * @ORM\OneToMany(targetEntity="EmploymentStatus", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="EmploymentStatus", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"terminationDate" = "ASC"})
      */
     private $employmentStatus;
@@ -126,30 +126,30 @@ class User extends BaseUser {
     private $researchLabs;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Grant", mappedBy="user", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Grant", mappedBy="user", cascade={"persist","remove"})
      **/
     private $grants;
 
     /**
-     * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
     private $privateComments;
 
     /**
-     * @ORM\OneToMany(targetEntity="PublicComment", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PublicComment", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
     private $publicComments;
 
     /**
-     * @ORM\OneToMany(targetEntity="ConfidentialComment", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ConfidentialComment", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
     private $confidentialComments;
 
     /**
-     * @ORM\OneToMany(targetEntity="AdminComment", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AdminComment", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
     private $adminComments;

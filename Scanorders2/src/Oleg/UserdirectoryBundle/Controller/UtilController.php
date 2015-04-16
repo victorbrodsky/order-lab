@@ -523,6 +523,7 @@ class UtilController extends Controller {
         $ssn = trim( $request->get('number') );
         $em = $this->getDoctrine()->getManager();
 
+        $users = null;
         $user = null;
 
         if( $ssn != "" ) {
@@ -901,6 +902,17 @@ class UtilController extends Controller {
                 break;
             case "commentsubtype":
                 $className = "CommentSubTypeList";
+                break;
+
+            //grants
+            case "granttitle":
+                $className = "GrantTitle";
+                break;
+            case "sourceorganization":
+                $className = "SourceOrganization";
+                break;
+            case "grantlink":
+                $className = "GrantLink";
                 break;
 
             default:

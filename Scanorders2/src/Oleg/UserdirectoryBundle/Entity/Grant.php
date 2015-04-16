@@ -51,7 +51,7 @@ class Grant extends ListAbstract
     //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
      **/
     private $attachmentContainer;
 
@@ -102,8 +102,23 @@ class Grant extends ListAbstract
         $this->user = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
 
+        //set mandatory list attributes
+        $this->setName("");
+        $this->setType('user-added');
+        $this->setCreatedate(new \DateTime());
+        $this->setOrderinlist(-1);
         if( $creator ) {
             $this->setCreator($creator);
+        }
+
+        //add one document
+        $attachmentContainer = $this->getAttachmentContainer();
+        if( !$attachmentContainer ) {
+            $attachmentContainer = new AttachmentContainer();
+            $this->setAttachmentContainer($attachmentContainer);
+            if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
+                $attachmentContainer->addDocumentContainer( new DocumentContainer() );
+            }
         }
 
     }
@@ -292,6 +307,24 @@ class Grant extends ListAbstract
     }
 
 
+
+    //interface function
+    public function getAuthor()
+    {
+        return $this->getCreator();
+    }
+    public function setAuthor($author)
+    {
+        return $this->setCreator($author);
+    }
+    public function getUpdateAuthor()
+    {
+        return $this->getUpdatedby();
+    }
+    public function setUpdateAuthor($author)
+    {
+        return $this->setUpdatedby($author);
+    }
 
 
 }

@@ -33,6 +33,11 @@ var _fellowshipTitles = new Array();
 var _traininginstitution = new Array();
 var _locationusers = new Array();
 
+//grants
+var _granttitle = new Array();
+var _sourceorganization = new Array();
+var _grantlink = new Array();
+
 
 function initAllComboboxGeneric(newForm) {
 
@@ -60,6 +65,11 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'locationusers',_locationusers,false,'');
     //getComboboxGeneric(newForm,'residencyspecialty',_residencySpecialtys,false);
     //getComboboxGeneric(newForm,'fellowshipsubspecialty',_fellowshipSubspecialtys,false);
+
+    //grants
+    getComboboxGeneric(newForm,'granttitle',_granttitle,false);
+    getComboboxGeneric(newForm,'sourceorganization',_sourceorganization,false);
+    getComboboxGeneric(newForm,'grantlink',_grantlink,false);
 
     setBuidlingListener(newForm);
 
