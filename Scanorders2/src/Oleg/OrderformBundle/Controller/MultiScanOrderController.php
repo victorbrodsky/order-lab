@@ -187,10 +187,10 @@ class MultiScanOrderController extends Controller {
 //       } else {
 //           echo "form is not valid ??? <br>";
 //       }
-        //echo "<br>errors:<br>".$form->getErrors()."<br>";
-        //echo "errors as string=".$form->getErrorsAsString()."<br>";
-        //echo "order patient=".$entity->getPatient()->first();
-        //exit("controller exit");
+//        echo "<br>errors:<br>".$form->getErrors()."<br>";
+//        echo "errors as string=".$form->getErrorsAsString()."<br>";
+//        //echo "order patient=".$entity->getPatient()->first();
+//        exit("controller exit");
 
         if( $form->isValid() ) {
 

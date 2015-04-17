@@ -539,7 +539,7 @@ class CheckController extends Controller {
 
         $element = array();
 
-        if( !$entity && strpos($key,$entity->obtainNoprovidedKeyPrefix().'-') !== false ) {
+        if( $entity && strpos($key,$entity->obtainNoprovidedKeyPrefix().'-') !== false ) {
             $entity = null;
             $element = -2;
         }
@@ -675,7 +675,7 @@ class CheckController extends Controller {
             
             $element = array();
 
-            if( !$entity && strpos($key,$entity->obtainNoprovidedKeyPrefix().'-') !== false ) {
+            if( $entity && strpos($key,$entity->obtainNoprovidedKeyPrefix().'-') !== false ) {
                 $entity = null;
                 $element = -2;
             }

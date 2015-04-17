@@ -1678,22 +1678,14 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-        //oleg_userdirectorybundle_user[grants][0][grantid]
-        //oleg_userdirectorybundle_user[grants][0][attachmentContainer][documentContainers][0][id][documents][0][id]
-        $documentContainrs = $form["grants"][0]["attachmentContainer"]["documentContainers"]->getData();
-        echo "form doc containers count=".count($documentContainrs)."<br>";
-        $documents = $form["grants"][0]["attachmentContainer"]["documentContainers"][0]["documents"]->getData();
-        echo "form docs count=".count($documents)."<br>";
-        $document = $documents->first();
-        echo $document;
 
-        //exit('after handle request');
-        //print_r($form->getErrors());
-//        print_r($form->getErrors());
-//        echo "<br>loc string errors:<br>";
-//        print_r($form->getErrorsAsString());
-//        echo "<br>";
-        exit();
+        if( $form->isValid() ) {
+            echo "form is valid <br>";
+        } else {
+            echo "form has error <br>";
+        }
+
+
 
         if( $form->isValid() ) {
 
@@ -1846,12 +1838,12 @@ class UserController extends Controller
             }
 
             //echo "user=".$entity."<br>";
-            if( count($entity->getGrants()) > 0 ) {
+            if( 1==0 && count($entity->getGrants()) > 0 ) {
                 echo "2 DocumentContainers count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers())."<br>";
                 if( count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
                     echo "3 documents count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
                 }
-                exit('user exit');
+                //exit('user exit');
             }
 
 
@@ -2057,17 +2049,9 @@ class UserController extends Controller
 
     //set documents for grants
     public function setGrantsComments($subjectUser) {
-        //return;
-        //exit();
+
         $em = $this->getDoctrine()->getManager();
         foreach( $subjectUser->getGrants() as $grant ) {
-
-            echo "0 grant doc count=".count($grant->getAttachmentContainer()->getDocumentContainers())."<br>";
-            //exit();
-
-            //oleg_userdirectorybundle_user[grants][0][amount]
-            //oleg_userdirectorybundle_user[grants][0][attachmentContainer][documentContainers][0][id][documents][0][id]
-            //oleg_userdirectorybundle_user[publicComments][2][documents][0][id]
 
             foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
 
@@ -2081,11 +2065,6 @@ class UserController extends Controller
 
             }
 
-            echo "1 doc count=".count($grant->getAttachmentContainer()->getDocumentContainers())."<br>";
-            if( count($grant->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
-                echo "1 documents count=".count($grant->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
-            }
-            //exit();
         }
     }
 

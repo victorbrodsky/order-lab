@@ -24,6 +24,8 @@ class DocumentContainerType extends AbstractType
 
         if( $params && !array_key_exists('document.showall',$params) ) {
             $params['document.showall'] = true;
+        } else {
+            $params['document.showall'] = false;
         }
 
         $this->params = $params;

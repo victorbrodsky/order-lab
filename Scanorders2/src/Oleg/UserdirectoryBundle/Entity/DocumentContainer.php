@@ -141,6 +141,8 @@ class DocumentContainer {
     }
     public function addDocument($document)
     {
+        //echo "add document=".$document;
+        //exit('add');
         if( $document && !$this->documents->contains($document) ) {
             $this->documents->add($document);
         }

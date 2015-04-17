@@ -23,7 +23,7 @@
     </li>
 {% endmacro %}
 
-{% macro fileupload( comment, cycle, classname, prototype ) %}
+{% macro fileupload( container, cycle, classname, prototype ) %}
 
 
     {% import _self as usermacros %}
@@ -44,7 +44,7 @@
                     <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
                 {% endif %}
 
-                {{ usermacros.document( comment, cycle, prototype ) }}
+                {{ usermacros.document( container, cycle, prototype ) }}
 
             </div>
 
@@ -56,7 +56,7 @@
 
 {% endmacro %}
 
-{% macro document( comment, cycle, prototype ) %}
+{% macro document( container, cycle, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {#get sitename#}
@@ -68,7 +68,7 @@
         {% set sitename = employees_sitename %}
     {% endif %}
 
-    {% for document in comment.documents %}
+    {% for document in container.documents %}
 
         <div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">
             <div class="dz-details">
@@ -100,7 +100,7 @@
 
     {% endfor %}
 
-    {% do comment.documents.setRendered %}
+    {% do container.documents.setRendered %}
 
 {% endmacro %}
 
@@ -808,17 +808,14 @@
         {{ formmacros.field(formfield.comment) }}
 
         {#grant's attachmentContainer#}
-        documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}
-        {#documents|length:{{ formfield.attachmentContainer.documentContainers|first.vars.value.documents|length }}#}
+        {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
         {% if formfield.attachmentContainer is defined %}
             {% set count = 0 %}
             {% for documentContainer in formfield.attachmentContainer.documentContainers %}
-                {#YMDHisu m-d-Y H:i:s.u#}
                 {% set count = count + 1 %}
                 {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
-                {#uniqueId:{{ uniqueId }}#}
-                documents|length:{{ documentContainer.documents|length }}
                 {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20) }}
+                {#{% do documentContainer.setRendered %}#}
             {% endfor %}
         {% endif %}
 

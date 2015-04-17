@@ -730,7 +730,8 @@ class PatientController extends Controller
             'withorders' => false,
             'persist' => false,
             'specificmessage' => $message,
-            'testpatient' => true
+            'testpatient' => true,
+            //'accession.attachmentContainer' => 1 //testing!!!
         );
         $patient = $this->createPatientDatastructure($thisparams);
 
@@ -823,6 +824,14 @@ class PatientController extends Controller
             $encounterCount++;
 
             //block staintype
+
+            //testing!!! add document to autopsy image
+//            $accessionAttachmentContainer = $accession->getAttachmentContainer();
+//            $accessionDocContainer = $accessionAttachmentContainer->getdocumentContainers()->first();
+//            //add document to DocumentContainer
+//            $uniqueName = 'testimage_5522979c2e736.jpg';
+//            $autopsydocument = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
+//            $accessionDocContainer->addDocument($autopsydocument);
 
         }
         ///////////////////// EOF populate accession with accession number, accession type, etc. /////////////////////

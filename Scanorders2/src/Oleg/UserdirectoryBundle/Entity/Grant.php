@@ -51,7 +51,7 @@ class Grant extends ListAbstract
     //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
      **/
     private $attachmentContainer;
 
