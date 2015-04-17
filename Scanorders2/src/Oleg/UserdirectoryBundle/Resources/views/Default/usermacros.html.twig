@@ -786,9 +786,15 @@
         {% set standAloneObject = true %}
     {% endif %}
 
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if cycle != 'show_user' %}
+        {% if not showFlag %}
             <div class="text-right">
                 {#btn-remove-minimumone-collection#}
                 <button type="button" class="btn btn-default btn-sm  confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
@@ -800,7 +806,24 @@
         {{ formmacros.field(formfield.sourceOrganization) }}
         {{ formmacros.field(formfield.grantid) }}
         {{ formmacros.field(formfield.grantTitle) }}
-        {{ formmacros.field_notempty(formfield.grantLink,cycle,'link',"") }}
+
+        {% if not showFlag %}
+            {{ formmacros.field_notempty(formfield.grantLink,cycle) }}
+        {% else %}
+            {% if formfield.vars.value and formfield.vars.value.grantLink %}
+
+                {% if "http" in formfield.vars.value.grantLink %}
+                    {% set href = formfield.vars.value.grantLink %}
+                {% else %}
+                    {% set href = "http://"~formfield.vars.value.grantLink %}
+                {% endif %}
+                {% set hreflink = '<a href="'~href|raw~'">'~formfield.vars.value.grantLink~'</a>' %}
+                {{ formmacros.simplefield( "Link to a page with more information:", hreflink, "", "disabled" ) }}
+
+            {% endif %}
+            {% do formfield.grantLink.setRendered %}
+        {% endif %}
+
         {{ formmacros.field(formfield.effort) }}
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date') }}

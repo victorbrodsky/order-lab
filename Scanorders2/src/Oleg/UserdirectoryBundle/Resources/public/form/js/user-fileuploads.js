@@ -365,7 +365,7 @@ function constractDocuemntIdFieldHtml(commentHolder,documentid) {
     var idHtml =    '<input type="hidden" id="'+beginIdStr+'_documents_'+documentCount+'_id" '+
         'name="'+beginNameStr+'[documents]['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
 
-    //console.log("idHtml="+idHtml);
+    console.log("idHtml="+idHtml);
 
     return idHtml;
 }
@@ -413,7 +413,7 @@ function getNewDocumentInfoByHolder( commentHolder ) {
 //get id and name up to _documents_
 function getElementInfoById( id, name ) {
 
-    //console.log('id='+id);
+    console.log('id='+id);
     //console.log('name='+name);
 
     if( !id || id == ""  ) {
