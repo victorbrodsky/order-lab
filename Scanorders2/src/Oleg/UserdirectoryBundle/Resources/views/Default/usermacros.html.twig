@@ -803,9 +803,9 @@
 
         {{ formmacros.field(formfield.id) }}
 
+        {{ formmacros.field(formfield.grantTitle) }}
         {{ formmacros.field(formfield.sourceOrganization) }}
         {{ formmacros.field(formfield.grantid) }}
-        {{ formmacros.field(formfield.grantTitle) }}
 
         {% if not showFlag %}
             {{ formmacros.field_notempty(formfield.grantLink,cycle) }}
@@ -834,12 +834,18 @@
         {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
         {% if formfield.attachmentContainer is defined %}
             {% set count = 0 %}
+            {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
             {% for documentContainer in formfield.attachmentContainer.documentContainers %}
                 {% set count = count + 1 %}
                 {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
                 {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20) }}
-                {#{% do documentContainer.setRendered %}#}
             {% endfor %}
+
+            {% if prototype == "prototype" %}
+                {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20) }}
+            {% endif %}
+
         {% endif %}
 
     </div>

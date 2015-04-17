@@ -75,7 +75,7 @@ class GrantType extends AbstractType
         ));
 
         $builder->add('sourceOrganization', 'employees_custom_selector', array(
-            'label' => "Source Organization:",
+            'label' => "Source Sponsor Organization:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-sourceorganization', 'type' => 'hidden'),
             'classtype' => 'sourceorganization'
@@ -96,7 +96,7 @@ class GrantType extends AbstractType
         ));
 
         //Relevant Documents
-        $params = array('labelPrefix'=>'Relevant Documents');
+        $params = array('labelPrefix'=>'Relevant Document');
         $params['document.showall'] = false;
         $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
             'required' => false,

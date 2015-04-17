@@ -83,6 +83,9 @@ function getBaseTitleForm( elclass ) {
     var prototype = collectionHolder.data('prototype-'+identLowerCase);
     //console.log("prototype="+prototype);
 
+    //grant __documentContainers__ => 0
+    prototype = prototype.replace("__documentContainers__", "0");
+
     //var newForm = prototype.replace(/__administrativetitles__/g, elements.length);
 
     var classArr = identLowerCase.split("-"); //user-fieldname

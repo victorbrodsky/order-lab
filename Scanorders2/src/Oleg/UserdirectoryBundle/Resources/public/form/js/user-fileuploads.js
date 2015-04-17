@@ -449,37 +449,42 @@ function getElementInfoById_User( id, name ) {
     var beginIdStr = null;
     var beginNameStr = null;
 
-    //comment's document
+    //adding document to existing documentContainer with existing document(s)
     //input: oleg_userdirectorybundle_user_publicComments_0_documents_1_id
     //goal:  oleg_userdirectorybundle_user_publicComments_0
     if( id.indexOf("_documents_") !== -1 ) {
+
+        /////////////// adding document //////////////////
         var idArr = id.split("_documents");
         beginIdStr = idArr[0];
         var nameArr = name.split("[documents]");
         beginNameStr = nameArr[0];
-    }
 
-    //comment's document
-    //input: oleg_userdirectorybundle_user_publicComments_0_commentType
-    //goal:  oleg_userdirectorybundle_user_publicComments_0
-    if( id.indexOf("_commentType") !== -1 ) {
-        var idArr = id.split("_commentType");
-        beginIdStr = idArr[0];
-        var nameArr = name.split("[commentType]");
-        beginNameStr = nameArr[0];
-    }
+    } else {
 
-    //grant's document
-    //input: oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0_id
-    //goal:  oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0
-    if( id.indexOf("_documentContainers_") !== -1 ) {
-        var idArr = id.split("_documentContainers_");
-        var endStr = idArr[1]; //0_id
-        var containerIndexArr = idArr[1].split("_id");
-        beginIdStr = idArr[0]+"_documentContainers_"+containerIndexArr[0];
+        /////////////// new document //////////////////
+        //comment's document
+        //input: oleg_userdirectorybundle_user_publicComments_0_commentType
+        //goal:  oleg_userdirectorybundle_user_publicComments_0
+        if( id.indexOf("_commentType") !== -1 ) {
+            var idArr = id.split("_commentType");
+            beginIdStr = idArr[0];
+            var nameArr = name.split("[commentType]");
+            beginNameStr = nameArr[0];
+        }
 
-        var nameArr = name.split("[documentContainers]");
-        beginNameStr = nameArr[0]+"[documentContainers]"+"["+containerIndexArr[0]+"]";
+        //grant's document
+        //input: oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0_id
+        //goal:  oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0
+        if( id.indexOf("_documentContainers_") !== -1 ) {
+            var idArr = id.split("_documentContainers_");
+            var containerIndexArr = idArr[1].split("_id");
+            beginIdStr = idArr[0]+"_documentContainers_"+containerIndexArr[0];
+
+            var nameArr = name.split("[documentContainers]");
+            beginNameStr = nameArr[0]+"[documentContainers]"+"["+containerIndexArr[0]+"]";
+        }
+
     }
 
     if( beginIdStr == null ) {
