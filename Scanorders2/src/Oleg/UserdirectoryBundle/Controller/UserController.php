@@ -1274,7 +1274,10 @@ class UserController extends Controller
             $user = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
 
             //set documents for grants
-            $this->setGrantsComments($user);
+            //$this->setGrantsComments($user);
+            $commentDummy = $form['commentDummy']->getData();
+            $effortDummy = $form['effortDummy']->getData();
+            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($user,$commentDummy,$effortDummy);
 
             $em->persist($user);
             $em->flush();
@@ -1721,7 +1724,10 @@ class UserController extends Controller
             //exit('before processing');
 
             //set documents for grants
-            $this->setGrantsComments($entity);
+            //$this->setGrantsComments($entity,$form);
+            $commentDummy = $form['commentDummy']->getData();
+            $effortDummy = $form['effortDummy']->getData();
+            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity,$commentDummy,$effortDummy);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForInstitutionTree($entity);
@@ -2047,26 +2053,26 @@ class UserController extends Controller
     }
 
 
-    //set documents for grants
-    public function setGrantsComments($subjectUser) {
-
-        $em = $this->getDoctrine()->getManager();
-        foreach( $subjectUser->getGrants() as $grant ) {
-
-            foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
-
-                $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
-
-                if( $documentContainer ) {
-                    //$userUtil = new UserUtil();
-                    //$sc = $this->get('security.context');
-                    //$userUtil->setUpdateInfo($documentContainer,$em,$sc);
-                }
-
-            }
-
-        }
-    }
+//    //set documents for grants
+//    public function setGrantsComments($subjectUser) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//        foreach( $subjectUser->getGrants() as $grant ) {
+//
+//            foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
+//
+//                $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+//
+//                if( $documentContainer ) {
+//                    //$userUtil = new UserUtil();
+//                    //$sc = $this->get('security.context');
+//                    //$userUtil->setUpdateInfo($documentContainer,$em,$sc);
+//                }
+//
+//            }
+//
+//        }
+//    }
 
     //explicitly set a new avatar
     public function processSetAvatar($subjectUser) {
@@ -2172,7 +2178,7 @@ class UserController extends Controller
 
                         if( $title instanceof Grant ) {
                             //remove dependents: remove documents
-                            //$em->getRepository('OlegUserdirectoryBundle:Grant')->removeDependents( $subjectUser, $title );
+                            $em->getRepository('OlegUserdirectoryBundle:Grant')->removeDependents( $subjectUser, $title );
                         }
 
                         //TODO: remove documents from comments?

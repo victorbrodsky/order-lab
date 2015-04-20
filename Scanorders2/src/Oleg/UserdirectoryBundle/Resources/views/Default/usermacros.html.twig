@@ -824,11 +824,18 @@
             {% do formfield.grantLink.setRendered %}
         {% endif %}
 
-        {{ formmacros.field(formfield.effort) }}
+        {{ formmacros.field(formfield.effortDummy) }}
+
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date') }}
+
+        {{ formmacros.field(formfield.currentYearDirectCost) }}
+        {{ formmacros.field(formfield.currentYearIndirectCost) }}
+        {{ formmacros.field(formfield.totalCurrentYearCost) }}
         {{ formmacros.field(formfield.amount) }}
-        {{ formmacros.field(formfield.comment) }}
+        {{ formmacros.field(formfield.amountLabSpace) }}
+
+        {{ formmacros.field(formfield.commentDummy) }}
 
         {#grant's attachmentContainer#}
         {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}

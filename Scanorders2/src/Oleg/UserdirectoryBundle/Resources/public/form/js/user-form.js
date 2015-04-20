@@ -409,7 +409,9 @@ function degreeListener( holder ) {
 
 }
 
-//identifier type listener
+
+
+/////////////////////////// researchLab type ///////////////////////////
 function researchLabListener( holder ) {
 
     var targetClass = ".ajax-combobox-researchlab";
@@ -611,4 +613,8 @@ function deleteObjectFromDB(btn) {
 
     return res;
 }
+/////////////////////////// EOF researchLab type ///////////////////////////
+
+
+
 

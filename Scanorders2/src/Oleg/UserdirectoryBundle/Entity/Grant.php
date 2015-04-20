@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\GrantRepository")
  * @ORM\Table(name="user_grant")
  */
 class Grant extends ListAbstract
@@ -63,11 +63,6 @@ class Grant extends ListAbstract
     private $grantLink;
 
     /**
-     * @ORM\ManyToOne(targetEntity="EffortList",cascade={"persist"})
-     **/
-    protected $effort;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $grantid;
@@ -83,15 +78,40 @@ class Grant extends ListAbstract
     private $endDate;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $comment;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $amount;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $currentYearDirectCost;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $currentYearIndirectCost;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $totalCurrentYearCost;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $amountLabSpace;
+
+    //User's fields
+    /**
+     * @ORM\OneToMany(targetEntity="GrantComment", mappedBy="grant", cascade={"persist","remove"})
+     **/
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GrantEffort", mappedBy="grant", cascade={"persist","remove"})
+     **/
+    private $efforts;
 
 
 
@@ -100,7 +120,8 @@ class Grant extends ListAbstract
         parent::__construct();
 
         $this->user = new ArrayCollection();
-        $this->synonyms = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->efforts = new ArrayCollection();
 
         //set mandatory list attributes
         $this->setName("");
@@ -144,6 +165,45 @@ class Grant extends ListAbstract
         return $this->user;
     }
 
+    public function addComment($item)
+    {
+        if( $item && !$this->comments->contains($item) ) {
+            $this->comments->add($item);
+            $item->setGrant($this);
+        }
+
+        return $this;
+    }
+    public function removeComment($item)
+    {
+        $this->comments->removeElement($item);
+    }
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function addEffort($item)
+    {
+        if( $item && !$this->efforts->contains($item) ) {
+            $this->efforts->add($item);
+            $item->setGrant($this);
+        }
+
+        return $this;
+    }
+    public function removeEffort($item)
+    {
+        $this->efforts->removeElement($item);
+    }
+    public function getEfforts()
+    {
+        return $this->efforts;
+    }
+
+
+
+
     /**
      * @param mixed $amount
      */
@@ -161,6 +221,71 @@ class Grant extends ListAbstract
     }
 
     /**
+     * @param mixed $amountLabSpace
+     */
+    public function setAmountLabSpace($amountLabSpace)
+    {
+        $this->amountLabSpace = $amountLabSpace;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAmountLabSpace()
+    {
+        return $this->amountLabSpace;
+    }
+
+    /**
+     * @param mixed $currentYearDirectCost
+     */
+    public function setCurrentYearDirectCost($currentYearDirectCost)
+    {
+        $this->currentYearDirectCost = $currentYearDirectCost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentYearDirectCost()
+    {
+        return $this->currentYearDirectCost;
+    }
+
+    /**
+     * @param mixed $currentYearIndirectCost
+     */
+    public function setCurrentYearIndirectCost($currentYearIndirectCost)
+    {
+        $this->currentYearIndirectCost = $currentYearIndirectCost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentYearIndirectCost()
+    {
+        return $this->currentYearIndirectCost;
+    }
+
+    /**
+     * @param mixed $totalCurrentYearCost
+     */
+    public function setTotalCurrentYearCost($totalCurrentYearCost)
+    {
+        $this->totalCurrentYearCost = $totalCurrentYearCost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalCurrentYearCost()
+    {
+        return $this->totalCurrentYearCost;
+    }
+
+
+    /**
      * @param mixed $attachmentContainer
      */
     public function setAttachmentContainer($attachmentContainer)
@@ -174,22 +299,6 @@ class Grant extends ListAbstract
     public function getAttachmentContainer()
     {
         return $this->attachmentContainer;
-    }
-
-    /**
-     * @param mixed $comment
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComment()
-    {
-        return $this->comment;
     }
 
     /**
@@ -290,21 +399,7 @@ class Grant extends ListAbstract
 
 
 
-    /**
-     * @param mixed $effort
-     */
-    public function setEffort($effort)
-    {
-        $this->effort = $effort;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getEffort()
-    {
-        return $this->effort;
-    }
 
 
 
@@ -325,6 +420,32 @@ class Grant extends ListAbstract
     {
         return $this->setUpdatedby($author);
     }
+
+
+
+
+
+    //Util functions
+    public function setComment($text,$user)
+    {
+        if( $text && $text != "" ) {
+            $grantComment = new GrantComment();
+            $grantComment->setComment($text);
+            $grantComment->setAuthor($user);
+            $this->addComment($grantComment);
+        }
+    }
+
+    public function setEffort($effort,$user)
+    {
+        if( $effort ) {
+            $grantEffort = new GrantEffort();
+            $grantEffort->setEffort($effort);
+            $grantEffort->setAuthor($user);
+            $this->addEffort($grantEffort);
+        }
+    }
+
 
 
 }
