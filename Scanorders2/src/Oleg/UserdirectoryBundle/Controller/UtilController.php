@@ -444,7 +444,7 @@ class UtilController extends Controller {
     }
 
     /**
-     * check if location can be deleted
+     * check if researchlab can be deleted
      *
      * @Route("/common/researchlab/deletefromuser/{id}/{subjectUser}", name="employees_researchlab_deletefromuser")
      * @Method("DELETE")
@@ -460,6 +460,126 @@ class UtilController extends Controller {
         //more effificient than looping (?)
         if( $user && $lab ) {
             $user->removeResearchLab($lab);
+            $em->persist($user);
+            $em->flush();
+            $output = 'ok';
+        }
+
+//        foreach( $user->getResearchLabs() as $lab ) {
+//            if( $lab->getId() == $id ) {
+//                $user->removeResearchLab($lab);
+//                $em->persist($user);
+//                $em->flush();
+//                $output = 'ok';
+//                break;
+//            }
+//        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+    /**
+     * @Route("/common/grant/{id}/{subjectUser}", name="employees_get_grant")
+     * @Method("GET")
+     */
+    public function getGrantByIdAction( $id, $subjectUser ) {
+
+        if( !is_numeric($id) ) {
+            //echo "return null";
+            $output = array();
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+//        $researchLabDB = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($id);
+//        if( !$researchLabDB ) {
+//            $response = new Response();
+//            $response->headers->set('Content-Type', 'application/json');
+//            $response->setContent(null);
+//            return $response;
+//        }
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Grant', 'list')
+            ->leftJoin('list.sourceOrganization','sourceOrganization')
+            ->leftJoin('list.grantTitle','grantTitle')
+            ->leftJoin('list.attachmentContainer','attachmentContainer')
+            ->leftJoin('list.grantLink','grantLink')
+
+            ->leftJoin('list.comments','comments')
+            ->leftJoin('comments.author','commentauthor')
+            ->leftJoin('list.efforts','efforts')
+            ->leftJoin('efforts.author','effortauthor')
+            ->select("list")
+            ->orderBy("list.orderinlist","ASC");
+
+        //$user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.id=".$id);
+
+        $grants = $query->getQuery()->getResult();
+
+        $output = array();
+
+        foreach( $grants as $grant ) {
+
+            $userComment = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUserDB, 'grant'=>$grant ) );
+            $userEffort = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUserDB, 'grant'=>$grant ) );
+
+            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+
+            $element = array(
+                'id'                    => $grant->getId(),
+                'text'                  => $grant."",
+                'sourceOrganization'    => ( $grant->getSourceOrganization() ? $grant->getSourceOrganization()->getId() : null ),
+                'startDate'             => $transformer->transform($grant->getStartDate()),
+                'endDate'               => $transformer->transform($grant->getEndDate()),
+                'grantTitle'            => ( $grant->getGrantTitle() ? $grant->getGrantTitle()->getId() : null ),
+                'grantLink'             => ( $grant->getGrantLink() ? $grant->getGrantLink()->getId() : null ),
+                'grantid'               => $grant->getGrantid(),
+                'amount'                => $grant->getAmount(),
+                'currentYearDirectCost'     => $grant->getCurrentYearDirectCost(),
+                'currentYearIndirectCost'   => $grant->getCurrentYearIndirectCost(),
+                'totalCurrentYearCost'      => $grant->getTotalCurrentYearCost(),
+                'amountLabSpace'            => $grant->getAmountLabSpace(),
+                'comment'                   => $userComment,
+                'effort'                    => $userEffort,
+            );
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * check if grant can be deleted
+     *
+     * @Route("/common/grant/deletefromuser/{id}/{subjectUser}", name="employees_grant_deletefromuser")
+     * @Method("DELETE")
+     */
+    public function grantDeleteAction($id, $subjectUser) {
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+        $grant = $em->getRepository('OlegUserdirectoryBundle:Grant')->find($id);
+
+        $output = 'not ok';
+
+        //more effificient than looping (?)
+        if( $user && $grant ) {
+            $user->removeResearchLab($grant);
             $em->persist($user);
             $em->flush();
             $output = 'ok';

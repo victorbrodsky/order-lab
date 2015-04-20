@@ -1275,9 +1275,10 @@ class UserController extends Controller
 
             //set documents for grants
             //$this->setGrantsComments($user);
-            $commentDummy = $form['commentDummy']->getData();
-            $effortDummy = $form['effortDummy']->getData();
-            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($user,$commentDummy,$effortDummy);
+            //$commentDummy = $form['grants'][0]['commentDummy']->getData();
+            //echo "commentDummy=".$commentDummy."<br>";
+            //$effortDummy = $form['grants'][0]['effortDummy']->getData();
+            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($user);
 
             $em->persist($user);
             $em->flush();

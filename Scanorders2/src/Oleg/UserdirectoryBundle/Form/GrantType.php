@@ -30,7 +30,7 @@ class GrantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        //echo "cycle=".$this->params['cycle']."<br>";
+        echo "cycle=".$this->params['cycle']."<br>";
 
         if( strpos($this->params['cycle'],'_standalone') === false ) {
             $readonly = true;
@@ -46,37 +46,37 @@ class GrantType extends AbstractType
         $builder->add('grantid',null,array(
             'read_only' => $readonly,
             'label'=>'Grant ID Number:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control grant-grantid-field')
         ));
 
         $builder->add('amount',null,array(
             'read_only' => $readonly,
             'label'=>'Total Amount:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control grant-amount-field')
         ));
 
         $builder->add('currentYearDirectCost',null,array(
             'read_only' => $readonly,
             'label'=>'Current Year Direct Cost:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control grant-currentYearDirectCost-field')
         ));
 
         $builder->add('currentYearIndirectCost',null,array(
             'read_only' => $readonly,
             'label'=>'Current Year Indirect Cost:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control grant-currentYearIndirectCost-field')
         ));
 
         $builder->add('totalCurrentYearCost',null,array(
             'read_only' => $readonly,
             'label'=>'Total Current Year Cost:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control grant-totalCurrentYearCost-field')
         ));
 
         $builder->add('amountLabSpace',null,array(
             'read_only' => $readonly,
             'label'=>'Amount of Lab Space:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control grant-amountLabSpace-field')
         ));
 
         $builder->add('startDate', 'date', array(
@@ -85,7 +85,7 @@ class GrantType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control patientdob-mask grant-startDate-field'),
         ));
 
         $builder->add('endDate', 'date', array(
@@ -94,7 +94,7 @@ class GrantType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control patientdob-mask grant-endDate-field'),
         ));
 
         $builder->add('sourceOrganization', 'employees_custom_selector', array(
@@ -186,6 +186,7 @@ class GrantType extends AbstractType
 
                     if( $comment ) {
                         $this->commentData = $comment->getComment();
+                        $grant->setCommentDummy($comment->getComment());
                     }
 
                     $effort = $this->params['em']->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy(
@@ -197,6 +198,7 @@ class GrantType extends AbstractType
 
                     if( $effort ) {
                         $this->effortData = $effort;
+                        $grant->setEffortDummy($effort);
                     }
 
                 }
@@ -205,17 +207,19 @@ class GrantType extends AbstractType
             });
 
 
+            //exit('this->commentData='.$this->commentData);
+
             $builder->add('commentDummy','textarea',array(
-                'mapped' => false,
-                'data' => $this->commentData,
+                //'mapped' => false,
+                //'data' => $this->commentData,
                 'required' => false,
                 'label'=>'Comment:',
                 'attr' => array('class'=>'textarea form-control grant-commentDummy-field')
             ));
 
             $builder->add('effortDummy', 'employees_custom_selector', array(
-                'mapped' => false,
-                'data' => $this->effortData,
+                //'mapped' => false,
+                //'data' => $this->effortData,
                 'required' => false,
                 'label' => 'Percent Effort:',
                 'attr' => array('class'=>'ajax-combobox-effort grant-effortDummy-field', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),

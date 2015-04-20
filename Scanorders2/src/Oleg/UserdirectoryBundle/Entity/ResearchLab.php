@@ -266,8 +266,9 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
         }
     }
 
-
+    //TODO: not used???
     public function removeDependents($user) {
+        exit('ResearchLab: removeDependents');
         //remove user's comments
         foreach( $this->getComments() as $comment ) {
             if( $comment->getAuthor()->getId() == $user->getId() ) {

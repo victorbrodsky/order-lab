@@ -107,11 +107,13 @@ class Grant extends ListAbstract
      * @ORM\OneToMany(targetEntity="GrantComment", mappedBy="grant", cascade={"persist","remove"})
      **/
     private $comments;
+    private $commentDummy;
 
     /**
      * @ORM\OneToMany(targetEntity="GrantEffort", mappedBy="grant", cascade={"persist","remove"})
      **/
     private $efforts;
+    private $effortDummy;
 
 
 
@@ -395,6 +397,38 @@ class Grant extends ListAbstract
     public function getStartDate()
     {
         return $this->startDate;
+    }
+
+    /**
+     * @param mixed $commentDummy
+     */
+    public function setCommentDummy($commentDummy)
+    {
+        $this->commentDummy = $commentDummy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCommentDummy()
+    {
+        return $this->commentDummy;
+    }
+
+    /**
+     * @param mixed $effortDummy
+     */
+    public function setEffortDummy($effortDummy)
+    {
+        $this->effortDummy = $effortDummy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEffortDummy()
+    {
+        return $this->effortDummy;
     }
 
 

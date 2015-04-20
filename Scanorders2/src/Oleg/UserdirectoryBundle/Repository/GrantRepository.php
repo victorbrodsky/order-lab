@@ -10,7 +10,7 @@ use Oleg\UserdirectoryBundle\Entity\Grant;
 class GrantRepository extends EntityRepository {
 
 
-    public function processGrant( $user, $commentDummy, $effortDummy ) {
+    public function processGrant( $user ) {
 
         $em = $this->_em;
 
@@ -32,8 +32,8 @@ class GrantRepository extends EntityRepository {
                 echo "found grant in DB name=".$grant->getName().", id=".$grant->getId()."<br>";
 
                 //merge db and form entity
-                //$grantDb->setPiDummy($grant->getPiDummy());
-                //$grantDb->setCommentDummy($lab->getCommentDummy());
+                $grantDb->setEffortDummy($grant->getEffortDummy());
+                $grantDb->setCommentDummy($grant->getCommentDummy());
 
                 $user->removeGrant($grant);
                 $user->addGrant($grantDb);
@@ -49,15 +49,15 @@ class GrantRepository extends EntityRepository {
             //check if effort already exists
             $grantEffortDb = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$user, 'grant'=>$grantFinal->getId() ) );
 
-            if( $effortDummy ) {
+            if( $grantFinal->getEffortDummy() ) {
                 //echo "lab pi=".$labFinal->getPiDummy()."<br>";
 
                 if( $grantEffortDb ) {
                     //echo "exist pi=".$piDb->getPi()."<br>";
-                    $grantEffortDb->setEffort($user);
+                    $grantEffortDb->setAuthor($user);
                 } else {
                     //echo "does not exist pi <br>";
-                    $grantFinal->setEffort($effortDummy,$user);
+                    $grantFinal->setEffort($grantEffortDb,$user);
                 }
 
             } else {
@@ -73,14 +73,14 @@ class GrantRepository extends EntityRepository {
             //check if comment authored by $user for this lab already exists
             $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'grant'=>$grantFinal->getId() ) );
 
-            if( $commentDummy ) {
+            if( $grantFinal->getCommentDummy() && $grantFinal->getCommentDummy() != '' ) {
 
                 if( $commentDb ) {
                     //echo "exist comment=".$commentDb->getComment()."<br>";
-                    $commentDb->setComment($commentDummy);
+                    $commentDb->setComment($grantFinal->getCommentDummy());
                 } else {
                     //echo "does not exist comment <br>";
-                    $grantFinal->setComment($commentDummy,$user);
+                    $grantFinal->setComment($grantFinal->getCommentDummy(),$user);
                 }
 
             } else {
