@@ -1275,9 +1275,6 @@ class UserController extends Controller
 
             //set documents for grants
             //$this->setGrantsComments($user);
-            //$commentDummy = $form['grants'][0]['commentDummy']->getData();
-            //echo "commentDummy=".$commentDummy."<br>";
-            //$effortDummy = $form['grants'][0]['effortDummy']->getData();
             $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($user);
 
             $em->persist($user);
@@ -1726,9 +1723,9 @@ class UserController extends Controller
 
             //set documents for grants
             //$this->setGrantsComments($entity,$form);
-            $commentDummy = $form['commentDummy']->getData();
-            $effortDummy = $form['effortDummy']->getData();
-            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity,$commentDummy,$effortDummy);
+            //$commentDummy = $form['commentDummy']->getData();
+            //$effortDummy = $form['effortDummy']->getData();
+            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForInstitutionTree($entity);
