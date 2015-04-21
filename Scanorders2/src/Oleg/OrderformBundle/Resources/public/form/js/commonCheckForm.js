@@ -1433,9 +1433,14 @@ function setPaperDocuments( btnEl, parent, data ) {
 
     if( 1 ) {
 
+        var documentContainerData = null;
+        if( data ) {
+            documentContainerData = data['paper'];
+        }
+
         setDocumentsInDocumentConatiner(
             parent,
-            data,
+            documentContainerData,
             'paper',       //name
             '.partpaper'   //documentHolderClass
         );

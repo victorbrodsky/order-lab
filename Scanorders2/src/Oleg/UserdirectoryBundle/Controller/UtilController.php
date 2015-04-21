@@ -550,9 +550,11 @@ class UtilController extends Controller {
 
             $documentContainerJson = array();
             if( $grant->getAttachmentContainer() && count($grant->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
+
                 foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentConatiner ) {
-                    $documentContainerJson['id'] = $documentConatiner->getId();
+                    //$documentContainerJson['id'] = $documentConatiner->getId();
                     $documentsJson = array();
+                    $holder = array();
                     foreach( $documentConatiner->getDocuments() as $document ) {
                         $documentJson = array();
                         $documentsJson['id'] =  $document->getId();
@@ -562,8 +564,10 @@ class UtilController extends Controller {
                         $documentJson["url"] = $document->getAbsoluteUploadFullPath();
                         $documentsJson[] = $documentJson;
                     }
-                    $documentContainerJson['documents'] = $documentsJson;
+                    $holder['documents'] = $documentsJson;
                 }
+
+                $documentContainerJson[] = $holder;
             }
 
             $element = array(

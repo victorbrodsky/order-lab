@@ -50,12 +50,15 @@
         {% if pathname == 'grants' %}
 
             {% set grantsPrototype = null %}
+            {% set documentsHtml = null %}
             {% if form.grants is defined %}
                 {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
+                {% set documentsHtml = formmacros.inputField(form.grants.vars.prototype.attachmentContainer.vars.prototype.documentContainers,type,"documentContainer","prototype") %}
             {% endif %}
 
             <div id="form-prototype-data"
                  data-prototype-user-grants = "{{ grantsPrototype|e }}"
+                 data-prototype-partpaper= "{{ documentsHtml|e }}"
                  data-userurllink = "{{ usermacros.userUrlLink()|e }}"
                  data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
                  data-userid = "{{ entity.id }}"

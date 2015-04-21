@@ -646,38 +646,39 @@ function setGrantDocuments( parent, data ) {
     //console.log(parent);
     //console.log(data);
 
-    if( !parent.hasClass('scan-partpaper') && orderformtype != "single" ) {
+    if( !parent.hasClass('user-grants') ) {
         return;
     }
 
-    if( orderformtype == "single" ) {
-        var btnObj = new btnObject(btnEl);
-        //compare button name with holdername: 'patient' ?= 'accession'
-        //console.log("compare:"+btnObj.name+"?="+'part');
-        if( btnObj.name != 'part' ) {
-            return;
-        }
+    var documentContainerData = null;
+    if( data ) {
+        documentContainerData = data['documentContainers'];
     }
+
+    console.log("setGrantDocuments run");
+    //console.log(documentContainerData);
 
     setDocumentsInDocumentConatiner(
         parent,
-        data['paper'],  //
-        '.partpaper',   //documentHolderClass
-        'paper'         //tooltipName
+        documentContainerData,      //
+        null,                       //tooltipName
+        '.user-grants'              //documentHolderClass
     );
 }
 
 //common functions
-function setDocumentsInDocumentConatiner( parent, data, objectName, documentHolderClass ) {
+function setDocumentsInDocumentConatiner( parent, documentContainerData, tooltipName, documentHolderClass ) {
 
     //clean fields
-    if( data == null  ) {
+    if( documentContainerData == null  ) {
 
         if( parent.find('.file-upload-dropzone').length == 1 ) {
             parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
             parent.find('.file-upload-dropzone').find('.dz-preview').remove();
             parent.find('.file-upload-dropzone').find('.dz-message').css('opacity','1');
-            attachTooltip(parent.find('.file-upload-dropzone'),true,objectName);
+            if( tooltipName ) {
+                attachTooltip(parent.find('.file-upload-dropzone'),true,tooltipName);
+            }
             return;
         }
 
@@ -692,44 +693,79 @@ function setDocumentsInDocumentConatiner( parent, data, objectName, documentHold
     var existingDropzone = parent.find('.file-upload-dropzone').first();
     existingDropzone.addClass('dropzone-keep-enabled');
 
-    var documentData = data[objectName];
+    console.log('create dropzone');
+    console.log(documentContainerData);
 
-    if( documentData && documentData != undefined ) {
+    if( documentContainerData && documentContainerData != undefined ) {
 
-        var documentContainers = documentData;
+        var papers = documentContainerData;
 
-        if( documentContainers.length == 0 ) {
+        if( papers.length == 0 ) {
             return;
         }
 
-        //console.log('documentContainers count=' + documentContainers.length );
+        console.log('papers count=' + papers.length );
 
-        for( var i=0; i<documentContainers.length; i++ ) {
+        for( var i=0; i<papers.length; i++ ) {
 
-            var documentContainer = documentContainers[i];
+            var paper = papers[i];
 
-            //console.log('documentContainer id='+documentContainer.id);
+            console.log('paper id='+paper.id);
 
-            if( documentContainer['documents'].length == 0 ) {
+            if( paper['documents'].length == 0 ) {
                 continue;
             }
 
-            //create documentContainer prototype
+            //create paper prototype using data-prototype-partpaper
             var newDropzoneHolder = createDropzoneHolder(existingDropzone, documentHolderClass);
-            //console.log('newDropzoneHolder='+newDropzoneHolder);
             var newDropzoneHolderEl = $(newDropzoneHolder);
 
-            //attach prototype
+            //attach paper prototype to part after Source Organ
             var documentContainerHolder = parent.find(documentHolderClass);
             documentContainerHolder.prepend( newDropzoneHolderEl );
 
             //init dropzone
-            var documentContainerData = processDocumentsInDocumentContainer(documentContainer);
+            var documentContainerData = processDocumentsInDocumentContainer(paper);
             initFileUpload( newDropzoneHolderEl, documentContainerData, null );
 
         }
 
     }
+
+//    if( documentContainerData && documentContainerData != undefined ) {
+//
+//        if( documentContainerData.length == 0 ) {
+//            return;
+//        }
+//
+//        //console.log('documentContainerData count=' + documentContainerData.length );
+//
+//        for( var i=0; i<documentContainerData.length; i++ ) {
+//
+//            var documentContainer = documentContainerData[i];
+//
+//            //console.log('documentContainer id='+documentContainer.id);
+//
+//            if( documentContainer['documents'].length == 0 ) {
+//                continue;
+//            }
+//
+//            //create documentContainer prototype
+//            var newDropzoneHolder = createDropzoneHolder(existingDropzone, documentHolderClass);
+//            //console.log('newDropzoneHolder='+newDropzoneHolder);
+//            var newDropzoneHolderEl = $(newDropzoneHolder);
+//
+//            //attach prototype
+//            var documentContainerHolder = parent.find(documentHolderClass);
+//            documentContainerHolder.prepend( newDropzoneHolderEl );
+//
+//            //init dropzone
+//            var documentContainerData = processDocumentsInDocumentContainer(documentContainer);
+//            initFileUpload( newDropzoneHolderEl, documentContainerData, null );
+//
+//        }
+//
+//    }
 
 }
 
@@ -838,49 +874,43 @@ function createDropzoneHolder_Paper(existingDropzoneHolder) {
 function createDropzoneHolder_Other(existingDropzoneHolder) {
 
     var dataElement = document.getElementById("form-prototype-data");
-    var prototype = dataElement.getAttribute('data-prototype-partpaper');
+    var prototype = dataElement.getAttribute('data-prototype-user-grants');
 
     //console.log('prototype='+prototype);
 
     //printF(existingDropzoneHolder,"existingDropzoneHolder:");
     //console.log(existingDropzoneHolder);
 
-    var paperidElement = existingDropzoneHolder.parent().find('.field-partpaperothers');
-    //var paperidElement = existingDropzoneHolder.closest('.partpaper').find('.field-partpaperothers'); //this will get incorrect paperid
+    var paperidElement = existingDropzoneHolder.closest('.well').find('.documentcontainer-field-id');
 
     //console.log('count paperidElement='+paperidElement.length);
 
     if( !paperidElement || paperidElement.length == 0 ) {
-        throw new Error("Paper element is not found");
+        throw new Error("Container element is not found");
     }
 
-    //printF(paperidElement,"paperidElement:");
+    printF(paperidElement,"paperidElement:");
     //console.log(paperidElement);
 
     var id = paperidElement.last().attr('id');
 
     if( !id || id == "" ) {
-        throw new Error("Paper id element is not found");
+        throw new Error("Container id element is not found");
     }
+
+    console.log("id="+id);
 
     var idArr = id.split("_");
 
-    //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14  15
-    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
-    var patientid = idArr[4];
-    var encounterid = idArr[6];
-    var procedureid = idArr[8];
-    var accessionid = idArr[10];
-    var partid = idArr[12];
-    var paperid = idArr[14];
+    //  0       1               2     3    4          5                  6          7  8
+    //oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0_id
+    var grantid = idArr[4];
+    var documentContainerid = idArr[7];
 
-    var newForm = prototype.replace(/__patient__/g, patientid);
-    newForm = newForm.replace(/__encounter__/g, encounterid);
-    newForm = newForm.replace(/__procedure__/g, procedureid);
-    newForm = newForm.replace(/__accession__/g, accessionid);
-    newForm = newForm.replace(/__part__/g, partid);
-    newForm = newForm.replace(/__partpaper__/g, paperid);
+    var newForm = prototype.replace(/__grants__/g, grantid);
+    newForm = newForm.replace(/__documentContainers__/g, documentContainerid);
 
+    console.log("newForm="+newForm);
 
     return newForm;
 }
