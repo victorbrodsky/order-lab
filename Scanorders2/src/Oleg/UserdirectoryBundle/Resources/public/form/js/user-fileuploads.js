@@ -874,7 +874,7 @@ function createDropzoneHolder_Paper(existingDropzoneHolder) {
 function createDropzoneHolder_Other(existingDropzoneHolder) {
 
     var dataElement = document.getElementById("form-prototype-data");
-    var prototype = dataElement.getAttribute('data-prototype-user-grants');
+    var prototype = dataElement.getAttribute('data-prototype-user-grants-documentcontainers');
 
     //console.log('prototype='+prototype);
 
