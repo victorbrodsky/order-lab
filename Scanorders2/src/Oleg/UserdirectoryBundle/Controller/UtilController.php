@@ -459,6 +459,9 @@ class UtilController extends Controller {
 
         //more effificient than looping (?)
         if( $user && $lab ) {
+
+            $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->removeDependents( $user, $lab );
+
             $user->removeResearchLab($lab);
             $em->persist($user);
             $em->flush();
@@ -524,18 +527,44 @@ class UtilController extends Controller {
 
         //$user = $this->get('security.context')->getToken()->getUser();
 
-        $query->where("list.id=".$id);
+        $query->where("grantTitle.id=".$id);
 
         $grants = $query->getQuery()->getResult();
 
+        //echo "grant count=".count($grants)."<br>";
+
+        $grant = null;
+
+        if( count($grants) == 1 ) {
+            $grant = $grants[0];
+        }
+
         $output = array();
 
-        foreach( $grants as $grant ) {
+        if( $grant ) {
 
             $userComment = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUserDB, 'grant'=>$grant ) );
             $userEffort = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUserDB, 'grant'=>$grant ) );
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+
+            $documentContainerJson = array();
+            if( $grant->getAttachmentContainer() && count($grant->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
+                foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentConatiner ) {
+                    $documentContainerJson['id'] = $documentConatiner->getId();
+                    $documentsJson = array();
+                    foreach( $documentConatiner->getDocuments() as $document ) {
+                        $documentJson = array();
+                        $documentsJson['id'] =  $document->getId();
+                        $documentsJson["uniquename"] = $document->getUniquename();
+                        $documentsJson["originalname"] = $document->getOriginalname();
+                        $documentsJson["size"] = $document->getSize();
+                        $documentJson["url"] = $document->getAbsoluteUploadFullPath();
+                        $documentsJson[] = $documentJson;
+                    }
+                    $documentContainerJson['documents'] = $documentsJson;
+                }
+            }
 
             $element = array(
                 'id'                    => $grant->getId(),
@@ -551,8 +580,9 @@ class UtilController extends Controller {
                 'currentYearIndirectCost'   => $grant->getCurrentYearIndirectCost(),
                 'totalCurrentYearCost'      => $grant->getTotalCurrentYearCost(),
                 'amountLabSpace'            => $grant->getAmountLabSpace(),
-                'comment'                   => $userComment,
-                'effort'                    => $userEffort,
+                'comment'                   => ( $userComment ? $userComment->getComment() : null ),
+                'effort'                    => ( $userEffort ? $userEffort->getEffort()->getId() : null ),
+                'documentContainers'        => $documentContainerJson,
             );
             $output[] = $element;
         }
@@ -579,21 +609,14 @@ class UtilController extends Controller {
 
         //more effificient than looping (?)
         if( $user && $grant ) {
-            $user->removeResearchLab($grant);
+
+            $em->getRepository('OlegUserdirectoryBundle:Grant')->removeDependents( $user, $grant );
+
+            $user->removeGrant($grant);
             $em->persist($user);
             $em->flush();
             $output = 'ok';
         }
-
-//        foreach( $user->getResearchLabs() as $lab ) {
-//            if( $lab->getId() == $id ) {
-//                $user->removeResearchLab($lab);
-//                $em->persist($user);
-//                $em->flush();
-//                $output = 'ok';
-//                break;
-//            }
-//        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

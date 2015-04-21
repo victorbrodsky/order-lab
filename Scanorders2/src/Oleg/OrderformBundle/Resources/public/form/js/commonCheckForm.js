@@ -1412,11 +1412,11 @@ function setSimpleField( element, text) {
 }
 
 
-
+//documents
 function setPaperDocuments( btnEl, parent, data ) {
 
-    //console.log(parent);
-    //console.log(data);
+    console.log(parent);
+    console.log(data);
 
     if( !parent.hasClass('scan-partpaper') && orderformtype != "single" ) {
         return;
@@ -1431,152 +1431,166 @@ function setPaperDocuments( btnEl, parent, data ) {
         }
     }
 
-    //clean fields
-    if( data == null  ) {
+    if( 1 ) {
 
-        if( parent.find('.file-upload-dropzone').length == 1 ) {
-            parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
-            parent.find('.file-upload-dropzone').find('.dz-preview').remove();
-            parent.find('.file-upload-dropzone').find('.dz-message').css('opacity','1');
-            attachTooltip(parent.find('.file-upload-dropzone'),true,'part');
-            return;
-        }
+        setDocumentsInDocumentConatiner(
+            parent,
+            data,
+            'paper',       //name
+            '.partpaper'   //documentHolderClass
+        );
 
-        parent.find('.file-upload-dropzone').not('.dropzone-keep-enabled').closest('.row').remove();
-        parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
-        parent.find('.file-upload-dropzone').find('.dz-message').css('opacity','1');
-        parent.find('.file-upload-dropzone').find('.dz-preview').remove();
-        return;
-    }
+    } else {
 
-    //keep enabled first paper dropzone
-    var existingDropzone = parent.find('.file-upload-dropzone').first();
-    existingDropzone.addClass('dropzone-keep-enabled');
+//    //clean fields
+//    if( data == null  ) {
+//
+//        if( parent.find('.file-upload-dropzone').length == 1 ) {
+//            parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
+//            parent.find('.file-upload-dropzone').find('.dz-preview').remove();
+//            parent.find('.file-upload-dropzone').find('.dz-message').css('opacity','1');
+//            attachTooltip(parent.find('.file-upload-dropzone'),true,'part');
+//            return;
+//        }
+//
+//        parent.find('.file-upload-dropzone').not('.dropzone-keep-enabled').closest('.row').remove();
+//        parent.find('.file-upload-dropzone').removeClass('dropzone-keep-enabled');
+//        parent.find('.file-upload-dropzone').find('.dz-message').css('opacity','1');
+//        parent.find('.file-upload-dropzone').find('.dz-preview').remove();
+//        return;
+//    }
+//
+//    //keep enabled first paper dropzone
+//    var existingDropzone = parent.find('.file-upload-dropzone').first();
+//    existingDropzone.addClass('dropzone-keep-enabled');
+//
+//    if( data['paper'] && data['paper'] != undefined ) {
+//
+//        var papers = data['paper'];
+//
+//        if( papers.length == 0 ) {
+//            return;
+//        }
+//
+//        //console.log('papers count=' + papers.length );
+//
+//        for( var i=0; i<papers.length; i++ ) {
+//
+//            var paper = papers[i];
+//
+//            //console.log('paper id='+paper.id);
+//
+//            if( paper['documents'].length == 0 ) {
+//                continue;
+//            }
+//
+//            //create paper prototype using data-prototype-partpaper
+//            var newDropzoneHolder = createDropzoneHolder_Paper(existingDropzone);
+//            //console.log('newDropzoneHolder='+newDropzoneHolder);
+//            var newDropzoneHolderEl = $(newDropzoneHolder);
+//
+//            //attach paper prototype to part after Source Organ
+//            var partPaperHolder = parent.find('.partpaper');
+//            partPaperHolder.prepend( newDropzoneHolderEl );
+//
+//            //init dropzone
+//            var paperdata = processDocumentsInDocumentContainer(paper);
+//            initFileUpload( newDropzoneHolderEl, paperdata, null );
+//
+//        }
+//
+//    }
 
-    if( data['paper'] && data['paper'] != undefined ) {
-
-        var papers = data['paper'];
-
-        if( papers.length == 0 ) {
-            return;
-        }
-
-        //console.log('papers count=' + papers.length );
-
-        for( var i=0; i<papers.length; i++ ) {
-
-            var paper = papers[i];
-
-            //console.log('paper id='+paper.id);
-
-            if( paper['documents'].length == 0 ) {
-                continue;
-            }
-
-            //create paper prototype using data-prototype-partpaper
-            var newDropzoneHolder = createDropzoneHolder(existingDropzone);
-            //console.log('newDropzoneHolder='+newDropzoneHolder);
-            var newDropzoneHolderEl = $(newDropzoneHolder);
-
-            //attach paper prototype to part after Source Organ
-            var partPaperHolder = parent.find('.partpaper');
-            partPaperHolder.prepend( newDropzoneHolderEl );
-
-            //init dropzone
-            var paperdata = processPaperDocuments(paper);
-            initFileUpload( newDropzoneHolderEl, paperdata, null );
-
-        }
-
-    }
+    } //else
 
 }
-function processPaperDocuments( paper ) {
 
-    var documents = paper['documents'];
+//function processPaperDocuments( paper ) {
+//
+//    var documents = paper['documents'];
+//
+//    //console.log('documents count=' + documents.length );
+//
+//    if( documents.length == 0 ) {
+//        return;
+//    }
+//
+//    var data = new Array();
+//
+//    for( var i=0; i<documents.length; i++ ) {
+//
+//        var document = documents[i];
+//
+//        var originalname = document['originalname'];
+//        var uniquename = document['uniquename'];
+//        var size = document['size'];
+//        var url = document['url'];
+//        var id = document['id'];
+//
+//        //console.log('originalname='+originalname);
+//
+//        var fileArr = new Array();
+//        fileArr['originalname'] = originalname;
+//        fileArr['uniquename'] = uniquename;
+//        fileArr['size'] = size;
+//        fileArr['url'] = url;
+//        fileArr['id'] = id;
+//        data.push(fileArr);
+//
+//    }
+//
+//    return data;
+//}
 
-    //console.log('documents count=' + documents.length );
-
-    if( documents.length == 0 ) {
-        return;
-    }
-
-    var data = new Array();
-
-    for( var i=0; i<documents.length; i++ ) {
-
-        var document = documents[i];
-
-        var originalname = document['originalname'];
-        var uniquename = document['uniquename'];
-        var size = document['size'];
-        var url = document['url'];
-        var id = document['id'];
-
-        //console.log('originalname='+originalname);
-
-        var fileArr = new Array();
-        fileArr['originalname'] = originalname;
-        fileArr['uniquename'] = uniquename;
-        fileArr['size'] = size;
-        fileArr['url'] = url;
-        fileArr['id'] = id;
-        data.push(fileArr);
-
-    }
-
-    return data;
-}
-
-function createDropzoneHolder(existingDropzoneHolder) {
-
-    var dataElement = document.getElementById("form-prototype-data");
-    var prototype = dataElement.getAttribute('data-prototype-partpaper');
-
-    //console.log('prototype='+prototype);
-
-    //printF(existingDropzoneHolder,"existingDropzoneHolder:");
-    //console.log(existingDropzoneHolder);
-
-    var paperidElement = existingDropzoneHolder.parent().find('.field-partpaperothers');
-    //var paperidElement = existingDropzoneHolder.closest('.partpaper').find('.field-partpaperothers'); //this will get incorrect paperid
-
-    //console.log('count paperidElement='+paperidElement.length);
-
-    if( !paperidElement || paperidElement.length == 0 ) {
-        throw new Error("Paper element is not found");
-    }
-
-    //printF(paperidElement,"paperidElement:");
-    //console.log(paperidElement);
-
-    var id = paperidElement.last().attr('id');
-
-    if( !id || id == "" ) {
-        throw new Error("Paper id element is not found");
-    }
-
-    var idArr = id.split("_");
-
-    //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14  15
-    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
-    var patientid = idArr[4];
-    var encounterid = idArr[6];
-    var procedureid = idArr[8];
-    var accessionid = idArr[10];
-    var partid = idArr[12];
-    var paperid = idArr[14];
-
-    var newForm = prototype.replace(/__patient__/g, patientid);
-    newForm = newForm.replace(/__encounter__/g, encounterid);
-    newForm = newForm.replace(/__procedure__/g, procedureid);
-    newForm = newForm.replace(/__accession__/g, accessionid);
-    newForm = newForm.replace(/__part__/g, partid);
-    newForm = newForm.replace(/__partpaper__/g, paperid);
-
-
-    return newForm;
-}
+//function createDropzoneHolder(existingDropzoneHolder) {
+//
+//    var dataElement = document.getElementById("form-prototype-data");
+//    var prototype = dataElement.getAttribute('data-prototype-partpaper');
+//
+//    //console.log('prototype='+prototype);
+//
+//    //printF(existingDropzoneHolder,"existingDropzoneHolder:");
+//    //console.log(existingDropzoneHolder);
+//
+//    var paperidElement = existingDropzoneHolder.parent().find('.field-partpaperothers');
+//    //var paperidElement = existingDropzoneHolder.closest('.partpaper').find('.field-partpaperothers'); //this will get incorrect paperid
+//
+//    //console.log('count paperidElement='+paperidElement.length);
+//
+//    if( !paperidElement || paperidElement.length == 0 ) {
+//        throw new Error("Paper element is not found");
+//    }
+//
+//    //printF(paperidElement,"paperidElement:");
+//    //console.log(paperidElement);
+//
+//    var id = paperidElement.last().attr('id');
+//
+//    if( !id || id == "" ) {
+//        throw new Error("Paper id element is not found");
+//    }
+//
+//    var idArr = id.split("_");
+//
+//    //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14  15
+//    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
+//    var patientid = idArr[4];
+//    var encounterid = idArr[6];
+//    var procedureid = idArr[8];
+//    var accessionid = idArr[10];
+//    var partid = idArr[12];
+//    var paperid = idArr[14];
+//
+//    var newForm = prototype.replace(/__patient__/g, patientid);
+//    newForm = newForm.replace(/__encounter__/g, encounterid);
+//    newForm = newForm.replace(/__procedure__/g, procedureid);
+//    newForm = newForm.replace(/__accession__/g, accessionid);
+//    newForm = newForm.replace(/__part__/g, partid);
+//    newForm = newForm.replace(/__partpaper__/g, paperid);
+//
+//
+//    return newForm;
+//}
 
 
 

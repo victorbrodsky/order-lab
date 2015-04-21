@@ -18,8 +18,8 @@ class GrantType extends AbstractType
     protected $params;
     protected $entity;
 
-    private $commentData = null;
-    private $effortData = null;
+    //private $commentData = null;
+    //private $effortData = null;
 
     public function __construct( $params=null, $entity = null )
     {
@@ -30,7 +30,7 @@ class GrantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        echo "cycle=".$this->params['cycle']."<br>";
+        //echo "cycle=".$this->params['cycle']."<br>";
 
         if( strpos($this->params['cycle'],'_standalone') === false ) {
             $readonly = true;
@@ -177,6 +177,7 @@ class GrantType extends AbstractType
 
                 if( $grant && $grant->getId() && $this->params['subjectUser'] ) {
 
+                    //comment
                     $comment = $this->params['em']->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy(
                         array(
                             'grant' => $grant,
@@ -184,11 +185,12 @@ class GrantType extends AbstractType
                         )
                     );
 
+                    //exit("grant=".$grant->getId().", user=".$this->params['subjectUser']->getId()." => comment=".$comment);
                     if( $comment ) {
-                        $this->commentData = $comment->getComment();
                         $grant->setCommentDummy($comment->getComment());
                     }
 
+                    //effort
                     $effort = $this->params['em']->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy(
                         array(
                             'grant' => $grant,
@@ -197,8 +199,7 @@ class GrantType extends AbstractType
                     );
 
                     if( $effort ) {
-                        $this->effortData = $effort;
-                        $grant->setEffortDummy($effort);
+                        $grant->setEffortDummy($effort->getEffort());
                     }
 
                 }
@@ -211,7 +212,6 @@ class GrantType extends AbstractType
 
             $builder->add('commentDummy','textarea',array(
                 //'mapped' => false,
-                //'data' => $this->commentData,
                 'required' => false,
                 'label'=>'Comment:',
                 'attr' => array('class'=>'textarea form-control grant-commentDummy-field')
@@ -219,10 +219,10 @@ class GrantType extends AbstractType
 
             $builder->add('effortDummy', 'employees_custom_selector', array(
                 //'mapped' => false,
-                //'data' => $this->effortData,
                 'required' => false,
                 'label' => 'Percent Effort:',
-                'attr' => array('class'=>'ajax-combobox-effort grant-effortDummy-field', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),
+                'attr' => array('class'=>'ajax-combobox-effort grant-effortDummy-field'),
+                //'attr' => array('class' => 'ajax-combobox-effort grant-effortDummy-field', 'type' => 'hidden', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),
                 'classtype' => 'effort'
             ));
 

@@ -29,6 +29,7 @@ class ComplexListController extends Controller
      * @Route("/list/locations/", name="employees_locations_pathaction_list")
      * @Route("/list/buildings/", name="employees_buildings_pathaction_list")
      * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list")
+     * @Route("/list/grants/", name="employees_grants_pathaction_list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:index.html.twig")
      */
@@ -66,6 +67,11 @@ class ComplexListController extends Controller
         }
 
         if( $mapper['pathname'] == 'researchlabs' ) {
+            $dql->leftJoin("ent.user", "user");
+            $dql->addGroupBy('user');
+        }
+
+        if( $mapper['pathname'] == 'grants' ) {
             $dql->leftJoin("ent.user", "user");
             $dql->addGroupBy('user');
         }
@@ -123,6 +129,9 @@ class ComplexListController extends Controller
      * @Route("/research-labs/show/{id}", name="employees_researchlabs_pathaction_show_standalone", requirements={"id" = "\d+"})
      * @Route("/admin/research-labs/edit/{id}", name="employees_researchlabs_pathaction_edit_standalone", requirements={"id" = "\d+"})
      *
+     * @Route("/grants/show/{id}", name="employees_grants_pathaction_show_standalone", requirements={"id" = "\d+"})
+     * @Route("/admin/grants/edit/{id}", name="employees_grants_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -134,7 +143,8 @@ class ComplexListController extends Controller
         if(
             $routeName == "employees_locations_pathaction_edit_standalone" ||
             $routeName == "employees_buildings_pathaction_edit_standalone" ||
-            $routeName == "employees_researchlabs_pathaction_edit_standalone"
+            $routeName == "employees_researchlabs_pathaction_edit_standalone" ||
+            $routeName == "employees_grants_pathaction_edit_standalone"
         ) {
             if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
                 return $this->redirect( $this->generateUrl('employees-order-nopermission') );
@@ -169,6 +179,7 @@ class ComplexListController extends Controller
      * @Route("/location/new", name="employees_locations_pathaction_new_standalone")
      * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_standalone")
      * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_standalone")
+     * @Route("/admin/grants/new", name="employees_grants_pathaction_new_standalone")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -209,6 +220,7 @@ class ComplexListController extends Controller
      * @Route("/location/new", name="employees_locations_pathaction_new_post_standalone")
      * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_post_standalone")
      * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_post_standalone")
+     * @Route("/admin/grants/new", name="employees_grants_pathaction_new_post_standalone")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -275,6 +287,13 @@ class ComplexListController extends Controller
                 $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
+            if( $mapper['pathname'] == 'grants' ) {
+                $userUtil = new UserUtil();
+                $em = $this->getDoctrine()->getManager();
+                $sc = $this->get('security.context');
+                $userUtil->setUpdateInfo($entity,$em,$sc);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -300,6 +319,7 @@ class ComplexListController extends Controller
      * @Route("/location/update/{id}", name="employees_locations_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Route("/admin/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Route("/admin/research-labs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * @Route("/admin/grants/update/{id}", name="employees_grants_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
      */
@@ -357,6 +377,14 @@ class ComplexListController extends Controller
                 $sc = $this->get('security.context');
                 $userUtil->setUpdateInfo($entity,$em,$sc);
             }
+
+            if( $mapper['pathname'] == 'grants' ) {
+                $userUtil = new UserUtil();
+                $em = $this->getDoctrine()->getManager();
+                $sc = $this->get('security.context');
+                $userUtil->setUpdateInfo($entity,$em,$sc);
+            }
+
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -471,6 +499,12 @@ class ComplexListController extends Controller
                 $displayName = "Research Labs";
                 $singleName = "Research Lab";
                 $formType = "ResearchLabType";
+                break;
+            case "grants":
+                $className = "Grant";
+                $displayName = "Grants";
+                $singleName = "Grant";
+                $formType = "GrantType";
                 break;
             default:
                 $className = null;

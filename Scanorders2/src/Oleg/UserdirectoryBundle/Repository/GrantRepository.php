@@ -3,6 +3,7 @@
 
 namespace Oleg\UserdirectoryBundle\Repository;
 
+
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\Grant;
 
@@ -19,13 +20,18 @@ class GrantRepository extends EntityRepository {
         foreach( $grants as $grant ) {
 
 
-            if( !($grant && $grant->getName() && $grant->getName() != "") ) {
+            if( !($grant && $grant->getGrantTitle() && $grant->getGrantTitle()."" != "") ) {
                 $user->removeGrant($grant);
                 continue;
             }
 
+            echo "Process Grant: ".$grant."<br>";
+
             //get grant from DB if exists
-            $grantDb = $em->getRepository('OlegUserdirectoryBundle:Grant')->findOneByName($grant->getGrantTitle()."");
+            $grantDb = $em->getRepository('OlegUserdirectoryBundle:Grant')->findOneByGrantTitle($grant->getGrantTitle());
+
+            echo "grantDb: ".$grantDb."<br>";
+            //exit('1');
 
             if( $grantDb ) {
 
@@ -34,13 +40,14 @@ class GrantRepository extends EntityRepository {
                 //merge db and form entity
                 $grantDb->setEffortDummy($grant->getEffortDummy());
                 $grantDb->setCommentDummy($grant->getCommentDummy());
+                $grantDb->setAttachmentContainer($grant->getAttachmentContainer());
 
                 $user->removeGrant($grant);
                 $user->addGrant($grantDb);
 
                 $grantFinal = $grantDb;
 
-                //echo "lab dummy: id=".$lab->getId().", pi=".$lab->getPiDummy().", comment=".$lab->getCommentDummy()."<br>";
+                //echo "grant dummy: id=".$grant->getId().", pi=".$grant->getPiDummy().", comment=".$grant->getCommentDummy()."<br>";
             } else {
                 $grantFinal = $grant;
             }
@@ -50,17 +57,18 @@ class GrantRepository extends EntityRepository {
             $grantEffortDb = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$user, 'grant'=>$grantFinal->getId() ) );
 
             if( $grantFinal->getEffortDummy() ) {
-                //echo "lab pi=".$labFinal->getPiDummy()."<br>";
+                echo "grant effort=".$grantFinal->getEffortDummy()."<br>";
 
                 if( $grantEffortDb ) {
-                    //echo "exist pi=".$piDb->getPi()."<br>";
+                    echo "exist effort=".$grantEffortDb->getEffort()."<br>";
                     $grantEffortDb->setAuthor($user);
                 } else {
-                    //echo "does not exist pi <br>";
-                    $grantFinal->setEffort($grantEffortDb,$user);
+                    echo "does not exist effort <br>";
+                    $grantFinal->setEffort($grantFinal->getEffortDummy(),$user);
                 }
 
             } else {
+                echo "no dummy effort=".$grantFinal->getEffortDummy()."<br>";
 
                 if( $grantEffortDb ) {
                     $grantFinal->removeEffort($grantEffortDb);
@@ -70,8 +78,8 @@ class GrantRepository extends EntityRepository {
             }
 
 
-            //check if comment authored by $user for this lab already exists
-            $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'grant'=>$grantFinal->getId() ) );
+            //check if comment authored by $user for this grant already exists
+            $commentDb = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $user, 'grant'=>$grantFinal->getId() ) );
 
             if( $grantFinal->getCommentDummy() && $grantFinal->getCommentDummy() != '' ) {
 
@@ -89,19 +97,27 @@ class GrantRepository extends EntityRepository {
                     $em->remove($commentDb);
                 }
             }
-            //echo "comments 2=".count($labFinal->getComments())."<br>";
+            //echo "comments 2=".count($grantFinal->getComments())."<br>";
 
-            //foreach( $labFinal->getComments() as $comment ) {
+            //foreach( $grantFinal->getComments() as $comment ) {
             //    echo $comment;
             //}
 
-        } //foreach
 
-        //echo "labs final count=".count($user->getResearchLabs())."<br>";
-        //$labOrig = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find(21);
-        //echo "original form labOrig id=21: name=".$labOrig->getName().", id=".$labOrig->getId()."<br>";
+            //process attachment documents
+            if( $grantFinal->getAttachmentContainer() ) {
+                foreach( $grantFinal->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
+                    $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+                }
+            }
 
-        //exit('process lab');
+        } //foreach grant
+
+        //echo "grants final count=".count($user->getGrants())."<br>";
+        //echo "effort count=".count($user->getGrants()->first()->getEfforts())."<br>";
+
+
+        //exit('process grant');
 
         return $user;
     }
@@ -112,7 +128,7 @@ class GrantRepository extends EntityRepository {
     //remove effort and comment for Grant
     public function removeDependents($subjectUser,$grant) {
 
-        //echo "remove user=".$subjectUser.", lab=".$lab->getId()."<br>";
+        //echo "remove user=".$subjectUser.", grant=".$grant->getId()."<br>";
 
         if( !($grant instanceof Grant) ) {
             //echo 'not grant object <br>';
@@ -123,19 +139,56 @@ class GrantRepository extends EntityRepository {
 
         $commentDb = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUser->getId(), 'grant'=>$grant->getId() ) );
         if( $commentDb ) {
-            echo "remove comment=".$commentDb."<br>";
+            //echo "remove comment=".$commentDb."<br>";
             $em->remove($commentDb);
             $em->flush();
         }
 
         $effortDb = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUser->getId(), 'grant'=>$grant->getId() ) );
         if( $effortDb ) {
-            echo "remove pi=".$effortDb."<br>";
+            //echo "remove effort=".$effortDb."<br>";
             $em->remove($effortDb);
             $em->flush();
         }
 
-        //exit('remove lab');
+        //remove documents
+        if( 0 ) {   //document belongs to grant, not to a user! => don't remove documents here!
+            if( $grant->getAttachmentContainer() ) {
+
+                foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
+                    //$em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+
+                    foreach( $documentContainer->getDocuments() as $document ) {
+
+                        if( $document && $document->getId() ) {
+                            $documentPath = $document->getServerPath();
+                            $documentContainer->removeDocument($document);
+
+                            //remove file from folder
+                            if( is_file($documentPath) ) {
+                                unlink($documentPath);
+                            }
+
+                            $em->remove($document);
+                        }
+
+                    } //foreach document
+
+                    $grant->getAttachmentContainer()->removeDocumentContainer($documentContainer);
+                    $em->remove($documentContainer);
+
+                } //foreach documentContainer
+
+                $em->remove($grant->getAttachmentContainer());
+
+                $grant->setAttachmentContainer(null);
+
+                $em->flush();
+
+            }
+        }
+
+        //exit('remove grant');
 
     }
 

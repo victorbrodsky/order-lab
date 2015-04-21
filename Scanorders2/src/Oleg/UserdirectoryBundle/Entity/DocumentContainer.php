@@ -35,10 +35,10 @@ class DocumentContainer {
     private $attachmentContainer;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="user_documentcontainer_document",
-     *      joinColumns={@ORM\JoinColumn(name="documentcontainer_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="documentcontainer_id", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="cascade")}
      *      )
      **/
     private $documents;
@@ -53,7 +53,7 @@ class DocumentContainer {
     //Image Comment(s): [plain text]
     /**
      * Document Container comment
-     * @ORM\OneToMany(targetEntity="DocumentComment", mappedBy="documentContainer", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="DocumentComment", mappedBy="documentContainer", cascade={"persist","remove"})
      */
     private $comments;
 

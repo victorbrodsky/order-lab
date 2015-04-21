@@ -1273,8 +1273,7 @@ class UserController extends Controller
 
             $user = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
 
-            //set documents for grants
-            //$this->setGrantsComments($user);
+            //process grants
             $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($user);
 
             $em->persist($user);
@@ -1721,12 +1720,6 @@ class UserController extends Controller
 
             //exit('before processing');
 
-            //set documents for grants
-            //$this->setGrantsComments($entity,$form);
-            //$commentDummy = $form['commentDummy']->getData();
-            //$effortDummy = $form['effortDummy']->getData();
-            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity);
-
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForInstitutionTree($entity);
 
@@ -1739,7 +1732,11 @@ class UserController extends Controller
             //set avatar
             $this->processSetAvatar($entity);
 
+            //process research labs
             $entity = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $entity );
+
+            //process grants
+            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity);
 
             //set update info for user
             $this->updateInfo($entity);
@@ -1842,13 +1839,13 @@ class UserController extends Controller
             }
 
             //echo "user=".$entity."<br>";
-            if( 1==0 && count($entity->getGrants()) > 0 ) {
-                echo "2 DocumentContainers count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers())."<br>";
-                if( count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
-                    echo "3 documents count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
-                }
-                //exit('user exit');
-            }
+//            if( 1==0 && count($entity->getGrants()) > 0 ) {
+//                echo "2 DocumentContainers count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers())."<br>";
+//                if( count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
+//                    echo "3 documents count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
+//                }
+//                //exit('user exit');
+//            }
 
 
             //$em->persist($entity);
@@ -2187,6 +2184,8 @@ class UserController extends Controller
             }
 
         } //foreach
+
+        //exit('done remove collection');
 
         return implode("<br>", $removeArr);
     }

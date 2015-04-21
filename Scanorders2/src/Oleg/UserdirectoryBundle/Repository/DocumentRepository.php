@@ -12,29 +12,29 @@ class DocumentRepository extends EntityRepository {
     public function processDocuments($documentHolder) {
 
         if( $documentHolder == null ) {
-            echo "not exists: document=".$documentHolder."<br>";
+            //echo "not exists: document=".$documentHolder."<br>";
             return $documentHolder;
         }
 
         if( count($documentHolder->getDocuments()) == 0 ) {
-            echo "return: no documents<br>";
+            //echo "return: no documents<br>";
             return $documentHolder;
         }
 
-        echo $documentHolder. ", id=".$documentHolder->getId()."<br>";
-        echo "<br>before processing holder count=".count($documentHolder->getDocuments())."<br>";
+        //echo $documentHolder. ", id=".$documentHolder->getId()."<br>";
+        //echo "<br>before processing holder count=".count($documentHolder->getDocuments())."<br>";
 
         //get type by $documentHolder class
         $docType = $this->getDocumentTypeByHolder($documentHolder);
 
         foreach( $documentHolder->getDocuments() as $doc ) {
-            echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+            //echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
             //if document does not have an original or unique names then this is a newly added document => find it in DB and attach it to this holder
             if( $doc->getId() && ( !$doc->getOriginalname() || !$doc->getUniquename() ) ) {
 
                 $documentHolder->removeDocument($doc);
 
-                echo "before get doc: id=".$doc->getId()."<br>";
+                //echo "before get doc: id=".$doc->getId()."<br>";
 
                 $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
 
@@ -45,13 +45,13 @@ class DocumentRepository extends EntityRepository {
                         $docDb->setType($docType);
                     }
 
-                    echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
+                    //echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
                     $documentHolder->addDocument($docDb);
                 }
             }
         }
 
-        echo "after processing holder count=".count($documentHolder->getDocuments())."<br>";
+        //echo "after processing holder count=".count($documentHolder->getDocuments())."<br>";
         //foreach( $documentHolder->getDocuments() as $doc ) {
             //echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
         //}

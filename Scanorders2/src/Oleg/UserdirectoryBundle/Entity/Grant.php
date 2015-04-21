@@ -481,5 +481,8 @@ class Grant extends ListAbstract
     }
 
 
+    public function __toString() {
+        return $this->getGrantTitle()."";
+    }
 
 }

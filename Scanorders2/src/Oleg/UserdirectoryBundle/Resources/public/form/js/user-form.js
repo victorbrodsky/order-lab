@@ -646,7 +646,7 @@ function researchLabListener( holder ) {
         //console.log(labObject);
 
         if( grantObject ) {
-            console.log("id="+grantObject.id+", text="+grantObject.text+', user_id='+user_id);
+            //console.log("id="+grantObject.id+", text="+grantObject.text+', user_id='+user_id);
 
             var url = getCommonBaseUrl("util/common/grant/"+grantObject.id+"/"+user_id,"employees");
 
@@ -686,79 +686,86 @@ function populateGrantData( data, elementName ) {
     var sourceOrganization = holder.find('.ajax-combobox-sourceorganization');
     var grantLink = holder.find('.ajax-combobox-grantlink');
     //var attachmentContainer = holder.find('.grant-attachmentContainer-field');
-    var commentDummy = holder.find('.grant-commentDummy-field');
-    var effortDummy = holder.find('.grant-effortDummy-field');
+    var comment = holder.find('.grant-commentDummy-field');
+    var effort = holder.find('.grant-effortDummy-field');
 
-
-    //commentDummy.attr("readonly", false);
-    //disableCheckbox(piDummy,false);
 
     if( data && data.length > 1 ) {
         throw new Error('More than 1 object found. count='+data.length);
     }
 
     if( !data ) {
-        console.log("data is null => empty lab");
+        //console.log("data is null => empty lab");
 
-        //set null (11 fields)
+        //set null (13 fields)
         idfield.val(null);
         grantid.val(null);
         amount.val(null);
+        startDate.val(null);
+        endDate.val(null);
         currentYearDirectCost.val(null);
         currentYearIndirectCost.val(null);
         totalCurrentYearCost.val(null);
         amountLabSpace.val(null);
         sourceOrganization.select2('val',null);
         grantLink.select2('val',null);
-        commentDummy.val(null);
-        effortDummy.select2('val',null);
+        comment.val(null);
+        effort.select2('val',null);
 
-        //disable (11 fields)
+        setGrantDocuments(holder,null);
+
+        //disable (13 fields)
         idfield.attr("readonly", true);
         grantid.attr("readonly", true);
         amount.attr("readonly", true);
+        startDate.attr("readonly", true);
+        endDate.attr("readonly", true);
         currentYearDirectCost.attr("readonly", true);
         currentYearIndirectCost.attr("readonly", true);
         totalCurrentYearCost.attr("readonly", true);
         amountLabSpace.attr("readonly", true);
         sourceOrganization.select2("readonly", true);
         grantLink.select2("readonly",true);
-        effortDummy.select2("readonly", true);
-        commentDummy.attr("readonly", true);
-
+        effort.select2("readonly", true);
+        comment.attr("readonly", true);
         initDatepicker(holder);
 
         return;
     }
 
     if( data.length == 0 ) {
-        console.log("data is empty => new lab");
+        //console.log("data is empty => new lab");
 
-        //set null (11 fields)
+        //set null (13 fields)
         idfield.val(null);
         grantid.val(null);
         amount.val(null);
+        startDate.val(null);
+        endDate.val(null);
         currentYearDirectCost.val(null);
         currentYearIndirectCost.val(null);
         totalCurrentYearCost.val(null);
         amountLabSpace.val(null);
         sourceOrganization.select2('val',null);
         grantLink.select2('val',null);
-        commentDummy.val(null);
-        effortDummy.select2('val',null);
+        comment.val(null);
+        effort.select2('val',null);
+        setGrantDocuments(holder,null);
 
         //enable
         idfield.attr("readonly", false);
         grantid.attr("readonly", false);
         amount.attr("readonly", false);
+        startDate.attr("readonly", false);
+        endDate.attr("readonly", false);
         currentYearDirectCost.attr("readonly", false);
         currentYearIndirectCost.attr("readonly", false);
         totalCurrentYearCost.attr("readonly", false);
         amountLabSpace.attr("readonly", false);
         sourceOrganization.select2("readonly", false);
         grantLink.select2("readonly",false);
-        effortDummy.select2("readonly", false);
-        commentDummy.attr("readonly", false);
+        effort.select2("readonly", false);
+        comment.attr("readonly", false);
 
         initDatepicker(holder);
 
@@ -768,53 +775,42 @@ function populateGrantData( data, elementName ) {
     if( data && data.length > 0) {
 
         data = data[0];
-        console.log("existing lab: idfield="+data.id);
+        //console.log("existing lab: idfield="+data.id);
 
         //set data
         idfield.val(data.id);
         grantid.val(data.grantid);
         amount.val(data.amount);
+        startDate.val(data.startDate);
+        endDate.val(data.endDate);
         currentYearDirectCost.val(data.currentYearDirectCost);
         currentYearIndirectCost.val(data.currentYearIndirectCost);
         totalCurrentYearCost.val(data.totalCurrentYearCost);
         amountLabSpace.val(data.amountLabSpace);
         sourceOrganization.select2('val',data.sourceOrganization);
         grantLink.select2('val',data.grantLink);
-        commentDummy.val(data.commentDummy);
-        effortDummy.select2('val',data.effortDummy);
-
-        //no comment or pi is attached to a new research lab
-        //commentDummy.val(data.commentDummy);
-//        if( data.piDummy && data.piDummy == user_id ) {
-//            piDummy.prop('checked', true);
-//        } else {
-//            piDummy.prop('checked', false);
-//        }
+        comment.val(data.comment);
+        effort.select2('val',data.effort);
+        setGrantDocuments(holder,data);
 
         //enable
-        idfield.attr("readonly", false);
-        grantid.attr("readonly", false);
-        amount.attr("readonly", false);
-        currentYearDirectCost.attr("readonly", false);
-        currentYearIndirectCost.attr("readonly", false);
-        totalCurrentYearCost.attr("readonly", false);
-        amountLabSpace.attr("readonly", false);
-        sourceOrganization.select2("readonly", false);
-        grantLink.select2("readonly",false);
-        effortDummy.select2("readonly", false);
-        commentDummy.attr("readonly", false);
+        idfield.attr("readonly", true);
+        grantid.attr("readonly", true);
+        amount.attr("readonly", true);
+        startDate.attr("readonly", true);
+        endDate.attr("readonly", true);
+        currentYearDirectCost.attr("readonly", true);
+        currentYearIndirectCost.attr("readonly", true);
+        totalCurrentYearCost.attr("readonly", true);
+        amountLabSpace.attr("readonly", true);
+        sourceOrganization.select2("readonly", true);
+        grantLink.select2("readonly",true);
+        effort.select2("readonly", false);
+        comment.attr("readonly", false);
 
         initDatepicker(holder);
 
         return;
-    }
-
-    function disableCheckbox( checkboxEl, disable ) {
-        if( disable ) {
-            checkboxEl.prop("disabled", true);
-        } else {
-            checkboxEl.prop("disabled", false);
-        }
     }
 
     return;

@@ -47,6 +47,23 @@
             {{ usermacros.researchlabObject(form,cycle,'user-researchlabs','noprototype',employees_sitename,entity) }}
         {% endif %}
 
+        {% if pathname == 'grants' %}
+
+            {% set grantsPrototype = null %}
+            {% if form.grants is defined %}
+                {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
+            {% endif %}
+
+            <div id="form-prototype-data"
+                 data-prototype-user-grants = "{{ grantsPrototype|e }}"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+                 data-userid = "{{ entity.id }}"
+            ></div>
+
+            {{ usermacros.grantObject(form,cycle,'user-grants','noprototype',employees_sitename,entity) }}
+        {% endif %}
+
 
         {# Token CSRF #}
         {{ form_widget(form._token) }}
