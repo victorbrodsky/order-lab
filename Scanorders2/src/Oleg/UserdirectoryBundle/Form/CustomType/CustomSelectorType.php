@@ -136,14 +136,11 @@ class CustomSelectorType extends AbstractType {
                 break;
 
             //grants
-            case "granttitle":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'GrantTitle');
-                break;
             case "sourceorganization":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'SourceOrganization');
                 break;
-            case "grantlink":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'GrantLink');
+            case "grant":
+                $transformer = new ResearchLabTransformer($this->om, $username, 'Grant');
                 break;
 
             default:

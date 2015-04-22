@@ -60,6 +60,8 @@ $(document).ready(function() {
 
     researchLabListener();
 
+    grantListener();
+
     initTypeaheadUserSiteSearch();
 
     degreeListener();

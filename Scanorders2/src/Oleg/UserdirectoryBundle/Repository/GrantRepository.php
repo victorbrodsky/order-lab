@@ -20,7 +20,7 @@ class GrantRepository extends EntityRepository {
         foreach( $grants as $grant ) {
 
 
-            if( !($grant && $grant->getGrantTitle() && $grant->getGrantTitle()."" != "") ) {
+            if( !($grant && $grant->getName() && $grant->getName()."" != "") ) {
                 $user->removeGrant($grant);
                 continue;
             }
@@ -28,7 +28,7 @@ class GrantRepository extends EntityRepository {
             echo "Process Grant: ".$grant."<br>";
 
             //get grant from DB if exists
-            $grantDb = $em->getRepository('OlegUserdirectoryBundle:Grant')->findOneByGrantTitle($grant->getGrantTitle());
+            $grantDb = $em->getRepository('OlegUserdirectoryBundle:Grant')->findOneByName($grant->getName());
 
             echo "grantDb: ".$grantDb."<br>";
             //exit('1');

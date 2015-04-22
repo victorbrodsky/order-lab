@@ -34,9 +34,8 @@ var _traininginstitution = new Array();
 var _locationusers = new Array();
 
 //grants
-var _granttitle = new Array();
 var _sourceorganization = new Array();
-var _grantlink = new Array();
+var _grants = new Array();
 
 
 function initAllComboboxGeneric(newForm) {
@@ -67,9 +66,8 @@ function initAllComboboxGeneric(newForm) {
     //getComboboxGeneric(newForm,'fellowshipsubspecialty',_fellowshipSubspecialtys,false);
 
     //grants
-    getComboboxGeneric(newForm,'granttitle',_granttitle,false);
     getComboboxGeneric(newForm,'sourceorganization',_sourceorganization,false);
-    getComboboxGeneric(newForm,'grantlink',_grantlink,false);
+    getComboboxGeneric(newForm,'grant',_grants,false);
 
     setBuidlingListener(newForm);
 

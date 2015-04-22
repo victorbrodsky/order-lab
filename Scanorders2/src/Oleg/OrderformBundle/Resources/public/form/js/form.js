@@ -758,7 +758,7 @@ function setEducational() {
     });
 }
 
-
+//collapse content of patient hierarchy
 function contentToggleHierarchyButton() {
 
     //var contentToggleBtns = $('.form_body_content_toggle_btn');

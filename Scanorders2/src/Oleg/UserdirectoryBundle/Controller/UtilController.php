@@ -503,21 +503,11 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
-//        $researchLabDB = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($id);
-//        if( !$researchLabDB ) {
-//            $response = new Response();
-//            $response->headers->set('Content-Type', 'application/json');
-//            $response->setContent(null);
-//            return $response;
-//        }
 
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Grant', 'list')
             ->leftJoin('list.sourceOrganization','sourceOrganization')
-            ->leftJoin('list.grantTitle','grantTitle')
             ->leftJoin('list.attachmentContainer','attachmentContainer')
-            ->leftJoin('list.grantLink','grantLink')
-
             ->leftJoin('list.comments','comments')
             ->leftJoin('comments.author','commentauthor')
             ->leftJoin('list.efforts','efforts')
@@ -527,7 +517,7 @@ class UtilController extends Controller {
 
         //$user = $this->get('security.context')->getToken()->getUser();
 
-        $query->where("grantTitle.id=".$id);
+        $query->where("list.id=".$id);
 
         $grants = $query->getQuery()->getResult();
 
@@ -576,8 +566,7 @@ class UtilController extends Controller {
                 'sourceOrganization'    => ( $grant->getSourceOrganization() ? $grant->getSourceOrganization()->getId() : null ),
                 'startDate'             => $transformer->transform($grant->getStartDate()),
                 'endDate'               => $transformer->transform($grant->getEndDate()),
-                'grantTitle'            => ( $grant->getGrantTitle() ? $grant->getGrantTitle()->getId() : null ),
-                'grantLink'             => ( $grant->getGrantLink() ? $grant->getGrantLink()->getId() : null ),
+                'grantLink'             => $grant->getGrantLink(),
                 'grantid'               => $grant->getGrantid(),
                 'amount'                => $grant->getAmount(),
                 'currentYearDirectCost'     => $grant->getCurrentYearDirectCost(),
@@ -1052,14 +1041,11 @@ class UtilController extends Controller {
                 break;
 
             //grants
-            case "granttitle":
-                $className = "GrantTitle";
-                break;
             case "sourceorganization":
                 $className = "SourceOrganization";
                 break;
-            case "grantlink":
-                $className = "GrantLink";
+            case "grant":
+                $className = "Grant";
                 break;
 
             default:

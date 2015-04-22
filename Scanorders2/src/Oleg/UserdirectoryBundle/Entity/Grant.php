@@ -42,11 +42,6 @@ class Grant extends ListAbstract
      */
     private $sourceOrganization;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="GrantTitle")
-     * @ORM\JoinColumn(name="grantTitle_id", referencedColumnName="id", nullable=true)
-     */
-    private $grantTitle;
 
     //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
     /**
@@ -57,8 +52,7 @@ class Grant extends ListAbstract
 
     //Link to a page with more information:
     /**
-     * @ORM\ManyToOne(targetEntity="GrantLink")
-     * @ORM\JoinColumn(name="grantLink_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $grantLink;
 
@@ -336,22 +330,6 @@ class Grant extends ListAbstract
     }
 
     /**
-     * @param mixed $grantTitle
-     */
-    public function setGrantTitle($grantTitle)
-    {
-        $this->grantTitle = $grantTitle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrantTitle()
-    {
-        return $this->grantTitle;
-    }
-
-    /**
      * @param mixed $grantid
      */
     public function setGrantid($grantid)
@@ -482,7 +460,7 @@ class Grant extends ListAbstract
 
 
     public function __toString() {
-        return $this->getGrantTitle()."";
+        return $this->getName()."";
     }
 
 }

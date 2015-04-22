@@ -105,12 +105,17 @@ class GrantType extends AbstractType
             'classtype' => 'sourceorganization'
         ));
 
-        $builder->add('grantLink', 'employees_custom_selector', array(
+//        $builder->add('grantLink', 'employees_custom_selector', array(
+//            'read_only' => $readonly,
+//            'label' => "Link to a page with more information:",
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-grantlink', 'type' => 'hidden'),
+//            'classtype' => 'grantlink'
+//        ));
+        $builder->add('grantLink', null, array(
             'read_only' => $readonly,
-            'label' => "Link to a page with more information:",
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-grantlink', 'type' => 'hidden'),
-            'classtype' => 'grantlink'
+            'label' => 'Link to a page with more information:',
+            'attr' => array('class'=>'form-control grant-grantLink-field')
         ));
 
 
@@ -167,12 +172,12 @@ class GrantType extends AbstractType
                 $grant = $event->getData();
                 $form = $event->getForm();
 
-                $form->add('grantTitle', 'employees_custom_selector', array(
+                $form->add('name', 'employees_custom_selector', array(
                     'read_only' => ($grant && $grant->getId() ? true : false),
-                    'label' => "Grant Title:",
+                    'label' => "Research Lab Title:",
                     'required' => false,
-                    'attr' => array('class' => 'combobox combobox-width ajax-combobox-granttitle', 'type' => 'hidden'),
-                    'classtype' => 'granttitle'
+                    'attr' => array('class' => 'combobox combobox-width ajax-combobox-grant', 'type' => 'hidden'),
+                    'classtype' => 'grant'
                 ));
 
                 if( $grant && $grant->getId() && $this->params['subjectUser'] ) {
@@ -228,11 +233,10 @@ class GrantType extends AbstractType
 
         } else {
 
-            $builder->add('grantTitle', 'employees_custom_selector', array(
+            $builder->add('name',null,array(
                 'label'=>"Grant Title:",
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-granttitle', 'type' => 'hidden'),
-                'classtype' => 'granttitle'
+                'required' => true,
+                'attr' => array('class' => 'form-control')
             ));
 
         }

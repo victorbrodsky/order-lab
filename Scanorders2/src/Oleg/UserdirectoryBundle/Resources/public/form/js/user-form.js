@@ -418,6 +418,8 @@ function researchLabListener( holder ) {
 
     var labs = $(targetClass);
 
+    //console.log('total research labs count=' + labs.length);
+
     if( labs.length == 0 ) {
         return;
     }
@@ -619,9 +621,9 @@ function deleteObjectFromDB(btn) {
 
 
 /////////////////////////// Grant type ///////////////////////////
-function researchLabListener( holder ) {
+function grantListener( holder ) {
 
-    var targetClass = ".ajax-combobox-granttitle";
+    var targetClass = ".ajax-combobox-grant";
 
     var grants = $(targetClass);
 
@@ -684,7 +686,7 @@ function populateGrantData( data, elementName ) {
     var startDate = holder.find('.grant-startDate-field');
     var endDate = holder.find('.grant-endDate-field');
     var sourceOrganization = holder.find('.ajax-combobox-sourceorganization');
-    var grantLink = holder.find('.ajax-combobox-grantlink');
+    var grantLink = holder.find('.grant-grantLink-field');
     //var attachmentContainer = holder.find('.grant-attachmentContainer-field');
     var comment = holder.find('.grant-commentDummy-field');
     var effort = holder.find('.grant-effortDummy-field');
@@ -708,9 +710,9 @@ function populateGrantData( data, elementName ) {
         currentYearIndirectCost.val(null);
         totalCurrentYearCost.val(null);
         amountLabSpace.val(null);
-        sourceOrganization.select2('val',null);
-        grantLink.select2('val',null);
+        grantLink.val(null);
         comment.val(null);
+        sourceOrganization.select2('val',null);
         effort.select2('val',null);
 
         setGrantDocuments(holder,null);
@@ -725,8 +727,8 @@ function populateGrantData( data, elementName ) {
         currentYearIndirectCost.attr("readonly", true);
         totalCurrentYearCost.attr("readonly", true);
         amountLabSpace.attr("readonly", true);
+        grantLink.attr("readonly", true);
         sourceOrganization.select2("readonly", true);
-        grantLink.select2("readonly",true);
         effort.select2("readonly", true);
         comment.attr("readonly", true);
         disableEnableDropzone( dropzoneElement, true, null );
@@ -749,9 +751,9 @@ function populateGrantData( data, elementName ) {
         currentYearIndirectCost.val(null);
         totalCurrentYearCost.val(null);
         amountLabSpace.val(null);
-        sourceOrganization.select2('val',null);
-        grantLink.select2('val',null);
+        grantLink.val(null);
         comment.val(null);
+        sourceOrganization.select2('val',null);
         effort.select2('val',null);
         setGrantDocuments(holder,null);
 
@@ -765,10 +767,10 @@ function populateGrantData( data, elementName ) {
         currentYearIndirectCost.attr("readonly", false);
         totalCurrentYearCost.attr("readonly", false);
         amountLabSpace.attr("readonly", false);
-        sourceOrganization.select2("readonly", false);
-        grantLink.select2("readonly",false);
-        effort.select2("readonly", false);
+        grantLink.attr("readonly",false);
         comment.attr("readonly", false);
+        sourceOrganization.select2("readonly", false);
+        effort.select2("readonly", false);
         disableEnableDropzone( dropzoneElement, false, null );
 
         initDatepicker(holder);
@@ -791,9 +793,9 @@ function populateGrantData( data, elementName ) {
         currentYearIndirectCost.val(data.currentYearIndirectCost);
         totalCurrentYearCost.val(data.totalCurrentYearCost);
         amountLabSpace.val(data.amountLabSpace);
-        sourceOrganization.select2('val',data.sourceOrganization);
-        grantLink.select2('val',data.grantLink);
+        grantLink.val(data.grantLink);
         comment.val(data.comment);
+        sourceOrganization.select2('val',data.sourceOrganization);
         effort.select2('val',data.effort);
         setGrantDocuments(holder,data);
 
@@ -807,10 +809,10 @@ function populateGrantData( data, elementName ) {
         currentYearIndirectCost.attr("readonly", true);
         totalCurrentYearCost.attr("readonly", true);
         amountLabSpace.attr("readonly", true);
-        sourceOrganization.select2("readonly", true);
-        grantLink.select2("readonly",true);
-        effort.select2("readonly", false);
+        grantLink.attr("readonly", true);
         comment.attr("readonly", false);
+        sourceOrganization.select2("readonly", true);
+        effort.select2("readonly", false);
         disableEnableDropzone( dropzoneElement, false, null );
 
         initDatepicker(holder);

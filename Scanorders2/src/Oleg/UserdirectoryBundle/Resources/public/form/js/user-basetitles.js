@@ -59,6 +59,8 @@ function initBaseAdd(newForm) {
 
     researchLabListener(newForm);
 
+    grantListener(newForm);
+
     degreeListener(newForm);
 }
 

@@ -1231,8 +1231,8 @@
             {% set researchLabsPrototype = usermacros.researchlabObject(form.researchLabs,cycle,'user-researchlabs','prototype',sitename,entity) %}
         {% endif %}
         {% if form.grants is defined %}
-            {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
             {% set documentsHtml = formmacros.inputField(form.grants.vars.prototype.attachmentContainer.documentContainers,cycle,"documentContainer","prototype") %}
+            {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
             {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cycle,'user-statelicense','prototype') %}
@@ -1633,7 +1633,7 @@
         {#Grants#}
         {% set showGrants = false %}
         {% for grant in form.grants %}
-            {% if grant.vars.value or grant.amount.vars.value or grant.grantTitle.vars.value or grant.startDate.vars.value %}
+            {% if grant.vars.value or grant.grantid.vars.value or grant.amount.vars.value or grant.startDate.vars.value %}
                 {% set showGrants = true %}
             {% endif %}
         {% endfor %}
