@@ -689,6 +689,7 @@ function populateGrantData( data, elementName ) {
     var comment = holder.find('.grant-commentDummy-field');
     var effort = holder.find('.grant-effortDummy-field');
 
+    var dropzoneElement = holder.find('.file-upload-dropzone');
 
     if( data && data.length > 1 ) {
         throw new Error('More than 1 object found. count='+data.length);
@@ -728,6 +729,8 @@ function populateGrantData( data, elementName ) {
         grantLink.select2("readonly",true);
         effort.select2("readonly", true);
         comment.attr("readonly", true);
+        disableEnableDropzone( dropzoneElement, true, null );
+
         initDatepicker(holder);
 
         return;
@@ -766,6 +769,7 @@ function populateGrantData( data, elementName ) {
         grantLink.select2("readonly",false);
         effort.select2("readonly", false);
         comment.attr("readonly", false);
+        disableEnableDropzone( dropzoneElement, false, null );
 
         initDatepicker(holder);
 
@@ -807,6 +811,7 @@ function populateGrantData( data, elementName ) {
         grantLink.select2("readonly",true);
         effort.select2("readonly", false);
         comment.attr("readonly", false);
+        disableEnableDropzone( dropzoneElement, false, null );
 
         initDatepicker(holder);
 

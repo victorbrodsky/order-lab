@@ -303,6 +303,17 @@
     {#{% set scanCount        = 0 %}#}
     {#{% set stainCount       = 0 %}#}
 
+    {% if name == 'encounter' and not (datastructure and datastructure == "datastructure")%}
+        {% set title = 'accession' %}
+        {% set procedure = formObject.vars.value.procedure|first %}
+        {% set formObject = procedure.accession|first %}
+        {#{% set toggleName = "form_body_"~name %}#}
+    {% else %}
+        {% set title = name %}
+        {% set formObject = formObject.vars.value %}
+        {#{% set toggleName = name %}#}
+    {% endif %}
+
     <div class="panel-heading panel-heading-hierarchy">
 
         <button
@@ -311,14 +322,14 @@
              data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}">
         </button>
 
-        {% if name == 'encounter' and not (datastructure and datastructure == "datastructure")%}
-            {% set title = 'accession' %}
-            {% set procedure = formObject.vars.value.procedure|first %}
-            {% set formObject = procedure.accession|first %}
-        {% else %}
-            {% set title = name %}
-            {% set formObject = formObject.vars.value %}
-        {% endif %}
+        <button
+                style="margin-left: 5px;"
+                type="button"
+                class="btn btn-default btn-xs form_body_content_toggle_btn glyphicon glyphicon-list pull-left"
+                aria-expanded="true"
+                data-toggle="collapse"
+                data-target="#{{ title }}_{{ uid }}">
+        </button>
 
         {#<div class="element-title text-left">{{ title | capitalize }} {{ count+1 }}</div>#}
         <h4 class="panel-title element-title element-title-extended-width">
@@ -1352,7 +1363,7 @@
     {#messages#}
     {{ formmacros.renderMessages(patient,flag,uid,cycle) }}
 
-    <div id="patient_{{ uid }}" class="form-element-holder">
+    <div id="patient_{{ uid }}" class="form-element-holder collapse in">
 
         {% if mrnHtml is not defined or mrnHtml == "" %}
             {{ formmacros.inputArrayField(patient.mrn,cycle,"patientmrn",key,"","","",status) }}
@@ -1418,7 +1429,7 @@
     {#messages#}
     {{ formmacros.renderMessages(encounter,flag,uid,cycle) }}
 
-    <div id="encounter_{{ uid }}" class="form-element-holder">
+    <div id="encounter_{{ uid }}" class="form-element-holder collapse in">
 
         {{ formmacros.encounterExtraForm(encounter,flag,uid,cycle,status) }}
 
@@ -1450,7 +1461,7 @@
     {#messages#}
     {{ formmacros.renderMessages(procedure,flag,uid,cycle) }}
 
-    <div id="procedure_{{ uid }}" class="form-element-holder">
+    <div id="procedure_{{ uid }}" class="form-element-holder collapse in">
 
         {#{{ formmacros.inputArrayField(procedure.number,cycle,"procedurenumber",key,"","","",status) }}#}
 
@@ -1488,7 +1499,7 @@
     {#messages#}
     {{ formmacros.renderMessages(accession,flag,uid,cycle) }}
 
-    <div id="accession_{{ uid }}" class="form-element-holder">
+    <div id="accession_{{ uid }}" class="form-element-holder collapse in">
         {% if accessionHtml is not defined or accessionHtml == "" %}
             {{ formmacros.inputArrayField(accession.accession,cycle,"accessionaccession",key,"","","",status) }}
         {% else  %}
@@ -1588,7 +1599,7 @@
     {#messages#}
     {{ formmacros.renderMessages(part,flag,uid,cycle) }}
 
-    <div id="part_{{ uid }}" class="form-element-holder scan-partpaper">
+    <div id="part_{{ uid }}" class="form-element-holder scan-partpaper collapse in">
 
         {% if partnameHtml is not defined or partnameHtml == "" %}
             {{ formmacros.inputArrayField(part.partname,cycle,"partpartname",key,"","","",status) }}
@@ -1653,7 +1664,7 @@
     {#messages#}
     {{ formmacros.renderMessages(block,flag,uid,cycle) }}
 
-    <div id="block_{{ uid }}" class="form-element-holder">
+    <div id="block_{{ uid }}" class="form-element-holder collapse in">
 
         {% if blocknameHtml is not defined or blocknameHtml == "" %}
             {{ formmacros.inputArrayField(block.blockname,cycle,"blockblockname",key,"","","",status) }}
@@ -1687,7 +1698,7 @@
     {#messages#}
     {{ formmacros.renderMessages(slide,flag,uid,cycle) }}
 
-    <div id="slide_{{ uid }}" class="form-element-holder">
+    <div id="slide_{{ uid }}" class="form-element-holder collapse in">
 
         {{ formmacros.field(slide.title) }}
 

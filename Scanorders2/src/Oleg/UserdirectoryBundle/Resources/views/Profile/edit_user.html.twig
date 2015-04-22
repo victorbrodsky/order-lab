@@ -1208,6 +1208,7 @@
         {% set employmentStatusPrototype = null %}
         {% set researchLabsPrototype = null %}
         {% set grantsPrototype = null %}
+        {% set documentsHtml = null %}
         {% set statelicensePrototype = null %}
         {% set boardcertificationPrototype = null %}
         {% set identifiersPrototype = null %}
@@ -1231,8 +1232,8 @@
         {% endif %}
         {% if form.grants is defined %}
             {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
+            {% set documentsHtml = formmacros.inputField(form.grants.vars.prototype.attachmentContainer.documentContainers,cycle,"documentContainer","prototype") %}
         {% endif %}
-
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
             {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cycle,'user-statelicense','prototype') %}
         {% endif %}
@@ -1269,6 +1270,7 @@
              data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
              data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
              data-prototype-user-grants = "{{ grantsPrototype|e }}"
+             data-prototype-documentcontainers = "{{ documentsHtml|e }}"
 
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"

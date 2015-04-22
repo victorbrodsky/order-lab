@@ -53,12 +53,12 @@
             {% set documentsHtml = null %}
             {% if form.grants is defined %}
                 {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
-                {% set documentsHtml = formmacros.inputField(form.grants.vars.prototype.attachmentContainer.vars.prototype.documentContainers,cycle,"documentContainer","prototype") %}
+                {#{% set documentsHtml = formmacros.inputField(form.grants.vars.prototype.attachmentContainer.documentContainers.vars.prototype,cycle,"documentContainer","noprototype") %}#}
             {% endif %}
 
             <div id="form-prototype-data"
                  data-prototype-user-grants = "{{ grantsPrototype|e }}"
-                 data-prototype-user-grants-documentcontainers = "{{ documentsHtml|e }}"
+                 data-prototype-documentcontainers = "{{ documentsHtml|e }}"
                  data-userurllink = "{{ usermacros.userUrlLink()|e }}"
                  data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
                  data-userid = "{{ entity.id }}"

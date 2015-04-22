@@ -874,7 +874,7 @@ function createDropzoneHolder_Paper(existingDropzoneHolder) {
 function createDropzoneHolder_Other(existingDropzoneHolder) {
 
     var dataElement = document.getElementById("form-prototype-data");
-    var prototype = dataElement.getAttribute('data-prototype-user-grants-documentcontainers');
+    var prototype = dataElement.getAttribute('data-prototype-documentcontainers');
 
     //console.log('prototype='+prototype);
 
@@ -915,3 +915,29 @@ function createDropzoneHolder_Other(existingDropzoneHolder) {
     return newForm;
 }
 
+
+function disableEnableDropzone( dropzoneElement, disabled, tooltipName ) {
+
+    var dropzoneDom = dropzoneElement.get(0);
+    //console.log('disable/enable dropzone className='+dropzoneDom.className);
+    var myDropzone = dropzoneDom.dropzone;
+
+    if( disabled && !dropzoneElement.hasClass('dropzone-keep-enabled') ) {
+        //disable
+        dropzoneElement.removeClass('dz-clickable'); // remove cursor
+        dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+        //add tooltip
+        if( tooltipName ) {
+            attachTooltip(dropzoneElement,true,tooltipName);
+        }
+    } else {
+        //enable
+        dropzoneElement.addClass('dz-clickable'); // add cursor
+        dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+        //remove tooltip
+        if( tooltipName ) {
+            attachTooltip(dropzoneElement,false,tooltipName);
+        }
+    }
+
+}

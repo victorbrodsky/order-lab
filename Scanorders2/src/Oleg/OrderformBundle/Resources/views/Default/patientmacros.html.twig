@@ -3,11 +3,6 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-    {#status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded'#}
-
-    {#&#123;&#35;patient&#35;&#125;#}
-    {#{% set patientCount = 0 %}#}
-    {#{% for patient in form.patient %}#}
 
         {############# patient #############}
 
@@ -29,7 +24,7 @@
                 {% for encounter in patient.encounter %}
 
                     {#encounter panel#}
-                    {% set uid = patientCount~'_'~encounterCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
+                    {% set uid = patientCount~'_'~encounterCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
                     <div id="formpanel_encounter_{{ uid }}" class="panel panel-encounter panel-multi-form">
 
                     {#encounter header#}
@@ -184,6 +179,7 @@
                         {% endfor %} {# procedure loop #}
 
                         </div>
+
                     </div>{#end of encounter #}
                     {% set encounterCount = encounterCount + 1 %}
                 {% endfor %} {# encounter loop #}

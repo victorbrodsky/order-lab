@@ -61,6 +61,8 @@ $(document).ready(function() {
         }
     });
 
+    contentToggleHierarchyButton();
+
     //multy form delete button
     $('.delete_form_btn').on('click', function(e) {
         var id = this.id;

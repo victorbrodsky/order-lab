@@ -340,8 +340,16 @@ function getForm( name, ids, withDelBtn ) {
 
                 '<button id="form_body_toggle_'+ name + '_' + idsu +'" type="button"' +
                     'class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"' +
+                    'aria-expanded="true"'+
                     'data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'">'+
                 '</button>'+
+
+
+            '<button style="margin-left: 5px;" type="button"'+
+                'class="btn btn-default btn-xs form_body_content_toggle_btn glyphicon glyphicon-list pull-left"'+
+                'aria-expanded="true"'+
+                'data-toggle="collapse" data-target="#'+title+'_'+idsu+'">'+
+            '</button>'+
 
 //            '<button id="form_body_toggle_'+ name + '_' + idsu +'" type="button" class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open black" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></button>' +
 //            '&nbsp;' +
@@ -751,5 +759,26 @@ function setEducational() {
 }
 
 
+function contentToggleHierarchyButton() {
 
+    var contentToggleBtns = $('.form_body_content_toggle_btn');
+
+    //contentToggleBtns.collapse({toggle: false});
+
+//    contentToggleBtns.click(function(e) {
+//        e.preventDefault();
+//        $(this).closest('.panel-multi-form').find('.form-element-holder').collapse('toggle');
+//    });
+
+//    $('.form-element-holder.collapse.in').on('shown.bs.collapse', function (e) {
+//        //e.preventDefault();
+//        $(this).find('.form-element-holder').collapse('show');
+//    })
+//
+//    $('.form-element-holder.collapse.in').on('hidden.bs.collapse', function (e) {
+//        //e.preventDefault();
+//        $(this).find('.form-element-holder').collapse('hide');
+//    })
+
+}
 

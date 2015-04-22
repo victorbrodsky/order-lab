@@ -129,9 +129,7 @@
 
     {% endif %}
 
-    {#            pat   spec  acc   part block slide  scan  stain       #}
-    {#{% set uid = 0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}#}
-    {% set uid = '__patient_____procedure_____accession_____part_____block_____slide_____scan_____stain__' %}
+    {% set uid = '__patient_____encounter_____procedure_____accession_____part_____block_____slide_____scan_____stain__' %}
     <div id="form-prototype-data"
 
       {% if type != 'show' %}

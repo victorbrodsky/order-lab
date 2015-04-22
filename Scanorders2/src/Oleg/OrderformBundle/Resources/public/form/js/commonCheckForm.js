@@ -1662,23 +1662,26 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //dropzone
         if( elements.eq(i).hasClass('file-upload-dropzone') ) {
-            var dropzoneDom = elements.eq(i).get(0);
-            //console.log('disable/enable dropzone className='+dropzoneDom.className);
-            var myDropzone = dropzoneDom.dropzone;
 
-            if( disabled && !elements.eq(i).hasClass('dropzone-keep-enabled') ) {
-                //disable
-                elements.eq(i).removeClass('dz-clickable'); // remove cursor
-                dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
-                //add tooltip
-                attachTooltip(elements.eq(i),true,'part');
-            } else {
-                //enable
-                elements.eq(i).addClass('dz-clickable'); // add cursor
-                dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
-                //remove tooltip
-                attachTooltip(elements.eq(i),false,'part');
-            }
+            disableEnableDropzone( elements.eq(i), disabled, 'part' );
+
+//            var dropzoneDom = elements.eq(i).get(0);
+//            //console.log('disable/enable dropzone className='+dropzoneDom.className);
+//            var myDropzone = dropzoneDom.dropzone;
+//
+//            if( disabled && !elements.eq(i).hasClass('dropzone-keep-enabled') ) {
+//                //disable
+//                elements.eq(i).removeClass('dz-clickable'); // remove cursor
+//                dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+//                //add tooltip
+//                attachTooltip(elements.eq(i),true,'part');
+//            } else {
+//                //enable
+//                elements.eq(i).addClass('dz-clickable'); // add cursor
+//                dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+//                //remove tooltip
+//                attachTooltip(elements.eq(i),false,'part');
+//            }
 
             //console.log('dropzone maxfiles(10?)='+myDropzone.options.maxFiles);
             continue;
