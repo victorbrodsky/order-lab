@@ -761,24 +761,62 @@ function setEducational() {
 
 function contentToggleHierarchyButton() {
 
-    var contentToggleBtns = $('.form_body_content_toggle_btn');
-
+    //var contentToggleBtns = $('.form_body_content_toggle_btn');
     //contentToggleBtns.collapse({toggle: false});
-
 //    contentToggleBtns.click(function(e) {
-//        e.preventDefault();
-//        $(this).closest('.panel-multi-form').find('.form-element-holder').collapse('toggle');
+//        //e.preventDefault();
+//        processCollapsableBodies($(this));
 //    });
+
+    $('.form-element-holder.collapse').on('hidden.bs.collapse', function (e) {
+        //e.preventDefault();
+        //processCollapsableBodies( $(this) );
+        hideORshowCollapsableBodies( $(this), 'hide' );
+    });
+
+    function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
+        //console.log(bodyElement);
+        bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse').collapse(toggleValue);
+    }
+
 
 //    $('.form-element-holder.collapse.in').on('shown.bs.collapse', function (e) {
 //        //e.preventDefault();
-//        $(this).find('.form-element-holder').collapse('show');
-//    })
+//        hideORshowCollapsableBodies( $(this), 'show' );
+//    });
+
+//    function processCollapsableBodies( bodyElement ) {
+//        //console.log(bodyElement);
+//        var allChildrenCollapsableElements = bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse');
 //
-//    $('.form-element-holder.collapse.in').on('hidden.bs.collapse', function (e) {
-//        //e.preventDefault();
-//        $(this).find('.form-element-holder').collapse('hide');
-//    })
+//        if( isCollapsableVisible(bodyElement) ) {
+//            console.log('visible');
+//            allChildrenCollapsableElements.collapse('hide');
+//        } else {
+//            console.log('collapsed');
+//            //allChildrenCollapsableElements.collapse('show');
+//        }
+//
+//        //does not work on chrome?
+//        function isCollapsableVisible(element) {
+//
+//            function isCollapsed(element) {
+//                var $e = $(element);
+//
+//                return $e.width()*$e.height() === 0;
+//            }
+//            $.fn.isReallyVisible = function () {
+//                var $this = $(this).filter(':visible');
+//
+//                // if jQuery says its not visible, trust it, otherwise
+//                // check if any of the parents are collapsed
+//                return $this ? !$this.parents().toArray().some(isCollapsed) : false;
+//            };
+//
+//            return element.isReallyVisible();
+//        }
+//    }
 
 }
+
 
