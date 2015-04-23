@@ -497,7 +497,7 @@
             {{ formmacros.field(formfield.comment) }}
 
             {% if formfield.documents is defined or prototype == 'prototype' %}
-                {{ usermacros.fileupload( formfield, cycle, classname, prototype ) }}
+                {{ usermacros.fileuploadLabelField( formfield, cycle, classname, prototype ) }}
             {% endif %}
 
             {% if showFlag and formfield.vars.value and formfield.vars.value.updateAuthor%}
@@ -1208,7 +1208,7 @@
         {% set employmentStatusPrototype = null %}
         {% set researchLabsPrototype = null %}
         {% set grantsPrototype = null %}
-        {% set documentsHtml = null %}
+        {#{% set documentsHtml = null %}#}
         {% set statelicensePrototype = null %}
         {% set boardcertificationPrototype = null %}
         {% set identifiersPrototype = null %}
@@ -1231,7 +1231,7 @@
             {% set researchLabsPrototype = usermacros.researchlabObject(form.researchLabs,cycle,'user-researchlabs','prototype',sitename,entity) %}
         {% endif %}
         {% if form.grants is defined %}
-            {% set documentsHtml = formmacros.inputField(form.grants.vars.prototype.attachmentContainer.documentContainers,cycle,"documentContainer","prototype") %}
+            {#{% set documentsHtml = formmacros.inputField(form.grants.vars.prototype.attachmentContainer.documentContainers,cycle,"documentContainer","prototype") %}#}
             {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
@@ -1270,7 +1270,7 @@
              data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
              data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
              data-prototype-user-grants = "{{ grantsPrototype|e }}"
-             data-prototype-documentcontainers = "{{ documentsHtml|e }}"
+             {#data-prototype-documentcontainers = "{{ documentsHtml|e }}"#}
 
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"

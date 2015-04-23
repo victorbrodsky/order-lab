@@ -538,26 +538,30 @@ class UtilController extends Controller {
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
-            $documentContainerJson = array();
+
             if( $grant->getAttachmentContainer() && count($grant->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
 
+                $documentContainers = array();
                 foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentConatiner ) {
-                    //$documentContainerJson['id'] = $documentConatiner->getId();
-                    $documentsJson = array();
-                    $holder = array();
+                    $documentContainer = array();
+                    $documentContainer['id'] = $documentConatiner->getId();
+                    $documentContainer['text'] = $documentConatiner."";
+
+                    $documents = array();
                     foreach( $documentConatiner->getDocuments() as $document ) {
                         $documentJson = array();
-                        $documentsJson['id'] =  $document->getId();
-                        $documentsJson["uniquename"] = $document->getUniquename();
-                        $documentsJson["originalname"] = $document->getOriginalname();
-                        $documentsJson["size"] = $document->getSize();
+                        $documentJson['id'] =  $document->getId();
+                        $documentJson["uniquename"] = $document->getUniquename();
+                        $documentJson["originalname"] = $document->getOriginalname();
+                        $documentJson["size"] = $document->getSize();
                         $documentJson["url"] = $document->getAbsoluteUploadFullPath();
-                        $documentsJson[] = $documentJson;
+                        $documents[] = $documentJson;
                     }
-                    $holder['documents'] = $documentsJson;
+
+                    $documentContainer['documents'] = $documents;
                 }
 
-                $documentContainerJson[] = $holder;
+                $documentContainers[] = $documentContainer;
             }
 
             $element = array(
@@ -575,7 +579,7 @@ class UtilController extends Controller {
                 'amountLabSpace'            => $grant->getAmountLabSpace(),
                 'comment'                   => ( $userComment ? $userComment->getComment() : null ),
                 'effort'                    => ( $userEffort ? $userEffort->getEffort()->getId() : null ),
-                'documentContainers'        => $documentContainerJson,
+                'documentContainers'        => $documentContainers,
             );
             $output[] = $element;
         }

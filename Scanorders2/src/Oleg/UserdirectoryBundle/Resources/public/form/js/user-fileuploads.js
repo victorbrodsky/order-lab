@@ -16,7 +16,7 @@ if( typeof Dropzone !== 'undefined' ) {
 //addRemoveLinks: true or null
 function initFileUpload( holder, data, addRemoveLinks ) {
 
-    console.log('init File Upload');
+    //console.log('init File Upload');
 
     if( $('.dropzone').length == 0 ) {
         return;
@@ -97,117 +97,138 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 //            '<button type="button" class="btn btn-danger" data-dz-remove>Delete</button>'+
     '</div>';
 
-    $(targetid).dropzone({
-        url: url,
-        clickable: clickable,
-        addRemoveLinks: addRemoveLinks,
-        maxFiles: _dz_maxFiles,
-        maxFilesize: _dz_maxFilesize,
-        previewTemplate: previewHtml,
-        dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
-        sending: function(file, xhr, formData){
-            formData.append('userid', userid);
-            var filename = file.name;
-            //console.log('filename='+filename);
-            formData.append('filename', filename);
-        },
-        success: function(file, responseText){
-            //console.log('responseText='+responseText);
-            //console.log(responseText);
-            //console.log(file);
+    $(targetid).each( function(){
 
-            var documentid = responseText.documentid;
-            //console.log('documentid='+documentid);
-            var documentSrc = responseText.documentsrc;
+//        if( $(this).hasClass('file-upload-dropzone-inactive') ) {
+//            //override default clickable value if dropzone set to inactive by creation
+//            clickable = false;
+//        }
 
-            var commentHolder = $(this.element).closest('.user-collection-holder,.form-element-holder'); //commentHolder
+        $(this).dropzone({
+            url: url,
+            clickable: clickable,
+            addRemoveLinks: addRemoveLinks,
+            maxFiles: _dz_maxFiles,
+            maxFilesize: _dz_maxFilesize,
+            previewTemplate: previewHtml,
+            dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
+            sending: function(file, xhr, formData){
+                formData.append('userid', userid);
+                var filename = file.name;
+                //console.log('filename='+filename);
+                formData.append('filename', filename);
+            },
+            success: function(file, responseText){
+                //console.log('responseText='+responseText);
+                //console.log(responseText);
+                //console.log(file);
 
-            if( commentHolder.length == 0 ) {
-                throw new Error("Collection holder for file upload is not found");
-            }
+                var documentid = responseText.documentid;
+                //console.log('documentid='+documentid);
+                var documentSrc = responseText.documentsrc;
 
-            var idHtml = constractDocuemntIdFieldHtml(commentHolder,documentid);
+                var commentHolder = $(this.element).closest('.user-collection-holder,.form-element-holder'); //commentHolder
 
-            if( file.previewElement ) {
-                $(file.previewElement).append(idHtml);
-                var showlinkDiv = $(file.previewElement).find('.file-upload-showlink');
-                var showlinkHtml = constractShowLink(documentid,file.name);
-                showlinkDiv.html(showlinkHtml);
-
-                adjustHolderHeight(commentHolder);
-            }
-
-            //populate document id input field
-            //var holder = $(this.element).closest('.files-upload-holder');
-            //var fileIdField = holder.find('.file-upload-id');
-            //fileIdField.val(documentid);
-            //file.previewTemplate.appendChild(document.createTextNode(responseText));
-
-            //parent function
-            if (file.previewElement) {
-                return file.previewElement.classList.add("dz-success");
-            }
-        },
-        maxfilesexceeded: function(file) {
-            alert('Maximum file upload limit reached');
-            return removeUploadedFileByHolder( file.previewElement, this, false );
-        },
-        removedfile: function(file) {
-            //console.log('remove js file name='+file.name);
-            return removeUploadedFileByHolder( file.previewElement, this, true );
-        },
-        init: function() {
-
-            if( data == null ) {
-                return;
-            }
-
-            //console.log('manual init');
-
-            var thisDropzone = this;
-
-            //console.log(thisDropzone);
-            var holder = $(thisDropzone.element).closest('.files-upload-holder');
-
-            var existedfiles = holder.find('.file-holder');
-            //console.log('existedfiles len='+existedfiles.length);
-
-            //console.log('data len='+data.length);
-
-            for( var i = 0; i < data.length; i++ ) {
-
-                var value = data[i];
-
-                //console.log('name='+value.uniquename);
-
-                var mockFile = { name: value.uniquename, size: value.size };
-
-                //console.log('mockFile=');
-                //console.log(mockFile);
-
-                thisDropzone.options.addedfile.call(thisDropzone, mockFile);
-
-                var filepath = value.url;   
-                //console.log('path='+filepath);
-
-                thisDropzone.options.thumbnail.call(thisDropzone, mockFile, filepath);
-
-                //add showlink
-                if( mockFile.previewElement ) {
-                    var showlinkDiv = $(mockFile.previewElement).find('.file-upload-showlink');
-                    var showlinkHtml = constractShowLink(value.id,value.originalname);
-                    showlinkDiv.html(showlinkHtml);
+                if( commentHolder.length == 0 ) {
+                    throw new Error("Collection holder for file upload is not found");
                 }
 
-            }
-            //See more at: http://www.startutorial.com/articles/view/dropzonejs-php-how-to-display-existing-files-on-server#sthash.sqF6KDsk.dpuf
-        }
+                var idHtml = constractDocumentIdFieldHtml(commentHolder,documentid);
 
-    });
+                if( file.previewElement ) {
+                    $(file.previewElement).append(idHtml);
+                    var showlinkDiv = $(file.previewElement).find('.file-upload-showlink');
+                    var showlinkHtml = constractShowLink(documentid,file.name);
+                    showlinkDiv.html(showlinkHtml);
+
+                    adjustHolderHeight(commentHolder);
+                }
+
+                //populate document id input field
+                //var holder = $(this.element).closest('.files-upload-holder');
+                //var fileIdField = holder.find('.file-upload-id');
+                //fileIdField.val(documentid);
+                //file.previewTemplate.appendChild(document.createTextNode(responseText));
+
+                //parent function
+                if (file.previewElement) {
+                    return file.previewElement.classList.add("dz-success");
+                }
+            },
+            maxfilesexceeded: function(file) {
+                alert('Maximum file upload limit reached');
+                return removeUploadedFileByHolder( file.previewElement, this, false );
+            },
+            removedfile: function(file) {
+                //console.log('remove js file name='+file.name);
+                return removeUploadedFileByHolder( file.previewElement, this, true );
+            },
+            init: function() {
+
+                //disable dropzone if dropzone has class file-upload-dropzone-inactive
+                if( $(this.element).hasClass('file-upload-dropzone-inactive') ) {
+                    //console.log('init: disable dropzone');
+                    //console.log($(this.element));
+                    disableEnableDropzone( $(this.element), true, null, true );
+                }
+
+                if( data == null ) {
+                    //console.log('dropzone init: data is null');
+                    return;
+                }
+
+                //console.log('manual init');
+
+                var thisDropzone = this;
+
+                populateDropzoneWithData(thisDropzone,data);
+                //See more at: http://www.startutorial.com/articles/view/dropzonejs-php-how-to-display-existing-files-on-server#sthash.sqF6KDsk.dpuf
+            }
+
+        });
+    }); //each
 
 
 //    $('#jquery-fileupload').fileupload({});
 
+}
+
+function populateDropzoneWithData(thisDropzone,data) {
+    //console.log(thisDropzone);
+    var holder = $(thisDropzone.element).closest('.files-upload-holder');
+
+    var existedfiles = holder.find('.file-holder');
+    //console.log('existedfiles len='+existedfiles.length);
+
+    //console.log('data len='+data.length);
+
+    for( var i = 0; i < data.length; i++ ) {
+
+        var value = data[i];
+
+        //console.log('name='+value.uniquename);
+
+        var mockFile = { name: value.uniquename, size: value.size };
+
+        //console.log('mockFile=');
+        //console.log(mockFile);
+
+        thisDropzone.options.addedfile.call(thisDropzone, mockFile);
+
+        var filepath = value.url;
+        //console.log('path='+filepath);
+
+        thisDropzone.options.thumbnail.call(thisDropzone, mockFile, filepath);
+
+        //add showlink
+        if( mockFile.previewElement ) {
+            var showlinkDiv = $(mockFile.previewElement).find('.file-upload-showlink');
+            var showlinkHtml = constractShowLink(value.id,value.originalname);
+            showlinkDiv.html(showlinkHtml);
+        }
+
+    }
+    //See more at: http://www.startutorial.com/articles/view/dropzonejs-php-how-to-display-existing-files-on-server#sthash.sqF6KDsk.dpuf
 }
 
 function constractShowLink(id,name) {
@@ -348,7 +369,7 @@ function adjustHolderHeight( commentHolder ) {
 
 
 
-function constractDocuemntIdFieldHtml(commentHolder,documentid) {
+function constractDocumentIdFieldHtml(commentHolder,documentid) {
 
     var res = getNewDocumentInfoByHolder(commentHolder);
 
@@ -365,7 +386,7 @@ function constractDocuemntIdFieldHtml(commentHolder,documentid) {
     var idHtml =    '<input type="hidden" id="'+beginIdStr+'_documents_'+documentCount+'_id" '+
         'name="'+beginNameStr+'[documents]['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
 
-    console.log("idHtml="+idHtml);
+    //console.log("idHtml="+idHtml);
 
     return idHtml;
 }
@@ -413,7 +434,7 @@ function getNewDocumentInfoByHolder( commentHolder ) {
 //get id and name up to _documents_
 function getElementInfoById( id, name ) {
 
-    console.log('id='+id);
+    //console.log('id='+id);
     //console.log('name='+name);
 
     if( !id || id == ""  ) {
@@ -652,17 +673,21 @@ function setGrantDocuments( parent, data ) {
 
     var documentContainerData = null;
     if( data ) {
-        documentContainerData = data['documentContainers'];
+        documentContainerData = data['documentContainers']; //documentContainers
     }
 
-    console.log("setGrantDocuments run");
+    //disable grant document
+//    var dropzoneElement = parent.find('.file-upload-dropzone');
+//    disableEnableDropzone( dropzoneElement, true, null, true );
+
+    //console.log("setGrantDocuments run");
     //console.log(documentContainerData);
 
     setDocumentsInDocumentConatiner(
         parent,
         documentContainerData,      //
         null,                       //tooltipName
-        '.user-grants'              //documentHolderClass
+        '.documentcontainer'              //documentHolderClass
     );
 }
 
@@ -689,12 +714,12 @@ function setDocumentsInDocumentConatiner( parent, documentContainerData, tooltip
         return;
     }
 
-    //keep enabled first document conatiner dropzone
+    //keep enabled first document container dropzone
     var existingDropzone = parent.find('.file-upload-dropzone').first();
     existingDropzone.addClass('dropzone-keep-enabled');
 
-    console.log('create dropzone');
-    console.log(documentContainerData);
+    //console.log('create dropzone');
+    //console.log(documentContainerData);
 
     if( documentContainerData && documentContainerData != undefined ) {
 
@@ -704,68 +729,61 @@ function setDocumentsInDocumentConatiner( parent, documentContainerData, tooltip
             return;
         }
 
-        console.log('papers count=' + papers.length );
+        //console.log('papers count=' + papers.length );
 
         for( var i=0; i<papers.length; i++ ) {
 
             var paper = papers[i];
 
-            console.log('paper id='+paper.id);
+            //console.log('paper id='+paper.id);
+            //console.log(paper);
 
+            //console.log('documents length='+paper['documents'].length);
             if( paper['documents'].length == 0 ) {
+                //console.log('no documents in paper');
                 continue;
             }
 
             //create paper prototype using data-prototype-partpaper
             var newDropzoneHolder = createDropzoneHolder(existingDropzone, documentHolderClass);
-            var newDropzoneHolderEl = $(newDropzoneHolder);
-
-            //attach paper prototype to part after Source Organ
-            var documentContainerHolder = parent.find(documentHolderClass);
-            documentContainerHolder.prepend( newDropzoneHolderEl );
-
-            //init dropzone
             var documentContainerData = processDocumentsInDocumentContainer(paper);
-            initFileUpload( newDropzoneHolderEl, documentContainerData, null );
 
-        }
+            //console.log('documentContainerData:');
+            //console.log(documentContainerData);
 
-    }
+            if( newDropzoneHolder ) {
+                //create a new dropzone element (for part paper: existing paper dropzone prepend before new paper dropzone)
+                var newDropzoneHolderEl = $(newDropzoneHolder);
 
-//    if( documentContainerData && documentContainerData != undefined ) {
-//
-//        if( documentContainerData.length == 0 ) {
-//            return;
-//        }
-//
-//        //console.log('documentContainerData count=' + documentContainerData.length );
-//
-//        for( var i=0; i<documentContainerData.length; i++ ) {
-//
-//            var documentContainer = documentContainerData[i];
-//
-//            //console.log('documentContainer id='+documentContainer.id);
-//
-//            if( documentContainer['documents'].length == 0 ) {
-//                continue;
-//            }
-//
-//            //create documentContainer prototype
-//            var newDropzoneHolder = createDropzoneHolder(existingDropzone, documentHolderClass);
-//            //console.log('newDropzoneHolder='+newDropzoneHolder);
-//            var newDropzoneHolderEl = $(newDropzoneHolder);
-//
-//            //attach prototype
-//            var documentContainerHolder = parent.find(documentHolderClass);
-//            documentContainerHolder.prepend( newDropzoneHolderEl );
-//
-//            //init dropzone
-//            var documentContainerData = processDocumentsInDocumentContainer(documentContainer);
-//            initFileUpload( newDropzoneHolderEl, documentContainerData, null );
-//
-//        }
-//
-//    }
+                //attach paper prototype to part after Source Organ
+                var documentContainerHolder = parent.find(documentHolderClass);
+                //console.log('prepend to:');
+                //console.log(documentContainerHolder);
+                documentContainerHolder.prepend( newDropzoneHolderEl );
+
+                //init dropzone
+                initFileUpload( newDropzoneHolderEl, documentContainerData, null );
+
+            } else {
+                //find and process existing dropzone (for grant's documents)
+                var dropzoneEl = parent.find(documentHolderClass).find('.file-upload-dropzone'); //file-upload-dropzone
+
+                var dropzoneDom = dropzoneEl.get(0);
+                //console.log('className='+dropzoneDom.className);
+                var thisDropzone = dropzoneDom.dropzone;
+
+                populateDropzoneWithData(thisDropzone,documentContainerData);
+
+                //hide remove button
+                var removeLinks = $(thisDropzone.element).find('.dz-remove');
+                removeLinks.hide();
+
+            } //if else
+
+        } //for
+
+    } //if
+
 
 }
 
@@ -811,15 +829,16 @@ function processDocumentsInDocumentContainer( documentContainer ) {
 
 
 function createDropzoneHolder(existingDropzoneHolder, switchflag ) {
-    console.log('createDropzoneHolder switchflag='+switchflag);
+    //console.log('createDropzoneHolder switchflag='+switchflag);
 
     if( switchflag == '.partpaper' ) {
         return createDropzoneHolder_Paper(existingDropzoneHolder);
     } else {
-        return createDropzoneHolder_Other(existingDropzoneHolder);
+        return null;    //createDropzoneHolder_Other(existingDropzoneHolder);
     }
 }
 
+//paper dropzone
 function createDropzoneHolder_Paper(existingDropzoneHolder) {
 
     var dataElement = document.getElementById("form-prototype-data");
@@ -866,11 +885,12 @@ function createDropzoneHolder_Paper(existingDropzoneHolder) {
     newForm = newForm.replace(/__part__/g, partid);
     newForm = newForm.replace(/__partpaper__/g, paperid);
 
+    //console.log("paper newForm="+newForm);
 
     return newForm;
 }
 
-//user directory: grants
+//Currently NOT USED. user directory: grants dropzone
 function createDropzoneHolder_Other(existingDropzoneHolder) {
 
     var dataElement = document.getElementById("form-prototype-data");
@@ -898,7 +918,7 @@ function createDropzoneHolder_Other(existingDropzoneHolder) {
         throw new Error("Container id element is not found");
     }
 
-    console.log("id="+id);
+    //console.log("id="+id);
 
     var idArr = id.split("_");
 
@@ -906,23 +926,72 @@ function createDropzoneHolder_Other(existingDropzoneHolder) {
     //oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0_id
     var grantid = idArr[4];
     var documentContainerid = idArr[7];
+    var documentid = 0;
 
     var newForm = prototype.replace(/__grants__/g, grantid);
     newForm = newForm.replace(/__documentContainers__/g, documentContainerid);
+    newForm = newForm.replace(/__documents__/g, documentid);
 
-    console.log("newForm="+newForm);
+    //console.log("newForm="+newForm);
 
     return newForm;
 }
 
 
-function disableEnableDropzone( dropzoneElement, disabled, tooltipName ) {
+function disableEnableDropzone_NEW( dropzoneElement, disabled, tooltipName, forcedisable ) {
 
     var dropzoneDom = dropzoneElement.get(0);
     //console.log('disable/enable dropzone className='+dropzoneDom.className);
     var myDropzone = dropzoneDom.dropzone;
 
-    if( disabled && !dropzoneElement.hasClass('dropzone-keep-enabled') ) {
+    //if( !myDropzone.listeners[1] ) {
+    //    return;
+    //}
+
+    if( typeof forcedisable === 'undefined' ) {
+        forcedisable = false;
+    }
+
+    if( disabled ) {
+        if( !dropzoneElement.hasClass('dropzone-keep-enabled') || forcedisable ) {
+            //disable
+            //console.log('disable dropzone');
+            dropzoneElement.removeClass('dz-clickable'); // remove cursor
+            dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+        }
+        //console.log('ignore disable dropzone');
+        //add tooltip
+        if( tooltipName ) {
+            attachTooltip(dropzoneElement,true,tooltipName);
+        }
+    } else {
+        //enable
+        //console.log('enable dropzone');
+        dropzoneElement.addClass('dz-clickable'); // add cursor
+        dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+        //remove tooltip
+        if( tooltipName ) {
+            attachTooltip(dropzoneElement,false,tooltipName);
+        }
+    }
+}
+
+
+function disableEnableDropzone( dropzoneElement, disabled, tooltipName, forcedisable ) {
+
+    var dropzoneDom = dropzoneElement.get(0);
+    //console.log('disable/enable dropzone className='+dropzoneDom.className);
+    var myDropzone = dropzoneDom.dropzone;
+
+    if( !myDropzone.listeners[1] ) {
+        return;
+    }
+
+    if( typeof forcedisable === 'undefined' ) {
+        forcedisable = false;
+    }
+
+    if( (disabled && !dropzoneElement.hasClass('dropzone-keep-enabled')) || (disabled && forcedisable) ) {
         //disable
         dropzoneElement.removeClass('dz-clickable'); // remove cursor
         dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);

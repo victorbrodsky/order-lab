@@ -23,10 +23,11 @@
     </li>
 {% endmacro %}
 
-{% macro fileupload( container, cycle, classname, prototype ) %}
-
+{#constract full input element with label and dropzone; used only by comments macros#}
+{% macro fileuploadLabelField( container, cycle, classname, prototype ) %}
 
     {% import _self as usermacros %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <p>
     {#style="height: 50px"#}
@@ -36,17 +37,19 @@
         </div>
         <div class="col-xs-6" align="left">
 
-            <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
+            {{ formmacros.fieldpaper(container,cycle,prototype,3) }}
 
-                {% if cycle != "show_user" %}
-                    <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 3 files, 10 MB each)</span></div>
-                {% else %}
-                    <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
-                {% endif %}
+            {#<div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">#}
 
-                {{ usermacros.document( container, cycle, prototype ) }}
+                {#{% if cycle != "show_user" %}#}
+                    {#<div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 3 files, 10 MB each)</span></div>#}
+                {#{% else %}#}
+                    {#<div class="dz-message" style="padding-bottom:5px;"><span></span></div>#}
+                {#{% endif %}#}
 
-            </div>
+                {#{{ usermacros.document( container, cycle, prototype ) }}#}
+
+            {#</div>#}
 
             {#{% do comment.documents.setRendered %}#}
 
@@ -849,12 +852,12 @@
             {% for documentContainer in formfield.attachmentContainer.documentContainers %}
                 {% set count = count + 1 %}
                 {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20) }}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20,true) }}
             {% endfor %}
 
             {% if prototype == "prototype" %}
                 {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20) }}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20,true) }}
             {% endif %}
 
         {% endif %}

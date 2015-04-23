@@ -254,6 +254,6 @@ class DocumentContainer {
 
 
     public function __toString() {
-        return "DocumentContainer: "."comments count=".count($this->getComments())."<br>";
+        return "DocumentContainer: "."documents count=".count($this->getDocuments()).",comments count=".count($this->getComments())."<br>";
     }
 }

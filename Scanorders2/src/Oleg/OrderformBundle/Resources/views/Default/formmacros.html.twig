@@ -1085,37 +1085,50 @@
 {% endmacro %}
 
 
-{% macro fieldpaper(paper,cycle,prototype,documentspercontainer) %}
+{% macro fieldpaper(paper,cycle,prototype,documentspercontainer,dropzoneInactive) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if paper.documents is defined or prototype == 'prototype' %}
 
-        {#paper.id:{{ paper.vars.value.id }}#}
-        {#part.id:{{ paper.vars.value.part.id }}#}
-        {#orderid:{{ paper.vars.value.orderinfo.id }}#}
-
         {% if documentspercontainer is not defined or documentspercontainer == "" or documentspercontainer == 0 %}
             {% set dz_maxFiles = 3 %}
         {% else %}
-            {% set dz_maxFiles = documentspercontainer
-            %}
+            {% set dz_maxFiles = documentspercontainer %}
         {% endif %}
 
-        <div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">
-            {% if cycle != "show" %}
+        {% if dropzoneInactive is not defined %}
+            {% set dropzoneInactive = false %}
+        {% endif %}
+        {% if dropzoneInactive == true %}
+            {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
+        {% else %}
+            {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
+        {% endif %}
+
+        {% if "show" in cycle %}
+            {% set showFlag = true %}
+        {% else %}
+            {% set showFlag = false %}
+        {% endif %}
+
+        <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">
+
+            {% if not showFlag %}
 
                 <input type="hidden" id="documentcontainer-documentspercontainer" value="{{ dz_maxFiles }}">
-
                 <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span></div>
+
             {% else %}
+
                 <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
+
             {% endif %}
 
             {{ usermacros.document( paper, cycle, prototype ) }}
 
             {#render field "other". id of this field will be used to get the paperid in js#}
-            {% if cycle != 'show' %}
+            {% if not showFlag %}
                 {% if paper.others is defined %}
                     {{ form_widget(paper.others) }}
                 {% endif %}
@@ -1233,7 +1246,7 @@
 {% endmacro %}
 
 
-{% macro fieldDocumentContainer(container,cycle,prefix,renderType,documentspercontainer) %}
+{% macro fieldDocumentContainer(container,cycle,prefix,renderType,documentspercontainer,dropzoneInactive) %}
     {% import _self as formmacros %}
 
     {% if renderType is defined and renderType == "panel" %}
@@ -1257,17 +1270,17 @@
             </div>
 
             <div id="form_body_{{ prefix }}_documentContainer_{{ uniqueId }}" class="panel-body collapse in">
-                {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer) }}
+                {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInactive) }}
             </div>
         </div>
     {% else %}
         <div class="well well-sm">
-            {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer) }}
+            {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInactive) }}
         </div>
     {% endif %}
 
 {% endmacro %}
-{% macro fieldDocumentContainerPlain(container,cycle,documentspercontainer) %}
+{% macro fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInactive) %}
     {% import _self as formmacros %}
 
     {{ form_errors(container) }}
@@ -1284,7 +1297,7 @@
                 {{form_label(container.documents)}}
             </div>
             <div class="col-xs-6" align="left">
-                {{ formmacros.fieldpaper(container,cycle,'prototype',documentspercontainer) }}
+                {{ formmacros.fieldpaper(container,cycle,'prototype',documentspercontainer,dropzoneInactive) }}
             </div>
         </div>
 

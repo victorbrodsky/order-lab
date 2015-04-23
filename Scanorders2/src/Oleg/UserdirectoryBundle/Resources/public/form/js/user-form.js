@@ -731,7 +731,7 @@ function populateGrantData( data, elementName ) {
         sourceOrganization.select2("readonly", true);
         effort.select2("readonly", true);
         comment.attr("readonly", true);
-        disableEnableDropzone( dropzoneElement, true, null );
+        disableEnableDropzone( dropzoneElement, true, null, true );
 
         initDatepicker(holder);
 
@@ -771,7 +771,7 @@ function populateGrantData( data, elementName ) {
         comment.attr("readonly", false);
         sourceOrganization.select2("readonly", false);
         effort.select2("readonly", false);
-        disableEnableDropzone( dropzoneElement, false, null );
+        disableEnableDropzone( dropzoneElement, false, null, true );
 
         initDatepicker(holder);
 
@@ -799,7 +799,7 @@ function populateGrantData( data, elementName ) {
         effort.select2('val',data.effort);
         setGrantDocuments(holder,data);
 
-        //enable
+        //disable
         idfield.attr("readonly", true);
         grantid.attr("readonly", true);
         amount.attr("readonly", true);
@@ -813,7 +813,9 @@ function populateGrantData( data, elementName ) {
         comment.attr("readonly", false);
         sourceOrganization.select2("readonly", true);
         effort.select2("readonly", false);
-        disableEnableDropzone( dropzoneElement, false, null );
+
+        console.log('before disabling dropzone');
+        disableEnableDropzone( dropzoneElement, true, null, true );
 
         initDatepicker(holder);
 
