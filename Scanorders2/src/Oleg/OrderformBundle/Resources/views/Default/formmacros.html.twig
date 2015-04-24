@@ -1785,7 +1785,16 @@
                     <button
                         id="form_body_toggle_imaging_{{ orderUniqueId }}_{{ uid }}" type="button"
                         class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
-                        data-toggle="collapse" data-target="#form_body_imaging_{{ orderUniqueId }}_{{ uid }}">
+                        data-toggle="collapse" data-target="#imaging_content_{{ orderUniqueId }}_{{ uid }}">
+                    </button>
+
+                    <button
+                            style="margin-left: 5px;"
+                            type="button"
+                            class="btn btn-default btn-xs form_body_content_toggle_btn glyphicon glyphicon-list pull-left"
+                            aria-expanded="true"
+                            data-toggle="collapse"
+                            data-target="#{{ orderUniqueId }}_{{ uid }}">
                     </button>
 
                     {#<h4 class="panel-title">Imaging</h4>#}
@@ -1793,7 +1802,7 @@
                         <div style="float:left;">
                             Imaging
                         </div>
-                        <div class="element-title-object-name" style="float:left; margin-left:10px;">
+                        <div id="imaging_content_{{ orderUniqueId }}_{{ uid }}" class="element-title-object-name collapse in" style="float:left; margin-left:10px;">
                             {% set obtainFullObjectName = scan.vars.value.obtainFullObjectName %}
                             {#{% if obtainFullObjectName %}#}
                             {{ obtainFullObjectName|raw }}
