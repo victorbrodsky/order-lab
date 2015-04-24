@@ -59,7 +59,7 @@
 
 {% endmacro %}
 
-{% macro document( container, cycle, prototype ) %}
+{% macro document( container, cycle, prototype, addRemoveLink ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {#get sitename#}
@@ -98,7 +98,7 @@
                 </div>
             </div>
 
-            {% if not showFlag %}
+            {% if addRemoveLink %}
                 <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
             {% endif %}
 

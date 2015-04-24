@@ -25,22 +25,21 @@ class GrantRepository extends EntityRepository {
                 continue;
             }
 
-            echo "Process Grant: ".$grant."<br>";
+            //echo "Process Grant: ".$grant."<br>";
 
             //get grant from DB if exists
             $grantDb = $em->getRepository('OlegUserdirectoryBundle:Grant')->findOneByName($grant->getName());
 
-            echo "grantDb: ".$grantDb."<br>";
+            //echo "grantDb: ".$grantDb."<br>";
             //exit('1');
 
             if( $grantDb ) {
 
-                echo "found grant in DB name=".$grant->getName().", id=".$grant->getId()."<br>";
+                //echo "found grant in DB by name=".$grant->getName().", id=".$grant->getId()."<br>";
 
                 //merge db and form entity
                 $grantDb->setEffortDummy($grant->getEffortDummy());
                 $grantDb->setCommentDummy($grant->getCommentDummy());
-                $grantDb->setAttachmentContainer($grant->getAttachmentContainer());
 
                 $user->removeGrant($grant);
                 $user->addGrant($grantDb);
@@ -52,23 +51,24 @@ class GrantRepository extends EntityRepository {
                 $grantFinal = $grant;
             }
 
+            //echo "grantFinal: ".$grantFinal."<br>";
 
             //check if effort already exists
             $grantEffortDb = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$user, 'grant'=>$grantFinal->getId() ) );
 
             if( $grantFinal->getEffortDummy() ) {
-                echo "grant effort=".$grantFinal->getEffortDummy()."<br>";
+                //echo "grant effort=".$grantFinal->getEffortDummy()."<br>";
 
                 if( $grantEffortDb ) {
-                    echo "exist effort=".$grantEffortDb->getEffort()."<br>";
+                    //echo "exist effort=".$grantEffortDb->getEffort()."<br>";
                     $grantEffortDb->setAuthor($user);
                 } else {
-                    echo "does not exist effort <br>";
+                    //echo "does not exist effort <br>";
                     $grantFinal->setEffort($grantFinal->getEffortDummy(),$user);
                 }
 
             } else {
-                echo "no dummy effort=".$grantFinal->getEffortDummy()."<br>";
+                //echo "no dummy effort=".$grantFinal->getEffortDummy()."<br>";
 
                 if( $grantEffortDb ) {
                     $grantFinal->removeEffort($grantEffortDb);
@@ -111,6 +111,8 @@ class GrantRepository extends EntityRepository {
                 }
             }
 
+            //echo "after document processing: grant=".$grantFinal."<br>";
+
         } //foreach grant
 
         //echo "grants final count=".count($user->getGrants())."<br>";
@@ -129,6 +131,7 @@ class GrantRepository extends EntityRepository {
     public function removeDependents($subjectUser,$grant) {
 
         //echo "remove user=".$subjectUser.", grant=".$grant->getId()."<br>";
+        //exit('1');
 
         if( !($grant instanceof Grant) ) {
             //echo 'not grant object <br>';

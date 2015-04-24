@@ -797,6 +797,7 @@ function populateGrantData( data, elementName ) {
         comment.val(data.comment);
         sourceOrganization.select2('val',data.sourceOrganization);
         effort.select2('val',data.effort);
+        setGrantDocuments(holder,null);
         setGrantDocuments(holder,data);
 
         //disable

@@ -1108,8 +1108,10 @@
         {% endif %}
         {% if dropzoneInactive == true %}
             {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
+            {% set addRemoveLink = false %}
         {% else %}
             {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
+            {% set addRemoveLink = true %}
         {% endif %}
 
         <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">
@@ -1125,7 +1127,7 @@
 
             {% endif %}
 
-            {{ usermacros.document( paper, cycle, prototype ) }}
+            {{ usermacros.document( paper, cycle, prototype, addRemoveLink ) }}
 
             {#render field "other". id of this field will be used to get the paperid in js#}
             {% if not showFlag %}

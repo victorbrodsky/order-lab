@@ -473,7 +473,20 @@ class Grant extends ListAbstract
 
 
     public function __toString() {
-        return $this->getName()."";
+
+        $documentContainersCount = 0;
+        $documentsCount = 0;
+        $attachmentContainer = $this->getAttachmentContainer();
+        if( $attachmentContainer ) {
+            foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
+                $documentContainersCount++;
+                foreach( $documentContainer->getDocuments() as $document ) {
+                    $documentsCount++;
+                }
+            }
+        }
+
+        return $this->getName().", id=".$this->getId().", documentContainersCount=".$documentContainersCount.", documentsCount=".$documentsCount;
     }
 
 }

@@ -1679,11 +1679,11 @@ class UserController extends Controller
         $form->handleRequest($request);
 
 
-        if( $form->isValid() ) {
-            echo "form is valid <br>";
-        } else {
-            echo "form has error <br>";
-        }
+//        if( $form->isValid() ) {
+//            echo "form is valid <br>";
+//        } else {
+//            echo "form has error <br>";
+//        }
 
 
 

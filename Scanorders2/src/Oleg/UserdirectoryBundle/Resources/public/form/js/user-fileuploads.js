@@ -173,7 +173,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
                 }
 
                 if( data == null ) {
-                    //console.log('dropzone init: data is null');
+                    console.log('dropzone init: data is null');
                     return;
                 }
 
