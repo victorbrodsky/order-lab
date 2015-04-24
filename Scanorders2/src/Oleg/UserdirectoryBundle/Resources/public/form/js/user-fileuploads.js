@@ -41,6 +41,13 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     }
 
+    console.log('cycle='+cycle);
+
+    var showFlag = true;
+    if( cycle.indexOf("show") === -1 ) {
+        showFlag = false;
+    }
+
     var dataElement = document.getElementById("form-prototype-data");
     //console.log('dataElement len='+dataElement);
 
@@ -56,23 +63,19 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     var userid = dataElement.getAttribute('data-userid');
     //console.log('userid='+userid);
 
-    //Dropzone.autoDiscover = false;
-
-    //console.log('cycle='+cycle);
     var clickable = true;
-
-    if( cycle == "show_user" || cycle == "show" ) {
+    if( showFlag ) {
         clickable = false;
     }
 
     if( typeof addRemoveLinks === 'undefined' ) {
         var addRemoveLinks = true;
-        if( cycle == "show_user" || cycle == "show" ) {
+        if( !clickable ) {
             addRemoveLinks = null;
         }
     }
 
-    //console.log('clickable='+clickable);
+    console.log('clickable='+clickable);
     //console.log('addRemoveLinks='+addRemoveLinks);
 
     //overwrite maxfiles
@@ -98,11 +101,6 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     '</div>';
 
     $(targetid).each( function(){
-
-//        if( $(this).hasClass('file-upload-dropzone-inactive') ) {
-//            //override default clickable value if dropzone set to inactive by creation
-//            clickable = false;
-//        }
 
         $(this).dropzone({
             url: url,
@@ -165,11 +163,13 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             },
             init: function() {
 
+                var withRemoveLinks = true;
                 //disable dropzone if dropzone has class file-upload-dropzone-inactive
                 if( $(this.element).hasClass('file-upload-dropzone-inactive') ) {
                     //console.log('init: disable dropzone');
                     //console.log($(this.element));
                     disableEnableDropzone( $(this.element), true, null, true );
+                    withRemoveLinks = false;
                 }
 
                 if( data == null ) {
@@ -181,7 +181,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
                 var thisDropzone = this;
 
-                populateDropzoneWithData(thisDropzone,data);
+                populateDropzoneWithData(thisDropzone,data,withRemoveLinks);
                 //See more at: http://www.startutorial.com/articles/view/dropzonejs-php-how-to-display-existing-files-on-server#sthash.sqF6KDsk.dpuf
             }
 
@@ -193,7 +193,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
 }
 
-function populateDropzoneWithData(thisDropzone,data) {
+function populateDropzoneWithData(thisDropzone,data,withRemoveLinks) {
     //console.log(thisDropzone);
     var holder = $(thisDropzone.element).closest('.files-upload-holder');
 
@@ -225,6 +225,13 @@ function populateDropzoneWithData(thisDropzone,data) {
             var showlinkDiv = $(mockFile.previewElement).find('.file-upload-showlink');
             var showlinkHtml = constractShowLink(value.id,value.originalname);
             showlinkDiv.html(showlinkHtml);
+        }
+
+        //hide removeLinks
+        if( !withRemoveLinks ) {
+            //console.log('removing remove button from the file='+value.uniquename);
+            var removeLinks = $(mockFile.previewElement).find('.dz-remove');
+            removeLinks.hide();
         }
 
     }
@@ -772,11 +779,11 @@ function setDocumentsInDocumentConatiner( parent, documentContainerData, tooltip
                 //console.log('className='+dropzoneDom.className);
                 var thisDropzone = dropzoneDom.dropzone;
 
-                populateDropzoneWithData(thisDropzone,documentContainerData);
+                populateDropzoneWithData(thisDropzone,documentContainerData,false);
 
                 //hide remove button
-                var removeLinks = $(thisDropzone.element).find('.dz-remove');
-                removeLinks.hide();
+                //var removeLinks = $(thisDropzone.element).find('.dz-remove');
+                //removeLinks.hide();
 
             } //if else
 

@@ -31,6 +31,12 @@ class LocationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        if( strpos($this->params['cycle'],'_standalone') === false ) {
+            $standalone = false;
+        } else {
+            $standalone = true;
+        }
+
         $builder->add('id','hidden',array(
             'label'=>false,
             'attr' => array('class'=>'user-object-id-field')
@@ -251,7 +257,7 @@ class LocationType extends AbstractType
 
 
         //add user (Inhabitant) for all stand alone location management by LocationController
-        if( strpos($this->params['cycle'],'_standalone') !== false ) {
+        if( $standalone ) {
             //user
             $builder->add('user', 'employees_custom_selector', array(
                 'label'=> "Inhabitant / Contact:",
@@ -277,7 +283,7 @@ class LocationType extends AbstractType
         }
 
         //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page
-        if( strpos($this->params['cycle'],'_standalone') !== false && strpos($this->params['cycle'],'new') === false ) {
+        if( $standalone && strpos($this->params['cycle'],'new') === false ) {
             //list attributes
             $params = array();
             $mapper = array();

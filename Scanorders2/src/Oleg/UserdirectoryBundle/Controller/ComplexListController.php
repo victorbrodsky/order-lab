@@ -161,6 +161,10 @@ class ComplexListController extends Controller
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
 
+        if( $mapper['pathname'] == 'grants' ) {
+            $entity->createAttachmentDocument();
+        }
+
         $form = $this->createCreateForm($entity,$cycle,$mapper);
 
         return array(
@@ -231,6 +235,8 @@ class ComplexListController extends Controller
             return $this->redirect( $this->generateUrl('employees-order-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         $cycle = 'new_post_standalone';
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -261,7 +267,6 @@ class ComplexListController extends Controller
             if( $mapper['pathname'] == 'locations' ) {
                 //set parents for institution tree for Administrative and Academical Titles
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
                 $sc = $this->get('security.context');
                 $userUtil->processInstTree($entity,$em,$sc);
 
@@ -275,26 +280,31 @@ class ComplexListController extends Controller
 
             if( $mapper['pathname'] == 'buildings' ) {
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
                 $sc = $this->get('security.context');
                 $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
             if( $mapper['pathname'] == 'researchlabs' ) {
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
                 $sc = $this->get('security.context');
                 $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
             if( $mapper['pathname'] == 'grants' ) {
+
+                //process attachment documents
+                if( $entity->getAttachmentContainer() ) {
+                    foreach( $entity->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
+                        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+                    }
+                    //echo "grant's documents count:".count($entity->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
+                }
+
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
                 $sc = $this->get('security.context');
                 $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
@@ -379,6 +389,15 @@ class ComplexListController extends Controller
             }
 
             if( $mapper['pathname'] == 'grants' ) {
+
+                //process attachment documents
+                if( $entity->getAttachmentContainer() ) {
+                    foreach( $entity->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
+                        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+                    }
+                    //echo "grant's documents count:".count($entity->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
+                }
+
                 $userUtil = new UserUtil();
                 $em = $this->getDoctrine()->getManager();
                 $sc = $this->get('security.context');

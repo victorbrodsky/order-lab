@@ -538,10 +538,10 @@ class UtilController extends Controller {
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
+            $documentContainers = array();
 
             if( $grant->getAttachmentContainer() && count($grant->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
 
-                $documentContainers = array();
                 foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentConatiner ) {
                     $documentContainer = array();
                     $documentContainer['id'] = $documentConatiner->getId();

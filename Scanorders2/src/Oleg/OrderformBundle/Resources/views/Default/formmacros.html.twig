@@ -1091,6 +1091,12 @@
 
     {% if paper.documents is defined or prototype == 'prototype' %}
 
+        {% if "show" in cycle %}
+            {% set showFlag = true %}
+        {% else %}
+            {% set showFlag = false %}
+        {% endif %}
+
         {% if documentspercontainer is not defined or documentspercontainer == "" or documentspercontainer == 0 %}
             {% set dz_maxFiles = 3 %}
         {% else %}
@@ -1104,12 +1110,6 @@
             {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
         {% else %}
             {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
-        {% endif %}
-
-        {% if "show" in cycle %}
-            {% set showFlag = true %}
-        {% else %}
-            {% set showFlag = false %}
         {% endif %}
 
         <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">

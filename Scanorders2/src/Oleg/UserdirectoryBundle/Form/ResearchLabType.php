@@ -29,8 +29,10 @@ class ResearchLabType extends AbstractType
 
         if( strpos($this->params['cycle'],'_standalone') === false ) {
             $readonly = true;
+            $standalone = false;
         } else {
             $readonly = false;
+            $standalone = true;
         }
 
         //echo "cycle=".$this->params['cycle']."<br>";
@@ -73,7 +75,7 @@ class ResearchLabType extends AbstractType
         ));
 
         //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page
-        if( strpos($this->params['cycle'],'_standalone') !== false && strpos($this->params['cycle'],'new') === false ) {
+        if( $standalone && strpos($this->params['cycle'],'new') === false ) {
             //list attributes
             $params = array();
             $mapper = array();
@@ -91,7 +93,7 @@ class ResearchLabType extends AbstractType
 
         //echo "subjectUser=".$this->params['subjectUser']."<br>";
 
-        if( strpos($this->params['cycle'],'_standalone') === false ) {
+        if( !$standalone ) {
 
             ////////////////////////// comment and pi /////////////////////////
             //pi and comment
@@ -114,39 +116,15 @@ class ResearchLabType extends AbstractType
 
                     foreach( $lab->getComments() as $comment ) {
                         if( $comment->getAuthor() && $comment->getAuthor()->getId() == $this->params['subjectUser']->getId() ) {
-
                             //preset comment dummy for current lab
                             $lab->setCommentDummy($comment->getComment());
-
-    //                        $form->add('comments', 'collection', array(
-    //                            'type' => new ResearchLabCommentType($this->params),
-    //                            'label' => false,
-    //                            'required' => false,
-    //                            'allow_add' => true,
-    //                            'allow_delete' => true,
-    //                            'by_reference' => false,
-    //                            'prototype' => true,
-    //                            'prototype_name' => '__comments__',
-    //                        ));
                         }
                     }
 
                     foreach( $lab->getPis() as $pi ) {
                         if( $pi && $pi == true && $pi->getPi()->getId() == $this->params['subjectUser']->getId() ) {
-
                             //preset pi dummy for current lab
                             $lab->setPiDummy(true);
-
-    //                        $form->add('pis', 'collection', array(
-    //                            'type' => new ResearchLabPIType($this->params),
-    //                            'label' => false,
-    //                            'required' => false,
-    //                            'allow_add' => true,
-    //                            'allow_delete' => true,
-    //                            'by_reference' => false,
-    //                            'prototype' => true,
-    //                            'prototype_name' => '__comments__',
-    //                        ));
                         }
                     }
 

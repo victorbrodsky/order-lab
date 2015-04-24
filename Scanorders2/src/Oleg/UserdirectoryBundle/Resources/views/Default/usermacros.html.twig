@@ -71,6 +71,12 @@
         {% set sitename = employees_sitename %}
     {% endif %}
 
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
     {% for document in container.documents %}
 
         <div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">
@@ -92,7 +98,7 @@
                 </div>
             </div>
 
-            {% if cycle != "show_user" and cycle != "show" %}
+            {% if not showFlag %}
                 <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
             {% endif %}
 
@@ -226,7 +232,7 @@
 
     {#Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page#}
     {% set standAloneLocation = false %}
-    {% if cycle == "create_standalone" or cycle == "show_standalone" or cycle == "edit_standalone" %}
+    {% if "standalone" in cycle %}
         {% set wellclass = "" %}
         {% set standAloneLocation = true %}
     {% endif %}
@@ -653,13 +659,21 @@
             {{ formmacros.field(formfield.list.synonyms) }}
         {% endif %}
 
-        {{ formmacros.field(formfield.list.type) }}
+        {% if formfield.list.type is defined %}
+            {{ formmacros.field(formfield.list.type) }}
+        {% endif %}
 
-        {{ formmacros.field(formfield.list.creator) }}
+        {% if formfield.list.creator is defined %}
+            {{ formmacros.field(formfield.list.creator) }}
+        {% endif %}
 
-        {{ formmacros.field(formfield.list.createdate) }}
+        {% if formfield.list.createdate is defined %}
+            {{ formmacros.field(formfield.list.createdate) }}
+        {% endif %}
 
-        {{ formmacros.field(formfield.list.orderinlist) }}
+        {% if formfield.list.orderinlist is defined %}
+            {{ formmacros.field(formfield.list.orderinlist) }}
+        {% endif %}
 
         {% if formfield.list.updatedby is defined %}
             {{ formmacros.field(formfield.list.updatedby) }}
@@ -679,7 +693,7 @@
     {% endif %}
 
     {% set standAloneLocation = false %}
-    {% if cycle == "create_standalone" or cycle == "show_standalone" or cycle == "edit_standalone" %}
+    {% if "standalone" in cycle %}
         {% set wellclass = "" %}
         {% set standAloneLocation = true %}
     {% endif %}
@@ -715,7 +729,7 @@
     {% endif %}
 
     {% set standAloneObject = false %}
-    {% if cycle == "create_standalone" or cycle == "show_standalone" or cycle == "edit_standalone" %}
+    {% if "standalone" in cycle %}
         {% set standAloneObject = true %}
     {% endif %}
 
@@ -785,7 +799,7 @@
     {% endif %}
 
     {% set standAloneObject = false %}
-    {% if cycle == "create_standalone" or cycle == "show_standalone" or cycle == "edit_standalone" %}
+    {% if "standalone" in cycle %}
         {% set standAloneObject = true %}
     {% endif %}
 
@@ -795,9 +809,18 @@
         {% set showFlag = false %}
     {% endif %}
 
+    {% set dropzoneInactive = true %}
+    {% if standAloneObject %}
+        {% if showFlag %}
+            {% set dropzoneInactive = true %}
+        {% else %}
+            {% set dropzoneInactive = false %}
+        {% endif %}
+    {% endif %}
+
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if not showFlag %}
+        {% if not standAloneObject and not showFlag %}
             <div class="text-right">
                 {#btn-remove-minimumone-collection#}
                 <button type="button" class="btn btn-default btn-sm  confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
@@ -852,12 +875,12 @@
             {% for documentContainer in formfield.attachmentContainer.documentContainers %}
                 {% set count = count + 1 %}
                 {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20,true) }}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20,dropzoneInactive) }}
             {% endfor %}
 
             {% if prototype == "prototype" %}
                 {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20,true) }}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20,dropzoneInactive) }}
             {% endif %}
 
         {% endif %}

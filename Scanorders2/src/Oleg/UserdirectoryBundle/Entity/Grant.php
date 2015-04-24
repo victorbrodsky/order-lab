@@ -129,17 +129,17 @@ class Grant extends ListAbstract
         }
 
         //add one document
-        $attachmentContainer = $this->getAttachmentContainer();
-        if( !$attachmentContainer ) {
-            $attachmentContainer = new AttachmentContainer();
-            $this->setAttachmentContainer($attachmentContainer);
-            if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
-                $attachmentContainer->addDocumentContainer( new DocumentContainer() );
-            }
-        }
+        $this->createAttachmentDocument();
+//        $attachmentContainer = $this->getAttachmentContainer();
+//        if( !$attachmentContainer ) {
+//            $attachmentContainer = new AttachmentContainer();
+//            $this->setAttachmentContainer($attachmentContainer);
+//            if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
+//                $attachmentContainer->addDocumentContainer( new DocumentContainer() );
+//            }
+//        }
 
     }
-
 
 
 
@@ -455,6 +455,19 @@ class Grant extends ListAbstract
             $grantEffort->setEffort($effort);
             $grantEffort->setAuthor($user);
             $this->addEffort($grantEffort);
+        }
+    }
+
+    //create attachmentDocument holder with one DocumentContainer if not exists
+    public function createAttachmentDocument() {
+        //add one document
+        $attachmentContainer = $this->getAttachmentContainer();
+        if( !$attachmentContainer ) {
+            $attachmentContainer = new AttachmentContainer();
+            $this->setAttachmentContainer($attachmentContainer);
+        }
+        if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
+            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
         }
     }
 
