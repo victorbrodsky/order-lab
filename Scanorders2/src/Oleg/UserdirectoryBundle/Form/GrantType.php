@@ -107,13 +107,6 @@ class GrantType extends AbstractType
             'classtype' => 'sourceorganization'
         ));
 
-//        $builder->add('grantLink', 'employees_custom_selector', array(
-//            'read_only' => $readonly,
-//            'label' => "Link to a page with more information:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-grantlink', 'type' => 'hidden'),
-//            'classtype' => 'grantlink'
-//        ));
         $builder->add('grantLink', null, array(
             'read_only' => $readonly,
             'label' => 'Link to a page with more information:',
@@ -124,7 +117,7 @@ class GrantType extends AbstractType
         //Relevant Documents
         $params = array('labelPrefix'=>'Relevant Document');
         $params['document.showall'] = false;
-        $params['read_only'] = $readonly;
+        //$params['read_only'] = $readonly;
         $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
             'required' => false,
             'label' => false
@@ -148,23 +141,6 @@ class GrantType extends AbstractType
                 'label' => false
             ));
         }
-
-
-
-
-//        $builder->add('effort', 'employees_custom_selector', array(
-//            'label' => 'Percent Effort:',
-//            'attr' => array('class' => 'ajax-combobox-effort', 'type' => 'hidden', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),
-//            'required' => false,
-//            'classtype' => 'effort'
-//        ));
-//
-//        $builder->add('comment', 'textarea', array(
-//            'label'=>'Comment:',
-//            'required'=>false,
-//            'attr' => array('class' => 'textarea form-control')
-//        ));
-
 
 
 

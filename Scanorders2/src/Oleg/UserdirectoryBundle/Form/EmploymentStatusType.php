@@ -88,6 +88,26 @@ class EmploymentStatusType extends AbstractType
             ));
         }
 
+        $builder->add( 'jobDescriptionSummary', 'textarea', array(
+            'label'=>'Job Description Summary:',
+            'required'=>false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add( 'jobDescription', 'textarea', array(
+            'label'=>'Job Description (official, as posted):',
+            'required'=>false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        //Associated Documents
+        $params = array('labelPrefix'=>'Associated Documents');
+        $params['document.showall'] = false;
+        //$params['read_only'] = $readonly;
+        $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+            'required' => false,
+            'label' => false
+        ));
 
     }
 

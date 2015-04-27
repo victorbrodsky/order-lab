@@ -12,6 +12,12 @@ class EmploymentStatus extends BaseUserAttributes
 {
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="employmentStatus")
+     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $user;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $hireDate;
@@ -40,17 +46,30 @@ class EmploymentStatus extends BaseUserAttributes
     private $terminationReason;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="employmentStatus")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $user;
+    private $jobDescriptionSummary;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $jobDescription;
+
+    /**
+     * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
+     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
+     **/
+    private $attachmentContainer;
 
 
 
-    public function __construct($author) {
+    public function __construct($author=null) {
         parent::__construct($author);
         $this->setType(self::TYPE_PRIVATE);
         $this->setStatus(self::STATUS_VERIFIED);
+
+        //add one document
+        $this->createAttachmentDocument();
     }
 
     /**
@@ -149,11 +168,84 @@ class EmploymentStatus extends BaseUserAttributes
         return $this->employmentType;
     }
 
+    /**
+     * @param mixed $attachmentContainer
+     */
+    public function setAttachmentContainer($attachmentContainer)
+    {
+        $this->attachmentContainer = $attachmentContainer;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getAttachmentContainer()
+    {
+        return $this->attachmentContainer;
+    }
+
+    /**
+     * @param mixed $jobDescription
+     */
+    public function setJobDescription($jobDescription)
+    {
+        $this->jobDescription = $jobDescription;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJobDescription()
+    {
+        return $this->jobDescription;
+    }
+
+    /**
+     * @param mixed $jobDescriptionSummary
+     */
+    public function setJobDescriptionSummary($jobDescriptionSummary)
+    {
+        $this->jobDescriptionSummary = $jobDescriptionSummary;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJobDescriptionSummary()
+    {
+        return $this->jobDescriptionSummary;
+    }
+
+
+
+
+    //create attachmentDocument holder with one DocumentContainer if not exists
+    public function createAttachmentDocument() {
+        //add one document
+        $attachmentContainer = $this->getAttachmentContainer();
+        if( !$attachmentContainer ) {
+            $attachmentContainer = new AttachmentContainer();
+            $this->setAttachmentContainer($attachmentContainer);
+        }
+        if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
+            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
+        }
+    }
 
 
     public function __toString() {
-        return "Employment Status";
+
+        $documentContainersCount = 0;
+        $documentsCount = 0;
+        $attachmentContainer = $this->getAttachmentContainer();
+        if( $attachmentContainer ) {
+            foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
+                $documentContainersCount++;
+                $documentsCount = $documentsCount + count($documentContainer->getDocuments());
+            }
+        }
+
+        return "Employment Status: id=".$this->getId().", documentContainersCount=".$documentContainersCount.", documentsCount=".$documentsCount;;
     }
 
 

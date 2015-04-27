@@ -130,14 +130,6 @@ class Grant extends ListAbstract
 
         //add one document
         $this->createAttachmentDocument();
-//        $attachmentContainer = $this->getAttachmentContainer();
-//        if( !$attachmentContainer ) {
-//            $attachmentContainer = new AttachmentContainer();
-//            $this->setAttachmentContainer($attachmentContainer);
-//            if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
-//                $attachmentContainer->addDocumentContainer( new DocumentContainer() );
-//            }
-//        }
 
     }
 
@@ -480,9 +472,7 @@ class Grant extends ListAbstract
         if( $attachmentContainer ) {
             foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
                 $documentContainersCount++;
-                foreach( $documentContainer->getDocuments() as $document ) {
-                    $documentsCount++;
-                }
+                $documentsCount = $documentsCount + count($documentContainer->getDocuments());
             }
         }
 

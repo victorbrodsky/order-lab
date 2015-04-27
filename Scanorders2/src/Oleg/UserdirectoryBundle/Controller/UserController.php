@@ -1276,6 +1276,9 @@ class UserController extends Controller
             //process grants
             $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($user);
 
+            //process employmentstatus attachments
+            $this->processEmploymentStatus($user);
+
             $em->persist($user);
             $em->flush();
 
@@ -1738,6 +1741,9 @@ class UserController extends Controller
             //process grants
             $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity);
 
+            //process employmentstatus attachments
+            $this->processEmploymentStatus($entity);
+
             //set update info for user
             $this->updateInfo($entity);
 
@@ -1839,14 +1845,10 @@ class UserController extends Controller
             }
 
             //echo "user=".$entity."<br>";
-//            if( 1==0 && count($entity->getGrants()) > 0 ) {
-//                echo "2 DocumentContainers count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers())."<br>";
-//                if( count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()) > 0 ) {
-//                    echo "3 documents count=".count($entity->getGrants()->first()->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
-//                }
-//                //exit('user exit');
-//            }
 
+            echo "employmentStatus=".$entity->getEmploymentStatus()->first()."<br>";
+
+            //exit('user exit');
 
             //$em->persist($entity);
             $em->flush($entity);
@@ -2048,26 +2050,27 @@ class UserController extends Controller
     }
 
 
-//    //set documents for grants
-//    public function setGrantsComments($subjectUser) {
-//
-//        $em = $this->getDoctrine()->getManager();
-//        foreach( $subjectUser->getGrants() as $grant ) {
-//
-//            foreach( $grant->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
-//
-//                $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
-//
-//                if( $documentContainer ) {
-//                    //$userUtil = new UserUtil();
-//                    //$sc = $this->get('security.context');
-//                    //$userUtil->setUpdateInfo($documentContainer,$em,$sc);
-//                }
-//
-//            }
-//
-//        }
-//    }
+    //set documents for EmploymentStatus
+    public function processEmploymentStatus($subjectUser) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        foreach( $subjectUser->getEmploymentStatus() as $employmentStatus ) {
+
+            foreach( $employmentStatus->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
+
+                $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+
+                if( $documentContainer ) {
+                    //$userUtil = new UserUtil();
+                    //$sc = $this->get('security.context');
+                    //$userUtil->setUpdateInfo($documentContainer,$em,$sc);
+                }
+
+            }
+        }
+
+    }
 
     //explicitly set a new avatar
     public function processSetAvatar($subjectUser) {
