@@ -1090,10 +1090,10 @@
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    paper.documents|length:{{ paper.documents|length }}
-    {% if paper.documents|first %}
-        paper.documents|first:{{ paper.documents|first.vars.value.id }}
-    {% endif %}
+    {#paper.documents|length:{{ paper.documents|length }}#}
+    {#{% if paper.documents|first %}#}
+        {#paper.documents|first:{{ paper.documents|first.vars.value.id }}#}
+    {#{% endif %}#}
 
     {% if paper.documents is defined or prototype == 'prototype' %}
 
