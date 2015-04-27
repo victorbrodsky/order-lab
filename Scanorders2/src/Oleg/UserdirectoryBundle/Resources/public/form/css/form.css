@@ -176,6 +176,13 @@
 /*.panel*/
 .panel-multi-form {
     border-left: 7px solid;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.panel-body-multi-form {
+    padding-top: 0px;
+    padding-bottom: 5px;
 }
 
 .panel-patient {

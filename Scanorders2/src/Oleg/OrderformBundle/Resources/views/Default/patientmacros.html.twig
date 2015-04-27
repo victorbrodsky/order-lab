@@ -14,7 +14,7 @@
             patientCount, 0, 0, 0, 0, 0, 0, 0, 0)
             }}
 
-            <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
+            <div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
 
                 {#patient form#}
                 {{ formmacros.patientForm(patient,datastructure,uid,type,status) }}
@@ -34,7 +34,7 @@
                     }}
 
                     {#encounter body#}
-                    <div id="form_body_encounter_{{ uid }}" class="panel-body collapse in">
+                    <div id="form_body_encounter_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
 
                         {#encounter form#}
                         {% if datastructure and datastructure == "datastructure" %}
@@ -56,7 +56,7 @@
                                     }}
 
                                     {#procedure body#}
-                                    <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
+                                    <div id="form_body_procedure_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
                                         {{ formmacros.procedureForm(procedure,datastructure,uid,type,status) }}
                             {% endif %}
 
@@ -73,7 +73,7 @@
                                         patientCount, encounterCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)
                                         }}
 
-                                        <div id="form_body_accession_{{ uid }}" class="panel-body collapse in">
+                                        <div id="form_body_accession_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
                                 {% endif %}
 
                                 {#accession form#}
@@ -90,7 +90,7 @@
                                         patientCount, encounterCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
                                         }}
 
-                                        <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
+                                        <div id="form_body_part_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
 
                                             {{ formmacros.partForm( part, datastructure, uid, type, status, "","","","","","","") }}
 
@@ -106,7 +106,7 @@
                                                     patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
                                                     }}
 
-                                                    <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
+                                                    <div id="form_body_block_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
                                                         {#{{ formmacros.field(block.name) }}#}
                                                         {{ formmacros.blockForm( block, datastructure, uid, type, status) }}
 
@@ -268,7 +268,7 @@
         {{ formmacros.orderinfo_panel_header_object(formObject,object,objects,datastructure,type,formtype,uidArr) }}
 
         {#body#}
-        <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
+        <div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
 
             {#object form#}
             {{ patientmacros.callObjectForm( object,formObject,datastructure,uid,type,status ) }}
