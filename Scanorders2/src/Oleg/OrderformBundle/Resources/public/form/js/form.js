@@ -213,6 +213,8 @@ function addSameForm( name, patientid, encounterid, procedureid, accessionid, pa
     initAdd();
     addKeyListener();
 
+    contentToggleHierarchyButton(newHolder);
+
     //mask init
     var newHolder = $('#formpanel_'+name + '_' + idsNext.join("_"));
     fieldInputMask( newHolder ); //setDefaultMask(btnObj);
@@ -290,6 +292,8 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, encoun
     diseaseTypeListener();
     initAdd();
     addKeyListener();
+
+    contentToggleHierarchyButton(newHolder);
 
     //mask init
     var newHolder = $( '#formpanel_' + name + '_' + ids.join("_") );
@@ -759,64 +763,113 @@ function setEducational() {
 }
 
 //collapse content of patient hierarchy
-function contentToggleHierarchyButton() {
+function contentToggleHierarchyButton(holder) {
 
-    //var contentToggleBtns = $('.form_body_content_toggle_btn');
-    //contentToggleBtns.collapse({toggle: false});
-//    contentToggleBtns.click(function(e) {
-//        //e.preventDefault();
-//        processCollapsableBodies($(this));
-//    });
-
-    $('.form-element-holder.collapse').on('hidden.bs.collapse', function (e) {
-        //e.preventDefault();
-        //processCollapsableBodies( $(this) );
-        hideORshowCollapsableBodies( $(this), 'hide' );
-    });
-
-    function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
-        //console.log(bodyElement);
-        bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse').collapse(toggleValue);
+    var targetId = '.form-element-holder.collapse';
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        var targetElement = holder.find(targetId);
+    } else {
+        var targetElement = $(targetId);
     }
 
+    targetElement.on('hide.bs.collapse', function (e) {
+        //e.preventDefault();
+        //hideORshowCollapsableBodies( $(this), 'hide' );
 
-//    $('.form-element-holder.collapse.in').on('shown.bs.collapse', function (e) {
+        var folderBtn = $(this).closest('.panel-multi-form').find('.panel-heading-hierarchy').find('button.form_body_toggle_btn').first();
+
+        if( folderBtn.hasClass('glyphicon-folder-close') ) {
+            //console.log('hidden: folderBtn is closed => open it');
+
+            //open folder button: show me what i am trying to see
+            folderBtn.trigger("click");
+
+            //1 solution) don't close list
+            e.preventDefault();
+            //2 solution) re-open list's collapsableBody
+            //$(this).collapse('show');
+
+        } else {
+            hideORshowCollapsableBodies( $(this), 'hide' );
+        }
+
+    });
+
+
+//    $('.form-element-holder.collapse.in').on('show.bs.collapse', function (e) {
 //        //e.preventDefault();
 //        hideORshowCollapsableBodies( $(this), 'show' );
 //    });
 
-//    function processCollapsableBodies( bodyElement ) {
-//        //console.log(bodyElement);
-//        var allChildrenCollapsableElements = bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse');
-//
-//        if( isCollapsableVisible(bodyElement) ) {
-//            console.log('visible');
-//            allChildrenCollapsableElements.collapse('hide');
-//        } else {
-//            console.log('collapsed');
-//            //allChildrenCollapsableElements.collapse('show');
-//        }
-//
-//        //does not work on chrome?
-//        function isCollapsableVisible(element) {
-//
-//            function isCollapsed(element) {
-//                var $e = $(element);
-//
-//                return $e.width()*$e.height() === 0;
-//            }
-//            $.fn.isReallyVisible = function () {
-//                var $this = $(this).filter(':visible');
-//
-//                // if jQuery says its not visible, trust it, otherwise
-//                // check if any of the parents are collapsed
-//                return $this ? !$this.parents().toArray().some(isCollapsed) : false;
-//            };
-//
-//            return element.isReallyVisible();
-//        }
-//    }
+    targetElement.on('shown.bs.collapse', function (e) {
+
+        var folderBtn = $(this).closest('.panel-multi-form').find('.panel-heading-hierarchy').find('button.form_body_toggle_btn').first();
+        //console.log(folderBtn);
+
+        //open folder button if closed
+        if( folderBtn.hasClass('glyphicon-folder-close') ) {
+            //console.log('folderBtn is closed => open it');
+            //open folder button: show me what i am trying to see
+            folderBtn.trigger("click");
+        }
+        //else {
+            //console.log('folderBtn is open');
+        //}
+
+    });
+
+
+//    $('.glyphicon-list').on('click', function (e) {
+//        //e.preventDefault();
+//        processListButtonClick(this);
+//    });
 
 }
 
+function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
+    //console.log(bodyElement);
+    bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse').collapse(toggleValue);
+}
+
+//toggle the folder button from "closed" to "open" state (only if it is in the closed state).
+//btn - list button
+//function processListButtonClick(btn) {
+//
+//    return;
+//
+//    var listBtn = $(btn);
+//    var folderBtn = listBtn.parent().find('button.form_body_toggle_btn').first();
+//
+//    if( listBtn.hasClass('glyphicon-list-close') ) {   //list_button = closed
+//
+//        if( folderBtn.hasClass('glyphicon-folder-close') ) {
+//            //folder_button.open()  ///show me what i am trying to see
+//            folderBtn.trigger('click');
+//            //listBtn.trigger('click');
+//        } else {
+//            //listBtn.trigger('click'); //list_button.open()
+//            var collapsableBody = listBtn.closest('.panel-multi-form').find('.panel-body').first().find('.form-element-holder').first();
+//            collapsableBody.collapse('show');
+//        }
+//
+//        //change class
+//        listBtn.removeClass('glyphicon-list-close');
+//        listBtn.addClass('glyphicon-list-open');
+//
+//    } else {    //list_button = open
+//
+//        if( folderBtn.hasClass('glyphicon-folder-close') ) {
+//            //folder_button.open()  ///list is already open, but i can not see it - show me what I am trying to see
+//            folderBtn.trigger('click'); //folder_button.open()
+//        } else {
+//            //listBtn.trigger('click'); //list_button.close()
+//        }
+//
+//        //change class
+//        listBtn.removeClass('glyphicon-list-open');
+//        listBtn.addClass('glyphicon-list-close');
+//
+//    }
+//
+//}
 
