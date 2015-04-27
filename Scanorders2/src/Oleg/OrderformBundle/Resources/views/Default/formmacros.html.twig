@@ -1714,7 +1714,7 @@
     {#messages#}
     {{ formmacros.renderMessages(slide,flag,uid,cycle) }}
 
-    <div id="slide_{{ uid }}" class="form-element-holder collapse in">
+    <div id="slide_{{ uid }}" class="slide-form-element-holder form-element-holder collapse in">
 
         {{ formmacros.field(slide.title) }}
 
@@ -1756,16 +1756,21 @@
             <p><div class="sliderelevantscans">{{ relevantScansHtml }}</div></p>
         {% endif %}
 
-        {% if flag and flag == "datastructure" %}
-            {{ formmacros.scanForm(slide,flag,uid,cycle) }}
-        {% endif %}
+        {#{% if flag and flag == "datastructure" %}#}
+            {#{{ formmacros.scanForm(slide,flag,uid,cycle) }}#}
+        {#{% endif %}#}
 
     </div>
 
 
+    {% if flag and flag == "datastructure" %}
+        {{ formmacros.scanForm(slide,flag,uid,cycle) }}
+    {% endif %}
+
+
 {% endmacro %}
 
-{#used bu datastructure#}
+{#used by datastructure#}
 {% macro scanForm(slide,flag,uid,cycle) %}
 
     {% import _self as formmacros %}
@@ -1783,11 +1788,11 @@
                         {% set orderUniqueId = scanCount %}
                     {% endif %}
 
-                    <button
-                        id="form_body_toggle_imaging_{{ orderUniqueId }}_{{ uid }}" type="button"
-                        class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
-                        data-toggle="collapse" data-target="#imaging_content_{{ orderUniqueId }}_{{ uid }}">
-                    </button>
+                    {#<button#}
+                        {#id="form_body_toggle_imaging_{{ orderUniqueId }}_{{ uid }}" type="button"#}
+                        {#class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"#}
+                        {#data-toggle="collapse" data-target="#imaging_content_{{ orderUniqueId }}_{{ uid }}">#}
+                    {#</button>#}
 
                     <button
                             style="margin-left: 5px;"
@@ -1795,7 +1800,7 @@
                             class="btn btn-default btn-xs form_body_content_toggle_btn glyphicon glyphicon-list pull-left"
                             aria-expanded="true"
                             data-toggle="collapse"
-                            data-target="#{{ orderUniqueId }}_{{ uid }}">
+                            data-target="#form_body_imaging_{{ orderUniqueId }}_{{ uid }}">
                     </button>
 
                     {#<h4 class="panel-title">Imaging</h4>#}
@@ -1819,7 +1824,7 @@
 
                 </div>
 
-                <div id="form_body_imaging_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse in">
+                <div id="form_body_imaging_{{ orderUniqueId }}_{{ uid }}" class="panel-body panel-body-imaging collapse in">
 
                     {% if scan.source is defined %}
                         {{ formmacros.field(scan.source) }}

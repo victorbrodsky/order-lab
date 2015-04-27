@@ -773,6 +773,8 @@ function contentToggleHierarchyButton(holder) {
     }
 
     targetElement.on('hide.bs.collapse', function (e) {
+
+        //console.log('hide: collapse');
         //e.preventDefault();
         //hideORshowCollapsableBodies( $(this), 'hide' );
 
@@ -829,6 +831,11 @@ function contentToggleHierarchyButton(holder) {
 function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
     //console.log(bodyElement);
     bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse').collapse(toggleValue);
+
+    //toggle all slide's lists
+    if( bodyElement.hasClass('slide-form-element-holder') ) {
+        bodyElement.closest('.panel-body').find('.panel-body-imaging.collapse').collapse(toggleValue);
+    }
 }
 
 //toggle the folder button from "closed" to "open" state (only if it is in the closed state).
