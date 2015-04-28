@@ -96,6 +96,28 @@ abstract class ListAbstract
     protected $updateAuthorRoles = array();
 
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $fulltitle;
+
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $fulltitleunique;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $fulltitlemedium;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $fulltitleshort;
+
+
+
 
     public function __construct() {
 
@@ -328,6 +350,74 @@ abstract class ListAbstract
         return $this->orderinlist;
     }
 
+
+    /////////////// full titles ////////////////////
+    /**
+     * @param mixed $fulltitle
+     */
+    public function setFulltitle($fulltitle)
+    {
+        $this->fulltitle = $fulltitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFulltitle()
+    {
+        return $this->fulltitle;
+    }
+
+//    /**
+//     * @param mixed $fulltitlemedium
+//     */
+//    public function setFulltitlemedium($fulltitlemedium)
+//    {
+//        $this->fulltitlemedium = $fulltitlemedium;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getFulltitlemedium()
+//    {
+//        return $this->fulltitlemedium;
+//    }
+//
+//    /**
+//     * @param mixed $fulltitleshort
+//     */
+//    public function setFulltitleshort($fulltitleshort)
+//    {
+//        $this->fulltitleshort = $fulltitleshort;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getFulltitleshort()
+//    {
+//        return $this->fulltitleshort;
+//    }
+//
+//    /**
+//     * @param mixed $fulltitleunique
+//     */
+//    public function setFulltitleunique($fulltitleunique)
+//    {
+//        $this->fulltitleunique = $fulltitleunique;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getFulltitleunique()
+//    {
+//        return $this->fulltitleunique;
+//    }
+    /////////////// EOF full titles ////////////////////
+
+
     public function __toString()
     {
         $name = $this->name."";
@@ -421,6 +511,36 @@ abstract class ListAbstract
 
     public function removeDependents($user) {
         return;
+    }
+
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function onCreateUpdate() {
+        $this->createFullTitle();
+    }
+
+    public function createFullTitle()
+    {
+        $fullTitle = "";
+
+        if( $this->getAbbreviation() ) {
+            $fullTitle = $this->getAbbreviation();
+        }
+
+        if( $this->getName() ) {
+            if( $fullTitle != "" ) {
+                $fullTitle = $fullTitle . " - " .  $this->getName();
+            } else {
+                $fullTitle = $this->getName();
+            }
+        }
+
+        $this->setFulltitle($fullTitle);
+
+        return $fullTitle;
     }
 
     //for entity with synonyms

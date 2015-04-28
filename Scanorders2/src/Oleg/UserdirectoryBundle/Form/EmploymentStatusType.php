@@ -101,7 +101,7 @@ class EmploymentStatusType extends AbstractType
         ));
 
         //Associated Documents
-        $params = array('labelPrefix'=>'Associated Documents');
+        $params = array('labelPrefix'=>'Associated Document');
         $params['document.showall'] = false;
         //$params['read_only'] = $readonly;
         $builder->add('attachmentContainer', new AttachmentContainerType($params), array(

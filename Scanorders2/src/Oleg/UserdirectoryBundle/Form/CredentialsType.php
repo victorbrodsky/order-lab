@@ -79,6 +79,11 @@ class CredentialsType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
+        $builder->add('hobby', null, array(
+            'label' => 'Hobbies:',
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
 
         $builder->add('codeNYPH', 'collection', array(
             'type' => new CodeNYPHType(),

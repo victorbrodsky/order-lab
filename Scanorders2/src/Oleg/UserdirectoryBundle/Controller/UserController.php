@@ -3,7 +3,8 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
-
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Loader\ArrayLoader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -255,6 +256,14 @@ class UserController extends Controller
 //        }
 
         //echo "search=".$search."<br>";
+
+//        $translator = new Translator('fr_FR');
+//        $translator->addLoader('array', new ArrayLoader());
+//        $translator->addResource('array', array(
+//            'Symfony is great!' => 'J\'aime Symfony!',
+//        ), 'fr_FR');
+//        echo $translator->trans('Symfony is great!');
+        //echo "translated=".$translated."<br>";
 
         $locations = null;
         $pagination = null;

@@ -1392,6 +1392,8 @@
 
                     {{ formmacros.field(form.preferences.timezone) }}
 
+                    {{ formmacros.field(form.preferences.languages) }}
+
                     {% if form.locked is defined and userEditor == true %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}
                             {{ formmacros.checkbox(form.locked) }}
@@ -1756,6 +1758,7 @@
                                             {{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}
                                             {{ formmacros.field_notempty(form.credentials.ssn,cycle) }}
                                             {{ formmacros.field(form.credentials.emergencyContactInfo) }}
+                                            {{ formmacros.field(form.credentials.hobby) }}
 
                                         </div>
                                     </div>

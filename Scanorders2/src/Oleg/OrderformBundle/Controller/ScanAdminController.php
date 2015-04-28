@@ -85,7 +85,7 @@ class ScanAdminController extends AdminController
     {
 
         $max_exec_time = ini_get('max_execution_time');
-        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 

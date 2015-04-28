@@ -10,6 +10,7 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,26 +24,32 @@ class UserPreferences {
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\OneToOne(targetEntity="User", mappedBy="preferences")
      */
-    protected $user;
+    private $user;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $timezone;
+    private $timezone;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="LanguageList", inversedBy="userpreferences")
+     * @ORM\JoinTable(name="user_userpreferences_languages")
+     **/
+    private $languages;
 
 //    /**
 //     * @ORM\Column(type="boolean", nullable=true)
 //     */
 //    protected $tooltip;
 
-//    public function __construct() {
-//        $this->tooltip = 1;
-//    }
+    public function __construct() {
+        $this->languages = new ArrayCollection();
+    }
 
     /**
      * @param mixed $id
@@ -108,6 +115,20 @@ class UserPreferences {
         return $this->timezone;
     }
 
-
+    public function addLanguage($item)
+    {
+        if( $item && !$this->languages->contains($item) ) {
+            $this->languages->add($item);
+        }
+        return $this;
+    }
+    public function removeLanguage($item)
+    {
+        $this->languages->removeElement($item);
+    }
+    public function getLanguages()
+    {
+        return $this->languages;
+    }
 
 }

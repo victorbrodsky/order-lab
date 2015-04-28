@@ -2,6 +2,16 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Intl\Intl;
+
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\BuildingList;
@@ -22,13 +32,6 @@ use Oleg\UserdirectoryBundle\Entity\SourceOrganization;
 use Oleg\UserdirectoryBundle\Entity\SourceSystemList;
 use Oleg\UserdirectoryBundle\Entity\TrainingDegreeList;
 use Oleg\UserdirectoryBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 use Oleg\UserdirectoryBundle\Entity\SiteParameters;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -50,6 +53,9 @@ use Oleg\UserdirectoryBundle\Entity\Equipment;
 use Oleg\UserdirectoryBundle\Entity\EquipmentType;
 use Oleg\UserdirectoryBundle\Entity\LocationPrivacyList;
 use Oleg\UserdirectoryBundle\Entity\RoleAttributeList;
+use Oleg\UserdirectoryBundle\Entity\LanguageList;
+use Symfony\Component\Intl\Locale\Locale;
+
 
 /**
  * @Route("/admin")
@@ -97,7 +103,7 @@ class AdminController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $max_exec_time = ini_get('max_execution_time');
-        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
@@ -123,6 +129,7 @@ class AdminController extends Controller
 
         $count_states = $this->generateStates();
         $count_countryList = $this->generateCountryList();
+        $count_languages = $this->generateLanguages();
 
         $count_locationTypeList = $this->generateLocationTypeList();
         $count_locprivacy = $this->generateLocationPrivacy();
@@ -179,6 +186,7 @@ class AdminController extends Controller
             'Location Privacy='.$count_locprivacy.', '.
             'States='.$count_states.', '.
             'Countries='.$count_countryList.', '.
+            'Languages='.$count_languages.', '.
             'Locations='.$count_locations.', '.
             'Buildings='.$count_buildings.', '.
             'Reaserch Labs='.$count_reslabs.', '.
@@ -1077,6 +1085,71 @@ class AdminController extends Controller
             $count = $count + 10;
 
         } //foreach
+
+        return round($count/10);
+
+    }
+
+
+    public function generateLanguages() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findAll();
+        if( $entities ) {
+            return -1;
+        }
+
+        //\Locale::setDefault('ru');
+        $elements = Intl::getLanguageBundle()->getLanguageNames();
+        //print_r($elements);
+        //exit();
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $abbreviation=>$name ) {
+
+            //$entity = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findOneByAbbreviation($abbreviation);
+
+            //testing
+//            if( $entity ) {
+//                $em->remove($entity);
+//                $em->flush();
+//                echo "remove entity with ".$abbreviation."<br>";
+//            }
+
+            $entity = null;
+
+            if( !$entity ) {
+                $entity = new LanguageList();
+                $this->setDefaultList($entity,$count,$username,null);
+                $entity->setName( trim($name) );
+                $entity->setAbbreviation( trim($abbreviation) );
+            }
+
+            \Locale::setDefault($abbreviation);
+            $languageNativeName = Intl::getLanguageBundle()->getLanguageName($abbreviation);
+
+            //uppercase the first letter
+            $languageNativeName = mb_convert_case(mb_strtolower($languageNativeName), MB_CASE_TITLE, "UTF-8");
+
+//            if( $abbreviation == 'ru' ) {
+//                echo $abbreviation."=(".$languageNativeName.")<br>";
+//                exit();
+//            }
+
+            $entity->setNativeName($languageNativeName);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+        //exit('1');
+
+        \Locale::setDefault('en');
 
         return round($count/10);
 

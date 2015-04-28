@@ -14,6 +14,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 
@@ -41,6 +42,7 @@ class UserPreferencesType extends AbstractType
 
         $builder->add( 'timezone', 'choice', array(
             'label' => 'Time Zone:',
+            //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
             'choices' => $tzUtil->tz_list(),
             'required' => true,
             'preferred_choices' => array('America/New_York'),
@@ -52,6 +54,25 @@ class UserPreferencesType extends AbstractType
 //            'label' => 'Show tool tips for locked fields:',
 //            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
 //        ));
+
+
+        $builder->add( 'languages', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:LanguageList',
+            'label'=> "Language(s):",
+            'required'=> false,
+            'multiple' => true,
+            'property' => 'fulltitle',
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
 
 
     }

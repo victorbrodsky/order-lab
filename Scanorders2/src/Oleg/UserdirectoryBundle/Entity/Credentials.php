@@ -54,6 +54,11 @@ class Credentials extends BaseUserAttributes
     private $emergencyContactInfo;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $hobby;
+
+    /**
      * @ORM\OneToOne(targetEntity="User", mappedBy="credentials")
      */
     private $user;
@@ -265,6 +270,21 @@ class Credentials extends BaseUserAttributes
         return $this->emergencyContactInfo;
     }
 
+    /**
+     * @param mixed $hobby
+     */
+    public function setHobby($hobby)
+    {
+        $this->hobby = $hobby;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHobby()
+    {
+        return $this->hobby;
+    }
 
     /**
      * @param mixed $user

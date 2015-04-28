@@ -66,6 +66,7 @@ class ListController extends Controller
      * @Route("/medical-specialties/", name="medicalspecialties-list")
      * @Route("/employment-types/", name="employmenttypes-list")
      * @Route("/source-organizations/", name="sourceorganizations-list")
+     * @Route("/languages/", name="languages-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -203,6 +204,8 @@ class ListController extends Controller
      * @Route("/medical-specialties/", name="medicalspecialties_create")
      * @Route("/employment-types/", name="employmenttypes_create")
      * @Route("/source-organizations/", name="sourceorganizations_create")
+     * @Route("/languages/", name="languages_create")
+     *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -330,6 +333,8 @@ class ListController extends Controller
      * @Route("/medical-specialties/new", name="medicalspecialties_new")
      * @Route("/employment-types/new", name="employmenttypes_new")
      * @Route("/source-organizations/new", name="sourceorganizations_new")
+     * @Route("/languages/new", name="languages_new")
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -428,6 +433,8 @@ class ListController extends Controller
      * @Route("/medical-specialties/{id}", name="medicalspecialties_show")
      * @Route("/employment-types/{id}", name="employmenttypes_show")
      * @Route("/source-organizations/{id}", name="sourceorganizations_show")
+     * @Route("/languages/{id}", name="languages_show")
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -516,6 +523,8 @@ class ListController extends Controller
      * @Route("/medical-specialties/{id}/edit", name="medicalspecialties_edit")
      * @Route("/employment-types/{id}/edit", name="employmenttypes_edit")
      * @Route("/source-organizations/{id}/edit", name="sourceorganizations_edit")
+     * @Route("/languages/{id}/edit", name="languages_edit")
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -636,6 +645,8 @@ class ListController extends Controller
      * @Route("/medical-specialties/{id}", name="medicalspecialties_update")
      * @Route("/employment-types/{id}", name="employmenttypes_update")
      * @Route("/source-organizations/{id}", name="sourceorganizations_update")
+     * @Route("/languages/{id}", name="languages_update")
+     *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -964,6 +975,10 @@ class ListController extends Controller
                 $className = "SourceOrganization";
                 $displayName = "Source Organizations";
                 break;
+            case "languages":
+                $className = "LanguageList";
+                $displayName = "Languages";
+                break;
 
             default:
                 $className = null;
@@ -1038,6 +1053,8 @@ class ListController extends Controller
      * @Route("/medical-specialties/{id}", name="medicalspecialties_delete")
      * @Route("/employment-types/{id}", name="employmenttypes_delete")
      * @Route("/source-organizations/{id}", name="sourceorganizations_delete")
+     * @Route("/languages/{id}", name="languages_delete")
+     *
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
