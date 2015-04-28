@@ -37,7 +37,7 @@
         </div>
         <div class="col-xs-6" align="left">
 
-            {{ formmacros.fieldpaper(container,cycle,prototype,3) }}
+            {{ formmacros.fieldpaper(container,cycle,prototype,3,'default') }}
 
             {#<div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">#}
 
@@ -98,7 +98,7 @@
                 </div>
             </div>
 
-            {% if addRemoveLink %}
+            {% if addRemoveLink or addRemoveLink == 'default' %}
                 <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
             {% endif %}
 
@@ -809,12 +809,12 @@
         {% set showFlag = false %}
     {% endif %}
 
-    {% set dropzoneInactive = true %}
+    {% set dropzoneInit = 'inactive' %}
     {% if standAloneObject %}
         {% if showFlag %}
-            {% set dropzoneInactive = true %}
+            {% set dropzoneInit = 'inactive' %}
         {% else %}
-            {% set dropzoneInactive = false %}
+            {% set dropzoneInit = 'active' %}
         {% endif %}
     {% endif %}
 
@@ -868,6 +868,7 @@
         {% endif %}
 
         {#grant's attachmentContainer#}
+        {#grant dropzoneInit:{{ dropzoneInit }}#}
         {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
         {% if formfield.attachmentContainer is defined %}
             {% set count = 0 %}
@@ -875,12 +876,12 @@
             {% for documentContainer in formfield.attachmentContainer.documentContainers %}
                 {% set count = count + 1 %}
                 {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20,dropzoneInactive) }}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20,dropzoneInit) }}
             {% endfor %}
 
             {% if prototype == "prototype" %}
                 {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20,dropzoneInactive) }}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20,dropzoneInit) }}
             {% endif %}
 
         {% endif %}

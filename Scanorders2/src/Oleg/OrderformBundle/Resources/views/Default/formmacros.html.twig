@@ -883,7 +883,7 @@
                 {% elseif fieldtype == "lockdate" %}
                     {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
                 {% elseif fieldtype == "paper" %}
-                    {{ formmacros.fieldpaper(fieldThis,cycle,prototype) }}
+                    {{ formmacros.fieldpaper(fieldThis,cycle,prototype,3,'default') }}
                 {% elseif classname == "patientmrn" %}
                     {{ form_widget(fieldThis.keytype) }}
                     {{ form_widget(fieldThis.field) }}
@@ -1085,8 +1085,10 @@
 
 {% endmacro %}
 
-
-{% macro fieldpaper(paper,cycle,prototype,documentspercontainer,dropzoneInactive) %}
+{#dropzoneInit = 'inactive':          inactive by default#}
+{#dropzoneInit = 'active':         active by default#}
+{#dropzoneInit = 'default':     inactive if show or active otherwise#}
+{% macro fieldpaper(paper,cycle,prototype,documentspercontainer,dropzoneInit) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -1109,15 +1111,39 @@
             {% set dz_maxFiles = documentspercontainer %}
         {% endif %}
 
-        {% if dropzoneInactive is not defined %}
-            {% set dropzoneInactive = false %}
+        {#dropzoneInit:{{ dropzoneInit }}<br>#}
+        {% if dropzoneInit is not defined %}
+            {#dropzoneInit is not defined<br>#}
+            {% set dropzoneInit = 'default' %}
+            {% set addRemoveLink = 'default' %}
         {% endif %}
-        {% if dropzoneInactive == true %}
+
+        {% if dropzoneInit == 'inactive' %}
+            {#dropzoneInit == true<br>#}
             {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
             {% set addRemoveLink = false %}
-        {% else %}
+        {% elseif dropzoneInit == 'active' %}
+            {#dropzoneInit == false<br>#}
             {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
             {% set addRemoveLink = true %}
+        {% elseif dropzoneInit == 'default' %}
+            {#dropzoneInit == 'default'<br>#}
+            {% if showFlag %}
+                {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
+                {% set addRemoveLink = false %}
+            {% else %}
+                {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
+                {% set addRemoveLink = true %}
+            {% endif %}
+        {% else %}
+            {#dropzoneInactive else<br>#}
+            {% if showFlag %}
+                {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
+                {% set addRemoveLink = false %}
+            {% else %}
+                {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
+                {% set addRemoveLink = true %}
+            {% endif %}
         {% endif %}
 
         <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">
@@ -1254,7 +1280,7 @@
 {% endmacro %}
 
 
-{% macro fieldDocumentContainer(container,cycle,prefix,renderType,documentspercontainer,dropzoneInactive) %}
+{% macro fieldDocumentContainer(container,cycle,prefix,renderType,documentspercontainer,dropzoneInit) %}
     {% import _self as formmacros %}
 
     {% if renderType is defined and renderType == "panel" %}
@@ -1278,17 +1304,17 @@
             </div>
 
             <div id="form_body_{{ prefix }}_documentContainer_{{ uniqueId }}" class="panel-body collapse in">
-                {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInactive) }}
+                {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInit) }}
             </div>
         </div>
     {% else %}
         <div class="well well-sm">
-            {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInactive) }}
+            {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInit) }}
         </div>
     {% endif %}
 
 {% endmacro %}
-{% macro fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInactive) %}
+{% macro fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInit) %}
     {% import _self as formmacros %}
 
     {{ form_errors(container) }}
@@ -1305,7 +1331,7 @@
                 {{form_label(container.documents)}}
             </div>
             <div class="col-xs-6" align="left">
-                {{ formmacros.fieldpaper(container,cycle,'prototype',documentspercontainer,dropzoneInactive) }}
+                {{ formmacros.fieldpaper(container,cycle,'prototype',documentspercontainer,dropzoneInit) }}
             </div>
         </div>
 
