@@ -88,6 +88,13 @@ class GenericListType extends AbstractType
         }
 
 
+        //nativeName for Language List
+        if( strtolower($this->mapper['className']) == strtolower("LanguageList") ) {
+            $builder->add('nativeName',null,array(
+                'label'=>'Native Name:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
 
 

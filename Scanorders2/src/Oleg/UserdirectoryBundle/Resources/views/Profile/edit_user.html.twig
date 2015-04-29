@@ -1393,6 +1393,7 @@
                     {{ formmacros.field(form.preferences.timezone) }}
 
                     {{ formmacros.field(form.preferences.languages) }}
+                    {{ formmacros.field(form.preferences.locale) }}
 
                     {% if form.locked is defined and userEditor == true %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}

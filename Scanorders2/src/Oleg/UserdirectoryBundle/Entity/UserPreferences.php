@@ -42,6 +42,12 @@ class UserPreferences {
      **/
     private $languages;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="LocaleList")
+     **/
+    private $locale;
+
+
 //    /**
 //     * @ORM\Column(type="boolean", nullable=true)
 //     */
@@ -114,6 +120,26 @@ class UserPreferences {
     {
         return $this->timezone;
     }
+
+    /**
+     * @param mixed $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+
+
+
 
     public function addLanguage($item)
     {

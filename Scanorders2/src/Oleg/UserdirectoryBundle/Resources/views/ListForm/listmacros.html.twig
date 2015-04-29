@@ -15,6 +15,10 @@
             <th>{{ knp_pagination_sortable(entities, 'Short Name', 'ent.shortname') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
 
+            {% if entities|first.nativeName is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Native Name', 'ent.nativeName') }}</th>
+            {% endif %}
+
             {% if entities|first.researchlab is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Principal Investigator(s)', 'usercount') }}</th>
             {% endif %}
@@ -74,6 +78,12 @@
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.shortname }}</td>
                 <td>{{ entity.abbreviation }}</td>
+
+                {% if entity.nativeName is defined %}
+                    <td>
+                        {{ entity.nativeName }}
+                    </td>
+                {% endif %}
 
                 {% if entity.researchlab is defined %}
                     <td>
@@ -200,6 +210,10 @@
     {{ formmacros.field(form.list.shortname) }}
     {{ formmacros.field(form.list.abbreviation) }}
 
+    {% if form.nativeName is defined %}
+        {{ formmacros.field(form.nativeName) }}
+    {% endif %}
+
     {% if form.parent is defined and entity.level is not defined and form.vars.value.parent is defined %}
         {{ formmacros.field(form.parent) }}
     {% endif %}
@@ -290,6 +304,10 @@
     {{ formmacros.field(edit_form.list.name) }}
     {{ formmacros.field(edit_form.list.shortname) }}
     {{ formmacros.field(edit_form.list.abbreviation) }}
+
+    {% if entity.nativeName is defined %}
+        {{ formmacros.field(edit_form.nativeName) }}
+    {% endif %}
 
     {% if entity.value is defined %}
         {{ formmacros.field(edit_form.value) }}

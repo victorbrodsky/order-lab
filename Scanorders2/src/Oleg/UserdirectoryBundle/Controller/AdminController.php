@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -130,6 +131,7 @@ class AdminController extends Controller
         $count_states = $this->generateStates();
         $count_countryList = $this->generateCountryList();
         $count_languages = $this->generateLanguages();
+        $count_locales = $this->generateLocales();
 
         $count_locationTypeList = $this->generateLocationTypeList();
         $count_locprivacy = $this->generateLocationPrivacy();
@@ -187,6 +189,7 @@ class AdminController extends Controller
             'States='.$count_states.', '.
             'Countries='.$count_countryList.', '.
             'Languages='.$count_languages.', '.
+            'Locales='.$count_locales.', '.
             'Locations='.$count_locations.', '.
             'Buildings='.$count_buildings.', '.
             'Reaserch Labs='.$count_reslabs.', '.
@@ -1152,7 +1155,52 @@ class AdminController extends Controller
         \Locale::setDefault('en');
 
         return round($count/10);
+    }
 
+
+    public function generateLocales() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findAll();
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = Intl::getLocaleBundle()->getLocaleNames();
+        //print_r($elements);
+        //exit();
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $locale=>$description ) {
+
+//            $entities = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findByName($locale);
+//            foreach( $entities as $entity ) {
+//                $em->remove($entity);
+//                $em->flush();
+//                //echo "remove entity with ".$locale."<br>";
+//            }
+
+            $entity = null;
+            if( !$entity ) {
+                $entity = new LocaleList();
+                $this->setDefaultList($entity,$count,$username,null);
+            }
+
+            $entity->setName( trim($locale) );
+            $entity->setDescription( trim($description) );
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+        //exit('1');
+
+        return round($count/10);
     }
 
 
