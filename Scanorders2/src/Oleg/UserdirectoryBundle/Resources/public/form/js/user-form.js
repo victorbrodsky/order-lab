@@ -787,8 +787,12 @@ function populateGrantData( data, elementName ) {
         idfield.val(data.id);
         grantid.val(data.grantid);
         amount.val(data.amount);
+
         startDate.val(data.startDate);
         endDate.val(data.endDate);
+        //startDate.datepicker('update', data.startDate);
+        //endDate.datepicker('update', data.endDate);
+
         currentYearDirectCost.val(data.currentYearDirectCost);
         currentYearIndirectCost.val(data.currentYearIndirectCost);
         totalCurrentYearCost.val(data.totalCurrentYearCost);
@@ -815,7 +819,7 @@ function populateGrantData( data, elementName ) {
         sourceOrganization.select2("readonly", true);
         effort.select2("readonly", false);
 
-        console.log('before disabling dropzone');
+        //console.log('before disabling dropzone');
         disableEnableDropzone( dropzoneElement, true, null, true );
 
         initDatepicker(holder);

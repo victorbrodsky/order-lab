@@ -223,6 +223,7 @@ class EmploymentStatus extends BaseUserAttributes
     public function createAttachmentDocument() {
         //add one document
         $attachmentContainer = $this->getAttachmentContainer();
+        //echo "attachmentContainer=".$attachmentContainer."<br>";
         if( !$attachmentContainer ) {
             $attachmentContainer = new AttachmentContainer();
             $this->setAttachmentContainer($attachmentContainer);

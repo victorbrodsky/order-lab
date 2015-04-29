@@ -86,8 +86,8 @@ class GrantType extends AbstractType
             'label' => "Grant Support Start Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask grant-startDate-field'),
+            'format' => 'MM/dd/yyyy',    //'MM-dd-yyyy',
+            'attr' => array('class' => 'datepicker form-control patientdob-mask grant-startDate-field'), //patientdob-mask regular-datepicker
         ));
 
         $builder->add('endDate', 'date', array(
@@ -95,7 +95,7 @@ class GrantType extends AbstractType
             'label' => "Grant Support End Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control patientdob-mask grant-endDate-field'),
         ));
 

@@ -5,7 +5,6 @@ namespace Oleg\UserdirectoryBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Entity\Grant;
 
 
 class GrantRepository extends EntityRepository {

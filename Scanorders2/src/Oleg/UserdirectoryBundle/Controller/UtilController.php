@@ -422,7 +422,7 @@ class UtilController extends Controller {
             //$commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUserDB, 'researchLab'=>$researchLabDB ) );
             //$piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUserDB, 'researchLab'=>$researchLabDB ) );
 
-            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+            $transformer = new DateTimeToStringTransformer(null,null,'MM/dd/yyyy');
 
             $element = array(
                 'id'            => $lab->getId(),
@@ -536,7 +536,7 @@ class UtilController extends Controller {
             $userComment = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUserDB, 'grant'=>$grant ) );
             $userEffort = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUserDB, 'grant'=>$grant ) );
 
-            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+            $transformer = new DateTimeToStringTransformer(null,null,'MM/dd/yyyy');
 
             $documentContainers = array();
 

@@ -1461,19 +1461,16 @@ class UserController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         if( count($entity->getAdministrativeTitles()) == 0 ) {
-            $administrativeTitle = new AdministrativeTitle($user);
-            $entity->addAdministrativeTitle($administrativeTitle);
+            $entity->addAdministrativeTitle(new AdministrativeTitle($user));
         }
 
         if( count($entity->getAppointmentTitles()) == 0 ) {
-            $appointmentTitle = new AppointmentTitle($user);
-            $entity->addAppointmentTitle($appointmentTitle);
+            $entity->addAppointmentTitle(new AppointmentTitle($user));
             //echo "app added, type=".$appointmentTitle->getType()."<br>";
         }
 
         if( count($entity->getMedicalTitles()) == 0 ) {
-            $medicalTitle = new MedicalTitle($user);
-            $entity->addMedicalTitle($medicalTitle);
+            $entity->addMedicalTitle(new MedicalTitle($user));
         }
 
         if( count($entity->getCredentials()->getStateLicense()) == 0 ) {
@@ -1485,8 +1482,11 @@ class UserController extends Controller
         }
 
         if( count($entity->getEmploymentStatus()) == 0 ) {
-            $employmentStatus = new EmploymentStatus($user);
-            $entity->addEmploymentStatus($employmentStatus);
+            $entity->addEmploymentStatus(new EmploymentStatus($user));
+        }
+        //check if has attachemntDocument and at least one DocumentContainers
+        foreach( $entity->getEmploymentStatus() as $employmentStatus ) {
+            $employmentStatus->createAttachmentDocument();
         }
 
         //create new comments
@@ -1518,10 +1518,15 @@ class UserController extends Controller
         if( count($entity->getGrants()) == 0 ) {
             $entity->addGrant(new Grant($user));
         }
+        //check if has attachemntDocument and at least one DocumentContainers
+        foreach( $entity->getGrants() as $grant ) {
+            $grant->createAttachmentDocument();
+        }
 
         if( count($entity->getTrainings()) == 0 ) {
             $entity->addTraining(new Training($user));
         }
+
 
         //Identifier EIN
 //        if( count($entity->getCredentials()->getIdentifiers()) == 0 ) {
@@ -1691,12 +1696,20 @@ class UserController extends Controller
         $form->handleRequest($request);
 
 
-//        if( $form->isValid() ) {
-//            echo "form is valid <br>";
-//        } else {
-//            echo "form has error <br>";
-//        }
+        if( $form->isValid() ) {
+            echo "form is valid <br>";
+        } else {
+            echo "form has error <br>";
+        }
 
+        echo "<br>loc string errors:<br>";
+        print_r($form->getErrorsAsString());
+        echo "<br>";
+
+        //$grantFirst = $entity->getGrants()->first();
+        //echo "startDate=".$grantFirst->getStartDate()."<br>";
+        //echo "endDate=".$grantFirst->getEndDate()."<br>";
+        //exit('1');
 
 
         if( $form->isValid() ) {
@@ -1855,7 +1868,7 @@ class UserController extends Controller
 
             //echo "user=".$entity."<br>";
 
-            echo "employmentStatus=".$entity->getEmploymentStatus()->first()."<br>";
+            //echo "employmentStatus=".$entity->getEmploymentStatus()->first()."<br>";
 
             //exit('user exit');
 

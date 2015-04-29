@@ -79,6 +79,8 @@
 
     {% for document in container.documents %}
 
+        {#document:{{ document.vars.value.id }}#}
+
         <div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">
             <div class="dz-details">
                 <div class="dz-filename"><span data-dz-name>{{ document.vars.value.uniquename }}</span></div>

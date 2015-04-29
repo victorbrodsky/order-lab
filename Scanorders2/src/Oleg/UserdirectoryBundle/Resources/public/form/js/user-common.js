@@ -102,7 +102,8 @@ function initDatetimepicker() {
     if( datetimepicker.length > 0 ) {
         //printF(datetimepicker,"init:");
         datetimepicker.datetimepicker({
-            format: 'mm-dd-yyyy hh:i'
+            //format: 'mm-dd-yyyy hh:i'
+            format: 'MM/dd/yyyy hh:i'
         });
     }
 }
@@ -232,10 +233,8 @@ function initDatepicker( holder ) {
         //console.log("init Datepicker");
 
         if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
-
             var target1 = holder.find('.input-group.date.regular-datepicker').not('.allow-future-date');
             var target2 = holder.find('.input-group.date.allow-future-date');
-
         } else {
             var target1 = $('.input-group.date.regular-datepicker').not('.allow-future-date');
             var target2 = $('.input-group.date.allow-future-date');
@@ -299,7 +298,7 @@ function initSingleDatepicker( datepickerElement ) {
             clearBtn: true,
             todayBtn: "linked",
             todayHighlight: true,
-            endDate: endDate,
+            endDate: endDate
             //minDate: new Date(1902, 1, 1)   //null
         });
 

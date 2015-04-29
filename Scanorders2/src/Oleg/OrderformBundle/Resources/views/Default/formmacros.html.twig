@@ -1343,7 +1343,7 @@
     {% endif %}
 
     {#comments#}
-    {% if container.title is defined %}
+    {% if container.comments is defined %}
         {% if container.comments|length > 0 %}
             {% endif %}
             {% for comment in container.comments %}
@@ -1357,11 +1357,11 @@
         {{ formmacros.field(container.device) }}
     {% endif %}
 
-    {% if container.device is defined %}
+    {% if container.datetime is defined %}
         {{ formmacros.fieldDateLabel(container.datetime,'regular-datepicker') }}
     {% endif %}
 
-    {% if container.device is defined %}
+    {% if container.provider is defined %}
         {{ formmacros.field(container.provider) }}
     {% endif %}
 
