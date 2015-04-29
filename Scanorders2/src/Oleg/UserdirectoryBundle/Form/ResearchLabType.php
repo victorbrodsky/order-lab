@@ -47,7 +47,7 @@ class ResearchLabType extends AbstractType
             'label'=>"Founded on:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control researchlab-foundedDate-field')
         ));
 
@@ -56,7 +56,7 @@ class ResearchLabType extends AbstractType
             'label'=>"Dissolved on:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control user-expired-end-date researchlab-dissolvedDate-field')
         ));
 

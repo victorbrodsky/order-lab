@@ -51,7 +51,7 @@ class TrainingType extends AbstractType
             'label' => 'Start Date:',
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
@@ -75,7 +75,7 @@ class TrainingType extends AbstractType
                         'label' => 'Graduation Date:',
                         'widget' => 'single_text',
                         'required' => false,
-                        'format' => 'MM-dd-yyyy',
+                        'format' => 'MM/dd/yyyy',
                         'attr' => array('class' => 'datepicker form-control'),
                     ));
 
@@ -85,7 +85,7 @@ class TrainingType extends AbstractType
                         'label' => 'Completion Date:',
                         'widget' => 'single_text',
                         'required' => false,
-                        'format' => 'MM-dd-yyyy',
+                        'format' => 'MM/dd/yyyy',
                         'attr' => array('class' => 'datepicker form-control'),
                     ));
 
@@ -104,7 +104,7 @@ class TrainingType extends AbstractType
                 'label' => 'Completion Date:',
                 'widget' => 'single_text',
                 'required' => false,
-                'format' => 'MM-dd-yyyy',
+                'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control'),
             ));
 

@@ -23,7 +23,7 @@ class CodeNYPHType extends AbstractType
             'label' => "NYPH Code Start Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 
@@ -31,7 +31,7 @@ class CodeNYPHType extends AbstractType
             'label' => "NYPH Code End Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 

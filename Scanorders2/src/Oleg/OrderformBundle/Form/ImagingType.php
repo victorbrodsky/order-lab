@@ -115,7 +115,7 @@ class ImagingType extends AbstractType
 
             $builder->add('creationdate','date',array(
                 'widget' => 'single_text',
-                'format' => 'MM-dd-yyyy, H:mm:ss',
+                'format' => 'MM/dd/yyyy, H:mm:ss',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
                 'label'=>'Image Acquisition Date & Time:',

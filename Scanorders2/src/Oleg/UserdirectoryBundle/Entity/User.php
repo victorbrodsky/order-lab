@@ -131,6 +131,12 @@ class User extends BaseUser {
     private $grants;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Publication", mappedBy="users", cascade={"persist","remove"})
+     * @ORM\OrderBy({"updatedate" = "DESC", "publicationDate" = "DESC"})
+     */
+    private $publications;
+
+    /**
      * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
@@ -176,6 +182,7 @@ class User extends BaseUser {
         $this->researchLabs = new ArrayCollection();
         $this->grants = new ArrayCollection();
         $this->trainings = new ArrayCollection();
+        $this->publications = new ArrayCollection();
 
         $this->privateComments = new ArrayCollection();
         $this->publicComments = new ArrayCollection();
@@ -644,7 +651,6 @@ class User extends BaseUser {
             $this->grants->add($item);
             $item->addUser($this);
         }
-
         return $this;
     }
     public function removeGrant($item)
@@ -657,6 +663,24 @@ class User extends BaseUser {
         return $this->grants;
     }
 
+
+    public function addPublication($item)
+    {
+        if( $item && !$this->publications->contains($item) ) {
+            $this->publications->add($item);
+            //$item->addUser($this);
+        }
+        return $this;
+    }
+    public function removePublication($item)
+    {
+        $this->publications->removeElement($item);
+        $item->removeUser($this);
+    }
+    public function getPublications()
+    {
+        return $this->publications;
+    }
 
 
 

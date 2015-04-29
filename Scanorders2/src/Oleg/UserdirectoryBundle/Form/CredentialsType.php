@@ -34,7 +34,7 @@ class CredentialsType extends AbstractType
             'label' => 'Date of Birth:',
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
@@ -52,7 +52,7 @@ class CredentialsType extends AbstractType
             'label' => 'CLIA Expiration Date:',
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
@@ -70,7 +70,7 @@ class CredentialsType extends AbstractType
             'label' => 'COQ Expiration Date:',
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
 

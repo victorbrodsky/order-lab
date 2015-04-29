@@ -29,7 +29,7 @@ class ReportType extends AbstractType
             'label' => "Issued Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control patientdob-mask'),
         ));
 
@@ -37,7 +37,7 @@ class ReportType extends AbstractType
             'label' => "Received Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control patientdob-mask'),
         ));
 
@@ -45,7 +45,7 @@ class ReportType extends AbstractType
             'label' => "Signature Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control patientdob-mask'),
         ));
 

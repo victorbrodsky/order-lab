@@ -29,7 +29,7 @@ class BlockOrderType extends AbstractType
             'label' => "Processed Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control patientdob-mask'),
         ));
 
@@ -42,7 +42,7 @@ class BlockOrderType extends AbstractType
             'label' => "Embedded Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control patientdob-mask'),
         ));
 

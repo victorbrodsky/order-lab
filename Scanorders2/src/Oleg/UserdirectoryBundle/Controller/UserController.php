@@ -1696,20 +1696,14 @@ class UserController extends Controller
         $form->handleRequest($request);
 
 
-        if( $form->isValid() ) {
-            echo "form is valid <br>";
-        } else {
-            echo "form has error <br>";
-        }
-
-        echo "<br>loc string errors:<br>";
-        print_r($form->getErrorsAsString());
-        echo "<br>";
-
-        //$grantFirst = $entity->getGrants()->first();
-        //echo "startDate=".$grantFirst->getStartDate()."<br>";
-        //echo "endDate=".$grantFirst->getEndDate()."<br>";
-        //exit('1');
+//        if( $form->isValid() ) {
+//            echo "form is valid <br>";
+//        } else {
+//            echo "form has error <br>";
+//        }
+//        echo "<br>loc string errors:<br>";
+//        print_r($form->getErrorsAsString());
+//        echo "<br>";
 
 
         if( $form->isValid() ) {

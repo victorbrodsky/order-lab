@@ -41,7 +41,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     }
 
-    console.log('cycle='+cycle);
+    //console.log('cycle='+cycle);
 
     var showFlag = true;
     if( cycle.indexOf("show") === -1 ) {
@@ -75,8 +75,8 @@ function initFileUpload( holder, data, addRemoveLinks ) {
         }
     }
 
-    console.log('clickable='+clickable);
-    console.log('addRemoveLinks='+addRemoveLinks);
+    //console.log('clickable='+clickable);
+    //console.log('addRemoveLinks='+addRemoveLinks);
 
     //overwrite maxfiles
     var documentspercontainer = $(targetid).find('#documentcontainer-documentspercontainer').val();

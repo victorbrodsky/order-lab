@@ -40,7 +40,7 @@ class BaseTitleType extends AbstractType
             'label' => $this->params['label']." Title Start Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 
@@ -48,7 +48,7 @@ class BaseTitleType extends AbstractType
             'label' => $this->params['label']." Title End Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control allow-future-date user-expired-end-date'),
         ));
 
@@ -173,7 +173,7 @@ class BaseTitleType extends AbstractType
                 'label' => "During academic year that started on:",
                 'widget' => 'single_text',
                 'required' => false,
-                'format' => 'MM-dd-yyyy',
+                'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control patientdob-mask pgystart-field', 'style'=>'margin-top: 0;'),
             ));
 

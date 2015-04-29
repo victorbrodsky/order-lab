@@ -98,7 +98,7 @@ class ListType extends AbstractType
             'widget' => 'single_text',
             'required'=>true,
             'read_only'=>true,
-            'format' => 'MM-dd-yyyy, H:mm:ss',
+            'format' => 'MM/dd/yyyy, H:mm:ss',
             'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
             'attr' => array('class' => 'form-control'),
         ));
@@ -120,7 +120,7 @@ class ListType extends AbstractType
                     'widget' => 'single_text',
                     'required'=>false,
                     'read_only'=>true,
-                    'format' => 'MM-dd-yyyy, H:mm:ss',
+                    'format' => 'MM/dd/yyyy, H:mm:ss',
                     'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
                     'attr' => array('class' => 'form-control'),
                 ));

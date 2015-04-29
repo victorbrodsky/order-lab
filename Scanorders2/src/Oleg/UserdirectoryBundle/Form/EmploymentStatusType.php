@@ -36,7 +36,7 @@ class EmploymentStatusType extends AbstractType
             'label'=>"Date of Hire:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control')
         ));
 
@@ -52,7 +52,7 @@ class EmploymentStatusType extends AbstractType
             'label'=>"End of Employment Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control user-expired-end-date')
         ));
 
@@ -90,12 +90,14 @@ class EmploymentStatusType extends AbstractType
 
         $builder->add( 'jobDescriptionSummary', 'textarea', array(
             'label'=>'Job Description Summary:',
+            'read_only' => $readonly,
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add( 'jobDescription', 'textarea', array(
             'label'=>'Job Description (official, as posted):',
+            'read_only' => $readonly,
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')
         ));

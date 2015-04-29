@@ -293,17 +293,22 @@
 
         {% if formfield.attachmentContainer is defined %}
 
+            {% set dropzoneInit = 'default' %}
+            {% if formfield.vars.value and formfield.vars.value.id == app.security.getToken().getUser().getId() %}
+                {% set dropzoneInit = 'inactive' %}
+            {% endif %}
+
             {% set count = 0 %}
             {% for documentContainer in formfield.attachmentContainer.documentContainers %}
                 {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
                 {% set count = count + 1 %}
                 {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20,'default') }}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'grant'~uniqueId,"",20,dropzoneInit) }}
             {% endfor %}
 
             {% if prototype == "prototype" %}
                 {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
-                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20,'default') }}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'grant'~uniqueId,"",20,dropzoneInit) }}
             {% endif %}
 
         {% endif %}

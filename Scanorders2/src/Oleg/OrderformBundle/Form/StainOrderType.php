@@ -29,7 +29,7 @@ class StainOrderType extends AbstractType
             'label' => "Slide Stained On:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control patientdob-mask'),
         ));
 

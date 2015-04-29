@@ -103,7 +103,7 @@ function initDatetimepicker() {
         //printF(datetimepicker,"init:");
         datetimepicker.datetimepicker({
             //format: 'mm-dd-yyyy hh:i'
-            format: 'MM/dd/yyyy hh:i'
+            format: 'mm/dd/yyyy hh:i'
         });
     }
 }

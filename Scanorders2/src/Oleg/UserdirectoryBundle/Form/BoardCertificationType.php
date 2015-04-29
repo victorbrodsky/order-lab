@@ -35,7 +35,7 @@ class BoardCertificationType extends AbstractType
             'label' => 'Date Issued:',
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
@@ -43,7 +43,7 @@ class BoardCertificationType extends AbstractType
             'label' => 'Recertification Date:',
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM-dd-yyyy',
+            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
 

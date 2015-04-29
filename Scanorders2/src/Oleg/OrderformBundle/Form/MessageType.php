@@ -83,8 +83,8 @@ class MessageType extends AbstractType
         if( array_key_exists('message.orderdate', $this->params) &&  $this->params['message.orderdate'] == true ) {
             $builder->add('orderdate','date',array(
                 'widget' => 'single_text',
-                //'format' => 'MM-dd-yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
-                'format' => 'MM-dd-yyyy, H:mm:ss',
+                //'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
+                'format' => 'MM/dd/yyyy, H:mm:ss',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
                 'label'=>'Date:',
@@ -141,7 +141,7 @@ class MessageType extends AbstractType
 
         $builder->add('deadline','date',array(
             'widget' => 'single_text',
-            'format' => 'MM-dd-yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
+            'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'data' => $deadline,

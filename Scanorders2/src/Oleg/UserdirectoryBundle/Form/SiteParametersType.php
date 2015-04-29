@@ -238,7 +238,7 @@ class SiteParametersType extends AbstractType
             $builder->add('maintenanceenddate',null,array(
                 'label'=>'Maintenance Until:',
                 'widget' => 'single_text',
-                'format' => 'MM-dd-yyyy H:m',
+                'format' => 'MM/dd/yyyy H:m',
                 'attr' => array('class'=>'form-control datetimepicker')
             ));
 
