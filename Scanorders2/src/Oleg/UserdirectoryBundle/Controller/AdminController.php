@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -163,6 +164,7 @@ class AdminController extends Controller
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
+        $count_generateAuthorshipRoles = $this->generateAuthorshipRoles();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -204,7 +206,8 @@ class AdminController extends Controller
             'Fellowship Titles='.$count_FellowshipTitles.', '.
             'Document Types='.$count_documenttypes.', '.
             'Source Organizations='.$count_sourceOrganizations.', '.
-            'Importances='.$count_generateImportances.' '.
+            'Importances='.$count_generateImportances.', '.
+            'AuthorshipRoles='.$count_generateAuthorshipRoles.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -2471,6 +2474,38 @@ class AdminController extends Controller
         foreach( $types as $name ) {
 
             $listEntity = new ImportanceList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateAuthorshipRoles() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:AuthorshipRoles')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Editor",
+            "Chapter Author"
+        );
+
+        $count = 1;
+        foreach( $types as $name ) {
+
+            $listEntity = new AuthorshipRoles();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);

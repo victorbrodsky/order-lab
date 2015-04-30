@@ -1233,6 +1233,7 @@
         {% set researchLabsPrototype = null %}
         {% set grantsPrototype = null %}
         {% set publicationsPrototype = null %}
+        {% set booksPrototype = null %}
         {#{% set documentsHtml = null %}#}
         {% set statelicensePrototype = null %}
         {% set boardcertificationPrototype = null %}
@@ -1261,6 +1262,9 @@
         {% endif %}
         {% if form.publications is defined %}
             {% set publicationsPrototype = usermacros.publicationObject(form.publications,cycle,'user-publications','prototype',sitename,entity) %}
+        {% endif %}
+        {% if form.books is defined %}
+            {% set booksPrototype = usermacros.bookObject(form.books,cycle,'user-books','prototype',sitename,entity) %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
             {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cycle,'user-statelicense','prototype') %}
@@ -1299,6 +1303,7 @@
              data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
              data-prototype-user-grants = "{{ grantsPrototype|e }}"
              data-prototype-user-publications = "{{ publicationsPrototype|e }}"
+             data-prototype-user-books = "{{ booksPrototype|e }}"
              {#data-prototype-documentcontainers = "{{ documentsHtml|e }}"#}
 
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -1739,6 +1744,44 @@
             </div>
         {% else %}
             {% do form.publications.setRendered %}
+        {% endif %}
+
+
+
+        {#Books#}
+        {% set showBooks = false %}
+        {% for book in form.books %}
+            {% if book.vars.value or book.isbn.vars.value or book.publicationDate.vars.value %}
+                {% set showBooks = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showBooks and form.books is defined %}
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-left">
+                        <a data-toggle="collapse" href="#Books">
+                            Book(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="Books" class="panel-collapse collapse {{ collapsein }}">
+                    <div class="panel-body">
+
+                        <div class="user-books-holder">
+                            {% for book in form.books %}
+                                {{ usermacros.bookObject(book,cycle,'user-books','noprototype',sitename,entity) }}
+                            {% endfor %}
+                            {% do form.books.setRendered %}
+                            {{ usermacros.addNewObjectBtn( cycle, 'user-books', 'Add Book' ) }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% do form.books.setRendered %}
         {% endif %}
 
 

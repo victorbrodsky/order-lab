@@ -272,10 +272,12 @@ function processAllDatepickers( target ) {
 function initSingleDatepicker( datepickerElement ) {
 
     //printF(datepickerElement,'datepicker element:');
-    //console.log(datepickerElement);
+    console.log(datepickerElement);
 
     //disable datepickers with readonly attributes
     var inputField = datepickerElement.find('input.datepicker');
+    printF(inputField,'inputField:');
+
     if( inputField.is('[readonly]') || inputField.is('[disabled]') ) {
 
             //console.log('datepicker readonly');
@@ -298,7 +300,10 @@ function initSingleDatepicker( datepickerElement ) {
             clearBtn: true,
             todayBtn: "linked",
             todayHighlight: true,
-            endDate: endDate
+            endDate: endDate,
+            format: "mm/yyyy",
+            startView: "months",
+            //minViewMode: "months"
             //minDate: new Date(1902, 1, 1)   //null
         });
 

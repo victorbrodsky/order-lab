@@ -947,6 +947,66 @@
 {% endmacro %}
 
 
+{% macro bookObject( field, cycle, classname, prototype, sitename, entity ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as usermacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% set wellclass = "" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" >
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.id) }}
+
+        {{ formmacros.field(formfield.citation) }}
+        {{ formmacros.field(formfield.isbn) }}
+
+        {% if not showFlag %}
+            {{ formmacros.field_notempty(formfield.link,cycle) }}
+        {% else %}
+            {% if formfield.vars.value and formfield.vars.value.link %}
+                {{ usermacros.htmlLink(formfield.vars.value.link,"Relevant Link:") }}
+            {% endif %}
+            {% do formfield.link.setRendered %}
+        {% endif %}
+
+        {{ formmacros.field(formfield.authorshipRole) }}
+        {{ formmacros.field(formfield.comment) }}
+
+        {{ formmacros.fieldDateLabel(formfield.publicationDate,'regular-datepicker') }}
+        {#{{ form_widget(formfield.publicationDate.month) }}#}
+        {#{{ form_widget(formfield.publicationDate.year) }}#}
+
+        {% if formfield.updatedate is defined %}
+            {{ formmacros.fieldDateLabel(formfield.updatedate,'regular-datepicker') }}
+        {% endif %}
+
+    </div>
+
+    {% do formfield.setRendered %}
+
+{% endmacro %}
+
+
 {% macro htmlLink(linkvalue,label) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% if "http" in linkvalue %}

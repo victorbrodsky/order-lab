@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Entity\Book;
 use Oleg\UserdirectoryBundle\Entity\Publication;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -1532,6 +1533,10 @@ class UserController extends Controller
             $entity->addPublication(new Publication($user));
         }
 
+        if( count($entity->getBooks()) == 0 ) {
+            $entity->addBook(new Book($user));
+        }
+
         //Identifier EIN
 //        if( count($entity->getCredentials()->getIdentifiers()) == 0 ) {
 //            $entity->getCredentials()->addIdentifier( new Identifier() );
@@ -1618,6 +1623,11 @@ class UserController extends Controller
         $originalPublications = new ArrayCollection();
         foreach( $entity->getPublications() as $publication) {
             $originalPublications->add($publication);
+        }
+
+        $originalBooks = new ArrayCollection();
+        foreach( $entity->getBooks() as $book) {
+            $originalBooks->add($book);
         }
 
         //Credentials collections
@@ -1805,6 +1815,11 @@ class UserController extends Controller
             }
 
             $removedInfo = $this->removeCollection($originalPublications,$entity->getPublications());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalBooks,$entity->getBooks());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }

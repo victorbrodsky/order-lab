@@ -140,6 +140,13 @@ class User extends BaseUser {
     private $publications;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Book", inversedBy="users", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="user_users_books")
+     * @ORM\OrderBy({"updatedate" = "DESC", "publicationDate" = "DESC"})
+     */
+    private $books;
+
+    /**
      * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
@@ -186,6 +193,7 @@ class User extends BaseUser {
         $this->grants = new ArrayCollection();
         $this->trainings = new ArrayCollection();
         $this->publications = new ArrayCollection();
+        $this->books = new ArrayCollection();
 
         $this->privateComments = new ArrayCollection();
         $this->publicComments = new ArrayCollection();
@@ -683,6 +691,22 @@ class User extends BaseUser {
     public function getPublications()
     {
         return $this->publications;
+    }
+
+    public function addBook($item)
+    {
+        if( $item && !$this->books->contains($item) ) {
+            $this->books->add($item);
+        }
+        return $this;
+    }
+    public function removeBook($item)
+    {
+        $this->books->removeElement($item);
+    }
+    public function getBooks()
+    {
+        return $this->books;
     }
 
 

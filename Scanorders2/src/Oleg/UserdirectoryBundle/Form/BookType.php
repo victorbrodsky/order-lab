@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormEvent;
 
 use Oleg\UserdirectoryBundle\Entity\Training;
 
-class PublicationType extends AbstractType
+class BookType extends AbstractType
 {
 
     protected $params;
@@ -38,9 +38,16 @@ class PublicationType extends AbstractType
             'label' => 'Publication Month and Year:',
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM/dd/yyyy',
+            //'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control datepicker-only-month-year'),
         ));
+//        $builder->add('publicationDate','date', array(
+//            'years' => range(date('Y'), date('Y')-5),
+//            'label' => 'Month & year',
+//            'input' => 'array',
+//            'widget' => 'choice',
+//        ));
+
 
         if( $this->params['cycle'] == "show" ) {
             $builder->add('updatedate', 'date', array(
@@ -59,19 +66,25 @@ class PublicationType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('pubmedid', null, array(
-            'label' => 'PubMed ID:',
+        $builder->add('comment','textarea',array(
+            'required' => false,
+            'label'=>'Comment:',
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('isbn', null, array(
+            'label' => 'ISBN:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('link', null, array(
-            'label' => 'PubMed or Relevant Link:',
+            'label' => 'Relevant Link:',
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add( 'importance', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:ImportanceList',
-            'label'=> "Importance:",
+        $builder->add( 'authorshipRole', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:AuthorshipRoles',
+            'label'=> "Authorship Role:",
             'required'=> false,
             'multiple' => false,
             'property' => 'name',
@@ -97,12 +110,12 @@ class PublicationType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Publication',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Book',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_userdirectorybundle_publication';
+        return 'oleg_userdirectorybundle_book';
     }
 }
