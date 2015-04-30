@@ -899,6 +899,50 @@
 
 {% endmacro %}
 
+{% macro publicationObject( field, cycle, classname, prototype, sitename, entity ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as usermacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" >
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.id) }}
+
+        {{ formmacros.field(formfield.citation) }}
+        {{ formmacros.field(formfield.pubmedid) }}
+        {{ formmacros.field(formfield.link) }}
+        {{ formmacros.field(formfield.importance) }}
+        {{ formmacros.fieldDateLabel(formfield.publicationDate,'regular-datepicker') }}
+
+        {% if formfield.updatedate is defined %}
+            {{ formmacros.fieldDateLabel(formfield.updatedate,'regular-datepicker') }}
+        {% endif %}
+
+    </div>
+
+    {% do formfield.setRendered %}
+
+{% endmacro %}
+
 
 {########################### Team #############################}
 {% macro userTeam( user, type, sitename, postData, collapsein ) %}

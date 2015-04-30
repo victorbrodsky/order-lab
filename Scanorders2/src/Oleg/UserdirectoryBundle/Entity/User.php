@@ -131,7 +131,8 @@ class User extends BaseUser {
     private $grants;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Publication", mappedBy="users", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="Publication", inversedBy="users", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="user_users_publications")
      * @ORM\OrderBy({"updatedate" = "DESC", "publicationDate" = "DESC"})
      */
     private $publications;
@@ -675,7 +676,7 @@ class User extends BaseUser {
     public function removePublication($item)
     {
         $this->publications->removeElement($item);
-        $item->removeUser($this);
+        //$item->removeUser($this);
     }
     public function getPublications()
     {

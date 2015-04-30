@@ -14,8 +14,7 @@ class Publication extends BaseUserAttributes
 {
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="publications")
-     * @ORM\JoinTable(name="user_publications_users")
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="publications")
      **/
     private $users;
 
@@ -36,7 +35,8 @@ class Publication extends BaseUserAttributes
     private $link;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="ImportanceList")
+     * @ORM\JoinColumn(name="importance_id", referencedColumnName="id", nullable=true)
      */
     private $importance;
 
@@ -60,14 +60,12 @@ class Publication extends BaseUserAttributes
     {
         if( $item && !$this->users->contains($item) ) {
             $this->users->add($item);
-            //$item->addUser($this);
         }
         return $this;
     }
     public function removeUser($item)
     {
         $this->users->removeElement($item);
-        $item->removeUser($this);
     }
     public function getUsers()
     {

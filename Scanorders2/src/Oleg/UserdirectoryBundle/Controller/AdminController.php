@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -161,6 +162,7 @@ class AdminController extends Controller
         $count_residencySpecialties = $this->generateResidencySpecialties();
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
+        $count_generateImportances = $this->generateImportances();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -201,7 +203,8 @@ class AdminController extends Controller
             'Honor Trainings='.$count_HonorTrainings.', '.
             'Fellowship Titles='.$count_FellowshipTitles.', '.
             'Document Types='.$count_documenttypes.', '.
-            'Source Organizations='.$count_sourceOrganizations.' '.
+            'Source Organizations='.$count_sourceOrganizations.', '.
+            'Importances='.$count_generateImportances.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -2433,6 +2436,42 @@ class AdminController extends Controller
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $listEntity->setAbbreviation($abbreviation);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateImportances() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:ImportanceList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "#1 - First most important",
+            "#2 - Second most important",
+            "#3 - Third most important",
+            "#4 - Fourth most important",
+            "#5 - Fifth most important",
+            "Other"
+        );
+
+        $count = 1;
+        foreach( $types as $name ) {
+
+            $listEntity = new ImportanceList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);
             $em->flush();

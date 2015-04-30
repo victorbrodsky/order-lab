@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Entity\Publication;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -1527,6 +1528,9 @@ class UserController extends Controller
             $entity->addTraining(new Training($user));
         }
 
+        if( count($entity->getPublications()) == 0 ) {
+            $entity->addPublication(new Publication($user));
+        }
 
         //Identifier EIN
 //        if( count($entity->getCredentials()->getIdentifiers()) == 0 ) {

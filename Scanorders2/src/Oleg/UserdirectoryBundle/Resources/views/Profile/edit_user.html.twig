@@ -1232,6 +1232,7 @@
         {% set employmentStatusPrototype = null %}
         {% set researchLabsPrototype = null %}
         {% set grantsPrototype = null %}
+        {% set publicationsPrototype = null %}
         {#{% set documentsHtml = null %}#}
         {% set statelicensePrototype = null %}
         {% set boardcertificationPrototype = null %}
@@ -1257,6 +1258,9 @@
         {% if form.grants is defined %}
             {#{% set documentsHtml = formmacros.inputField(form.grants.vars.prototype.attachmentContainer.documentContainers,cycle,"documentContainer","prototype") %}#}
             {% set grantsPrototype = usermacros.grantObject(form.grants,cycle,'user-grants','prototype',sitename,entity) %}
+        {% endif %}
+        {% if form.publications is defined %}
+            {% set publicationsPrototype = usermacros.publicationObject(form.publications,cycle,'user-publications','prototype',sitename,entity) %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
             {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cycle,'user-statelicense','prototype') %}
@@ -1294,6 +1298,7 @@
              data-prototype-user-admincomments = "{{ adminCommentsPrototype|e }}"
              data-prototype-user-researchlabs = "{{ researchLabsPrototype|e }}"
              data-prototype-user-grants = "{{ grantsPrototype|e }}"
+             data-prototype-user-publications = "{{ publicationsPrototype|e }}"
              {#data-prototype-documentcontainers = "{{ documentsHtml|e }}"#}
 
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -1690,6 +1695,42 @@
         {% else %}
             {% do form.grants.setRendered %}
         {% endif %}
+
+
+        {#Publications#}
+        {% set showPublications = false %}
+        {% for publication in form.publications %}
+            {% if publication.vars.value or publication.pubmedid.vars.value or publication.publicationDate.vars.value %}
+                {% set showPublications = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showPublications and form.publications is defined %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-left">
+                        <a data-toggle="collapse" href="#Publications">
+                            Publication(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="Publications" class="panel-collapse collapse {{ collapsein }}">
+                    <div class="panel-body">
+
+                        <div class="user-publications-holder">
+                            {% for publication in form.publications %}
+                                {{ usermacros.publicationObject(publication,cycle,'user-publications','noprototype',sitename,entity) }}
+                            {% endfor %}
+                            {{ usermacros.addNewObjectBtn( cycle, 'user-publications', 'Add Publication' ) }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% do form.publications.setRendered %}
+        {% endif %}
+
 
         {#Credentials#}
         {% if form.credentials is defined %}
