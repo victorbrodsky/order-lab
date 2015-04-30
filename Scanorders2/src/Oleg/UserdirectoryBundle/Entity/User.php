@@ -121,12 +121,14 @@ class User extends BaseUser {
     private $employmentStatus;
 
     /**
-     * @ORM\ManyToMany(targetEntity="ResearchLab", mappedBy="user", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="ResearchLab", inversedBy="user", cascade={"persist"})
+     * @ORM\JoinTable(name="user_users_researchlabs")
      **/
     private $researchLabs;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Grant", mappedBy="user", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="Grant", inversedBy="user", cascade={"persist"})
+     * @ORM\JoinTable(name="user_users_grants")
      **/
     private $grants;
 
@@ -630,7 +632,7 @@ class User extends BaseUser {
     {
         if( $researchLab && !$this->researchLabs->contains($researchLab) ) {
             $this->researchLabs->add($researchLab);
-            $researchLab->addUser($this);
+            //$researchLab->addUser($this);
         }
 
         return $this;
@@ -638,7 +640,7 @@ class User extends BaseUser {
     public function removeResearchLab($researchLab)
     {
         $this->researchLabs->removeElement($researchLab);
-        $researchLab->removeUser($this);
+        //$researchLab->removeUser($this);
     }
     public function getResearchLabs()
     {

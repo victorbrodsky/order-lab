@@ -1706,6 +1706,13 @@
         {% endfor %}
 
         {% if showPublications and form.publications is defined %}
+
+            {% set publicationLimit = form.publications|length %}
+            {% if showFlag %}
+                {#On the Profile View page show only 5 most recently updated or added publications#}
+                {% set publicationLimit = 5 %}
+            {% endif %}
+
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title text-left">
@@ -1718,9 +1725,12 @@
                     <div class="panel-body">
 
                         <div class="user-publications-holder">
-                            {% for publication in form.publications %}
+                            {% set publicationCount = 0 %}
+                            {% for publication in form.publications if publicationCount < publicationLimit %}
                                 {{ usermacros.publicationObject(publication,cycle,'user-publications','noprototype',sitename,entity) }}
+                                {% set publicationCount = publicationCount + 1 %}
                             {% endfor %}
+                            {% do form.publications.setRendered %}
                             {{ usermacros.addNewObjectBtn( cycle, 'user-publications', 'Add Publication' ) }}
                         </div>
 

@@ -1615,6 +1615,11 @@ class UserController extends Controller
             $originalTrainings->add($training);
         }
 
+        $originalPublications = new ArrayCollection();
+        foreach( $entity->getPublications() as $publication) {
+            $originalPublications->add($publication);
+        }
+
         //Credentials collections
         $originalIdentifiers = new ArrayCollection();
         foreach( $entity->getCredentials()->getIdentifiers() as $subitem) {
@@ -1795,6 +1800,11 @@ class UserController extends Controller
             }
 
             $removedInfo = $this->removeCollection($originalTrainings,$entity->getTrainings());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalPublications,$entity->getPublications());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }

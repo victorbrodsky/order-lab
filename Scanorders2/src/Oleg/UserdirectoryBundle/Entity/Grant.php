@@ -26,11 +26,7 @@ class Grant extends ListAbstract
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="grants")
-     * @ORM\JoinTable(name="user_grant_user",
-     *      joinColumns={@ORM\JoinColumn(name="grant_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     * )
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="grants")
      **/
     private $user;
 
@@ -139,7 +135,7 @@ class Grant extends ListAbstract
     {
         if( !$this->user->contains($user) ) {
             $this->user->add($user);
-            $user->addGrant($this);
+            //$user->addGrant($this);
         }
 
         return $this;

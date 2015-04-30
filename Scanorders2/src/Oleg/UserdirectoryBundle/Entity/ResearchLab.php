@@ -24,11 +24,7 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
     protected $original;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="researchLabs")
-     * @ORM\JoinTable(name="user_researchlab_user",
-     *      joinColumns={@ORM\JoinColumn(name="researchlab_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     * )
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="researchLabs")
      **/
     private $user;
 
@@ -182,7 +178,7 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
     {
         if( !$this->user->contains($user) ) {
             $this->user->add($user);
-            $user->addResearchLab($this);
+            //$user->addResearchLab($this);
         }
 
         return $this;

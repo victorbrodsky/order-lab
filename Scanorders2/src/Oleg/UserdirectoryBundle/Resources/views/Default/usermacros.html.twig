@@ -839,15 +839,7 @@
             {{ formmacros.field_notempty(formfield.grantLink,cycle) }}
         {% else %}
             {% if formfield.vars.value and formfield.vars.value.grantLink %}
-
-                {% if "http" in formfield.vars.value.grantLink %}
-                    {% set href = formfield.vars.value.grantLink %}
-                {% else %}
-                    {% set href = "http://"~formfield.vars.value.grantLink %}
-                {% endif %}
-                {% set hreflink = '<a href="'~href|raw~'">'~formfield.vars.value.grantLink~'</a>' %}
-                {{ formmacros.simplefield( "Link to a page with more information:", hreflink, "", "disabled" ) }}
-
+                {{ usermacros.htmlLink(formfield.vars.value.grantLink,"Link to a page with more information:") }}
             {% endif %}
             {% do formfield.grantLink.setRendered %}
         {% endif %}
@@ -915,6 +907,8 @@
         {% set showFlag = false %}
     {% endif %}
 
+    {% set wellclass = "" %}
+
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
         {% if cycle != 'show_user' %}
@@ -929,7 +923,16 @@
 
         {{ formmacros.field(formfield.citation) }}
         {{ formmacros.field(formfield.pubmedid) }}
-        {{ formmacros.field(formfield.link) }}
+
+        {% if not showFlag %}
+            {{ formmacros.field_notempty(formfield.link,cycle) }}
+        {% else %}
+            {% if formfield.vars.value and formfield.vars.value.link %}
+                {{ usermacros.htmlLink(formfield.vars.value.link,"PubMed or Relevant Link:") }}
+            {% endif %}
+            {% do formfield.link.setRendered %}
+        {% endif %}
+
         {{ formmacros.field(formfield.importance) }}
         {{ formmacros.fieldDateLabel(formfield.publicationDate,'regular-datepicker') }}
 
@@ -943,6 +946,17 @@
 
 {% endmacro %}
 
+
+{% macro htmlLink(linkvalue,label) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% if "http" in linkvalue %}
+        {% set href = linkvalue %}
+    {% else %}
+        {% set href = "http://"~linkvalue %}
+    {% endif %}
+    {% set hreflink = '<a href="'~href|raw~'">'~linkvalue~'</a>' %}
+    {{ formmacros.simplefield( label, hreflink, "", "disabled" ) }}
+{% endmacro %}
 
 {########################### Team #############################}
 {% macro userTeam( user, type, sitename, postData, collapsein ) %}
