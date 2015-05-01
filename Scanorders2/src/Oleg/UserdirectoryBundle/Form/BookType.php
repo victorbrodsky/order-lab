@@ -41,11 +41,13 @@ class BookType extends AbstractType
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker-exception form-control'), //datepicker
         ));
-//        $builder->add('publicationDate','date', array(
-//            'years' => range(date('Y'), date('Y')-5),
-//            'label' => 'Month & year',
-//            'input' => 'array',
-//            'widget' => 'choice',
+        //TODO: need transformer mm/yyyy to DateTime format
+//        $builder->add('publicationDate','text', array(
+//            'label' => 'Publication Month and Year:',
+//            'required' => false,
+//            //'widget' => 'single_text',
+//            //'format' => 'MM/dd/yyyy',
+//            'attr' => array('class' => 'datepicker-exception form-control')
 //        ));
 
 

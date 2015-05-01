@@ -1779,6 +1779,12 @@ class UserController extends Controller
             //process employmentstatus attachments
             $this->processEmploymentStatus($entity);
 
+            //process publications
+            //$this->processPublications($entity);
+
+            //process books
+            //$this->processBooks($entity);
+
             //set update info for user
             $this->updateInfo($entity);
 
@@ -2116,6 +2122,23 @@ class UserController extends Controller
         }
 
     }
+
+//    //convert mm/yyyy to DateTime format
+//    public function processPublications($subjectUser) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        foreach( $subjectUser->getPublications() as $item ) {
+//
+//            $mmyyyy = $item->getPublicationDate();
+//            echo "mmyyyy=".$mmyyyy."<br>";
+//            exit('1');
+//        }
+//
+//    }
+//    public function processBooks($subjectUser) {
+//
+//    }
 
     //explicitly set a new avatar
     public function processSetAvatar($subjectUser) {
