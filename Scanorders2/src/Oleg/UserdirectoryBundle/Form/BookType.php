@@ -38,8 +38,8 @@ class BookType extends AbstractType
             'label' => 'Publication Month and Year:',
             'widget' => 'single_text',
             'required' => false,
-            //'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control datepicker-only-month-year'),
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker-exception form-control'), //datepicker
         ));
 //        $builder->add('publicationDate','date', array(
 //            'years' => range(date('Y'), date('Y')-5),

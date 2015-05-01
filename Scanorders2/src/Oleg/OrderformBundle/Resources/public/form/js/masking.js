@@ -129,6 +129,7 @@ function fieldInputMask( holder ) {
 
     $(".patientage-mask").inputmask( { "mask": getAgeDefaultMask() });
 
+    //masking for datepicker. This will overwrite datepicker format even if format is mm/yyyy
     $(".datepicker").inputmask( "mm/dd/yyyy" );
 
     //$('.phone-mask').inputmask("mask", {"mask": "+9 (999) 999-9999"});

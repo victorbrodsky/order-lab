@@ -8,6 +8,8 @@
 function addNewObject(btn,classname) {
 //    var btnEl = $(btn);
 
+    //console.log("classname="+classname);
+
     var holder = $('.'+classname+'-holder');
 
     var titles = holder.find('.'+classname);
@@ -36,10 +38,13 @@ function addNewObject(btn,classname) {
 function initBaseAdd(newForm) {
     expandTextarea();
     regularCombobox();
-    initDatepicker();
+
     //tooltip
     $(".element-with-tooltip").tooltip();
+
     initTreeSelect();
+
+    initDatepicker(newForm);
 
     fieldInputMask(newForm);
 

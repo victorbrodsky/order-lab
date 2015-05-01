@@ -760,8 +760,8 @@
             {#{% endfor %}#}
         {#{% endif %}#}
 
-        {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date no-datepicker-events') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date no-datepicker-events') }}
 
         {#comment#}
         {% if formfield.piDummy is defined %}
@@ -848,8 +848,8 @@
             {{ formmacros.field(formfield.effortDummy) }}
         {% endif %}
 
-        {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date no-datepicker-events') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date no-datepicker-events') }}
 
         {{ formmacros.field(formfield.currentYearDirectCost) }}
         {{ formmacros.field(formfield.currentYearIndirectCost) }}
@@ -934,10 +934,10 @@
         {% endif %}
 
         {{ formmacros.field(formfield.importance) }}
-        {{ formmacros.fieldDateLabel(formfield.publicationDate,'regular-datepicker') }}
+        {{ formmacros.fieldDateLabel(formfield.publicationDate,'datepicker-only-month-year') }}
 
         {% if formfield.updatedate is defined %}
-            {{ formmacros.fieldDateLabel(formfield.updatedate,'regular-datepicker') }}
+            {{ formmacros.fieldDateLabel(formfield.updatedate,'allow-future-date') }}
         {% endif %}
 
     </div>
@@ -992,12 +992,11 @@
         {{ formmacros.field(formfield.authorshipRole) }}
         {{ formmacros.field(formfield.comment) }}
 
-        {{ formmacros.fieldDateLabel(formfield.publicationDate,'regular-datepicker') }}
-        {#{{ form_widget(formfield.publicationDate.month) }}#}
-        {#{{ form_widget(formfield.publicationDate.year) }}#}
+        {#{{ formmacros.fieldDateLabel(formfield.publicationDate,'regular-datepicker111 datepicker-only-month-year') }}#}
+        {{ formmacros.fieldDateLabel(formfield.publicationDate,'datepicker-only-month-year') }}
 
         {% if formfield.updatedate is defined %}
-            {{ formmacros.fieldDateLabel(formfield.updatedate,'regular-datepicker') }}
+            {{ formmacros.fieldDateLabel(formfield.updatedate,'allow-future-date') }}
         {% endif %}
 
     </div>

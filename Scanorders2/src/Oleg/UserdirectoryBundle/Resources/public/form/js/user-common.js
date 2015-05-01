@@ -231,17 +231,22 @@ function initDatepicker( holder ) {
     if( cycle != "show" ) {
 
         //console.log("init Datepicker");
+        //console.log(holder);
+
 
         if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
             var target1 = holder.find('.input-group.date.regular-datepicker').not('.allow-future-date');
             var target2 = holder.find('.input-group.date.allow-future-date');
+            var target3 = holder.find('.input-group.date.datepicker-only-month-year');
         } else {
             var target1 = $('.input-group.date.regular-datepicker').not('.allow-future-date');
             var target2 = $('.input-group.date.allow-future-date');
+            var target3 = $('.input-group.date.datepicker-only-month-year');
         }
 
         processAllDatepickers( target1 );
         processAllDatepickers( target2 );
+        processAllDatepickers( target3 );
 
 //        //make sure the masking is clear when input is cleared by datepicker
 //        regularDatepickers.datepicker().on("clearDate", function(e){
@@ -254,57 +259,78 @@ function initDatepicker( holder ) {
 
 }
 
-function processAllDatepickers( target ) {
-    target.each( function() {
+function processAllDatepickers( targets ) {
 
-        //make sure the masking is clear when input is cleared by datepicker
-        $(this).datepicker().on("clearDate", function(e){
-            var inputField = $(this).find('input');
-            //printF(inputField,"clearDate input:");
-            clearErrorField( inputField );
-        });
+    targets.each( function() {
 
         initSingleDatepicker( $(this) );
 
+        if( !$(this).hasClass('no-datepicker-events') ) {
+            //make sure the masking is clear when input is cleared by datepicker
+            $(this).datepicker().on("clearDate", function(e){
+                //var inputField = $(this).find('input');
+                //printF(inputField,"clearDate input:");
+                clearErrorField( $(this).find('input') );
+            });
+        }
+
     });
+
 }
+
 
 function initSingleDatepicker( datepickerElement ) {
 
+    //console.log("initSingleDatepicker:");
     //printF(datepickerElement,'datepicker element:');
-    console.log(datepickerElement);
+    //console.log(datepickerElement);
 
     //disable datepickers with readonly attributes
-    var inputField = datepickerElement.find('input.datepicker');
-    printF(inputField,'inputField:');
+    var inputField = datepickerElement.find('input.datepicker, input.datepicker-exception');
+    //var inputField = datepickerElement.find('input.datepicker');
+    //printF(inputField,'inputField:');
 
     if( inputField.is('[readonly]') || inputField.is('[disabled]') ) {
 
-            //console.log('datepicker readonly');
+            //console.log('datepicker input field is readonly');
             //console.log(inputField);
             datepickerElement.datepicker("remove");
             datepickerElement.find('.calendar-icon-button').off();
 
     } else {
 
-        var endDate = new Date(); //use current date as default
+        //console.log('datepicker input field is active');
 
+        var endDate = new Date(); //use current date as default
         if( datepickerElement.hasClass('allow-future-date') ) {
             endDate = false;//'End of time';
         }
         //console.log('endDate='+endDate);
 
+        var datepickertodayBtn = "linked";
+        var datepickerFormat = "mm/dd/yyyy";
+        //var datepickerStartView = "month";
+        var datepickerMinViewMode = "days";
+        if( datepickerElement.hasClass('datepicker-only-month-year') ) {
+            datepickertodayBtn = false;
+            datepickerFormat = "mm/yyyy";
+            //datepickerStartView = "month";
+            datepickerMinViewMode = "months";
+            //console.log('datepickerFormat='+datepickerFormat);
+            //console.log(datepickerElement);
+        }
+
         //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
         datepickerElement.datepicker({
             autoclose: true,
             clearBtn: true,
-            todayBtn: "linked",
+            todayBtn: datepickertodayBtn,
             todayHighlight: true,
             endDate: endDate,
-            format: "mm/yyyy",
-            startView: "months",
-            //minViewMode: "months"
             //minDate: new Date(1902, 1, 1)   //null
+            format: datepickerFormat,
+            //startView: datepickerStartView,
+            minViewMode: datepickerMinViewMode
         });
 
     }

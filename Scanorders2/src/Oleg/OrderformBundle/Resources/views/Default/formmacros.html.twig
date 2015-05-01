@@ -118,8 +118,14 @@
                     {{ form_widget(field) }}
                 {% endif %}
                 <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
-
             </div>
+
+            {#data-date-format="mm/yyyy"#}
+            {#<div class="input-group input-group-reg date datepicker-only-month-year">#}
+                {#{{ form_widget(field) }}#}
+                {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+            {#</div>#}
+
 
         </div>
         {{ form_rest(field) }}

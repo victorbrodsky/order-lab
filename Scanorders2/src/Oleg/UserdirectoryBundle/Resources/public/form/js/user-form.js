@@ -471,11 +471,16 @@ function populateResearchlabData( data, elementName ) {
 
     var idfield = holder.find('.researchlab-id-field');
     var weblink = holder.find('.researchlab-weblink-field');
-    var foundedDate = holder.find('.researchlab-foundedDate-field');
-    var dissolvedDate = holder.find('.researchlab-dissolvedDate-field');
     var location = holder.find('.ajax-combobox-location');
     var commentDummy = holder.find('.researchlab-commentDummy-field');
     var piDummy = holder.find('.researchlab-piDummy-field');
+    var foundedDate = holder.find('.researchlab-foundedDate-field');
+    var dissolvedDate = holder.find('.researchlab-dissolvedDate-field');
+
+    //var foundedDateDatepicker = foundedDate.closest('.input-group.date');
+    //var dissolvedDateDatepicker = dissolvedDate.closest('.input-group.date');
+    //console.log("foundedDateDatepicker:");
+    //console.log(foundedDateDatepicker);
 
     //commentDummy.attr("readonly", false);
     //disableCheckbox(piDummy,false);
@@ -492,6 +497,9 @@ function populateResearchlabData( data, elementName ) {
         weblink.val(null);
         foundedDate.val(null);
         dissolvedDate.val(null);
+        //foundedDateDatepicker.datepicker('setValue', null);
+        //dissolvedDateDatepicker.datepicker('setValue', null);
+
         location.select2('val',null);
         commentDummy.val(null);
         piDummy.prop('checked', false);
@@ -505,6 +513,8 @@ function populateResearchlabData( data, elementName ) {
         disableCheckbox(piDummy,true);
 
         initDatepicker(holder);
+        //initSingleDatepicker(foundedDateDatepicker);
+        //initSingleDatepicker(dissolvedDateDatepicker);
 
         return;
     }
@@ -542,9 +552,9 @@ function populateResearchlabData( data, elementName ) {
         //set data
         idfield.val(data.id);
         weblink.val(data.weblink);
+        location.select2('val',data.lablocation);
         foundedDate.val(data.foundedDate);
         dissolvedDate.val(data.dissolvedDate);
-        location.select2('val',data.lablocation);
 
         //no comment or pi is attached to a new research lab
         //commentDummy.val(data.commentDummy);

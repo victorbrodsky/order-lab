@@ -73,6 +73,7 @@ function fieldInputMask( holder ) {
 
     $(".age-mask").inputmask( { "mask": getAgeDefaultMask() });
 
+    //masking for datepicker. This will overwrite datepicker format even if format is mm/yyyy
     $(".datepicker").inputmask( "mm/dd/yyyy" );
 
     $('.phone-mask').inputmask("mask", {
@@ -129,7 +130,7 @@ function noMaskError( element ) {
 }
 
 function clearErrorField( element ) {
-
+    //console.log("user-masking: clear error fields");
     //check if not all zeros
     if( allZeros(element) ) {
         //console.log("all zeros!");
@@ -139,6 +140,8 @@ function clearErrorField( element ) {
     //console.log("make ok field id="+element.attr("id")+", class="+element.attr("class"));
     element.parent().removeClass(_maskErrorClass);
     $('.maskerror-added').remove();
+
+    return;
 }
 
 function allZeros(element) {

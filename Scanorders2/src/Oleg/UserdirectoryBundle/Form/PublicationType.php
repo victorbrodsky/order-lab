@@ -39,7 +39,7 @@ class PublicationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control datepicker-only-month-year'),
+            'attr' => array('class' => 'datepicker-exception form-control'),
         ));
 
         if( $this->params['cycle'] == "show" ) {
