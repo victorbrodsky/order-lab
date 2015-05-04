@@ -1052,10 +1052,10 @@ class UtilController extends Controller {
                 $className = "Grant";
                 break;
 
-            case "cities":
+            case "city":
                 $className = "CityList";
                 break;
-            case "organizations":
+            case "organization":
                 $className = "OrganizationList";
                 break;
 

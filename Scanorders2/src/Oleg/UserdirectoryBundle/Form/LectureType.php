@@ -80,7 +80,7 @@ class LectureType extends AbstractType
         ));
 
         //state
-        $defaultState = null;
+        //$defaultState = null;
         //$defaultState = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
         $builder->add( 'state', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:States',
@@ -88,7 +88,7 @@ class LectureType extends AbstractType
             'label'=>'Lecture State:',
             'required'=> false,
             'multiple' => false,
-            'data' => $defaultState,
+            //'data' => $defaultState,
             'attr' => array('class'=>'combobox combobox-width geo-field-state'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -102,7 +102,7 @@ class LectureType extends AbstractType
         ));
 
         //country
-        $defaultCountry = null;
+        //$defaultCountry = null;
         //$defaultCountry = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
         $builder->add( 'country', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Countries',
@@ -110,7 +110,7 @@ class LectureType extends AbstractType
             'label'=>'Lecture Country:',
             'required'=> false,
             'multiple' => false,
-            'data' => $defaultCountry,
+            //'data' => $defaultCountry,
             //'preferred_choices' => $defaultCountries,
             'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
