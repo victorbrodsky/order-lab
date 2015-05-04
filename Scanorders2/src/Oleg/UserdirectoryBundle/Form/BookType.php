@@ -34,21 +34,20 @@ class BookType extends AbstractType
         ));
 
 
-        $builder->add('publicationDate', 'date', array(
-            'label' => 'Publication Month and Year:',
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker-exception form-control'), //datepicker
-        ));
-        //TODO: need transformer mm/yyyy to DateTime format
-//        $builder->add('publicationDate','text', array(
+//        $builder->add('publicationDate', 'date', array(
 //            'label' => 'Publication Month and Year:',
+//            'widget' => 'single_text',
 //            'required' => false,
-//            //'widget' => 'single_text',
-//            //'format' => 'MM/dd/yyyy',
-//            'attr' => array('class' => 'datepicker-exception form-control')
+//            'format' => 'MM/dd/yyyy',
+//            'attr' => array('class' => 'datepicker-exception form-control'), //datepicker
 //        ));
+        //TODO: need transformer mm/yyyy to DateTime format
+        $builder->add('publicationDate','employees_custom_selector', array(
+            'label' => 'Publication Month and Year:',
+            'required' => false,
+            'attr' => array('class' => 'datepicker-exception form-control'),
+            'classtype' => 'month_year_date_only'
+        ));
 
 
         if( $this->params['cycle'] == "show" ) {

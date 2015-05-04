@@ -10,6 +10,7 @@
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManytomanyTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -141,6 +142,11 @@ class CustomSelectorType extends AbstractType {
                 break;
             case "grant":
                 $transformer = new ResearchLabTransformer($this->om, $username, 'Grant');
+                break;
+
+            //month year date only
+            case "month_year_date_only":
+                $transformer = new MonthYearDateTransformer($this->om, $username);
                 break;
 
             default:
