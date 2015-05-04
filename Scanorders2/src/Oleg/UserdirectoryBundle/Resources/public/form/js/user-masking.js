@@ -130,7 +130,7 @@ function noMaskError( element ) {
 }
 
 function clearErrorField( element ) {
-    console.log("user-masking: clear error fields");
+    //console.log("user-masking: clear error fields");
     //check if not all zeros
     if( allZeros(element) ) {
         //console.log("all zeros!");

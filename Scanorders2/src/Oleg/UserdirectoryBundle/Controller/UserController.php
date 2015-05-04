@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 
 use Oleg\UserdirectoryBundle\Entity\Book;
+use Oleg\UserdirectoryBundle\Entity\Lecture;
 use Oleg\UserdirectoryBundle\Entity\Publication;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -1537,6 +1538,10 @@ class UserController extends Controller
             $entity->addBook(new Book($user));
         }
 
+        if( count($entity->getLectures()) == 0 ) {
+            $entity->addLecture(new Lecture($user));
+        }
+
         //Identifier EIN
 //        if( count($entity->getCredentials()->getIdentifiers()) == 0 ) {
 //            $entity->getCredentials()->addIdentifier( new Identifier() );
@@ -1628,6 +1633,11 @@ class UserController extends Controller
         $originalBooks = new ArrayCollection();
         foreach( $entity->getBooks() as $book) {
             $originalBooks->add($book);
+        }
+
+        $originalLectures = new ArrayCollection();
+        foreach( $entity->getLectures() as $lecture) {
+            $originalLectures->add($lecture);
         }
 
         //Credentials collections
@@ -1826,6 +1836,11 @@ class UserController extends Controller
             }
 
             $removedInfo = $this->removeCollection($originalBooks,$entity->getBooks());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalLectures,$entity->getLectures());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
@@ -2463,6 +2478,34 @@ class UserController extends Controller
         foreach( $subjectuser->getGrants() as $item ) {
             $changeset = $uow->getEntityChangeSet($item);
             $text = "("."Grant ".$this->getEntityId($item).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Publications
+        foreach( $subjectuser->getPublications() as $item ) {
+            $changeset = $uow->getEntityChangeSet($item);
+            $text = "("."Publication ".$this->getEntityId($item).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Books
+        foreach( $subjectuser->getBooks() as $item ) {
+            $changeset = $uow->getEntityChangeSet($item);
+            $text = "("."Book ".$this->getEntityId($item).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Lectures
+        foreach( $subjectuser->getLectures() as $item ) {
+            $changeset = $uow->getEntityChangeSet($item);
+            $text = "("."Lecture ".$this->getEntityId($item).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Trainings (Educations)
+        foreach( $subjectuser->getTrainings() as $item ) {
+            $changeset = $uow->getEntityChangeSet($item);
+            $text = "("."Training ".$this->getEntityId($item).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 

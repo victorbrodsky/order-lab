@@ -1234,6 +1234,7 @@
         {% set grantsPrototype = null %}
         {% set publicationsPrototype = null %}
         {% set booksPrototype = null %}
+        {% set lecturesPrototype = null %}
         {#{% set documentsHtml = null %}#}
         {% set statelicensePrototype = null %}
         {% set boardcertificationPrototype = null %}
@@ -1265,6 +1266,9 @@
         {% endif %}
         {% if form.books is defined %}
             {% set booksPrototype = usermacros.bookObject(form.books,cycle,'user-books','prototype',sitename,entity) %}
+        {% endif %}
+        {% if form.lectures is defined %}
+            {% set lecturesPrototype = usermacros.lectureObject(form.lectures,cycle,'user-lectures','prototype',sitename,entity) %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.stateLicense is defined %}
             {% set statelicensePrototype = userform.stateLicenses(form.credentials.stateLicense,cycle,'user-statelicense','prototype') %}
@@ -1304,6 +1308,7 @@
              data-prototype-user-grants = "{{ grantsPrototype|e }}"
              data-prototype-user-publications = "{{ publicationsPrototype|e }}"
              data-prototype-user-books = "{{ booksPrototype|e }}"
+             data-prototype-user-lectures = "{{ lecturesPrototype|e }}"
              {#data-prototype-documentcontainers = "{{ documentsHtml|e }}"#}
 
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -1782,6 +1787,63 @@
             </div>
         {% else %}
             {% do form.books.setRendered %}
+        {% endif %}
+
+
+        {#Lectures#}
+        {% set showLectures = false %}
+        {% for lecture in form.lectures %}
+            {% if lecture.vars.value or lecture.isbn.vars.value or lecture.publicationDate.vars.value %}
+                {% set showLectures = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showLectures and form.lectures is defined %}
+
+            {% set currentYear = "now"|date("Y") %}
+            {% set previousYear = currentYear - 1 %}
+            {% set currentYearDate = '01/01/'~currentYear %}
+            {% set previousYearDate = '01/01/'~previousYear %}
+            {#currentYearDate:{{ currentYearDate }}<br>#}
+            {#previousYearDate:{{ previousYearDate }}<br>#}
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-left">
+                        <a data-toggle="collapse" href="#Lectures">
+                            Lecture(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="Lectures" class="panel-collapse collapse {{ collapsein }}">
+                    <div class="panel-body">
+
+                        <div class="user-lectures-holder">
+                            {% set lectureCount = 0 %}
+                            {% for lecture in form.lectures %}
+                                {#On the profile View page, only show the Visiting Lecture objects that are from the current and previous year (2015, 2014) and hide older ones.#}
+                                {% if (not showFlag) or
+                                    (
+                                        showFlag and (
+                                            lecture.vars.value.lectureDate|date('U') > currentYearDate|date('U') or
+                                            lecture.vars.value.lectureDate|date('U') > previousYearDate|date('U')
+                                        )
+                                    )
+                                %}
+                                    {{ usermacros.lectureObject(lecture,cycle,'user-lectures','noprototype',sitename,entity) }}
+                                {% endif %}
+
+                            {% endfor %}
+                            {% do form.lectures.setRendered %}
+                            {{ usermacros.addNewObjectBtn( cycle, 'user-lectures', 'Add Lecture' ) }}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% do form.lectures.setRendered %}
         {% endif %}
 
 

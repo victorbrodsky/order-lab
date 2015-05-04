@@ -147,6 +147,12 @@ class User extends BaseUser {
     private $books;
 
     /**
+     * @ORM\OneToMany(targetEntity="Lecture", mappedBy="user", cascade={"persist","remove"})
+     * @ORM\OrderBy({"lectureDate" = "DESC"})
+     */
+    private $lectures;
+
+    /**
      * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
      */
@@ -194,6 +200,7 @@ class User extends BaseUser {
         $this->trainings = new ArrayCollection();
         $this->publications = new ArrayCollection();
         $this->books = new ArrayCollection();
+        $this->lectures = new ArrayCollection();
 
         $this->privateComments = new ArrayCollection();
         $this->publicComments = new ArrayCollection();
@@ -709,6 +716,23 @@ class User extends BaseUser {
         return $this->books;
     }
 
+
+    public function addLecture($item)
+    {
+        if( $item && !$this->lectures->contains($item) ) {
+            $this->lectures->add($item);
+            $item->setUser($this);
+        }
+        return $this;
+    }
+    public function removeLecture($item)
+    {
+        $this->lectures->removeElement($item);
+    }
+    public function getLectures()
+    {
+        return $this->lectures;
+    }
 
 
     public function __toString() {
