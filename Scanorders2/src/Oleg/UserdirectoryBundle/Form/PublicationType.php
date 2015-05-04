@@ -34,12 +34,11 @@ class PublicationType extends AbstractType
         ));
 
 
-        $builder->add('publicationDate', 'date', array(
+        $builder->add('publicationDate','employees_custom_selector', array(
             'label' => 'Publication Month and Year:',
-            'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker-exception form-control'),
+            'classtype' => 'month_year_date_only'
         ));
 
         if( $this->params['cycle'] == "show" ) {

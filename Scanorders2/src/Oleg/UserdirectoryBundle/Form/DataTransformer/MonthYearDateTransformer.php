@@ -54,7 +54,7 @@ class MonthYearDateTransformer implements DataTransformerInterface
      */
     public function reverseTransform($text)
     {
-        echo "data reverseTransform text=".$text."<br>";
+        //echo "data reverseTransform text=".$text."<br>";
         //exit();
 
         if( !$text ) {

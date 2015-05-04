@@ -33,7 +33,7 @@ class LectureType extends AbstractType
         ));
 
 
-        $builder->add('lectureDate', null, array(
+        $builder->add('lectureDate', 'date', array(
             'label' => 'Lecture Date:',
             'widget' => 'single_text',
             'required' => false,
@@ -65,42 +65,18 @@ class LectureType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-
-        $builder->add( 'organization', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:OrganizationList',
-            //'property' => 'name',
+        $builder->add('organization', 'employees_custom_selector', array(
             'label' => 'Institution:',
             'required' => false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
+            'attr' => array('class' => 'ajax-combobox-organization', 'type' => 'hidden'),
+            'classtype' => 'organization'
         ));
 
-
-        $builder->add( 'city', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:LectureCityList',
-            'property' => 'name',
-            'label'=>'Lecture City:',
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
+        $builder->add('city', 'employees_custom_selector', array(
+            'label' => 'Lecture City:',
+            'required' => false,
+            'attr' => array('class' => 'ajax-combobox-city', 'type' => 'hidden'),
+            'classtype' => 'city'
         ));
 
         //state

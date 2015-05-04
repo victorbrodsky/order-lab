@@ -157,7 +157,7 @@ function objectIsDeleteable(btn,classname,id) {
             //console.log('ok to delete');
             removable = true;
         } else {
-            alert("This location is used by another objects");
+            alert("This object is used by another objects");
         }
 
     });

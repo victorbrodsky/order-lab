@@ -38,25 +38,25 @@ class Lecture extends BaseUserAttributes
 
     /**
      * @ORM\ManyToOne(targetEntity="OrganizationList")
-     * @ORM\JoinColumn(name="importance_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", nullable=true)
      */
     private $organization;
 
     /**
-     * @ORM\ManyToOne(targetEntity="LectureCityList")
-     * @ORM\JoinColumn(name="importance_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="CityList")
+     * @ORM\JoinColumn(name="city_id", referencedColumnName="id", nullable=true)
      */
     private $city;
 
     /**
      * @ORM\ManyToOne(targetEntity="States")
-     * @ORM\JoinColumn(name="state", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="state_id", referencedColumnName="id", nullable=true)
      **/
     private $state;
 
     /**
      * @ORM\ManyToOne(targetEntity="Countries")
-     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="country_id", referencedColumnName="id", nullable=true)
      **/
     private $country;
 

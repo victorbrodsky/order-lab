@@ -37,6 +37,9 @@ var _locationusers = new Array();
 var _sourceorganization = new Array();
 var _grants = new Array();
 
+var _cities = new Array();
+var _organizations = new Array();
+
 
 function initAllComboboxGeneric(newForm) {
 
@@ -68,6 +71,9 @@ function initAllComboboxGeneric(newForm) {
     //grants
     getComboboxGeneric(newForm,'sourceorganization',_sourceorganization,false);
     getComboboxGeneric(newForm,'grant',_grants,false);
+
+    getComboboxGeneric(newForm,'city',_cities,false);
+    getComboboxGeneric(newForm,'organization',_organizations,false);
 
     setBuidlingListener(newForm);
 

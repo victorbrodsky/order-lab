@@ -70,6 +70,8 @@ class ListController extends Controller
      * @Route("/locales/", name="locales-list")
      * @Route("/importances/", name="importances-list")
      * @Route("/authorshiproles/", name="authorshiproles-list")
+     * @Route("/organizations/", name="organizations-list")
+     * @Route("/cities/", name="cities-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -211,6 +213,8 @@ class ListController extends Controller
      * @Route("/locales/", name="locales_create")
      * @Route("/importances/", name="importances_create")
      * @Route("/authorshiproles/", name="authorshiproles_create")
+     * @Route("/organizations/", name="organizations_create")
+     * @Route("/cities/", name="cities_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -343,6 +347,8 @@ class ListController extends Controller
      * @Route("/locales/new", name="locales_new")
      * @Route("/importances/new", name="importances_new")
      * @Route("/authorshiproles/new", name="authorshiproles_new")
+     * @Route("/organizations/new", name="organizations_new")
+     * @Route("/cities/new", name="cities_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -446,6 +452,8 @@ class ListController extends Controller
      * @Route("/locales/{id}", name="locales_show")
      * @Route("/importances/{id}", name="importances_show")
      * @Route("/authorshiproles/{id}", name="authorshiproles_show")
+     * @Route("/organizations/{id}", name="organizations_show")
+     * @Route("/cities/{id}", name="cities_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -539,6 +547,8 @@ class ListController extends Controller
      * @Route("/locales/{id}/edit", name="locales_edit")
      * @Route("/importances/{id}/edit", name="importances_edit")
      * @Route("/authorshiproles/{id}/edit", name="authorshiproles_edit")
+     * @Route("/organizations/{id}/edit", name="organizations_edit")
+     * @Route("/cities/{id}/edit", name="cities_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -664,6 +674,8 @@ class ListController extends Controller
      * @Route("/locales/{id}", name="locales_update")
      * @Route("/importances/{id}", name="importances_update")
      * @Route("/authorshiproles/{id}", name="authorshiproles_update")
+     * @Route("/organizations/{id}", name="organizations_update")
+     * @Route("/cities/{id}", name="cities_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1009,6 +1021,14 @@ class ListController extends Controller
                 $className = "AuthorshipRoles";
                 $displayName = "Authorship Roles";
                 break;
+            case "organizations":
+                $className = "OrganizationList";
+                $displayName = "Organizations (Lecture Institutions)";
+                break;
+            case "cities":
+                $className = "CityList";
+                $displayName = "City";
+                break;
 
             default:
                 $className = null;
@@ -1087,6 +1107,8 @@ class ListController extends Controller
      * @Route("/locales/{id}", name="locales_delete")
      * @Route("/importances/{id}", name="importances_delete")
      * @Route("/authorshiproles/{id}", name="authorshiproles_delete")
+     * @Route("/organizations/{id}", name="organizations_delete")
+     * @Route("/cities/{id}", name="cities_delete")
      *
      * @Method("DELETE")
      */
