@@ -23,13 +23,6 @@ class AccessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add('accessionDate', 'date', array(
-//            'label' => "Accession Date:",
-//            'widget' => 'single_text',
-//            'required' => false,
-//            'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
-//            'attr' => array('class' => 'datepicker form-control patientdob-mask accessiondate-field', 'style'=>'margin-top: 0;'),
-//        ));
         $builder->add('accessionDate', 'collection', array(
             'type' => new AccessionDateType($this->params, null),
             'allow_add' => true,

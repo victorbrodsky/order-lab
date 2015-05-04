@@ -642,7 +642,7 @@ function calculateAgeByDob( btn ) {
 
     var patientEl = getButtonElementParent(patientBtnObj);
     //console.log(patientEl);
-    var dob = patientEl.find('.patientdob-mask');
+    var dob = patientEl.find('.patient-dob-date');
     var dobValue = dob.val();
     //console.log("dobValue="+dobValue);
 

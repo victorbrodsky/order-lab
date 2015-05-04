@@ -27,7 +27,7 @@ class AdministrativeTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control'),
         ));
 
         $builder->add('endDate', 'date', array(
@@ -35,7 +35,7 @@ class AdministrativeTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control'),
         ));
 
 

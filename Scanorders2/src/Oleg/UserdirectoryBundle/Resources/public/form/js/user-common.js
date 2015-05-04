@@ -226,6 +226,39 @@ function extendAll(holder) {
 }
 
 
+//function initDatepicker_orig( holder ) {
+//
+//    if( cycle != "show" ) {
+//
+//        //console.log("init Datepicker");
+//        //console.log(holder);
+//
+//
+//        if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
+//            var target1 = holder.find('.input-group.date.regular-datepicker').not('.allow-future-date');
+//            var target2 = holder.find('.input-group.date.allow-future-date');
+//            var target3 = holder.find('.input-group.date.datepicker-only-month-year');
+//        } else {
+//            var target1 = $('.input-group.date.regular-datepicker').not('.allow-future-date');
+//            var target2 = $('.input-group.date.allow-future-date');
+//            var target3 = $('.input-group.date.datepicker-only-month-year');
+//        }
+//
+//        processAllDatepickers( target1 );
+//        processAllDatepickers( target2 );
+//        processAllDatepickers( target3 );
+//
+////        //make sure the masking is clear when input is cleared by datepicker
+////        regularDatepickers.datepicker().on("clearDate", function(e){
+////            var inputField = $(this).find('input');
+////            //printF(inputField,"clearDate input:");
+////            clearErrorField( inputField );
+////        });
+//
+//    }
+//
+//}
+
 function initDatepicker( holder ) {
 
     if( cycle != "show" ) {
@@ -233,27 +266,13 @@ function initDatepicker( holder ) {
         //console.log("init Datepicker");
         //console.log(holder);
 
-
         if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
-            var target1 = holder.find('.input-group.date.regular-datepicker').not('.allow-future-date');
-            var target2 = holder.find('.input-group.date.allow-future-date');
-            var target3 = holder.find('.input-group.date.datepicker-only-month-year');
+            var targets = holder.find('.input-group.date');
         } else {
-            var target1 = $('.input-group.date.regular-datepicker').not('.allow-future-date');
-            var target2 = $('.input-group.date.allow-future-date');
-            var target3 = $('.input-group.date.datepicker-only-month-year');
+            var targets = $('.input-group.date');
         }
 
-        processAllDatepickers( target1 );
-        processAllDatepickers( target2 );
-        processAllDatepickers( target3 );
-
-//        //make sure the masking is clear when input is cleared by datepicker
-//        regularDatepickers.datepicker().on("clearDate", function(e){
-//            var inputField = $(this).find('input');
-//            //printF(inputField,"clearDate input:");
-//            clearErrorField( inputField );
-//        });
+        processAllDatepickers( targets );
 
     }
 
@@ -264,15 +283,6 @@ function processAllDatepickers( targets ) {
     targets.each( function() {
 
         initSingleDatepicker( $(this) );
-
-        if( !$(this).hasClass('no-datepicker-events') ) {
-            //make sure the masking is clear when input is cleared by datepicker
-            $(this).datepicker().on("clearDate", function(e){
-                //var inputField = $(this).find('input');
-                //printF(inputField,"clearDate input:");
-                clearErrorField( $(this).find('input') );
-            });
-        }
 
     });
 
@@ -290,16 +300,23 @@ function initSingleDatepicker( datepickerElement ) {
     //var inputField = datepickerElement.find('input.datepicker');
     //printF(inputField,'inputField:');
 
+    var calendarIconBtn = datepickerElement.find('.calendar-icon-button');
+    //console.log("calendarIconBtn:");
+    //console.log(calendarIconBtn);
+
     if( inputField.is('[readonly]') || inputField.is('[disabled]') ) {
 
-            //console.log('datepicker input field is readonly');
-            //console.log(inputField);
-            datepickerElement.datepicker("remove");
-            datepickerElement.find('.calendar-icon-button').off();
+        //console.log('datepicker input field is readonly');
+        //console.log(inputField);
+        datepickerElement.datepicker("remove");
+        //datepickerElement.datepicker('disable');
+
+        //calendarIconBtn.off();
+        calendarIconBtn.prop('disabled', true);
 
     } else {
 
-        //console.log('datepicker input field is active');
+        //console.log('datepicker input field is active !!!!!!!!!!!!!!!!!!!!!!');
 
         var endDate = new Date(); //use current date as default
         if( datepickerElement.hasClass('allow-future-date') ) {
@@ -333,8 +350,19 @@ function initSingleDatepicker( datepickerElement ) {
             minViewMode: datepickerMinViewMode
         });
 
+
+        //datepickerElement.datepicker('enable');
+        //calendarIconBtn.on();
+        calendarIconBtn.prop('disabled', false);
+
+        datepickerElement.datepicker().on("clearDate", function(e){
+            var inputField = $(this).find('input.datepicker, input.datepicker-exception');
+            //printF(inputField,"clearDate input:");
+            clearErrorField( inputField );
+        });
     }
 
+    return;
 }
 
 

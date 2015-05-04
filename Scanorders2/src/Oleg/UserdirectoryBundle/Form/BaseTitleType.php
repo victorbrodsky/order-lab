@@ -174,7 +174,7 @@ class BaseTitleType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
                 'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control patientdob-mask pgystart-field', 'style'=>'margin-top: 0;'),
+                'attr' => array('class' => 'datepicker form-control pgystart-field', 'style'=>'margin-top: 0;'),
             ));
 
             $builder->add('pgylevel',null,array(
