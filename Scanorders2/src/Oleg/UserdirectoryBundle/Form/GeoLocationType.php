@@ -39,9 +39,11 @@ class GeoLocationType extends AbstractType
             'attr' => array('class'=>'form-control geo-field-street2')
         ));
 
-        $builder->add('city',null,array(
-            'label'=>'City:',
-            'attr' => array('class'=>'form-control geo-field-city')
+        $builder->add('city', 'employees_custom_selector', array(
+            'label' => 'City:',
+            'required' => false,
+            'attr' => array('class' => 'ajax-combobox-city', 'type' => 'hidden'),
+            'classtype' => 'city'
         ));
 
         //state

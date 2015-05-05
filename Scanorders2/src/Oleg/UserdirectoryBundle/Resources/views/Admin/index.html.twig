@@ -61,6 +61,10 @@
     </p>
 
     <p>
+        <a href="{{ path('cities-list') }}">Cities</a>
+    </p>
+
+    <p>
         <a href="{{ path('countries-list') }}">Countries</a>
     </p>
 
@@ -180,9 +184,6 @@
         <a href="{{ path('organizations-list') }}">Organizations (Lecture Institutions)</a>
     </p>
 
-    <p>
-        <a href="{{ path('cities-list') }}">Cities where Faculty Lectured</a>
-    </p>
 
 
 
@@ -238,7 +239,17 @@
 
 
     <br>
+    <hr>
+    <h4 class="text-info">Populate Lists</h4>
 
+    <p>
+        <a data-confirm="Are you sure?"
+            href="{{ path('generate_country_city') }}">
+            Populate Country and City Lists
+        </a>
+    </p>
+
+    <br>
 
     {% if environment is not defined %}
         {% set environment = 'dev' %}

@@ -30,7 +30,8 @@ class GeoLocation
     private $street2;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="CityList")
+     * @ORM\JoinColumn(name="city", referencedColumnName="id", nullable=true)
      */
     private $city;
 

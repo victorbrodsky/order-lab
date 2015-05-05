@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
+use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -131,7 +132,7 @@ class AdminController extends Controller
         $count_equipment = $this->generateEquipment();
 
         $count_states = $this->generateStates();
-        $count_countryList = $this->generateCountryList();
+        //$count_countryList = $this->generateCountryList();
         $count_languages = $this->generateLanguages();
         $count_locales = $this->generateLocales();
 
@@ -191,7 +192,7 @@ class AdminController extends Controller
             'Location Types='.$count_locationTypeList.', '.
             'Location Privacy='.$count_locprivacy.', '.
             'States='.$count_states.', '.
-            'Countries='.$count_countryList.', '.
+            //'Countries='.$count_countryList.', '.
             'Languages='.$count_languages.', '.
             'Locales='.$count_locales.', '.
             'Locations='.$count_locations.', '.
@@ -247,6 +248,33 @@ class AdminController extends Controller
             return $this->redirect($this->generateUrl('user_admin_index'));
         }
 
+    }
+
+
+    /**
+     * @Route("/populate-country-city-list-with-default-values", name="generate_country_city")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generateProcedureAction()
+    {
+
+        $max_exec_time = ini_get('max_execution_time');
+        ini_set('max_execution_time', 900); //900 seconds = 15 minutes
+
+        $count = $this->generateCountryList();
+
+        $countryCount = $count['country'];
+        $cityCount = $count['city'];
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Added '.$countryCount.' countries and '.$cityCount.' cities'
+        );
+
+        ini_set('max_execution_time', $max_exec_time); //set back to the original value
+
+        return $this->redirect($this->generateUrl('user_admin_index'));
     }
 
 
@@ -1038,14 +1066,18 @@ class AdminController extends Controller
     }
 
 
-    public function generateCountryList() {
+    public function generateCountryList_Old() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Countries')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:Countries')->findAll();
+//        if( $entities ) {
+//            //return -1;
+//        }
+
+//        $elements = Intl::getRegionBundle()->getCountryNames();
+//        print_r($elements);
+//        exit();
 
         $elements = array(
             "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda",
@@ -1097,6 +1129,94 @@ class AdminController extends Controller
 
         return round($count/10);
 
+    }
+
+
+    public function generateCountryList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $inputFileName = __DIR__ . '/../Util/Cities.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $countryCount = 1;
+        $cityCount = 1;
+
+        //for each row in excel
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray(
+                'A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE
+            );
+
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
+
+            $country = trim($rowData[0][0]);
+            $city = trim($rowData[0][1]);
+
+            //country
+            //echo "country=".$country."<br>";
+            $countryDb = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName($country);
+
+            if( !$countryDb ) {
+                //echo "add country=".$country."<br>";
+
+                $newCountry = new Countries();
+                $this->setDefaultList($newCountry,$countryCount,$username,$country);
+
+
+                $em->persist($newCountry);
+                //$em->flush();
+
+                $countryCount = $countryCount + 10;
+
+            }
+
+            //city
+            //echo "city=".$city."<br>";
+            $cityDb = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName($city);
+
+            if( !$cityDb ) {
+                //echo "add city=".$city."<br>";
+
+                $newCity = new CityList();
+                $this->setDefaultList($newCity,$cityCount,$username,$city);
+
+
+                $em->persist($newCity);
+                //$em->flush();
+
+                $cityCount = $cityCount + 10;
+
+            }
+
+            $em->flush();
+        }
+
+        $count = array();
+        $count['country'] = $countryCount;
+        $count['city'] = $cityCount;
+
+        return $count;
     }
 
 
@@ -1926,7 +2046,7 @@ class AdminController extends Controller
             array('name'=>"",'street1'=>'333 East 38th Street','abbr'=>null,'inst'=>'NYP')  //NYP - 333 East 38th Street
         );
 
-        $city = "New York";
+        $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName("New York");
         $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
         $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
         if( !$country ) {
@@ -1988,7 +2108,7 @@ class AdminController extends Controller
             "Surgical Pathology Filing Room" => array('street1'=>'520 East 70th Street','phone'=>'222-0059','room'=>'ST-1012','inst'=>'NYP'),
         );
 
-        $city = "New York";
+        $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName("New York");
         $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
         $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
         $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Filing Room");
