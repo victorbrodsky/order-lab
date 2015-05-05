@@ -53,6 +53,11 @@ class IdentifierType extends AbstractType
             'label' => 'Publicly visible:',
         ));
 
+        $builder->add('enableAccess', 'checkbox', array(
+            'required' => false,
+            'label' => 'Identifier enables system/service access:',
+        ));
+
         //status
         $baseUserAttr = new Identifier();
         $builder->add('status', 'choice', array(

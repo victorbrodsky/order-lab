@@ -39,14 +39,14 @@ class StateLicenseType extends AbstractType
         ));
 
         //country
-        $defaultCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+        $preferredCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
         $builder->add( 'country', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Countries',
             'property' => 'name',
             'label'=>'Country:',
             'required'=> false,
             'multiple' => false,
-            'preferred_choices' => $defaultCountries,
+            'preferred_choices' => $preferredCountries,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')

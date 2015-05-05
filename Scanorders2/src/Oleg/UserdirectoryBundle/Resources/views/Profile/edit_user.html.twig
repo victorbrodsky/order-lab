@@ -320,7 +320,7 @@
 
 
 
-{#isEntity inidcates if the fields should be render not as form but as pure entity object#}
+{#isEntity inidcates if the fields should be render not as form but as pure entity object (object's shadow)#}
 {% macro identifier( field, cycle, classname, prototype, isEntity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
@@ -431,6 +431,12 @@
 
             {% else %}
                 {{ formmacros.field(formfield.field) }}
+            {% endif %}
+
+            {% if isEntity %}
+                {{ formmacros.simplefield_checkbox( "Identifier enables system/service access:", formfield.enableAccess, "", "disabled" ) }}
+            {% else %}
+                {{ formmacros.field(formfield.enableAccess) }}
             {% endif %}
 
             {% if formfield.link is defined and cycle != 'show_user' %}
@@ -2124,7 +2130,6 @@
 
 
         {#Public Identifiers from entity#}
-        {#If the user has no Research Labs (no array members with a research lab title), hide the whole Research Lab(s) section on the profile page.#}
         {% set showPublicIdentifiers = false %}
         {% for identifier in form.vars.value.credentials.identifiers %}
             {% if showFlag and identifier and identifier.publiclyVisible == true %}

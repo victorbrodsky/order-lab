@@ -87,6 +87,11 @@ class BaseTitle extends BaseUserAttributes
      */
     private $supervisorService;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="TitlePositionType",cascade={"persist"})
+     */
+    protected $titlePositionType;
+
 
 
     function __construct($author=null)
@@ -228,6 +233,29 @@ class BaseTitle extends BaseUserAttributes
         return $this->effort;
     }
 
+
+
+
+    /**
+     * @param mixed $titlePositionType
+     */
+    public function setTitlePositionType($titlePositionType)
+    {
+        $this->titlePositionType = $titlePositionType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitlePositionType()
+    {
+        return $this->titlePositionType;
+    }
+
+
+
+
+    ///////////////////////// TO REMOVE /////////////////////////////////////////////////////////
     /**
      * @param mixed $supervisorDepartment
      */
@@ -404,6 +432,7 @@ class BaseTitle extends BaseUserAttributes
             }
         }
     }
+    //////////////////////////////////////////////////////////////////////////////////
 
 
     /**

@@ -7,6 +7,7 @@ use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
+use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -167,6 +168,8 @@ class AdminController extends Controller
         $count_generateImportances = $this->generateImportances();
         $count_generateAuthorshipRoles = $this->generateAuthorshipRoles();
 
+        //$count_generateTitlePositionTypes = $this->generateTitlePositionTypes();
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
@@ -209,6 +212,7 @@ class AdminController extends Controller
             'Source Organizations='.$count_sourceOrganizations.', '.
             'Importances='.$count_generateImportances.', '.
             'AuthorshipRoles='.$count_generateAuthorshipRoles.' '.
+            //'TitlePositionTypes='.$count_generateTitlePositionTypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -1975,15 +1979,17 @@ class AdminController extends Controller
             "Laboratory of Prostate Cancer Research Group",
             "Proteolytic Oncogenesis",
             "Macrophages and Tissue Remodeling",
-            "Molecular Gynecologic Pathology",
-            "Cancer Biology",
-            "Laboratory of Cell Metabolism",
-            "Viral Oncogenesis",
-            "Center for Vascular Biology",
-            "Cell Cycle",
+            "Antiphospholipid Syndrome",
             "Laboratory of Stem Cell Aging and Cancer",
             "Molecular Pathology",
-            "Skeletal Biology"
+            "Skeletal Biology",
+            "Viral Oncogenesis",
+            "Vascular Biology",
+            "Cell Cycle",
+            "Molecular Gynecologic Pathology",
+            "Cancer Biology",
+            "Cell Metabolism",
+            "Oncogenic Transcription Factors in Prostate Cancer",
         );
 
         $count = 1;
@@ -2636,6 +2642,59 @@ class AdminController extends Controller
         foreach( $types as $name ) {
 
             $listEntity = new AuthorshipRoles();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateTitlePositionTypes() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:TitlePositionType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+//        $types = array(
+//            'Head',
+//            'Manager',
+//            'Primary Contact',
+//            'Transcriptionist',
+//        );
+
+        $types = array(
+            'Head of Institution',
+            'Head of Department',
+            'Head of Division',
+            'Head of Service',
+            'Manager of Institution',
+            'Manager of Department',
+            'Manager of Division',
+            'Manager of Service',
+            'Primary Contact of Institution',
+            'Primary Contact of Department',
+            'Primary Contact of Division',
+            'Primary Contact of Service',
+            'Transcriptionist for the Institution',
+            'Transcriptionist for the Department',
+            'Transcriptionist for the Division',
+            'Transcriptionist for the Service'
+        );
+
+        $count = 1;
+        foreach( $types as $name ) {
+
+            $listEntity = new TitlePositionType();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);

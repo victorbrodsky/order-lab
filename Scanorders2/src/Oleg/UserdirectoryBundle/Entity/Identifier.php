@@ -66,6 +66,13 @@ class Identifier
      */
     private $publiclyVisible;
 
+    /**
+     * Identifier enables system/service access
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableAccess;
+
+
 
     public function __construct() {
         $this->setStatus(self::STATUS_UNVERIFIED);
@@ -182,6 +189,22 @@ class Identifier
     public function getPubliclyVisible()
     {
         return $this->publiclyVisible;
+    }
+
+    /**
+     * @param mixed $enableAccess
+     */
+    public function setEnableAccess($enableAccess)
+    {
+        $this->enableAccess = $enableAccess;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableAccess()
+    {
+        return $this->enableAccess;
     }
 
 

@@ -13,6 +13,30 @@
     </p>
 {% endmacro %}
 
+{% macro simplefield_checkbox( label, value, type, disabled ) %}
+    {% if value %}
+        {% set checked = 'checked' %}
+    {% else %}
+        {% set checked = '' %}
+    {% endif %}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            <strong>{{ label }}</strong>
+        </div>
+        <div class="col-xs-6" align="left">
+            {% if type is defined and (type == "input" or type == "simple-field") %}
+                <input class="not-mapped-simplefield" type="checkbox" {{ checked }} {{ disabled }}>
+            {% else %}
+                <div class="not-mapped-simplefield" style="min-height:34px; height:auto;" {{ disabled }}>
+                    <input type="checkbox" {{ checked }} {{ disabled }}>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+
 {% macro simplefield( label, value, type, disabled ) %}
     <p>
     <div class="row">
