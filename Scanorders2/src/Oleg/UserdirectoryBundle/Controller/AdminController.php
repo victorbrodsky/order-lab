@@ -2051,7 +2051,10 @@ class AdminController extends Controller
         $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
         if( !$country ) {
             //exit('ERROR: country null');
-            throw new \Exception( "country is not found by name=" . "United States" );
+            $errorMsg = 'Failed to create Building List. Country is not found by name=' . 'United States.'.
+            'Please populate Country and City Lists first or create a country with name "United States"';
+            //throw new \Exception( $errorMsg );
+            return $errorMsg;
         }
 
         $count = 1;
@@ -2114,6 +2117,13 @@ class AdminController extends Controller
         $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Filing Room");
         $locationPrivacy = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
         $building = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findOneByName("Starr Pavilion");
+
+        if( !$country ) {
+            $errorMsg = 'Failed to create Building List. Country is not found by name=' . 'United States.'.
+                'Please populate Country and City Lists first or create a country with name "United States"';
+            //throw new \Exception( $errorMsg );
+            return $errorMsg;
+        }
 
         $count = 1;
         foreach( $locations as $location => $attr ) {
