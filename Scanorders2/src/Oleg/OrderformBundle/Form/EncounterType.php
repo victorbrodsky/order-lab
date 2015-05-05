@@ -195,6 +195,18 @@ class EncounterType extends AbstractType
                 'prototype_name' => '__encounterinpatientinfo__',
             ));
 
+            $builder->add('provider', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => 'Provider:',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                            ->where('u.roles LIKE :roles OR u=:user')
+                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                    },
+            ));
+
         }
 
 

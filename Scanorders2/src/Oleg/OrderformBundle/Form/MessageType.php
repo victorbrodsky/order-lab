@@ -42,8 +42,8 @@ class MessageType extends AbstractType
             'destinations.system' => 'Destination System:',
 
             'equipment' => 'Scanner:',
-            'proxyuser' => '',
-            'provider' => '',
+            'proxyuser' => 'Proxyuser:',
+            'provider' => 'Provider:',
             'returnoption' => 'Return slide(s) by this date even if not scanned:',
             'priority' => 'Priority:',
             'deadline' => 'Deadline:',
@@ -92,6 +92,7 @@ class MessageType extends AbstractType
         }
 
         if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
+            //echo "provider label=".$this->labels['provider']."<br>";
             $builder->add('provider', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => $this->labels['provider'],

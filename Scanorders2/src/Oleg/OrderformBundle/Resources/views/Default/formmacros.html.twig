@@ -1875,7 +1875,7 @@
                             {{ obtainFullObjectName|raw }}
                             {#{% endif %}#}
                             {#the link to "Download" the image should only show if the "Image Link" field is empty#}
-                            {% if not scan.vars.value.imageLink %}
+                            {% if not scan.vars.value.imageLink and scan.vars.value.documentContainer %}
                                 {% for document in scan.vars.value.documentContainer.documents %}
                                     <a target="_blank" href="{{ path(scan_sitename~'_file_download', { 'id': document.id }) }}">{{ scan.vars.value.imageId }}</a>
                                 {% endfor %}
@@ -1985,6 +1985,10 @@
             {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
         {% endif %}
 
+        {% if encounter.provider is defined %}
+            {{ formmacros.field(encounter.provider) }}
+        {% endif %}
+
         {% if encounter.location is defined %}
             {{ formmacros.inputArrayField(encounter.location,cycle,"encounterlocation","","","","",status) }}
         {% endif %}
@@ -2049,6 +2053,10 @@
 
         {% if procedure.date is defined %}
             {{ formmacros.inputArrayField(procedure.date,cycle,"proceduredate","date","","","",status) }}
+        {% endif %}
+
+        {% if procedure.provider is defined %}
+            {{ formmacros.field(procedure.provider) }}
         {% endif %}
 
         {% if procedure.location is defined %}
