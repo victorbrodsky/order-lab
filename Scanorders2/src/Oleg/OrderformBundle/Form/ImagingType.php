@@ -95,11 +95,11 @@ class ImagingType extends AbstractType
                 'attr' => array('class'=>'form-control'),
             ));
 
-            $builder->add('imageLink', 'text', array(
-                'required'=>false,
-                'label'=>'Image Link:',
-                'attr' => array('class'=>'form-control'),
-            ));
+//            $builder->add('imageLink', 'text', array(
+//                'required'=>false,
+//                'label'=>'Image Link:',
+//                'attr' => array('class'=>'form-control'),
+//            ));
 
             $builder->add('source', null, array(
                 'required'=>false,
@@ -107,42 +107,46 @@ class ImagingType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width'),
             ));
 
-            $builder->add('provider', null, array(
-                'required'=>false,
-                'label'=>'Image Acquired By:',
-                'attr' => array('class' => 'combobox combobox-width'),
-            ));
+//            $builder->add('provider', null, array(
+//                'required'=>false,
+//                'label'=>'Image Acquired By:',
+//                'attr' => array('class' => 'combobox combobox-width'),
+//            ));
 
-            $builder->add('creationdate','date',array(
-                'widget' => 'single_text',
-                'format' => 'MM/dd/yyyy, H:mm:ss',
-                'attr' => array('class' => 'datepicker form-control'),
-                'required' => false,
-                'label'=>'Image Acquisition Date & Time:',
-            ));
+//            $builder->add('creationdate','date',array(
+//                'widget' => 'single_text',
+//                'format' => 'MM/dd/yyyy, H:mm:ss',
+//                'attr' => array('class' => 'datepicker form-control'),
+//                'required' => false,
+//                'label'=>'Image Acquisition Date & Time:',
+//            ));
 
-            $builder->add( 'equipment', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:Equipment',
-                'property' => 'name',
-                'label' => 'Image Acquisition Device:',
-                'required'=> true,
-                'multiple' => false,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('i')
-                            ->leftJoin('i.keytype','keytype')
-                            ->where("keytype.name = :keytype AND i.type != :type")
-                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
-                    },
-            ));
+//            $builder->add( 'equipment', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:Equipment',
+//                'property' => 'name',
+//                'label' => 'Image Acquisition Device:',
+//                'required'=> true,
+//                'multiple' => false,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('i')
+//                            ->leftJoin('i.keytype','keytype')
+//                            ->where("keytype.name = :keytype AND i.type != :type")
+//                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
+//                    },
+//            ));
 
             //Image container
             $params = array('labelPrefix'=>'Acquired Image');
-            //$equipmentTypes = array('Whole Slide Scanners','Microscope Camera');
-            //$params['device.types'] = $equipmentTypes;
-            $params['document.device'] = false;
-            $params['document.datetime'] = false;
-            $params['document.provider'] = false;
+            $equipmentTypes = array('Whole Slide Scanners','Microscope Camera');
+            $params['device.types'] = $equipmentTypes;
+            //$params['document.device'] = false;
+            //$params['document.datetime'] = false;
+            //$params['document.provider'] = false;
+            $params['document.device.label'] = 'Image Acquisition Device:';
+            $params['document.datetime.label'] = 'Image Acquisition Date and Time:';
+            $params['document.provider.label'] = 'Image acquired by:';
+            $params['document.link.label'] = 'Image Link:';
             $builder->add('documentContainer', new DocumentContainerType($params), array(
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
                 'label' => false

@@ -371,7 +371,7 @@ class PatientController extends Controller
                     $docContainer = $scanimage->getDocumentContainer();
 
                     if( !$docContainer ) {
-                        $docContainer = new DocumentContainer();
+                        $docContainer = new DocumentContainer($user);
                         $scanimage->setDocumentContainer($docContainer);
                     }
 
@@ -425,7 +425,7 @@ class PatientController extends Controller
                     $accession->setAttachmentContainer($attachmentContainerAccession);
                 }
                 for( $i=0; $i<$attachmentContainerAccessionNumber; $i++) {
-                    $attachmentContainerAccession->addDocumentContainer( new DocumentContainer() );
+                    $attachmentContainerAccession->addDocumentContainer( new DocumentContainer($user) );
                 }
             }
 
@@ -437,7 +437,7 @@ class PatientController extends Controller
                     $part->setAttachmentContainer($attachmentContainerPart);
                 }
                 for( $i=0; $i<$attachmentContainerPartNumber; $i++) {
-                    $attachmentContainerPart->addDocumentContainer( new DocumentContainer() );
+                    $attachmentContainerPart->addDocumentContainer( new DocumentContainer($user) );
                 }
             }
 
@@ -496,7 +496,7 @@ class PatientController extends Controller
             $message->setAttachmentContainer($attachmentContainerPart);
         }
         for( $i = 0; $i < 1; $i++ ) {
-            $attachmentContainerPart->addDocumentContainer( new DocumentContainer() );
+            $attachmentContainerPart->addDocumentContainer( new DocumentContainer($user) );
         }
 
 

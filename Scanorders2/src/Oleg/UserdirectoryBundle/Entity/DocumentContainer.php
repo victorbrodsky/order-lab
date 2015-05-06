@@ -82,10 +82,19 @@ class DocumentContainer {
      */
     private $type;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $link;
 
-    public function __construct() {
+
+    public function __construct($provider=null) {
         $this->documents = new ArrayCollection();
         $this->comments = new ArrayCollection();
+
+        if( $provider ) {
+            $this->setProvider($provider);
+        }
 
         //testing
         //echo "comments count=".count($this->getComments())."<br>";
@@ -250,6 +259,23 @@ class DocumentContainer {
     {
         return $this->title;
     }
+
+    /**
+     * @param mixed $link
+     */
+    public function setLink($link)
+    {
+        $this->link = $link;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
 
 
 

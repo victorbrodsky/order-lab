@@ -266,12 +266,12 @@
 }
 
 .panel-scan {
-    border-color: #FF9933; //35478C
+    border-color: #ffb770;
 }
 .panel-scan .panel-heading-hierarchy {
     color: #ffffff;
-    background-color: #FF9933;
-    border-color: #FF9933;
+    background-color: #ffb770;
+    border-color: #ffb770;
     border-top-left-radius: 0px;
 }
 

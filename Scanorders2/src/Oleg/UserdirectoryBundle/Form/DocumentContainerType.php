@@ -29,26 +29,50 @@ class DocumentContainerType extends AbstractType
             $params['document.showall'] = false;
         }
 
-        //set default as true
+        ///////////////// labels /////////////////
+        if( $params && !array_key_exists('document.device.label',$params) ) {
+            $params['document.device.label'] = $params['labelPrefix'] . ' Device:';
+        }
+
+        if( $params && !array_key_exists('document.datetime.label',$params) ) {
+            $params['document.datetime.label'] = $params['labelPrefix'] . ' Date & Time:';
+        }
+
+        if( $params && !array_key_exists('document.provider.label',$params) ) {
+            $params['document.provider.label'] = $params['labelPrefix'] . ' Scanned By:';
+        }
+
+        if( $params && !array_key_exists('document.link.label',$params) ) {
+            $params['document.link.label'] = $params['labelPrefix'] . ' Link:';
+        }
+        ///////////////////////////////////////////////////////////
+
+        ///////////////// set default as true /////////////////
         if( $params && !array_key_exists('document.datetime',$params) ) {
             $params['document.datetime'] = true;
         } else {
             $params['document.datetime'] = false;
         }
 
-        //set default as true
         if( $params && !array_key_exists('document.provider',$params) ) {
             $params['document.provider'] = true;
         } else {
             $params['document.provider'] = false;
         }
 
-        //set default as true
         if( $params && !array_key_exists('document.device',$params) ) {
             $params['document.device'] = true;
         } else {
             $params['document.device'] = false;
         }
+
+        if( $params && !array_key_exists('document.link',$params) ) {
+            $params['document.link'] = true;
+        } else {
+            $params['document.link'] = false;
+        }
+        ///////////////////////////////////////////////////////////
+
 
         $this->params = $params;
     }
@@ -96,7 +120,7 @@ class DocumentContainerType extends AbstractType
                     $builder->add( 'device', 'entity', array(
                         'class' => 'OlegUserdirectoryBundle:Equipment',
                         'property' => 'name',
-                        'label' => $this->params['labelPrefix'] . ' Device:',
+                        'label' => $this->params['document.device.label'],
                         'required'=> true,
                         'multiple' => false,
                         'attr' => array('class'=>'combobox combobox-width'),
@@ -132,14 +156,21 @@ class DocumentContainerType extends AbstractType
                     'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
                     'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
                     'required' => false,
-                    'label'=>$this->params['labelPrefix'] . ' Date & Time:',
+                    'label' => $this->params['document.datetime.label'],
                 ));
             }
 
             if( $this->params['document.provider'] ) {
                 $builder->add('provider', null, array(
-                    'label' => $this->params['labelPrefix'] . ' Scanned By:',
+                    'label' => $this->params['document.provider.label'],
                     'attr' => array('class' => 'combobox combobox-width'),
+                ));
+            }
+
+            if( $this->params['document.link'] ) {
+                $builder->add('link', null, array(
+                    'label' => $this->params['document.link.label'],
+                    'attr' => array('class' => 'form-control'),
                 ));
             }
 

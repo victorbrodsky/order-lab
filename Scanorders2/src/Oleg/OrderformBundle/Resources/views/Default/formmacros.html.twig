@@ -202,6 +202,35 @@
 
 {% endmacro %}
 
+{% macro field_provider( container, cycle, attr ) %}
+
+    {% import _self as formmacros %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if showFlag and container.vars.value.provider %}
+
+        {% if attr is not defined %}
+            {% set attr = 'disabled' %}
+        {% endif %}
+
+        {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': container.vars.value.provider.id })~'">'~container.vars.value.provider.getUserNameStr()~'</a>' %}
+        {% set label = container.provider.vars.label %}
+
+        {{ formmacros.simplefield( label, hreflink, "", attr ) }}
+
+    {% else %}
+
+        {{ formmacros.field(container.provider) }}
+
+    {% endif %}
+
+{% endmacro %}
+
 
 {% macro orderinfo(form) %}
 
@@ -1337,6 +1366,10 @@
                 {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInit) }}
             </div>
         </div>
+    {% elseif renderType is defined and renderType == "plain" %}
+        <div>
+            {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInit) }}
+        </div>
     {% else %}
         <div class="well well-sm">
             {{ formmacros.fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInit) }}
@@ -1351,6 +1384,14 @@
 
     {#hidden id: used as a reference to get objects count#}
     {{ form_widget(container.id) }}
+
+    {% if container.title is defined %}
+        {{ formmacros.field(container.title) }}
+    {% endif %}
+
+    {% if container.link is defined %}
+        {{ formmacros.field(container.link) }}
+    {% endif %}
 
     {#documents/images in container#}
     <p>
@@ -1367,10 +1408,6 @@
 
     </div>
     </p>
-
-    {% if container.title is defined %}
-        {{ formmacros.field(container.title) }}
-    {% endif %}
 
     {#comments#}
     {% if container.comments is defined %}
@@ -1392,7 +1429,8 @@
     {% endif %}
 
     {% if container.provider is defined %}
-        {{ formmacros.field(container.provider) }}
+        {#{{ formmacros.field(container.provider) }}#}
+        {{ formmacros.field_provider( container, cycle ) }}
     {% endif %}
 
 {% endmacro %}
@@ -1841,9 +1879,10 @@
     {% set scanCount = 0 %}
     {% for scan in slide.scan %}
         {% if flag and flag == "datastructure" %}
-            <div class="panel panel-default">
+            <div class="panel panel-scan">
 
-                <div class="panel-heading panel-heading-min-height">
+                {#panel-heading-min-height panel-heading-hierarchy#}
+                <div class="panel-heading panel-heading-hierarchy">
 
                     {% if scan.vars.value.id %}
                         {% set orderUniqueId = scan.vars.value.id %}
@@ -1877,13 +1916,16 @@
                             {{ obtainFullObjectName|raw }}
                             {#{% endif %}#}
                             {#the link to "Download" the image should only show if the "Image Link" field is empty#}
-                            {% if not scan.vars.value.imageLink and scan.vars.value.documentContainer %}
+                            {#{% if not scan.vars.value.imageLink and scan.vars.value.documentContainer %}#}
+                            {% if scan.vars.value.documentContainer %}
                                 {% for document in scan.vars.value.documentContainer.documents %}
                                     <a target="_blank" href="{{ path(scan_sitename~'_file_download', { 'id': document.id }) }}">{{ scan.vars.value.imageId }}</a>
                                 {% endfor %}
                             {% endif %}
                         </div>
                     </h4>
+
+                    <div class="clearfix"></div>
 
                 </div>
 
@@ -2193,9 +2235,9 @@
             {{ formmacros.fieldDateLabel(scan.creationdate,'allow-future-date') }}
         {% endif %}
 
-        {% if scan.provider is defined %}
-            {{ formmacros.field(scan.provider) }}
-        {% endif %}
+        {#{% if scan.provider is defined %}#}
+            {#{{ formmacros.field_provider( scan.provider, cycle ) }}#}
+        {#{% endif %}#}
 
         {% if scan.equipment is defined %}
             {{ formmacros.field(scan.equipment) }}
@@ -2209,12 +2251,12 @@
             {#{{ formmacros.field(scan.imageId) }}#}
         {#{% endif %}#}
 
-        {% if scan.imageLink is defined %}
-            {{ formmacros.field(scan.imageLink) }}
-        {% endif %}
+        {#{% if scan.imageLink is defined %}#}
+            {#{{ formmacros.field(scan.imageLink) }}#}
+        {#{% endif %}#}
 
         {% if scan.documentContainer is defined %}
-            {{ formmacros.fieldDocumentContainer(scan.documentContainer,cycle,'scan'~'_'~uid) }}
+            {{ formmacros.fieldDocumentContainer(scan.documentContainer,cycle,'scan'~'_'~uid,"plain") }}
         {% endif %}
 
     {% endif %}
