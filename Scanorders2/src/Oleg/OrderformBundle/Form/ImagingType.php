@@ -138,8 +138,11 @@ class ImagingType extends AbstractType
 
             //Image container
             $params = array('labelPrefix'=>'Acquired Image');
-            $equipmentTypes = array('Whole Slide Scanners','Microscope Camera');
-            $params['device.types'] = $equipmentTypes;
+            //$equipmentTypes = array('Whole Slide Scanners','Microscope Camera');
+            //$params['device.types'] = $equipmentTypes;
+            $params['document.device'] = false;
+            $params['document.datetime'] = false;
+            $params['document.provider'] = false;
             $builder->add('documentContainer', new DocumentContainerType($params), array(
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
                 'label' => false

@@ -1491,6 +1491,8 @@
         {{ formmacros.patientExtraForm(patient,flag,uid,cycle,status) }}
 
     </div>
+
+
 {% endmacro %}
 
 {#used for datastructure#}
@@ -1935,6 +1937,17 @@
         {% endif %}
 
 
+        {{ formmacros.patientDeceasedForm(patient,datastructure,uid,cycle,status) }}
+
+    {% endif %}
+
+{% endmacro %}
+
+{% macro patientDeceasedForm( patient, datastructure, uid, cycle, status ) %}
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% import _self as formmacros %}
+
         {% if patient.deceased is defined and patient.deceased|length > 0 %}
             <div class="panel panel-default">
 
@@ -1946,10 +1959,17 @@
                         {% set orderUniqueId = 0 %}
                     {% endif %}
 
+                    {#<button#}
+                            {#id="form_body_toggle_patientdeath_{{ orderUniqueId }}_{{ uid }}" type="button"#}
+                            {#class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"#}
+                            {#data-toggle="collapse"#}
+                            {#data-target="#form_body_patientdeath_{{ orderUniqueId }}_{{ uid }}">#}
+                    {#</button>#}
+
                     <button
                             id="form_body_toggle_patientdeath_{{ orderUniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            data-toggle="collapse" data-target="#form_body_patientdeath_{{ orderUniqueId }}_{{ uid }}">
+                            onclick="toggleSinglePanel(this,'#form_body_patientdeath_{{ orderUniqueId }}_{{ uid }}');">
                     </button>
 
                     <h4 class="panel-title">Additional Information</h4>
@@ -1962,10 +1982,7 @@
                 </div>
             </div>
         {% endif %}
-
-
     {% endif %}
-
 {% endmacro %}
 
 
@@ -2013,7 +2030,7 @@
                     <button
                             id="form_body_toggle_inpatientinfo_{{ uniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            data-toggle="collapse" data-target="#form_body_inpatientinfo_{{ uniqueId }}_{{ uid }}">
+                            onclick="toggleSinglePanel(this,'#form_body_inpatientinfo_{{ uniqueId }}_{{ uid }}');">
                     </button>
 
                     <h4 class="panel-title">Inpatient Info</h4>
@@ -2104,7 +2121,7 @@
                     <button
                             id="form_body_toggle_accession_autopsyimages_{{ uniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            data-toggle="collapse" data-target="#form_body_accession_autopsyimages_{{ uniqueId }}_{{ uid }}">
+                            onclick="toggleSinglePanel(this,'#form_body_accession_autopsyimages_{{ uniqueId }}_{{ uid }}');">
                     </button>
 
                     <h4 class="panel-title">Autopsy Images</h4>

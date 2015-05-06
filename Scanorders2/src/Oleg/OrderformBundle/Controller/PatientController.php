@@ -113,8 +113,8 @@ class PatientController extends Controller
         $thisparams = array(
             'objectNumber' => 1,
             'withorders' => true,
-            'accession.attachmentContainer' => 5,
-            'part.attachmentContainer' => 5,
+            'accession.attachmentContainer' => 1,
+            'part.attachmentContainer' => 1,
         );
         $patient = $this->createPatientDatastructure($thisparams);
 
@@ -417,7 +417,7 @@ class PatientController extends Controller
                 $slide->addScan($scanimage);
             }
 
-            //Accession: add 5 autopsy fields: add 5 documentContainers to attachmentContainer
+            //Accession: add n autopsy fields: add n documentContainers to attachmentContainer
             if( $attachmentContainerAccessionNumber > 0 ) {
                 $attachmentContainerAccession = $accession->getAttachmentContainer();
                 if( !$attachmentContainerAccession ) {
@@ -429,7 +429,7 @@ class PatientController extends Controller
                 }
             }
 
-            //Part: add 5 gross image fields: add 5 documentContainers to attachmentContainer
+            //Part: add n gross image fields: add n documentContainers to attachmentContainer
             if( $attachmentContainerPartNumber > 0 ) {
                 $attachmentContainerPart = $part->getAttachmentContainer();
                 if( !$attachmentContainerPart ) {

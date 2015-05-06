@@ -213,10 +213,10 @@ function addSameForm( name, patientid, encounterid, procedureid, accessionid, pa
     initAdd();
     addKeyListener();
 
-    contentToggleHierarchyButton(newHolder);
-
     //mask init
     var newHolder = $('#formpanel_'+name + '_' + idsNext.join("_"));
+
+    contentToggleHierarchyButton(newHolder);
     fieldInputMask( newHolder ); //setDefaultMask(btnObj);
     //comboboxes init
     initComboboxJs(idsNext, newHolder);
@@ -293,10 +293,10 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, encoun
     initAdd();
     addKeyListener();
 
-    contentToggleHierarchyButton(newHolder);
-
     //mask init
     var newHolder = $( '#formpanel_' + name + '_' + ids.join("_") );
+
+    contentToggleHierarchyButton(newHolder);
     fieldInputMask( newHolder );
     //comboboxes init
     initComboboxJs(ids, newHolder);
@@ -775,10 +775,14 @@ function contentToggleHierarchyButton(holder) {
     targetElement.on('hide.bs.collapse', function (e) {
 
         //console.log('hide: collapse');
+        //console.log($(this));
         //e.preventDefault();
         //hideORshowCollapsableBodies( $(this), 'hide' );
 
+
         var folderBtn = $(this).closest('.panel-multi-form').find('.panel-heading-hierarchy').find('button.form_body_toggle_btn').first();
+        //console.log("folderBtn.length="+folderBtn.length);
+        //console.log(folderBtn);
 
         if( folderBtn.hasClass('glyphicon-folder-close') ) {
             //console.log('hidden: folderBtn is closed => open it');
@@ -792,7 +796,9 @@ function contentToggleHierarchyButton(holder) {
             //$(this).collapse('show');
 
         } else {
+
             hideORshowCollapsableBodies( $(this), 'hide' );
+
         }
 
     });
@@ -829,12 +835,35 @@ function contentToggleHierarchyButton(holder) {
 }
 
 function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
+    //console.log("hideORshowCollapsableBodies bodyElement:");
     //console.log(bodyElement);
     bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse').collapse(toggleValue);
 
     //toggle all slide's lists
     if( bodyElement.hasClass('slide-form-element-holder') ) {
         bodyElement.closest('.panel-body').find('.panel-body-imaging.collapse').collapse(toggleValue);
+    }
+}
+
+function toggleSinglePanel(btn,panel) {
+
+    var btnEl = $(btn);
+    var panelEl = $(panel);
+
+    if( btnEl.hasClass('glyphicon-folder-close') ) {
+        //open
+        panelEl.show(400);
+        //panelEl.slideUp();
+        //panelEl.show("slide", {direction: "right" }, "slow");
+        //panelEl.show( "slide", { direction: "down"  }, 400 );
+        //panelEl.show(400).animation({direction:"down"});
+        //panelEl.show("slide", {direction: "right" }, 500);
+        //panelEl.effect('slide', { direction: 'down', mode: 'show' }, 400);
+    }
+
+    if( btnEl.hasClass('glyphicon-folder-open') ) {
+        //open
+        panelEl.hide(400);
     }
 }
 
