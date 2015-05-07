@@ -22,7 +22,7 @@ class AccessionDateType extends AbstractType
     {
 
         $builder->add('field', 'date', array(
-            'label' => "Accession Date",
+            'label' => "Accession Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone

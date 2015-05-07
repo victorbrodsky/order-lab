@@ -38,7 +38,7 @@ class AccessionAccessionType extends AbstractType
         }
 
         $builder->add( 'field', 'text', array(
-            'label'=>'Accession Number [or Label]',
+            'label'=>'Accession Number [or Label]:',
             'required'=>false,
             'attr' => $attr
         ));

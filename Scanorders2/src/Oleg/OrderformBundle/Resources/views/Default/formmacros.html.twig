@@ -234,11 +234,18 @@
 
 {% macro orderinfo(form) %}
 
+    {% set proxyuserName = null %}
+    {% set proxyuserId = null %}
+    {% if form.vars.value.proxyuser %}
+        {% set proxyuserName = form.vars.value.proxyuser.getUserNameStr() %}
+        {% set proxyuserId = form.vars.value.proxyuser.id %}
+    {% endif %}
+
     <input type="hidden" id="user_name" value="{{ form.vars.value.provider.getUserNameStr() }}" />
     <input type="hidden" id="user_id" value="{{ form.vars.value.provider.id }}" />
 
-    <input type="hidden" id="proxyuser_name" value="{{ form.vars.value.proxyuser.getUserNameStr() }}" />
-    <input type="hidden" id="proxyuser_id" value="{{ form.vars.value.proxyuser.id }}" />
+    <input type="hidden" id="proxyuser_name" value="{{ proxyuserName }}" />
+    <input type="hidden" id="proxyuser_id" value="{{ proxyuserId }}" />
 
     {% import _self as formmacros %}
 
@@ -842,6 +849,26 @@
 
     {%  else %}
 
+        {#show provider and status to dataquality specialist#}
+        {% set showInfoDate = 0 %}
+        {% set showInfoProvider = 0 %}
+        {% if field.vars.value.provider is defined %}
+            {% if cycle == "show" or cycle == "amend" %}
+                {% if field.vars.value.creationdate != "" and field.vars.value.status != 'valid' %}
+                    {% set showInfoDate = 1 %}
+                {% endif %}
+                {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
+                    {% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}
+                        {% set showInfoProvider = 1 %}
+                    {% endif %}
+                    {% if field.vars.value.status != 'valid' %}
+                        {% set showInfoDate = 1 %}
+                        {% set showInfoProvider = 1 %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
         {% if withspace is defined and withspace != "" %}
             <div class="row" style="padding-top: 1%;">
         {% else %}
@@ -849,79 +876,66 @@
         {% endif %}
 
             <div class="col-xs-6" align="right">
-                <p>
+                {#<p>#}
                 {% if nolabel is defined and nolabel != "" %}
                     {#no label#}
                 {% else %}
-
-                    {#show provider and status to dataquality specialist#}
-                    {% set showInfoDate = 0 %}
-                    {% set showInfoProvider = 0 %}
-                    {% if field.vars.value.provider is defined %}
-                        {% if cycle == "show" or cycle == "amend" %}
-                            {% if field.vars.value.creationdate != "" and field.vars.value.status != 'valid' %}
-                                {% set showInfoDate = 1 %}
-                            {% endif %}
-                            {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
-                                {% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}
-                                    {% set showInfoProvider = 1 %}
-                                {% endif %}
-                                {% if field.vars.value.status != 'valid' %}
-                                    {% set showInfoDate = 1 %}
-                                    {% set showInfoProvider = 1 %}
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
-
-
-                    {% if showInfoDate == 0 and showInfoProvider == 0 %}
-                        {#{% if fieldtype == "encounterpatfirstname" %}#}
-                            {#{{form_label(fieldThis.firstName)}}<strong>:</strong>#}
-                        {#{% elseif fieldtype == "encounterpatmiddlename" %}#}
-                            {#{{form_label(fieldThis.middleName)}}<strong>:</strong>#}
-                        {% if fieldtype == "paper" %}
-                            {{form_label(fieldThis.documents)}}<strong>:</strong>
-                        {% elseif fieldtype == "blockspecialStains" %}
-                            {{form_label(fieldThis.staintype)}}<br>
-                            {{form_label(fieldThis.field)}}<strong>:</strong>
-                        {% else %}
-                            {% if fieldThis.field is defined %}
-                                {{form_label(fieldThis.field)}}<strong>:</strong>
-                            {% endif %}
-                        {% endif %}
+                    {#label#}
+                    {% if fieldtype == "blockspecialStains" %}
+                        {{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider) }}
+                        {#<br>#}
+                        {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}
                     {% else %}
-                        {#{% if fieldtype == "encounterpatfirstname" %}#}
-                            {#{{form_label(fieldThis.firstName)}}#}
-                        {#{% elseif fieldtype == "encounterpatmiddlename" %}#}
-                            {#{{form_label(fieldThis.middleName)}}#}
-                        {% if fieldtype == "paper" %}
-                            {{form_label(fieldThis.documents)}}
-                        {% elseif fieldtype == "blockspecialStains" %}
-                            {{form_label(fieldThis.staintype)}}<br>
-                            {{form_label(fieldThis.field)}}
-                        {% else %}
-                            {% if fieldThis.field is defined %}
-                                {{form_label(fieldThis.field)}}
-                            {% endif %}
+                        {% if fieldThis.field is defined %}
+                            {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}
                         {% endif %}
                     {% endif %}
 
-                    {% if showInfoDate == 1 %}
-                        entered on
-                        {{field.vars.value.creationdate|date('Y-m-d')}}
-                    {% endif %}
-                    {% if showInfoProvider == 1 %}
-                        by
-                        {{field.vars.value.provider}}
-                        {% if showInfoDate == 1 %}
-                            ({{ field.vars.value.status }})<strong>:</strong>
-                        {% endif %}
-                    {% endif %}
+                    {#{% if showInfoDate == 0 and showInfoProvider == 0 %}#}
+                        {##}
+                        {#{% if fieldtype == "paper" %}                           #}
+                            {#{{ formmacros.labelWithInfo(field,fieldThis.documents,cycle,prototype,showInfoDate,showInfoProvider) }}#}
+                        {#{% elseif fieldtype == "blockspecialStains" %}                            #}
+                            {#{{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider) }}#}
+                            {#<br>#}
+                            {#{{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}#}
+                        {#{% else %}#}
+                            {#{% if fieldThis.field is defined %}                                #}
+                                {#{{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                        {##}
+                    {#{% else %}#}
+                        {##}
+                        {#{% if fieldtype == "paper" %}                            #}
+                            {#{{ formmacros.labelWithInfo(field,fieldThis.documents,cycle,prototype,showInfoDate,showInfoProvider) }}#}
+                        {#{% elseif fieldtype == "blockspecialStains" %}                            #}
+                            {#{{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider) }}#}
+                            {#<br>#}
+                            {#{{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}#}
+                        {#{% else %}#}
+                            {#{% if fieldThis.field is defined %}                               #}
+                                {#{{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                    {#{% endif %}#}
+
+                    {#{% if showInfoDate == 1 %}#}
+                        {#entered on#}
+                        {#{{field.vars.value.creationdate|date('Y-m-d')}}#}
+                    {#{% endif %}#}
+                    {#{% if showInfoProvider == 1 %}#}
+                        {#<a href="{{ path(scan_sitename~'_showuser', { 'id': field.vars.value.provider.id }) }}">#}
+                            {#<span class="glyphicon glyphicon-question-sign element-with-tooltip" aria-hidden="true"#}
+                                  {#data-toggle="tooltip" data-placement="right"#}
+                                  {#title="{{ field.vars.value.provider.getUserNameStr() }}">#}
+                            {#</span><!--#}
+                        {#--></a><strong>:</strong>#}
+                    {#{% endif %}#}
 
                 {% endif %}
 
-                </p>
+                {#</p>#}
             </div>
 
             <div class="col-xs-6" align="left">
@@ -994,7 +1008,56 @@
 
 {% endmacro %}
 
+{% macro labelWithInfo(fullfield,field,cycle,prototype,showInfoDate,showInfoProvider) %}
 
+    {% if prototype == "prototype" %}
+        {% set fieldThis = null %}
+    {% else %}
+        {% set fieldThis = fullfield.vars.value %}
+    {% endif %}
+
+    {#{{form_label(field)}}#}
+    {% set label = field.vars.label %}
+
+    {% set postfixDate = null %}
+    {% set postfixProvider = null %}
+
+    {% if showInfoDate == 1 %}
+        {#entered on#}
+        {#{{fieldThis.creationdate|date('Y-m-d')}}#}
+        {% set postfixDate = "entered on "~fieldThis.creationdate|date('Y-m-d') %}
+    {% endif %}
+
+    {#{% if showInfoProvider == 1 %}#}
+        {#<a href="{{ path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id }) }}">#}
+            {#<span class="glyphicon glyphicon-question-sign element-with-tooltip" aria-hidden="true"#}
+                  {#data-toggle="tooltip" data-placement="right"#}
+                  {#title="{{ fieldThis.provider.getUserNameStr() }}">#}
+            {#</span><!--#}
+        {#--></a><!--#}
+        {#&#123;&#35;<strong>:</strong>&#35;&#125;#}
+    {#{% endif %}<!--#}
+    {#--><strong>:</strong>#}
+
+    {% if showInfoProvider == 1 %}
+        {% set postfixProvider = '<a href='~path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id })~'>' %}
+        {% set postfixProvider = postfixProvider~'<span class="glyphicon glyphicon-question-sign element-with-tooltip" aria-hidden="true"' %}
+        {% set postfixProvider = postfixProvider~'data-toggle="tooltip" data-placement="right"' %}
+        {% set postfixProvider = postfixProvider~'title="'~fieldThis.provider.getUserNameStr()~'">' %}
+        {% set postfixProvider = postfixProvider~'</span></a>' %}
+    {% endif %}
+
+    {% if postfixDate or showInfoProvider %}
+        {% set label = label|replace({":":""}) %}
+        {% set label = label ~ " " ~ postfixDate ~ postfixProvider ~ ":" %}
+    {% endif %}
+    {#{{ form_label(field, label|raw) }}#}
+
+    <p>
+        <strong>{{ label|raw }}</strong>
+    </p>
+
+{% endmacro %}
 
 {#simple field widget. i.e. diffDiagnoses field widget#}
 {% macro fieldWidget(field) %}
@@ -1915,6 +1978,7 @@
                             {#{% if obtainFullObjectName %}#}
                             {{ obtainFullObjectName|raw }}
                             {#{% endif %}#}
+
                             {#the link to "Download" the image should only show if the "Image Link" field is empty#}
                             {#{% if not scan.vars.value.imageLink and scan.vars.value.documentContainer %}#}
                             {% if scan.vars.value.documentContainer %}
