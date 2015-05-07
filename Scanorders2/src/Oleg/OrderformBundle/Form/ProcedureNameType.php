@@ -26,7 +26,7 @@ class ProcedureNameType extends AbstractType
         $attr = array('class' => 'ajax-combobox ajax-combobox-procedure', 'type' => 'hidden');
 
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Procedure Type',
+            'label' => 'Procedure Type:',
             'required' => false,
             'attr' => $attr,
             'classtype' => 'procedureType',

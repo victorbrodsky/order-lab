@@ -875,12 +875,12 @@
             <div class="row">
         {% endif %}
 
+            {#field label#}
             <div class="col-xs-6" align="right">
-                {#<p>#}
+
                 {% if nolabel is defined and nolabel != "" %}
                     {#no label#}
                 {% else %}
-                    {#label#}
                     {% if fieldtype == "blockspecialStains" %}
                         {{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider) }}
                         {#<br>#}
@@ -890,54 +890,11 @@
                             {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}
                         {% endif %}
                     {% endif %}
-
-                    {#{% if showInfoDate == 0 and showInfoProvider == 0 %}#}
-                        {##}
-                        {#{% if fieldtype == "paper" %}                           #}
-                            {#{{ formmacros.labelWithInfo(field,fieldThis.documents,cycle,prototype,showInfoDate,showInfoProvider) }}#}
-                        {#{% elseif fieldtype == "blockspecialStains" %}                            #}
-                            {#{{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider) }}#}
-                            {#<br>#}
-                            {#{{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}#}
-                        {#{% else %}#}
-                            {#{% if fieldThis.field is defined %}                                #}
-                                {#{{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}#}
-                            {#{% endif %}#}
-                        {#{% endif %}#}
-                        {##}
-                    {#{% else %}#}
-                        {##}
-                        {#{% if fieldtype == "paper" %}                            #}
-                            {#{{ formmacros.labelWithInfo(field,fieldThis.documents,cycle,prototype,showInfoDate,showInfoProvider) }}#}
-                        {#{% elseif fieldtype == "blockspecialStains" %}                            #}
-                            {#{{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider) }}#}
-                            {#<br>#}
-                            {#{{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}#}
-                        {#{% else %}#}
-                            {#{% if fieldThis.field is defined %}                               #}
-                                {#{{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}#}
-                            {#{% endif %}#}
-                        {#{% endif %}#}
-                    {#{% endif %}#}
-
-                    {#{% if showInfoDate == 1 %}#}
-                        {#entered on#}
-                        {#{{field.vars.value.creationdate|date('Y-m-d')}}#}
-                    {#{% endif %}#}
-                    {#{% if showInfoProvider == 1 %}#}
-                        {#<a href="{{ path(scan_sitename~'_showuser', { 'id': field.vars.value.provider.id }) }}">#}
-                            {#<span class="glyphicon glyphicon-question-sign element-with-tooltip" aria-hidden="true"#}
-                                  {#data-toggle="tooltip" data-placement="right"#}
-                                  {#title="{{ field.vars.value.provider.getUserNameStr() }}">#}
-                            {#</span><!--#}
-                        {#--></a><strong>:</strong>#}
-                    {#{% endif %}#}
-
                 {% endif %}
 
-                {#</p>#}
             </div>
 
+            {#field input/value#}
             <div class="col-xs-6" align="left">
                 {% if fieldtype == "key" and ( cycle == 'new' or cycle == 'amend' ) %}
                     {% if classname == "patientmrn" %}
@@ -1023,21 +980,8 @@
     {% set postfixProvider = null %}
 
     {% if showInfoDate == 1 %}
-        {#entered on#}
-        {#{{fieldThis.creationdate|date('Y-m-d')}}#}
         {% set postfixDate = "entered on "~fieldThis.creationdate|date('Y-m-d') %}
     {% endif %}
-
-    {#{% if showInfoProvider == 1 %}#}
-        {#<a href="{{ path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id }) }}">#}
-            {#<span class="glyphicon glyphicon-question-sign element-with-tooltip" aria-hidden="true"#}
-                  {#data-toggle="tooltip" data-placement="right"#}
-                  {#title="{{ fieldThis.provider.getUserNameStr() }}">#}
-            {#</span><!--#}
-        {#--></a><!--#}
-        {#&#123;&#35;<strong>:</strong>&#35;&#125;#}
-    {#{% endif %}<!--#}
-    {#--><strong>:</strong>#}
 
     {% if showInfoProvider == 1 %}
         {% set postfixProvider = '<a href='~path(scan_sitename~'_showuser', { 'id': fieldThis.provider.id })~'>' %}
@@ -1053,6 +997,7 @@
     {% endif %}
     {#{{ form_label(field, label|raw) }}#}
 
+    {#render label#}
     <p>
         <strong>{{ label|raw }}</strong>
     </p>

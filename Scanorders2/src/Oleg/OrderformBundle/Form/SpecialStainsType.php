@@ -27,7 +27,7 @@ class SpecialStainsType extends AbstractType
 
         //field
         $builder->add('field', 'textarea', array(
-            'label' => 'Associated Special Stain Result',
+            'label' => 'Associated Special Stain Result:',
             'required' => false,
             'attr' => array('class'=>'textarea form-control form-control-modif')
         ));

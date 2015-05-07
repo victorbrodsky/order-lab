@@ -25,7 +25,7 @@ class PartSourceOrganType extends AbstractType
         $attr = array('class' => 'ajax-combobox ajax-combobox-organ', 'type' => 'hidden');
 
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Source Organ',
+            'label' => 'Source Organ:',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'sourceOrgan'

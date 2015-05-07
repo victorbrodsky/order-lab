@@ -75,7 +75,7 @@ class PartType extends AbstractType
 
         //description
         $attr = array('class'=>'textarea form-control');
-        $gen_attr = array('label'=>'Gross Description','class'=>'Oleg\OrderformBundle\Entity\PartDescription','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Gross Description:','class'=>'Oleg\OrderformBundle\Entity\PartDescription','type'=>null);    //type=null => auto type
         $builder->add('description', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
@@ -89,7 +89,7 @@ class PartType extends AbstractType
 
         //diagnosis
         //$attr = array('class'=>'textarea form-control', 'style'=>'height:35px');
-        $gen_attr = array('label'=>'Diagnosis','class'=>'Oleg\OrderformBundle\Entity\PartDisident','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Diagnosis:','class'=>'Oleg\OrderformBundle\Entity\PartDisident','type'=>null);    //type=null => auto type
         $builder->add('disident', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
@@ -114,7 +114,7 @@ class PartType extends AbstractType
         ));
 
         //diffDiagnoses
-        $gen_attr = array('label'=>'Differential Diagnoses','class'=>'Oleg\OrderformBundle\Entity\PartDiffDisident','type'=>'text');
+        $gen_attr = array('label'=>'Differential Diagnoses:','class'=>'Oleg\OrderformBundle\Entity\PartDiffDisident','type'=>'text');
         $attr = array('class'=>'form-control partdiffdisident-field');
         $builder->add('diffDisident', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
@@ -128,7 +128,7 @@ class PartType extends AbstractType
         ));
 
         //diseaseType
-        $gen_attr = array('label'=>'Type of Disease','class'=>'Oleg\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Type of Disease:','class'=>'Oleg\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
         $builder->add('diseaseType', 'collection', array(
             'type' => new PartDiseaseTypeType($this->params, null, $gen_attr),
             'allow_add' => true,

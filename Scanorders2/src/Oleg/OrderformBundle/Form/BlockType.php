@@ -37,7 +37,7 @@ class BlockType extends AbstractType
             'prototype_name' => '__blockblockname__',
         ));
 
-        $gen_attr = array('label'=>'Section Source','class'=>'Oleg\OrderformBundle\Entity\BlockSectionsource','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Section Source:','class'=>'Oleg\OrderformBundle\Entity\BlockSectionsource','type'=>null);    //type=null => auto type
         $builder->add('sectionsource', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,

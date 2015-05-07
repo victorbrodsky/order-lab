@@ -79,7 +79,7 @@ class SlideType extends AbstractType
         $attr = array('class' => 'combobox combobox-width slidetype-combobox');
         $builder->add('slidetype', 'entity', array(
             'class' => 'OlegOrderformBundle:SlideType',
-            'label'=>'* Slide Type:',
+            'label'=>'Slide Type:',
             'required' => true,
             'attr' => $attr,
             'query_builder' => function(EntityRepository $er) {

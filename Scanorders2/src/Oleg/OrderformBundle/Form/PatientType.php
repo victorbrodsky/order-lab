@@ -54,7 +54,7 @@ class PatientType extends AbstractType
         ));
 
         $attr = array('class'=>'textarea form-control patient-clinicalhistory-field');
-        $gen_attr = array('label'=>'Clinical Summary','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
+        $gen_attr = array('label'=>'Clinical Summary:','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
         $builder->add('clinicalHistory', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             //'read_only' => $flag,

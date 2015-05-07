@@ -22,7 +22,7 @@ class EncounterPatfirstnameType extends AbstractType
     {
 
         $builder->add( 'field', 'text', array(
-            'label'=>"Patient's First Name (at the time of encounter)",
+            'label'=>"Patient's First Name (at the time of encounter):",
             'required' => false,
             'attr' => array('class' => 'form-control form-control-modif encounter-firstName')
         ));

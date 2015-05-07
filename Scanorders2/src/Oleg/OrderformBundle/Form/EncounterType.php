@@ -104,7 +104,7 @@ class EncounterType extends AbstractType
         ));
 
         $attr = array('class'=>'form-control encounterage-field patientage-mask');
-        $gen_attr = array('label'=>"Patient's Age (at the time of encounter)",'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage','type'=>'text');
+        $gen_attr = array('label'=>"Patient's Age (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage','type'=>'text');
         $builder->add('patage', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
@@ -118,7 +118,7 @@ class EncounterType extends AbstractType
 
         //pathistory'
         $attr = array('class'=>'textarea form-control encounterhistory-field');
-        $gen_attr = array('label'=>"Clinical History (at the time of encounter)",'class'=>'Oleg\OrderformBundle\Entity\EncounterPathistory','type'=>null);
+        $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPathistory','type'=>null);
         $builder->add('pathistory', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,

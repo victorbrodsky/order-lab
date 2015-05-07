@@ -27,7 +27,7 @@ class RelevantScansType extends AbstractType
     {
 
         $builder->add('field', null, array(
-            'label' => 'Link(s) to related image(s)',
+            'label' => 'Link(s) to related image(s):',
             'required' => false,
             'attr' => array('class'=>'form-control sliderelevantscan-field', 'style'=>'height: 35px;')
             //'attr' => array('class'=>'form-control')

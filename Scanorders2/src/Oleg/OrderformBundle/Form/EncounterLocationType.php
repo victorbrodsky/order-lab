@@ -24,7 +24,7 @@ class EncounterLocationType extends AbstractType
 
         $builder->add('field', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Location',
-            'label' => 'Encounter Location',
+            'label' => 'Encounter Location:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
