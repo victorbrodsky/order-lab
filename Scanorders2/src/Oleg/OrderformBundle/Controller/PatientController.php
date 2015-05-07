@@ -295,6 +295,12 @@ class PatientController extends Controller
                 $sourceOrgan = $part->obtainValidField('sourceOrgan');
                 $organList = $em->getRepository('OlegOrderformBundle:OrganList')->find(1);
                 $sourceOrgan->setField($organList);
+
+                //set the "Type of Disease" in Part to "Neoplastic" and "Metastatic" to show the child and grandchild questions.
+                $typeDisease = $part->obtainValidField('diseaseType');
+                $typeDisease->setField('Neoplastic');
+                $typeDisease->setOrigin('Metastatic');
+                $typeDisease->setPrimaryOrgan($organList);
             }
 
             $block = new Block($withfields,$status,$user,$system);
