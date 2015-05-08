@@ -212,7 +212,7 @@
         {% set showFlag = false %}
     {% endif %}
 
-    {% if showFlag and container.vars.value.provider %}
+    {% if showFlag and container.vars.value and container.vars.value.provider %}
 
         {% if attr is not defined %}
             {% set attr = 'disabled' %}
@@ -454,18 +454,24 @@
 
         {% for message in object.orderinfo %}
 
-            {#message:{{ message.vars.value }}#}
+            {#message:{{ message.vars.value.getMessageCategory() }}#}
 
             {#decide if this object is the same as input object #}
             {%  set showMessage = false %}
             {% for input in message.vars.value.inputs %}
-                {% if
-                        input.entityNamespace~"\\"~input.entityName == object.vars.value.obtainFullClassName
+                {% set messageInputClassName = input.entityNamespace~"\\"~input.entityName %}
+                {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
+                {#<br>compare :{{ messageInputClassName }} ?= {{currentObjectClassName }}#}
+                {#<br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}#}
+                 {% if
+                        messageInputClassName == currentObjectClassName
                         and input.entityId == object.vars.value.id
                 %}
                     {%  set showMessage = true %}
                 {% endif %}
             {% endfor %}
+
+            {#<br>showMessage:({{ showMessage }})<br>#}
 
             {% if showMessage %}
 
@@ -1975,8 +1981,8 @@
 
         {#<h5>Extra data structure fields:</h5>#}
 
-        {% if patient.patientType is defined %}
-            {{ formmacros.inputArrayField(patient.patientType,cycle,"patienttype","","","","",status) }}
+        {% if patient.type is defined %}
+            {{ formmacros.inputArrayField(patient.type,cycle,"patienttype","","","","",status) }}
         {% endif %}
 
         {% if patient.race is defined %}

@@ -35,9 +35,10 @@ class InstructionList extends ListAbstract
 
 
 
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
-    }
+//    public function __construct() {
+//        parent::__construct();
+//        $this->synonyms = new ArrayCollection();
+//    }
 
 
 

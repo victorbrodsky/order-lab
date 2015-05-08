@@ -33,7 +33,7 @@ class Report {
     //Should be able to create a new user
     //Pathologist names are entered. Use a wrapper because report can have multiple Pathologists
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_reports_signingPathologists",
      *      joinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
@@ -42,7 +42,7 @@ class Report {
     private $signingPathologists;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_reports_consultedPathologists",
      *      joinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}

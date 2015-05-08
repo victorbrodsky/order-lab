@@ -119,9 +119,19 @@ abstract class ListAbstract
 
 
 
-    public function __construct() {
+    public function __construct( $creator = null ) {
 
         $this->synonyms = new ArrayCollection();
+
+        //set mandatory list attributes
+        $this->setName("");
+        $this->setType('user-added');
+        $this->setCreatedate(new \DateTime());
+        $this->setOrderinlist(-1);
+
+        if( $creator ) {
+            $this->setCreator($creator);
+        }
 
     }
 

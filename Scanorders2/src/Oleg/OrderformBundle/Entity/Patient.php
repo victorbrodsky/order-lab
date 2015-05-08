@@ -61,7 +61,7 @@ class Patient extends ObjectAbstract
     private $clinicalHistory;
         
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient", cascade={"persist"})
      **/
     protected $orderinfo;
 
@@ -94,7 +94,7 @@ class Patient extends ObjectAbstract
      * Hierarchy Tree
      * @ORM\OneToMany(targetEntity="PatientType", mappedBy="patient", cascade={"persist"})
      */
-    private $patientType;
+    private $type;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 
 
@@ -123,7 +123,7 @@ class Patient extends ObjectAbstract
         $this->race = new ArrayCollection();
         $this->deceased = new ArrayCollection();
         $this->contactinfo = new ArrayCollection();
-        $this->patientType = new ArrayCollection();
+        $this->type = new ArrayCollection();
 
         if( $withfields ) {
             $this->addMrn( new PatientMrn($status,$provider,$sourcesystem) );
@@ -157,7 +157,7 @@ class Patient extends ObjectAbstract
         $this->race = $this->cloneDepend($this->race,$this);
         $this->deceased = $this->cloneDepend($this->deceased,$this);
         $this->contactinfo = $this->cloneDepend($this->contactinfo,$this);
-        $this->patientType = $this->cloneDepend($this->patientType,$this);
+        $this->type = $this->cloneDepend($this->type,$this);
 
     }
 
@@ -712,7 +712,7 @@ class Patient extends ObjectAbstract
         $this->addRace( new PatientRace($status,$provider,$source) );
         $this->addDeceased( new PatientDeceased($status,$provider,$source) );
         $this->addContactinfo( new PatientContactinfo($status,$provider,$source) );
-        $this->addPatientType( new PatientType($status,$provider,$source) );
+        $this->addType( new PatientType($status,$provider,$source) );
     }
 
     public function getRace()
@@ -770,20 +770,20 @@ class Patient extends ObjectAbstract
         $this->contactinfo->removeElement($contactinfo);
     }
 
-    public function getPatientType()
+    public function getType()
     {
-        return $this->patientType;
+        return $this->type;
     }
-    public function addPatientType($item)
+    public function addType($item)
     {
-        if( $item && !$this->patientType->contains($item) ) {
-            $this->patientType->add($item);
+        if( $item && !$this->type->contains($item) ) {
+            $this->type->add($item);
         }
         return $this;
     }
-    public function removePatientType($item)
+    public function removeType($item)
     {
-        $this->patientType->removeElement($item);
+        $this->type->removeElement($item);
     }
     ///////////////////////// Extra fields /////////////////////////
 

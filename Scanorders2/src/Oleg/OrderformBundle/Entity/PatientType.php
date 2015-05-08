@@ -17,7 +17,7 @@ class PatientType extends PatientArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="patientType")
+     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="type")
      * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", nullable=true)
      */
     protected $patient;
