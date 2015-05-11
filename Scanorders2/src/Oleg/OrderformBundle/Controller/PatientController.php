@@ -153,12 +153,16 @@ class PatientController extends Controller
             'datastructure' => 'datastructure'
         );
 
-        //specific fields
-        $params['message.sources'] = true;
+        //message fields
         $params['endpoint.system'] = true;
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
-        $params['message.idnumber'] = true;
+        $params['message.proxyuser'] = true;
+        $params['message.idnumber'] = false;
+        $params['message.sources'] = false;
+        $params['message.destinations'] = false;
+        $params['message.inputs'] = false;
+        $params['message.outputs'] = false;
 
         //specific orders
 //        $params['message.laborder'] = true;
@@ -210,6 +214,17 @@ class PatientController extends Controller
             'user' => $user,
             'datastructure' => 'datastructure'
         );
+
+        //message fields
+        $params['endpoint.system'] = true;
+        $params['message.orderdate'] = true;
+        $params['message.provider'] = true;
+        $params['message.proxyuser'] = true;
+        $params['message.idnumber'] = false;
+        $params['message.sources'] = false;
+        $params['message.destinations'] = false;
+        $params['message.inputs'] = false;
+        $params['message.outputs'] = false;
 
         $form = $this->createForm( new PatientType($params,$entity), $entity, array('disabled' => true) );
 
@@ -911,6 +926,10 @@ class PatientController extends Controller
                 $slide->addScan($scanimage);
             }
 
+            //attach one existing aperio image http://c.med.cornell.edu/EditRecord.php?TableName=Slide&Ids[]=42814,
+            //image ID:73660
+            //image/aperio/73660
+
             //Accession: add n autopsy fields: add n documentContainers to attachmentContainer
             if( $attachmentContainerAccessionNumber > 0 ) {
                 $attachmentContainerAccession = $accession->getAttachmentContainer();
@@ -984,114 +1003,6 @@ class PatientController extends Controller
         }
 
     }
-
-//    public function addSpecificMessage_OLD( $object, $messageTypeStr, $addObjectToMessage=true ) {
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $message = new OrderInfo();
-//
-//        $user = $this->get('security.context')->getToken()->getUser();
-//        $message->setProvider($user);
-//
-////        $message->setIdnumber($messageTypeStr.' id number');
-//
-//        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageTypeStr);
-//        $message->setMessageCategory($category);
-//
-//        $source = new Endpoint();
-//        $message->addSource($source);
-//
-//        $destination = new Endpoint();
-//        $message->addDestination($destination);
-//
-//        //add attachment with 1 documentContainer
-//        $attachmentContainerPart = $message->getAttachmentContainer();
-//        if( !$attachmentContainerPart ) {
-//            $attachmentContainerPart = new AttachmentContainer();
-//            $message->setAttachmentContainer($attachmentContainerPart);
-//        }
-//        for( $i = 0; $i < 1; $i++ ) {
-//            $attachmentContainerPart->addDocumentContainer( new DocumentContainer($user) );
-//        }
-//
-//
-//        //add this object to message and input
-//        $object->addOrderinfo($message);
-//
-//        //set this object as order input
-//        if( $addObjectToMessage ) {
-//            $message->addInputObject($object);
-//        }
-//
-//
-//        if( $messageTypeStr == "Lab Order" ) {
-//
-//            $laborder = new LabOrder();
-//            $laborder->setOrderinfo($message);
-//            $message->setLaborder($laborder);
-//
-//            $em->persist($message);
-//        }
-//
-//        if( $messageTypeStr == "Report" ) {
-//
-//            $report = new Report();
-//            $report->setOrderinfo($message);
-//            $message->setReport($report);
-//
-//            $signingPathologist = new UserWrapper();
-//            $report->addSigningPathologist($signingPathologist);
-//
-//            $consultedPathologist = new UserWrapper();
-//            $report->addConsultedPathologist($consultedPathologist);
-//
-//            $em->persist($message);
-//        }
-//
-//        if( $messageTypeStr == "Block Order" ) {
-//            $blockorder = new BlockOrder();
-//            $blockorder->setOrderinfo($message);
-//            $message->setBlockorder($blockorder);
-//
-//            $instruction = new InstructionList($user);
-//            $blockorder->setInstruction($instruction);
-//
-//            $em->persist($message);
-//        }
-//
-//        if( $messageTypeStr == "Slide Order" ) {
-//            $slideorder = new SlideOrder();
-//            $slideorder->setOrderinfo($message);
-//            $message->setSlideorder($slideorder);
-//
-//
-//            $instruction = new InstructionList($user);
-//            $slideorder->setInstruction($instruction);
-//
-//            $em->persist($message);
-//        }
-//
-//        if( $messageTypeStr == "Stain Order" ) {
-//            $stainorder = new StainOrder();
-//            $stainorder->setOrderinfo($message);
-//            $message->setStainorder($stainorder);
-//
-//            $instruction = new InstructionList($user);
-//            $stainorder->setInstruction($instruction);
-//
-//            $em->persist($message);
-//        }
-//
-//        if( $messageTypeStr == "Multi-Slide Scan Order" ) {
-//            $scanorder = new ScanOrder();
-//            $scanorder->setOrderinfo($message);
-//            $message->setScanorder($scanorder);
-//        }
-//
-//        //$em->persist($message);
-//
-//        return $message;
-//    }
 
 
     public function createSpecificMessage( $messageCategoryStr ) {

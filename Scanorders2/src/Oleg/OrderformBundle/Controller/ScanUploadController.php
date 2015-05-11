@@ -34,4 +34,28 @@ class ScanUploadController extends UploadController {
         return $this->downloadFileMethod($id);
     }
 
+
+    /**
+     * @Route("/image-viewer/{systemid}/{imageid}", name="scan_image_viewer", requirements={"systemid" = "\d+", "imageid" = "\d+"})
+     * @Method("GET")
+     */
+    public function imageFileAction($systemid,$imageid) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
+
+        //1) get image info by imageid
+
+        //2) show image in Aperio's image viewer http://c.med.cornell.edu/imageserver/@@_DGjlRH2SJIRkb9ZOOr1sJEuLZRwLUhWzDSDb-sG0U61NzwQ4a8Byw==/@73660/view.apml
+
+        $response = new Response();
+
+
+
+        return $response;
+    }
+
+
+
 } 

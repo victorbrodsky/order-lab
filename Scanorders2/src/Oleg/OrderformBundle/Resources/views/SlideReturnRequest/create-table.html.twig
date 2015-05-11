@@ -163,12 +163,18 @@
                     {{ formmacros.field(form.returnoption) }}
                     {#{{ formmacros.field(form.provider) }}#}
                     {{ formmacros.simplefield( "Submitter:", form.orderinfo.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
-                    {{ formmacros.field(form.orderinfo.proxyuser) }}
+
+                    {% if form.orderinfo.proxyuser is defined %}
+                        {{ formmacros.field(form.orderinfo.proxyuser) }}
+                    {% endif %}
+
                     {{ formmacros.field(form.orderinfo.institution) }}
 
-                    {% for destination in form.orderinfo.destinations %}
-                        {{ formmacros.field(destination.location) }}
-                    {% endfor %}
+                    {% if form.orderinfo.destinations is defined %}
+                        {% for destination in form.orderinfo.destinations %}
+                            {{ formmacros.field(destination.location) }}
+                        {% endfor %}
+                    {% endif %}
 
                     {{ formmacros.field(form.urgency) }}
 

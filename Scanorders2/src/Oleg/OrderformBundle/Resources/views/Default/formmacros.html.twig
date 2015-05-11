@@ -202,7 +202,7 @@
 
 {% endmacro %}
 
-{% macro field_provider( container, cycle, attr ) %}
+{% macro field_show_user( container, fieldname, cycle, attr ) %}
 
     {% import _self as formmacros %}
 
@@ -212,21 +212,39 @@
         {% set showFlag = false %}
     {% endif %}
 
-    {% if showFlag and container.vars.value and container.vars.value.provider %}
-
-        {% if attr is not defined %}
-            {% set attr = 'disabled' %}
+    {% if fieldname == "provider" %}
+        {% set userValue = container.vars.value.provider %}
+        {% set userLabel = container.provider.vars.label %}
+        {% if container.provider is defined %}
+            {% set userForm = container.provider %}
         {% endif %}
+    {% endif %}
 
-        {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': container.vars.value.provider.id })~'">'~container.vars.value.provider.getUserNameStr()~'</a>' %}
-        {% set label = container.provider.vars.label %}
+    {% if fieldname == "proxyuser" %}
+        {% set userValue = container.vars.value.proxyuser %}
+        {% set userLabel = container.proxyuser.vars.label %}
+        {% if container.proxyuser is defined %}
+            {% set userForm = container.proxyuser %}
+        {% endif %}
+    {% endif %}
 
-        {{ formmacros.simplefield( label, hreflink, "", attr ) }}
+    {% if userForm is defined %}
+        {% if showFlag and container.vars.value and userValue %}
 
-    {% else %}
+            {% if attr is not defined %}
+                {% set attr = 'disabled' %}
+            {% endif %}
 
-        {{ formmacros.field(container.provider) }}
+            {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': userValue.id })~'">'~userValue.getUserNameStr()~'</a>' %}
+            {% set label = userLabel %}
 
+            {{ formmacros.simplefield( label, hreflink, "", attr ) }}
+
+        {% else %}
+
+            {{ formmacros.field(userForm) }}
+
+        {% endif %}
     {% endif %}
 
 {% endmacro %}
@@ -509,43 +527,54 @@
                     <p>
                         {#make the value of "ID:" into a clickable link to the order.#}
                         {% if orderViewable %}
-                            {#<a href="{{ path('multy_show',{'id':orderId}) }}">{{ orderId }}</a>#}
                             {% set orderIdHref = '<a href="'~path('multy_show',{'id':orderId})~'">'~orderId~'</a>' %}
                         {% else %}
                             {% set orderIdHref = orderId %}
                         {% endif %}
-                        {#orderIdHref:{{ orderIdHref|raw }}#}
                         {{ formmacros.simplefield( "ID:", orderIdHref, "", disabled ) }}
 
+                        {#controlled by controller and form#}
                         {% if message.idnumber is defined %}
                             {{ formmacros.field( message.idnumber ) }}
                             {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
                         {% endif %}
 
-                        {#{{ formmacros.simplefield( "Date:", message.vars.value.orderdate|date('Y-m-d')~" at "~message.vars.value.orderdate|date('h:i a'), "input", disabled ) }}#}
-                        {#{{ formmacros.simplefield( "Provider:", message.vars.value.provider, "input", disabled ) }}#}
-                        {% if message.idnumber is defined %}
+                        {#controlled by controller and form#}
+                        {% if message.orderdate is defined %}
                             {{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}
                         {% endif %}
 
+                        {#controlled by controller and form#}
                         {% if message.provider is defined %}
-                            {{ formmacros.field(message.provider) }}
+                            {{ formmacros.field_show_user( message, "provider", cycle ) }}
                         {% endif %}
 
-                        <p>
-                            {% for input in message.vars.value.inputs %}
-                                {#{{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "input", disabled ) }}#}
-                                {{ formmacros.simplefield( "Input:", input.getFullName, "input", disabled ) }}
-                            {% endfor %}
-                        </p>
+                        {#controlled by controller and form#}
+                        {% if message.proxyuser is defined %}
+                            {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
+                        {% endif %}
 
-                        <p>
-                            {% for output in message.vars.value.outputs %}
-                                {#{{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "input", disabled ) }}#}
-                                {{ formmacros.simplefield( "Output:", output.getFullName, "input", disabled ) }}
-                            {% endfor %}
-                        </p>
+                        {#controlled by controller and form#}
+                        {% if message.inputs is defined %}
+                            <p>
+                                {% for input in message.vars.value.inputs %}
+                                    {#{{ formmacros.simplefield( "Input:", "ID="~input.entityId~", "~input.entityNamespace~"\\"~input.entityName, "input", disabled ) }}#}
+                                    {{ formmacros.simplefield( "Input:", input.getFullName, "input", disabled ) }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
 
+                        {#controlled by controller and form#}
+                        {% if message.outputs is defined %}
+                            <p>
+                                {% for output in message.vars.value.outputs %}
+                                    {#{{ formmacros.simplefield( "Output:", output.entityNamespace~"\\"~output.entityName, "input", disabled ) }}#}
+                                    {{ formmacros.simplefield( "Output:", output.getFullName, "input", disabled ) }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+
+                        {#controlled by controller and form#}
                         {% if message.sources is defined %}
                             <p>
                                 {% for source in message.sources %}
@@ -561,18 +590,21 @@
                             </p>
                         {% endif %}
 
-                        <p>
-                            {% for destination in message.destinations %}
-                                {#{{ formmacros.simplefield( "Destination System:", destination.system, "input", disabled ) }}#}
-                                {#{{ formmacros.simplefield( "Destination Location:", destination.location, "input", disabled ) }}#}
-                                {% if destination.system is defined %}
-                                    {{ formmacros.field( destination.system ) }}
-                                {% endif %}
-                                {% if destination.location is defined %}
-                                    {{ formmacros.field( destination.location ) }}
-                                {% endif %}
-                            {% endfor %}
-                        </p>
+                        {#controlled by controller and form#}
+                        {% if message.destinations is defined %}
+                            <p>
+                                {% for destination in message.destinations %}
+                                    {#{{ formmacros.simplefield( "Destination System:", destination.system, "input", disabled ) }}#}
+                                    {#{{ formmacros.simplefield( "Destination Location:", destination.location, "input", disabled ) }}#}
+                                    {% if destination.system is defined %}
+                                        {{ formmacros.field( destination.system ) }}
+                                    {% endif %}
+                                    {% if destination.location is defined %}
+                                        {{ formmacros.field( destination.location ) }}
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
 
 
                         {#specific fields#}
@@ -1454,7 +1486,7 @@
 
     {% if container.provider is defined %}
         {#{{ formmacros.field(container.provider) }}#}
-        {{ formmacros.field_provider( container, cycle ) }}
+        {{ formmacros.field_show_user( container, "provider", cycle ) }}
     {% endif %}
 
 {% endmacro %}
@@ -2261,7 +2293,7 @@
         {% endif %}
 
         {#{% if scan.provider is defined %}#}
-            {#{{ formmacros.field_provider( scan.provider, cycle ) }}#}
+            {#{{ formmacros.field_show_user( scan.provider, "provider", cycle ) }}#}
         {#{% endif %}#}
 
         {% if scan.equipment is defined %}

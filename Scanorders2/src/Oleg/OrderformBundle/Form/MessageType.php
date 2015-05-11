@@ -30,6 +30,17 @@ class MessageType extends AbstractType
             $this->params['type'] = 'Unknown Order';
         }
 
+        //show by default
+        if( !array_key_exists('message.provider', $this->params) ) {
+            $this->params['message.provider'] = true;
+        }
+        if( !array_key_exists('message.proxyuser', $this->params) ) {
+            $this->params['message.proxyuser'] = true;
+        }
+        if( !array_key_exists('message.destinations', $this->params) ) {
+            $this->params['message.destinations'] = true;
+        }
+
         //default labels
         $labels = array(
             'educational' => 'Educational:',
@@ -81,6 +92,7 @@ class MessageType extends AbstractType
         }
 
         if( array_key_exists('message.orderdate', $this->params) &&  $this->params['message.orderdate'] == true ) {
+            //echo "message.orderdate=".$this->params['message.orderdate']."<br>";
             $builder->add('orderdate','date',array(
                 'widget' => 'single_text',
                 //'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
@@ -91,12 +103,27 @@ class MessageType extends AbstractType
             ));
         }
 
+        //echo "provider show=".$this->params['message.provider']."<br>";
         if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
-            //echo "provider label=".$this->labels['provider']."<br>";
             $builder->add('provider', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => $this->labels['provider'],
                 'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                            ->where('u.roles LIKE :roles OR u=:user')
+                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                    },
+            ));
+        }
+
+        if( array_key_exists('message.proxyuser', $this->params) &&  $this->params['message.proxyuser'] == true ) {
+            $builder->add('proxyuser', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label'=>$this->labels['proxyuser'],
+                'required' => false,
+                //'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('u')
@@ -154,20 +181,6 @@ class MessageType extends AbstractType
             'required'  => false,
         ));
 
-
-        $builder->add('proxyuser', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label'=>$this->labels['proxyuser'],
-            'required' => false,
-            //'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    ->where('u.roles LIKE :roles OR u=:user')
-                    ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
-            },
-        ));
-
         if( array_key_exists('message.sources', $this->params) &&  $this->params['message.sources'] == true ) {
             $this->params['endpoint.location'] = $this->labels['sources.location'];
             $this->params['endpoint.system'] = $this->labels['sources.system'];
@@ -184,18 +197,20 @@ class MessageType extends AbstractType
         }
 
         //Endpoint object: destination - location
-        $this->params['endpoint.location'] = $this->labels['destinations.location'];
-        $this->params['endpoint.system'] = $this->labels['destinations.system'];
-        $builder->add('destinations', 'collection', array(
-            'type' => new EndpointType($this->params,$this->entity),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__destinations__',
-        ));
+        if( array_key_exists('message.destinations', $this->params) &&  $this->params['message.destinations'] == true ) {
+            $this->params['endpoint.location'] = $this->labels['destinations.location'];
+            $this->params['endpoint.system'] = $this->labels['destinations.system'];
+            $builder->add('destinations', 'collection', array(
+                'type' => new EndpointType($this->params,$this->entity),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__destinations__',
+            ));
+        }
 
         //Institution Tree
         if( array_key_exists('institutions', $this->params) ) {
