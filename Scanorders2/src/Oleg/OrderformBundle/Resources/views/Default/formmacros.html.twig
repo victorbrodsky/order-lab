@@ -477,8 +477,10 @@
 
                 {% if message.vars.value.oid %}
                     {% set orderId = message.vars.value.oid %}
+                    {% set orderViewable = true %}
                 {% else %}
                     {% set orderId = message.vars.value.id %}
+                    {% set orderViewable = false %}
                 {% endif %}
 
                 {% if orderId %}
@@ -505,7 +507,15 @@
                     <div id="form_body_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
 
                     <p>
-                        {{ formmacros.simplefield( "ID:", orderId, "input", disabled ) }}
+                        {#make the value of "ID:" into a clickable link to the order.#}
+                        {% if orderViewable %}
+                            {#<a href="{{ path('multy_show',{'id':orderId}) }}">{{ orderId }}</a>#}
+                            {% set orderIdHref = '<a href="'~path('multy_show',{'id':orderId})~'">'~orderId~'</a>' %}
+                        {% else %}
+                            {% set orderIdHref = orderId %}
+                        {% endif %}
+                        {#orderIdHref:{{ orderIdHref|raw }}#}
+                        {{ formmacros.simplefield( "ID:", orderIdHref, "", disabled ) }}
 
                         {% if message.idnumber is defined %}
                             {{ formmacros.field( message.idnumber ) }}
