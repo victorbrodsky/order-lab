@@ -136,6 +136,7 @@ class PatientController extends Controller
 
         $thisparams = array(
             'objectNumber' => 1,
+            'aperioImageNumber' => 1,
             'withorders' => true,
             'accession.attachmentContainer' => 1,
             'part.attachmentContainer' => 1,
@@ -373,7 +374,8 @@ class PatientController extends Controller
 
         ///////////////////// prepare test patient /////////////////////
         $thisparams = array(
-            'objectNumber' => 2,
+            'objectNumber' => 1,
+            'aperioImageNumber' => 1,
             //'withorders' => false,               //add orders to correspondent entities
             'persist' => false,                 //persist each patient hierarchy object (not used)
             //'specificmessages' => $messages,    //add specific messages to each patient hierarchy
@@ -667,6 +669,12 @@ class PatientController extends Controller
             $objectNumber = 1;
         }
 
+        if( array_key_exists('aperioImageNumber', $params) ) {
+            $aperioImageNumber = $params['aperioImageNumber'];
+        } else {
+            $aperioImageNumber = 0;
+        }
+
         if( array_key_exists('withorders', $params) ) {
             $withOrders = $params['withorders'];
         } else {
@@ -929,6 +937,36 @@ class PatientController extends Controller
             //attach one existing aperio image http://c.med.cornell.edu/EditRecord.php?TableName=Slide&Ids[]=42814,
             //image ID:73660
             //image/aperio/73660
+            for( $countImage = 0; $countImage < $aperioImageNumber; $countImage++ ) {
+                $scanimage = new Imaging('valid',$user,$system);
+
+                if( 0 && $testpatient ) {
+                    $scanimage->setField('20X');
+
+                    //set imageid
+                    $scanimage->setImageId('testimage_id_'.$countImage);
+                    $docContainer = $scanimage->getDocumentContainer();
+
+                    if( !$docContainer ) {
+                        $docContainer = new DocumentContainer($user);
+                        $scanimage->setDocumentContainer($docContainer);
+                    }
+
+                    $docContainer->setTitle('Aperio Image');
+
+                    //set image
+                    //testimage_5522979c2e736.jpg
+                    //$uniqueName = uniqid('testimage_').".jpg";
+                    $uniqueName = 'testimage_5522979c2e736.jpg';
+                    //echo "uniqueName=".$uniqueName."<br>";
+                    //exit();
+
+                    $docContainer->addDocument($document);
+                } //if testpatient
+
+                //add scan to slide
+                $slide->addScan($scanimage);
+            }
 
             //Accession: add n autopsy fields: add n documentContainers to attachmentContainer
             if( $attachmentContainerAccessionNumber > 0 ) {

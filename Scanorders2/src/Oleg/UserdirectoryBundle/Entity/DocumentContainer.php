@@ -82,6 +82,7 @@ class DocumentContainer {
      */
     private $type;
 
+    //TODO: create imageLink with two fields: type and link
     /**
      * @ORM\Column(type="string", nullable=true)
      */
