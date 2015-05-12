@@ -956,6 +956,7 @@ class PatientController extends Controller
 
                     $docContainer->setTitle('Aperio Image');
 
+                    //TODO: we can record only Aperio slide id as input. Then what?
                     //add link to document container
                     $linklink = "http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml";
 
