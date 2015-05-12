@@ -168,9 +168,20 @@ class DocumentContainerType extends AbstractType
             }
 
             if( $this->params['document.link'] ) {
-                $builder->add('link', null, array(
-                    'label' => $this->params['document.link.label'],
-                    'attr' => array('class' => 'form-control'),
+                //echo "show link<br>";
+//                $builder->add('link', null, array(
+//                    'label' => $this->params['document.link.label'],
+//                    'attr' => array('class' => 'form-control'),
+//                ));
+                $builder->add('links', 'collection', array(
+                    'type' => new LinkType($this->params),
+                    'label' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'required' => false,
+                    'by_reference' => false,
+                    'prototype' => true,
+                    'prototype_name' => '__links__',
                 ));
             }
 

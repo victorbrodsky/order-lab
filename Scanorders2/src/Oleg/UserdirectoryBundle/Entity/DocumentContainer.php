@@ -82,16 +82,20 @@ class DocumentContainer {
      */
     private $type;
 
-    //TODO: create imageLink with two fields: type and link
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $link;
+     * @ORM\ManyToMany(targetEntity="Link", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="user_documentcontainer_link",
+     *      joinColumns={@ORM\JoinColumn(name="documentcontainer_id", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="link_id", referencedColumnName="id", onDelete="cascade")}
+     *      )
+     **/
+    private $links;
 
 
     public function __construct($provider=null) {
         $this->documents = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->links = new ArrayCollection();
 
         if( $provider ) {
             $this->setProvider($provider);
@@ -261,20 +265,20 @@ class DocumentContainer {
         return $this->title;
     }
 
-    /**
-     * @param mixed $link
-     */
-    public function setLink($link)
+    public function getLinks()
     {
-        $this->link = $link;
+        return $this->links;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getLink()
+    public function addLink($item)
     {
-        return $this->link;
+        if( $item && !$this->links->contains($item) ) {
+            $this->links->add($item);
+        }
+        return $this;
+    }
+    public function removeLink($item)
+    {
+        $this->links->removeElement($item);
     }
 
 

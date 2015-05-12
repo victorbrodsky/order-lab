@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\UserdirectoryBundle\Entity\Link;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -940,13 +941,14 @@ class PatientController extends Controller
             for( $countImage = 0; $countImage < $aperioImageNumber; $countImage++ ) {
                 $scanimage = new Imaging('valid',$user,$system);
 
-                if( 0 && $testpatient ) {
+                if( $testpatient ) {
                     $scanimage->setField('20X');
 
                     //set imageid
-                    $scanimage->setImageId('testimage_id_'.$countImage);
-                    $docContainer = $scanimage->getDocumentContainer();
+                    $scanimage->setImageId('73660');
 
+                    //get document container
+                    $docContainer = $scanimage->getDocumentContainer();
                     if( !$docContainer ) {
                         $docContainer = new DocumentContainer($user);
                         $scanimage->setDocumentContainer($docContainer);
@@ -954,12 +956,23 @@ class PatientController extends Controller
 
                     $docContainer->setTitle('Aperio Image');
 
-                    //set image
-                    //testimage_5522979c2e736.jpg
-                    //$uniqueName = uniqid('testimage_').".jpg";
-                    $uniqueName = 'testimage_5522979c2e736.jpg';
-                    //echo "uniqueName=".$uniqueName."<br>";
-                    //exit();
+                    //add link to document container
+                    $linklink = "http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml";
+
+                    //add link Via WebScope
+                    $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
+                    $link = new Link($user);
+                    $link->setLinktype($linkType);
+                    $link->setLink($linklink);
+                    $docContainer->addLink($link);
+
+                    //add link Via WebScope
+
+                    //add link Via ImageScope
+
+                    //add Thumbnail
+
+                    //add Label
 
                     $docContainer->addDocument($document);
                 } //if testpatient

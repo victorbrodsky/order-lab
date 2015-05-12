@@ -1435,6 +1435,13 @@
 {% endmacro %}
 {% macro fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInit) %}
     {% import _self as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
 
     {{ form_errors(container) }}
 
@@ -1445,8 +1452,15 @@
         {{ formmacros.field(container.title) }}
     {% endif %}
 
-    {% if container.link is defined %}
-        {{ formmacros.field(container.link) }}
+    {% if container.links is defined %}
+        {% for link in container.links %}
+            {{ formmacros.field(link.linktype) }}
+            {% if showFlag and link.vars.value.link %}
+                {{ usermacros.htmlLink(link.link.vars.value,link.link.vars.label) }}
+            {% else %}
+                {{ formmacros.field(link.link) }}
+            {% endif %}
+        {% endfor %}
     {% endif %}
 
     {#documents/images in container#}

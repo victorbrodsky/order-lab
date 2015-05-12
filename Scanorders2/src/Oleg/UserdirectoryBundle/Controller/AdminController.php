@@ -6,6 +6,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
+use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -154,6 +155,7 @@ class AdminController extends Controller
         $count_sourcesystems = $this->generateSourceSystems();
 
         $count_documenttypes = $this->generateDocumentTypes();
+        $count_generateLinkTypes = $this->generateLinkTypes();
 
         //training
         $count_completionReasons = $this->generateCompletionReasons();
@@ -211,7 +213,8 @@ class AdminController extends Controller
             'Document Types='.$count_documenttypes.', '.
             'Source Organizations='.$count_sourceOrganizations.', '.
             'Importances='.$count_generateImportances.', '.
-            'AuthorshipRoles='.$count_generateAuthorshipRoles.' '.
+            'AuthorshipRoles='.$count_generateAuthorshipRoles.', '.
+            'LinkTypes='.$count_generateLinkTypes.' '.
             //'TitlePositionTypes='.$count_generateTitlePositionTypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -1449,6 +1452,43 @@ class AdminController extends Controller
         foreach( $elements as $value ) {
 
             $entity = new DocumentTypeList();
+            $this->setDefaultList($entity,$count,$username,$value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+
+    public function generateLinkTypes() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Thumbnail',
+            'Label',
+            'Via WebScope',
+            'Via ImageScope',
+            'Download'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new LinkTypeList();
             $this->setDefaultList($entity,$count,$username,$value);
 
             $em->persist($entity);
