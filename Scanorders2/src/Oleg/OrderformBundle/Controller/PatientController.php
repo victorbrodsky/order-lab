@@ -137,6 +137,7 @@ class PatientController extends Controller
 
         $thisparams = array(
             'objectNumber' => 1,
+            'dropzoneImageNumber' => 1,
             'aperioImageNumber' => 1,
             'withorders' => true,
             'accession.attachmentContainer' => 1,
@@ -375,7 +376,8 @@ class PatientController extends Controller
 
         ///////////////////// prepare test patient /////////////////////
         $thisparams = array(
-            'objectNumber' => 1,
+            'objectNumber' => 2,
+            'dropzoneImageNumber' => 1,
             'aperioImageNumber' => 1,
             //'withorders' => false,               //add orders to correspondent entities
             'persist' => false,                 //persist each patient hierarchy object (not used)
@@ -670,6 +672,12 @@ class PatientController extends Controller
             $objectNumber = 1;
         }
 
+        if( array_key_exists('dropzoneImageNumber', $params) ) {
+            $dropzoneImageNumber = $params['dropzoneImageNumber'];
+        } else {
+            $dropzoneImageNumber = 0;
+        }
+
         if( array_key_exists('aperioImageNumber', $params) ) {
             $aperioImageNumber = $params['aperioImageNumber'];
         } else {
@@ -875,10 +883,10 @@ class PatientController extends Controller
             }
 
             //add scan (Imaging) to a slide
-            if( $objectNumber > 0 ) {
+            if( $dropzoneImageNumber > 0 ) {
                 $slide->clearScan();
             }
-            for( $countImage = 0; $countImage < $objectNumber; $countImage++ ) {
+            for( $countImage = 0; $countImage < $dropzoneImageNumber; $countImage++ ) {
                 $scanimage = new Imaging('valid',$user,$system);
 
                 if( $testpatient ) {
@@ -944,8 +952,20 @@ class PatientController extends Controller
                 if( $testpatient ) {
                     $scanimage->setField('20X');
 
+                    //Input: Slide Id: 23
+                    //Input: url: /image-viewer/{system}/{type}/{tablename}/{imageid}
+                    //Slide Image url: \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
                     //set imageid
-                    $scanimage->setImageId('73660');
+                    $sourceSystemName = 'Aperio eSlide Manager on C.MED.CORNELL.EDU';
+                    $sourceSystem = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+//                    if( !$sourceSystem ) {
+//                        $sourceSystem = null;
+//                    }
+                    //echo "sourceSystem id=".$sourceSystem->getId()."<br>";
+                    //exit();
+
+                    $slideId = 23;
+                    $scanimage->setImageId($slideId);
 
                     //get document container
                     $docContainer = $scanimage->getDocumentContainer();
@@ -954,26 +974,43 @@ class PatientController extends Controller
                         $scanimage->setDocumentContainer($docContainer);
                     }
 
-                    $docContainer->setTitle('Aperio Image');
+                    $docContainer->setTitle('Image from ' . $sourceSystemName);
 
-                    //TODO: we can record only Aperio slide id as input. Then what?
-                    //add link to document container
-                    $linklink = "http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml";
+                    $router = $this->container->get('router');
 
                     //add link Via WebScope
+                    //use http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml
                     $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystem->getId(),'type'=>$linkType->getId(),'tablename'=>'Slide','imageid'=>$slideId),true);
                     $link = new Link($user);
                     $link->setLinktype($linkType);
                     $link->setLink($linklink);
                     $docContainer->addLink($link);
 
-                    //add link Via WebScope
-
                     //add link Via ImageScope
+                    //use sis file containing url to image from Aperio DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
+                    $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystem->getId(),'type'=>$linkType->getId(),'tablename'=>'Slide','imageid'=>$slideId),true);
+                    $link = new Link($user);
+                    $link->setLinktype($linkType);
+                    $link->setLink($linklink);
+                    $docContainer->addLink($link);
 
                     //add Thumbnail
+                    $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystem->getId(),'type'=>$linkType->getId(),'tablename'=>'Slide','imageid'=>$slideId),true);
+                    $link = new Link($user);
+                    $link->setLinktype($linkType);
+                    $link->setLink($linklink);
+                    $docContainer->addLink($link);
 
                     //add Label
+                    $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystem->getId(),'type'=>$linkType->getId(),'tablename'=>'Slide','imageid'=>$slideId),true);
+                    $link = new Link($user);
+                    $link->setLinktype($linkType);
+                    $link->setLink($linklink);
+                    $docContainer->addLink($link);
 
                     $docContainer->addDocument($document);
                 } //if testpatient

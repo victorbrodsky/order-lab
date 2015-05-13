@@ -1398,6 +1398,9 @@
 {% macro fieldDocumentContainer(container,cycle,prefix,renderType,documentspercontainer,dropzoneInit) %}
     {% import _self as formmacros %}
 
+    {#testing#}
+    <a target="_blank" href="{{ path(scan_sitename~'_image_viewer', { 'system': 6, 'type': 3, 'tablename': 'Slide', 'imageid': 23 }) }}">Test Link to Aperio Slide ID 23</a>
+
     {% if renderType is defined and renderType == "panel" %}
         <div class="panel panel-default">
 
