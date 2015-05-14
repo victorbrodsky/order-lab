@@ -31,15 +31,43 @@ use FOS\UserBundle\Model\User as BaseUser;
  *      @ORM\Index( name="username_idx", columns={"username"} )
  *  }
  * )
- * @ORM\AttributeOverrides({ @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) ) })
+ * @ORM\AttributeOverrides({
+ *      @ORM\AttributeOverride(name="email",
+ *          column=@ORM\Column(
+ *              name     = "email",
+ *              type     = "string",
+ *              unique   = false,
+ *              nullable = true
+ *          )
+ *      ),
+ *      @ORM\AttributeOverride(name="emailCanonical",
+ *          column=@ORM\Column(
+ *              name     = "email_canonical",
+ *              type     = "string",
+ *              unique   = false,
+ *              nullable = true
+ *          )
+ *      )
+ * })
  */
 class User extends BaseUser {
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+//    /**
+//     * @ORM\Column(name="email", type="string", unique=false, nullable=true)
+//     */
+//    protected $email;
+//
+//    /**
+//     * @ORM\Column(name="email_canonical", type="string", unique=false, nullable=true)
+//     */
+//    protected $emailCanonical;
 
     /**
      * Ldap Object Distinguished Name

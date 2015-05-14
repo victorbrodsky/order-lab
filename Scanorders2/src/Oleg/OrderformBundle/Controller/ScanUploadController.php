@@ -38,6 +38,7 @@ class ScanUploadController extends UploadController {
     }
 
 
+    //Aperio API for authenticated user: http://c.med.cornell.edu/imageserver/@73956?GETPATH => \\collage\images\2015-05-14\73956.svs
 
     //Aperio communicate to DB by using "soap call" http://www.aperio.com/webservices/
     //$res = $client->__soapCall(	'GetRecordImages',		//SOAP Method Name
@@ -58,71 +59,135 @@ class ScanUploadController extends UploadController {
      */
     public function imageFileAction($system,$type,$tablename,$imageid) {
 
-        $em = $this->getDoctrine()->getManager();
+        //1) get image url info by imageid
 
-        //$document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
+        ////////////////// aperio DB ////////////////////////////
+        $aperioEm = $this->getDoctrine()->getManager('aperio');
 
-        //AperioAuthentication
-        //Array ( [ReturnCode] => 0 [ReturnText] => [Token] => g9_qgXEA7Q2aMKLzYsdHv3yFn0HaUjhtOvDhZgIaipW47PMTJQryCQ==
-        //[UserId] => 3 [FullName] => Administrator [LoginName] => administrator [Phone] => [E_Mail] => [LastLoginTime] => 2015-05-13 14:23:37
-        //[PasswordDaysLeft] => -1 [UserMustChangePassword] => False [StartPage] => [AutoView] => [ViewingMode] => [DisableLicenseWarning] => [ScanDataGroupId] => )
+        $aperioConnection = $aperioEm->getConnection();
 
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        //print_r($this->get('session'));
-        $sessionId = $this->get('session')->getId();
-        //$sessionId = 'es1yx28s0rccwcc4s0oog8g04gg4cwg';
-        echo "session id=".$sessionId."<br>";
-
-//        echo "php session:<br>";
-//        print_r($_SESSION);
-//        echo "<br>";
-
-        //DataServer Error: -7002: Failed to execute method DataServer.ImageProxy.GetRecordImages: Token is invalid or has timed out.
-		$_SESSION['AuthToken'] = $sessionId;
-
-        //echo "session:<br>";
-        //print_r($_SESSION ['AuthToken']);
-        //echo "<br>";
-
-        //imageId=23
-        //url=\\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
-
-        $Id = $imageid;
-        $TableName = $tablename;
-
-        echo "ADB_GetRecordImages: Id=".$Id.", TableName=".$TableName."<br>";
-        $RecordImages = ADB_GetRecordImages($Id, $TableName);
-        echo "Slide's RecordImages count=".count($RecordImages)."<br>";
-
-        foreach( $RecordImages as $image ) {
-            echo $TableName." image:<br>";
-            print_r($image);
-            echo "<br>";
-
-            $ImageFile = new \cImageFile();
-
-            $ImageFile->SetFilePath($image['CompressedFileLocation']);
-            $ImageServerURL = $ImageFile->GetURL();
-
-            echo $TableName.": ImageServerURL=".$ImageServerURL."<br>";
-            echo $TableName.": ImageId=".$Id."<br>";
-
+        if( $aperioConnection ) {
+            //echo "connection is OK <br>";
+            //print_r($aperioConnection);
+            //echo "<br>";
         }
 
+        $statement = $aperioConnection->prepare(
+            'SELECT * FROM [Aperio].[dbo].[Image] a WHERE a.ImageId = :imageId'
+        );
+        $statement->bindValue('imageId', intval($imageid));
+        $statement->execute();
 
+        // for SELECT queries
+        $results = $statement->fetchAll();  // note: !== $connection->fetchAll()!
 
-        //1) get image info by imageid
+        // for INSERT, UPDATE, DELETE queries
+        $affected_rows = $statement->rowCount();
+
+        //echo "Affected Rows=".$affected_rows."<br>";
+
+        //echo "<br>Result:<br>";
+        //print_r($results);
+        //echo "<br><br>";
+
+        if( $affected_rows != 1 && count($results) != 1 ) {
+            throw $this->createNotFoundException('Unable to find unique image with id='.$imageid);
+        }
+
+        $compressedFileLocation = $results[0]['CompressedFileLocation'];
+        //echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
+        //////////////////////////////////////////////////////////
 
         //2) show image in Aperio's image viewer http://c.med.cornell.edu/imageserver/@@_DGjlRH2SJIRkb9ZOOr1sJEuLZRwLUhWzDSDb-sG0U61NzwQ4a8Byw==/@73660/view.apml
 
         $response = new Response();
 
-        exit('exit imageFileAction');
+        if( $compressedFileLocation ) {
+
+            $originalname = $tablename."_Image_ID_" . $imageid.".sis";
+            $size = 1;
+
+            $sisFile = "<SIS>".
+                "<CloseAllImages/>".
+                "<ViewingMode></ViewingMode>".
+                "<Image>".
+                "<URL>".$compressedFileLocation."</URL>".
+                "<Title>".$originalname."</Title>".
+                "</Image>".
+                "</SIS>";
+
+            $response->headers->set('Content-Type', 'application/unknown');
+            $response->headers->set('Content-Description', 'File Transfer');
+            $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
+            $response->headers->set('Content-Length', $size);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->setContent($sisFile);
+
+        } else {
+            $response->setContent('error');
+        }
+
+        //exit('exit imageFileAction');
 
         return $response;
     }
 
+
+
+
+
+    //$em = $this->getDoctrine()->getManager();
+
+    //$document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
+
+    //AperioAuthentication
+    //Array ( [ReturnCode] => 0 [ReturnText] => [Token] => g9_qgXEA7Q2aMKLzYsdHv3yFn0HaUjhtOvDhZgIaipW47PMTJQryCQ==
+    //[UserId] => 3 [FullName] => Administrator [LoginName] => administrator [Phone] => [E_Mail] => [LastLoginTime] => 2015-05-13 14:23:37
+    //[PasswordDaysLeft] => -1 [UserMustChangePassword] => False [StartPage] => [AutoView] => [ViewingMode] => [DisableLicenseWarning] => [ScanDataGroupId] => )
+
+    //$user = $this->get('security.context')->getToken()->getUser();
+
+
+//        //print_r($this->get('session'));
+//        $sessionId = $this->get('session')->getId();
+//        //$sessionId = 'es1yx28s0rccwcc4s0oog8g04gg4cwg';
+//        echo "session id=".$sessionId."<br>";
+//
+////        echo "php session:<br>";
+////        print_r($_SESSION);
+////        echo "<br>";
+//
+//        //DataServer Error: -7002: Failed to execute method DataServer.ImageProxy.GetRecordImages: Token is invalid or has timed out.
+//		$_SESSION['AuthToken'] = $sessionId;
+//
+//        //echo "session:<br>";
+//        //print_r($_SESSION ['AuthToken']);
+//        //echo "<br>";
+//
+//        //imageId=23
+//        //url=\\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
+//
+//        $Id = $imageid;
+//        $TableName = $tablename;
+//
+//        echo "ADB_GetRecordImages: Id=".$Id.", TableName=".$TableName."<br>";
+//        $RecordImages = ADB_GetRecordImages($Id, $TableName);
+//        echo "Slide's RecordImages count=".count($RecordImages)."<br>";
+//
+//        foreach( $RecordImages as $image ) {
+//            echo $TableName." image:<br>";
+//            print_r($image);
+//            echo "<br>";
+//
+//            $ImageFile = new \cImageFile();
+//
+//            $ImageFile->SetFilePath($image['CompressedFileLocation']);
+//            $ImageServerURL = $ImageFile->GetURL();
+//
+//            echo $TableName.": ImageServerURL=".$ImageServerURL."<br>";
+//            echo $TableName.": ImageId=".$Id."<br>";
+//
+//        }
 
 
 } 

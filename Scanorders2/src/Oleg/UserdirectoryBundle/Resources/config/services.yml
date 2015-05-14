@@ -89,8 +89,10 @@ parameters:
 #fos user bundle
 fos_user:
     db_driver: orm
+#    model_manager_name: default
     firewall_name: main
     user_class: Oleg\UserdirectoryBundle\Entity\User
+
 
 services:
 

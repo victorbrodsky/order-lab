@@ -149,6 +149,8 @@ security:
      - { path: ^/scan/slide-return-request, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
      - { path: ^/scan/my-slide-return-requests, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
 
+     - { path: ^/scan/image-viewer/, role: [ROLE_SCANORDER_SUBMITTER] }
+
      #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
      - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') and !has_role('ROLE_SCANORDER_BANNED')" }
 

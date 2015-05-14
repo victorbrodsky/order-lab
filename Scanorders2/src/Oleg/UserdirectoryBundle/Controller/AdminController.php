@@ -431,8 +431,14 @@ class AdminController extends Controller
             "dbServerAddress" => "127.0.0.1",
             "dbServerPort" => "null",
             "dbServerAccountUserName" => "symfony2",
-            "dbServerAccountPassword" => "symfony2",
+            "dbServerAccountPassword" => "Symfony!2",
             "dbDatabaseName" => "ScanOrder",
+
+            "aperioeSlideManagerDBServerAddress" => "127.0.0.1",
+            "aperioeSlideManagerDBServerPort" => "null",
+            "aperioeSlideManagerDBUserName" => "symfony2",
+            "aperioeSlideManagerDBPassword" => "Symfony!2",
+            "aperioeSlideManagerDBName" => "Aperio",
 
             "institutionurl" => "http://weill.cornell.edu",
             "institutionname" => "Weill Cornell Medical College",
