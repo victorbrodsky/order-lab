@@ -11,38 +11,47 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="scan_imaging")
  */
-class Imaging extends SlideArrayFieldAbstract
+class Imaging extends ObjectAbstract
 {
+
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="imaging")
+     **/
+    protected $orderinfo;
 
     /**
      * @ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")
      * @ORM\JoinColumn(name="slide", referencedColumnName="id")
      */
-    protected $slide;
+    private $slide;
 
-    //TODO: convert to MagList?
+//    /**
+//     * @ORM\Column(name="magnification", type="string", nullable=true)
+//     */
+//    private $magnification;
     /**
-     * @ORM\Column(name="mag", type="string", nullable=true)
-     */
-    protected $field;
+     * @ORM\ManyToOne(targetEntity="Magnification")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     **/
+    private $magnification;
     
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $scanregion;
+    private $scanregion;
     
     /**
      * Note/Reason for Scan
      * @ORM\Column(type="text", nullable=true)    
      */
-    protected $note;
+    private $note;
     
 
     /**
      * date of scan performed
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $scandate;
+    private $scandate;
 
 
     //Extra fields for datastructure: Whole Slide Image
@@ -53,10 +62,10 @@ class Imaging extends SlideArrayFieldAbstract
      */
     private $imageId;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $imageLink;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $imageLink;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
@@ -80,6 +89,27 @@ class Imaging extends SlideArrayFieldAbstract
 
 
 
+    public function __construct( $status='valid', $provider=null, $source=null )
+    {
+        parent::__construct($status,$provider,$source);
+    }
+
+    public function makeDependClone() {
+        //empty method
+    }
+
+
+
+
+    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
+    {
+        $this->slide = $slide;
+        return $this;
+    }
+    public function getSlide()
+    {
+        return $this->slide;
+    }
 
     /**
      * @param mixed $documentContainer
@@ -129,21 +159,21 @@ class Imaging extends SlideArrayFieldAbstract
         return $this->imageId;
     }
 
-    /**
-     * @param mixed $imageLink
-     */
-    public function setImageLink($imageLink)
-    {
-        $this->imageLink = $imageLink;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImageLink()
-    {
-        return $this->imageLink;
-    }
+//    /**
+//     * @param mixed $imageLink
+//     */
+//    public function setImageLink($imageLink)
+//    {
+//        $this->imageLink = $imageLink;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getImageLink()
+//    {
+//        return $this->imageLink;
+//    }
 
     /**
      * Set scanregion
@@ -225,6 +255,24 @@ class Imaging extends SlideArrayFieldAbstract
         return $this->scandate;
     }
 
+    /**
+     * @param mixed $magnification
+     */
+    public function setMagnification($magnification)
+    {
+        $this->magnification = $magnification;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMagnification()
+    {
+        return $this->magnification;
+    }
+
+
+
     public function __toString() {
         return $this->scanregion."";
     }
@@ -235,10 +283,10 @@ class Imaging extends SlideArrayFieldAbstract
 
         $fullNameArr = array();
 
-        //field -> mag
-        $mag = $this->getField();
-        if( $mag && $mag != "" ) {
-            $fullNameArr[] = $mag."";
+        //magnification
+        $magnification = $this->getMagnification();
+        if( $magnification && $magnification != "" ) {
+            $fullNameArr[] = $magnification."";
         }
 
         //imageId
@@ -250,6 +298,25 @@ class Imaging extends SlideArrayFieldAbstract
         $fullName = implode(": ",$fullNameArr);
 
         return $fullName;
+    }
+
+
+    public function getChildren() {
+        return null;    //new ArrayCollection();
+    }
+
+    public function obtainKeyField() {
+        return null;
+    }
+
+    public function getParent() {
+        return $this->getSlide();
+    }
+
+    public function setParent($parent) {
+        if( $parent ) {
+            $this->setSlide($parent);
+        }
     }
 
 }

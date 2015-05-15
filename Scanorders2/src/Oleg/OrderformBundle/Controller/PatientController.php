@@ -94,6 +94,7 @@ class PatientController extends Controller
      */
     public function newPatientAction()
     {
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
         //check if user has at least one institution
@@ -153,7 +154,8 @@ class PatientController extends Controller
             'type' => 'multy',
             'cycle' => 'new',
             'user' => $user,
-            'datastructure' => 'datastructure'
+            'em' => $em,
+            'datastructure' => 'datastructure',
         );
 
         //message fields
@@ -215,6 +217,7 @@ class PatientController extends Controller
             'type' => 'multy',
             'cycle' => "show",
             'user' => $user,
+            'em' => $em,
             'datastructure' => 'datastructure'
         );
 
@@ -593,6 +596,7 @@ class PatientController extends Controller
     public function linkSingleMessageObject( $message, $object ) {
 
         $inputPairs = array(
+            "Imaging" => array("Report"),
             "Slide" => array("Lab Order","Report","Stain Order","Multi-Slide Scan Order"),
             "Block" => array("Slide Order"),
             "Part" => array("Block Order")
@@ -721,6 +725,62 @@ class PatientController extends Controller
         $status = 'valid';
         $user = $this->get('security.context')->getToken()->getUser();
 
+
+        //////////////////////////// get lists ////////////////////////////////////
+        $uniqueName = 'testimage_5522979c2e736.jpg';
+        $document = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
+        //echo "document=".$document."<br>";
+
+        if( !$document ) {
+            $document = new Document($user);
+            $document->setOriginalname('testimage.jpg');
+            $document->setUniquename($uniqueName);
+            $dir = 'Uploaded/scan-order/documents';
+            $document->setUploadDirectory($dir);
+            $filename = $dir."/".$uniqueName;
+            if( file_exists($filename) ) {
+                $imagesize = filesize($filename);
+                //echo "The imagesize=$imagesize<br>";
+                $document->setSize($imagesize);
+            } else {
+                //echo "The file $filename does not exist<br>";
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    'The file'.$filename.' does not exist. Please copy this file to web/'.$dir
+                );
+                return $this->redirect( $this->generateUrl('scan-patient-list') );
+                //throw new \Exception( 'The file'.$filename.' does not exist' );
+            }
+        }
+
+        $staintype = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
+        $organList = $em->getRepository('OlegOrderformBundle:OrganList')->find(1);
+        $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName('Frozen Section');
+
+        $sourceSystemName = 'Aperio eSlide Manager on C.MED.CORNELL.EDU';
+        $sourceSystemAperio = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+        $sourceSystemAperioClean = $sourceSystemAperio->getName();
+        //$sourceSystemAperioClean = str_replace(" ","_",$sourceSystemAperio->getName());
+
+        $linkTypeWebScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
+        $linkTypeWebScopeClean = $linkTypeWebScope->getName();
+
+        $linkTypeImageScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
+        $linkTypeImageScopeClean = $linkTypeImageScope->getName();
+
+        $linkTypeThumbnail = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
+        $linkTypeThumbnailClean = $linkTypeThumbnail->getName();
+
+        $linkTypeLabel = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
+        $linkTypeLabelClean = $linkTypeLabel->getName();
+
+        $linkTypeDownload = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
+        $linkTypeDownloadClean = $linkTypeDownload->getName();
+
+        $maginification = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
+        //////////////////////////// EOF get lists ////////////////////////////////////
+
+
         $patient = new Patient($withfields,$status,$user,$system);
         $patient->addExtraFields($status,$user,$system);
 
@@ -809,7 +869,7 @@ class PatientController extends Controller
                 $partname = $part->obtainValidField('partname');
                 $partname->setField('A');
                 $sourceOrgan = $part->obtainValidField('sourceOrgan');
-                $organList = $em->getRepository('OlegOrderformBundle:OrganList')->find(1);
+
                 $sourceOrgan->setField($organList);
 
                 //set the "Type of Disease" in Part to "Neoplastic" and "Metastatic" to show the child and grandchild questions.
@@ -823,7 +883,6 @@ class PatientController extends Controller
 
             //set specialStains to null
             $blockSpecialstain = $block->getSpecialStains()->first();
-            $staintype = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
             $blockSpecialstain->setStaintype($staintype);
             //$blockSpecialstain->setField('stain ' . $staintype);
             //echo "specialStain field=".$blockSpecialstain->getField()."<br>";
@@ -871,14 +930,13 @@ class PatientController extends Controller
 
             if( $testpatient ) {
                 //set stain
-                $slidestain = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
-                $slide->getStain()->first()->setField($slidestain);
+
+                $slide->getStain()->first()->setField($staintype);
 
                 //set slide title
                 $slide->setTitle('Test Slide ' . $count);
 
                 //set slide type
-                $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName('Frozen Section');
                 $slide->setSlidetype($slidetype);
             }
 
@@ -890,7 +948,7 @@ class PatientController extends Controller
                 $scanimage = new Imaging('valid',$user,$system);
 
                 if( $testpatient ) {
-                    $scanimage->setField('20X');
+                    $scanimage->setMagnification($maginification);
 
                     //set imageid
                     $scanimage->setImageId('testimage_id_'.$countImage);
@@ -903,38 +961,7 @@ class PatientController extends Controller
 
                     $docContainer->setTitle('Test Image');
 
-                    //set image
-                    //testimage_5522979c2e736.jpg
-                    //$uniqueName = uniqid('testimage_').".jpg";
-                    $uniqueName = 'testimage_5522979c2e736.jpg';
-                    //echo "uniqueName=".$uniqueName."<br>";
-                    //exit();
 
-                    //add document to DocumentContainer
-                    $document = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
-                    //echo "document=".$document."<br>";
-
-                    if( !$document ) {
-                        $document = new Document($user);
-                        $document->setOriginalname('testimage.jpg');
-                        $document->setUniquename($uniqueName);
-                        $dir = 'Uploaded/scan-order/documents';
-                        $document->setUploadDirectory($dir);
-                        $filename = $dir."/".$uniqueName;
-                        if( file_exists($filename) ) {
-                            $imagesize = filesize($filename);
-                            //echo "The imagesize=$imagesize<br>";
-                            $document->setSize($imagesize);
-                        } else {
-                            //echo "The file $filename does not exist<br>";
-                            $this->get('session')->getFlashBag()->add(
-                                'notice',
-                                'The file'.$filename.' does not exist. Please copy this file to web/'.$dir
-                            );
-                            return $this->redirect( $this->generateUrl('scan-patient-list') );
-                            //throw new \Exception( 'The file'.$filename.' does not exist' );
-                        }
-                    }
 
                     $docContainer->addDocument($document);
                 } //if testpatient
@@ -947,24 +974,13 @@ class PatientController extends Controller
             //image ID:73660
             //image/aperio/73660
             for( $countImage = 0; $countImage < $aperioImageNumber; $countImage++ ) {
-                $scanimage = new Imaging('valid',$user,$system);
+                $scanimage = new Imaging('valid',$user,$sourceSystemAperio);
 
                 if( $testpatient ) {
-                    $scanimage->setField('20X');
+                    $scanimage->setMagnification($maginification);
 
-                    //Input: Slide Id: 23
-                    //Input: url: /image-viewer/{system}/{type}/{tablename}/{imageid}
-                    //Slide Image url: \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
-                    //set imageid
-                    $sourceSystemName = 'Aperio eSlide Manager on C.MED.CORNELL.EDU';
-                    $sourceSystem = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
-//                    if( !$sourceSystem ) {
-//                        $sourceSystem = null;
-//                    }
-                    //echo "sourceSystem id=".$sourceSystem->getId()."<br>";
-                    //exit();
-
-                    $slideId = 23;
+                    //Input: Slide Id from c.med: 42814
+                    $slideId = 42814;
                     $scanimage->setImageId($slideId);
 
                     //get document container
@@ -974,41 +990,44 @@ class PatientController extends Controller
                         $scanimage->setDocumentContainer($docContainer);
                     }
 
-                    $docContainer->setTitle('Image from ' . $sourceSystemName);
+                    $docContainer->setTitle('Image from ' . $sourceSystemAperio);
 
                     $router = $this->container->get('router');
 
                     //add link Via WebScope
                     //use http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml
-                    $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystem->getId(),'type'=>$linkType->getId(),'tablename'=>'Slide','imageid'=>$slideId),true);
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
                     $link = new Link($user);
-                    $link->setLinktype($linkType);
+                    $link->setLinktype($linkTypeWebScope);
                     $link->setLink($linklink);
                     $docContainer->addLink($link);
 
                     //add link Via ImageScope
                     //use sis file containing url to image from Aperio DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
-                    $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystem->getId(),'type'=>$linkType->getId(),'tablename'=>'Slide','imageid'=>$slideId),true);
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
                     $link = new Link($user);
-                    $link->setLinktype($linkType);
+                    $link->setLinktype($linkTypeImageScope);
                     $link->setLink($linklink);
                     $docContainer->addLink($link);
 
                     //add Thumbnail
-                    $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystem->getId(),'type'=>$linkType->getId(),'tablename'=>'Slide','imageid'=>$slideId),true);
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),true);
                     $link = new Link($user);
-                    $link->setLinktype($linkType);
+                    $link->setLinktype($linkTypeThumbnail);
                     $link->setLink($linklink);
                     $docContainer->addLink($link);
 
                     //add Label
-                    $linkType = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystem->getId(),'type'=>$linkType->getId(),'tablename'=>'Slide','imageid'=>$slideId),true);
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),true);
                     $link = new Link($user);
-                    $link->setLinktype($linkType);
+                    $link->setLinktype($linkTypeLabel);
+                    $link->setLink($linklink);
+                    $docContainer->addLink($link);
+
+                    //add download
+                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+                    $link = new Link($user);
+                    $link->setLinktype($linkTypeDownload);
                     $link->setLink($linklink);
                     $docContainer->addLink($link);
 

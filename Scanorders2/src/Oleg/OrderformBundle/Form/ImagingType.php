@@ -48,43 +48,112 @@ class ImagingType extends AbstractType
                 'attr' => array('class'=>'textarea form-control'),   //form-control
         ));
 
-        //abstract data
-        $builder->add('others', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Imaging',
-            'label' => false,
-			'attr' => array('style'=>'display:none;')
-        ));
+//        //abstract data
+//        $builder->add('others', new ArrayFieldType(), array(
+//            'data_class' => 'Oleg\OrderformBundle\Entity\Imaging',
+//            'label' => false,
+//			'attr' => array('style'=>'display:none;')
+//        ));
+
+
+//        ///////////// mag /////////////
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//
+//            $scan = $event->getData();
+//            $form = $event->getForm();
+//
+//            $tooltip =  "Scanning at 40X magnification is done Friday to Monday. ".
+//                        "Some of the slides (about 7% of the batch) may have to be rescanned the following week in order to obtain sufficient image quality. ".
+//                        "We will do our best to expedite the process.";
+//
+//            $magArr = array(
+//                'label' => 'Magnification:',
+//                'choices' => $this->getArrayOfMaginifications(),
+//                'required' => true,
+//                'multiple' => false,
+//                'expanded' => true,
+//                'attr' => array('class' => 'horizontal_type element-with-tooltip', 'required'=>'required', 'title'=>$tooltip),
+//                //'classtype' => 'magnification'
+//            );
+//
+//            // check if the Scan object is "new"
+//            if( !$scan || null === $scan->getId() ) {
+//                $magArr['data'] = 0;    //'20X';
+//            }
+//
+//            //$form->add( 'magnification', 'employees_custom_selector', $magArr );
+//            $form->add( 'magnification', 'choice', $magArr );
+//
+//        });
+//        ///////////// EOF mag /////////////
 
 
         ///////////// mag /////////////
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $tooltip =  "Scanning at 40X magnification is done Friday to Monday. ".
+            "Some of the slides (about 7% of the batch) may have to be rescanned the following week in order to obtain sufficient image quality. ".
+            "We will do our best to expedite the process.";
 
-            $scan = $event->getData();
-            $form = $event->getForm();
+        $builder->add('magnification', 'entity', array(
+            'class' => 'OlegOrderformBundle:Magnification',
+            'property' => 'name',
+            'label'=>'Magnification:',
+            'required'=> true,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width element-with-select2-tooltip', 'title'=>$tooltip, 'data-toggle'=>'tooltip'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
 
-            $helper = new FormHelper();
-
-            $tooltip =  "Scanning at 40X magnification is done Friday to Monday.".
-                        "Some of the slides (about 7% of the batch) may have to be rescanned the following week in order to obtain sufficient image quality.".
-                        "We will do our best to expedite the process.";
-
-            $magArr = array(
-                'label' => 'Magnification:',
-                'choices' => $helper->getMags(),
-                'required' => true,
-                'multiple' => false,
-                'expanded' => true,
-                'attr' => array('class' => 'horizontal_type element-with-tooltip', 'required'=>'required', 'title'=>$tooltip)
-            );
-
-            // check if the Scan object is "new"
-            if( !$scan || null === $scan->getId() ) {
-                $magArr['data'] = '20X';
-            }
-
-            $form->add( 'field', 'choice', $magArr );
-
-        });
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//
+////            $scan = $event->getData();
+//            $form = $event->getForm();
+//
+//
+//
+////            $magArr = array(
+////                'label' => 'Magnification:',
+////                'choices' => $this->getArrayOfMaginifications(),
+////                'required' => true,
+////                'multiple' => false,
+////                'expanded' => true,
+////                'attr' => array('class' => 'horizontal_type element-with-tooltip', 'required'=>'required', 'title'=>$tooltip),
+////                'classtype' => 'magnification'
+////            );
+//
+//            // check if the Scan object is "new"
+////            if( !$scan || null === $scan->getId() ) {
+////                $maginification = $this->params['em']->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
+////                //echo "set default data=".$maginification."<br>";
+////                $magArr['data'] = $maginification;    //'20X';
+////            }
+//
+//            $form->add('magnification', 'entity', array(
+//                'class' => 'OlegOrderformBundle:Magnification',
+//                'property' => 'name',
+//                'label'=>'Magnification:',
+//                'required'=> true,
+//                'multiple' => false,
+//                'attr' => array('class'=>'combobox combobox-width', 'title'=>$tooltip),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('list')
+//                            ->where("list.type = :typedef OR list.type = :typeadd")
+//                            ->orderBy("list.orderinlist","ASC")
+//                            ->setParameters( array(
+//                                'typedef' => 'default',
+//                                'typeadd' => 'user-added',
+//                            ));
+//                    },
+//            ));
+//
+//        });
         ///////////// EOF mag /////////////
 
         if( array_key_exists('datastructure', $this->params) &&  $this->params['datastructure'] == true ) {
@@ -156,6 +225,25 @@ class ImagingType extends AbstractType
         }
 
 
+
+        //messages
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+            //echo "slide datastructure <br>";
+
+            $builder->add('orderinfo', 'collection', array(
+                'type' => new MessageType($this->params),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__imagingmessage__',
+            ));
+
+        }
+
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -169,4 +257,32 @@ class ImagingType extends AbstractType
     {
         return 'oleg_orderformbundle_imagingtype';
     }
+
+
+    private function getArrayOfMaginifications(){
+
+        $query = $this->params['em']->createQueryBuilder()
+            ->from('OlegOrderformBundle:Magnification', 'list')
+            ->select("list")
+            ->where("list.type = :typedef OR list.type = :typeadd")
+            ->orderBy("list.orderinlist","ASC")
+            ->setParameters( array(
+                'typedef' => 'default',
+                'typeadd' => 'user-added',
+            ));
+
+        $mags = $query->getQuery()->getResult();
+
+        //echo "mags count=".count($mags)."<br>";
+
+        $list = array();
+        foreach( $mags as $mag ){
+            $list[] = $mag."";
+        }
+
+        //print_r($list);
+
+        return $list;
+    }
+
 }

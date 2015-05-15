@@ -1934,12 +1934,7 @@
             <p><div class="sliderelevantscans">{{ relevantScansHtml }}</div></p>
         {% endif %}
 
-        {#{% if flag and flag == "datastructure" %}#}
-            {#{{ formmacros.scanForm(slide,flag,uid,cycle) }}#}
-        {#{% endif %}#}
-
     </div>
-
 
     {% if flag and flag == "datastructure" %}
         {{ formmacros.scanForm(slide,flag,uid,cycle) }}
@@ -2017,14 +2012,14 @@
                         {{ formmacros.field(scan.imageId) }}
                     {% endif %}
 
-                    {{ formmacros.field(scan.field) }}
+                    {{ formmacros.field(scan.magnification) }}
                     {{ formmacros.field(scan.scanregion) }}
                     {{ formmacros.field(scan.note) }}
                     {{ formmacros.scanExtraForm(scan,flag,uid,cycle) }}
                 </div>
             </div>
         {% else %}
-            {{ formmacros.field(scan.field) }}
+            {{ formmacros.field(scan.magnification) }}
             {{ formmacros.field(scan.scanregion) }}
             {{ formmacros.field(scan.note) }}
         {% endif %}

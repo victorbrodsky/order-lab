@@ -72,6 +72,12 @@ class OrderInfo {
      * @ORM\JoinTable(name="scan_slide_orderinfo")
      **/
     private $slide;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Imaging", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_imaging_orderinfo")
+     **/
+    private $imaging;
     /////////////////   EOF  HIERARCHY OBJECTS    //////////////////////
 
 
@@ -367,6 +373,8 @@ class OrderInfo {
         $this->part = new ArrayCollection();      
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
+        $this->imaging = new ArrayCollection();
+
         $this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
         $this->tracking = new ArrayCollection();
@@ -413,6 +421,7 @@ class OrderInfo {
             $this->part = new ArrayCollection();
             $this->block = new ArrayCollection();
             $this->slide = new ArrayCollection();
+            $this->imaging = new ArrayCollection();
 
             //links
             $this->inputs = new ArrayCollection();
@@ -1190,6 +1199,21 @@ class OrderInfo {
     public function getBlock()
     {
         return $this->block;
+    }
+
+    public function getImaging()
+    {
+        return $this->imaging;
+    }
+    public function addImaging($item)
+    {
+        if( $item && !$this->imaging->contains($item) ) {
+            $this->imaging->add($item);
+        }
+    }
+    public function removeImaging($item)
+    {
+        $this->imaging->removeElement($item);
     }
     ///////////////////// EOF Hierarchy objects /////////////////////
 

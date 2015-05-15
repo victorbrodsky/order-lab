@@ -46,6 +46,8 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         foreach( $scans as $scan ) {
             $scan->setProvider($orderinfo->getProvider());
             $scan = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($scan,$orderinfo,$original);
+            $scan->setInstitution($orderinfo->getInstitution());
+            $orderinfo->addImaging($scan);
         } //scan
 
         $stains = $slide->getStain();

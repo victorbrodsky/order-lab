@@ -83,10 +83,13 @@ class SlideType extends AbstractType
             'required' => true,
             'attr' => $attr,
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('s')
-                    ->where('s.type = :type')
-                    ->setParameter('type', 'default')
-                    ->orderBy('s.id', 'ASC');
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
             },
         ));
 

@@ -113,6 +113,7 @@ class MultiScanOrderController extends Controller {
             'type'=>$type,  //category
             'cycle'=>'create',
             'user'=>$user,
+            'em' => $em,
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
             'datastructure'=>$this->datastructure
@@ -470,6 +471,7 @@ class MultiScanOrderController extends Controller {
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
             'user'=>$user,
+            'em' => $em,
             'division'=>$division,
             'department'=>$department,
             'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity),
@@ -792,6 +794,7 @@ class MultiScanOrderController extends Controller {
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
             'user'=>$user,
+            'em' => $em,
             'division'=>$division,
             'department'=>$department,
             'datastructure' => $datastructure

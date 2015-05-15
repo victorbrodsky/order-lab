@@ -200,6 +200,7 @@ class TableController extends Controller {
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
             'user'=>$user,
+            'em' => $em,
             'division'=>$division,
             'department'=>$department
         );
@@ -571,6 +572,7 @@ class TableController extends Controller {
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
             'user'=>$user,
+            'em' => $em,
             'division'=>$division,
             'department'=>$department,
             'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity)
@@ -615,7 +617,7 @@ class TableController extends Controller {
         $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
         $entity->setMessageCategory($category);
 
-        $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user);
+        $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user, 'em' => $em);
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
 

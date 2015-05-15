@@ -18,6 +18,7 @@ function regularCombobox() {
     var selectboxes = $("select.combobox");
 
     selectboxes.each( function() {
+
         $(this).select2({
             width: combobox_width,
             dropdownAutoWidth: true,
@@ -26,9 +27,20 @@ function regularCombobox() {
             selectOnBlur: false
             //containerCssClass: 'combobox-width'
         });
+
         if( $(this).attr("readonly") ) {
             $(this).select2("readonly", true);
         }
+
+//        if( $(this).hasClass('element-with-select2-tooltip') ) {
+//            console.log('regularCombobox: add tooltip to id='+$(this).attr('id'));
+//            console.log('title tooltip='+$(this).attr('title'));
+//            var parent = $(this).parent().tooltip({
+//                title: $(this).attr('title')
+//            });
+//            //$(this).tooltip();
+//        }
+
     });
 }
 
@@ -92,6 +104,7 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     if( $(target).attr("readonly") ) {
         $(this).select2("readonly", true);
     }
+
 }
 
 

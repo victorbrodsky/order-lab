@@ -7,6 +7,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\SexList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -107,6 +108,7 @@ class ScanAdminController extends AdminController
         $count_comments = $this->generateProcessorComments();
         $count_urgency = $this->generateUrgency();
         $count_progressCommentsEventType = $this->generateProgressCommentsEventType();
+        $count_generateMagnifications = $this->generateMagnifications();
 
         $count_race = $this->generateRace();
 
@@ -129,9 +131,10 @@ class ScanAdminController extends AdminController
             'Order Delivery='.$count_OrderDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
             'Processor Comments='.$count_comments.', '.
-            'Urgency='.$count_urgency.' '.
-            'Progress and Comments EventTypes='.$count_progressCommentsEventType.' '.
-            'Races='.$count_race.' '.
+            'Urgency='.$count_urgency.', '.
+            'Progress and Comments EventTypes='.$count_progressCommentsEventType.', '.
+            'Races='.$count_race.', '.
+            'Magnifications='.$count_generateMagnifications.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1154,6 +1157,37 @@ class ScanAdminController extends AdminController
         foreach( $types as $type ) {
 
             $listEntity = new ProgressCommentsEventTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateMagnifications() {
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:Magnification')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            '20X',
+            '40X'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new Magnification();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

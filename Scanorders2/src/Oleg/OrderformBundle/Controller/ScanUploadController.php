@@ -66,12 +66,6 @@ class ScanUploadController extends UploadController {
 
         $aperioConnection = $aperioEm->getConnection();
 
-        if( $aperioConnection ) {
-            //echo "connection is OK <br>";
-            //print_r($aperioConnection);
-            //echo "<br>";
-        }
-
         $statement = $aperioConnection->prepare(
             'SELECT * FROM [Aperio].[dbo].[Image] a WHERE a.ImageId = :imageId'
         );
@@ -95,7 +89,7 @@ class ScanUploadController extends UploadController {
         }
 
         $compressedFileLocation = $results[0]['CompressedFileLocation'];
-        //echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
+        echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
         //////////////////////////////////////////////////////////
 
         //2) show image in Aperio's image viewer http://c.med.cornell.edu/imageserver/@@_DGjlRH2SJIRkb9ZOOr1sJEuLZRwLUhWzDSDb-sG0U61NzwQ4a8Byw==/@73660/view.apml
@@ -107,25 +101,40 @@ class ScanUploadController extends UploadController {
             $originalname = $tablename."_Image_ID_" . $imageid.".sis";
             $size = 1;
 
-            $sisFile = "<SIS>".
-                "<CloseAllImages/>".
-                "<ViewingMode></ViewingMode>".
-                "<Image>".
-                "<URL>".$compressedFileLocation."</URL>".
-                "<Title>".$originalname."</Title>".
-                "</Image>".
-                "</SIS>";
+            $contentFile = 'incorrect link type';
+            $contentFlagOk = false;
 
-            $response->headers->set('Content-Type', 'application/unknown');
-            $response->headers->set('Content-Description', 'File Transfer');
-            $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
-            $response->headers->set('Content-Length', $size);
-            $response->headers->set('Content-Transfer-Encoding', 'binary');
-            $response->setContent($sisFile);
+            if( $type == 'Via ImageScope' ) {
+                $contentFile = "<SIS>".
+                    "<CloseAllImages/>".
+                    "<ViewingMode></ViewingMode>".
+                    "<Image>".
+                    "<URL>".$compressedFileLocation."</URL>".
+                    "<Title>".$originalname."</Title>".
+                    "</Image>".
+                    "</SIS>";
+
+                $contentFlagOk = true;
+            }
+
+            if( $type == 'Download' ) {
+                $contentFile = file_get_contents($compressedFileLocation);
+                $contentFlagOk = true;
+            }
+
+            if( $contentFlagOk ) {
+                $response->headers->set('Content-Type', 'application/unknown');
+                $response->headers->set('Content-Description', 'File Transfer');
+                $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
+                $response->headers->set('Content-Length', $size);
+                $response->headers->set('Content-Transfer-Encoding', 'binary');
+            }
 
         } else {
-            $response->setContent('error');
+            $contentFile = 'error';
         }
+
+        $response->setContent($contentFile);
 
         //exit('exit imageFileAction');
 

@@ -1147,9 +1147,9 @@ class AdminController extends Controller
 
     public function generateCountryList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
-
         $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $inputFileName = __DIR__ . '/../Util/Cities.xlsx';
 
@@ -1199,7 +1199,7 @@ class AdminController extends Controller
                 //echo "add country=".$country."<br>";
 
                 $newCountry = new Countries();
-                $this->setDefaultList($newCountry,$countryCount,$username,$country);
+                $this->setDefaultList($newCountry,$countryCount,$user,$country);
 
 
                 $em->persist($newCountry);
@@ -1217,7 +1217,7 @@ class AdminController extends Controller
                 //echo "add city=".$city."<br>";
 
                 $newCity = new CityList();
-                $this->setDefaultList($newCity,$cityCount,$username,$city);
+                $this->setDefaultList($newCity,$cityCount,$user,$city);
 
 
                 $em->persist($newCity);
@@ -1230,7 +1230,7 @@ class AdminController extends Controller
             if( $countryPersisted || $cityPersisted ) {
                 if( ($row % $batchSize) === 0 ) {
                     $em->flush();
-                    $em->clear(); // Detaches all objects from Doctrine!
+                    //$em->clear(); // Detaches all objects from Doctrine!
                 }
             }
 
