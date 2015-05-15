@@ -1168,6 +1168,8 @@ class AdminController extends Controller
         $countryCount = 1;
         $cityCount = 1;
 
+        $batchSize = 20;
+
         //for each row in excel
         for( $row = 2; $row <= $highestRow; $row++ ) {
 
@@ -1182,6 +1184,9 @@ class AdminController extends Controller
             //echo $row.": ";
             //var_dump($rowData);
             //echo "<br>";
+
+            $countryPersisted = false;
+            $cityPersisted = false;
 
             $country = trim($rowData[0][0]);
             $city = trim($rowData[0][1]);
@@ -1198,7 +1203,7 @@ class AdminController extends Controller
 
 
                 $em->persist($newCountry);
-                //$em->flush();
+                $countryPersisted = true;
 
                 $countryCount = $countryCount + 10;
 
@@ -1216,20 +1221,29 @@ class AdminController extends Controller
 
 
                 $em->persist($newCity);
-                //$em->flush();
+                $cityPersisted = true;
 
                 $cityCount = $cityCount + 10;
 
             }
 
-            $em->flush();
-        }
+            if( $countryPersisted || $cityPersisted ) {
+                if( ($row % $batchSize) === 0 ) {
+                    $em->flush();
+                    $em->clear(); // Detaches all objects from Doctrine!
+                }
+            }
 
-        $count = array();
-        $count['country'] = $countryCount;
-        $count['city'] = $cityCount;
+        } //for loop
 
-        return $count;
+        $em->flush(); //Persist objects that did not make up an entire batch
+        $em->clear();
+
+        $countArr = array();
+        $countArr['country'] = round($countryCount);
+        $countArr['city'] = round($cityCount);
+
+        return $countArr;
     }
 
 
