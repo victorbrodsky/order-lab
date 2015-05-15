@@ -53,8 +53,8 @@ class MessageType extends AbstractType
             'destinations.system' => 'Destination System:',
 
             'equipment' => 'Scanner:',
-            'proxyuser' => 'Proxyuser:',
-            'provider' => 'Provider:',
+            'proxyuser' => 'Ordering Provider:',
+            'provider' => 'Submitter:',
             'returnoption' => 'Return slide(s) by this date even if not scanned:',
             'priority' => 'Priority:',
             'deadline' => 'Deadline:',
