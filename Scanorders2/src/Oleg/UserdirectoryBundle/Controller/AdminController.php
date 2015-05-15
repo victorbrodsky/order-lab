@@ -1240,8 +1240,8 @@ class AdminController extends Controller
         $em->clear();
 
         $countArr = array();
-        $countArr['country'] = round($countryCount);
-        $countArr['city'] = round($cityCount);
+        $countArr['country'] = round($countryCount/10);
+        $countArr['city'] = round($cityCount/10);
 
         return $countArr;
     }

@@ -35,7 +35,11 @@ class DocumentContainerType extends AbstractType
         }
 
         if( $params && !array_key_exists('document.datetime.label',$params) ) {
-            $params['document.datetime.label'] = $params['labelPrefix'] . ' Date & Time:';
+            $params['document.datetime.label'] = $params['labelPrefix'] . ' Date:';
+        }
+
+        if( $params && !array_key_exists('document.time.label',$params) ) {
+            $params['document.time.label'] = $params['labelPrefix'] . ' Time:';
         }
 
         if( $params && !array_key_exists('document.provider.label',$params) ) {
@@ -157,6 +161,12 @@ class DocumentContainerType extends AbstractType
                     'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
                     'required' => false,
                     'label' => $this->params['document.datetime.label'],
+                ));
+
+                $builder->add('time', 'time', array(
+                    'input'  => 'datetime',
+                    'widget' => 'choice',
+                    'label' => $this->params['document.time.label']
                 ));
             }
 

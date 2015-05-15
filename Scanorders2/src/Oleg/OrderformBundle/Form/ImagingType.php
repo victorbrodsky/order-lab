@@ -144,7 +144,8 @@ class ImagingType extends AbstractType
             //$params['document.datetime'] = false;
             //$params['document.provider'] = false;
             $params['document.device.label'] = 'Image Acquisition Device:';
-            $params['document.datetime.label'] = 'Image Acquisition Date and Time:';
+            $params['document.datetime.label'] = 'Image Acquisition Date:';
+            $params['document.time.label'] = 'Image Acquisition Time:';
             $params['document.provider.label'] = 'Image acquired by:';
             $params['document.link.label'] = 'Image Link:';
             $builder->add('documentContainer', new DocumentContainerType($params), array(

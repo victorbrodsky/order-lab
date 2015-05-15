@@ -70,6 +70,11 @@ class DocumentContainer {
      */
     private $datetime;
 
+    /**
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $time;
+
     //Image Scanned By: [Select2; one user from the list of users]
     /**
      * @ORM\ManyToOne(targetEntity="User")
@@ -199,6 +204,22 @@ class DocumentContainer {
     public function getDatetime()
     {
         return $this->datetime;
+    }
+
+    /**
+     * @param mixed $time
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTime()
+    {
+        return $this->time;
     }
 
     /**

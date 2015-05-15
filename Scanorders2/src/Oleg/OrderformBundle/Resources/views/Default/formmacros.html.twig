@@ -1501,6 +1501,10 @@
         {{ formmacros.fieldDateLabel(container.datetime,'regular-datepicker') }}
     {% endif %}
 
+    {% if container.time is defined %}
+        {{ formmacros.field(container.time) }}
+    {% endif %}
+
     {% if container.provider is defined %}
         {#{{ formmacros.field(container.provider) }}#}
         {{ formmacros.field_show_user( container, "provider", cycle ) }}
