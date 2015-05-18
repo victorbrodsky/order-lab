@@ -518,8 +518,8 @@ class PatientController extends Controller
         $messageReportOrder = $this->createSpecificMessage("Report");
         $messages[] = $messageReportOrder;
 
-        $messageReportOrder = $this->createSpecificMessage("Analysis Report");
-        $messages[] = $messageReportOrder;
+        //$messageReportOrder = $this->createSpecificMessage("Analysis Report");
+        //$messages[] = $messageReportOrder;
 
         $messageStainOrder = $this->createSpecificMessage("Stain Order");
         $messages[] = $messageStainOrder;
@@ -1080,8 +1080,8 @@ class PatientController extends Controller
 
                 $this->addSpecificMessage($specificmessages,$slide,"Multi-Slide Scan Order",true);
 
-                $this->addSpecificMessage($specificmessages,$dropzoneImage,"Analysis Report",true);
-                $this->addSpecificMessage($specificmessages,$aperioImage,"Analysis Report",true);
+                //$this->addSpecificMessage($specificmessages,$dropzoneImage,"Analysis Report",true);
+                //$this->addSpecificMessage($specificmessages,$aperioImage,"Analysis Report",true);
 
             }
 
