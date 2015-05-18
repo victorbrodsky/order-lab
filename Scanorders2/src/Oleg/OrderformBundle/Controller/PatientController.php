@@ -518,6 +518,9 @@ class PatientController extends Controller
         $messageReportOrder = $this->createSpecificMessage("Report");
         $messages[] = $messageReportOrder;
 
+        $messageReportOrder = $this->createSpecificMessage("Analysis Report");
+        $messages[] = $messageReportOrder;
+
         $messageStainOrder = $this->createSpecificMessage("Stain Order");
         $messages[] = $messageStainOrder;
 
@@ -945,18 +948,18 @@ class PatientController extends Controller
                 $slide->clearScan();
             }
             for( $countImage = 0; $countImage < $dropzoneImageNumber; $countImage++ ) {
-                $scanimage = new Imaging('valid',$user,$system);
+                $dropzoneImage = new Imaging('valid',$user,$system);
 
                 if( $testpatient ) {
-                    $scanimage->setMagnification($maginification);
+                    $dropzoneImage->setMagnification($maginification);
 
                     //set imageid
-                    $scanimage->setImageId('testimage_id_'.$countImage);
-                    $docContainer = $scanimage->getDocumentContainer();
+                    $dropzoneImage->setImageId('testimage_id_'.$countImage);
+                    $docContainer = $dropzoneImage->getDocumentContainer();
 
                     if( !$docContainer ) {
                         $docContainer = new DocumentContainer($user);
-                        $scanimage->setDocumentContainer($docContainer);
+                        $dropzoneImage->setDocumentContainer($docContainer);
                     }
 
                     $docContainer->setTitle('Test Image');
@@ -967,27 +970,27 @@ class PatientController extends Controller
                 } //if testpatient
 
                 //add scan to slide
-                $slide->addScan($scanimage);
+                $slide->addScan($dropzoneImage);
             }
 
             //attach one existing aperio image http://c.med.cornell.edu/EditRecord.php?TableName=Slide&Ids[]=42814,
             //image ID:73660
             //image/aperio/73660
             for( $countImage = 0; $countImage < $aperioImageNumber; $countImage++ ) {
-                $scanimage = new Imaging('valid',$user,$sourceSystemAperio);
+                $aperioImage = new Imaging('valid',$user,$sourceSystemAperio);
 
                 if( $testpatient ) {
-                    $scanimage->setMagnification($maginification);
+                    $aperioImage->setMagnification($maginification);
 
                     //Input: Slide Id from c.med: 42814
                     $slideId = 42814;
-                    $scanimage->setImageId($slideId);
+                    $aperioImage->setImageId($slideId);
 
                     //get document container
-                    $docContainer = $scanimage->getDocumentContainer();
+                    $docContainer = $aperioImage->getDocumentContainer();
                     if( !$docContainer ) {
                         $docContainer = new DocumentContainer($user);
-                        $scanimage->setDocumentContainer($docContainer);
+                        $aperioImage->setDocumentContainer($docContainer);
                     }
 
                     $docContainer->setTitle('Image from ' . $sourceSystemAperio);
@@ -1031,11 +1034,10 @@ class PatientController extends Controller
                     $link->setLink($linklink);
                     $docContainer->addLink($link);
 
-                    $docContainer->addDocument($document);
                 } //if testpatient
 
-                //add scan to slide
-                $slide->addScan($scanimage);
+                //add Image to Slide
+                $slide->addScan($aperioImage);
             }
 
             //Accession: add n autopsy fields: add n documentContainers to attachmentContainer
@@ -1077,6 +1079,9 @@ class PatientController extends Controller
                 $this->addSpecificMessage($specificmessages,$slide,"Stain Order",true);
 
                 $this->addSpecificMessage($specificmessages,$slide,"Multi-Slide Scan Order",true);
+
+                $this->addSpecificMessage($specificmessages,$dropzoneImage,"Analysis Report",true);
+                $this->addSpecificMessage($specificmessages,$aperioImage,"Analysis Report",true);
 
             }
 
@@ -1201,6 +1206,21 @@ class PatientController extends Controller
         }
 
         if( $messageCategoryStr == "Report" ) {
+
+            $report = new Report();
+            $report->setOrderinfo($message);
+            $message->setReport($report);
+
+            $signingPathologist = new UserWrapper();
+            $report->addSigningPathologist($signingPathologist);
+
+            $consultedPathologist = new UserWrapper();
+            $report->addConsultedPathologist($consultedPathologist);
+
+            //$em->persist($message);
+        }
+
+        if( $messageCategoryStr == "Analysis Report" ) {
 
             $report = new Report();
             $report->setOrderinfo($message);

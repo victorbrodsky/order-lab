@@ -155,6 +155,12 @@
     width: 85%;
 }
 
+.panel .panel-success {
+    margin-bottom: 0px;
+}
+.panel .panel-scan {
+    margin-bottom: 0px;
+}
 
 /*.activetr {*/
     /*background-color: rgb(217, 237, 247);*/

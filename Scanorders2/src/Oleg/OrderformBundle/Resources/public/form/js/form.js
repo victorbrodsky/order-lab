@@ -379,7 +379,7 @@ function getForm( name, ids, withDelBtn ) {
                 '</div>' +
                 '<div class="clearfix"></div>' +
             '</div>' +  //panel-heading
-            '<div id="form_body_' + name + '_' + idsu + '" class="panel-body collapse in">' +
+            '<div id="form_body_' + name + '_' + idsu + '" class="panel-body panel-body-multi-form collapse in">' +
                 formbody +
             '</div>' +
             '</div>';
