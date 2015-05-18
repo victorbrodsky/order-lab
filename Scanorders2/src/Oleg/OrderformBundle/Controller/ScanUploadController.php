@@ -9,6 +9,7 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
+use Oleg\OrderformBundle\Helper\smbclient;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -89,7 +90,7 @@ class ScanUploadController extends UploadController {
         }
 
         $compressedFileLocation = $results[0]['CompressedFileLocation'];
-        echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
+        //echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
         //////////////////////////////////////////////////////////
 
         //2) show image in Aperio's image viewer http://c.med.cornell.edu/imageserver/@@_DGjlRH2SJIRkb9ZOOr1sJEuLZRwLUhWzDSDb-sG0U61NzwQ4a8Byw==/@73660/view.apml
@@ -101,7 +102,7 @@ class ScanUploadController extends UploadController {
             $originalname = $tablename."_Image_ID_" . $imageid.".sis";
             $size = 1;
 
-            $contentFile = 'incorrect link type';
+            $contentFile = 'Not implemented link type ' . $type;
             $contentFlagOk = false;
 
             if( $type == 'Via ImageScope' ) {
@@ -113,13 +114,114 @@ class ScanUploadController extends UploadController {
                     "<Title>".$originalname."</Title>".
                     "</Image>".
                     "</SIS>";
-
                 $contentFlagOk = true;
             }
 
             if( $type == 'Download' ) {
-                $contentFile = file_get_contents($compressedFileLocation);
+
+                if( 0 ) {
+
+                $originalname = "1376592216_rat_liver_tox.jpeg";
+                $localFile = "C:/Images/SampleData/1376592216_rat_liver_tox.jpg";
+                $contentFile = file_get_contents($localFile);
+                $size = filesize($localFile);
+                //echo "size=".$size."<br>";
                 $contentFlagOk = true;
+                //exit('2');
+
+                }
+                if( 0 ) {
+
+//                $w = stream_get_wrappers();
+//                echo 'openssl: ',  extension_loaded  ('openssl') ? 'yes':'no', "<br>";
+//                echo 'http wrapper: ', in_array('http', $w) ? 'yes':'no', "<br>";
+//                echo 'https wrapper: ', in_array('https', $w) ? 'yes':'no', "<br>";
+//                echo 'wrappers: ', var_dump($w);
+
+                //$remoteFile = 'file:\"' . $compressedFileLocation;
+                // \\140.251.33.101\Gross\S13-12343
+                //$fileTest = "collageimage://S14-571/S14-571_1.jpg";
+                //$contentFile = file_get_contents($fileTest);
+                //$contentFile = file_get_contents('collageimage://S13-12343/S13-12343_1.jpg');
+
+                $fileTest = '\\\\Collage\\Gross\\S14-571\\S14-571_1.jpg';
+                //$fileTest = '//Collage/Gross/S14-571/S14-571_1.jpg';
+                $contentFile = fopen($fileTest,"r");
+                exit('1');
+
+                $fileTest = "file://collage.med.cornell.edu/Gross/S14-571/S14-571_1.jpg";
+                $contentFile = file_get_contents($fileTest);
+                exit('1');
+
+                //$smbc = new smbclient("//collage.med.cornell.edu/Gross", 'svc_aperio_spectrum', 'Aperi0,123');
+                //$contentFile = file_get_contents($smbc);
+
+                //if (!$smbc->get ('path/to/desired/file.txt', '/tmp/localfile.txt'))
+//                if( !$smbc->get($compressedFileLocation, 'C:/tmp/localfile.txt') )
+//                {
+//                    print "Failed to retrieve file:\n";
+//                    print join ("\n", $smbc->get_last_stdout());
+//
+//                }
+//                else
+//                {
+//                    print "Transferred file successfully.";
+//                }
+//                exit('1');
+
+                $compressedFileLocationConverted = str_replace("\\","/",$compressedFileLocation);
+                $remoteFile = 'file:' . $compressedFileLocationConverted;
+                echo "remoteFile=".$remoteFile."<br>";
+
+                $urlTest = '<a href="'.$fileTest.'">Test Download</a>';
+                echo $urlTest."<br>";
+
+                $contentFile = file_get_contents($remoteFile);
+
+                $size = filesize($contentFile);
+                echo "size=".$size."<br>";
+
+                $contentFlagOk = true;
+
+                }
+            }
+
+
+            if( 0 )  {
+                function SMBMap($username, $password, $server, $dir) {
+                    $command = "mount -t smbfs -o username=$username,password=$password //$server/$dir /mnt/tmp";
+                    echo "command=".$command."<br>";
+                    echo system($command);
+                }
+
+                function SMBRelease() {
+                    $command = "umount /mnt/tmp";
+                    echo system($command);
+                }
+
+                function GetFiles($dir) {
+                    $files = array();
+                    if (is_dir($dir)) {
+                        if ($dh = opendir($dir)) {
+                            while (($file = readdir($dh)) !== false) {
+                                $files[] = $file."{".filetype("$dir/$file")."}";
+                            }
+                            closedir($dh);
+                        }
+                    }
+                    return $files;
+                }
+
+                SMBMap("svc_aperio_spectrum", "Aperi0,123", "140.251.33.101", "Gross");
+                $any = GetFiles("/S14-571/");
+                SMBRelease();
+                print_r($any);
+                exit('1');
+            }
+
+            if( 1 ) {
+                system('net use K: \\servername\sharename /user:username password /persistent:no');
+                $share = opendir('\\\\servername\\sharename');
             }
 
             if( $contentFlagOk ) {
