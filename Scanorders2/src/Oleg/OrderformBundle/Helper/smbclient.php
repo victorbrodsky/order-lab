@@ -204,6 +204,8 @@ class smbclient
         {
             $this->_cmd .= " '" . $this->_password . "'";
         }
+
+        echo "fullcmd=".$this->_cmd."<br>";
     }
 }
 

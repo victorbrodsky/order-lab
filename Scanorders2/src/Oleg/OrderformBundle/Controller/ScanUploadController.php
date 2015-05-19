@@ -120,6 +120,12 @@ class ScanUploadController extends UploadController {
             if( $type == 'Download' ) {
 
                 if( 0 ) {
+                    //file://///Collage/Gross/S14-571/S14-571_1.jpg
+                    $file = "file://///collage/images/2015-05-18/75105.svs";
+                    $contentFile = fopen($file,"r");
+                }
+
+                if( 0 ) {
 
                 $originalname = "1376592216_rat_liver_tox.jpeg";
                 $localFile = "C:/Images/SampleData/1376592216_rat_liver_tox.jpg";
@@ -219,9 +225,111 @@ class ScanUploadController extends UploadController {
                 exit('1');
             }
 
-            if( 1 ) {
+            if( 0 ) {
                 system('net use K: \\servername\sharename /user:username password /persistent:no');
                 $share = opendir('\\\\servername\\sharename');
+            }
+
+            if( 0 ) {
+
+                //collage.med.cornell.edu/Gross/S14-571/S14-571_1.jpg
+                //"smb://user:pass@server/share/path";
+
+                include "smb.php";
+                $dir = "smb://Collage/Gross";
+                //$dir = "smb://svc_aperio_spectrum:Aperi0,123@Collage/Gross";
+
+                //$url =
+
+                if( is_dir($dir) ) {
+                    $dh = opendir($dir);
+                    $count = 0;
+                    while( ($file=readdir($dh)) !== false && $count < 3 ) {
+                        echo "filename: $file - filetype: ".filetype($dir.'/'.$file)."<br>";
+                        $count++;
+                    }
+                    closedir($dh);
+                }
+                else {
+                    echo $dir." not found!!!<br>";
+                }
+
+            }
+
+            if( 0 ) {
+
+                $smb = new smbclient("collage.med.cornell.edu","svc_aperio_spectrum","Aperi0,123");
+
+                $remoteFile = "\\\\Collage\\Gross\\S14-571\\S14-571_1.jpg";
+                $localFile = "C:\tmp\test.jpg";
+
+                $res = $smb->get($remoteFile,$localFile);
+                echo "res=".$res."<br>";
+                exit('1');
+            }
+
+            if( 0 ) {
+
+                $dirs = array(
+                    "\\Collage\testoleg",
+                    "\\\\Collage\\testoleg",
+                    "//Collage/testoleg/",
+                    "//collage/testoleg/image.jpg",
+                    "\\\\collage\\testoleg\\image.jpg",
+                    "//collage/testoleg/",
+                    "//collage/testoleg",
+                    "file://collage/testoleg",
+                    "file:///collage/E:/testoleg",
+                    "//Collage/E:/testoleg",
+                    "//collage.med.cornell.edu/testoleg"
+                );
+
+                foreach( $dirs as $dir ) {
+                    if( is_dir($dir) ){
+                        echo "success <br>";
+                    } else {
+                        echo "failed dir=".$dir."<br>";
+                    }
+                    //$contentFile = file_get_contents($dir."/image.jpg");
+                    $content = $this->get_content($dir);
+                    echo " => ";
+                    var_dump ($content);
+
+                    $returned_content = $this->get_data($dir);
+                    echo " => ";
+                    var_dump ($returned_content);
+                }
+
+                $contentFile = file_get_contents("file://collage/testoleg/image.jpg");
+
+                $content = $this->get_content("file://///Collage/testoleg/image.jpg");
+                var_dump ($content);
+                echo "<br>";
+
+                $returned_content = $this->get_data("file://\\Collage\testoleg\image.jpg");
+                var_dump ($returned_content);
+                echo "<br>";
+
+                //curl file://\\Collage\sharedrive\testoleg\image.jpg
+                //curl -k --user svc_aperio_spectrum -1 -o filename "ftp://collage.med.cornell.edu/testoleg/image.jpg"
+
+            }
+
+            if( 1 ) {
+
+                //$homepage = file_get_contents('http://collage.med.cornell.edu/order/');
+                //echo $homepage;
+
+                //$lines = file('file://collage/testoleg/image.jpg');
+
+                //$contents = file_get_contents("\\\\collage\\testoleg\\image.jpg");
+                //echo $contents;
+
+                //$contents = file_get_contents("//collage/testoleg/image.jpg");
+                //echo $contents;
+
+                $lurl = $this->get_fcontent("\\\\collage\\testoleg\\image.jpg");
+                echo"cid:".$lurl[0]."<BR>";
             }
 
             if( $contentFlagOk ) {
@@ -231,6 +339,8 @@ class ScanUploadController extends UploadController {
                 $response->headers->set('Content-Length', $size);
                 $response->headers->set('Content-Transfer-Encoding', 'binary');
             }
+
+
 
         } else {
             $contentFile = 'error';
@@ -244,6 +354,72 @@ class ScanUploadController extends UploadController {
     }
 
 
+    public function get_content($url)
+    {
+        $ch = curl_init();
+
+        curl_setopt ($ch, CURLOPT_URL, $url);
+        curl_setopt ($ch, CURLOPT_HEADER, 0);
+
+        ob_start();
+
+        curl_exec ($ch);
+        curl_close ($ch);
+        $string = ob_get_contents();
+
+        ob_end_clean();
+
+        return $string;
+    }
+
+    public function get_data($url) {
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
+
+    public function get_fcontent( $url,  $javascript_loop = 0, $timeout = 5 ) {
+        $url = str_replace( "&amp;", "&", urldecode(trim($url)) );
+
+        $cookie = tempnam ("/tmp", "CURLCOOKIE");
+        $ch = curl_init();
+        curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+        curl_setopt( $ch, CURLOPT_URL, $url );
+        curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie );
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+        curl_setopt( $ch, CURLOPT_ENCODING, "" );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_AUTOREFERER, true );
+        curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );    # required for https urls
+        curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $timeout );
+        curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout );
+        curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
+        $content = curl_exec( $ch );
+        $response = curl_getinfo( $ch );
+        curl_close ( $ch );
+
+        if ($response['http_code'] == 301 || $response['http_code'] == 302) {
+            ini_set("user_agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1");
+
+            if ( $headers = get_headers($response['url']) ) {
+                foreach( $headers as $value ) {
+                    if ( substr( strtolower($value), 0, 9 ) == "location:" )
+                        return get_url( trim( substr( $value, 9, strlen($value) ) ) );
+                }
+            }
+        }
+
+        if (    ( preg_match("/>[[:space:]]+window\.location\.replace\('(.*)'\)/i", $content, $value) || preg_match("/>[[:space:]]+window\.location\=\"(.*)\"/i", $content, $value) ) && $javascript_loop < 5) {
+            return get_url( $value[1], $javascript_loop+1 );
+        } else {
+            return array( $content, $response );
+        }
+    }
 
 
 
