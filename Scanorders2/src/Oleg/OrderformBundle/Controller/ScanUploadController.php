@@ -90,7 +90,7 @@ class ScanUploadController extends UploadController {
         }
 
         $compressedFileLocation = $results[0]['CompressedFileLocation'];
-        echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
+        //echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
         //////////////////////////////////////////////////////////
 
         //2) show image in Aperio's image viewer http://c.med.cornell.edu/imageserver/@@_DGjlRH2SJIRkb9ZOOr1sJEuLZRwLUhWzDSDb-sG0U61NzwQ4a8Byw==/@73660/view.apml
@@ -101,7 +101,7 @@ class ScanUploadController extends UploadController {
 
             $fileLocArr = explode("\\",$compressedFileLocation);
             $originalFileName = $fileLocArr[ count($fileLocArr)-1 ];
-            echo "originalFileName=".$originalFileName."<br>";
+            //echo "originalFileName=".$originalFileName."<br>";
             $originalname = $tablename."_Image_ID_" . $originalFileName;
             $size = 1;
 
@@ -127,15 +127,15 @@ class ScanUploadController extends UploadController {
 
                 $compressedFileLocationConverted = str_replace("\\","/",$compressedFileLocation);
                 $remoteFile = $compressedFileLocationConverted;
-                echo "remoteFile=".$remoteFile."<br>";
+                //echo "remoteFile=".$remoteFile."<br>";
 
                 //$urlTest = '<a href="'.$remoteFile.'">Test Download</a>';
                 //echo $urlTest."<br>";
 
                 $contentFile = file_get_contents($remoteFile);
 
-                $size = filesize($contentFile);
-                echo "size=".$size."<br>";
+                $size = filesize($remoteFile);
+                //echo "size=".$size."<br>";
 
                 $contentFlagOk = true;
 
