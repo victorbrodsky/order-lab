@@ -126,6 +126,8 @@ class ScanUploadController extends UploadController {
 
             if( $type == 'Download' ) {
 
+                ini_set('memory_limit', '2048M'); //128M
+
                 $compressedFileLocationConverted = str_replace("\\","/",$compressedFileLocation);
                 $remoteFile = $compressedFileLocationConverted;
                 //echo "remoteFile=".$remoteFile."<br>";
