@@ -62,6 +62,7 @@ class ScanUploadController extends UploadController {
 
         //1) get image url info by imageid
 
+    if(0) {
         ////////////////// aperio DB ////////////////////////////
         $aperioEm = $this->getDoctrine()->getManager('aperio');
 
@@ -88,8 +89,10 @@ class ScanUploadController extends UploadController {
         if( $affected_rows != 1 && count($results) != 1 ) {
             throw $this->createNotFoundException('Unable to find unique image with id='.$imageid);
         }
+    }
 
-        $compressedFileLocation = $results[0]['CompressedFileLocation'];
+        //$compressedFileLocation = $results[0]['CompressedFileLocation'];
+        $compressedFileLocation = "C://Images/SampleData/1376592216_rat_liver_tox.jpg";
         //echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
         //////////////////////////////////////////////////////////
 
@@ -99,7 +102,8 @@ class ScanUploadController extends UploadController {
 
         if( $compressedFileLocation ) {
 
-            $fileLocArr = explode("\\",$compressedFileLocation);
+            //$fileLocArr = explode("\\",$compressedFileLocation);
+            $fileLocArr = explode("/",$compressedFileLocation);
             $originalFileName = $fileLocArr[ count($fileLocArr)-1 ];
             //echo "originalFileName=".$originalFileName."<br>";
             $originalname = $tablename."_Image_ID_" . $originalFileName;
@@ -133,22 +137,23 @@ class ScanUploadController extends UploadController {
                 //echo $urlTest."<br>";
 
                 $contentFile = file_get_contents($remoteFile);
+                //echo "contentFile=".$contentFile."<br>";
+                //exit();
 
                 $size = filesize($remoteFile);
                 //echo "size=".$size."<br>";
 
                 $contentFlagOk = true;
-
             }
 
             if( $contentFlagOk ) {
                 $response->headers->set('Content-Type', 'application/unknown');
+                //$response->headers->set('Content-Type', 'application/jpeg');
                 $response->headers->set('Content-Description', 'File Transfer');
                 $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
                 $response->headers->set('Content-Length', $size);
                 $response->headers->set('Content-Transfer-Encoding', 'binary');
             }
-
 
 
         } else {
