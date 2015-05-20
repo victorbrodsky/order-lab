@@ -8,7 +8,6 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
-
 use Oleg\OrderformBundle\Helper\smbclient;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,8 +16,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Oleg\UserdirectoryBundle\Controller\UploadController;
 use Symfony\Component\HttpFoundation\Response;
 
-include_once '\DatabaseRoutines.php';
-include_once '\cImageFile.php';
+//error_reporting(E_ALL);
+//include_once '\DatabaseRoutines.php';
+//include_once '\cImageFile.php';
 
 class ScanUploadController extends UploadController {
 
@@ -62,7 +62,6 @@ class ScanUploadController extends UploadController {
 
         //1) get image url info by imageid
 
-    if(0) {
         ////////////////// aperio DB ////////////////////////////
         $aperioEm = $this->getDoctrine()->getManager('aperio');
 
@@ -89,10 +88,9 @@ class ScanUploadController extends UploadController {
         if( $affected_rows != 1 && count($results) != 1 ) {
             throw $this->createNotFoundException('Unable to find unique image with id='.$imageid);
         }
-    }
 
-        //$compressedFileLocation = $results[0]['CompressedFileLocation'];
-        $compressedFileLocation = "C://Images/SampleData/1376592216_rat_liver_tox.jpg";
+        $compressedFileLocation = $results[0]['CompressedFileLocation'];
+        //$compressedFileLocation = "C://Images/SampleData/1376592216_rat_liver_tox.jpg";
         //echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
         //////////////////////////////////////////////////////////
 
@@ -102,8 +100,8 @@ class ScanUploadController extends UploadController {
 
         if( $compressedFileLocation ) {
 
-            //$fileLocArr = explode("\\",$compressedFileLocation);
-            $fileLocArr = explode("/",$compressedFileLocation);
+            $fileLocArr = explode("\\",$compressedFileLocation);
+            //$fileLocArr = explode("/",$compressedFileLocation);
             $originalFileName = $fileLocArr[ count($fileLocArr)-1 ];
             //echo "originalFileName=".$originalFileName."<br>";
             $originalname = $tablename."_Image_ID_" . $originalFileName;
@@ -148,7 +146,6 @@ class ScanUploadController extends UploadController {
 
             if( $contentFlagOk ) {
                 $response->headers->set('Content-Type', 'application/unknown');
-                //$response->headers->set('Content-Type', 'application/jpeg');
                 $response->headers->set('Content-Description', 'File Transfer');
                 $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
                 $response->headers->set('Content-Length', $size);
