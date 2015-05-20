@@ -93,6 +93,12 @@ class ScanUploadController extends UploadController {
         //echo "compressedFileLocation Rows=".$compressedFileLocation."<br>";
         //////////////////////////////////////////////////////////
 
+        //////////////// testing: order memory usage ////////////////
+        //$mem = memory_get_usage(true);
+        //echo "order mem = ".$mem. " => " .round($mem/1000000,2)." Mb<br>";
+        //exit('1');
+        //////////////// EOF order memory usage ////////////////
+
         //2) show image in Aperio's image viewer http://c.med.cornell.edu/imageserver/@@_DGjlRH2SJIRkb9ZOOr1sJEuLZRwLUhWzDSDb-sG0U61NzwQ4a8Byw==/@73660/view.apml
 
         $response = new Response();
@@ -126,7 +132,7 @@ class ScanUploadController extends UploadController {
 
             if( $type == 'Download' ) {
 
-                ini_set('memory_limit', '2048M'); //128M
+                //ini_set('memory_limit', '2048M'); //128M
 
                 $compressedFileLocationConverted = str_replace("\\","/",$compressedFileLocation);
                 $remoteFile = $compressedFileLocationConverted;
