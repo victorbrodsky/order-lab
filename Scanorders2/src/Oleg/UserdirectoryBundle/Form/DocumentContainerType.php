@@ -43,7 +43,7 @@ class DocumentContainerType extends AbstractType
         }
 
         if( $params && !array_key_exists('document.provider.label',$params) ) {
-            $params['document.provider.label'] = $params['labelPrefix'] . ' Scanned By:';
+            $params['document.provider.label'] = $params['labelPrefix'] . ' Acquired By:';
         }
 
         if( $params && !array_key_exists('document.link.label',$params) ) {

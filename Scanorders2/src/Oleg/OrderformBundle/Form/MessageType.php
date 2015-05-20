@@ -95,11 +95,11 @@ class MessageType extends AbstractType
             //echo "message.orderdate=".$this->params['message.orderdate']."<br>";
             $builder->add('orderdate','date',array(
                 'widget' => 'single_text',
+                'label' => "Generation Date:",
                 //'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
                 'format' => 'MM/dd/yyyy, H:mm:ss',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
-                'label'=>'Date:',
             ));
         }
 

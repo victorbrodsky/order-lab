@@ -259,7 +259,7 @@ class Slide extends ObjectAbstract
         $stain = "";
         $mag = "";
         if( count($this->getStain()) > 0 && count($this->getScan())>0 ) {
-            $mag = $this->getScan()->first()->getField();
+            $mag = $this->getScan()->first()->getMagnification();
             $stain = $this->getStain()->first()->getField();
         }
 
@@ -415,7 +415,23 @@ class Slide extends ObjectAbstract
     }
 
     public function getChildren() {
-        return null;    //new ArrayCollection();
+        return $this->getScan();
+    }
+
+    public function addChildren($child) {
+        $this->addScan($child);
+    }
+
+    public function removeChildren($child) {
+        $this->removeScan($child);
+    }
+
+    public function setChildren($children) {
+        $this->setScan($children);
+    }
+
+    public function setScan( $scan ){
+        $this->scan = $scan;
     }
 
     public function obtainKeyField() {

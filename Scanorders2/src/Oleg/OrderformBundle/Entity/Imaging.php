@@ -274,7 +274,7 @@ class Imaging extends ObjectAbstract
 
 
     public function __toString() {
-        return $this->scanregion."";
+        return "Imaging: id=".$this->getId().", ".$this->scanregion."<br>";
     }
 
 

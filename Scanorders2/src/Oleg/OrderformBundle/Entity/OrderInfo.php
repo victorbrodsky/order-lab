@@ -277,7 +277,7 @@ class OrderInfo {
 
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", inversedBy="backAssociations", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="associations",
+     * @ORM\JoinTable(name="scan_associations",
      *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="association_id", referencedColumnName="id")}
      *      )

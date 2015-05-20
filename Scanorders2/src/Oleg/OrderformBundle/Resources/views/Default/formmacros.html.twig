@@ -213,7 +213,9 @@
     {% endif %}
 
     {% if fieldname == "provider" %}
-        {% set userValue = container.vars.value.provider %}
+        {% if container.vars.value %}
+            {% set userValue = container.vars.value.provider %}
+        {% endif %}
         {% set userLabel = container.provider.vars.label %}
         {% if container.provider is defined %}
             {% set userForm = container.provider %}
@@ -615,12 +617,14 @@
                         {% if message.report is defined and message.report.vars.value %}
                             <p>
 
-                                {{ formmacros.field( message.report.reportType ) }}
+                                {% if message.report.reportType is defined %}
+                                    {{ formmacros.field( message.report.reportType ) }}
+                                {% endif %}
 
                                 <div class="well well-sm">
+                                {{ formmacros.fieldDateLabel(message.report.signatureDate,'allow-future-date') }}
                                 {{ formmacros.fieldDateLabel(message.report.issuedDate,'allow-future-date') }}
                                 {{ formmacros.fieldDateLabel(message.report.receivedDate,'allow-future-date') }}
-                                {{ formmacros.fieldDateLabel(message.report.signatureDate,'allow-future-date') }}
                                 </div>
 
                                 {#{{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId~uid) }}#}
@@ -1950,6 +1954,7 @@
 
     {% set scanCount = 0 %}
     {% for scan in slide.scan %}
+
         <p>
         {% if flag and flag == "datastructure" %}
             <div class="panel panel-scan">
@@ -2004,6 +2009,8 @@
                 </div>
 
                 <div id="form_body_imaging_{{ orderUniqueId }}_{{ uid }}" class="panel-body panel-body-imaging collapse in">
+
+                    {{ formmacros.renderMessages(scan,flag,uid,cycle) }}
 
                     {% if scan.source is defined %}
                         {{ formmacros.field(scan.source) }}

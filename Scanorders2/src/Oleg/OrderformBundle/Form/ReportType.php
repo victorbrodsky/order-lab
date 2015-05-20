@@ -26,7 +26,7 @@ class ReportType extends AbstractType
     {
 
         $builder->add('issuedDate', 'date', array(
-            'label' => "Issued Date:",
+            'label' => "Issued Date & Time:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
@@ -34,7 +34,7 @@ class ReportType extends AbstractType
         ));
 
         $builder->add('receivedDate', 'date', array(
-            'label' => "Received Date:",
+            'label' => "Received Date & Time:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
@@ -42,7 +42,7 @@ class ReportType extends AbstractType
         ));
 
         $builder->add('signatureDate', 'date', array(
-            'label' => "Signature Date:",
+            'label' => "Signature Date & Time:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
@@ -86,12 +86,12 @@ class ReportType extends AbstractType
         ));
 
 
-        $builder->add('reportType', null, array(
-            'label' => "Report Type:",
-            'required' => false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-        ));
+//        $builder->add('reportType', null, array(
+//            'label' => "Report Type:",
+//            'required' => false,
+//            'multiple' => false,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//        ));
 
 
 //        $builder->add('consultedPathologists', 'custom_selector', array(

@@ -270,16 +270,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //echo $entity;
         $children = $entity->getChildren();
 
+        if( $entity instanceof Slide ) {
+            //echo "Add slide=".$entity."<br>";
+            $orderinfo->addSlide($entity);
+
+        } else {
+            //echo "not slides =>".$entity."<br>";
+        }
+
         if( !$children || count($children) == 0  ) {
-
-            if( $entity instanceof Slide ) {
-                //echo "Add slide=".$entity."<br>";
-                $orderinfo->addSlide($entity);
-
-            } else {
-                //echo "not slides<br>";
-            }
-
             return;
         }
 

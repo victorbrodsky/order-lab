@@ -762,9 +762,12 @@ class ScanAdminController extends AdminController
                 'Lab Order' => array(
                     'Outside Lab Order - Comprehensive',
                     'Outside Lab Order on Part'
-                )
+                ),
+                'Image Analysis Order'
             ),
-            'Report' => array(),
+            'Report' => array(
+                'Analysis Report'
+            ),
             'Note' => array()
 
         );
