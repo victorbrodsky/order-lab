@@ -25,6 +25,52 @@ class LargeFileDownloader {
     }
 
 
+    public function downloadLargeFile( $filename, $retbytes=true ) {
+
+        $filenameClean = str_replace("\\","/",$filename);
+
+        if( empty($filename) ) {
+            exit;
+        }
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filenameClean));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filenameClean));
+        $this->readfile_chunked($filenameClean);
+        return;
+    }
+
+    //form: http://php.net/manual/en/function.readfile.php
+    public function readfile_chunked($filename,$retbytes=true) {
+        $chunksize = 1*(1024*1024); // how many bytes per chunk
+        $buffer = '';
+        $cnt =0;
+        // $handle = fopen($filename, 'rb');
+        $handle = fopen($filename, 'rb');
+        if ($handle === false) {
+            return false;
+        }
+        while (!feof($handle)) {
+            $buffer = fread($handle, $chunksize);
+            echo $buffer;
+            ob_flush();
+            flush();
+            if ($retbytes) {
+                $cnt += strlen($buffer);
+            }
+        }
+        $status = fclose($handle);
+        if ($retbytes && $status) {
+            return $cnt; // return num. bytes delivered like readfile() does.
+        }
+        return $status;
+    }
+
+
     //THE DOWNLOAD SCRIPT
     //$filePath = "D:/Software/versions/windows/windows_7.rar"; // set your download file path here.
     //download($filePath); // calls download function

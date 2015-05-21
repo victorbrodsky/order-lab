@@ -131,7 +131,7 @@ class ScanUploadController extends UploadController {
                 $contentFlagOk = true;
             }
 
-            if( $type == 'Download-111' ) {
+            if( $type == 'Download-SmallFile' ) {
 
                 //ini_set('memory_limit', '2048M'); //128M
 
@@ -154,34 +154,12 @@ class ScanUploadController extends UploadController {
 
             if( $type == 'Download' ) {
 
-                set_time_limit(0);
-                ini_set('memory_limit', '2048M');
+                $remoteFile = "C:/Images/GIID-153-001.svs";
 
-                //$remoteFile = "C:/Images/1376592217_1368_3005ER.svs"; //GIID-153-001.svs"; // set your download file path here.
-                //$remoteFile = "C:/Images/GIID-153-001.svs";
+                $downloader = new LargeFileDownloader();
+                $downloader->downloadLargeFile($remoteFile);
 
-                if( 0 ) {
-                    set_time_limit(0);
-                    ini_set('memory_limit', '512M');
-
-                    //$downloader = new LargeFileDownloader();
-                    $this->download($remoteFile); // calls download function
-                    exit;
-                }
-
-                $compressedFileLocationConverted = str_replace("\\","/",$compressedFileLocation);
-                $remoteFile = $compressedFileLocationConverted;
-
-                header('Content-Description: File Transfer');
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename='.basename($remoteFile));
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
-                header('Content-Length: ' . filesize($remoteFile));
-                $this->readfile_chunked($remoteFile);
                 exit;
-
             }
 
             if( $contentFlagOk ) {
