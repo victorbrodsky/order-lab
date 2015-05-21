@@ -154,6 +154,9 @@ class ScanUploadController extends UploadController {
 
             if( $type == 'Download' ) {
 
+                set_time_limit(0);
+                ini_set('memory_limit', '2048M');
+
                 //$remoteFile = "C:/Images/1376592217_1368_3005ER.svs"; //GIID-153-001.svs"; // set your download file path here.
                 //$remoteFile = "C:/Images/GIID-153-001.svs";
 
@@ -165,7 +168,6 @@ class ScanUploadController extends UploadController {
                     $this->download($remoteFile); // calls download function
                     exit;
                 }
-
 
                 $compressedFileLocationConverted = str_replace("\\","/",$compressedFileLocation);
                 $remoteFile = $compressedFileLocationConverted;
