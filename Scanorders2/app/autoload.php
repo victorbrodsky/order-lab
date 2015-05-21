@@ -3,7 +3,7 @@
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Composer\Autoload\ClassLoader;
 
-ini_set('memory_limit', '2048M'); //128M
+ini_set('memory_limit', '1024M');   //128M
 
 ini_set('max_execution_time', 180);  //in sec
 
