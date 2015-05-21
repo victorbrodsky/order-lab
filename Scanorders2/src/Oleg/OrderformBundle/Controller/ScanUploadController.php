@@ -131,26 +131,26 @@ class ScanUploadController extends UploadController {
                 $contentFlagOk = true;
             }
 
-            if( $type == 'Download-SmallFile' ) {
-
-                //ini_set('memory_limit', '2048M'); //128M
-
-                $compressedFileLocationConverted = str_replace("\\","/",$compressedFileLocation);
-                $remoteFile = $compressedFileLocationConverted;
-                //echo "remoteFile=".$remoteFile."<br>";
-
-                //$urlTest = '<a href="'.$remoteFile.'">Test Download</a>';
-                //echo $urlTest."<br>";
-
-                $contentFile = file_get_contents($remoteFile);
-                //echo "contentFile=".$contentFile."<br>";
-                //exit();
-
-                $size = filesize($remoteFile);
-                //echo "size=".$size."<br>";
-
-                $contentFlagOk = true;
-            }
+//            if( $type == 'Download-SmallFile' ) {
+//
+//                //ini_set('memory_limit', '2048M'); //128M
+//
+//                $compressedFileLocationConverted = str_replace("\\","/",$compressedFileLocation);
+//                $remoteFile = $compressedFileLocationConverted;
+//                //echo "remoteFile=".$remoteFile."<br>";
+//
+//                //$urlTest = '<a href="'.$remoteFile.'">Test Download</a>';
+//                //echo $urlTest."<br>";
+//
+//                $contentFile = file_get_contents($remoteFile);
+//                //echo "contentFile=".$contentFile."<br>";
+//                //exit();
+//
+//                $size = filesize($remoteFile);
+//                //echo "size=".$size."<br>";
+//
+//                $contentFlagOk = true;
+//            }
 
             if( $type == 'Download' ) {
 

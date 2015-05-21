@@ -8,6 +8,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -117,12 +118,19 @@ class UploadController extends Controller {
             $abspath = $document->getAbsoluteUploadFullPath();
             $size = $document->getSize();
 
-            $response->headers->set('Content-Type', 'application/unknown');
-            $response->headers->set('Content-Description', 'File Transfer');
-            $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
-            $response->headers->set('Content-Length', $size);
-            $response->headers->set('Content-Transfer-Encoding', 'binary');
-            $response->setContent(file_get_contents($abspath));
+            $downloader = new LargeFileDownloader();
+            $downloader->downloadLargeFile($abspath,$originalname,$size);
+
+            exit;
+
+            if(0) {
+                $response->headers->set('Content-Type', 'application/unknown');
+                $response->headers->set('Content-Description', 'File Transfer');
+                $response->headers->set('Content-Disposition', 'attachment; filename="'.$originalname.'"');
+                $response->headers->set('Content-Length', $size);
+                $response->headers->set('Content-Transfer-Encoding', 'binary');
+                $response->setContent(file_get_contents($abspath));
+            }
 
         } else {
             $response->setContent('error');

@@ -27,21 +27,29 @@ class LargeFileDownloader {
 
     //download large files
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/Aperio%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
-    public function downloadLargeFile( $filename, $retbytes=true ) {
+    public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true ) {
 
-        $filenameClean = str_replace("\\","/",$filename);
+        $filenameClean = str_replace("\\","/",$filepath);
 
         if( empty($filenameClean) ) {
             exit;
         }
 
+        if( !$filename ) {
+            $filename = basename($filenameClean);
+        }
+
+        if( !$size ) {
+            $size = filesize($filenameClean);
+        }
+
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.basename($filenameClean));
+        header('Content-Disposition: attachment; filename='.$filename);
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
-        header('Content-Length: ' . filesize($filenameClean));
+        header('Content-Length: ' . $size);
         $this->readfile_chunked($filenameClean);
         return;
     }
@@ -73,6 +81,7 @@ class LargeFileDownloader {
     }
 
 
+    //Does not work properly
     //THE DOWNLOAD SCRIPT
     //$filePath = "D:/Software/versions/windows/windows_7.rar"; // set your download file path here.
     //download($filePath); // calls download function
