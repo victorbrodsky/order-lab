@@ -26,7 +26,7 @@ class LargeFileDownloader {
 
 
     //download large files
-    //tested on 7GB file http://c.med.cornell.edu/order/scan/image-viewer/Aperio%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
+    //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/Aperio%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filename, $retbytes=true ) {
 
         $filenameClean = str_replace("\\","/",$filename);

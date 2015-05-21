@@ -154,10 +154,10 @@ class ScanUploadController extends UploadController {
 
             if( $type == 'Download' ) {
 
-                $remoteFile = "C:/Images/GIID-153-001.svs";
+                //$compressedFileLocation = "C:/Images/GIID-153-001.svs"; //testing file on dev
 
                 $downloader = new LargeFileDownloader();
-                $downloader->downloadLargeFile($remoteFile);
+                $downloader->downloadLargeFile($compressedFileLocation);
 
                 exit;
             }
