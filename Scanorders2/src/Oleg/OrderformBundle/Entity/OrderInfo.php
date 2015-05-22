@@ -356,6 +356,12 @@ class OrderInfo {
      */
     private $stainorder;
 
+    /**
+     * Image Analysis Order
+     * @ORM\OneToOne(targetEntity="ImageAnalysisOrder", inversedBy="orderinfo", cascade={"persist","remove"})
+     */
+    private $imageAnalysisOrder;
+
     ////////////////////////// EOF Specific Orders //////////////////////////
 
 
@@ -1470,6 +1476,22 @@ class OrderInfo {
     public function getStainorder()
     {
         return $this->stainorder;
+    }
+
+    /**
+     * @param mixed $imageAnalysisOrder
+     */
+    public function setImageAnalysisOrder($imageAnalysisOrder)
+    {
+        $this->imageAnalysisOrder = $imageAnalysisOrder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageAnalysisOrder()
+    {
+        return $this->imageAnalysisOrder;
     }
 
 

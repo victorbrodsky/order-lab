@@ -54,6 +54,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/", name="patienttype-list")
      * @Route("/sex/", name="sexes-list")
      * @Route("/magnifications/", name="magnifications-list")
+     * @Route("/image-analysis-algorithms/", name="imageanalysisalgorithm-list")
+     *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -100,6 +102,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/", name="patienttype_create")
      * @Route("/sex/", name="sexes_create")
      * @Route("/magnifications/", name="magnifications_create")
+     * @Route("/image-analysis-algorithms/", name="imageanalysisalgorithm_create")
+     *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -146,6 +150,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/new", name="patienttype_new")
      * @Route("/sex/new", name="sexes_new")
      * @Route("/magnifications/new", name="magnifications_new")
+     * @Route("/image-analysis-algorithms/new", name="imageanalysisalgorithm_new")
+     *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -192,6 +198,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/{id}", name="patienttype_show")
      * @Route("/sex/{id}", name="sexes_show")
      * @Route("/magnifications/{id}", name="magnifications_show")
+     * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_show")
+     *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -238,6 +246,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/{id}/edit", name="patienttype_edit")
      * @Route("/sex/{id}/edit", name="sexes_edit")
      * @Route("/magnifications/edit", name="magnifications_edit")
+     * @Route("/image-analysis-algorithms/edit", name="imageanalysisalgorithm_edit")
+     *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -284,6 +294,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/{id}", name="patienttype_update")
      * @Route("/sex/{id}", name="sexes_update")
      * @Route("/magnifications/{id}", name="magnifications_update")
+     * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_update")
+     *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -426,6 +438,11 @@ class ScanListController extends ListController
             $className = "Magnification";
             $displayName = "Magnifications";
             break;
+        case "imageanalysisalgorithm":
+            $className = "ImageAnalysisAlgorithmList";
+            $displayName = "Image Analysis Algorithms";
+            break;
+
 
         default:
             $className = null;
@@ -478,6 +495,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/{id}", name="patienttype_delete")
      * @Route("/sex/{id}", name="sexes_delete")
      * @Route("/magnifications/{id}", name="magnifications_delete")
+     * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_delete")
+     *
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

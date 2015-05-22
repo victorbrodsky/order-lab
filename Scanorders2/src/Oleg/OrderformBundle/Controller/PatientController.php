@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
 use Oleg\UserdirectoryBundle\Entity\Link;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -127,6 +128,9 @@ class PatientController extends Controller
 
         $messageReportOrder = $this->createSpecificMessage("Report");
         $messages[] = $messageReportOrder;
+
+        $messageImageAnalysisOrder = $this->createSpecificMessage("Image Analysis Order");
+        $messages[] = $messageImageAnalysisOrder;
 
         $messageReportOrder = $this->createSpecificMessage("Analysis Report");
         $messages[] = $messageReportOrder;
@@ -521,6 +525,9 @@ class PatientController extends Controller
         $messageReportOrder = $this->createSpecificMessage("Report");
         $messages[] = $messageReportOrder;
 
+        $messageImageAnalysisOrder = $this->createSpecificMessage("Image Analysis Order");
+        $messages[] = $messageImageAnalysisOrder;
+
         $messageAnalysisReportOrder = $this->createSpecificMessage("Analysis Report");
         $messages[] = $messageAnalysisReportOrder;
 
@@ -546,6 +553,8 @@ class PatientController extends Controller
         //echo "patientDb=".$patientDb."<br>";
         $this->linkMessagesPatient($messages,$patientDb);
         //exit('1');
+
+        //TODO: set "Image Analysis Order" as source for "Analysis Report"
 
         if( $patient->getId() ) {
             return $this->redirect( $this->generateUrl('scan-patient-show',array('id'=>$patient->getId())) );
@@ -599,7 +608,7 @@ class PatientController extends Controller
     public function linkSingleMessageObject( $message, $object ) {
 
         $inputPairs = array(
-            "Imaging" => array("Analysis Report"),
+            "Imaging" => array("Image Analysis Order","Analysis Report"),
             "Slide" => array("Lab Order","Report","Stain Order","Multi-Slide Scan Order"),
             "Block" => array("Slide Order"),
             "Part" => array("Block Order")
@@ -1098,6 +1107,8 @@ class PatientController extends Controller
 
                 $this->addSpecificMessage($specificmessages,$slide,"Multi-Slide Scan Order",true);
 
+                $this->addSpecificMessage($specificmessages,$dropzoneImage,"Image Analysis Order",true);
+
                 $this->addSpecificMessage($specificmessages,$dropzoneImage,"Analysis Report",true);
                 $this->addSpecificMessage($specificmessages,$aperioImage,"Analysis Report",true);
 
@@ -1235,6 +1246,15 @@ class PatientController extends Controller
             $report->addConsultedPathologist($consultedPathologist);
 
             //$em->persist($message);
+        }
+
+        if( $messageCategoryStr == "Image Analysis Order" ) {
+            $imageAnalysisOrder = new ImageAnalysisOrder();
+            $imageAnalysisOrder->setOrderinfo($message);
+            $message->setImageAnalysisOrder($imageAnalysisOrder);
+
+            $instruction = new InstructionList($user);
+            $imageAnalysisOrder->setInstruction($instruction);
         }
 
         if( $messageCategoryStr == "Analysis Report" ) {

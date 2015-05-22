@@ -839,7 +839,7 @@ class ListController extends Controller
 
             case "sourcesystems":
                 $className = "SourceSystemList";
-                $displayName = "Source Systems";
+                $displayName = "Systems";
                 break;
             case "role":
                 $className = "Roles";

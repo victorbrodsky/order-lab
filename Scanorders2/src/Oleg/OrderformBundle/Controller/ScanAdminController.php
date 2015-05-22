@@ -7,6 +7,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Oleg\OrderformBundle\Entity\SexList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -109,6 +110,7 @@ class ScanAdminController extends AdminController
         $count_urgency = $this->generateUrgency();
         $count_progressCommentsEventType = $this->generateProgressCommentsEventType();
         $count_generateMagnifications = $this->generateMagnifications();
+        $count_generateImageAnalysisAlgorithmList = $this->generateImageAnalysisAlgorithmList();
 
         $count_race = $this->generateRace();
 
@@ -134,7 +136,8 @@ class ScanAdminController extends AdminController
             'Urgency='.$count_urgency.', '.
             'Progress and Comments EventTypes='.$count_progressCommentsEventType.', '.
             'Races='.$count_race.', '.
-            'Magnifications='.$count_generateMagnifications.' '.
+            'Magnifications='.$count_generateMagnifications.', '.
+            'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1202,6 +1205,72 @@ class ScanAdminController extends AdminController
         return round($count/10);
     }
 
+    //http://indicalab.com/products/ except Image Analysis Hyper-Cluster
+    public function generateImageAnalysisAlgorithmList() {
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:ImageAnalysisAlgorithmList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Break-Apart & Fusion FISH',
+            'Amplification & Deletion FISH',
+            'Multiplex RNA FISH',
+            'Fluorescent Object Colocalization',
+            'Cell-Based Immunofluorescence',
+            'Double Stain Cytoplasmic & Nuclear IHC',
+            'Membrane IHC Quantification',
+            'SISH & Dual CISH Quantification',
+            'Chromogenic RNA ISH',
+            'Steatosis Quantificatio',
+            'Adipose Tissue Quantification',
+            'Muscle Fiber Quantification',
+            'Pancreatic Islet Quantification',
+            'Micro-hemorrhage Counting',
+            'Amyloid Plaque Counting',
+            'Axon Quantification',
+            'Lung Quantification',
+            'Microglial Activation Quantification',
+            'FREE ImageScope Eyedropper',
+            'Photoreceptor Analysis',
+            'HALO',
+            'Muscle Fiber – Fluorescence',
+            'Epidermal Layer Thickness',
+            'Retina Layer Thickness',
+            'Nucleoli Quantification',
+            'Protein Foci Quantification',
+            'Fluorescent Microvessel Quantification',
+            'Fluorescent Membrane Quantification',
+            'Retinal Vascular Quantification',
+            'Tissue Microarray (TMA)',
+            'Tissue Classification',
+            'Glomeruli Podocyte Quantification',
+            'Multiplex DNA FISH',
+            'Circulating Tumor Cell (CTC)',
+            'Brightfield Microvessel Quantification',
+            'Fluorescent Islet Quantification',
+            'Immune Cell Proximity',
+            'Serial Section Analysis'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new ImageAnalysisAlgorithmList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
 
     public function generateRace() {
