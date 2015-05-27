@@ -474,24 +474,24 @@
 
         {% for message in object.orderinfo %}
 
-            {#message:{{ message.vars.value.getMessageCategory() }}#}
+            message:{{ message.vars.value.getMessageCategory() }}
 
             {#decide if this object is the same as input object #}
             {%  set showMessage = false %}
             {% for input in message.vars.value.inputs %}
                 {% set messageInputClassName = input.entityNamespace~"\\"~input.entityName %}
                 {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
-                {#<br>compare :{{ messageInputClassName }} ?= {{currentObjectClassName }}#}
-                {#<br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}#}
-                 {% if
+
+                <br>compare :{{ messageInputClassName }} ?= {{currentObjectClassName }}
+                <br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}
+
+                {% if
                         messageInputClassName == currentObjectClassName
                         and input.entityId == object.vars.value.id
                 %}
                     {%  set showMessage = true %}
                 {% endif %}
             {% endfor %}
-
-            {#<br>showMessage:({{ showMessage }})<br>#}
 
             {% if showMessage %}
 
@@ -507,6 +507,12 @@
                     {% set orderUniqueId = orderId %}
                 {% else %}
                     {% set orderUniqueId = message.vars.value.messageCategory.name|replace({" ":"_"}) %}
+                {% endif %}
+
+                {% if message.vars.value.messageCategory.name %}
+                    {% set orderName = message.vars.value.messageCategory.name %}
+                {% else %}
+                    {% set orderName = "Order" %}
                 {% endif %}
 
                 <p>
@@ -533,7 +539,7 @@
                         {% else %}
                             {% set orderIdHref = orderId %}
                         {% endif %}
-                        {{ formmacros.simplefield( "Order ID:", orderIdHref, "", disabled ) }}
+                        {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
 
                         {#controlled by controller and form#}
                         {% if message.idnumber is defined %}
@@ -2010,7 +2016,7 @@
 
                 <div id="form_body_imaging_{{ orderUniqueId }}_{{ uid }}" class="panel-body panel-body-imaging collapse in">
 
-                    {{ formmacros.renderMessages(scan,flag,uid,cycle) }}
+                    {{ formmacros.renderMessages(scan,flag,"pid"~orderUniqueId~"_"~uid,cycle) }}
 
                     {% if scan.source is defined %}
                         {{ formmacros.field(scan.source) }}

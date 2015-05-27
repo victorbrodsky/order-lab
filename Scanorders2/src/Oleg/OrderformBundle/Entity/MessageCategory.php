@@ -165,14 +165,15 @@ class MessageCategory extends ListAbstract implements ComponentCategoryInterface
     public function getClassName() {
         return "MessageCategory";
     }
-    public function getParentClassName () {
-        return $this->getClassName();
-    }
+//    public function getParentClassName() {
+//        return $this->getClassName();
+//    }
 
 
     public function printTree() {
 
-        echo $this;
+        //exit('1');
+        //echo $this;
 
         foreach( $this->getChildren() as $subCategory ) {
 

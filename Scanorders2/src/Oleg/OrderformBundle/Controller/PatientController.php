@@ -555,6 +555,8 @@ class PatientController extends Controller
         //exit('1');
 
         //TODO: set "Image Analysis Order" as source for "Analysis Report"
+        $messageAnalysisReportOrder->addAssociation($messageImageAnalysisOrder);
+
 
         if( $patient->getId() ) {
             return $this->redirect( $this->generateUrl('scan-patient-show',array('id'=>$patient->getId())) );
@@ -1136,9 +1138,11 @@ class PatientController extends Controller
 
         foreach( $messages as $message) {
 
-            if( $message->getMessageCategory()->getName()."" == $messageTypeStr ) {
-                //echo $messageTypeStr." link message to object<br>";
-                $this->linkMessageObject($message,$object,$addObjectToMessage,$forceAddObjectAsInput);
+            if( $message->getMessageCategory() ) {
+                if( $message->getMessageCategory()->getName()."" == $messageTypeStr ) {
+                    echo $messageTypeStr." link message to object<br>";
+                    $this->linkMessageObject($message,$object,$addObjectToMessage,$forceAddObjectAsInput);
+                }
             }
 
         }
