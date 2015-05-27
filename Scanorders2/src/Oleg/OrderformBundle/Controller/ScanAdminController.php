@@ -815,7 +815,7 @@ class ScanAdminController extends AdminController
                 $parentCategory->addChild($messageCategory);
             }
 
-            $messageCategory->printTree();
+            //$messageCategory->printTree();
 
             //make children
             if( $subcategory && is_array($subcategory) && count($subcategory) > 0 ) {

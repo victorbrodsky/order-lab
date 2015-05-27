@@ -173,7 +173,7 @@ class MessageCategory extends ListAbstract implements ComponentCategoryInterface
     public function printTree() {
 
         //exit('1');
-        //echo $this;
+        echo $this;
 
         foreach( $this->getChildren() as $subCategory ) {
 
@@ -192,7 +192,7 @@ class MessageCategory extends ListAbstract implements ComponentCategoryInterface
         if( $this->getParent() ) {
             $parentName = ", parent=".$this->getParent()->getName();
         }
-        return "Category:: ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName;
+        return "Category: ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName;
     }
 
 }

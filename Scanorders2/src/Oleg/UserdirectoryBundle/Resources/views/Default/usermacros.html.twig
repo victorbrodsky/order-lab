@@ -187,7 +187,7 @@
 
     {% import _self as usermacros %}
 
-    {% if entity and entity.parent %}
+    {% if entity and entity.parent and entity.id != entity.parent.id %}
         {{ usermacros.nestedTree(entity.parent, linktype) }}
     {% endif %}
 

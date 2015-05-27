@@ -474,7 +474,7 @@
 
         {% for message in object.orderinfo %}
 
-            message:{{ message.vars.value.getMessageCategory() }}
+            {#message:{{ message.vars.value.getMessageCategory() }}#}
 
             {#decide if this object is the same as input object #}
             {%  set showMessage = false %}
@@ -482,8 +482,8 @@
                 {% set messageInputClassName = input.entityNamespace~"\\"~input.entityName %}
                 {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
 
-                <br>compare :{{ messageInputClassName }} ?= {{currentObjectClassName }}
-                <br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}
+                {#<br>compare :{{ messageInputClassName }} ?= {{currentObjectClassName }}#}
+                {#<br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}#}
 
                 {% if
                         messageInputClassName == currentObjectClassName
@@ -492,6 +492,8 @@
                     {%  set showMessage = true %}
                 {% endif %}
             {% endfor %}
+
+            <br>showMessage:({{ showMessage }})<br>
 
             {% if showMessage %}
 

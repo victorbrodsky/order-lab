@@ -1140,7 +1140,7 @@ class PatientController extends Controller
 
             if( $message->getMessageCategory() ) {
                 if( $message->getMessageCategory()->getName()."" == $messageTypeStr ) {
-                    echo $messageTypeStr." link message to object<br>";
+                    //echo $messageTypeStr." link message to object<br>";
                     $this->linkMessageObject($message,$object,$addObjectToMessage,$forceAddObjectAsInput);
                 }
             }
