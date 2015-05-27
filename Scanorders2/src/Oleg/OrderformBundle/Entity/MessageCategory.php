@@ -172,7 +172,6 @@ class MessageCategory extends ListAbstract implements ComponentCategoryInterface
 
     public function printTree() {
 
-        //exit('1');
         echo $this;
 
         foreach( $this->getChildren() as $subCategory ) {

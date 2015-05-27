@@ -493,7 +493,7 @@
                 {% endif %}
             {% endfor %}
 
-            <br>showMessage:({{ showMessage }})<br>
+            {#<br>showMessage:({{ showMessage }})<br>#}
 
             {% if showMessage %}
 
@@ -698,6 +698,17 @@
                                 </div>
 
                             </p>
+                        {% endif %}
+
+                        {% if message.imageAnalysisOrder is defined and message.imageAnalysisOrder.vars.value %}
+                            {{ formmacros.field( message.imageAnalysisOrder.imageAnalysisAlgorithm ) }}
+
+                            <div class="well well-sm">
+                                {{ formmacros.fieldDateLabel(message.imageAnalysisOrder.instruction.createdate,'allow-future-date') }}
+                                {{ formmacros.field( message.imageAnalysisOrder.instruction.creator ) }}
+                                {{ formmacros.field( message.imageAnalysisOrder.instruction.instruction ) }}
+                            </div>
+
                         {% endif %}
 
 

@@ -53,6 +53,8 @@ class ImageAnalysisOrder {
     private $imageAnalysisAlgorithm;
 
 
+
+
     /**
      * @param int $id
      */

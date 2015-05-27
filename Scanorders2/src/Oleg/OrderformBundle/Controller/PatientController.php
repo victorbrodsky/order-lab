@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
 use Oleg\UserdirectoryBundle\Entity\Link;
 use Symfony\Component\HttpFoundation\Request;
@@ -1110,6 +1111,7 @@ class PatientController extends Controller
                 $this->addSpecificMessage($specificmessages,$slide,"Multi-Slide Scan Order",true);
 
                 $this->addSpecificMessage($specificmessages,$dropzoneImage,"Image Analysis Order",true);
+                $this->addSpecificMessage($specificmessages,$aperioImage,"Image Analysis Order",true);
 
                 $this->addSpecificMessage($specificmessages,$dropzoneImage,"Analysis Report",true);
                 $this->addSpecificMessage($specificmessages,$aperioImage,"Analysis Report",true);
@@ -1139,6 +1141,7 @@ class PatientController extends Controller
         foreach( $messages as $message) {
 
             if( $message->getMessageCategory() ) {
+                //echo "compare: ".$message->getMessageCategory()->getName()."" ."==". $messageTypeStr."<br>";
                 if( $message->getMessageCategory()->getName()."" == $messageTypeStr ) {
                     //echo $messageTypeStr." link message to object<br>";
                     $this->linkMessageObject($message,$object,$addObjectToMessage,$forceAddObjectAsInput);
@@ -1179,6 +1182,10 @@ class PatientController extends Controller
 
         //type
         $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategoryStr);
+        //echo "category=".$category."<br>";
+        if( !$category ) {
+            throw $this->createNotFoundException('Unable to find MessageCategory bt name "' . $messageCategoryStr . '"');
+        }
         $message->setMessageCategory($category);
 
         //set the default institution; check if user has at least one institution
@@ -1259,6 +1266,19 @@ class PatientController extends Controller
 
             $instruction = new InstructionList($user);
             $imageAnalysisOrder->setInstruction($instruction);
+
+            //Image Analysis Software: Indica HALO (destination(endpoint) -> SourceSystemList "Indica HALO")
+            $indicaHALOSystem = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName('Indica HALO');
+            $destination->setSystem($indicaHALOSystem);
+
+            //Image Analysis Algorithm:
+            $imageAnalysisAlgorithm = $em->getRepository('OlegOrderformBundle:ImageAnalysisAlgorithmList')->findOneByName('Break-Apart & Fusion FISH');
+            $imageAnalysisOrder->setImageAnalysisAlgorithm($imageAnalysisAlgorithm);
+
+            //Message Source: source(endpoint) -> SourceSystemList "ScanOrder": already set as default system
+            //$scanOrderSystem = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName('ScanOrder');
+            //$source->setSystem($scanOrderSystem);
+
         }
 
         if( $messageCategoryStr == "Analysis Report" ) {
