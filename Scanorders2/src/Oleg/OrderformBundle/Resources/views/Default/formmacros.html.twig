@@ -567,23 +567,24 @@
                         {#associations and backAssociations: controlled by controller and form#}
                         {#message.vars.value.associations|length:{{ message.vars.value.associations|length }}<br>#}
                         {#message.associations|length:{{ message.associations|length }}#}
-                        {{ formmacros.field( message.associations ) }}
-                        {#{% if message.associations is defined %}#}
-                            {#<p>#}
-                                {#&#123;&#35;{{ formmacros.field( message.associations ) }}&#35;&#125;#}
-                                {#{% for association in message.vars.value.associations %}#}
-                                    {#{{ formmacros.simplefield( "Association:", association.getFullName(), "", "disabled" ) }}#}
-                                {#{% endfor %}#}
-                            {#</p>#}
-                        {#{% endif %}#}
+                        {% if message.associations is defined %}
+                            {% if message.vars.value.id %}
+                                {{ formmacros.field_notempty( message.associations, cycle ) }}
+                            {% else %}
+                                {% for association in message.vars.value.associations %}
+                                    {{ formmacros.simplefield( "Association:", association.getFullName(), "", "disabled" ) }}
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
                         {#message.backAssociations|length:{{ message.backAssociations|length }}#}
                         {% if message.backAssociations is defined %}
-                            <p>
-                                {#{{ formmacros.field( message.backAssociations ) }}#}
+                            {% if message.vars.value.id %}
+                                {{ formmacros.field_notempty( message.backAssociations, cycle ) }}
+                            {% else %}
                                 {% for backAssociation in message.vars.value.backAssociations %}
                                     {{ formmacros.simplefield( "Back Association:", backAssociation.getFullName(), "", "disabled" ) }}
                                 {% endfor %}
-                            </p>
+                            {% endif %}
                         {% endif %}
 
                         {#controlled by controller and form#}
