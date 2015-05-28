@@ -1263,6 +1263,7 @@ class OrderInfo {
     {
         if( !$this->associations->contains($item) ) {
             $this->associations->add($item);
+            $item->addBackAssociation($this);
         }
     }
     public function removeAssociation($item)
@@ -1302,6 +1303,33 @@ class OrderInfo {
 //        return $this->scanner;
 //    }
 
+    public function getFullName(){
+        $fullName = "";
+
+        if( $this->getMessageCategory() ) {
+            $fullName = $fullName . $this->getMessageCategory()->getName();
+        }
+
+        $id = "";
+        if( $this->getOid() ) {
+            $id = $this->getOid();
+        } else {
+            if( $this->getId() ) {
+                $id = $this->getId();
+            }
+        }
+
+        $idStr = "";
+        if( $id ) {
+            $idStr = " ID:" . $id;
+        }
+
+        $fullName = $fullName . $idStr;
+
+        //echo "fullName=".$fullName."<br>";
+
+        return $fullName;
+    }
 
     public function __toString(){
 

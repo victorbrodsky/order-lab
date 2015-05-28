@@ -564,6 +564,28 @@
                             {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
                         {% endif %}
 
+                        {#associations and backAssociations: controlled by controller and form#}
+                        {#message.vars.value.associations|length:{{ message.vars.value.associations|length }}<br>#}
+                        {#message.associations|length:{{ message.associations|length }}#}
+                        {{ formmacros.field( message.associations ) }}
+                        {#{% if message.associations is defined %}#}
+                            {#<p>#}
+                                {#&#123;&#35;{{ formmacros.field( message.associations ) }}&#35;&#125;#}
+                                {#{% for association in message.vars.value.associations %}#}
+                                    {#{{ formmacros.simplefield( "Association:", association.getFullName(), "", "disabled" ) }}#}
+                                {#{% endfor %}#}
+                            {#</p>#}
+                        {#{% endif %}#}
+                        {#message.backAssociations|length:{{ message.backAssociations|length }}#}
+                        {% if message.backAssociations is defined %}
+                            <p>
+                                {#{{ formmacros.field( message.backAssociations ) }}#}
+                                {% for backAssociation in message.vars.value.backAssociations %}
+                                    {{ formmacros.simplefield( "Back Association:", backAssociation.getFullName(), "", "disabled" ) }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+
                         {#controlled by controller and form#}
                         {% if message.inputs is defined %}
                             <p>
@@ -602,7 +624,6 @@
 
                         {#controlled by controller and form#}
                         {% if message.destinations is defined %}
-                            destinations!!!
                             <p>
                                 {% for destination in message.destinations %}
                                     {#{{ formmacros.simplefield( "Destination System:", destination.system, "input", disabled ) }}#}

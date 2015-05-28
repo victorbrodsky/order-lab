@@ -259,30 +259,30 @@ class ImagingType extends AbstractType
     }
 
 
-    private function getArrayOfMaginifications(){
-
-        $query = $this->params['em']->createQueryBuilder()
-            ->from('OlegOrderformBundle:Magnification', 'list')
-            ->select("list")
-            ->where("list.type = :typedef OR list.type = :typeadd")
-            ->orderBy("list.orderinlist","ASC")
-            ->setParameters( array(
-                'typedef' => 'default',
-                'typeadd' => 'user-added',
-            ));
-
-        $mags = $query->getQuery()->getResult();
-
-        //echo "mags count=".count($mags)."<br>";
-
-        $list = array();
-        foreach( $mags as $mag ){
-            $list[] = $mag."";
-        }
-
-        //print_r($list);
-
-        return $list;
-    }
+//    private function getArrayOfMaginifications(){
+//
+//        $query = $this->params['em']->createQueryBuilder()
+//            ->from('OlegOrderformBundle:Magnification', 'list')
+//            ->select("list")
+//            ->where("list.type = :typedef OR list.type = :typeadd")
+//            ->orderBy("list.orderinlist","ASC")
+//            ->setParameters( array(
+//                'typedef' => 'default',
+//                'typeadd' => 'user-added',
+//            ));
+//
+//        $mags = $query->getQuery()->getResult();
+//
+//        //echo "mags count=".count($mags)."<br>";
+//
+//        $list = array();
+//        foreach( $mags as $mag ){
+//            $list[] = $mag."";
+//        }
+//
+//        //print_r($list);
+//
+//        return $list;
+//    }
 
 }

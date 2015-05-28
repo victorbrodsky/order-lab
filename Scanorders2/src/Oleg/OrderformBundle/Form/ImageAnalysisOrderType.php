@@ -43,7 +43,7 @@ class ImageAnalysisOrderType extends AbstractType
                 },
         ));
 
-        $params = array('labelPrefix'=>' for Embedder');
+        $params = array('labelPrefix'=>'');
         $builder->add('instruction', new InstructionType($params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
             'label' => false

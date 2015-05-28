@@ -17,29 +17,34 @@ class EndpointType extends AbstractType
     {
         if( $params ) $this->params = $params;
         if( $entity ) $this->entity = $entity;
+
+        if( !array_key_exists('endpoint.location', $this->params) ) {
+            $this->params['endpoint.location'] = true;
+        }
+
+        if( !array_key_exists('endpoint.system', $this->params) ) {
+            $this->params['endpoint.system'] = true;
+        }
+
+        if( !array_key_exists('endpoint.location.label', $this->params) ) {
+            $this->params['endpoint.location.label'] = "Location:";
+        }
+
+        if( !array_key_exists('endpoint.system.label', $this->params) ) {
+            $this->params['endpoint.system.label'] = "System:";
+        }
+
     }
         
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $labelLocation = "";
-        $labelSystem = "";
-
-        if( array_key_exists('endpoint.location', $this->params) ) {
-            //echo "EndpointType: label exists=".$this->params['label']."<br>";
-            $labelLocation = $this->params['endpoint.location'];
-        }
-
-        if( array_key_exists('endpoint.system', $this->params) ) {
-            $labelSystem = $this->params['endpoint.system'];
-        }
-
         ////////////// Location //////////////////////
         //use Endpoint object: destination - location
 
         $destinationLocationsOptions = array(
-            'label' => $labelLocation,
+            'label' => $this->params['endpoint.location.label'],
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
             'classtype' => 'location',
@@ -51,16 +56,18 @@ class EndpointType extends AbstractType
             $destinationLocationsOptions['data'] = $destinationLocation['data']->getId();
         }
 
-        if( $this->params['cycle'] == 'show' ) {
-            $builder->add('location', 'entity', array(
-                'label' => $labelLocation,
-                'required'=> false,
-                'multiple' => false,
-                'class' => 'OlegUserdirectoryBundle:Location',
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
-        } else {
-            $builder->add('location', 'employees_custom_selector', $destinationLocationsOptions);
+        if( $this->params['endpoint.location'] == true ) {
+            if( $this->params['cycle'] == 'show' ) {
+                $builder->add('location', 'entity', array(
+                    'label' => $this->params['endpoint.location.label'],
+                    'required'=> false,
+                    'multiple' => false,
+                    'class' => 'OlegUserdirectoryBundle:Location',
+                    'attr' => array('class' => 'combobox combobox-width')
+                ));
+            } else {
+                $builder->add('location', 'employees_custom_selector', $destinationLocationsOptions);
+            }
         }
         ////////////// EOF Location //////////////////////
 
@@ -68,9 +75,9 @@ class EndpointType extends AbstractType
 
 
         ////////////// System //////////////////////
-        if( array_key_exists('endpoint.system', $this->params) &&  $this->params['endpoint.system'] == true ) {
+        if( $this->params['endpoint.system'] == true ) {
             $builder->add('system', 'entity', array(
-                'label' => $labelSystem,
+                'label' => $this->params['endpoint.system.label'],
                 'required'=> false,
                 'multiple' => false,
                 'class' => 'OlegUserdirectoryBundle:SourceSystemList',

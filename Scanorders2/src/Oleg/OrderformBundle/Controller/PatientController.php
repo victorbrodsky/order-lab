@@ -133,14 +133,20 @@ class PatientController extends Controller
         $messageImageAnalysisOrder = $this->createSpecificMessage("Image Analysis Order");
         $messages[] = $messageImageAnalysisOrder;
 
-        $messageReportOrder = $this->createSpecificMessage("Analysis Report");
-        $messages[] = $messageReportOrder;
+        $messageAnalysisReport = $this->createSpecificMessage("Analysis Report");
+        $messages[] = $messageAnalysisReport;
 
         $messageStainOrder = $this->createSpecificMessage("Stain Order");
         $messages[] = $messageStainOrder;
 
         $messageMultiSlideScanOrder = $this->createSpecificMessage("Multi-Slide Scan Order");
         $messages[] = $messageMultiSlideScanOrder;
+
+        //set "Image Analysis Order" as source for "Analysis Report"
+        $em->persist($messageAnalysisReport);
+        $em->persist($messageImageAnalysisOrder);
+        $messageImageAnalysisOrder->addAssociation($messageAnalysisReport);
+        //$messageAnalysisReport->addBackAssociation($messageImageAnalysisOrder);
         ///////////////////// EOF prepare messages /////////////////////
 
 
@@ -529,14 +535,17 @@ class PatientController extends Controller
         $messageImageAnalysisOrder = $this->createSpecificMessage("Image Analysis Order");
         $messages[] = $messageImageAnalysisOrder;
 
-        $messageAnalysisReportOrder = $this->createSpecificMessage("Analysis Report");
-        $messages[] = $messageAnalysisReportOrder;
+        $messageAnalysisReport = $this->createSpecificMessage("Analysis Report");
+        $messages[] = $messageAnalysisReport;
 
         $messageStainOrder = $this->createSpecificMessage("Stain Order");
         $messages[] = $messageStainOrder;
 
         //$messageMultiSlideScanOrder = $this->createSpecificMessage("Multi-Slide Scan Order");
         //$messages[] = $messageMultiSlideScanOrder;
+
+        //set "Image Analysis Order" as source for "Analysis Report"
+        $messageImageAnalysisOrder->addAssociation($messageAnalysisReport);
         ///////////////////// EOF prepare messages /////////////////////
 
 //        foreach( $messages as $message ) {
@@ -554,9 +563,6 @@ class PatientController extends Controller
         //echo "patientDb=".$patientDb."<br>";
         $this->linkMessagesPatient($messages,$patientDb);
         //exit('1');
-
-        //TODO: set "Image Analysis Order" as source for "Analysis Report"
-        $messageAnalysisReportOrder->addAssociation($messageImageAnalysisOrder);
 
 
         if( $patient->getId() ) {

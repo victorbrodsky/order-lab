@@ -44,6 +44,13 @@ class MessageType extends AbstractType
             $this->params['message.destinations'] = true;
         }
 
+        if( !array_key_exists('message.associations', $this->params) ) {
+            $this->params['message.associations'] = true;
+        }
+        if( !array_key_exists('message.backAssociations', $this->params) ) {
+            $this->params['message.backAssociations'] = true;
+        }
+
         //default labels
         $labels = array(
             'educational' => 'Educational:',
@@ -86,6 +93,203 @@ class MessageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+
+        if( array_key_exists('message.idnumber', $this->params) &&  $this->params['message.idnumber'] == true ) {
+            $builder->add('idnumber', null, array(
+                'label' => "Identification Number:",
+                'attr' => array('class' => 'form-control'),
+                'required'=>false,
+            ));
+        }
+
+        if( array_key_exists('message.orderdate', $this->params) &&  $this->params['message.orderdate'] == true ) {
+            //echo "message.orderdate=".$this->params['message.orderdate']."<br>";
+            $builder->add('orderdate','date',array(
+                'widget' => 'single_text',
+                'label' => "Generation Date:",
+                //'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
+                'format' => 'MM/dd/yyyy, H:mm:ss',
+                'attr' => array('class' => 'datepicker form-control'),
+                'required' => false,
+            ));
+        }
+
+        //echo "provider show=".$this->params['message.provider']."<br>";
+        if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
+            $builder->add('provider', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => $this->labels['provider'],
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                            ->where('u.roles LIKE :roles OR u=:user')
+                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                    },
+            ));
+        }
+
+        if( array_key_exists('message.proxyuser', $this->params) &&  $this->params['message.proxyuser'] == true ) {
+            $builder->add('proxyuser', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label'=>$this->labels['proxyuser'],
+                'required' => false,
+                //'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                            ->where('u.roles LIKE :roles OR u=:user')
+                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                    },
+            ));
+        }
+
+        if( array_key_exists('educational', $this->params) &&  $this->params['educational'] == true ) {
+            $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>$this->labels['educational']) );
+        }
+
+        if( array_key_exists('research', $this->params) &&  $this->params['research'] == true ) {
+            $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>$this->labels['research']) );
+        }
+
+        //priority
+        $helper = new FormHelper();
+        $priorityArr = array(
+            'label' => $this->labels['priority'],
+            'choices' => $helper->getPriority(),
+            'required' => true,
+            'multiple' => false,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type', 'required'=>'required')
+        );
+        if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' ) {
+            $priorityArr['data'] = 'Routine';    //new
+        }
+        $builder->add( 'priority', 'choice', $priorityArr);
+
+        //deadline
+        if( $this->params['cycle'] == 'new' ) {
+            $deadline = date_modify(new \DateTime(), '+2 week');
+        } else {
+            $deadline = null;
+        }
+
+        if( $this->entity && $this->entity->getDeadline() != '' ) {
+            $deadline = $this->entity->getDeadline();
+        }
+
+        $builder->add('deadline','date',array(
+            'widget' => 'single_text',
+            'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
+            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
+            'required' => false,
+            'data' => $deadline,
+            'label'=>$this->labels['deadline'],
+        ));
+
+        $builder->add('returnoption', 'checkbox', array(
+            'label'     => $this->labels['returnoption'],
+            'required'  => false,
+        ));
+
+        //sources
+        if( array_key_exists('message.sources', $this->params) &&  $this->params['message.sources'] == true ) {
+            $this->params['endpoint.location.label'] = $this->labels['sources.location'];
+            $this->params['endpoint.system.label'] = $this->labels['sources.system'];
+            $this->addFormEndpoint('sources',$builder,$this->params);
+        }
+
+        //destinations
+        if( array_key_exists('message.destinations', $this->params) && $this->params['message.destinations'] == true ) {
+            //echo "show destination endpoint<br>";
+            $this->params['endpoint.location.label'] = $this->labels['destinations.location'];
+            $this->params['endpoint.system.label'] = $this->labels['destinations.system'];
+            $this->addFormEndpoint('destinations',$builder,$this->params);
+        }
+
+        //Institution Tree
+        if( array_key_exists('institutions', $this->params) ) {
+            $institutions = $this->params['institutions'];
+        } else {
+            $institutions = null;
+        }
+
+        $builder->add('institution', 'entity', array(
+            'label' => $this->labels['institution'],
+            'required'=> true,
+            'multiple' => false,
+            'empty_value' => false,
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'choices' => $institutions,
+            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
+        ));
+
+
+        //message's slide
+        if( array_key_exists('slide', $this->params) &&  $this->params['slide'] == true ) {
+            $builder->add('slide', 'collection', array(
+                'type' => new SlideSimpleType($this->params,$this->entity),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__slide__',
+            ));
+        }
+
+//        if( !$builder->has('attachmentContainer') ) {
+//            $params = array('labelPrefix'=>'Image');
+//            $params['device.types'] = array();
+//            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+//                'required' => false,
+//                'label' => false
+//            ));
+//        }
+//
+//        if( !$builder->has('equipment') ) {
+//            $builder->add('equipment', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:Equipment',
+//                'property' => 'name',
+//                'label'=>$this->labels['equipment'],
+//                'required'=> true,
+//                'multiple' => false,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('i')
+//                            ->leftJoin('i.keytype','keytype')
+//                            ->where("keytype.name = :keytype AND i.type != :type")
+//                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
+//                    },
+//            ));
+//        }
+
+
+        //Associations
+        //$this->params['message.associations'] = true;
+        if( array_key_exists('message.associations', $this->params) &&  $this->params['message.associations'] == true ) {
+            $builder->add('associations', 'entity', array(
+                'class' => 'OlegOrderformBundle:OrderInfo',
+                'property' => 'getFullName',
+                'label' => "Association Order(s):",
+                'attr' => array('class' => 'combobox combobox-width'),
+                'required'=>false,
+                'multiple' => true,
+            ));
+        }
+        if( array_key_exists('message.backAssociations', $this->params) &&  $this->params['message.backAssociations'] == true ) {
+            $builder->add('backAssociations', 'entity', array(
+                'class' => 'OlegOrderformBundle:OrderInfo',
+                'property' => 'getFullName',
+                'label' => "Back Association Order(s):",
+                'attr' => array('class' => 'combobox combobox-width'),
+                'required'=>false,
+                'multiple' => true,
+            ));
+                    }
+
+
         /////////////////////////// specific orders //////////////////////////
 
         //get message entity
@@ -117,13 +321,10 @@ class MessageType extends AbstractType
                         'required' => false,
                         'label' => false
                     ));
-
-                    //$this->params['message.sources'] = true;
-                    //$this->params['message.destinations'] = true;
                 }
 
                 //imageAnalysisOrder
-                if( $dataEntity->getImageAnalysisOrder() || (array_key_exists('message.imageAnalysisOrder', $this->params) &&  $this->params['message.imageAnalysisOrder'] == true) ) {
+                if( $dataEntity->getImageAnalysisOrder() || (array_key_exists('message.imageAnalysisOrder', $this->params) && $this->params['message.imageAnalysisOrder'] == true) ) {
                     //$params['device.types'] = $equipmentTypes;
                     //echo "show imageAnalysisOrder <br>";
                     $form->add('imageAnalysisOrder', new ImageAnalysisOrderType($this->params,$this->entity), array(
@@ -131,8 +332,15 @@ class MessageType extends AbstractType
                         'label' => false
                     ));
 
-                    $this->params['message.sources'] = true;
-                    $this->params['message.destinations'] = true;
+                    //$this->params['endpoint.location.label'] = $this->labels['destinations.location'];
+                    $this->params['endpoint.location'] = false;
+                    $this->params['endpoint.system.label'] = 'Image Analysis Software:';     //$this->labels['destinations.system'];
+                    $this->addFormEndpoint('destinations',$form,$this->params);
+
+                    //$this->params['endpoint.location.label'] = $this->labels['sources.location'];
+                    $this->params['endpoint.location'] = false;
+                    $this->params['endpoint.system.label'] = $this->labels['sources.system'];   //'Message Source:';
+                    $this->addFormEndpoint('sources',$form,$this->params);
                 }
 
                 //report
@@ -241,202 +449,6 @@ class MessageType extends AbstractType
 
 
 
-        if( array_key_exists('message.idnumber', $this->params) &&  $this->params['message.idnumber'] == true ) {
-            $builder->add('idnumber', null, array(
-                'label' => "Identification Number:",
-                'attr' => array('class' => 'form-control'),
-                'required'=>false,
-            ));
-        }
-
-        if( array_key_exists('message.orderdate', $this->params) &&  $this->params['message.orderdate'] == true ) {
-            //echo "message.orderdate=".$this->params['message.orderdate']."<br>";
-            $builder->add('orderdate','date',array(
-                'widget' => 'single_text',
-                'label' => "Generation Date:",
-                //'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
-                'format' => 'MM/dd/yyyy, H:mm:ss',
-                'attr' => array('class' => 'datepicker form-control'),
-                'required' => false,
-            ));
-        }
-
-        //echo "provider show=".$this->params['message.provider']."<br>";
-        if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
-            $builder->add('provider', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:User',
-                'label' => $this->labels['provider'],
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('u')
-                            ->where('u.roles LIKE :roles OR u=:user')
-                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
-                    },
-            ));
-        }
-
-        if( array_key_exists('message.proxyuser', $this->params) &&  $this->params['message.proxyuser'] == true ) {
-            $builder->add('proxyuser', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:User',
-                'label'=>$this->labels['proxyuser'],
-                'required' => false,
-                //'multiple' => true,
-                'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('u')
-                            ->where('u.roles LIKE :roles OR u=:user')
-                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
-                    },
-            ));
-        }
-
-        if( array_key_exists('educational', $this->params) &&  $this->params['educational'] == true ) {
-            $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>$this->labels['educational']) );
-        }
-
-        if( array_key_exists('research', $this->params) &&  $this->params['research'] == true ) {
-            $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>$this->labels['research']) );
-        }
-
-        //priority
-        $helper = new FormHelper();
-        $priorityArr = array(
-            'label' => $this->labels['priority'],
-            'choices' => $helper->getPriority(),
-            'required' => true,
-            'multiple' => false,
-            'expanded' => true,
-            'attr' => array('class' => 'horizontal_type', 'required'=>'required')
-        );
-        if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' ) {
-            $priorityArr['data'] = 'Routine';    //new
-        }
-        $builder->add( 'priority', 'choice', $priorityArr);
-
-        //deadline
-        if( $this->params['cycle'] == 'new' ) {
-            $deadline = date_modify(new \DateTime(), '+2 week');
-        } else {
-            $deadline = null;
-        }
-
-        if( $this->entity && $this->entity->getDeadline() != '' ) {
-            $deadline = $this->entity->getDeadline();
-        }
-
-        $builder->add('deadline','date',array(
-            'widget' => 'single_text',
-            'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
-            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
-            'required' => false,
-            'data' => $deadline,
-            'label'=>$this->labels['deadline'],
-        ));
-
-        $builder->add('returnoption', 'checkbox', array(
-            'label'     => $this->labels['returnoption'],
-            'required'  => false,
-        ));
-
-        if( array_key_exists('message.sources', $this->params) &&  $this->params['message.sources'] == true ) {
-            $this->params['endpoint.location'] = $this->labels['sources.location'];
-            $this->params['endpoint.system'] = $this->labels['sources.system'];
-            $builder->add('sources', 'collection', array(
-                'type' => new EndpointType($this->params,$this->entity),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__sources__',
-            ));
-        }
-
-        //$this->params['message.destinations'] = true;
-        //Endpoint object: destination - location
-        if( array_key_exists('message.destinations', $this->params) &&  $this->params['message.destinations'] == true ) {
-            $this->params['endpoint.location'] = $this->labels['destinations.location'];
-            $this->params['endpoint.system'] = $this->labels['destinations.system'];
-            $builder->add('destinations', 'collection', array(
-                'type' => new EndpointType($this->params,$this->entity),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__destinations__',
-            ));
-        }
-
-        //Institution Tree
-        if( array_key_exists('institutions', $this->params) ) {
-            $institutions = $this->params['institutions'];
-        } else {
-            $institutions = null;
-        }
-
-        $builder->add('institution', 'entity', array(
-            'label' => $this->labels['institution'],
-            'required'=> true,
-            'multiple' => false,
-            'empty_value' => false,
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $institutions,
-            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
-        ));
-
-
-        //message's slide
-        if( array_key_exists('slide', $this->params) &&  $this->params['slide'] == true ) {
-            $builder->add('slide', 'collection', array(
-                'type' => new SlideSimpleType($this->params,$this->entity),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__slide__',
-            ));
-        }
-
-
-//        if( !$builder->has('attachmentContainer') ) {
-//            $params = array('labelPrefix'=>'Image');
-//            $params['device.types'] = array();
-//            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
-//                'required' => false,
-//                'label' => false
-//            ));
-//        }
-//
-//        if( !$builder->has('equipment') ) {
-//            $builder->add('equipment', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:Equipment',
-//                'property' => 'name',
-//                'label'=>$this->labels['equipment'],
-//                'required'=> true,
-//                'multiple' => false,
-//                'attr' => array('class'=>'combobox combobox-width'),
-//                'query_builder' => function(EntityRepository $er) {
-//                        return $er->createQueryBuilder('i')
-//                            ->leftJoin('i.keytype','keytype')
-//                            ->where("keytype.name = :keytype AND i.type != :type")
-//                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
-//                    },
-//            ));
-//        }
-
-
-
-
-
-
-
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -461,6 +473,20 @@ class MessageType extends AbstractType
         }
         //echo "no has <br>";
         return false;
+    }
+
+
+    public function addFormEndpoint( $field, $form, $params ) {
+        $form->add($field, 'collection', array(
+            'type' => new EndpointType($params,$this->entity),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__'.$field.'__',
+        ));
     }
 
 }

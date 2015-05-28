@@ -196,7 +196,7 @@ class OrderInfoType extends AbstractType
 
         //Endpoint object: destination - location
         //$this->params['label'] = 'Return Slides to:';
-        $this->params['endpoint.location'] = 'Return Slides to:';
+        $this->params['endpoint.location.label'] = 'Return Slides to:';
         $builder->add('destinations', 'collection', array(
             'type' => new EndpointType($this->params,$this->entity),    //$this->type),
             'label' => false,
@@ -300,6 +300,10 @@ class OrderInfoType extends AbstractType
 
     //return true if substring is found: 'Scan Order', 'Lab Order' ...
     public function hasSpecificOrders( $orderinfo, $substring ) {
+        if( !$orderinfo ) {
+            return false;
+        }
+
         $category = $orderinfo->getMessageCategory();
         //echo "category=".$category."<br>";
         if( strpos($category,$substring) !== false ) {
