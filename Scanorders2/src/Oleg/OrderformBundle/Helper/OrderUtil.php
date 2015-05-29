@@ -434,7 +434,9 @@ class OrderUtil {
 
         $dql->innerJoin("history.orderinfo", "orderinfo");
         $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuserWrapper");
+        $dql->leftJoin("proxyuserWrapper.user", "proxyuser");
 
         //$dql->innerJoin("history.orderProvider", "provider");
         //$dql->leftJoin("history.orderProxyuser", "proxyuser");
@@ -695,7 +697,13 @@ class OrderUtil {
 
         if( $orderinfo ) {
             $provider = $orderinfo->getProvider();
-            $proxy = $orderinfo->getProxyuser();
+            $proxys = $orderinfo->getProxyuser();
+            if( count($proxys) > 0 ) {
+                $firstProxyWrapper = $proxys->first();
+                if( $firstProxyWrapper ) {
+                    $proxy = $firstProxyWrapper->getUser();
+                }
+            }
         } else {
             if( $providerid && $providerid != "" ) {
                 $provider = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($providerid);
@@ -771,8 +779,34 @@ class OrderUtil {
         return $res;
     }
 
+    //get ordering provider from the most recent order
+    public function setLastOrderWithProxyuser($user,$message=null) {
+        $repository = $this->em->getRepository('OlegOrderformBundle:OrderInfo');
+        $dql =  $repository->createQueryBuilder("orderinfo");
+        $dql->select('orderinfo');
+        $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+        $dql->where("provider=:user AND proxyuser IS NOT NULL");
+        $dql->orderBy("orderinfo.orderdate","DESC");
+        $query = $this->em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
+        $lastOrderWithProxies = $query->getResult();
+        //echo "count=".count($lastOrderWithProxies)."<br>";
 
+        if( $message ) {
+            if( count($lastOrderWithProxies) > 0 ) {
+                foreach( $lastOrderWithProxies as $order ) {
+                    foreach( $order->getProxyuser() as $proxyuser ) {
+                        $message->addProxyuser($proxyuser);
+                    }
+                }
+            } else {
+                //echo "add [".$user."] as proxyuser <br>";
+                $message->addProxyuserAsUser($user);
+            }
+        }
 
+        return $lastOrderWithProxies;
+    }
 
 
 

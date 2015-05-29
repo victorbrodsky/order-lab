@@ -212,9 +212,12 @@
         {% set showFlag = false %}
     {% endif %}
 
+    {% set userValues = {} %}
+
     {% if fieldname == "provider" %}
         {% if container.vars.value %}
             {% set userValue = container.vars.value.provider %}
+            {% set userValues = userValues|merge(userValue) %}
         {% endif %}
         {% set userLabel = container.provider.vars.label %}
         {% if container.provider is defined %}
@@ -223,7 +226,7 @@
     {% endif %}
 
     {% if fieldname == "proxyuser" %}
-        {% set userValue = container.vars.value.proxyuser %}
+        {% set userValues = container.vars.value.proxyuser %}
         {% set userLabel = container.proxyuser.vars.label %}
         {% if container.proxyuser is defined %}
             {% set userForm = container.proxyuser %}
@@ -237,10 +240,12 @@
                 {% set attr = 'disabled' %}
             {% endif %}
 
-            {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': userValue.id })~'">'~userValue.getUserNameStr()~'</a>' %}
             {% set label = userLabel %}
 
-            {{ formmacros.simplefield( label, hreflink, "", attr ) }}
+            {% for singleUserValue in userValues %}
+                {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~singleUserValue.getUserNameStr()~'</a>' %}
+                {{ formmacros.simplefield( label, hreflink, "", attr ) }}
+            {% endfor %}
 
         {% else %}
 
@@ -257,8 +262,8 @@
     {% set proxyuserName = null %}
     {% set proxyuserId = null %}
     {% if form.vars.value.proxyuser %}
-        {% set proxyuserName = form.vars.value.proxyuser.getUserNameStr() %}
-        {% set proxyuserId = form.vars.value.proxyuser.id %}
+        {% set proxyuserName = form.vars.value.getProxyuserAsUser().getUserNameStr() %}
+        {% set proxyuserId = form.vars.value.getProxyuserAsUser().getId() %}
     {% endif %}
 
     <input type="hidden" id="user_name" value="{{ form.vars.value.provider.getUserNameStr() }}" />

@@ -341,32 +341,6 @@ class MultiScanOrderController extends Controller {
         $scanOrder = new ScanOrder();
         $scanOrder->setOrderinfo($entity);
 
-        //***************** get ordering provider from most recent order ***************************//
-        $lastProxy = null;
-        //$orderWithOrderingProvider = $em->getRepository('OlegOrderformBundle:History')->findByProvider($user);
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
-        $dql =  $repository->createQueryBuilder("orderinfo");
-        $dql->select('orderinfo');
-        $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
-        $dql->where("provider=:user AND proxyuser IS NOT NULL");
-        $dql->orderBy("orderinfo.orderdate","DESC");
-        $query = $em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
-        $lastOrderWithProxies = $query->getResult();
-        //echo "count=".count($lastOrderWithProxies)."<br>";
-
-        if( count($lastOrderWithProxies) > 0 ) {
-            if( count($lastOrderWithProxies) > 1 ) {
-                throw new \Exception( 'More than one orderinfo found count='.count($lastOrderWithProxies).' objects' );
-            }
-            $lastOrderWithProxy = $lastOrderWithProxies[0];
-            $lastProxy = $lastOrderWithProxy->getProxyuser();
-        } else {
-            $lastProxy = null;
-        }
-        //echo "lastProxy=".$lastProxy."<br>";
-        //***************** end of get ordering provider from most recent order ***************************//
-
         //echo "MultiScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
 
@@ -376,6 +350,7 @@ class MultiScanOrderController extends Controller {
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
 
         $entity->setProvider($user);
+        $orderUtil->setLastOrderWithProxyuser($user,$entity);
 
         //set Source object
         $source = new Endpoint();
@@ -386,12 +361,6 @@ class MultiScanOrderController extends Controller {
         $destination = new Endpoint();
         //$destination->setSystem($system);
         $entity->addDestination($destination);
-
-        if( $lastProxy ) {
-            $entity->setProxyuser($lastProxy);
-        } else {
-            $entity->setProxyuser($user);
-        }
 
         $patient = new Patient(true,$status,$user,$system);
         $entity->addPatient($patient);

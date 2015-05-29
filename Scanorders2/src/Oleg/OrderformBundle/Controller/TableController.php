@@ -479,36 +479,6 @@ class TableController extends Controller {
         $scanOrder = new ScanOrder();
         $scanOrder->setOrderinfo($entity);
 
-        //***************** get ordering provider from most recent order ***************************//
-        $lastProxy = null;
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
-        $dql =  $repository->createQueryBuilder("orderinfo");
-        $dql->select('orderinfo');
-        $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
-        $dql->where("provider=:user AND proxyuser IS NOT NULL");
-        $dql->orderBy("orderinfo.orderdate","DESC");
-        $query = $em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
-        $lastOrderWithProxies = $query->getResult();
-        //echo "count=".count($lastOrderWithProxies)."<br>";
-
-        if( count($lastOrderWithProxies) > 0 ) {
-            if( count($lastOrderWithProxies) > 1 ) {
-                throw new \Exception( 'More than one orderinfo found count='.count($lastOrderWithProxies).' objects' );
-            }
-            $lastOrderWithProxy = $lastOrderWithProxies[0];
-            $lastProxy = $lastOrderWithProxy->getProxyuser();
-        } else {
-            $lastProxy = null;
-        }
-        //echo "lastProxy=".$lastProxy."<br>";
-        if( $lastProxy ) {
-            $entity->setProxyuser($lastProxy);
-        } else {
-            $entity->setProxyuser($user);
-        }
-        //***************** end of get ordering provider from most recent order ***************************//
-
         $system = $securityUtil->getDefaultSourceSystem();  //'scanorder';
 
         //set Source object
@@ -522,7 +492,7 @@ class TableController extends Controller {
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
 
         $entity->setProvider($user);
-        $entity->setProxyuser($user);
+        $orderUtil->setLastOrderWithProxyuser($user,$entity);
 
         $patient = new Patient(true,'invalid',$user,$system);
         $entity->addPatient($patient);

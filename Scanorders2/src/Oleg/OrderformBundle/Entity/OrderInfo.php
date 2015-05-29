@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oleg\UserdirectoryBundle\Entity\GeneralEntity;
+use Oleg\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,19 +34,19 @@ class OrderInfo {
     /////////////////    HIERARCHY OBJECTS    //////////////////////
     /**
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo" )
-     * @ORM\JoinTable(name="scan_patient_orderinfo")
+     * @ORM\JoinTable(name="scan_message_patient")
      **/
     private $patient;
 
     /**
      * @ORM\ManyToMany(targetEntity="Encounter", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_encounter_orderinfo")
+     * @ORM\JoinTable(name="scan_message_encounter")
      **/
     private $encounter;
 
     /**
      * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_procedure_orderinfo")
+     * @ORM\JoinTable(name="scan_message_procedure")
      **/
     private $procedure;
 
@@ -111,9 +112,17 @@ class OrderInfo {
      */
     private $provider;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     */
+//    private $proxyuser;
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     */
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_message_user",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      )
+     **/
     private $proxyuser;
 
     /**
@@ -381,6 +390,7 @@ class OrderInfo {
         $this->slide = new ArrayCollection();
         $this->imaging = new ArrayCollection();
 
+        $this->proxyuser = new ArrayCollection();
         $this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
         $this->tracking = new ArrayCollection();
@@ -440,7 +450,7 @@ class OrderInfo {
 
             //
             $provider = $this->getProvider();
-            $proxyuser = $this->getProxyuser();
+            //$proxyuser = $this->getProxyuser();
             $dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
             $histories = $this->getHistory();
             $trackings = $this->getTracking();
@@ -452,7 +462,7 @@ class OrderInfo {
             $this->tracking = new ArrayCollection();
 
             $this->setProvider( $provider );
-            $this->setProxyuser( $proxyuser );
+            //$this->setProxyuser( $proxyuser );
 
             foreach( $dataqualitiesmrnacc as $dataqualitymrnacc ) {
                 $this->addDataqualityMrnAcc($dataqualitymrnacc);
@@ -653,20 +663,38 @@ class OrderInfo {
         return $this->provider;
     }
 
-    /**
-     * @param mixed $proxyuser
-     */
-    public function setProxyuser($proxyuser)
-    {
-        $this->proxyuser = $proxyuser;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getProxyuser()
     {
         return $this->proxyuser;
+    }
+    public function addProxyuser($item)
+    {
+        if( $item && !$this->proxyuser->contains($item) ) {
+            $this->proxyuser->add($item);
+        }
+        return $this;
+    }
+    public function removeProxyuser($item)
+    {
+        $this->proxyuser->removeElement($item);
+    }
+    public function addProxyuserAsUser($user)
+    {
+        if( $user ) {
+            $userWrapper = new UserWrapper();
+            $userWrapper->setUser($user);
+            $this->addProxyuser($userWrapper);
+        }
+        return $this;
+    }
+    public function getProxyuserAsUser()
+    {
+        $proxyuser = null;
+        $proxyuserWrapper = $this->getProxyuser()->first();
+        if( $proxyuserWrapper ) {
+            $proxyuser = $proxyuserWrapper->getUser();
+        }
+        return $proxyuser;
     }
 
     /**

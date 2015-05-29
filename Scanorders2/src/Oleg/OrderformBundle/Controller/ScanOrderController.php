@@ -1115,7 +1115,9 @@ class ScanOrderController extends Controller {
         $dql->innerJoin("orderinfo.status", "status");
 
         $dql->leftJoin("provider.infos", "providerinfos");
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuserWrapper");
+        $dql->leftJoin("proxyuserWrapper.user", "proxyuser");
         $dql->leftJoin("proxyuser.infos", "proxyuserinfos");
 
         $dql->leftJoin("orderinfo.destinations", "destinations");

@@ -147,18 +147,25 @@ class OrderInfoType extends AbstractType
         ));
 
 
-        $builder->add('proxyuser', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label'=>'Ordering Provider:',
-            'required' => false,
-            //'multiple' => true,
+//        $builder->add('proxyuser', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:User',
+//            'label'=>'Ordering Provider:',
+//            'required' => false,
+//            //'multiple' => true,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('u')
+//                    ->where('u.roles LIKE :roles OR u=:user')
+//                    ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+//            },
+//        ));
+        $builder->add('proxyuser', 'custom_selector', array(
+            'label' => 'Ordering Provider:',
             'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    ->where('u.roles LIKE :roles OR u=:user')
-                    ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
-            },
+            'required' => false,
+            'classtype' => 'userWrapper'
         ));
+
 
         $builder->add( 'equipment', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Equipment',
@@ -196,6 +203,7 @@ class OrderInfoType extends AbstractType
 
         //Endpoint object: destination - location
         //$this->params['label'] = 'Return Slides to:';
+        $this->params['endpoint.system'] = false;
         $this->params['endpoint.location.label'] = 'Return Slides to:';
         $builder->add('destinations', 'collection', array(
             'type' => new EndpointType($this->params,$this->entity),    //$this->type),

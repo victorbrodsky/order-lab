@@ -326,7 +326,8 @@ class SlideReturnRequestController extends Controller
         $slideReturnRequest->setOrderinfo($orderinfo);
 
         $slideReturnRequest->getOrderinfo()->setProvider($user);
-        $slideReturnRequest->getOrderinfo()->setProxyuser($user);
+        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil->setLastOrderWithProxyuser($user,$slideReturnRequest->getOrderinfo());
 
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
@@ -376,10 +377,11 @@ class SlideReturnRequestController extends Controller
         $dql->leftJoin("orderinfo.slide", "slides");
         $dql->leftJoin('orderinfo.provider','provider');
         $dql->leftJoin('orderinfo.institution','institution');
-        $dql->leftJoin('orderinfo.proxyuser','proxyuser');
         $dql->leftJoin('orderinfo.destinations','destinations');
         $dql->leftJoin("destinations.location", "destinationslocation");
         $dql->leftJoin('orderinfo.associations','associations');
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuserWrapper");
+        $dql->leftJoin("proxyuserWrapper.user", "proxyuser");
 
         $dql->groupBy('list');
         $dql->addGroupBy('provider');
@@ -507,10 +509,11 @@ class SlideReturnRequestController extends Controller
         $dql->leftJoin("orderinfo.slide", "slides");
         $dql->innerJoin('orderinfo.provider','provider');
         $dql->innerJoin('orderinfo.institution','institution');
-        $dql->leftJoin('orderinfo.proxyuser','proxyuser');
         $dql->leftJoin('orderinfo.destinations', 'destinations');
         $dql->leftJoin('destinations.location', 'destinationslocation');
         $dql->leftJoin('orderinfo.associations','associations');
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuserWrapper");
+        $dql->leftJoin("proxyuserWrapper.user", "proxyuser");
 
 		$postData = $request->query->all();
 		

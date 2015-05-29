@@ -7,14 +7,14 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
 //used by user type
-class UserListTransformer implements DataTransformerInterface
+class UserWrapperTransformer implements DataTransformerInterface
 {
 
     /**
@@ -37,7 +37,7 @@ class UserListTransformer implements DataTransformerInterface
         if( $bundleName ) {
             $this->bundleName = $bundleName;
         } else {
-            $this->bundleName = "OrderformBundle";
+            $this->bundleName = "UserdirectoryBundle";
         }
     }
 
@@ -51,9 +51,9 @@ class UserListTransformer implements DataTransformerInterface
      */
     public function transform( $entities )
     {
-        //echo $entities->first()->getName()."<br>";
+        echo $entities->first()."<br>";
         //echo "transform: entities=".$entities."<br>";
-        //echo $this->className.": transform: count=".count($entities)."<br>";
+        echo $this->className.": transform: count=".count($entities)."<br>";
         //var_dump($entities);
 
         $array = new \Doctrine\Common\Collections\ArrayCollection();
@@ -71,25 +71,28 @@ class UserListTransformer implements DataTransformerInterface
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {
-                    $idArr[] = $entity->getUserStr();
+                    echo "add userwrapper to show ".$entity->getEntity()."<br>";
+                    //$idArr[] = $entity->getUserStr();
+                    $idArr[] = $entity->getEntity();
                 }
             }
             
             //return array with primaryPrincipal as the first element
             //echo "idArr:<br>";
             //var_dump($idArr);
-            //echo "return:".implode(",", $idArr)."<br>";
+            echo "return:".implode(",", $idArr)."<br>";
             
             return implode(",", $idArr);
         }
 
+        echo "return ".$entities->first()->getId()."<br>";
         return $entities->first()->getId();
     }
 
     /**
      * Use for 'Submit'
      *
-     * Transforms a string (number) to an object (i.e. stain).
+     * Transforms a string (number) to an object (i.e. user).
      *
      * @param  string $number
      *
@@ -181,7 +184,7 @@ class UserListTransformer implements DataTransformerInterface
         }
     }
 
-    //createNew DirectorList, PIList
+    //createNew UserWrapper
     //name is entered by a user username
     public function createNew( $name ) {
 
@@ -201,7 +204,7 @@ class UserListTransformer implements DataTransformerInterface
             $newEntity->setCreatedate(new \DateTime());
             $newEntity->setType('user-added');
             $newEntity->setCreator($this->user);
-            $newEntity->setUserObjectLink($user);
+            $newEntity->setUser($user);
 
             //get max orderinlist
             $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM Oleg'.$this->bundleName.':'.$this->className.' c');
@@ -216,10 +219,10 @@ class UserListTransformer implements DataTransformerInterface
         } else {
 
             //update if the user object is not set, maybe we have it now
-            if( !$entity->getUserObjectLink() ) {
+            if( !$entity->getUser() ) {
                 $user = $this->getUserByUserstr( $name );
                 if( $user ) {
-                    $entity->setUserObjectLink($user);
+                    $entity->setUser($user);
                     $this->em->persist($entity);
                     $this->em->flush($entity);
                 }

@@ -88,7 +88,20 @@ class UserWrapper {
         return $this->userStr;
     }
 
+    public function __toString() {
+        return $this->getUser()." ".$this->getUserStr();
+    }
 
-
+    //get user id or user string
+    //used for transformer
+    public function getEntity() {
+        if( $this->getUser() && $this->getUser()->getId() ) {
+            return $this->getUser()->getId();
+        }
+        if( $this->getUserStr() ) {
+            return $this->getUserStr();
+        }
+        return null;
+    }
 
 }

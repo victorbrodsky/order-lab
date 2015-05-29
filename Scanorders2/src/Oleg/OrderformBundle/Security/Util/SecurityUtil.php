@@ -124,7 +124,15 @@ class SecurityUtil extends UserSecurityUtil {
 
         //submitter(owner) and ordering provider can perform any actions
         //echo $order->getProvider()->getId() . " ?= " . $user->getId() . "<br>";
-        if( $order->getProvider()->getId() === $user->getId() || $order->getProxyuser()->getId() === $user->getId() ) {
+        $isProxyUser = false;
+        foreach( $order->getProxyuser() as $proxyuser ) {
+            if( $proxyuser->getUser() && $proxyuser->getUser()->getId() === $user->getId() ) {
+                $isProxyUser = true;
+                break;
+            }
+        }
+
+        if( $order->getProvider()->getId() === $user->getId() || $isProxyUser ) {
             return true;
         }
 
