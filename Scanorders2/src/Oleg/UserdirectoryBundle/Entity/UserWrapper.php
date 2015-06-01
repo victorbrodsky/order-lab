@@ -89,19 +89,45 @@ class UserWrapper {
     }
 
     public function __toString() {
-        return $this->getUser()." ".$this->getUserStr();
+        return $this->getFullName();
+    }
+
+    public function getFullName() {
+        $fullName = "";
+
+        if( $this->getUser() ) {
+            $fullName = $fullName . $this->getUser()."";
+        }
+
+        if( $this->getUserStr() ) {
+            if( $fullName ) {
+                $fullName = $fullName . " " .$this->getUserStr()."";
+            } else {
+                $fullName = $this->getUserStr()."";
+            }
+        }
+
+        return $fullName;
     }
 
     //get user id or user string
     //used for transformer
     public function getEntity() {
-        if( $this->getUser() && $this->getUser()->getId() ) {
-            return $this->getUser()->getId();
+        if( $this->getId() ) {
+            return $this->getId();
         }
-        if( $this->getUserStr() ) {
-            return $this->getUserStr();
-        }
-        return null;
+
+        return $this->getFullName();
+
+//        if( $this->getUser() && $this->getUser()->getId() ) {
+//            //return $this->getUser()->getId();
+//            return $this->getUser()."";
+//        }
+//        if( $this->getUserStr() ) {
+//            return $this->getUserStr();
+//        }
+//        return null;
     }
+
 
 }

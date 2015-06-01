@@ -1095,6 +1095,58 @@ class ScanUtilController extends Controller {
     }
 
 
+    /**
+     * Get all users and user wrappers combined
+     * @Route("/common/proxyuser", name="scan_get_proxyuser")
+     * @Method("GET")
+     */
+    public function getProxyusersAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //get all users
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->leftJoin("list.infos", "infos")
+            ->select("list")
+            //->select("infos.displayName as id, infos.displayName as text")
+            ->orderBy("infos.displayName","ASC");
+
+        $users = $query->getQuery()->getResult();
+
+        $output = array();
+
+        foreach( $users as $user ) {
+            $element = array('id'=>$user."", 'text'=>$user."");
+            if( !$this->in_complex_array($user."",$output) ) {
+                $output[] = $element;
+            }
+        }
+
+        //get all wrapper users
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+            ->leftJoin("list.user", "user")
+            ->leftJoin("user.infos", "infos")
+            ->select("list")
+            //->select("list.id as id, infos.displayName as text")
+            ->orderBy("infos.displayName","ASC");
+        $userWrappers = $query->getQuery()->getResult();
+        foreach( $userWrappers as $userWrapper ) {
+            $element = array(
+                'id'        => $userWrapper->getId(),
+                'text'      => $userWrapper.""
+            );
+            $output[] = $element;
+        }
+        //$output = array_merge($users,$output);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
     //search if $needle exists in array $products
     public function in_complex_array($needle,$products,$indexstr='text') {

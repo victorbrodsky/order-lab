@@ -390,4 +390,29 @@ class UserSecurityUtil {
         return $user;
     }
 
+
+    //$name is entered by a user username. $name can be a guessed username
+    //Use primaryPublicUserId as cwid
+    //TODO: make it more flexible to find a user
+    public function getUserByUserstr( $name ) {
+
+        //echo "get cwid name=".$name."<br>";
+
+        //get cwid
+        $strArr = explode(" ",$name);
+
+        if( count($strArr) > 0 ) {
+            $cwid = $strArr[0];
+        }
+
+        if( $cwid ) {
+            //echo "cwid=".$cwid."<br>";
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        } else {
+            $user = NULL;
+        }
+
+        return $user;
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -43,7 +44,7 @@ class OrderInfoType extends AbstractType
 
 //        echo "orderinfo params=";
         //echo "type=".$this->params['type']."<br>";
-        //echo "cycle=".$this->params['cycle']."<br>";
+        echo "cycle=".$this->params['cycle']."<br>";
 //        echo "<br>";
 
         $helper = new FormHelper();
@@ -159,12 +160,60 @@ class OrderInfoType extends AbstractType
 //                    ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
 //            },
 //        ));
-        $builder->add('proxyuser', 'custom_selector', array(
-            'label' => 'Ordering Provider:',
-            'attr' => array('class' => 'combobox combobox-width'),
-            'required' => false,
-            'classtype' => 'userWrapper'
-        ));
+
+//        $builder->add('proxyuser', 'custom_selector', array(
+//            'label' => 'Ordering Provider:',
+//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
+//            'required' => false,
+//            'classtype' => 'userWrapper'
+//        ));
+
+        //$transformer = new UserWrapperTransformer($this->params['em'], $this->params['serviceContainer']);
+//        $builder->add(
+//            $builder->create('proxyuser', null, array(
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'multiple' => false,
+//                'label' => 'Ordering Provider(s):',
+//            ))
+//                ->addModelTransformer($transformer)
+//        );
+//        $builder->add(
+//            $builder->create('proxyuser', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:UserWrapper',
+//                //'choices' => array(1,2,3),
+//                'multiple' => true,
+//                'expanded' => true,
+//                'label' => 'Ordering Provider(s):',
+//                'attr' => array('class' => 'combobox combobox-width'),
+//                //'classtype' => 'userWrapper'
+//            ))
+//                ->addModelTransformer($transformer)
+//        );
+
+        if( $this->params['cycle'] == 'show' ) {
+
+            //$builder->add( 'proxyuser', null);
+
+            $builder->add( 'proxyuser', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:UserWrapper',
+                //'property' => 'getEntity',
+                'label'=>'Ordering Provider(s):',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width')
+            ));
+
+        } else {
+
+            $builder->add('proxyuser', 'custom_selector', array(
+                'label' => 'Ordering Provider(s):',
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
+                'required' => false,
+                //'multiple' => true,
+                'classtype' => 'userWrapper'
+            ));
+
+        }
 
 
         $builder->add( 'equipment', 'entity', array(

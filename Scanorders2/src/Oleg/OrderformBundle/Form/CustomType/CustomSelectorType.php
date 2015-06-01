@@ -71,10 +71,10 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new SourceOrganTransformer($this->om, $username);
                 break;
             case "optionalUserEducational":
-                $transformer = new UserListTransformer($this->om, $username, 'DirectorList');
+                $transformer = new UserListTransformer($this->om, $this->serviceContainer, $username, 'DirectorList');
                 break;
             case "optionalUserResearch":
-                $transformer = new UserListTransformer($this->om, $username, 'PIList');
+                $transformer = new UserListTransformer($this->om, $this->serviceContainer, $username, 'PIList');
                 break;
             case "account":
                 $transformer = new AccountTransformer($this->om, $username);
@@ -86,7 +86,7 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new MrnTypeTransformer($this->om, $username);
                 break;
             case "userWrapper":
-                $transformer = new UserWrapperTransformer($this->om, $username, 'UserWrapper');
+                $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
                 break;
 //            case "returnSlide":
 //                $transformer = new  GenericTreeTransformer($this->om, $username, 'Location');

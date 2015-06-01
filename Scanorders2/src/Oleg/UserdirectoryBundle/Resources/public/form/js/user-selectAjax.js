@@ -41,6 +41,7 @@ var _cities = new Array();
 var _organizations = new Array();
 
 
+
 function initAllComboboxGeneric(newForm) {
 
     getComboboxGeneric(newForm,'identifierkeytype',_identifiers,false);
@@ -108,44 +109,6 @@ function getDataIdByText(arr,text) {
     return id;
 }
 
-//Generic ajax combobox
-function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix) {
-
-    var targetid = ".ajax-combobox-"+name;
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    if( typeof urlprefix === 'undefined' ) {
-        urlprefix = "generic/";
-    }
-
-    var url = getCommonBaseUrl("util/common/"+urlprefix+name,"employees");
-
-    if( globalDataArray.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            $.each(data, function(key, val) {
-                globalDataArray.push(val);
-            });
-            populateSelectCombobox( targetid, globalDataArray, "Select an option or type in a new value", multipleFlag );
-        });
-    } else {
-        populateSelectCombobox( targetid, globalDataArray, "Select an option or type in a new value", multipleFlag );
-    }
-
-}
 
 
 

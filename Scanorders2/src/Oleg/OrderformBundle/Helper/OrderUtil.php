@@ -792,20 +792,32 @@ class OrderUtil {
         $lastOrderWithProxies = $query->getResult();
         //echo "count=".count($lastOrderWithProxies)."<br>";
 
+        $proxyusers = new ArrayCollection();
+
         if( $message ) {
             if( count($lastOrderWithProxies) > 0 ) {
                 foreach( $lastOrderWithProxies as $order ) {
                     foreach( $order->getProxyuser() as $proxyuser ) {
                         $message->addProxyuser($proxyuser);
+                        $proxyusers->add($proxyuser);
                     }
                 }
             } else {
                 //echo "add [".$user."] as proxyuser <br>";
                 $message->addProxyuserAsUser($user);
+                foreach( $message->getProxyuser() as $proxyuser ) {
+                    $proxyusers->add($proxyuser);
+                }
+
             }
         }
 
-        return $lastOrderWithProxies;
+        $res = array(
+            'proxyusers' => $proxyusers,
+            'orders' => $lastOrderWithProxies
+        );
+
+        return $res;
     }
 
 

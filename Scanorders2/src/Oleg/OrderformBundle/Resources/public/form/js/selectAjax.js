@@ -36,6 +36,7 @@ var _projectTitle = new Array();
 var _courseTitle = new Array();
 var _account = new Array();
 var _urgency = new Array();
+var _proxyuser = new Array();
 
 
 
@@ -76,7 +77,7 @@ function setResearchEducational() {
 
 function customCombobox() {
 
-    //console.log("cycle="+cycle);
+    console.log("cycle="+cycle);
 
     if( cycle && urlBase && cycle != 'edit_user' && cycle != 'accountreq' ) {
         getComboboxMrnType(new Array("0","0","0","0","0","0"));
@@ -96,6 +97,8 @@ function customCombobox() {
 
         getComboboxAccount(new Array("0","0","0","0","0","0"));
         getComboboxReturnLocations();
+
+        getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
     }
 
 }

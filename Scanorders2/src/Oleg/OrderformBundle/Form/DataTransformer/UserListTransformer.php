@@ -21,6 +21,7 @@ class UserListTransformer implements DataTransformerInterface
      * @var ObjectManager
      */
     private $em;
+    private $serviceContainer;
     private $user;
     private $className;
     private $bundleName;
@@ -28,9 +29,10 @@ class UserListTransformer implements DataTransformerInterface
     /**
      * @param ObjectManager $om
      */
-    public function __construct( ObjectManager $em=null, $user=null, $className=null, $bundleName=null )
+    public function __construct( ObjectManager $em=null, $serviceContainer=null, $user=null, $className=null, $bundleName=null )
     {
         $this->em = $em;
+        $this->serviceContainer = $serviceContainer;
         $this->user = $user;
         $this->className = $className;
 
@@ -187,14 +189,16 @@ class UserListTransformer implements DataTransformerInterface
 
         //echo "create: name=".$name."<br>";
 
+        $userSecUtil = $this->serviceContainer->get('user_security_utility');
+
         //check if it is already exists in db
         $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name);
 
         if( null === $entity ) {
 
-            $user = $this->getUserByUserstr( $name );
+            $user = $userSecUtil->getUserByUserstr( $name );
 
-            $entityClass = "Oleg\\$this->bundleName\\Entity\\".$this->className;
+            $entityClass = "Oleg\\".$this->bundleName."\\Entity\\".$this->className;
 
             $newEntity = new $entityClass();
             $newEntity->setName($name);
@@ -217,7 +221,7 @@ class UserListTransformer implements DataTransformerInterface
 
             //update if the user object is not set, maybe we have it now
             if( !$entity->getUserObjectLink() ) {
-                $user = $this->getUserByUserstr( $name );
+                $user = $userSecUtil->getUserByUserstr( $name );
                 if( $user ) {
                     $entity->setUserObjectLink($user);
                     $this->em->persist($entity);
@@ -230,28 +234,6 @@ class UserListTransformer implements DataTransformerInterface
 
     }
 
-    //$name is entered by a user username. $name can be a guessed username
-    //Use primaryPublicUserId as cwid
-    //TODO: make it more flexible to find a user
-    public function getUserByUserstr( $name ) {
 
-        //echo "get cwid name=".$name."<br>";
-
-        //get cwid
-        $strArr = explode(" ",$name);
-
-        if( count($strArr) > 0 ) {
-            $cwid = $strArr[0];
-        }
-
-        if( $cwid ) {
-            //echo "cwid=".$cwid."<br>";
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
-        } else {
-            $user = NULL;
-        }
-
-        return $user;
-    }
 
 }

@@ -9,6 +9,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
+use Oleg\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -21,6 +22,7 @@ class UserWrapperTransformer implements DataTransformerInterface
      * @var ObjectManager
      */
     private $em;
+    private $serviceContainer;
     private $user;
     private $className;
     private $bundleName;
@@ -28,11 +30,17 @@ class UserWrapperTransformer implements DataTransformerInterface
     /**
      * @param ObjectManager $om
      */
-    public function __construct( ObjectManager $em=null, $user=null, $className=null, $bundleName=null )
+    public function __construct( ObjectManager $em=null, $serviceContainer=null, $user=null, $className=null, $bundleName=null )
     {
         $this->em = $em;
+        $this->serviceContainer = $serviceContainer;
         $this->user = $user;
-        $this->className = $className;
+
+        if( $className ) {
+            $this->className = $className;
+        } else {
+            $this->className = "UserWrapper";
+        }
 
         if( $bundleName ) {
             $this->bundleName = $bundleName;
@@ -44,16 +52,16 @@ class UserWrapperTransformer implements DataTransformerInterface
     /**
      * Use for 'Show'
      *
-     * Transforms an object to a string.
+     * Transforms an UserWrapper object to a string.
      *
      * @param  Issue|null $issue
      * @return string
      */
     public function transform( $entities )
     {
-        echo $entities->first()."<br>";
+        //echo $entities->first()."<br>";
         //echo "transform: entities=".$entities."<br>";
-        echo $this->className.": transform: count=".count($entities)."<br>";
+        //echo $this->className.": transform: count=".count($entities)."<br>";
         //var_dump($entities);
 
         $array = new \Doctrine\Common\Collections\ArrayCollection();
@@ -71,28 +79,29 @@ class UserWrapperTransformer implements DataTransformerInterface
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {
-                    echo "add userwrapper to show ".$entity->getEntity()."<br>";
+                    //echo "add userwrapper to show ".$entity->getEntity()."<br>";
                     //$idArr[] = $entity->getUserStr();
                     $idArr[] = $entity->getEntity();
+                    //$idArr[] = $entity->getId();
                 }
             }
             
             //return array with primaryPrincipal as the first element
             //echo "idArr:<br>";
             //var_dump($idArr);
-            echo "return:".implode(",", $idArr)."<br>";
+            //echo "return:".implode(",", $idArr)."<br>";
             
             return implode(",", $idArr);
         }
 
-        echo "return ".$entities->first()->getId()."<br>";
+        //echo "return ".$entities->first()->getId()."<br>";
         return $entities->first()->getId();
     }
 
     /**
      * Use for 'Submit'
      *
-     * Transforms a string (number) to an object (i.e. user).
+     * Transform a user (user id) or userstr (user string) to an UserWrapper object (i.e. user).
      *
      * @param  string $number
      *
@@ -103,12 +112,9 @@ class UserWrapperTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-//        var_dump($text);
-//        echo "<br>transformer: count=".count($text)."<br>";
-//        echo "data transformer text=".$text."<br>";
-//        if( $this->className == 'PIList') {
-//            //exit();
-//        }
+        var_dump($text);
+        echo "<br>transformer: count=".count($text)."<br>";
+        echo "data transformer text=".$text."<br>";
 
         $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
 
@@ -128,133 +134,117 @@ class UserWrapperTransformer implements DataTransformerInterface
             $textArr = explode(",", $text);
             foreach( $textArr as $principal ) {
                 //echo "principal text=".$principal."<br>";
-                $newListArr = $this->addSingleUser( $newListArr, $principal );
+                $newListArr = $this->addSingleObject( $newListArr, $principal );
             }
 
             //echo "reverseTransform: return count:".count($newListArr)."<br>";
-            return $newListArr;
 
         } else {
 
-            $newListArr = $this->addSingleUser( $newListArr, $text );
-            return $newListArr;
+            $newListArr = $this->addSingleObject( $newListArr, $text );
+
 
         }
 
+        echo "newListArr count=".count($newListArr)."<br>";
+        //exit('1');
+
+        return $newListArr; //UserWrapper
     }
 
-    public function addSingleUser( $newListArr, $username ) {
+    //$username - user id or user as string
+    //return array of UserWrapper
+    public function addSingleObject( $newListArr, $username ) {
+
+        echo "username=".$username."<br>";
 
         if( is_numeric ( $username ) ) {    //number => most probably it is id
 
-            //echo "principal=".$username." => numeric => most probably it is id<br>";
+            echo "principal=".$username." => numeric => most probably it is id<br>";
 
-            //entity is a DirectorList, PIList (or user wrapper?)
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($username);
+            //$entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($username);
+            //$entity = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findOneById($username);
 
-            if( null === $entity ) {
+            $query = $this->em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+                ->select("list")
+                //->select("list.id as id, infos.displayName as text")
+                ->leftJoin("list.user", "user")
+                ->where("user.id=:userid")
+                ->setParameters( array(
+                    'userid' => $username
+                ));
 
-                $newList = $this->createNew($username); //create a new record in db
+            $userWrappers = $query->getQuery()->getResult();
 
-                $newListArr->add($newList);
+            if( $userWrappers && count($userWrappers) > 0 ) {
 
                 return $newListArr;
 
             } else {
 
-                $newListArr->add($entity);
+                $newList = $this->createNewUserWrapperByUserId($username); //create a new UserWrapper record in db
+
+                $newListArr->add($newList);
 
                 return $newListArr;
-
             }
 
         } else {    //text => most probably it is new name or multiple ids
 
-            //echo "principal=".$username." => text => most probably it is new name or multiple ids<br>";
+            echo "principal=".$username." => text => most probably it is new name or multiple ids<br>";
 
-            $newList = $this->createNew($username); //create a new record in db
+            $newList = $this->createNewUserWrapperByUserStr($username); //create a new record in db
 
             if( $newList ) {
-                //echo "newList=".$newList."<br>";
+                echo "newList=".$newList."<br>";
                 $newListArr->add($newList);
             }
 
             return $newListArr;
 
         }
+
     }
 
-    //createNew UserWrapper
-    //name is entered by a user username
-    public function createNew( $name ) {
+    public function createNewUserWrapperByUserId( $userid ) {
 
-        //echo "create: name=".$name."<br>";
+        $userWrapper = null;
 
-        //check if it is already exists in db
-        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name);
+        //find user by id
+        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
 
-        if( null === $entity ) {
+        if( $user ) {
+            $userWrapper = new UserWrapper();
+            $userWrapper->setUser($user);
+        }
 
-            $user = $this->getUserByUserstr( $name );
+        return $userWrapper;
+    }
 
-            $entityClass = "Oleg\\$this->bundleName\\Entity\\".$this->className;
+    public function createNewUserWrapperByUserStr( $userStr ) {
 
-            $newEntity = new $entityClass();
-            $newEntity->setName($name);
-            $newEntity->setCreatedate(new \DateTime());
-            $newEntity->setType('user-added');
-            $newEntity->setCreator($this->user);
-            $newEntity->setUser($user);
+        $userWrapper = null;
 
-            //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM Oleg'.$this->bundleName.':'.$this->className.' c');
-            $nextorder = $query->getSingleResult()['maxorderinlist']+10;
-            $newEntity->setOrderinlist($nextorder);
+        $userSecUtil = $this->serviceContainer->get('user_security_utility');
 
-            $this->em->persist($newEntity);
-            $this->em->flush($newEntity);
+        //find user by user string
+        $user = $userSecUtil->getUserByUserstr( $userStr );
 
-            return $newEntity;
+        if( $user ) {
+
+            $userWrapper = new UserWrapper();
+            $userWrapper->setUser($user);
 
         } else {
 
-            //update if the user object is not set, maybe we have it now
-            if( !$entity->getUser() ) {
-                $user = $this->getUserByUserstr( $name );
-                if( $user ) {
-                    $entity->setUser($user);
-                    $this->em->persist($entity);
-                    $this->em->flush($entity);
-                }
-            }
+            $userWrapper = new UserWrapper();
+            $userWrapper->setUserStr($userStr);
 
-            return $entity;
         }
 
+        return $userWrapper;
     }
 
-    //$name is entered by a user username. $name can be a guessed username
-    //Use primaryPublicUserId as cwid
-    //TODO: make it more flexible to find a user
-    public function getUserByUserstr( $name ) {
-
-        //echo "get cwid name=".$name."<br>";
-
-        //get cwid
-        $strArr = explode(" ",$name);
-
-        if( count($strArr) > 0 ) {
-            $cwid = $strArr[0];
-        }
-
-        if( $cwid ) {
-            //echo "cwid=".$cwid."<br>";
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
-        } else {
-            $user = NULL;
-        }
-
-        return $user;
-    }
 
 }
