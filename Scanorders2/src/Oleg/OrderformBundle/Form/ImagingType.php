@@ -231,7 +231,7 @@ class ImagingType extends AbstractType
             //echo "slide datastructure <br>";
 
             $builder->add('message', 'collection', array(
-                'type' => new MessageType($this->params),
+                'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,

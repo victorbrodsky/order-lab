@@ -212,16 +212,29 @@
         {% set showFlag = false %}
     {% endif %}
 
-    {% set userValues = {} %}
+    {% if attr is not defined %}
+        {% set attr = 'disabled' %}
+    {% endif %}
+
+    {% set userValues = [] %}
 
     {% if fieldname == "provider" %}
         {% if container.vars.value %}
             {% set userValue = container.vars.value.provider %}
-            {% set userValues = userValues|merge(userValue) %}
+            {% set userValues = [userValue] %}
         {% endif %}
         {% set userLabel = container.provider.vars.label %}
         {% if container.provider is defined %}
             {% set userForm = container.provider %}
+            {% if showFlag and container.vars.value %}
+                {% set label = userLabel %}
+                {% for singleUserValue in userValues %}
+                    {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~singleUserValue.getUserNameStr()~'</a>' %}
+                    {{ formmacros.simplefield( label, hreflink, "", attr ) }}
+                {% endfor %}
+            {% else %}
+                {{ formmacros.field(userForm) }}
+            {% endif %}
         {% endif %}
     {% endif %}
 
@@ -230,28 +243,26 @@
         {% set userLabel = container.proxyuser.vars.label %}
         {% if container.proxyuser is defined %}
             {% set userForm = container.proxyuser %}
+            {% if showFlag and container.vars.value %}
+                {% set label = userLabel %}
+                {% for singleProxyUserValue in userValues %}
+                    {% if singleProxyUserValue.user %}
+                        {% set singleUserValue = singleProxyUserValue.user %}
+                        {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~singleProxyUserValue~'</a>' %}
+                    {% else %}
+                        {% set hreflink = singleProxyUserValue %}
+                    {% endif %}
+                    {{ formmacros.simplefield( label, hreflink, "", attr ) }}
+                {% endfor %}
+            {% else %}
+                {{ formmacros.field(userForm) }}
+            {% endif %}
         {% endif %}
     {% endif %}
 
-    {% if userForm is defined %}
-        {% if showFlag and container.vars.value and userValue %}
-
-            {% if attr is not defined %}
-                {% set attr = 'disabled' %}
-            {% endif %}
-
-            {% set label = userLabel %}
-
-            {% for singleUserValue in userValues %}
-                {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~singleUserValue.getUserNameStr()~'</a>' %}
-                {{ formmacros.simplefield( label, hreflink, "", attr ) }}
-            {% endfor %}
-
-        {% else %}
-
-            {{ formmacros.field(userForm) }}
-
-        {% endif %}
+    {% if fieldname == "proxyuser_selectbox" %}
+        container.proxyuser|length:{{ container.proxyuser|length }}
+        {{ formmacros.field(container.proxyuser) }}
     {% endif %}
 
 {% endmacro %}
@@ -664,10 +675,10 @@
                                 </div>
 
                                 {#{{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId~uid) }}#}
-                                <div class="well well-sm">
-                                {{ formmacros.fieldUserWrapper(message.report.signingPathologists,cycle) }}
-                                {{ formmacros.fieldUserWrapper(message.report.consultedPathologists,cycle) }}
-                                </div>
+                                {#<div class="well well-sm">#}
+                                {#{{ formmacros.fieldUserWrapper(message.report.signingPathologists,cycle) }}#}
+                                {#{{ formmacros.fieldUserWrapper(message.report.consultedPathologists,cycle) }}#}
+                                {#</div>#}
 
                             </p>
                         {% endif %}

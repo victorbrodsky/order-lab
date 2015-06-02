@@ -63,27 +63,27 @@ class ReportType extends AbstractType
 //        ));
 
         //$paramsNew = new ArrayObject($params);
-        $params = array('labelPrefix'=>'Signing Pathologist(s):');
-        $builder->add('signingPathologists', 'collection', array(
-            'type' => new UserWrapperType($params),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__signingpathologists__',
-        ));
-
-        $params = array('labelPrefix'=>'Consulted Pathologist(s):');
-        $builder->add('consultedPathologists', 'collection', array(
-            'type' => new UserWrapperType($params),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__consultedpathologists__',
-        ));
+//        $params = array('labelPrefix'=>'Signing Pathologist(s):');
+//        $builder->add('signingPathologists', 'collection', array(
+//            'type' => new UserWrapperType($params),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__signingpathologists__',
+//        ));
+//
+//        $params = array('labelPrefix'=>'Consulted Pathologist(s):');
+//        $builder->add('consultedPathologists', 'collection', array(
+//            'type' => new UserWrapperType($params),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__consultedpathologists__',
+//        ));
 
 
 //        $builder->add('reportType', null, array(

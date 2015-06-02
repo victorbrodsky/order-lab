@@ -14,6 +14,7 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 
 //This form type is used strictly only for scan order: message (message) form has scan order
+//This form includes patient hierarchy form.
 //Originally it was made the way that message has scanorder.
 //All other order's form should have aggregated message type form: order form has message form.
 class MessageType extends AbstractType
@@ -36,6 +37,10 @@ class MessageType extends AbstractType
             $this->params['type'] = 'Unknown Order';
         }
 
+        if( !array_key_exists('message.proxyuser.label', $this->params) ) {
+            $this->params['message.proxyuser.label'] = 'Ordering Provider(s):';
+        }
+
     }
         
     
@@ -44,7 +49,7 @@ class MessageType extends AbstractType
 
 //        echo "message params=";
         //echo "type=".$this->params['type']."<br>";
-        echo "cycle=".$this->params['cycle']."<br>";
+        //echo "cycle=".$this->params['cycle']."<br>";
 //        echo "<br>";
 
         $helper = new FormHelper();
@@ -139,13 +144,27 @@ class MessageType extends AbstractType
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'data' => $deadline,
-            'label'=>'Scan Deadline:',
+            'label' => 'Scan Deadline:',
         ));
 
         $builder->add('returnoption', 'checkbox', array(
             'label'     => 'Return slide(s) by this date even if not scanned:',
             'required'  => false,
         ));
+
+        if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
+            $builder->add('provider', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => 'Submitter:',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                            ->where('u.roles LIKE :roles OR u=:user')
+                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                    },
+            ));
+        }
 
 
 //        $builder->add('proxyuser', 'entity', array(
@@ -197,8 +216,8 @@ class MessageType extends AbstractType
             $builder->add( 'proxyuser', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:UserWrapper',
                 //'property' => 'getEntity',
-                'label'=>'Ordering Provider(s):',
-                'required'=> false,
+                'label' => $this->params['message.proxyuser.label'],
+                'required' => false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width')
             ));
@@ -206,7 +225,7 @@ class MessageType extends AbstractType
         } else {
 
             $builder->add('proxyuser', 'custom_selector', array(
-                'label' => 'Ordering Provider(s):',
+                'label' => $this->params['message.proxyuser.label'],
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
                 'required' => false,
                 //'multiple' => true,
@@ -219,7 +238,7 @@ class MessageType extends AbstractType
         $builder->add( 'equipment', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Equipment',
             'property' => 'name',
-            'label'=>'Scanner:',
+            'label' => 'Scanner:',
             'required'=> true,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -232,7 +251,7 @@ class MessageType extends AbstractType
         ));
 
         $builder->add( 'purpose', 'choice', array(
-            'label'=>'Purpose:',
+            'label' => 'Purpose:',
             'required' => true,
             'choices' => array("For Internal Use by WCMC Department of Pathology"=>"For Internal Use by WCMC Department of Pathology", "For External Use (Invoice Fund Number)"=>"For External Use (Invoice Fund Number)"),
             'multiple' => false,

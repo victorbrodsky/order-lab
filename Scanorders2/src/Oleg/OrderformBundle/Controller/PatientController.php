@@ -177,11 +177,17 @@ class PatientController extends Controller
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
+        $params['proxyuser'] = 'Signing Pathologist(s):';
         $params['message.idnumber'] = false;
         $params['message.sources'] = false;
         $params['message.destinations'] = false;
         $params['message.inputs'] = false;
         $params['message.outputs'] = false;
+
+        $labels = array(
+            'proxyuser' => 'Signing Pathologist(s):'
+        );
+        $params['labels'] = $labels;
 
         //specific orders
 //        $params['message.laborder'] = true;
@@ -239,12 +245,17 @@ class PatientController extends Controller
         $params['endpoint.system'] = true;
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
-        $params['message.proxyuser'] = true;
+        $params['message.proxyuser'] = 'Signing Pathologist(s):';
         $params['message.idnumber'] = false;
         $params['message.sources'] = false;
         $params['message.destinations'] = false;
         $params['message.inputs'] = false;
         $params['message.outputs'] = false;
+
+        $labels = array(
+            'proxyuser' => 'Signing Pathologist(s):'
+        );
+        $params['labels'] = $labels;
 
         $form = $this->createForm( new PatientType($params,$entity), $entity, array('disabled' => true) );
 
@@ -1257,10 +1268,13 @@ class PatientController extends Controller
             $message->setReport($report);
 
             $signingPathologist = new UserWrapper();
-            $report->addSigningPathologist($signingPathologist);
+            $signingPathologist->setUser($user);
+            $message->addProxyuser($signingPathologist);
 
             $consultedPathologist = new UserWrapper();
-            $report->addConsultedPathologist($consultedPathologist);
+            $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
+            $consultedPathologist->setUser($userSystem);
+            $message->addProxyuser($consultedPathologist);
 
             //$em->persist($message);
         }
@@ -1294,10 +1308,13 @@ class PatientController extends Controller
             $message->setReport($report);
 
             $signingPathologist = new UserWrapper();
-            $report->addSigningPathologist($signingPathologist);
+            $signingPathologist->setUser($user);
+            $message->addProxyuser($signingPathologist);
 
             $consultedPathologist = new UserWrapper();
-            $report->addConsultedPathologist($consultedPathologist);
+            $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
+            $consultedPathologist->setUser($userSystem);
+            $message->addProxyuser($consultedPathologist);
 
             //$em->persist($message);
         }

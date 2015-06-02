@@ -29,26 +29,26 @@ class Report {
 
 
 
-    //Outside Report Pathologist(s) - Signing Pathologist(s): [Select2, can add new value, separate list in List Manager]
-    //Should be able to create a new user
-    //Pathologist names are entered. Use a wrapper because report can have multiple Pathologists
-    /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_reports_signingPathologists",
-     *      joinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $signingPathologists;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_reports_consultedPathologists",
-     *      joinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $consultedPathologists;
+//    //Outside Report Pathologist(s) - Signing Pathologist(s): [Select2, can add new value, separate list in List Manager]
+//    //Should be able to create a new user
+//    //Pathologist names are entered. Use a wrapper because report can have multiple Pathologists
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+//     * @ORM\JoinTable(name="scan_reports_signingPathologists",
+//     *      joinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $signingPathologists;
+//
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+//     * @ORM\JoinTable(name="scan_reports_consultedPathologists",
+//     *      joinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $consultedPathologists;
 
     //Outside Report Issued On (Date & Time)
     /**
@@ -75,10 +75,10 @@ class Report {
 
 
 
-    public function __construct() {
-        $this->signingPathologists = new ArrayCollection();
-        $this->consultedPathologists = new ArrayCollection();
-    }
+//    public function __construct() {
+//        $this->signingPathologists = new ArrayCollection();
+//        $this->consultedPathologists = new ArrayCollection();
+//    }
 
 
 
@@ -165,37 +165,37 @@ class Report {
 
 
 
-    public function getSigningPathologists()
-    {
-        return $this->signingPathologists;
-    }
-    public function addSigningPathologist($item)
-    {
-        if( $item && !$this->signingPathologists->contains($item) ) {
-            $this->signingPathologists->add($item);
-        }
-        return $this;
-    }
-    public function removeSigningPathologist($item)
-    {
-        $this->signingPathologists->removeElement($item);
-    }
-
-    public function getConsultedPathologists()
-    {
-        return $this->consultedPathologists;
-    }
-    public function addConsultedPathologist($item)
-    {
-        if( $item && !$this->consultedPathologists->contains($item) ) {
-            $this->consultedPathologists->add($item);
-        }
-        return $this;
-    }
-    public function removeConsultedPathologist($item)
-    {
-        $this->consultedPathologists->removeElement($item);
-    }
+//    public function getSigningPathologists()
+//    {
+//        return $this->signingPathologists;
+//    }
+//    public function addSigningPathologist($item)
+//    {
+//        if( $item && !$this->signingPathologists->contains($item) ) {
+//            $this->signingPathologists->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeSigningPathologist($item)
+//    {
+//        $this->signingPathologists->removeElement($item);
+//    }
+//
+//    public function getConsultedPathologists()
+//    {
+//        return $this->consultedPathologists;
+//    }
+//    public function addConsultedPathologist($item)
+//    {
+//        if( $item && !$this->consultedPathologists->contains($item) ) {
+//            $this->consultedPathologists->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeConsultedPathologist($item)
+//    {
+//        $this->consultedPathologists->removeElement($item);
+//    }
 
     /**
      * @param mixed $reportType

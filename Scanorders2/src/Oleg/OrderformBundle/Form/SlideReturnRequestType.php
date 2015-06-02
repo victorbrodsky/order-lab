@@ -32,7 +32,7 @@ class SlideReturnRequestType extends AbstractType
     {
 
         $this->params['slide'] = true;
-        $builder->add('message', new MessageType($this->params), array(
+        $builder->add('message', new MessageObjectType($this->params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Message',
             'label' => false
         ));

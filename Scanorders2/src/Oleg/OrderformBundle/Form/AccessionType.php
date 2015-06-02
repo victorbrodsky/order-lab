@@ -70,7 +70,7 @@ class AccessionType extends AbstractType
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             $builder->add('message', 'collection', array(
-                'type' => new MessageType($this->params),
+                'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
