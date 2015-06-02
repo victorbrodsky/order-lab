@@ -100,7 +100,7 @@ class EducationalResearchController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            $orderoid = $entity->getOrderinfo()->getOid();
+            $orderoid = $entity->getMessage()->getOid();
 
             if( $routeName == "educational_update" ) {
                 $directors = $entity->getCourseTitle()->getDirectors();
@@ -135,10 +135,10 @@ class EducationalResearchController extends Controller {
             $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Data Reviewed');
             $history->setEventtype($eventtype);
 
-            $history->setOrderinfo($entity->getOrderinfo());
+            $history->setMessage($entity->getMessage());
             $history->setProvider($user);
-            $history->setCurrentid($entity->getOrderinfo()->getOid());
-            $history->setCurrentstatus($entity->getOrderinfo()->getStatus());
+            $history->setCurrentid($entity->getMessage()->getOid());
+            $history->setCurrentstatus($entity->getMessage()->getStatus());
             $history->setChangedate( new \DateTime() );
             $history->setNote($msg.$reviewLink);
             $history->setRoles($user->getRoles());

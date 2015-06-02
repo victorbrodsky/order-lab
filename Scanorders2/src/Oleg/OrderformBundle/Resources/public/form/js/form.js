@@ -666,10 +666,10 @@ function priorityOption() {
         $('#priority_option').collapse('hide');
     }
 
-    $('#oleg_orderformbundle_orderinfotype_priority').change(function(e) {
+    $('#oleg_orderformbundle_messagetype_priority').change(function(e) {
         //e.preventDefault();
         //$('#priority_option').collapse('toggle');
-        var checked = $('#oleg_orderformbundle_orderinfotype_priority').find('input[type=radio]:checked').val();
+        var checked = $('#oleg_orderformbundle_messagetype_priority').find('input[type=radio]:checked').val();
         if( checked == 'Stat' ) {
             var param = 'show';
         } else {
@@ -678,7 +678,7 @@ function priorityOption() {
         $('#priority_option').collapse(param);
     });
 
-    var checked = $('#oleg_orderformbundle_orderinfotype_priority').find('input[type=radio]:checked').val();
+    var checked = $('#oleg_orderformbundle_messagetype_priority').find('input[type=radio]:checked').val();
     //console.log("checked="+checked);
     if( checked == 'Stat' ) {
         $('#priority_option').collapse('show');
@@ -691,10 +691,10 @@ function purposeOption() {
         $('#purpose_option').collapse('hide');
     }
 
-    $('#oleg_orderformbundle_orderinfotype_purpose').change(function(e) {
+    $('#oleg_orderformbundle_messagetype_purpose').change(function(e) {
         //e.preventDefault();
         //$('#purpose_option').collapse('toggle');
-        var checked = $('#oleg_orderformbundle_orderinfotype_purpose').find('input[type=radio]:checked').val();
+        var checked = $('#oleg_orderformbundle_messagetype_purpose').find('input[type=radio]:checked').val();
         if( checked == 'For External Use (Invoice Fund Number)' ) {
             var param = 'show';
         } else {
@@ -703,7 +703,7 @@ function purposeOption() {
         $('#purpose_option').collapse(param);
     });
 
-    var checked = $('#oleg_orderformbundle_orderinfotype_purpose').find('input[type=radio]:checked').val();
+    var checked = $('#oleg_orderformbundle_messagetype_purpose').find('input[type=radio]:checked').val();
     //console.log("checked="+checked);
     if( checked == 'For External Use (Invoice Fund Number)' ) {
         $('#purpose_option').collapse('show');

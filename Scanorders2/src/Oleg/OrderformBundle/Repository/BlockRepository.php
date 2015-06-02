@@ -56,7 +56,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 //    }
 
     //override parent method to get next key string
-    public function getNextNonProvided($entity, $extra=null, $orderinfo=null) {
+    public function getNextNonProvided($entity, $extra=null, $message=null) {
         $part= $entity->getParent();
         $partname = $part->obtainValidKeyfield()."";
         $accession= $part->getParent();
@@ -65,7 +65,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $accessionNumber = $key."";
         $keytype = $key->getKeytype()->getId();
 
-        return $this->findNextBlocknameByAccessionPartname( $entity->getInstitution()->getId(), $accessionNumber, $keytype, $partname, $orderinfo );
+        return $this->findNextBlocknameByAccessionPartname( $entity->getInstitution()->getId(), $accessionNumber, $keytype, $partname, $message );
     }
 
     //override parent method to find unique entity in DB
@@ -261,7 +261,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         return $block;
     }
 
-    public function findNextBlocknameByAccessionPartname( $institution, $accessionNumber, $keytype, $partname, $orderinfo=null ) {
+    public function findNextBlocknameByAccessionPartname( $institution, $accessionNumber, $keytype, $partname, $message=null ) {
 
         if( !$institution || $institution == "" || !$accessionNumber || $accessionNumber == "" ) {
             return null;
@@ -299,10 +299,10 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $maxKey = $this->getNextByMax($lastFieldStr, $name);
 
         //check if the valid bigger key was already assigned to the element of the same class attached to this order
-        if( $orderinfo ) {
+        if( $message ) {
             $className = "Block";
             $getSameEntity = "get".$className;
-            foreach( $orderinfo->$getSameEntity() as $same ) {
+            foreach( $message->$getSameEntity() as $same ) {
                 if( $same->getStatus() == self::STATUS_VALID ) {
                     $key = $same->obtainValidKeyfield();
                     $newBiggerKey = $this->getBiggerKey($maxKey,$key,$name);
@@ -318,7 +318,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
     }
 
     //$parent is block. Don't replace slides
-    public function replaceDuplicateEntities($parent,$orderinfo) {
+    public function replaceDuplicateEntities($parent,$message) {
         return $parent;
     }
 

@@ -26,47 +26,47 @@ class Account extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="account")
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="account")
      */
-    protected $orderinfo;
+    protected $message;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->orderinfo = new ArrayCollection();
+        $this->message = new ArrayCollection();
     }
 
 
     /**
-     * Add orderinfo
+     * Add message
      *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @param \Oleg\OrderformBundle\Entity\Message $message
      * @return Account
      */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    public function addMessage(\Oleg\OrderformBundle\Entity\Message $message)
     {
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
+        if( !$this->message->contains($message) ) {
+            $this->message->add($message);
         }
     }
 
     /**
-     * Remove orderinfo
+     * Remove message
      *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @param \Oleg\OrderformBundle\Entity\Message $message
      */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    public function removeMessage(\Oleg\OrderformBundle\Entity\Message $message)
     {
-        $this->orderinfo->removeElement($orderinfo);
+        $this->message->removeElement($message);
     }
 
     /**
-     * Get orderinfo
+     * Get message
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 }

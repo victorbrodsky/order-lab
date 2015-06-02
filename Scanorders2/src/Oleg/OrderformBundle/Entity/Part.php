@@ -67,9 +67,9 @@ class Part extends ObjectAbstract
     protected $block;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="part")
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="part")
      **/
-    protected $orderinfo;
+    protected $message;
 
     /**
      * For some slides, the slide can be attached to the Part directly, without block
@@ -139,7 +139,7 @@ class Part extends ObjectAbstract
         ", paper=".$this->paper->first().
         ", diffDisident=".$this->diffDisident->first().
         ", blockCount=".count($this->block).
-        ", orderinfo=".count($this->orderinfo).
+        ", message=".count($this->message).
         $partnameStr."<br>";
     }
 

@@ -39,9 +39,9 @@ class Encounter extends ObjectAbstract
     protected $procedure;
     
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="encounter")
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="encounter")
      **/
-    protected $orderinfo;
+    protected $message;
 
 
     //Patient's info: age, name, sex, date, history

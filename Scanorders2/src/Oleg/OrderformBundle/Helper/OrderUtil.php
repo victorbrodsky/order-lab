@@ -85,10 +85,10 @@ class OrderUtil {
 
         $em = $this->em;
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
 
         if (!$entity) {
-            throw new \Exception( 'Unable to find OrderInfo entity by id'.$id );
+            throw new \Exception( 'Unable to find Message entity by id'.$id );
         }
 
         $securityUtil = $this->container->get('order_security_utility');
@@ -117,13 +117,13 @@ class OrderUtil {
         $history = new History();
         $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Status Changed');
         $history->setEventtype($eventtype);
-        $history->setOrderinfo($entity);
+        $history->setMessage($entity);
         $history->setCurrentid($entity->getOid());
         $history->setCurrentstatus($entity->getStatus());
         $history->setProvider($user);
         $history->setRoles($user->getRoles());
 
-        //change status for all orderinfo children to "deleted-by-canceled-order"
+        //change status for all message children to "deleted-by-canceled-order"
         //IF their source is ='scanorder' AND there are no child objects with status == 'valid'
         //AND there are no fields that belong to this object that were added by another order
         if( $status == 'Cancel' ) {
@@ -191,15 +191,15 @@ class OrderUtil {
 
             //exit('case Un-Cancel or Submit');
 
-            //1) clone orderinfo object
+            //1) clone message object
             //2) validate MRN-Accession
             //3) change status to 'valid' and 'submit'
 
-//            echo "<br><br>newOrderinfo Patient's count=".count($entity->getPatient())."<br>";
+//            echo "<br><br>newMessage Patient's count=".count($entity->getPatient())."<br>";
 //            echo $entity;
 //            foreach( $entity->getPatient() as $patient ) {
 //                echo "<br>--------------------------<br>";
-//                $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
+//                $em->getRepository('OlegOrderformBundle:Message')->printTree( $patient );
 //                echo "--------------------------<br>";
 //            }
             //exit();
@@ -243,7 +243,7 @@ class OrderUtil {
                             //exit("no conflict <br>");
                         } else {
                             //echo "there is a conflict <br>";
-                            //conflict => render the orderinfo in the amend view 'order_amend'
+                            //conflict => render the message in the amend view 'order_amend'
                             //exit('un-canceling order. id='.$entity->getOid());
                             $conflict = true;
                         }
@@ -306,7 +306,7 @@ class OrderUtil {
         return $res;
     }
 
-//    public function makeOrderInfoClone( $entity, $status_entity, $statusStr ) {
+//    public function makeMessageClone( $entity, $status_entity, $statusStr ) {
 //
 //        $em = $this->em;
 //
@@ -319,23 +319,23 @@ class OrderUtil {
 //        $oidArr = explode("-", $oid);
 //        $originalId = $oidArr[0];
 //
-//        $newOrderinfo = clone $entity;
+//        $newMessage = clone $entity;
 //
 //        $em->detach($entity);
-//        $em->detach($newOrderinfo);
+//        $em->detach($newMessage);
 //
-//        $newOrderinfo->setStatus($status_entity);
-//        //$newOrderinfo->setCycle('submit');
-//        $newOrderinfo->setOid($originalId);
+//        $newMessage->setStatus($status_entity);
+//        //$newMessage->setCycle('submit');
+//        $newMessage->setOid($originalId);
 //
-//        //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
+//        //$newMessage = $this->iterateMessage( $newMessage, $statusStr );
 //
 //        //change status to valid
-//        $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
+//        $message = $this->processObjects( $newMessage, $status_entity, $statusStr );
 //
 //        $res = array();
 //        $res['message'] = $message;
-//        $res['orderinfo'] = $newOrderinfo;
+//        $res['message'] = $newMessage;
 //
 //        return $res;
 //    }
@@ -363,7 +363,7 @@ class OrderUtil {
         return " (changed children: patients ".$patCount.", procedures ".$procCount.", accessions ".$accCount.", parts ".$partCount.", blocks ".$blockCount." slides ".$slideCount.")";
     }
 
-    public function iterateEntity( $orderinfo, $children, $status_entity, $statusStr ) {
+    public function iterateEntity( $message, $children, $status_entity, $statusStr ) {
 
         $em = $this->em;
 
@@ -384,28 +384,28 @@ class OrderUtil {
 
         foreach( $children as $child ) {
 
-            $noOtherOrderinfo = true;
+            $noOtherMessage = true;
 
-            //echo "orderinfo count=".count($child->getOrderinfo()).", order id=".$child->getOrderinfo()->first()->getId()."<br>";
+            //echo "message count=".count($child->getMessage()).", order id=".$child->getMessage()->first()->getId()."<br>";
 
-            //check if this object is used by any other orderinfo (for cancel and amend only)
+            //check if this object is used by any other message (for cancel and amend only)
             //TODO: check all parents too(?)
             if( $statusStr != 'valid' ) {
-                foreach( $child->getOrderinfo() as $order ) {
-                    //echo "orderinfo id=".$order->getId().", oid=".$order->getOid()."<br>";
-                    if( $orderinfo->getId() != $order->getId() ) {  //&& $order->getStatus() != $status_entity->getId()  ) {
-                        $noOtherOrderinfo = false;
+                foreach( $child->getMessage() as $order ) {
+                    //echo "message id=".$order->getId().", oid=".$order->getOid()."<br>";
+                    if( $message->getId() != $order->getId() ) {  //&& $order->getStatus() != $status_entity->getId()  ) {
+                        $noOtherMessage = false;
                         break;
                     }
                 }
             }
 
-            //echo "noOtherOrderinfo=".$noOtherOrderinfo."<br>";
+            //echo "noOtherMessage=".$noOtherMessage."<br>";
 
             //TODO: is it logical to check if source == scanorder? Why we have to limit to scanorder source?
             //Change status to a new $statusStr if the field is not used by other orders
-            //if( $child->getSource()->getId() == $source->getId() && $noOtherOrderinfo ) {
-            if( $noOtherOrderinfo ) {
+            //if( $child->getSource()->getId() == $source->getId() && $noOtherMessage ) {
+            if( $noOtherMessage ) {
                 //echo "change status to (".$statusStr.") <br>";
                 $child->setStatus($statusStr);
                 $em->getRepository('OlegOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
@@ -432,10 +432,10 @@ class OrderUtil {
         $dql->select('history');
         $dql->leftJoin("history.eventtype", "eventtype");
 
-        $dql->innerJoin("history.orderinfo", "orderinfo");
-        $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->innerJoin("history.message", "message");
+        $dql->innerJoin("message.provider", "provider");
 
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuserWrapper");
+        $dql->leftJoin("message.proxyuser", "proxyuserWrapper");
         $dql->leftJoin("proxyuserWrapper.user", "proxyuser");
 
         //$dql->innerJoin("history.orderProvider", "provider");
@@ -523,7 +523,7 @@ class OrderUtil {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }
-            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+            $instStr = $instStr . 'message.institution='.$inst->getId();
             //$instStr = $instStr . 'institution='.$inst->getId();
         }
         if( $instStr == "" ) {
@@ -569,7 +569,7 @@ class OrderUtil {
             $dataqualityObj->setAccession($dataquality['accession']);
             $dataqualityObj->setAccessiontype($accessiontype);
 
-            $dataqualityObj->setOrderinfo($entity);
+            $dataqualityObj->setMessage($entity);
             $dataqualityObj->setProvider($entity->getProvider());
             $dataqualityObj->setStatus('active');
 
@@ -653,21 +653,21 @@ class OrderUtil {
     }
 
     //get the last order
-    public function getPreviousOrderinfo( $categoryStr=null ) {
+    public function getPreviousMessage( $categoryStr=null ) {
         $previousOrder = null;
 
         $user = $this->sc->getToken()->getUser();
 
-//        $previousOrders = $this->em->getRepository('OlegOrderformBundle:OrderInfo')->findBy(
+//        $previousOrders = $this->em->getRepository('OlegOrderformBundle:Message')->findBy(
 //            array('provider'=>$user),
 //            array('orderdate' => 'DESC'),
 //            1                                   //limit to one result
 //        );
 
-        $repository = $this->em->getRepository('OlegOrderformBundle:OrderInfo');
-        $dql =  $repository->createQueryBuilder("orderinfo");
-        $dql->leftJoin('orderinfo.provider','provider');
-        $dql->leftJoin('orderinfo.messageCategory','category');
+        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $dql =  $repository->createQueryBuilder("message");
+        $dql->leftJoin('message.provider','provider');
+        $dql->leftJoin('message.messageCategory','category');
 
         $criteria = "provider=".$user->getId(); //." AND category LIKE '%".$categoryStr."%'";
         if( $categoryStr && $categoryStr != "" ) {
@@ -675,7 +675,7 @@ class OrderUtil {
         }
 
         $dql->where($criteria);
-        $dql->orderBy('orderinfo.orderdate','DESC');
+        $dql->orderBy('message.orderdate','DESC');
 
         $query = $this->em->createQuery($dql)->setMaxResults(1);
         $previousOrders = $query->getResult();
@@ -690,14 +690,14 @@ class OrderUtil {
     }
 
 
-    public function getOrderReturnLocations( $orderinfo, $providerid=null, $proxyid=null ) {
+    public function getOrderReturnLocations( $message, $providerid=null, $proxyid=null ) {
 
         $provider = null;
         $proxy = null;
 
-        if( $orderinfo ) {
-            $provider = $orderinfo->getProvider();
-            $proxys = $orderinfo->getProxyuser();
+        if( $message ) {
+            $provider = $message->getProvider();
+            $proxys = $message->getProxyuser();
             if( count($proxys) > 0 ) {
                 $firstProxyWrapper = $proxys->first();
                 if( $firstProxyWrapper ) {
@@ -781,13 +781,13 @@ class OrderUtil {
 
     //get ordering provider from the most recent order
     public function setLastOrderWithProxyuser($user,$message=null) {
-        $repository = $this->em->getRepository('OlegOrderformBundle:OrderInfo');
-        $dql =  $repository->createQueryBuilder("orderinfo");
-        $dql->select('orderinfo');
-        $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $dql =  $repository->createQueryBuilder("message");
+        $dql->select('message');
+        $dql->innerJoin("message.provider", "provider");
+        $dql->leftJoin("message.proxyuser", "proxyuser");
         $dql->where("provider=:user AND proxyuser IS NOT NULL");
-        $dql->orderBy("orderinfo.orderdate","DESC");
+        $dql->orderBy("message.orderdate","DESC");
         $query = $this->em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
         $lastOrderWithProxies = $query->getResult();
         //echo "count=".count($lastOrderWithProxies)."<br>";

@@ -9,7 +9,7 @@
         {% set uid = patientCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
         <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">
 
-            {{ formmacros.orderinfo_panel_header(
+            {{ formmacros.message_panel_header(
             patient,'patient', datastructure, type, formtype, patientCount, uid,
             patientCount, 0, 0, 0, 0, 0, 0, 0, 0)
             }}
@@ -28,7 +28,7 @@
                     <div id="formpanel_encounter_{{ uid }}" class="panel panel-encounter panel-multi-form">
 
                     {#encounter header#}
-                    {{ formmacros.orderinfo_panel_header(
+                    {{ formmacros.message_panel_header(
                     encounter,'encounter', datastructure, type, formtype, encounterCount, uid,
                     patientCount, encounterCount, 0, 0, 0, 0, 0, 0, 0)
                     }}
@@ -50,7 +50,7 @@
                             {% if datastructure and datastructure == "datastructure" %}
                                 <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure panel-multi-form">
                                     {#procedure header#}
-                                    {{ formmacros.orderinfo_panel_header(
+                                    {{ formmacros.message_panel_header(
                                     procedure,'procedure', datastructure, type, formtype, encounterCount, uid,
                                     patientCount, encounterCount, procedureCount, 0, 0, 0, 0, 0, 0)
                                     }}
@@ -68,7 +68,7 @@
 
                                 {% if datastructure and datastructure == "datastructure" %}
                                         <div id="formpanel_accession_{{ uid }}" class="panel panel-accession panel-multi-form">
-                                        {{ formmacros.orderinfo_panel_header(
+                                        {{ formmacros.message_panel_header(
                                         accession,'accession', datastructure, type, formtype, accessionCount, uid,
                                         patientCount, encounterCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)
                                         }}
@@ -85,7 +85,7 @@
                                     {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
                                     <div id="formpanel_part_{{ uid }}" class="panel panel-part panel-multi-form">
 
-                                        {{ formmacros.orderinfo_panel_header(
+                                        {{ formmacros.message_panel_header(
                                         part,'part', datastructure, type, formtype, partCount, uid,
                                         patientCount, encounterCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
                                         }}
@@ -101,7 +101,7 @@
                                                 {#block id={{ block.vars.value.id }}#}
                                                 {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
                                                 <div id="formpanel_block_{{ uid }}" class="panel panel-block panel-multi-form">
-                                                    {{ formmacros.orderinfo_panel_header(
+                                                    {{ formmacros.message_panel_header(
                                                     block,'block', datastructure, type, formtype, blockCount, uid,
                                                     patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
                                                     }}
@@ -117,7 +117,7 @@
                                                             {#slide id={{ slide.vars.value.id }}#}
                                                             {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
                                                             <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
-                                                                {{ formmacros.orderinfo_panel_header(
+                                                                {{ formmacros.message_panel_header(
                                                                 slide,'slide', datastructure, type, formtype, slideCount, uid,
                                                                 patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
                                                                 }}
@@ -142,7 +142,7 @@
                                             {% for slide in part.slide %}
                                                 {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
                                                 <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
-                                                    {{ formmacros.orderinfo_panel_header(
+                                                    {{ formmacros.message_panel_header(
                                                     slide,'slide', datastructure, type, formtype, slideCount, uid,
                                                     patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
                                                     }}
@@ -265,7 +265,7 @@
     <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">
 
         {#header#}
-        {{ formmacros.orderinfo_panel_header_object(formObject,object,objects,datastructure,type,formtype,uidArr) }}
+        {{ formmacros.message_panel_header_object(formObject,object,objects,datastructure,type,formtype,uidArr) }}
 
         {#body#}
         <div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">

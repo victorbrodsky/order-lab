@@ -25,7 +25,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $this->source = $securityUtil->getDefaultSourceSystem();
     }
 
-    public function processEntity( $entity, $orderinfo, $original=null ) {
+    public function processEntity( $entity, $message, $original=null ) {
 
         if( !$entity ) {
             throw new \Exception('Provided entity for processing is null');
@@ -40,10 +40,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         echo $entity;
         echo $className.": original:".$original."<br>";
 
-        //add this object to institution from orderinfo.
+        //add this object to institution from message.
         //$addClassMethod = "add".$className;
-        //$orderinfo->getInstitution()->$addClassMethod($entity);
-        $entity->setInstitution($orderinfo->getInstitution());
+        //$message->getInstitution()->$addClassMethod($entity);
+        $entity->setInstitution($message->getInstitution());
 
         //set default source if empty
         if( !$entity->getSource() ) {
@@ -51,11 +51,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //check and remove duplication objects such as two Part 'A'.
-        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
+        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $message );
 
         //Accession only: process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
 //        if( $className == 'Accession' ) {
-//            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $original, $orderinfo );
+//            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $original, $message );
 //        }
 
 
@@ -90,12 +90,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $key == ""  ) { //$key == "" is the same as $key->getName().""
             echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
-            $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);
+            $nextKey = $this->getNextNonProvided($entity,null,$message);
 
             //we should have only one key field. At this point block and part names might be empty, this can happen if Accession number was empty on the form
             $key->setField($nextKey);
             $key->setStatus(self::STATUS_VALID);
-            $key->setProvider($orderinfo->getProvider());
+            $key->setProvider($message->getProvider());
             //echo "nextKey=".$nextKey."<br>";
 
         } else {
@@ -104,7 +104,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $found = $this->findUniqueByKey($entity);
 
             //TODO: if amend the use the same logic as for submit. Probably, restriction that only one valid field exist is not correct.
-//            if( $orderinfo->getStatus() == 'Amended' ) {
+//            if( $message->getStatus() == 'Amended' ) {
 //                //echo "amended order: found=".$found."<br>";
 //                //$found = null;
 //            } else {
@@ -127,7 +127,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                     $entity = $original;
                 }
 
-                return $this->setResult($found, $orderinfo, $entity);
+                return $this->setResult($found, $message, $entity);
 
             } else {
                 echo "Case 3: object does not exist in DB (new key is eneterd) or it's an amend order <br>";
@@ -135,11 +135,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         }
 
-        return $this->setResult($entity, $orderinfo, $original);
+        return $this->setResult($entity, $message, $original);
     }
 
 
-    public function setResult( $entity, $orderinfo, $original=null ) {
+    public function setResult( $entity, $message, $original=null ) {
 
         $em = $this->_em;
         $class = new \ReflectionClass($entity);
@@ -152,8 +152,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             } else {
                 $formEntity = $entity;
             }
-            $this->copyCommonFieldsToPatient( $formEntity, $orderinfo->getProvider() );
-            $this->checkAgeConflict( $entity, $orderinfo, $original );
+            $this->copyCommonFieldsToPatient( $formEntity, $message->getProvider() );
+            $this->checkAgeConflict( $entity, $message, $original );
             //exit();
         }
 
@@ -194,10 +194,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
 
-        //Check if institution of orderinfo and entity are match.
-        //Since we set institution of entity from orderinfo on the previous step, the institution of orderinfo and entity must be the same.
+        //Check if institution of message and entity are match.
+        //Since we set institution of entity from message on the previous step, the institution of message and entity must be the same.
         //However, keep this check just in case we got a wrong entity from DB
-        if( $entity->getInstitution()->getId() != $orderinfo->getInstitution()->getId() ) {
+        if( $entity->getInstitution()->getId() != $message->getInstitution()->getId() ) {
             //echo "inst are diff!";
             throw new \Exception( 'Institution of order form and found object are different '.$className );
         } else {
@@ -210,7 +210,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity->setStatus(self::STATUS_VALID);
 
         //Copy Fields
-        $entity = $this->processFieldArrays($entity,$orderinfo,$original);
+        $entity = $this->processFieldArrays($entity,$message,$original);
 
         //Clean empty array fields, which can be added by user dinamically, such as Part's "Differential Diagnoses" (DiffDisident) with empty input field
         //$entity->cleanEmptyArrayFields();
@@ -225,16 +225,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //set provider
-        $entity->setProvider($orderinfo->getProvider());
+        $entity->setProvider($message->getProvider());
 
-        //add entity to orderinfo
-        //$this->addEntityToOrderinfo($entity,$orderinfo);
+        //add entity to message
+        //$this->addEntityToMessage($entity,$message);
         $addClassMethod = "add".$className;
-        $orderinfo->$addClassMethod($entity);
+        $message->$addClassMethod($entity);
 
-        //add this object to institution from orderinfo.
-        //$orderinfo->getInstitution()->$addClassMethod($entity);
-        $entity->setInstitution($orderinfo->getInstitution());
+        //add this object to institution from message.
+        //$message->getInstitution()->$addClassMethod($entity);
+        $entity->setInstitution($message->getInstitution());
 
         echo "After processing:".$entity;
 
@@ -260,7 +260,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $parentClass = new \ReflectionClass($parent);
             $parentClassName = $parentClass->getShortName();
-            $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity( $parent, $orderinfo, $originalParent );
+            $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity( $parent, $message, $originalParent );
             //echo "processed parent:".$processedParent;
 
             $entity->setParent($processedParent);
@@ -281,39 +281,39 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity;
     }
 
-    public function postProcessing($orderinfo) {
+    public function postProcessing($message) {
 
         ///////////// post processing part /////////////
-        $parts = $orderinfo->getPart();
+        $parts = $message->getPart();
         foreach( $parts as $part ) {
             $key = $part->obtainValidKeyField();
             if( !$key || $key == "" ) {
                 //generate auto key
-                $nextKey = $this->getNextNonProvided($part,null,$orderinfo);
+                $nextKey = $this->getNextNonProvided($part,null,$message);
                 if( !$nextKey || $nextKey == '' ) {
                     throw new \Exception( 'Key field was not generated for Part, key='.$nextKey );
                 }
                 $key->setField($nextKey);
                 $key->setStatus(self::STATUS_VALID);
-                $key->setProvider($orderinfo->getProvider());
+                $key->setProvider($message->getProvider());
                 //echo "nextKey=".$nextKey."<br>";
             }
         }
         ///////////// EOF post processing part /////////////
 
         ///////////// post processing block /////////////
-        $blocks = $orderinfo->getBlock();
+        $blocks = $message->getBlock();
         foreach( $blocks as $block ) {
             $key = $block->obtainValidKeyField();
             if( !$key || $key == "" ) {
                 //generate auto key
-                $nextKey = $this->getNextNonProvided($block,null,$orderinfo);
+                $nextKey = $this->getNextNonProvided($block,null,$message);
                 if( !$nextKey || $nextKey == '' ) {
                     throw new \Exception( 'Key field was not generated for Block, key='.$nextKey );
                 }
                 $key->setField($nextKey);
                 $key->setStatus(self::STATUS_VALID);
-                $key->setProvider($orderinfo->getProvider());
+                $key->setProvider($message->getProvider());
                 //echo "nextKey=".$nextKey."<br>";
             }
         }
@@ -324,7 +324,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 //    //overrided by block and part repositories
 //    public function attachToParent( $entity, $child ) {
-//        //echo "start adding to orderinfo <br>";
+//        //echo "start adding to message <br>";
 //        if( $child ) {
 //            $entity->addChildren($child);
 //        }
@@ -428,16 +428,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     //TODO: not used!
-    //if child has orderinfo without id => child belongs to this orderinfo
-    public function isEntityBelongsToOrderinfo_NEW( $entity, $orderinfo ) {
+    //if child has message without id => child belongs to this message
+    public function isEntityBelongsToMessage_NEW( $entity, $message ) {
 
-        //echo "check if belongs to orderinfo. entity: ".$entity;
+        //echo "check if belongs to message. entity: ".$entity;
 
-        $orders = $entity->getOrderinfo();
+        $orders = $entity->getMessage();
 
         //echo "orders=".count($orders)."<br>";
 
-        //1) if object (ie part) does not have orderinfo => does not belong => return true
+        //1) if object (ie part) does not have message => does not belong => return true
         if( count($orders) == 0 ) {
             //echo "yes!!! no orders <br>";
             return true;
@@ -448,7 +448,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo "order id=".$order->getId()."<br>";
             if( $order->getId() && $order->getId() != '' ) {
                 //previous order
-                //echo "object has orderinfo with ID <br>";
+                //echo "object has message with ID <br>";
             } else {
                 //echo "order no ID !!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
                 return true;
@@ -458,25 +458,25 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
     //TODO: not used!
-    public function isEntityBelongsToOrderinfo( $entity, $orderinfo ) {
+    public function isEntityBelongsToMessage( $entity, $message ) {
 
-        //echo "check if belongs to orderinfo. entity: ".$entity;
+        //echo "check if belongs to message. entity: ".$entity;
 
         //this condition will not work on postgresql because id is preset for not existing entity
-        if( $orderinfo->getId() && $orderinfo->getId() != '' ) {
-//            if( $entity->getOrderinfo()->first()->getId() == $orderinfo->getId() ) {
+        if( $message->getId() && $message->getId() != '' ) {
+//            if( $entity->getMessage()->first()->getId() == $message->getId() ) {
 //                return true;
 //            } else {
 //                return false;
 //            }
-            //echo "no: orderinfo has id <br>";
+            //echo "no: message has id <br>";
             return false;
         } else {
 
-            $orders = $entity->getOrderinfo();
+            $orders = $entity->getMessage();
             //echo "orders=".count($orders)."<br>";
 
-            //1) if object (ie part) does not have orderinfo => does not belong => return true
+            //1) if object (ie part) does not have message => does not belong => return true
             if( count($orders) == 0 ) {
                 //echo "yes!!! no orders <br>";
                 return true;
@@ -486,13 +486,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 //            foreach( $orders as $order ) {
 //                if( $order->getId() && $order->getId() != '' ) {
 //                    //previous order
-//                    //echo "object has orderinfo with ID <br>";
+//                    //echo "object has message with ID <br>";
 //                } else {
 //                    return true;
 //                }
 //            }
 
-            //2) if object (ie part) does not have id then this is a new object which belongs to this new orderinfo
+            //2) if object (ie part) does not have id then this is a new object which belongs to this new message
             if( $entity->getId() && $entity->getId() != '' ) {
                 //echo "no: entity has id :".$entity;
                 return false;
@@ -506,21 +506,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     //TODO: not used!
-    public function removeThisAndAllParentsFromOrderinfo( $entity, $orderinfo ) {
+    public function removeThisAndAllParentsFromMessage( $entity, $message ) {
         $className = new \ReflectionClass($entity);
         $shortClassName = $className->getShortName();
         $removeClassMethod = "remove".$shortClassName;    //"removePatient"
         //echo 'removing '.$shortClassName."<br>";
 
-        $orderinfo->$removeClassMethod($entity);
+        $message->$removeClassMethod($entity);
         $parent = $entity->getParent();
         if( $parent ) {
-            $this->removeThisAndAllParentsFromOrderinfo( $parent, $orderinfo );
+            $this->removeThisAndAllParentsFromMessage( $parent, $message );
         }
     }
 
     //overwrited by accession only => conflicting accession number replaced by a new generated one
-    public function processDuplicationKeyField($entity,$orderinfo) {
+    public function processDuplicationKeyField($entity,$message) {
         return $entity; //override it for accession only
     }
 
@@ -530,10 +530,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
     //process single array of fields (i.e. ClinicalHistory Array of Fields)
-    public function processFieldArrays( $entity, $orderinfo=null, $original=null, $status=null ) {
+    public function processFieldArrays( $entity, $message=null, $original=null, $status=null ) {
 
-        if( $orderinfo ) {
-            $provider = $orderinfo->getProvider(); //assume orderinfo has only one provider.
+        if( $message ) {
+            $provider = $message->getProvider(); //assume message has only one provider.
             //echo "provider=".$provider."<br>";
         }
 
@@ -545,16 +545,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $className = $class->getShortName();
         //echo "Process Array Fields: className=".$className."<br>";
 
-        //make sure the orderinfo is set for the key element.
+        //make sure the message is set for the key element.
         if( is_subclass_of($entity, 'Oleg\OrderformBundle\Entity\ObjectAbstract') ) {
             //echo "is_subclass_of: className=".$className."<br>";
             $key = $entity->obtainValidKeyfield();
-            if( $key && !$key->getOrderinfo() ) {
-                $key->setOrderinfo($orderinfo);
+            if( $key && !$key->getMessage() ) {
+                $key->setMessage($message);
                 //echo "key=".$key.", id=".$key->getId()."<br>";
-                //echo "set field's orderinfo=".$key->getOrderinfo()."<br>";
+                //echo "set field's message=".$key->getMessage()."<br>";
             } else {
-                //echo "Don't add orderinfo to field=".$key."!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
+                //echo "Don't add message to field=".$key."!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
             }
         }
 
@@ -597,13 +597,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                             if( $parent ) {
 
-                                //assign orderinfo to the field if orderinfo is null
-                                if( !$field->getOrderinfo() ) {
-                                    //echo "set orderinfo to field=".$field."<br>";
-                                    $field->setOrderinfo($orderinfo);
-                                    //echo "field's orderinfo=".$field->getOrderinfo()."<br>";
+                                //assign message to the field if message is null
+                                if( !$field->getMessage() ) {
+                                    //echo "set message to field=".$field."<br>";
+                                    $field->setMessage($message);
+                                    //echo "field's message=".$field->getMessage()."<br>";
                                 } else {
-                                    //echo "Don't add orderinfo to field=".$field."!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
+                                    //echo "Don't add message to field=".$field."!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
                                 }
 
                                 //Change status only and continue to the next field
@@ -664,7 +664,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                         //echo "original:".$original;
                                         //echo "field=".$field."<br>";
                                     $methodBaseName = str_replace("get", "", $methodShortName);
-                                    $entity = $this->copyField( $entity, $orderinfo, $field, $className, $methodBaseName, $exceptionArr );
+                                    $entity = $this->copyField( $entity, $message, $field, $className, $methodBaseName, $exceptionArr );
                                 }
                                 //############# EOF copy processed field from submitted object (original) to found entity in DB #############//
 
@@ -687,7 +687,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //add field entity if not existed from source object to destination object (from origin to entity)
     //field id is null if check button is not pressed, in this case all fields are gray
     //if entity is found in DB, then all fields have ID, if not then this function is not executed, because process FieldArrays has original=null
-    public function copyField( $entity, $orderinfo, $field, $className, $methodName, $exceptionArr ) {
+    public function copyField( $entity, $message, $field, $className, $methodName, $exceptionArr ) {
         $em = $this->_em;
         //echo "copy Field: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
         //echo $entity;
@@ -744,7 +744,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //echo "provider=".$provider."<br>";
                 $newField = new $fieldClassName($status,$provider);
                 $newField->setField($field->getField());
-                $newField->setOrderinfo($orderinfo);
+                $newField->setMessage($message);
                 $entity->$addMethodName( $newField );
 
                 if( $validField ) {
@@ -764,8 +764,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo $methodName.": compare: (".$thisField.") ?= (".$field.") , status=".$thisField->getStatus()." => ";
             //echo "author thisField: ".$thisField->getProvider()->getId() . " ";
             //echo "authors field: ".$field->getProvider()->getId()." => ";
-            //echo "orderinfo field: ".$field->getOrderinfo()."<br>";
-            //echo "author thisField: ".$thisField->getOrderinfo()."<br>";
+            //echo "message field: ".$field->getMessage()."<br>";
+            //echo "author thisField: ".$thisField->getMessage()."<br>";
 
             if(
                 $thisField."" == $field."" &&
@@ -1125,7 +1125,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$name: NOMRNPROVIDED
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
-    public function getNextNonProvided( $entity, $extra=null, $orderinfo=null ) { //$name, $className, $fieldName ) {
+    public function getNextNonProvided( $entity, $extra=null, $message=null ) { //$name, $className, $fieldName ) {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
@@ -1150,14 +1150,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
 
-        //echo $orderinfo;
+        //echo $message;
         //echo $entity;
         //echo "name=".$name.", fieldName=".$fieldName.", className=".$className."<br>";
         //echo "extraStr=".$extraStr.",<br>";
 
         //institution
-        if( !$entity->getInstitution() && $orderinfo && $orderinfo->getInstitution() ) {
-            $entity->setInstitution( $orderinfo->getInstitution() );
+        if( !$entity->getInstitution() && $message && $message->getInstitution() ) {
+            $entity->setInstitution( $message->getInstitution() );
         }
 
         $inst = " AND c.institution=".$entity->getInstitution()->getId();
@@ -1184,9 +1184,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $maxKey = $this->getNextByMax($lastFieldStr, $name);
 
         //check if the valid bigger key was already assigned to the element of the same class attached to this order
-        if( $orderinfo ) {
+        if( $message ) {
             $getSameEntity = "get".$className;
-            foreach( $orderinfo->$getSameEntity() as $same ) {
+            foreach( $message->$getSameEntity() as $same ) {
                 if( $same->getStatus() == self::STATUS_VALID ) {
                     $key = $same->obtainValidKeyfield()->getField()."";
                     $newBiggerKey = $this->getBiggerKey($maxKey,$key,$name);
@@ -1295,16 +1295,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
     //replace child if duplicated
-    //This abstract method will execute only for Orderinfo, Accession and Part.
+    //This abstract method will execute only for Message, Accession and Part.
     //Encounter and Procedure will be processed by Patient repository's overwrite method
     //Block is not processed, because block never remove slides
-    public function replaceDuplicateEntities( $parent, $orderinfo ) {
+    public function replaceDuplicateEntities( $parent, $message ) {
 
         //echo "abstract replace duplicate parent=".$parent;
-        //echo "abstract replace duplicate orderinfo=".$orderinfo;
+        //echo "abstract replace duplicate message=".$message;
 
-        if( $parent === $orderinfo ) {
-            $children = $orderinfo->getChildren();
+        if( $parent === $message ) {
+            $children = $message->getChildren();
         } else {
             $children = $parent->getChildren();
         }
@@ -1341,18 +1341,18 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                 //Copy Fields
                 //echo "<br>######################################## Process similar fields ########################################<br>";
-                $sameChild = $this->processFieldArrays($sameChild,$orderinfo,$child);
+                $sameChild = $this->processFieldArrays($sameChild,$message,$child);
                 //echo "######################################## EOF Process similar fields ########################################<br>";
 
                 $parent->removeChildren($child);
                 $child->setParent(null);
-                $child->clearOrderinfo();
+                $child->clearMessage();
 
-                //make $orderinfo->removeAccession($child);
+                //make $message->removeAccession($child);
                 $class = new \ReflectionClass($child);
                 $className = $class->getShortName();
                 $removeEntity = "remove".$className;
-                $orderinfo->$removeEntity($child);
+                $message->$removeEntity($child);
 
                 //clean child
                 //echo 'mem: ' . (memory_get_usage()/1024/1024) . "<br />\n";

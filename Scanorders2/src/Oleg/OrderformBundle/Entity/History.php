@@ -86,10 +86,10 @@ class History
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="history", cascade={"persist"})
-     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Message", inversedBy="history", cascade={"persist"})
+     * @ORM\JoinColumn(name="message", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    private $orderinfo;
+    private $message;
 
 
 
@@ -249,14 +249,14 @@ class History
     }
 
 
-    public function setOrderinfo($order)
+    public function setMessage($order)
     {
-        $this->orderinfo = $order;
+        $this->message = $order;
     }
 
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
 

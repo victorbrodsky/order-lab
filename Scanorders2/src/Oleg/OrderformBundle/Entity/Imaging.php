@@ -15,9 +15,9 @@ class Imaging extends ObjectAbstract
 {
 
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="imaging")
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="imaging")
      **/
-    protected $orderinfo;
+    protected $message;
 
     /**
      * @ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")

@@ -71,7 +71,7 @@
     {{ form_widget(form.oid) }}
 
     {% if type == 'show' %}
-        {{ formmacros.orderinfo_panel(form, "Scan Order Info") }}
+        {{ formmacros.message_panel(form, "Scan Order Info") }}
     {% endif %}
 
     <br />
@@ -241,12 +241,12 @@
 
     {% if type == 'new' or type == 'edit' or type == 'amend' %}
 
-        <button id="next_button_multi" type="button" name="btnNext" class="btn btn-success" data-toggle="collapse" data-target="#orderinfo_param" onclick="checkMultiFormOnNext(this)">Next</button>
-        {#<a id="next_button_multi" href="#orderinfo_param" type="button" name="btnNext" class="btn btn-success" data-toggle="collapse" data-target="#orderinfo_param">Next</a>#}
+        <button id="next_button_multi" type="button" name="btnNext" class="btn btn-success" data-toggle="collapse" data-target="#message_param" onclick="checkMultiFormOnNext(this)">Next</button>
+        {#<a id="next_button_multi" href="#message_param" type="button" name="btnNext" class="btn btn-success" data-toggle="collapse" data-target="#message_param">Next</a>#}
 
-        <div id="orderinfo_param" class="collapse">
+        <div id="message_param" class="collapse">
 
-            {{ formmacros.orderinfo_panel(form,"Scan Order Info") }}
+            {{ formmacros.message_panel(form,"Scan Order Info") }}
 
             <div class="row">
                 {% if type == 'amend' %}

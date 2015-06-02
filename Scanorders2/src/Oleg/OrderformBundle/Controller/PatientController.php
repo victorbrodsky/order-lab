@@ -31,7 +31,7 @@ use Oleg\OrderformBundle\Entity\EncounterDate;
 use Oleg\OrderformBundle\Entity\EncounterPatage;
 use Oleg\OrderformBundle\Entity\Endpoint;
 use Oleg\OrderformBundle\Entity\InstructionList;
-use Oleg\OrderformBundle\Entity\OrderInfo;
+use Oleg\OrderformBundle\Entity\Message;
 use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientDob;
 use Oleg\OrderformBundle\Entity\PatientFirstName;
@@ -407,11 +407,11 @@ class PatientController extends Controller
 
         //add messages to the patient
 //        foreach( $messages as $message ) {
-//            $patient->addOrderinfo($message);
+//            $patient->addMessage($message);
 //            $message->addPatient($patient);
 //        }
 
-        //echo "messages=".count($patient->getOrderinfo())."<br>";
+        //echo "messages=".count($patient->getMessage())."<br>";
 
         ///////////////////// populate patient with mrn, mrntype, name etc. /////////////////////
         $mrntypeStr = 'Test Patient MRN';
@@ -510,12 +510,12 @@ class PatientController extends Controller
 
         //add messages to the patient
         foreach( $messages as $message ) {
-            $patient->addOrderinfo($message);
+            $patient->addMessage($message);
             $message->addPatient($patient);
         }
 
         //create scan order first; patient hierarchy will be created as well.
-        $messageMultiSlideScanOrder = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $messageMultiSlideScanOrder, $user, null, $this->get('router'), $this->container );
+        $messageMultiSlideScanOrder = $em->getRepository('OlegOrderformBundle:Message')->processMessageEntity( $messageMultiSlideScanOrder, $user, null, $this->get('router'), $this->container );
 
         ///////////////////// prepare messages /////////////////////
         $messages = array();
@@ -550,10 +550,10 @@ class PatientController extends Controller
 
 //        foreach( $messages as $message ) {
 //
-//            $patient->addOrderinfo($message);
+//            $patient->addMessage($message);
 //            $message->addPatient($patient);
 //
-//            $message = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $message, $user, null, $this->get('router'), $this->container );
+//            $message = $em->getRepository('OlegOrderformBundle:Message')->processMessageEntity( $message, $user, null, $this->get('router'), $this->container );
 //            echo '"<br><br>Created message id='.$message->getId().', cat='.$message->getMessageCategory()."<br><br>";
 //            //continue;
 //        }
@@ -657,7 +657,7 @@ class PatientController extends Controller
         //}
 
         //add message to object
-        $object->addOrderinfo($message);
+        $object->addMessage($message);
 
         //add object to message
         $class = new \ReflectionClass($object);
@@ -1170,9 +1170,9 @@ class PatientController extends Controller
         $system = $securityUtil->getDefaultSourceSystem();
 
         //set scan order
-        $message = new OrderInfo();
+        $message = new Message();
         //$scanOrder = new ScanOrder();
-        //$scanOrder->setOrderinfo($message);
+        //$scanOrder->setMessage($message);
 
         //set provider
         $message->setProvider($user);
@@ -1233,7 +1233,7 @@ class PatientController extends Controller
 
 
         //add this object to message and input
-        //$object->addOrderinfo($message);
+        //$object->addMessage($message);
 
         //set this object as order input
 //        if( $addObjectToMessage ) {
@@ -1244,7 +1244,7 @@ class PatientController extends Controller
         if( $messageCategoryStr == "Lab Order" ) {
 
             $laborder = new LabOrder();
-            $laborder->setOrderinfo($message);
+            $laborder->setMessage($message);
             $message->setLaborder($laborder);
 
             //$em->persist($message);
@@ -1253,7 +1253,7 @@ class PatientController extends Controller
         if( $messageCategoryStr == "Report" ) {
 
             $report = new Report();
-            $report->setOrderinfo($message);
+            $report->setMessage($message);
             $message->setReport($report);
 
             $signingPathologist = new UserWrapper();
@@ -1267,7 +1267,7 @@ class PatientController extends Controller
 
         if( $messageCategoryStr == "Image Analysis Order" ) {
             $imageAnalysisOrder = new ImageAnalysisOrder();
-            $imageAnalysisOrder->setOrderinfo($message);
+            $imageAnalysisOrder->setMessage($message);
             $message->setImageAnalysisOrder($imageAnalysisOrder);
 
             $instruction = new InstructionList($user);
@@ -1290,7 +1290,7 @@ class PatientController extends Controller
         if( $messageCategoryStr == "Analysis Report" ) {
 
             $report = new Report();
-            $report->setOrderinfo($message);
+            $report->setMessage($message);
             $message->setReport($report);
 
             $signingPathologist = new UserWrapper();
@@ -1304,7 +1304,7 @@ class PatientController extends Controller
 
         if( $messageCategoryStr == "Block Order" ) {
             $blockorder = new BlockOrder();
-            $blockorder->setOrderinfo($message);
+            $blockorder->setMessage($message);
             $message->setBlockorder($blockorder);
 
             $instruction = new InstructionList($user);
@@ -1315,7 +1315,7 @@ class PatientController extends Controller
 
         if( $messageCategoryStr == "Slide Order" ) {
             $slideorder = new SlideOrder();
-            $slideorder->setOrderinfo($message);
+            $slideorder->setMessage($message);
             $message->setSlideorder($slideorder);
 
 
@@ -1327,7 +1327,7 @@ class PatientController extends Controller
 
         if( $messageCategoryStr == "Stain Order" ) {
             $stainorder = new StainOrder();
-            $stainorder->setOrderinfo($message);
+            $stainorder->setMessage($message);
             $message->setStainorder($stainorder);
 
             $instruction = new InstructionList($user);
@@ -1338,7 +1338,7 @@ class PatientController extends Controller
 
         if( $messageCategoryStr == "Multi-Slide Scan Order" ) {
             $scanorder = new ScanOrder();
-            $scanorder->setOrderinfo($message);
+            $scanorder->setMessage($message);
             $message->setScanorder($scanorder);
         }
         /////////////////// EOF set specific message //////////////////////////////

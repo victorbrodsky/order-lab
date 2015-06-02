@@ -22,9 +22,9 @@ class Status extends ListAbstract
     protected $action;
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="status")
+//     * @ORM\OneToMany(targetEntity="Message", mappedBy="status")
 //     */
-//    protected $orderinfo;
+//    protected $message;
 
     /**
      * @ORM\OneToMany(targetEntity="Status", mappedBy="original", cascade={"persist"})
@@ -43,7 +43,7 @@ class Status extends ListAbstract
 //     */
 //    public function __construct()
 //    {
-//        //$this->orderinfo = new ArrayCollection();
+//        //$this->message = new ArrayCollection();
 //        $this->synonyms = new ArrayCollection();
 //    }
 
@@ -75,36 +75,36 @@ class Status extends ListAbstract
     }
 
 //    /**
-//     * Add orderinfo
+//     * Add message
 //     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     * @param \Oleg\OrderformBundle\Entity\Message $message
 //     * @return Status
 //     */
-//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    public function addMessage(\Oleg\OrderformBundle\Entity\Message $message)
 //    {
-//        //echo "Status addOrderinfo=".$orderinfo."<br>";
-//        if( !$this->orderinfo->contains($orderinfo) ) {
-//            $this->orderinfo->add($orderinfo);
+//        //echo "Status addMessage=".$message."<br>";
+//        if( !$this->message->contains($message) ) {
+//            $this->message->add($message);
 //        }
 //    }
 //
 //    /**
-//     * Remove orderinfo
+//     * Remove message
 //     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     * @param \Oleg\OrderformBundle\Entity\Message $message
 //     */
-//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    public function removeMessage(\Oleg\OrderformBundle\Entity\Message $message)
 //    {
-//        $this->orderinfo->removeElement($orderinfo);
+//        $this->message->removeElement($message);
 //    }
 //
 //    /**
-//     * Get orderinfo
+//     * Get message
 //     *
 //     * @return \Doctrine\Common\Collections\Collection
 //     */
-//    public function getOrderinfo()
+//    public function getMessage()
 //    {
-//        return $this->orderinfo;
+//        return $this->message;
 //    }
 }

@@ -21,7 +21,7 @@ function getButtonElementParent( btn ) {
         if( btn.hasClass('patientmrnbtn') ) {
             var parent = $('#patient_0');
         } else {
-            var parent = $('.singleorderinfo');
+            var parent = $('.singlemessage');
         }
     }
 
@@ -32,8 +32,8 @@ function checkMultiFormOnNext(nextBtn) {
     $("#next_button_multi").hide();
     $("#optional_button").show();
 
-    //scroll page to orderinfo_param
-    //var x = $('#orderinfo_param').offset().top;
+    //scroll page to message_param
+    //var x = $('#message_param').offset().top;
     var x = $(document).height();
     //console.log('x='+x);
     $('html, body').animate( {scrollTop: x}, 250 );
@@ -421,7 +421,7 @@ function setPatientAndEncounterAgeListener() {
         //clear warning message
         var encounterAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
         if( orderformtype == "single") {
-            encounterAgeEl = $(this).closest('.singleorderinfo').find('.encounterage-field');
+            encounterAgeEl = $(this).closest('.singlemessage').find('.encounterage-field');
         }
         removeAgeConflictWarningMessage(encounterAgeEl);
 
@@ -436,7 +436,7 @@ function setPatientAndEncounterAgeListener() {
         //clear warning message
         var encounterAgeEl = $(this).closest('.panel-patient').find('.encounterage-field');
         if( orderformtype == "single") {
-            encounterAgeEl = $('.singleorderinfo').find('.encounterage-field');
+            encounterAgeEl = $('.singlemessage').find('.encounterage-field');
         }
         removeAgeConflictWarningMessage(encounterAgeEl);
 
@@ -450,7 +450,7 @@ function setPatientAndEncounterAgeListener() {
             if( patientdobValue != "" ) {
                 var patientAgeEl = $(this).closest('.form-element-holder').find('.patientage').find('.not-mapped-simplefield');
                 if( orderformtype == "single") {
-                    patientAgeEl = $('.singleorderinfo').find('.patientage').find('.not-mapped-simplefield');
+                    patientAgeEl = $('.singlemessage').find('.patientage').find('.not-mapped-simplefield');
                 }
                 var age = getAge(patientdobValue);
                 if( age > 0 ) {
@@ -464,7 +464,7 @@ function setPatientAndEncounterAgeListener() {
             //find all children encounter's encounter date
             var procEncDates = $(this).closest('.panel-patient').find(".encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
             if( orderformtype == "single") {
-                procEncDates = $('.singleorderinfo').find(".encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
+                procEncDates = $('.singlemessage').find(".encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
             }
 
             procEncDates.each( function() {
@@ -481,7 +481,7 @@ function setPatientAndEncounterAgeListener() {
                     //find encounter age element
                     var encounterAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
                     if( orderformtype == "single") {
-                        encounterAgeEl = $('.singleorderinfo').find('.encounterage-field');
+                        encounterAgeEl = $('.singlemessage').find('.encounterage-field');
                     }
 
                     if( encounterAgeEl.val() == "" ) {  //don't override age
@@ -501,7 +501,7 @@ function setPatientAndEncounterAgeListener() {
             //find patient dob element
             var patientdob = $(this).closest('.panel-patient').find('.form-element-holder').find('.patient-dob-date');
             if( orderformtype == "single") {
-                patientdob = $('.singleorderinfo').find('.patient-dob-date');
+                patientdob = $('.singlemessage').find('.patient-dob-date');
             }
             //printF(patientdob,"patientdob: ");
 
@@ -518,7 +518,7 @@ function setPatientAndEncounterAgeListener() {
                 //find encounter age element
                 var encounterAgeEl = $(this).closest('.form-element-holder').find('.encounterage-field');
                 if( orderformtype == "single") {
-                    encounterAgeEl = $('.singleorderinfo').find('.encounterage-field');
+                    encounterAgeEl = $('.singlemessage').find('.encounterage-field');
                 }
 
                 if( encounterAgeEl.val() == "" ) {  //don't override age
@@ -539,7 +539,7 @@ function setPatientAndEncounterAgeListener() {
         //find patient dob element
         var patientdob = encounterElement.closest('.panel-patient').find('.form-element-holder').find('.patient-dob-date');
         if( orderformtype == "single" ) {
-            patientdob = $('.singleorderinfo').find('.patient-dob-date');
+            patientdob = $('.singlemessage').find('.patient-dob-date');
         }
         var patientdobValue = patientdob.val();
 
@@ -547,14 +547,14 @@ function setPatientAndEncounterAgeListener() {
         //find encounter date element
         var encdate = encounterElement.closest('.panel-patient').find('.form-element-holder').find('.encounter-date');
         if( orderformtype == "single" ) {
-            encdate = $('.singleorderinfo').find('.encounter-date');
+            encdate = $('.singlemessage').find('.encounter-date');
         }
         var encdateValue = encdate.val();
 
         //find encounter age element
         var encage = encounterElement.closest('.panel-patient').find('.form-element-holder').find('.encounterage-field');
         if( orderformtype == "single" ) {
-            encage = $('.singleorderinfo').find('.encounterage-field');
+            encage = $('.singlemessage').find('.encounterage-field');
         }
         var encageValue = encage.val();
 
@@ -853,7 +853,7 @@ function checkMrnAccessionConflict() {
                         var mrn = data['parent'];
                         var mrntype = data['extraid'];
                         var mrnstring = data['mrnstring'];
-                        var orderinfo = data['orderinfo'];
+                        var message = data['message'];
 
                         mrn = trimWithCheck(mrn);
                         mrntype = trimWithCheck(mrntype);
@@ -884,7 +884,7 @@ function checkMrnAccessionConflict() {
                             accObj["acctypeIDForm"] = acctypeValue;
                             accObj["accInput"] = accInput;
 
-                            createDataquality( mrnObj, accObj, orderinfo, index );
+                            createDataquality( mrnObj, accObj, message, index );
 
                             index++;
                             totalError++;
@@ -992,7 +992,7 @@ function checkIfMrnAccConflictHandled() {
 }
 
 //create MRN-ACC conflict questions and highlight by red the error fields
-function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueForm, mrnValueDB, mrntypeTextForm, accValueForm, accValueDB, acctypeTextForm, mrnstring, orderinfo ) {
+function createDataquality( mrnObj, accObj, message, index ) {   //mrnValueForm, mrnValueDB, mrntypeTextForm, accValueForm, accValueDB, acctypeTextForm, mrnstring, message ) {
 
     var prototype = $('#form-prototype-data').data('prototype-dataquality');
     //console.log("prototype="+prototype);
@@ -1023,8 +1023,8 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
     var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValueForm+" ["+mrntypeTextForm+"] belong to the same patient";
     dataquality_message1.push(dataquality_message_1);
 
-    var message2 = "If you believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" and not patient MRN "+mrnValueDB+" (as stated by "+orderinfo+"), please mark here:";
-    var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" ["+mrntypeTextForm+"] and not patient "+mrnstring+" (as stated by "+orderinfo+")";
+    var message2 = "If you believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" and not patient MRN "+mrnValueDB+" (as stated by "+message+"), please mark here:";
+    var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" ["+mrntypeTextForm+"] and not patient "+mrnstring+" (as stated by "+message+")";
     dataquality_message2.push(dataquality_message_2);
 
     var message3 = "If you have changed the involved MRN "+mrnValueForm+" or the Accession Number "+accValueForm+" in the form above, please mark here:";
@@ -1057,14 +1057,14 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
 }
 
 function setDataqualityMessage(index,message) {
-    var partid = "#oleg_orderformbundle_orderinfotype_conflicts_"+index+"_";
+    var partid = "#oleg_orderformbundle_messagetype_conflicts_"+index+"_";
     //console.log("message=" + message);
     $(partid+'description').val(message);
 }
 
 
 function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
-    var partid = "#oleg_orderformbundle_orderinfotype_conflicts_"+index+"_";
+    var partid = "#oleg_orderformbundle_messagetype_conflicts_"+index+"_";
     //console.log("set Dataquality Data: "+accession + " " + acctype + " " + mrn + " " + mrntype);
     $(partid+'accession').val(accession);
     $(partid+'accessiontype').val(acctype);
@@ -1578,7 +1578,7 @@ function setPaperDocuments( btnEl, parent, data ) {
 //    var idArr = id.split("_");
 //
 //    //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14  15
-//    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
+//    //oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
 //    var patientid = idArr[4];
 //    var encounterid = idArr[6];
 //    var procedureid = idArr[8];
@@ -1656,7 +1656,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //console.log("\n\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
         //  0         1              2           3   4  5
-        //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
+        //oleg_orderformbundle_messagetype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
 
@@ -1698,7 +1698,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
             continue;
         }
 
-        //don't process fields not containing patient (orderinfo fields)
+        //don't process fields not containing patient (message fields)
         if( id && id.indexOf("_patient_") == -1 ) {
             continue;
         }
@@ -1887,9 +1887,9 @@ function setElementBlock( element, data, cleanall, key ) {
             var elements = $('#block-single').find('.keyfield').not("*[id^='s2id_']");
         } else if( field == "accession" ) {
             //var elements = $('#accession-single').find('.keyfield').not("*[id^='s2id_']");
-            var elements = $('.singleorderinfo').find('.accessiontype-combobox').not("*[id^='s2id_']");    //treat accession as a group
+            var elements = $('.singlemessage').find('.accessiontype-combobox').not("*[id^='s2id_']");    //treat accession as a group
         } else if( field == "mrn" ) {
-            var elements = $('.singleorderinfo').find('.mrntype-combobox').not("*[id^='s2id_']");    //treat mrn as a group
+            var elements = $('.singlemessage').find('.mrntype-combobox').not("*[id^='s2id_']");    //treat mrn as a group
         } else {
             //console.debug('WARNING: logical error! No key for single order form is found: field='+field);
         }
@@ -1905,7 +1905,7 @@ function setElementBlock( element, data, cleanall, key ) {
         //console.log('\n\n'+"Set Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
 
         //  0         1              2           3   4  5
-        //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
+        //oleg_orderformbundle_messagetype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
         var classs = elements.eq(i).attr("class");
@@ -2230,7 +2230,7 @@ function setArrayField(element, dataArr, parent) {
 }
 
 //set key type field. Used by set and clean functions
-//element - is key type element (combobox): id=oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_accession_0_keytype
+//element - is key type element (combobox): id=oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_accession_0_keytype
 function setKeyGroup( element, data ) {
     //console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
 
@@ -2508,7 +2508,7 @@ function cleanPartDiffDisident( element, field, single ) {
     });
 
     //construct new 0 special stain group
-    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_1_field
+    //oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_1_field
     var patient = idsArr[4];
     var encounter = idsArr[6];
     var procedure = idsArr[8];
@@ -2590,7 +2590,7 @@ function cleanArrayField( element, field, single ) {
     }
 
 
-    //clean array field id=oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_2_field
+    //clean array field id=oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_2_field
     //console.log( "\nclean array element id=" + element.attr("id") + ", field=" + field );
     //delete if id != 0 or its not the last element
 
@@ -2754,7 +2754,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
         if( id && id.indexOf("_slide_") != -1 ) {
             continue;
         }
-        //don't process fields not containing patient (orderinfo fields)
+        //don't process fields not containing patient (message fields)
         if( id && id.indexOf("_patient_") == -1 ) {
             continue;
         }

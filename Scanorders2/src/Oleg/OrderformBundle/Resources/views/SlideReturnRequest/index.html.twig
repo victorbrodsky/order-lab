@@ -98,7 +98,7 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(sliderequests, 'ID', 'list.id') }}</th>
-                <th>{{ knp_pagination_sortable(sliderequests, 'Date', 'orderinfo.orderdate') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Date', 'message.orderdate') }}</th>
                 {% if routename == 'incoming-slide-return-requests' %}
                     <th>{{ knp_pagination_sortable(sliderequests, 'Submitter', 'provider.username') }}</th>
                 {% endif %}
@@ -140,21 +140,21 @@
                 </td>
 
                 <td>
-                    {{ sliderequest.orderinfo.orderdate|date('m/d/Y H:i') }}
+                    {{ sliderequest.message.orderdate|date('m/d/Y H:i') }}
                 </td>
 
                 {% if routename == 'incoming-slide-return-requests' %}
                     <td>
-                        <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.orderinfo.provider.id }) }}">{{ sliderequest.orderinfo.provider }}</a>
+                        <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.message.provider.id }) }}">{{ sliderequest.message.provider }}</a>
                     </td>
                 {% endif %}
 
                 <td>
-                    <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.orderinfo.proxyuser.id }) }}">{{ sliderequest.orderinfo.proxyuser }}</a>
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.message.proxyuser.id }) }}">{{ sliderequest.message.proxyuser }}</a>
                 </td>
 
                 <td>
-                    {{ sliderequest.orderinfo.institution }}
+                    {{ sliderequest.message.institution }}
                 </td>
 
                 <td>
@@ -171,7 +171,7 @@
 
                 <td>
                     {#{{ sliderequest.returnLocation }}#}
-                    {% for destination in sliderequest.orderinfo.destinations %}
+                    {% for destination in sliderequest.message.destinations %}
                         {{ destination.location }}
                     {% endfor %}
                 </td>
@@ -206,7 +206,7 @@
                 </td>
 
                 <td>
-                    {% for associatedorder in sliderequest.orderinfo.associations %}
+                    {% for associatedorder in sliderequest.message.associations %}
                         {% if associatedorder != NULL and associatedorder.oid %}
                             <a href="{{ path('multy_show', { 'id': associatedorder.oid }) }}">{{ associatedorder.oid }}</a>
                         {% endif %}

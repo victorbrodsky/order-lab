@@ -20,7 +20,7 @@ var user_id = $("#user_id").val();
 var proxyuser_name = $("#proxyuser_name").val();
 var proxyuser_id = $("#proxyuser_id").val();
 //console.log("urlCommon="+urlCommon);
-var orderinfoid = $(".orderinfo-id").val();
+var messageid = $(".message-id").val();
 
 var _mrntype = new Array();
 var _accessiontype = new Array();
@@ -56,7 +56,7 @@ var _proxyuser = new Array();
 function setResearchEducational() {
     //preselect with current user
 //    if( proxyuser_id ) {
-//        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
+//        $("#s2id_oleg_orderformbundle_messagetype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
 //    }
 
     //research
@@ -126,7 +126,7 @@ function initDefaultServiceManually() {
     $.ajax({
         url: url,
         type: 'GET',
-        //data: {id: curid, instid: instid, orderid: orderinfoid},
+        //data: {id: curid, instid: instid, orderid: messageid},
         data: {id: curid, instid: instid},
         timeout: _ajaxTimeout,
         async: asyncflag
@@ -170,7 +170,7 @@ function getComboboxStain(ids,holder) {
 
     if( cycle == "new"  ) {
 //        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
 //        var targetid = id+"stain_0_field";
         setElementToId( targetid, _stain );
     }
@@ -187,9 +187,9 @@ function getComboboxSpecialStain(ids, preset, setId) {
 
     var targetid = "";
     if( cycle == "new" || (cycle == "amend" && preset) || (cycle == "edit" && preset) ) {
-        //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_block_0_specialStains_0_staintype
+        //oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_block_0_specialStains_0_staintype
         var uid = 'patient_'+ids[0]+'_encounter_'+ids[1]+'_procedure_'+ids[2]+'_accession_'+ids[3]+'_part_'+ids[4]+'_block_'+ids[5];
-        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
         targetid = id+"specialStains_"+ids[6]+"_staintype";
         //console.log("targetid="+targetid);
     }
@@ -227,7 +227,7 @@ function getComboboxScanregion(ids,holder) {
     }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
+        url = url + "?opt="+messageid;
     }
 
     if( _scanregion.length == 0 ) {
@@ -245,7 +245,7 @@ function getComboboxScanregion(ids,holder) {
 
     if( cycle == "new"  ) {
 //        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
 //        var targetid = id+"scan_0_scanregion";
         //$(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
         setElementToId( targetid, _scanregion );
@@ -339,7 +339,7 @@ function getComboboxAccessionType(ids,holder) {
 
     if( cycle == "new"  ) {
 //        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2];
-//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
 //        var targetid = id+"accession_0_accessiontype";
         //console.log("targetid="+targetid);
         //$(targetid).select2('val', 1);
@@ -376,9 +376,9 @@ function getComboboxMrnType(ids,holder) {
     }
 
     if( cycle == "new"  ) {
-        //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_keytype
+        //oleg_orderformbundle_messagetype_patient_0_mrn_0_keytype
 //        var uid = 'patient_'+ids[0];
-//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
 //        var targetid = id+"mrn_0_mrntype";
         //console.log("targetid="+targetid);
         setElementToId( targetid, _mrntype );
@@ -392,9 +392,9 @@ function getComboboxPartname(ids,holder) {
 
     var targetid = ".ajax-combobox-partname";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+        //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_partname_0_field
 //        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
-//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
 //        var targetid = id+"partname_0_field";
         targetid = holder.find(targetid);
     }
@@ -402,7 +402,7 @@ function getComboboxPartname(ids,holder) {
     //console.log("cycle="+cycle);
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
+        url = url + "?opt="+messageid;
     }
 
     if( _partname.length == 0 ) {
@@ -446,14 +446,14 @@ function getComboboxBlockname(ids,holder) {
     var targetid = ".ajax-combobox-blockname";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
 //        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
-//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
 //        var targetid = id+"blockname_0_field";
         targetid = holder.find(targetid);
     }
     //console.log("block targetid="+targetid);
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
+        url = url + "?opt="+messageid;
     }
 
     if( _blockname.length == 0 ) {
@@ -474,12 +474,12 @@ function getComboboxBlockname(ids,holder) {
 //#############  slide delivery  ##############//
 function getComboboxDelivery(ids) {
     //var uid = "";   //'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-//    var id= "#oleg_orderformbundle_orderinfotype_";
+//    var id= "#oleg_orderformbundle_messagetype_";
     var url = getCommonBaseUrl("util/"+"delivery");    //urlCommon+"delivery";
     var target = ".ajax-combobox-delivery";
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
+        url = url + "?opt="+messageid;
     }
 
     //console.log("scanregion.length="+organ.length);
@@ -516,7 +516,7 @@ function getProjectTitle(ids,holder) {
     }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
+        url = url + "?opt="+messageid;
     }
 
     if( _projectTitle.length == 0 ) {
@@ -558,7 +558,7 @@ function getSetTitle() {
     url = url + "?opt="+idInArr;
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "&orderoid="+orderinfoid;
+        url = url + "&orderoid="+messageid;
     }
 
     $.ajax({
@@ -589,7 +589,7 @@ function getCourseTitle(ids,holder) {
     }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
+        url = url + "?opt="+messageid;
     }
 
     if( _courseTitle.length == 0 ) {
@@ -630,7 +630,7 @@ function getLessonTitle() {
     url = url + "?opt="+idInArr;
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "&orderoid="+orderinfoid;
+        url = url + "&orderoid="+messageid;
     }
 
     $.ajax({
@@ -765,7 +765,7 @@ function getComboboxAccount(ids,holder) {
     }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
+        url = url + "?opt="+messageid;
     }
 
     if( _account.length == 0 ) {
@@ -821,7 +821,7 @@ function getUrgency() {
     var url = getCommonBaseUrl("util/"+"urgency");  //urlCommon+"urgency";
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
+        url = url + "?opt="+messageid;
     }
 
     //console.log("scanregion.length="+organ.length);
@@ -881,9 +881,9 @@ function initComboboxJs(ids, holder) {
 
 function slideType(ids) {    
     
-    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_1_slide_0_slidetype
+    //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_block_1_slide_0_slidetype
     var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_slidetype";
+    var id= "#oleg_orderformbundle_messagetype_"+uid+"_slidetype";
 
     $(id).change(function(e) {   //.slidetype-combobox
         //console.log("slidetype-combobox changed: this id="+$(this).attr('id')+",class="+$(this).attr('class'));

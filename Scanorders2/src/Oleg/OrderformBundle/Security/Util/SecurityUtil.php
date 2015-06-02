@@ -21,7 +21,7 @@ use Oleg\OrderformBundle\Entity\PerSiteSettings;
 class SecurityUtil extends UserSecurityUtil {
 
     //user has permission to perform the view/edit the valid field, created by someone else, if he/she is submitter or ROLE_SCANORDER_PROCESSOR or service chief or division chief
-    //$entity is object: orderinfo or patient, accession, part ...
+    //$entity is object: message or patient, accession, part ...
     public function hasUserPermission( $entity, $user ) {
 
         if( $entity == null ) {
@@ -243,8 +243,8 @@ class SecurityUtil extends UserSecurityUtil {
         return $entity;
     }
 
-    public function getDefaultDepartmentDivision($orderinfo,$userSiteSettings) {
-        if( $service = $orderinfo->getScanorder()->getService() ) {
+    public function getDefaultDepartmentDivision($message,$userSiteSettings) {
+        if( $service = $message->getScanorder()->getService() ) {
             $division = $service->getParent();
             $department = $division->getParent();
         } else {
@@ -255,7 +255,7 @@ class SecurityUtil extends UserSecurityUtil {
                 $department = $this->em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
 
             }
-            if( $orderinfo->getInstitution() == null || ($orderinfo->getInstitution() && $department->getParent()->getId() != $orderinfo->getInstitution()->getId()) ) {
+            if( $message->getInstitution() == null || ($message->getInstitution() && $department->getParent()->getId() != $message->getInstitution()->getId()) ) {
                 $department = null;
             }
 
@@ -269,7 +269,7 @@ class SecurityUtil extends UserSecurityUtil {
             }
 
         }
-//        echo $department->getParent()->getId()."?=?".$orderinfo->getInstitution()->getId()."<br>";
+//        echo $department->getParent()->getId()."?=?".$message->getInstitution()->getId()."<br>";
 
 
         $params = array();

@@ -23,9 +23,9 @@ class SlideOrder {
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="slideorder")
+     * @ORM\OneToOne(targetEntity="Message", mappedBy="slideorder")
      **/
-    private $orderinfo;
+    private $message;
 
 
 
@@ -86,19 +86,19 @@ class SlideOrder {
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
     /**

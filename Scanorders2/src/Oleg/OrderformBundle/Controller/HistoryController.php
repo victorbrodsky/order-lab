@@ -38,7 +38,7 @@ class HistoryController extends Controller
 //        //$entities = $em->getRepository('OlegOrderformBundle:History')->findAll();
 //        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
 //        $dql =  $repository->createQueryBuilder("hist");
-//        $dql->innerJoin("hist.orderinfo", "orderinfo");
+//        $dql->innerJoin("hist.message", "message");
 //
 //        /////////// institution ///////////
 //        $instStr = "";
@@ -47,7 +47,7 @@ class HistoryController extends Controller
 //            if( $instStr != "" ) {
 //                $instStr = $instStr . " OR ";
 //            }
-//            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+//            $instStr = $instStr . 'message.institution='.$inst->getId();
 //        }
 //        if( $instStr == "" ) {
 //            $instStr = "1=0";
@@ -159,7 +159,7 @@ class HistoryController extends Controller
 
         $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
-        if( $entity && !$securityUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -190,7 +190,7 @@ class HistoryController extends Controller
 
         $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
-        if( $entity && !$securityUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -241,7 +241,7 @@ class HistoryController extends Controller
 
         $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
-        if( $entity && !$securityUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -307,15 +307,15 @@ class HistoryController extends Controller
 
 
 
-    //History of OrderInfo
+    //History of Message
     /**
-     * Finds and displays a History entity for OrderInfo.
+     * Finds and displays a History entity for Message.
      *
-     * @Route("/scan-order/{id}/progress-and-comments", name="history_orderinfo_show", requirements={"id" = "\d+"})
+     * @Route("/scan-order/{id}/progress-and-comments", name="history_message_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:History:index.html.twig")
      */
-    public function showHistoryOrderinfoAction($id)
+    public function showHistoryMessageAction($id)
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
@@ -332,7 +332,7 @@ class HistoryController extends Controller
         //echo "hist count=".count($entities)."<br>";
 
         $securityUtil = $this->get('order_security_utility');
-        if( count($entities)>0 && !$securityUtil->hasUserPermission($entities[0]->getOrderInfo(),$user) ) {
+        if( count($entities)>0 && !$securityUtil->hasUserPermission($entities[0]->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -362,7 +362,7 @@ class HistoryController extends Controller
             if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
 
                 //don't mark with view comments placed by PROCESSOR to User and viewed by another PROCESSOR (order->provider does not have role PROCESSOR)
-//                $orderprovider = $entity->getOrderinfo()->getProvider();
+//                $orderprovider = $entity->getMessage()->getProvider();
 //                echo $orderprovider."<br>";
 //                if( $orderprovider->hasRole('ROLE_SCANORDER_ADMIN') || $orderprovider->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
 //                    //
@@ -420,18 +420,18 @@ class HistoryController extends Controller
 //            throw $this->createNotFoundException('Unable to find History entity.');
 //        }
 
-        $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
 
-        //if( $viewcount > 0 && $orderinfo->getProvider()->getId() != $user->getId()) {
+        //if( $viewcount > 0 && $message->getProvider()->getId() != $user->getId()) {
         if( 1 ) {
             //add a new record in history
             $history = new History();
-            $history->setOrderinfo($orderinfo);
+            $history->setMessage($message);
             $history->setProvider($user);
             $history->setCurrentid($id);
             //$history->setNewid($id);
-            $history->setCurrentstatus($orderinfo->getStatus());
-            //$history->setNewstatus($orderinfo->getStatus());
+            $history->setCurrentstatus($message->getStatus());
+            //$history->setNewstatus($message->getStatus());
             $history->setChangedate( new \DateTime() );
             //$history->setNote($text_value);
             //$history->setSelectednote($selectednote);
@@ -473,13 +473,13 @@ class HistoryController extends Controller
 
 
     /**
-     * Finds and displays a History entity for OrderInfo.
+     * Finds and displays a History entity for Message.
      *
-     * @Route("/scan-order/progress-and-comments/create", name="history_orderinfo_new")
+     * @Route("/scan-order/progress-and-comments/create", name="history_message_new")
      * @Method("POST")
      * @Template("OlegOrderformBundle:History:index.html.twig")
      */
-    public function createHistoryOrderinfoAction(Request $request)
+    public function createHistoryMessageAction(Request $request)
     {
 
         $text_value = $request->request->get('text');
@@ -495,15 +495,15 @@ class HistoryController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $user = $this->get('security.context')->getToken()->getUser();
-            $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+            $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
 
             $history = new History();
-            $history->setOrderinfo($orderinfo);
+            $history->setMessage($message);
             $history->setProvider($user);
             $history->setCurrentid($id);
             //$history->setNewid($id);
-            $history->setCurrentstatus($orderinfo->getStatus());
-            //$history->setNewstatus($orderinfo->getStatus());
+            $history->setCurrentstatus($message->getStatus());
+            //$history->setNewstatus($message->getStatus());
             $history->setChangedate( new \DateTime() );
             $history->setNote($text_value);
             $history->setSelectednote($selectednote);
@@ -526,7 +526,7 @@ class HistoryController extends Controller
 
 
     /**
-     * Finds and displays a History entity for OrderInfo.
+     * Finds and displays a History entity for Message.
      *
      * @Route("/scan-order/progress-and-comments/notviewedcomments", name="history_not_viewed_comments")
      * @Method("GET")
@@ -552,7 +552,7 @@ class HistoryController extends Controller
     }
 
     /**
-     * Finds and displays a History entity for OrderInfo.
+     * Finds and displays a History entity for Message.
      *
      * @Route("/scan-order/progress-and-comments/notviewedadmincomments", name="history_not_viewed_admincomments")
      * @Method("GET")

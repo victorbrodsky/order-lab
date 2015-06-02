@@ -3,8 +3,8 @@
 namespace Oleg\OrderformBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\OrderInfo;
-use Oleg\OrderformBundle\Form\OrderInfoType;
+use Oleg\OrderformBundle\Entity\Message;
+use Oleg\OrderformBundle\Form\MessageType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -134,7 +134,7 @@ class SlideReturnRequestController extends Controller
                 $slideReturnRequest->addSlidetext($slideText);
 
                 //set this slide as order input
-                $institution = $slideReturnRequest->getOrderinfo()->getInstitution()->getId();
+                $institution = $slideReturnRequest->getMessage()->getInstitution()->getId();
 
 
                 if( $slideReturnRequest->getReturnoption() ) {
@@ -147,7 +147,7 @@ class SlideReturnRequestController extends Controller
                 //exit('1');
 
                 foreach( $slides as $slide ) {
-                    $slideReturnRequest->getOrderinfo()->addInputObject($slide);
+                    $slideReturnRequest->getMessage()->addInputObject($slide);
                 }
 
                 //echo $rowCount.": accType=".$row[0].", acc=".$row[1]." \n ";
@@ -232,23 +232,23 @@ class SlideReturnRequestController extends Controller
             $user = $this->get('security.context')->getToken()->getUser();
             $em = $this->getDoctrine()->getManager();
 
-            //add orderinfo with specified id to associated objects to orderinfo
-            $associationOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
-            $slideReturnRequest->getOrderinfo()->addAssociation($associationOrderinfo);
+            //add message with specified id to associated objects to message
+            $associationMessage = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $slideReturnRequest->getMessage()->addAssociation($associationMessage);
 
-            $slides = $associationOrderinfo->getSlide();
+            $slides = $associationMessage->getSlide();
             //echo "slide request slide count=".count($slides)."<br>";
 
             //replace form's slide with DB slide => this way new slide will not be created
             foreach( $slides as $slide ) {
 
-                //add slide to slide return request order (however, we have these slides in $associationOrderinfo)
-                $slideReturnRequest->getOrderinfo()->removeSlide($slide);
+                //add slide to slide return request order (however, we have these slides in $associationMessage)
+                $slideReturnRequest->getMessage()->removeSlide($slide);
                 $slideDb =  $em->getRepository('OlegOrderformBundle:Slide')->findOneById($slide->getId());
-                $slideReturnRequest->getOrderinfo()->addSlide($slideDb);
+                $slideReturnRequest->getMessage()->addSlide($slideDb);
 
                 //set this slide as order input
-                $slideReturnRequest->getOrderinfo()->addInputObject($slide);
+                $slideReturnRequest->getMessage()->addInputObject($slide);
             }
 
             //exit('1');
@@ -259,11 +259,11 @@ class SlideReturnRequestController extends Controller
             }
 
             //record history
-            $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+            $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
             $history = new History();
-            $history->setOrderinfo($orderinfo);
-            $history->setCurrentid($orderinfo->getOid());
-            $history->setCurrentstatus($orderinfo->getStatus());
+            $history->setMessage($message);
+            $history->setCurrentid($message->getOid());
+            $history->setCurrentstatus($message->getStatus());
             $history->setProvider($user);
             $history->setRoles($user->getRoles());
 
@@ -295,39 +295,39 @@ class SlideReturnRequestController extends Controller
 
         if( $scanorderId ) {
 
-            $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($scanorderId);
+            $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($scanorderId);
 
-            if( !$orderinfo ) {
+            if( !$message ) {
                 throw $this->createNotFoundException('Unable to find Message (Scan Order) entity with id='.$scanorderId);
             }
 
             $securityUtil = $this->get('order_security_utility');
-            if( $orderinfo && !$securityUtil->isUserAllowOrderActions($orderinfo, $user, array('show')) ) {
+            if( $message && !$securityUtil->isUserAllowOrderActions($message, $user, array('show')) ) {
                 return $this->redirect( $this->generateUrl('scan-order-nopermission') );
             }
         } else {
-            $orderinfo = new OrderInfo();
+            $message = new Message();
 
             //set category
             $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
-            $orderinfo->setMessageCategory($category);
+            $message->setMessageCategory($category);
 
             //set destination
             $destination = new Endpoint();
-            $orderinfo->addDestination($destination);
+            $message->addDestination($destination);
         }
 
-//        echo "slide count=".count($orderinfo->getSlide())."<br>";
-//        foreach( $orderinfo->getSlide() as $slide ) {
+//        echo "slide count=".count($message->getSlide())."<br>";
+//        foreach( $message->getSlide() as $slide ) {
 //            echo $slide->getId()."<br>";
 //        }
 
-        //assign orderinfo
-        $slideReturnRequest->setOrderinfo($orderinfo);
+        //assign message
+        $slideReturnRequest->setMessage($message);
 
-        $slideReturnRequest->getOrderinfo()->setProvider($user);
+        $slideReturnRequest->getMessage()->setProvider($user);
         $orderUtil = $this->get('scanorder_utility');
-        $orderUtil->setLastOrderWithProxyuser($user,$slideReturnRequest->getOrderinfo());
+        $orderUtil->setLastOrderWithProxyuser($user,$slideReturnRequest->getMessage());
 
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
@@ -337,7 +337,7 @@ class SlideReturnRequestController extends Controller
         $params['em'] = $this->getDoctrine()->getManager();
         $params['user'] = $user;
         $params['institutions'] = $permittedInst;
-        $params['destinationLocation'] = $orderUtil->getOrderReturnLocations($orderinfo);
+        $params['destinationLocation'] = $orderUtil->getOrderReturnLocations($message);
 
 
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
@@ -373,20 +373,20 @@ class SlideReturnRequestController extends Controller
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list, COUNT(slides) as slidecount');
 
-        $dql->leftJoin('list.orderinfo','orderinfo');
-        $dql->leftJoin("orderinfo.slide", "slides");
-        $dql->leftJoin('orderinfo.provider','provider');
-        $dql->leftJoin('orderinfo.institution','institution');
-        $dql->leftJoin('orderinfo.destinations','destinations');
+        $dql->leftJoin('list.message','message');
+        $dql->leftJoin("message.slide", "slides");
+        $dql->leftJoin('message.provider','provider');
+        $dql->leftJoin('message.institution','institution');
+        $dql->leftJoin('message.destinations','destinations');
         $dql->leftJoin("destinations.location", "destinationslocation");
-        $dql->leftJoin('orderinfo.associations','associations');
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuserWrapper");
+        $dql->leftJoin('message.associations','associations');
+        $dql->leftJoin("message.proxyuser", "proxyuserWrapper");
         $dql->leftJoin("proxyuserWrapper.user", "proxyuser");
 
         $dql->groupBy('list');
         $dql->addGroupBy('provider');
         $dql->addGroupBy('proxyuser');
-        $dql->addGroupBy('orderinfo');
+        $dql->addGroupBy('message');
         $dql->addGroupBy('institution');
         $dql->addGroupBy('associations');
         $dql->addGroupBy('destinationslocation');
@@ -394,7 +394,7 @@ class SlideReturnRequestController extends Controller
 		$postData = $request->query->all();
 		
 		if( !isset($postData['sort']) ) { 
-			$dql->orderBy('orderinfo.orderdate','DESC');
+			$dql->orderBy('message.orderdate','DESC');
 		}
 
         $setParameter = false;
@@ -500,25 +500,25 @@ class SlideReturnRequestController extends Controller
         $dql->groupBy('list');
         $dql->addGroupBy('provider');
         $dql->addGroupBy('proxyuser');
-        $dql->addGroupBy('orderinfo');
+        $dql->addGroupBy('message');
         $dql->addGroupBy('institution');
         $dql->addGroupBy('destinationslocation');
         $dql->addGroupBy('associations');
 
-        $dql->leftJoin('list.orderinfo','orderinfo');
-        $dql->leftJoin("orderinfo.slide", "slides");
-        $dql->innerJoin('orderinfo.provider','provider');
-        $dql->innerJoin('orderinfo.institution','institution');
-        $dql->leftJoin('orderinfo.destinations', 'destinations');
+        $dql->leftJoin('list.message','message');
+        $dql->leftJoin("message.slide", "slides");
+        $dql->innerJoin('message.provider','provider');
+        $dql->innerJoin('message.institution','institution');
+        $dql->leftJoin('message.destinations', 'destinations');
         $dql->leftJoin('destinations.location', 'destinationslocation');
-        $dql->leftJoin('orderinfo.associations','associations');
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuserWrapper");
+        $dql->leftJoin('message.associations','associations');
+        $dql->leftJoin("message.proxyuser", "proxyuserWrapper");
         $dql->leftJoin("proxyuserWrapper.user", "proxyuser");
 
 		$postData = $request->query->all();
 		
 		if( !isset($postData['sort']) ) { 
-			$dql->orderBy('orderinfo.orderdate','DESC');
+			$dql->orderBy('message.orderdate','DESC');
 		}
 
         $setParameter = false;
@@ -587,9 +587,9 @@ class SlideReturnRequestController extends Controller
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
-        $orderinfo = $entity->getOrderInfo();
+        $message = $entity->getMessage();
         $securityUtil = $this->get('order_security_utility');
-        if( $orderinfo && !$securityUtil->hasUserPermission($orderinfo,$user) ) {
+        if( $message && !$securityUtil->hasUserPermission($message,$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -599,14 +599,14 @@ class SlideReturnRequestController extends Controller
 
 
         //record history
-        $orderinfo = $entity->getOrderinfo();
-        if( $orderinfo ) {
+        $message = $entity->getMessage();
+        if( $message ) {
 
             $slides = $entity->getSlide();
             $history = new History();
-            $history->setOrderinfo($orderinfo);
-            $history->setCurrentid($orderinfo->getOid());
-            $history->setCurrentstatus($orderinfo->getStatus());
+            $history->setMessage($message);
+            $history->setCurrentid($message->getOid());
+            $history->setCurrentstatus($message->getStatus());
             $history->setProvider($user);
             $history->setRoles($user->getRoles());
             $notemsg = 'Status Changed to "'.ucfirst($status).'" for Slide Return Request ' .
@@ -618,7 +618,7 @@ class SlideReturnRequestController extends Controller
             $em->persist($history);
             $em->flush();
 
-        } //if orderinfo
+        } //if message
 
 
         $filter = $request->query->get('filter');
@@ -674,13 +674,13 @@ class SlideReturnRequestController extends Controller
 //
 //            //record history
 //            $user = $this->get('security.context')->getToken()->getUser();
-//            $orderinfo = $slideReturnRequest->getOrderinfo();
+//            $message = $slideReturnRequest->getMessage();
 //            $slides = $slideReturnRequest->getSlide();
 //            $history = new History();
 //            $history->setEventtype('Slide Return Request Comment Added');
-//            $history->setOrderinfo($orderinfo);
-//            $history->setCurrentid($orderinfo->getOid());
-//            $history->setCurrentstatus($orderinfo->getStatus());
+//            $history->setMessage($message);
+//            $history->setCurrentid($message->getOid());
+//            $history->setCurrentstatus($message->getStatus());
 //            $history->setProvider($user);
 //            $history->setRoles($user->getRoles());
 //            $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
@@ -728,15 +728,15 @@ class SlideReturnRequestController extends Controller
             $em->flush();
 
             //record history
-            $orderinfo = $slideReturnRequest->getOrderinfo();
-            if( $orderinfo ) {
+            $message = $slideReturnRequest->getMessage();
+            if( $message ) {
 
                 $user = $this->get('security.context')->getToken()->getUser();
                 $slides = $slideReturnRequest->getSlide();
                 $history = new History();
-                $history->setOrderinfo($orderinfo);
-                $history->setCurrentid($orderinfo->getOid());
-                $history->setCurrentstatus($orderinfo->getStatus());
+                $history->setMessage($message);
+                $history->setCurrentid($message->getOid());
+                $history->setCurrentstatus($message->getStatus());
                 $history->setProvider($user);
                 $history->setRoles($user->getRoles());
 
@@ -753,7 +753,7 @@ class SlideReturnRequestController extends Controller
                 $em->persist($history);
                 $em->flush();
 
-            } //if orderinfo
+            } //if message
 
         }
 

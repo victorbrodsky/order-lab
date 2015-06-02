@@ -16,7 +16,7 @@
     
 {#    
     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
-        <form action="{{ path('orderinfo_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('message_delete', { 'id': entity.id }) }}" method="post">
             <input type="hidden" name="_method" value="DELETE" />
             {{ form_widget(delete_form) }}
             <button onclick="return confirm('Are you sure?');" class="btn btn-small btn-danger" type="submit">Delete</button>

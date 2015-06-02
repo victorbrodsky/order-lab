@@ -136,9 +136,9 @@ function validateHandsonTable() {
             for( row in _mrnAccConflictRowArr ) {
                 var mrnObj = _mrnAccConflictRowArr[row]["mrnObj"];
                 var accObj = _mrnAccConflictRowArr[row]["accObj"];
-                var orderinfo = _mrnAccConflictRowArr[row]["orderinfo"];
+                var message = _mrnAccConflictRowArr[row]["message"];
 
-                createDataquality( mrnObj, accObj, orderinfo, index );
+                createDataquality( mrnObj, accObj, message, index );
                 setErrorToRow(row,conflictRenderer,true);
                 index++;
             }
@@ -202,14 +202,14 @@ function assignDataToDatalocker() {
     //console.log(data);
 
     if( _btnClickedName != null ) {
-        $("#oleg_orderformbundle_orderinfotype_clickedbtn").val( _btnClickedName );
+        $("#oleg_orderformbundle_messagetype_clickedbtn").val( _btnClickedName );
     }
 
     //provide table data to controller
     //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
     var jsonstr = JSON.stringify(data);
     //console.log("jsonstr="+jsonstr);
-    $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
+    $("#oleg_orderformbundle_messagetype_datalocker").val( jsonstr );
 
 }
 
@@ -256,7 +256,7 @@ function checkPrevGenAndConflictTable(row) {
         var mrnDB = null;
         var mrntypeDB = null;
         var mrnstring = null;
-        var orderinfo = null;
+        var message = null;
 
         //required for MRN-DOB conflict
         var mrnDBByPatient = null;
@@ -326,7 +326,7 @@ function checkPrevGenAndConflictTable(row) {
                         mrnDB = response['parentkeyvalue'];
                         mrntypeDB = response['parentkeytype'];
                         mrnstring = response['mrnstring'];
-                        orderinfo = response['orderinfo'];
+                        message = response['message'];
                     }
                 }
             }
@@ -387,7 +387,7 @@ function checkPrevGenAndConflictTable(row) {
                     _mrnAccConflictRowArr[row] = new Array();
                     _mrnAccConflictRowArr[row]['mrnObj'] = mrnObj;
                     _mrnAccConflictRowArr[row]['accObj'] = accObj;
-                    _mrnAccConflictRowArr[row]['orderinfo'] = orderinfo;
+                    _mrnAccConflictRowArr[row]['message'] = message;
 
                 }//if
 
@@ -664,7 +664,7 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
                             res['parentkeytype'] = data['extraid'];
                             res['parentdob'] = data['parentdob'];
                             res['mrnstring'] = data['mrnstring'];
-                            res['orderinfo'] = data['orderinfo'];
+                            res['message'] = data['message'];
                             resolve(res);
                         } else
                         if( "mrn" in data ) {

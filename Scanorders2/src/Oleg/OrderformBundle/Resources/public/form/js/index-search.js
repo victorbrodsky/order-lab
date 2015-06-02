@@ -27,7 +27,7 @@ function buildSearchedObjects() {
     //console.log("routename="+routename+", service="+service+",filter="+filter+", search="+search);
 
     var searchObjects = [
-        "orderinfo.oid",
+        "message.oid",
 //        "educational.courseTitleStr",
 //        "educational.lessonTitleStr",
 //        "directorUser.username",

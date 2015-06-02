@@ -32,8 +32,8 @@ class SlideReturnRequestType extends AbstractType
     {
 
         $this->params['slide'] = true;
-        $builder->add('orderinfo', new MessageType($this->params), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\OrderInfo',
+        $builder->add('message', new MessageType($this->params), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\Message',
             'label' => false
         ));
 

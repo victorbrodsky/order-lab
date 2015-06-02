@@ -11,13 +11,13 @@
                 
                 {% if routename == 'my-scan-orders' %}
                 
-                    <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
+                    <th{% if pagination.isSorted('message.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'message.orderdate') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'ID', 'orderinfo.oid') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'ID', 'message.oid') }}</th>
                     {#<th>Slides</th>#}
                     <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Priority', 'message.priority') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Return to', 'message.returnoption') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Category', 'messageCategory.name') }}</th>
                     {% if showprovider is defined and showprovider == 'true' %}
                         <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>
@@ -28,9 +28,9 @@
                        
                 {% if routename == 'incoming-scan-orders' %}
                        
-                    <th>{{ knp_pagination_sortable(pagination, 'ID', 'orderinfo.oid') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Stat', 'orderinfo.deadline') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'ID', 'message.oid') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Stat', 'message.deadline') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Date', 'message.orderdate') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>
                     {% if showproxyuser is defined and showproxyuser == 'true' %}
                         <th>{{ knp_pagination_sortable(pagination, 'Ordering Provider', 'proxyuser.username') }}</th>

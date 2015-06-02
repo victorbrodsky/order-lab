@@ -24,9 +24,9 @@ class SlideReturnRequest {
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="slideReturnRequest", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Message", mappedBy="slideReturnRequest", cascade={"persist"})
      **/
-    private $orderinfo;
+    private $message;
 
 
 
@@ -61,10 +61,10 @@ class SlideReturnRequest {
 //    private $slide;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="OrderInfo")
-//     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", nullable=true)
+//     * @ORM\ManyToOne(targetEntity="Message")
+//     * @ORM\JoinColumn(name="message", referencedColumnName="id", nullable=true)
 //     */
-//    protected $orderinfo;
+//    protected $message;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -187,20 +187,20 @@ class SlideReturnRequest {
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
-        $orderinfo->setSlideReturnRequest($this);
+        $this->message = $message;
+        $message->setSlideReturnRequest($this);
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
     /**
@@ -270,7 +270,7 @@ class SlideReturnRequest {
     public function getSlideDescription( $user ) {
 
         $description = array();
-        foreach( $this->getOrderinfo()->getSlide() as $slide ) {
+        foreach( $this->getMessage()->getSlide() as $slide ) {
 
             $patient =  $slide->obtainPatient();//->filterArrayFields($user,true);
             $patientkey =  $patient->obtainValidKeyfield();

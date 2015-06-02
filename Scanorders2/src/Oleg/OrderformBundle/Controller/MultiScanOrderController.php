@@ -16,8 +16,8 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-use Oleg\OrderformBundle\Entity\OrderInfo;
-use Oleg\OrderformBundle\Form\OrderInfoType;
+use Oleg\OrderformBundle\Entity\Message;
+use Oleg\OrderformBundle\Form\MessageType;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\Procedure;
@@ -37,9 +37,9 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
 
-//ScanOrder joins OrderInfo + Scan
+//ScanOrder joins Message + Scan
 /**
- * OrderInfo controller.
+ * Message controller.
  */
 class MultiScanOrderController extends Controller {
 
@@ -49,7 +49,7 @@ class MultiScanOrderController extends Controller {
 
 
     /**
-     * Creates a new OrderInfo entity.
+     * Creates a new Message entity.
      *
      * @Route("/scan-order/one-slide/create", name="singleorder_create")
      * @Route("/scan-order/multi-slide/create", name="multi_create")
@@ -69,7 +69,7 @@ class MultiScanOrderController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity  = new OrderInfo();
+        $entity  = new Message();
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -120,13 +120,13 @@ class MultiScanOrderController extends Controller {
             'datastructure'=>$this->datastructure
         );
 
-        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
+        $form = $this->createForm(new MessageType($params,$entity), $entity);
 
         $form->handleRequest($request);
 
 
 //        echo "provider2=".$entity->getProvider()."<br>";
-        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_field
+        //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_accession_0_field
 //        $patient = $form["patient"][0]->getData();
 //        echo "patient=".$patient."<br>";
 //        $mrn = $patient->getMrn()->first()->getField();
@@ -135,7 +135,7 @@ class MultiScanOrderController extends Controller {
 //        $accession = $form["patient"][0]["procedure"][0]["accession"][0]->getData();
 //        $accessionNum = $accession->getAccession()->first()->getField();
 //        $accessionType = $accession->getAccession()->first()->getKeytype();
-//        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_keytype
+//        //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_accession_0_keytype
 //        echo "accessionNum=".$accessionNum.", accessionType=".$accessionType."<br>";
         //exit();
 
@@ -226,7 +226,7 @@ class MultiScanOrderController extends Controller {
 
 
             /////////////////// process and save form //////////////////////////////
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router'), $this->container );
+            $entity = $em->getRepository('OlegOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
 
             if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 
@@ -304,7 +304,7 @@ class MultiScanOrderController extends Controller {
     }
     
     /**
-     * Displays a form to create a new OrderInfo + Scan entities.
+     * Displays a form to create a new Message + Scan entities.
      *
      * @Route("/scan-order/one-slide/new", name="single_new")
      * @Route("/scan-order/multi-slide/new", name="multi_new")
@@ -336,11 +336,11 @@ class MultiScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-        $entity = new OrderInfo();
+        $entity = new Message();
 
         //set scan order
         $scanOrder = new ScanOrder();
-        $scanOrder->setOrderinfo($entity);
+        $scanOrder->setMessage($entity);
 
         //echo "MultiScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
@@ -412,9 +412,9 @@ class MultiScanOrderController extends Controller {
         ////////////////// set previous service from the last order if default is null //////////////////
         if( !$userSiteSettings->getDefaultService() ) {
             //echo "find prev service <br>";
-            $previousOrder = $orderUtil->getPreviousOrderinfo('Scan Order');
+            $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
             //echo $previousOrder;
-            //$this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
+            //$this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
             if( $previousOrder ) {
                 if( $previousOrder->getScanOrder() ) {
                     //echo "prev service=".$previousOrder->getScanOrder()->getService()->getName()."<br>";
@@ -448,7 +448,7 @@ class MultiScanOrderController extends Controller {
             'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity),
             'datastructure'=>$this->datastructure
         );
-        $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
+        $form   = $this->createForm( new MessageType($params, $entity), $entity );
 
         if( $routeName != "single_new") {
             return $this->render('OlegOrderformBundle:MultiScanOrder:new.html.twig', array(
@@ -471,7 +471,7 @@ class MultiScanOrderController extends Controller {
 
 
     /**
-     * Displays a form to view, update, amend an OrderInfo + Scan entities. $id is oid of the orderinfo object
+     * Displays a form to view, update, amend an Message + Scan entities. $id is oid of the message object
      * @Route("/scan-order/{id}/edit", name="multy_edit", requirements={"id" = "\d+"})
      * @Route("/scan-order/{id}/amend", name="order_amend", requirements={"id" = "\d+"})
      * @Route("/scan-order/{id}/show", name="multy_show", requirements={"id" = "\d+"})
@@ -507,28 +507,28 @@ class MultiScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-        //INNER JOIN orderinfo.block block
-//        INNER JOIN orderinfo.patient patient
-//        INNER JOIN orderinfo.procedure procedure
-//        INNER JOIN orderinfo.accession accession
-//        INNER JOIN orderinfo.part part
-//        INNER JOIN orderinfo.slide slide
+        //INNER JOIN message.block block
+//        INNER JOIN message.patient patient
+//        INNER JOIN message.procedure procedure
+//        INNER JOIN message.accession accession
+//        INNER JOIN message.part part
+//        INNER JOIN message.slide slide
         $query = $em->createQuery('
-            SELECT orderinfo
-            FROM OlegOrderformBundle:OrderInfo orderinfo
-            WHERE orderinfo.oid = :oid'
+            SELECT message
+            FROM OlegOrderformBundle:Message message
+            WHERE message.oid = :oid'
         )->setParameter('oid', $id);
 
         $entities = $query->getResult();
 
-        //echo "<br>orderinfo count=".count( $entities )."<br>";
+        //echo "<br>message count=".count( $entities )."<br>";
 
         if( count( $entities ) == 0 ) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity with oid='.$id);
+            throw $this->createNotFoundException('Unable to find Message entity with oid='.$id);
         }
 
         if( count( $entities ) == 0 ) {
-            throw $this->createNotFoundException('More than one OrderInfo entity found.');
+            throw $this->createNotFoundException('More than one Message entity found.');
         } else {
             $entity = $entities[0];
         }
@@ -586,8 +586,8 @@ class MultiScanOrderController extends Controller {
         //patient
         foreach( $entity->getPatient() as $patient ) {
 
-            //check if patient has this orderinfo
-            if( !$this->hasOrderInfo($patient,$id) ) {
+            //check if patient has this message
+            if( !$this->hasMessage($patient,$id) ) {
                 $entity->removePatient($patient);
                 continue;
             }
@@ -604,7 +604,7 @@ class MultiScanOrderController extends Controller {
             //encounter
             foreach( $patient->getEncounter() as $encounter ) {
 
-                if( !$this->hasOrderInfo($encounter,$id) ) {
+                if( !$this->hasMessage($encounter,$id) ) {
                     $patient->removeEncounter($encounter);
                     continue;
                 }
@@ -621,7 +621,7 @@ class MultiScanOrderController extends Controller {
                 //procedure
                 foreach( $encounter->getProcedure() as $procedure ) {
 
-                    if( !$this->hasOrderInfo($procedure,$id) ) {
+                    if( !$this->hasMessage($procedure,$id) ) {
                         $encounter->removeProcedure($procedure);
                         continue;
                     }
@@ -637,7 +637,7 @@ class MultiScanOrderController extends Controller {
 
                     //accession
                     foreach( $procedure->getAccession() as $accession ) {
-                        if( !$this->hasOrderInfo($accession,$id) ) {
+                        if( !$this->hasMessage($accession,$id) ) {
                             $procedure->removeAccession($accession);
                             continue;
                         }
@@ -653,7 +653,7 @@ class MultiScanOrderController extends Controller {
 
                         //part
                         foreach( $accession->getPart() as $part ) {
-                           if( !$this->hasOrderInfo($part,$id) ) {
+                           if( !$this->hasMessage($part,$id) ) {
                                 $accession->removePart($part);
                                 continue;
                             }
@@ -667,7 +667,7 @@ class MultiScanOrderController extends Controller {
 
                             //block
                             foreach( $part->getBlock() as $block ) {
-                                if( !$this->hasOrderInfo($block,$id) ) {
+                                if( !$this->hasMessage($block,$id) ) {
                                     $part->removeBlock($block);
                                     continue;
                                 }
@@ -693,7 +693,7 @@ class MultiScanOrderController extends Controller {
 
                                     //echo "permission=".$permission;
 
-                                    if( !$this->hasOrderInfo($slide,$id) || !$permission ) {
+                                    if( !$this->hasMessage($slide,$id) || !$permission ) {
                                         $block->removeSlide($slide);
                                         $entity->removeSlide($slide);
                                         continue;
@@ -713,7 +713,7 @@ class MultiScanOrderController extends Controller {
         //echo "<br>Slide count=".count( $entity->getSlide() );
 
         if( count( $entity->getSlide() ) == 0 ) {
-            //this orderinfo does not have slides to show or the user don't have permission to view this orderinfo's slides
+            //this message does not have slides to show or the user don't have permission to view this message's slides
             throw $this->createNotFoundException('Nothing to display.');
         }
 
@@ -771,7 +771,7 @@ class MultiScanOrderController extends Controller {
             'department'=>$department,
             'datastructure' => $datastructure
         );
-        $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
+        $form   = $this->createForm( new MessageType($params,$entity), $entity, array('disabled' => $disable) );
 
         //echo "type=".$entity->getMessageCategory();
         //exit();
@@ -788,7 +788,7 @@ class MultiScanOrderController extends Controller {
             //$history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
             $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
             $dql = $repository->createQueryBuilder("h");
-            $dql->innerJoin("h.orderinfo", "orderinfo");
+            $dql->innerJoin("h.message", "message");
             $dql->innerJoin("h.eventtype", "eventtype");
             $dql->where("h.currentid = :oid AND (eventtype.name = 'Initial Order Submission' OR eventtype.name = 'Status Changed' OR eventtype.name = 'Amended Order Submission')");
             $dql->orderBy('h.changedate','DESC');
@@ -811,9 +811,9 @@ class MultiScanOrderController extends Controller {
 
     }
 
-    public function hasOrderInfo( $entity, $id ) {
+    public function hasMessage( $entity, $id ) {
         $has = false;
-        foreach( $entity->getOrderInfo() as $child ) {
+        foreach( $entity->getMessage() as $child ) {
             if( $child->getOid() == $id ) {
                 $has = true;
                 break;
@@ -823,7 +823,7 @@ class MultiScanOrderController extends Controller {
     }
 
     /**
-     * Displays a form to create a new OrderInfo + Scan entities.
+     * Displays a form to create a new Message + Scan entities.
      * @Route("/scan-order/download/{id}", name="download_file", requirements={"id" = "\d+"})
      * @Method("GET")
      */

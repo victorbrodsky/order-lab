@@ -196,7 +196,7 @@ function removeFormSingle( elem ) {
 //            var docloc = document.location;
 //            console.log("remove docloc="+docloc);
 //            docloc = docloc.replace("#optional_param_tab_body", "");
-//            docloc = docloc.replace("#orderinfo_param", "");
+//            docloc = docloc.replace("#message_param", "");
 //            console.log("remove final docloc="+docloc);
 //            document.location = docloc;
         }
@@ -223,7 +223,7 @@ function finalStepDelete() {
 }
 
 function checkSingleFormOnNext( elem ) {
-    //data-target="#orderinfo_param"
+    //data-target="#message_param"
     if( validateMaskFields() > 0 ) {
         return false;
     } else {
@@ -235,11 +235,11 @@ function checkSingleFormOnNext( elem ) {
             $("#optional_button").show();
         }
 
-        collapseElementFix($('#orderinfo_param'),'show');
+        collapseElementFix($('#message_param'),'show');
     }
 
-    //scroll page to orderinfo_param
-    var x = $('#orderinfo_param').offset().top;
+    //scroll page to message_param
+    var x = $('#message_param').offset().top;
     $('html,body').animate( {scrollTop: x}, 400 );
 
     return true;

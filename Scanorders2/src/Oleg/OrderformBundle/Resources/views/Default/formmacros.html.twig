@@ -257,7 +257,7 @@
 {% endmacro %}
 
 
-{% macro orderinfo(form) %}
+{% macro message(form) %}
 
     {% set proxyuserName = null %}
     {% set proxyuserId = null %}
@@ -321,7 +321,7 @@
 {% endmacro %}
 
 
-{% macro orderinfo_panel(form, header) %}
+{% macro message_panel(form, header) %}
 
     {% import _self as formmacros %}
     {#panel-patient panel-primary#}
@@ -335,14 +335,14 @@
             </div>
         </div>
         <div class="panel-body collapse in">
-            {{ formmacros.orderinfo(form) }}
+            {{ formmacros.message(form) }}
         </div>
     </div>
 
 {% endmacro %}
 
-{#wrapper for orderinfo_panel_header#}
-{% macro orderinfo_panel_header_object(formObject, object, objects, datastructure, type, formtype, uidArr) %}
+{#wrapper for message_panel_header#}
+{% macro message_panel_header_object(formObject, object, objects, datastructure, type, formtype, uidArr) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
@@ -360,14 +360,14 @@
     {% set scanCount        = 0 %}
     {% set stainCount       = 0 %}
 
-    {{ formmacros.orderinfo_panel_header(
+    {{ formmacros.message_panel_header(
         formObject, name, datastructure, type, formtype, count, uid,
         patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount)
     }}
 
 {% endmacro %}
 
-{% macro orderinfo_panel_header(
+{% macro message_panel_header(
     formObject, name, datastructure, type, formtype, count, uid,
     patientCount,
     encounterCount,
@@ -472,12 +472,12 @@
 
     {% import _self as formmacros %}
 
-    {% if datastructure and datastructure == "datastructure" and object.orderinfo is defined %}
+    {% if datastructure and datastructure == "datastructure" and object.message is defined %}
 
         {%  set disabled = "disabled" %}
         {#{%  set disabled = "" %}#}
 
-        {% for message in object.orderinfo %}
+        {% for message in object.message %}
 
             {#message:{{ message.vars.value.getMessageCategory() }}#}
 
@@ -779,13 +779,13 @@
 
     <div class="well well-sm">
 
-        {% if histories|first.orderinfo.status != "Superseded" %}
-            {% if histories|first.orderinfo.status == "Amended" %}
+        {% if histories|first.message.status != "Superseded" %}
+            {% if histories|first.message.status == "Amended" %}
                 <p>
                     This order has been originally submitted
                     by
-                    <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.orderinfo.provider.id }) }}">{{ histories|first.orderinfo.provider }}</a>
-                    on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.message.provider.id }) }}">{{ histories|first.message.provider }}</a>
+                    on {{ histories|first.message.orderdate|date('Y-m-d') }} at {{ histories|first.message.orderdate|date('h:i a') }}
                     and most recently {{ formstatus }} by
                     <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
@@ -799,7 +799,7 @@
                 <p>
                     This order has been {{ formstatus }} {{performed}}by
                     <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
-                    {#on {{ histories|last.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|last.orderinfo.orderdate|date('h:i a') }}#}
+                    {#on {{ histories|last.message.orderdate|date('Y-m-d') }} at {{ histories|last.message.orderdate|date('h:i a') }}#}
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>
             {% endif %}
@@ -809,11 +809,11 @@
 
             {% set historytatus = history.currentstatus|lower %}
 
-            {% if history.orderinfo.id != history.currentid %}
-                {% if history.currentid > history.orderinfo.id %}
+            {% if history.message.id != history.currentid %}
+                {% if history.currentid > history.message.id %}
                     <p class="text-danger">
                         This order is the older archived version of and has been {{ formstatus }} by
-                        <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a> via amendment
+                        <a href="{{ path('multy_show',{'id':history.message.id}) }}">Order ID {{ history.message.id }}</a> via amendment
                         on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by
                         <a href="{{ path(scan_sitename~'_showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
                         .
@@ -822,7 +822,7 @@
                     {% if historytatus != 'canceled by submitter' and historytatus != 'submitted' %}
                         <p>
                             Older, superseded version of this order:
-                            <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
+                            <a href="{{ path('multy_show',{'id':history.message.id}) }}">Order ID {{ history.message.id }}</a>
                             {{ history.currentstatus.name|lower }} on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by
                             <a href="{{ path(scan_sitename~'_showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
                         </p>
@@ -2181,9 +2181,9 @@
             {{ formmacros.inputArrayField(encounter.location,cycle,"encounterlocation","","","","",status) }}
         {% endif %}
 
-        {% if encounter.orderinfo is defined %}
-            {% for orderinfo in encounter.orderinfo %}
-                {{ formmacros.fieldGeneralOrder(orderinfo,cycle) }}
+        {% if encounter.message is defined %}
+            {% for message in encounter.message %}
+                {{ formmacros.fieldGeneralOrder(message,cycle) }}
             {% endfor %}
         {% endif %}
 
@@ -2255,9 +2255,9 @@
             {{ formmacros.inputArrayField(procedure.name,cycle,"procedurename","","","","",status) }}
         {% endif %}
 
-        {% if procedure.orderinfo is defined %}
-            {% for orderinfo in procedure.orderinfo %}
-                {{ formmacros.fieldGeneralOrder(orderinfo,cycle) }}
+        {% if procedure.message is defined %}
+            {% for message in procedure.message %}
+                {{ formmacros.fieldGeneralOrder(message,cycle) }}
             {% endfor %}
         {% endif %}
 

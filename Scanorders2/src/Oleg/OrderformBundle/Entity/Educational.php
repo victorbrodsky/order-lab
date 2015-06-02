@@ -28,9 +28,9 @@ class Educational
 
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="educational")
+     * @ORM\OneToOne(targetEntity="Message", mappedBy="educational")
      */
-    protected $orderinfo;
+    protected $message;
 
     /**
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="educational")
@@ -87,19 +87,19 @@ class Educational
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
 //    /**

@@ -113,7 +113,7 @@
             >
             </div>
 
-        <div class="singleorderinfo" id="singleorderinfo_0_0_0_0_0_0_0_0">
+        <div class="singlemessage" id="singlemessage_0_0_0_0_0_0_0_0">
 
             {#<div class="panel panel-primary single-scan-order-slide-info">#}
             <div id="single-scan-order-slide-info" class="panel panel-primary">
@@ -170,11 +170,11 @@
 
             <button id="next_button" type="button" class="btn btn-success" data-toggle="collapse" onclick="checkSingleFormOnNext(this)">Next</button>
 
-            <div id="orderinfo_param" class="collapse">
+            <div id="message_param" class="collapse">
 
                 {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' %}
 
-                {{ formmacros.orderinfo_panel(form,"Order Info") }}
+                {{ formmacros.message_panel(form,"Order Info") }}
 
                 <div id="validationerror" style="padding-top: 2%"></div>
 
@@ -328,10 +328,10 @@
                 </div>
 
 
-            </div> <!-- singleorderinfo -->
+            </div> <!-- singlemessage -->
 
         </div>
-    {#        <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>#}
+    {#        <a class='btn_margin_top btn btn-primary' href="{{ path('message') }}">Back to the list</a>#}
 
                             {% endfor %}
                         {% endfor %}

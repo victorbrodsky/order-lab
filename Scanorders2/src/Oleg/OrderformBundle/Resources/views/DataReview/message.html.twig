@@ -1,0 +1,5 @@
+
+{{ myform.simplefield( "Order ID:", entity.message.id, "input", "disabled" ) }}
+{{ myform.simplefield( "Date:", entity.message.orderdate|date('Y-m-d, H:i:s'), "input", "disabled" ) }}
+{{ myform.simplefield( "Submitter:", entity.message.provider, "input", "disabled" ) }}
+{{ myform.simplefield( "Ordering Provider:", entity.message.proxyuser, "input", "disabled" ) }}

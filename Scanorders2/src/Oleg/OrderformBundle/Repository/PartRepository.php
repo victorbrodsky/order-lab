@@ -12,9 +12,9 @@ use Oleg\OrderformBundle\Entity\Part;
 class PartRepository extends ArrayFieldAbstractRepository
 {
 
-//    //if this element does not have any slide belonging to this order (with id=null) or children (empty branch for this orderinfo),
-//    //so remove this element and all its parents from orderinfo
-//    public function attachToOrderinfo( $entity, $orderinfo ) {
+//    //if this element does not have any slide belonging to this order (with id=null) or children (empty branch for this message),
+//    //so remove this element and all its parents from message
+//    public function attachToMessage( $entity, $message ) {
 //
 //        $children = $entity->getChildren();
 //
@@ -25,18 +25,18 @@ class PartRepository extends ArrayFieldAbstractRepository
 //            $childClass = new \ReflectionClass($child);
 //            $childClassName = $childClass->getShortName();
 //            if( $childClassName == "Block" ) {
-//                //echo "check if this block has slides belongs to this orderinfo <br>";
+//                //echo "check if this block has slides belongs to this message <br>";
 //                $slides = $child->getChildren();
 //                foreach( $slides as $slide ) {
-//                    $res = $this->isEntityBelongsToOrderinfo( $slide, $orderinfo );
+//                    $res = $this->isEntityBelongsToMessage( $slide, $message );
 //                    if( $res ) {
 //                        $countNotEmptyChildren++;
 //                    }
 //                }
 //            } else
 //            if( $childClassName == "Slide") {
-//                //echo "check if this slide belongs to this orderinfo <br>";
-//                $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
+//                //echo "check if this slide belongs to this message <br>";
+//                $res = $this->isEntityBelongsToMessage( $child, $message );
 //                if( $res ) {
 //                    $countNotEmptyChildren++;
 //                }
@@ -46,12 +46,12 @@ class PartRepository extends ArrayFieldAbstractRepository
 //        }
 //
 //        if( $countNotEmptyChildren == 0 ) {
-//            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
+//            $this->removeThisAndAllParentsFromMessage($entity,$message);
 //            $ret = -1;
 //        } else {
-//            //echo "added to orderinfo: Part ret=".$ret.", count=".count($entity->getChildren())."<br>";
+//            //echo "added to message: Part ret=".$ret.", count=".count($entity->getChildren())."<br>";
 //            //echo $entity."<br>";
-//            $orderinfo->addPart($entity);
+//            $message->addPart($entity);
 //            $ret = 1;
 //        }
 //
@@ -107,17 +107,17 @@ class PartRepository extends ArrayFieldAbstractRepository
 
 
     //override parent method to get next key string
-    public function getNextNonProvided( $entity, $extra=null, $orderinfo=null ) {
+    public function getNextNonProvided( $entity, $extra=null, $message=null ) {
         $accession= $entity->getParent();
         //echo $entity;
         //echo $accession;
         $key = $accession->obtainValidKeyfield();
         $accessionNumber = $key."";
         $keytype = $key->getKeytype()->getId();
-        return $this->findNextPartnameByAccession( $entity->getInstitution()->getId(), $accessionNumber, $keytype, $orderinfo );
+        return $this->findNextPartnameByAccession( $entity->getInstitution()->getId(), $accessionNumber, $keytype, $message );
     }
 
-    public function findNextPartnameByAccession( $institution, $accessionNumber, $keytype, $orderinfo=null ) {
+    public function findNextPartnameByAccession( $institution, $accessionNumber, $keytype, $message=null ) {
         if( !$institution || $institution == "" || !$accessionNumber || $accessionNumber == "" ) {
             return null;
         }
@@ -148,10 +148,10 @@ class PartRepository extends ArrayFieldAbstractRepository
         $maxKey = $this->getNextByMax($lastFieldStr, $name);
 
         //check if the valid bigger key was already assigned to the element of the same class attached to this order
-        if( $orderinfo ) {
+        if( $message ) {
             $className = "Part";
             $getSameEntity = "get".$className;
-            foreach( $orderinfo->$getSameEntity() as $same ) {
+            foreach( $message->$getSameEntity() as $same ) {
                 if( $same->getStatus() == self::STATUS_VALID ) {
                     $key = $same->obtainValidKeyfield();
                     $newBiggerKey = $this->getBiggerKey($maxKey,$key,$name);

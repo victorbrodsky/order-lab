@@ -14,7 +14,7 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 //TODO: optimise by removing foreach loops
 
 /**
- * OrderInfo controller.
+ * Message controller.
  *
  * @Route("/util")
  */
@@ -66,7 +66,7 @@ class ScanUtilController extends Controller {
     }
 
     /**
-     * Displays a form to create a new OrderInfo + Scan entities.
+     * Displays a form to create a new Message + Scan entities.
      * @Route("/procedure", name="get-procedure")
      * @Method("GET")
      */
@@ -146,7 +146,7 @@ class ScanUtilController extends Controller {
     }
 
     /**
-     * Displays a form to create a new OrderInfo + Scan entities.
+     * Displays a form to create a new Message + Scan entities.
      * @Route("/scanregion", name="get-scanregion")
      * @Method("GET")
      */
@@ -210,9 +210,9 @@ class ScanUtilController extends Controller {
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
-            if( $orderinfo ) {
-                $slides = $orderinfo->getSlide();
+            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            if( $message ) {
+                $slides = $message->getSlide();
                 foreach( $slides as $slide ) {
                     $arr[] = $slide->getScan()->first()->getScanregion();
                 }
@@ -225,7 +225,7 @@ class ScanUtilController extends Controller {
         $parametersArr['user'] = $user;
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:OrderInfo', 'list')
+            ->from('OlegOrderformBundle:Message', 'list')
             ->select("scan.scanregion")
             ->innerJoin("list.slide","slide")
             ->innerJoin("slide.scan","scan")
@@ -262,7 +262,7 @@ class ScanUtilController extends Controller {
     }
     
     /**
-     * Displays a form to create a new OrderInfo + Scan entities.
+     * Displays a form to create a new Message + Scan entities.
      * @Route("/delivery", name="get-orderdelivery")
      * @Method("GET")
      */
@@ -312,9 +312,9 @@ class ScanUtilController extends Controller {
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
-            if( $orderinfo ) {
-                $arr[] = $orderinfo->getScanorder()->getDelivery();
+            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            if( $message ) {
+                $arr[] = $message->getScanorder()->getDelivery();
             }
         }
         //////////////////////////////////// END OF 3 ///////////////////////////////////////////
@@ -323,7 +323,7 @@ class ScanUtilController extends Controller {
         $parametersArr['user'] = $user;
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:OrderInfo', 'list')
+            ->from('OlegOrderformBundle:Message', 'list')
             ->select("scanorder.delivery")
             ->innerJoin("list.provider","provider")
             ->innerJoin("list.scanorder","scanorder")
@@ -371,9 +371,9 @@ class ScanUtilController extends Controller {
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
-            if( $orderinfo ) {
-                $parts = $orderinfo->getPart();
+            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            if( $message ) {
+                $parts = $message->getPart();
                 foreach( $parts as $part ) {
                     foreach( $part->getPartname() as $partname ) {
                         $arr[] = $partname."";
@@ -409,9 +409,9 @@ class ScanUtilController extends Controller {
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
-            if( $orderinfo ) {
-                $blocks = $orderinfo->getBlock();
+            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            if( $message ) {
+                $blocks = $message->getBlock();
                 foreach( $blocks as $block ) {
                     foreach( $block->getBlockname() as $blockname ) {
                         $arr[] = $blockname."";
@@ -572,9 +572,9 @@ class ScanUtilController extends Controller {
 
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $opt && $opt != "undefined" ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($opt);
-            if( $orderinfo->getResearch() ) {
-                $strEneterd = $orderinfo->getResearch()->getProjectTitleStr();
+            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($opt);
+            if( $message->getResearch() ) {
+                $strEneterd = $message->getResearch()->getProjectTitleStr();
                 $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
                 if( !$this->in_complex_array($element,$output) ) {
                     $output[] = $element;
@@ -617,9 +617,9 @@ class ScanUtilController extends Controller {
 
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $orderoid ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderoid);
-            if( $orderinfo->getResearch() ) {
-                $strEneterd = $orderinfo->getResearch()->getSetTitleStr();
+            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($orderoid);
+            if( $message->getResearch() ) {
+                $strEneterd = $message->getResearch()->getSetTitleStr();
                 $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
                 if( !$this->in_complex_array($element,$output) ) {
                     $output[] = $element;
@@ -665,9 +665,9 @@ class ScanUtilController extends Controller {
 
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $opt && $opt != "undefined" ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($opt);
-            if( $strEneterd = $orderinfo->getEducational() ) {
-                $strEneterd = $orderinfo->getEducational()->getCourseTitleStr();
+            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($opt);
+            if( $strEneterd = $message->getEducational() ) {
+                $strEneterd = $message->getEducational()->getCourseTitleStr();
                 $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
                 if( !$this->in_complex_array($element,$output) ) {
                     $output[] = $element;
@@ -715,9 +715,9 @@ class ScanUtilController extends Controller {
 
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $orderoid ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderoid);
-            if( $orderinfo->getEducational() ) {
-                $strEneterd = $orderinfo->getEducational()->getLessonTitleStr();
+            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($orderoid);
+            if( $message->getEducational() ) {
+                $strEneterd = $message->getEducational()->getLessonTitleStr();
                 $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
                 if( !$this->in_complex_array($element,$output) ) {
                     $output[] = $element;
@@ -839,7 +839,7 @@ class ScanUtilController extends Controller {
         } else {
             //add service from previous order for this user
             $orderUtil = $this->get('scanorder_utility');
-            $previousOrder = $orderUtil->getPreviousOrderinfo('Scan Order');
+            $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
             if( $previousOrder ) {
 				if( $previousOrder->getScanOrder() ) {
 					$service = $previousOrder->getScanOrder()->getService();
@@ -857,8 +857,8 @@ class ScanUtilController extends Controller {
 
 //        //add order's service
 //        if( $orderid ) {
-//            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderid);
-//            $service = $orderinfo->getService();
+//            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($orderid);
+//            $service = $message->getService();
 //            if( $service ) {
 //                $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
 //                $output[] = $element;

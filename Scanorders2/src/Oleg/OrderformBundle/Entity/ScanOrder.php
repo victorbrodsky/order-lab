@@ -24,9 +24,9 @@ class ScanOrder {
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="scanorder")
+     * @ORM\OneToOne(targetEntity="Message", mappedBy="scanorder")
      **/
-    private $orderinfo;
+    private $message;
 
 
     ///////////////////// This order (scanorder) specific, unique fields /////////////////////
@@ -116,20 +116,20 @@ class ScanOrder {
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
-        $orderinfo->setScanorder($this);
+        $this->message = $message;
+        $message->setScanorder($this);
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
     /**

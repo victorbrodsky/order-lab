@@ -64,7 +64,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     //replace child if duplicated
     //$parent: encounter
     //procedure has only one accession
-    public function replaceDuplicateEntities( $parent, $orderinfo ) {
+    public function replaceDuplicateEntities( $parent, $message ) {
         //echo "Procedure replace duplicates:".$parent;
         return $parent;
     }
@@ -73,7 +73,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
     //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
     //This function redirects to the same overrided function by Accession Repository
-    public function processDuplicationKeyField( $procedure, $orderinfo ) {
+    public function processDuplicationKeyField( $procedure, $message ) {
 
         $accessions = $procedure->getChildren();
 
@@ -86,7 +86,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $procedure->removeChildren($accession);
 
         //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-        $accession = $this->_em->getRepository('OlegOrderformBundle:Accession')->processDuplicationKeyField($accession,$orderinfo);
+        $accession = $this->_em->getRepository('OlegOrderformBundle:Accession')->processDuplicationKeyField($accession,$message);
 
         $procedure->addChildren($accession);
 

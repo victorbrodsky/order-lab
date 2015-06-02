@@ -23,9 +23,9 @@ class ImageAnalysisOrder {
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="imageAnalysisOrder")
+     * @ORM\OneToOne(targetEntity="Message", mappedBy="imageAnalysisOrder")
      **/
-    private $orderinfo;
+    private $message;
 
 
     //Instruction (List manager: datetime, author, author roles)
@@ -88,19 +88,19 @@ class ImageAnalysisOrder {
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
     /**

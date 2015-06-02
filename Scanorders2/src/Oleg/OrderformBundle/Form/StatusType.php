@@ -16,7 +16,7 @@ class StatusType extends AbstractType
     {
         $builder
             ->add('action')
-            ->add('orderinfo')
+            ->add('message')
         ;
 
         $builder->add('list', new ListType(), array(

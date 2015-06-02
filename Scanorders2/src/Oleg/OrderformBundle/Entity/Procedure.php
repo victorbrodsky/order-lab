@@ -39,9 +39,9 @@ class Procedure extends ObjectAbstract
     protected $accession;
     
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="procedure")
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="procedure")
      **/
-    protected $orderinfo;
+    protected $message;
 
 
 

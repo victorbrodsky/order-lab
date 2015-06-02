@@ -53,7 +53,7 @@ $(document).ready(function() {
 });
 
 //  0         1              2           3   4  5  6   7
-//oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
+//oleg_orderformbundle_messagetype_patient_0_mrn_0_field
 var fieldIndex = 3;     //get 'key'
 var holderIndex = 5;    //get 'patient'
 //console.log("urlCheck="+urlCheck);

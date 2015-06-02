@@ -33,9 +33,9 @@ class Research
     protected $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="research")
+     * @ORM\OneToOne(targetEntity="Message", mappedBy="research")
      */
-    protected $orderinfo;
+    protected $message;
 
     /**
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="research")
@@ -97,19 +97,19 @@ class Research
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
 //    /**

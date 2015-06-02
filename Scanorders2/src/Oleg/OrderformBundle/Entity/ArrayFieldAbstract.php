@@ -51,10 +51,10 @@ abstract class ArrayFieldAbstract {
     protected $creationdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="OrderInfo", cascade={"persist"})
-     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Message", cascade={"persist"})
+     * @ORM\JoinColumn(name="message", referencedColumnName="id", nullable=true)
      */
-    protected $orderinfo;
+    protected $message;
 
 
     /**
@@ -149,19 +149,19 @@ abstract class ArrayFieldAbstract {
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
     /**

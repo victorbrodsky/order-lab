@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 /**
- * OrderInfo controller.
+ * Message controller.
  *
  * @Route("/check")
  * @Template("OlegOrderformBundle:Patient:edit_single.html.twig")
@@ -354,7 +354,7 @@ class CheckController extends Controller {
                         $newkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
                         $extraid = $newkeytype->getId()."";
                     }
-                    $orderinfoString = "Order ".$patient->getOrderinfo()->first()->getId()." submitted on ".$transformer->transform($patient->getOrderinfo()->first()->getOrderdate()). " by ". $patient->getOrderinfo()->first()->getProvider();
+                    $messageString = "Order ".$patient->getMessage()->first()->getId()." submitted on ".$transformer->transform($patient->getMessage()->first()->getOrderdate()). " by ". $patient->getMessage()->first()->getProvider();
                 }
 
                 //procedure's fields: Procedure Type (Name)
@@ -379,7 +379,7 @@ class CheckController extends Controller {
                 $mrnstring = "";
                 $extraid = "";
                 $parentDob = "";
-                $orderinfoString = "";
+                $messageString = "";
                 //$encounterName = array();
                 $procedureName = array();
 
@@ -401,7 +401,7 @@ class CheckController extends Controller {
                 'extraid'=>$extraid,
                 'parentdob'=>$parentDob."",
                 'mrnstring'=>$mrnstring,
-                'orderinfo'=>$orderinfoString,
+                'message'=>$messageString,
 
                 //procedure data
                 'procedure'=>$this->getArrayFieldJson($procedureName),

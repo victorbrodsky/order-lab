@@ -67,11 +67,11 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
     //replace child of patient if duplicated
     //$parent: patient
-    //$orderinfo: orderinfo
-    public function replaceDuplicateEntities( $parent, $orderinfo ) {
+    //$message: message
+    public function replaceDuplicateEntities( $parent, $message ) {
 
         //echo "Patient replace duplicates: parent: ".$parent;
-        //echo "Patient replace duplicates: orderinfo: ".$orderinfo;
+        //echo "Patient replace duplicates: message: ".$message;
 
         $encounters = $parent->getChildren(); //encounters
 
@@ -130,37 +130,37 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
                 //Copy Fields for Encounter
                 //echo "<br>######################################## Process similar fields ########################################<br>";
-                $foundEncounter = $this->processFieldArrays($foundEncounter,$orderinfo,$encounter);
+                $foundEncounter = $this->processFieldArrays($foundEncounter,$message,$encounter);
                 //echo "######################################## EOF Process similar fields ########################################<br>";
 
                 //Copy Fields for Procedure
                 //echo "<br>######################################## Process similar fields ########################################<br>";
-                $foundProcedure = $this->processFieldArrays($foundProcedure,$orderinfo,$procedure);
+                $foundProcedure = $this->processFieldArrays($foundProcedure,$message,$procedure);
                 //echo "######################################## EOF Process similar fields ########################################<br>";
 
                 //Copy Fields for Accession
                 //echo "<br>######################################## Process similar fields ########################################<br>";
-                $foundAccession = $this->processFieldArrays($foundAccession,$orderinfo,$accession);
+                $foundAccession = $this->processFieldArrays($foundAccession,$message,$accession);
                 //echo "######################################## EOF Process similar fields ########################################<br>";
 
-                //clear encounter-procedure-accession from patient (parent) and from orderinfo
+                //clear encounter-procedure-accession from patient (parent) and from message
                 //$foundProcedure->removeAccession($accession);
                 //$foundEncounter->removeProcedure($procedure);
                 $parent->removeEncounter($encounter);
 
-                $orderinfo->removeAccession($accession);
-                $orderinfo->removeProcedure($procedure);
-                $orderinfo->removeEncounter($encounter);
+                $message->removeAccession($accession);
+                $message->removeProcedure($procedure);
+                $message->removeEncounter($encounter);
 
                 //add foundEncounter to patient
                 $parent->addEncounter($foundEncounter);
-                $orderinfo->addEncounter($foundEncounter);
+                $message->addEncounter($foundEncounter);
 
-                //add $foundProcedure to orderinfo
-                $orderinfo->addProcedure($foundProcedure);
+                //add $foundProcedure to message
+                $message->addProcedure($foundProcedure);
 
-                //add $foundAccession to orderinfo
-                $orderinfo->addAccession($foundAccession);
+                //add $foundAccession to message
+                $message->addAccession($foundAccession);
 
             }
 

@@ -130,13 +130,13 @@ class LoginTest extends WebTestCase {
 
         $form = $crawler->selectButton('btnSubmit')->form();
 
-        $form['oleg_orderformbundle_orderinfotype[patient][0][encounter][0][procedure][0][accession][0][part][0][block][0][slide][0][title]'] = 'Slide submitted by phpunit test';
+        $form['oleg_orderformbundle_messagetype[patient][0][encounter][0][procedure][0][accession][0][part][0][block][0][slide][0][title]'] = 'Slide submitted by phpunit test';
 
-        $form['oleg_orderformbundle_orderinfotype[patient][0][encounter][0][procedure][0][accession][0][part][0][block][0][slide][0][slidetype]'] = 7;
+        $form['oleg_orderformbundle_messagetype[patient][0][encounter][0][procedure][0][accession][0][part][0][block][0][slide][0][slidetype]'] = 7;
 
-        $form['oleg_orderformbundle_orderinfotype[patient][0][clinicalHistory][0][field]'] = 'clinical history test';
+        $form['oleg_orderformbundle_messagetype[patient][0][clinicalHistory][0][field]'] = 'clinical history test';
 
-        $form['oleg_orderformbundle_orderinfotype[patient][0][mrn][0][field]'] = '0000000';
+        $form['oleg_orderformbundle_messagetype[patient][0][mrn][0][field]'] = '0000000';
 
 
 

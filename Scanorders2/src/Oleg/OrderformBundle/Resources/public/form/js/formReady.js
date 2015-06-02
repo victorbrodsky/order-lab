@@ -39,7 +39,7 @@ $(document).ready(function() {
     diseaseTypeRender();
 
     //take care of buttons for single form
-    $("#orderinfo").hide();
+    $("#message").hide();
     $("#optional_button").hide();
 
     //priority option

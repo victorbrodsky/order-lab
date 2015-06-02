@@ -129,7 +129,7 @@
         {{ form_widget(form.oid) }}
 
         {% if type == 'show' %}
-            {{ formmacros.orderinfo_panel(form, "Scan Order Info") }}
+            {{ formmacros.message_panel(form, "Scan Order Info") }}
         {% endif %}
 
         <div id="form-prototype-data"
@@ -147,11 +147,11 @@
 
         <br>
 
-        {#<p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>#}
+        {#<p>{{ formmacros.message_panel(form,"Order Info") }}</p>#}
 
         {% if type == 'new' or type == 'edit' or type == 'amend' %}
 
-            <p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>
+            <p>{{ formmacros.message_panel(form,"Order Info") }}</p>
 
             <div class="row">
                 {% if type == 'amend' %}

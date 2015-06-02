@@ -77,7 +77,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
 
     //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-    public function processDuplicationKeyField( $accession, $orderinfo ) {
+    public function processDuplicationKeyField( $accession, $message ) {
 
         if( !($accession instanceof Accession) ) {
             //echo 'Provided entity is not Accession, entity:'.$accession;
@@ -91,11 +91,11 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //process data quality
         $currentDataquality = null;
 
-        //echo "dataquality count=".count($orderinfo->getDataqualityMrnAcc())."<br>";
+        //echo "dataquality count=".count($message->getDataqualityMrnAcc())."<br>";
 
         //loop through all conflicts to find out if this accession is conflicted
         //To determine if this accession has geberated conflict: 1) compare accession number/type and mrn number/type of dataquality and form
-        foreach( $orderinfo->getDataqualityMrnAcc() as $dataquality) {
+        foreach( $message->getDataqualityMrnAcc() as $dataquality) {
 
             $accessionConflict = false;
             $patientConflict = false;
@@ -118,7 +118,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 //valid values are not empty
             } else {
                 //echo "skip!!! <br>";
-                $orderinfo->removeDataqualityMrnAcc($dataquality);
+                $message->removeDataqualityMrnAcc($dataquality);
                 continue;   //remove and skip this dataquality
             }
 
@@ -155,7 +155,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             }
         }
 
-        ///////////////// check DB directly for conflict, just in case JS fails to catch conflict and orderinfo's Dataquality is empty ////////////////////
+        ///////////////// check DB directly for conflict, just in case JS fails to catch conflict and message's Dataquality is empty ////////////////////
         $dbconflict = false;
         if( $currentDataquality == null ) {
 
@@ -184,7 +184,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $mrnKeytype = $mrnKey->getKeytype()->getId();
 
             if( !$accession->getInstitution() ) {
-                $accession->setInstitution($orderinfo->getInstitution());
+                $accession->setInstitution($message->getInstitution());
             }
             $institutions = array($accession->getInstitution()->getId());
             //echo "mrnKeytype Id=".$mrnKeytype."<br>";
@@ -205,15 +205,15 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 $currentDataquality->setAccessiontype($accessiontype);
                 $currentDataquality->setAccession($accValue);
 
-                $currentDataquality->setOrderinfo($orderinfo);
-                $currentDataquality->setProvider($orderinfo->getProvider());
+                $currentDataquality->setMessage($message);
+                $currentDataquality->setProvider($message->getProvider());
                 $currentDataquality->setStatus('active');
 
-                $orderinfo->addDataqualityMrnAcc($currentDataquality);
+                $message->addDataqualityMrnAcc($currentDataquality);
 
             }
         }
-        ///////////////// EOF check DB directly for conflict, just in case JS fails to catch conflict and orderinfo's Dataquality is empty ////////////////////
+        ///////////////// EOF check DB directly for conflict, just in case JS fails to catch conflict and message's Dataquality is empty ////////////////////
 
         if( $currentDataquality == null && $dbconflict == false ) {
             //echo "#####this is not conflict accession => return !!!!!! <br>";
@@ -238,13 +238,13 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $key->setKeytype($acctype);
         $key->setStatus(self::STATUS_VALID);
         $key->setSource($source);
-        $key->setProvider($orderinfo->getProvider());
+        $key->setProvider($message->getProvider());
 
         if( !$accession->getInstitution() ) {
-            $accession->setInstitution($orderinfo->getInstitution());
+            $accession->setInstitution($message->getInstitution());
         }
 
-        $nextKey = $this->getNextNonProvided($accession,null,$orderinfo);
+        $nextKey = $this->getNextNonProvided($accession,null,$message);
         $key->setField($nextKey);
 
         //set new accession number to dataquality
@@ -335,7 +335,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     }
 
 
-    public function setCorrectAccessionIfConflict( $slide, $orderinfo ) {
+    public function setCorrectAccessionIfConflict( $slide, $message ) {
 
         $slideParent = $slide->getParent();
 
@@ -350,7 +350,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $accession = $slideParent->getParent();
         }
 
-        $accession = $this->processDuplicationKeyField( $accession, $orderinfo );
+        $accession = $this->processDuplicationKeyField( $accession, $message );
 
 
     }

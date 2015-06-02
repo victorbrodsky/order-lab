@@ -402,7 +402,7 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
 //get document container id and name up to _documents_:
 //example: oleg_userdirectorybundle_user_publicComments_0
 //example: oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0
-//example: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_paper_0
+//example: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0
 function getNewDocumentInfoByHolder( commentHolder ) {
 
     //console.log(commentHolder);
@@ -536,13 +536,13 @@ function getElementInfoById_Scan( id, name ) {
     //console.log('id='+id);
     //console.log('name='+name);
 
-    //id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_paper_0_name
+    //id=oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_name
 
     //result error:
     //                                                        _accession_0_part_0_documents_0_id
 
     //  0           1           2           3    4    5      6      7    8   9  10   11     12   13     14  15
-    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id
+    //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id
 
     //var documentCount = 0;
     var beginIdStr = null;
@@ -556,8 +556,8 @@ function getElementInfoById_Scan( id, name ) {
     } else {
 
         //when collection does not have a file => use first collection field
-        //input: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
-        //goal:  oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0
+        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+        //goal:  oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0
         if( id.indexOf("_partname_") !== -1 ) {
             //need id up to _paper_0 => attach
             var idArr = id.split("_partname_");
@@ -567,8 +567,8 @@ function getElementInfoById_Scan( id, name ) {
         }
 
         //TODO: test it
-        //input: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_sourceOrgan_0_field
-        //goal:  oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0
+        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_sourceOrgan_0_field
+        //goal:  oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0
 //        if( id.indexOf("_sourceOrgan_") !== -1 ) {
 //            var idArr = id.split("_sourceOrgan_");
 //            beginIdStr = idArr[0];
@@ -577,9 +577,9 @@ function getElementInfoById_Scan( id, name ) {
 //        }
 
         //TODO: test it
-        //name: oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][laborder][0][imageTitle]
-        //input: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_laborder_0_imageTitle
-        //goal:  oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_laborder_0
+        //name: oleg_orderformbundle_messagetype[patient][0][procedure][0][accession][0][laborder][0][imageTitle]
+        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_laborder_0_imageTitle
+        //goal:  oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_laborder_0
 //        if( id.indexOf("_imageTitle") !== -1 ) {
 //            containerName = "";
 //            containerId = "";
@@ -591,9 +591,9 @@ function getElementInfoById_Scan( id, name ) {
     }
 
     //document is part of the document container
-    //name=oleg_orderformbundle_orderinfotype[patient][0][encounter][0][procedure][0][accession][0][laborder][0][documentContainer][id]
-    //input: oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_laborder_0_documentContainer_id
-    //goal:  oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_laborder_0
+    //name=oleg_orderformbundle_messagetype[patient][0][encounter][0][procedure][0][accession][0][laborder][0][documentContainer][id]
+    //input: oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_laborder_0_documentContainer_id
+    //goal:  oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_laborder_0
     if( id.indexOf("_documentContainer_") !== -1 ) {
         var idArr = id.split("_documentContainer_");
         beginIdStr = idArr[0] + "_documentContainer";
@@ -650,7 +650,7 @@ function getNextCollectionCount( holder, fieldSelector ) {
 
 function getDocumentIndexById(id) {
     var documentIndex = 0;
-    //id: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id  => get index id
+    //id: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id  => get index id
     //id must have "_documents_index" string
     if( id.indexOf("_documents_") !== -1 ) {
         //get documentcount
@@ -877,7 +877,7 @@ function createDropzoneHolder_Paper(existingDropzoneHolder) {
     var idArr = id.split("_");
 
     //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14  15
-    //oleg_orderformbundle_orderinfotype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
+    //oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
     var patientid = idArr[4];
     var encounterid = idArr[6];
     var procedureid = idArr[8];

@@ -11,17 +11,17 @@ use Doctrine\ORM\EntityRepository;
 class SlideRepository extends ArrayFieldAbstractRepository {
 
     //Make new - no requirements for uniqueness.
-    public function processEntity( $entity, $orderinfo=null, $original=null ) {
+    public function processEntity( $entity, $message=null, $original=null ) {
 
         //set default source if empty
         if( !$entity->getSource() ) {
             $entity->setSource($this->source);
         }
 
-        return $this->setResult( $entity, $orderinfo, null );
+        return $this->setResult( $entity, $message, null );
     }
     
-    public function setResult( $slide, $orderinfo, $original=null ) {
+    public function setResult( $slide, $message, $original=null ) {
 
         //echo $slide;
 
@@ -31,52 +31,52 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $em = $this->_em;
         $em->persist($slide);
 
-        if( $orderinfo == null ) {
+        if( $message == null ) {
             return $slide;
         }
 
         if( !$slide->getProvider() ) {
-            //echo "set slide provider=".$orderinfo->getProvider()."<br>";
-            $slide->setProvider($orderinfo->getProvider());
+            //echo "set slide provider=".$message->getProvider()."<br>";
+            $slide->setProvider($message->getProvider());
         }
 
-        $slide = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($slide,$orderinfo,$original);
+        $slide = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($slide,$message,$original);
 
         $scans = $slide->getScan();
         foreach( $scans as $scan ) {
-            $scan->setProvider($orderinfo->getProvider());
-            $scan = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($scan,$orderinfo,$original);
-            $scan->setInstitution($orderinfo->getInstitution());
-            $orderinfo->addImaging($scan);
+            $scan->setProvider($message->getProvider());
+            $scan = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($scan,$message,$original);
+            $scan->setInstitution($message->getInstitution());
+            $message->addImaging($scan);
         } //scan
 
         $stains = $slide->getStain();
         foreach( $stains as $stain ) {
-            $stain->setProvider($orderinfo->getProvider());
-            $stain = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($stain,$orderinfo,$original);
+            $stain->setProvider($message->getProvider());
+            $stain = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($stain,$message,$original);
         } //stain
 
         unset($original);
 
         //this does not work on postgresql because id is set before creating a new element in DB (before flush)
         if( !$slide->getId() || $slide->getId() == "" ) {
-            $orderinfo->addSlide($slide);
+            $message->addSlide($slide);
         }
 
         //add educational and research
         //********** take care of educational and research director and principal investigator ***********//
-        if( $orderinfo->getEducational() && !$orderinfo->getEducational()->isEmpty() ) {
-            $orderinfo->getEducational()->addSlide($slide);
+        if( $message->getEducational() && !$message->getEducational()->isEmpty() ) {
+            $message->getEducational()->addSlide($slide);
         }
 
-        if( $orderinfo->getResearch() && !$orderinfo->getResearch()->isEmpty() ) {
-            $orderinfo->getResearch()->addSlide($slide);
+        if( $message->getResearch() && !$message->getResearch()->isEmpty() ) {
+            $message->getResearch()->addSlide($slide);
         }
         //********** end of educational and research processing ***********//
 
-        //add this slide to institution from orderinfo.
-        //$orderinfo->getInstitution()->addSlide($slide);
-        $slide->setInstitution($orderinfo->getInstitution());
+        //add this slide to institution from message.
+        //$message->getInstitution()->addSlide($slide);
+        $slide->setInstitution($message->getInstitution());
 
         ////////////// process parent //////////////
         //1) reattach slide to part if it is Cytopathology
@@ -96,7 +96,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $parent = $slide->getParent();
         $class = new \ReflectionClass($parent);
         $className = $class->getShortName();
-        $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo, null);
+        $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $message, null);
         $slide->setParent($processedParent);
         ////////////// EOF process parent //////////////
 
@@ -187,7 +187,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
     }
 
     //$parent is slide. Slide does not have children.
-    public function replaceDuplicateEntities($parent,$orderinfo) {
+    public function replaceDuplicateEntities($parent,$message) {
         return $parent;
     }
 

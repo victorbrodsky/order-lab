@@ -8,13 +8,13 @@ use Oleg\UserdirectoryBundle\Repository\ListAbstractRepository;
 
 class EducationalRepository extends ListAbstractRepository {
 
-    public function processEntity( $orderinfo, $user ) {
+    public function processEntity( $message, $user ) {
 
-        $educational = $orderinfo->getEducational();
+        $educational = $message->getEducational();
 
         if( !$educational || $educational->isEmpty() ) {
-            $orderinfo->setEducational(NULL);
-            return $orderinfo;
+            $message->setEducational(NULL);
+            return $message;
         }
 
         //process Course Title
@@ -44,7 +44,7 @@ class EducationalRepository extends ListAbstractRepository {
         //set this new LessonTitle to Educational and CourseTitle objects
         $courseTitle->addLessonTitle($lessonTitle);
 
-        return $orderinfo;
+        return $message;
     }
 
 

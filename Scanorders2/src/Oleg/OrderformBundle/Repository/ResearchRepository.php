@@ -8,13 +8,13 @@ use Oleg\UserdirectoryBundle\Repository\ListAbstractRepository;
 
 class ResearchRepository extends ListAbstractRepository {
 
-    public function processEntity( $orderinfo, $user ) {
+    public function processEntity( $message, $user ) {
 
-        $research = $orderinfo->getResearch();
+        $research = $message->getResearch();
 
         if( !$research || $research->isEmpty() ) {
-            $orderinfo->setResearch(NULL);
-            return $orderinfo;
+            $message->setResearch(NULL);
+            return $message;
         }
 
         //process Project Title
@@ -47,10 +47,10 @@ class ResearchRepository extends ListAbstractRepository {
 //        foreach( $projectTitle->getSetTitles() as $settitle ) {
 //            echo "SetTitleList name=".$settitle->getName().", id=".$settitle->getId()."<br>";
 //        }
-//        echo "SetTitleStr=".$orderinfo->getResearch()->getSetTitleStr()."<br>";
+//        echo "SetTitleStr=".$message->getResearch()->getSetTitleStr()."<br>";
 
         //exit('res');
-        return $orderinfo;
+        return $message;
     }
 
 

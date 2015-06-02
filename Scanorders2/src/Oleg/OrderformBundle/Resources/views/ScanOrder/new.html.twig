@@ -90,12 +90,12 @@
         </div>
 
         <button id="next_button" type="button" class="btn btn-success" 
-                data-toggle="collapse" data-target="#orderinfo_param">Next
+                data-toggle="collapse" data-target="#message_param">Next
         </button>
 
 
-        <div id="orderinfo_param" class="collapse">
-            {{ formmacros.orderinfo_panel(form,"Order Info") }}
+        <div id="message_param" class="collapse">
+            {{ formmacros.message_panel(form,"Order Info") }}
 
             <div class="row">
                 <p>
@@ -233,7 +233,7 @@
             
         </div>     
        </div>      
-{#        <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>#}
+{#        <a class='btn_margin_top btn btn-primary' href="{{ path('message') }}">Back to the list</a>#}
 
     {{ form_end(form) }}
     </form>

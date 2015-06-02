@@ -22,7 +22,7 @@ class SearchController extends Controller {
 
 
     /**
-     * Lists all OrderInfo entities.
+     * Lists all Message entities.
      *
      * @Route("/patients/search", name="scan_search_patients")
      * @Method("GET")

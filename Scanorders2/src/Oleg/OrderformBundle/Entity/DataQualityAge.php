@@ -13,10 +13,10 @@ class DataQualityAge extends DataQuality
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="OrderInfo")
+     * @ORM\ManyToOne(targetEntity="Message")
      * @ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $orderinfo;
+    protected $message;
 
     /**
      * @ORM\ManyToOne(targetEntity="Encounter")
@@ -43,19 +43,19 @@ class DataQualityAge extends DataQuality
 
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
     /**

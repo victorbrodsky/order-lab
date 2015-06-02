@@ -23,9 +23,9 @@ class Report {
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="report")
+     * @ORM\OneToOne(targetEntity="Message", mappedBy="report")
      **/
-    private $orderinfo;
+    private $message;
 
 
 
@@ -99,19 +99,19 @@ class Report {
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
     /**

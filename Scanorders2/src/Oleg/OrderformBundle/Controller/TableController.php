@@ -18,8 +18,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\OrderformBundle\Entity\OrderInfo;
-use Oleg\OrderformBundle\Form\OrderInfoType;
+use Oleg\OrderformBundle\Entity\Message;
+use Oleg\OrderformBundle\Form\MessageType;
 
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
@@ -133,7 +133,7 @@ class TableController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
 
         if( $routeName == "table_show") {
             $actions = array('show');
@@ -146,13 +146,13 @@ class TableController extends Controller {
         }
 
         $secUtil = $this->get('order_security_utility');
-        if( $orderinfo && !$secUtil->isUserAllowOrderActions($orderinfo, $user, $actions) ) {
+        if( $message && !$secUtil->isUserAllowOrderActions($message, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         //redirect by status
         $orderUtil = $this->get('scanorder_utility');
-        $redirect = $orderUtil->redirectOrderByStatus($orderinfo,$routeName);
+        $redirect = $orderUtil->redirectOrderByStatus($message,$routeName);
         if( $redirect ) {
             return $redirect;
         }
@@ -175,10 +175,10 @@ class TableController extends Controller {
             //echo "amend! <br>";
         }
 
-        if( $orderinfo->getStatus() == "Submitted" || $orderinfo->getStatus() == "Amended" || $orderinfo->getStatus() == "Not Submitted" ) {
+        if( $message->getStatus() == "Submitted" || $message->getStatus() == "Amended" || $message->getStatus() == "Not Submitted" ) {
             $fieldstatus = "valid";
         } else
-        if( $orderinfo->getStatus() == "Superseded" ) {
+        if( $message->getStatus() == "Superseded" ) {
             //status for superseded, canceled can be "deleted-by-amended-order" or "canceled-by-amended-order" or "valid". By setting status to null, we saying that we do not know the status, so the first
             $fieldstatus = "deleted-by-amended-order";
         } else {
@@ -190,12 +190,12 @@ class TableController extends Controller {
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
         //set default department and division
-        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($orderinfo,$userSiteSettings);
+        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($message,$userSiteSettings);
         $department = $defaultsDepDiv['department'];
         $division = $defaultsDepDiv['division'];
 
         $params = array(
-            'type'=>$orderinfo->getMessageCategory()->getName(),
+            'type'=>$message->getMessageCategory()->getName(),
             'cycle'=>$type,
             'institutions'=>$permittedInstitutions,
             'services'=>$permittedServices,
@@ -204,14 +204,14 @@ class TableController extends Controller {
             'division'=>$division,
             'department'=>$department
         );
-        $form = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
+        $form = $this->createForm( new MessageType($params,$message), $message, array('disabled' => $disable) );
 
-        //$slides = $orderinfo->getSlide();
+        //$slides = $message->getSlide();
         $query = $em->createQuery('
             SELECT slide
             FROM OlegOrderformBundle:Slide slide
-            INNER JOIN slide.orderinfo orderinfo
-            WHERE orderinfo.oid = :id
+            INNER JOIN slide.message message
+            WHERE message.oid = :id
             ORDER BY slide.sequence ASC'
         )->setParameter('id', $id);
 
@@ -422,24 +422,24 @@ class TableController extends Controller {
             //$history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
             $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
             $dql = $repository->createQueryBuilder("h");
-            $dql->innerJoin("h.orderinfo", "orderinfo");
+            $dql->innerJoin("h.message", "message");
             $dql->leftJoin("h.eventtype", "eventtype");
             $dql->where("h.currentid = :oid AND (eventtype.name = 'Initial Order Submission' OR eventtype.name = 'Status Changed' OR eventtype.name = 'Amended Order Submission')");
             $dql->orderBy('h.changedate','DESC');
-            $dql->setParameter('oid',$orderinfo->getOid());
+            $dql->setParameter('oid',$message->getOid());
             $history = $dql->getQuery()->getResult();
 
         }
 
         return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
             'orderdata' => json_encode($jsonData),
-            'entity' => $orderinfo,
+            'entity' => $message,
             'form' => $form->createView(),
             'type' => $type,
-            'formtype' => $orderinfo->getMessageCategory()->getName(),
+            'formtype' => $message->getMessageCategory()->getName(),
             'history' => $history,
-            'amendable' => $secUtil->isUserAllowOrderActions($orderinfo, $user, array('amend')),
-            'changestatus' => $secUtil->isUserAllowOrderActions($orderinfo, $user, array('changestatus'))
+            'amendable' => $secUtil->isUserAllowOrderActions($message, $user, array('amend')),
+            'changestatus' => $secUtil->isUserAllowOrderActions($message, $user, array('changestatus'))
         ));
 
     }
@@ -475,9 +475,9 @@ class TableController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = new OrderInfo();
+        $entity = new Message();
         $scanOrder = new ScanOrder();
-        $scanOrder->setOrderinfo($entity);
+        $scanOrder->setMessage($entity);
 
         $system = $securityUtil->getDefaultSourceSystem();  //'scanorder';
 
@@ -509,8 +509,8 @@ class TableController extends Controller {
         ////////////////// set previous service from the last order if default is null //////////////////
         if( !$userSiteSettings->getDefaultService() ) {
             //echo "find prev service <br>";
-            $previousOrder = $orderUtil->getPreviousOrderinfo('Scan Order');
-            //$this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
+            $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
+            //$this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
             if( $previousOrder ) {
                 if( $previousOrder->getScanOrder() ) {
                     $entity->getScanorder()->setService($previousOrder->getScanorder()->getService());
@@ -547,7 +547,7 @@ class TableController extends Controller {
             'department'=>$department,
             'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity)
         );
-        $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
+        $form = $this->createForm( new MessageType($params, $entity), $entity );
 
         return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
             'form' => $form->createView(),
@@ -559,7 +559,7 @@ class TableController extends Controller {
     }
 
     /**
-     * Creates a new Table OrderInfo.
+     * Creates a new Table Message.
 
      * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
      * @Method("POST")
@@ -579,7 +579,7 @@ class TableController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $entity = new OrderInfo();
+        $entity = new Message();
 
         $type = "Table-View Scan Order";
 
@@ -589,7 +589,7 @@ class TableController extends Controller {
 
         $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user, 'em' => $em);
 
-        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
+        $form = $this->createForm(new MessageType($params,$entity), $entity);
 
         //$form->bind($request);
         $form->handleRequest($request);
@@ -682,7 +682,7 @@ class TableController extends Controller {
         $orderUtil = $this->get('scanorder_utility');
         $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router'), $this->container );
+        $entity = $em->getRepository('OlegOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/json');

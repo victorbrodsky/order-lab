@@ -61,9 +61,9 @@ class Patient extends ObjectAbstract
     private $clinicalHistory;
         
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="patient", cascade={"persist"})
      **/
-    protected $orderinfo;
+    protected $message;
 
     /**
      * Patient might have many encounters (children)
@@ -798,8 +798,8 @@ class Patient extends ObjectAbstract
             $mrns = $mrns . $mrn->getField().",".$mrn->getKeytype()."(".$mrn->getStatus().",id=".$mrn->getId().")";
         }
 
-        $orders = ", orderinfosCount=".count($this->getOrderinfo()).": ";
-        foreach( $this->getOrderinfo() as $order ) {
+        $orders = ", messagesCount=".count($this->getMessage()).": ";
+        foreach( $this->getMessage() as $order ) {
             $orders = $orders . "id=".$order->getId().", oid=".$order->getOid();
         }
 
@@ -851,7 +851,7 @@ class Patient extends ObjectAbstract
         ", status=".$this->status.
         ", encounterCount=".count($this->encounter).
         //", firstencounterID=".$this->encounter->first()->getId().
-        ", orderinfo=".$orders.
+        ", message=".$orders.
         $mrns."<br>";
     }
 
@@ -1032,7 +1032,7 @@ class Patient extends ObjectAbstract
     public function rearangeNameArrByOrder( $orderArr, $sourceArr, $destArr, $htmlTags = null ) {
         $resArr = array();
         foreach( $sourceArr as $name ) {
-            $orderId = $name->getOrderinfo()->getId();
+            $orderId = $name->getMessage()->getId();
             //echo "orderId=".$orderId."<br>";
             if( !in_array($orderId,$orderArr) ) {
                 //echo "!!!!!!!!!add orderId=".$orderId."<br>";

@@ -269,7 +269,7 @@ function accessionTypeListener() {
             if( accTypeText == 'Auto-generated Accession Number' ) {
                 //console.log("click on order info");
                 //checkFormSingle($('#optional_button'));
-                if( !$('#orderinfo_param').is(':visible') ) {
+                if( !$('#message_param').is(':visible') ) {
                     $('#next_button').trigger("click");
                 }
                 $('#optional_button').trigger("click");
@@ -595,7 +595,7 @@ function getRepeatMask( repeat, char, allsame ) {
 function getKeyGroupParent(elem) {
     //printF(elem, "@@@@@@@@@@@@@ Get parent for element:");
     if( orderformtype == "single" && elem.attr('class').indexOf("mrn") == -1) {
-        var parent = $('.singleorderinfo');
+        var parent = $('.singlemessage');
 
     } else {
         var parent = elem.closest('.row');

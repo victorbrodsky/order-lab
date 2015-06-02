@@ -15,7 +15,7 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
 
     /**
      * @var integer
-     *OrderInfo
+     *Message
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,9 +23,9 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="laborder")
+     * @ORM\OneToOne(targetEntity="Message", mappedBy="laborder")
      **/
-    private $orderinfo;
+    private $message;
 
 //    /**
 //     * Lab Order might have many Requisition Form
@@ -62,20 +62,20 @@ class LabOrder { //extends AccessionArrayFieldAbstract {
     }
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
-        $orderinfo->setLaborder($this);
+        $this->message = $message;
+        $message->setLaborder($this);
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
 

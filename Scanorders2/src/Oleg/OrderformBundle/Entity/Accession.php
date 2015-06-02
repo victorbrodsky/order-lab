@@ -41,9 +41,9 @@ class Accession extends ObjectAbstract {
     protected $part;
     
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="accession")
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="accession")
      **/
-    protected $orderinfo;
+    protected $message;
 
 //    /**
 //     * @ORM\ManyToMany(targetEntity="ResultInfo", mappedBy="accession")

@@ -75,19 +75,19 @@ abstract class ObjectAbstract
         $this->status = $status;
         $this->source = $source;
         $this->provider = $provider;
-        $this->orderinfo = new ArrayCollection();
+        $this->message = new ArrayCollection();
     }
 
 
     public function __clone() {
         if( $this->getId() ) {
             $this->setId(null);
-            $this->orderinfo = new ArrayCollection();
+            $this->message = new ArrayCollection();
             $this->makeDependClone();
         }
     }
     
-    public function cloneChildren($orderinfo) {
+    public function cloneChildren($message) {
         // Get current collection
         $children = $this->getChildren();
 
@@ -97,16 +97,16 @@ abstract class ObjectAbstract
         
         foreach( $children as $child ) {
             //echo "1 clone Children: ".$child;
-            $orderinfo->removeDepend($child);
+            $message->removeDepend($child);
             $cloneChild = clone $child;
-            //$cloneChild->removeOrderinfo($orderinfo);
-            $cloneChild->cloneChildren($orderinfo);
+            //$cloneChild->removeMessage($message);
+            $cloneChild->cloneChildren($message);
             $cloneChildren->add($cloneChild);
             $cloneChild->setParent($this);
-            //$orderinfo->removeDepend($cloneChild);
+            //$message->removeDepend($cloneChild);
 
-            //$cloneChild->addOrderinfo($orderinfo);
-            $orderinfo->addDepend($cloneChild);
+            //$cloneChild->addMessage($message);
+            $message->addDepend($cloneChild);
             //echo "2 cloned Children: ".$cloneChild;
         }
 
@@ -178,41 +178,41 @@ abstract class ObjectAbstract
     }
 
     /**
-     * Add orderinfo
+     * Add message
      *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @param \Oleg\OrderformBundle\Entity\Message $message
      */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo=null)
+    public function addMessage(\Oleg\OrderformBundle\Entity\Message $message=null)
     {
-        //echo "ObjectAbstract add orderinfo=".$orderinfo."<br>";
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
+        //echo "ObjectAbstract add message=".$message."<br>";
+        if( !$this->message->contains($message) ) {
+            $this->message->add($message);
         }
     }
 
     /**
-     * Remove orderinfo
+     * Remove message
      *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @param \Oleg\OrderformBundle\Entity\Message $message
      */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    public function removeMessage(\Oleg\OrderformBundle\Entity\Message $message)
     {
-        $this->orderinfo->removeElement($orderinfo);
+        $this->message->removeElement($message);
     }
 
     /**
-     * Get orderinfo
+     * Get message
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
-    public function clearOrderinfo()
+    public function clearMessage()
     {
-        return $this->orderinfo->clear();
+        return $this->message->clear();
     }
 
     public function setProvider($provider)
@@ -493,8 +493,8 @@ abstract class ObjectAbstract
             if( $status == null ) {
 
                 if( $orderid != null ) {
-                    //echo "field order id=".$entity->getOrderinfo()->getOid()." =? ".$orderid."<br>";
-                    if( $entity->getOrderinfo()->getOid() == $orderid ) {
+                    //echo "field order id=".$entity->getMessage()->getOid()." =? ".$orderid."<br>";
+                    if( $entity->getMessage()->getOid() == $orderid ) {
                         $res[] = $entity;
                     }
                 } else {
@@ -508,7 +508,7 @@ abstract class ObjectAbstract
 
                     //if orderid is given, then return the first $status field with provided orderid
                     if( $orderid != null ) {
-                        if( $entity->getOrderinfo()->getOid() == $orderid ) {
+                        if( $entity->getMessage()->getOid() == $orderid ) {
                             $res[] = $entity;
                         }
                     } else {
@@ -635,13 +635,13 @@ abstract class ObjectAbstract
 //        return false;
 //    }
 
-//    //TODO: compare two orderinfo: dirty and from db?
-//    //get children which belongs to provided orderinfo
-//    public function countChildrenWithOrderinfo( $orderinfo ) {
+//    //TODO: compare two message: dirty and from db?
+//    //get children which belongs to provided message
+//    public function countChildrenWithMessage( $message ) {
 //        $children = $this->getChildren();
 //        $count = 0;
 //        foreach( $children as $child ) {
-//            if( $child->getOrderinfo() == $orderinfo ) {
+//            if( $child->getMessage() == $message ) {
 //                $count ++;
 //            }
 //        }

@@ -21,17 +21,17 @@ use Oleg\OrderformBundle\Entity\PatientSuffix;
 class EncounterRepository extends ArrayFieldAbstractRepository
 {
 
-//    public function setEncounterKey($key, $entity, $orderinfo) {
+//    public function setEncounterKey($key, $entity, $message) {
 //        $em = $this->_em;
 //        $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
 //        $key->setKeytype($newkeytypeEntity);
 //
-//        $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."IDPROVIDED", $className, $fieldName);
+//        $nextKey = $this->getNextNonProvided($entity,null,$message);  //"NO".strtoupper($fieldName)."IDPROVIDED", $className, $fieldName);
 //
 //        //we should have only one key field !!!
 //        $key->setField($nextKey);
 //        $key->setStatus(self::STATUS_VALID);
-//        $key->setProvider($orderinfo->getProvider());
+//        $key->setProvider($message->getProvider());
 //    }
 
 
@@ -134,7 +134,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
     }
 
     //age conflict is based on 3 values: dob, encounter date and encounter age
-    public function checkAgeConflict( $encounter, $orderinfo, $original ) {
+    public function checkAgeConflict( $encounter, $message, $original ) {
 
         $dataqualityObj = null;
 
@@ -202,11 +202,11 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         if(  $msg != "" ) {
 
             $dataqualityObj = new DataQualityAge();
-            $dataqualityObj->setOrderinfo($orderinfo);
+            $dataqualityObj->setMessage($message);
             $dataqualityObj->setPatientdob($patientdob);
             $dataqualityObj->setEncounterdate($encounterdate);
             $dataqualityObj->setEncounterage($encounterage);
-            $dataqualityObj->setProvider($orderinfo->getProvider());
+            $dataqualityObj->setProvider($message->getProvider());
             $dataqualityObj->setDescription($msg);
             $dataqualityObj->setStatus('active');
 
@@ -279,7 +279,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
     //replace child if duplicated
     //$parent: patient
     //Encounter has only one procedure
-    public function replaceDuplicateEntities( $parent, $orderinfo ) {
+    public function replaceDuplicateEntities( $parent, $message ) {
         //echo "Encounter replace duplicates:".$parent;
         return $parent;
     }
@@ -349,7 +349,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
     //process conflict if exists for procedure number. Replace conflicting procedure number by a new generated number.
     //This function redirects to the same overrided function by Procedure Repository
-    public function processDuplicationKeyField( $encounter, $orderinfo ) {
+    public function processDuplicationKeyField( $encounter, $message ) {
 
         $procedures = $encounter->getChildren();
 
@@ -362,7 +362,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $encounter->removeChildren($procedure);
 
         //process conflict if exists for procedure number. Replace conflicting procedure number by a new generated number.
-        $procedure = $this->_em->getRepository('OlegOrderformBundle:Procedure')->processDuplicationKeyField($procedure,$orderinfo);
+        $procedure = $this->_em->getRepository('OlegOrderformBundle:Procedure')->processDuplicationKeyField($procedure,$message);
 
         $encounter->addChildren($procedure);
 

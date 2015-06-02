@@ -40,9 +40,9 @@ class Block extends ObjectAbstract
     protected $slide;
     
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="block")
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="block")
      **/
-    protected $orderinfo;
+    protected $message;
 
     /**
      * @param \Doctrine\Common\Collections\Collection $property

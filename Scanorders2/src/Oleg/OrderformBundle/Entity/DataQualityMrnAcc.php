@@ -13,11 +13,11 @@ class DataQualityMrnAcc extends DataQuality
 {
 
     /**
-     * conflicting accession number is replaced, so keep the reference to dataqualityaccmrn object in the orderinfo (unlike to dataqualityage)
-     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="dataqualitymrnacc")
-     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * conflicting accession number is replaced, so keep the reference to dataqualityaccmrn object in the message (unlike to dataqualityage)
+     * @ORM\ManyToOne(targetEntity="Message", inversedBy="dataqualitymrnacc")
+     * @ORM\JoinColumn(name="message", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $orderinfo;
+    protected $message;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -53,19 +53,19 @@ class DataQualityMrnAcc extends DataQuality
     protected $mrntype;
 
     /**
-     * @param mixed $orderinfo
+     * @param mixed $message
      */
-    public function setOrderinfo($orderinfo)
+    public function setMessage($message)
     {
-        $this->orderinfo = $orderinfo;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      */
-    public function getOrderinfo()
+    public function getMessage()
     {
-        return $this->orderinfo;
+        return $this->message;
     }
 
 

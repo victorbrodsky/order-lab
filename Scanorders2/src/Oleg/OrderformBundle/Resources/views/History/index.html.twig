@@ -18,7 +18,7 @@
 
     <input type="hidden" id="reload_page_after_modal" value="1" />
 
-    <a class="btn btn-default btn_margin" href="{{ path('history_orderinfo_show', { 'id': orderid }) }}" style="">Reload this page to see most current comments and updates</a>
+    <a class="btn btn-default btn_margin" href="{{ path('history_message_show', { 'id': orderid }) }}" style="">Reload this page to see most current comments and updates</a>
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
@@ -101,7 +101,7 @@
 
 
     {% if orderid is defined %}
-        {#<a href="{{ path('history_orderinfo_new',{ 'id': orderid }) }}">#}
+        {#<a href="{{ path('history_message_new',{ 'id': orderid }) }}">#}
             {#Add Comment#}
         {#</a>#}
 

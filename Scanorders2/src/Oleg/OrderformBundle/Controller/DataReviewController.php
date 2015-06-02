@@ -22,13 +22,13 @@ class DataReviewController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
 
         $queryE = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:Educational', 'e')
             ->select("e")
-            ->leftJoin("e.orderinfo", "orderinfo")
-            ->where("orderinfo.id=:id")
+            ->leftJoin("e.message", "message")
+            ->where("message.id=:id")
             ->setParameter("id",$id);
 
         $educational = $queryE->getQuery()->getResult();
@@ -37,8 +37,8 @@ class DataReviewController extends Controller {
         $queryR = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:Research', 'e')
             ->select("e")
-            ->leftJoin("e.orderinfo", "orderinfo")
-            ->where("orderinfo.id=:id")
+            ->leftJoin("e.message", "message")
+            ->where("message.id=:id")
             ->setParameter("id",$id);
 
         $research = $queryR->getQuery()->getResult();
@@ -46,7 +46,7 @@ class DataReviewController extends Controller {
         return array(
             'educationals' => $educational,
             'researches' => $research,
-            'entity' => $orderinfo
+            'entity' => $message
         );
 
     }
