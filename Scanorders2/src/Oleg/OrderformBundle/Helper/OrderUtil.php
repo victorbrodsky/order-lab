@@ -797,7 +797,9 @@ class OrderUtil {
         if( $message ) {
             if( count($lastOrderWithProxies) > 0 ) {
                 foreach( $lastOrderWithProxies as $order ) {
+                    //echo "order=".$order->getId()."<br>";
                     foreach( $order->getProxyuser() as $proxyuser ) {
+                        //echo "proxyuser=".$proxyuser."<br>";
                         $message->addProxyuser($proxyuser);
                         $proxyusers->add($proxyuser);
                     }
@@ -811,6 +813,10 @@ class OrderUtil {
 
             }
         }
+
+//        foreach( $proxyusers as $proxyuser ) {
+//            echo "[".$proxyuser."] is added as proxyuser <br>";
+//        }
 
         $res = array(
             'proxyusers' => $proxyusers,

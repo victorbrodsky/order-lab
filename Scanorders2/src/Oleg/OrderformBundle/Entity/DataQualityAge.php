@@ -14,7 +14,7 @@ class DataQualityAge extends DataQuality
 
     /**
      * @ORM\ManyToOne(targetEntity="OrderInfo")
-     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $orderinfo;
 

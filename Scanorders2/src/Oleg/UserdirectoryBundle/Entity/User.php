@@ -362,7 +362,7 @@ class User extends BaseUser {
 
         $loc = $this->getLocations()->get(0);
 
-        if( $loc->hasLocationTypeName("Employee Office") ) {
+        if( $loc && $loc->hasLocationTypeName("Employee Office") ) {
             return $loc;
         }
 

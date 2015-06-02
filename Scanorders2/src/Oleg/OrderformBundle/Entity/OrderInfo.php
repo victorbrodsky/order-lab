@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Message, Holder of different orders (i.e. scanorder, laborder)
  *
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrderInfoRepository")
- * @ORM\Table(name="scan_orderinfo",
+ * @ORM\Table(name="scan_message",
  *  indexes={
  *      @ORM\Index( name="oid_idx", columns={"oid"} )
  *  }
@@ -52,31 +52,31 @@ class OrderInfo {
 
     /**
      * @ORM\ManyToMany(targetEntity="Accession", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_accession_orderinfo")
+     * @ORM\JoinTable(name="scan_message_accession")
      **/
     private $accession;
 
     /**
      * @ORM\ManyToMany(targetEntity="Part", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_part_orderinfo")
+     * @ORM\JoinTable(name="scan_message_part")
      **/
     private $part;
 
     /**
      * @ORM\ManyToMany(targetEntity="Block", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_block_orderinfo")
+     * @ORM\JoinTable(name="scan_message_block")
      **/
     private $block;
 
     /**
      * @ORM\ManyToMany(targetEntity="Slide", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_slide_orderinfo")
+     * @ORM\JoinTable(name="scan_message_slide")
      **/
     private $slide;
 
     /**
      * @ORM\ManyToMany(targetEntity="Imaging", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_imaging_orderinfo")
+     * @ORM\JoinTable(name="scan_message_imaging")
      **/
     private $imaging;
     /////////////////   EOF  HIERARCHY OBJECTS    //////////////////////
@@ -219,8 +219,8 @@ class OrderInfo {
 //     * History of the order
 //     *
 //     * @ORM\ManyToMany(targetEntity="History")
-//     * @ORM\JoinTable(name="scan_orderinfo_history",
-//     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
+//     * @ORM\JoinTable(name="scan_message_history",
+//     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
 //     *      inverseJoinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id", unique=true)}
 //     *      )
 //     **/
@@ -245,8 +245,8 @@ class OrderInfo {
      * One-To-Many unidirectional with Join table
      *
      * @ORM\ManyToMany(targetEntity="Tracking")
-     * @ORM\JoinTable(name="scan_orderinfo_tracking",
-     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="scan_message_tracking",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="tracking_id", referencedColumnName="id", unique=true)}
      *      )
      **/
@@ -260,8 +260,8 @@ class OrderInfo {
      * One-To-Many Unidirectional
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_orderinfo_input",
-     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="scan_message_input",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="input_id", referencedColumnName="id", unique=true)}
      *      )
      */
@@ -271,8 +271,8 @@ class OrderInfo {
      * One-To-Many Unidirectional
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\GeneralEntity", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_orderinfo_output",
-     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="scan_message_output",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="output_id", referencedColumnName="id", unique=true)}
      *      )
      */
@@ -286,8 +286,8 @@ class OrderInfo {
 
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", inversedBy="backAssociations", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_associations",
-     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="scan_message_associations",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="association_id", referencedColumnName="id")}
      *      )
      **/
@@ -300,8 +300,8 @@ class OrderInfo {
      * One-To-Many unidirectional with Join table
      *
      * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_source_orderinfo",
-     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="scan_message_source",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="source_id", referencedColumnName="id", unique=true)}
      *      )
      **/
@@ -312,8 +312,8 @@ class OrderInfo {
      * One-To-Many unidirectional with Join table
      *
      * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_destination_orderinfo",
-     *      joinColumns={@ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="scan_message_destination",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="destination_id", referencedColumnName="id", unique=true)}
      *      )
      **/

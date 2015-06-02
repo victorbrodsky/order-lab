@@ -61,7 +61,7 @@ class UserWrapperTransformer implements DataTransformerInterface
     {
         //echo $entities->first()."<br>";
         //echo "transform: entities=".$entities."<br>";
-        //echo $this->className.": transform: count=".count($entities)."<br>";
+        echo $this->className.": transform: count=".count($entities)."<br>";
         //var_dump($entities);
 
         $array = new \Doctrine\Common\Collections\ArrayCollection();
@@ -79,7 +79,7 @@ class UserWrapperTransformer implements DataTransformerInterface
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {
-                    //echo "add userwrapper to show ".$entity->getEntity()."<br>";
+                    echo "add userwrapper to show ".$entity->getEntity()."<br>";
                     //$idArr[] = $entity->getUserStr();
                     $idArr[] = $entity->getEntity();
                     //$idArr[] = $entity->getId();
