@@ -77,7 +77,7 @@ function setResearchEducational() {
 
 function customCombobox() {
 
-    console.log("cycle="+cycle);
+    //console.log("cycle="+cycle);
 
     if( cycle && urlBase && cycle != 'edit_user' && cycle != 'accountreq' ) {
         getComboboxMrnType(new Array("0","0","0","0","0","0"));

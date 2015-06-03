@@ -772,6 +772,8 @@ function setEducational() {
 //collapse content of patient hierarchy
 function contentToggleHierarchyButton(holder) {
 
+    console.log('content ToggleHierarchy Button');
+
     var targetId = '.form-element-holder.collapse';
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         var targetElement = holder.find(targetId);
