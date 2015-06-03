@@ -976,6 +976,11 @@ class Message {
     public function getOid()
     {
         return $this->oid;
+//        if( $this->oid ) {
+//            return $this->oid;
+//        } else {
+//            return $this->id;
+//        }
     }
 
 

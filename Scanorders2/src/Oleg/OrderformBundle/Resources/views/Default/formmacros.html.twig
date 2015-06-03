@@ -245,6 +245,7 @@
             {% set userForm = container.proxyuser %}
             {% if showFlag and container.vars.value %}
                 {% set label = userLabel %}
+                {% set hreflinks = [] %}
                 {% for singleProxyUserValue in userValues %}
                     {% if singleProxyUserValue.user %}
                         {% set singleUserValue = singleProxyUserValue.user %}
@@ -252,38 +253,68 @@
                     {% else %}
                         {% set hreflink = singleProxyUserValue %}
                     {% endif %}
-                    {{ formmacros.simplefield( label, hreflink, "", attr ) }}
+                    {% set hreflinks = hreflinks|merge([hreflink]) %}
                 {% endfor %}
+                {{ formmacros.simplefield( label, hreflinks|join('<br>'), "", attr ) }}
             {% else %}
                 {{ formmacros.field(userForm) }}
             {% endif %}
         {% endif %}
     {% endif %}
 
-    {% if fieldname == "proxyuser_selectbox" %}
+    {% if fieldname == "proxyuser-as-well" %}
+        {% set userValues = container.vars.value.proxyuser %}
+        {% set userLabel = container.proxyuser.vars.label %}
+        {% if container.proxyuser is defined %}
+            {% set userForm = container.proxyuser %}
+            {% if showFlag and container.vars.value %}
+                {% set label = userLabel %}
+                <div class="well well-sm" align='center'>
+                    <h5>{{ label }}</h5>
+                {% for singleProxyUserValue in userValues %}
+                    {% if singleProxyUserValue.user %}
+                        {% set singleUserValue = singleProxyUserValue.user %}
+                        {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~singleProxyUserValue~'</a>' %}
+                    {% else %}
+                        {% set hreflink = singleProxyUserValue %}
+                    {% endif %}
+                    {#{{ formmacros.simplefield( label, hreflink, "", attr ) }}#}
+                    <p>{{ hreflink|raw }}</p>
+                {% endfor %}
+                </div>
+            {% else %}
+                {{ formmacros.field(userForm) }}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% if fieldname == "proxyuser-as-selectbox" %}
         container.proxyuser|length:{{ container.proxyuser|length }}
         {{ formmacros.field(container.proxyuser) }}
     {% endif %}
 
 {% endmacro %}
 
-
-{% macro message(form) %}
-
+{% macro hiddenInputFieldsForJS(messageForm) %}
     {% set proxyuserName = null %}
     {% set proxyuserId = null %}
-    {% if form.vars.value.proxyuser %}
-        {% set proxyuserName = form.vars.value.getProxyuserAsUser().getUserNameStr() %}
-        {% set proxyuserId = form.vars.value.getProxyuserAsUser().getId() %}
+    {% if messageForm.vars.value.proxyuser %}
+        {% set proxyuserName = messageForm.vars.value.getProxyuserAsUser().getUserNameStr() %}
+        {% set proxyuserId = messageForm.vars.value.getProxyuserAsUser().getId() %}
     {% endif %}
 
-    <input type="hidden" id="user_name" value="{{ form.vars.value.provider.getUserNameStr() }}" />
-    <input type="hidden" id="user_id" value="{{ form.vars.value.provider.id }}" />
+    <input type="hidden" id="user_name" value="{{ messageForm.vars.value.provider.getUserNameStr() }}" />
+    <input type="hidden" id="user_id" value="{{ messageForm.vars.value.provider.id }}" />
 
     <input type="hidden" id="proxyuser_name" value="{{ proxyuserName }}" />
     <input type="hidden" id="proxyuser_id" value="{{ proxyuserId }}" />
+{% endmacro %}
+
+{% macro message(form) %}
 
     {% import _self as formmacros %}
+
+    {{ formmacros.hiddenInputFieldsForJS(form) }}
 
     {#{{ formmacros.field(form.provider) }}#}
     {{ formmacros.simplefield( "Submitter:", form.vars.value.provider.getUserNameStr(), "", "disabled" ) }}

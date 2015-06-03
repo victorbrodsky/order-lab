@@ -177,14 +177,15 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         }
 
         //insert oid to entity
-        if( !$entity->getOid() ) {
-            //echo "insert oid <br>";
-            $entity->setOid($entity->getId());
-
-            //if clear is used above => doctrine error: A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\Message#patient' that was not configured to cascade persist operations
-            //it is happened because all objects are not persisted anymore.
-            $em->flush();
-        }
+//        if( !$entity->getOid() ) {
+//            //echo "insert oid <br>";
+//            $entity->setOid($entity->getId());
+//
+//            //if clear is used above => doctrine error: A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\Message#patient' that was not configured to cascade persist operations
+//            //it is happened because all objects are not persisted anymore.
+//            $em->flush();
+//        }
+//        echo "after inserting oid entity=".$entity."<br>";
         ////////////////////// finished save new message ///////////////////////////
 
 
@@ -212,6 +213,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         }
 
         //*********** record history ***********//
+        //echo "before find entity=".$entity."<br>";
         $entity = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($entity->getOid());
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($this->user->getId());
         $history = new History();

@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserWrapperRepository")
  * @ORM\Table(name="user_userWrapper")
  */
 class UserWrapper {

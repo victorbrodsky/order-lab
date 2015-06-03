@@ -149,3 +149,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
 #            - { name: kernel.event_listener, event: oneup_uploader.pre_upload, method: preUpload }
+
+    #Doctrine listenere for postPersist
+    doctrine.listener:
+        class: Oleg\UserdirectoryBundle\Services\DoctrineListener
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, connection: default }

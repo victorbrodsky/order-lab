@@ -86,7 +86,7 @@ class MessageCategory extends ListAbstract implements ComponentCategoryInterface
     {
         if( !$this->children->contains($item) ) {
             $this->children->add($item);
-            //$item->setParent($this);
+            $item->setParent($this);
         }
     }
     public function removeChild($item)

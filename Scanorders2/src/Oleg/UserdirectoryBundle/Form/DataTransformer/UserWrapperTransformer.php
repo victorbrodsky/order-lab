@@ -30,7 +30,7 @@ class UserWrapperTransformer implements DataTransformerInterface
     /**
      * @param ObjectManager $om
      */
-    public function __construct( ObjectManager $em=null, $serviceContainer=null, $user=null, $className=null, $bundleName=null )
+    public function __construct( ObjectManager $em, $serviceContainer, $user=null, $className=null, $bundleName=null )
     {
         $this->em = $em;
         $this->serviceContainer = $serviceContainer;
@@ -90,12 +90,12 @@ class UserWrapperTransformer implements DataTransformerInterface
             //echo "idArr:<br>";
             //var_dump($idArr);
             //echo "return:".implode(",", $idArr)."<br>";
-            
+
             return implode(",", $idArr);
         }
 
         //echo "return ".$entities->first()->getId()."<br>";
-        return $entities->first()->getId();
+        return $entities->first()->getEntity();
     }
 
     /**
@@ -112,9 +112,9 @@ class UserWrapperTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        var_dump($text);
-        echo "<br>transformer: count=".count($text)."<br>";
-        echo "data transformer text=".$text."<br>";
+        //var_dump($text);
+        //echo "<br>transformer: count=".count($text)."<br>";
+        //echo "data transformer text=".$text."<br>";
 
         $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
 
@@ -146,7 +146,7 @@ class UserWrapperTransformer implements DataTransformerInterface
 
         }
 
-        echo "newListArr count=".count($newListArr)."<br>";
+        //echo "newListArr count=".count($newListArr)."<br>";
         //exit('1');
 
         return $newListArr; //UserWrapper
@@ -156,55 +156,59 @@ class UserWrapperTransformer implements DataTransformerInterface
     //return array of UserWrapper
     public function addSingleObject( $newListArr, $username ) {
 
-        echo "username=".$username."<br>";
+        //echo "username=".$username."<br>";
 
         if( is_numeric ( $username ) ) {    //number => most probably it is id
 
-            echo "principal=".$username." => numeric => most probably it is id<br>";
+            //echo "principal=".$username." => numeric => most probably it is a UserWrapper id<br>";
 
             //$entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($username);
             //$entity = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findOneById($username);
 
-            $query = $this->em->createQueryBuilder()
-                ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
-                ->select("list")
-                //->select("list.id as id, infos.displayName as text")
-                ->leftJoin("list.user", "user")
-                ->where("user.id=:userid")
-                ->setParameters( array(
-                    'userid' => $username
-                ));
+//            $query = $this->em->createQueryBuilder()
+//                ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+//                ->select("list")
+//                //->select("list.id as id, infos.displayName as text")
+//                //->leftJoin("list.user", "user")
+//                ->where("list=:userWrapperId")
+//                ->setParameters( array(
+//                    'userWrapperId' => $username
+//                ));
+//            $userWrappers = $query->getQuery()->getResult();
 
-            $userWrappers = $query->getQuery()->getResult();
+            $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->find($username);
+            //echo "userWrapper=".$userWrapper."<br>";
 
-            if( $userWrappers && count($userWrappers) > 0 ) {
+            //if( $userWrappers && count($userWrappers) > 0 ) {
+            if( $userWrapper ) {
 
-                return $newListArr;
+                $newListArr->add($userWrapper);
+                //return $newListArr;
 
             } else {
 
                 $newList = $this->createNewUserWrapperByUserId($username); //create a new UserWrapper record in db
 
                 $newListArr->add($newList);
-
-                return $newListArr;
+                //return $newListArr;
             }
 
         } else {    //text => most probably it is new name or multiple ids
 
-            echo "principal=".$username." => text => most probably it is new name or multiple ids<br>";
+            //echo "principal=".$username." => text => most probably it is new name or multiple ids<br>";
 
             $newList = $this->createNewUserWrapperByUserStr($username); //create a new record in db
 
             if( $newList ) {
-                echo "newList=".$newList."<br>";
+                //echo "newList=".$newList."<br>";
                 $newListArr->add($newList);
             }
 
-            return $newListArr;
+            //return $newListArr;
 
         }
 
+        return $newListArr;
     }
 
     public function createNewUserWrapperByUserId( $userid ) {
@@ -213,6 +217,13 @@ class UserWrapperTransformer implements DataTransformerInterface
 
         //find user by id
         $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+
+        $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,null);
+        //echo "found userWrapper by wrapper id=".$userWrapper."<br>";
+
+        if( $userWrapper ) {
+            return $userWrapper;
+        }
 
         if( $user ) {
             $userWrapper = new UserWrapper();
@@ -230,6 +241,16 @@ class UserWrapperTransformer implements DataTransformerInterface
 
         //find user by user string
         $user = $userSecUtil->getUserByUserstr( $userStr );
+        //echo "found user=".$user."<br>";
+
+        $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,$userStr);
+        //echo "found userWrapper=".$userWrapper."<br>";
+
+        //exit('1');
+
+        if( $userWrapper ) {
+            return $userWrapper;
+        }
 
         if( $user ) {
 

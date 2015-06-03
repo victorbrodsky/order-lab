@@ -393,10 +393,12 @@ class UserSecurityUtil {
 
     //$name is entered by a user username. $name can be a guessed username
     //Use primaryPublicUserId as cwid
-    //TODO: make it more flexible to find a user
     public function getUserByUserstr( $name ) {
 
         //echo "get cwid name=".$name."<br>";
+
+        $user = null;
+        $cwid = null;
 
         //get cwid
         $strArr = explode(" ",$name);
@@ -405,11 +407,35 @@ class UserSecurityUtil {
             $cwid = $strArr[0];
         }
 
+        //1) try first part
         if( $cwid ) {
             //echo "cwid=".$cwid."<br>";
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
-        } else {
-            $user = NULL;
+        }
+
+        //2) try full name
+        if( !$user ) {
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($name);
+        }
+
+        //3) try full name
+        if( !$user ) {
+
+            $query = $this->em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:User', 'user')
+                ->select("user")
+                ->leftJoin("user.infos", "infos")
+                ->where("infos.email=:name OR infos.displayName=:name")
+                ->setParameters( array(
+                    'name' => $name
+                ));
+
+            $users = $query->getQuery()->getResult();
+
+            if( count($users) > 0 ) {
+                $user = $users->first();
+            }
+
         }
 
         return $user;

@@ -7,6 +7,7 @@ namespace Oleg\OrderformBundle\Controller;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
 use Oleg\UserdirectoryBundle\Entity\Link;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -177,7 +178,6 @@ class PatientController extends Controller
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
-        $params['proxyuser'] = 'Signing Pathologist(s):';
         $params['message.idnumber'] = false;
         $params['message.sources'] = false;
         $params['message.destinations'] = false;
@@ -245,7 +245,7 @@ class PatientController extends Controller
         $params['endpoint.system'] = true;
         $params['message.orderdate'] = true;
         $params['message.provider'] = true;
-        $params['message.proxyuser'] = 'Signing Pathologist(s):';
+        $params['message.proxyuser'] = true;
         $params['message.idnumber'] = false;
         $params['message.sources'] = false;
         $params['message.destinations'] = false;
@@ -1267,16 +1267,17 @@ class PatientController extends Controller
             $report->setMessage($message);
             $message->setReport($report);
 
-            $signingPathologist = new UserWrapper();
-            $signingPathologist->setUser($user);
-            $message->addProxyuser($signingPathologist);
+            //add 2 proxyusers
+            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
 
-            $consultedPathologist = new UserWrapper();
+            //add first proxyuser
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
+            $message->addProxyuser($UserWrappers[0]);
+
+            //add second proxyuser
             $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
-            $consultedPathologist->setUser($userSystem);
-            $message->addProxyuser($consultedPathologist);
-
-            //$em->persist($message);
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
+            $message->addProxyuser($UserWrappers[0]);
         }
 
         if( $messageCategoryStr == "Image Analysis Order" ) {
@@ -1307,16 +1308,17 @@ class PatientController extends Controller
             $report->setMessage($message);
             $message->setReport($report);
 
-            $signingPathologist = new UserWrapper();
-            $signingPathologist->setUser($user);
-            $message->addProxyuser($signingPathologist);
+            //add 2 proxyusers
+            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
 
-            $consultedPathologist = new UserWrapper();
+            //add first proxyuser
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
+            $message->addProxyuser($UserWrappers[0]);
+
+            //add second proxyuser
             $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
-            $consultedPathologist->setUser($userSystem);
-            $message->addProxyuser($consultedPathologist);
-
-            //$em->persist($message);
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
+            $message->addProxyuser($UserWrappers[0]);
         }
 
         if( $messageCategoryStr == "Block Order" ) {

@@ -79,6 +79,7 @@
             regularCombobox();
 			setResearchEducational();
             windowCloseAlert();
+            getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
 
         });
 
@@ -125,10 +126,7 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
-    <input type="hidden" id="user_name" value="{{ form.message.vars.value.provider.getUserNameStr() }}" />
-    <input type="hidden" id="user_id" value="{{ form.message.vars.value.provider.id }}" />
-    <input type="hidden" id="proxyuser_name" value="{{ form.message.vars.value.proxyuser.getUserNameStr() }}" />
-    <input type="hidden" id="proxyuser_id" value="{{ form.message.vars.value.proxyuser.id }}" />
+    {{ formmacros.hiddenInputFieldsForJS(form.message) }}
 
     <h3 class="text-info">Please enter the information about the slides you would like to be returned</h3>
 

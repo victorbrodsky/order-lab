@@ -93,7 +93,6 @@ class MessageObjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-
         if( array_key_exists('message.idnumber', $this->params) &&  $this->params['message.idnumber'] == true ) {
             $builder->add('idnumber', null, array(
                 'label' => "Identification Number:",

@@ -48,3 +48,4 @@ services:
     search_utility:
         class: Oleg\OrderformBundle\Helper\SearchUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container", "@security.context"]
+

@@ -1492,6 +1492,14 @@ class ScanOrderController extends Controller {
         }
         //***************** END of Search filetr ***************************//
 
+        //filter by message category
+        if( $criteriastr != "" ) {
+            $criteriastr .= " AND ";
+            $criteriastr .= " ( ";
+            $criteriastr .= "messageCategory.name LIKE '%Scan Order%'";
+            $criteriastr .= " ) ";
+        }
+
         /////////// institution ///////////
         $orderUtil = $this->get('scanorder_utility');
         $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);

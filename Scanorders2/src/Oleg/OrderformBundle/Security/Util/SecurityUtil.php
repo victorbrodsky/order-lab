@@ -244,6 +244,7 @@ class SecurityUtil extends UserSecurityUtil {
     }
 
     public function getDefaultDepartmentDivision($message,$userSiteSettings) {
+
         if( $service = $message->getScanorder()->getService() ) {
             $division = $service->getParent();
             $department = $division->getParent();
