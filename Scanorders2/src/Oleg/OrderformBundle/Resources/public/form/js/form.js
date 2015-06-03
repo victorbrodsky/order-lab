@@ -844,8 +844,8 @@ function contentToggleHierarchyButton(holder) {
 }
 
 function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
-    //console.log("hideORshowCollapsableBodies bodyElement:");
-    //console.log(bodyElement);
+    console.log("hideORshowCollapsableBodies bodyElement:");
+    console.log(bodyElement);
     bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse').collapse(toggleValue);
 
     //toggle all slide's lists
@@ -855,6 +855,8 @@ function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
 }
 
 function toggleSinglePanel(btn,panel) {
+
+    console.log("toggle SinglePanel");
 
     var btnEl = $(btn);
     var panelEl = $(panel);

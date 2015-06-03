@@ -125,6 +125,8 @@ class Message {
      **/
     private $proxyuser;
 
+    //TODO: create similar to proxyusers: orderRecipients, reportRecipients
+
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      */

@@ -185,7 +185,7 @@ class PatientController extends Controller
         $params['message.outputs'] = false;
 
         $labels = array(
-            'proxyuser' => 'Signing Pathologist(s):'
+            'proxyuser' => 'Signing Provider(s):'
         );
         $params['labels'] = $labels;
 
@@ -253,7 +253,7 @@ class PatientController extends Controller
         $params['message.outputs'] = false;
 
         $labels = array(
-            'proxyuser' => 'Signing Pathologist(s):'
+            'proxyuser' => 'Signing Provider(s):'
         );
         $params['labels'] = $labels;
 

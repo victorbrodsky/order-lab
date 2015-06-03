@@ -279,7 +279,7 @@ class MessageObjectType extends AbstractType
             $builder->add('associations', 'entity', array(
                 'class' => 'OlegOrderformBundle:Message',
                 'property' => 'getFullName',
-                'label' => "Association Order(s):",
+                'label' => "Association(s):",
                 'attr' => array('class' => 'combobox combobox-width'),
                 'required'=>false,
                 'multiple' => true,
@@ -289,7 +289,7 @@ class MessageObjectType extends AbstractType
             $builder->add('backAssociations', 'entity', array(
                 'class' => 'OlegOrderformBundle:Message',
                 'property' => 'getFullName',
-                'label' => "Back Association Order(s):",
+                'label' => "Reciprocal Association(s):",
                 'attr' => array('class' => 'combobox combobox-width'),
                 'required'=>false,
                 'multiple' => true,
