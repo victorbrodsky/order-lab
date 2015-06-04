@@ -727,7 +727,7 @@ class ScanAdminController extends AdminController
         $entities = $em->getRepository('OlegOrderformBundle:MessageCategory')->findAll();
 
         if( $entities ) {
-            //return -1;
+            return -1;
         }
 
 //        $types = array(
