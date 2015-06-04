@@ -126,6 +126,23 @@ class Message {
     private $proxyuser;
 
     //TODO: create similar to proxyusers: orderRecipients, reportRecipients
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_message_orderRecipient",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $orderRecipients;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_message_reportRecipient",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $reportRecipients;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
@@ -393,6 +410,9 @@ class Message {
         $this->imaging = new ArrayCollection();
 
         $this->proxyuser = new ArrayCollection();
+        $this->orderRecipients = new ArrayCollection();
+        $this->reportRecipients = new ArrayCollection();
+
         $this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
         $this->tracking = new ArrayCollection();
@@ -698,6 +718,40 @@ class Message {
         }
         return $proxyuser;
     }
+
+
+    public function getOrderRecipients()
+    {
+        return $this->orderRecipients;
+    }
+    public function addOrderRecipient($item)
+    {
+        if( $item && !$this->orderRecipients->contains($item) ) {
+            $this->orderRecipients->add($item);
+        }
+        return $this;
+    }
+    public function removeOrderRecipient($item)
+    {
+        $this->orderRecipients->removeElement($item);
+    }
+
+    public function getReportRecipients()
+    {
+        return $this->reportRecipients;
+    }
+    public function addReportRecipient($item)
+    {
+        if( $item && !$this->reportRecipients->contains($item) ) {
+            $this->reportRecipients->add($item);
+        }
+        return $this;
+    }
+    public function removeReportRecipient($item)
+    {
+        $this->reportRecipients->removeElement($item);
+    }
+
 
     /**
      * @param mixed $purpose

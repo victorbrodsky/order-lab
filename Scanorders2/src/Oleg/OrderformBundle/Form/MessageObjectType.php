@@ -37,6 +37,12 @@ class MessageObjectType extends AbstractType
         if( !array_key_exists('message.proxyuser', $this->params) ) {
             $this->params['message.proxyuser'] = true;
         }
+        if( !array_key_exists('message.orderRecipients', $this->params) ) {
+            $this->params['message.orderRecipients'] = true;
+        }
+        if( !array_key_exists('message.reportRecipients', $this->params) ) {
+            $this->params['message.reportRecipients'] = true;
+        }
         if( !array_key_exists('message.sources', $this->params) ) {
             $this->params['message.sources'] = true;
         }
@@ -63,7 +69,9 @@ class MessageObjectType extends AbstractType
             'destinations.system' => 'Destination System:',
 
             'equipment' => 'Scanner:',
-            'proxyuser' => 'Ordering Provider:',
+            'proxyuser' => 'Ordering Provider(s):',
+            'orderRecipients' => 'Order Recipient(s):',
+            'reportRecipients' => 'Report Recipient(s):',
             'provider' => 'Submitter:',
             'returnoption' => 'Return slide(s) by this date even if not scanned:',
             'priority' => 'Priority:',
@@ -92,6 +100,7 @@ class MessageObjectType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
 
         if( array_key_exists('message.idnumber', $this->params) &&  $this->params['message.idnumber'] == true ) {
             $builder->add('idnumber', null, array(
@@ -147,6 +156,24 @@ class MessageObjectType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
                 'required' => false,
                 //'multiple' => true,
+                'classtype' => 'userWrapper'
+            ));
+        }
+
+        if( array_key_exists('message.orderRecipients', $this->params) &&  $this->params['message.orderRecipients'] == true ) {
+            $builder->add('orderRecipients', 'custom_selector', array(
+                'label' => $this->labels['orderRecipients'],
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
+                'required' => false,
+                'classtype' => 'userWrapper'
+            ));
+        }
+
+        if( array_key_exists('message.reportRecipients', $this->params) &&  $this->params['message.reportRecipients'] == true ) {
+            $builder->add('reportRecipients', 'custom_selector', array(
+                'label' => $this->labels['reportRecipients'],
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
+                'required' => false,
                 'classtype' => 'userWrapper'
             ));
         }
@@ -300,7 +327,6 @@ class MessageObjectType extends AbstractType
         /////////////////////////// specific orders //////////////////////////
 
         //get message entity
-        //$builder->addEventListener(FormEvents::PRE_SET_DATA, function (DataEvent $event) use ($builder)
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
         {
 
@@ -448,13 +474,36 @@ class MessageObjectType extends AbstractType
                     ));
                 }
 
+
+                //////////////////// message exception fields such as orderRecipients, reportRecipients  ////////////////////
+                $showOrderRecipients = true;
+                $showReportRecipients = false;
+                $catName = $dataEntity->getMessageCategory()->getName()."";
+
+                if( $catName == "Image Analysis Order" ) {
+                    $showOrderRecipients = true;
+                    $showReportRecipients = true;
+                }
+
+                if( strpos($catName,'Report') !== false ) {
+                    $showOrderRecipients = false;
+                    $showReportRecipients = true;
+                }
+
+                //remove fields
+                if( !$showOrderRecipients ) {
+                    $form->remove('orderRecipients');
+                }
+
+                if( !$showReportRecipients ) {
+                    $form->remove('reportRecipients');
+                }
+                //////////////////// EOF message exception fields such as orderRecipients, reportRecipients ////////////////////
+
+
             }//$dataEntity
         });
         /////////////////////////// specific orders //////////////////////////
-
-
-
-
 
     }
 

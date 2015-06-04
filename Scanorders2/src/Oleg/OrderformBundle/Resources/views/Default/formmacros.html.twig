@@ -238,20 +238,49 @@
         {% endif %}
     {% endif %}
 
-    {% if fieldname == "proxyuser" %}
-        {% set userValues = container.vars.value.proxyuser %}
-        {% set userLabel = container.proxyuser.vars.label %}
-        {% if container.proxyuser is defined %}
-            {% set userForm = container.proxyuser %}
+    {% if fieldname == "proxyuser" or fieldname == "orderRecipients" or fieldname == "reportRecipients" %}
+
+        {% if fieldname == "proxyuser" %}
+            {% set userValues = container.vars.value.proxyuser %}
+            {% set userLabel = container.proxyuser.vars.label %}
+            {% set userForm = null %}
+            {% if container.proxyuser is defined %}
+                {% set userForm = container.proxyuser %}
+            {% endif %}
+        {% endif %}
+
+        {% if fieldname == "orderRecipients" %}
+            {% set userValues = container.vars.value.orderRecipients %}
+            {% set userLabel = container.orderRecipients.vars.label %}
+            {% set userForm = null %}
+            {% if container.orderRecipients is defined %}
+                {% set userForm = container.orderRecipients %}
+            {% endif %}
+        {% endif %}
+
+        {% if fieldname == "reportRecipients" %}
+            {% set userValues = container.vars.value.reportRecipients %}
+            {% set userLabel = container.reportRecipients.vars.label %}
+            {% set userForm = null %}
+            {% if container.reportRecipients is defined %}
+                {% set userForm = container.reportRecipients %}
+            {% endif %}
+        {% endif %}
+
+        {#{% set userValues = container.vars.value.proxyuser %}#}
+        {#{% set userLabel = container.proxyuser.vars.label %}#}
+        {#{% if container.proxyuser is defined %}#}
+            {#{% set userForm = container.proxyuser %}#}
+        {% if userForm %}
             {% if showFlag and container.vars.value %}
                 {% set label = userLabel %}
                 {% set hreflinks = [] %}
-                {% for singleProxyUserValue in userValues %}
-                    {% if singleProxyUserValue.user %}
-                        {% set singleUserValue = singleProxyUserValue.user %}
-                        {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~singleProxyUserValue~'</a>' %}
+                {% for singleUserWrapperValue in userValues %}
+                    {% if singleUserWrapperValue.user %}
+                        {% set singleUserValue = singleUserWrapperValue.user %}
+                        {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~singleUserWrapperValue~'</a>' %}
                     {% else %}
-                        {% set hreflink = singleProxyUserValue %}
+                        {% set hreflink = singleUserWrapperValue %}
                     {% endif %}
                     {% set hreflinks = hreflinks|merge([hreflink]) %}
                 {% endfor %}
@@ -609,6 +638,14 @@
                         {#controlled by controller and form#}
                         {% if message.proxyuser is defined %}
                             {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
+                        {% endif %}
+
+                        {% if message.orderRecipients is defined %}
+                            {{ formmacros.field_show_user( message, "orderRecipients", cycle ) }}
+                        {% endif %}
+
+                        {% if message.reportRecipients is defined %}
+                            {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
                         {% endif %}
 
                         {#associations and backAssociations: controlled by controller and form#}
