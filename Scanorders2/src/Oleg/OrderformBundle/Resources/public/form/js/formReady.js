@@ -50,6 +50,7 @@ $(document).ready(function() {
 
     //multy form toggle button
     $('.form_body_toggle_btn').on('click', function(e) {
+        //console.log('form_body_toggle_btn on click');
         var className = $(this).attr("class");
         var id = this.id;
         if( $(this).hasClass('glyphicon-folder-open') ) {

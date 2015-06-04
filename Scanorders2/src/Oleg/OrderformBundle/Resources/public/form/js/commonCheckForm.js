@@ -1415,8 +1415,8 @@ function setSimpleField( element, text) {
 //documents
 function setPaperDocuments( btnEl, parent, data ) {
 
-    console.log(parent);
-    console.log(data);
+    //console.log(parent);
+    //console.log(data);
 
     if( !parent.hasClass('scan-partpaper') && orderformtype != "single" ) {
         return;

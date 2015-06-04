@@ -162,7 +162,7 @@ function initTypeaheadUserSiteSearch() {
         if(event.keyCode == 13) {
             event.preventDefault();
             if( $(this).val() != "" ) {
-                console.log('enter pressed => submit form');
+                //console.log('enter pressed => submit form');
                 $('#user-typeahead-search-form').submit();
             }
         }

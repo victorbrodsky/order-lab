@@ -463,6 +463,7 @@ function researchLabListener( holder ) {
 
 
 function populateResearchlabData( data, elementName ) {
+
     //console.log(data);
 
     var holder = elementName.closest('.user-researchlabs');

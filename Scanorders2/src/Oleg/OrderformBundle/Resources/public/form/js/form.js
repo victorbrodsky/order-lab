@@ -770,9 +770,10 @@ function setEducational() {
 }
 
 //collapse content of patient hierarchy
+//Note: for bootstrap's "hide.bs.collapse" event use datepicker fix https://github.com/eternicode/bootstrap-datepicker/issues/978
 function contentToggleHierarchyButton(holder) {
 
-    console.log('content ToggleHierarchy Button');
+    //console.log('content ToggleHierarchy Button');
 
     var targetId = '.form-element-holder.collapse';
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
@@ -787,7 +788,6 @@ function contentToggleHierarchyButton(holder) {
         //console.log($(this));
         //e.preventDefault();
         //hideORshowCollapsableBodies( $(this), 'hide' );
-
 
         var folderBtn = $(this).closest('.panel-multi-form').find('.panel-heading-hierarchy').find('button.form_body_toggle_btn').first();
         //console.log("folderBtn.length="+folderBtn.length);
@@ -844,8 +844,8 @@ function contentToggleHierarchyButton(holder) {
 }
 
 function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
-    console.log("hideORshowCollapsableBodies bodyElement:");
-    console.log(bodyElement);
+    //console.log("hide OR showCollapsableBodies bodyElement:");
+    //console.log(bodyElement);
     bodyElement.closest('.panel-body').find('.panel-multi-form').find('.form-element-holder.collapse').collapse(toggleValue);
 
     //toggle all slide's lists
@@ -856,7 +856,7 @@ function hideORshowCollapsableBodies( bodyElement, toggleValue ) {
 
 function toggleSinglePanel(btn,panel) {
 
-    console.log("toggle SinglePanel");
+    //console.log("toggle SinglePanel");
 
     var btnEl = $(btn);
     var panelEl = $(panel);

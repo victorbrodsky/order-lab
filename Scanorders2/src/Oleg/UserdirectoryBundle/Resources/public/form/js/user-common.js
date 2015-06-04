@@ -255,11 +255,13 @@ function getSitename() {
 }
 
 function collapseThis(link) {
+    //console.log('collapse This');
     var holder = $(link).closest('.panel');
     holder.find('.panel-collapse').collapse('toggle');
 }
 
 function collapseAll(holder) {
+    //console.log('collapse All');
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('hide');
     } else {
@@ -272,6 +274,7 @@ function collapseAll(holder) {
 }
 
 function extendAll(holder) {
+    //console.log('extend All');
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('show');
     } else {
@@ -346,7 +349,7 @@ function processAllDatepickers( targets ) {
 
 }
 
-
+//Note: for bootstrap's "hide.bs.collapse" event use datepicker fix https://github.com/eternicode/bootstrap-datepicker/issues/978
 function initSingleDatepicker( datepickerElement ) {
 
     //console.log("initSingleDatepicker:");
@@ -367,7 +370,6 @@ function initSingleDatepicker( datepickerElement ) {
         //console.log('datepicker input field is readonly');
         //console.log(inputField);
         datepickerElement.datepicker("remove");
-        //datepickerElement.datepicker('disable');
 
         //calendarIconBtn.off();
         calendarIconBtn.prop('disabled', true);
@@ -402,20 +404,27 @@ function initSingleDatepicker( datepickerElement ) {
             todayBtn: datepickertodayBtn,
             todayHighlight: true,
             endDate: endDate,
-            //minDate: new Date(1902, 1, 1)   //null
+            ////minDate: new Date(1902, 1, 1)   //null
             format: datepickerFormat,
-            //startView: datepickerStartView,
             minViewMode: datepickerMinViewMode
         });
 
-
-        //datepickerElement.datepicker('enable');
-        //calendarIconBtn.on();
         calendarIconBtn.prop('disabled', false);
+
+        //fix bug: https://github.com/eternicode/bootstrap-datepicker/issues/978
+        datepickerElement.datepicker().on('hide.bs.collapse', function(event) {
+            // prevent datepicker from firing bootstrap modal "show.bs.modal"
+            event.stopPropagation();
+        });
+        datepickerElement.datepicker().on('shown.bs.collapse', function(event) {
+            // prevent datepicker from firing bootstrap modal "show.bs.modal"
+            event.stopPropagation();
+        });
 
         datepickerElement.datepicker().on("clearDate", function(e){
             var inputField = $(this).find('input.datepicker, input.datepicker-exception');
-            //printF(inputField,"clearDate input:");
+            //console.log('on clear Date');
+            printF(inputField,"clearDate input:");
             clearErrorField( inputField );
         });
     }

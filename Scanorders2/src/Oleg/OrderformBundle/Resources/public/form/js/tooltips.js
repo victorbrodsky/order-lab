@@ -112,7 +112,7 @@ function attachResEduOnMouseEvent( parentTarget, elementTarget1, elementTarget2,
     setResEduTooltip( parentTarget, elementTarget2, title );
 
     $(parentTarget).on("change", function(e) {
-        //console.log('on change');
+        //console.log('attach ResEdu On MouseEvent on change');
 
         if( $(elementTarget1).hasClass('select2-container-disabled') ) {
             setResEduTooltip( parentTarget, elementTarget1, title );
@@ -140,6 +140,7 @@ function setResEduTooltip( parentTarget, elementTarget, title ) {
 function highlightResEduParentElement( elementTarget, parentTarget ) {
 
     $(elementTarget).parent().on('show.bs.tooltip', function () {
+        //console.log('on show tooltip');
         var parent = $(parentTarget).parent();
         var inputEl = parent.find('.select2-chosen');
         //inputEl.addClass("highlightSelect");
@@ -147,6 +148,7 @@ function highlightResEduParentElement( elementTarget, parentTarget ) {
     });
 
     $(elementTarget).parent().on('hide.bs.tooltip', function () {
+        //console.log('on hide tooltip');
         var parent = $(parentTarget).parent();
         var inputEl = parent.find('.select2-chosen');
         //inputEl.removeClass("highlightSelect");
