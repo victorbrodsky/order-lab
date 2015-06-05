@@ -122,7 +122,7 @@ class ScanAdminController extends AdminController
             'Accession Types='.$count_acctype.', '.
             'Encounter Types='.$count_proceduretype.', '.
             'Procedure Types='.$count_enctype.', '.
-            'Message Category'.$count_orderCategory.', '.
+            'Message Category='.$count_orderCategory.', '.
             'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
@@ -723,12 +723,12 @@ class ScanAdminController extends AdminController
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:MessageCategory')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegOrderformBundle:MessageCategory')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
 
 //        $types = array(
 //            'One-Slide Scan Order',
@@ -746,6 +746,7 @@ class ScanAdminController extends AdminController
 //            'Outside Lab Order on Part'
 //        );
 
+
         $categories = array(
 
             'Order' => array(
@@ -759,17 +760,24 @@ class ScanAdminController extends AdminController
                 'Procedure Order',
                 'Referral',
                 'Tissue Examination',
-                'Block Order',
+                'Embed Block Order',
                 'Slide Order',
-                'Stain Order',
+                'Stain Slide Order',
                 'Lab Order' => array(
                     'Outside Lab Order - Comprehensive',
-                    'Outside Lab Order on Part'
+                    'Outside Lab Order on Part',
+                    'Lab Order Requisition'
                 ),
-                'Image Analysis Order'
+                'Image Analysis Order',
+                //'Requisition to Accession',
+                'Autopsy Images',
+                'Gross Images',
+                'Block Images',
             ),
             'Report' => array(
-                'Analysis Report'
+                'Analysis Report',
+                //'Complete Report',
+                'Outside Report',
             ),
             'Note' => array()
 
@@ -790,18 +798,22 @@ class ScanAdminController extends AdminController
 
         foreach( $categories as $category=>$subcategory ) {
 
-            //make category
-            $messageCategory = new MessageCategory();
-
             $name = $category;
 
             if( $subcategory && !is_array($subcategory) ) {
                 $name = $subcategory;
             }
 
-            $this->setDefaultList($messageCategory,$count,$username,$name);
-            $messageCategory->setLevel($level);
-            $count = $count + 10;
+            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($name);
+
+            if( !$messageCategory ) {
+                //make category
+                $messageCategory = new MessageCategory();
+
+                $this->setDefaultList($messageCategory,$count,$username,$name);
+                $messageCategory->setLevel($level);
+                $count = $count + 10;
+            }
 
 //            echo $level.": category=".$name.", count=".$count."<br>";
 //            echo "subcategory:<br>";

@@ -1462,6 +1462,14 @@ class Message {
         }
     }
 
+    public function addOutputObject($object) {
+        $output = new GeneralEntity();
+        $output->setObject($object);
+        if( !$this->getOutputs()->contains($output) ) {
+            $this->addOutput($output);
+        }
+    }
+
 
     //TODO: testing
     public function getChildren() {
