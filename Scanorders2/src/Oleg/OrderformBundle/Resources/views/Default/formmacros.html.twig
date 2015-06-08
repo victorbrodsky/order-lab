@@ -569,7 +569,7 @@
                 {% endif %}
             {% endfor %}
 
-            <br>showOutputMessage:({{ showOutputMessage }})<br>
+            {#<br>showOutputMessage:({{ showOutputMessage }})<br>#}
 
             {#decide if this object is the same as input object #}
             {%  set showInputMessage = false %}
@@ -617,9 +617,9 @@
 
             {% if showInputMessage %}
                 <p>
-                <div class="panel panel-success">
+                <div class="panel panel-message">
 
-                    <div class="panel-heading">
+                    <div class="panel-heading panel-heading-message">
 
                         <button
                                 id="form_body_toggle_message_{{ orderUniqueId }}_{{ uid }}" type="button"
@@ -860,9 +860,9 @@
             {#output message#}
             {% if showOutputMessage %}
                 <p>
-                <div class="panel panel-success">
+                <div class="panel panel-shadow-message">
 
-                <div class="panel-heading">
+                <div class="panel-heading panel-heading-message">
 
                     <button
                             id="form_body_toggle_shadow_message_{{ orderUniqueId }}_{{ uid }}" type="button"
@@ -870,7 +870,7 @@
                             data-toggle="collapse" data-target="#form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}">
                     </button>
 
-                    <div class="panel-title">{{ message.vars.value.messageCategory.name }} (Shadow)</div>
+                    <div class="panel-title">{{ message.vars.value.messageCategory.name }}</div>
 
                 </div> {#heading#}
 
