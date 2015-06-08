@@ -114,16 +114,21 @@ class GeneralEntity
         $this->setEntityNamespace($classNamespace);
 
         if( $object->getId() ) {
+            //echo "setEntityId=".$object->getId()."<br>";
             $this->setEntityId($object->getId());
         }
     }
 
     public function getFullName() {
         if( $this->getId() ) {
-            return $this->getEntityName() . " ID=" . $this->getId();
+            return $this->getEntityName() . " ID=" . $this->getEntityId();
         } else {
             return $this->getEntityName();
         }
     }
 
+
+    public function __toString() {
+        return $this->getFullName();
+    }
 }

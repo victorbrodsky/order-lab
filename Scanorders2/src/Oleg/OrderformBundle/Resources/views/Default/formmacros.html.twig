@@ -552,8 +552,27 @@
 
             {#message:{{ message.vars.value.getMessageCategory() }}#}
 
+            {#decide if this object is the same as output object #}
+            {%  set showOutputMessage = false %}
+            {% for output in message.vars.value.outputs %}
+                {% set messageOutputClassName = output.entityNamespace~"\\"~output.entityName %}
+                {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
+
+                {#<br>compare :{{ messageInputClassName }} ?= {{currentObjectClassName }}#}
+                {#<br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}#}
+
+                {% if
+                    messageOutputClassName == currentObjectClassName
+                    and output.entityId == object.vars.value.id
+                %}
+                    {%  set showOutputMessage = true %}
+                {% endif %}
+            {% endfor %}
+
+            <br>showOutputMessage:({{ showOutputMessage }})<br>
+
             {#decide if this object is the same as input object #}
-            {%  set showMessage = false %}
+            {%  set showInputMessage = false %}
             {% for input in message.vars.value.inputs %}
                 {% set messageInputClassName = input.entityNamespace~"\\"~input.entityName %}
                 {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
@@ -565,13 +584,13 @@
                         messageInputClassName == currentObjectClassName
                         and input.entityId == object.vars.value.id
                 %}
-                    {%  set showMessage = true %}
+                    {%  set showInputMessage = true %}
                 {% endif %}
             {% endfor %}
 
-            {#<br>showMessage:({{ showMessage }})<br>#}
+            {#<br>showInputMessage:({{ showInputMessage }})<br>#}
 
-            {% if showMessage %}
+            {% if showInputMessage or showOutputMessage %}
 
                 {% if message.vars.value.oid %}
                     {% set orderId = message.vars.value.oid %}
@@ -593,6 +612,10 @@
                     {% set orderName = "Order" %}
                 {% endif %}
 
+            {% endif %}
+
+
+            {% if showInputMessage %}
                 <p>
                 <div class="panel panel-success">
 
@@ -832,7 +855,71 @@
 
                 </p>
 
-            {% endif %}
+            {% endif %} {#input message#}
+
+            {#output message#}
+            {% if showOutputMessage %}
+                <p>
+                <div class="panel panel-success">
+
+                <div class="panel-heading">
+
+                    <button
+                            id="form_body_toggle_shadow_message_{{ orderUniqueId }}_{{ uid }}" type="button"
+                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
+                            data-toggle="collapse" data-target="#form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}">
+                    </button>
+
+                    <div class="panel-title">{{ message.vars.value.messageCategory.name }} (Shadow)</div>
+
+                </div> {#heading#}
+
+
+            <div id="form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
+
+                {#make the value of "ID:" into a clickable link to the order.#}
+                {% if orderViewable %}
+                    {% set orderIdHref = '<a href="'~path('multy_show',{'id':orderId})~'">'~orderId~'</a>' %}
+                {% else %}
+                    {% set orderIdHref = orderId %}
+                {% endif %}
+                {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
+
+                {#controlled by controller and form#}
+                {% if message.idnumber is defined %}
+                    {{ formmacros.field( message.idnumber ) }}
+                    {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
+                {% endif %}
+
+                {#controlled by controller and form#}
+                {% if message.orderdate is defined %}
+                    {{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}
+                {% endif %}
+
+                {#controlled by controller and form#}
+                {% if message.provider is defined %}
+                    {{ formmacros.field_show_user( message, "provider", cycle ) }}
+                {% endif %}
+
+                {#controlled by controller and form#}
+                {% if message.proxyuser is defined %}
+                    {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
+                {% endif %}
+
+                {% if message.orderRecipients is defined %}
+                    {{ formmacros.field_show_user( message, "orderRecipients", cycle ) }}
+                {% endif %}
+
+                {% if message.reportRecipients is defined %}
+                    {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
+                {% endif %}
+
+                </div> {#body#}
+                </div> {#panel#}
+
+                </p>
+
+            {% endif %} {#output message#}
 
         {% endfor %}
 
