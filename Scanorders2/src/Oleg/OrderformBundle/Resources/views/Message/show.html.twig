@@ -17,7 +17,6 @@
         {{ formmacros.simplefield( "Message ID:", entity.id, "", "disabled" ) }}
         {{ formmacros.simplefield( "Generation Date:", entity.orderdate|date('m/d/Y'), "", "disabled" ) }}
 
-        {#{{ formmacros.field_show_user( entity, "provider", cycle ) }}#}
         {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': entity.provider.id })~'">'~entity.provider.getUserNameStr()~'</a>' %}
         {{ formmacros.simplefield( "Submitter:", hreflink, "", "disabled" ) }}
 

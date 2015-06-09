@@ -54,6 +54,40 @@ class MessageController extends Controller {
             'entities' => $entities,          
         );
     }
+
+    /**
+     * Finds and displays a Message entity.
+     *
+     * @Route("/{id}", name="message_show")
+     * @Method("GET")
+     * @Template()
+     */
+    public function showAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegOrderformBundle:Message')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Message entity.');
+        }
+
+        //$deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'formtype' => $entity->getMessageCategory()->getName()."",
+            'cycle' => 'show',
+            'entity' => $entity,
+            //'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+
+
+
+
+
+
     
     /**
      * Creates a new Message entity.
@@ -128,33 +162,6 @@ class MessageController extends Controller {
         return array(
             'entity' => $entity,
             'form' => $form->createView(),           
-        );
-    }
-
-    /**
-     * Finds and displays a Message entity.
-     *
-     * @Route("/{id}", name="message_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OlegOrderformBundle:Message')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Message entity.');
-        }
-
-        //$deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'formtype' => $entity->getMessageCategory()->getName()."",
-            'cycle' => 'show',
-            'entity' => $entity,
-            //'delete_form' => $deleteForm->createView(),
         );
     }
 

@@ -274,17 +274,7 @@
         {% if userForm %}
             {% if showFlag and container.vars.value %}
                 {% set label = userLabel %}
-                {% set hreflinks = [] %}
-                {% for singleUserWrapperValue in userValues %}
-                    {% if singleUserWrapperValue.user %}
-                        {% set singleUserValue = singleUserWrapperValue.user %}
-                        {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~singleUserWrapperValue~'</a>' %}
-                    {% else %}
-                        {% set hreflink = singleUserWrapperValue %}
-                    {% endif %}
-                    {% set hreflinks = hreflinks|merge([hreflink]) %}
-                {% endfor %}
-                {{ formmacros.simplefield( label, hreflinks|join('<br>'), "", attr ) }}
+                {{ formmacros.showUserWrapperAsSimpleField( userValues, label, attr ) }}
             {% else %}
                 {{ formmacros.field(userForm) }}
             {% endif %}
