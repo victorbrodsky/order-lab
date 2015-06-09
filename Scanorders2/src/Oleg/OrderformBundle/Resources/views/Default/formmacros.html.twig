@@ -893,7 +893,8 @@
 
                 {#controlled by controller and form#}
                 {% if message.orderdate is defined %}
-                    {{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}
+                    {#{{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}#}
+                    {{ formmacros.simplefield( message.orderdate.vars.label, message.orderdate.vars.value|date('m/d/Y'), "", disabled ) }}
                 {% endif %}
 
                 {#controlled by controller and form#}
