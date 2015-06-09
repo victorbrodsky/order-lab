@@ -772,9 +772,13 @@ class ScanAdminController extends AdminController
                 'Block Images',
             ),
             'Report' => array(
-                'Analysis Report',
+                'Image Analysis Report',
                 //'Complete Report',
                 'Outside Report',
+                'Block Report',
+                'Slide Report',
+                'Stain Report',
+
             ),
             'Note' => array()
 

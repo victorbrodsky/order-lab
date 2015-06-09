@@ -1000,11 +1000,11 @@ class PatientController extends Controller
                     $this->addSpecificMessage($ImageAnalysisOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
                     $this->linkMessageObject( $ImageAnalysisOrder, $scan, 'input' );
 
-                    $AnalysisReport = $this->createSpecificMessage("Analysis Report");
+                    $AnalysisReport = $this->createSpecificMessage("Image Analysis Report");
                     $this->addSpecificMessage($AnalysisReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
                     $this->linkMessageObject( $AnalysisReport, $scan, 'input' );
 
-                    //set "Image Analysis Order" as source for "Analysis Report"
+                    //set "Image Analysis Order" as source for "Image Analysis Report"
                     $ImageAnalysisOrder->addAssociation($AnalysisReport);
                     $AnalysisReport->addBackAssociation($ImageAnalysisOrder);
                 }
@@ -1133,7 +1133,7 @@ class PatientController extends Controller
             //$em->persist($message);
         }
 
-        if( $messageCategoryStr == "Report" || $messageCategoryStr == "Analysis Report" || $messageCategoryStr == "Outside Report" ) {
+        if( $messageCategoryStr == "Report" || $messageCategoryStr == "Image Analysis Report" || $messageCategoryStr == "Outside Report" ) {
 
             $report = new Report();
             $report->setMessage($message);
