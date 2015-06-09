@@ -568,7 +568,9 @@ class ScanOrderController extends Controller {
         $dql =  $repository->createQueryBuilder("message");
         $dql->innerJoin("message.status", "status");
         //$dql->innerJoin("message.institution", "institution");
+
         $dql->where("status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'" . $instStr);
+
         $query = $em->createQuery($dql);
         $unprocessedOrders = $query->getResult();
 
@@ -802,6 +804,10 @@ class ScanOrderController extends Controller {
     }
 
     public function getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page ) {
+
+        $securityUtil = $this->get('order_security_utility');
+        $filter = $securityUtil->mysql_escape_mimic($filter);
+        $search = $securityUtil->mysql_escape_mimic($search);
 
         //***************** Search filetr ***************************//
         if( $search == "" ) {
@@ -1097,6 +1103,10 @@ class ScanOrderController extends Controller {
 
 
     public function getDQL( $repository, $service, $filter, $search, $routeName, $securityContext, $withSearch = false ) {
+
+        $securityUtil = $this->get('order_security_utility');
+        $filter = $securityUtil->mysql_escape_mimic($filter);
+        $search = $securityUtil->mysql_escape_mimic($search);
 
         $user = $securityContext->getToken()->getUser();
 

@@ -524,11 +524,7 @@ class MultiScanOrderController extends Controller {
         //echo "<br>message count=".count( $entities )."<br>";
 
         if( count( $entities ) == 0 ) {
-            throw $this->createNotFoundException('Unable to find Message entity with oid='.$id);
-        }
-
-        if( count( $entities ) == 0 ) {
-            throw $this->createNotFoundException('More than one Message entity found.');
+            throw $this->createNotFoundException('More than one Message entity found with oid='.$id);
         } else {
             $entity = $entities[0];
         }
@@ -570,7 +566,14 @@ class MultiScanOrderController extends Controller {
             return $this->redirect($this->generateUrl('table_show',array('id'=>$entity->getOid())));
         }
 
-        //redirect by status
+        if(
+            $entity->getMessageCategory()->getName() != "Multi-Slide Scan Order" ||
+            $entity->getMessageCategory()->getName() != "One-Slide Scan Order"
+        ) {
+            return $this->redirect($this->generateUrl('message_show',array('id'=>$id)));
+    }
+
+    //redirect by status
         $orderUtil = $this->get('scanorder_utility');
         $redirect = $orderUtil->redirectOrderByStatus($entity,$routeName);
         if( $redirect != null ) {

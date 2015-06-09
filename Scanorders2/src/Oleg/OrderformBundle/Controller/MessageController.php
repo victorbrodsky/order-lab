@@ -148,11 +148,13 @@ class MessageController extends Controller {
             throw $this->createNotFoundException('Unable to find Message entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        //$deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'formtype' => $entity->getMessageCategory()->getName()."",
+            'cycle' => 'show',
+            'entity' => $entity,
+            //'delete_form' => $deleteForm->createView(),
         );
     }
 

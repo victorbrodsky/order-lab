@@ -324,6 +324,23 @@
 
 {% endmacro %}
 
+{% macro showUserWrapperAsSimpleField(userWrappers,label,attr) %}
+    {% import _self as formmacros %}
+    {% set hreflinks = [] %}
+    {% for userwrapper in userWrappers %}
+        {% if userwrapper.user %}
+            {% set singleUserValue = userwrapper.user %}
+            {% set hreflink = '<a href="'~path(scan_sitename~'_showuser', { 'id': singleUserValue.id })~'">'~userwrapper~'</a>' %}
+        {% else %}
+            {% set hreflink = userwrapper %}
+        {% endif %}
+        {% set hreflinks = hreflinks|merge([hreflink]) %}
+    {% endfor %}
+    {% if hreflinks|length > 0 %}
+        {{ formmacros.simplefield( label, hreflinks|join('<br>'), "", attr ) }}
+    {% endif %}
+{% endmacro %}
+
 {% macro hiddenInputFieldsForJS(messageForm) %}
     {% set proxyuserName = null %}
     {% set proxyuserId = null %}
