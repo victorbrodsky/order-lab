@@ -52,7 +52,6 @@ class ScanListController extends ListController
      * @Route("/report-types/", name="reporttype-list")
      * @Route("/instructions-for-embedder/", name="instruction-list")
      * @Route("/patient-types/", name="patienttype-list")
-     * @Route("/sex/", name="sexes-list")
      * @Route("/magnifications/", name="magnifications-list")
      * @Route("/image-analysis-algorithms/", name="imageanalysisalgorithm-list")
      *
@@ -100,7 +99,6 @@ class ScanListController extends ListController
      * @Route("/report-types/", name="reporttype_create")
      * @Route("/instructions-for-embedder/", name="instruction_create")
      * @Route("/patient-types/", name="patienttype_create")
-     * @Route("/sex/", name="sexes_create")
      * @Route("/magnifications/", name="magnifications_create")
      * @Route("/image-analysis-algorithms/", name="imageanalysisalgorithm_create")
      *
@@ -148,7 +146,6 @@ class ScanListController extends ListController
      * @Route("/report-types/new", name="reporttype_new")
      * @Route("/instructions-for-embedder/new", name="instruction_new")
      * @Route("/patient-types/new", name="patienttype_new")
-     * @Route("/sex/new", name="sexes_new")
      * @Route("/magnifications/new", name="magnifications_new")
      * @Route("/image-analysis-algorithms/new", name="imageanalysisalgorithm_new")
      *
@@ -196,7 +193,6 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}", name="reporttype_show")
      * @Route("/instructions-for-embedder/{id}", name="instruction_show")
      * @Route("/patient-types/{id}", name="patienttype_show")
-     * @Route("/sex/{id}", name="sexes_show")
      * @Route("/magnifications/{id}", name="magnifications_show")
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_show")
      *
@@ -244,7 +240,6 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}/edit", name="reporttype_edit")
      * @Route("/instructions-for-embedder/{id}/edit", name="instruction_edit")
      * @Route("/patient-types/{id}/edit", name="patienttype_edit")
-     * @Route("/sex/{id}/edit", name="sexes_edit")
      * @Route("/magnifications/edit", name="magnifications_edit")
      * @Route("/image-analysis-algorithms/edit", name="imageanalysisalgorithm_edit")
      *
@@ -292,7 +287,6 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}", name="reporttype_update")
      * @Route("/instructions-for-embedder/{id}", name="instruction_update")
      * @Route("/patient-types/{id}", name="patienttype_update")
-     * @Route("/sex/{id}", name="sexes_update")
      * @Route("/magnifications/{id}", name="magnifications_update")
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_update")
      *
@@ -430,10 +424,6 @@ class ScanListController extends ListController
             $className = "PatientTypeList";
             $displayName = "Patient Types";
             break;
-        case "sexes":
-            $className = "SexList";
-            $displayName = "Sex";
-            break;
         case "magnifications":
             $className = "Magnification";
             $displayName = "Magnifications";
@@ -493,7 +483,6 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}", name="reporttype_delete")
      * @Route("/instructions-for-embedder/{id}", name="instruction_delete")
      * @Route("/patient-types/{id}", name="patienttype_delete")
-     * @Route("/sex/{id}", name="sexes_delete")
      * @Route("/magnifications/{id}", name="magnifications_delete")
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_delete")
      *

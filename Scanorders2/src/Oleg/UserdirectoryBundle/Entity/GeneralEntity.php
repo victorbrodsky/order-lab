@@ -110,10 +110,15 @@ class GeneralEntity
         $className = $class->getShortName();
         $classNamespace = $class->getNamespaceName();
 
-        $this->setEntityName($className);
-        $this->setEntityNamespace($classNamespace);
+        if( $className && !$this->getEntityName() ) {
+            $this->setEntityName($className);
+        }
 
-        if( $object->getId() ) {
+        if( $classNamespace && !$this->getEntityNamespace() ) {
+            $this->setEntityNamespace($classNamespace);
+        }
+
+        if( !$this->getEntityId() && $object->getId() ) {
             //echo "setEntityId=".$object->getId()."<br>";
             $this->setEntityId($object->getId());
         }

@@ -8,6 +8,7 @@ use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
+use Oleg\UserdirectoryBundle\Entity\SexList;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -170,6 +171,7 @@ class AdminController extends Controller
         $count_generateImportances = $this->generateImportances();
         $count_generateAuthorshipRoles = $this->generateAuthorshipRoles();
 
+        $count_sex = $this->generateSex();
         //$count_generateTitlePositionTypes = $this->generateTitlePositionTypes();
 
         $this->get('session')->getFlashBag()->add(
@@ -215,6 +217,7 @@ class AdminController extends Controller
             'Importances='.$count_generateImportances.', '.
             'AuthorshipRoles='.$count_generateAuthorshipRoles.', '.
             'LinkTypes='.$count_generateLinkTypes.' '.
+            'Sex='.$count_sex.', '.
             //'TitlePositionTypes='.$count_generateTitlePositionTypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -2758,6 +2761,40 @@ class AdminController extends Controller
 
             $listEntity = new TitlePositionType();
             $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateSex() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SexList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        //http://nces.ed.gov/ipeds/reic/definitions.asp
+        $types = array(
+            'Female',
+            'Male',
+            'Unspecified'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new SexList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);
             $em->flush();

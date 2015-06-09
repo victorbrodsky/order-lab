@@ -19,6 +19,12 @@ class Credentials extends BaseUserAttributes
     private $dob;
 
     /**
+     * @ORM\ManyToOne(targetEntity="SexList", cascade={"persist"})
+     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
+     */
+    protected $sex;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $ssn;
@@ -154,6 +160,22 @@ class Credentials extends BaseUserAttributes
     public function getDob()
     {
         return $this->dob;
+    }
+
+    /**
+     * @param mixed $sex
+     */
+    public function setSex($sex)
+    {
+        $this->sex = $sex;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSex()
+    {
+        return $this->sex;
     }
 
     /**

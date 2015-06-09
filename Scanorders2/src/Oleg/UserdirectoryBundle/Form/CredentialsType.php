@@ -11,6 +11,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -36,6 +37,24 @@ class CredentialsType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
+        ));
+
+        $builder->add('sex', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:SexList',
+            'property' => 'name',
+            'label' => "Sex:",
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added'
+                        ));
+                },
         ));
 
         $builder->add('ssn', null, array(

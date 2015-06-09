@@ -115,51 +115,6 @@ class PatientController extends Controller
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-
-        ///////////////////// prepare messages /////////////////////
-//        $messages = array();
-//
-//        $messageBlockOrder = $this->createSpecificMessage("Embed Block Order");
-//        $messages[] = $messageBlockOrder;
-//
-//        $messageSlideOrder = $this->createSpecificMessage("Slide Order");
-//        $messages[] = $messageSlideOrder;
-//
-//        $messageLabOrder = $this->createSpecificMessage("Lab Order");
-//        $messages[] = $messageLabOrder;
-//
-//        $messageReportOrder = $this->createSpecificMessage("Report");
-//        $messages[] = $messageReportOrder;
-//
-//        $messageImageAnalysisOrder = $this->createSpecificMessage("Image Analysis Order");
-//        $messages[] = $messageImageAnalysisOrder;
-//
-//        $messageAnalysisReport = $this->createSpecificMessage("Analysis Report");
-//        $messages[] = $messageAnalysisReport;
-//
-//        $messageStainOrder = $this->createSpecificMessage("Stain Slide Order");
-//        $messages[] = $messageStainOrder;
-//
-//        $messageMultiSlideScanOrder = $this->createSpecificMessage("Multi-Slide Scan Order");
-//        $messages[] = $messageMultiSlideScanOrder;
-//
-//        //7 messages
-//        $messages[] = $this->createSpecificMessage("Lab Order Requisition"); //to Accession
-//        //$messages[] = $this->createSpecificMessage("Report");
-//        $messages[] = $this->createSpecificMessage("Autopsy Images");
-//        $messages[] = $this->createSpecificMessage("Gross Images");
-//        $messages[] = $this->createSpecificMessage("Block Images");
-//        $messages[] = $this->createSpecificMessage("Outside Report");   //to Part
-//        //$messages[] = $this->createSpecificMessage("Outside Report");   //to Accession
-//
-//        //set "Image Analysis Order" as source for "Analysis Report"
-//        $em->persist($messageAnalysisReport);
-//        $em->persist($messageImageAnalysisOrder);
-//        $messageImageAnalysisOrder->addAssociation($messageAnalysisReport);
-        //$messageAnalysisReport->addBackAssociation($messageImageAnalysisOrder);
-        ///////////////////// EOF prepare messages /////////////////////
-
-
         $thisparams = array(
             'objectNumber' => 1,
             'dropzoneImageNumber' => 1,
@@ -387,14 +342,13 @@ class PatientController extends Controller
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-
         ///////////////////// prepare test patient /////////////////////
         $thisparams = array(
-            'objectNumber' => 2,
+            'objectNumber' => 2,                //2 - generate 2 encounters
             'dropzoneImageNumber' => 1,
             'aperioImageNumber' => 1,
             'withorders' => true,               //add orders to correspondent entities
-            'persist' => false,                 //persist each patient hierarchy object (not used)
+            'persist' => true,                 //persist each patient hierarchy object (not used)
             'testpatient' => true,              //populate patient hierarchy with default data
             //'accession.attachmentContainer' => 1 //testing!!!
         );
@@ -433,7 +387,7 @@ class PatientController extends Controller
 
         //sex
         $patientSex = new PatientSex($status,$user,$system);
-        $sex = $em->getRepository('OlegOrderformBundle:SexList')->findOneByName('Female');
+        $sex = $em->getRepository('OlegUserdirectoryBundle:SexList')->findOneByName('Female');
         $patientSex->setField($sex);
         $patient->addSex($patientSex);
 
@@ -512,10 +466,8 @@ class PatientController extends Controller
         //now patient hierarchy exists in DB => re-set message inputs and outputs (GeneralEntity) with existing object ID from DB
         $patientDb = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
         //echo "patientDb=".$patientDb."<br>";
-        //$this->linkMessagesPatient($messages,$patientDb);
         $this->linkMessagesInPatient($patientDb);
         //exit('1');
-
 
         if( $patient->getId() ) {
             return $this->redirect( $this->generateUrl('scan-patient-show',array('id'=>$patient->getId())) );
@@ -534,28 +486,32 @@ class PatientController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $messages = $patient->getMessage();
-        echo "<br><br>link Messages InPatient messages=".count($messages)."<br>";
+        //echo "<br><br>link Messages InPatient messages=".count($messages)."<br>";
 
         foreach( $messages as $message ) {
 
+            //echo "<br>";
             //echo $message." => 1 inputs count=".count($message->getInputs())."<br>";
+
             foreach( $message->getInputs() as $input ) {
+                //echo "1 input=".$input."<br>";
                 if( !$input->getEntityId() ) {
                     $className = $input->getEntityName();
                     //echo "className=".$className."<br>";
-                    $getMethod = 'get'.$className;
+                    $getMethod = 'get'.$className;  //getImaging()
                     $objects = $message->$getMethod();
                     foreach( $objects as $object ) {
                         if( !$input->getEntityId() ) {
-                            echo "className=".$className." set input object=".$object."<br>";
+                            //echo "className=".$className.": set input object=".$object;
                             $input->setObject($object);
                         }
                     }
                 }
-                echo "input=".$input."<br>";
+                //echo "2 input=".$input."<br>";
             }
 
             foreach( $message->getOutputs() as $output ) {
+                //echo "1 output=".$output."<br>";
                 if( !$output->getEntityId() ) {
                     $className = $output->getEntityName();
                     //echo "className=".$className."<br>";
@@ -563,12 +519,12 @@ class PatientController extends Controller
                     $objects = $message->$getMethod();
                     foreach( $objects as $object ) {
                         if( !$output->getEntityId() ) {
-                            echo "className=".$className." set output object=".$object."<br>";
+                            //echo "className=".$className." set output object=".$object."<br>";
                             $output->setObject($object);
                         }
                     }
                 }
-                echo "output=".$output."<br>";
+                //echo "2 output=".$output."<br>";
             }
             //echo $message." => 2 inputs count=".count($message->getInputs())."<br>";
 
@@ -578,94 +534,6 @@ class PatientController extends Controller
         //exit('1');
         $em->flush();
     }
-
-
-//    public function linkMessagesPatient( $messages, $patient ) {
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        foreach( $messages as $message ) {
-//
-//            $this->recursiveHierarchyLink($message,$patient);
-//
-//            $em->persist($message);
-//        }
-//
-//        $em->flush();
-//    }
-//
-//    public function recursiveHierarchyLink( $message, $entity ) {
-//
-//        $children = $entity->getChildren();
-//
-//        if( !$children ) {
-//            return;
-//        }
-//
-//        foreach( $entity->getChildren() as $child ) {
-//
-//            $this->processSingleMessageObject( $message, $child );
-//
-//            if( $child ) {
-//
-//                $this->recursiveHierarchyLink( $message, $child );
-//
-//            }
-//
-//        }
-//
-//    }
-//
-//    public function processSingleMessageObject( $message, $object ) {
-//
-//        $inputPairs = array(
-//            "Imaging" => array("Image Analysis Order","Analysis Report"),
-//            "Slide" => array("Lab Order","Report","Stain Slide Order","Multi-Slide Scan Order"),
-//            "Block" => array("Slide Order"),
-//            "Part" => array("Embed Block Order","Outside Report"),
-//            "Accession" => array("Report","Outside Report"),
-//            "Procedure" => array("Lab Order Requisition")
-//        );
-//
-//        $this->linkMessageObject($message,$object,$inputPairs,'input');
-//
-//        $outputPairs = array(
-//            "Imaging" => array(),
-//            "Slide" => array("Stain Slide Order"),
-//            "Block" => array(),
-//            "Part" => array("Embed Block Order"),
-//            "Accession" => array("Lab Order Requisition"),
-//        );
-//
-//        //$this->linkMessageObject($message,$object,$outputPairs,'output');
-//
-//
-//    }
-
-//    public function linkSingleMessageObject( $message, $object, $pairs, $objectType ) {
-//
-//        $class = new \ReflectionClass($object);
-//        $className = $class->getShortName();
-//
-//        if( !array_key_exists($className, $pairs) ) {
-//            return;
-//        }
-//
-//        $messageCategories = $pairs[$className];
-//        $thisMessageCategory = $message->getMessageCategory()->getName()."";
-//        //echo "thisMessageCategory=".$thisMessageCategory."<br>";
-//        //echo "className=".$className.":<br>";
-//        //print_r($messageCategories);
-//        //echo "<br>";
-//
-//        $addObjectAsInput = false;
-//        if( in_array($thisMessageCategory,$messageCategories) ) {
-//            $addObjectAsInput = true;
-//        }
-//
-//        $this->linkMessageObject($message,$object,$objectType,$addObjectAsInput);
-//
-//    }
 
 
     public function linkMessageObject( $message, $object, $objectType='input', $addObject=true, $forceAddObject=true ) {
@@ -927,6 +795,7 @@ class PatientController extends Controller
 
 
             $slide = new Slide($withfields,'valid',$user,$system); //Slides are always valid by default
+            $slide->clearScan();
             //$slide->addExtraFields($status,$user,$system);
             $block->addSlide($slide);
 
@@ -976,6 +845,10 @@ class PatientController extends Controller
 
                 //add scan to slide
                 $slide->addScan($dropzoneImage);
+
+                if( $persist ) {
+                    $em->persist($dropzoneImage);
+                }
             }
 
             //attach one existing aperio image http://c.med.cornell.edu/EditRecord.php?TableName=Slide&Ids[]=42814,
@@ -1043,6 +916,10 @@ class PatientController extends Controller
 
                 //add Image to Slide
                 $slide->addScan($aperioImage);
+
+                if( $persist ) {
+                    $em->persist($aperioImage);
+                }
             }
 
             //Accession: add n autopsy fields: add n documentContainers to attachmentContainer
@@ -1072,59 +949,59 @@ class PatientController extends Controller
             /////////////////////// testing: create specific messages ///////////////////////
             if( $withOrders ) {
 
-                $this->addSpecificMessage($MultiSlideScanOrder,$patient,$encounter);
+                $this->addSpecificMessage($MultiSlideScanOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $MultiSlideScanOrder, $slide, 'input' );
 
                 $LabOrderRequisition = $this->createSpecificMessage("Lab Order Requisition");
-                $this->addSpecificMessage($LabOrderRequisition,$patient,$encounter);
+                $this->addSpecificMessage($LabOrderRequisition,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $LabOrderRequisition, $accession, 'output' );
                 $this->linkMessageObject( $LabOrderRequisition, $procedure, 'input' );
 
                 $EmbedBlockOrder = $this->createSpecificMessage("Embed Block Order");
-                $this->addSpecificMessage($EmbedBlockOrder,$patient,$encounter);
+                $this->addSpecificMessage($EmbedBlockOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $EmbedBlockOrder, $part, 'input' );
                 $this->linkMessageObject( $EmbedBlockOrder, $block, 'output' );
 
                 $Report = $this->createSpecificMessage("Report");
-                $this->addSpecificMessage($Report,$patient,$encounter);
+                $this->addSpecificMessage($Report,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $Report, $accession, 'input' );
 
                 $AutopsyImages = $this->createSpecificMessage("Autopsy Images");
-                $this->addSpecificMessage($AutopsyImages,$patient,$encounter);
+                $this->addSpecificMessage($AutopsyImages,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $AutopsyImages, $accession, 'input' );
 
                 $GrossImages = $this->createSpecificMessage("Gross Images");
-                $this->addSpecificMessage($GrossImages,$patient,$encounter);
+                $this->addSpecificMessage($GrossImages,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $GrossImages, $part, 'input' );
 
                 $BlockImages = $this->createSpecificMessage("Block Images");
-                $this->addSpecificMessage($BlockImages,$patient,$encounter);
+                $this->addSpecificMessage($BlockImages,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $BlockImages, $block, 'input' );
 
                 $OutsideReportPart = $this->createSpecificMessage("Outside Report");
-                $this->addSpecificMessage($OutsideReportPart,$patient,$encounter);
+                $this->addSpecificMessage($OutsideReportPart,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $OutsideReportPart, $part, 'input' );
 
                 $OutsideReportAccession = $this->createSpecificMessage("Outside Report");
-                $this->addSpecificMessage($OutsideReportAccession,$patient,$encounter);
+                $this->addSpecificMessage($OutsideReportAccession,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $OutsideReportAccession, $accession, 'input' );
 
                 $SlideOrder = $this->createSpecificMessage("Slide Order");
-                $this->addSpecificMessage($SlideOrder,$patient,$encounter);
+                $this->addSpecificMessage($SlideOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $SlideOrder, $block, 'input' );
 
                 $StainSlideOrder = $this->createSpecificMessage("Stain Slide Order");
-                $this->addSpecificMessage($StainSlideOrder,$patient,$encounter);
+                $this->addSpecificMessage($StainSlideOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $StainSlideOrder, $slide, 'input' );
                 $this->linkMessageObject( $StainSlideOrder, $slide, 'output' );
 
                 foreach( $slide->getScan() as $scan ) {
                     $ImageAnalysisOrder = $this->createSpecificMessage("Image Analysis Order");
-                    $this->addSpecificMessage($ImageAnalysisOrder,$patient,$encounter);
+                    $this->addSpecificMessage($ImageAnalysisOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
                     $this->linkMessageObject( $ImageAnalysisOrder, $scan, 'input' );
 
                     $AnalysisReport = $this->createSpecificMessage("Analysis Report");
-                    $this->addSpecificMessage($AnalysisReport,$patient,$encounter);
+                    $this->addSpecificMessage($AnalysisReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
                     $this->linkMessageObject( $AnalysisReport, $scan, 'input' );
 
                     //set "Image Analysis Order" as source for "Analysis Report"
@@ -1140,12 +1017,7 @@ class PatientController extends Controller
         return $patient;
     }
 
-    public function addSpecificMessage($message,$patient,$encounter) {
-        $procedure = $encounter->getChildren()->first();
-        $accession = $procedure->getChildren()->first();
-        $part = $accession->getChildren()->first();
-        $block = $part->getChildren()->first();
-        $slide = $block->getChildren()->first();
+    public function addSpecificMessage($message,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan=null) {
 
         if( $patient ) {
             $message->addPatient($patient);
@@ -1157,8 +1029,12 @@ class PatientController extends Controller
         $message->addBlock($block);
         $message->addSlide($slide);
 
-        foreach( $slide->getChildren() as $imaging ) {
-            $message->addImaging($imaging);
+        if( $scan ) {
+            $message->addImaging($scan);
+        } else {
+            foreach( $slide->getChildren() as $imaging ) {
+                $message->addImaging($imaging);
+            }
         }
 
         $em = $this->getDoctrine()->getManager();

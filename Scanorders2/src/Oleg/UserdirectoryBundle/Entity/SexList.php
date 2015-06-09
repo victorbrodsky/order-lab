@@ -1,15 +1,15 @@
 <?php
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+//use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_sexList")
+ * @ORM\Table(name="user_sexList")
  */
 class SexList extends ListAbstract
 {

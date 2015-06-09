@@ -9,7 +9,6 @@ namespace Oleg\OrderformBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
-use Oleg\OrderformBundle\Entity\SexList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -100,7 +99,6 @@ class ScanAdminController extends AdminController
         $count_organ = $this->generateOrgans();
         $count_procedure = $this->generateProcedures();
         $count_status = $this->generateStatuses();
-        $count_sex = $this->generateSex();
         //$count_pathservice = $this->generatePathServices();
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
@@ -127,7 +125,6 @@ class ScanAdminController extends AdminController
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
             'Statuses='.$count_status.', '.
-            'Sex='.$count_sex.', '.
             'Slide Types='.$count_slidetype.', '.
             'MRN Types='.$count_mrntype.', '.
             'Order Delivery='.$count_OrderDelivery.', '.
@@ -1310,39 +1307,6 @@ class ScanAdminController extends AdminController
         foreach( $types as $type ) {
 
             $listEntity = new RaceList();
-            $this->setDefaultList($listEntity,$count,$username,$type);
-
-            $em->persist($listEntity);
-            $em->flush();
-
-            $count = $count + 10;
-        }
-
-        return round($count/10);
-    }
-
-    public function generateSex() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:SexList')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        //http://nces.ed.gov/ipeds/reic/definitions.asp
-        $types = array(
-            'Female',
-            'Male',
-            'Unspecified'
-        );
-
-        $count = 1;
-        foreach( $types as $type ) {
-
-            $listEntity = new SexList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

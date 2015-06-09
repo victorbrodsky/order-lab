@@ -19,7 +19,7 @@ class EncounterPatsex extends EncounterArrayFieldAbstract
     protected $encounter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SexList", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SexList", cascade={"persist"})
      * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
      */
     protected $field;
