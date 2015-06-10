@@ -38,19 +38,6 @@ class BlockOrderType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
-        $builder->add('embeddedDate', 'date', array(
-            'label' => "Embedded Date:",
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-        ));
-
-        $builder->add('embeddedByUser', null, array(
-            'label' => 'Block Embedded By:',
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
-
 
         //Block Image container
 //        $params = array('labelPrefix'=>'Block Image');

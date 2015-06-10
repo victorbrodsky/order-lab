@@ -11,38 +11,19 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="scan_scanorder")
  */
-class ScanOrder {
-
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+class ScanOrder extends OrderBase {
 
     /**
      * @ORM\OneToOne(targetEntity="Message", mappedBy="scanorder")
      **/
-    private $message;
+    protected $message;
 
-
-    ///////////////////// This order (scanorder) specific, unique fields /////////////////////
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
      * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
      */
     private $service;
-
-//    /**
-//     * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the scanorder (unlike to dataqualityage)
-//     *
-//     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="scanorder", cascade={"persist"})
-//     */
-//    private $dataqualitymrnacc;
 
     /**
      * Order delivery (string): I'll give slides to ...
@@ -51,51 +32,6 @@ class ScanOrder {
      */
     private $delivery;
 
-
-
-
-//    public function __construct()
-//    {
-//        $this->dataqualitymrnacc = new ArrayCollection();
-//    }
-
-
-
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getDataqualitymrnacc()
-//    {
-//        return $this->dataqualitymrnacc;
-//    }
-//    public function addDataqualityMrnAcc($dataqualitymrnacc)
-//    {
-//        if( !$this->dataqualitymrnacc->contains($dataqualitymrnacc) ) {
-//            $this->dataqualitymrnacc->add($dataqualitymrnacc);
-//        }
-//    }
-//    public function removeDataqualityMrnAcc($dataqualitymrnacc)
-//    {
-//        $this->dataqualitymrnacc->removeElement($dataqualitymrnacc);
-//    }
 
 
 
@@ -113,23 +49,6 @@ class ScanOrder {
     public function getService()
     {
         return $this->service;
-    }
-
-    /**
-     * @param mixed $message
-     */
-    public function setMessage($message)
-    {
-        $this->message = $message;
-        $message->setScanorder($this);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMessage()
-    {
-        return $this->message;
     }
 
     /**

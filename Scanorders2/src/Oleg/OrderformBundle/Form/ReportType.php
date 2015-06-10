@@ -49,6 +49,19 @@ class ReportType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
+        $builder->add('processedDate', 'date', array(
+            'label' => "Processed Date:",
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+        ));
+
+        $builder->add('processedByUser', null, array(
+            'label' => 'Processed By:',
+            'attr' => array('class' => 'combobox combobox-width'),
+        ));
+
 
 
 

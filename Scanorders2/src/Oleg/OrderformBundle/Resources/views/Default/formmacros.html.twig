@@ -754,7 +754,7 @@
                         {% endif %}
 
 
-                        {#specific fields#}
+                        {################## specific fields ####################}
                         {% if message.laborder is defined and message.laborder.vars.value %}
                             {#no fields#}
                         {% endif %}
@@ -772,11 +772,42 @@
                                 {{ formmacros.fieldDateLabel(message.report.receivedDate,'allow-future-date') }}
                                 </div>
 
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.report.processedDate,'allow-future-date') }}
+                                    {{ formmacros.field( message.report.processedByUser ) }}
+                                </div>
+
                                 {#{{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId~uid) }}#}
                                 {#<div class="well well-sm">#}
                                 {#{{ formmacros.fieldUserWrapper(message.report.signingPathologists,cycle) }}#}
                                 {#{{ formmacros.fieldUserWrapper(message.report.consultedPathologists,cycle) }}#}
                                 {#</div>#}
+
+                            </p>
+                        {% endif %}
+
+                        {% if message.reportBlock is defined and message.reportBlock.vars.value %}
+                            <p>
+
+                                {% if message.reportBlock.reportType is defined %}
+                                    {{ formmacros.field( message.report.reportType ) }}
+                                {% endif %}
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.reportBlock.signatureDate,'allow-future-date') }}
+                                    {{ formmacros.fieldDateLabel(message.reportBlock.issuedDate,'allow-future-date') }}
+                                    {{ formmacros.fieldDateLabel(message.reportBlock.receivedDate,'allow-future-date') }}
+                                </div>
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.reportBlock.processedDate,'allow-future-date') }}
+                                    {{ formmacros.field( message.reportBlock.processedByUser ) }}
+                                </div>
+
+                                <div class="well well-sm">
+                                    {{ formmacros.fieldDateLabel(message.reportBlock.embeddedDate,'allow-future-date') }}
+                                    {{ formmacros.field( message.reportBlock.embeddedByUser ) }}
+                                </div>
 
                             </p>
                         {% endif %}
@@ -787,16 +818,6 @@
                                 {{ formmacros.fieldDateLabel(message.blockorder.instruction.createdate,'allow-future-date') }}
                                 {{ formmacros.field( message.blockorder.instruction.creator ) }}
                                 {{ formmacros.field( message.blockorder.instruction.instruction ) }}
-                                </div>
-
-                                <div class="well well-sm">
-                                {{ formmacros.fieldDateLabel(message.blockorder.processedDate,'allow-future-date') }}
-                                {{ formmacros.field( message.blockorder.processedByUser ) }}
-                                </div>
-
-                                <div class="well well-sm">
-                                {{ formmacros.fieldDateLabel(message.blockorder.embeddedDate,'allow-future-date') }}
-                                {{ formmacros.field( message.blockorder.embeddedByUser ) }}
                                 </div>
                             </p>
                         {% endif %}
@@ -1750,7 +1771,7 @@
 
         {{ formmacros.field(field.outsidereport.source) }}
         {{ formmacros.field(field.outsidereport.outsideReportType) }}
-        {{ formmacros.field(field.outsidereport.outsideReportText) }}
+        {{ formmacros.field(field.reportType.outsideReportText) }}
 
         {#Outside Report Reference Representation (PDF)#}
         {#Outside Report Pathologist(s)#}

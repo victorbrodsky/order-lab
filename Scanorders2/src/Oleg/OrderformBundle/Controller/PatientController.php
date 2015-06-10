@@ -6,6 +6,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
+use Oleg\OrderformBundle\Entity\ReportBlock;
 use Oleg\UserdirectoryBundle\Entity\Link;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,6 @@ use Oleg\OrderformBundle\Entity\LabOrder;
 
 use Oleg\OrderformBundle\Entity\AccessionAccession;
 use Oleg\OrderformBundle\Entity\BlockOrder;
-use Oleg\OrderformBundle\Entity\EmbedBlockOrder;
 use Oleg\OrderformBundle\Entity\EncounterDate;
 use Oleg\OrderformBundle\Entity\EncounterPatage;
 use Oleg\OrderformBundle\Entity\Endpoint;
@@ -41,7 +41,6 @@ use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\Report;
-use Oleg\OrderformBundle\Entity\RequisitionForm;
 use Oleg\OrderformBundle\Entity\Imaging;
 use Oleg\OrderformBundle\Entity\ScanOrder;
 use Oleg\OrderformBundle\Entity\SlideOrder;
@@ -949,57 +948,80 @@ class PatientController extends Controller
             /////////////////////// testing: create specific messages ///////////////////////
             if( $withOrders ) {
 
+                //Multi-Slide Scan Order
                 $this->addSpecificMessage($MultiSlideScanOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $MultiSlideScanOrder, $slide, 'input' );
 
+                //Lab Order Requisition
                 $LabOrderRequisition = $this->createSpecificMessage("Lab Order Requisition");
                 $this->addSpecificMessage($LabOrderRequisition,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $LabOrderRequisition, $accession, 'output' );
                 $this->linkMessageObject( $LabOrderRequisition, $procedure, 'input' );
 
+                //Embed Block Order
                 $EmbedBlockOrder = $this->createSpecificMessage("Embed Block Order");
                 $this->addSpecificMessage($EmbedBlockOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $EmbedBlockOrder, $part, 'input' );
                 $this->linkMessageObject( $EmbedBlockOrder, $block, 'output' );
 
+                //Block Report
+                $BlockReport = $this->createSpecificMessage("Block Report");
+                $this->addSpecificMessage($BlockReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
+                $this->linkMessageObject( $BlockReport, $block, 'input' );
+
+                //set "Embed Block Order" as source for "Block Report"
+                $EmbedBlockOrder->addAssociation($BlockReport);
+                $BlockReport->addBackAssociation($EmbedBlockOrder);
+
+                //Report
                 $Report = $this->createSpecificMessage("Report");
                 $this->addSpecificMessage($Report,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $Report, $accession, 'input' );
 
+                //Autopsy Images
                 $AutopsyImages = $this->createSpecificMessage("Autopsy Images");
                 $this->addSpecificMessage($AutopsyImages,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $AutopsyImages, $accession, 'input' );
 
+                //Gross Images
                 $GrossImages = $this->createSpecificMessage("Gross Images");
                 $this->addSpecificMessage($GrossImages,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $GrossImages, $part, 'input' );
 
+                //Block Images
                 $BlockImages = $this->createSpecificMessage("Block Images");
                 $this->addSpecificMessage($BlockImages,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $BlockImages, $block, 'input' );
 
+                //Outside Report to Part
                 $OutsideReportPart = $this->createSpecificMessage("Outside Report");
                 $this->addSpecificMessage($OutsideReportPart,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $OutsideReportPart, $part, 'input' );
 
+                //Outside Report to Accession
                 $OutsideReportAccession = $this->createSpecificMessage("Outside Report");
                 $this->addSpecificMessage($OutsideReportAccession,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $OutsideReportAccession, $accession, 'input' );
 
+                //Slide Order
                 $SlideOrder = $this->createSpecificMessage("Slide Order");
                 $this->addSpecificMessage($SlideOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $SlideOrder, $block, 'input' );
 
+                //Stain Slide Order
                 $StainSlideOrder = $this->createSpecificMessage("Stain Slide Order");
                 $this->addSpecificMessage($StainSlideOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $StainSlideOrder, $slide, 'input' );
                 $this->linkMessageObject( $StainSlideOrder, $slide, 'output' );
 
+
                 foreach( $slide->getScan() as $scan ) {
+                    //Image Analysis Order
                     $ImageAnalysisOrder = $this->createSpecificMessage("Image Analysis Order");
                     $this->addSpecificMessage($ImageAnalysisOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
                     $this->linkMessageObject( $ImageAnalysisOrder, $scan, 'input' );
 
+                    //Image Analysis Report
                     $AnalysisReport = $this->createSpecificMessage("Image Analysis Report");
                     $this->addSpecificMessage($AnalysisReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
                     $this->linkMessageObject( $AnalysisReport, $scan, 'input' );
@@ -1136,6 +1158,25 @@ class PatientController extends Controller
         if( $messageCategoryStr == "Report" || $messageCategoryStr == "Image Analysis Report" || $messageCategoryStr == "Outside Report" ) {
 
             $report = new Report();
+            $report->setMessage($message);
+            $message->setReport($report);
+
+            //add 2 proxyusers
+            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
+
+            //add first proxyuser
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
+            $message->addProxyuser($UserWrappers[0]);
+
+            //add second proxyuser
+            $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
+            $message->addProxyuser($UserWrappers[0]);
+        }
+
+        if( $messageCategoryStr == "Block Report" ) {
+
+            $report = new ReportBlock();
             $report->setMessage($message);
             $message->setReport($report);
 

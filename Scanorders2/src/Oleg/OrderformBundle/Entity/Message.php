@@ -112,10 +112,6 @@ class Message {
      */
     private $provider;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-//     */
-//    private $proxyuser;
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_message_user",
@@ -125,7 +121,6 @@ class Message {
      **/
     private $proxyuser;
 
-    //TODO: create similar to proxyusers: orderRecipients, reportRecipients
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_message_orderRecipient",
@@ -346,13 +341,7 @@ class Message {
     private $attachmentContainer;
 
 
-    ////////////////////////// Specific Orders //////////////////////////
-
-    //cascade={"persist","remove"}
-    /**
-     * @ORM\OneToOne(targetEntity="ScanOrder", inversedBy="message", cascade={"persist","remove"})
-     **/
-    private $scanorder;
+    ////////////////////////// Specific Messages //////////////////////////
 
     /**
      * @ORM\OneToOne(targetEntity="SlideReturnRequest", inversedBy="message", cascade={"persist","remove"})
@@ -360,14 +349,14 @@ class Message {
     private $slideReturnRequest;
 
     /**
+     * @ORM\OneToOne(targetEntity="ScanOrder", inversedBy="message", cascade={"persist","remove"})
+     **/
+    private $scanorder;
+
+    /**
      * @ORM\OneToOne(targetEntity="LabOrder", inversedBy="message", cascade={"persist","remove"})
      */
     private $laborder;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Report", inversedBy="message", cascade={"persist","remove"})
-     */
-    private $report;
 
     /**
      * @ORM\OneToOne(targetEntity="BlockOrder", inversedBy="message", cascade={"persist","remove"})
@@ -390,7 +379,17 @@ class Message {
      */
     private $imageAnalysisOrder;
 
-    ////////////////////////// EOF Specific Orders //////////////////////////
+    /**
+     * @ORM\OneToOne(targetEntity="Report", inversedBy="message", cascade={"persist","remove"})
+     */
+    private $report;
+
+    /**
+     * @ORM\OneToOne(targetEntity="ReportBlock", inversedBy="message", cascade={"persist","remove"})
+     */
+    private $reportBlock;
+
+    ////////////////////////// EOF Specific Messages //////////////////////////
 
 
 
@@ -1619,8 +1618,21 @@ class Message {
         return $this->imageAnalysisOrder;
     }
 
+    /**
+     * @param mixed $reportBlock
+     */
+    public function setReportBlock($reportBlock)
+    {
+        $this->reportBlock = $reportBlock;
+    }
 
-
+    /**
+     * @return mixed
+     */
+    public function getReportBlock()
+    {
+        return $this->reportBlock;
+    }
 
 
 
