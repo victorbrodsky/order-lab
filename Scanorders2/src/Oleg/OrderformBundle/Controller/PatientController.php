@@ -958,6 +958,16 @@ class PatientController extends Controller
                 $this->linkMessageObject( $LabOrderRequisition, $accession, 'output' );
                 $this->linkMessageObject( $LabOrderRequisition, $procedure, 'input' );
 
+                //Report
+                $Report = $this->createSpecificMessage("Report");
+                $this->addSpecificMessage($Report,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
+                $this->linkMessageObject( $Report, $accession, 'input' );
+                $this->linkMessageObject( $Report, $procedure, 'output' );
+
+                //set "Order" as source for "Report"
+                $LabOrderRequisition->addAssociation($Report);
+                $Report->addBackAssociation($LabOrderRequisition);
+
                 //Embed Block Order
                 $EmbedBlockOrder = $this->createSpecificMessage("Embed Block Order");
                 $this->addSpecificMessage($EmbedBlockOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
@@ -972,11 +982,6 @@ class PatientController extends Controller
                 //set "Embed Block Order" as source for "Block Report"
                 $EmbedBlockOrder->addAssociation($BlockReport);
                 $BlockReport->addBackAssociation($EmbedBlockOrder);
-
-                //Report
-                $Report = $this->createSpecificMessage("Report");
-                $this->addSpecificMessage($Report,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
-                $this->linkMessageObject( $Report, $accession, 'input' );
 
                 //Autopsy Images
                 $AutopsyImages = $this->createSpecificMessage("Autopsy Images");
