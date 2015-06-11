@@ -1178,7 +1178,7 @@ class PatientController extends Controller
 
             $report = new ReportBlock();
             $report->setMessage($message);
-            $message->setReport($report);
+            $message->setReportBlock($report);
 
             //add 2 proxyusers
             $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);

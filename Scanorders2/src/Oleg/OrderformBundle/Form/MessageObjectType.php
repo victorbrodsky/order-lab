@@ -396,20 +396,20 @@ class MessageObjectType extends AbstractType
 
                 //report block
                 if( $dataEntity->getReportBlock() || (array_key_exists('message.reportblock', $this->params) &&  $this->params['message.reportblock'] == true) ) {
-                    echo "ReportBlock:".$dataEntity->getReportBlock()->getId()."<br>";
+                    //echo "ReportBlock:".$dataEntity->getReportBlock()->getId()."<br>";
                     $form->add('reportBlock', new ReportBlockType($this->params,$this->entity), array(
                         'required' => false,
                         'label' => false
                     ));
 
-                    //overwrite report's attachmentContainer
-                    $params = array('labelPrefix'=>'Reference Representation');
-                    $equipmentTypes = array();
-                    $params['device.types'] = $equipmentTypes;
-                    $form->add('attachmentContainer', new AttachmentContainerType($params), array(
-                        'required' => false,
-                        'label' => false
-                    ));
+                    //overwrite blockorder's attachmentContainer
+//                    $params = array('labelPrefix'=>'Block Image');
+//                    $equipmentTypes = array('Xray Machine','Block Imaging Camera');
+//                    $params['device.types'] = $equipmentTypes;
+//                    $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+//                        'required' => false,
+//                        'label' => false
+//                    ));
                 }
 
                 //blockorder
@@ -418,6 +418,24 @@ class MessageObjectType extends AbstractType
                         'required' => false,
                         'label' => false
                     ));
+
+                    //overwrite blockorder's attachmentContainer
+//                    $params = array('labelPrefix'=>'Block Image');
+//                    $equipmentTypes = array('Xray Machine','Block Imaging Camera');
+//                    $params['device.types'] = $equipmentTypes;
+//                    $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+//                        'required' => false,
+//                        'label' => false
+//                    ));
+                }
+
+                //block images
+                if( $dataEntity->getMessageCategory() && $dataEntity->getMessageCategory()->getName() == "Block Images" ) {
+                    //echo "Report:".$dataEntity->getReport()->getId()."<br>";
+//                    $form->add('report', new ReportType($this->params,$this->entity), array(
+//                        'required' => false,
+//                        'label' => false
+//                    ));
 
                     //overwrite blockorder's attachmentContainer
                     $params = array('labelPrefix'=>'Block Image');
