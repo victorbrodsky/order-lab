@@ -336,6 +336,7 @@ class MessageObjectType extends AbstractType
             /* Check we're looking at the right data/form */
             if( $dataEntity && $dataEntity instanceof Message ) {
 
+                $this->params['dataEntity'] = $dataEntity;
                 //echo $dataEntity;
 
                 //laborder
@@ -431,13 +432,7 @@ class MessageObjectType extends AbstractType
 
                 //block images
                 if( $dataEntity->getMessageCategory() && $dataEntity->getMessageCategory()->getName() == "Block Images" ) {
-                    //echo "Report:".$dataEntity->getReport()->getId()."<br>";
-//                    $form->add('report', new ReportType($this->params,$this->entity), array(
-//                        'required' => false,
-//                        'label' => false
-//                    ));
-
-                    //overwrite blockorder's attachmentContainer
+                    //attachmentContainer
                     $params = array('labelPrefix'=>'Block Image');
                     $equipmentTypes = array('Xray Machine','Block Imaging Camera');
                     $params['device.types'] = $equipmentTypes;

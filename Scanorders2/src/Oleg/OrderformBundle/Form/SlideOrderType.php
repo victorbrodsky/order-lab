@@ -25,28 +25,11 @@ class SlideOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('processedDate', 'date', array(
-            'label' => "Slide Cut or Prepared On:",
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-        ));
-
-        $builder->add('processedByUser', null, array(
-            'label' => 'Slide Cut or Prepared By:',
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
-
-
         $params = array('labelPrefix'=>' for Slide Cutter');
         $builder->add('instruction', new InstructionType($params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
             'label' => false
         ));
-
-
-
 
     }
 

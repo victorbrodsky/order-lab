@@ -1008,6 +1008,15 @@ class PatientController extends Controller
                 $this->addSpecificMessage($SlideOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $SlideOrder, $block, 'input' );
 
+                //Slide Report
+                $SlideReport = $this->createSpecificMessage("Slide Report");
+                $this->addSpecificMessage($SlideReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
+                $this->linkMessageObject( $SlideReport, $slide, 'input' );
+
+                //set "Order" as source for "Report"
+                $SlideOrder->addAssociation($SlideReport);
+                $SlideReport->addBackAssociation($SlideOrder);
+
                 //Stain Slide Order
                 $StainSlideOrder = $this->createSpecificMessage("Stain Slide Order");
                 $this->addSpecificMessage($StainSlideOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
@@ -1155,7 +1164,12 @@ class PatientController extends Controller
             //$em->persist($message);
         }
 
-        if( $messageCategoryStr == "Report" || $messageCategoryStr == "Image Analysis Report" || $messageCategoryStr == "Outside Report" ) {
+        if(
+            $messageCategoryStr == "Report" ||
+            $messageCategoryStr == "Image Analysis Report" ||
+            $messageCategoryStr == "Outside Report" ||
+            $messageCategoryStr == "Slide Report"
+        ) {
 
             $report = new Report();
             $report->setMessage($message);

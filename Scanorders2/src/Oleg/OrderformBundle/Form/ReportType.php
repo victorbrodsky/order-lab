@@ -15,11 +15,28 @@ class ReportType extends AbstractType
 
     protected $params;
     protected $entity;
+    protected $label;
 
     public function __construct( $params=null, $entity = null )
     {
         $this->params = $params;
         $this->entity = $entity;
+
+        //////////// create labels ////////////
+        $label = array();
+        $label['processedDate'] = "Processed Date:";
+        $label['processedByUser'] = "Processed By:";
+
+        $dataEntity = $this->params['dataEntity'];
+
+        //slide report
+        if( $dataEntity->getMessageCategory() && $dataEntity->getMessageCategory()->getName() == "Slide Report" ) {
+            $label['processedDate'] = "Slide Cut or Prepared On:";
+            $label['processedByUser'] = "Slide Cut or Prepared By:";
+        }
+
+        $this->label = $label;
+        //////////// EOF create labels ////////////
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -50,7 +67,7 @@ class ReportType extends AbstractType
         ));
 
         $builder->add('processedDate', 'date', array(
-            'label' => "Processed Date:",
+            'label' => $this->label['processedDate'], //"Processed Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
@@ -58,71 +75,15 @@ class ReportType extends AbstractType
         ));
 
         $builder->add('processedByUser', null, array(
-            'label' => 'Processed By:',
+            'label' => $this->label['processedByUser'], //'Processed By:',
             'attr' => array('class' => 'combobox combobox-width'),
         ));
-
-
-
-
-        //Requisition Form Image container
-//        $params = array(
-//            'labelPrefix' => 'Reference Representation',
-//            'documentContainer.comments.comment.label' => "Full Text:"
-//        );
-//        $builder->add('documentContainer', new DocumentContainerType($params), array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
-//            'label' => false
-//        ));
-
-        //$paramsNew = new ArrayObject($params);
-//        $params = array('labelPrefix'=>'Signing Pathologist(s):');
-//        $builder->add('signingPathologists', 'collection', array(
-//            'type' => new UserWrapperType($params),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__signingpathologists__',
-//        ));
-//
-//        $params = array('labelPrefix'=>'Consulted Pathologist(s):');
-//        $builder->add('consultedPathologists', 'collection', array(
-//            'type' => new UserWrapperType($params),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__consultedpathologists__',
-//        ));
-
 
 //        $builder->add('reportType', null, array(
 //            'label' => "Report Type:",
 //            'required' => false,
 //            'multiple' => false,
 //            'attr' => array('class'=>'combobox combobox-width'),
-//        ));
-
-
-//        $builder->add('consultedPathologists', 'custom_selector', array(
-//            'label' => 'Course Director(s):',
-//            'attr' => array('class' => 'combobox combobox-width combobox-optionaluser-educational', 'type' => 'hidden'),
-//            'required'=>false,
-//            'classtype' => 'optionalUserEducational'
-//        ));
-
-
-
-
-
-
-//        $builder->add('others', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\Report',
-//            'label' => false,
-//			'attr' => array('style'=>'display:none;')
 //        ));
 
 
