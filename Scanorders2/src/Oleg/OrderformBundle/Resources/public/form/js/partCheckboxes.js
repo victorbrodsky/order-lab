@@ -7,7 +7,7 @@
  * JS for diseaseType group
  */
 
-var choice_selector_str = 'input:radio';
+var choice_selector_str = 'input:checkbox';
 
 function diseaseTypeListener() {
 
@@ -15,7 +15,13 @@ function diseaseTypeListener() {
     $(".diseaseType").find(choice_selector_str).on('change', function(){
         //access value of changed radio group with $(this).val()
         var checkedValue = $(this).val();
-        //console.log("checkedValue="+checkedValue);
+        console.log("checkedValue="+checkedValue);
+
+        var boxChecked = false;
+        if( $(this).is(':checked') ) {
+            boxChecked = true;
+        }
+        console.log("boxChecked="+boxChecked);
 
         var parent = $(this).closest('.partdiseasetype');
         var originradio = parent.find('.originradio');
@@ -24,26 +30,42 @@ function diseaseTypeListener() {
 
         if( checkedValue == "Neoplastic" ) {
 
-            originradio.collapse('show');
-
-            //add listener for child radio, because it is visible now
-            originradio.find(choice_selector_str).on('change', function(){
-                var checkedValueOrigin = $(this).val();
-                //console.log("checkedValueOrigin="+checkedValueOrigin);
-                if( checkedValueOrigin == "Metastatic" ) {
-                    primaryorganradio.collapse('show');
-                } else {
-                    if( primaryorganradio.is(':visible') ) {
-                        primaryorganradio.collapse('hide');
-                        clearPrimaryOrgan($(this));
+            if( boxChecked ) {
+                originradio.collapse('show');
+                //add listener for child radio, because it is visible now
+                originradio.find(choice_selector_str).on('change', function(){
+                    var checkedValueOrigin = $(this).val();
+                    var boxChecked = false;
+                    if( $(this).is(':checked') ) {
+                        boxChecked = true;
                     }
-                }
-            });
+                    //console.log("checkedValueOrigin="+checkedValueOrigin);
+                    if( checkedValueOrigin == "Metastatic" ) {
+                        if( boxChecked ) {
+                            primaryorganradio.collapse('show');
+                        } else {
+                            if( primaryorganradio.is(':visible') ) {
+                                primaryorganradio.collapse('hide');
+                                clearPrimaryOrgan($(this));
+                            }
+                        }
+                    }
+                    if( boxChecked && checkedValueOrigin == "Unspecified" ) {
+                        console.log("uncheck all children boxes");
+                        var parent = $(this).closest('.origin-checkboxes');
+                        primaryorganradio.find(choice_selector_str).attr('checked',false);
+                    }
+                });
+            } else {
+                hideDiseaseTypeChildren($(this));
+            }
 
-        } else {
+        }
 
-            hideDiseaseTypeChildren($(this));
-
+        if( boxChecked && (checkedValue == "None" || checkedValue == "Unspecified") ) {
+            console.log("uncheck all boxes");
+            var parent = $(this).closest('.partdiseasetype');
+            parent.find(choice_selector_str).attr('checked',false);
         }
 
 
@@ -57,7 +79,25 @@ function diseaseTypeRender() {
         var radioElement = $(this);
         var radioElementValue = radioElement.val();
 
-        if( radioElement.is(':checked') && radioElementValue == "Neoplastic" ) {
+        var boxChecked = false;
+        if( $(this).is(':checked') ) {
+            boxChecked = true;
+        }
+
+//        if( radioElementValue == "Metastatic" ) {
+//
+//            if( boxChecked ) {
+//                var primaryorganradio = parent.find('.primaryorganradio');
+//                primaryorganradio.collapse('show');
+//            } else {
+//                var primaryorganradio = parent.find('.primaryorganradio');
+//                primaryorganradio.collapse('hide');
+//            }
+//
+//
+//        }
+
+        if( boxChecked && radioElementValue == "Neoplastic" ) {
             //console.log("checked id="+radioElement.attr("id"));
 
             var parent = radioElement.closest('.partdiseasetype');
@@ -72,14 +112,27 @@ function diseaseTypeRender() {
                 var originElement = $(this);
                 //console.log("originElement id="+originElement.attr("id")+", value="+originElement.val());
 
-                if( originElement.is(':checked') && originElement.val() == "Metastatic" ) {
+                if( boxChecked && originElement.val() == "Metastatic" ) {
 
                     var primaryorganradio = parent.find('.primaryorganradio');
                     primaryorganradio.collapse('show');
                 }
 
+                if( boxChecked && (radioElementValue == "Unspecified") ) {
+                    console.log("uncheck all children boxes");
+                    var parent = radioElement.closest('.origin-checkboxes');
+                    parent.find(choice_selector_str).attr('checked',false);
+                }
+
             });
 
+        }
+
+//        if( boxChecked && (radioElementValue == "None" || radioElementValue == "Unspecified") ) {
+        if( boxChecked && radioElementValue == "None" ) {
+            console.log("uncheck all boxes");
+            var parent = radioElement.closest('.partdiseasetype');
+            parent.find(choice_selector_str).attr('checked',false);
         }
 
     }

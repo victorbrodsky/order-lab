@@ -36,6 +36,16 @@ class ScanOrder extends OrderBase {
 
 
     /**
+     * @param mixed $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+        $message->setScanorder($this);
+    }
+
+
+    /**
      * @param mixed $service
      */
     public function setService($service)

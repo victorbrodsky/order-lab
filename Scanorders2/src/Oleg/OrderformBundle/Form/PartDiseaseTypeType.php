@@ -22,23 +22,31 @@ class PartDiseaseTypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+//        $builder->add( 'field', 'choice', array(
+//            'label'=>'Type of Disease:',
+//            //'required'=>false,
+//            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None", "Unspecified"=>"Unspecified"),
+//            'multiple' => false,
+//            'expanded' => true,
+//            'attr' => array('class' => 'horizontal_type diseaseType'), //'required' => '0', 'disabled'
+//            //'data' => 'Male',
+//        ));
         $builder->add( 'field', 'choice', array(
             'label'=>'Type of Disease:',
             //'required'=>false,
             'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None", "Unspecified"=>"Unspecified"),
-            'multiple' => false,
+            'multiple' => true,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type diseaseType'), //'required' => '0', 'disabled'
-            //'data' => 'Male',
         ));
 
         $builder->add( 'origin', 'choice', array(
             'label'=>'Origin:',
             //'required'=>false,
             'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic", "Unspecified"=>"Unspecified"),
-            'multiple' => false,
+            'multiple' => true,
             'expanded' => true,
-            'attr' => array('class' => 'horizontal_type'),
+            'attr' => array('class' => 'horizontal_type origin-checkboxes'),
         ));
 
         $attr = array('class' => 'ajax-combobox ajax-combobox-organ', 'type' => 'hidden');
