@@ -35,6 +35,12 @@ class ReportType extends AbstractType
             $label['processedByUser'] = "Slide Cut or Prepared By:";
         }
 
+        //stain report
+        if( $dataEntity->getMessageCategory() && $dataEntity->getMessageCategory()->getName() == "Stain Report" ) {
+            $label['processedDate'] = "Slide Stained On:";
+            $label['processedByUser'] = "Slide Stained By:";
+        }
+
         $this->label = $label;
         //////////// EOF create labels ////////////
     }

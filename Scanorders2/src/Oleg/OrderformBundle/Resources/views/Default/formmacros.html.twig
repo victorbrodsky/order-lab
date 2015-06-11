@@ -754,6 +754,14 @@
                         {% endif %}
 
 
+                        {#controlled by controller and form#}
+                        {% if message.comment is defined %}
+                            <p>
+                                {{ formmacros.field( message.comment ) }}
+                            </p>
+                        {% endif %}
+
+
                         {################## specific fields ####################}
                         {% if message.laborder is defined and message.laborder.vars.value %}
                             {#no fields#}
@@ -844,11 +852,6 @@
                                     {{ formmacros.fieldDateLabel(message.stainorder.instruction.createdate,'allow-future-date') }}
                                     {{ formmacros.field( message.stainorder.instruction.creator ) }}
                                     {{ formmacros.field( message.stainorder.instruction.instruction ) }}
-                                </div>
-
-                                <div class="well well-sm">
-                                    {{ formmacros.fieldDateLabel(message.stainorder.processedDate,'allow-future-date') }}
-                                    {{ formmacros.field( message.stainorder.processedByUser ) }}
                                 </div>
 
                             </p>

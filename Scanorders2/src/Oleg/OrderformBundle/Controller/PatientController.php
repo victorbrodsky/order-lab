@@ -952,6 +952,16 @@ class PatientController extends Controller
                 $this->addSpecificMessage($MultiSlideScanOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $MultiSlideScanOrder, $slide, 'input' );
 
+                //Encounter Note
+                $EncounterNote = $this->createSpecificMessage("Encounter Note");
+                $this->addSpecificMessage($EncounterNote,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
+                $this->linkMessageObject( $EncounterNote, $encounter, 'input' );
+
+                //Procedure Note
+                $ProcedureNote = $this->createSpecificMessage("Procedure Note");
+                $this->addSpecificMessage($ProcedureNote,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
+                $this->linkMessageObject( $ProcedureNote, $procedure, 'input' );
+
                 //Lab Order Requisition
                 $LabOrderRequisition = $this->createSpecificMessage("Lab Order Requisition");
                 $this->addSpecificMessage($LabOrderRequisition,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
@@ -1028,6 +1038,14 @@ class PatientController extends Controller
                 $this->linkMessageObject( $StainSlideOrder, $slide, 'input' );
                 $this->linkMessageObject( $StainSlideOrder, $slide, 'output' );
 
+                //Stain Report
+                $StainReport = $this->createSpecificMessage("Stain Report");
+                $this->addSpecificMessage($StainReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
+                $this->linkMessageObject( $StainReport, $slide, 'input' );
+
+                //set "Order" as source for "Report"
+                $StainSlideOrder->addAssociation($StainReport);
+                $StainReport->addBackAssociation($StainSlideOrder);
 
                 foreach( $slide->getScan() as $scan ) {
                     //Image Analysis Order
@@ -1173,7 +1191,8 @@ class PatientController extends Controller
             $messageCategoryStr == "Report" ||
             $messageCategoryStr == "Image Analysis Report" ||
             $messageCategoryStr == "Outside Report" ||
-            $messageCategoryStr == "Slide Report"
+            $messageCategoryStr == "Slide Report" ||
+            $messageCategoryStr == "Stain Report"
         ) {
 
             $report = new Report();

@@ -25,19 +25,6 @@ class StainOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('processedDate', 'date', array(
-            'label' => "Slide Stained On:",
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-        ));
-
-        $builder->add('processedByUser', null, array(
-            'label' => 'Slide Stained By:',
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
-
 //        //Microscopic Image container
 //        $params = array('labelPrefix'=>'Microscopic Image');
 //        $equipmentTypes = array('Microscope Camera');

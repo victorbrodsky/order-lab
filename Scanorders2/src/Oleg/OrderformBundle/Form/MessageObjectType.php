@@ -339,6 +339,24 @@ class MessageObjectType extends AbstractType
                 $this->params['dataEntity'] = $dataEntity;
                 //echo $dataEntity;
 
+                //Encounter Note
+                if( $dataEntity->getMessageCategory() && $dataEntity->getMessageCategory()->getName() == "Encounter Note" ) {
+                    $form->add('comment', 'text', array(
+                        'required' => false,
+                        'label' => 'Note:',
+                        'attr' => array('class' => 'textarea form-control'),
+                    ));
+                }
+
+                //Procedure Note
+                if( $dataEntity->getMessageCategory() && $dataEntity->getMessageCategory()->getName() == "Procedure Note" ) {
+                    $form->add('comment', 'text', array(
+                        'required' => false,
+                        'label' => 'Note:',
+                        'attr' => array('class' => 'textarea form-control'),
+                    ));
+                }
+
                 //laborder
                 if( $dataEntity->getLaborder() || (array_key_exists('message.laborder', $this->params) &&  $this->params['message.laborder'] == true) ) {
                     //echo "laborder:".$dataEntity->getLaborder()->getId()."<br>";

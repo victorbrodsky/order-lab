@@ -780,7 +780,10 @@ class ScanAdminController extends AdminController
                 'Stain Report',
 
             ),
-            'Note' => array()
+            'Note' => array(
+                'Encounter Note',
+                'Procedure Note'
+            )
 
         );
 
