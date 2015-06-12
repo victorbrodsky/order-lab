@@ -2290,7 +2290,7 @@ function setKeyGroup( element, data ) {
 //process groups such as radio button group
 function processGroup( element, data, disableFlag ) {
 
-    //printF(element,"process group:");
+    printF(element,"process group:");
 
     if( typeof element.attr("id") == 'undefined' || element.attr("id") == "" ) {
         return;
@@ -2309,6 +2309,7 @@ function processGroup( element, data, disableFlag ) {
     //console.log("partId=" + partId );
 
     var members = element.find(partId);
+    //console.log('members.length='+members.length);
 
     for( var i = 0; i < members.length; i++ ) {
         var localElement = members.eq(i);
@@ -2318,12 +2319,25 @@ function processGroup( element, data, disableFlag ) {
         if( disableFlag == "ignoreDisable" ) {  //use to set radio box
 
             if( data && data != "" ) {  //set fields with data
-                //console.log("data ok, check radio (data): " + value + "?=" + data['text'] );
-                if( value == data['text'] ) {
+                //console.log("data ok, check radio (data): " + value + "?=" + data['text'] + ",id="+data['id'] );
+
+                //check if current checkbox value (diseasetype id) is in array of data['diseasetypes']
+                var index = -1;
+                for( var ii = 0; ii < data['diseasetypes'].length; ii++ ) {
+                    //console.log("data check :" + value + "==" + data['diseasetypes'][ii]['id'] );
+                    if( data['diseasetypes'][ii]['id'] == value ) {
+                        index = ii;
+                        break;
+                    }
+                }
+                //console.log("index=" + index );
+
+                //if( value == data['text'] ) {
+                if( index > -1 ) {
                     //console.log("Match!" );
-                    //console.log("show and set children: disableFlag="+disableFlag+", origin="+data['origin']+", primaryorgan="+data['primaryorgan']);
+                    //console.log("show and set children: disableFlag="+disableFlag+", diseasetypes="+data['diseasetypes']+", diseaseorigins="+data['diseaseorigins']+", primaryorgan="+data['primaryorgan']);
                     localElement.prop('checked',true);
-                    diseaseTypeRenderCheckForm(element,data['origin'],data['primaryorgan']);    //set diseaseType group
+                    diseaseTypeRenderCheckForm(element,data['diseasetypes'],data['diseaseorigins'],data['primaryorgan']);    //set diseaseType group
                 }
             } else {
                 //console.log("no data radio: value=" + value);

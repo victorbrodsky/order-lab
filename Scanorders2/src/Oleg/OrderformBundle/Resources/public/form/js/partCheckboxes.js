@@ -165,7 +165,7 @@ function diseaseTypeRender() {
 }
 
 //render diseaseType by AJAX from checkForm
-function diseaseTypeRenderCheckForm( element, origin, primaryorgan ) {
+function diseaseTypeRenderCheckForm( element, diseasetypes, diseaseorigins, primaryorgan ) {
 
     if( !element.attr("class") || element.attr("class").indexOf('diseaseType') == -1 ) {
         return;
@@ -173,7 +173,12 @@ function diseaseTypeRenderCheckForm( element, origin, primaryorgan ) {
 
     function checkDiseaseType() {
         var radioElement = $(this);
-        var radioElementValue = radioElement.val();
+        //var radioElementValue = radioElement.val();
+
+        var label = $("label[for='"+this.id+"']");
+        var radioElementValue = label.text();
+
+        //console.log("checkDiseaseType: radioElementValue="+radioElementValue);
 
         if( radioElement.is(':checked') && radioElementValue == "Neoplastic" ) {
             //console.log("checked id="+radioElement.attr("id"));
@@ -188,11 +193,24 @@ function diseaseTypeRenderCheckForm( element, origin, primaryorgan ) {
             originradio.find(choice_selector_str).each(function() {
 
                 var originElement = $(this);
-                var originElementValue = originElement.val();
+                //var originElementValue = originElement.val();
+                var label = $("label[for='"+this.id+"']");
+                var originElementValue = label.text();
                 //console.log("originElement id="+originElement.attr("id")+", value="+originElementValue);
 
-                if( origin == "Metastatic" && originElementValue == "Metastatic" ) {
-                    //console.log("Check "+origin);
+                //check if current checkbox value is in array of data
+                var index = -1;
+                for( var ii = 0; ii < diseaseorigins.length; ii++ ) {
+                    //console.log("data check :" + value + "==" + data['diseasetypes'][ii]['id'] );
+                    if( diseaseorigins[ii]['name'] == "Metastatic" ) {
+                        index = ii;
+                        break;
+                    }
+                }
+
+                //if( origin == "Metastatic" && originElementValue == "Metastatic" ) {
+                if( index > -1 && originElementValue == "Metastatic" ) {
+                    //console.log("Check originElementValue="+originElementValue);
                     originElement.prop('checked',true);
 
                     var primaryorganradio = parent.find('.primaryorganradio');
