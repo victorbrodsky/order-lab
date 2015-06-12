@@ -14,14 +14,16 @@ function diseaseTypeListener() {
     //add listener for all visible radio for diseaseType
     $(".diseaseType").find(choice_selector_str).on('change', function(){
         //access value of changed radio group with $(this).val()
-        var checkedValue = $(this).val();
-        console.log("checkedValue="+checkedValue);
+        //var checkedValue = $(this).val();
+        var label = $("label[for='"+this.id+"']");
+        var checkedValue = label.text();
+        //console.log("checkedValue="+checkedValue);
 
         var boxChecked = false;
         if( $(this).is(':checked') ) {
             boxChecked = true;
         }
-        console.log("boxChecked="+boxChecked);
+        //console.log("boxChecked="+boxChecked);
 
         var parent = $(this).closest('.partdiseasetype');
         var originradio = parent.find('.originradio');
@@ -34,7 +36,9 @@ function diseaseTypeListener() {
                 originradio.collapse('show');
                 //add listener for child radio, because it is visible now
                 originradio.find(choice_selector_str).on('change', function(){
-                    var checkedValueOrigin = $(this).val();
+                    //var checkedValueOrigin = $(this).val();
+                    var label = $("label[for='"+this.id+"']");
+                    var checkedValueOrigin = label.text();
                     var boxChecked = false;
                     if( $(this).is(':checked') ) {
                         boxChecked = true;
@@ -50,10 +54,21 @@ function diseaseTypeListener() {
                             }
                         }
                     }
-                    if( boxChecked && checkedValueOrigin == "Unspecified" ) {
-                        console.log("uncheck all children boxes");
+                    if( checkedValueOrigin == "Unspecified" ) {
+                        //console.log("uncheck all children boxes");
                         var parent = $(this).closest('.origin-checkboxes');
-                        primaryorganradio.find(choice_selector_str).attr('checked',false);
+                        parent.find(choice_selector_str).not(this).each(function(){
+                            if( boxChecked ) {
+                                $(this).attr('checked',false);
+                                $(this).attr('disabled',true);
+                                if( primaryorganradio.is(':visible') ) {
+                                    primaryorganradio.collapse('hide');
+                                    clearPrimaryOrgan($(this));
+                                }
+                            } else {
+                                $(this).attr('disabled',false);
+                            }
+                        });
                     }
                 });
             } else {
@@ -62,10 +77,19 @@ function diseaseTypeListener() {
 
         }
 
-        if( boxChecked && (checkedValue == "None" || checkedValue == "Unspecified") ) {
-            console.log("uncheck all boxes");
+        if( checkedValue == "None" || checkedValue == "Unspecified" ) {
+            //console.log("uncheck all boxes");
             var parent = $(this).closest('.partdiseasetype');
-            parent.find(choice_selector_str).attr('checked',false);
+            parent.find(choice_selector_str).not(this).each(function(){
+                if( boxChecked ) {
+                    $(this).attr('checked',false);
+                    $(this).attr('disabled',true);
+                    hideDiseaseTypeChildren($(this));
+                } else {
+                    $(this).attr('disabled',false);
+                }
+            });
+
         }
 
 
@@ -119,7 +143,7 @@ function diseaseTypeRender() {
                 }
 
                 if( boxChecked && (radioElementValue == "Unspecified") ) {
-                    console.log("uncheck all children boxes");
+                    //console.log("uncheck all children boxes");
                     var parent = radioElement.closest('.origin-checkboxes');
                     parent.find(choice_selector_str).attr('checked',false);
                 }
@@ -130,7 +154,7 @@ function diseaseTypeRender() {
 
 //        if( boxChecked && (radioElementValue == "None" || radioElementValue == "Unspecified") ) {
         if( boxChecked && radioElementValue == "None" ) {
-            console.log("uncheck all boxes");
+            //console.log("uncheck all boxes");
             var parent = radioElement.closest('.partdiseasetype');
             parent.find(choice_selector_str).attr('checked',false);
         }

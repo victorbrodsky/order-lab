@@ -2304,7 +2304,10 @@ function processGroup( element, data, disableFlag ) {
 
     //console.log("process group id="+element.attr("id")+ ", class="+element.attr("class") + ", fieldName="+fieldName );
 
-    var partId = 'input[id*="'+fieldName+'_"]:radio';
+    //var partId = 'input[id*="'+fieldName+'_"]:radio';
+    var partId = 'input[id*="'+fieldName+'_"][type=radio],input[id*="'+fieldName+'_"][type=checkbox]';
+    //console.log("partId=" + partId );
+
     var members = element.find(partId);
 
     for( var i = 0; i < members.length; i++ ) {

@@ -1034,14 +1034,14 @@
 {% macro diseaseTypeForm( field ) %}
     {% import _self as formmacros %}
 
-    {{ formmacros.field(field.field) }}
+    {{ formmacros.field(field.diseaseTypes) }}
     <br>
 
     <div class="collapse originradio">
         <div class="well" align='center'>
             {#{{ form_label(form.origin) }}#}
             {#{{ form_widget(form.origin) }}#}
-            {{ formmacros.field(field.origin) }}
+            {{ formmacros.field(field.diseaseOrigins) }}
         </div>
     </div>
 

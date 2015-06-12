@@ -561,19 +561,25 @@ class MultiScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
+        $messageCategory = $entity->getMessageCategory()->getName()."";
+
         //redirect to show table view controller if form type is "Table-View Scan Order"
-        if( $entity->getMessageCategory()->getName() == "Table-View Scan Order" ) {
+        if( $messageCategory == "Table-View Scan Order" ) {
             return $this->redirect($this->generateUrl('table_show',array('id'=>$entity->getOid())));
         }
 
+        //echo "cat=".$messageCategory."<br>";
         if(
-            $entity->getMessageCategory()->getName() != "Multi-Slide Scan Order" ||
-            $entity->getMessageCategory()->getName() != "One-Slide Scan Order"
-        ) {
+            $messageCategory != "Multi-Slide Scan Order" &&
+            $messageCategory != "One-Slide Scan Order"
+        )
+        {
+            //exit('message_show');
             return $this->redirect($this->generateUrl('message_show',array('id'=>$id)));
-    }
+        }
+        //exit('detail show');
 
-    //redirect by status
+        //redirect by status
         $orderUtil = $this->get('scanorder_utility');
         $redirect = $orderUtil->redirectOrderByStatus($entity,$routeName);
         if( $redirect != null ) {

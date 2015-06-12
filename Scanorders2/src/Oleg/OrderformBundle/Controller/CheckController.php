@@ -83,6 +83,17 @@ class CheckController extends Controller {
                             }
                             $hist[$child] = $children;
                     } else
+                    if( $child == "diseaseorigins" || $child == "diseasetypes" ) {
+                        $childs = $field->$getMethod();
+                        $children = array();
+                        foreach( $childs as $onechild ) {
+                            $childArr = array();
+                            $childArr["id"] = $onechild->getId();
+                            $childArr["name"] = $onechild->getName()."";
+                            $children[] = $childArr;
+                        }
+                        $hist[$child] = $children;
+                    } else
                     {
                         $childValue = $field->$getMethod()."";
                         //echo "childValue=".$childValue."<br>";
@@ -562,7 +573,7 @@ class CheckController extends Controller {
                 'disident'=>$this->getArrayFieldJson($entity->getDisident()),
                 'paper'=>$this->getArrayFieldJson($entity->getPaper(), array("documents")),
                 'diffDisident'=>$this->getArrayFieldJson($entity->getDiffDisident()),
-                'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("origin","primaryorgan") ),
+                'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("diseasetypes","diseaseorigins","primaryorgan") ),
                 'fullObjectName'=>$entity->obtainFullObjectName()
             );
         } 

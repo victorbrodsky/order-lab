@@ -7,6 +7,8 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\OrderformBundle\Entity\DiseaseOriginList;
+use Oleg\OrderformBundle\Entity\DiseaseTypeList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -109,8 +111,9 @@ class ScanAdminController extends AdminController
         $count_progressCommentsEventType = $this->generateProgressCommentsEventType();
         $count_generateMagnifications = $this->generateMagnifications();
         $count_generateImageAnalysisAlgorithmList = $this->generateImageAnalysisAlgorithmList();
-
         $count_race = $this->generateRace();
+        $count_DiseaseTypeList = $this->generateDiseaseTypeList();
+        $count_DiseaseOriginList = $this->generateDiseaseOriginList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -124,6 +127,8 @@ class ScanAdminController extends AdminController
             'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
+            'DiseaseTypes='.$count_DiseaseTypeList.', '.
+            'DiseaseOrigins='.$count_DiseaseOriginList.', '.
             'Statuses='.$count_status.', '.
             'Slide Types='.$count_slidetype.', '.
             'MRN Types='.$count_mrntype.', '.
@@ -1314,6 +1319,72 @@ class ScanAdminController extends AdminController
         foreach( $types as $type ) {
 
             $listEntity = new RaceList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateDiseaseTypeList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:DiseaseTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Neoplastic',
+            'Non-Neoplastic',
+            'None',
+            'Unspecified'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new DiseaseTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateDiseaseOriginList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:DiseaseOriginList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Primary',
+            'Metastatic',
+            'Unspecified'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new DiseaseOriginList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

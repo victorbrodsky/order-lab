@@ -54,6 +54,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/", name="patienttype-list")
      * @Route("/magnifications/", name="magnifications-list")
      * @Route("/image-analysis-algorithms/", name="imageanalysisalgorithm-list")
+     * @Route("/disease-types/", name="diseasetypes-list")
+     * @Route("/disease-origins/", name="diseaseorigins-list")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
@@ -101,6 +103,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/", name="patienttype_create")
      * @Route("/magnifications/", name="magnifications_create")
      * @Route("/image-analysis-algorithms/", name="imageanalysisalgorithm_create")
+     * @Route("/disease-types/", name="diseasetypes_create")
+     * @Route("/disease-origins/", name="diseaseorigins_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -148,6 +152,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/new", name="patienttype_new")
      * @Route("/magnifications/new", name="magnifications_new")
      * @Route("/image-analysis-algorithms/new", name="imageanalysisalgorithm_new")
+     * @Route("/disease-types/new", name="diseasetypes_new")
+     * @Route("/disease-origins/new", name="diseaseorigins_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -195,6 +201,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/{id}", name="patienttype_show")
      * @Route("/magnifications/{id}", name="magnifications_show")
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_show")
+     * @Route("/disease-types/{id}", name="diseasetypes_show")
+     * @Route("/disease-origins/{id}", name="diseaseorigins_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -240,8 +248,10 @@ class ScanListController extends ListController
      * @Route("/report-types/{id}/edit", name="reporttype_edit")
      * @Route("/instructions-for-embedder/{id}/edit", name="instruction_edit")
      * @Route("/patient-types/{id}/edit", name="patienttype_edit")
-     * @Route("/magnifications/edit", name="magnifications_edit")
-     * @Route("/image-analysis-algorithms/edit", name="imageanalysisalgorithm_edit")
+     * @Route("/magnifications/{id}/edit", name="magnifications_edit")
+     * @Route("/image-analysis-algorithms/{id}/edit", name="imageanalysisalgorithm_edit")
+     * @Route("/disease-types/{id}/edit", name="diseasetypes_edit")
+     * @Route("/disease-origins/{id}/edit", name="diseaseorigins_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -289,6 +299,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/{id}", name="patienttype_update")
      * @Route("/magnifications/{id}", name="magnifications_update")
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_update")
+     * @Route("/disease-types/{id}", name="diseasetypes_update")
+     * @Route("/disease-origins/{id}", name="diseaseorigins_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -432,6 +444,15 @@ class ScanListController extends ListController
             $className = "ImageAnalysisAlgorithmList";
             $displayName = "Image Analysis Algorithms";
             break;
+        case "diseasetypes":
+            $className = "DiseaseTypeList";
+            $displayName = "Disease Types";
+            break;
+        case "diseaseorigins":
+            $className = "DiseaseOriginList";
+            $displayName = "Disease Origins";
+            break;
+
 
 
         default:
@@ -485,6 +506,8 @@ class ScanListController extends ListController
      * @Route("/patient-types/{id}", name="patienttype_delete")
      * @Route("/magnifications/{id}", name="magnifications_delete")
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_delete")
+     * @Route("/disease-types/{id}", name="diseasetypes_delete")
+     * @Route("/disease-origins/{id}", name="diseaseorigins_delete")
      *
      * @Method("DELETE")
      */
