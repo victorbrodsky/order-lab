@@ -2290,7 +2290,7 @@ function setKeyGroup( element, data ) {
 //process groups such as radio button group
 function processGroup( element, data, disableFlag ) {
 
-    printF(element,"process group:");
+    //printF(element,"disableFlag="+disableFlag+": process group:");
 
     if( typeof element.attr("id") == 'undefined' || element.attr("id") == "" ) {
         return;
@@ -2339,6 +2339,7 @@ function processGroup( element, data, disableFlag ) {
                     localElement.prop('checked',true);
                     diseaseTypeRenderCheckForm(element,data['diseasetypes'],data['diseaseorigins'],data['primaryorgan']);    //set diseaseType group
                 }
+                localElement.attr("disabled", true);
             } else {
                 //console.log("no data radio: value=" + value);
                 //console.log("hide children: disableFlag="+disableFlag);
@@ -2350,11 +2351,7 @@ function processGroup( element, data, disableFlag ) {
         } else  {
             if( disableFlag ) {
                 //console.log("disable radio: value=" + value);
-                if( localElement.is(":checked") ){
-                    localElement.attr("disabled", false);
-                } else {
-                    localElement.attr("disabled", true);
-                }
+                localElement.attr("disabled", true);
             } else {
                 //console.log("enable radio: value=" + value);
                 localElement.prop("disabled", false);

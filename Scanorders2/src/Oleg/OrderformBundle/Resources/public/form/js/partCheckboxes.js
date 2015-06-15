@@ -13,155 +13,145 @@ function diseaseTypeListener() {
 
     //add listener for all visible radio for diseaseType
     $(".diseaseType").find(choice_selector_str).on('change', function(){
-        //access value of changed radio group with $(this).val()
-        //var checkedValue = $(this).val();
-        var label = $("label[for='"+this.id+"']");
-        var checkedValue = label.text();
-        //console.log("checkedValue="+checkedValue);
 
-        var boxChecked = false;
-        if( $(this).is(':checked') ) {
-            boxChecked = true;
-        }
-        //console.log("boxChecked="+boxChecked);
-
-        var parent = $(this).closest('.partdiseasetype');
-        var originradio = parent.find('.originradio');
-        var primaryorganradio = parent.find('.primaryorganradio');
-        //console.log("originradio id="+originradio.attr("id")+", class="+originradio.attr("class"));
-
-        if( checkedValue == "Neoplastic" ) {
-
-            if( boxChecked ) {
-                originradio.collapse('show');
-                //add listener for child radio, because it is visible now
-                originradio.find(choice_selector_str).on('change', function(){
-                    //var checkedValueOrigin = $(this).val();
-                    var label = $("label[for='"+this.id+"']");
-                    var checkedValueOrigin = label.text();
-                    var boxChecked = false;
-                    if( $(this).is(':checked') ) {
-                        boxChecked = true;
-                    }
-                    //console.log("checkedValueOrigin="+checkedValueOrigin);
-                    if( checkedValueOrigin == "Metastatic" ) {
-                        if( boxChecked ) {
-                            primaryorganradio.collapse('show');
-                        } else {
-                            if( primaryorganradio.is(':visible') ) {
-                                primaryorganradio.collapse('hide');
-                                clearPrimaryOrgan($(this));
-                            }
-                        }
-                    }
-                    if( checkedValueOrigin == "Unspecified" ) {
-                        //console.log("uncheck all children boxes");
-                        var parent = $(this).closest('.origin-checkboxes');
-                        parent.find(choice_selector_str).not(this).each(function(){
-                            if( boxChecked ) {
-                                $(this).attr('checked',false);
-                                $(this).attr('disabled',true);
-                                if( primaryorganradio.is(':visible') ) {
-                                    primaryorganradio.collapse('hide');
-                                    clearPrimaryOrgan($(this));
-                                }
-                            } else {
-                                $(this).attr('disabled',false);
-                            }
-                        });
-                    }
-                });
-            } else {
-                hideDiseaseTypeChildren($(this));
-            }
-
-        }
-
-        if( checkedValue == "None" || checkedValue == "Unspecified" ) {
-            //console.log("uncheck all boxes");
-            var parent = $(this).closest('.partdiseasetype');
-            parent.find(choice_selector_str).not(this).each(function(){
-                if( boxChecked ) {
-                    $(this).attr('checked',false);
-                    $(this).attr('disabled',true);
-                    hideDiseaseTypeChildren($(this));
-                } else {
-                    $(this).attr('disabled',false);
-                }
-            });
-
-        }
-
+        diseaseTypeProcessing($(this));
 
     });
 
 }
+function diseaseTypeProcessing(checkbox) {
+    //access value of changed radio group with $(this).val()
+    //var checkedValue = $(this).val();
+    var label = $("label[for='"+checkbox.attr("id")+"']");
+    var checkedValue = label.text();
+    //console.log("checkedValue="+checkedValue);
 
-function diseaseTypeRender() {
+    var boxChecked = false;
+    if( checkbox.is(':checked') ) {
+        boxChecked = true;
+    }
+    //console.log("checkedValue="+checkedValue+", boxChecked="+boxChecked);
 
-    function checkDiseaseType() {
-        var radioElement = $(this);
-        var radioElementValue = radioElement.val();
+    var parent = checkbox.closest('.partdiseasetype');
+    var originradio = parent.find('.originradio');
+    var primaryorganradio = parent.find('.primaryorganradio');
+    //console.log("originradio id="+originradio.attr("id")+", class="+originradio.attr("class"));
 
-        var boxChecked = false;
-        if( $(this).is(':checked') ) {
-            boxChecked = true;
-        }
+    if( checkedValue == "Neoplastic" ) {
 
-//        if( radioElementValue == "Metastatic" ) {
-//
-//            if( boxChecked ) {
-//                var primaryorganradio = parent.find('.primaryorganradio');
-//                primaryorganradio.collapse('show');
-//            } else {
-//                var primaryorganradio = parent.find('.primaryorganradio');
-//                primaryorganradio.collapse('hide');
-//            }
-//
-//
-//        }
-
-        if( boxChecked && radioElementValue == "Neoplastic" ) {
-            //console.log("checked id="+radioElement.attr("id"));
-
-            var parent = radioElement.closest('.partdiseasetype');
-            var originradio = parent.find('.originradio');
-
+        if( boxChecked ) {
             originradio.collapse('show');
-
-            //console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
-
-            originradio.find(choice_selector_str).each(function() {
-
-                var originElement = $(this);
-                //console.log("originElement id="+originElement.attr("id")+", value="+originElement.val());
-
-                if( boxChecked && originElement.val() == "Metastatic" ) {
-
-                    var primaryorganradio = parent.find('.primaryorganradio');
-                    primaryorganradio.collapse('show');
+            //add listener for child radio, because it is visible now
+            originradio.find(choice_selector_str).on('change', function(){
+                //var checkedValueOrigin = checkbox.val();
+                var label = $("label[for='"+this.id+"']");
+                var checkedValueOrigin = label.text();
+                var boxChecked = false;
+                if( checkbox.is(':checked') ) {
+                    boxChecked = true;
                 }
-
-                if( boxChecked && (radioElementValue == "Unspecified") ) {
+                //console.log("checkedValueOrigin="+checkedValueOrigin);
+                if( checkedValueOrigin == "Metastatic" ) {
+                    if( boxChecked ) {
+                        primaryorganradio.collapse('show');
+                    } else {
+                        if( primaryorganradio.is(':visible') ) {
+                            primaryorganradio.collapse('hide');
+                            clearPrimaryOrgan(checkbox);
+                        }
+                    }
+                }
+                if( checkedValueOrigin == "Unspecified" ) {
                     //console.log("uncheck all children boxes");
-                    var parent = radioElement.closest('.origin-checkboxes');
-                    parent.find(choice_selector_str).attr('checked',false);
+                    var parent = checkbox.closest('.origin-checkboxes');
+                    parent.find(choice_selector_str).not(this).each(function(){
+                        if( boxChecked ) {
+                            checkbox.attr('checked',false);
+                            checkbox.attr('disabled',true);
+                            if( primaryorganradio.is(':visible') ) {
+                                primaryorganradio.collapse('hide');
+                                clearPrimaryOrgan(checkbox);
+                            }
+                        } else {
+                            checkbox.attr('disabled',false);
+                        }
+                    });
                 }
-
             });
-
-        }
-
-//        if( boxChecked && (radioElementValue == "None" || radioElementValue == "Unspecified") ) {
-        if( boxChecked && radioElementValue == "None" ) {
-            //console.log("uncheck all boxes");
-            var parent = radioElement.closest('.partdiseasetype');
-            parent.find(choice_selector_str).attr('checked',false);
+        } else {
+            hideDiseaseTypeChildren(checkbox);
         }
 
     }
 
+    if( checkedValue == "None" || checkedValue == "Unspecified" ) {
+        //console.log("uncheck all boxes");
+        var parent = checkbox.closest('.partdiseasetype');
+        parent.find(choice_selector_str).not(this).each(function(){
+            if( boxChecked ) {
+                checkbox.attr('checked',false);
+                checkbox.attr('disabled',true);
+                hideDiseaseTypeChildren(checkbox);
+            } else {
+                checkbox.attr('disabled',false);
+            }
+        });
+
+    }
+}
+
+//render checkboxes and its children when page is rendered from server
+function diseaseTypeRender() {
+
+    function checkDiseaseType() {
+        diseaseTypeSingleRender($(this))
+    }
+
     $(".diseaseType").find(choice_selector_str).each(checkDiseaseType);
+}
+function diseaseTypeSingleRender(checkbox) {
+    var label = $("label[for='"+checkbox.attr("id")+"']");
+    var elementValue = label.text();
+
+    var boxChecked = false;
+    if( checkbox.is(':checked') ) {
+        boxChecked = true;
+    }
+    //console.log("elementValue="+elementValue+", boxChecked="+boxChecked);
+
+    if( boxChecked && elementValue == "Neoplastic" ) {
+        //console.log("checked id="+checkbox.attr("id"));
+
+        var parent = checkbox.closest('.partdiseasetype');
+        var originradio = parent.find('.originradio');
+
+        originradio.collapse('show');
+
+        //console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
+
+        originradio.find(choice_selector_str).each(function() {
+
+            var originElement = $(this);
+            var label = $("label[for='"+this.id+"']");
+            var elementValue = label.text();
+            //console.log("origin elementValue="+elementValue);
+
+            if( boxChecked && elementValue == "Metastatic" ) {
+                var parent = checkbox.closest('.partdiseasetype');
+                var primaryorganradio = parent.find('.primaryorganradio');
+                primaryorganradio.collapse('show');
+            }
+
+            if( boxChecked && (elementValue == "Unspecified") ) {
+                //console.log("uncheck all children boxes");
+                var parent = checkbox.closest('.origin-checkboxes');
+                parent.find(choice_selector_str).attr('checked',false);
+            }
+
+        });
+
+    }
+
 }
 
 //render diseaseType by AJAX from checkForm
@@ -200,28 +190,70 @@ function diseaseTypeRenderCheckForm( element, diseasetypes, diseaseorigins, prim
 
                 //check if current checkbox value is in array of data
                 var index = -1;
+                var indexMetastatic = -1;
+                var indexPrimary = -1;
+                var indexUnspecified = -1;
                 for( var ii = 0; ii < diseaseorigins.length; ii++ ) {
-                    //console.log("data check :" + value + "==" + data['diseasetypes'][ii]['id'] );
-                    if( diseaseorigins[ii]['name'] == "Metastatic" ) {
+                    //console.log("data check :" + diseaseorigins[ii]['name'] + ", originElementValue=" + originElementValue );
+                    if( diseaseorigins[ii]['name'] == originElementValue ) {
                         index = ii;
                         break;
                     }
+//                    if( diseaseorigins[ii]['name'] == "Metastatic" ) {
+//                        indexMetastatic = ii;
+//                        break;
+//                    }
+//                    if( diseaseorigins[ii]['name'] == "Primary" ) {
+//                        indexPrimary = ii;
+//                        break;
+//                    }
+//                    if( diseaseorigins[ii]['name'] == "Unspecified" ) {
+//                        indexUnspecified = ii;
+//                        break;
+//                    }
                 }
 
-                //if( origin == "Metastatic" && originElementValue == "Metastatic" ) {
-                if( index > -1 && originElementValue == "Metastatic" ) {
-                    //console.log("Check originElementValue="+originElementValue);
+                if( index > -1 ) {
+
                     originElement.prop('checked',true);
 
-                    var primaryorganradio = parent.find('.primaryorganradio');
-                    primaryorganradio.collapse('show');
+                    if( originElementValue == "Metastatic" ) {
+                        //console.log("Check originElementValue="+originElementValue);
+                        //originElement.prop('checked',true);
 
-                    //set ajax-combobox-organ
-                    var primaryOrgan = primaryorganradio.find(".ajax-combobox-organ");
-                    primaryOrgan.select2('data', {id: primaryorgan, text: primaryorgan});
-                } else {
-                    originElement.attr("disabled", true);
+                        var primaryorganradio = parent.find('.primaryorganradio');
+                        primaryorganradio.collapse('show');
+
+                        //set ajax-combobox-organ
+                        var primaryOrgan = primaryorganradio.find(".ajax-combobox-organ");
+                        primaryOrgan.select2('data', {id: primaryorgan, text: primaryorgan});
+                    }
+
                 }
+//                if( indexPrimary > -1 && originElementValue == "Primary" ) {
+//                    originElement.prop('checked',true);
+//                }
+//                if( indexUnspecified > -1 && originElementValue == "Unspecified" ) {
+//                    originElement.prop('checked',true);
+//                }
+
+                //if( origin == "Metastatic" && originElementValue == "Metastatic" ) {
+//                if( index > -1 && originElementValue == "Metastatic" ) {
+//                    //console.log("Check originElementValue="+originElementValue);
+//                    originElement.prop('checked',true);
+//
+//                    var primaryorganradio = parent.find('.primaryorganradio');
+//                    primaryorganradio.collapse('show');
+//
+//                    //set ajax-combobox-organ
+//                    var primaryOrgan = primaryorganradio.find(".ajax-combobox-organ");
+//                    primaryOrgan.select2('data', {id: primaryorgan, text: primaryorgan});
+//                }
+                //else {
+                    //originElement.attr("disabled", true);
+                //}
+
+                originElement.attr("disabled", true);
 
             });
 
