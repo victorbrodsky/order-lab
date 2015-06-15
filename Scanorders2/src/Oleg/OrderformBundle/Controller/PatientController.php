@@ -692,6 +692,9 @@ class PatientController extends Controller
         $linkTypeDownloadClean = $linkTypeDownload->getName();
 
         $maginification = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
+
+        $neoplasticType = $em->getRepository('OlegOrderformBundle:DiseaseTypeList')->findOneByName('Neoplastic');
+        $metastaticOrigin = $em->getRepository('OlegOrderformBundle:DiseaseOriginList')->findOneByName('Metastatic');
         //////////////////////////// EOF get lists ////////////////////////////////////
 
         $patient = new Patient($withfields,$status,$user,$system);
@@ -759,8 +762,8 @@ class PatientController extends Controller
 
                 //set the "Type of Disease" in Part to "Neoplastic" and "Metastatic" to show the child and grandchild questions.
                 $typeDisease = $part->obtainValidField('diseaseType');
-                $typeDisease->setField('Neoplastic');
-                $typeDisease->setOrigin('Metastatic');
+                $typeDisease->addDiseaseType($neoplasticType);
+                $typeDisease->addDiseaseOrigin($metastaticOrigin);
                 $typeDisease->setPrimaryOrgan($organList);
             }
 

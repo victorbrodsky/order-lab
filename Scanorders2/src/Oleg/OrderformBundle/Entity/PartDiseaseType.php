@@ -57,7 +57,8 @@ class PartDiseaseType extends PartArrayFieldAbstract
     protected $primaryOrgan;
 
 
-    public function __construct() {
+    public function __construct( $status = 'valid', $provider = null, $source = null ) {
+        parent::__construct($status,$provider,$source);
         $this->diseaseTypes = new ArrayCollection();
         $this->diseaseOrigins = new ArrayCollection();
     }
