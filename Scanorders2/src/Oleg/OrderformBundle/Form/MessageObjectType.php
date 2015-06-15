@@ -23,6 +23,7 @@ class MessageObjectType extends AbstractType
 
     public function __construct( $params=null, $entity=null )
     {
+
         if( $params ) $this->params = $params;
         if( $entity ) $this->entity = $entity;
 
@@ -31,9 +32,25 @@ class MessageObjectType extends AbstractType
         }
 
         //show by default
-        if( !array_key_exists('message.provider', $this->params) ) {
-            $this->params['message.provider'] = true;
-        }
+//        if( !array_key_exists('slide', $this->params) ) {
+//            $this->params['slide'] = true;
+//        }
+//        if( !array_key_exists('educational', $this->params) ) {
+//            $this->params['educational'] = true;
+//        }
+//        if( !array_key_exists('research', $this->params) ) {
+//            $this->params['research'] = true;
+//        }
+//        if( !array_key_exists('message.idnumber', $this->params) ) {
+//            $this->params['message.idnumber'] = true;
+//        }
+//        if( !array_key_exists('message.orderdate', $this->params) ) {
+//            $this->params['message.orderdate'] = true;
+//        }
+
+//        if( !array_key_exists('message.provider', $this->params) ) {
+//            $this->params['message.provider'] = true;
+//        }
         if( !array_key_exists('message.proxyuser', $this->params) ) {
             $this->params['message.proxyuser'] = true;
         }
@@ -85,9 +102,7 @@ class MessageObjectType extends AbstractType
         if( array_key_exists('labels', $this->params) ) {
             $overLabels = $this->params['labels'];
             foreach($labels as $field=>$label) {
-                //echo $field."=>".$label."<br>";
                 if( array_key_exists($field, $overLabels) ) {
-                    //echo $field." exists!<br>";
                     $labels[$field] = $overLabels[$field];
                 }
             }
@@ -100,9 +115,9 @@ class MessageObjectType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //return;
 
-
-        if( array_key_exists('message.idnumber', $this->params) &&  $this->params['message.idnumber'] == true ) {
+        if( array_key_exists('message.idnumber', $this->params) && $this->params['message.idnumber'] == true ) {
             $builder->add('idnumber', null, array(
                 'label' => "Identification Number:",
                 'attr' => array('class' => 'form-control'),
@@ -110,7 +125,7 @@ class MessageObjectType extends AbstractType
             ));
         }
 
-        if( array_key_exists('message.orderdate', $this->params) &&  $this->params['message.orderdate'] == true ) {
+        if( array_key_exists('message.orderdate', $this->params) && $this->params['message.orderdate'] == true ) {
             //echo "message.orderdate=".$this->params['message.orderdate']."<br>";
             $builder->add('orderdate','date',array(
                 'widget' => 'single_text',
@@ -122,35 +137,19 @@ class MessageObjectType extends AbstractType
             ));
         }
 
-        //echo "provider show=".$this->params['message.provider']."<br>";
-        //if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
-            $builder->add('provider', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:User',
-                'label' => $this->labels['provider'],
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('u')
-                            ->where('u.roles LIKE :roles OR u=:user')
-                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
-                    },
-            ));
-        //}
+        $builder->add('provider', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => $this->labels['provider'],
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.roles LIKE :roles OR u=:user')
+                        ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                },
+        ));
 
-        if( array_key_exists('message.proxyuser', $this->params) &&  $this->params['message.proxyuser'] == true ) {
-//            $builder->add('proxyuser', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:User',
-//                'label' => $this->labels['proxyuser'],
-//                'required' => false,
-//                'multiple' => true,
-//                'attr' => array('class' => 'combobox combobox-width'),
-//                'query_builder' => function(EntityRepository $er) {
-//                        return $er->createQueryBuilder('u')
-//                            ->where('u.roles LIKE :roles OR u=:user')
-//                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
-//                    },
-//            ));
-
+        //if( $this->params['message.proxyuser'] == true ) {
             $builder->add('proxyuser', 'custom_selector', array(
                 'label' => $this->labels['proxyuser'],
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
@@ -158,9 +157,9 @@ class MessageObjectType extends AbstractType
                 //'multiple' => true,
                 'classtype' => 'userWrapper'
             ));
-        }
+        //}
 
-        if( array_key_exists('message.orderRecipients', $this->params) &&  $this->params['message.orderRecipients'] == true ) {
+        if( array_key_exists('message.orderRecipients', $this->params) && $this->params['message.orderRecipients'] == true ) {
             $builder->add('orderRecipients', 'custom_selector', array(
                 'label' => $this->labels['orderRecipients'],
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
@@ -169,7 +168,7 @@ class MessageObjectType extends AbstractType
             ));
         }
 
-        if( array_key_exists('message.reportRecipients', $this->params) &&  $this->params['message.reportRecipients'] == true ) {
+        if( array_key_exists('message.reportRecipients', $this->params) && $this->params['message.reportRecipients'] == true ) {
             $builder->add('reportRecipients', 'custom_selector', array(
                 'label' => $this->labels['reportRecipients'],
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
@@ -178,11 +177,11 @@ class MessageObjectType extends AbstractType
             ));
         }
 
-        if( array_key_exists('educational', $this->params) &&  $this->params['educational'] == true ) {
+        if( array_key_exists('educational', $this->params) && $this->params['educational'] == true ) {
             $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>$this->labels['educational']) );
         }
 
-        if( array_key_exists('research', $this->params) &&  $this->params['research'] == true ) {
+        if( array_key_exists('research', $this->params) && $this->params['research'] == true ) {
             $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>$this->labels['research']) );
         }
 
@@ -227,14 +226,14 @@ class MessageObjectType extends AbstractType
         ));
 
         //sources
-        if( array_key_exists('message.sources', $this->params) &&  $this->params['message.sources'] == true ) {
+        if( $this->params['message.sources'] == true ) {
             $this->params['endpoint.location.label'] = $this->labels['sources.location'];
             $this->params['endpoint.system.label'] = $this->labels['sources.system'];
             $this->addFormEndpoint('sources',$builder,$this->params);
         }
 
         //destinations
-        if( array_key_exists('message.destinations', $this->params) && $this->params['message.destinations'] == true ) {
+        if( $this->params['message.destinations'] == true ) {
             //echo "show destination endpoint<br>";
             $this->params['endpoint.location.label'] = $this->labels['destinations.location'];
             $this->params['endpoint.system.label'] = $this->labels['destinations.system'];
@@ -260,7 +259,7 @@ class MessageObjectType extends AbstractType
 
 
         //message's slide
-        if( array_key_exists('slide', $this->params) &&  $this->params['slide'] == true ) {
+        //if( array_key_exists('slide', $this->params) && $this->params['slide'] == true ) {
             $builder->add('slide', 'collection', array(
                 'type' => new SlideSimpleType($this->params,$this->entity),
                 'label' => false,
@@ -271,38 +270,11 @@ class MessageObjectType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__slide__',
             ));
-        }
-
-//        if( !$builder->has('attachmentContainer') ) {
-//            $params = array('labelPrefix'=>'Image');
-//            $params['device.types'] = array();
-//            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
-//                'required' => false,
-//                'label' => false
-//            ));
-//        }
-//
-//        if( !$builder->has('equipment') ) {
-//            $builder->add('equipment', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:Equipment',
-//                'property' => 'name',
-//                'label'=>$this->labels['equipment'],
-//                'required'=> true,
-//                'multiple' => false,
-//                'attr' => array('class'=>'combobox combobox-width'),
-//                'query_builder' => function(EntityRepository $er) {
-//                        return $er->createQueryBuilder('i')
-//                            ->leftJoin('i.keytype','keytype')
-//                            ->where("keytype.name = :keytype AND i.type != :type")
-//                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
-//                    },
-//            ));
-//        }
+        //}
 
 
         //Associations
-        //$this->params['message.associations'] = true;
-        if( array_key_exists('message.associations', $this->params) &&  $this->params['message.associations'] == true ) {
+        if( $this->params['message.associations'] == true ) {
             $builder->add('associations', 'entity', array(
                 'class' => 'OlegOrderformBundle:Message',
                 'property' => 'getFullName',
@@ -312,7 +284,7 @@ class MessageObjectType extends AbstractType
                 'multiple' => true,
             ));
         }
-        if( array_key_exists('message.backAssociations', $this->params) &&  $this->params['message.backAssociations'] == true ) {
+        if( $this->params['message.backAssociations'] == true ) {
             $builder->add('backAssociations', 'entity', array(
                 'class' => 'OlegOrderformBundle:Message',
                 'property' => 'getFullName',
@@ -321,11 +293,10 @@ class MessageObjectType extends AbstractType
                 'required'=>false,
                 'multiple' => true,
             ));
-                    }
-
+        }
 
         /////////////////////////// specific orders //////////////////////////
-
+if(1) {
         //get message entity
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
         {
@@ -552,6 +523,7 @@ class MessageObjectType extends AbstractType
 
             }//$dataEntity
         });
+}
         /////////////////////////// specific orders //////////////////////////
 
     }

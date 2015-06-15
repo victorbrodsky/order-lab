@@ -187,6 +187,16 @@ class PatientController extends Controller
 
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
 
+//        $encounter = $entity->getEncounter()->first();
+//        $procedure = $encounter->getProcedure()->first();
+//        $accession = $procedure->getAccession()->first();
+//        $parts = $accession->getPart();
+//        foreach( $parts as $part ) {
+//            foreach( $part->getDiseaseType() as $diseaseType ) {
+//                $part->removeDiseaseType($diseaseType);
+//            }
+//        }
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Patient entity.');
         }
@@ -215,7 +225,13 @@ class PatientController extends Controller
         );
         $params['labels'] = $labels;
 
+        $time_pre = microtime(true);
+
         $form = $this->createForm( new PatientType($params,$entity), $entity, array('disabled' => true) );
+
+        $time_post = microtime(true);
+        $exec_time = $time_post - $time_pre;
+        //exit('form created: exec_time='.round($exec_time));
 
         return array(
             'entity' => $entity,

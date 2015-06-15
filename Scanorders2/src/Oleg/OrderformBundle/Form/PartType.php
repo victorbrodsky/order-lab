@@ -22,6 +22,9 @@ class PartType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
+        //testing
+        //$this->params['datastructure'] = false;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -153,6 +156,8 @@ class PartType extends AbstractType
             ));
         }
 
+        //testing
+        //$this->params['datastructure'] = false;
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             $builder->add('message', 'collection', array(
