@@ -37,10 +37,6 @@ class PartDiseaseType extends PartArrayFieldAbstract
      **/
     private $diseaseTypes;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $origin;
     /**
      * @ORM\ManyToMany(targetEntity="DiseaseOriginList", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_diseaseOrigin_diseaseOriginList",

@@ -1034,21 +1034,21 @@
 {% macro diseaseTypeForm( field ) %}
     {% import _self as formmacros %}
 
-    {{ formmacros.field(field.diseaseTypes) }}
-    <br>
+    {% if field.diseaseTypes is defined %}
+        {{ formmacros.field(field.diseaseTypes) }}
+        {#<br>#}
+    {% endif %}
 
-    <div class="collapse originradio">
-        <div class="well" align='center'>
-            {#{{ form_label(form.origin) }}#}
-            {#{{ form_widget(form.origin) }}#}
-            {{ formmacros.field(field.diseaseOrigins) }}
+    {% if field.diseaseOrigins is defined %}
+        <div class="collapse originradio">
+            <div class="well" align='center'>
+                {{ formmacros.field(field.diseaseOrigins) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="collapse primaryorganradio">
         <div class="well" align='center'>
-            {#{{ form_label(form.primaryOrgan) }}#}
-            {#{{ form_widget(form.primaryOrgan) }}#}
             {{ formmacros.field(field.primaryOrgan) }}
         </div>
     </div>
@@ -2077,7 +2077,9 @@
         {% endif %}
 
         {% if diseaseTypeHtml is not defined or diseaseTypeHtml == "" %}
-            {{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType","","","",status) }}
+            {% if part.diseaseType is defined %}
+                {{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType","","","",status) }}
+            {% endif %}
         {% else  %}
             <p><div class="partdiseasetype">{{ diseaseTypeHtml }}</div></p>
             {#{{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType") }}#}

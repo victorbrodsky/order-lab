@@ -3,9 +3,9 @@
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Composer\Autoload\ClassLoader;
 
-ini_set('memory_limit', '512M');   //128M
+ini_set('memory_limit', '1024M');   //512M 128M
 
-ini_set('max_execution_time', 180);  //in sec
+ini_set('max_execution_time', 360);  //in sec
 
 /**
  * @var $loader ClassLoader

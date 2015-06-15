@@ -72,10 +72,6 @@ class PatientController extends Controller
      */
     public function indexAction(Request $request)
     {
-        //found 19
-        //$em = $this->getDoctrine()->getManager();
-        //$entities = $em->getRepository('OlegOrderformBundle:Patient')->findAll();
-
         $searchUtil = $this->get('search_utility');
         $object = 'patient';
         $params = array('request'=>$request,'object'=>$object);
@@ -248,12 +244,12 @@ class PatientController extends Controller
         }
 
         $editForm = $this->createForm(new PatientType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
+        //$deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
         );
     }
 
@@ -274,7 +270,7 @@ class PatientController extends Controller
             throw $this->createNotFoundException('Unable to find Patient entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        //$deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new PatientType(), $entity);
         $editForm->bind($request);
 
@@ -288,7 +284,7 @@ class PatientController extends Controller
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
         );
     }
 
@@ -762,6 +758,9 @@ class PatientController extends Controller
 
                 //set the "Type of Disease" in Part to "Neoplastic" and "Metastatic" to show the child and grandchild questions.
                 $typeDisease = $part->obtainValidField('diseaseType');
+                //echo "DiseaseType count=".count($typeDisease->getDiseaseTypes())."<br>";
+                //echo "DiseaseOrigin count=".count($typeDisease->getDiseaseOrigins())."<br>";
+                //exit('1');
                 $typeDisease->addDiseaseType($neoplasticType);
                 $typeDisease->addDiseaseOrigin($metastaticOrigin);
                 $typeDisease->setPrimaryOrgan($organList);

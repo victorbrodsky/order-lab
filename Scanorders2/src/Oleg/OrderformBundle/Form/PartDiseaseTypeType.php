@@ -22,28 +22,10 @@ class PartDiseaseTypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add( 'field', 'choice', array(
-//            'label'=>'Type of Disease:',
-//            //'required'=>false,
-//            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None", "Unspecified"=>"Unspecified"),
-//            'multiple' => false,
-//            'expanded' => true,
-//            'attr' => array('class' => 'horizontal_type diseaseType'), //'required' => '0', 'disabled'
-//            //'data' => 'Male',
-//        ));
-//        $builder->add( 'field', 'choice', array(
-//            'label'=>'Type of Disease:',
-//            //'required'=>false,
-//            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None", "Unspecified"=>"Unspecified"),
-//            'multiple' => true,
-//            'expanded' => true,
-//            'attr' => array('class' => 'horizontal_type diseaseType'), //'required' => '0', 'disabled'
-//        ));
         $builder->add( 'diseaseTypes', 'entity', array(
             'class' => 'OlegOrderformBundle:DiseaseTypeList',
             'label'=>'Type of Disease:',
-            //'required'=>false,
-            //'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None", "Unspecified"=>"Unspecified"),
+            'required'=>false,
             'multiple' => true,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type diseaseType'), //'required' => '0', 'disabled'
@@ -53,20 +35,10 @@ class PartDiseaseTypeType extends AbstractType
                 },
         ));
 
-//        $builder->add( 'origin', 'choice', array(
-//            'label'=>'Origin:',
-//            //'required'=>false,
-//            'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic", "Unspecified"=>"Unspecified"),
-//            'multiple' => true,
-//            'expanded' => true,
-//            'attr' => array('class' => 'horizontal_type origin-checkboxes'),
-//        ));
-        //$builder->add('diseaseOrigins');
         $builder->add( 'diseaseOrigins', 'entity', array(
             'class' => 'OlegOrderformBundle:DiseaseOriginList',
             'label'=>'Origin:',
-            //'required'=>false,
-            //'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None", "Unspecified"=>"Unspecified"),
+            'required'=>false,
             'multiple' => true,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type origin-checkboxes'), //'required' => '0', 'disabled'
@@ -76,11 +48,9 @@ class PartDiseaseTypeType extends AbstractType
                 },
         ));
 
-        $attr = array('class' => 'ajax-combobox ajax-combobox-organ', 'type' => 'hidden');
-
         $builder->add('primaryOrgan', 'custom_selector', array(
             'label' => 'Primary Site of Origin:',
-            'attr' => $attr,
+            'attr' => array('class' => 'ajax-combobox ajax-combobox-organ', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'sourceOrgan'
         ));

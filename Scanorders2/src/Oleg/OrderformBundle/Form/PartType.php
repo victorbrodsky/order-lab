@@ -128,17 +128,17 @@ class PartType extends AbstractType
         ));
 
         //diseaseType
-        $gen_attr = array('label'=>'Type of Disease:','class'=>'Oleg\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
-        $builder->add('diseaseType', 'collection', array(
-            'type' => new PartDiseaseTypeType($this->params, null, $gen_attr),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Type of Disease:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__partdiseaseType__',
-        ));
+//        $gen_attr = array('label'=>'Type of Disease:','class'=>'Oleg\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
+//        $builder->add('diseaseType', 'collection', array(
+//            'type' => new PartDiseaseTypeType($this->params, null, $gen_attr),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => "Type of Disease:",
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__partdiseaseType__',
+//        ));
 
 
 
