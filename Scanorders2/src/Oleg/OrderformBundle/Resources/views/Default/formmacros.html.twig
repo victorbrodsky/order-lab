@@ -334,7 +334,7 @@
 {% macro hiddenInputFieldsForJS(messageForm) %}
     {% set proxyuserName = null %}
     {% set proxyuserId = null %}
-    {% if messageForm.vars.value.proxyuser %}
+    {% if messageForm.vars.value.proxyuser and messageForm.vars.value.getProxyuserAsUser() %}
         {% set proxyuserName = messageForm.vars.value.getProxyuserAsUser().getUserNameStr() %}
         {% set proxyuserId = messageForm.vars.value.getProxyuserAsUser().getId() %}
     {% endif %}

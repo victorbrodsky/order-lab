@@ -13,9 +13,7 @@ function diseaseTypeListener() {
 
     //add listener for all visible radio for diseaseType
     $(".diseaseType").find(choice_selector_str).on('change', function(){
-
         diseaseTypeProcessing($(this));
-
     });
 
 }
@@ -96,7 +94,9 @@ function diseaseTypeProcessing(checkbox) {
                 $(this).attr('disabled',true);
                 hideDiseaseTypeChildren($(this));
             } else {
-                $(this).attr('disabled',false);
+                if( cycle != "show" ) {
+                    $(this).attr('disabled',false);
+                }
             }
         });
 
@@ -109,11 +109,16 @@ function diseaseTypeRender() {
     function checkDiseaseType() {
         diseaseTypeProcessing($(this));
         diseaseTypeSingleRender($(this));
+//        console.log('cycle='+cycle);
+        if( cycle == "show" ) {
+            $(this).attr("disabled", true);
+        }
     }
 
     $(".diseaseType").find(choice_selector_str).each(checkDiseaseType);
 }
 function diseaseTypeSingleRender(checkbox) {
+
     var label = $("label[for='"+checkbox.attr("id")+"']");
     var elementValue = label.text();
 

@@ -117,7 +117,7 @@ function cleanValidationAlert() {
 
 function initAllElements(newHolder) {
 
-//    if( cycle == "new" || cycle == "amend" ) {
+    //console.log('cycle='+cycle);
     if( cycle == "new" ) {
 
         if( typeof newHolder === 'undefined' || newHolder.length == 0 ) {
@@ -1791,8 +1791,8 @@ function disableElement( parentname, element, flag) {
 
     attachTooltip(element,flag,fieldParentName);
 
-    if( tagName == "DIV" && classs.indexOf("select2") == -1 ) { //only for radio group
-        //console.debug("radio disable classs="+classs+", id="+element.attr('id'));
+    if( tagName == "DIV" && classs.indexOf("select2") == -1 ) { //only for checkbox group
+        //console.debug("checkbox disable classs="+classs+", id="+element.attr('id'));
         processGroup( element, "", flag );
         return;
     }
@@ -2287,7 +2287,7 @@ function setKeyGroup( element, data ) {
     keyEl.val(data['text']);
 }
 
-//process groups such as radio button group
+//process groups such as radio and checkbox button group
 function processGroup( element, data, disableFlag ) {
 
     //printF(element,"disableFlag="+disableFlag+": process group:");
@@ -2366,6 +2366,7 @@ function processGroup( element, data, disableFlag ) {
 function processInputGroupCheckboxFields(element,data,disableFlag,action) {
 
     var parent = element.parent();
+    //console.log("processInputGroupCheckboxFields");
 
     if( parent.hasClass('input-group') ) {
 
@@ -2382,9 +2383,6 @@ function processInputGroupCheckboxFields(element,data,disableFlag,action) {
         parent.find('input:checkbox').each( function() {
 
             //printF($(this),"process input group checkbox:");
-
-            var type = $(this).attr('type');
-            //console.log("type="+type+"value="+value+", alias="+alias+", action="+action);
 
             //assign value
             if( action == 'set' && alias == 1 ) {
