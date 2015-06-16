@@ -354,6 +354,11 @@ class Message {
     private $scanorder;
 
     /**
+     * @ORM\OneToOne(targetEntity="ProcedureOrder", inversedBy="message", cascade={"persist","remove"})
+     **/
+    private $procedureorder;
+
+    /**
      * @ORM\OneToOne(targetEntity="LabOrder", inversedBy="message", cascade={"persist","remove"})
      */
     private $laborder;
@@ -1634,6 +1639,21 @@ class Message {
         return $this->reportBlock;
     }
 
+    /**
+     * @param mixed $procedureorder
+     */
+    public function setProcedureorder($procedureorder)
+    {
+        $this->procedureorder = $procedureorder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProcedureorder()
+    {
+        return $this->procedureorder;
+    }
 
 
 

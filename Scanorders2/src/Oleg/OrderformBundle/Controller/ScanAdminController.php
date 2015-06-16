@@ -760,7 +760,7 @@ class ScanAdminController extends AdminController
                 'Slide Return Request',
                 'Encounter Order',
                 'Procedure Order',
-                'Referral',
+                'Referral Order',
                 'Tissue Examination',
                 'Embed Block Order',
                 'Slide Order',

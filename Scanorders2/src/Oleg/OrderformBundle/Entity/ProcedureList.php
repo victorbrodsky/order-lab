@@ -29,52 +29,52 @@ class ProcedureList extends ListAbstract
      **/
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ProcedureName", mappedBy="field")
-     */
-    protected $procedurename;
+//    /**
+//     * @ORM\OneToMany(targetEntity="ProcedureName", mappedBy="field")
+//     */
+//    protected $procedurename;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->procedurename = new ArrayCollection();
+        //$this->procedurename = new ArrayCollection();
     }   
 
-    /**
-     * Add procedurename
-     *
-     * @param \Oleg\OrderformBundle\Entity\ProcedureName $procedurename
-     * @return ProcedureList
-     */
-    public function addProcedurename(\Oleg\OrderformBundle\Entity\ProcedureName $procedurename)
-    {
-        if( $procedurename && !$this->procedurename->contains($procedurename) ) {
-            $this->procedurename->add($procedurename);
-            $procedurename->setField($this);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Remove procedurename
-     *
-     * @param \Oleg\OrderformBundle\Entity\ProcedureName $procedurename
-     */
-    public function removeProcedurename(\Oleg\OrderformBundle\Entity\ProcedureName $procedurename)
-    {
-        $this->procedurename->removeElement($procedurename);
-    }
-
-    /**
-     * Get procedurename
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getProcedurename()
-    {
-        return $this->procedurename;
-    }
+//    /**
+//     * Add procedurename
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\ProcedureName $procedurename
+//     * @return ProcedureList
+//     */
+//    public function addProcedurename(\Oleg\OrderformBundle\Entity\ProcedureName $procedurename)
+//    {
+//        if( $procedurename && !$this->procedurename->contains($procedurename) ) {
+//            $this->procedurename->add($procedurename);
+//            $procedurename->setField($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove procedurename
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\ProcedureName $procedurename
+//     */
+//    public function removeProcedurename(\Oleg\OrderformBundle\Entity\ProcedureName $procedurename)
+//    {
+//        $this->procedurename->removeElement($procedurename);
+//    }
+//
+//    /**
+//     * Get procedurename
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getProcedurename()
+//    {
+//        return $this->procedurename;
+//    }
 
 
 }

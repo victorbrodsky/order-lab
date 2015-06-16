@@ -282,7 +282,7 @@ class MessageObjectType extends AbstractType
         }
 
         /////////////////////////// specific orders //////////////////////////
-if(1) {
+if( 1 ) {
         //get message entity
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
         {
@@ -306,6 +306,14 @@ if(1) {
                         'required' => false,
                         'label' => 'Note:',
                         'attr' => array('class' => 'textarea form-control'),
+                    ));
+                }
+
+                //Procedure Order
+                if( $messageCategory == "Procedure Order" ) {
+                    $form->add('procedureorder', new ProcedureOrderType($this->params,$this->entity), array(
+                        'required' => false,
+                        'label' => false
                     ));
                 }
 

@@ -565,8 +565,8 @@
                 {% set messageOutputClassName = output.entityNamespace~"\\"~output.entityName %}
                 {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
 
-                {#<br>compare :{{ messageInputClassName }} ?= {{currentObjectClassName }}#}
-                {#<br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}#}
+                {#<br>compare :{{ messageOutputClassName }} ?= {{currentObjectClassName }}#}
+                {#<br>compare (messageoutputid, objectid):{{ output.entityId }} ?= {{object.vars.value.id }}#}
 
                 {% if
                     messageOutputClassName == currentObjectClassName
@@ -763,6 +763,14 @@
 
 
                         {################## specific fields ####################}
+                        {% if message.procedureorder is defined and message.procedureorder.vars.value %}
+                            <p>
+                                {% if message.procedureorder.type is defined %}
+                                    {{ formmacros.field( message.procedureorder.type ) }}
+                                {% endif %}
+                            </p>
+                        {% endif %}
+
                         {% if message.laborder is defined and message.laborder.vars.value %}
                             {#no fields#}
                         {% endif %}

@@ -6,6 +6,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
+use Oleg\OrderformBundle\Entity\ProcedureOrder;
 use Oleg\OrderformBundle\Entity\ReportBlock;
 use Oleg\UserdirectoryBundle\Entity\Link;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
@@ -111,7 +112,7 @@ class PatientController extends Controller
         }
 
         $thisparams = array(
-            'objectNumber' => 1,
+            'objectNumber' => 2,
             'dropzoneImageNumber' => 1,
             'aperioImageNumber' => 1,
             'withorders' => true,
@@ -355,11 +356,12 @@ class PatientController extends Controller
 
         ///////////////////// prepare test patient /////////////////////
         $thisparams = array(
-            'objectNumber' => 1,                //2 - generate 2 encounters (Note: it takes 40 sec (17 sec to make form on server) to render patient with 2 objects; it takes 15 sec for 1 object)
+            'objectNumber' => 2,                //2 - generate 2 encounters (Note: it takes 40 sec (17 sec to make form on server) to render patient with 2 objects; it takes 15 sec for 1 object)
             'dropzoneImageNumber' => 1,
             'aperioImageNumber' => 1,
             'withorders' => true,               //add orders to correspondent entities
             'persist' => true,                 //persist each patient hierarchy object (not used)
+            'flush' => true,                    //flush after each object creation
             'testpatient' => true,              //populate patient hierarchy with default data
             //'accession.attachmentContainer' => 1 //testing!!!
         );
@@ -477,7 +479,7 @@ class PatientController extends Controller
         //now patient hierarchy exists in DB => re-set message inputs and outputs (GeneralEntity) with existing object ID from DB
         $patientDb = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
         //echo "patientDb=".$patientDb."<br>";
-        $this->linkMessagesInPatient($patientDb);
+        //$this->linkMessagesInPatient($patientDb);
         //exit('1');
 
         if( $patient->getId() ) {
@@ -644,6 +646,12 @@ class PatientController extends Controller
             $testpatient = false;
         }
 
+        if( array_key_exists('flush', $params) ) {
+            $flush = $params['flush'];
+        } else {
+            $flush = false;
+        }
+
         $em = $this->getDoctrine()->getManager();
         $securityUtil = $this->get('order_security_utility');
 
@@ -723,6 +731,7 @@ class PatientController extends Controller
 
             $encounter = new Encounter($withfields,$status,$user,$system);
             $encounter->addExtraFields($status,$user,$system);
+            //$encounter->setStatus($status."_".$count);
             $patient->addEncounter($encounter);
 
             if( $persist ) {
@@ -963,6 +972,10 @@ class PatientController extends Controller
                 }
             }
 
+            if( $flush ) {
+                $em->flush();
+            }
+
             /////////////////////// testing: create specific messages ///////////////////////
             if( $withOrders ) {
 
@@ -974,6 +987,12 @@ class PatientController extends Controller
                 $EncounterNote = $this->createSpecificMessage("Encounter Note");
                 $this->addSpecificMessage($EncounterNote,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $EncounterNote, $encounter, 'input' );
+
+                //Procedure Order
+                $ProcedureOrder = $this->createSpecificMessage("Procedure Order");
+                $this->addSpecificMessage($ProcedureOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
+                $this->linkMessageObject( $ProcedureOrder, $encounter, 'input' );
+                $this->linkMessageObject( $ProcedureOrder, $procedure, 'output' );
 
                 //Procedure Note
                 $ProcedureNote = $this->createSpecificMessage("Procedure Note");
@@ -1086,26 +1105,51 @@ class PatientController extends Controller
 
         } //for $objectNumber
 
+        //Referral Order
+        $encounters = $patient->getEncounter();
+        $encounterFirst = $encounters[0];
+        //$encounterFirst->setId(1);
+        //echo $encounterFirst->getStatus()."<br>";
+        $encounterSecond = $encounters[1];
+        //$encounterSecond->setId(2);
+        //echo $encounterSecond->getStatus()."<br>";
+        $ReferralOrder = $this->createSpecificMessage("Referral Order");
+        $this->addSpecificMessage($ReferralOrder,$patient,$encounterFirst,null,null,null,null,null);
+        $this->addSpecificMessage($ReferralOrder,$patient,$encounterSecond,null,null,null,null,null);
+        $this->linkMessageObject( $ReferralOrder, $encounterFirst, 'input' );
+        $this->linkMessageObject( $ReferralOrder, $encounterSecond, 'output' );
+
+        if( $flush ) {
+            $em->flush();
+        }
+
         return $patient;
     }
 
     public function addSpecificMessage($message,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan=null) {
 
-        if( $patient ) {
+        if( $patient )
             $message->addPatient($patient);
-        }
-        $message->addEncounter($encounter);
-        $message->addProcedure($procedure);
-        $message->addAccession($accession);
-        $message->addPart($part);
-        $message->addBlock($block);
-        $message->addSlide($slide);
+        if( $encounter )
+            $message->addEncounter($encounter);
+        if( $procedure )
+            $message->addProcedure($procedure);
+        if( $accession )
+            $message->addAccession($accession);
+        if( $part )
+            $message->addPart($part);
+        if( $block )
+            $message->addBlock($block);
+        if( $slide )
+            $message->addSlide($slide);
 
         if( $scan ) {
             $message->addImaging($scan);
         } else {
-            foreach( $slide->getChildren() as $imaging ) {
-                $message->addImaging($imaging);
+            if( $slide ) {
+                foreach( $slide->getChildren() as $imaging ) {
+                    $message->addImaging($imaging);
+                }
             }
         }
 
@@ -1195,14 +1239,19 @@ class PatientController extends Controller
 //            $message->addInputObject($object);
 //        }
 
+        if( $messageCategoryStr == "Procedure Order" ) {
+            $procedureorder = new ProcedureOrder();
+            $procedureorder->setMessage($message);
+            $message->setProcedureorder($procedureorder);
+
+            //$procedureType = $em->getRepository('OlegOrderformBundle:ProcedureList')->find(1);
+            //$procedureorder->setType($procedureType);
+        }
 
         if( $messageCategoryStr == "Lab Order" ) {
-
             $laborder = new LabOrder();
             $laborder->setMessage($message);
             $message->setLaborder($laborder);
-
-            //$em->persist($message);
         }
 
         if(
