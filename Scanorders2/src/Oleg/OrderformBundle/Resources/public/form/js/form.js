@@ -789,6 +789,10 @@ function contentToggleHierarchyButton(holder) {
         //e.preventDefault();
         //hideORshowCollapsableBodies( $(this), 'hide' );
 
+        if( $(this).hasClass('originradio') || $(this).hasClass('primaryorganradio') ) {
+            return;
+        }
+
         var folderBtn = $(this).closest('.panel-multi-form').find('.panel-heading-hierarchy').find('button.form_body_toggle_btn').first();
         //console.log("folderBtn.length="+folderBtn.length);
         //console.log(folderBtn);

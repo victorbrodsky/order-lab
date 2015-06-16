@@ -107,15 +107,24 @@ function diseaseTypeProcessing(checkbox) {
 function diseaseTypeRender() {
 
     function checkDiseaseType() {
+
         diseaseTypeProcessing($(this));
+
         diseaseTypeSingleRender($(this));
+
 //        console.log('cycle='+cycle);
         if( cycle == "show" ) {
             $(this).attr("disabled", true);
         }
+
     }
 
     $(".diseaseType").find(choice_selector_str).each(checkDiseaseType);
+
+    //checkbox has collapse element: fix bug: https://github.com/eternicode/bootstrap-datepicker/issues/978
+    $('.originradio,.primaryorganradio').on('hide.bs.collapse', function (event) {
+        event.stopPropagation();
+    });
 }
 function diseaseTypeSingleRender(checkbox) {
 
