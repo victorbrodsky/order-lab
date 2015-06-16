@@ -355,7 +355,7 @@ class PatientController extends Controller
 
         ///////////////////// prepare test patient /////////////////////
         $thisparams = array(
-            'objectNumber' => 2,                //2 - generate 2 encounters
+            'objectNumber' => 1,                //2 - generate 2 encounters (Note: it takes 40 sec (17 sec to make form on server) to render patient with 2 objects; it takes 15 sec for 1 object)
             'dropzoneImageNumber' => 1,
             'aperioImageNumber' => 1,
             'withorders' => true,               //add orders to correspondent entities
