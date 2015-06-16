@@ -27,16 +27,16 @@ class ReportType extends AbstractType
         $label['processedDate'] = "Processed Date:";
         $label['processedByUser'] = "Processed By:";
 
-        $dataEntity = $this->params['dataEntity'];
+        $messageCategory = $this->params['dataEntity.messageCategory'];
 
         //slide report
-        if( $dataEntity->getMessageCategory() && $dataEntity->getMessageCategory()->getName() == "Slide Report" ) {
+        if( $messageCategory == "Slide Report" ) {
             $label['processedDate'] = "Slide Cut or Prepared On:";
             $label['processedByUser'] = "Slide Cut or Prepared By:";
         }
 
         //stain report
-        if( $dataEntity->getMessageCategory() && $dataEntity->getMessageCategory()->getName() == "Stain Report" ) {
+        if( $messageCategory == "Stain Report" ) {
             $label['processedDate'] = "Slide Stained On:";
             $label['processedByUser'] = "Slide Stained By:";
         }
