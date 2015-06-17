@@ -2093,9 +2093,9 @@
             {#{{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType") }}#}
         {% endif %}
 
-    </div>
+        {{ formmacros.partExtraForm(part,flag,uid,cycle,status) }}
 
-    {{ formmacros.partExtraForm(part,flag,uid,cycle,status) }}
+    </div>
 
 {% endmacro %}
 
@@ -2483,7 +2483,7 @@
 
         {% if accession.attachmentContainer is defined and accession.attachmentContainer.documentContainers|length > 0 %}
 
-            <div class="panel panel-default">
+            <div class="panel panel-imaging">
 
                 <div class="panel-heading">
 
@@ -2524,7 +2524,7 @@
 
         {% if part.attachmentContainer is defined and part.attachmentContainer.documentContainers|length > 0 %}
 
-            <div class="panel panel-default">
+            <div class="panel panel-imaging">
 
                 <div class="panel-heading">
 

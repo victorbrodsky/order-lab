@@ -61,19 +61,35 @@ function diseaseTypeProcessing(checkbox) {
                         }
                     }
                 }
+
+                //unchecked "Unspecified" if Primary or Metastatic checked
+                if( checkedValueOrigin == "Primary" || checkedValueOrigin == "Metastatic" ) {
+                    if( boxChecked ) {
+                        var parent = $(this).closest('.origin-checkboxes');
+                        parent.find(choice_selector_str).not(this).each(function(){
+                            var labelSelector = "label[for='"+$(this).attr('id')+"']";
+                            var label = $(labelSelector);
+                            var labelText = label.text();
+                            if( labelText == "Unspecified" ) {
+                                $(this).attr('checked',false);
+                            }
+                        });
+                    }
+                }
+
                 if( checkedValueOrigin == "Unspecified" ) {
                     //console.log("uncheck all children boxes");
                     var parent = $(this).closest('.origin-checkboxes');
                     parent.find(choice_selector_str).not(this).each(function(){
                         if( boxChecked ) {
                             $(this).attr('checked',false);
-                            $(this).attr('disabled',true);
+                            //$(this).attr('disabled',true);
                             if( primaryorganradio.is(':visible') ) {
                                 primaryorganradio.collapse('hide');
                                 clearPrimaryOrgan($(this));
                             }
                         } else {
-                            $(this).attr('disabled',false);
+                            //$(this).attr('disabled',false);
                         }
                     });
                 }
@@ -84,6 +100,21 @@ function diseaseTypeProcessing(checkbox) {
 
     }
 
+    //unchecked "None" and "Unspecified" if Neoplastic or Non-Neoplastic checked
+    if( checkedValue == "Neoplastic" || checkedValue == "Non-Neoplastic" ) {
+        if( boxChecked ) {
+            var parent = checkbox.closest('.diseaseType');
+            parent.find(choice_selector_str).not(checkbox).each(function(){
+                var labelSelector = "label[for='"+$(this).attr('id')+"']";
+                var label = $(labelSelector);
+                var labelText = label.text();
+                if( labelText == "None" || labelText == "Unspecified" ) {
+                    $(this).attr('checked',false);
+                }
+            });
+        }
+    }
+
     if( checkedValue == "None" || checkedValue == "Unspecified" ) {
         //console.log("uncheck all boxes");
         var parent = checkbox.closest('.diseaseType');
@@ -91,11 +122,11 @@ function diseaseTypeProcessing(checkbox) {
             //printF($(this),'uncheck:');
             if( boxChecked ) {
                 $(this).attr('checked',false);
-                $(this).attr('disabled',true);
+                //$(this).attr('disabled',true);
                 hideDiseaseTypeChildren($(this));
             } else {
                 if( cycle != "show" ) {
-                    $(this).attr('disabled',false);
+                    //$(this).attr('disabled',false);
                 }
             }
         });
@@ -112,7 +143,7 @@ function diseaseTypeRender() {
 
         diseaseTypeSingleRender($(this));
 
-//        console.log('cycle='+cycle);
+        //console.log('cycle='+cycle);
         if( cycle == "show" ) {
             $(this).attr("disabled", true);
         }

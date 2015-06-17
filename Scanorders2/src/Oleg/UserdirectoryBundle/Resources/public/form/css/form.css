@@ -184,7 +184,7 @@
     border-color: #d6e9c6;
 }
 .panel-message .panel-heading-message {
-    color: #3c763d;
+    color: #777;    /*#3c763d;*/
     background-color: #d6e9c6;
     border-color: #d6e9c6;
     border-top-left-radius: 0px;
@@ -194,7 +194,7 @@
     border-color: #EEF6E8;
 }
 .panel-shadow-message .panel-heading-message {
-    color: #3c763d;
+    color: #777;
     background-color: #EEF6E8;
     border-color: #EEF6E8;
     border-top-left-radius: 0px;
@@ -298,6 +298,16 @@
     color: #ffffff;
     background-color: #ffb770;
     border-color: #ffb770;
+    border-top-left-radius: 0px;
+}
+
+.panel-imaging {
+    border-color: #ddd3ee;
+}
+.panel-imaging > .panel-heading {
+    color: #777;
+    background-color: #ddd3ee;
+    border-color: #ddd3ee;
     border-top-left-radius: 0px;
 }
 
