@@ -788,10 +788,16 @@
                                 {{ formmacros.fieldDateLabel(message.report.receivedDate,'allow-future-date') }}
                                 </div>
 
-                                <div class="well well-sm">
-                                    {{ formmacros.fieldDateLabel(message.report.processedDate,'allow-future-date') }}
-                                    {{ formmacros.field( message.report.processedByUser ) }}
-                                </div>
+                                {% if message.report.processedDate is defined or message.report.processedByUser is defined %}
+                                    <div class="well well-sm">
+                                        {% if message.report.processedDate is defined %}
+                                            {{ formmacros.fieldDateLabel(message.report.processedDate,'allow-future-date') }}
+                                        {% endif %}
+                                        {% if message.report.processedByUser is defined %}
+                                            {{ formmacros.field( message.report.processedByUser ) }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
 
                                 {#{{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId~uid) }}#}
                                 {#<div class="well well-sm">#}
@@ -1704,6 +1710,14 @@
     {#hidden id: used as a reference to get objects count#}
     {{ form_widget(container.id) }}
 
+    {% if container.imageId is defined %}
+        {{ formmacros.field(container.imageId) }}
+    {% endif %}
+
+    {% if container.source is defined %}
+        {{ formmacros.field(container.source) }}
+    {% endif %}
+
     {% if container.title is defined %}
         {{ formmacros.field(container.title) }}
     {% endif %}
@@ -2093,7 +2107,6 @@
             {#{{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType") }}#}
         {% endif %}
 
-
         {{ formmacros.partExtraForm(part,flag,uid,cycle,status) }}
 
     </div>
@@ -2134,6 +2147,8 @@
         {% else  %}
             <p><div class="blockspecialstains">{{ specialStainsHtml }}</div></p>
         {% endif %}
+
+        {{ formmacros.blockExtraForm(block,flag,uid,cycle,status) }}
 
     </div>
 
@@ -2494,16 +2509,21 @@
                         {% set uniqueId = 0 %}
                     {% endif %}
 
+                    {#<button#}
+                            {#id="form_body_toggle_accession_images_{{ uniqueId }}_{{ uid }}" type="button"#}
+                            {#class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"#}
+                            {#onclick="toggleSinglePanel(this,'#form_body_accession_images_{{ uniqueId }}_{{ uid }}');">#}
+                    {#</button>#}
                     <button
-                            id="form_body_toggle_accession_autopsyimages_{{ uniqueId }}_{{ uid }}" type="button"
+                            id="form_body_toggle_accession_images_{{ uniqueId }}_{{ uid }}" type="button"
                             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
-                            onclick="toggleSinglePanel(this,'#form_body_accession_autopsyimages_{{ uniqueId }}_{{ uid }}');">
+                            data-toggle="collapse" data-target="#form_body_accession_images_{{ uniqueId }}_{{ uid }}">
                     </button>
 
                     <h4 class="panel-title">Autopsy Images</h4>
                 </div>
 
-                <div id="form_body_accession_autopsyimages_{{ uniqueId }}_{{ uid }}" class="panel-body collapse">
+                <div id="form_body_accession_images_{{ uniqueId }}_{{ uid }}" class="panel-body collapse">
                     {% for documentContainer in accession.attachmentContainer.documentContainers %}
                         {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'accession'~'_'~uid) }}
                     {% endfor %}
@@ -2547,6 +2567,48 @@
                 <div id="form_body_part_grossimages_{{ uniqueId }}_{{ uid }}" class="panel-body collapse">
                     {% for documentContainer in part.attachmentContainer.documentContainers %}
                         {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'part'~'_'~uid) }}
+                    {% endfor %}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro blockExtraForm( block, datastructure, uid, cycle, status ) %}
+
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% import _self as formmacros %}
+
+        {% if block.attachmentContainer is defined and block.attachmentContainer.documentContainers|length > 0 %}
+
+            <div class="panel panel-imaging">
+
+                <div class="panel-heading">
+
+                    {% if block.vars.value.id %}
+                        {% set uniqueId = block.attachmentContainer.vars.value.id %}
+                    {% else %}
+                        {% set uniqueId = 0 %}
+                    {% endif %}
+
+                    <button
+                            id="form_body_toggle_block_images_{{ uniqueId }}_{{ uid }}" type="button"
+                            class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
+                            data-toggle="collapse" data-target="#form_body_block_images_{{ uniqueId }}_{{ uid }}">
+                    </button>
+
+                    <h4 class="panel-title">Block Images</h4>
+                </div>
+
+                <div id="form_body_block_images_{{ uniqueId }}_{{ uid }}" class="panel-body collapse">
+                    {% for documentContainer in block.attachmentContainer.documentContainers %}
+                        {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'block'~'_'~uid) }}
                     {% endfor %}
                 </div>
 

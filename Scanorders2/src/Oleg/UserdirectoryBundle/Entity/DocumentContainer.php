@@ -96,6 +96,17 @@ class DocumentContainer {
      **/
     private $links;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $imageId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="SourceSystemList")
+     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
+     */
+    private $source;
+
 
     public function __construct($provider=null) {
         $this->documents = new ArrayCollection();
@@ -302,6 +313,37 @@ class DocumentContainer {
         $this->links->removeElement($item);
     }
 
+    /**
+     * @param mixed $source
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * @param mixed $imageId
+     */
+    public function setImageId($imageId)
+    {
+        $this->imageId = $imageId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageId()
+    {
+        return $this->imageId;
+    }
 
 
 

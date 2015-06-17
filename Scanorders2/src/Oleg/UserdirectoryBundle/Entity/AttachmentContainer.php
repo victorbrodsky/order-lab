@@ -35,8 +35,6 @@ class AttachmentContainer {
 
 
 
-
-
     public function __construct() {
         $this->documentContainers = new ArrayCollection();
     }
@@ -77,6 +75,7 @@ class AttachmentContainer {
     {
         $this->documentContainers->removeElement($item);
     }
+
 
 
     public function __toString() {

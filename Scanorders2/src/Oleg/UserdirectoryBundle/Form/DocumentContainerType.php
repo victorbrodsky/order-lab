@@ -101,6 +101,18 @@ class DocumentContainerType extends AbstractType
 
         if( $this->params['document.showall'] == true ) {
 
+            $builder->add('imageId', 'text', array(
+                'required'=>false,
+                'label'=>'Image ID:',
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('source', null, array(
+                'required'=>false,
+                'label'=>'Image ID Source System:',
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+
             $builder->add('title', null, array(
                 'label' => $this->params['labelPrefix'] . ' Title:',
                 'attr' => array('class' => 'form-control'),

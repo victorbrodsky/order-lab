@@ -116,8 +116,10 @@ class PatientController extends Controller
             'dropzoneImageNumber' => 1,
             'aperioImageNumber' => 1,
             'withorders' => true,
+            'testpatient' => true,
             'accession.attachmentContainer' => 1,
-            'part.attachmentContainer' => 1
+            'part.attachmentContainer' => 1,
+            'block.attachmentContainer' => 1
         );
         $res = $this->createPatientDatastructure($thisparams);
         $patient = $res['patient'];
@@ -365,7 +367,8 @@ class PatientController extends Controller
             'flush' => true,                    //flush after each object creation
             'testpatient' => true,              //populate patient hierarchy with default data
             'accession.attachmentContainer' => 1,
-            'part.attachmentContainer' => 1
+            'part.attachmentContainer' => 1,
+            'block.attachmentContainer' => 1
         );
         $res = $this->createPatientDatastructure($thisparams);
         $patient = $res['patient'];
@@ -633,6 +636,12 @@ class PatientController extends Controller
             $attachmentContainerPartNumber = 0;
         }
 
+        if( array_key_exists('block.attachmentContainer', $params) ) {
+            $attachmentContainerBlockNumber = $params['block.attachmentContainer'];
+        } else {
+            $attachmentContainerBlockNumber = 0;
+        }
+
         if( array_key_exists('testpatient', $params) ) {
             $testpatient = $params['testpatient'];
         } else {
@@ -686,28 +695,30 @@ class PatientController extends Controller
 
         $sourceSystemName = 'Aperio eSlide Manager on C.MED.CORNELL.EDU';
         $sourceSystemAperio = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
-        $sourceSystemAperioClean = $sourceSystemAperio->getName();
-        //$sourceSystemAperioClean = str_replace(" ","_",$sourceSystemAperio->getName());
+        //$sourceSystemAperioClean = $sourceSystemAperio->getName();
 
-        $linkTypeWebScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
-        $linkTypeWebScopeClean = $linkTypeWebScope->getName();
+        //$linkTypeWebScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
+        //$linkTypeWebScopeClean = $linkTypeWebScope->getName();
 
-        $linkTypeImageScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
-        $linkTypeImageScopeClean = $linkTypeImageScope->getName();
+        //$linkTypeImageScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
+        //$linkTypeImageScopeClean = $linkTypeImageScope->getName();
 
-        $linkTypeThumbnail = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
-        $linkTypeThumbnailClean = $linkTypeThumbnail->getName();
+        //$linkTypeThumbnail = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
+        //$linkTypeThumbnailClean = $linkTypeThumbnail->getName();
 
-        $linkTypeLabel = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
-        $linkTypeLabelClean = $linkTypeLabel->getName();
+        //$linkTypeLabel = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
+        //$linkTypeLabelClean = $linkTypeLabel->getName();
 
-        $linkTypeDownload = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
-        $linkTypeDownloadClean = $linkTypeDownload->getName();
+        //$linkTypeDownload = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
+        //$linkTypeDownloadClean = $linkTypeDownload->getName();
 
         $maginification = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
 
         $neoplasticType = $em->getRepository('OlegOrderformBundle:DiseaseTypeList')->findOneByName('Neoplastic');
         $metastaticOrigin = $em->getRepository('OlegOrderformBundle:DiseaseOriginList')->findOneByName('Metastatic');
+
+        //Input: Slide Id from c.med: 42814
+        $slideId = 42814;
         //////////////////////////// EOF get lists ////////////////////////////////////
 
         $patient = new Patient($withfields,$status,$user,$system);
@@ -724,11 +735,11 @@ class PatientController extends Controller
 
         $slideArr = array();
 
-        for( $count = 0; $count < $objectNumber; $count++ ) {
+        for( $countObject = 0; $countObject < $objectNumber; $countObject++ ) {
 
             $encounter = new Encounter($withfields,$status,$user,$system);
             $encounter->addExtraFields($status,$user,$system);
-            //$encounter->setStatus($status."_".$count);
+            //$encounter->setStatus($status."_".$countObject);
             $patient->addEncounter($encounter);
 
             if( $persist ) {
@@ -832,7 +843,7 @@ class PatientController extends Controller
                 $slide->getStain()->first()->setField($staintype);
 
                 //set slide title
-                $slide->setTitle('Test Slide ' . $count);
+                $slide->setTitle('Test Slide ' . $countObject);
 
                 //set slide type
                 $slide->setSlidetype($slidetype);
@@ -861,10 +872,8 @@ class PatientController extends Controller
                         $dropzoneImage->setDocumentContainer($docContainer);
                     }
 
+                    //set Document Container
                     $docContainer->setTitle('Test Image');
-
-
-
                     $docContainer->addDocument($document);
                 } //if testpatient
 
@@ -886,7 +895,7 @@ class PatientController extends Controller
                     $aperioImage->setMagnification($maginification);
 
                     //Input: Slide Id from c.med: 42814
-                    $slideId = 42814;
+                    //$slideId = 42814;
                     $aperioImage->setImageId($slideId);
 
                     //get document container
@@ -896,46 +905,48 @@ class PatientController extends Controller
                         $aperioImage->setDocumentContainer($docContainer);
                     }
 
-                    $docContainer->setTitle('Image from ' . $sourceSystemAperio);
+                    $this->setDocumentContainerWithLinks($docContainer,$slideId,$user);
 
-                    $router = $this->container->get('router');
-
-                    //add link Via WebScope
-                    //use http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-                    $link = new Link($user);
-                    $link->setLinktype($linkTypeWebScope);
-                    $link->setLink($linklink);
-                    $docContainer->addLink($link);
-
-                    //add link Via ImageScope
-                    //use sis file containing url to image from Aperio DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-                    $link = new Link($user);
-                    $link->setLinktype($linkTypeImageScope);
-                    $link->setLink($linklink);
-                    $docContainer->addLink($link);
-
-                    //add Thumbnail
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-                    $link = new Link($user);
-                    $link->setLinktype($linkTypeThumbnail);
-                    $link->setLink($linklink);
-                    $docContainer->addLink($link);
-
-                    //add Label
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-                    $link = new Link($user);
-                    $link->setLinktype($linkTypeLabel);
-                    $link->setLink($linklink);
-                    $docContainer->addLink($link);
-
-                    //add download
-                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-                    $link = new Link($user);
-                    $link->setLinktype($linkTypeDownload);
-                    $link->setLink($linklink);
-                    $docContainer->addLink($link);
+//                    $docContainer->setTitle('Image from ' . $sourceSystemAperio);
+//
+//                    $router = $this->container->get('router');
+//
+//                    //add link Via WebScope
+//                    //use http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml
+//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+//                    $link = new Link($user);
+//                    $link->setLinktype($linkTypeWebScope);
+//                    $link->setLink($linklink);
+//                    $docContainer->addLink($link);
+//
+//                    //add link Via ImageScope
+//                    //use sis file containing url to image from Aperio DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
+//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+//                    $link = new Link($user);
+//                    $link->setLinktype($linkTypeImageScope);
+//                    $link->setLink($linklink);
+//                    $docContainer->addLink($link);
+//
+//                    //add Thumbnail
+//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+//                    $link = new Link($user);
+//                    $link->setLinktype($linkTypeThumbnail);
+//                    $link->setLink($linklink);
+//                    $docContainer->addLink($link);
+//
+//                    //add Label
+//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+//                    $link = new Link($user);
+//                    $link->setLinktype($linkTypeLabel);
+//                    $link->setLink($linklink);
+//                    $docContainer->addLink($link);
+//
+//                    //add download
+//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+//                    $link = new Link($user);
+//                    $link->setLinktype($linkTypeDownload);
+//                    $link->setLink($linklink);
+//                    $docContainer->addLink($link);
 
                 } //if testpatient
 
@@ -955,7 +966,17 @@ class PatientController extends Controller
                     $accession->setAttachmentContainer($attachmentContainerAccession);
                 }
                 for( $i=0; $i<$attachmentContainerAccessionNumber; $i++) {
-                    $attachmentContainerAccession->addDocumentContainer( new DocumentContainer($user) );
+                    $docContainer = new DocumentContainer($user);
+                    //drop zone
+                    if( $countObject == 0 ) {
+                        $docContainer->setTitle('Test Image');
+                        $docContainer->addDocument($document);
+                    }
+                    //link
+                    if( $countObject == 1 ) {
+                        $docContainer = $this->setDocumentContainerWithLinks($docContainer,$slideId,$user);
+                    }
+                    $attachmentContainerAccession->addDocumentContainer( $docContainer );
                 }
             }
 
@@ -968,6 +989,18 @@ class PatientController extends Controller
                 }
                 for( $i=0; $i<$attachmentContainerPartNumber; $i++) {
                     $attachmentContainerPart->addDocumentContainer( new DocumentContainer($user) );
+                }
+            }
+
+            //Block: add n gross image fields: add n documentContainers to attachmentContainer
+            if( $attachmentContainerBlockNumber > 0 ) {
+                $attachmentContainerBlock = $block->getAttachmentContainer();
+                if( !$attachmentContainerBlock ) {
+                    $attachmentContainerBlock = new AttachmentContainer();
+                    $block->setAttachmentContainer($attachmentContainerBlock);
+                }
+                for( $i=0; $i<$attachmentContainerBlockNumber; $i++) {
+                    $attachmentContainerBlock->addDocumentContainer( new DocumentContainer($user) );
                 }
             }
 
@@ -1006,8 +1039,8 @@ class PatientController extends Controller
                 $this->linkMessageObject( $LabOrderRequisition, $accession, 'output' );
                 $this->linkMessageObject( $LabOrderRequisition, $procedure, 'input' );
 
-                //Report
-                $Report = $this->createSpecificMessage("Report");
+                //Lab Report
+                $Report = $this->createSpecificMessage("Lab Report");
                 $this->addSpecificMessage($Report,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $Report, $accession, 'input' );
                 $this->linkMessageObject( $Report, $procedure, 'output' );
@@ -1026,6 +1059,7 @@ class PatientController extends Controller
                 $BlockReport = $this->createSpecificMessage("Block Report");
                 $this->addSpecificMessage($BlockReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $BlockReport, $block, 'input' );
+                $this->linkMessageObject( $BlockReport, $part, 'output' );
 
                 //set "Embed Block Order" as source for "Block Report"
                 $EmbedBlockOrder->addAssociation($BlockReport);
@@ -1065,6 +1099,7 @@ class PatientController extends Controller
                 $SlideReport = $this->createSpecificMessage("Slide Report");
                 $this->addSpecificMessage($SlideReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide);
                 $this->linkMessageObject( $SlideReport, $slide, 'input' );
+                $this->linkMessageObject( $SlideReport, $block, 'output' );
 
                 //set "Order" as source for "Report"
                 $SlideOrder->addAssociation($SlideReport);
@@ -1269,6 +1304,7 @@ class PatientController extends Controller
 
         if(
             $messageCategoryStr == "Report" ||
+            $messageCategoryStr == "Lab Report" ||
             $messageCategoryStr == "Image Analysis Report" ||
             $messageCategoryStr == "Outside Report" ||
             $messageCategoryStr == "Slide Report" ||
@@ -1382,6 +1418,76 @@ class PatientController extends Controller
         //echo "message accessions count=".count($message->getAccession())."<br>";
 
         return $message;
+    }
+
+
+
+
+    public function setDocumentContainerWithLinks( $docContainer, $slideId, $user ) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $sourceSystemName = 'Aperio eSlide Manager on C.MED.CORNELL.EDU';
+        $sourceSystemAperio = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+        $sourceSystemAperioClean = $sourceSystemAperio->getName();
+
+        $linkTypeWebScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
+        $linkTypeWebScopeClean = $linkTypeWebScope->getName();
+
+        $linkTypeImageScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
+        $linkTypeImageScopeClean = $linkTypeImageScope->getName();
+
+        $linkTypeThumbnail = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
+        $linkTypeThumbnailClean = $linkTypeThumbnail->getName();
+
+        $linkTypeLabel = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
+        $linkTypeLabelClean = $linkTypeLabel->getName();
+
+        $linkTypeDownload = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
+        $linkTypeDownloadClean = $linkTypeDownload->getName();
+
+        $docContainer->setTitle('Image from ' . $sourceSystemAperio);
+
+        $router = $this->container->get('router');
+
+        //add link Via WebScope
+        //use http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $link = new Link($user);
+        $link->setLinktype($linkTypeWebScope);
+        $link->setLink($linklink);
+        $docContainer->addLink($link);
+
+        //add link Via ImageScope
+        //use sis file containing url to image from Aperio DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $link = new Link($user);
+        $link->setLinktype($linkTypeImageScope);
+        $link->setLink($linklink);
+        $docContainer->addLink($link);
+
+        //add Thumbnail
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $link = new Link($user);
+        $link->setLinktype($linkTypeThumbnail);
+        $link->setLink($linklink);
+        $docContainer->addLink($link);
+
+        //add Label
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $link = new Link($user);
+        $link->setLinktype($linkTypeLabel);
+        $link->setLink($linklink);
+        $docContainer->addLink($link);
+
+        //add download
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $link = new Link($user);
+        $link->setLinktype($linkTypeDownload);
+        $link->setLink($linklink);
+        $docContainer->addLink($link);
+
+        return $docContainer;
     }
 
 }

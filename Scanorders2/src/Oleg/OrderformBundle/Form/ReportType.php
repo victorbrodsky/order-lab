@@ -41,6 +41,16 @@ class ReportType extends AbstractType
             $label['processedByUser'] = "Slide Stained By:";
         }
 
+        //Outside Report
+        if(
+            $messageCategory == "Outside Report" ||
+            $messageCategory == "Lab Report" ||
+            $messageCategory == "Image Analysis Report"
+        ) {
+            $label['processedDate'] = null;
+            $label['processedByUser'] = null;
+        }
+
         $this->label = $label;
         //////////// EOF create labels ////////////
     }
@@ -72,18 +82,22 @@ class ReportType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('processedDate', 'date', array(
-            'label' => $this->label['processedDate'], //"Processed Date:",
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-        ));
+        if( $this->label['processedDate'] ) {
+            $builder->add('processedDate', 'date', array(
+                'label' => $this->label['processedDate'], //"Processed Date:",
+                'widget' => 'single_text',
+                'required' => false,
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control'),
+            ));
+        }
 
-        $builder->add('processedByUser', null, array(
-            'label' => $this->label['processedByUser'], //'Processed By:',
-            'attr' => array('class' => 'combobox combobox-width'),
-        ));
+        if( $this->label['processedByUser'] ) {
+            $builder->add('processedByUser', null, array(
+                'label' => $this->label['processedByUser'], //'Processed By:',
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        }
 
 //        $builder->add('reportType', null, array(
 //            'label' => "Report Type:",

@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -71,6 +72,16 @@ class BlockType extends AbstractType
             'prototype_name' => '__blockspecialstains__',
         ));
 
+        //extra data-structure fields
+        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
+            $params = array('labelPrefix'=>'Block Image');
+            $equipmentTypes = array('Block Imaging Camera');
+            $params['device.types'] = $equipmentTypes;
+            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+                'required' => false,
+                'label' => false
+            ));
+        }
 
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
