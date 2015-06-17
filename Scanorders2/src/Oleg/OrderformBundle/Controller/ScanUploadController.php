@@ -175,7 +175,7 @@ class ScanUploadController extends UploadController {
             $contentFile = 'error';
         }
 
-        //$response->setContent($contentFile);
+        $response->setContent($contentFile);
 
         //exit('exit imageFileAction');
 
