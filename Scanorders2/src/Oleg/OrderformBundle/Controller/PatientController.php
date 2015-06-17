@@ -364,7 +364,8 @@ class PatientController extends Controller
             'persist' => true,                 //persist each patient hierarchy object (not used)
             'flush' => true,                    //flush after each object creation
             'testpatient' => true,              //populate patient hierarchy with default data
-            //'accession.attachmentContainer' => 1 //testing!!!
+            'accession.attachmentContainer' => 1,
+            'part.attachmentContainer' => 1
         );
         $res = $this->createPatientDatastructure($thisparams);
         $patient = $res['patient'];
