@@ -34,7 +34,7 @@ class StainOrderType extends AbstractType
 //            'label' => false
 //        ));
 
-        $params = array('labelPrefix'=>' for Slide Stainer');
+        $params = array('labelPrefix'=>' for Histotechnologist');
         $builder->add('instruction', new InstructionType($params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
             'label' => false

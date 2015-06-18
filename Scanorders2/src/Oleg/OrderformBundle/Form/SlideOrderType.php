@@ -25,7 +25,7 @@ class SlideOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $params = array('labelPrefix'=>' for Slide Cutter');
+        $params = array('labelPrefix'=>' for Histotechnologist');
         $builder->add('instruction', new InstructionType($params), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
             'label' => false
