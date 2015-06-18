@@ -783,6 +783,7 @@ class ScanAdminController extends AdminController
                 'Block Report',
                 'Slide Report',
                 'Stain Report',
+                'Scan Report'
 
             ),
             'Note' => array(

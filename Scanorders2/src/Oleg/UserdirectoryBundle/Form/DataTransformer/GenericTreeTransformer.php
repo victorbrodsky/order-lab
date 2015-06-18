@@ -26,17 +26,25 @@ class GenericTreeTransformer implements DataTransformerInterface
     protected $em;
     protected $user;
     protected $className;
+    protected $bundleName;
     protected $params;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null, $className=null, $params=null)
+    public function __construct(ObjectManager $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;
         $this->user = $user;
         $this->className = $className;
+        $this->bundleName = $bundleName;
         $this->params = $params;
+
+        if( $bundleName ) {
+            $this->bundleName = $bundleName;
+        } else {
+            $this->bundleName = "UserdirectoryBundle";
+        }
     }
 
     public function getThisEm() {
@@ -64,12 +72,12 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         if( is_int($entity) ) {
             //echo "transform by id=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($entity);
             //echo "findOneById entity=".$entity."<br>";
         }
 //        else {
 //            //echo "transform by name=".$entity." ????????????????<br>";
-//            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($entity);
+//            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($entity);
 //        }
 
         if( null === $entity ) {
@@ -108,7 +116,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             //echo 'text is id <br>';
 
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -145,7 +153,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         //check if it is already exists in db
         //echo "className=".$this->className."<br>";
-        $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name."");
+        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name."");
         
         if( null === $entity ) {
 
@@ -186,7 +194,7 @@ class GenericTreeTransformer implements DataTransformerInterface
             return null;
         }
 
-        $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
+        $fullClassName = "Oleg\\".$this->bundleName."\\Entity\\".$className;
         $newEntity = new $fullClassName();
 
         //add default type
@@ -211,7 +219,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         $className = $fullClassName->getShortName();
 
         //get max orderinlist
-        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:'.$className.' c');
+        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM Oleg'.$this->bundleName.':'.$className.' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
 

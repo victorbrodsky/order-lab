@@ -45,7 +45,8 @@ class ReportType extends AbstractType
         if(
             $messageCategory == "Outside Report" ||
             $messageCategory == "Lab Report" ||
-            $messageCategory == "Image Analysis Report"
+            $messageCategory == "Image Analysis Report" ||
+            $messageCategory == "Scan Report"
         ) {
             $label['processedDate'] = null;
             $label['processedByUser'] = null;

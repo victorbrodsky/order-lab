@@ -38,6 +38,9 @@ var _account = new Array();
 var _urgency = new Array();
 var _proxyuser = new Array();
 
+//generic select2 fields
+var _labtesttype = new Array();
+
 
 
 //function regularCombobox() {
@@ -100,6 +103,9 @@ function customCombobox() {
 
         getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
     }
+
+    //scan
+    getComboboxGeneric(null,'labtesttype',_labtesttype,false);
 
 }
 

@@ -776,7 +776,15 @@
                         {% endif %}
 
                         {% if message.laborder is defined and message.laborder.vars.value %}
-                            {#no fields#}
+                            {% if message.laborder.labTestType is defined %}
+                                {{ formmacros.field( message.laborder.labTestType ) }}
+                            {% endif %}
+                            {% if message.laborder.labTestId is defined %}
+                                {{ formmacros.field( message.laborder.labTestId ) }}
+                            {% endif %}
+                            {% if message.laborder.labTestTitle is defined %}
+                                {{ formmacros.field( message.laborder.labTestTitle ) }}
+                            {% endif %}
                         {% endif %}
 
                         {% if message.report is defined and message.report.vars.value %}
@@ -802,12 +810,6 @@
                                         {% endif %}
                                     </div>
                                 {% endif %}
-
-                                {#{{ formmacros.fieldDocumentContainer(message.report.documentContainer,cycle,'report'~orderUniqueId~uid) }}#}
-                                {#<div class="well well-sm">#}
-                                {#{{ formmacros.fieldUserWrapper(message.report.signingPathologists,cycle) }}#}
-                                {#{{ formmacros.fieldUserWrapper(message.report.consultedPathologists,cycle) }}#}
-                                {#</div>#}
 
                             </p>
                         {% endif %}
@@ -920,45 +922,45 @@
                 </div> {#heading#}
 
 
-            <div id="form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
+                <div id="form_body_shadow_message_{{ orderUniqueId }}_{{ uid }}" class="panel-body collapse">
 
-                {#make the value of "ID:" into a clickable link to the order.#}
-                {% if orderViewable %}
-                    {% set orderIdHref = '<a href="'~path('multy_show',{'id':orderId})~'">'~orderId~'</a>' %}
-                {% else %}
-                    {% set orderIdHref = orderId %}
-                {% endif %}
-                {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
+                    {#make the value of "ID:" into a clickable link to the order.#}
+                    {% if orderViewable %}
+                        {% set orderIdHref = '<a href="'~path('multy_show',{'id':orderId})~'">'~orderId~'</a>' %}
+                    {% else %}
+                        {% set orderIdHref = orderId %}
+                    {% endif %}
+                    {{ formmacros.simplefield( orderName~" ID:", orderIdHref, "", disabled ) }}
 
-                {#controlled by controller and form#}
-                {% if message.idnumber is defined %}
-                    {{ formmacros.field( message.idnumber ) }}
-                    {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
-                {% endif %}
+                    {#controlled by controller and form#}
+                    {% if message.idnumber is defined %}
+                        {{ formmacros.field( message.idnumber ) }}
+                        {#{{ formmacros.simplefield( "Identification Number:", message.vars.value.idnumber, "input", disabled ) }}#}
+                    {% endif %}
 
-                {#controlled by controller and form#}
-                {% if message.orderdate is defined %}
-                    {#{{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}#}
-                    {{ formmacros.simplefield( message.orderdate.vars.label, message.orderdate.vars.value|date('m/d/Y'), "", disabled ) }}
-                {% endif %}
+                    {#controlled by controller and form#}
+                    {% if message.orderdate is defined %}
+                        {#{{ formmacros.fieldDateLabel(message.orderdate,'regular-datepicker') }}#}
+                        {{ formmacros.simplefield( message.orderdate.vars.label, message.orderdate.vars.value|date('m/d/Y'), "", disabled ) }}
+                    {% endif %}
 
-                {#controlled by controller and form#}
-                {% if message.provider is defined %}
-                    {{ formmacros.field_show_user( message, "provider", cycle ) }}
-                {% endif %}
+                    {#controlled by controller and form#}
+                    {% if message.provider is defined %}
+                        {{ formmacros.field_show_user( message, "provider", cycle ) }}
+                    {% endif %}
 
-                {#controlled by controller and form#}
-                {% if message.proxyuser is defined %}
-                    {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
-                {% endif %}
+                    {#controlled by controller and form#}
+                    {% if message.proxyuser is defined %}
+                        {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
+                    {% endif %}
 
-                {% if message.orderRecipients is defined %}
-                    {{ formmacros.field_show_user( message, "orderRecipients", cycle ) }}
-                {% endif %}
+                    {% if message.orderRecipients is defined %}
+                        {{ formmacros.field_show_user( message, "orderRecipients", cycle ) }}
+                    {% endif %}
 
-                {% if message.reportRecipients is defined %}
-                    {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
-                {% endif %}
+                    {% if message.reportRecipients is defined %}
+                        {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
+                    {% endif %}
 
                 </div> {#body#}
                 </div> {#panel#}

@@ -47,7 +47,7 @@ function regularCombobox() {
 //Generic ajax combobox
 function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename) {
 
-    //console.log('getComboboxGeneric: name='+name);
+    //console.log('get Combobox Generic: name='+name);
 
     var targetid = ".ajax-combobox-"+name;
 

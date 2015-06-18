@@ -30,14 +30,14 @@ class LinkType extends AbstractType
     {
 
         $builder->add('link',null,array(
-            'label'=>'Link:',
+            'label'=>'Image Link:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add( 'linktype', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:LinkTypeList',
             'property' => 'name',
-            'label'=>'Link Type:',
+            'label'=>'Image Link Type:',
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),

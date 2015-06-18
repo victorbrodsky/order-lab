@@ -690,27 +690,11 @@ class PatientController extends Controller
         }
 
         $staintype = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
-        $organList = $em->getRepository('OlegOrderformBundle:OrganList')->find(1);
+        $organList = $em->getRepository('OlegOrderformBundle:OrganList')->findOneByName('Breast');
         $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName('Frozen Section');
 
         $sourceSystemName = 'Aperio eSlide Manager on C.MED.CORNELL.EDU';
         $sourceSystemAperio = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
-        //$sourceSystemAperioClean = $sourceSystemAperio->getName();
-
-        //$linkTypeWebScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
-        //$linkTypeWebScopeClean = $linkTypeWebScope->getName();
-
-        //$linkTypeImageScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
-        //$linkTypeImageScopeClean = $linkTypeImageScope->getName();
-
-        //$linkTypeThumbnail = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
-        //$linkTypeThumbnailClean = $linkTypeThumbnail->getName();
-
-        //$linkTypeLabel = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
-        //$linkTypeLabelClean = $linkTypeLabel->getName();
-
-        //$linkTypeDownload = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
-        //$linkTypeDownloadClean = $linkTypeDownload->getName();
 
         $maginification = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
 
@@ -907,47 +891,6 @@ class PatientController extends Controller
 
                     $this->setDocumentContainerWithLinks($docContainer,$slideId,$user);
 
-//                    $docContainer->setTitle('Image from ' . $sourceSystemAperio);
-//
-//                    $router = $this->container->get('router');
-//
-//                    //add link Via WebScope
-//                    //use http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml
-//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-//                    $link = new Link($user);
-//                    $link->setLinktype($linkTypeWebScope);
-//                    $link->setLink($linklink);
-//                    $docContainer->addLink($link);
-//
-//                    //add link Via ImageScope
-//                    //use sis file containing url to image from Aperio DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
-//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-//                    $link = new Link($user);
-//                    $link->setLinktype($linkTypeImageScope);
-//                    $link->setLink($linklink);
-//                    $docContainer->addLink($link);
-//
-//                    //add Thumbnail
-//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-//                    $link = new Link($user);
-//                    $link->setLinktype($linkTypeThumbnail);
-//                    $link->setLink($linklink);
-//                    $docContainer->addLink($link);
-//
-//                    //add Label
-//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-//                    $link = new Link($user);
-//                    $link->setLinktype($linkTypeLabel);
-//                    $link->setLink($linklink);
-//                    $docContainer->addLink($link);
-//
-//                    //add download
-//                    $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),true);
-//                    $link = new Link($user);
-//                    $link->setLinktype($linkTypeDownload);
-//                    $link->setLink($linklink);
-//                    $docContainer->addLink($link);
-
                 } //if testpatient
 
                 //add Image to Slide
@@ -1120,7 +1063,18 @@ class PatientController extends Controller
                 $StainSlideOrder->addAssociation($StainReport);
                 $StainReport->addBackAssociation($StainSlideOrder);
 
+
+
                 foreach( $slide->getScan() as $scan ) {
+                    //Scan Report
+                    $ScanReport = $this->createSpecificMessage("Scan Report");
+                    $this->addSpecificMessage($ScanReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
+                    $this->linkMessageObject( $ScanReport, $scan, 'input' );
+                    $this->linkMessageObject( $ScanReport, $slide, 'output' );
+                    //set "Multi-Scan Order" as source for "Scan Report"
+                    $MultiSlideScanOrder->addAssociation($ScanReport);
+                    $ScanReport->addBackAssociation($MultiSlideScanOrder);
+
                     //Image Analysis Order
                     $ImageAnalysisOrder = $this->createSpecificMessage("Image Analysis Order");
                     $this->addSpecificMessage($ImageAnalysisOrder,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
@@ -1300,7 +1254,7 @@ class PatientController extends Controller
             //$procedureorder->setType($procedureType);
         }
 
-        if( $messageCategoryStr == "Lab Order" ) {
+        if( $messageCategoryStr == "Lab Order" || $messageCategoryStr == "Lab Order Requisition" ) {
             $laborder = new LabOrder();
             $laborder->setMessage($message);
             $message->setLaborder($laborder);
@@ -1312,7 +1266,8 @@ class PatientController extends Controller
             $messageCategoryStr == "Image Analysis Report" ||
             $messageCategoryStr == "Outside Report" ||
             $messageCategoryStr == "Slide Report" ||
-            $messageCategoryStr == "Stain Report"
+            $messageCategoryStr == "Stain Report" ||
+            $messageCategoryStr == "Scan Report"
         ) {
 
             $report = new Report();

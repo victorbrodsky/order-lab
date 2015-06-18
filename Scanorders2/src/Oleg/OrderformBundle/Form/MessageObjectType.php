@@ -333,13 +333,15 @@ if( 1 ) {
                         'label' => false
                     ));
 
-                    $params = array('labelPrefix'=>'Requisition Form Image');
-                    $equipmentTypes = array('Requisition Form Scanner');
-                    $params['device.types'] = $equipmentTypes;
-                    $form->add('attachmentContainer', new AttachmentContainerType($params), array(
-                        'required' => false,
-                        'label' => false
-                    ));
+                    if( $messageCategory != "Lab Order Requisition" ) {
+                        $params = array('labelPrefix'=>'Requisition Form Image');
+                        $equipmentTypes = array('Requisition Form Scanner');
+                        $params['device.types'] = $equipmentTypes;
+                        $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+                            'required' => false,
+                            'label' => false
+                        ));
+                    }
                 }
 
                 //imageAnalysisOrder
@@ -358,14 +360,17 @@ if( 1 ) {
                     $this->addFormEndpoint('sources',$form,$this->params);
                 }
 
-                //report
+                //Genaral Report
                 if( $dataEntity->getReport() ) {
                     $form->add('report', new ReportType($this->params,$this->entity), array(
                         'required' => false,
                         'label' => false
                     ));
 
-                    if( $messageCategory != "Slide Report" && $messageCategory != "Stain Report" ) {
+                    if( $messageCategory != "Slide Report" &&
+                        $messageCategory != "Stain Report" &&
+                        $messageCategory != "Scan Report"
+                    ) {
                         $params = array('labelPrefix'=>'Reference Representation');
                         $equipmentTypes = array();
                         $params['device.types'] = $equipmentTypes;

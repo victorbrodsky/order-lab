@@ -33,7 +33,9 @@ class UtilController extends Controller {
     public function getGenericAction( $name ) {
 
         //echo "name=".$name."<br>";
-        $className = $this->getClassByName($name);
+        $res = $this->getClassBundleByName($name);
+        $className = $res['className'];
+        $bundleName = $res['bundleName'];
 
         //echo "className=".$className."<br>";
 
@@ -46,7 +48,7 @@ class UtilController extends Controller {
             switch( $className ) {
 
                 case "FellowshipTitleList": //show this object as "abbreviation - name"
-                    $entities = $em->getRepository('OlegUserdirectoryBundle:'.$className)->findBy(
+                    $entities = $em->getRepository('Oleg'.$bundleName.':'.$className)->findBy(
                         array('type' => array('default','user-added'))
                     );
                     foreach( $entities as $entity ) {
@@ -56,7 +58,7 @@ class UtilController extends Controller {
                     break;
 
                 default:
-                    $query = $em->createQueryBuilder()->from('OlegUserdirectoryBundle:'.$className, 'list')
+                    $query = $em->createQueryBuilder()->from('Oleg'.$bundleName.':'.$className, 'list')
                         ->select("list.id as id, list.name as text")
                         ->orderBy("list.orderinlist","ASC");
                     $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
@@ -96,14 +98,16 @@ class UtilController extends Controller {
 
         $name = str_replace("get-", "", $routeName);
         $name = str_replace("-by-parent", "", $name);
-        $className = $this->getClassByName($name);
+        $res = $this->getClassBundleByName($name);
+        $className = $res['className'];
+        $bundleName = $res['bundleName'];
 
         //echo "className=".$className."<br>";
 
         if( $className && is_numeric($pid) ) {
             //echo "className=".$className."<br>";
             $query = $em->createQueryBuilder()
-                ->from('OlegUserdirectoryBundle:'.$className, 'list')
+                ->from('Oleg'.$bundleName.':'.$className, 'list')
                 ->innerJoin("list.parent", "parent")
                 ->select("list.id as id, list.name as text, parent.id as parentid")
                 //->select("list.name as id, list.name as text")
@@ -119,7 +123,7 @@ class UtilController extends Controller {
 
         //add current element by id
         if( $id ) {
-            $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$className)->findOneById($id);
+            $entity = $this->getDoctrine()->getRepository('Oleg'.$bundleName.':'.$className)->findOneById($id);
             if( $entity ) {
                 if( array_key_exists($entity->getId(), $output) === false ) {
                     $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
@@ -972,7 +976,8 @@ class UtilController extends Controller {
     }
 
 
-    public function getClassByName($name) {
+    public function getClassBundleByName($name) {
+        $bundleName = "UserdirectoryBundle";
         switch( $name ) {
             case "identifierkeytype":
                 $className = "IdentifierTypeList";
@@ -1059,11 +1064,22 @@ class UtilController extends Controller {
                 $className = "OrganizationList";
                 break;
 
+            //scan
+            case "labtesttype":
+                $className = "LabTestType";
+                $bundleName = "OrderformBundle";
+                break;
+
             default:
                 $className = null;
         }
 
-        return $className;
+        $res = array(
+            'className' => $className,
+            'bundleName' => $bundleName
+        );
+
+        return $res;
     }
 
 }
