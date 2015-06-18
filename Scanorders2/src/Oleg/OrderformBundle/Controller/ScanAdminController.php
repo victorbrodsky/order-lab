@@ -354,36 +354,36 @@ class ScanAdminController extends AdminController
 //////////////////////////////////////////////////////////////////////////////
 
 
-    //return -1 if failed
-    //return number of generated records
-    public function generateStains_OLD() {
-
-        $helper = new FormHelper();
-        $stains = $helper->getStains();
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
-
-        if( $entities ) {
-
-            return -1;
-        }
-
-        $count = 1;
-        foreach( $stains as $stain ) {
-            $stainList = new StainList();
-            $this->setDefaultList($stainList,$count,$username,$stain);
-
-            $em->persist($stainList);
-            $em->flush();
-
-            $count = $count + 10;
-        }
-
-        return round($count/10);
-    }
+//    //return -1 if failed
+//    //return number of generated records
+//    public function generateStains_OLD() {
+//
+//        $helper = new FormHelper();
+//        $stains = $helper->getStains();
+//
+//        $username = $this->get('security.context')->getToken()->getUser();
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+//
+//        if( $entities ) {
+//
+//            return -1;
+//        }
+//
+//        $count = 1;
+//        foreach( $stains as $stain ) {
+//            $stainList = new StainList();
+//            $this->setDefaultList($stainList,$count,$username,$stain);
+//
+//            $em->persist($stainList);
+//            $em->flush();
+//
+//            $count = $count + 10;
+//        }
+//
+//        return round($count/10);
+//    }
 
     //populate stains from Excel sheet
     public function generateStains() {
@@ -446,6 +446,7 @@ class ScanAdminController extends AdminController
                 continue;
             }
 
+            //TODO: check case insensitive
             if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
                 continue;
             }
