@@ -559,25 +559,6 @@
 
             {#message:{{ message.vars.value.getMessageCategory() }}#}
 
-            {#decide if this object is the same as output object #}
-            {%  set showOutputMessage = false %}
-            {% for output in message.vars.value.outputs %}
-                {% set messageOutputClassName = output.entityNamespace~"\\"~output.entityName %}
-                {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
-
-                {#<br>compare :{{ messageOutputClassName }} ?= {{currentObjectClassName }}#}
-                {#<br>compare (messageoutputid, objectid):{{ output.entityId }} ?= {{object.vars.value.id }}#}
-
-                {% if
-                    messageOutputClassName == currentObjectClassName
-                    and output.entityId == object.vars.value.id
-                %}
-                    {%  set showOutputMessage = true %}
-                {% endif %}
-            {% endfor %}
-
-            {#<br>showOutputMessage:({{ showOutputMessage }})<br>#}
-
             {#decide if this object is the same as input object #}
             {%  set showInputMessage = false %}
             {% for input in message.vars.value.inputs %}
@@ -588,14 +569,37 @@
                 {#<br>compare (messageinputid, objectid):{{ input.entityId }} ?= {{object.vars.value.id }}#}
 
                 {% if
-                        messageInputClassName == currentObjectClassName
-                        and input.entityId == object.vars.value.id
+                    messageInputClassName == currentObjectClassName
+                    and input.entityId == object.vars.value.id
                 %}
                     {%  set showInputMessage = true %}
                 {% endif %}
             {% endfor %}
 
             {#<br>showInputMessage:({{ showInputMessage }})<br>#}
+
+            {#decide if this object is the same as output object #}
+            {%  set showOutputMessage = false %}
+
+            {#Never show a shadow of a message under the same parent as the message#}
+            {% if showInputMessage == false %}
+                {% for output in message.vars.value.outputs %}
+                    {% set messageOutputClassName = output.entityNamespace~"\\"~output.entityName %}
+                    {% set currentObjectClassName = object.vars.value.obtainFullClassName %}
+
+                    {#<br>compare :{{ messageOutputClassName }} ?= {{currentObjectClassName }}#}
+                    {#<br>compare (messageoutputid, objectid):{{ output.entityId }} ?= {{object.vars.value.id }}#}
+
+                    {% if
+                        messageOutputClassName == currentObjectClassName
+                        and output.entityId == object.vars.value.id
+                    %}
+                        {%  set showOutputMessage = true %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {#<br>showOutputMessage:({{ showOutputMessage }})<br>#}
 
             {% if showInputMessage or showOutputMessage %}
 
