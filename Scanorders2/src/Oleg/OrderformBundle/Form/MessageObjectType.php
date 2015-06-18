@@ -333,7 +333,6 @@ if( 1 ) {
                         'label' => false
                     ));
 
-                    //overwrite laborder's attachmentContainer
                     $params = array('labelPrefix'=>'Requisition Form Image');
                     $equipmentTypes = array('Requisition Form Scanner');
                     $params['device.types'] = $equipmentTypes;
@@ -366,14 +365,15 @@ if( 1 ) {
                         'label' => false
                     ));
 
-                    //overwrite report's attachmentContainer
-                    $params = array('labelPrefix'=>'Reference Representation');
-                    $equipmentTypes = array();
-                    $params['device.types'] = $equipmentTypes;
-                    $form->add('attachmentContainer', new AttachmentContainerType($params), array(
-                        'required' => false,
-                        'label' => false
-                    ));
+                    if( $messageCategory != "Slide Report" && $messageCategory != "Stain Report" ) {
+                        $params = array('labelPrefix'=>'Reference Representation');
+                        $equipmentTypes = array();
+                        $params['device.types'] = $equipmentTypes;
+                        $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+                            'required' => false,
+                            'label' => false
+                        ));
+                    }
                 }
 
                 //report block
