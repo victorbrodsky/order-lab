@@ -1131,6 +1131,10 @@ class PatientController extends Controller
                     $this->addSpecificMessage($AnalysisReport,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan);
                     $this->linkMessageObject( $AnalysisReport, $scan, 'input' );
 
+                    if( $withscanorder ) {
+                        $this->linkMessageObject( $MultiSlideScanOrder, $scan, 'output' );
+                    }
+
                     //set "Image Analysis Order" as source for "Image Analysis Report"
                     $ImageAnalysisOrder->addAssociation($AnalysisReport);
                     $AnalysisReport->addBackAssociation($ImageAnalysisOrder);
