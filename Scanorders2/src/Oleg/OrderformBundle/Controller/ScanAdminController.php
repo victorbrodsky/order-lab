@@ -446,7 +446,6 @@ class ScanAdminController extends AdminController
                 continue;
             }
 
-            //TODO: check case insensitive
             if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
                 continue;
             }
