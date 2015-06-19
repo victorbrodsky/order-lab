@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Oleg\UserdirectoryBundle\Entity\ComponentCategoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;

@@ -8,6 +8,7 @@ use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
+use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -172,6 +173,8 @@ class AdminController extends Controller
         $count_generateAuthorshipRoles = $this->generateAuthorshipRoles();
 
         $count_sex = $this->generateSex();
+
+        $count_PositionTypeList = $this->generatePositionTypeList();
         //$count_generateTitlePositionTypes = $this->generateTitlePositionTypes();
 
         $this->get('session')->getFlashBag()->add(
@@ -216,8 +219,9 @@ class AdminController extends Controller
             'Source Organizations='.$count_sourceOrganizations.', '.
             'Importances='.$count_generateImportances.', '.
             'AuthorshipRoles='.$count_generateAuthorshipRoles.', '.
-            'LinkTypes='.$count_generateLinkTypes.' '.
+            'LinkTypes='.$count_generateLinkTypes.', '.
             'Sex='.$count_sex.', '.
+            'Position Types='.$count_PositionTypeList.', '.
             //'TitlePositionTypes='.$count_generateTitlePositionTypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -2794,6 +2798,41 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $listEntity = new SexList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generatePositionTypeList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:PositionTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        //https://bitbucket.org/weillcornellpathology/scanorder/issue/438/change-institution-division-department
+        $types = array(
+            'Head',
+            'Manager',
+            'Primary Contact',
+            'Transcriptionist'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new PositionTypeList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

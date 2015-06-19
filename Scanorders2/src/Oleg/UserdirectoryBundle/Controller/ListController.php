@@ -74,6 +74,7 @@ class ListController extends Controller
      * @Route("/cities/", name="cities-list")
      * @Route("/linktypes/", name="linktypes-list")
      * @Route("/sex/", name="sexes-list")
+     * @Route("/position-types/", name="positiontypes-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -219,6 +220,7 @@ class ListController extends Controller
      * @Route("/cities/", name="cities_create")
      * @Route("/linktypes/", name="linktypes_create")
      * @Route("/sex/", name="sexes_create")
+     * @Route("/position-types/", name="positiontypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -355,6 +357,7 @@ class ListController extends Controller
      * @Route("/cities/new", name="cities_new")
      * @Route("/linktypes/new", name="linktypes_new")
      * @Route("/sex/new", name="sexes_new")
+     * @Route("/position-types/new", name="positiontypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -462,6 +465,7 @@ class ListController extends Controller
      * @Route("/cities/{id}", name="cities_show")
      * @Route("/linktypes/{id}", name="linktypes_show")
      * @Route("/sex/{id}", name="sexes_show")
+     * @Route("/position-types/{id}", name="positiontypes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -559,6 +563,7 @@ class ListController extends Controller
      * @Route("/cities/{id}/edit", name="cities_edit")
      * @Route("/linktypes/{id}/edit", name="linktypes_edit")
      * @Route("/sex/{id}/edit", name="sexes_edit")
+     * @Route("/position-types/{id}/edit", name="positiontypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -688,6 +693,7 @@ class ListController extends Controller
      * @Route("/cities/{id}", name="cities_update")
      * @Route("/linktypes/{id}", name="linktypes_update")
      * @Route("/sex/{id}", name="sexes_update")
+     * @Route("/position-types/{id}", name="positiontypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1049,6 +1055,10 @@ class ListController extends Controller
                 $className = "SexList";
                 $displayName = "Sex";
                 break;
+            case "positiontypes":
+                $className = "PositionTypeList";
+                $displayName = "Position Types";
+                break;
 
             default:
                 $className = null;
@@ -1131,6 +1141,7 @@ class ListController extends Controller
      * @Route("/cities/{id}", name="cities_delete")
      * @Route("/linktypes/{id}", name="linktypes_delete")
      * @Route("/sex/{id}", name="sexes_delete")
+     * @Route("/position-types/{id}", name="positiontypes_delete")
      *
      * @Method("DELETE")
      */
