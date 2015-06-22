@@ -420,9 +420,9 @@
 
 
                     {{ formmacros.field(formfield.institution) }}
-                    {{ formmacros.field(formfield.department) }}
-                    {{ formmacros.field(formfield.division) }}
-                    {{ formmacros.field(formfield.service) }}
+                    {#{{ formmacros.field(formfield.department) }}#}
+                    {#{{ formmacros.field(formfield.division) }}#}
+                    {#{{ formmacros.field(formfield.service) }}#}
 
                     {{ formmacros.field_notempty(formfield.mailbox,cycle) }}
 
@@ -1115,49 +1115,49 @@
     {% endfor %}
 
     {#Department if head#}
-    {% set departments = user.getDepartments(true) %}
-    {% set mydepartmentsArr = {} %}
-    {% for department in departments %}
-        {% if department and department.getId() %}
-            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'department','id':department.getId(),'name':department} ) %}
-            {% set element = {'table': table, 'element':department} %}
-            {% set mydepartmentsArr = mydepartmentsArr|merge({ (loop.index0): element}) %}
-            {% if render(table)|length > threshold %}
-                {% set mydepartmentsShow = true %}
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+    {#{% set departments = user.getDepartments(true) %}#}
+    {#{% set mydepartmentsArr = {} %}#}
+    {#{% for department in departments %}#}
+        {#{% if department and department.getId() %}#}
+            {#{% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'department','id':department.getId(),'name':department} ) %}#}
+            {#{% set element = {'table': table, 'element':department} %}#}
+            {#{% set mydepartmentsArr = mydepartmentsArr|merge({ (loop.index0): element}) %}#}
+            {#{% if render(table)|length > threshold %}#}
+                {#{% set mydepartmentsShow = true %}#}
+            {#{% endif %}#}
+        {#{% endif %}#}
+    {#{% endfor %}#}
 
     {#Division if head or service is empty#}
-    {% set divisions = user.getDivisions(true,true) %}
-    {% set mydivisionsArr = {} %}
-    {% for division in divisions %}
-        {% if division and division.getId() %}
-            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'division','id':division.getId(),'name':division} ) %}
-            {% set element = {'table': table, 'element':division} %}
-            {% set mydivisionsArr = mydivisionsArr|merge({ (loop.index0): element}) %}
-            {% if render(table)|length > threshold %}
-                {% set mydivisionsShow = true %}
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+    {#{% set divisions = user.getDivisions(true,true) %}#}
+    {#{% set mydivisionsArr = {} %}#}
+    {#{% for division in divisions %}#}
+        {#{% if division and division.getId() %}#}
+            {#{% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'division','id':division.getId(),'name':division} ) %}#}
+            {#{% set element = {'table': table, 'element':division} %}#}
+            {#{% set mydivisionsArr = mydivisionsArr|merge({ (loop.index0): element}) %}#}
+            {#{% if render(table)|length > threshold %}#}
+                {#{% set mydivisionsShow = true %}#}
+            {#{% endif %}#}
+        {#{% endif %}#}
+    {#{% endfor %}#}
 
     {#Service#}
-    {% set services = user.getServices() %}
-    {% set myservicesArr = {} %}
-    {% for service in services %}
-        {% if service and service.getId() %}
-            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}
-            {#table:{{ dump(render(table)) }}#}
-            {#{% set rowArr = render(table)|split('<tr>') %}#}
-            {#rowArr length:{{ rowArr|length }}#}
-            {% set element = {'table': table, 'element':service} %}
-            {% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}
-            {% if render(table)|length > threshold %}
-                {% set myservicesShow = true %}
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+    {#{% set services = user.getServices() %}#}
+    {#{% set myservicesArr = {} %}#}
+    {#{% for service in services %}#}
+        {#{% if service and service.getId() %}#}
+            {#{% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}#}
+            {#&#123;&#35;table:{{ dump(render(table)) }}&#35;&#125;#}
+            {#&#123;&#35;{% set rowArr = render(table)|split('<tr>') %}&#35;&#125;#}
+            {#&#123;&#35;rowArr length:{{ rowArr|length }}&#35;&#125;#}
+            {#{% set element = {'table': table, 'element':service} %}#}
+            {#{% set myservicesArr = myservicesArr|merge({ (loop.index0): element}) %}#}
+            {#{% if render(table)|length > threshold %}#}
+                {#{% set myservicesShow = true %}#}
+            {#{% endif %}#}
+        {#{% endif %}#}
+    {#{% endfor %}#}
 
     {#Research Lab#}
     {% set labs = user.getResearchLabs() %}

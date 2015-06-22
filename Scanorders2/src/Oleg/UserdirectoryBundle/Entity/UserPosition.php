@@ -26,6 +26,12 @@ class UserPosition {
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="userPositions", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     */
+    protected $institution;
+
+    /**
      * User object
      * @ORM\ManyToOne(targetEntity="User")
      */
@@ -60,6 +66,22 @@ class UserPosition {
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
     }
 
     /**

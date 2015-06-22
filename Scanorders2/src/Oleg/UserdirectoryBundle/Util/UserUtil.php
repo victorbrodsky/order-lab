@@ -133,6 +133,7 @@ class UserUtil {
             $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
             //************** end of  Aperio group roles **************//
 
+            //TODO: implement service!
             foreach( $services as $service ) {
 
                 $service = trim($service);
@@ -558,8 +559,8 @@ class UserUtil {
         $dql->addSelect('location');
 
         $dql->leftJoin("location.user", "locationuser");
-        $dql->leftJoin("location.service", "service");
-        $dql->leftJoin("service.heads", "heads");
+        //$dql->leftJoin("location.service", "service");
+        //$dql->leftJoin("service.heads", "heads");
         $dql->leftJoin("heads.infos", "headsinfos");
 
         $postData = $request->query->all();
@@ -591,16 +592,17 @@ class UserUtil {
                 break;
             case "Pathology Common Locations":
                 //filter by Department=Pathology and Laboratory Medicine
-                $dql->leftJoin("location.department", "department");
+                //$dql->leftJoin("location.department", "department");
+                $dql->leftJoin("location.institution", "institution");
                 $criteriastr .= " AND ";
-                $criteriastr .= "department.name LIKE '%Pathology%'";
+                $criteriastr .= "institution.name LIKE '%Pathology%'";
                 break;
             case "WCMC & NYP Pathology Common Locations":
                 //filter by Institution=Weill Cornell Medical College & NYP and Department=Pathology
-                $dql->leftJoin("location.department", "department");
+                //$dql->leftJoin("location.department", "department");
                 $dql->leftJoin("location.institution", "institution");
                 $criteriastr .= " AND ";
-                $criteriastr .= "department.name LIKE '%Pathology%'";
+                $criteriastr .= "institution.name LIKE '%Pathology%'";
                 $criteriastr .= " AND (";
                 $criteriastr .= "institution.name LIKE 'Weill Cornell Medical College'";
                 $criteriastr .= " OR ";
@@ -610,19 +612,19 @@ class UserUtil {
                 break;
             case "WCMC Pathology Common Locations":
                 //filter by Institution=Weill Cornell Medical College and Department=Pathology and Laboratory Medicine
-                $dql->leftJoin("location.department", "department");
+                //$dql->leftJoin("location.department", "department");
                 $dql->leftJoin("location.institution", "institution");
                 $criteriastr .= " AND ";
-                $criteriastr .= "department.name LIKE 'Pathology and Laboratory Medicine'";
+                $criteriastr .= "institution.name LIKE 'Pathology and Laboratory Medicine'";
                 $criteriastr .= " AND ";
                 $criteriastr .= "institution.name LIKE 'Weill Cornell Medical College'";
                 break;
             case "NYP Pathology Common Locations":
                 //filter by Institution=New York Hospital and Department=Pathology and Laboratory Medicine
-                $dql->leftJoin("location.department", "department");
+                //$dql->leftJoin("location.department", "department");
                 $dql->leftJoin("location.institution", "institution");
                 $criteriastr .= " AND ";
-                $criteriastr .= "department.name LIKE 'Pathology'";
+                $criteriastr .= "institution.name LIKE 'Pathology'";
                 $criteriastr .= " AND ";
                 $criteriastr .= "institution.name LIKE 'New York Hospital'";
                 break;

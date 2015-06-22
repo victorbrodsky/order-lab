@@ -116,6 +116,27 @@ function getDataIdByText(arr,text) {
 //#############  institution  ##############//
 function getComboboxInstitution(holder) {
 
+    //employees_get_institution
+    var institutionUrl = Routing.generate('employees_get_institution_tree');
+    console.log('institutionUrl='+institutionUrl);
+
+    //_institution
+    //$('#composite-tree').jstree();
+    $('#composite-tree').jstree({
+        'core' : {
+            'data' : {
+                "url" : institutionUrl, //"//www.jstree.com/fiddle/",
+                //"dataType" : "json" // needed only if you do not supply JSON headers
+                "data" : function (node) {
+                    return { "id" : node.id };
+                }
+            }
+        }
+    });
+
+}
+function getComboboxInstitution_OLD(holder) {
+
     setInstitutionTreeChildren(holder);
 
     var targetid = ".ajax-combobox-institution";

@@ -389,23 +389,23 @@ class UserController extends Controller
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
         $dql->leftJoin("administrativeTitles.name", "administrativeName");
         $dql->leftJoin("administrativeTitles.institution", "administrativeInstitution");
-        $dql->leftJoin("administrativeTitles.department", "administrativeDepartment");
-        $dql->leftJoin("administrativeTitles.division", "administrativeDivision");
-        $dql->leftJoin("administrativeTitles.service", "administrativeService");
+        //$dql->leftJoin("administrativeTitles.department", "administrativeDepartment");
+        //$dql->leftJoin("administrativeTitles.division", "administrativeDivision");
+        //$dql->leftJoin("administrativeTitles.service", "administrativeService");
 
         $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
         $dql->leftJoin("appointmentTitles.name", "appointmentName");
         $dql->leftJoin("appointmentTitles.institution", "appointmentInstitution");
-        $dql->leftJoin("appointmentTitles.department", "appointmentDepartment");
-        $dql->leftJoin("appointmentTitles.division", "appointmentDivision");
-        $dql->leftJoin("appointmentTitles.service", "appointmentService");
+        //$dql->leftJoin("appointmentTitles.department", "appointmentDepartment");
+        //$dql->leftJoin("appointmentTitles.division", "appointmentDivision");
+        //$dql->leftJoin("appointmentTitles.service", "appointmentService");
 
         $dql->leftJoin("user.medicalTitles", "medicalTitles");
         $dql->leftJoin("medicalTitles.name", "medicalName");
         $dql->leftJoin("medicalTitles.institution", "medicalInstitution");
-        $dql->leftJoin("medicalTitles.department", "medicalDepartment");
-        $dql->leftJoin("medicalTitles.division", "medicalDivision");
-        $dql->leftJoin("medicalTitles.service", "medicalService");
+        //$dql->leftJoin("medicalTitles.department", "medicalDepartment");
+        //$dql->leftJoin("medicalTitles.division", "medicalDivision");
+        //$dql->leftJoin("medicalTitles.service", "medicalService");
 
         $dql->leftJoin("user.locations", "locations");
         $dql->leftJoin("locations.room", "locationroom");
@@ -423,9 +423,9 @@ class UserController extends Controller
             if( $time == 'current_only' ) {
                 $dql->orderBy("infos.lastName","ASC");
                 $dql->addOrderBy("administrativeInstitution.name","ASC");
-                $dql->addOrderBy("administrativeService.name","ASC");
-                $dql->addOrderBy("appointmentService.name","ASC");
-                $dql->addOrderBy("medicalService.name","ASC");
+                //$dql->addOrderBy("administrativeService.name","ASC");
+                //$dql->addOrderBy("appointmentService.name","ASC");
+               //$dql->addOrderBy("medicalService.name","ASC");
             } else if( $time == 'past_only' ) {
                 $dql->orderBy("employmentStatus.terminationDate","DESC");
                 $dql->addOrderBy("infos.lastName","ASC");
@@ -557,11 +557,11 @@ class UserController extends Controller
         //institution
         $criteriastr .= "administrativeInstitution.name LIKE '%".$search."%' OR ";
         //department
-        $criteriastr .= "administrativeDepartment.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "administrativeDepartment.name LIKE '%".$search."%' OR ";
         //division
-        $criteriastr .= "administrativeDivision.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "administrativeDivision.name LIKE '%".$search."%' OR ";
         //service
-        $criteriastr .= "administrativeService.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "administrativeService.name LIKE '%".$search."%' OR ";
         $criteriastr .= "administrativeName.name LIKE '%".$search."%' OR ";
 
 
@@ -569,11 +569,11 @@ class UserController extends Controller
         //institution
         $criteriastr .= "appointmentInstitution.name LIKE '%".$search."%' OR ";
         //department
-        $criteriastr .= "appointmentDepartment.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "appointmentDepartment.name LIKE '%".$search."%' OR ";
         //division
-        $criteriastr .= "appointmentDivision.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "appointmentDivision.name LIKE '%".$search."%' OR ";
         //service
-        $criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
         $criteriastr .= "appointmentName.name LIKE '%".$search."%' OR ";
 
 
@@ -581,11 +581,11 @@ class UserController extends Controller
         //institution
         $criteriastr .= "medicalInstitution.name LIKE '%".$search."%' OR ";
         //department
-        $criteriastr .= "medicalDepartment.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "medicalDepartment.name LIKE '%".$search."%' OR ";
         //division
-        $criteriastr .= "medicalDivision.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "medicalDivision.name LIKE '%".$search."%' OR ";
         //service
-        $criteriastr .= "medicalService.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "medicalService.name LIKE '%".$search."%' OR ";
         $criteriastr .= "medicalName.name LIKE '%".$search."%' OR ";
 
 
@@ -636,7 +636,7 @@ class UserController extends Controller
         return $inputCriteriastr;
     }
 
-
+    //TODO: implement this! administrativeDepartment.name?
     public function getCriteriaStrByFilter( $dql, $filter, $inputCriteriastr ) {
 
         $criteriastr = "";

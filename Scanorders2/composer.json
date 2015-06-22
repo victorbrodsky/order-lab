@@ -23,7 +23,9 @@
         "knplabs/knp-paginator-bundle": "~2.4",
         "phpexcel/phpexcel": "dev-master",
         "phpunit/phpunit": "4.1.*",
-        "oneup/uploader-bundle": "~1.3"
+        "oneup/uploader-bundle": "~1.3",
+        "friendsofsymfony/jsrouting-bundle": "@stable",
+        "symfony-cmf/tree-browser-bundle": "1.1.0"
 
     },
     "scripts": {

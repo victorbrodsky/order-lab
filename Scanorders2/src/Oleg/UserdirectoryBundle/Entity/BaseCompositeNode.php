@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\MappedSuperclass
  */
-abstract class BaseCompositeNode extends ListAbstract implements ComponentCategoryInterface {  //extends ListAbstract
+abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeInterface {  //extends ListAbstract
 
     //children
 

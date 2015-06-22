@@ -9,7 +9,7 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 
-interface ComponentCategoryInterface {
+interface CompositeNodeInterface {
 
     // Composites' methods
     public function addChild( $component );

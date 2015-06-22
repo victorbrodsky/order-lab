@@ -1,16 +1,24 @@
 parameters:
-    database_driver:   pdo_mysql
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
-    database_user:     root
+
+    database_driver: pdo_sqlsrv
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: ScanOrder
+    database_user: symfony2
     database_password: ~
 
-    mailer_transport:  smtp
-    mailer_host:       smtp.med.cornell.edu 
-    mailer_user:       slidescan@med.cornell.edu
-    mailer_password:   
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: 563fd817cf2c4f1f692d90650b6fba50f782ccc9
     delivery_strategy: realtime
 
-    locale:            en
-    secret:            ThisTokenIsNotSoSecretChangeIt
+    #Aperio DB connection
+    database_driver_aperio: pdo_sqlsrv
+    database_host_aperio: c.med.cornell.edu
+    database_port_aperio: null
+    database_name_aperio: Aperio
+    database_user_aperio: symfony2_aperio
+    database_password_aperio: ~

@@ -140,9 +140,22 @@
 
 
         {{ formmacros.field(formfield.institution) }}
-        {{ formmacros.field(formfield.department) }}
-        {{ formmacros.field(formfield.division) }}
-        {{ formmacros.field(formfield.service) }}
+
+        institution tree (composite-tree)
+        <div id="composite-tree">
+        {#<ul>#}
+            {#<li>Root node#}
+                {#<ul>#}
+                    {#<li>Child node 1</li>#}
+                    {#<li>Child node 2</li>#}
+                {#</ul>#}
+            {#</li>#}
+        {#</ul>#}
+        </div>
+
+        {#{{ formmacros.field(formfield.department) }}#}
+        {#{{ formmacros.field(formfield.division) }}#}
+        {#{{ formmacros.field(formfield.service) }}#}
 
         {#show "head of ..." on show only if set#}
         {#{% if formfield.supervisorInstitution is defined %}#}
@@ -618,11 +631,11 @@
     <tbody>
         <tr>
             <td>
-                {% for service in user.getServices %}
-                    {% if service is defined and service != "" %}
-                        {{ usermacros.getInstitutionalTree(service,'userlink') }}
-                    {% endif %}
-                {% endfor %}
+                {#{% for service in user.getServices %}#}
+                    {#{% if service is defined and service != "" %}#}
+                        {#{{ usermacros.getInstitutionalTree(service,'userlink') }}#}
+                    {#{% endif %}#}
+                {#{% endfor %}#}
             </td>
             <td>{{ user.displayName }}</td>
             <td>
@@ -762,27 +775,27 @@
                     <div class="service">
                         <p>
                             {#services#}
-                            {% for service in user.getServices %}
-                                {#Eyebrow Pathology<br>#}
-                                {#Anatomic Pathology<br>#}
-                                {#Department of Pathology and Laboratory Medicine<br>#}
-                                {#Weill Cornell Medical College#}
-                                {#{{ service.name }}<br>#}
-                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.__toString() }) }}">{{ service }}</a>
-                                <br>
-                            {% endfor %}
-                            {#divisions#}
-                            {% for division in user.getDivisions %}
-                                {#{{ division.name }}<br>#}
-                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'division','id': division.id, 'name': division.__toString() }) }}">{{ division }}</a>
-                                <br>
-                            {% endfor %}
-                            {#departments#}
-                            {% for department in user.getDepartments %}
-                                {#{{ department.name }}<br>#}
-                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'department','id': department.id, 'name': department.__toString() }) }}">{{ department }}</a>
-                                <br>
-                            {% endfor %}
+                            {#{% for service in user.getServices %}#}
+                                {#&#123;&#35;Eyebrow Pathology<br>&#35;&#125;#}
+                                {#&#123;&#35;Anatomic Pathology<br>&#35;&#125;#}
+                                {#&#123;&#35;Department of Pathology and Laboratory Medicine<br>&#35;&#125;#}
+                                {#&#123;&#35;Weill Cornell Medical College&#35;&#125;#}
+                                {#&#123;&#35;{{ service.name }}<br>&#35;&#125;#}
+                                {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.__toString() }) }}">{{ service }}</a>#}
+                                {#<br>#}
+                            {#{% endfor %}#}
+                            {#&#123;&#35;divisions&#35;&#125;#}
+                            {#{% for division in user.getDivisions %}#}
+                                {#&#123;&#35;{{ division.name }}<br>&#35;&#125;#}
+                                {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'division','id': division.id, 'name': division.__toString() }) }}">{{ division }}</a>#}
+                                {#<br>#}
+                            {#{% endfor %}#}
+                            {#&#123;&#35;departments&#35;&#125;#}
+                            {#{% for department in user.getDepartments %}#}
+                                {#&#123;&#35;{{ department.name }}<br>&#35;&#125;#}
+                                {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'department','id': department.id, 'name': department.__toString() }) }}">{{ department }}</a>#}
+                                {#<br>#}
+                            {#{% endfor %}#}
                             {#institutions#}
                             {% for institution in user.getInstitutions %}
                                 {#{{ institution.name }}#}
@@ -1005,18 +1018,18 @@
 
                             {#services#}
                             <p>
-                                {#services#}
-                                {% for service in user.getServices %}
-                                    {{ service.name }}<br>
-                                {% endfor %}
-                                {#divisions#}
-                                {% for division in user.getDivisions %}
-                                    {{ division.name }}<br>
-                                {% endfor %}
-                                {#departments#}
-                                {% for department in user.getDepartments %}
-                                    {{ department.name }}<br>
-                                {% endfor %}
+                                {#&#123;&#35;services&#35;&#125;#}
+                                {#{% for service in user.getServices %}#}
+                                    {#{{ service.name }}<br>#}
+                                {#{% endfor %}#}
+                                {#&#123;&#35;divisions&#35;&#125;#}
+                                {#{% for division in user.getDivisions %}#}
+                                    {#{{ division.name }}<br>#}
+                                {#{% endfor %}#}
+                                {#&#123;&#35;departments&#35;&#125;#}
+                                {#{% for department in user.getDepartments %}#}
+                                    {#{{ department.name }}<br>#}
+                                {#{% endfor %}#}
                                 {#institutions#}
                                 {% for institution in user.getInstitutions %}
                                     {{ institution.name }}

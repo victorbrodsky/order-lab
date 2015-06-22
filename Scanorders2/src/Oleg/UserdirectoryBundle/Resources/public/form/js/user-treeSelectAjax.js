@@ -3,6 +3,13 @@
  */
 
 
+
+
+
+
+
+////////////////////////////// OLD TREE: TO DELETE //////////////////////////////////
+
 function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) {
 
     //console.log( "onchange=" + fieldClass );

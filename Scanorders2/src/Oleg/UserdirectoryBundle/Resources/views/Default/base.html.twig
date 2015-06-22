@@ -70,6 +70,12 @@
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
+        {% stylesheets
+        'bundles/oleguserdirectory/vakata-jstree/themes/default/style.min.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
     {% endblock %}
 
     {% block additionalcss %}{% endblock %}
@@ -188,6 +194,8 @@
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
 
+                '@OlegUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'
+
                 '@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
 
@@ -199,6 +207,7 @@
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
                 '@OlegUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
                 '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
+
             %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
@@ -210,6 +219,10 @@
             %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
+
+            {#FOSJsRoutingBundle#}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
         {% endblock %}
 
