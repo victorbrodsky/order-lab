@@ -156,20 +156,20 @@ class Location extends ListAbstract //extends BaseLocation
      */
     private $institution;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
-     */
-    private $department;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
-     */
-    private $division;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
-     */
-    private $service;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
+//     */
+//    private $department;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
+//     */
+//    private $division;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
+//     */
+//    private $service;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -485,53 +485,53 @@ class Location extends ListAbstract //extends BaseLocation
         return $this->institution;
     }
 
-    /**
-     * @param mixed $department
-     */
-    public function setDepartment($department)
-    {
-        $this->department = $department;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDepartment()
-    {
-        return $this->department;
-    }
-
-    /**
-     * @param mixed $division
-     */
-    public function setDivision($division)
-    {
-        $this->division = $division;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDivision()
-    {
-        return $this->division;
-    }
-
-    /**
-     * @param mixed $service
-     */
-    public function setService($service)
-    {
-        $this->service = $service;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
+//    /**
+//     * @param mixed $department
+//     */
+//    public function setDepartment($department)
+//    {
+//        $this->department = $department;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDepartment()
+//    {
+//        return $this->department;
+//    }
+//
+//    /**
+//     * @param mixed $division
+//     */
+//    public function setDivision($division)
+//    {
+//        $this->division = $division;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDivision()
+//    {
+//        return $this->division;
+//    }
+//
+//    /**
+//     * @param mixed $service
+//     */
+//    public function setService($service)
+//    {
+//        $this->service = $service;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getService()
+//    {
+//        return $this->service;
+//    }
 
     /**
      * Add assistant
@@ -852,14 +852,14 @@ class Location extends ListAbstract //extends BaseLocation
         }
 
         //add room and suite to department
-        if( $this->department ) {
-            if( $this->room ) {
-                $this->room->addDepartment($this->department);
-            }
-            if( $this->suite ) {
-                $this->suite->addDepartment($this->department);
-            }
-        }
+//        if( $this->department ) {
+//            if( $this->room ) {
+//                $this->room->addDepartment($this->department);
+//            }
+//            if( $this->suite ) {
+//                $this->suite->addDepartment($this->department);
+//            }
+//        }
 
         //echo "set room suite floor building <br>";
     }

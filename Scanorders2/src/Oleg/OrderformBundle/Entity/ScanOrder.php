@@ -20,10 +20,10 @@ class ScanOrder extends OrderBase {
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
-     */
-    private $service;
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+//     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $service;
 
     /**
      * Order delivery (string): I'll give slides to ...
@@ -45,21 +45,21 @@ class ScanOrder extends OrderBase {
     }
 
 
-    /**
-     * @param mixed $service
-     */
-    public function setService($service)
-    {
-        $this->service = $service;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
+//    /**
+//     * @param mixed $service
+//     */
+//    public function setService($service)
+//    {
+//        $this->service = $service;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getService()
+//    {
+//        return $this->service;
+//    }
 
     /**
      * @param mixed $delivery

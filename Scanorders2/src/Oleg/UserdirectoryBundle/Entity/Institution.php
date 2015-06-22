@@ -23,7 +23,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  }
  * )
  */
-class Institution extends ListAbstract implements ComponentCategoryInterface {  //extends ListAbstract
+class Institution extends BaseCompositeNode {
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="children")
+     **/
+    protected $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Institution", mappedBy="parent", cascade={"persist","remove"})
+     **/
+    protected $children;
 
     /**
      * @ORM\OneToMany(targetEntity="Institution", mappedBy="original")
@@ -36,36 +46,6 @@ class Institution extends ListAbstract implements ComponentCategoryInterface {  
      **/
     protected $original;
 
-    // Composites' fields
-
-    //parent
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="children")
-     **/
-    private $parent;
-
-    //children
-    /**
-     * @ORM\OneToMany(targetEntity="Institution", mappedBy="parent", cascade={"persist","remove"})
-     **/
-    private $children;
-
-    //left
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $lft;
-
-    //right
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $rgt;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $level;
 
     /**
      * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="institutions")
@@ -100,19 +80,20 @@ class Institution extends ListAbstract implements ComponentCategoryInterface {  
     private $userPositions;
 
     /**
-     * level title corresponds to level integer: 1-Institution, 2-Department, 3-Division, 4-Service
-     * string or LevelTitleList?
-     * For example, when level is set to 1, LevelTitleList id is set
+     * level int in LevelTitleList corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
+     * For example, LevelTitleList with level=1, set this level to 1.
      *
      * @ORM\ManyToOne(targetEntity="LevelTitleList", cascade={"persist"})
      */
     private $levelTitle;
 
 
+    //May add additional properties of the tree node
+
+
     public function __construct() {
         parent::__construct();
 
-        $this->children = new ArrayCollection();
         $this->buildings = new ArrayCollection();
         $this->types = new ArrayCollection();
 
@@ -122,89 +103,6 @@ class Institution extends ListAbstract implements ComponentCategoryInterface {  
     }
 
 
-    public function getChild( $index ) {
-        return $this->children->get($index);
-    }
-
-    public function getChildren()
-    {
-        return $this->children;
-    }
-    public function addChild($item)
-    {
-        if( !$this->children->contains($item) ) {
-            $this->children->add($item);
-            $item->setParent($this);
-        }
-    }
-    public function removeChild($item)
-    {
-        $this->children->removeElement($item);
-    }
-
-    /**
-     * @param mixed $level
-     */
-    public function setLevel($level)
-    {
-        $this->level = $level;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
-    /**
-     * @param mixed $lft
-     */
-    public function setLft($lft)
-    {
-        $this->lft = $lft;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLft()
-    {
-        return $this->lft;
-    }
-
-    /**
-     * @param mixed $parent
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * @param mixed $rgt
-     */
-    public function setRgt($rgt)
-    {
-        $this->rgt = $rgt;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRgt()
-    {
-        return $this->rgt;
-    }
 
     /**
      * @param mixed $levelTitle
@@ -212,6 +110,7 @@ class Institution extends ListAbstract implements ComponentCategoryInterface {  
     public function setLevelTitle($levelTitle)
     {
         $this->levelTitle = $levelTitle;
+        $this->setLevel($levelTitle->getLevel());
     }
 
     /**

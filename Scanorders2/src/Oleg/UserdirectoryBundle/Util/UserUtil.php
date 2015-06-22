@@ -686,20 +686,18 @@ class UserUtil {
 
     public function processInstTree( $treeholder, $em, $sc ) {
 
+        exit('Error: implement processInstTree');
         $institution = $treeholder->getInstitution();
-        $department = $treeholder->getDepartment();
-        $division = $treeholder->getDivision();
-        $service = $treeholder->getService();
+//        $department = $treeholder->getDepartment();
+//        $division = $treeholder->getDivision();
+//        $service = $treeholder->getService();
         //echo "service: name=".$service->getName().", id=".$service->getId()."<br>";
         //exit();
 
-        $user = $sc->getToken()->getUser();
-
-        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$institution,$department);
-
-        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$department,$division);
-
-        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$division,$service);
+//        $user = $sc->getToken()->getUser();
+//        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$institution,$department);
+//        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$department,$division);
+//        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$division,$service);
 
         //set author if not set
         $this->setUpdateInfo($treeholder,$em,$sc);

@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+//TODO: remove this entity? Why do I need it? For logger?
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_institutionTree")
@@ -35,20 +36,20 @@ class InstitutionTree
      */
     private $institution;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
-     */
-    private $department;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
-     */
-    private $division;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
-     */
-    private $service;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
+//     */
+//    private $department;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
+//     */
+//    private $division;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
+//     */
+//    private $service;
 
 
     function __construct($type=null)
@@ -58,43 +59,43 @@ class InstitutionTree
 
 
 
-    /**
-     * @param mixed $department
-     */
-    public function setDepartment($department)
-    {
-        $this->department = $department;
-
-        //set parent
-        $this->setInstitution($department->getParent());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDepartment()
-    {
-        return $this->department;
-    }
-
-    /**
-     * @param mixed $division
-     */
-    public function setDivision($division)
-    {
-        $this->division = $division;
-
-        //set parent
-        $this->setDepartment($division->getParent());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDivision()
-    {
-        return $this->division;
-    }
+//    /**
+//     * @param mixed $department
+//     */
+//    public function setDepartment($department)
+//    {
+//        $this->department = $department;
+//
+//        //set parent
+//        $this->setInstitution($department->getParent());
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDepartment()
+//    {
+//        return $this->department;
+//    }
+//
+//    /**
+//     * @param mixed $division
+//     */
+//    public function setDivision($division)
+//    {
+//        $this->division = $division;
+//
+//        //set parent
+//        $this->setDepartment($division->getParent());
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDivision()
+//    {
+//        return $this->division;
+//    }
 
     /**
      * @param int $id
@@ -128,24 +129,24 @@ class InstitutionTree
         return $this->institution;
     }
 
-    /**
-     * @param mixed $service
-     */
-    public function setService($service)
-    {
-        $this->service = $service;
-
-        //set parent
-        $this->setDivision($service->getParent());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
+//    /**
+//     * @param mixed $service
+//     */
+//    public function setService($service)
+//    {
+//        $this->service = $service;
+//
+//        //set parent
+//        $this->setDivision($service->getParent());
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getService()
+//    {
+//        return $this->service;
+//    }
 
     /**
      * @param mixed $type

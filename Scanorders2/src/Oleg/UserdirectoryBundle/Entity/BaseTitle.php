@@ -40,20 +40,20 @@ class BaseTitle extends BaseUserAttributes
      */
     protected $institution;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
-     */
-    protected $department;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
-     */
-    protected $division;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
-     */
-    protected $service;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
+//     */
+//    protected $department;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
+//     */
+//    protected $division;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
+//     */
+//    protected $service;
 
     /**
      * @var \DateTime
@@ -67,30 +67,30 @@ class BaseTitle extends BaseUserAttributes
     protected $pgylevel;
 
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $supervisorInstitution;
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $supervisorInstitution;
+//
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $supervisorDepartment;
+//
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $supervisorDivision;
+//
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $supervisorService;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $supervisorDepartment;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $supervisorDivision;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $supervisorService;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="TitlePositionType",cascade={"persist"})
-     */
-    protected $titlePositionType;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="TitlePositionType",cascade={"persist"})
+//     */
+//    protected $titlePositionType;
 
 
 
@@ -98,10 +98,10 @@ class BaseTitle extends BaseUserAttributes
     {
         parent::__construct($author);
 
-        $this->supervisorInstitution = false;
-        $this->supervisorDepartment = false;
-        $this->supervisorDivision = false;
-        $this->supervisorService = false;
+//        $this->supervisorInstitution = false;
+//        $this->supervisorDepartment = false;
+//        $this->supervisorDivision = false;
+//        $this->supervisorService = false;
     }
 
 
@@ -153,37 +153,37 @@ class BaseTitle extends BaseUserAttributes
         return $this->startDate;
     }
 
-    /**
-     * @param mixed $department
-     */
-    public function setDepartment($department)
-    {
-        $this->department = $department;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDepartment()
-    {
-        return $this->department;
-    }
-
-    /**
-     * @param mixed $division
-     */
-    public function setDivision($division)
-    {
-        $this->division = $division;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDivision()
-    {
-        return $this->division;
-    }
+//    /**
+//     * @param mixed $department
+//     */
+//    public function setDepartment($department)
+//    {
+//        $this->department = $department;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDepartment()
+//    {
+//        return $this->department;
+//    }
+//
+//    /**
+//     * @param mixed $division
+//     */
+//    public function setDivision($division)
+//    {
+//        $this->division = $division;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDivision()
+//    {
+//        return $this->division;
+//    }
 
     /**
      * @param mixed $institution
@@ -201,21 +201,21 @@ class BaseTitle extends BaseUserAttributes
         return $this->institution;
     }
 
-    /**
-     * @param mixed $service
-     */
-    public function setService($service)
-    {
-        $this->service = $service;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
+//    /**
+//     * @param mixed $service
+//     */
+//    public function setService($service)
+//    {
+//        $this->service = $service;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getService()
+//    {
+//        return $this->service;
+//    }
 
     /**
      * @param mixed $effort
@@ -236,202 +236,202 @@ class BaseTitle extends BaseUserAttributes
 
 
 
-    /**
-     * @param mixed $titlePositionType
-     */
-    public function setTitlePositionType($titlePositionType)
-    {
-        $this->titlePositionType = $titlePositionType;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTitlePositionType()
-    {
-        return $this->titlePositionType;
-    }
+//    /**
+//     * @param mixed $titlePositionType
+//     */
+//    public function setTitlePositionType($titlePositionType)
+//    {
+//        $this->titlePositionType = $titlePositionType;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getTitlePositionType()
+//    {
+//        return $this->titlePositionType;
+//    }
 
 
 
 
     ///////////////////////// TO REMOVE /////////////////////////////////////////////////////////
-    /**
-     * @param mixed $supervisorDepartment
-     */
-    public function setSupervisorDepartment($supervisorDepartment)
-    {
-        if( !$this->getDepartment() && $supervisorDepartment ) {
-            return;
-        }
-
-        //echo "supervisorDepartment=".$supervisorDepartment."<br>";
-        $this->supervisorDepartment = $supervisorDepartment;
-
-        //echo "user=".$this->getUser()."<br>";
-        if( $supervisorDepartment ) {
-            if( $this->getDepartment() ) {
-                //$this->getDepartment()->addHead( $this->getUser() );
-            }
-        } else {
-            if( $this->getDepartment() )
-                $this->getDepartment()->removeHead( $this->getUser() );
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSupervisorDepartment()
-    {
-        return $this->supervisorDepartment;
-    }
-
-    /**
-     * @param mixed $supervisorDivision
-     */
-    public function setSupervisorDivision($supervisorDivision)
-    {
-        if( !$this->getDivision() ) {
-            return;
-        }
-
-        $this->supervisorDivision = $supervisorDivision;
-
-        if( $supervisorDivision ) {
-            $this->getDivision()->addHead( $this->getUser() );
-        } else {
-            $this->getDivision()->removeHead( $this->getUser() );
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSupervisorDivision()
-    {
-        return $this->supervisorDivision;
-    }
-
-    /**
-     * @param mixed $supervisorInstitution
-     */
-    public function setSupervisorInstitution($supervisorInstitution)
-    {
-        if( !$this->getInstitution() ) {
-            return;
-        }
-
-        $this->supervisorInstitution = $supervisorInstitution;
-
-        if( $supervisorInstitution ) {
-            $this->getInstitution()->addHead( $this->getUser() );
-        } else {
-            $this->getInstitution()->removeHead( $this->getUser() );
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSupervisorInstitution()
-    {
-        return $this->supervisorInstitution;
-    }
-
-    /**
-     * @param mixed $supervisorService
-     */
-    public function setSupervisorService($supervisorService)
-    {
-        if( !$this->getService() ) {
-            return;
-        }
-
-        $this->supervisorService = $supervisorService;
-
-        if( $supervisorService ) {
-            $this->getService()->addHead( $this->getUser() );
-        } else {
-            $this->getService()->removeHead( $this->getUser() );
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSupervisorService()
-    {
-        return $this->supervisorService;
-    }
+//    /**
+//     * @param mixed $supervisorDepartment
+//     */
+//    public function setSupervisorDepartment($supervisorDepartment)
+//    {
+//        if( !$this->getDepartment() && $supervisorDepartment ) {
+//            return;
+//        }
+//
+//        //echo "supervisorDepartment=".$supervisorDepartment."<br>";
+//        $this->supervisorDepartment = $supervisorDepartment;
+//
+//        //echo "user=".$this->getUser()."<br>";
+//        if( $supervisorDepartment ) {
+//            if( $this->getDepartment() ) {
+//                //$this->getDepartment()->addHead( $this->getUser() );
+//            }
+//        } else {
+//            if( $this->getDepartment() )
+//                $this->getDepartment()->removeHead( $this->getUser() );
+//        }
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSupervisorDepartment()
+//    {
+//        return $this->supervisorDepartment;
+//    }
+//
+//    /**
+//     * @param mixed $supervisorDivision
+//     */
+//    public function setSupervisorDivision($supervisorDivision)
+//    {
+//        if( !$this->getDivision() ) {
+//            return;
+//        }
+//
+//        $this->supervisorDivision = $supervisorDivision;
+//
+//        if( $supervisorDivision ) {
+//            $this->getDivision()->addHead( $this->getUser() );
+//        } else {
+//            $this->getDivision()->removeHead( $this->getUser() );
+//        }
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSupervisorDivision()
+//    {
+//        return $this->supervisorDivision;
+//    }
+//
+//    /**
+//     * @param mixed $supervisorInstitution
+//     */
+//    public function setSupervisorInstitution($supervisorInstitution)
+//    {
+//        if( !$this->getInstitution() ) {
+//            return;
+//        }
+//
+//        $this->supervisorInstitution = $supervisorInstitution;
+//
+//        if( $supervisorInstitution ) {
+//            $this->getInstitution()->addHead( $this->getUser() );
+//        } else {
+//            $this->getInstitution()->removeHead( $this->getUser() );
+//        }
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSupervisorInstitution()
+//    {
+//        return $this->supervisorInstitution;
+//    }
+//
+//    /**
+//     * @param mixed $supervisorService
+//     */
+//    public function setSupervisorService($supervisorService)
+//    {
+//        if( !$this->getService() ) {
+//            return;
+//        }
+//
+//        $this->supervisorService = $supervisorService;
+//
+//        if( $supervisorService ) {
+//            $this->getService()->addHead( $this->getUser() );
+//        } else {
+//            $this->getService()->removeHead( $this->getUser() );
+//        }
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSupervisorService()
+//    {
+//        return $this->supervisorService;
+//    }
 
 //    /**
 //     * @ORM\PreRemove
 //     */
-    public function unsetHeads() {
-        //exit('on remove');
-        //remove possible links institution-head
-        if( $this->getInstitution() ) {
-            if( $this->getInstitution()->getHeads()->contains($this->getUser()) ) {
-                $this->getInstitution()->removeHead( $this->getUser() );
-            }
-        }
-
-        //department
-        if( $this->getDepartment() ) {
-            if( $this->getDepartment()->getHeads()->contains($this->getUser()) ) {
-                $this->getDepartment()->removeHead( $this->getUser() );
-            }
-        }
-
-        //division
-        if( $this->getDivision() ) {
-            if( $this->getDivision()->getHeads()->contains($this->getUser()) ) {
-                $this->getDivision()->removeHead( $this->getUser() );
-            }
-        }
-
-        //service
-        if( $this->getService() ) {
-            if( $this->getService()->getHeads()->contains($this->getUser()) ) {
-                $this->getService()->removeHead( $this->getUser() );
-            }
-        }
-
-    }
+//    public function unsetHeads() {
+//        //exit('on remove');
+//        //remove possible links institution-head
+//        if( $this->getInstitution() ) {
+//            if( $this->getInstitution()->getHeads()->contains($this->getUser()) ) {
+//                $this->getInstitution()->removeHead( $this->getUser() );
+//            }
+//        }
+//
+//        //department
+//        if( $this->getDepartment() ) {
+//            if( $this->getDepartment()->getHeads()->contains($this->getUser()) ) {
+//                $this->getDepartment()->removeHead( $this->getUser() );
+//            }
+//        }
+//
+//        //division
+//        if( $this->getDivision() ) {
+//            if( $this->getDivision()->getHeads()->contains($this->getUser()) ) {
+//                $this->getDivision()->removeHead( $this->getUser() );
+//            }
+//        }
+//
+//        //service
+//        if( $this->getService() ) {
+//            if( $this->getService()->getHeads()->contains($this->getUser()) ) {
+//                $this->getService()->removeHead( $this->getUser() );
+//            }
+//        }
+//
+//    }
 
 //    /**
 //     * @ORM\preFlush
 //     */
-    public function setHeads() {
-        //add possible links institution-head
-        if( $this->getInstitution() ) {
-            if( !$this->getInstitution()->getHeads()->contains($this->getUser()) ) {
-                $this->getInstitution()->addHead( $this->getUser() );
-            }
-        }
-
-        //department
-        if( $this->getDepartment() ) {
-            if( !$this->getDepartment()->getHeads()->contains($this->getUser()) ) {
-                $this->getDepartment()->addHead($this->getUser());
-            }
-        }
-
-        //division
-        if( $this->getDivision() ) {
-            if( !$this->getDivision()->getHeads()->contains($this->getUser()) ) {
-                $this->getDivision()->addHead( $this->getUser() );
-            }
-        }
-
-        //service
-        if( $this->getService() ) {
-            if( !$this->getService()->getHeads()->contains($this->getUser()) ) {
-                $this->getService()->addHead( $this->getUser() );
-            }
-        }
-    }
+//    public function setHeads() {
+//        //add possible links institution-head
+//        if( $this->getInstitution() ) {
+//            if( !$this->getInstitution()->getHeads()->contains($this->getUser()) ) {
+//                $this->getInstitution()->addHead( $this->getUser() );
+//            }
+//        }
+//
+//        //department
+//        if( $this->getDepartment() ) {
+//            if( !$this->getDepartment()->getHeads()->contains($this->getUser()) ) {
+//                $this->getDepartment()->addHead($this->getUser());
+//            }
+//        }
+//
+//        //division
+//        if( $this->getDivision() ) {
+//            if( !$this->getDivision()->getHeads()->contains($this->getUser()) ) {
+//                $this->getDivision()->addHead( $this->getUser() );
+//            }
+//        }
+//
+//        //service
+//        if( $this->getService() ) {
+//            if( !$this->getService()->getHeads()->contains($this->getUser()) ) {
+//                $this->getService()->addHead( $this->getUser() );
+//            }
+//        }
+//    }
     //////////////////////////////////////////////////////////////////////////////////
 
 

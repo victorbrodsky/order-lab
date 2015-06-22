@@ -42,11 +42,11 @@ class RoomList extends ListAbstract
      **/
     private $buildings;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Department", inversedBy="rooms")
-     * @ORM\JoinTable(name="user_rooms_departments")
-     **/
-    private $departments;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Department", inversedBy="rooms")
+//     * @ORM\JoinTable(name="user_rooms_departments")
+//     **/
+//    private $departments;
 
 
     public function __construct() {
@@ -54,7 +54,7 @@ class RoomList extends ListAbstract
         $this->floors = new ArrayCollection();
         $this->suites = new ArrayCollection();
         $this->buildings = new ArrayCollection();
-        $this->departments = new ArrayCollection();
+        //$this->departments = new ArrayCollection();
     }
 
 
@@ -114,23 +114,23 @@ class RoomList extends ListAbstract
     }
 
 
-    public function getDepartments()
-    {
-        return $this->departments;
-    }
-    public function addDepartment($department)
-    {
-        if( !$this->departments->contains($department) ) {
-            $this->departments->add($department);
-            $department->addRoom($this);
-        }
-
-        return $this;
-    }
-    public function removeDepartment($department)
-    {
-        $this->departments->removeElement($department);
-    }
+//    public function getDepartments()
+//    {
+//        return $this->departments;
+//    }
+//    public function addDepartment($department)
+//    {
+//        if( !$this->departments->contains($department) ) {
+//            $this->departments->add($department);
+//            $department->addRoom($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeDepartment($department)
+//    {
+//        $this->departments->removeElement($department);
+//    }
 
 
     public function getFullName() {

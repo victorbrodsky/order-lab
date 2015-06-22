@@ -474,14 +474,14 @@ class User extends BaseUser {
             $this->administrativeTitles->add($administrativeTitle);
             $administrativeTitle->setUser($this);
 
-            $administrativeTitle->setHeads();
+            //$administrativeTitle->setHeads();
         }
     
         return $this;
     }
     public function removeAdministrativeTitle($administrativeTitle)
     {
-        $administrativeTitle->unsetHeads();
+        //$administrativeTitle->unsetHeads();
         $this->administrativeTitles->removeElement($administrativeTitle);
     }
     public function getAdministrativeTitles()
@@ -1194,111 +1194,111 @@ class User extends BaseUser {
 
 
     //If the person is a head of a Department, list all people who belong in that department.
-    public function getDepartments($head=false,$type=null) {
-        $departments = new ArrayCollection();
-        if( $type == null or $type == "AdministrativeTitle" ) {
-            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-                if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getId() && $adminTitles->getDepartment()->getName() != "" ) {
-                    if( $head == true ) {
-                        if( $adminTitles->getDepartment()->getHeads()->contains($this) ) {
-                            if( !$departments->contains($adminTitles->getDepartment()) ) {
-                                $departments->add($adminTitles->getDepartment());
-                            }
-                        }
-                    } else {
-                        if( !$departments->contains($adminTitles->getDepartment()) ) {
-                            $departments->add($adminTitles->getDepartment());
-                        }
-                    }
-                }
-            }
-        }
-        if( $type == null or $type == "AppointmentTitle" ) {
-            if( $head == false ) {
-                foreach( $this->getAppointmentTitles() as $appTitles ) {
-                    if( $appTitles->getDepartment() && $appTitles->getDepartment()->getId() && $appTitles->getDepartment()->getName() != "" ) {
-                        if( !$departments->contains($appTitles->getDepartment()) ) {
-                            $departments->add($appTitles->getDepartment());
-                        }
-                    }
-                }
-            }
-        }
-        return $departments;
-    }
+//    public function getDepartments($head=false,$type=null) {
+//        $departments = new ArrayCollection();
+//        if( $type == null or $type == "AdministrativeTitle" ) {
+//            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+//                if( $adminTitles->getDepartment() && $adminTitles->getDepartment()->getId() && $adminTitles->getDepartment()->getName() != "" ) {
+//                    if( $head == true ) {
+//                        if( $adminTitles->getDepartment()->getHeads()->contains($this) ) {
+//                            if( !$departments->contains($adminTitles->getDepartment()) ) {
+//                                $departments->add($adminTitles->getDepartment());
+//                            }
+//                        }
+//                    } else {
+//                        if( !$departments->contains($adminTitles->getDepartment()) ) {
+//                            $departments->add($adminTitles->getDepartment());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if( $type == null or $type == "AppointmentTitle" ) {
+//            if( $head == false ) {
+//                foreach( $this->getAppointmentTitles() as $appTitles ) {
+//                    if( $appTitles->getDepartment() && $appTitles->getDepartment()->getId() && $appTitles->getDepartment()->getName() != "" ) {
+//                        if( !$departments->contains($appTitles->getDepartment()) ) {
+//                            $departments->add($appTitles->getDepartment());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return $departments;
+//    }
 
     //If the person is a head of a Division, list all people who belong in that division.
     //$emptyService=true => divisions with empty service
-    public function getDivisions($head=false,$emptyService=false,$type=null) {
-
-        $divisions = new ArrayCollection();
-
-        if( $type == null or $type == "AdministrativeTitle" ) {
-            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-                if( $adminTitles->getDivision() && $adminTitles->getDivision()->getId() && $adminTitles->getDivision()->getName() != "" ) {
-                    //echo "division=".$adminTitles->getDivision()->getName()."<br>";
-                    if( $emptyService && $adminTitles->getDivision() && count($adminTitles->getDivision()->getServices()) == 0 ) {
-                        //echo "set head true <br>";
-                        $head = false;
-                    }
-                    if( $head == true ) {
-                        if( $adminTitles->getDivision()->getHeads()->contains($this) ) {
-                            if( !$divisions->contains($adminTitles->getDivision()) ) {
-                                $divisions->add($adminTitles->getDivision());
-                            }
-                        }
-                    } else {
-                        if( !$divisions->contains($adminTitles->getDivision()) ) {
-                            $divisions->add($adminTitles->getDivision());
-                        }
-                    }
-                }
-            }
-        }
-
-        if( $type == null or $type == "AppointmentTitle" ) {
-            foreach( $this->getAppointmentTitles() as $appTitles ) {
-                if( $appTitles->getDivision() && $appTitles->getDivision()->getId() && $appTitles->getDivision()->getName() != "" ) {
-                    if( $emptyService && $appTitles->getDivision() && count($appTitles->getDivision()->getServices()) == 0 ) {
-                        $head = false;
-                    }
-                    if( $head == true ) {
-                        if( !$divisions->contains($appTitles->getDivision()) ) {
-                            $divisions->add($appTitles->getDivision());
-                        }
-                    } else {
-                        if( !$divisions->contains($appTitles->getDivision()) ) {
-                            $divisions->add($appTitles->getDivision());
-                        }
-                    }
-                }
-            }
-        }
-
-        return $divisions;
-    }
+//    public function getDivisions($head=false,$emptyService=false,$type=null) {
+//
+//        $divisions = new ArrayCollection();
+//
+//        if( $type == null or $type == "AdministrativeTitle" ) {
+//            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+//                if( $adminTitles->getDivision() && $adminTitles->getDivision()->getId() && $adminTitles->getDivision()->getName() != "" ) {
+//                    //echo "division=".$adminTitles->getDivision()->getName()."<br>";
+//                    if( $emptyService && $adminTitles->getDivision() && count($adminTitles->getDivision()->getServices()) == 0 ) {
+//                        //echo "set head true <br>";
+//                        $head = false;
+//                    }
+//                    if( $head == true ) {
+//                        if( $adminTitles->getDivision()->getHeads()->contains($this) ) {
+//                            if( !$divisions->contains($adminTitles->getDivision()) ) {
+//                                $divisions->add($adminTitles->getDivision());
+//                            }
+//                        }
+//                    } else {
+//                        if( !$divisions->contains($adminTitles->getDivision()) ) {
+//                            $divisions->add($adminTitles->getDivision());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        if( $type == null or $type == "AppointmentTitle" ) {
+//            foreach( $this->getAppointmentTitles() as $appTitles ) {
+//                if( $appTitles->getDivision() && $appTitles->getDivision()->getId() && $appTitles->getDivision()->getName() != "" ) {
+//                    if( $emptyService && $appTitles->getDivision() && count($appTitles->getDivision()->getServices()) == 0 ) {
+//                        $head = false;
+//                    }
+//                    if( $head == true ) {
+//                        if( !$divisions->contains($appTitles->getDivision()) ) {
+//                            $divisions->add($appTitles->getDivision());
+//                        }
+//                    } else {
+//                        if( !$divisions->contains($appTitles->getDivision()) ) {
+//                            $divisions->add($appTitles->getDivision());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return $divisions;
+//    }
 
     //get all services from administrative and appointment titles.
-    public function getServices($type=null) {
-        $services = new ArrayCollection();
-        if( $type == null or $type == "AdministrativeTitle" ) {
-            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-                if( $adminTitles->getService() && $adminTitles->getService()->getId() && $adminTitles->getService()->getName() != "" )
-                    if( !$services->contains($adminTitles->getService()) ) {
-                        $services->add($adminTitles->getService());
-                    }
-            }
-        }
-        if( $type == null or $type == "AppointmentTitle" ) {
-            foreach( $this->getAppointmentTitles() as $appTitles ) {
-                if( $appTitles->getService() && $appTitles->getService()->getId() && $appTitles->getService()->getName() != "" )
-                    if( !$services->contains($appTitles->getService()) ) {
-                        $services->add($appTitles->getService());
-                    }
-            }
-        }
-        return $services;
-    }
+//    public function getServices($type=null) {
+//        $services = new ArrayCollection();
+//        if( $type == null or $type == "AdministrativeTitle" ) {
+//            foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+//                if( $adminTitles->getService() && $adminTitles->getService()->getId() && $adminTitles->getService()->getName() != "" )
+//                    if( !$services->contains($adminTitles->getService()) ) {
+//                        $services->add($adminTitles->getService());
+//                    }
+//            }
+//        }
+//        if( $type == null or $type == "AppointmentTitle" ) {
+//            foreach( $this->getAppointmentTitles() as $appTitles ) {
+//                if( $appTitles->getService() && $appTitles->getService()->getId() && $appTitles->getService()->getName() != "" )
+//                    if( !$services->contains($appTitles->getService()) ) {
+//                        $services->add($appTitles->getService());
+//                    }
+//            }
+//        }
+//        return $services;
+//    }
 
     //get all institutions from administrative and appointment titles.
     public function getInstitutions($type=null) {

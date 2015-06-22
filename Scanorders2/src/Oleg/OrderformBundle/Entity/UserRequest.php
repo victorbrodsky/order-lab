@@ -72,19 +72,19 @@ class UserRequest
      */
     protected $institution;
     
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $department;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinTable(name="scan_accountrequest_service",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-     * )
-     */
-    protected $services;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $department;
+//
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+//     * @ORM\JoinTable(name="scan_accountrequest_service",
+//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+//     * )
+//     */
+//    protected $services;
     
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -136,7 +136,7 @@ class UserRequest
 
     function __construct()
     {
-        $this->services = new ArrayCollection();
+        //$this->services = new ArrayCollection();
         $this->institution = new ArrayCollection();
     }
 
@@ -218,10 +218,6 @@ class UserRequest
         return $this->job;
     }
 
-    public function getDepartment() {
-        return $this->department;
-    }
-
     public function setName($name) {
         $this->name = $name;
     }
@@ -238,9 +234,6 @@ class UserRequest
         $this->job = $job;
     }
 
-    public function setDepartment($department) {
-        $this->department = $department;
-    }
     public function getStatus() {
         return $this->status;
     }
@@ -263,57 +256,57 @@ class UserRequest
     }
 
 
-    public function addServices(\Oleg\UserdirectoryBundle\Entity\Service $service)
-    {
-        if( !$this->services->contains($service) ) {
-            $this->services->add($service);
-        }
-
-        return $this;
-    }
-
-    public function removeServices(\Oleg\UserdirectoryBundle\Entity\Service $service)
-    {
-        $this->services->removeElement($service);
-    }
-
-    /**
-     * @param mixed $services
-     */
-    public function setServices($services)
-    {
-        if( $services->first() ) {
-            $this->primaryService = $services->first()->getId();
-        } else {
-            $this->primaryService = NULL;
-        }
-        $this->services = $services;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getServices()
-    {
-
-        $resArr = new ArrayCollection();
-        foreach( $this->services as $service ) {
-            if( $service->getId()."" == $this->getPrimaryService()."" ) {
-                //$resArr->removeElement($service);
-                //$resArr->first();
-                if( count($this->services) > 1 ) {
-                    $firstEl = $resArr->get(0);
-                    $resArr->set(0,$service);
-                    $resArr->add($firstEl);
-                } else {
-                    $resArr->add($service);
-                }
-            } else {
-                $resArr->add($service);
-            }
-        }
-        return $resArr;
-    }
+//    public function addServices(\Oleg\UserdirectoryBundle\Entity\Service $service)
+//    {
+//        if( !$this->services->contains($service) ) {
+//            $this->services->add($service);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeServices(\Oleg\UserdirectoryBundle\Entity\Service $service)
+//    {
+//        $this->services->removeElement($service);
+//    }
+//
+//    /**
+//     * @param mixed $services
+//     */
+//    public function setServices($services)
+//    {
+//        if( $services->first() ) {
+//            $this->primaryService = $services->first()->getId();
+//        } else {
+//            $this->primaryService = NULL;
+//        }
+//        $this->services = $services;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getServices()
+//    {
+//
+//        $resArr = new ArrayCollection();
+//        foreach( $this->services as $service ) {
+//            if( $service->getId()."" == $this->getPrimaryService()."" ) {
+//                //$resArr->removeElement($service);
+//                //$resArr->first();
+//                if( count($this->services) > 1 ) {
+//                    $firstEl = $resArr->get(0);
+//                    $resArr->set(0,$service);
+//                    $resArr->add($firstEl);
+//                } else {
+//                    $resArr->add($service);
+//                }
+//            } else {
+//                $resArr->add($service);
+//            }
+//        }
+//        return $resArr;
+//    }
 
     /**
      * @param mixed $primaryService

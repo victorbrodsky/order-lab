@@ -6,6 +6,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
+use Oleg\UserdirectoryBundle\Entity\LevelTitleList;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
@@ -116,6 +117,7 @@ class AdminController extends Controller
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
         $count_institutiontypes = $this->generateInstitutionTypes();         //must be first
+        $count_LevelTitleList = $this->generateLevelTitleList();                  //must be first
         $count_institution = $this->generateInstitutions();                  //must be first
 
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
@@ -184,6 +186,7 @@ class AdminController extends Controller
             'Roles='.$count_roles.', '.
             'Site Settings='.$count_siteParameters.', '.
             'Institution Types='.$count_institutiontypes.', '.
+            'Level Titles='.$count_LevelTitleList.', '.
             'Institutions='.$count_institution.', '.
             'Users='.$count_users.', '.
             'Test Users='.$count_testusers.', '.
@@ -226,7 +229,6 @@ class AdminController extends Controller
 
             ' (Note: -1 means that this table is already exists)'
         );
-
 
         ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
@@ -711,6 +713,43 @@ class AdminController extends Controller
 
     }
 
+    public function generateLevelTitleList() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Institution' => 0,
+            'Department' => 1,
+            'Division' => 2,
+            'Service' => 3
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $name=>$level ) {
+
+            $entity = new LevelTitleList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $entity->setLevel($level);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
     //https://bitbucket.org/weillcornellpathology/scanorder/issue/221/multiple-office-locations-and-phone
     public function generateInstitutions() {
 
@@ -928,6 +967,11 @@ class AdminController extends Controller
 
         $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
 
+        $levelInstitution = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findOneByName('Institution');
+        $levelDepartment = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findOneByName('Department');
+        $levelDivision = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findOneByName('Division');
+        $levelService = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findOneByName('Service');
+
         $instCount = 1;
         foreach( $institutions as $institutionname=>$infos ) {
             $institution = new Institution();
@@ -935,19 +979,21 @@ class AdminController extends Controller
             $institution->setAbbreviation( trim($infos['abbreviation']) );
 
             $institution->addType($medicalType);
+            $institution->setLevelTitle($levelInstitution);
 
             if( array_key_exists('departments', $infos) && $infos['departments'] && is_array($infos['departments'])  ) {
 
                 $depCount = 0;
                 foreach( $infos['departments'] as $departmentname=>$divisions ) {
 
-                    $department = new Department();
+                    $department = new Institution();
 
                     if( is_numeric($departmentname) ){
                         $departmentname = $infos['departments'][$departmentname];
                     }
                     //echo "departmentname=".$departmentname."<br>";
                     $this->setDefaultList($department,$depCount,$username,$departmentname);
+                    $department->setLevelTitle($levelDepartment);
 
                     if( $divisions && is_array($divisions) ) {
                         $divCount = 0;
@@ -960,34 +1006,35 @@ class AdminController extends Controller
                                 continue;
                             }
 
-                            $division = new Division();
+                            $division = new Institution();
                             if( is_numeric($divisionname) ){
                                 $divisionname = $divisions[$divisionname];
                             }
                             $this->setDefaultList($division,$divCount,$username,$divisionname);
-
+                            $division->setLevelTitle($levelDivision);
 
                             if( $services && is_array($services) ) {
                                 $serCount = 0;
                                 foreach( $services as $servicename ) {
-                                    $service = new Service();
+                                    $service = new Institution();
                                     if( is_numeric($servicename) ){
                                         $servicename = $services[$servicename];
                                     }
                                     $this->setDefaultList($service,$serCount,$username,$servicename);
+                                    $division->setLevelTitle($levelDivision);
 
-                                    $division->addService($service);
+                                    $division->addChild($service);
                                     $serCount = $serCount + 10;
                                 }
                             }//services
 
 
-                            $department->addDivision($division);
+                            $department->addChild($division);
                             $divCount = $divCount + 10;
                         }
                     }//divisions
 
-                    $institution->addDepartment($department);
+                    $institution->addChild($department);
                     $depCount = $depCount + 10;
 
                 }
@@ -2723,57 +2770,57 @@ class AdminController extends Controller
     }
 
 
-    public function generateTitlePositionTypes() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:TitlePositionType')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
+//    public function generateTitlePositionTypes() {
+//
+//        $username = $this->get('security.context')->getToken()->getUser();
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:TitlePositionType')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
+//
+////        $types = array(
+////            'Head',
+////            'Manager',
+////            'Primary Contact',
+////            'Transcriptionist',
+////        );
+//
 //        $types = array(
-//            'Head',
-//            'Manager',
-//            'Primary Contact',
-//            'Transcriptionist',
+//            'Head of Institution',
+//            'Head of Department',
+//            'Head of Division',
+//            'Head of Service',
+//            'Manager of Institution',
+//            'Manager of Department',
+//            'Manager of Division',
+//            'Manager of Service',
+//            'Primary Contact of Institution',
+//            'Primary Contact of Department',
+//            'Primary Contact of Division',
+//            'Primary Contact of Service',
+//            'Transcriptionist for the Institution',
+//            'Transcriptionist for the Department',
+//            'Transcriptionist for the Division',
+//            'Transcriptionist for the Service'
 //        );
-
-        $types = array(
-            'Head of Institution',
-            'Head of Department',
-            'Head of Division',
-            'Head of Service',
-            'Manager of Institution',
-            'Manager of Department',
-            'Manager of Division',
-            'Manager of Service',
-            'Primary Contact of Institution',
-            'Primary Contact of Department',
-            'Primary Contact of Division',
-            'Primary Contact of Service',
-            'Transcriptionist for the Institution',
-            'Transcriptionist for the Department',
-            'Transcriptionist for the Division',
-            'Transcriptionist for the Service'
-        );
-
-        $count = 1;
-        foreach( $types as $name ) {
-
-            $listEntity = new TitlePositionType();
-            $this->setDefaultList($listEntity,$count,$username,$name);
-
-            $em->persist($listEntity);
-            $em->flush();
-
-            $count = $count + 10;
-        }
-
-        return round($count/10);
-    }
+//
+//        $count = 1;
+//        foreach( $types as $name ) {
+//
+//            $listEntity = new TitlePositionType();
+//            $this->setDefaultList($listEntity,$count,$username,$name);
+//
+//            $em->persist($listEntity);
+//            $em->flush();
+//
+//            $count = $count + 10;
+//        }
+//
+//        return round($count/10);
+//    }
 
 
     public function generateSex() {
