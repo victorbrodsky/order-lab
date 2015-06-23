@@ -41,7 +41,6 @@ function getJstree(entityName) {
                         if( parent.id === "#" ) {
                             return false; // prevent moving a child above or below the root
                         }
-                        jstree_copy_node(entityName, node, parent, position, more);
                     }
 
                     if( operation === "copy_node" ) {
@@ -58,7 +57,11 @@ function getJstree(entityName) {
                     }
 
                     if( operation === "rename_node" ) {
-                        return jstree_rename_node(entityName, node, parent, position, more);
+                        return jstree_action_node(entityName, operation, node, parent, position, more);
+                    }
+
+                    if( operation === "delete_node" ) {
+                        return jstree_action_node(entityName, operation, node, parent, position, more);
                     }
 
                     return false; // do not allow everything else
@@ -109,15 +112,31 @@ function getJstree(entityName) {
 //node - node being copied
 //parent - new parent
 //position - the position to insert at (besides integer values, "first" and "last" are supported, as well as "before" and "after"), defaults to integer `0`
-function jstree_rename_node(entityName, node, parent, position, more) {
+function jstree_action_node(entityName, operation, node, parent, position, more) {
     console.log(entityName+': rename node id='+node.id+", text="+node.text);
     console.log('position='+position);
     console.log('parent.id='+parent.id);
     console.log(more);
 
-    employees_tree_rename_node
+    var url = Routing.generate('employees_tree_edit_node');
 
-    return true;
+    var res = false;
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        timeout: _ajaxTimeout,
+        async: false,
+        data: { action: operation, pid: parent.id, id: node.id, position: position, more: more, entity: entityName }
+    }).success(function(data) {
+        if( data == 'ok' ) {
+            res = true;
+        }
+    }).fail(function(data) {
+        console.log('failed: '+data);
+    }) ;
+
+    return res;
 }
 
 function jstree_move_node(entityName, node, parent, position, more) {
