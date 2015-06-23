@@ -110,31 +110,93 @@ function getDataIdByText(arr,text) {
 }
 
 
-
-
-
 //#############  institution  ##############//
 function getComboboxInstitution(holder) {
 
-    //employees_get_institution
-    var institutionUrl = Routing.generate('employees_get_institution_tree');
-    console.log('institutionUrl='+institutionUrl);
+    console.log('cycle='+cycle);
 
-    //_institution
-    //$('#composite-tree').jstree();
-    $('#composite-tree').jstree({
-        'core' : {
-            'data' : {
-                "url" : institutionUrl, //"//www.jstree.com/fiddle/",
-                //"dataType" : "json" // needed only if you do not supply JSON headers
-                "data" : function (node) {
-                    return { "id" : node.id };
-                }
+    if( typeof cycle === 'undefined' ) {
+        var cycle = 'edit';
+    }
+
+    //if( cycle != "show" ) {
+    if( cycle.indexOf("show") == -1 ) {
+
+        var targetid = ".ajax-combobox-institution";
+        if( $(targetid).length == 0 ) {
+            return;
+        }
+        if( typeof holder !== 'undefined' && holder.length > 0 ) {
+            targetid = holder.find(targetid);
+            if( targetid.length == 0 ) {
+                return;
             }
         }
-    });
+
+        var level = 0;
+        var treeArr = getChildrenByLevel(level);
+
+        populateSelectCombobox( targetid, treeArr, null );
+
+        comboboxTreeListener( targetid, level )
+
+    }
 
 }
+function getChildrenByLevel(level) {
+
+    //employees_get_institution
+    var treeUrl = Routing.generate('employees_get_institution_tree');
+    treeUrl = treeUrl + '?level=' + level;
+    //console.log('treeUrl='+treeUrl);
+
+    var children = new Array();
+
+    $.ajax({
+        url: treeUrl,
+        timeout: _ajaxTimeout,
+        async: false
+    }).success(function(data) {
+        children = data;
+    });
+
+    return children;
+}
+
+function setComboboxInstitution(holder) {
+
+    var targetid = ".ajax-combobox-institution";
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+
+        if( targetid.length == 0 )
+            return;
+    }
+
+    var url = getCommonBaseUrl("util/common/"+"institution-all","employees"); //always use "employees" to get institution
+
+    //console.log('cycle='+cycle);
+
+    if( _institution.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _institution = data;
+            populateSelectCombobox( targetid, _institution, null );
+        });
+    } else {
+        populateSelectCombobox( targetid, _institution, null );
+    }
+
+}
+
 function getComboboxInstitution_OLD(holder) {
 
     setInstitutionTreeChildren(holder);

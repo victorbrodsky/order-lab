@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f796ca9f59b7c9ba7bc2af9d21a4e1c2",
+    "hash": "0b6a3c354e979bbbd86a62cd3e3f08b5",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2140,62 +2140,6 @@
                 "mailer"
             ],
             "time": "2015-06-06 14:19:39"
-        },
-        {
-            "name": "symfony-cmf/tree-browser-bundle",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony-cmf/TreeBrowserBundle.git",
-                "reference": "a2d7bcaa231f3dbd674e70d3198b0b795369bb34"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony-cmf/TreeBrowserBundle/zipball/a2d7bcaa231f3dbd674e70d3198b0b795369bb34",
-                "reference": "a2d7bcaa231f3dbd674e70d3198b0b795369bb34",
-                "shasum": ""
-            },
-            "require": {
-                "friendsofsymfony/jsrouting-bundle": "~1.1",
-                "php": ">=5.3.3",
-                "symfony/framework-bundle": "~2.3"
-            },
-            "require-dev": {
-                "symfony-cmf/testing": "~1.1"
-            },
-            "suggest": {
-                "doctrine/phpcr-bundle": "~1.0",
-                "doctrine/phpcr-odm": "~1.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Cmf\\Bundle\\TreeBrowserBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony CMF Community",
-                    "homepage": "https://github.com/symfony-cmf/TreeBrowserBundle/contributors"
-                }
-            ],
-            "description": "Symfony CMF Tree Browser Bundle",
-            "homepage": "http://cmf.symfony.com",
-            "keywords": [
-                "Symfony CMF",
-                "phpcr",
-                "tree"
-            ],
-            "time": "2014-10-21 18:42:27"
         },
         {
             "name": "symfony/assetic-bundle",

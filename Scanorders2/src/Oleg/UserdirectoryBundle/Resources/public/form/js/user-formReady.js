@@ -31,7 +31,11 @@ $(document).ready(function() {
 
     initTreeSelect();
 
+    //nstitution tree as combobox select2 view
     getComboboxInstitution();
+
+    //jstree in admin page for Institution tree
+    getJstree('Institution');
 
     getComboboxResidencyspecialty();
 

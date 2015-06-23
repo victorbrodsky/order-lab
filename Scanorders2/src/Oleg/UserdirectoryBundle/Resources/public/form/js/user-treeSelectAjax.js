@@ -3,7 +3,39 @@
  */
 
 
+////////////////////////////// TREE //////////////////////////////////
 
+
+
+////////////////////////////// EOF TREE //////////////////////////////////
+
+function comboboxTreeListener( target, level ) {
+
+    var targetElements = $(target);
+
+//    targetElements.each( function() {
+//
+//        var selectId = '#'+$(this).attr('id');
+//
+//        populateSelectCombobox( selectId, data, placeholder, multipleFlag );
+//
+//        //children
+//        //console.log('################################# populate Parent Child Tree childClass='+childClass);
+//        getComboboxTreeByPid($(this),childClass,null,true);
+//
+//    });
+
+    targetElements.on('change', function(e){
+
+        console.log( "combobox on change" );
+
+        var thisData = $(this).select2('data');
+
+        var treeArr = getChildrenByLevel(level+1);
+
+    });
+
+}
 
 
 

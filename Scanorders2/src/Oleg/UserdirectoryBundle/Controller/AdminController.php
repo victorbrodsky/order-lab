@@ -2891,4 +2891,22 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+
+    /**
+     * @Route("/list/institutional-tree/", name="employees_institutiontree_list")
+     * @Method("GET")
+     */
+    public function institutionTreeAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        return $this->render('OlegUserdirectoryBundle:Admin:institution-tree.html.twig',
+            array(
+                'title' => "Institutional Tree Management"
+            )
+        );
+    }
+
 }

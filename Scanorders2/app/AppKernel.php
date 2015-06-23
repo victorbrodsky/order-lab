@@ -24,7 +24,6 @@ class AppKernel extends Kernel
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
-            new Symfony\Cmf\Bundle\TreeBrowserBundle\CmfTreeBrowserBundle(),
         );
 
 		//echo "environment:<br>";

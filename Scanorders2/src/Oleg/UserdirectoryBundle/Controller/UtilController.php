@@ -142,37 +142,21 @@ class UtilController extends Controller {
     }
 
     /**
-     * @Route("/common/institution", name="employees_get_institution_tree", options={"expose"=true})
+     * @Route("/common/institution-all", name="employees_get_institution_all", options={"expose"=true})
      * @Method({"GET", "POST"})
      */
-    public function getInstitutionTreeAction(Request $request) {
-
-        $id = trim( $request->get('id') );
+    public function setInstitutionTreeAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Institution', 'list')
-            ->select("list")
-            //->select("list.id as id, list.name as text")
-            //->select("list.name as id, list.name as text")
+            ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
-        $query->where("list.level = :level AND (list.type = :typedef OR list.type = :typeadd)")
-        ->setParameters(
-            array('level' => 0,'typedef' => 'default','typeadd' => 'user-added')
-        );
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
-        $entities = $query->getQuery()->getResult();
-
-        foreach( $entities as $entity ) {
-            $element = array(
-                'id'=>$entity->getId(),
-                'text'=>$entity->getName()."",
-                'children' => ( count($entity->getChildren()) > 0 ? true : false)
-            );
-            $output[] = $element;
-        }
+        $output = $query->getQuery()->getResult();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

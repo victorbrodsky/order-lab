@@ -141,17 +141,7 @@
 
         {{ formmacros.field(formfield.institution) }}
 
-        institution tree (composite-tree)
-        <div id="composite-tree">
-        {#<ul>#}
-            {#<li>Root node#}
-                {#<ul>#}
-                    {#<li>Child node 1</li>#}
-                    {#<li>Child node 2</li>#}
-                {#</ul>#}
-            {#</li>#}
-        {#</ul>#}
-        </div>
+        {#{{ formmacros.jstree('','composite-tree') }}#}
 
         {#{{ formmacros.field(formfield.department) }}#}
         {#{{ formmacros.field(formfield.division) }}#}

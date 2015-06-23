@@ -108,11 +108,6 @@ class BaseTitleType extends AbstractType
 //            'classtype' => 'service'
 //        ));
 
-//        $builder->add( 'effort', 'text', array(
-//            'label'=>'Percent Effort:',
-//            'required'=>false,
-//            'attr' => array('class' => 'form-control', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false")
-//        ));
         $builder->add('effort', 'employees_custom_selector', array(
             'label' => 'Percent Effort:',
             'attr' => array('class' => 'ajax-combobox-effort', 'type' => 'hidden', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),
