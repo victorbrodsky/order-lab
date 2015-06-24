@@ -79,6 +79,19 @@ function getJstree(entityName) {
                 items: function(node) {
                     var tmp = $.jstree.defaults.contextmenu.items();
                     delete tmp.ccp;
+                    delete tmp.delete;
+
+                    //add Edit link to open a modal edit windows
+                    tmp.create = {
+                        "label": "Edit",
+                        "action": function (obj) {
+                            //this.edit_node(obj);
+                            console.log(obj);
+                            //open modal edit
+                            $('').modal('show');
+                        }
+                    };
+
                     return tmp;
                 }
             }

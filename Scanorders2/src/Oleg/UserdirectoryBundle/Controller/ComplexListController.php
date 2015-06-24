@@ -30,6 +30,7 @@ class ComplexListController extends Controller
      * @Route("/list/buildings/", name="employees_buildings_pathaction_list")
      * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list")
      * @Route("/list/grants/", name="employees_grants_pathaction_list")
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:index.html.twig")
      */
@@ -131,6 +132,7 @@ class ComplexListController extends Controller
      *
      * @Route("/grants/show/{id}", name="employees_grants_pathaction_show_standalone", requirements={"id" = "\d+"})
      * @Route("/admin/grants/edit/{id}", name="employees_grants_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     *
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")

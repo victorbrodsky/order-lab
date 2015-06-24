@@ -15,6 +15,10 @@
             <th>{{ knp_pagination_sortable(entities, 'Short Name', 'ent.shortname') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
 
+            {% if entities|first.level is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Level', 'ent.level') }}</th>
+            {% endif %}
+
             {% if entities|first.nativeName is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Native Name', 'ent.nativeName') }}</th>
             {% endif %}
@@ -78,6 +82,12 @@
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.shortname }}</td>
                 <td>{{ entity.abbreviation }}</td>
+
+                {% if entity.level is defined %}
+                    <td>
+                        {{ entity.level }}
+                    </td>
+                {% endif %}
 
                 {% if entity.nativeName is defined %}
                     <td>
@@ -210,6 +220,10 @@
     {{ formmacros.field(form.list.shortname) }}
     {{ formmacros.field(form.list.abbreviation) }}
 
+    {% if form.level is defined %}
+        {{ formmacros.field(form.level) }}
+    {% endif %}
+
     {% if form.nativeName is defined %}
         {{ formmacros.field(form.nativeName) }}
     {% endif %}
@@ -304,6 +318,10 @@
     {{ formmacros.field(edit_form.list.name) }}
     {{ formmacros.field(edit_form.list.shortname) }}
     {{ formmacros.field(edit_form.list.abbreviation) }}
+
+    {% if entity.level is defined %}
+        {{ formmacros.field(edit_form.level) }}
+    {% endif %}
 
     {% if entity.nativeName is defined %}
         {{ formmacros.field(edit_form.nativeName) }}

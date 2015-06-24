@@ -346,22 +346,6 @@
     <input type="hidden" id="proxyuser_id" value="{{ proxyuserId }}" />
 {% endmacro %}
 
-{% macro jstree( label, jstreeid ) %}
-    {% import _self as formmacros %}
-    <p>
-    <div class="row jstree-parent-container">
-        <div class="col-xs-6" align="right">
-            <strong>{{ label }}</strong>
-        </div>
-        <div class="col-xs-6" align="left">
-            <p>
-                <input class="form-control form-control-modif not-mapped-simplefield jstree-search" type="search" placeholder="Search" />
-            </p>
-            <div class="{{ jstreeid }}"></div>
-        </div>
-    </div>
-    </p>
-{% endmacro %}
 
 {% macro message(form) %}
 

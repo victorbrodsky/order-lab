@@ -1,6 +1,6 @@
 {% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
 {% block title %}
     {{ title }}
@@ -12,7 +12,7 @@
 
     <br><br>
 
-    {{ formmacros.jstree('Institution Tree:','composite-tree') }}
+    {{ treemacros.jstree('Institution Tree:','composite-tree') }}
 
 {% endblock %}
 

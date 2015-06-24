@@ -6,19 +6,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
+ * "Organizational Group Types" with a url of /list/organizational-group-types
  * @ORM\Entity
- * @ORM\Table(name="user_levelTitleList")
+ * @ORM\Table(name="user_organizationalGroupType")
  */
-class LevelTitleList extends ListAbstract
+class OrganizationalGroupType extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="LevelTitleList", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="OrganizationalGroupType", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="LevelTitleList", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;

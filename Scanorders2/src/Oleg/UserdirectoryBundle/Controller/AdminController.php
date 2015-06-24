@@ -6,7 +6,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
-use Oleg\UserdirectoryBundle\Entity\LevelTitleList;
+use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
@@ -117,7 +117,7 @@ class AdminController extends Controller
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
         $count_institutiontypes = $this->generateInstitutionTypes();         //must be first
-        $count_LevelTitleList = $this->generateLevelTitleList();                  //must be first
+        $count_OrganizationalGroupType = $this->generateOrganizationalGroupType();                  //must be first
         $count_institution = $this->generateInstitutions();                  //must be first
 
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
@@ -186,7 +186,7 @@ class AdminController extends Controller
             'Roles='.$count_roles.', '.
             'Site Settings='.$count_siteParameters.', '.
             'Institution Types='.$count_institutiontypes.', '.
-            'Level Titles='.$count_LevelTitleList.', '.
+            'Organizational Group Types='.$count_OrganizationalGroupType.', '.
             'Institutions='.$count_institution.', '.
             'Users='.$count_users.', '.
             'Test Users='.$count_testusers.', '.
@@ -713,10 +713,10 @@ class AdminController extends Controller
 
     }
 
-    public function generateLevelTitleList() {
+    public function generateOrganizationalGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -734,7 +734,7 @@ class AdminController extends Controller
         $count = 1;
         foreach( $elements as $name=>$level ) {
 
-            $entity = new LevelTitleList();
+            $entity = new OrganizationalGroupType();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $entity->setLevel($level);
@@ -967,10 +967,10 @@ class AdminController extends Controller
 
         $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
 
-        $levelInstitution = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findOneByName('Institution');
-        $levelDepartment = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findOneByName('Department');
-        $levelDivision = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findOneByName('Division');
-        $levelService = $em->getRepository('OlegUserdirectoryBundle:LevelTitleList')->findOneByName('Service');
+        $levelInstitution = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
+        $levelDepartment = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Department');
+        $levelDivision = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Division');
+        $levelService = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Service');
 
         $instCount = 1;
         foreach( $institutions as $institutionname=>$infos ) {
@@ -979,7 +979,7 @@ class AdminController extends Controller
             $institution->setAbbreviation( trim($infos['abbreviation']) );
 
             $institution->addType($medicalType);
-            $institution->setLevelTitle($levelInstitution);
+            $institution->setOrganizationalGroupType($levelInstitution);
 
             if( array_key_exists('departments', $infos) && $infos['departments'] && is_array($infos['departments'])  ) {
 
@@ -993,7 +993,7 @@ class AdminController extends Controller
                     }
                     //echo "departmentname=".$departmentname."<br>";
                     $this->setDefaultList($department,$depCount,$username,$departmentname);
-                    $department->setLevelTitle($levelDepartment);
+                    $department->setOrganizationalGroupType($levelDepartment);
 
                     if( $divisions && is_array($divisions) ) {
                         $divCount = 0;
@@ -1011,7 +1011,7 @@ class AdminController extends Controller
                                 $divisionname = $divisions[$divisionname];
                             }
                             $this->setDefaultList($division,$divCount,$username,$divisionname);
-                            $division->setLevelTitle($levelDivision);
+                            $division->setOrganizationalGroupType($levelDivision);
 
                             if( $services && is_array($services) ) {
                                 $serCount = 0;
@@ -1021,7 +1021,7 @@ class AdminController extends Controller
                                         $servicename = $services[$servicename];
                                     }
                                     $this->setDefaultList($service,$serCount,$username,$servicename);
-                                    $division->setLevelTitle($levelDivision);
+                                    $division->setOrganizationalGroupType($levelService);
 
                                     $division->addChild($service);
                                     $serCount = $serCount + 10;
@@ -2902,7 +2902,7 @@ class AdminController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        return $this->render('OlegUserdirectoryBundle:Admin:institution-tree.html.twig',
+        return $this->render('OlegUserdirectoryBundle:Tree:institution-tree.html.twig',
             array(
                 'title' => "Institutional Tree Management"
             )

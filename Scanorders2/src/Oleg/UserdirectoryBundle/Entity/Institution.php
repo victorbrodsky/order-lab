@@ -80,12 +80,13 @@ class Institution extends BaseCompositeNode {
     private $userPositions;
 
     /**
-     * level int in LevelTitleList corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
-     * For example, LevelTitleList with level=1, set this level to 1.
+     * Organizational Group Types
+     * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
+     * For example, OrganizationalGroupType with level=1, set this level to 1.
      *
-     * @ORM\ManyToOne(targetEntity="LevelTitleList", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", cascade={"persist"})
      */
-    private $levelTitle;
+    private $organizationalGroupType;
 
 
     //May add additional properties of the tree node
@@ -96,30 +97,27 @@ class Institution extends BaseCompositeNode {
 
         $this->buildings = new ArrayCollection();
         $this->types = new ArrayCollection();
-
-        //$this->departments = new ArrayCollection();
-        //$this->heads = new ArrayCollection();
         $this->userPositions = new ArrayCollection();
     }
 
 
-
     /**
-     * @param mixed $levelTitle
+     * @param mixed $organizationalGroupType
      */
-    public function setLevelTitle($levelTitle)
+    public function setOrganizationalGroupType($organizationalGroupType)
     {
-        $this->levelTitle = $levelTitle;
-        $this->setLevel($levelTitle->getLevel());
+        $this->organizationalGroupType = $organizationalGroupType;
+        $this->setLevel($organizationalGroupType->getLevel());
     }
 
     /**
      * @return mixed
      */
-    public function getLevelTitle()
+    public function getOrganizationalGroupType()
     {
-        return $this->levelTitle;
+        return $this->organizationalGroupType;
     }
+
 
 
 
