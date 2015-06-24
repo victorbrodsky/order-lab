@@ -2,6 +2,8 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use Oleg\UserdirectoryBundle\Entity\Institution;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -96,7 +98,9 @@ class GenericListType extends AbstractType
         }
 
         //level for OrganizationalGroupType
-        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ) {
+        //if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") || strtolower($this->mapper['className']) == strtolower("Institution") ) {
+        //if( $this->params['entity'] instanceof CompositeNodeInterface || strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ) {
+        if( method_exists($this->params['entity'],'getLevel') ) {
             $builder->add('level',null,array(
                 'label'=>'Level:',
                 'attr' => array('class' => 'form-control')

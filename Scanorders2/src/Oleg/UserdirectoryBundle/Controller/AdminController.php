@@ -972,14 +972,19 @@ class AdminController extends Controller
         $levelDivision = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Division');
         $levelService = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Service');
 
-        $instCount = 1;
+        $treeCount = 10;
+
+        $instCount = 0;
         foreach( $institutions as $institutionname=>$infos ) {
             $institution = new Institution();
-            $this->setDefaultList($institution,$instCount,$username,$institutionname);
+            $this->setDefaultList($institution,$treeCount,$username,$institutionname);
+            $treeCount = $treeCount + 10;
             $institution->setAbbreviation( trim($infos['abbreviation']) );
 
             $institution->addType($medicalType);
             $institution->setOrganizationalGroupType($levelInstitution);
+            $institution->setPosition($instCount);
+            $instCount++;
 
             if( array_key_exists('departments', $infos) && $infos['departments'] && is_array($infos['departments'])  ) {
 
@@ -992,8 +997,11 @@ class AdminController extends Controller
                         $departmentname = $infos['departments'][$departmentname];
                     }
                     //echo "departmentname=".$departmentname."<br>";
-                    $this->setDefaultList($department,$depCount,$username,$departmentname);
+                    $this->setDefaultList($department,$treeCount,$username,$departmentname);
+                    $treeCount = $treeCount + 10;
                     $department->setOrganizationalGroupType($levelDepartment);
+                    $department->setPosition($depCount);
+                    $depCount++;
 
                     if( $divisions && is_array($divisions) ) {
                         $divCount = 0;
@@ -1010,8 +1018,11 @@ class AdminController extends Controller
                             if( is_numeric($divisionname) ){
                                 $divisionname = $divisions[$divisionname];
                             }
-                            $this->setDefaultList($division,$divCount,$username,$divisionname);
+                            $this->setDefaultList($division,$treeCount,$username,$divisionname);
+                            $treeCount = $treeCount + 10;
                             $division->setOrganizationalGroupType($levelDivision);
+                            $division->setPosition($divCount);
+                            $divCount++;
 
                             if( $services && is_array($services) ) {
                                 $serCount = 0;
@@ -1020,32 +1031,30 @@ class AdminController extends Controller
                                     if( is_numeric($servicename) ){
                                         $servicename = $services[$servicename];
                                     }
-                                    $this->setDefaultList($service,$serCount,$username,$servicename);
-                                    $division->setOrganizationalGroupType($levelService);
+                                    $this->setDefaultList($service,$treeCount,$username,$servicename);
+                                    $treeCount = $treeCount + 10;
+                                    $service->setOrganizationalGroupType($levelService);
+                                    $service->setPosition($serCount);
+                                    $serCount++;
 
                                     $division->addChild($service);
-                                    $serCount = $serCount + 10;
                                 }
                             }//services
 
 
                             $department->addChild($division);
-                            $divCount = $divCount + 10;
                         }
                     }//divisions
 
                     $institution->addChild($department);
-                    $depCount = $depCount + 10;
-
                 }
             }//departmets
 
             $em->persist($institution);
             $em->flush();
-            $instCount = $instCount + 10;
         } //foreach
 
-        return round($instCount/10);
+        return round($treeCount/10);
     }
 
 

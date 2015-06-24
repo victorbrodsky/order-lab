@@ -32,6 +32,11 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
      */
     private $level;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $position;
+
 
     //May add additional properties of the tree node
 
@@ -101,6 +106,12 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     public function setParent($parent)
     {
         $this->parent = $parent;
+
+        //change level of this entity to the first child level of the parent
+        if( count($parent->getChildren()) > 0 ) {
+            $firstSiblingLevel = $parent->getChildren()->first()->getLevel();
+            $this->setLevel($firstSiblingLevel);
+        }
     }
 
     /**
@@ -125,6 +136,22 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     public function getRgt()
     {
         return $this->rgt;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 
 

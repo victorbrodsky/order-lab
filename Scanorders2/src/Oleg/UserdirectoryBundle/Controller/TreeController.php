@@ -79,8 +79,11 @@ class TreeController extends Controller {
         $output = array();
         foreach( $entities as $entity ) {
             $element = array(
-                'id'=>$entity->getId(),
-                'text'=>$entity->getId().": ".$entity->getName()."",
+                'id' => $entity->getId(),
+                'text' => 'id:'.$entity->getId().", pos:".$entity->getOrderInList().": ".$entity->getName()."",
+                //'text' => $entity->getName()."",
+                'level' => $entity->getLevel(),
+                'leveltype' => $entity->getOrganizationalGroupType()->getName()."",
                 'children' => ( count($entity->getChildren()) > 0 ? true : false)
             );
             $output[] = $element;
@@ -95,15 +98,15 @@ class TreeController extends Controller {
 
 
     /**
-     * @Route("/tree/rename", name="employees_tree_edit_node", options={"expose"=true})
+     * @Route("/tree/action", name="employees_tree_edit_node", options={"expose"=true})
      * @Method({"POST"})
      */
     public function setTreeAction(Request $request) {
 
         $pid = trim( $request->get('pid') );
+        $oldpid = trim( $request->get('oldpid') );
         $id = trim( $request->get('id') );
         $action = trim( $request->get('action') );
-        $more = trim( $request->get('more') );
         $position = trim( $request->get('position') );
         $className = trim( $request->get('entity') );
         //echo "id=".$id."<br>";
@@ -128,8 +131,21 @@ class TreeController extends Controller {
         }
 
         if( $node && $action == 'move_node' ) {
+
+            if( $oldpid != $node->getParent()->getId() ) {
+                //logic error if not the same
+                throw new \Exception( 'Logic error: js old pid=' . $oldpid . ' is not the same as node pid=' .$node->getParent()->getId() );
+            }
+
+            $parent = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className'])->find($pid);
+
+            //change position only
+            if( $oldpid == $pid ) {
+                $this->setPositionAction($parent,$node,$position);
+            }
+
+            //move node to another parent
             if( $node->getParent()->getId() != $pid ) {
-                $parent = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className'])->find($pid);
                 if( $parent ) {
                     $node->setParent($parent);
                     $em->flush($node);
@@ -146,6 +162,10 @@ class TreeController extends Controller {
         return $response;
     }
 
+    public function setPositionAction($parent,$node,$position) {
+        $node->setPosition($position);
+        //change positions of other children
+    }
 
     public function classMapper($name) {
 

@@ -25,7 +25,7 @@ class ListController extends Controller
      *
      * @Route("/source-systems/", name="sourcesystems-list")
      * @Route("/roles/", name="role-list")
-     * @Route("/institutions/", name="institutions-list")
+     * @Route("/institutions/", name="institutions-list", options={"expose"=true})
      * @Route("/departments/", name="departments-list")
      * @Route("/divisions/", name="divisions-list")
      * @Route("/services/", name="services-list")
@@ -422,7 +422,7 @@ class ListController extends Controller
      * @Route("/departments/{id}", name="departments_show")
      * @Route("/divisions/{id}", name="divisions_show")
      * @Route("/services/{id}", name="services_show")
-     * @Route("/institutions/{id}", name="institutions_show")
+     * @Route("/institutions/{id}", name="institutions_show", options={"expose"=true})
      * @Route("/states/{id}", name="states_show")
      * @Route("/countries/{id}", name="countries_show")
      * @Route("/board-certifications/{id}", name="boardcertifications_show")

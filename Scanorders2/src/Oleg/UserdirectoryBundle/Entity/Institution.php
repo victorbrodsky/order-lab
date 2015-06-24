@@ -138,58 +138,6 @@ class Institution extends BaseCompositeNode {
     }
 
 
-//    public function addHead($head)
-//    {
-//        if( !$this->heads->contains($head) ) {
-//            $this->heads->add($head);
-//        }
-//        return $this;
-//    }
-//
-//    public function removeHead($head)
-//    {
-//        $this->heads->removeElement($head);
-//    }
-//
-//    public function getHeads()
-//    {
-//        return $this->heads;
-//    }
-    
-
-//    /**
-//     * Add department
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
-//     * @return Institution
-//     */
-//    public function addDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
-//    {
-//        if( !$this->departments->contains($department) ) {
-//            $department->setParent($this);
-//            $this->departments->add($department);
-//        }
-//    }
-//    /**
-//     * Remove department
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
-//     */
-//    public function removeDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
-//    {
-//        $this->departments->removeElement($department);
-//    }
-//    /**
-//     * Get order
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getDepartments()
-//    {
-//        return $this->departments;
-//    }
-
-
     public function getBuildings()
     {
         return $this->buildings;
@@ -223,6 +171,22 @@ class Institution extends BaseCompositeNode {
     public function getTypes()
     {
         return $this->types;
+    }
+
+
+    /**
+     * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
+     * @param mixed $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+
+        //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
+        if( count($parent->getChildren()) > 0 ) {
+            $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
+            $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
+        }
     }
 
 
