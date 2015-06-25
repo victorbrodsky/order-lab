@@ -756,6 +756,84 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
+
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
+
+        ///////////////test
+        //$levelInstitution = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
+        //$levelDepartment = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Department');
+        //$levelDivision = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Division');
+        //$levelService = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Service');
+//
+//        $treeCount = 10;
+//        $inst = new Institution();
+//        $this->setDefaultList($inst,$treeCount,$username,'WCMC');
+//        $inst->setOrganizationalGroupType($levelInstitution);
+//        $treeCount++;
+//
+//        $pathdep = new Institution();
+//        $this->setDefaultList($pathdep,$treeCount,$username,'Pathology');
+//        $pathdep->setOrganizationalGroupType($levelDepartment);
+//        $treeCount = $treeCount + 10;
+//        $inst->addChild($pathdep);
+//
+//        $Biochemistry = new Institution();
+//        $this->setDefaultList($Biochemistry,$treeCount,$username,'Biochemistry');
+//        $Biochemistry->setOrganizationalGroupType($levelDepartment);
+//        $treeCount = $treeCount + 10;
+//        $inst->addChild($Biochemistry);
+//
+//        $division = new Institution();
+//        $this->setDefaultList($division,$treeCount,$username,'Informatics');
+//        $division->setOrganizationalGroupType($levelDivision);
+//        $treeCount = $treeCount + 10;
+//        $pathdep->addChild($division);
+//
+//        $service = new Institution();
+//        $this->setDefaultList($service,$treeCount,$username,'Software Development');
+//        $service->setOrganizationalGroupType($levelService);
+//        $treeCount = $treeCount + 10;
+//        $division->addChild($service);
+//
+//        $em->persist($inst);
+//        $em->flush();
+
+        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
+
+//        $inst = $repo->findOneByName('WCMC');
+//        $Anesthesiology = new Institution();
+//        $this->setDefaultList($Anesthesiology,60,$username,'Anesthesiology');
+//        $Anesthesiology->setOrganizationalGroupType($levelDepartment);
+//        $repo->persistAsFirstChildOf($Anesthesiology,$inst);
+//        $em->flush();
+
+        //$node = $repo->findOneByName('Pathology');
+//        $repo->removeFromTree($node);
+        //$repo->moveUp($node, true);
+        //exit();
+
+        //echo $node."<br>";
+        //echo $node->getPath();
+
+        //$arrayTree = $repo->childrenHierarchy();
+        $htmlTree = $repo->childrenHierarchy(
+            null, /* starting from root nodes */
+            false, /* true: load all children, false: only direct */
+            array(
+                'decorate' => true,
+                'representationField' => 'slug',
+                'html' => true
+            )
+        );
+        echo $htmlTree;
+
+        exit('eof test');
+        /////////////////////
+
         $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
 
         if( $entities ) {
@@ -974,7 +1052,6 @@ class AdminController extends Controller
 
         $treeCount = 10;
 
-        $instCount = 0;
         foreach( $institutions as $institutionname=>$infos ) {
             $institution = new Institution();
             $this->setDefaultList($institution,$treeCount,$username,$institutionname);
@@ -983,12 +1060,9 @@ class AdminController extends Controller
 
             $institution->addType($medicalType);
             $institution->setOrganizationalGroupType($levelInstitution);
-            $institution->setPosition($instCount);
-            $instCount++;
 
             if( array_key_exists('departments', $infos) && $infos['departments'] && is_array($infos['departments'])  ) {
 
-                $depCount = 0;
                 foreach( $infos['departments'] as $departmentname=>$divisions ) {
 
                     $department = new Institution();
@@ -1000,11 +1074,9 @@ class AdminController extends Controller
                     $this->setDefaultList($department,$treeCount,$username,$departmentname);
                     $treeCount = $treeCount + 10;
                     $department->setOrganizationalGroupType($levelDepartment);
-                    $department->setPosition($depCount);
-                    $depCount++;
 
                     if( $divisions && is_array($divisions) ) {
-                        $divCount = 0;
+
                         foreach( $divisions as $divisionname=>$services ) {
 
                             //shortname
@@ -1021,11 +1093,9 @@ class AdminController extends Controller
                             $this->setDefaultList($division,$treeCount,$username,$divisionname);
                             $treeCount = $treeCount + 10;
                             $division->setOrganizationalGroupType($levelDivision);
-                            $division->setPosition($divCount);
-                            $divCount++;
 
                             if( $services && is_array($services) ) {
-                                $serCount = 0;
+
                                 foreach( $services as $servicename ) {
                                     $service = new Institution();
                                     if( is_numeric($servicename) ){
@@ -1034,8 +1104,6 @@ class AdminController extends Controller
                                     $this->setDefaultList($service,$treeCount,$username,$servicename);
                                     $treeCount = $treeCount + 10;
                                     $service->setOrganizationalGroupType($levelService);
-                                    $service->setPosition($serCount);
-                                    $serCount++;
 
                                     $division->addChild($service);
                                 }
@@ -2910,6 +2978,19 @@ class AdminController extends Controller
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
+
+//        $em = $this->getDoctrine()->getManager();
+//        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
+//        $htmlTree = $repo->childrenHierarchy(
+//            null, /* starting from root nodes */
+//            false, /* true: load all children, false: only direct */
+//            array(
+//                'decorate' => true,
+//                'representationField' => 'slug',
+//                'html' => true
+//            )
+//        );
+//        echo $htmlTree;
 
         return $this->render('OlegUserdirectoryBundle:Tree:institution-tree.html.twig',
             array(

@@ -2,11 +2,11 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//similar to MessageCategory
 
 /**
  * Use Composite pattern:
@@ -14,7 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * way as a single instance of an object. The intent of a composite is to "compose" objects into tree structures
  * to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects
  * and compositions uniformly.
+ * Use Doctrine Extension Tree for tree manipulation.
  *
+ * @Gedmo\Tree(type="nested")
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
  *  name="user_institution",
@@ -26,12 +28,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Institution extends BaseCompositeNode {
 
     /**
+     * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Institution", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
     protected $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="Institution", mappedBy="parent", cascade={"persist","remove"})
+     * @ORM\OrderBy({"lft" = "ASC"})
      **/
     protected $children;
 
@@ -75,7 +80,7 @@ class Institution extends BaseCompositeNode {
 //     **/
 //    private $positionTypes;
     /**
-     * @ORM\OneToMany(targetEntity="UserPosition", mappedBy="institution", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="UserPosition", mappedBy="institution", cascade={"persist","remove"})
      */
     private $userPositions;
 
@@ -178,7 +183,7 @@ class Institution extends BaseCompositeNode {
      * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
      * @param mixed $parent
      */
-    public function setParent($parent)
+    public function setParent(CompositeNodeInterface $parent = null)
     {
         $this->parent = $parent;
 

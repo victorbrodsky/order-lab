@@ -24,7 +24,8 @@
         "phpexcel/phpexcel": "dev-master",
         "phpunit/phpunit": "4.1.*",
         "oneup/uploader-bundle": "~1.3",
-        "friendsofsymfony/jsrouting-bundle": "@stable"
+        "friendsofsymfony/jsrouting-bundle": "@stable",
+        "stof/doctrine-extensions-bundle": "~1.1@dev"
     },
     "scripts": {
         "post-install-cmd": [

@@ -2,11 +2,19 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * Use Composite pattern:
+ * The composite pattern describes that a group of objects is to be treated in the same
+ * way as a single instance of an object. The intent of a composite is to "compose" objects into tree structures
+ * to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects
+ * and compositions uniformly.
+ * Use Doctrine Extension Tree for tree manipulation.
+ *
  * @ORM\MappedSuperclass
  */
 abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeInterface {  //extends ListAbstract
@@ -15,27 +23,30 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 
     //parent
 
-    //left
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\TreeLeft
+     * @ORM\Column(type="integer")
      */
     private $lft;
 
-    //right
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\TreeRight
+     * @ORM\Column(type="integer")
      */
     private $rgt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\TreeLevel
+     * @ORM\Column(type="integer")
      */
     private $level;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\TreeRoot
+     * @ORM\Column(name="root", type="integer", nullable=true)
      */
-    private $position;
+    private $root;
+
 
 
     //May add additional properties of the tree node
@@ -103,7 +114,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     /**
      * @param mixed $parent
      */
-    public function setParent($parent)
+    public function setParent(CompositeNodeInterface $parent = null)
     {
         $this->parent = $parent;
 
@@ -139,20 +150,23 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
     /**
-     * @param mixed $position
+     * @param mixed $root
      */
-    public function setPosition($position)
+    public function setRoot($root)
     {
-        $this->position = $position;
+        $this->root = $root;
     }
 
     /**
      * @return mixed
      */
-    public function getPosition()
+    public function getRoot()
     {
-        return $this->position;
+        return $this->root;
     }
+
+
+
 
 
 

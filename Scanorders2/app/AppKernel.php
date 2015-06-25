@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
         );
 
 		//echo "environment:<br>";

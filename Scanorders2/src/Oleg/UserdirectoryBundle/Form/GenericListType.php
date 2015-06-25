@@ -98,12 +98,25 @@ class GenericListType extends AbstractType
         }
 
         //level for OrganizationalGroupType
-        //if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") || strtolower($this->mapper['className']) == strtolower("Institution") ) {
-        //if( $this->params['entity'] instanceof CompositeNodeInterface || strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ) {
-        if( method_exists($this->params['entity'],'getLevel') ) {
+        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ) {
             $builder->add('level',null,array(
                 'label'=>'Level:',
                 'attr' => array('class' => 'form-control')
+            ));
+        }
+
+        //fields for Tree implements CompositeNodeInterface
+        if( $this->params['entity'] instanceof CompositeNodeInterface ) {
+            //always read only - do not allow to change level
+            $builder->add('level',null,array(
+                'label'=>'Level:',
+                'read_only' => true,
+                'attr' => array('class' => 'form-control')
+            ));
+            //always read only - do not allow to change parent
+            $builder->add('parent',null,array(
+                'label' => $this->mapper['parentClassName'].' (Parent):',
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>'readonly')
             ));
         }
 

@@ -37,7 +37,7 @@ class TreeController extends Controller {
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Institution');
         $dql =  $repository->createQueryBuilder("list");
-        $dql->orderBy("list.orderinlist","ASC");
+        $dql->orderBy("list.lft","ASC");
 
         $where = "(list.type = :typedef OR list.type = :typeadd)";
         $params = array('typedef' => 'default','typeadd' => 'user-added');
@@ -80,7 +80,7 @@ class TreeController extends Controller {
         foreach( $entities as $entity ) {
             $element = array(
                 'id' => $entity->getId(),
-                'text' => 'id:'.$entity->getId().", pos:".$entity->getOrderInList().": ".$entity->getName()."",
+                'text' => 'id:'.$entity->getId()." (".$entity->getLft()." ".$entity->getName()." ".$entity->getRgt().")",
                 //'text' => $entity->getName()."",
                 'level' => $entity->getLevel(),
                 'leveltype' => $entity->getOrganizationalGroupType()->getName()."",
@@ -104,10 +104,13 @@ class TreeController extends Controller {
     public function setTreeAction(Request $request) {
 
         $pid = trim( $request->get('pid') );
+        $position = trim( $request->get('position') );
+
         $oldpid = trim( $request->get('oldpid') );
+        $oldposition = trim( $request->get('oldposition') );
+
         $id = trim( $request->get('id') );
         $action = trim( $request->get('action') );
-        $position = trim( $request->get('position') );
         $className = trim( $request->get('entity') );
         //echo "id=".$id."<br>";
         //echo "pid=".$pid."<br>";
@@ -120,7 +123,9 @@ class TreeController extends Controller {
 
         $mapper = $this->classMapper($className);
 
-        $node = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className'])->find($id);
+        $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+
+        $node = $treeRepository->find($id);
 
         if( $node && $action == 'rename_node' ) {
             if( $node->getName()."" != $position ) {
@@ -137,23 +142,70 @@ class TreeController extends Controller {
                 throw new \Exception( 'Logic error: js old pid=' . $oldpid . ' is not the same as node pid=' .$node->getParent()->getId() );
             }
 
-            $parent = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className'])->find($pid);
+            $parent = $treeRepository->find($pid);
 
-            //change position only
-            if( $oldpid == $pid ) {
-                $this->setPositionAction($parent,$node,$position);
-            }
+            if( $parent ) {
 
-            //move node to another parent
-            if( $node->getParent()->getId() != $pid ) {
-                if( $parent ) {
-                    $node->setParent($parent);
-                    $em->flush($node);
-                    $output = "ok";
+                if( $position == 0 ) {
+                    $treeRepository->persistAsFirstChildOf($node, $parent);
+                } else
+                if( intval($position)+1 == $treeRepository->childCount($parent,true) ) {
+                    $treeRepository->persistAsLastChildOf($node, $parent);
                 } else {
-                    $output = "parent node is not found";
+                    $currentSibling = $treeRepository->findChildAtPosition($parent,$position);
+                    if( $currentSibling ) {
+                        $treeRepository->persistAsPrevSiblingOf($node, $currentSibling);
+                        //$node->setParent($parent);
+                    } else {
+                        echo "logical error! ";
+                        $treeRepository->persistAsFirstChildOf($node, $parent);
+                    }
                 }
+
+                $em->flush($node);
+                $output = "ok";
+
+            } else {
+                $output = "parent node is not found";
             }
+
+//            //change position only
+//            if( $oldpid == $pid ) {
+//                if( $parent ) {
+//                    if( $position == 0 ) {
+//                        $treeRepository->persistAsFirstChildOf($node, $parent);
+//                    } else {
+//                        $currentSibling = $treeRepository->findChildAtPosition($parent,$position);
+//                        if( $currentSibling ) {
+//                            $treeRepository->persistAsPrevSiblingOf($node, $currentSibling);
+//                        } else {
+//                            $treeRepository->persistAsFirstChildOf($node, $parent);
+//                        }
+//                    }
+//                    $em->flush();
+//                    $output = "ok";
+//                } else {
+//                    $output = "parent node is not found";
+//                }
+//            }
+//
+//            //move node to another parent
+//            if( $node->getParent()->getId() != $pid ) {
+//                if( $parent ) {
+//                    $currentSibling = $treeRepository->findChildAtPosition($parent,$position);
+//                    if( $currentSibling ) {
+//                        $treeRepository->persistAsPrevSiblingOf($node, $currentSibling);
+//                        //$node->setParent($parent);
+//                    } else {
+//                        $treeRepository->persistAsFirstChildOf($node, $parent);
+//                    }
+//                    $em->flush($node);
+//                    $output = "ok";
+//                } else {
+//                    $output = "parent node is not found";
+//                }
+//            }
+
         }
 
         $response = new Response();
@@ -162,10 +214,7 @@ class TreeController extends Controller {
         return $response;
     }
 
-    public function setPositionAction($parent,$node,$position) {
-        $node->setPosition($position);
-        //change positions of other children
-    }
+
 
     public function classMapper($name) {
 

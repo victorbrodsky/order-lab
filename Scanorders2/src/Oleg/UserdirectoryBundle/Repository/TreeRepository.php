@@ -4,11 +4,22 @@
 namespace Oleg\UserdirectoryBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
-class TreeRepository extends EntityRepository {
+class TreeRepository extends NestedTreeRepository {
 
+
+    public function findChildAtPosition($parent,$position) {
+        //$children = $this->children($parent);
+        $children = $parent->getChildren();
+        if( $children && count($children) > 0 ) {
+            $child = $children->get($position);
+        } else {
+            $child = null;
+        }
+        return $child;
+    }
 
 
     public function findCategoryByNameAndParentId($category,$parent) {

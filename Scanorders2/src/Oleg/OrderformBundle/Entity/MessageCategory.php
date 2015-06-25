@@ -2,13 +2,13 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
 use Oleg\UserdirectoryBundle\Entity\ComponentCategoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * Use Composite pattern:
@@ -16,19 +16,29 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
  * way as a single instance of an object. The intent of a composite is to "compose" objects into tree structures
  * to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects
  * and compositions uniformly.
+ * Use Doctrine Extension Tree for tree manipulation.
  *
- * @ORM\Entity
- * @ORM\Table(name="scan_messageCategory")
+ * @Gedmo\Tree(type="nested")
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Table(
+ *  name="scan_messageCategory",
+ *  indexes={
+ *      @ORM\Index( name="name_idx", columns={"name"} ),
+ *  }
+ * )
  */
 class MessageCategory extends BaseCompositeNode {
 
     /**
+     * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="MessageCategory", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
     protected $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="MessageCategory", mappedBy="parent", cascade={"persist","remove"})
+     * @ORM\OrderBy({"lft" = "ASC"})
      **/
     protected $children;
 

@@ -16,11 +16,12 @@ interface CompositeNodeInterface {
 
     public function removeChild( $component );
 
-    public function getChild( $index );
+    public function getChild( $index ); //get child by position index
 
     public function getChildren();
 
     public function getParent();
+    public function setParent(CompositeNodeInterface $parent = null);
 
     public function setLevel($level);
     public function getLevel();
@@ -30,4 +31,7 @@ interface CompositeNodeInterface {
 
     public function setLft($component);
     public function getLft();
+
+    public function setRoot($root);
+    public function getRoot();
 } 
