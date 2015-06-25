@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\UserdirectoryBundle\Entity\Institution;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -109,27 +110,29 @@ class TreeController extends Controller {
         $oldpid = trim( $request->get('oldpid') );
         $oldposition = trim( $request->get('oldposition') );
 
-        $id = trim( $request->get('id') );
+        $nodeid = trim( $request->get('nodeid') );
+        $nodetext = trim( $request->get('nodetext') );
+
         $action = trim( $request->get('action') );
         $className = trim( $request->get('entity') );
-        //echo "id=".$id."<br>";
+        //echo "nodeid=".$nodeid."<br>";
         //echo "pid=".$pid."<br>";
         //echo "action=".$action."<br>";
         //echo "className=".$className."<br>";
 
         $em = $this->getDoctrine()->getManager();
 
-        $output = 'not supported action ' . $action;
+        $output = 'Failed: not supported action ' . $action;
 
         $mapper = $this->classMapper($className);
 
         $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
-        $node = $treeRepository->find($id);
+        $node = $treeRepository->find($nodeid);
 
         if( $node && $action == 'rename_node' ) {
-            if( $node->getName()."" != $position ) {
-                $node->setName($position);
+            if( $node->getName()."" != $nodetext ) {
+                $node->setName($nodetext);
                 $em->flush($node);
                 $output = "ok";
             }
@@ -166,46 +169,28 @@ class TreeController extends Controller {
                 $output = "ok";
 
             } else {
-                $output = "parent node is not found";
+                $output = "Failed: parent node is not found";
             }
 
-//            //change position only
-//            if( $oldpid == $pid ) {
-//                if( $parent ) {
-//                    if( $position == 0 ) {
-//                        $treeRepository->persistAsFirstChildOf($node, $parent);
-//                    } else {
-//                        $currentSibling = $treeRepository->findChildAtPosition($parent,$position);
-//                        if( $currentSibling ) {
-//                            $treeRepository->persistAsPrevSiblingOf($node, $currentSibling);
-//                        } else {
-//                            $treeRepository->persistAsFirstChildOf($node, $parent);
-//                        }
-//                    }
-//                    $em->flush();
-//                    $output = "ok";
-//                } else {
-//                    $output = "parent node is not found";
-//                }
-//            }
-//
-//            //move node to another parent
-//            if( $node->getParent()->getId() != $pid ) {
-//                if( $parent ) {
-//                    $currentSibling = $treeRepository->findChildAtPosition($parent,$position);
-//                    if( $currentSibling ) {
-//                        $treeRepository->persistAsPrevSiblingOf($node, $currentSibling);
-//                        //$node->setParent($parent);
-//                    } else {
-//                        $treeRepository->persistAsFirstChildOf($node, $parent);
-//                    }
-//                    $em->flush($node);
-//                    $output = "ok";
-//                } else {
-//                    $output = "parent node is not found";
-//                }
-//            }
+        }
 
+
+        if( $action == 'create_node' ) {
+            $username = $this->get('security.context')->getToken()->getUser();
+            $parent = $treeRepository->find($pid);
+            $parentLevel = $parent->getLevel();
+            $childLevel = intval($parentLevel) + 1;
+            $organizationalGroupType = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByLevel($childLevel);
+
+            $node = new Institution();
+            $userutil = new UserUtil();
+            $userutil->setDefaultList($node,60,$username,$nodetext);
+            $node->setOrganizationalGroupType($organizationalGroupType);
+            $treeRepository->persistAsLastChildOf($node,$parent);
+
+            $em->persist($node);
+            $em->flush();
+            $output = $node->getId();
         }
 
         $response = new Response();

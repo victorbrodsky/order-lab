@@ -2979,18 +2979,18 @@ class AdminController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-//        $em = $this->getDoctrine()->getManager();
-//        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
-//        $htmlTree = $repo->childrenHierarchy(
-//            null, /* starting from root nodes */
-//            false, /* true: load all children, false: only direct */
-//            array(
-//                'decorate' => true,
-//                'representationField' => 'slug',
-//                'html' => true
-//            )
-//        );
-//        echo $htmlTree;
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
+        $htmlTree = $repo->childrenHierarchy(
+            null, /* starting from root nodes */
+            false, /* true: load all children, false: only direct */
+            array(
+                'decorate' => true,
+                'representationField' => 'slug',
+                'html' => true
+            )
+        );
+        echo $htmlTree;
 
         return $this->render('OlegUserdirectoryBundle:Tree:institution-tree.html.twig',
             array(

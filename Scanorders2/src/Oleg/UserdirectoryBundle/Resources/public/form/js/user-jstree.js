@@ -54,7 +54,8 @@ function getJstree(entityName) {
                     }
 
                     if( operation === "rename_node" ) {
-                        return jstree_wrapper_action_node(entityName, operation, node, parent, position, more);
+                        return true;
+                        //return jstree_wrapper_action_node(entityName, operation, node, parent, position, more);
                     }
 
 //                    if( operation === "delete_node" ) {
@@ -73,7 +74,7 @@ function getJstree(entityName) {
                     delete tmp.remove;
 
                     //add Edit link to open a modal edit windows
-                    tmp.create = {
+                    tmp.editbyurl = {
                         "label": "Edit",
                         "action": function (obj) {
                             //this.edit_node(obj);
@@ -122,19 +123,22 @@ function getJstree(entityName) {
             }
         });
 
-//        $(document).on('dnd_start.vakata', function (e, data) {
-//            console.log('Started');
-//            console.log(data);
-//        });
-//
-//        $(document).on('dnd_stop.vakata', function (e, data) {
-//            console.log('Stoped');
-//            console.log(data);
-//        });
-
         $(targetid).bind('move_node.jstree', function(e, data) {
             jstree_move_node(entityName,data);
         });
+
+        $(targetid).bind('create_node.jstree', function(e, data) {
+            //console.log('create_node');
+            var operation = 'create_node';
+            var newnodeid = jstree_action_node(entityName, operation, null, data.node.text, data.parent, data.position, null, null, null);
+            $(this).jstree(true).set_id(data.node,newnodeid);
+        });
+
+        $(targetid).bind('rename_node.jstree', function(e, data) {
+            var operation = 'rename_node';
+            jstree_action_node(entityName, operation, data.node.id, data.node.text, data.parent, data.position, null, null, null);
+        });
+
 
     } //if
 
@@ -144,32 +148,28 @@ function getJstree(entityName) {
 //parent - new parent
 //position - the position to insert at (besides integer values, "first" and "last" are supported, as well as "before" and "after"), defaults to integer `0`
 function jstree_wrapper_action_node(entityName, operation, node, parent, position, more) {
-    console.log(entityName+':' + operation + ' id='+node.id+", text="+node.text);
-    console.log('position='+position);
-    console.log('parent.id='+parent.id);
-    console.log(more);
-
-    return jstree_action_node(entityName, operation, node.id, parent.id, position, null, null, more);
+    //console.log(entityName+':' + operation + ' id='+node.id+", text="+node.text);
+    //console.log('position='+position);
+    //console.log('parent.id='+parent.id);
+    //console.log(more);
+    return jstree_action_node(entityName, operation, node.id, node.text, parent.id, position, null, null, more);
 }
 
 function jstree_move_node(entityName,data) {
 
-    console.log('move_node');
-    console.log(data);
-    console.log("node.id="+data.node.id);
-    console.log("parent="+data.parent);
-    console.log("old_parent="+data.old_parent);
-    console.log("position="+data.position);
-    console.log("old_position="+data.old_position);
-
+//    console.log('move_node');
+//    console.log(data);
+//    console.log("node.id="+data.node.id);
+//    console.log("parent="+data.parent);
+//    console.log("old_parent="+data.old_parent);
+//    console.log("position="+data.position);
+//    console.log("old_position="+data.old_position);
 
     var operation = 'move_node';
-    var more = null;
-
-    return jstree_action_node(entityName, operation, data.node.id, data.parent, data.position, data.old_parent, data.old_position, more);
+    return jstree_action_node(entityName, operation, data.node.id, null, data.parent, data.position, data.old_parent, data.old_position, null);
 }
 
-function jstree_action_node(entityName, operation, nodeid, parentid, position, oldparentid, oldposition, more) {
+function jstree_action_node(entityName, operation, nodeid, nodetext, parentid, position, oldparentid, oldposition, more) {
     var url = Routing.generate('employees_tree_edit_node');
     var res = false;
 
@@ -178,10 +178,17 @@ function jstree_action_node(entityName, operation, nodeid, parentid, position, o
         url: url,
         timeout: _ajaxTimeout,
         async: false,
-        data: { action: operation, pid: parentid, position: position, oldpid: oldparentid, oldposition: oldposition, id: nodeid, entity: entityName }
+        data: { action: operation, pid: parentid, position: position, oldpid: oldparentid, oldposition: oldposition, nodeid: nodeid, nodetext: nodetext, entity: entityName }
     }).success(function(data) {
-        if( data == 'ok' ) {
-            res = true;
+        //console.log('data='+data);
+        if( isInt(data) ) {
+            if( operation == "create_node" ) {
+                res = data;
+            }
+        } else {
+            if( data.indexOf("Failed") == -1 ) {
+                res = true;
+            }
         }
     }).fail(function(data) {
         console.log('failed: '+data);
