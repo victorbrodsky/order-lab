@@ -114,6 +114,7 @@ class TreeController extends Controller {
         $nodetext = trim( $request->get('nodetext') );
 
         $action = trim( $request->get('action') );
+        //$action = 'none'; //testing
         $className = trim( $request->get('entity') );
         //echo "nodeid=".$nodeid."<br>";
         //echo "pid=".$pid."<br>";
@@ -136,14 +137,14 @@ class TreeController extends Controller {
                 $em->flush($node);
                 $output = "ok";
             }
-        }
+        } //rename_node
 
         if( $node && $action == 'move_node' ) {
 
-            if( $oldpid != $node->getParent()->getId() ) {
+            //if( $oldpid != $node->getParent()->getId() ) {
                 //logic error if not the same
-                throw new \Exception( 'Logic error: js old pid=' . $oldpid . ' is not the same as node pid=' .$node->getParent()->getId() );
-            }
+                //throw new \Exception( 'Logic error: js old pid=' . $oldpid . ' is not the same as node pid=' .$node->getParent()->getId() );
+            //}
 
             $parent = $treeRepository->find($pid);
 
@@ -172,7 +173,7 @@ class TreeController extends Controller {
                 $output = "Failed: parent node is not found";
             }
 
-        }
+        } //move_node
 
 
         if( $action == 'create_node' ) {
@@ -191,7 +192,7 @@ class TreeController extends Controller {
             $em->persist($node);
             $em->flush();
             $output = $node->getId();
-        }
+        } //create_node
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

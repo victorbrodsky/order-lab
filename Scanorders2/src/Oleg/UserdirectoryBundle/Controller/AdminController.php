@@ -801,37 +801,32 @@ class AdminController extends Controller
 //
 //        $em->persist($inst);
 //        $em->flush();
-
-        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
-
+//        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
 //        $inst = $repo->findOneByName('WCMC');
 //        $Anesthesiology = new Institution();
 //        $this->setDefaultList($Anesthesiology,60,$username,'Anesthesiology');
 //        $Anesthesiology->setOrganizationalGroupType($levelDepartment);
 //        $repo->persistAsFirstChildOf($Anesthesiology,$inst);
 //        $em->flush();
-
         //$node = $repo->findOneByName('Pathology');
 //        $repo->removeFromTree($node);
         //$repo->moveUp($node, true);
         //exit();
-
         //echo $node."<br>";
         //echo $node->getPath();
-
         //$arrayTree = $repo->childrenHierarchy();
-        $htmlTree = $repo->childrenHierarchy(
-            null, /* starting from root nodes */
-            false, /* true: load all children, false: only direct */
-            array(
-                'decorate' => true,
-                'representationField' => 'slug',
-                'html' => true
-            )
-        );
-        echo $htmlTree;
-
-        exit('eof test');
+//        $htmlTree = $repo->childrenHierarchy(
+//            null, /* starting from root nodes */
+//            false, /* true: load all children, false: only direct */
+//            array(
+//                'decorate' => true,
+//                'representationField' => 'slug',
+//                'html' => true
+//            )
+//        );
+//        echo $htmlTree;
+//
+//        exit('eof test');
         /////////////////////
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
@@ -2979,18 +2974,18 @@ class AdminController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
-        $htmlTree = $repo->childrenHierarchy(
-            null, /* starting from root nodes */
-            false, /* true: load all children, false: only direct */
-            array(
-                'decorate' => true,
-                'representationField' => 'slug',
-                'html' => true
-            )
-        );
-        echo $htmlTree;
+//        $em = $this->getDoctrine()->getManager();
+//        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
+//        $htmlTree = $repo->childrenHierarchy(
+//            null, /* starting from root nodes */
+//            false, /* true: load all children, false: only direct */
+//            array(
+//                'decorate' => true,
+//                'representationField' => 'slug',
+//                'html' => true
+//            )
+//        );
+//        echo $htmlTree;
 
         return $this->render('OlegUserdirectoryBundle:Tree:institution-tree.html.twig',
             array(

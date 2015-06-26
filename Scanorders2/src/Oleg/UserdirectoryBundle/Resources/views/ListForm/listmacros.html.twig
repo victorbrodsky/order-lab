@@ -1,7 +1,7 @@
 {#macro for list#}
 
 
-{% macro listIndex( entities, pathbase ) %}
+{% macro listIndex( entities, pathbase, withCreateNewEntityLink ) %}
 
     {% import _self as listmacros %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -177,9 +177,11 @@
         {{ knp_pagination_render(entities) }}
     </div>
 
-    <a href="{{ path(pathbase~'_new') }}">
-        Create a new entry
-    </a>
+    {% if withCreateNewEntityLink == true %}
+        <a href="{{ path(pathbase~'_new') }}">
+            Create a new entry
+        </a>
+    {% endif %}
 
 {% endmacro %}
 

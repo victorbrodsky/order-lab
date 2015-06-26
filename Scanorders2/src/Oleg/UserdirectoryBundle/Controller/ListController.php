@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -160,10 +161,23 @@ class ListController extends Controller
             $limit/*limit per page*/
         );
 
+        ///////////// check if show "create a new entity" link //////////////
+        $createNew = true;
+        $reflectionClass = new \ReflectionClass($mapper['fullClassName']);
+        $compositeReflection = new \ReflectionClass("Oleg\\UserdirectoryBundle\\Entity\\CompositeNodeInterface");
+        if( $reflectionClass->isSubclassOf($compositeReflection) ) {
+            $createNew = false;
+            //echo "dont show create new link";
+        } else {
+            //echo "show create new link";
+        }
+        ///////////// EOF check if show "create a new entity" link //////////////
+
         return array(
             'entities' => $entities,
             'displayName' => $mapper['displayName'],
-            'pathbase' => $pathbase
+            'pathbase' => $pathbase,
+            'withCreateNewEntityLink' => $createNew
         );
     }
 
@@ -772,6 +786,9 @@ class ListController extends Controller
             'pathbase' => $pathbase
         );
     }
+
+
+
 
 
 

@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//TODO: turn to BaseCompositeNode: CommentSubTypeList, FellowshipSubspecialty
 /**
  * Use Composite pattern:
  * The composite pattern describes that a group of objects is to be treated in the same

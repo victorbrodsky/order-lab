@@ -1,4 +1,5 @@
 /**
+ * Basic jstree operations: create, move and edit node in separate page.
  * Created by DevServer on 6/23/15.
  */
 
@@ -36,6 +37,12 @@ function getJstree(entityName) {
                     }
                 },
                 "check_callback" : function (operation, node, parent, position, more) {
+
+                    //console.log("operation="+operation);
+                    //console.log('position='+position);
+                    //console.log('parent.id='+parent.id);
+                    //console.log(more);
+
                     //create_node, rename_node, delete_node, move_node, copy_node
                     if( operation === "copy_node" || operation === "move_node" ) {
                         if( parent.id === "#" ) {
@@ -44,18 +51,26 @@ function getJstree(entityName) {
                     }
 
                     if( operation === "move_node" ) {
-                        //jstree_move_node(entityName, operation, node, parent, position, more);
-                        return true;
+                        //return true;
+                        if( more && more.core ) {
+                            if( !window.confirm("Are you sure?") ) {
+                                return false;
+                            }
+                            return jstree_wrapper_action_node(entityName, operation, node, parent, position, more);
+                        } else {
+                            return true;
+                        }
                     }
 
                     if( operation === "create_node" ) {
+                        if( !window.confirm("Are you sure?") ) {
+                            return false;
+                        }
                         return true;
-                        //return jstree_wrapper_action_node(entityName, operation, node, parent, position, more);
                     }
 
                     if( operation === "rename_node" ) {
                         return true;
-                        //return jstree_wrapper_action_node(entityName, operation, node, parent, position, more);
                     }
 
 //                    if( operation === "delete_node" ) {
@@ -70,7 +85,7 @@ function getJstree(entityName) {
                 items: function(node) {
                     var tmp = $.jstree.defaults.contextmenu.items();
                     delete tmp.ccp;
-                    //delete tmp.rename;
+                    delete tmp.rename;
                     delete tmp.remove;
 
                     //add Edit link to open a modal edit windows
@@ -78,7 +93,7 @@ function getJstree(entityName) {
                         "label": "Edit",
                         "action": function (obj) {
                             //this.edit_node(obj);
-                            console.log(obj);
+                            //console.log(obj);
                             var treeUrl = Routing.generate('institutions_show', {id: node.id});
                             window.open(treeUrl);
                             //open modal edit
@@ -101,14 +116,14 @@ function getJstree(entityName) {
 
         });
 
-        $(targetid).on("changed.jstree", function (e, data) {
-            //console.log("The selected nodes are:");
-            //console.log(data.selected);
-            var selectedNode = data.selected[0];
-            console.log("selectedNode="+selectedNode);
-            //var targetInstitution = $(this).closest('.user-collection-holder').find('.ajax-combobox-institution');
-            //setElementToId( targetInstitution, _institution, selectedNode );
-        });
+//        $(targetid).on("changed.jstree", function (e, data) {
+//            //console.log("The selected nodes are:");
+//            //console.log(data.selected);
+//            var selectedNode = data.selected[0];
+//            console.log("selectedNode="+selectedNode);
+//            //var targetInstitution = $(this).closest('.user-collection-holder').find('.ajax-combobox-institution');
+//            //setElementToId( targetInstitution, _institution, selectedNode );
+//        });
 
         $(".jstree-search").keyup(function(event){
             if( event.keyCode == 13 ) {
@@ -123,20 +138,30 @@ function getJstree(entityName) {
             }
         });
 
-        $(targetid).bind('move_node.jstree', function(e, data) {
-            jstree_move_node(entityName,data);
-        });
+//        $(targetid).bind('move_node.jstree', function(e, data) {
+//            var res = jstree_move_node(entityName,data);
+//            if( res == false ) {
+//                failedOperation($(this),'move_node');
+//            }
+//        });
 
         $(targetid).bind('create_node.jstree', function(e, data) {
             //console.log('create_node');
             var operation = 'create_node';
             var newnodeid = jstree_action_node(entityName, operation, null, data.node.text, data.parent, data.position, null, null, null);
-            $(this).jstree(true).set_id(data.node,newnodeid);
+            if( newnodeid != false ) {
+                $(this).jstree(true).set_id(data.node,newnodeid);
+            } else {
+                failedOperation($(this),operation);
+            }
         });
 
         $(targetid).bind('rename_node.jstree', function(e, data) {
             var operation = 'rename_node';
-            jstree_action_node(entityName, operation, data.node.id, data.node.text, data.parent, data.position, null, null, null);
+            var res = jstree_action_node(entityName, operation, data.node.id, data.node.text, data.parent, data.position, null, null, null);
+            if( res == false ) {
+                failedOperation($(this),operation);
+            }
         });
 
 
@@ -196,6 +221,16 @@ function jstree_action_node(entityName, operation, nodeid, nodetext, parentid, p
 
     return res;
 }
+
+function failedOperation(jstreeObj,operation) {
+    alert('Operation ' + operation + 'failed. Tree will be refreshed.');
+    jstreeObj.jstree("refresh");
+}
+
+
+
+
+
 
 
 

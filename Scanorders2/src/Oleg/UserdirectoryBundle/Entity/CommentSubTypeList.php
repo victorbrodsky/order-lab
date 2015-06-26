@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 //@ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
 
+//TODO: turn it to BaseCompositeNode
 /**
  *
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")

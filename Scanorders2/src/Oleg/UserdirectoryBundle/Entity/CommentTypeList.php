@@ -5,6 +5,7 @@ namespace Oleg\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+//TODO: turn it to BaseCompositeNode
 /**
  * @ORM\Entity()
  * @ORM\Table(name="user_commentTypeList")

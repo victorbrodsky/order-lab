@@ -10,6 +10,10 @@
 
     <h3 class="text-info">{{ displayName }}</h3>
 
-    {{ listmacros.listIndex( entities, pathbase ) }}
+    {% if withCreateNewEntityLink is not defined %}
+        {% set withCreateNewEntityLink = true %}
+    {% endif %}
+
+    {{ listmacros.listIndex( entities, pathbase, withCreateNewEntityLink ) }}
 
 {% endblock %}

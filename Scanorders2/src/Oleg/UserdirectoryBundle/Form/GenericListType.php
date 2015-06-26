@@ -37,7 +37,7 @@ class GenericListType extends AbstractType
         ));
 
 
-        //tree classes
+        //tree classes: BaseCompositeNode (Institution, MessageCatergory), CommentSubTypeList, FellowshipSubspecialty
         if( method_exists($this->params['entity'],'getParent') ) {
             //echo "cycle=".$this->params['cycle']."<br>";
             if( $this->params['cycle'] == "show" ) {
