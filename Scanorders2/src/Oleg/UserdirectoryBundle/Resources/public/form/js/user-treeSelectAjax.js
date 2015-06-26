@@ -9,29 +9,70 @@
 
 ////////////////////////////// EOF TREE //////////////////////////////////
 
-function comboboxTreeListener( target, level ) {
+//TODO: set hidden real institution field in the form every time the combobox is chnaged.
+//Then, use this real institution field and parent field in controller to create a new instituition.
+function comboboxTreeListener( target, entityName ) {
 
-    var targetElements = $(target);
+    $(target).on('change', function(e){
 
-//    targetElements.each( function() {
-//
-//        var selectId = '#'+$(this).attr('id');
-//
-//        populateSelectCombobox( selectId, data, placeholder, multipleFlag );
-//
-//        //children
-//        //console.log('################################# populate Parent Child Tree childClass='+childClass);
-//        getComboboxTreeByPid($(this),childClass,null,true);
-//
-//    });
+        //console.log( "combobox on change" );
 
-    targetElements.on('change', function(e){
+        var comboboxEl = $(this);
+        var thisData = comboboxEl.select2('data');
 
-        console.log( "combobox on change" );
+        //console.log( thisData );
 
-        var thisData = $(this).select2('data');
+        //first remove all siblings after this combobox
+        var allNextSiblings = comboboxEl.closest('.row').nextAll().remove();
 
-        var treeArr = getChildrenByLevel(level+1);
+        //check if combobox cleared; if none => do nothing
+        if( !thisData ) {
+            return;
+        }
+
+        var treeArr = getChildrenByParent(entityName,thisData.id);
+        //console.log( treeArr );
+        //console.log( 'treeArr.length=' + treeArr.length );
+
+        //do nothing if new element was enetered
+        if( treeArr == null ) {
+            return;
+        }
+
+        if( treeArr.length > 0 ) {
+
+            var label = treeArr[0].leveltitle;
+            var newid = "new-tree-" + label;
+            // 1) construct and attach a new select2 combobox below comboboxEl (parent combobox)
+            var comboboxHtml =
+                '<div class="row">' +
+                    '<div class="col-xs-6" align="right">' +
+                        '<strong>'+label+':</strong>' +
+                    '</div>' +
+                    '<div class="col-xs-6" align="left">' +
+                        '<input id="'+newid+'" class="ajax-combobox-institution" type="text"/>' +
+                    '</div>' +
+                '</div>';
+
+            //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
+
+            var treeHolder = comboboxEl.closest('.composite-tree-holder');
+            //console.log( treeHolder );
+
+            treeHolder.append(comboboxHtml);
+
+            //console.log( 'newid='+newid );
+            var newElementsAppended = treeHolder.find('#'+newid);
+            //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
+
+            populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
+
+            //wait
+            comboboxTreeListener( newElementsAppended, entityName );
+
+            // 2) replace id and name of newly created combobox with the parent
+
+        } //if
 
     });
 

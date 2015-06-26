@@ -198,6 +198,7 @@
 
 {% macro locationObject( field, cycle, classname, prototype, sitename, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -418,8 +419,7 @@
 
                 {% if homeLocation == false %}
 
-
-                    {{ formmacros.field(formfield.institution) }}
+                    {{ treemacros.compositeTree(formfield.institution) }}
                     {#{{ formmacros.field(formfield.department) }}#}
                     {#{{ formmacros.field(formfield.division) }}#}
                     {#{{ formmacros.field(formfield.service) }}#}

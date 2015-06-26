@@ -21,8 +21,8 @@ function getJstree(entityName) {
         }
 
         //employees_get_institution
-        var institutionUrl = Routing.generate('employees_get_institution_tree');
-        institutionUrl = institutionUrl + '?lazy';
+        var institutionUrl = Routing.generate('employees_get_composition_tree');
+        institutionUrl = institutionUrl + '?lazy&classname='+entityName;
         //console.log('institutionUrl='+institutionUrl);
 
         //_institution
@@ -103,6 +103,20 @@ function getJstree(entityName) {
                     };
 
                     return tmp;
+                }
+            },
+            "types" : {
+                "Institution" : {
+                    "icon" : "glyphicon glyphicon-home"
+                },
+                "Department" : {
+                    "icon" : "glyphicon glyphicon-leaf"
+                },
+                "Division" : {
+                    "icon" : "glyphicon glyphicon-tag"
+                },
+                "Service" : {
+                    "icon" : "glyphicon glyphicon-ok"
                 }
             },
             "plugins" : [
@@ -203,7 +217,7 @@ function jstree_action_node(entityName, operation, nodeid, nodetext, parentid, p
         url: url,
         timeout: _ajaxTimeout,
         async: false,
-        data: { action: operation, pid: parentid, position: position, oldpid: oldparentid, oldposition: oldposition, nodeid: nodeid, nodetext: nodetext, entity: entityName }
+        data: { action: operation, pid: parentid, position: position, oldpid: oldparentid, oldposition: oldposition, nodeid: nodeid, nodetext: nodetext, classname: entityName }
     }).success(function(data) {
         //console.log('data='+data);
         if( isInt(data) ) {
@@ -245,7 +259,7 @@ function actionNodeModal( entityName, operation, obj, node, parent ) {
 
     if( !$('#editNodeModal').length ) {
 
-        var dataNodeLabel = 'Edit ' + node.text + ' with ID:' + node.id + ' level:' + node.original.leveltype;
+        var dataNodeLabel = 'Edit ' + node.text + ' with ID:' + node.id + ' level:' + node.original.leveltitle;
 
         var modalHtml =
             '<div id="editNodeModal" class="modal fade data-node-modal">' +

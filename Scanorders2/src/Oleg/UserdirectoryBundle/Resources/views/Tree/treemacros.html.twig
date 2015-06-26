@@ -16,3 +16,28 @@
     </div>
     </p>
 {% endmacro %}
+
+
+{% macro compositeTree( tree ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    <div class="composite-tree-holder">
+        {{ formmacros.field(tree) }}
+    </div>
+{% endmacro %}
+
+{#{% macro compositeSimplefieldTree( label, jstreeid ) %}#}
+    {#&#123;&#35;{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}&#35;&#125;#}
+    {#<p>#}
+    {#<div class="row jstree-parent-container">#}
+        {#<div class="col-xs-6" align="right">#}
+            {#<strong>{{ label }}</strong>#}
+        {#</div>#}
+        {#<div class="col-xs-6" align="left">#}
+            {#<p>#}
+                {#<input class="form-control form-control-modif not-mapped-simplefield jstree-search" type="search" placeholder="Search" />#}
+            {#</p>#}
+            {#<div class="{{ jstreeid }}"></div>#}
+        {#</div>#}
+    {#</div>#}
+    {#</p>#}
+{#{% endmacro %}#}

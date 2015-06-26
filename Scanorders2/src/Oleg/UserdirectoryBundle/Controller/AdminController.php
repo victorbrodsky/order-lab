@@ -570,6 +570,12 @@ class AdminController extends Controller
                     <br>
 
                     <li>
+                        <a href="http://www.jstree.com/">jsTree</a>
+                    </li>
+
+                    <br>
+
+                    <li>
                         <a href="https://github.com/KnpLabs/KnpPaginatorBundle">KnpPaginatorBundle</a>
                     </li>
 
@@ -762,7 +768,6 @@ class AdminController extends Controller
 //        if( $entities ) {
 //            return -1;
 //        }
-
         ///////////////test
         //$levelInstitution = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
         //$levelDepartment = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Department');

@@ -24,43 +24,60 @@ class TreeController extends Controller {
 
 
     /**
-     * @Route("/common/institution/", name="employees_get_institution_tree", options={"expose"=true})
+     * Get tree structure by parent
+     *
+     * @Route("/common/composition-tree/", name="employees_get_composition_tree", options={"expose"=true})
      * @Method({"GET", "POST"})
      */
-    public function getTreeAction(Request $request) {
+    public function getTreeByParentAction(Request $request) {
 
-        $id = trim( $request->get('id') );
-        $level = trim( $request->get('level') );
+        $pid = trim( $request->get('id') );
+        $className = trim( $request->get('classname') );
+        //$level = trim( $request->get('pid') );
         //echo "id=".$id."<br>";
         //echo "level=".$level."<br>";
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Institution');
-        $dql =  $repository->createQueryBuilder("list");
+        //$repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Institution');
+        $mapper = $this->classMapper($className);
+        $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+
+        $dql =  $treeRepository->createQueryBuilder("list");
         $dql->orderBy("list.lft","ASC");
 
         $where = "(list.type = :typedef OR list.type = :typeadd)";
         $params = array('typedef' => 'default','typeadd' => 'user-added');
 
-        if( $id != '#' && is_numeric($id) ) {
-            //children: where parent = $id
+
+        if( is_numeric($pid) && $pid == 0 ) {
+            //children: where parent = $pid
+            $dql->leftJoin("list.parent", "parent");
+            $where = $where . " AND parent.id is NULL";
+        }
+
+        if( $pid == '#' || !is_numeric($pid) ) {
+            //root: the same as $pid == 0
+            //$where = $where . " AND list.level = :level";
+            //$params['level'] = 0;
+            $dql->leftJoin("list.parent", "parent");
+            $where = $where . " AND parent.id is NULL";
+        }
+
+        if( $pid != 0 && $pid != '#' && is_numeric($pid) ) {
+            //children: where parent = $pid
             $dql->leftJoin("list.parent", "parent");
             $where = $where . " AND parent.id = :id";
-            $params['id'] = $id;
+            $params['id'] = $pid;
         }
 
-        if( $id == '#' || !is_numeric($id) ) {
-            //root
-            $where = $where . " AND list.level = :level";
-            $params['level'] = 0;
-        }
 
-        if( $level && is_numeric($level) ) {
-            //root
-            $where = $where . " AND list.level = :level";
-            $params['level'] = $level;
-        }
+
+//        if( $level && is_numeric($level) ) {
+//            //root
+//            $where = $where . " AND list.level = :level";
+//            $params['level'] = $level;
+//        }
 
         //$query->where($where)->setParameters($params);
         $dql->where($where);
@@ -79,12 +96,15 @@ class TreeController extends Controller {
 
         $output = array();
         foreach( $entities as $entity ) {
+            $levelTitle = $entity->getOrganizationalGroupType()->getName()."";
             $element = array(
                 'id' => $entity->getId(),
-                'text' => 'id:'.$entity->getId()." (".$entity->getLft()." ".$entity->getName()." ".$entity->getRgt().")",
-                //'text' => $entity->getName()."",
+                'pid' => ($entity->getParent() ? $entity->getParent()->getId() : 0),
+                //'text' => 'id:'.$entity->getId()." (".$entity->getLft()." ".$entity->getName()." ".$entity->getRgt().")",
+                'text' => $entity->getName()." [" . $levelTitle . "]",
                 'level' => $entity->getLevel(),
-                'leveltype' => $entity->getOrganizationalGroupType()->getName()."",
+                'type' => $levelTitle,          //set js icon by level title
+                'leveltitle' => $levelTitle,
                 'children' => ( count($entity->getChildren()) > 0 ? true : false)
             );
             $output[] = $element;
@@ -115,7 +135,7 @@ class TreeController extends Controller {
 
         $action = trim( $request->get('action') );
         //$action = 'none'; //testing
-        $className = trim( $request->get('entity') );
+        $className = trim( $request->get('classname') );
         //echo "nodeid=".$nodeid."<br>";
         //echo "pid=".$pid."<br>";
         //echo "action=".$action."<br>";

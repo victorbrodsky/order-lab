@@ -111,6 +111,8 @@ function getDataIdByText(arr,text) {
 
 
 //#############  institution  ##############//
+
+//this function is used for form institution hierarchy using select2, not jstree
 function getComboboxInstitution(holder) {
 
     console.log('cycle='+cycle);
@@ -133,21 +135,27 @@ function getComboboxInstitution(holder) {
             }
         }
 
-        var level = 0;
-        var treeArr = getChildrenByLevel(level);
+        var entityName = 'Institution';
+        var parentid = 0;
+        var treeArr = getChildrenByParent(entityName,parentid);
 
-        populateSelectCombobox( targetid, treeArr, null );
+        populateSelectCombobox( targetid, treeArr, "Select an option" );
 
-        comboboxTreeListener( targetid, level )
+        comboboxTreeListener( targetid, entityName );
 
     }
 
 }
-function getChildrenByLevel(level) {
+function getChildrenByParent(entityName,parentid) {
+
+    //do nothing if new element was enetered. In this case pid will be a string with a new element name.
+    if( !isInt(parentid) ) {
+        return null;
+    }
 
     //employees_get_institution
-    var treeUrl = Routing.generate('employees_get_institution_tree');
-    treeUrl = treeUrl + '?level=' + level;
+    var treeUrl = Routing.generate('employees_get_composition_tree');
+    treeUrl = treeUrl + '?id=' + parentid + '&classname=' + entityName;
     //console.log('treeUrl='+treeUrl);
 
     var children = new Array();

@@ -128,7 +128,9 @@ class UserUtil {
             //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             //TODO: this should be located on scanorder site
             $aperioUtil = new AperioUtil();
+            //echo "username=".$username."<br>";
             $userid = $aperioUtil->getUserIdByUserName($username);
+            //echo "userid=".$userid."<br>";
             $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
             $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
             //************** end of  Aperio group roles **************//
@@ -140,27 +142,10 @@ class UserUtil {
 
                 if( $service != "" ) {
                     //echo " (".$service.") ";
-                    $serviceEntity  = $em->getRepository('OlegUserdirectoryBundle:Service')->findOneByName($service);
+                    $serviceEntity  = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($service);
 
                     if( $serviceEntity ) {
-                        $administrativeTitle->setService($serviceEntity);
-                        $division = $serviceEntity->getParent();
-                        $administrativeTitle->setDivision($division);
-                        $department = $division->getParent();
-                        $administrativeTitle->setDepartment($department);
-                        $institution = $department->getParent();
-                        $administrativeTitle->setInstitution($institution);
-                    } else {
-                        //Don't create service if it is not found in the service list
-//                        $serviceEntity = new \Oleg\UserdirectoryBundle\Entity\Service();
-//                        $serviceEntity->setOrderinlist( $serviceCount );
-//                        $serviceEntity->setCreator( $systemuser );
-//                        $serviceEntity->setCreatedate( new \DateTime() );
-//                        $serviceEntity->setName( trim($service) );
-//                        $serviceEntity->setType('default');
-//                        $em->persist($serviceEntity);
-//                        $em->flush();
-//                        $serviceCount = $serviceCount + 10;
+                        $administrativeTitle->setInstitution($serviceEntity);
                     }
                 } //if
 

@@ -30,23 +30,23 @@ class PerSiteSettings extends BaseUserAttributes
     private $permittedInstitutionalPHIScope;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinTable(name="scan_perSiteSettings_service",
-     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $scanOrdersServicesScope;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinTable(name="scan_chiefServices_service",
-     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $chiefServices;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+//     * @ORM\JoinTable(name="scan_perSiteSettings_service",
+//     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $scanOrdersServicesScope;
+//
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+//     * @ORM\JoinTable(name="scan_chiefServices_service",
+//     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $chiefServices;
 
 
 
@@ -56,23 +56,23 @@ class PerSiteSettings extends BaseUserAttributes
      **/
     private $defaultInstitution;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Department")
-     * @ORM\JoinColumn(name="department_id", referencedColumnName="id")
-     **/
-    private $defaultDepartment;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Division")
-     * @ORM\JoinColumn(name="division_id", referencedColumnName="id")
-     **/
-    private $defaultDivision;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-     * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
-     **/
-    private $defaultService;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Department")
+//     * @ORM\JoinColumn(name="department_id", referencedColumnName="id")
+//     **/
+//    private $defaultDepartment;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Division")
+//     * @ORM\JoinColumn(name="division_id", referencedColumnName="id")
+//     **/
+//    private $defaultDivision;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+//     * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
+//     **/
+//    private $defaultService;
 
     /**
      * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
@@ -91,8 +91,8 @@ class PerSiteSettings extends BaseUserAttributes
         parent::__construct();
 
         $this->permittedInstitutionalPHIScope = new ArrayCollection();
-        $this->scanOrdersServicesScope = new ArrayCollection();
-        $this->chiefServices = new ArrayCollection();
+        //$this->scanOrdersServicesScope = new ArrayCollection();
+        //$this->chiefServices = new ArrayCollection();
         $this->setType(self::TYPE_RESTRICTED);
         $this->tooltip = true;
 
@@ -116,53 +116,53 @@ class PerSiteSettings extends BaseUserAttributes
         return $this->user;
     }
 
-    /**
-     * @param mixed $defaultService
-     */
-    public function setDefaultService($defaultService)
-    {
-        $this->defaultService = $defaultService;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultService()
-    {
-        return $this->defaultService;
-    }
-
-    /**
-     * @param mixed $defaultDepartment
-     */
-    public function setDefaultDepartment($defaultDepartment)
-    {
-        $this->defaultDepartment = $defaultDepartment;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultDepartment()
-    {
-        return $this->defaultDepartment;
-    }
-
-    /**
-     * @param mixed $defaultDivision
-     */
-    public function setDefaultDivision($defaultDivision)
-    {
-        $this->defaultDivision = $defaultDivision;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultDivision()
-    {
-        return $this->defaultDivision;
-    }
+//    /**
+//     * @param mixed $defaultService
+//     */
+//    public function setDefaultService($defaultService)
+//    {
+//        $this->defaultService = $defaultService;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDefaultService()
+//    {
+//        return $this->defaultService;
+//    }
+//
+//    /**
+//     * @param mixed $defaultDepartment
+//     */
+//    public function setDefaultDepartment($defaultDepartment)
+//    {
+//        $this->defaultDepartment = $defaultDepartment;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDefaultDepartment()
+//    {
+//        return $this->defaultDepartment;
+//    }
+//
+//    /**
+//     * @param mixed $defaultDivision
+//     */
+//    public function setDefaultDivision($defaultDivision)
+//    {
+//        $this->defaultDivision = $defaultDivision;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDefaultDivision()
+//    {
+//        return $this->defaultDivision;
+//    }
 
     /**
      * @param mixed $defaultInstitution
@@ -200,44 +200,44 @@ class PerSiteSettings extends BaseUserAttributes
         $this->permittedInstitutionalPHIScope->removeElement($permittedInstitutionalPHIScope);
     }
 
-    //ScanOrdersServicesScope
-    public function getScanOrdersServicesScope()
-    {
-        return $this->scanOrdersServicesScope;
-    }
-
-    public function addScanOrdersServicesScope( $scanOrdersServicesScope )
-    {
-        if( !$this->scanOrdersServicesScope->contains($scanOrdersServicesScope) ) {
-            $this->scanOrdersServicesScope->add($scanOrdersServicesScope);
-        }
-
-    }
-
-    public function removeScanOrdersServicesScope($scanOrdersServicesScope)
-    {
-        $this->scanOrdersServicesScope->removeElement($scanOrdersServicesScope);
-    }
-
-
-    //chiefServices
-    public function getChiefServices()
-    {
-        return $this->chiefServices;
-    }
-
-    public function addChiefService( $chiefService )
-    {
-        if( !$this->chiefServices->contains($chiefService) ) {
-            $this->chiefServices->add($chiefService);
-        }
-
-    }
-
-    public function removeChiefService($chiefService)
-    {
-        $this->chiefServices->removeElement($chiefService);
-    }
+//    //ScanOrdersServicesScope
+//    public function getScanOrdersServicesScope()
+//    {
+//        return $this->scanOrdersServicesScope;
+//    }
+//
+//    public function addScanOrdersServicesScope( $scanOrdersServicesScope )
+//    {
+//        if( !$this->scanOrdersServicesScope->contains($scanOrdersServicesScope) ) {
+//            $this->scanOrdersServicesScope->add($scanOrdersServicesScope);
+//        }
+//
+//    }
+//
+//    public function removeScanOrdersServicesScope($scanOrdersServicesScope)
+//    {
+//        $this->scanOrdersServicesScope->removeElement($scanOrdersServicesScope);
+//    }
+//
+//
+//    //chiefServices
+//    public function getChiefServices()
+//    {
+//        return $this->chiefServices;
+//    }
+//
+//    public function addChiefService( $chiefService )
+//    {
+//        if( !$this->chiefServices->contains($chiefService) ) {
+//            $this->chiefServices->add($chiefService);
+//        }
+//
+//    }
+//
+//    public function removeChiefService($chiefService)
+//    {
+//        $this->chiefServices->removeElement($chiefService);
+//    }
 
     /**
      * @param mixed $tooltip
