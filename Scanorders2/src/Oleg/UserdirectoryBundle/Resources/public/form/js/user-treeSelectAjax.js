@@ -5,9 +5,23 @@
 
 ////////////////////////////// TREE //////////////////////////////////
 
+function setTreeByClickingParent(targetid, entityName) {
 
+    var comboboxEl = $(targetid);
+    var treeHolder = comboboxEl.closest('.composite-tree-holder');
 
-////////////////////////////// EOF TREE //////////////////////////////////
+    var breadcrumbs = treeHolder.find('.tree-node-breadcrumbs').val();
+    var breadcrumbsArr = breadcrumbs.split(",");
+
+    //var thisId = treeHolder.find('.tree-node-id').val();
+    //var thisPid = treeHolder.find('.tree-node-parent').val();
+
+    if( breadcrumbsArr.length > 0 ) {
+        var setid = breadcrumbsArr[0];
+        console.log('set id='+setid);
+        comboboxEl.select2('data',1);
+    }
+}
 
 //TODO: set hidden real institution field in the form every time the combobox is chnaged.
 //Then, use this real institution field and parent field in controller to create a new instituition.
@@ -20,7 +34,13 @@ function comboboxTreeListener( target, entityName ) {
         var comboboxEl = $(this);
         var thisData = comboboxEl.select2('data');
 
+        var treeHolder = comboboxEl.closest('.composite-tree-holder');
+
         //console.log( thisData );
+
+        /////////////////// set id and parent ///////////////////
+        setNodeIdPid( entityName, treeHolder, comboboxEl, thisData );
+        /////////////////// EOF set id and parent ///////////////////
 
         //first remove all siblings after this combobox
         var allNextSiblings = comboboxEl.closest('.row').nextAll().remove();
@@ -50,7 +70,7 @@ function comboboxTreeListener( target, entityName ) {
                         '<strong>'+label+':</strong>' +
                     '</div>' +
                     '<div class="col-xs-6" align="left">' +
-                        '<input id="'+newid+'" class="ajax-combobox-institution" type="text"/>' +
+                        '<input id="'+newid+'" class="ajax-combobox-institution" type="hidden"/>' +
                     '</div>' +
                 '</div>';
 
@@ -77,6 +97,100 @@ function comboboxTreeListener( target, entityName ) {
     });
 
 }
+
+function setNodeIdPid( entityName, treeHolder, node, data ) {
+
+    //console.log( data );
+
+    //treeHolder.find('.tree-node-id').val(data.id);
+    //treeHolder.find('.tree-node-parent').val(data.pid);
+
+    //1 case: data has id and pid - existing node (pid might be 0)
+    if( data && data.id && data.hasOwnProperty("pid") ) {
+        //console.log("1 case: data has id and pid - existing node");
+        treeHolder.find('.tree-node-id').val(data.id);
+        treeHolder.find('.tree-node-parent').val(data.pid);
+    }
+
+    //2 case: data is null - clear node => set as previous select box
+    if( !data ) {
+        //console.log("2 case: data is null - clear node");
+        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
+        //console.log(prevNodeData);
+        var thisId = 0;
+        var thisPid = 0;
+        if( prevNodeData ) {
+            thisId = prevNodeData.id;
+            thisPid = prevNodeData.pid;
+        }
+        //console.log( 'id='+thisId+", pid="+thisPid );
+        treeHolder.find('.tree-node-id').val(thisId);
+        treeHolder.find('.tree-node-parent').val(thisPid);
+    }
+
+    //3 case: data has id and text (both equal to a node name), but does not have pid - new node => pid is previous select box
+    //generate new node in DB
+    if( data && data.id && !data.hasOwnProperty("pid") ) {
+        //console.log("3 case: new node");
+
+        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
+        //console.log(prevNodeData);
+
+        var conf = "Are you sure you want to create " + "'" + data.id + "?";
+        if( prevNodeData && data.hasOwnProperty("leveltitle") ) {
+            conf = "Are you sure you want to create " + "'" + data.id + "' under " + prevNodeData.leveltitle + "?";
+        }
+        if( !window.confirm(conf) ) {
+            //treeHolder.find('.tree-node-id').val(0);
+            node.select2('data', null);
+            return;
+        }
+
+        var thisPid = 0;
+        if( prevNodeData ) {
+            thisPid = prevNodeData.id;
+        }
+
+        var newnodeid = jstree_action_node(entityName, 'create_node', null, data.id, thisPid, null, null, null, null, 'combobox');
+
+        if( newnodeid ) {
+            treeHolder.find('.tree-node-id').val(newnodeid);
+            treeHolder.find('.tree-node-parent').val(prevNodeData.id);
+        } else {
+            treeHolder.find('.tree-node-id').val(0);
+            treeHolder.find('.tree-node-parent').val(prevNodeData.id);
+        }
+
+    }
+
+    //set id and pid only
+//    if( data && data.id && !data.hasOwnProperty("pid") ) {
+//        console.log("3 case: new node");
+//        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
+//        console.log(prevNodeData);
+//        var thisId = data.id;
+//        var thisPid = 0;
+//        if( prevNodeData ) {
+//            //thisId = prevNodeData.id
+//            thisPid = prevNodeData.id;
+//        }
+//        console.log( 'id='+thisId+", pid="+thisPid );
+//        treeHolder.find('.tree-node-id').val(thisId);
+//        treeHolder.find('.tree-node-parent').val(thisPid);
+//    }
+
+}
+
+////////////////////////////// EOF TREE //////////////////////////////////
+
+
+
+
+
+
+
+
+
 
 
 

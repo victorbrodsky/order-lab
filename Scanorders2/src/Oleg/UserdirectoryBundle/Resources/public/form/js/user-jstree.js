@@ -22,7 +22,7 @@ function getJstree(entityName) {
 
         //employees_get_institution
         var institutionUrl = Routing.generate('employees_get_composition_tree');
-        institutionUrl = institutionUrl + '?lazy&classname='+entityName;
+        institutionUrl = institutionUrl + '?lazy&$opt=none&classname='+entityName;
         //console.log('institutionUrl='+institutionUrl);
 
         //_institution
@@ -162,7 +162,7 @@ function getJstree(entityName) {
         $(targetid).bind('create_node.jstree', function(e, data) {
             //console.log('create_node');
             var operation = 'create_node';
-            var newnodeid = jstree_action_node(entityName, operation, null, data.node.text, data.parent, data.position, null, null, null);
+            var newnodeid = jstree_action_node(entityName, operation, null, data.node.text, data.parent, data.position, null, null, null, null);
             if( newnodeid != false ) {
                 $(this).jstree(true).set_id(data.node,newnodeid);
             } else {
@@ -172,7 +172,7 @@ function getJstree(entityName) {
 
         $(targetid).bind('rename_node.jstree', function(e, data) {
             var operation = 'rename_node';
-            var res = jstree_action_node(entityName, operation, data.node.id, data.node.text, data.parent, data.position, null, null, null);
+            var res = jstree_action_node(entityName, operation, data.node.id, data.node.text, data.parent, data.position, null, null, null, null);
             if( res == false ) {
                 failedOperation($(this),operation);
             }
@@ -191,7 +191,7 @@ function jstree_wrapper_action_node(entityName, operation, node, parent, positio
     //console.log('position='+position);
     //console.log('parent.id='+parent.id);
     //console.log(more);
-    return jstree_action_node(entityName, operation, node.id, node.text, parent.id, position, null, null, more);
+    return jstree_action_node(entityName, operation, node.id, node.text, parent.id, position, null, null, more, null);
 }
 
 function jstree_move_node(entityName,data) {
@@ -205,10 +205,10 @@ function jstree_move_node(entityName,data) {
 //    console.log("old_position="+data.old_position);
 
     var operation = 'move_node';
-    return jstree_action_node(entityName, operation, data.node.id, null, data.parent, data.position, data.old_parent, data.old_position, null);
+    return jstree_action_node(entityName, operation, data.node.id, null, data.parent, data.position, data.old_parent, data.old_position, null, null);
 }
 
-function jstree_action_node(entityName, operation, nodeid, nodetext, parentid, position, oldparentid, oldposition, more) {
+function jstree_action_node(entityName, operation, nodeid, nodetext, parentid, position, oldparentid, oldposition, more, opt) {
     var url = Routing.generate('employees_tree_edit_node');
     var res = false;
 
@@ -217,7 +217,7 @@ function jstree_action_node(entityName, operation, nodeid, nodetext, parentid, p
         url: url,
         timeout: _ajaxTimeout,
         async: false,
-        data: { action: operation, pid: parentid, position: position, oldpid: oldparentid, oldposition: oldposition, nodeid: nodeid, nodetext: nodetext, classname: entityName }
+        data: { action: operation, pid: parentid, position: position, oldpid: oldparentid, oldposition: oldposition, nodeid: nodeid, nodetext: nodetext, classname: entityName, opt: opt }
     }).success(function(data) {
         //console.log('data='+data);
         if( isInt(data) ) {

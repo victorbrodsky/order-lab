@@ -107,8 +107,21 @@ class Logger
 
 
     //user's institution, department, division, service at the moment of creation/update
+//    /**
+//     * @ORM\OneToMany(targetEntity="InstitutionTree", mappedBy="logger", cascade={"persist","remove"})
+//     **/
+//    private $institutionTrees;
+//    /**
+//     * @ORM\OneToMany(targetEntity="Institutions", mappedBy="logger", cascade={"persist","remove"})
+//     **/
+//    private $institutions;
+
     /**
-     * @ORM\OneToMany(targetEntity="InstitutionTree", mappedBy="logger", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\JoinTable(name="user_logger_institutions",
+     *      joinColumns={@ORM\JoinColumn(name="logger_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id", unique=true)}
+     *      )
      **/
     private $institutionTrees;
 
@@ -161,23 +174,21 @@ class Logger
         if( $user ) {
             //set title's institution, department, division, service
             foreach( $user->getAdministrativeTitles() as $title ) {
-                $tree = $this->setInstTree($title,"AdministrativeTitle");
-                if( $tree ) {
-                    $this->addInstitutionTree($tree);
+                //$tree = $this->setInstTree($title,"AdministrativeTitle");
+                if( $title->getInstitution() ) {
+                    $this->addInstitutionTree($title->getInstitution());
                 }
             }
 
             foreach( $user->getAppointmentTitles() as $title ) {
-                $tree = $this->setInstTree($title,"AppointmentTitle");
-                if( $tree ) {
-                    $this->addInstitutionTree($tree);
+                if( $title->getInstitution() ) {
+                    $this->addInstitutionTree($title->getInstitution());
                 }
             }
 
             foreach( $user->getMedicalTitles() as $title ) {
-                $tree = $this->setInstTree($title,"MedicalTitle");
-                if( $tree ) {
-                    $this->addInstitutionTree($tree);
+                if( $title->getInstitution() ) {
+                    $this->addInstitutionTree($title->getInstitution());
                 }
             }
         }
@@ -191,28 +202,19 @@ class Logger
     }
 
     //set inst tree
-    public function setInstTree($title,$type) {
-        $instTreeEntity = null;
-
-        $ins = $title->getInstitution();
-        $dep = $title->getDepartment();
-        $div = $title->getDivision();
-        $ser = $title->getService();
-
-        if( $ins || $dep || $div || $ser ) {
-            $instTreeEntity = new InstitutionTree($type);
-            if( $ins )
-                $instTreeEntity->setInstitution($ins);
-            if( $dep )
-                $instTreeEntity->setDepartment($dep);
-            if( $div )
-                $instTreeEntity->setDivision($div);
-            if( $ser )
-                $instTreeEntity->setService($ser);
-        }
-
-        return $instTreeEntity;
-    }
+//    public function setInstTree($title,$type) {
+//        $instTreeEntity = null;
+//
+//        $ins = $title->getInstitution();
+//
+//        if( $ins  ) {
+//            $instTreeEntity = new InstitutionTree($type);
+//            if( $ins )
+//                $instTreeEntity->setInstitution($ins);
+//        }
+//
+//        return $instTreeEntity;
+//    }
 
     /**
      * @param mixed $event
@@ -455,7 +457,6 @@ class Logger
     {
         if( !$this->institutionTrees->contains($tree) ) {
             $this->institutionTrees->add($tree);
-            $tree->setLogger($this);
         }
 
         return $this;

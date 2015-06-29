@@ -18,10 +18,21 @@
 {% endmacro %}
 
 
-{% macro compositeTree( tree ) %}
+{% macro compositeTreeNode( tree ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     <div class="composite-tree-holder">
-        {{ formmacros.field(tree) }}
+        {% if tree.breadcrumbs is defined %}
+            {{ formmacros.field(tree.breadcrumbs) }}
+        {% endif %}
+        {% if tree.id is defined %}
+            {{ formmacros.field(tree.id) }}
+        {% endif %}
+        {% if tree.parent is defined %}
+            {{ formmacros.field(tree.parent) }}
+        {% endif %}
+        {% if tree.institutionnode is defined %}
+            {{ formmacros.field(tree.institutionnode) }}
+        {% endif %}
     </div>
 {% endmacro %}
 

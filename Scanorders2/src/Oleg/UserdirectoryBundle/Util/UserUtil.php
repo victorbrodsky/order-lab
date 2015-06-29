@@ -672,22 +672,25 @@ class UserUtil {
     }
 
     public function processInstTree( $treeholder, $em, $sc ) {
+        return;
+
+        $institution = $treeholder->getInstitution();
+        $parent = $institution->getParent();
+
+        echo "parent=".$parent."<br>";
+        echo "institution=".$institution->getId()."<br>";
 
         exit('Error: implement processInstTree');
-        $institution = $treeholder->getInstitution();
-//        $department = $treeholder->getDepartment();
-//        $division = $treeholder->getDivision();
-//        $service = $treeholder->getService();
-        //echo "service: name=".$service->getName().", id=".$service->getId()."<br>";
-        //exit();
 
-//        $user = $sc->getToken()->getUser();
-//        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$institution,$department);
-//        $division = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$department,$division);
-//        $service = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$division,$service);
+//        if( $institution ) {
+//            //convert parent id to an object
+//            $pid = $institution->getParent();
+//            $parent = $em->getReference('Institution', $pid);
+//            $institution->setParent();
+//        }
 
         //set author if not set
-        $this->setUpdateInfo($treeholder,$em,$sc);
+        //$this->setUpdateInfo($treeholder,$em,$sc);
 
         //exit('eof tree');
     }

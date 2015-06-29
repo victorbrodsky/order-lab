@@ -168,7 +168,20 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 
 
 
-
+    public function getIdBreadcrumbs() {
+        $breadcrumbsArr = array();
+        $this->getIdBreadcrumbsIter($this,$breadcrumbsArr);
+        return $breadcrumbsArr;
+    }
+    public function getIdBreadcrumbsIter($node,$breadcrumbsArr) {
+        if( $node->getParent() ) {
+            $this->getIdBreadcrumbsIter($node->getParent(),$breadcrumbsArr);
+        } else {
+            echo "id=".$node->getId()."<br>";
+            $breadcrumbsArr[] = $node->getId();
+            return $breadcrumbsArr;
+        }
+    }
 
 
 

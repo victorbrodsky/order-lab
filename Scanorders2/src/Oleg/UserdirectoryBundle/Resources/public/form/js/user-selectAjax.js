@@ -122,7 +122,7 @@ function getComboboxInstitution(holder) {
     }
 
     //if( cycle != "show" ) {
-    if( cycle.indexOf("show") == -1 ) {
+    //if( cycle.indexOf("show") == -1 ) {
 
         var targetid = ".ajax-combobox-institution";
         if( $(targetid).length == 0 ) {
@@ -143,7 +143,10 @@ function getComboboxInstitution(holder) {
 
         comboboxTreeListener( targetid, entityName );
 
-    }
+    //}
+
+    //click parent
+    setTreeByClickingParent(targetid, entityName);
 
 }
 function getChildrenByParent(entityName,parentid) {
@@ -155,7 +158,7 @@ function getChildrenByParent(entityName,parentid) {
 
     //employees_get_institution
     var treeUrl = Routing.generate('employees_get_composition_tree');
-    treeUrl = treeUrl + '?id=' + parentid + '&classname=' + entityName;
+    treeUrl = treeUrl + '?id=' + parentid + '&classname=' + entityName + '&opt=combobox';
     //console.log('treeUrl='+treeUrl);
 
     var children = new Array();

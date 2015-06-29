@@ -31,6 +31,7 @@ class TreeController extends Controller {
      */
     public function getTreeByParentAction(Request $request) {
 
+        $opt = trim( $request->get('opt') );
         $pid = trim( $request->get('id') );
         $className = trim( $request->get('classname') );
         //$level = trim( $request->get('pid') );
@@ -71,8 +72,6 @@ class TreeController extends Controller {
             $params['id'] = $pid;
         }
 
-
-
 //        if( $level && is_numeric($level) ) {
 //            //root
 //            $where = $where . " AND list.level = :level";
@@ -105,10 +104,37 @@ class TreeController extends Controller {
                 'level' => $entity->getLevel(),
                 'type' => $levelTitle,          //set js icon by level title
                 'leveltitle' => $levelTitle,
-                'children' => ( count($entity->getChildren()) > 0 ? true : false)
+                //'children' => ( count($entity->getChildren()) > 0 ? true : false)
             );
+
+            if( $opt != 'combobox' ) {
+                $element['children'] = ( count($entity->getChildren()) > 0 ? true : false);
+            }
+
             $output[] = $element;
         }
+
+        //construct an empty element for combobox to allow to enter a new node
+        if( $opt == 'combobox' && count($output) == 0 ) {
+            if( $pid != 0 && $pid != '#' && is_numeric($pid) ) {
+                $parent = $treeRepository->find($pid);
+                $childLevel = intval($parent->getLevel()) + 1;
+                $organizationalGroupType = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByLevel($childLevel);
+                if( $organizationalGroupType ) {
+                    $levelTitle = $organizationalGroupType->getName();
+                    $element = array(
+                        'id' => null,
+                        'pid' => $pid,
+                        'text' => "",
+                        'level' => $childLevel,
+                        'type' => $levelTitle,          //set js icon by level title
+                        'leveltitle' => $levelTitle,
+                    );
+                    $output[] = $element;
+                }
+            }
+        }
+
         //$output['children'] = array($children);
 
         $response = new Response();
@@ -123,6 +149,8 @@ class TreeController extends Controller {
      * @Method({"POST"})
      */
     public function setTreeAction(Request $request) {
+
+        $opt = trim( $request->get('opt') );
 
         $pid = trim( $request->get('pid') );
         $position = trim( $request->get('position') );
@@ -197,21 +225,55 @@ class TreeController extends Controller {
 
 
         if( $action == 'create_node' ) {
-            $username = $this->get('security.context')->getToken()->getUser();
-            $parent = $treeRepository->find($pid);
-            $parentLevel = $parent->getLevel();
-            $childLevel = intval($parentLevel) + 1;
-            $organizationalGroupType = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByLevel($childLevel);
 
-            $node = new Institution();
-            $userutil = new UserUtil();
-            $userutil->setDefaultList($node,60,$username,$nodetext);
-            $node->setOrganizationalGroupType($organizationalGroupType);
-            $treeRepository->persistAsLastChildOf($node,$parent);
+            //check if already exists in DB by $nodetext and $pid
+            $nodes = $treeRepository->findBy(array('parent'=>$pid,'name'=>$nodetext));
 
-            $em->persist($node);
-            $em->flush();
+            if( $nodes && count($nodes) > 0 ) {
+                $node = $nodes[0];
+            } else {
+                $node = null;
+            }
+
+            if( !$node ) {
+
+                $username = $this->get('security.context')->getToken()->getUser();
+                $parent = $treeRepository->find($pid);
+                $parentLevel = $parent->getLevel();
+                $childLevel = intval($parentLevel) + 1;
+                $organizationalGroupType = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByLevel($childLevel);
+
+                //////////// get max ordeinlist ////////////////////
+                $query = $treeRepository->createQueryBuilder('s');
+                $query->select('s, MAX(s.orderinlist) AS max_orderinlist');
+                $query->groupBy('s');
+                $query->setMaxResults(1);
+                $query->orderBy('max_orderinlist', 'DESC');
+                $results = $query->getQuery()->getResult();
+                if( $results && count($results) > 0 ) {
+                    $orderinlist = $results[0]['max_orderinlist'];
+                    $orderinlist = intval($orderinlist) + 10;
+                } else {
+                    $orderinlist = 10;
+                }
+                //////////// EOF get max ordeinlist ////////////////////
+
+                $node = new Institution();
+                $userutil = new UserUtil();
+                $userutil->setDefaultList($node,$orderinlist,$username,$nodetext);
+                $node->setOrganizationalGroupType($organizationalGroupType);
+                if( $opt == 'combobox' ) {
+                    $node->setType('user-added');
+                }
+                $treeRepository->persistAsLastChildOf($node,$parent);
+
+                $em->persist($node);
+                $em->flush();
+
+            }
+
             $output = $node->getId();
+
         } //create_node
 
         $response = new Response();
