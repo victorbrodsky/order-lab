@@ -11,6 +11,8 @@ namespace Oleg\UserdirectoryBundle\Services;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Oleg\OrderformBundle\Entity\Message;
+use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
+use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 
 class DoctrineListener {
 
@@ -33,6 +35,9 @@ class DoctrineListener {
             }
 
         }
+
     }
+
+
 
 } 

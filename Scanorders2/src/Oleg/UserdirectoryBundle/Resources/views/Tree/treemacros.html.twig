@@ -20,20 +20,40 @@
 
 {% macro compositeTreeNode( tree ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    <p>
     <div class="composite-tree-holder">
-        {% if tree.breadcrumbs is defined %}
-            {{ formmacros.field(tree.breadcrumbs) }}
-        {% endif %}
-        {% if tree.id is defined %}
-            {{ formmacros.field(tree.id) }}
-        {% endif %}
-        {% if tree.parent is defined %}
-            {{ formmacros.field(tree.parent) }}
-        {% endif %}
-        {% if tree.institutionnode is defined %}
-            {{ formmacros.field(tree.institutionnode) }}
-        {% endif %}
+        <div style="display: none;">
+            {% if tree.breadcrumbs is defined %}
+                {{ formmacros.field(tree.breadcrumbs) }}
+            {% endif %}
+            {% if tree.id is defined %}
+                {{ formmacros.field(tree.id) }}
+            {% endif %}
+            {% if tree.parent is defined %}
+                {{ formmacros.field(tree.parent) }}
+            {% endif %}
+        </div>
+
+        {#{% if tree.institutionnode is defined %}#}
+            {#{{ formmacros.field(tree.institutionnode) }}#}
+        {#{% endif %}#}
+        {#{% if tree.userPositions is defined %}#}
+            {#userPositions#}
+            {#{{ formmacros.field(tree.userPositions) }}#}
+        {#{% endif %}#}
+
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <strong>label:</strong>
+            </div>
+            <div class="col-xs-6" align="left">
+                <input id="tree-newid" class="ajax-combobox-institution" type="hidden" />
+                <input id="extra-newid" class="ajax-combobox-userpositions" type="hidden" />
+            </div>
+        </div>
+
     </div>
+    </p>
 {% endmacro %}
 
 {#{% macro compositeSimplefieldTree( label, jstreeid ) %}#}

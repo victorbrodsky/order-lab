@@ -8,19 +8,38 @@
 function setTreeByClickingParent(targetid, entityName) {
 
     var comboboxEl = $(targetid);
+    //console.log('combobox len='+comboboxEl.length);
+
+
     var treeHolder = comboboxEl.closest('.composite-tree-holder');
+    //console.log(treeHolder);
 
     var breadcrumbs = treeHolder.find('.tree-node-breadcrumbs').val();
+
+    if( !breadcrumbs ) {
+        return;
+    }
+
     var breadcrumbsArr = breadcrumbs.split(",");
 
     //var thisId = treeHolder.find('.tree-node-id').val();
     //var thisPid = treeHolder.find('.tree-node-parent').val();
 
     if( breadcrumbsArr.length > 0 ) {
-        var setid = breadcrumbsArr[0];
-        console.log('set id='+setid);
-        comboboxEl.select2('data',1);
+        //var setid = breadcrumbsArr[0];
+        //console.log('set id='+setid);
+        //comboboxEl.select2('val',setid, true);
+
+        var nextRowSiblings = comboboxEl.closest('.row');
+        for( var i = 0; i < breadcrumbsArr.length; i++ ) {
+            comboboxEl = nextRowSiblings.find('.ajax-combobox-institution');
+            console.log('set id='+breadcrumbsArr[i]);
+            comboboxEl.select2('val',breadcrumbsArr[i]);
+            comboboxEl.trigger('change');
+            var nextRowSiblings = nextRowSiblings.next();
+        }
     }
+
 }
 
 //TODO: set hidden real institution field in the form every time the combobox is chnaged.
@@ -29,7 +48,7 @@ function comboboxTreeListener( target, entityName ) {
 
     $(target).on('change', function(e){
 
-        //console.log( "combobox on change" );
+        printF( $(this), "combobox on change:" );
 
         var comboboxEl = $(this);
         var thisData = comboboxEl.select2('data');
@@ -63,6 +82,13 @@ function comboboxTreeListener( target, entityName ) {
 
             var label = treeArr[0].leveltitle;
             var newid = "new-tree-" + label;
+
+            //readonly combobox
+            var readonly = "";
+            if( cycle.indexOf("show") != -1 ) {
+                readonly = "readonly";
+            }
+
             // 1) construct and attach a new select2 combobox below comboboxEl (parent combobox)
             var comboboxHtml =
                 '<div class="row">' +
@@ -70,7 +96,8 @@ function comboboxTreeListener( target, entityName ) {
                         '<strong>'+label+':</strong>' +
                     '</div>' +
                     '<div class="col-xs-6" align="left">' +
-                        '<input id="'+newid+'" class="ajax-combobox-institution" type="hidden"/>' +
+                        '<input id="tree-'+newid+'" class="ajax-combobox-institution" type="hidden" ' + readonly + '/>' +
+                        '<input id="extra-'+newid+'" class="ajax-combobox-userpositions" type="hidden" ' + readonly + '/>' +
                     '</div>' +
                 '</div>';
 
@@ -179,6 +206,7 @@ function setNodeIdPid( entityName, treeHolder, node, data ) {
 //        treeHolder.find('.tree-node-parent').val(thisPid);
 //    }
 
+    //console.log( 'id='+treeHolder.find('.tree-node-id').val()+", pid="+treeHolder.find('.tree-node-parent').val() );
 }
 
 ////////////////////////////// EOF TREE //////////////////////////////////

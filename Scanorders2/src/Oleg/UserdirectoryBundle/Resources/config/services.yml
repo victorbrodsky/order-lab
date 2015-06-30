@@ -155,3 +155,5 @@ services:
         class: Oleg\UserdirectoryBundle\Services\DoctrineListener
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
+
+

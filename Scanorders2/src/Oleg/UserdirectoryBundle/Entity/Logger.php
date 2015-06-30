@@ -120,7 +120,7 @@ class Logger
      * @ORM\ManyToMany(targetEntity="Institution")
      * @ORM\JoinTable(name="user_logger_institutions",
      *      joinColumns={@ORM\JoinColumn(name="logger_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      *      )
      **/
     private $institutionTrees;

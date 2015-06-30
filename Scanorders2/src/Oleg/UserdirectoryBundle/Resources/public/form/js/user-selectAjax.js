@@ -6,7 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var _institutionRoot = new Array();
 var _institution = new Array();
+var _userpositions = new Array();
+
 var _commenttype = new Array();
 var _identifiers = new Array();
 var _fellowshiptype = new Array();
@@ -76,6 +79,8 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'city',_cities,false);
     getComboboxGeneric(newForm,'organization',_organizations,false);
 
+    getComboboxGeneric(newForm,'userpositions',_userpositions,true);
+
     setBuidlingListener(newForm);
 
 }
@@ -115,7 +120,7 @@ function getDataIdByText(arr,text) {
 //this function is used for form institution hierarchy using select2, not jstree
 function getComboboxInstitution(holder) {
 
-    console.log('cycle='+cycle);
+    //console.log('cycle='+cycle);
 
     if( typeof cycle === 'undefined' ) {
         var cycle = 'edit';
@@ -137,16 +142,21 @@ function getComboboxInstitution(holder) {
 
         var entityName = 'Institution';
         var parentid = 0;
-        var treeArr = getChildrenByParent(entityName,parentid);
 
-        populateSelectCombobox( targetid, treeArr, "Select an option" );
+        if( _institutionRoot.length == 0 ) {
+            _institutionRoot = getChildrenByParent(entityName,parentid);
+        }
 
-        comboboxTreeListener( targetid, entityName );
+        $(targetid).each( function(e) {
 
-    //}
+            populateSelectCombobox( $(this), _institutionRoot, "Select an option" );
 
-    //click parent
-    setTreeByClickingParent(targetid, entityName);
+            comboboxTreeListener( $(this), entityName );
+
+            //click parent
+            setTreeByClickingParent($(this), entityName);
+
+        });
 
 }
 function getChildrenByParent(entityName,parentid) {

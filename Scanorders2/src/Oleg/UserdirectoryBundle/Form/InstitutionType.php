@@ -20,22 +20,23 @@ class InstitutionType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
-
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
         $builder->add('id',null,array(
-            'label' => 'ID:',   //'ID:'
+            'label' => false,   //'ID:',   //'ID:'
             'attr' => array('class' => 'tree-node-id'),
         ));
 
         $builder->add('parent',null,array(
-            'label' => 'Parent:',
+            'label' => false,   //'Parent:',
             'attr' => array('class' => 'tree-node-parent'),
         ));
 
+
+        //////////////////////// Not mapped data providing fields ////////////////////////
         $builder->add('institutionnode', 'employees_custom_selector', array(
             'mapped' => false,
             'label' => 'Institution:',
@@ -45,7 +46,7 @@ class InstitutionType extends AbstractType
         ));
 
 
-        ///////////// ids breadcrumbs /////////////
+        ///// ids breadcrumbs /////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
             $institution = $event->getData();
@@ -56,7 +57,7 @@ class InstitutionType extends AbstractType
                 $children = $institution->getIdBreadcrumbs();
             }
 
-            $form->add('breadcrumbs', null, array(
+            $form->add('breadcrumbs', 'hidden', array(
                 'mapped' => false,
                 'data' => implode(',',$children),
                 'label' => false,
@@ -64,7 +65,44 @@ class InstitutionType extends AbstractType
             ));
 
         });
-        ///////////// EOF mag /////////////
+        ///// EOF breadcrumbs /////
+
+        //////////////////////// EOF Not mapped data providing fields ////////////////////////
+
+        //add userPositions for 'label'=>'Administrative'
+        if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
+            $builder->add('userPositions',null,array(
+                'mapped' => false,
+                'label' => false,
+                'attr' => array('class' => 'ajax-combobox-userpositions'),
+            ));
+        }
+
+
+//        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+//            $inst = $event->getData();
+//            $form = $event->getForm();
+//
+//            if (!$inst) {
+//                return;
+//            }
+//
+//            //echo "inst=".$inst."<br>";
+//            //print_r($inst);
+//            $instId = $inst['id'];
+//            //echo "inst id=".$instId."<br>";
+//            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
+//            $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
+//
+//            if( !$newInst ) {
+//                return;
+//            }
+//
+//            $inst['id'] = $newInst->getId();
+//            $inst['parent'] = $newInst->getParent()->getId();
+//
+//            $event->setData($inst);
+//        });
 
 
     }

@@ -1092,6 +1092,10 @@ class UtilController extends Controller {
                 $bundleName = "OrderformBundle";
                 break;
 
+            case "userpositions":
+                $className = "PositionTypeList";
+                break;
+
             default:
                 $className = null;
         }

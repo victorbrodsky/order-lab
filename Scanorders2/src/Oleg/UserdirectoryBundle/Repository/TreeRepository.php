@@ -10,6 +10,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 class TreeRepository extends NestedTreeRepository {
 
 
+
     public function findChildAtPosition($parent,$position) {
         //$children = $this->children($parent);
         $children = $parent->getChildren();

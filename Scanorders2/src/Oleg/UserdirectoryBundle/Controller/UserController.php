@@ -1770,7 +1770,7 @@ class UserController extends Controller
             //exit('before processing');
 
             //set parents for institution tree for Administrative and Academical Titles
-            $this->setParentsForInstitutionTree($entity);
+            $this->setCompositeTreeNode($entity);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
@@ -2024,7 +2024,7 @@ class UserController extends Controller
     }
 
     //Process all holder containing institutional tree
-    public function setParentsForInstitutionTree($entity) {
+    public function setCompositeTreeNode($entity) {
 
         $em = $this->getDoctrine()->getManager();
         $sc = $this->get('security.context');

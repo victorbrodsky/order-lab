@@ -707,6 +707,7 @@
     {{ usermacros.geoLocation(field,cycle,prototype) }}
 
     {{ formmacros.field(formfield.institutions) }}
+    {#{{ treemacros.compositeTreeNode(formfield.institution) }}#}
 
     <br>
 
@@ -1486,15 +1487,15 @@
             {% if tree.institution %}
                 {{ formmacros.simplefield( loggeraction~" by user from Institution:", tree.institution.name, "input", "disabled" ) }}
             {% endif %}
-            {% if tree.department %}
-                {{ formmacros.simplefield( loggeraction~" by user from Department:", tree.department.name, "input", "disabled" ) }}
-            {% endif %}
-            {% if tree.division %}
-                {{ formmacros.simplefield( loggeraction~" by user from Division:", tree.division.name, "input", "disabled" ) }}
-            {% endif %}
-            {% if tree.service %}
-                {{ formmacros.simplefield( loggeraction~" by user from Service:", tree.service.name, "input", "disabled" ) }}
-            {% endif %}
+            {#{% if tree.department %}#}
+                {#{{ formmacros.simplefield( loggeraction~" by user from Department:", tree.department.name, "input", "disabled" ) }}#}
+            {#{% endif %}#}
+            {#{% if tree.division %}#}
+                {#{{ formmacros.simplefield( loggeraction~" by user from Division:", tree.division.name, "input", "disabled" ) }}#}
+            {#{% endif %}#}
+            {#{% if tree.service %}#}
+                {#{{ formmacros.simplefield( loggeraction~" by user from Service:", tree.service.name, "input", "disabled" ) }}#}
+            {#{% endif %}#}
         </div>
     {% endfor %}
 

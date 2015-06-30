@@ -206,11 +206,15 @@ class LocationType extends AbstractType
         ));
 
         //institution. User should be able to add institution to administrative or appointment titles
-        $builder->add('institution', 'employees_custom_selector', array(
-            'label' => 'Institution:',
-            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+//        $builder->add('institution', 'employees_custom_selector', array(
+//            'label' => 'Institution:',
+//            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+//            'required' => false,
+//            'classtype' => 'institution'
+//        ));
+        $builder->add('institution', new InstitutionType($this->params), array(
             'required' => false,
-            'classtype' => 'institution'
+            'label' => false
         ));
 
         //department. User should be able to add institution to administrative or appointment titles

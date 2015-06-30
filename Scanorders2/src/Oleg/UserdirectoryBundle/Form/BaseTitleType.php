@@ -8,6 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+
 
 class BaseTitleType extends AbstractType
 {
@@ -87,6 +90,46 @@ class BaseTitleType extends AbstractType
             'required' => false,
             'label' => false    //'Institution:'
         ));
+//        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+//            $title = $event->getData();
+//            $form = $event->getForm();
+//
+//            if (!$title) {
+//                return;
+//            }
+//
+//            $inst = $title['institution'];
+//            if (!$inst) {
+//                return;
+//            }
+//
+//            //echo "inst=".$inst."<br>";
+//            print_r($inst);
+//            $instId = $inst['id'];
+//            echo "inst id=".$instId."<br>";
+//            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
+//            $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
+//            if( $newInst ) {
+//                //$title->setInstitution($newInst);
+//                $title['institution'] = $newInst;
+//                $event->setData($title);
+//            }
+//        });
+//        $builder->get('institution')->addEventListener(
+//            FormEvents::SUBMIT,
+//            function (FormEvent $event) {
+//                // It's important here to fetch $event->getForm()->getData(), as
+//                // $event->getData() will get you the client data (that is, the ID)
+//                $inst = $event->getForm()->getData();
+//                if( $inst ) {
+//                    echo "inst id=".$inst->getId()."<br>";
+//                    echo "inst name=".$inst->getName()."<br>";
+//                    //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $inst->getId());
+//                    $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($inst->getId());
+//                    $event->getForm()->setData($newInst);
+//                }
+//            }
+//        );
 
         //department. User should be able to add institution to administrative or appointment titles
 //        $builder->add('department', 'employees_custom_selector', array(

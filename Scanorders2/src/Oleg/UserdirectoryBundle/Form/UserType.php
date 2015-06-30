@@ -21,6 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class UserType extends AbstractType
 {
 
+    protected $params;
     protected $cycle;
     protected $roleAdmin;
     protected $subjectUser;
@@ -31,6 +32,8 @@ class UserType extends AbstractType
 
     public function __construct( $params )
     {
+        $this->params = $params;
+
         $this->cycle = $params['cycle'];
         $this->subjectUser = $params['user'];
         $this->cloneUser = $params['cloneuser'];
@@ -178,6 +181,7 @@ class UserType extends AbstractType
 
         //Administrative Titles
         $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cycle'=>$this->cycle);
+        $params = array_merge($this->params, $params);
         $builder->add('administrativeTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,
@@ -190,6 +194,7 @@ class UserType extends AbstractType
         ));
 
         $params = array('read_only'=>$read_only,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
+        $params = array_merge($this->params, $params);
         $builder->add('appointmentTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,
@@ -202,6 +207,7 @@ class UserType extends AbstractType
         ));
 
         $params = array('read_only'=>$read_only,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
+        $params = array_merge($this->params, $params);
         $builder->add('medicalTitles', 'collection', array(
             'type' => new BaseTitleType($params),
             'label' => false,
@@ -389,7 +395,7 @@ class UserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User'
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
         ));
     }
 

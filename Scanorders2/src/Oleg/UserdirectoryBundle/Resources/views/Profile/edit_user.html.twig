@@ -1802,7 +1802,7 @@
         {#Lectures#}
         {% set showLectures = false %}
         {% for lecture in form.lectures %}
-            {% if lecture.vars.value or lecture.isbn.vars.value or lecture.publicationDate.vars.value %}
+            {% if lecture.vars.value or lecture.title.vars.value %}
                 {% set showLectures = true %}
             {% endif %}
         {% endfor %}

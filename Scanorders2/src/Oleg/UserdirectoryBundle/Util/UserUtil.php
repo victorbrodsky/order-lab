@@ -672,27 +672,15 @@ class UserUtil {
     }
 
     public function processInstTree( $treeholder, $em, $sc ) {
-        return;
 
+        //reset tree node by id
         $institution = $treeholder->getInstitution();
-        $parent = $institution->getParent();
-
-        echo "parent=".$parent."<br>";
-        echo "institution=".$institution->getId()."<br>";
-
-        exit('Error: implement processInstTree');
-
-//        if( $institution ) {
-//            //convert parent id to an object
-//            $pid = $institution->getParent();
-//            $parent = $em->getReference('Institution', $pid);
-//            $institution->setParent();
-//        }
+        if( $institution ) {
+            $treeholder->setInstitution( $em->getReference('OlegUserdirectoryBundle:Institution', $institution->getId()) );
+        }
 
         //set author if not set
-        //$this->setUpdateInfo($treeholder,$em,$sc);
-
-        //exit('eof tree');
+        $this->setUpdateInfo($treeholder,$em,$sc);
     }
 
 

@@ -54,15 +54,19 @@ class CustomSelectorType extends AbstractType {
                 $params = array('type'=>'Medical');
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', null, $params);
                 break;
-            case "department":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Department');
-                break;
-            case "division":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Division');
-                break;
-            case "service":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'Service');
-                break;
+//            case "institution_id":
+//                $params = array('field'=>'id');
+//                $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', null, $params);
+//                break;
+//            case "department":
+//                $transformer = new GenericTreeTransformer($this->om, $username, 'Department');
+//                break;
+//            case "division":
+//                $transformer = new GenericTreeTransformer($this->om, $username, 'Division');
+//                break;
+//            case "service":
+//                $transformer = new GenericTreeTransformer($this->om, $username, 'Service');
+//                break;
             case "identifierkeytype":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'IdentifierTypeList');
                 break;
