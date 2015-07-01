@@ -25,11 +25,13 @@ class InstitutionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        //hidden: set by js
         $builder->add('id',null,array(
             'label' => false,   //'ID:',   //'ID:'
             'attr' => array('class' => 'tree-node-id'),
         ));
 
+        //hidden: set by js
         $builder->add('parent',null,array(
             'label' => false,   //'Parent:',
             'attr' => array('class' => 'tree-node-parent'),
@@ -37,16 +39,8 @@ class InstitutionType extends AbstractType
 
 
         //////////////////////// Not mapped data providing fields ////////////////////////
-        $builder->add('institutionnode', 'employees_custom_selector', array(
-            'mapped' => false,
-            'label' => 'Institution:',
-            'required' => false,
-            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-            'classtype' => 'institution'
-        ));
 
-
-        ///// ids breadcrumbs /////
+        //breadcrumbs hidden: set by js
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
             $institution = $event->getData();
@@ -65,16 +59,32 @@ class InstitutionType extends AbstractType
             ));
 
         });
-        ///// EOF breadcrumbs /////
 
+        //visible as institution node combobox
+        $builder->add('institutionnode', 'employees_custom_selector', array(
+            'mapped' => false,
+            'label' => 'Institution:',
+            'required' => false,
+            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+            'classtype' => 'institution'
+        ));
         //////////////////////// EOF Not mapped data providing fields ////////////////////////
 
         //add userPositions for 'label'=>'Administrative'
         if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
-            $builder->add('userPositions',null,array(
-                'mapped' => false,
-                'label' => false,
-                'attr' => array('class' => 'ajax-combobox-userpositions'),
+//            $builder->add('userPositions',null,array(
+//                'mapped' => false,
+//                'label' => false,
+//                'attr' => array('class' => 'ajax-combobox-userpositions'),
+//            ));
+            $builder->add('userPositions', 'collection', array(
+                'type' => new UserPositionType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__userpositions__',
             ));
         }
 

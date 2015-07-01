@@ -19,6 +19,7 @@
 
 
 {% macro compositeTreeNode( tree ) %}
+    {% import _self as treemacros %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     <p>
     <div class="composite-tree-holder">
@@ -34,26 +35,49 @@
             {% endif %}
         </div>
 
-        {#{% if tree.institutionnode is defined %}#}
+        {% set nodeLabel = 'Node:' %}
+        {% if tree.institutionnode is defined %}
             {#{{ formmacros.field(tree.institutionnode) }}#}
-        {#{% endif %}#}
+            {% set nodeLabel = tree.institutionnode.vars.label %}
+        {% endif %}
+        {#{% set userpositionLabel = 'Position Type:' %}#}
         {#{% if tree.userPositions is defined %}#}
-            {#userPositions#}
+            {#{% set userpositionLabel = tree.userPositions.vars.positionTypes.vars.label %}#}
             {#{{ formmacros.field(tree.userPositions) }}#}
         {#{% endif %}#}
 
-        <div class="row">
-            <div class="col-xs-6" align="right">
-                <strong>label:</strong>
-            </div>
-            <div class="col-xs-6" align="left">
-                <input id="tree-newid" class="ajax-combobox-institution" type="hidden" />
-                <input id="extra-newid" class="ajax-combobox-userpositions" type="hidden" />
-            </div>
-        </div>
+        {#<div class="row">#}
+            {#<div class="col-xs-6" align="right">#}
+                {#&#123;&#35;<strong>{{ nodeLabel }}</strong>&#35;&#125;#}
+                {#{{ form_label(tree.institutionnode) }}#}
+            {#</div>#}
+            {#<div class="col-xs-6" align="left">#}
+                {#<input id="tree-{{ nodeLabel }}" class="ajax-combobox-institution" type="hidden" />#}
+                {#<input id="userposition-{{ nodeLabel }}" class="ajax-combobox-userpositions" type="hidden" />#}
+                {#{{ form_widget(tree.institutionnode) }}#}
+                {#{{ form_widget(tree.institutionnode) }}#}
+            {#</div>#}
+        {#</div>#}
+
+        {{ treemacros.compositeSingleTreeNode(tree) }}
 
     </div>
     </p>
+{% endmacro %}
+
+{% macro compositeSingleTreeNode( tree ) %}
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {#<strong>{{ nodeLabel }}</strong>#}
+            {{ form_label(tree.institutionnode) }}
+        </div>
+        <div class="col-xs-6" align="left">
+            {#<input id="tree-{{ nodeLabel }}" class="ajax-combobox-institution" type="hidden" />#}
+            {#<input id="userposition-{{ nodeLabel }}" class="ajax-combobox-userpositions" type="hidden" />#}
+            {{ form_widget(tree.institutionnode) }}
+            {{ form_widget(tree.institutionnode) }}
+        </div>
+    </div>
 {% endmacro %}
 
 {#{% macro compositeSimplefieldTree( label, jstreeid ) %}#}
