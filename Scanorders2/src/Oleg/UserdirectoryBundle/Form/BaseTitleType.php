@@ -79,6 +79,9 @@ class BaseTitleType extends AbstractType
         ));
 
 
+
+
+        /////////////////////////////////////// institution ////////////////////////////////
         //institution. User should be able to add institution to administrative or appointment titles
 //        $builder->add('institution', 'employees_custom_selector', array(
 //            'label' => 'Institution:',
@@ -115,45 +118,10 @@ class BaseTitleType extends AbstractType
 //                $event->setData($title);
 //            }
 //        });
-//        $builder->get('institution')->addEventListener(
-//            FormEvents::SUBMIT,
-//            function (FormEvent $event) {
-//                // It's important here to fetch $event->getForm()->getData(), as
-//                // $event->getData() will get you the client data (that is, the ID)
-//                $inst = $event->getForm()->getData();
-//                if( $inst ) {
-//                    echo "inst id=".$inst->getId()."<br>";
-//                    echo "inst name=".$inst->getName()."<br>";
-//                    //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $inst->getId());
-//                    $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($inst->getId());
-//                    $event->getForm()->setData($newInst);
-//                }
-//            }
-//        );
+        /////////////////////////////////////// EOF institution ////////////////////////////////
 
-        //department. User should be able to add institution to administrative or appointment titles
-//        $builder->add('department', 'employees_custom_selector', array(
-//            'label' => "Department:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-department', 'type' => 'hidden'),
-//            'classtype' => 'department'
-//        ));
-//
-//        //division. User should be able to add institution to administrative or appointment titles
-//        $builder->add('division', 'employees_custom_selector', array(
-//            'label' => "Division:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-division', 'type' => 'hidden'),
-//            'classtype' => 'division'
-//        ));
-//
-//        //service. User should be able to add institution to administrative or appointment titles
-//        $builder->add('service', 'employees_custom_selector', array(
-//            'label' => "Service:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-service', 'type' => 'hidden'),
-//            'classtype' => 'service'
-//        ));
+
+
 
         $builder->add('effort', 'employees_custom_selector', array(
             'label' => 'Percent Effort:',

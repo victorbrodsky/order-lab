@@ -15,6 +15,7 @@ function setTreeByClickingParent(targetid, entityName) {
     //console.log(treeHolder);
 
     var breadcrumbs = treeHolder.find('.tree-node-breadcrumbs').val();
+    console.log('breadcrumbs='+breadcrumbs);
 
     if( !breadcrumbs ) {
         return;
@@ -81,7 +82,7 @@ function comboboxTreeListener( target, entityName ) {
         if( treeArr.length > 0 ) {
 
             var label = treeArr[0].leveltitle;
-            var newid = "new-tree-" + label;
+            var newid = "newnode-" + label;
 
             //readonly combobox
             var readonly = "";
@@ -89,30 +90,49 @@ function comboboxTreeListener( target, entityName ) {
                 readonly = "readonly";
             }
 
+            var collen = '6';
+            var userpositions = '';
+            if( treeHolder.hasClass('institution-with-userpositions') ) {
+                collen = '4';
+                userpositions =
+                    '<div class="col-xs-2" align="left">' +
+                        '<input id="userposition-'+newid+'" class="combobox ajax-combobox-userpositions" type="hidden" ' + readonly + '/>' +
+                    '</div>';
+            }
+            console.log('collen='+collen);
+
             // 1) construct and attach a new select2 combobox below comboboxEl (parent combobox)
             var comboboxHtml =
-                '<div class="row">' +
+                '<p><div class="row">' +
                     '<div class="col-xs-6" align="right">' +
                         '<strong>'+label+':</strong>' +
                     '</div>' +
-                    '<div class="col-xs-6" align="left">' +
-                        '<input id="tree-'+newid+'" class="ajax-combobox-institution" type="hidden" ' + readonly + '/>' +
-                        '<input id="extra-'+newid+'" class="ajax-combobox-userpositions" type="hidden" ' + readonly + '/>' +
+                    '<div class="col-xs-'+collen+'" align="left">' +
+                        '<input id="institution-'+newid+'" class="ajax-combobox-institution" type="hidden" ' + readonly + '/>' +
                     '</div>' +
-                '</div>';
+                    userpositions +
+                '</div></p>';
+
+            var comboboxHtml = getNewTreeNode(treeHolder);    //treeHolder.find('#node-userpositions-data');
 
             //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
 
-            var treeHolder = comboboxEl.closest('.composite-tree-holder');
+            //var treeHolder = comboboxEl.closest('.composite-tree-holder');
             //console.log( treeHolder );
 
             treeHolder.append(comboboxHtml);
 
             //console.log( 'newid='+newid );
-            var newElementsAppended = treeHolder.find('#'+newid);
-            //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
-
+            var newElementsAppended = treeHolder.find('#institution-'+newid);
+            //var newElementsAppended = treeHolder.find('.ajax-combobox-institution');
+            console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
             populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
+
+            var newUserposition = treeHolder.find('#userposition-'+newid);
+            //var newElementsAppended = treeHolder.find('.ajax-combobox-institution');
+            //console.log( 'newUserposition.id='+newUserposition.attr('id') );
+            //populateSelectCombobox( newUserposition, null, "Select an option", true );
+            regularCombobox(treeHolder);
 
             //wait
             comboboxTreeListener( newElementsAppended, entityName );
@@ -123,6 +143,26 @@ function comboboxTreeListener( target, entityName ) {
 
     });
 
+}
+
+function getNewTreeNode(treeHolder) {
+    var datael = treeHolder.find('#node-userpositions-data');
+
+    if( !datael ) {
+        return;
+    }
+
+    var prototype = datael.data('prototype-'+'user-userpositions');
+
+    //var index = 0;
+    var index = getNextElementCount(treeHolder,'ajax-combobox-institution');
+
+    //prototype = prototype.replace("__documentContainers__", "0");
+    prototype = prototype.replace(/__userpositions__/g, index);
+
+    console.log( "prototype=" + prototype );
+
+    return prototype;
 }
 
 function setNodeIdPid( entityName, treeHolder, node, data ) {

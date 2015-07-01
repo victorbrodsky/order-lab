@@ -2,6 +2,8 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -24,12 +26,38 @@ class UserPositionType extends AbstractType
         $builder->add( 'institution', null, array(
             'label' => false,
             'required'=> false,
+            'data' => $this->params['treenode']
         ));
+//        $builder->addEventListener(
+//            FormEvents::PRE_SET_DATA,
+//            function (FormEvent $event) {
+//                $form = $event->getForm();
+//                $userPosition = $event->getData();
+//                $institution = null;
+//
+//                if( $userPosition ) {
+//                    $institution = $userPosition->getInstitution();
+//                }
+//
+//                if( $institution ) {
+//                    $data = $institution;
+//                } else {
+//                    $data = null;
+//                }
+//
+//                $form->add( 'institution', null, array(
+//                    'label' => false,
+//                    'required' => false,
+//                    'data' => $data
+//                ));
+//            }
+//        );
 
         //hidden: set by js
         $builder->add( 'user', null, array(
             'label' => false,
-            'required'=> false,
+            'required' => false,
+            'data' => $this->params['user']
         ));
 
         //visible as positionType combobox attached to an institution node

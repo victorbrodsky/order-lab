@@ -419,7 +419,7 @@
 
                 {% if homeLocation == false %}
 
-                    {{ treemacros.compositeTreeNode(formfield.institution) }}
+                    {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
                     {#{{ formmacros.field(formfield.department) }}#}
                     {#{{ formmacros.field(formfield.division) }}#}
                     {#{{ formmacros.field(formfield.service) }}#}

@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -227,20 +228,23 @@ class MessageObjectType extends AbstractType
         }
 
         //Institution Tree
-        if( $this->keyInArray($this->params,'institutions') ) {
-            $institutions = $this->params['institutions'];
-        } else {
-            $institutions = null;
-        }
-
-        $builder->add('institution', 'entity', array(
-            'label' => $this->labels['institution'],
-            'required'=> true,
-            'multiple' => false,
-            'empty_value' => false,
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $institutions,
-            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
+//        if( $this->keyInArray($this->params,'institutions') ) {
+//            $institutions = $this->params['institutions'];
+//        } else {
+//            $institutions = null;
+//        }
+//        $builder->add('institution', 'entity', array(
+//            'label' => $this->labels['institution'],
+//            'required'=> true,
+//            'multiple' => false,
+//            'empty_value' => false,
+//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'choices' => $institutions,
+//            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
+//        ));
+        $builder->add('institution', new InstitutionType($this->params), array(
+            'required' => false,
+            'label' => false    //'Institution:'
         ));
 
 

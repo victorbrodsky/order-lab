@@ -139,7 +139,7 @@
             {% do formfield.effort.setRendered %}
         {% endif %}
 
-        {{ treemacros.compositeTreeNode(formfield.institution) }}
+        {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
 
         {#{{ formmacros.jstree('','composite-tree') }}#}
 
@@ -1173,6 +1173,7 @@
 
 {% import _self as userform %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
 {% if "show" in cycle %}
     {% set showFlag = true %}
@@ -1249,6 +1250,7 @@
         {% set boardcertificationPrototype = null %}
         {% set identifiersPrototype = null %}
         {% set codeNYPHPrototype = null %}
+        {#{% set userPositionPrototype = null %}#}
 
         {% if form.publicComments is defined %}
             {% set publicCommentsPrototype = userform.comments(form.publicComments,cycle,'user-publiccomments','prototype') %}
@@ -1292,6 +1294,10 @@
             {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cycle,'user-codenyph','prototype') %}
         {% endif %}
 
+        {#{% if form.administrativeTitles is defined %}#}
+            {#{% set userPositionPrototype = treemacros.userPositionField(form.administrativeTitles.vars.prototype.institution.userPositions,cycle,'prototype') %}#}
+        {#{% endif %}#}
+
         {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
             {% set userEditor = true %}
         {% else %}
@@ -1319,6 +1325,7 @@
              data-prototype-user-books = "{{ booksPrototype|e }}"
              data-prototype-user-lectures = "{{ lecturesPrototype|e }}"
              {#data-prototype-documentcontainers = "{{ documentsHtml|e }}"#}
+             {#data-prototype-user-userpositions = "{{ userPositionPrototype|e }}"#}
 
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"

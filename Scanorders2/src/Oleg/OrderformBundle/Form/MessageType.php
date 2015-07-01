@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
+use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -285,57 +286,60 @@ class MessageType extends AbstractType
         ));
 
         //Institution Tree
-        if( array_key_exists('institutions', $this->params) ) {
-            $institutions = $this->params['institutions'];
-        } else {
-            $institutions = null;
-        }
-
-        $builder->add('institution', 'entity', array(
-            'label' => 'Institution:',
-            'required'=> true,
-            'multiple' => false,
-            'empty_value' => false,
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $institutions,
-            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
+//        if( array_key_exists('institutions', $this->params) ) {
+//            $institutions = $this->params['institutions'];
+//        } else {
+//            $institutions = null;
+//        }
+//        $builder->add('institution', 'entity', array(
+//            'label' => 'Institution:',
+//            'required'=> true,
+//            'multiple' => false,
+//            'empty_value' => false,
+//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'choices' => $institutions,
+//            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
+//        ));
+        $builder->add('institution', new InstitutionType($this->params), array(
+            'required' => false,
+            'label' => false    //'Institution:'
         ));
 
-        if( $this->params['cycle'] != 'show' ) {
-
-            if( array_key_exists('department', $this->params) ) {
-                $departmentId = $this->params['department']->getId();
-            } else {
-                $departmentId = null;
-            }
-
-            //department. User should be able to add institution to administrative or appointment titles
-            $builder->add('department', 'employees_custom_selector', array(
-                'label' => "Department:",
-                "mapped" => false,
-                'required' => false,
-                'data' => $departmentId,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
-                'classtype' => 'department'
-            ));
-
-
-            if( array_key_exists('division', $this->params) ) {
-                $divisionId = $this->params['division']->getId();
-            } else {
-                $divisionId = null;
-            }
-
-            //division. User should be able to add institution to administrative or appointment titles
-            $builder->add('division', 'employees_custom_selector', array(
-                'label' => "Division:",
-                "mapped" => false,
-                'required' => false,
-                'data' => $divisionId,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
-                'classtype' => 'division'
-            ));
-        }
+//        if( $this->params['cycle'] != 'show' ) {
+//
+//            if( array_key_exists('department', $this->params) ) {
+//                $departmentId = $this->params['department']->getId();
+//            } else {
+//                $departmentId = null;
+//            }
+//
+//            //department. User should be able to add institution to administrative or appointment titles
+//            $builder->add('department', 'employees_custom_selector', array(
+//                'label' => "Department:",
+//                "mapped" => false,
+//                'required' => false,
+//                'data' => $departmentId,
+//                'attr' => array('class' => 'combobox combobox-width ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
+//                'classtype' => 'department'
+//            ));
+//
+//
+//            if( array_key_exists('division', $this->params) ) {
+//                $divisionId = $this->params['division']->getId();
+//            } else {
+//                $divisionId = null;
+//            }
+//
+//            //division. User should be able to add institution to administrative or appointment titles
+//            $builder->add('division', 'employees_custom_selector', array(
+//                'label' => "Division:",
+//                "mapped" => false,
+//                'required' => false,
+//                'data' => $divisionId,
+//                'attr' => array('class' => 'combobox combobox-width ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
+//                'classtype' => 'division'
+//            ));
+//        }
 
 
         ////////////////////////// Specific Orders //////////////////////////

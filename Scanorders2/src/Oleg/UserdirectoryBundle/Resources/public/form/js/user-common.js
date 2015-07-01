@@ -13,9 +13,17 @@ var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
 
 
-function regularCombobox() {
+function regularCombobox(holder) {
 
     var selectboxes = $("select.combobox");
+
+    if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
+        selectboxes = holder.find(selectboxes);
+    }
+
+    if( selectboxes.length == 0 ) {
+        return;
+    }
 
     selectboxes.each( function() {
 

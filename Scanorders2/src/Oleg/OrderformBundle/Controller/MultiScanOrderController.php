@@ -407,44 +407,46 @@ class MultiScanOrderController extends Controller {
         $entity->setMessageCategory($category);
 
         //set the default service
-        $entity->getScanorder()->setService($userSiteSettings->getDefaultService());
+        //TODO: implement it
+//        $entity->getScanorder()->setService($userSiteSettings->getDefaultService());
 
         ////////////////// set previous service from the last order if default is null //////////////////
-        if( !$userSiteSettings->getDefaultService() ) {
-            //echo "find prev service <br>";
-            $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
-            //echo $previousOrder;
-            //$this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
-            if( $previousOrder ) {
-                if( $previousOrder->getScanOrder() ) {
-                    //echo "prev service=".$previousOrder->getScanOrder()->getService()->getName()."<br>";
-                    $entity->getScanOrder()->setService($previousOrder->getScanOrder()->getService());
-                }
-                //echo "prev service set<br>";
-            }
-        }
+        //TODO: implement it
+//        if( !$userSiteSettings->getDefaultService() ) {
+//            //echo "find prev service <br>";
+//            $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
+//            //echo $previousOrder;
+//            //$this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
+//            if( $previousOrder ) {
+//                if( $previousOrder->getScanOrder() ) {
+//                    //echo "prev service=".$previousOrder->getScanOrder()->getService()->getName()."<br>";
+//                    $entity->getScanOrder()->setService($previousOrder->getScanOrder()->getService());
+//                }
+//                //echo "prev service set<br>";
+//            }
+//        }
         ////////////////// EOF set previous service from the last order if default is null //////////////////
 
         //set the default institution
         $entity->setInstitution($permittedInstitutions->first());
 
         //set default department and division
-        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
-        $department = $defaultsDepDiv['department'];
-        $division = $defaultsDepDiv['division'];
-
-        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+        //TODO: implement it
+//        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
+//        $department = $defaultsDepDiv['department'];
+//        $division = $defaultsDepDiv['division'];
+//        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
         $params = array(
             'type'=>$type,
             'cycle'=>'new',
             'institutions'=>$permittedInstitutions,
-            'services'=>$permittedServices,
+            //'services'=>$permittedServices,
             'user'=>$user,
             'em' => $em,
             'serviceContainer' => $this->container,
-            'division'=>$division,
-            'department'=>$department,
+            //'division'=>$division,
+            //'department'=>$department,
             'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity),
             'datastructure'=>$this->datastructure
         );

@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -43,12 +44,17 @@ class PerSiteSettingsType extends AbstractType
                 },
             ));
 
-            $builder->add( 'scanOrdersServicesScope', null, array(
-                'label'=>'Service(s) Scope:',
-                'required'=>false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width')
+            $builder->add('defaultInstitution', new InstitutionType(), array(
+                'required' => false,
+                'label' => false    //'Institution:'
             ));
+
+//            $builder->add( 'scanOrdersServicesScope', null, array(
+//                'label'=>'Service(s) Scope:',
+//                'required'=>false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width')
+//            ));
             //service. User should be able to add institution to administrative or appointment titles
 //            $builder->add('scanOrdersServicesScope', 'employees_custom_selector', array(
 //                'label' => "Service(s) Scope:",
@@ -57,12 +63,12 @@ class PerSiteSettingsType extends AbstractType
 //                'classtype' => 'service'
 //            ));
 
-            $builder->add( 'chiefServices', null, array(
-                'label'=>'Chief of the following Service(s) for Scope:',
-                'required'=>false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width')
-            ));
+//            $builder->add( 'chiefServices', null, array(
+//                'label'=>'Chief of the following Service(s) for Scope:',
+//                'required'=>false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width')
+//            ));
 
 
 
@@ -105,27 +111,27 @@ class PerSiteSettingsType extends AbstractType
 //        ));
 
         //department. User should be able to add institution to administrative or appointment titles
-        $builder->add('defaultDepartment', 'employees_custom_selector', array(
-            'label' => "Default Department:",
-            'required' => false,
-            'attr' => array('class' => 'ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
-            'classtype' => 'department'
-        ));
-
-        //division. User should be able to add institution to administrative or appointment titles
-        $builder->add('defaultDivision', 'employees_custom_selector', array(
-            'label' => "Default Division:",
-            'required' => false,
-            'attr' => array('class' => 'ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
-            'classtype' => 'division'
-        ));
-
-        $builder->add( 'defaultService', 'employees_custom_selector', array(
-            'label'=>'Default Service:',
-            'required'=>false,
-            'attr' => array('class' => 'ajax-combobox-service combobox-without-add', 'type' => 'hidden'),
-            'classtype' => 'service'
-        ));
+//        $builder->add('defaultDepartment', 'employees_custom_selector', array(
+//            'label' => "Default Department:",
+//            'required' => false,
+//            'attr' => array('class' => 'ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
+//            'classtype' => 'department'
+//        ));
+//
+//        //division. User should be able to add institution to administrative or appointment titles
+//        $builder->add('defaultDivision', 'employees_custom_selector', array(
+//            'label' => "Default Division:",
+//            'required' => false,
+//            'attr' => array('class' => 'ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
+//            'classtype' => 'division'
+//        ));
+//
+//        $builder->add( 'defaultService', 'employees_custom_selector', array(
+//            'label'=>'Default Service:',
+//            'required'=>false,
+//            'attr' => array('class' => 'ajax-combobox-service combobox-without-add', 'type' => 'hidden'),
+//            'classtype' => 'service'
+//        ));
 
     }
 

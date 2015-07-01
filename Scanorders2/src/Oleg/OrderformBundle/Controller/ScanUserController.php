@@ -136,13 +136,13 @@ class ScanUserController extends UserController
                 $originalInsts->add($item);
             }
 
-            foreach( $scanSiteSettings->getScanOrdersServicesScope() as $item) {
-                $originalServices->add($item);
-            }
+//            foreach( $scanSiteSettings->getScanOrdersServicesScope() as $item) {
+//                $originalServices->add($item);
+//            }
 
-            foreach( $scanSiteSettings->getChiefServices() as $item) {
-                $originalChiefServices->add($item);
-            }
+//            foreach( $scanSiteSettings->getChiefServices() as $item) {
+//                $originalChiefServices->add($item);
+//            }
         }
 
 
@@ -202,16 +202,16 @@ class ScanUserController extends UserController
             }
 
             //log scanOrdersServicesScope
-            $collDiffStr = $this->getDiffCollectionStr($originalServices,$entity->getScanOrdersServicesScope());
-            if( $collDiffStr ) {
-                $eventArr[] = $collDiffStr;
-            }
+//            $collDiffStr = $this->getDiffCollectionStr($originalServices,$entity->getScanOrdersServicesScope());
+//            if( $collDiffStr ) {
+//                $eventArr[] = $collDiffStr;
+//            }
 
             //log chiefServices
-            $collDiffStr = $this->getDiffCollectionStr($originalChiefServices,$entity->getChiefServices());
-            if( $collDiffStr ) {
-                $eventArr[] = $collDiffStr;
-            }
+//            $collDiffStr = $this->getDiffCollectionStr($originalChiefServices,$entity->getChiefServices());
+//            if( $collDiffStr ) {
+//                $eventArr[] = $collDiffStr;
+//            }
 
 
             if( count($eventArr) > 0 ) {

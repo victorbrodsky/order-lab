@@ -18,66 +18,116 @@
 {% endmacro %}
 
 
-{% macro compositeTreeNode( tree ) %}
+{% macro compositeTreeNode( node, cycle, prototype ) %}
     {% import _self as treemacros %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% set institutionWithUserPositions = '' %}
+    {% set userPositionPrototype = null %}
+    {% if node.userPositions is defined %}
+        {% set institutionWithUserPositions = 'institution-with-userpositions' %}
+        {% set userPositionPrototype = treemacros.userPositionField(node.userPositions,cycle,prototype) %}
+    {% endif %}
+
     <p>
-    <div class="composite-tree-holder">
+    <div class="composite-tree-holder {{ institutionWithUserPositions }}">
+    <div id="node-userpositions-data" data-prototype-user-userpositions = "{{ userPositionPrototype|e }}"></div>
         <div style="display: none;">
-            {% if tree.breadcrumbs is defined %}
-                {{ formmacros.field(tree.breadcrumbs) }}
+            {% if node.breadcrumbs is defined %}
+                {{ formmacros.field(node.breadcrumbs) }}
             {% endif %}
-            {% if tree.id is defined %}
-                {{ formmacros.field(tree.id) }}
+            {% if node.id is defined %}
+                {{ formmacros.field(node.id) }}
             {% endif %}
-            {% if tree.parent is defined %}
-                {{ formmacros.field(tree.parent) }}
+            {% if node.parent is defined %}
+                {{ formmacros.field(node.parent) }}
             {% endif %}
         </div>
 
         {% set nodeLabel = 'Node:' %}
-        {% if tree.institutionnode is defined %}
-            {#{{ formmacros.field(tree.institutionnode) }}#}
-            {% set nodeLabel = tree.institutionnode.vars.label %}
+        {% if node.institutionnode is defined %}
+            {#{{ formmacros.field(node.institutionnode) }}#}
+            {% set nodeLabel = node.institutionnode.vars.label %}
         {% endif %}
         {#{% set userpositionLabel = 'Position Type:' %}#}
-        {#{% if tree.userPositions is defined %}#}
-            {#{% set userpositionLabel = tree.userPositions.vars.positionTypes.vars.label %}#}
-            {#{{ formmacros.field(tree.userPositions) }}#}
+        {#{% if node.userPositions is defined %}#}
+            {#{% set userpositionLabel = node.userPositions.vars.positionTypes.vars.label %}#}
+            {#{{ formmacros.field(node.userPositions) }}#}
         {#{% endif %}#}
 
         {#<div class="row">#}
             {#<div class="col-xs-6" align="right">#}
                 {#&#123;&#35;<strong>{{ nodeLabel }}</strong>&#35;&#125;#}
-                {#{{ form_label(tree.institutionnode) }}#}
+                {#{{ form_label(node.institutionnode) }}#}
             {#</div>#}
             {#<div class="col-xs-6" align="left">#}
                 {#<input id="tree-{{ nodeLabel }}" class="ajax-combobox-institution" type="hidden" />#}
                 {#<input id="userposition-{{ nodeLabel }}" class="ajax-combobox-userpositions" type="hidden" />#}
-                {#{{ form_widget(tree.institutionnode) }}#}
-                {#{{ form_widget(tree.institutionnode) }}#}
+                {#{{ form_widget(node.institutionnode) }}#}
+                {#{{ form_widget(node.institutionnode) }}#}
             {#</div>#}
         {#</div>#}
 
-        {{ treemacros.compositeSingleTreeNode(tree) }}
+        {{ treemacros.compositeSingleTreeNode(node,cycle,prototype) }}
 
     </div>
     </p>
 {% endmacro %}
 
-{% macro compositeSingleTreeNode( tree ) %}
+{% macro compositeSingleTreeNode( node, cycle, prototype ) %}
+    {% import _self as treemacros %}
+
     <div class="row">
         <div class="col-xs-6" align="right">
             {#<strong>{{ nodeLabel }}</strong>#}
-            {{ form_label(tree.institutionnode) }}
+            {{ form_label(node.institutionnode) }}
         </div>
-        <div class="col-xs-6" align="left">
-            {#<input id="tree-{{ nodeLabel }}" class="ajax-combobox-institution" type="hidden" />#}
-            {#<input id="userposition-{{ nodeLabel }}" class="ajax-combobox-userpositions" type="hidden" />#}
-            {{ form_widget(tree.institutionnode) }}
-            {{ form_widget(tree.institutionnode) }}
-        </div>
+        {% if node.userPositions is defined %}
+            <div class="col-xs-4" align="left">
+                {#<input id="node-{{ nodeLabel }}" class="ajax-combobox-institution" type="hidden" />#}
+                {#<input id="userposition-{{ nodeLabel }}" class="ajax-combobox-userpositions" type="hidden" />#}
+                {{ form_widget(node.institutionnode) }}
+            </div>
+            <div class="col-xs-2" align="left">
+                {{ treemacros.userPositionField(node,cycle,'prototype') }}
+            </div>
+        {% else %}
+            <div class="col-xs-6" align="left">
+                {{ form_widget(node.institutionnode) }}
+            </div>
+        {% endif %}
+
     </div>
+{% endmacro %}
+
+{% macro userPositionField( node,cycle,prototype ) %}
+
+    {% if node.userPositions is defined %}
+
+        {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+        {#prototype:{{ prototype }}#}
+        {% if prototype == "prototype" %}
+            {% set nodeThis = node.userPositions.vars.prototype %}
+        {% else %}
+            {% set nodeThis = node.userPositions %}
+        {% endif %}
+
+        {#<div>#}
+        <div style="display: none;">
+            {% if nodeThis.institution is defined %}
+                {{ formmacros.field(nodeThis.institution) }}
+            {% endif %}
+            {% if nodeThis.user is defined %}
+                {{ formmacros.field(nodeThis.user) }}
+            {% endif %}
+        </div>
+
+        {% if nodeThis.positionTypes is defined %}
+            {{ form_widget(nodeThis.positionTypes) }}
+        {% endif %}
+    {% endif %}
+
 {% endmacro %}
 
 {#{% macro compositeSimplefieldTree( label, jstreeid ) %}#}

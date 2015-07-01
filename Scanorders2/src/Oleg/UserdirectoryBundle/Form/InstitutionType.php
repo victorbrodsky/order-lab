@@ -20,7 +20,9 @@ class InstitutionType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+        $this->institutionWithUserPositions = '';
     }
+
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -58,7 +60,44 @@ class InstitutionType extends AbstractType
                 'attr' => array('class' => 'tree-node-breadcrumbs'),
             ));
 
+            //add userPositions for 'label'=>'Administrative'
+            if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
+                //$institutionWithUserPositions = 'institution-with-userpositions';
+//            $builder->add('userPositions',null,array(
+//                'mapped' => false,
+//                'label' => false,
+//                'attr' => array('class' => 'ajax-combobox-userpositions'),
+//            ));
+                $this->params['treenode'] = $institution;
+                $form->add('userPositions', 'collection', array(
+                    'type' => new UserPositionType($this->params, null),
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'required' => false,
+                    'by_reference' => false,
+                    'prototype' => true,
+                    'prototype_name' => '__userpositions__',
+                ));
+
+            } else {
+                //$institutionWithUserPositions = '';
+                //echo "no user pos<br>";
+                $form->remove('userPositions');
+            }
+
+//            //visible as institution node combobox
+//            //echo "user pos=".$institutionWithUserPositions."<br>";
+//            $form->add('institutionnode', 'employees_custom_selector', array(
+//                'mapped' => false,
+//                'label' => 'Institution:',
+//                'required' => false,
+//                'attr' => array('class' => 'ajax-combobox-institution '.$institutionWithUserPositions, 'type' => 'hidden'),
+//                'classtype' => 'institution'
+//            ));
+
         });
+        //////////////////////// EOF Not mapped data providing fields ////////////////////////
+
 
         //visible as institution node combobox
         $builder->add('institutionnode', 'employees_custom_selector', array(
@@ -68,26 +107,17 @@ class InstitutionType extends AbstractType
             'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
             'classtype' => 'institution'
         ));
-        //////////////////////// EOF Not mapped data providing fields ////////////////////////
 
-        //add userPositions for 'label'=>'Administrative'
-        if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
-//            $builder->add('userPositions',null,array(
-//                'mapped' => false,
-//                'label' => false,
-//                'attr' => array('class' => 'ajax-combobox-userpositions'),
-//            ));
-            $builder->add('userPositions', 'collection', array(
-                'type' => new UserPositionType($this->params, null),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__userpositions__',
-            ));
-        }
 
+//        echo "with user pos=".$this->institutionWithUserPositions."<br>";
+//        //visible as institution node combobox
+//        $builder->add('institutionnode', 'employees_custom_selector', array(
+//            'mapped' => false,
+//            'label' => 'Institution:',
+//            'required' => false,
+//            'attr' => array('class' => 'ajax-combobox-institution ' . $this->institutionWithUserPositions, 'type' => 'hidden'),
+//            'classtype' => 'institution'
+//        ));
 
 //        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
 //            $inst = $event->getData();
