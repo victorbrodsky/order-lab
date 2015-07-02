@@ -18,6 +18,11 @@ oleg_userdirectory:
 #    type:     annotation
 #    prefix:   /demo
 
+oleg_testpage:
+    path: /directory/testpage
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'OlegUserdirectoryBundle:Default:testpage.html.twig'
 
 
 #login and logout routes

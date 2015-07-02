@@ -1,0 +1,28 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Test Page
+{% endblock %}
+
+
+{% block content %}
+
+<div id="form-content"></div>
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script>
+        $(document).ready(function () {
+            $.getJSON('https://script.google.com/a/macros/pathologysystems.org/s/AKfycbwvwigp9nGu8TqVk_Zj10NOiIs5Jeu7mhryvk6jg960/exec?prefix=?', null, function (results) {
+                $('#form-content').html(results);
+            });
+        });
+    </script>
+
+{% endblock %}
+
+
+
