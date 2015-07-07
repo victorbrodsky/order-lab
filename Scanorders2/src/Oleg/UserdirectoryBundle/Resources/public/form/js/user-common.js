@@ -14,42 +14,42 @@ var user_id = $("#user_id").val();
 
 
 function regularCombobox(holder) {
-
-    var selectboxes = $("select.combobox");
-
-    if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
-        selectboxes = holder.find(selectboxes);
-    }
-
-    if( selectboxes.length == 0 ) {
+    var targetid = "select.combobox";
+    if( $(targetid).length == 0 ) {
         return;
     }
-
-    selectboxes.each( function() {
-
-        $(this).select2({
-            width: combobox_width,
-            dropdownAutoWidth: true,
-            placeholder: "Select an option",
-            allowClear: true,
-            selectOnBlur: false
-            //containerCssClass: 'combobox-width'
-        });
-
-        if( $(this).attr("readonly") ) {
-            $(this).select2("readonly", true);
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+        if( targetid.length == 0 ) {
+            return;
         }
-
-//        if( $(this).hasClass('element-with-select2-tooltip') ) {
-//            console.log('regularCombobox: add tooltip to id='+$(this).attr('id'));
-//            console.log('title tooltip='+$(this).attr('title'));
-//            var parent = $(this).parent().tooltip({
-//                title: $(this).attr('title')
-//            });
-//            //$(this).tooltip();
-//        }
-
+    }
+    $(targetid).each( function() {
+        specificRegularCombobox( $(this) )
     });
+}
+function specificRegularCombobox( comboboxEl ) {
+    comboboxEl.select2({
+        width: combobox_width,
+        dropdownAutoWidth: true,
+        placeholder: "Select an option",
+        allowClear: true,
+        selectOnBlur: false
+        //containerCssClass: 'combobox-width'
+    });
+
+    if( comboboxEl.attr("readonly") ) {
+        comboboxEl.select2("readonly", true);
+    }
+
+//        if( comboboxEl.hasClass('element-with-select2-tooltip') ) {
+//            console.log('regularCombobox: add tooltip to id='+comboboxEl.attr('id'));
+//            console.log('title tooltip='+comboboxEl.attr('title'));
+//            var parent = comboboxEl.parent().tooltip({
+//                title: comboboxEl.attr('title')
+//            });
+//            //comboboxEl.tooltip();
+//        }
 }
 
 //Generic ajax combobox
@@ -101,6 +101,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
 function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
     //console.log("target="+target);
+    //printF(target,'populate combobox target: ');
 
 //    //clear the value if it is not set (What is the point to do so if it is empty?!)
 //    var value = $(target).val();

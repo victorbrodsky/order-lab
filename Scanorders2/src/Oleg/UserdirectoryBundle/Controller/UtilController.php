@@ -1031,6 +1031,9 @@ class UtilController extends Controller {
             case "researchlab":
                 $className = "ResearchLab";
                 break;
+            case "fellowshiptype":
+                $className = "FellowshipTypeList";
+                break;
 
             //training
             case "trainingmajors":

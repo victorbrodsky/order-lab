@@ -27,6 +27,117 @@ class InstitutionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+//        $builder->add('id', 'employees_custom_selector', array(
+//            'label' => 'Institution:',
+//            'required' => false,
+//            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+//            'classtype' => 'institution'
+//        ));
+
+        //hidden: set by js
+//        $builder->add('id',null,array(
+//            'label' => false,   //'ID:',   //'ID:'
+//            'attr' => array('class' => 'tree-node-id'),
+//        ));
+
+        //hidden: set by js
+//        $builder->add('parent',null,array(
+//            'label' => false,   //'Parent:',
+//            'attr' => array('class' => 'tree-node-parent'),
+//        ));
+
+
+        //////////////////////// Not mapped data providing fields ////////////////////////
+
+        //breadcrumbs hidden: set by js
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+
+            $institution = $event->getData();
+            $form = $event->getForm();
+
+            echo "inst:".$institution."<br>";
+
+            ////////////////// breadcrumbs //////////////////
+//            $children = array();
+//            if( $institution ) {
+//                $children = $institution->getIdBreadcrumbs();
+//            }
+//
+//            $form->add('breadcrumbs', 'hidden', array(
+//                'mapped' => false,
+//                'data' => implode(',',$children),
+//                'label' => false,
+//                'attr' => array('class' => 'tree-node-breadcrumbs'),
+//            ));
+            ////////////////// EOF breadcrumbs //////////////////
+
+            $label = 'Institution:';
+            if( $institution && $institution->getOrganizationalGroupType() ) {
+                $label = $institution->getOrganizationalGroupType()->getName().":";
+            }
+
+            $form->add('id', 'employees_custom_selector', array(
+                'label' => $label,   //'Institution:',
+                'required' => false,
+                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+                'classtype' => 'institution'
+            ));
+
+            //add userPositions for 'label'=>'Administrative'
+            if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
+                //$institutionWithUserPositions = 'institution-with-userpositions';
+//            $builder->add('userPositions',null,array(
+//                'mapped' => false,
+//                'label' => false,
+//                'attr' => array('class' => 'ajax-combobox-userpositions'),
+//            ));
+                $this->params['treenode'] = $institution;
+                $form->add('userPositions', 'collection', array(
+                    'type' => new UserPositionType($this->params, null),
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'required' => false,
+                    'by_reference' => false,
+                    'prototype' => true,
+                    'prototype_name' => '__userpositions__',
+                ));
+
+            } else {
+                //$institutionWithUserPositions = '';
+                //echo "no user pos<br>";
+                $form->remove('userPositions');
+            }
+
+//            //visible as institution node combobox
+//            //echo "user pos=".$institutionWithUserPositions."<br>";
+//            $form->add('institutionnode', 'employees_custom_selector', array(
+//                'mapped' => false,
+//                'label' => 'Institution:',
+//                'required' => false,
+//                'attr' => array('class' => 'ajax-combobox-institution '.$institutionWithUserPositions, 'type' => 'hidden'),
+//                'classtype' => 'institution'
+//            ));
+
+        });
+        //////////////////////// EOF Not mapped data providing fields ////////////////////////
+
+
+        //visible as institution node combobox
+//        $builder->add('institutionnode', 'employees_custom_selector', array(
+//            'mapped' => false,
+//            'label' => 'Institution:',
+//            'required' => false,
+//            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+//            'classtype' => 'institution'
+//        ));
+
+
+    }
+
+
+    public function buildForm_ORIG(FormBuilderInterface $builder, array $options)
+    {
+
         //hidden: set by js
         $builder->add('id',null,array(
             'label' => false,   //'ID:',   //'ID:'

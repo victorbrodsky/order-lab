@@ -1298,6 +1298,7 @@
             {#{% set userPositionPrototype = treemacros.userPositionField(form.administrativeTitles.vars.prototype.institution.userPositions,cycle,'prototype') %}#}
         {#{% endif %}#}
 
+
         {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
             {% set userEditor = true %}
         {% else %}

@@ -2,10 +2,12 @@
  * Created by oli2002 on 9/17/14.
  */
 
+var _newTreeNondePrefix = 'newnode_';
 
 ////////////////////////////// TREE //////////////////////////////////
 
 function setTreeByClickingParent(targetid, entityName) {
+    return; //testing
 
     var comboboxEl = $(targetid);
     //console.log('combobox len='+comboboxEl.length);
@@ -45,7 +47,7 @@ function setTreeByClickingParent(targetid, entityName) {
 
 //TODO: set hidden real institution field in the form every time the combobox is chnaged.
 //Then, use this real institution field and parent field in controller to create a new instituition.
-function comboboxTreeListener( target, entityName ) {
+function comboboxTreeListener( target, entityName, rowElHtml ) {
 
     $(target).on('change', function(e){
 
@@ -64,6 +66,7 @@ function comboboxTreeListener( target, entityName ) {
 
         //first remove all siblings after this combobox
         var allNextSiblings = comboboxEl.closest('.row').nextAll().remove();
+        clearElementsIdName(treeHolder);
 
         //check if combobox cleared; if none => do nothing
         if( !thisData ) {
@@ -82,7 +85,7 @@ function comboboxTreeListener( target, entityName ) {
         if( treeArr.length > 0 ) {
 
             var label = treeArr[0].leveltitle;
-            var newid = "newnode-" + label;
+            //var newid = "newnode-" + label;
 
             //readonly combobox
             var readonly = "";
@@ -90,52 +93,60 @@ function comboboxTreeListener( target, entityName ) {
                 readonly = "readonly";
             }
 
-            var collen = '6';
-            var userpositions = '';
-            if( treeHolder.hasClass('institution-with-userpositions') ) {
-                collen = '4';
-                userpositions =
-                    '<div class="col-xs-2" align="left">' +
-                        '<input id="userposition-'+newid+'" class="combobox ajax-combobox-userpositions" type="hidden" ' + readonly + '/>' +
-                    '</div>';
-            }
-            console.log('collen='+collen);
+//            var collen = '6';
+//            var userpositions = '';
+//            if( treeHolder.hasClass('institution-with-userpositions') ) {
+//                collen = '4';
+//                userpositions =
+//                    '<div class="col-xs-2" align="left">' +
+//                        '<input id="userposition-'+newid+'" class="combobox ajax-combobox-userpositions" type="hidden" ' + readonly + '/>' +
+//                    '</div>';
+//            }
+//            console.log('collen='+collen);
+//
+//            // 1) construct and attach a new select2 combobox below comboboxEl (parent combobox)
+//            var comboboxHtml =
+//                '<p><div class="row">' +
+//                    '<div class="col-xs-6" align="right">' +
+//                        '<strong>'+label+':</strong>' +
+//                    '</div>' +
+//                    '<div class="col-xs-'+collen+'" align="left">' +
+//                        '<input id="institution-'+newid+'" class="ajax-combobox-institution" type="hidden" ' + readonly + '/>' +
+//                    '</div>' +
+//                    userpositions +
+//                '</div></p>';
 
-            // 1) construct and attach a new select2 combobox below comboboxEl (parent combobox)
-            var comboboxHtml =
-                '<p><div class="row">' +
-                    '<div class="col-xs-6" align="right">' +
-                        '<strong>'+label+':</strong>' +
-                    '</div>' +
-                    '<div class="col-xs-'+collen+'" align="left">' +
-                        '<input id="institution-'+newid+'" class="ajax-combobox-institution" type="hidden" ' + readonly + '/>' +
-                    '</div>' +
-                    userpositions +
-                '</div></p>';
-
-            var comboboxHtml = getNewTreeNode(treeHolder);    //treeHolder.find('#node-userpositions-data');
+            //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
+            var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
 
             //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
 
             //var treeHolder = comboboxEl.closest('.composite-tree-holder');
             //console.log( treeHolder );
 
-            treeHolder.append(comboboxHtml);
+            //treeHolder.append(comboboxHtml);
+            var newElementsAppendedRaw = $(comboboxHtml).appendTo(treeHolder);
+
+            //change label
+            newElementsAppendedRaw.find('label').text(label+":");
 
             //console.log( 'newid='+newid );
-            var newElementsAppended = treeHolder.find('#institution-'+newid);
-            //var newElementsAppended = treeHolder.find('.ajax-combobox-institution');
-            console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
+            //var newElementsAppended = treeHolder.find('#institution-'+newid);
+            var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
+            //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
             populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
 
-            var newUserposition = treeHolder.find('#userposition-'+newid);
-            //var newElementsAppended = treeHolder.find('.ajax-combobox-institution');
+            //var newUserposition = treeHolder.find('#userposition-'+newid);
+            var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
             //console.log( 'newUserposition.id='+newUserposition.attr('id') );
-            //populateSelectCombobox( newUserposition, null, "Select an option", true );
-            regularCombobox(treeHolder);
+            newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
+            specificRegularCombobox(newUserposition);
+
+            //remove id and name for all inputs preceding the input with selected node
+            clearElementsIdName(treeHolder);
 
             //wait
-            comboboxTreeListener( newElementsAppended, entityName );
+            comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
 
             // 2) replace id and name of newly created combobox with the parent
 
@@ -145,7 +156,119 @@ function comboboxTreeListener( target, entityName ) {
 
 }
 
-function getNewTreeNode(treeHolder) {
+function getNewTreeNode(treeHolder,comboboxEl,rowElHtml) {
+
+    //console.log( "rowElHtml=" + rowElHtml );
+
+    //rowElHtml = '<div class="trenode">'+rowElHtml+'</div>';
+
+    var index = getNextElementCount(treeHolder,'ajax-combobox-institution');
+    //console.log( "index=" + index );
+
+    rowElHtml = rowElHtml.replace(/__userpositions__/g, index);
+
+    //console.log( "rowElHtml=" + rowElHtml );
+
+    return rowElHtml;
+}
+
+//modify all id and name by attaching a prefix "newelement_" to all ajax-combobox-institution element prior to the last not empty combobox
+function clearElementsIdName(treeHolder) {
+    //console.log('treeHolder=');
+    //console.log(treeHolder);
+
+    var lastNode = treeHolder.find('.treenode').last();
+    //printF(lastNode,'clear el by lastNode:');
+    //console.log('lastNode:');
+    //console.log(lastNode);
+
+    clearRecursivelyIdName(lastNode);
+}
+
+function clearRecursivelyIdName(treenode) {
+    //console.log('process treenode:');
+    //console.log(treenode);
+
+    if( treenode.length == 0 ) {
+        //console.log('treenode is null');
+        return;
+    }
+
+    var lastComboboxEl = treenode.find('div.ajax-combobox-institution');
+    var lastInputEl = treenode.find('input.ajax-combobox-institution');
+    if( lastComboboxEl.length == 0 || lastInputEl.length == 0 ) {
+        //console.log('lastComboboxEl or lastInputEl is null');
+        return;
+    }
+
+    if( !lastComboboxEl.attr('id') ) {
+        //console.log('lastComboboxEl id is null');
+        return;
+    }
+
+    var comboboxData = lastComboboxEl.select2('data');
+    //console.log('comboboxData:');
+    //console.log(comboboxData);
+
+    if( comboboxData == null ) {
+        //console.log('comboboxData is null');
+        //unmap element
+        mapTreeNode(lastInputEl,false);
+        clearRecursivelyIdName(treenode.prev());
+        return;
+    }
+
+    //console.log('lastComboboxEl:');
+    //console.log(lastComboboxEl);
+
+    //console.log('comboboxData.id='+comboboxData.id+', text='+comboboxData.text);
+
+    if( comboboxData && comboboxData.id ) {
+        //unmap all previous siblings
+        treenode.prevAll().each( function(){
+            var inputEl = $(this).find('input.ajax-combobox-institution');
+            mapTreeNode(inputEl,false);
+        });
+        //map element
+        mapTreeNode(lastInputEl,true);
+        return;
+    }
+
+    return;
+}
+
+function mapTreeNode( element, mapped ) {
+    //console.log('modify element:');
+    //console.log(element.prevObject);
+    //printF(element,'modify id and name:');
+    var prefix = 'newnode_';
+    var elId = element.attr('id');
+    var elName = element.attr('name');
+    //console.log('modify element: prefix='+prefix+', id='+elId+', elName='+elName);
+
+    if( !elId || !elName ) {
+        return;
+    }
+
+    if( mapped ) {
+        //remove prefix
+        elId = elId.replace(prefix, "");
+        elName = elName.replace(prefix, "");
+    } else {
+        //add prefix
+        if( elId.indexOf(prefix) == -1 ) {
+            elId = prefix+elId;
+        }
+        if( elName.indexOf(prefix) == -1 ) {
+            elName = prefix+elName;
+        }
+    }
+
+    element.attr('id',elId);
+    element.attr('name',elName);
+}
+
+function getNewTreeNode_ORIG(treeHolder) {
     var datael = treeHolder.find('#node-userpositions-data');
 
     if( !datael ) {

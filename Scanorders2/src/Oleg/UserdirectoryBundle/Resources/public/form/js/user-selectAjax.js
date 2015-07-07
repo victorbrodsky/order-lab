@@ -120,43 +120,44 @@ function getDataIdByText(arr,text) {
 //this function is used for form institution hierarchy using select2, not jstree
 function getComboboxInstitution(holder) {
 
-    //console.log('cycle='+cycle);
-
     if( typeof cycle === 'undefined' ) {
         var cycle = 'edit';
     }
+    //console.log('inst cycle='+cycle);
 
-    //if( cycle != "show" ) {
-    //if( cycle.indexOf("show") == -1 ) {
-
-        var targetid = ".ajax-combobox-institution";
-        if( $(targetid).length == 0 ) {
+    var targetid = ".ajax-combobox-institution";
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+        if( targetid.length == 0 ) {
             return;
         }
-        if( typeof holder !== 'undefined' && holder.length > 0 ) {
-            targetid = holder.find(targetid);
-            if( targetid.length == 0 ) {
-                return;
-            }
-        }
+    }
 
-        var entityName = 'Institution';
-        var parentid = 0;
+    var entityName = 'Institution';
+    var parentid = 0;
 
-        if( _institutionRoot.length == 0 ) {
-            _institutionRoot = getChildrenByParent(entityName,parentid);
-        }
+    if( _institutionRoot.length == 0 ) {
+        _institutionRoot = getChildrenByParent(entityName,parentid);
+    }
 
-        $(targetid).each( function(e) {
+    $(targetid).each( function(e) {
 
-            populateSelectCombobox( $(this), _institutionRoot, "Select an option" );
+        var rowElHtml = $(this).closest('.row')[0].outerHTML;
 
-            comboboxTreeListener( $(this), entityName );
+        //console.log('populate combobox');
+        populateSelectCombobox( $(this), _institutionRoot, "Select an option" );
 
-            //click parent
-            setTreeByClickingParent($(this), entityName);
+        comboboxTreeListener( $(this), entityName, rowElHtml );
 
-        });
+        $(this).trigger('change');
+
+        //click parent
+        setTreeByClickingParent($(this), entityName);
+
+    });
 
 }
 function getChildrenByParent(entityName,parentid) {

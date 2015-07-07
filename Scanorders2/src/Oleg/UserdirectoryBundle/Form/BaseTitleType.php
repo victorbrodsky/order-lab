@@ -95,6 +95,8 @@ class BaseTitleType extends AbstractType
         ));
 //        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
 //            $title = $event->getData();
+//            if( $title )
+//                echo "title id=".$title->getId()."<br>";
 //            $form = $event->getForm();
 //
 //            if (!$title) {
