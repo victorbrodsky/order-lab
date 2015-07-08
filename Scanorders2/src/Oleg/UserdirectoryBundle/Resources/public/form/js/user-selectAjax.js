@@ -137,10 +137,19 @@ function getComboboxInstitution(holder) {
     }
 
     var entityName = 'Institution';
-    var parentid = 0;
+    //var parentid = 0;
+    var thisid = $(targetid).val();
 
-    if( _institutionRoot.length == 0 ) {
-        _institutionRoot = getChildrenByParent(entityName,parentid);
+    //get this id from tree-node-parent
+//    var parentEl = $(targetid).closest('.treenode').find('.tree-node-parent');
+//    if( parentEl.length > 0 ) {
+//        parentid = parentEl.val();
+//        console.log('parentid='+parentid);
+//    }
+
+
+    if( _institutionRoot.length == 0 && thisid ) {
+        _institutionRoot = getChildrenByParent(entityName,thisid,null);
     }
 
     $(targetid).each( function(e) {
@@ -154,22 +163,22 @@ function getComboboxInstitution(holder) {
 
         $(this).trigger('change');
 
-        //click parent
-        setTreeByClickingParent($(this), entityName);
+        //set parent
+        setParentComboboxree($(this), entityName, rowElHtml);
 
     });
 
 }
-function getChildrenByParent(entityName,parentid) {
+function getChildrenByParent(entityName,thisid,parentid) {
 
     //do nothing if new element was enetered. In this case pid will be a string with a new element name.
-    if( !isInt(parentid) ) {
+    if( !isInt(thisid) || !isInt(parentid) ) {
         return null;
     }
 
     //employees_get_institution
     var treeUrl = Routing.generate('employees_get_composition_tree');
-    treeUrl = treeUrl + '?id=' + parentid + '&classname=' + entityName + '&opt=combobox';
+    treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=combobox';
     //console.log('treeUrl='+treeUrl);
 
     var children = new Array();

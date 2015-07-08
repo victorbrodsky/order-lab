@@ -95,11 +95,15 @@ class BaseTitleType extends AbstractType
         ));
 //        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
 //            $title = $event->getData();
-//            if( $title )
-//                echo "title id=".$title->getId()."<br>";
 //            $form = $event->getForm();
 //
 //            if (!$title) {
+//                return;
+//            }
+//
+//            echo "PRE_SUBMIT title id:".$title['id']."<br>";
+//
+//            if( !array_key_exists('institution', $title) ) {
 //                return;
 //            }
 //
@@ -113,10 +117,17 @@ class BaseTitleType extends AbstractType
 //            $instId = $inst['id'];
 //            echo "inst id=".$instId."<br>";
 //            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
-//            $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
-//            if( $newInst ) {
+//            //$newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
+//
+//            if( $instId ) {
+//                $form->add('institution', null, array(
+//                    'required' => false,
+//                    'label' => false,
+//                    'data' => $instId   //$newInst->getId()
+//                ));
+//
 //                //$title->setInstitution($newInst);
-//                $title['institution'] = $newInst;
+//                $title['institution'] = $instId;    //$newInst->getId();
 //                $event->setData($title);
 //            }
 //        });

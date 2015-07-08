@@ -129,11 +129,23 @@ class UserPosition {
             $fullName = $fullName . $this->getUser()."";
         }
 
-        if( $this->getUserStr() ) {
+        //institution
+        if( $this->getInstitution() ) {
+            $fullName = $fullName . ", Institution:" . $this->getInstitution(); //."(".$this->getInstitution()->getId().")";
+        }
+
+        //positions
+        $positions = $this->getPositionTypes();
+        $positionsArr = array();
+        foreach( $positions as $position ) {
+            $positionsArr[] = $position;
+        }
+
+        if( count($positions) > 0 ) {
             if( $fullName ) {
-                $fullName = $fullName . " " .$this->getUserStr()."";
+                $fullName = $fullName . ", Positions:" .implode(",", $positionsArr)."";
             } else {
-                $fullName = $this->getUserStr()."";
+                $fullName = " Positions:" . implode(",", $positionsArr)."";
             }
         }
 

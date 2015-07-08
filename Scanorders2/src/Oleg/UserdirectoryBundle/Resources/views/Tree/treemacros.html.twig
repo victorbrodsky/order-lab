@@ -65,6 +65,11 @@
     {% import _self as treemacros %}
 
     <div class="row treenode">
+        {#<div style="display: none;">#}
+            {#{% if node.parent is defined %}#}
+                {#{{ form_widget(node.parent) }}#}
+            {#{% endif %}#}
+        {#</div>#}
         <div class="col-xs-6" align="right">
             {#<strong>{{ nodeLabel }}</strong>#}
             {#{{ form_label(node.vars.value.getOrganizationalGroupType().getName()) }}#}
@@ -85,6 +90,7 @@
             </div>
         {% endif %}
     </div>
+    {% do node.setRendered %}
 {% endmacro %}
 {% macro compositeSingleTreeNode_ORIG( node, cycle, prototype ) %}
     {% import _self as treemacros %}

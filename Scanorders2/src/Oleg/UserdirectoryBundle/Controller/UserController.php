@@ -2026,6 +2026,17 @@ class UserController extends Controller
     //Process all holder containing institutional tree
     public function setCompositeTreeNode($entity) {
 
+        foreach( $entity->getAdministrativeTitles() as $title) {
+            $inst = $title->getInstitution();
+            $positions = $inst->getUserPositions();
+            echo "position count=".count($positions)."<br>";
+            foreach( $positions as $position ) {
+                echo "position=".$position."<br>";
+            }
+        }
+        //exit('set composite tree node');
+        return;
+
         $em = $this->getDoctrine()->getManager();
         $sc = $this->get('security.context');
         $userUtil = new UserUtil();
@@ -2033,6 +2044,7 @@ class UserController extends Controller
         foreach( $entity->getAdministrativeTitles() as $title) {
             $userUtil->processInstTree($title,$em,$sc);
         }
+
         foreach( $entity->getAppointmentTitles() as $title) {
             $userUtil->processInstTree($title,$em,$sc);
         }

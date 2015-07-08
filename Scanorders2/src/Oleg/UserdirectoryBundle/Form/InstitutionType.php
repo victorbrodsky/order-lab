@@ -40,9 +40,9 @@ class InstitutionType extends AbstractType
 //            'attr' => array('class' => 'tree-node-id'),
 //        ));
 
-        //hidden: set by js
+        //hidden
 //        $builder->add('parent',null,array(
-//            'label' => false,   //'Parent:',
+//            'label' => false,
 //            'attr' => array('class' => 'tree-node-parent'),
 //        ));
 
@@ -55,7 +55,7 @@ class InstitutionType extends AbstractType
             $institution = $event->getData();
             $form = $event->getForm();
 
-            echo "inst:".$institution."<br>";
+            echo "PRE_SET_DATA inst:".$institution."<br>";
 
             ////////////////// breadcrumbs //////////////////
 //            $children = array();
@@ -77,7 +77,7 @@ class InstitutionType extends AbstractType
             }
 
             $form->add('id', 'employees_custom_selector', array(
-                'label' => $label,   //'Institution:',
+                'label' => $label,
                 'required' => false,
                 'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
                 'classtype' => 'institution'
@@ -120,6 +120,51 @@ class InstitutionType extends AbstractType
 
         });
         //////////////////////// EOF Not mapped data providing fields ////////////////////////
+
+        //////////////////////// PRE_SUBMIT: set node by id ////////////////////////
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+
+            $institution = $event->getData();
+            $form = $event->getForm();
+
+            print_r($institution);
+            echo "<br>";
+
+            if( !$institution ) {
+                return;
+            }
+
+            $instId = $institution['id'];
+            if( !$instId ) {
+                return;
+            }
+
+            echo "PRE_SUBMIT inst id:".$instId."<br>";
+
+            $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
+            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
+
+            if( $newInst ) {
+                $titleForm = $form->getParent();
+                $title = $titleForm->getData();
+
+                $titleForm->add('institution', null, array(
+                    'required' => false,
+                    'label' => false,
+                    'data' => $newInst   //$newInst->getId()
+                ));
+
+                //$title['institution'] = $instId;
+                $title->setInstitution($newInst);
+                //$titleForm->setData($title);
+
+                //$title->setInstitution($newInst);
+                //$institution['id'] = $instId;
+                //$event->setData($newInst);
+            }
+
+        });
+        //////////////////////// EOF PRE_SUBMIT: set node by id ////////////////////////
 
 
         //visible as institution node combobox

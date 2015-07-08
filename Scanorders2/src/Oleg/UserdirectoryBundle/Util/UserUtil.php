@@ -675,9 +675,18 @@ class UserUtil {
 
         //reset tree node by id
         $institution = $treeholder->getInstitution();
+        //print_r($institution);
         if( $institution ) {
-            $treeholder->setInstitution( $em->getReference('OlegUserdirectoryBundle:Institution', $institution->getId()) );
+            echo "echo orig=".$institution."<br>";
+            echo "echo orig parent=".$institution->getParent()."<br>";
+            //$institutionDb = $em->getReference('OlegUserdirectoryBundle:Institution', $institution->getId());
+            $institutionDb = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution->getId());
+            echo "echo id=".$institutionDb->getId()."<br>";
+            echo "echo parent=".$institutionDb->getParent()."<br>";
+
+            $treeholder->setInstitution($institutionDb);
         }
+        //exit('exit processInstTree');
 
         //set author if not set
         $this->setUpdateInfo($treeholder,$em,$sc);

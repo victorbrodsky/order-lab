@@ -32,11 +32,20 @@ class TreeController extends Controller {
     public function getTreeByParentAction(Request $request) {
 
         $opt = trim( $request->get('opt') );
+        $thisid = trim( $request->get('thisid') );
         $pid = trim( $request->get('id') );
         $className = trim( $request->get('classname') );
         //$level = trim( $request->get('pid') );
-        //echo "id=".$id."<br>";
+        //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
+
+        if( $thisid == 'null' ) {
+            $thisid = null;
+        }
+
+        if( $pid == 'null' ) {
+            $pid = null;
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -51,13 +60,14 @@ class TreeController extends Controller {
         $params = array('typedef' => 'default','typeadd' => 'user-added');
 
 
-        if( is_numeric($pid) && $pid == 0 ) {
+        if( $pid && is_numeric($pid) && $pid == 0 ) {
             //children: where parent = $pid
             $dql->leftJoin("list.parent", "parent");
             $where = $where . " AND parent.id is NULL";
         }
 
-        if( $pid == '#' || !is_numeric($pid) ) {
+        if( $pid && ($pid == '#' || !is_numeric($pid)) ) {
+            //echo "by root pid=".$pid."<br>";
             //root: the same as $pid == 0
             //$where = $where . " AND list.level = :level";
             //$params['level'] = 0;
@@ -65,11 +75,25 @@ class TreeController extends Controller {
             $where = $where . " AND parent.id is NULL";
         }
 
-        if( $pid != 0 && $pid != '#' && is_numeric($pid) ) {
+        if( $pid && $pid != 0 && $pid != '#' && is_numeric($pid) ) {
             //children: where parent = $pid
+            //echo "by pid=".$pid."<br>";
             $dql->leftJoin("list.parent", "parent");
             $where = $where . " AND parent.id = :id";
             $params['id'] = $pid;
+        }
+
+        if( $pid == null && $thisid && $thisid != 0 && is_numeric($thisid) ) {
+            //siblings
+            //echo "by sibling id=".$thisid."<br>";
+            $thisNode = $treeRepository->find($thisid);
+            $parent = $thisNode->getParent();
+            if( $parent ) {
+                $pid = $parent->getId();
+                $dql->leftJoin("list.parent", "parent");
+                $where = $where . " AND parent.id = :id";
+                $params['id'] = $pid;
+            }
         }
 
 //        if( $level && is_numeric($level) ) {
