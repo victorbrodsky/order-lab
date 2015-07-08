@@ -14,7 +14,10 @@ function setParentComboboxree(targetid, entityName, rowElHtml) {
     //console.log(treeHolder);
 
     var thisData = comboboxEl.select2('data');
+    console.log(thisData);
+
     if( !thisData ) {
+        clearElementsIdName(treeHolder);
         return;
     }
 
@@ -22,47 +25,58 @@ function setParentComboboxree(targetid, entityName, rowElHtml) {
 
     //exit if no parent
     if( thisData.pid == 0 ) {
+        clearElementsIdName(treeHolder);
         return;
     }
 
     var treeArr = getChildrenByParent(entityName,thisData.pid,null);
-    if( treeArr == null ) {
-        return;
+
+    var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'top' );
+    if( newElementsAppended ) {
+        newElementsAppended.select2('val',thisData.pid);
+        setParentComboboxree(newElementsAppended, entityName, rowElHtml);
     }
 
-    if( treeArr.length > 0 ) {
-
-        var label = "Top "+treeArr[0].leveltitle;
-        console.log('label='+label);
-
-        //readonly combobox
-        var readonly = "";
-        if( cycle.indexOf("show") != -1 ) {
-            readonly = "readonly";
-        }
-
-        //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
-        var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
-
-        //treeHolder.append(comboboxHtml);
-        var newElementsAppendedRaw = $(comboboxHtml).insertBefore(targetid.closest('.treenode'));
-
-        //change label
-        newElementsAppendedRaw.find('label').text(label+":");
-
-        var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
-        populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
-        newElementsAppended.select2('val',thisData.pid);
-
-        var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
-        newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
-        specificRegularCombobox(newUserposition);
-
-        comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
-
-        setParentComboboxree(newElementsAppended, entityName, rowElHtml);
-
-    } //if
+//    if( treeArr == null ) {
+//        return;
+//    }
+//
+//    if( treeArr.length > 0 ) {
+//
+//        var label = "Top "+treeArr[0].leveltitle;
+//        console.log('label='+label);
+//
+//        //readonly combobox
+//        var readonly = "";
+//        if( cycle.indexOf("show") != -1 ) {
+//            readonly = "readonly";
+//        }
+//
+//        //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
+//        var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
+//
+//        //treeHolder.append(comboboxHtml);
+//        var newElementsAppendedRaw = $(comboboxHtml).insertBefore(targetid.closest('.treenode'));
+//
+//        //change label
+//        newElementsAppendedRaw.find('label').text(label+":");
+//
+//        //change institution for user position .userposition-institution
+//        newElementsAppendedRaw.find('.userposition-institution').val(thisData.id);
+//
+//        var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
+//        populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
+//        newElementsAppended.select2('val',thisData.pid);
+//
+//        var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
+//        newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
+//        specificRegularCombobox(newUserposition);
+//
+//        comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
+//
+//        setParentComboboxree(newElementsAppended, entityName, rowElHtml);
+//
+//    } //if
 
 }
 function setTreeByClickingParent_OLD(targetid, entityName) {
@@ -138,59 +152,136 @@ function comboboxTreeListener( target, entityName, rowElHtml ) {
         //console.log( treeArr );
         //console.log( 'treeArr.length=' + treeArr.length );
 
-        //do nothing if new element was enetered
-        if( treeArr == null ) {
-            console.log('do nothing if new element was enetered');
-            return;
-        }
-
-        if( treeArr.length > 0 ) {
-
-            var label = treeArr[0].leveltitle;
-            //console.log( 'label='+ label );
-
-            //readonly combobox
-            var readonly = "";
-            if( cycle.indexOf("show") != -1 ) {
-                readonly = "readonly";
-            }
-
-            //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
-            var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
-
-            //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
-
-            //var treeHolder = comboboxEl.closest('.composite-tree-holder');
-            //console.log( treeHolder );
-
-            //treeHolder.append(comboboxHtml);
-            var newElementsAppendedRaw = $(comboboxHtml).appendTo(treeHolder);
-
-            //change label
-            newElementsAppendedRaw.find('label').text(label+":");
-
-            //console.log( 'newid='+newid );
-            //var newElementsAppended = treeHolder.find('#institution-'+newid);
-            var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
-            //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
-            populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
-
-            //var newUserposition = treeHolder.find('#userposition-'+newid);
-            var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
-            //console.log( 'newUserposition.id='+newUserposition.attr('id') );
-            newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
-            specificRegularCombobox(newUserposition);
-
+        var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'bottom' );
+        if( newElementsAppended ) {
             //remove id and name for all inputs preceding the input with selected node
             clearElementsIdName(treeHolder);
+        }
 
-            //add listener to this element
-            comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
-
-        } //if
+//        //do nothing if new element was enetered
+//        if( treeArr == null ) {
+//            console.log('do nothing if new element was enetered');
+//            return;
+//        }
+//
+//        if( treeArr.length > 0 ) {
+//
+//            var label = treeArr[0].leveltitle;
+//            //console.log( 'label='+ label );
+//
+//            //readonly combobox
+//            var readonly = "";
+//            if( cycle.indexOf("show") != -1 ) {
+//                readonly = "readonly";
+//            }
+//
+//            //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
+//            var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
+//
+//            //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
+//
+//            //var treeHolder = comboboxEl.closest('.composite-tree-holder');
+//            //console.log( treeHolder );
+//
+//            //treeHolder.append(comboboxHtml);
+//            var newElementsAppendedRaw = $(comboboxHtml).appendTo(treeHolder);
+//
+//            //change label
+//            newElementsAppendedRaw.find('label').text(label+":");
+//
+//            //change institution for user position .userposition-institution
+//            newElementsAppendedRaw.find('.userposition-institution').val(thisData.id);
+//
+//            //console.log( 'newid='+newid );
+//            //var newElementsAppended = treeHolder.find('#institution-'+newid);
+//            var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
+//            //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
+//            populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
+//
+//            //var newUserposition = treeHolder.find('#userposition-'+newid);
+//            var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
+//            //console.log( 'newUserposition.id='+newUserposition.attr('id') );
+//            newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
+//            specificRegularCombobox(newUserposition);
+//
+//            //remove id and name for all inputs preceding the input with selected node
+//            clearElementsIdName(treeHolder);
+//
+//            //add listener to this element
+//            comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
+//
+//        } //if
 
     });
 
+}
+
+function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, attachflag ) {
+    //do nothing if new element was enetered
+    if( treeArr == null ) {
+        console.log('do nothing if new element was enetered');
+        return false;
+    }
+
+    if( treeArr.length > 0 ) {
+
+        var label = treeArr[0].leveltitle;
+        //console.log( 'label='+ label );
+
+        //readonly combobox
+        var readonly = "";
+        if( cycle.indexOf("show") != -1 ) {
+            readonly = "readonly";
+        }
+
+        //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
+        var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
+
+        //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
+
+        //var treeHolder = comboboxEl.closest('.composite-tree-holder');
+        //console.log( treeHolder );
+
+        //treeHolder.append(comboboxHtml);
+        if( attachflag == 'bottom' ) {
+            var newElementsAppendedRaw = $(comboboxHtml).appendTo(treeHolder);
+        }
+
+        if( attachflag == 'top' ) {
+            var newElementsAppendedRaw = $(comboboxHtml).insertBefore(comboboxEl.closest('.treenode'));
+            //label = "Top "+label;
+        }
+
+        //change label
+        newElementsAppendedRaw.find('label').text(label+":");
+
+        //change institution for user position .userposition-institution
+        var thisData = comboboxEl.select2('data');
+        //console.log('change user position inst.id='+thisData.pid);
+        var userPositionInstitution = newElementsAppendedRaw.find('.userposition-institution');
+        //console.log(userPositionInstitution);
+        userPositionInstitution.val(thisData.pid);
+
+        //console.log( 'newid='+newid );
+        //var newElementsAppended = treeHolder.find('#institution-'+newid);
+        var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
+        //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
+        populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
+
+        //var newUserposition = treeHolder.find('#userposition-'+newid);
+        var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
+        //console.log( 'newUserposition.id='+newUserposition.attr('id') );
+        newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
+        specificRegularCombobox(newUserposition);
+        //newUserposition.select2("readonly", readonly);
+
+        //add listener to this element
+        comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
+
+        return newElementsAppended;
+    } //if
+
+    return false;
 }
 
 function getNewTreeNode(treeHolder,comboboxEl,rowElHtml) {

@@ -107,7 +107,8 @@
                 {{ form_widget(node.institutionnode) }}
             </div>
             <div class="col-xs-2" align="left">
-                {{ treemacros.userPositionField(node,cycle,'prototype') }}
+                {#{{ treemacros.userPositionField(node,cycle,'prototype') }}#}
+                {{ treemacros.userPositionField(node,cycle,'') }}
             </div>
         {% else %}
             <div class="col-xs-6" align="left">
@@ -134,14 +135,24 @@
         {#<div>#}
         <div style="display: none;">
             {% if nodeThis.institution is defined %}
-                {{ formmacros.field(nodeThis.institution) }}
+                {#{{ formmacros.field(nodeThis.institution) }}#}
+                {{ form_widget(nodeThis.institution) }}
             {% endif %}
             {% if nodeThis.user is defined %}
-                {{ formmacros.field(nodeThis.user) }}
+                {#{{ formmacros.field(nodeThis.user) }}#}
+                {{ form_widget(nodeThis.user) }}
             {% endif %}
         </div>
 
         {% if nodeThis.positionTypes is defined %}
+
+            {#{% if nodeThis.positionTypes.vars.value %}#}
+                {#nodeThis.positionTypes.length:{{ nodeThis.positionTypes.vars.value.length }}#}
+            {#{% endif %}#}
+            {#{% for pos in nodeThis.positionTypes %}#}
+                {#pos:{{ pos.vars.value.name }}#}
+            {#{% endfor %}#}
+
             {{ form_widget(nodeThis.positionTypes) }}
         {% endif %}
     {% endif %}

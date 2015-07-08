@@ -2032,7 +2032,12 @@ class UserController extends Controller
             echo "position count=".count($positions)."<br>";
             foreach( $positions as $position ) {
                 echo "position=".$position."<br>";
+                if( count($position->getPositionTypes()) == 0 ) {
+                    echo 'remove position with empty pos types';
+                    $inst->removeUserPosition($position);
+                }
             }
+            echo "after clean position count=".count($positions)."<br>";
         }
         //exit('set composite tree node');
         return;

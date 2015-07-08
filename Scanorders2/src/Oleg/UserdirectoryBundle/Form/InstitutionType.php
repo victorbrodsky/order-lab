@@ -86,11 +86,11 @@ class InstitutionType extends AbstractType
             //add userPositions for 'label'=>'Administrative'
             if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
                 //$institutionWithUserPositions = 'institution-with-userpositions';
-//            $builder->add('userPositions',null,array(
-//                'mapped' => false,
-//                'label' => false,
-//                'attr' => array('class' => 'ajax-combobox-userpositions'),
-//            ));
+//                $form->add('userPositions',null,array(
+//                    'mapped' => false,
+//                    'label' => false,
+//                    'attr' => array('class' => 'combobox'),
+//                ));
                 $this->params['treenode'] = $institution;
                 $form->add('userPositions', 'collection', array(
                     'type' => new UserPositionType($this->params, null),
@@ -154,13 +154,33 @@ class InstitutionType extends AbstractType
                     'data' => $newInst   //$newInst->getId()
                 ));
 
-                //$title['institution'] = $instId;
-                $title->setInstitution($newInst);
-                //$titleForm->setData($title);
+//                $positions = $newInst->getUserPositions();
+//                foreach( $positions as $position ) {
+//                    echo "PRE_SUBMIT newInst position=".$position."<br>";
+//                    if( count($position->getPositionTypes()) == 0 ) {
+//                        //echo 'remove position with empty pos types';
+//                        $newInst->removeUserPosition($position);
+//                    }
+//                }
 
-                //$title->setInstitution($newInst);
-                //$institution['id'] = $instId;
-                //$event->setData($newInst);
+                $title->setInstitution($newInst);
+
+                //userPositions
+                //remove userPosition from institution if empty
+                $inst = $title->getInstitution();
+                $positions = $inst->getUserPositions();
+                //echo "PRE_SUBMIT position count=".count($positions)."<br>";
+                foreach( $positions as $position ) {
+                    //echo "PRE_SUBMIT position=".$position."<br>";
+                    if( count($position->getPositionTypes()) == 0 ) {
+                        //echo 'remove position with empty pos types';
+                        $inst->removeUserPosition($position);
+                    }
+                }
+                echo "after clean PRE_SUBMIT position count=".count($positions)."<br>";
+                foreach( $positions as $position ) {
+                    echo "PRE_SUBMIT position=".$position."<br>";
+                }
             }
 
         });

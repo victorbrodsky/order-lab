@@ -22,11 +22,19 @@ class UserPositionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+//        echo 'cycle='.$this->params['cycle']."<br>";
+//        $readonly = '';
+//        if( strpos($this->params['cycle'],'show') !== false ) {
+//            $readonly = 'readonly';
+//        }
+//        echo 'readonly='.$readonly."<br>";
+
         //hidden: set by js
         $builder->add( 'institution', null, array(
             'label' => false,
             'required'=> false,
-            'data' => $this->params['treenode']
+            'data' => $this->params['treenode'],
+            'attr' => array('class'=>'userposition-institution'),
         ));
 //        $this->params['nodeid'] = '1';
 //        if( $this->params['treenode'] ) {
@@ -93,6 +101,13 @@ class UserPositionType extends AbstractType
                 },
         ));
 
+        $attr = array('class'=>'combobox combobox-width userposition-positiontypes');
+        //echo 'cycle='.$this->params['cycle']."<br>";
+        if( strpos($this->params['cycle'],'show') !== false ) {
+            $attr['readonly'] = 'readonly';
+            //echo 'readonly!!! <br>';
+        }
+
         //visible as positionType combobox attached to an institution node
         $builder->add( 'positionTypes', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:PositionTypeList',
@@ -100,7 +115,7 @@ class UserPositionType extends AbstractType
             'label'=>'Position Type:',
             'required'=> false,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width userposition-positiontypes'),
+            'attr' => $attr,
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
@@ -111,6 +126,47 @@ class UserPositionType extends AbstractType
                         ));
                 },
         ));
+
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $userpos = $event->getData();
+//            $form = $event->getForm();
+//            if( !$userpos ) {
+//                return;
+//            }
+//            //echo 'userpos count='.coun($userpos)."<br>";
+//            //echo 'postypes count='.coun($userpos->getPositionTypes())."<br>";
+//            foreach( $userpos->getPositionTypes() as $type ) {
+//                echo 'type='.$type."<br>";
+//            }
+//
+//            $attr = array('class'=>'combobox combobox-width userposition-positiontypes');
+//            //echo 'cycle='.$this->params['cycle']."<br>";
+//            if( strpos($this->params['cycle'],'show') !== false ) {
+//                $attr['readonly'] = 'readonly';
+//                //echo 'readonly!!! <br>';
+//            }
+//
+//            //visible as positionType combobox attached to an institution node
+//            $form->add( 'positionTypes', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:PositionTypeList',
+//                'property' => 'name',
+//                'label'=>'Position Type:',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => $attr,
+//                'data' => $userpos->getPositionTypes(),
+//                'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('list')
+//                            ->where("list.type = :typedef OR list.type = :typeadd")
+//                            ->orderBy("list.orderinlist","ASC")
+//                            ->setParameters( array(
+//                                'typedef' => 'default',
+//                                'typeadd' => 'user-added',
+//                            ));
+//                    },
+//            ));
+//
+//        });
 
 
     }
