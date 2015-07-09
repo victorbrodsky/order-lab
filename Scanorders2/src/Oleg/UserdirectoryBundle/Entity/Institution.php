@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -193,6 +194,25 @@ class Institution extends BaseCompositeNode {
             $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
         }
     }
+
+
+
+    public function getUserPositionsByUseridAndNodeid($user,$institution) {
+        $positionTypes = $this->getUserPositions();
+        $criteria = Criteria::create()
+            ->where( Criteria::expr()->eq("user", $user) )
+            ->andWhere( Criteria::expr()->eq("institution", $institution) )
+        ;
+        $positionTypesFiltered = $positionTypes->matching($criteria);
+
+//        foreach( $positionTypesFiltered as $type ) {
+//            echo "!!!filtered type=".$type."<br>";
+//        }
+
+        return $positionTypesFiltered;
+    }
+
+
 
 
     public function __toString()

@@ -167,18 +167,28 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
 
-
-    public function getIdBreadcrumbs() {
+    public function getEntityBreadcrumbs() {
         $breadcrumbsArr = array();
-        $breadcrumbsArr = $this->getIdBreadcrumbsIter($this,$breadcrumbsArr);
+        $breadcrumbsArr = $this->getIdBreadcrumbsIter($this,$breadcrumbsArr,false);
         $breadcrumbsArr = array_reverse($breadcrumbsArr);
         //print_r($breadcrumbsArr);
         return $breadcrumbsArr;
     }
-    public function getIdBreadcrumbsIter($node,$breadcrumbsArr) {
-        $breadcrumbsArr[] = $node->getId();
+    public function getIdBreadcrumbs() {
+        $breadcrumbsArr = array();
+        $breadcrumbsArr = $this->getIdBreadcrumbsIter($this,$breadcrumbsArr,true);
+        $breadcrumbsArr = array_reverse($breadcrumbsArr);
+        //print_r($breadcrumbsArr);
+        return $breadcrumbsArr;
+    }
+    public function getIdBreadcrumbsIter($node,$breadcrumbsArr,$byId) {
+        if( $byId ) {
+            $breadcrumbsArr[] = $node->getId();
+        } else {
+            $breadcrumbsArr[] = $node;
+        }
         if( $node->getParent() ) {
-            $breadcrumbsArr = $this->getIdBreadcrumbsIter($node->getParent(),$breadcrumbsArr);
+            $breadcrumbsArr = $this->getIdBreadcrumbsIter($node->getParent(),$breadcrumbsArr,$byId);
         }
         return $breadcrumbsArr;
     }

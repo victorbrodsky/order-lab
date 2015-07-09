@@ -2039,7 +2039,7 @@ class UserController extends Controller
             }
             echo "after clean position count=".count($positions)."<br>";
         }
-        //exit('set composite tree node');
+        exit('set composite tree node');
         return;
 
         $em = $this->getDoctrine()->getManager();

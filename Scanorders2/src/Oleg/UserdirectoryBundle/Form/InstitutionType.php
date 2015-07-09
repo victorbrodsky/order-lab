@@ -86,21 +86,55 @@ class InstitutionType extends AbstractType
             //add userPositions for 'label'=>'Administrative'
             if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
                 //$institutionWithUserPositions = 'institution-with-userpositions';
-//                $form->add('userPositions',null,array(
-//                    'mapped' => false,
-//                    'label' => false,
-//                    'attr' => array('class' => 'combobox'),
+
+                if( !$institution ) {
+                    return;
+                }
+
+                if( $institution ) {
+                    $positions = $institution->getUserPositions();
+                    foreach( $positions as $position ) {
+                        echo "PRE_SET_DATA position=".$position."<br>";
+                    }
+                }
+
+//                echo "show userPositions <br>";
+//                $this->params['treenode'] = $institution;
+//                $form->add('userPositions', 'collection', array(
+//                    'type' => new UserPositionType($this->params, null),
+//                    'allow_add' => true,
+//                    'allow_delete' => true,
+//                    'required' => false,
+//                    'by_reference' => false,
+//                    'prototype' => true,
+//                    'prototype_name' => '__userpositions__',
 //                ));
-                $this->params['treenode'] = $institution;
-                $form->add('userPositions', 'collection', array(
-                    'type' => new UserPositionType($this->params, null),
-                    'allow_add' => true,
-                    'allow_delete' => true,
-                    'required' => false,
-                    'by_reference' => false,
-                    'prototype' => true,
-                    'prototype_name' => '__userpositions__',
-                ));
+
+
+                //create unmapped fields one for each node from bottom to top
+                foreach( $institution->getEntityBreadcrumbs() as $institution ) {
+                    $this->params['treenode'] = $institution;
+
+                    $positiontypes = $institution->getUserPositionsByUseridAndNodeid($this->params['user'],$institution);
+                    //echo "postypes count=".count($positiontypes)."<br>";
+                    $positiontypesArr = array();
+                    foreach( $positiontypes as $nodeUserPosition ) {
+                        //echo "regular filtered type=".$type."<br>";
+                        foreach( $nodeUserPosition->getPositionTypes() as $posType ) {
+                            $positiontypesArr[] = $posType;
+                            echo "!!!add type=".$posType."<br>";
+                        }
+                    }
+
+                    $this->params['positiontypes'] = $positiontypesArr;
+                    $fieldname = 'userposition'.$institution->getId();
+                    echo "add fieldname=".$fieldname."<br>";
+                    $form->add($fieldname, new UserPositionType($this->params, null), array(
+                        'mapped' => false,
+                        'required' => false,
+                        'label' => false
+                    ));
+                }
 
             } else {
                 //$institutionWithUserPositions = '';
@@ -127,6 +161,7 @@ class InstitutionType extends AbstractType
             $institution = $event->getData();
             $form = $event->getForm();
 
+            echo "PRE_SUBMIT institution:<br>";
             print_r($institution);
             echo "<br>";
 
@@ -141,6 +176,14 @@ class InstitutionType extends AbstractType
 
             echo "PRE_SUBMIT inst id:".$instId."<br>";
 
+            if( array_key_exists('position1', $institution) ) {
+                //$addEmailTemplateBlock($form, $institution['position1']);
+                echo "position1 exists !!! <br>";
+            } else {
+                echo "position1 does not exists !!! <br>";
+            }
+
+
             $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
             //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
 
@@ -154,33 +197,34 @@ class InstitutionType extends AbstractType
                     'data' => $newInst   //$newInst->getId()
                 ));
 
-//                $positions = $newInst->getUserPositions();
-//                foreach( $positions as $position ) {
-//                    echo "PRE_SUBMIT newInst position=".$position."<br>";
-//                    if( count($position->getPositionTypes()) == 0 ) {
-//                        //echo 'remove position with empty pos types';
-//                        $newInst->removeUserPosition($position);
-//                    }
-//                }
+                $positions = $newInst->getUserPositions();
+                foreach( $positions as $position ) {
+                    echo "PRE_SUBMIT newInst position=".$position."<br>";
+                    if( count($position->getPositionTypes()) == 0 ) {
+                        //echo 'remove position with empty pos types';
+                        $newInst->removeUserPosition($position);
+                    }
+                }
 
                 $title->setInstitution($newInst);
 
                 //userPositions
                 //remove userPosition from institution if empty
-                $inst = $title->getInstitution();
-                $positions = $inst->getUserPositions();
-                //echo "PRE_SUBMIT position count=".count($positions)."<br>";
-                foreach( $positions as $position ) {
-                    //echo "PRE_SUBMIT position=".$position."<br>";
-                    if( count($position->getPositionTypes()) == 0 ) {
-                        //echo 'remove position with empty pos types';
-                        $inst->removeUserPosition($position);
-                    }
-                }
-                echo "after clean PRE_SUBMIT position count=".count($positions)."<br>";
-                foreach( $positions as $position ) {
-                    echo "PRE_SUBMIT position=".$position."<br>";
-                }
+//                $inst = $title->getInstitution();
+//                $positions = $inst->getUserPositions();
+//                //echo "PRE_SUBMIT position count=".count($positions)."<br>";
+//                foreach( $positions as $position ) {
+//                    //echo "PRE_SUBMIT position=".$position."<br>";
+//                    if( count($position->getPositionTypes()) == 0 ) {
+//                        //echo 'remove position with empty pos types';
+//                        $inst->removeUserPosition($position);
+//                    }
+//                }
+//                echo "after clean PRE_SUBMIT position count=".count($positions)."<br>";
+//                foreach( $positions as $position ) {
+//                    echo "PRE_SUBMIT position=".$position."<br>";
+//                }
+
             }
 
         });
@@ -198,6 +242,15 @@ class InstitutionType extends AbstractType
 
 
     }
+
+
+
+
+
+
+
+
+
 
 
     public function buildForm_ORIG(FormBuilderInterface $builder, array $options)

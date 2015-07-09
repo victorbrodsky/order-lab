@@ -123,7 +123,7 @@ class UserPosition {
     }
 
     public function getFullName() {
-        $fullName = "";
+        $fullName = "ID:".$this->getId()." ";
 
         if( $this->getUser() ) {
             $fullName = $fullName . $this->getUser()."";

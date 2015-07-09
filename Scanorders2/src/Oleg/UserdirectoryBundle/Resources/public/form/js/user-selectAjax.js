@@ -149,7 +149,7 @@ function getComboboxInstitution(holder) {
 
 
     if( _institutionRoot.length == 0 && thisid ) {
-        _institutionRoot = getChildrenByParent(entityName,thisid,null);
+        _institutionRoot = getChildrenByParent(entityName,$(targetid),thisid,null);
     }
 
     $(targetid).each( function(e) {
@@ -169,16 +169,26 @@ function getComboboxInstitution(holder) {
     });
 
 }
-function getChildrenByParent(entityName,thisid,parentid) {
+function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
 
     //do nothing if new element was enetered. In this case pid will be a string with a new element name.
     if( !isInt(thisid) || !isInt(parentid) ) {
         return null;
     }
 
+    var treeHolder = thiselement.closest('.composite-tree-holder');
+    var opt = 'combobox';
+    if( treeHolder.hasClass('institution-with-userpositions') ) {
+        opt = opt + ',userpositions';
+    }
+
+    //current userid
+    var dataElement = document.getElementById("form-prototype-data");
+    var userid = dataElement.getAttribute('data-userid');
+
     //employees_get_institution
     var treeUrl = Routing.generate('employees_get_composition_tree');
-    treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=combobox';
+    treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
     //console.log('treeUrl='+treeUrl);
 
     var children = new Array();

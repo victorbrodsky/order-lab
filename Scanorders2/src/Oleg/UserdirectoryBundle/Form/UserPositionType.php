@@ -88,7 +88,7 @@ class UserPositionType extends AbstractType
 //        ));
         $builder->add( 'user', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label' => 'User:',
+            'label' => false,
             'required'=> true,
             'multiple' => false,
             //'attr' => array('class'=>'combobox combobox-width userposition-user'),
@@ -102,20 +102,19 @@ class UserPositionType extends AbstractType
         ));
 
         $attr = array('class'=>'combobox combobox-width userposition-positiontypes');
-        //echo 'cycle='.$this->params['cycle']."<br>";
         if( strpos($this->params['cycle'],'show') !== false ) {
             $attr['readonly'] = 'readonly';
-            //echo 'readonly!!! <br>';
         }
 
         //visible as positionType combobox attached to an institution node
         $builder->add( 'positionTypes', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:PositionTypeList',
             'property' => 'name',
-            'label'=>'Position Type:',
+            'label' => false,
             'required'=> false,
             'multiple' => true,
             'attr' => $attr,
+            'data' => $this->params['positiontypes'],
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
@@ -127,34 +126,37 @@ class UserPositionType extends AbstractType
                 },
         ));
 
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//            $userpos = $event->getData();
-//            $form = $event->getForm();
-//            if( !$userpos ) {
-//                return;
-//            }
-//            //echo 'userpos count='.coun($userpos)."<br>";
-//            //echo 'postypes count='.coun($userpos->getPositionTypes())."<br>";
-//            foreach( $userpos->getPositionTypes() as $type ) {
-//                echo 'type='.$type."<br>";
-//            }
-//
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $userpos = $event->getData();
+            $form = $event->getForm();
+            if( !$userpos ) {
+                return;
+            }
+            //echo 'userpos count='.coun($userpos)."<br>";
+            //echo 'postypes count='.coun($userpos->getPositionTypes())."<br>";
+            foreach( $userpos->getPositionTypes() as $type ) {
+                echo '!PRE_SET_DATA user pos type='.$type."<br>";
+                //echo 'PRE_SET_DATA user pos type='.$type."(inst=".$type->getInstitution().",userid=".$type->getUser()->getId()."<br>";
+            }
+
+//            $form->add('positionTypes',null,array(
+//                'label' => false,
+//                'multiple' => true,
+//                'attr' => array('class' => 'combobox combobox-width userposition-positiontypes'),
+//            ));
+
+            //visible as positionType combobox attached to an institution node
 //            $attr = array('class'=>'combobox combobox-width userposition-positiontypes');
-//            //echo 'cycle='.$this->params['cycle']."<br>";
 //            if( strpos($this->params['cycle'],'show') !== false ) {
 //                $attr['readonly'] = 'readonly';
-//                //echo 'readonly!!! <br>';
 //            }
-//
-//            //visible as positionType combobox attached to an institution node
 //            $form->add( 'positionTypes', 'entity', array(
 //                'class' => 'OlegUserdirectoryBundle:PositionTypeList',
 //                'property' => 'name',
 //                'label'=>'Position Type:',
 //                'required'=> false,
 //                'multiple' => true,
-//                'attr' => $attr,
-//                'data' => $userpos->getPositionTypes(),
+//                'attr' => array('class'=>'combobox combobox-width userposition-positiontypes'),
 //                'query_builder' => function(EntityRepository $er) {
 //                        return $er->createQueryBuilder('list')
 //                            ->where("list.type = :typedef OR list.type = :typeadd")
@@ -165,8 +167,30 @@ class UserPositionType extends AbstractType
 //                            ));
 //                    },
 //            ));
-//
-//        });
+
+        });
+
+
+
+
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+
+            $userPosition = $event->getData();
+            $form = $event->getForm();
+
+            echo "!!!userPosition:<br>";
+            print_r($userPosition);
+            echo "<br>";
+
+            if( !$userPosition ) {
+                return;
+            }
+
+
+
+        });
+
 
 
     }

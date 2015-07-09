@@ -14,14 +14,14 @@ function setParentComboboxree(targetid, entityName, rowElHtml) {
     //console.log(treeHolder);
 
     var thisData = comboboxEl.select2('data');
-    console.log(thisData);
+    //console.log(thisData);
 
     if( !thisData ) {
         clearElementsIdName(treeHolder);
         return;
     }
 
-    console.log('thisData.pid='+thisData.pid);
+    //console.log('thisData.pid='+thisData.pid);
 
     //exit if no parent
     if( thisData.pid == 0 ) {
@@ -29,7 +29,7 @@ function setParentComboboxree(targetid, entityName, rowElHtml) {
         return;
     }
 
-    var treeArr = getChildrenByParent(entityName,thisData.pid,null);
+    var treeArr = getChildrenByParent(entityName,comboboxEl,thisData.pid,null);
 
     var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'top' );
     if( newElementsAppended ) {
@@ -148,7 +148,7 @@ function comboboxTreeListener( target, entityName, rowElHtml ) {
             return;
         }
 
-        var treeArr = getChildrenByParent(entityName,null,thisData.id);
+        var treeArr = getChildrenByParent(entityName,comboboxEl,null,thisData.id);
         //console.log( treeArr );
         //console.log( 'treeArr.length=' + treeArr.length );
 
@@ -235,7 +235,8 @@ function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr,
         }
 
         //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
-        var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
+        //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml,treeArr);
+        var comboboxHtml = rowElHtml;   //changePoistionTypeByNodeid(treeHolder,comboboxEl,rowElHtml,treeArr);
 
         //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
 
@@ -255,25 +256,37 @@ function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr,
         //change label
         newElementsAppendedRaw.find('label').text(label+":");
 
-        //change institution for user position .userposition-institution
+        ///////////// change institution for user position .userposition-institution
         var thisData = comboboxEl.select2('data');
         //console.log('change user position inst.id='+thisData.pid);
         var userPositionInstitution = newElementsAppendedRaw.find('.userposition-institution');
         //console.log(userPositionInstitution);
         userPositionInstitution.val(thisData.pid);
 
-        //console.log( 'newid='+newid );
-        //var newElementsAppended = treeHolder.find('#institution-'+newid);
+        ///////////// initialize the node
         var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
         //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
         populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
 
-        //var newUserposition = treeHolder.find('#userposition-'+newid);
+        ///////////// prepare the positiontypes
         var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
         //console.log( 'newUserposition.id='+newUserposition.attr('id') );
+        //remove unneeded div
         newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
+        //init the positiontypes
         specificRegularCombobox(newUserposition);
-        //newUserposition.select2("readonly", readonly);
+        //set the positiontypes
+        var positiontypes = treeArr[0].positiontypes;
+        //console.log('positiontypes='+positiontypes);
+        if( positiontypes ) {
+            newUserposition.select2('val', positiontypes);
+        } else {
+            //console.log('clear position types');
+            //console.log( newUserposition );
+            newUserposition.select2('data', null);
+        }
+        //replace id and name by current node id
+        changePoistionTypeByNodeid(newUserposition,thisData.id);
 
         //add listener to this element
         comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
@@ -284,16 +297,76 @@ function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr,
     return false;
 }
 
-function getNewTreeNode(treeHolder,comboboxEl,rowElHtml) {
+function changePoistionTypeByNodeid(element,nodeid) {
+    var elId = element.attr('id');
+    var elName = element.attr('name');
+    //console.log('modify element: prefix='+prefix+', id='+elId+', elName='+elName);
+
+    if( !elId || !elName ) {
+        return;
+    }
+
+    //oleg_userdirectorybundle_user_administrativeTitles_0_institution_userposition151_positionTypes
+    //replace userposition151 by 'userposition'+nodeid
+    var userPosArr = elId.split("_userposition");
+
+    //151_positionTypes
+    var secondStr = userPosArr[1];
+
+    var secondStrArr = secondStr.split('_');
+
+    var originalId = secondStrArr[0];
+    //console.log( "originalId=" + originalId );
+
+    var positionOld = 'userposition'+originalId;
+    var positionNew = 'userposition'+nodeid;
+    //console.log( "positionOld=" + positionOld + ", positionNew=" + positionNew );
+
+    //replace
+    elId = elId.replace(positionOld, positionNew);
+    elName = elName.replace(positionOld, positionNew);
+
+    element.attr('id',elId);
+    element.attr('name',elName);
+}
+
+function getNewTreeNode(treeHolder,comboboxEl,rowElHtml,treeArr) {
 
     //console.log( "rowElHtml=" + rowElHtml );
 
     //rowElHtml = '<div class="trenode">'+rowElHtml+'</div>';
 
-    var index = getNextElementCount(treeHolder,'ajax-combobox-institution');
+//    var comboboxId = comboboxEl.attr('id');
+//    console.log( "comboboxId=" + comboboxId );
+//
+//    var thisid = treeArr[0].id;
+//
+//    //oleg_userdirectorybundle_user_administrativeTitles_0_institution_userposition151_positionTypes
+//    //replace _userposition151_ by '_userposition'+thisid+'_'
+//    var userPosArr = comboboxId.split("_userposition");
+//
+//    //151_positionTypes
+//    var secondStr = userPosArr[1];
+//
+//    var secondStrArr = secondStr.split('_');
+//
+//    var originalId = secondStrArr[0];
+//    console.log( "originalId=" + originalId );
+//
+//    var positionOld = '_userposition'+originalId+'_';
+//    var positionNew = '_userposition'+thisid+'_';
+//
+//    var re = new RegExp(positionOld, 'g');
+//    rowElHtml = rowElHtml.replace(re, positionNew);
+
+
+    var index = 0;
     //console.log( "index=" + index );
 
-    rowElHtml = rowElHtml.replace(/__userpositions__/g, index);
+    index = '_userPositions_'+index;
+
+    //rowElHtml = rowElHtml.replace(/__userpositions__/g, index);
+    rowElHtml = rowElHtml.replace(/_userPositions_0/g, index);
 
     //console.log( "rowElHtml=" + rowElHtml );
 
