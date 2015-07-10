@@ -36,7 +36,9 @@
     </p>
 
     {% if node.institutionspositiontypes is defined %}
-        {{ formmacros.field(node.institutionspositiontypes) }}
+        <div class="positiontypes-holder">
+            {{ formmacros.field(node.institutionspositiontypes) }}
+        </div>
     {% endif %}
 
 {% endmacro %}

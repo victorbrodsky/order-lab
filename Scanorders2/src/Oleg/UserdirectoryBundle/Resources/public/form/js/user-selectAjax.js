@@ -147,8 +147,9 @@ function getComboboxInstitution(holder) {
 //        console.log('parentid='+parentid);
 //    }
 
+    var label = getComboboxNodeLabel($(targetid));
 
-    if( _institutionRoot.length == 0 && thisid ) {
+    if( _institutionRoot.length == 0 && thisid && label != _institutionRoot.leveltitle ) {
         _institutionRoot = getChildrenByParent(entityName,$(targetid),thisid,null);
     }
 

@@ -59,6 +59,16 @@ class InstitutionType extends AbstractType
 
                 //unmapped field: institution-userpositiontype
                 $positions = $this->params['em']->getRepository('OlegUserdirectoryBundle:PositionTypeList')->findAll();
+                //$positionIds = array();
+                //$positionNames = array();
+                $positionIdName = array();
+                foreach( $positions as $position ) {
+                    //$positionIds[] = $position->getId();
+                    //$positionNames[] = $position->getName();
+                    $positionIdName[] = $position->getId() . '-' . $position->getName();
+                }
+
+
                 $institutionsPositiontypes = array();
                 $dataPositions = array();
 
@@ -90,7 +100,7 @@ class InstitutionType extends AbstractType
                     'multiple' => true,
                     'required' => false,
                     'data' => $dataPositions,
-                    'attr' => array('class' => 'combobox'),
+                    'attr' => array('class' => 'combobox institutionspositiontypes', 'data-positions-idname' => implode(",", $positionIdName) ),
                 ));
 
             }
