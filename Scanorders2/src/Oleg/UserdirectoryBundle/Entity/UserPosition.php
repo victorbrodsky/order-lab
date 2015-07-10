@@ -14,7 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_userPosition")
+ * @ORM\Table(name="user_userPosition",
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="userposition_unique", columns={"institution_id", "user_id"})}
+ * )
  */
 class UserPosition {
 
@@ -26,10 +28,10 @@ class UserPosition {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="userPositions", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="userPositions", cascade={"persist"})
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $institution;
+    private $institution;
 
     /**
      * User object
@@ -115,7 +117,14 @@ class UserPosition {
     {
         return $this->positionTypes;
     }
-
+    public function clearPositionTypes()
+    {
+        foreach( $this->getPositionTypes() as $posType )
+        {
+            $this->removePositionType($posType);
+        }
+        return $this;
+    }
 
 
     public function __toString() {

@@ -31,155 +31,147 @@
 
     <p>
     <div class="composite-tree-holder {{ institutionWithUserPositions }}">
-    {#<div id="node-userpositions-data" data-prototype-user-userpositions = "{{ userPositionPrototype|e }}"></div>#}
-        {#<div style="display: none;">#}
-            {#{% if node.breadcrumbs is defined %}#}
-                {#{{ formmacros.field(node.breadcrumbs) }}#}
-            {#{% endif %}#}
-            {#{% if node.id is defined %}#}
-                {#{{ formmacros.field(node.id) }}#}
-            {#{% endif %}#}
-            {#{% if node.parent is defined %}#}
-                {#{{ formmacros.field(node.parent) }}#}
-            {#{% endif %}#}
-        {#</div>#}
-
-        {#{% set nodeLabel = 'Node:' %}#}
-        {#{% if node.institutionnode is defined %}            #}
-            {#{% set nodeLabel = node.institutionnode.vars.label %}#}
-        {#{% endif %}#}
-        {#{% if node.id is defined %}#}
-            {#{% set nodeLabel = node.id.vars.label %}#}
-            {#node.id:{{ node.id.vars.value }}#}
-            {#{{ formmacros.field(node.id) }}#}
-            {#{{ form_widget(node.id) }}#}
-        {#{% endif %}#}
-
         {{ treemacros.compositeSingleTreeNode(node,cycle,prototype) }}
-
     </div>
     </p>
+
+    {% if node.institutionspositiontypes is defined %}
+        {{ formmacros.field(node.institutionspositiontypes) }}
+    {% endif %}
+
 {% endmacro %}
-
 {% macro compositeSingleTreeNode( node, cycle, prototype ) %}
-    {% import _self as treemacros %}
-
     <div class="row treenode">
         <div class="col-xs-6" align="right">
             {{ form_label(node.id) }}
         </div>
+        <div class="col-xs-6" align="left">
+            {{ form_widget(node.id) }}
+        </div>
+    </div>
+    {#{% do node.setRendered %}#}
+{% endmacro %}
 
-        {#display node by id#}
-        {% if node.vars.value %}
-            {#node.vars.value.id:{{ node.vars.value.id }}#}
-            {#node.vars.value.getIdBreadcrumbs():{{ node.vars.value.getIdBreadcrumbs()|join(',') }}#}
-            {#{% if node.vars.value.id in node.vars.value.getIdBreadcrumbs() %}#}
-            {% if attribute(node, 'userposition'~node.vars.value.id) is defined %}
-                {% set userpositionform = attribute(node, 'userposition'~node.vars.value.id) %}
-                {#{% set userpositionform = node.userposition151 %}#}
-            {% endif %}
-        {% endif %}
 
+{#{% macro compositeSingleTreeNode_TODEL( node, cycle, prototype ) %}#}
+    {#{% import _self as treemacros %}#}
+
+    {#<div class="row treenode">#}
+        {#<div class="col-xs-6" align="right">#}
+            {#{{ form_label(node.id) }}#}
+        {#</div>#}
+
+        {#&#123;&#35;display node by id&#35;&#125;#}
+        {#{% if node.vars.value %}#}
+            {#&#123;&#35;node.vars.value.id:{{ node.vars.value.id }}&#35;&#125;#}
+            {#&#123;&#35;node.vars.value.getIdBreadcrumbs():{{ node.vars.value.getIdBreadcrumbs()|join(',') }}&#35;&#125;#}
+            {#&#123;&#35;{% if node.vars.value.id in node.vars.value.getIdBreadcrumbs() %}&#35;&#125;#}
+            {#{% if attribute(node, 'userposition'~node.vars.value.id) is defined %}#}
+                {#{% set userpositionform = attribute(node, 'userposition'~node.vars.value.id) %}#}
+                {#&#123;&#35;{% set userpositionform = node.userposition151 %}&#35;&#125;#}
+            {#{% endif %}#}
+        {#{% endif %}#}
+
+        {#&#123;&#35;{% if node.userPositions is defined %}&#35;&#125;#}
+        {#{% if userpositionform is defined %}#}
+            {#<div class="col-xs-4" align="left">#}
+                {#{{ form_widget(node.id) }}#}
+            {#</div>#}
+            {#<div class="col-xs-2" align="left">#}
+                {#&#123;&#35;{{ treemacros.userPositionField(node,cycle,'') }}&#35;&#125;#}
+                {#{{ treemacros.userPositionField(userpositionform,cycle,'') }}#}
+            {#</div>#}
+        {#{% else %}#}
+            {#<div class="col-xs-6" align="left">#}
+                {#{{ form_widget(node.id) }}#}
+            {#</div>#}
+        {#{% endif %}#}
+
+    {#</div>#}
+    {#{% do node.setRendered %}#}
+{#{% endmacro %}#}
+
+{#{% macro userPositionField( position,cycle,prototype ) %}#}
+
+    {#{% if position and position is defined %}#}
+        {#<div style="display: none;">#}
+            {#{% if position.institution is defined %}#}
+                {#{{ form_widget(position.institution) }}#}
+            {#{% endif %}#}
+            {#{% if position.user is defined %}#}
+                {#{{ form_widget(position.user) }}#}
+            {#{% endif %}#}
+        {#</div>#}
+
+        {#{{ form_widget(position.positionTypes) }}#}
+    {#{% endif %}#}
+{#{% endmacro %}#}
+
+
+{#{% macro compositeSingleTreeNode_ORIG( node, cycle, prototype ) %}#}
+    {#{% import _self as treemacros %}#}
+
+    {#<div class="row">#}
+        {#<div class="col-xs-6" align="right">#}
+            {#&#123;&#35;<strong>{{ nodeLabel }}</strong>&#35;&#125;#}
+            {#{{ form_label(node.institutionnode) }}#}
+        {#</div>#}
         {#{% if node.userPositions is defined %}#}
-        {% if userpositionform is defined %}
-            <div class="col-xs-4" align="left">
-                {{ form_widget(node.id) }}
-            </div>
-            <div class="col-xs-2" align="left">
-                {#{{ treemacros.userPositionField(node,cycle,'') }}#}
-                {{ treemacros.userPositionField(userpositionform,cycle,'') }}
-            </div>
-        {% else %}
-            <div class="col-xs-6" align="left">
-                {{ form_widget(node.id) }}
-            </div>
-        {% endif %}
-
-    </div>
-    {% do node.setRendered %}
-{% endmacro %}
-
-{% macro userPositionField( position,cycle,prototype ) %}
-
-    {% if position and position is defined %}
-        <div style="display: none;">
-            {% if position.institution is defined %}
-                {{ form_widget(position.institution) }}
-            {% endif %}
-            {% if position.user is defined %}
-                {{ form_widget(position.user) }}
-            {% endif %}
-        </div>
-
-        {{ form_widget(position.positionTypes) }}
-    {% endif %}
-{% endmacro %}
-
-
-{% macro compositeSingleTreeNode_ORIG( node, cycle, prototype ) %}
-    {% import _self as treemacros %}
-
-    <div class="row">
-        <div class="col-xs-6" align="right">
-            {#<strong>{{ nodeLabel }}</strong>#}
-            {{ form_label(node.institutionnode) }}
-        </div>
-        {% if node.userPositions is defined %}
-            <div class="col-xs-4" align="left">
-                {#<input id="node-{{ nodeLabel }}" class="ajax-combobox-institution" type="hidden" />#}
-                {#<input id="userposition-{{ nodeLabel }}" class="ajax-combobox-userpositions" type="hidden" />#}
-                {{ form_widget(node.institutionnode) }}
-            </div>
-            <div class="col-xs-2" align="left">
+            {#<div class="col-xs-4" align="left">#}
+                {#&#123;&#35;<input id="node-{{ nodeLabel }}" class="ajax-combobox-institution" type="hidden" />&#35;&#125;#}
+                {#&#123;&#35;<input id="userposition-{{ nodeLabel }}" class="ajax-combobox-userpositions" type="hidden" />&#35;&#125;#}
+                {#{{ form_widget(node.institutionnode) }}#}
+            {#</div>#}
+            {#<div class="col-xs-2" align="left">#}
+                {#&#123;&#35;{{ treemacros.userPositionField(node,cycle,'prototype') }}&#35;&#125;#}
                 {#{{ treemacros.userPositionField(node,cycle,'prototype') }}#}
-                {{ treemacros.userPositionField(node,cycle,'prototype') }}
-            </div>
-        {% else %}
-            <div class="col-xs-6" align="left">
-                {{ form_widget(node.institutionnode) }}
-            </div>
-        {% endif %}
+            {#</div>#}
+        {#{% else %}#}
+            {#<div class="col-xs-6" align="left">#}
+                {#{{ form_widget(node.institutionnode) }}#}
+            {#</div>#}
+        {#{% endif %}#}
 
-    </div>
-{% endmacro %}
+    {#</div>#}
+{#{% endmacro %}#}
 
-{% macro userPositionField_ORIG( node,cycle,prototype ) %}
-    {% if node.userPositions is defined %}
-        {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{#{% macro userPositionField_ORIG( node,cycle,prototype ) %}#}
+    {#{% if node.userPositions is defined %}#}
+        {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
 
-        {#prototype:{{ prototype }}#}
-        {% if prototype == "prototype" %}
-            {% set userPositions = node.userPositions.vars.prototype %}
-        {% else %}
-            {% set userPositions = node.userPositions %}
-        {% endif %}
+        {#&#123;&#35;prototype:{{ prototype }}&#35;&#125;#}
+        {#{% if prototype == "prototype" %}#}
+            {#{% set userPositions = node.userPositions.vars.prototype %}#}
+        {#{% else %}#}
+            {#{% set userPositions = node.userPositions %}#}
+        {#{% endif %}#}
 
-        {% for positionType in userPositions  %}
-            {#<div>#}
-            <div style="display: none;">
-                {% if positionType.institution is defined %}
-                    {#{{ formmacros.field(nodeThis.institution) }}#}
-                    {{ form_widget(positionType.institution) }}
-                {% endif %}
-                {% if positionType.user is defined %}
-                    {#{{ formmacros.field(nodeThis.user) }}#}
-                    {{ form_widget(positionType.user) }}
-                {% endif %}
-            </div>
-            {% if positionType.positionTypes is defined %}
-                {#{% if nodeThis.positionTypes.vars.value %}#}
-                    {#nodeThis.positionTypes.length:{{ nodeThis.positionTypes.vars.value.length }}#}
+        {#{% for positionType in userPositions  %}#}
+            {#&#123;&#35;<div>&#35;&#125;#}
+            {#<div style="display: none;">#}
+                {#{% if positionType.institution is defined %}#}
+                    {#&#123;&#35;{{ formmacros.field(nodeThis.institution) }}&#35;&#125;#}
+                    {#{{ form_widget(positionType.institution) }}#}
                 {#{% endif %}#}
-                {#{% for pos in nodeThis.positionTypes %}#}
-                    {#pos:{{ pos.vars.value.name }}#}
-                {#{% endfor %}#}
-                {{ form_widget(positionType.positionTypes) }}
-            {% endif %}
-        {% endfor %}
+                {#{% if positionType.user is defined %}#}
+                    {#&#123;&#35;{{ formmacros.field(nodeThis.user) }}&#35;&#125;#}
+                    {#{{ form_widget(positionType.user) }}#}
+                {#{% endif %}#}
+            {#</div>#}
+            {#{% if positionType.positionTypes is defined %}#}
+                {#&#123;&#35;{% if nodeThis.positionTypes.vars.value %}&#35;&#125;#}
+                    {#&#123;&#35;nodeThis.positionTypes.length:{{ nodeThis.positionTypes.vars.value.length }}&#35;&#125;#}
+                {#&#123;&#35;{% endif %}&#35;&#125;#}
+                {#&#123;&#35;{% for pos in nodeThis.positionTypes %}&#35;&#125;#}
+                    {#&#123;&#35;pos:{{ pos.vars.value.name }}&#35;&#125;#}
+                {#&#123;&#35;{% endfor %}&#35;&#125;#}
+                {#{{ form_widget(positionType.positionTypes) }}#}
+            {#{% endif %}#}
+        {#{% endfor %}#}
 
-    {% endif %}
+    {#{% endif %}#}
 
-{% endmacro %}
+{#{% endmacro %}#}
 
 {#{% macro compositeSimplefieldTree( label, jstreeid ) %}#}
     {#&#123;&#35;{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}&#35;&#125;#}

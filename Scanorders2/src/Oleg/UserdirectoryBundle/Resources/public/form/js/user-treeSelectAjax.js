@@ -37,47 +37,6 @@ function setParentComboboxree(targetid, entityName, rowElHtml) {
         setParentComboboxree(newElementsAppended, entityName, rowElHtml);
     }
 
-//    if( treeArr == null ) {
-//        return;
-//    }
-//
-//    if( treeArr.length > 0 ) {
-//
-//        var label = "Top "+treeArr[0].leveltitle;
-//        console.log('label='+label);
-//
-//        //readonly combobox
-//        var readonly = "";
-//        if( cycle.indexOf("show") != -1 ) {
-//            readonly = "readonly";
-//        }
-//
-//        //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
-//        var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
-//
-//        //treeHolder.append(comboboxHtml);
-//        var newElementsAppendedRaw = $(comboboxHtml).insertBefore(targetid.closest('.treenode'));
-//
-//        //change label
-//        newElementsAppendedRaw.find('label').text(label+":");
-//
-//        //change institution for user position .userposition-institution
-//        newElementsAppendedRaw.find('.userposition-institution').val(thisData.id);
-//
-//        var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
-//        populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
-//        newElementsAppended.select2('val',thisData.pid);
-//
-//        var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
-//        newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
-//        specificRegularCombobox(newUserposition);
-//
-//        comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
-//
-//        setParentComboboxree(newElementsAppended, entityName, rowElHtml);
-//
-//    } //if
-
 }
 function setTreeByClickingParent_OLD(targetid, entityName) {
     return; //testing
@@ -158,60 +117,6 @@ function comboboxTreeListener( target, entityName, rowElHtml ) {
             clearElementsIdName(treeHolder);
         }
 
-//        //do nothing if new element was enetered
-//        if( treeArr == null ) {
-//            console.log('do nothing if new element was enetered');
-//            return;
-//        }
-//
-//        if( treeArr.length > 0 ) {
-//
-//            var label = treeArr[0].leveltitle;
-//            //console.log( 'label='+ label );
-//
-//            //readonly combobox
-//            var readonly = "";
-//            if( cycle.indexOf("show") != -1 ) {
-//                readonly = "readonly";
-//            }
-//
-//            //var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl);    //treeHolder.find('#node-userpositions-data');
-//            var comboboxHtml = getNewTreeNode(treeHolder,comboboxEl,rowElHtml);
-//
-//            //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
-//
-//            //var treeHolder = comboboxEl.closest('.composite-tree-holder');
-//            //console.log( treeHolder );
-//
-//            //treeHolder.append(comboboxHtml);
-//            var newElementsAppendedRaw = $(comboboxHtml).appendTo(treeHolder);
-//
-//            //change label
-//            newElementsAppendedRaw.find('label').text(label+":");
-//
-//            //change institution for user position .userposition-institution
-//            newElementsAppendedRaw.find('.userposition-institution').val(thisData.id);
-//
-//            //console.log( 'newid='+newid );
-//            //var newElementsAppended = treeHolder.find('#institution-'+newid);
-//            var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
-//            //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
-//            populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
-//
-//            //var newUserposition = treeHolder.find('#userposition-'+newid);
-//            var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
-//            //console.log( 'newUserposition.id='+newUserposition.attr('id') );
-//            newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
-//            specificRegularCombobox(newUserposition);
-//
-//            //remove id and name for all inputs preceding the input with selected node
-//            clearElementsIdName(treeHolder);
-//
-//            //add listener to this element
-//            comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
-//
-//        } //if
-
     });
 
 }
@@ -269,24 +174,24 @@ function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr,
         populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
 
         ///////////// prepare the positiontypes
-        var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
-        //console.log( 'newUserposition.id='+newUserposition.attr('id') );
-        //remove unneeded div
-        newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
-        //init the positiontypes
-        specificRegularCombobox(newUserposition);
-        //set the positiontypes
-        var positiontypes = treeArr[0].positiontypes;
-        //console.log('positiontypes='+positiontypes);
-        if( positiontypes ) {
-            newUserposition.select2('val', positiontypes);
-        } else {
-            //console.log('clear position types');
-            //console.log( newUserposition );
-            newUserposition.select2('data', null);
-        }
-        //replace id and name by current node id
-        changePoistionTypeByNodeid(newUserposition,thisData.id);
+//        var newUserposition = newElementsAppendedRaw.find('select.userposition-positiontypes');    //find('.userposition-positiontypes');
+//        //console.log( 'newUserposition.id='+newUserposition.attr('id') );
+//        //remove unneeded div
+//        newElementsAppendedRaw.find('div.userposition-positiontypes').remove();
+//        //init the positiontypes
+//        specificRegularCombobox(newUserposition);
+//        //set the positiontypes
+//        var positiontypes = treeArr[0].positiontypes;
+//        //console.log('positiontypes='+positiontypes);
+//        if( positiontypes ) {
+//            newUserposition.select2('val', positiontypes);
+//        } else {
+//            //console.log('clear position types');
+//            //console.log( newUserposition );
+//            newUserposition.select2('data', null);
+//        }
+//        //replace id and name by current node id
+//        changePoistionTypeByNodeid(newUserposition,thisData.id);
 
         //add listener to this element
         comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
@@ -297,53 +202,18 @@ function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr,
     return false;
 }
 
-function changePoistionTypeByNodeid(element,nodeid) {
-    var elId = element.attr('id');
-    var elName = element.attr('name');
-    //console.log('modify element: prefix='+prefix+', id='+elId+', elName='+elName);
-
-    if( !elId || !elName ) {
-        return;
-    }
-
-    //oleg_userdirectorybundle_user_administrativeTitles_0_institution_userposition151_positionTypes
-    //replace userposition151 by 'userposition'+nodeid
-    var userPosArr = elId.split("_userposition");
-
-    //151_positionTypes
-    var secondStr = userPosArr[1];
-
-    var secondStrArr = secondStr.split('_');
-
-    var originalId = secondStrArr[0];
-    //console.log( "originalId=" + originalId );
-
-    var positionOld = 'userposition'+originalId;
-    var positionNew = 'userposition'+nodeid;
-    //console.log( "positionOld=" + positionOld + ", positionNew=" + positionNew );
-
-    //replace
-    elId = elId.replace(positionOld, positionNew);
-    elName = elName.replace(positionOld, positionNew);
-
-    element.attr('id',elId);
-    element.attr('name',elName);
-}
-
-function getNewTreeNode(treeHolder,comboboxEl,rowElHtml,treeArr) {
-
-    //console.log( "rowElHtml=" + rowElHtml );
-
-    //rowElHtml = '<div class="trenode">'+rowElHtml+'</div>';
-
-//    var comboboxId = comboboxEl.attr('id');
-//    console.log( "comboboxId=" + comboboxId );
+//function changePoistionTypeByNodeid(element,nodeid) {
+//    var elId = element.attr('id');
+//    var elName = element.attr('name');
+//    //console.log('modify element: prefix='+prefix+', id='+elId+', elName='+elName);
 //
-//    var thisid = treeArr[0].id;
+//    if( !elId || !elName ) {
+//        return;
+//    }
 //
 //    //oleg_userdirectorybundle_user_administrativeTitles_0_institution_userposition151_positionTypes
-//    //replace _userposition151_ by '_userposition'+thisid+'_'
-//    var userPosArr = comboboxId.split("_userposition");
+//    //replace userposition151 by 'userposition'+nodeid
+//    var userPosArr = elId.split("_userposition");
 //
 //    //151_positionTypes
 //    var secondStr = userPosArr[1];
@@ -351,27 +221,62 @@ function getNewTreeNode(treeHolder,comboboxEl,rowElHtml,treeArr) {
 //    var secondStrArr = secondStr.split('_');
 //
 //    var originalId = secondStrArr[0];
-//    console.log( "originalId=" + originalId );
+//    //console.log( "originalId=" + originalId );
 //
-//    var positionOld = '_userposition'+originalId+'_';
-//    var positionNew = '_userposition'+thisid+'_';
+//    var positionOld = 'userposition'+originalId;
+//    var positionNew = 'userposition'+nodeid;
+//    //console.log( "positionOld=" + positionOld + ", positionNew=" + positionNew );
 //
-//    var re = new RegExp(positionOld, 'g');
-//    rowElHtml = rowElHtml.replace(re, positionNew);
+//    //replace
+//    elId = elId.replace(positionOld, positionNew);
+//    elName = elName.replace(positionOld, positionNew);
+//
+//    element.attr('id',elId);
+//    element.attr('name',elName);
+//}
 
-
-    var index = 0;
-    //console.log( "index=" + index );
-
-    index = '_userPositions_'+index;
-
-    //rowElHtml = rowElHtml.replace(/__userpositions__/g, index);
-    rowElHtml = rowElHtml.replace(/_userPositions_0/g, index);
-
-    //console.log( "rowElHtml=" + rowElHtml );
-
-    return rowElHtml;
-}
+//function getNewTreeNode(treeHolder,comboboxEl,rowElHtml,treeArr) {
+//
+//    //console.log( "rowElHtml=" + rowElHtml );
+//
+//    //rowElHtml = '<div class="trenode">'+rowElHtml+'</div>';
+//
+////    var comboboxId = comboboxEl.attr('id');
+////    console.log( "comboboxId=" + comboboxId );
+////
+////    var thisid = treeArr[0].id;
+////
+////    //oleg_userdirectorybundle_user_administrativeTitles_0_institution_userposition151_positionTypes
+////    //replace _userposition151_ by '_userposition'+thisid+'_'
+////    var userPosArr = comboboxId.split("_userposition");
+////
+////    //151_positionTypes
+////    var secondStr = userPosArr[1];
+////
+////    var secondStrArr = secondStr.split('_');
+////
+////    var originalId = secondStrArr[0];
+////    console.log( "originalId=" + originalId );
+////
+////    var positionOld = '_userposition'+originalId+'_';
+////    var positionNew = '_userposition'+thisid+'_';
+////
+////    var re = new RegExp(positionOld, 'g');
+////    rowElHtml = rowElHtml.replace(re, positionNew);
+//
+//
+//    var index = 0;
+//    //console.log( "index=" + index );
+//
+//    index = '_userPositions_'+index;
+//
+//    //rowElHtml = rowElHtml.replace(/__userpositions__/g, index);
+//    rowElHtml = rowElHtml.replace(/_userPositions_0/g, index);
+//
+//    //console.log( "rowElHtml=" + rowElHtml );
+//
+//    return rowElHtml;
+//}
 
 //modify all id and name by attaching a prefix "newelement_" to all ajax-combobox-institution element prior to the last not empty combobox
 function clearElementsIdName(treeHolder) {
@@ -385,7 +290,6 @@ function clearElementsIdName(treeHolder) {
 
     clearRecursivelyIdName(lastNode);
 }
-
 function clearRecursivelyIdName(treenode) {
     //console.log('process treenode:');
     //console.log(treenode);
@@ -469,25 +373,28 @@ function mapTreeNode( element, mapped ) {
     element.attr('name',elName);
 }
 
-function getNewTreeNode_ORIG(treeHolder) {
-    var datael = treeHolder.find('#node-userpositions-data');
 
-    if( !datael ) {
-        return;
-    }
 
-    var prototype = datael.data('prototype-'+'user-userpositions');
 
-    //var index = 0;
-    var index = getNextElementCount(treeHolder,'ajax-combobox-institution');
-
-    //prototype = prototype.replace("__documentContainers__", "0");
-    prototype = prototype.replace(/__userpositions__/g, index);
-
-    //console.log( "prototype=" + prototype );
-
-    return prototype;
-}
+//function getNewTreeNode_ORIG(treeHolder) {
+//    var datael = treeHolder.find('#node-userpositions-data');
+//
+//    if( !datael ) {
+//        return;
+//    }
+//
+//    var prototype = datael.data('prototype-'+'user-userpositions');
+//
+//    //var index = 0;
+//    var index = getNextElementCount(treeHolder,'ajax-combobox-institution');
+//
+//    //prototype = prototype.replace("__documentContainers__", "0");
+//    prototype = prototype.replace(/__userpositions__/g, index);
+//
+//    //console.log( "prototype=" + prototype );
+//
+//    return prototype;
+//}
 
 function setTreeNode( entityName, treeHolder, node, data ) {
     //3 case: data has id and text (both equal to a node name), but does not have pid - new node => pid is previous select box
@@ -524,89 +431,89 @@ function setTreeNode( entityName, treeHolder, node, data ) {
         //console.log(node.select2('data'));
     }
 }
-function setNodeIdPid_OLD( entityName, treeHolder, node, data ) {
-
-    //console.log( data );
-
-    //treeHolder.find('.tree-node-id').val(data.id);
-    //treeHolder.find('.tree-node-parent').val(data.pid);
-
-    //1 case: data has id and pid - existing node (pid might be 0)
-    if( data && data.id && data.hasOwnProperty("pid") ) {
-        //console.log("1 case: data has id and pid - existing node");
-        treeHolder.find('.tree-node-id').val(data.id);
-        treeHolder.find('.tree-node-parent').val(data.pid);
-    }
-
-    //2 case: data is null - clear node => set as previous select box
-    if( !data ) {
-        //console.log("2 case: data is null - clear node");
-        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
-        //console.log(prevNodeData);
-        var thisId = 0;
-        var thisPid = 0;
-        if( prevNodeData ) {
-            thisId = prevNodeData.id;
-            thisPid = prevNodeData.pid;
-        }
-        //console.log( 'id='+thisId+", pid="+thisPid );
-        treeHolder.find('.tree-node-id').val(thisId);
-        treeHolder.find('.tree-node-parent').val(thisPid);
-    }
-
-    //3 case: data has id and text (both equal to a node name), but does not have pid - new node => pid is previous select box
-    //generate new node in DB
-    if( data && data.id && !data.hasOwnProperty("pid") ) {
-        //console.log("3 case: new node");
-
-        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
-        //console.log(prevNodeData);
-
-        var conf = "Are you sure you want to create " + "'" + data.id + "?";
-        if( prevNodeData && data.hasOwnProperty("leveltitle") ) {
-            conf = "Are you sure you want to create " + "'" + data.id + "' under " + prevNodeData.leveltitle + "?";
-        }
-        if( !window.confirm(conf) ) {
-            //treeHolder.find('.tree-node-id').val(0);
-            node.select2('data', null);
-            return;
-        }
-
-        var thisPid = 0;
-        if( prevNodeData ) {
-            thisPid = prevNodeData.id;
-        }
-
-        var newnodeid = jstree_action_node(entityName, 'create_node', null, data.id, thisPid, null, null, null, null, 'combobox');
-
-        if( newnodeid ) {
-            treeHolder.find('.tree-node-id').val(newnodeid);
-            treeHolder.find('.tree-node-parent').val(prevNodeData.id);
-        } else {
-            treeHolder.find('.tree-node-id').val(0);
-            treeHolder.find('.tree-node-parent').val(prevNodeData.id);
-        }
-
-    }
-
-    //set id and pid only
-//    if( data && data.id && !data.hasOwnProperty("pid") ) {
-//        console.log("3 case: new node");
+//function setNodeIdPid_OLD( entityName, treeHolder, node, data ) {
+//
+//    //console.log( data );
+//
+//    //treeHolder.find('.tree-node-id').val(data.id);
+//    //treeHolder.find('.tree-node-parent').val(data.pid);
+//
+//    //1 case: data has id and pid - existing node (pid might be 0)
+//    if( data && data.id && data.hasOwnProperty("pid") ) {
+//        //console.log("1 case: data has id and pid - existing node");
+//        treeHolder.find('.tree-node-id').val(data.id);
+//        treeHolder.find('.tree-node-parent').val(data.pid);
+//    }
+//
+//    //2 case: data is null - clear node => set as previous select box
+//    if( !data ) {
+//        //console.log("2 case: data is null - clear node");
 //        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
-//        console.log(prevNodeData);
-//        var thisId = data.id;
+//        //console.log(prevNodeData);
+//        var thisId = 0;
 //        var thisPid = 0;
 //        if( prevNodeData ) {
-//            //thisId = prevNodeData.id
-//            thisPid = prevNodeData.id;
+//            thisId = prevNodeData.id;
+//            thisPid = prevNodeData.pid;
 //        }
-//        console.log( 'id='+thisId+", pid="+thisPid );
+//        //console.log( 'id='+thisId+", pid="+thisPid );
 //        treeHolder.find('.tree-node-id').val(thisId);
 //        treeHolder.find('.tree-node-parent').val(thisPid);
 //    }
-
-    //console.log( 'id='+treeHolder.find('.tree-node-id').val()+", pid="+treeHolder.find('.tree-node-parent').val() );
-}
+//
+//    //3 case: data has id and text (both equal to a node name), but does not have pid - new node => pid is previous select box
+//    //generate new node in DB
+//    if( data && data.id && !data.hasOwnProperty("pid") ) {
+//        //console.log("3 case: new node");
+//
+//        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
+//        //console.log(prevNodeData);
+//
+//        var conf = "Are you sure you want to create " + "'" + data.id + "?";
+//        if( prevNodeData && data.hasOwnProperty("leveltitle") ) {
+//            conf = "Are you sure you want to create " + "'" + data.id + "' under " + prevNodeData.leveltitle + "?";
+//        }
+//        if( !window.confirm(conf) ) {
+//            //treeHolder.find('.tree-node-id').val(0);
+//            node.select2('data', null);
+//            return;
+//        }
+//
+//        var thisPid = 0;
+//        if( prevNodeData ) {
+//            thisPid = prevNodeData.id;
+//        }
+//
+//        var newnodeid = jstree_action_node(entityName, 'create_node', null, data.id, thisPid, null, null, null, null, 'combobox');
+//
+//        if( newnodeid ) {
+//            treeHolder.find('.tree-node-id').val(newnodeid);
+//            treeHolder.find('.tree-node-parent').val(prevNodeData.id);
+//        } else {
+//            treeHolder.find('.tree-node-id').val(0);
+//            treeHolder.find('.tree-node-parent').val(prevNodeData.id);
+//        }
+//
+//    }
+//
+//    //set id and pid only
+////    if( data && data.id && !data.hasOwnProperty("pid") ) {
+////        console.log("3 case: new node");
+////        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
+////        console.log(prevNodeData);
+////        var thisId = data.id;
+////        var thisPid = 0;
+////        if( prevNodeData ) {
+////            //thisId = prevNodeData.id
+////            thisPid = prevNodeData.id;
+////        }
+////        console.log( 'id='+thisId+", pid="+thisPid );
+////        treeHolder.find('.tree-node-id').val(thisId);
+////        treeHolder.find('.tree-node-parent').val(thisPid);
+////    }
+//
+//    //console.log( 'id='+treeHolder.find('.tree-node-id').val()+", pid="+treeHolder.find('.tree-node-parent').val() );
+//}
 
 ////////////////////////////// EOF TREE //////////////////////////////////
 

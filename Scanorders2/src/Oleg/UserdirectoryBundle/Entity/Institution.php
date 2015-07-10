@@ -65,21 +65,6 @@ class Institution extends BaseCompositeNode {
      **/
     private $types;
 
-    //    /**
-//     * @ORM\OneToMany(targetEntity="Department", mappedBy="parent", cascade={"persist"})
-//     */
-//    protected $departments;
-//    /**
-//     * @ORM\ManyToMany(targetEntity="User")
-//     * @ORM\JoinTable(name="user_institution_head")
-//     **/
-//    private $heads;
-//    /**
-//     * //Position Type: Head, Manager, Primary Contact, Transcriptionist
-//     * @ORM\ManyToMany(targetEntity="InstitutionType", inversedBy="institutions")
-//     * @ORM\JoinTable(name="user_institutions_types")
-//     **/
-//    private $positionTypes;
     /**
      * @ORM\OneToMany(targetEntity="UserPosition", mappedBy="institution", cascade={"persist","remove"})
      */

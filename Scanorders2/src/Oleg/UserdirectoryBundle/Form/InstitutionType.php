@@ -3,7 +3,9 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Entity\UserPosition;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
@@ -27,49 +29,13 @@ class InstitutionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add('id', 'employees_custom_selector', array(
-//            'label' => 'Institution:',
-//            'required' => false,
-//            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-//            'classtype' => 'institution'
-//        ));
 
-        //hidden: set by js
-//        $builder->add('id',null,array(
-//            'label' => false,   //'ID:',   //'ID:'
-//            'attr' => array('class' => 'tree-node-id'),
-//        ));
-
-        //hidden
-//        $builder->add('parent',null,array(
-//            'label' => false,
-//            'attr' => array('class' => 'tree-node-parent'),
-//        ));
-
-
-        //////////////////////// Not mapped data providing fields ////////////////////////
-
-        //breadcrumbs hidden: set by js
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
             $institution = $event->getData();
             $form = $event->getForm();
 
-            echo "PRE_SET_DATA inst:".$institution."<br>";
-
-            ////////////////// breadcrumbs //////////////////
-//            $children = array();
-//            if( $institution ) {
-//                $children = $institution->getIdBreadcrumbs();
-//            }
-//
-//            $form->add('breadcrumbs', 'hidden', array(
-//                'mapped' => false,
-//                'data' => implode(',',$children),
-//                'label' => false,
-//                'attr' => array('class' => 'tree-node-breadcrumbs'),
-//            ));
-            ////////////////// EOF breadcrumbs //////////////////
+            //echo "PRE_SET_DATA inst:".$institution."<br>";
 
             $label = 'Institution:';
             if( $institution && $institution->getOrganizationalGroupType() ) {
@@ -91,69 +57,46 @@ class InstitutionType extends AbstractType
                     return;
                 }
 
-                if( $institution ) {
-                    $positions = $institution->getUserPositions();
-                    foreach( $positions as $position ) {
-                        echo "PRE_SET_DATA position=".$position."<br>";
-                    }
-                }
+                //unmapped field: institution-userpositiontype
+                $positions = $this->params['em']->getRepository('OlegUserdirectoryBundle:PositionTypeList')->findAll();
+                $institutionsPositiontypes = array();
+                $dataPositions = array();
 
-//                echo "show userPositions <br>";
-//                $this->params['treenode'] = $institution;
-//                $form->add('userPositions', 'collection', array(
-//                    'type' => new UserPositionType($this->params, null),
-//                    'allow_add' => true,
-//                    'allow_delete' => true,
-//                    'required' => false,
-//                    'by_reference' => false,
-//                    'prototype' => true,
-//                    'prototype_name' => '__userpositions__',
-//                ));
-
-
-                //create unmapped fields one for each node from bottom to top
                 foreach( $institution->getEntityBreadcrumbs() as $institution ) {
-                    $this->params['treenode'] = $institution;
 
+                    $name = $institution->getOrganizationalGroupType()->getName();
+                    $keyInst = $name.'-'.$institution->getId(); //full key: Division-nodeid-positiontype
+
+                    foreach( $positions as $position ) {
+                        $key = $keyInst.'-'.$position->getId();
+                        $institutionsPositiontypes[$key] = $position->getName() . ' of ' . $name; //Head of Department
+                    }
+
+                    //create position data
                     $positiontypes = $institution->getUserPositionsByUseridAndNodeid($this->params['user'],$institution);
-                    //echo "postypes count=".count($positiontypes)."<br>";
-                    $positiontypesArr = array();
                     foreach( $positiontypes as $nodeUserPosition ) {
-                        //echo "regular filtered type=".$type."<br>";
                         foreach( $nodeUserPosition->getPositionTypes() as $posType ) {
-                            $positiontypesArr[] = $posType;
-                            echo "!!!add type=".$posType."<br>";
+                            $key = $keyInst.'-'.$posType->getId();
+                            $dataPositions[] = $key;
                         }
                     }
 
-                    $this->params['positiontypes'] = $positiontypesArr;
-                    $fieldname = 'userposition'.$institution->getId();
-                    echo "add fieldname=".$fieldname."<br>";
-                    $form->add($fieldname, new UserPositionType($this->params, null), array(
-                        'mapped' => false,
-                        'required' => false,
-                        'label' => false
-                    ));
                 }
 
-            } else {
-                //$institutionWithUserPositions = '';
-                //echo "no user pos<br>";
-                $form->remove('userPositions');
+                $form->add('institutionspositiontypes', 'choice', array(
+                    'mapped' => false,
+                    'label' => 'Position Type:',
+                    'choices' => $institutionsPositiontypes,
+                    'multiple' => true,
+                    'required' => false,
+                    'data' => $dataPositions,
+                    'attr' => array('class' => 'combobox'),
+                ));
+
             }
 
-//            //visible as institution node combobox
-//            //echo "user pos=".$institutionWithUserPositions."<br>";
-//            $form->add('institutionnode', 'employees_custom_selector', array(
-//                'mapped' => false,
-//                'label' => 'Institution:',
-//                'required' => false,
-//                'attr' => array('class' => 'ajax-combobox-institution '.$institutionWithUserPositions, 'type' => 'hidden'),
-//                'classtype' => 'institution'
-//            ));
-
         });
-        //////////////////////// EOF Not mapped data providing fields ////////////////////////
+
 
         //////////////////////// PRE_SUBMIT: set node by id ////////////////////////
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -161,31 +104,79 @@ class InstitutionType extends AbstractType
             $institution = $event->getData();
             $form = $event->getForm();
 
-            echo "PRE_SUBMIT institution:<br>";
-            print_r($institution);
-            echo "<br>";
+//            echo "PRE_SUBMIT institution:<br>";
+//            print_r($institution);
+//            echo "<br>";
 
             if( !$institution ) {
                 return;
             }
 
-            $instId = $institution['id'];
-            if( !$instId ) {
+            $submittedInstitutionId = $institution['id'];
+            if( !$submittedInstitutionId ) {
                 return;
             }
 
-            echo "PRE_SUBMIT inst id:".$instId."<br>";
-
-            if( array_key_exists('position1', $institution) ) {
-                //$addEmailTemplateBlock($form, $institution['position1']);
-                echo "position1 exists !!! <br>";
-            } else {
-                echo "position1 does not exists !!! <br>";
+            //save institutionspositiontypes to DB
+            $instArr = array();
+            if( array_key_exists('institutionspositiontypes', $institution) ) {
+                foreach( $institution['institutionspositiontypes'] as $institutionspositiontypes ) {
+                    echo "institutionspositiontypes=".$institutionspositiontypes."<br>";
+                    //Division-149-2
+                    $arr = explode("-",$institutionspositiontypes);
+                    $instId = $arr[1];
+                    $posId = $arr[2];
+                    if( $instId && $posId ) {
+                        $instArr[$instId][] = $posId;
+                    }
+                }
             }
 
+//            echo "newPositions <br>";
+//            print_r($instArr);
+//            echo "<br>";
 
-            $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
-            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
+            foreach( $instArr as $instId => $newPositions ) {
+
+                $nodeUserPositions = $this->params['em']->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+                    array(
+                        'user' => $this->params['user']->getId(),
+                        'institution' => $instId
+                    )
+                );
+
+                if( count($nodeUserPositions) > 1 ) {
+                    $error = 'Logical Error: More than one UserPosition found for user ' . $this->params['user'] . ' and institution ID ' . $instId . '. Found ' . count($nodeUserPositions) . ' UserPositions';
+                    throw new LogicException($error);
+                }
+
+                $nodeUserPosition = null;
+                if( count($nodeUserPositions) > 0 ) {
+                    $nodeUserPosition = $nodeUserPositions[0];
+                }
+
+                if( !$nodeUserPosition ) {
+                    //echo 'create new UserPosition<br>';
+                    $nodeUserPosition = new UserPosition();
+                    $nodeUserPosition->setUser($this->params['user']);
+                    $instRef = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
+                    $nodeUserPosition->setInstitution($instRef);
+                }
+
+                $nodeUserPosition->clearPositionTypes();
+
+                foreach( $newPositions as $positionId ) {
+                    $positionRef = $this->params['em']->getReference('OlegUserdirectoryBundle:PositionTypeList', $positionId);
+                    $nodeUserPosition->addPositionType($positionRef);
+                }
+
+                $this->params['em']->persist($nodeUserPosition);
+
+            }
+
+            //set node by id
+            $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionId);
+            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $submittedInstitutionId);
 
             if( $newInst ) {
                 $titleForm = $form->getParent();
@@ -197,33 +188,28 @@ class InstitutionType extends AbstractType
                     'data' => $newInst   //$newInst->getId()
                 ));
 
-                $positions = $newInst->getUserPositions();
-                foreach( $positions as $position ) {
-                    echo "PRE_SUBMIT newInst position=".$position."<br>";
-                    if( count($position->getPositionTypes()) == 0 ) {
-                        //echo 'remove position with empty pos types';
-                        $newInst->removeUserPosition($position);
-                    }
-                }
-
-                $title->setInstitution($newInst);
-
-                //userPositions
-                //remove userPosition from institution if empty
-//                $inst = $title->getInstitution();
-//                $positions = $inst->getUserPositions();
-//                //echo "PRE_SUBMIT position count=".count($positions)."<br>";
+//                $positions = $newInst->getUserPositions();
 //                foreach( $positions as $position ) {
-//                    //echo "PRE_SUBMIT position=".$position."<br>";
+//                    //echo "PRE_SUBMIT newInst position=".$position."<br>";
 //                    if( count($position->getPositionTypes()) == 0 ) {
 //                        //echo 'remove position with empty pos types';
-//                        $inst->removeUserPosition($position);
+//                        $newInst->removeUserPosition($position);
 //                    }
 //                }
-//                echo "after clean PRE_SUBMIT position count=".count($positions)."<br>";
-//                foreach( $positions as $position ) {
-//                    echo "PRE_SUBMIT position=".$position."<br>";
-//                }
+
+                //remove old userPosition from institution node
+                $newIdBreadcrumbs = $newInst->getIdBreadcrumbs();
+
+                $originalInstitutionId = $title->getInstitution()->getId();
+                $originalInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($originalInstitutionId);
+                $originalIdBreadcrumbs = $originalInstitution->getIdBreadcrumbs();
+
+                $this->removeUserPositionFromInstitution($this->params['user']->getId(),$originalIdBreadcrumbs,$newIdBreadcrumbs);
+
+                //echo "PRE_SUBMIT set newInst=".$newInst."<br>";
+                $title->setInstitution($newInst);
+
+                //remove old userPositions_positionTypes
 
             }
 
@@ -231,7 +217,145 @@ class InstitutionType extends AbstractType
         //////////////////////// EOF PRE_SUBMIT: set node by id ////////////////////////
 
 
-        //visible as institution node combobox
+    }
+
+
+    public function removeUserPositionFromInstitution( $userid, $originalIdBreadcrumbs, $newIdBreadcrumbs ) {
+
+//        echo "originalIdBreadcrumbs:<br>";
+//        print_r($originalIdBreadcrumbs);
+//        echo "<br>";
+//        echo "newIdBreadcrumbs:<br>";
+//        print_r($newIdBreadcrumbs);
+//        echo "<br>";
+
+        $mergedArr = array_merge( $originalIdBreadcrumbs, $newIdBreadcrumbs );
+        $diffIds = array_diff($mergedArr, $newIdBreadcrumbs);
+
+//        echo "diffIds:<br>";
+//        print_r($diffIds);
+//        echo "<br>";
+
+        foreach( $diffIds as $instId ) {
+
+            if( !in_array($instId, $newIdBreadcrumbs) ) {
+                $this->removeUserPositionFromSingleInstitution($userid,$instId);
+            }
+
+        }
+    }
+
+    public function removeUserPositionFromSingleInstitution( $userid, $instid ) {
+
+        $originalInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+
+        $originalUserPositions = $this->params['em']->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+            array(
+                'user' => $userid,
+                'institution' => $instid
+            )
+        );
+
+        if( !$originalInstitution && (!$originalUserPositions || count($originalUserPositions) == 0) ) {
+            return;
+        }
+
+        foreach( $originalUserPositions as $originalUserPosition ) {
+            //echo "!!!PRE_SUBMIT remove userPosition=".$originalUserPosition." from inst=".$originalInstitution."<br>";
+            $originalInstitution->removeUserPosition($originalUserPosition);
+
+            $this->params['em']->remove($originalUserPosition);
+            $this->params['em']->flush($originalUserPosition);
+
+            $this->params['em']->persist($originalInstitution);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+//    public function buildForm_ORIG(FormBuilderInterface $builder, array $options)
+//    {
+//
+//        //hidden: set by js
+//        $builder->add('id',null,array(
+//            'label' => false,   //'ID:',   //'ID:'
+//            'attr' => array('class' => 'tree-node-id'),
+//        ));
+//
+//        //hidden: set by js
+//        $builder->add('parent',null,array(
+//            'label' => false,   //'Parent:',
+//            'attr' => array('class' => 'tree-node-parent'),
+//        ));
+//
+//
+//        //////////////////////// Not mapped data providing fields ////////////////////////
+//
+//        //breadcrumbs hidden: set by js
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//
+//            $institution = $event->getData();
+//            $form = $event->getForm();
+//
+//            $children = array();
+//            if( $institution ) {
+//                $children = $institution->getIdBreadcrumbs();
+//            }
+//
+//            $form->add('breadcrumbs', 'hidden', array(
+//                'mapped' => false,
+//                'data' => implode(',',$children),
+//                'label' => false,
+//                'attr' => array('class' => 'tree-node-breadcrumbs'),
+//            ));
+//
+//            //add userPositions for 'label'=>'Administrative'
+//            if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
+//                //$institutionWithUserPositions = 'institution-with-userpositions';
+////            $builder->add('userPositions',null,array(
+////                'mapped' => false,
+////                'label' => false,
+////                'attr' => array('class' => 'ajax-combobox-userpositions'),
+////            ));
+//                $this->params['treenode'] = $institution;
+//                $form->add('userPositions', 'collection', array(
+//                    'type' => new UserPositionType($this->params, null),
+//                    'allow_add' => true,
+//                    'allow_delete' => true,
+//                    'required' => false,
+//                    'by_reference' => false,
+//                    'prototype' => true,
+//                    'prototype_name' => '__userpositions__',
+//                ));
+//
+//            } else {
+//                //$institutionWithUserPositions = '';
+//                //echo "no user pos<br>";
+//                $form->remove('userPositions');
+//            }
+//
+////            //visible as institution node combobox
+////            //echo "user pos=".$institutionWithUserPositions."<br>";
+////            $form->add('institutionnode', 'employees_custom_selector', array(
+////                'mapped' => false,
+////                'label' => 'Institution:',
+////                'required' => false,
+////                'attr' => array('class' => 'ajax-combobox-institution '.$institutionWithUserPositions, 'type' => 'hidden'),
+////                'classtype' => 'institution'
+////            ));
+//
+//        });
+//        //////////////////////// EOF Not mapped data providing fields ////////////////////////
+//
+//
+//        //visible as institution node combobox
 //        $builder->add('institutionnode', 'employees_custom_selector', array(
 //            'mapped' => false,
 //            'label' => 'Institution:',
@@ -239,142 +363,45 @@ class InstitutionType extends AbstractType
 //            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
 //            'classtype' => 'institution'
 //        ));
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public function buildForm_ORIG(FormBuilderInterface $builder, array $options)
-    {
-
-        //hidden: set by js
-        $builder->add('id',null,array(
-            'label' => false,   //'ID:',   //'ID:'
-            'attr' => array('class' => 'tree-node-id'),
-        ));
-
-        //hidden: set by js
-        $builder->add('parent',null,array(
-            'label' => false,   //'Parent:',
-            'attr' => array('class' => 'tree-node-parent'),
-        ));
-
-
-        //////////////////////// Not mapped data providing fields ////////////////////////
-
-        //breadcrumbs hidden: set by js
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-
-            $institution = $event->getData();
-            $form = $event->getForm();
-
-            $children = array();
-            if( $institution ) {
-                $children = $institution->getIdBreadcrumbs();
-            }
-
-            $form->add('breadcrumbs', 'hidden', array(
-                'mapped' => false,
-                'data' => implode(',',$children),
-                'label' => false,
-                'attr' => array('class' => 'tree-node-breadcrumbs'),
-            ));
-
-            //add userPositions for 'label'=>'Administrative'
-            if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
-                //$institutionWithUserPositions = 'institution-with-userpositions';
-//            $builder->add('userPositions',null,array(
-//                'mapped' => false,
-//                'label' => false,
-//                'attr' => array('class' => 'ajax-combobox-userpositions'),
-//            ));
-                $this->params['treenode'] = $institution;
-                $form->add('userPositions', 'collection', array(
-                    'type' => new UserPositionType($this->params, null),
-                    'allow_add' => true,
-                    'allow_delete' => true,
-                    'required' => false,
-                    'by_reference' => false,
-                    'prototype' => true,
-                    'prototype_name' => '__userpositions__',
-                ));
-
-            } else {
-                //$institutionWithUserPositions = '';
-                //echo "no user pos<br>";
-                $form->remove('userPositions');
-            }
-
-//            //visible as institution node combobox
-//            //echo "user pos=".$institutionWithUserPositions."<br>";
-//            $form->add('institutionnode', 'employees_custom_selector', array(
-//                'mapped' => false,
-//                'label' => 'Institution:',
-//                'required' => false,
-//                'attr' => array('class' => 'ajax-combobox-institution '.$institutionWithUserPositions, 'type' => 'hidden'),
-//                'classtype' => 'institution'
-//            ));
-
-        });
-        //////////////////////// EOF Not mapped data providing fields ////////////////////////
-
-
-        //visible as institution node combobox
-        $builder->add('institutionnode', 'employees_custom_selector', array(
-            'mapped' => false,
-            'label' => 'Institution:',
-            'required' => false,
-            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-            'classtype' => 'institution'
-        ));
-
-
-//        echo "with user pos=".$this->institutionWithUserPositions."<br>";
-//        //visible as institution node combobox
-//        $builder->add('institutionnode', 'employees_custom_selector', array(
-//            'mapped' => false,
-//            'label' => 'Institution:',
-//            'required' => false,
-//            'attr' => array('class' => 'ajax-combobox-institution ' . $this->institutionWithUserPositions, 'type' => 'hidden'),
-//            'classtype' => 'institution'
-//        ));
-
-//        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
-//            $inst = $event->getData();
-//            $form = $event->getForm();
 //
-//            if (!$inst) {
-//                return;
-//            }
 //
-//            //echo "inst=".$inst."<br>";
-//            //print_r($inst);
-//            $instId = $inst['id'];
-//            //echo "inst id=".$instId."<br>";
-//            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
-//            $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
+////        echo "with user pos=".$this->institutionWithUserPositions."<br>";
+////        //visible as institution node combobox
+////        $builder->add('institutionnode', 'employees_custom_selector', array(
+////            'mapped' => false,
+////            'label' => 'Institution:',
+////            'required' => false,
+////            'attr' => array('class' => 'ajax-combobox-institution ' . $this->institutionWithUserPositions, 'type' => 'hidden'),
+////            'classtype' => 'institution'
+////        ));
 //
-//            if( !$newInst ) {
-//                return;
-//            }
+////        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+////            $inst = $event->getData();
+////            $form = $event->getForm();
+////
+////            if (!$inst) {
+////                return;
+////            }
+////
+////            //echo "inst=".$inst."<br>";
+////            //print_r($inst);
+////            $instId = $inst['id'];
+////            //echo "inst id=".$instId."<br>";
+////            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
+////            $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
+////
+////            if( !$newInst ) {
+////                return;
+////            }
+////
+////            $inst['id'] = $newInst->getId();
+////            $inst['parent'] = $newInst->getParent()->getId();
+////
+////            $event->setData($inst);
+////        });
 //
-//            $inst['id'] = $newInst->getId();
-//            $inst['parent'] = $newInst->getParent()->getId();
 //
-//            $event->setData($inst);
-//        });
-
-
-    }
+//    }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
