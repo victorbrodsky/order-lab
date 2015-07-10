@@ -80,6 +80,9 @@ class Institution extends BaseCompositeNode {
     private $organizationalGroupType;
 
 
+    //dummy field not linked to DB
+    private $institutionspositiontypes;
+
     //May add additional properties of the tree node
 
 
@@ -195,6 +198,25 @@ class Institution extends BaseCompositeNode {
 //        }
 
         return $positionTypesFiltered;
+    }
+
+
+
+
+    /**
+     * @param mixed $institutionspositiontypes
+     */
+    public function setInstitutionspositiontypes($institutionspositiontypes)
+    {
+        $this->institutionspositiontypes = $institutionspositiontypes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitutionspositiontypes()
+    {
+        return $this->institutionspositiontypes;
     }
 
 

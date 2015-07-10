@@ -72,8 +72,9 @@ class TreeController extends Controller {
         $params = array('typedef' => 'default','typeadd' => 'user-added');
 
 
-        if( $pid && is_numeric($pid) && $pid == 0 ) {
-            //children: where parent = $pid
+        if( $pid != null && is_numeric($pid) && $pid == 0 ) {
+            //children: where parent is NULL => root
+            //echo "by root pid=".$pid."<br>";
             $dql->leftJoin("list.parent", "parent");
             $where = $where . " AND parent.id is NULL";
         }
@@ -100,11 +101,15 @@ class TreeController extends Controller {
             //echo "by sibling id=".$thisid."<br>";
             $thisNode = $treeRepository->find($thisid);
             $parent = $thisNode->getParent();
+
             if( $parent ) {
                 $pid = $parent->getId();
                 $dql->leftJoin("list.parent", "parent");
                 $where = $where . " AND parent.id = :id";
                 $params['id'] = $pid;
+            } else {
+                $dql->leftJoin("list.parent", "parent");
+                $where = $where . " AND parent.id is NULL";
             }
         }
 
@@ -131,12 +136,26 @@ class TreeController extends Controller {
 
         $output = array();
         foreach( $entities as $entity ) {
+
+            if( !$entity->getOrganizationalGroupType() ) {
+                //echo "entity without org group = ".$entity->getId()."<br>";
+                continue;
+            }
+
             $levelTitle = $entity->getOrganizationalGroupType()->getName()."";
+
+            if( $combobox ) {
+                $text = $entity->getName()."";
+            } else {
+                $text = $entity->getName()." [" . $levelTitle . "]";
+            }
+
             $element = array(
                 'id' => $entity->getId(),
                 'pid' => ($entity->getParent() ? $entity->getParent()->getId() : 0),
                 //'text' => 'id:'.$entity->getId()." (".$entity->getLft()." ".$entity->getName()." ".$entity->getRgt().")",
-                'text' => $entity->getName()." [" . $levelTitle . "]",
+                //'text' => $entity->getName()." [" . $levelTitle . "]",
+                'text' => $text,
                 'level' => $entity->getLevel(),
                 'type' => $levelTitle,          //set js icon by level title
                 'leveltitle' => $levelTitle,

@@ -140,46 +140,6 @@
         {% endif %}
 
         {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
-
-        {#{{ formmacros.jstree('','composite-tree') }}#}
-
-        {#{{ formmacros.field(formfield.department) }}#}
-        {#{{ formmacros.field(formfield.division) }}#}
-        {#{{ formmacros.field(formfield.service) }}#}
-
-        {#show "head of ..." on show only if set#}
-        {#{% if formfield.supervisorInstitution is defined %}#}
-            {#{% if formfield.vars.value and formfield.vars.value.supervisorInstitution == 1 %}#}
-                {#{% set value = 1 %}#}
-            {#{% else %}#}
-                {#{% set value = 0 %}#}
-            {#{% endif %}#}
-            {#{{ usermacros.checkbox_notempty(formfield.supervisorInstitution,value,cycle) }}#}
-        {#{% endif %}#}
-        {#{% if formfield.supervisorDepartment is defined %}#}
-            {#{% if formfield.vars.value and formfield.vars.value.supervisorDepartment == 1 %}#}
-                {#{% set value = 1 %}#}
-            {#{% else %}#}
-                {#{% set value = 0 %}#}
-            {#{% endif %}#}
-            {#{{ usermacros.checkbox_notempty(formfield.supervisorDepartment,value,cycle) }}#}
-        {#{% endif %}#}
-        {#{% if formfield.supervisorDivision is defined %}#}
-            {#{% if formfield.vars.value and formfield.vars.value.supervisorDivision == 1 %}#}
-                {#{% set value = 1 %}#}
-            {#{% else %}#}
-                {#{% set value = 0 %}#}
-            {#{% endif %}#}
-            {#{{ usermacros.checkbox_notempty(formfield.supervisorDivision,value,cycle) }}#}
-        {#{% endif %}#}
-        {#{% if formfield.supervisorService is defined %}#}
-            {#{% if formfield.vars.value and formfield.vars.value.supervisorService == 1 %}#}
-                {#{% set value = 1 %}#}
-            {#{% else %}#}
-                {#{% set value = 0 %}#}
-            {#{% endif %}#}
-            {#{{ usermacros.checkbox_notempty(formfield.supervisorService,value,cycle) }}#}
-        {#{% endif %}#}
     </div>
 {% endmacro %}
 

@@ -136,40 +136,73 @@ function getComboboxInstitution(holder) {
         }
     }
 
-    var entityName = 'Institution';
+    $(targetid).each( function(e){
+        getComboboxSingleInstitution($(this),'Institution');
+    });
+}
+
+function getComboboxSingleInstitution(comboboxEl,entityName) {
+
+    //var entityName = 'Institution';
     //var parentid = 0;
-    var thisid = $(targetid).val();
+    var thisid = comboboxEl.val();
+    //console.log('thisid='+thisid);
 
     //get this id from tree-node-parent
-//    var parentEl = $(targetid).closest('.treenode').find('.tree-node-parent');
+//    var parentEl = comboboxEl.closest('.treenode').find('.tree-node-parent');
 //    if( parentEl.length > 0 ) {
 //        parentid = parentEl.val();
 //        console.log('parentid='+parentid);
 //    }
 
-    var label = getComboboxNodeLabel($(targetid));
+    var optionData = null;
+    var fetched = false;
 
-    if( _institutionRoot.length == 0 && thisid && label != _institutionRoot.leveltitle ) {
-        _institutionRoot = getChildrenByParent(entityName,$(targetid),thisid,null);
+    //get root level
+    if( !fetched && !thisid && _institutionRoot.length == 0 ) {
+        optionData = getChildrenByParent(entityName,comboboxEl,null,0);
+        _institutionRoot = optionData;
+        fetched = true;
     }
 
-    $(targetid).each( function(e) {
+    var label = getComboboxNodeLabel(comboboxEl);
+//    if( _institutionRoot && _institutionRoot.length > 0 ) {
+//        console.log('label='+label+"?="+ _institutionRoot[0].leveltitle);
+//    }
 
-        var rowElHtml = $(this).closest('.row')[0].outerHTML;
+    //empty combobox with new label (new level) => initializing with empty value only possible for root combobox => root
+    if( !fetched && !thisid && _institutionRoot.length > 0 && label != _institutionRoot[0].leveltitle ) {
+        optionData = getChildrenByParent(entityName,comboboxEl,null,0);
+        _institutionRoot = optionData;
+        fetched = true;
+    }
 
-        //console.log('populate combobox');
-        populateSelectCombobox( $(this), _institutionRoot, "Select an option" );
+    //get siblings of thisid
+    if( !fetched && _institutionRoot.length > 0 && thisid && label != _institutionRoot[0].leveltitle ) {
+        //console.log('get new getChildren By Parent: thisid='+thisid);
+        _institutionRoot = getChildrenByParent(entityName,comboboxEl,thisid,null);
+        fetched = true;
+    }
 
-        comboboxTreeListener( $(this), entityName, rowElHtml );
+    if( !fetched && _institutionRoot.length == 0 && thisid ) {
+        //console.log('get new getChildren By Parent: thisid='+thisid);
+        _institutionRoot = getChildrenByParent(entityName,comboboxEl,thisid,null);
+        fetched = true;
+    }
 
-        $(this).trigger('change');
+    var rowElHtml = comboboxEl.closest('.row')[0].outerHTML;
 
-        //set parent
-        setParentComboboxree($(this), entityName, rowElHtml);
+    //console.log('populate combobox');
+    populateSelectCombobox( comboboxEl, _institutionRoot, "Select an option" );
 
-    });
+    comboboxTreeListener( comboboxEl, entityName, rowElHtml );
 
+    comboboxEl.trigger('change');
+
+    //set parent
+    setParentComboboxree(comboboxEl, entityName, rowElHtml);
 }
+
 function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
 
     //do nothing if new element was enetered. In this case pid will be a string with a new element name.

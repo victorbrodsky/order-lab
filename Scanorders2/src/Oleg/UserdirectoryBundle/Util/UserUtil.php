@@ -671,10 +671,20 @@ class UserUtil {
 
     }
 
-    public function processInstTree( $treeholder, $em, $sc ) {
+    //re-set node by id
+    public function processInstTree( $treeholder, $em, $sc, $subjectUser=null ) {
+
+        echo "///////////////title=".$treeholder.", id=".$treeholder->getId()."<br>";
 
         //reset tree node by id
         $institution = $treeholder->getInstitution();
+
+        if( !$institution ) {
+            //set author if not set
+            $this->setUpdateInfo($treeholder,$em,$sc);
+            return;
+        }
+
         //print_r($institution);
         if( $institution ) {
             echo "echo orig=".$institution."<br>";
@@ -685,11 +695,153 @@ class UserUtil {
             echo "echo parent=".$institutionDb->getParent()."<br>";
 
             $treeholder->setInstitution($institutionDb);
+        } else {
+            echo "institution <br>";
+            print_r($institution);
+            echo "<br>";
+            echo 'Inst does not exists for treeholder id='.$treeholder->getId()."<br>";
         }
         //exit('exit processInstTree');
 
+        if( !$subjectUser ) {
+            //set author if not set
+            $this->setUpdateInfo($treeholder,$em,$sc);
+            return;
+        }
+
+        //set user positions
+        //echo "form <br>";
+        //print_r($form);
+        //echo "<br>";
+
+        //$form["patient"][0]["procedure"][0]["accession"][0]->getData(); administrativetitles
+        //$positiontypes = $form->get('institutionspositiontypes')->getData();
+        $positiontypes = $institution->getInstitutionspositiontypes();
+        echo "positiontypes <br>";
+        print_r($positiontypes);
+        echo "<br>";
+
+        if( !$positiontypes ) {
+            return;
+        }
+
+        foreach( $positiontypes as $institutionspositiontypes ) {
+            echo "institutionspositiontypes=".$institutionspositiontypes."<br>";
+            //Division-149-2
+            $arr = explode("-",$institutionspositiontypes);
+            $instId = $arr[1];
+            $posId = $arr[2];
+            if( $instId && $posId ) {
+                $instArr[$instId][] = $posId;
+            }
+        }
+
+        echo "newPositions <br>";
+        print_r($instArr);
+        echo "<br>";
+
+        foreach( $instArr as $instId => $newPositions ) {
+
+            $nodeUserPositions = $em->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+                array(
+                    'user' => $subjectUser->getId(),
+                    'institution' => $instId
+                )
+            );
+
+            if( count($nodeUserPositions) > 1 ) {
+                $error = 'Logical Error: More than one UserPosition found for user ' . $subjectUser . ' and institution ID ' . $instId . '. Found ' . count($nodeUserPositions) . ' UserPositions';
+                throw new LogicException($error);
+            }
+
+            $nodeUserPosition = null;
+            if( count($nodeUserPositions) > 0 ) {
+                $nodeUserPosition = $nodeUserPositions[0];
+            }
+
+            if( !$nodeUserPosition ) {
+                //echo 'create new UserPosition<br>';
+                $nodeUserPosition = new UserPosition();
+                $nodeUserPosition->setUser($subjectUser);
+                $instRef = $em->getReference('OlegUserdirectoryBundle:Institution', $instId);
+                $nodeUserPosition->setInstitution($instRef);
+            }
+
+            $nodeUserPosition->clearPositionTypes();
+
+            foreach( $newPositions as $positionId ) {
+                $positionRef = $em->getReference('OlegUserdirectoryBundle:PositionTypeList', $positionId);
+                $nodeUserPosition->addPositionType($positionRef);
+            }
+
+            $em->persist($nodeUserPosition);
+        }
+
+        //remove old userPosition from institution node
+        $newIdBreadcrumbs = $institutionDb->getIdBreadcrumbs();
+
+        $originalInstitutionId = $treeholder->getInstitution()->getId();
+        $originalInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($originalInstitutionId);
+        $originalIdBreadcrumbs = $originalInstitution->getIdBreadcrumbs();
+
+        $this->removeUserPositionFromInstitution($subjectUser->getId(),$originalIdBreadcrumbs,$newIdBreadcrumbs,$em);
+
+        //echo "PRE_SUBMIT set newInst=".$institutionDb."<br>";
+        $treeholder->setInstitution($institutionDb);
+
+
         //set author if not set
         $this->setUpdateInfo($treeholder,$em,$sc);
+    }
+    public function removeUserPositionFromInstitution( $userid, $originalIdBreadcrumbs, $newIdBreadcrumbs, $em ) {
+
+//        echo "originalIdBreadcrumbs:<br>";
+//        print_r($originalIdBreadcrumbs);
+//        echo "<br>";
+//        echo "newIdBreadcrumbs:<br>";
+//        print_r($newIdBreadcrumbs);
+//        echo "<br>";
+
+        $mergedArr = array_merge( $originalIdBreadcrumbs, $newIdBreadcrumbs );
+        $diffIds = array_diff($mergedArr, $newIdBreadcrumbs);
+
+//        echo "diffIds:<br>";
+//        print_r($diffIds);
+//        echo "<br>";
+
+        foreach( $diffIds as $instId ) {
+
+            if( !in_array($instId, $newIdBreadcrumbs) ) {
+                $this->removeUserPositionFromSingleInstitution($userid,$instId,$em);
+            }
+
+        }
+    }
+    public function removeUserPositionFromSingleInstitution( $userid, $instid, $em ) {
+
+        $originalInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+
+        $originalUserPositions = $em->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+            array(
+                'user' => $userid,
+                'institution' => $instid
+            )
+        );
+
+        if( !$originalInstitution && (!$originalUserPositions || count($originalUserPositions) == 0) ) {
+            return;
+        }
+
+        foreach( $originalUserPositions as $originalUserPosition ) {
+            //echo "!!!PRE_SUBMIT remove userPosition=".$originalUserPosition." from inst=".$originalInstitution."<br>";
+            $originalInstitution->removeUserPosition($originalUserPosition);
+
+            $em->remove($originalUserPosition);
+            $em->flush($originalUserPosition);
+
+            $em->persist($originalInstitution);
+        }
+
     }
 
 

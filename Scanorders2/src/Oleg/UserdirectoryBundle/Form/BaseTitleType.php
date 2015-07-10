@@ -79,62 +79,13 @@ class BaseTitleType extends AbstractType
         ));
 
 
-
-
-        /////////////////////////////////////// institution ////////////////////////////////
-        //institution. User should be able to add institution to administrative or appointment titles
-//        $builder->add('institution', 'employees_custom_selector', array(
-//            'label' => 'Institution:',
-//            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-//            'required' => false,
-//            'classtype' => 'institution'
-//        ));
+        ///////////////////////// tree node /////////////////////////
+        echo "base title user=".$this->params['user']."<br>";
         $builder->add('institution', new InstitutionType($this->params), array(
             'required' => false,
             'label' => false    //'Institution:'
         ));
-//        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-//            $title = $event->getData();
-//            $form = $event->getForm();
-//
-//            if (!$title) {
-//                return;
-//            }
-//
-//            echo "PRE_SUBMIT title id:".$title['id']."<br>";
-//
-//            if( !array_key_exists('institution', $title) ) {
-//                return;
-//            }
-//
-//            $inst = $title['institution'];
-//            if (!$inst) {
-//                return;
-//            }
-//
-//            //echo "inst=".$inst."<br>";
-//            print_r($inst);
-//            $instId = $inst['id'];
-//            echo "inst id=".$instId."<br>";
-//            //$newInst = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
-//            //$newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instId);
-//
-//            if( $instId ) {
-//                $form->add('institution', null, array(
-//                    'required' => false,
-//                    'label' => false,
-//                    'data' => $instId   //$newInst->getId()
-//                ));
-//
-//                //$title->setInstitution($newInst);
-//                $title['institution'] = $instId;    //$newInst->getId();
-//                $event->setData($title);
-//            }
-//        });
-        /////////////////////////////////////// EOF institution ////////////////////////////////
-
-
-
+        ///////////////////////// EOF tree node /////////////////////////
 
         $builder->add('effort', 'employees_custom_selector', array(
             'label' => 'Percent Effort:',

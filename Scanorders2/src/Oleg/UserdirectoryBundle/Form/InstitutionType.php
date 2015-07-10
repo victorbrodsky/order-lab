@@ -35,7 +35,7 @@ class InstitutionType extends AbstractType
             $institution = $event->getData();
             $form = $event->getForm();
 
-            //echo "PRE_SET_DATA inst:".$institution."<br>";
+            echo "PRE_SET_DATA inst:".$institution."<br>";
 
             $label = 'Institution:';
             if( $institution && $institution->getOrganizationalGroupType() ) {
@@ -74,6 +74,10 @@ class InstitutionType extends AbstractType
 
                 foreach( $institution->getEntityBreadcrumbs() as $institution ) {
 
+                    if( !$institution->getOrganizationalGroupType() ) {
+                        //continue;
+                    }
+
                     $name = $institution->getOrganizationalGroupType()->getName();
                     $keyInst = $name.'-'.$institution->getId(); //full key: Division-nodeid-positiontype
 
@@ -94,7 +98,7 @@ class InstitutionType extends AbstractType
                 }
 
                 $form->add('institutionspositiontypes', 'choice', array(
-                    'mapped' => false,
+                    //'mapped' => false,
                     'label' => 'Position Type:',
                     'choices' => $institutionsPositiontypes,
                     'multiple' => true,
@@ -109,14 +113,15 @@ class InstitutionType extends AbstractType
 
 
         //////////////////////// PRE_SUBMIT: set node by id ////////////////////////
+if(0) {
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
 
             $institution = $event->getData();
             $form = $event->getForm();
 
-//            echo "PRE_SUBMIT institution:<br>";
-//            print_r($institution);
-//            echo "<br>";
+            echo "PRE_SUBMIT institution:<br>";
+            print_r($institution);
+            echo "<br>";
 
             if( !$institution ) {
                 return;
@@ -192,6 +197,26 @@ class InstitutionType extends AbstractType
                 $titleForm = $form->getParent();
                 $title = $titleForm->getData();
 
+//                echo "title <br>";
+//                print_r($title);
+//                echo "<br>";
+
+                if( !$title ) {
+                    echo "title <br>";
+                    print_r($title);
+                    echo "<br>";
+                    //return;
+                }
+
+                if( !$title->getInstitution() ) {
+                    //return;
+                }
+
+                //echo "user=".$this->params['user']."<br>";
+                if( !$this->params['user'] ) {
+                    //return;
+                }
+
                 $titleForm->add('institution', null, array(
                     'required' => false,
                     'label' => false,
@@ -224,6 +249,7 @@ class InstitutionType extends AbstractType
             }
 
         });
+}
         //////////////////////// EOF PRE_SUBMIT: set node by id ////////////////////////
 
 

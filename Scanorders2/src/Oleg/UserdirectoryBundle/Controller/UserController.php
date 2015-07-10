@@ -2028,39 +2028,41 @@ class UserController extends Controller
 
         //return;
 
-        foreach( $entity->getAdministrativeTitles() as $title) {
-            $inst = $title->getInstitution();
-            echo "inst=".$inst."<br>";
-            $positions = $inst->getUserPositions();
-            echo "position count=".count($positions)."<br>";
-            foreach( $positions as $position ) {
-                echo "position=".$position."<br>";
-                if( count($position->getPositionTypes()) == 0 ) {
-                    echo 'remove position with empty pos types';
-                    $inst->removeUserPosition($position);
-                }
-            }
-            echo "after clean position count=".count($positions)."<br>";
-        }
+//        foreach( $entity->getAdministrativeTitles() as $title) {
+//            $inst = $title->getInstitution();
+//            echo "inst=".$inst."<br>";
+//            $positions = $inst->getUserPositions();
+//            echo "position count=".count($positions)."<br>";
+//            foreach( $positions as $position ) {
+//                echo "position=".$position."<br>";
+//                if( count($position->getPositionTypes()) == 0 ) {
+//                    echo 'remove position with empty pos types';
+//                    $inst->removeUserPosition($position);
+//                }
+//            }
+//            echo "after clean position count=".count($positions)."<br>";
+//        }
         //exit('set composite tree node');
-        return;
+        //return;
 
         $em = $this->getDoctrine()->getManager();
         $sc = $this->get('security.context');
         $userUtil = new UserUtil();
 
+        echo "AdministrativeTitles count=".count($entity->getAdministrativeTitles())."<br>";
         foreach( $entity->getAdministrativeTitles() as $title) {
-            $userUtil->processInstTree($title,$em,$sc);
+            $userUtil->processInstTree($title,$em,$sc,$entity);
         }
+        //exit('set composite tree node');
 
         foreach( $entity->getAppointmentTitles() as $title) {
-            $userUtil->processInstTree($title,$em,$sc);
+            $userUtil->processInstTree($title,$em,$sc,$entity);
         }
         foreach( $entity->getMedicalTitles() as $title) {
-            $userUtil->processInstTree($title,$em,$sc);
+            $userUtil->processInstTree($title,$em,$sc,$entity);
         }
         foreach( $entity->getLocations() as $location) {
-            $userUtil->processInstTree($location,$em,$sc);
+            $userUtil->processInstTree($location,$em,$sc,$entity);
         }
     }
 
