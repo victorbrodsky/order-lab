@@ -205,41 +205,40 @@ class LocationType extends AbstractType
             }
         ));
 
-        //institution. User should be able to add institution to administrative or appointment titles
+
+
+        ///////////////////////// tree node /////////////////////////
 //        $builder->add('institution', 'employees_custom_selector', array(
 //            'label' => 'Institution:',
-//            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
 //            'required' => false,
+//            'attr' => array('class' => 'ajax-combobox-institution show-as-single-node', 'type' => 'hidden'),
 //            'classtype' => 'institution'
 //        ));
-        $builder->add('institution', new InstitutionType($this->params), array(
-            'required' => false,
-            'label' => false
-        ));
+//        $builder->add('institution', new InstitutionType($this->params), array(
+//            'required' => false,
+//            'label' => false
+//        ));
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $title = $event->getData();
+            $form = $event->getForm();
 
-        //department. User should be able to add institution to administrative or appointment titles
-//        $builder->add('department', 'employees_custom_selector', array(
-//            'label' => "Department:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-department', 'type' => 'hidden'),
-//            'classtype' => 'department'
-//        ));
-//
-//        //division. User should be able to add institution to administrative or appointment titles
-//        $builder->add('division', 'employees_custom_selector', array(
-//            'label' => "Division:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-division', 'type' => 'hidden'),
-//            'classtype' => 'division'
-//        ));
-//
-//        //service. User should be able to add institution to administrative or appointment titles
-//        $builder->add('service', 'employees_custom_selector', array(
-//            'label' => "Service:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width ajax-combobox-service', 'type' => 'hidden'),
-//            'classtype' => 'service'
-//        ));
+            $label = 'Institution:';
+            if( $title ) {
+                $institution = $title->getInstitution();
+                if( $institution && $institution->getOrganizationalGroupType() ) {
+                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
+                    $label = $institution->getOrganizationalGroupType()->getName().":";
+                }
+            }
+
+            $form->add('institution', 'employees_custom_selector', array(
+                'label' => $label,
+                'required' => false,
+                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+                'classtype' => 'institution'
+            ));
+        });
+        ///////////////////////// EOF tree node /////////////////////////
 
 
         //Privacy

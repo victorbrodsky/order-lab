@@ -31,7 +31,20 @@ class AdministrativeTitle extends BaseTitle
      *      inverseJoinColumns={@ORM\JoinColumn(name="boss_id", referencedColumnName="id")}
      * )
      **/
-    protected $boss;
+    private $boss;
+
+//    /**
+//     * @ORM\OneToMany(targetEntity="UserPosition", mappedBy="administrativeTitle", cascade={"persist","remove"})
+//     */
+//    private $userPositions;
+    /**
+     * @ORM\ManyToMany(targetEntity="PositionTypeList")
+     * @ORM\JoinTable(name="user_administrative_userPosition",
+     *      joinColumns={@ORM\JoinColumn(name="administrative_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="userPosition_id", referencedColumnName="id")}
+     * )
+     **/
+    private $userPositions;
 
 
 
@@ -40,6 +53,7 @@ class AdministrativeTitle extends BaseTitle
         parent::__construct($author);
 
         $this->boss = new ArrayCollection();
+        $this->userPositions = new ArrayCollection();
     }
 
 
@@ -117,6 +131,23 @@ class AdministrativeTitle extends BaseTitle
     {
         return $this->boss;
     }
+
+    public function addUserPosition($item)
+    {
+        if( !$this->userPositions->contains($item) ) {
+            $this->userPositions->add($item);
+        }
+        return $this;
+    }
+    public function removeUserPosition($item)
+    {
+        $this->userPositions->removeElement($item);
+    }
+    public function getUserPositions()
+    {
+        return $this->userPositions;
+    }
+
 
 
     public function __toString() {

@@ -14,9 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_userPosition",
- *  uniqueConstraints={@ORM\UniqueConstraint(name="userposition_unique", columns={"institution_id", "user_id"})}
- * )
+ * @ORM\Table(name="user_userPosition")
  */
 class UserPosition {
 
@@ -28,16 +26,10 @@ class UserPosition {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="userPositions", cascade={"persist"})
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="AdministrativeTitle", inversedBy="userPositions", cascade={"persist"})
+     * @ORM\JoinColumn(name="administrativeTitle_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    private $institution;
-
-    /**
-     * User object
-     * @ORM\ManyToOne(targetEntity="User")
-     */
-    private $user;
+    private $administrativeTitle;
 
     /**
      * //Position Type: Head, Manager, Primary Contact, Transcriptionist
@@ -71,36 +63,21 @@ class UserPosition {
     }
 
     /**
-     * @param mixed $institution
+     * @param mixed $administrativeTitle
      */
-    public function setInstitution($institution)
+    public function setAdministrativeTitle($administrativeTitle)
     {
-        $this->institution = $institution;
+        $this->administrativeTitle = $administrativeTitle;
     }
 
     /**
      * @return mixed
      */
-    public function getInstitution()
+    public function getAdministrativeTitle()
     {
-        return $this->institution;
+        return $this->administrativeTitle;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
 
     public function addPositionType($item)
     {
@@ -134,13 +111,9 @@ class UserPosition {
     public function getFullName() {
         $fullName = "ID:".$this->getId()." ";
 
-        if( $this->getUser() ) {
-            $fullName = $fullName . $this->getUser()."";
-        }
-
-        //institution
-        if( $this->getInstitution() ) {
-            $fullName = $fullName . ", Institution:" . $this->getInstitution(); //."(".$this->getInstitution()->getId().")";
+        //Administrative Title
+        if( $this->getAdministrativeTitle() ) {
+            $fullName = $fullName . ", Administrative Title:" . $this->getAdministrativeTitle();
         }
 
         //positions

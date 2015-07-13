@@ -139,7 +139,14 @@
             {% do formfield.effort.setRendered %}
         {% endif %}
 
-        {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+        {% if formfield.institution is defined %}
+            {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+        {% endif %}
+
+        {% if formfield.userPositions is defined %}
+            {{ formmacros.field(formfield.userPositions) }}
+        {% endif %}
+
     </div>
 {% endmacro %}
 

@@ -66,11 +66,6 @@ class Institution extends BaseCompositeNode {
     private $types;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserPosition", mappedBy="institution", cascade={"persist","remove"})
-     */
-    private $userPositions;
-
-    /**
      * Organizational Group Types
      * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
      * For example, OrganizationalGroupType with level=1, set this level to 1.
@@ -81,7 +76,7 @@ class Institution extends BaseCompositeNode {
 
 
     //dummy field not linked to DB
-    private $institutionspositiontypes;
+    //private $institutionspositiontypes;
 
     //May add additional properties of the tree node
 
@@ -91,7 +86,6 @@ class Institution extends BaseCompositeNode {
 
         $this->buildings = new ArrayCollection();
         $this->types = new ArrayCollection();
-        $this->userPositions = new ArrayCollection();
     }
 
 
@@ -112,24 +106,6 @@ class Institution extends BaseCompositeNode {
         return $this->organizationalGroupType;
     }
 
-
-
-
-    public function addUserPosition($item)
-    {
-        if( !$this->userPositions->contains($item) ) {
-            $this->userPositions->add($item);
-        }
-        return $this;
-    }
-    public function removeUserPosition($item)
-    {
-        $this->userPositions->removeElement($item);
-    }
-    public function getUserPositions()
-    {
-        return $this->userPositions;
-    }
 
 
     public function getBuildings()
@@ -185,39 +161,35 @@ class Institution extends BaseCompositeNode {
 
 
 
-    public function getUserPositionsByUseridAndNodeid($user,$institution) {
-        $positionTypes = $this->getUserPositions();
-        $criteria = Criteria::create()
-            ->where( Criteria::expr()->eq("user", $user) )
-            ->andWhere( Criteria::expr()->eq("institution", $institution) )
-        ;
-        $positionTypesFiltered = $positionTypes->matching($criteria);
-
-//        foreach( $positionTypesFiltered as $type ) {
-//            echo "!!!filtered type=".$type."<br>";
-//        }
-
-        return $positionTypesFiltered;
-    }
+//    public function getUserPositionsByUseridAndNodeid($user,$institution) {
+//        $positionTypes = $this->getUserPositions();
+//        $criteria = Criteria::create()
+//            ->where( Criteria::expr()->eq("user", $user) )
+//            ->andWhere( Criteria::expr()->eq("institution", $institution) )
+//        ;
+//        $positionTypesFiltered = $positionTypes->matching($criteria);
+//
+//        return $positionTypesFiltered;
+//    }
 
 
 
 
-    /**
-     * @param mixed $institutionspositiontypes
-     */
-    public function setInstitutionspositiontypes($institutionspositiontypes)
-    {
-        $this->institutionspositiontypes = $institutionspositiontypes;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInstitutionspositiontypes()
-    {
-        return $this->institutionspositiontypes;
-    }
+//    /**
+//     * @param mixed $institutionspositiontypes
+//     */
+//    public function setInstitutionspositiontypes($institutionspositiontypes)
+//    {
+//        $this->institutionspositiontypes = $institutionspositiontypes;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getInstitutionspositiontypes()
+//    {
+//        return $this->institutionspositiontypes;
+//    }
 
 
 

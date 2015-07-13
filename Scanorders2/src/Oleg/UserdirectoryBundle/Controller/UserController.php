@@ -1722,6 +1722,31 @@ class UserController extends Controller
         ));
         //$form->add('submit', 'submit', array('label' => 'Update'));
 
+
+
+//        $data = $request->request->all();
+//
+//        print("REQUEST DATA<br/>");
+//        foreach ($data as $k => $d) {
+//            print("$k: <pre>"); print_r($d); print("</pre>");
+//        }
+//
+//        $children = $form->all();
+//
+//        print("<br/>FORM CHILDREN<br/>");
+//        foreach ($children as $ch) {
+//            print($ch->getName() . "<br/>");
+//        }
+//
+//        $data = array_diff_key($data, $children);
+//        //$data contains now extra fields
+//
+//        print("<br/>DIFF DATA<br/>");
+//        foreach ($data as $k => $d) {
+//            print("$k: <pre>"); print_r($d); print("</pre>");
+//        }
+
+
         $form->handleRequest($request);
 
 
@@ -2026,24 +2051,17 @@ class UserController extends Controller
     //Process all holder containing institutional tree
     public function setCompositeTreeNode($entity) {
 
-        //return;
+        return;
 
 //        foreach( $entity->getAdministrativeTitles() as $title) {
+//            echo "/////////// title=".$title."<br>";
 //            $inst = $title->getInstitution();
-//            echo "inst=".$inst."<br>";
-//            $positions = $inst->getUserPositions();
-//            echo "position count=".count($positions)."<br>";
-//            foreach( $positions as $position ) {
-//                echo "position=".$position."<br>";
-//                if( count($position->getPositionTypes()) == 0 ) {
-//                    echo 'remove position with empty pos types';
-//                    $inst->removeUserPosition($position);
-//                }
+//            if( $inst ) {
+//                echo "inst id=".$inst->getId().", name=".$inst->getName()."<br>";
 //            }
-//            echo "after clean position count=".count($positions)."<br>";
 //        }
-        //exit('set composite tree node');
-        //return;
+//        //exit('set composite tree node');
+//        return;
 
         $em = $this->getDoctrine()->getManager();
         $sc = $this->get('security.context');

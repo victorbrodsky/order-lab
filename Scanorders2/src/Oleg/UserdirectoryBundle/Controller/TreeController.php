@@ -41,15 +41,15 @@ class TreeController extends Controller {
         //echo "level=".$level."<br>";
 
         $combobox = false;
-        $userpositions = false;
+        //$userpositions = false;
 
         if (strpos($opt,'combobox') !== false) {
             $combobox = true;
         }
 
-        if (strpos($opt,'userpositions') !== false) {
-            $userpositions = true;
-        }
+//        if (strpos($opt,'userpositions') !== false) {
+//            $userpositions = true;
+//        }
 
         if( $thisid == 'null' ) {
             $thisid = null;
@@ -57,6 +57,11 @@ class TreeController extends Controller {
 
         if( $pid == 'null' ) {
             $pid = null;
+        }
+
+        if( !$pid && $thisid == 0 ) {
+            //echo "get root if thisid is 0 <br>";
+            $pid = '0';
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -71,32 +76,36 @@ class TreeController extends Controller {
         $where = "(list.type = :typedef OR list.type = :typeadd)";
         $params = array('typedef' => 'default','typeadd' => 'user-added');
 
+        $addwhere = false;
 
-        if( $pid != null && is_numeric($pid) && $pid == 0 ) {
+        if( !$addwhere && $pid != null && is_numeric($pid) && $pid == 0 ) {
             //children: where parent is NULL => root
             //echo "by root pid=".$pid."<br>";
             $dql->leftJoin("list.parent", "parent");
             $where = $where . " AND parent.id is NULL";
+            $addwhere = true;
         }
 
-        if( $pid && ($pid == '#' || !is_numeric($pid)) ) {
+        if( !$addwhere && $pid && ($pid == '#' || !is_numeric($pid)) ) {
             //echo "by root pid=".$pid."<br>";
             //root: the same as $pid == 0
             //$where = $where . " AND list.level = :level";
             //$params['level'] = 0;
             $dql->leftJoin("list.parent", "parent");
             $where = $where . " AND parent.id is NULL";
+            $addwhere = true;
         }
 
-        if( $pid && $pid != 0 && $pid != '#' && is_numeric($pid) ) {
+        if( !$addwhere && $pid && $pid != 0 && $pid != '#' && is_numeric($pid) ) {
             //children: where parent = $pid
             //echo "by pid=".$pid."<br>";
             $dql->leftJoin("list.parent", "parent");
             $where = $where . " AND parent.id = :id";
             $params['id'] = $pid;
+            $addwhere = true;
         }
 
-        if( $pid == null && $thisid && $thisid != 0 && is_numeric($thisid) ) {
+        if( !$addwhere && $pid == null && $thisid && $thisid != 0 && is_numeric($thisid) ) {
             //siblings
             //echo "by sibling id=".$thisid."<br>";
             $thisNode = $treeRepository->find($thisid);
@@ -111,6 +120,7 @@ class TreeController extends Controller {
                 $dql->leftJoin("list.parent", "parent");
                 $where = $where . " AND parent.id is NULL";
             }
+            $addwhere = true;
         }
 
 //        if( $level && is_numeric($level) ) {
@@ -165,24 +175,24 @@ class TreeController extends Controller {
             if( $combobox ) {
                 //for combobox
 
-                if( $userpositions ) {
-                    //find user positions by $userid and nodeid
-                    $nodeUserPositions = $em->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
-                        array(
-                            'user' => $userid,
-                            'institution' => $entity->getId()
-                        )
-                    );
-
-                    $positiontypes = array();
-                    foreach( $nodeUserPositions as $nodeUserPosition ) {
-                        foreach( $nodeUserPosition->getPositionTypes() as $posType ) {
-                            $positiontypes[] = $posType->getId();
-                        }
-                    }
-
-                    $element['positiontypes'] = implode(",", $positiontypes);
-                }
+//                if( $userpositions ) {
+//                    //find user positions by $userid and nodeid
+//                    $nodeUserPositions = $em->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+//                        array(
+//                            'user' => $userid,
+//                            'institution' => $entity->getId()
+//                        )
+//                    );
+//
+//                    $positiontypes = array();
+//                    foreach( $nodeUserPositions as $nodeUserPosition ) {
+//                        foreach( $nodeUserPosition->getPositionTypes() as $posType ) {
+//                            $positiontypes[] = $posType->getId();
+//                        }
+//                    }
+//
+//                    $element['positiontypes'] = implode(",", $positiontypes);
+//                }
 
             } else {
                 //for jstree
@@ -248,15 +258,15 @@ class TreeController extends Controller {
         //echo "className=".$className."<br>";
 
         $combobox = false;
-        $userpositions = false;
+        //$userpositions = false;
 
         if (strpos($opt,'combobox') !== false) {
             $combobox = true;
         }
 
-        if (strpos($opt,'userpositions') !== false) {
-            $userpositions = true;
-        }
+//        if (strpos($opt,'userpositions') !== false) {
+//            $userpositions = true;
+//        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -328,8 +338,13 @@ class TreeController extends Controller {
 
                 $username = $this->get('security.context')->getToken()->getUser();
                 $parent = $treeRepository->find($pid);
-                $parentLevel = $parent->getLevel();
-                $childLevel = intval($parentLevel) + 1;
+
+                if( $parent ) {
+                    $parentLevel = $parent->getLevel();
+                    $childLevel = intval($parentLevel) + 1;
+                } else {
+                    $childLevel = 0;
+                }
                 $organizationalGroupType = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByLevel($childLevel);
 
                 //////////// get max ordeinlist ////////////////////
@@ -354,9 +369,14 @@ class TreeController extends Controller {
                 if( $combobox ) {
                     $node->setType('user-added');
                 }
-                $treeRepository->persistAsLastChildOf($node,$parent);
 
-                $em->persist($node);
+                if( $parent ) {
+                    $treeRepository->persistAsLastChildOf($node,$parent);
+                } else {
+                    $treeRepository->persistAsLastChild($node);
+                }
+
+                //$em->persist($node);
                 $em->flush();
 
             }

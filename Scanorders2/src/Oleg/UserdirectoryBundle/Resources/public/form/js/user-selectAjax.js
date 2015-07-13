@@ -6,9 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var _institutionRoot = new Array();
 var _institution = new Array();
-var _userpositions = new Array();
+//var _institutionRoot = new Array();
+var _treenodedata = new Array();
+//var _userpositions = new Array();
 
 var _commenttype = new Array();
 var _identifiers = new Array();
@@ -79,7 +80,7 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'city',_cities,false);
     getComboboxGeneric(newForm,'organization',_organizations,false);
 
-    getComboboxGeneric(newForm,'userpositions',_userpositions,true);
+    //getComboboxGeneric(newForm,'userpositions',_userpositions,true);
 
     setBuidlingListener(newForm);
 
@@ -136,106 +137,107 @@ function getComboboxInstitution(holder) {
         }
     }
 
+    var entityName = 'Institution';
+    _treenodedata[entityName] = new Array();
+
     $(targetid).each( function(e){
-        getComboboxSingleInstitution($(this),'Institution');
+        getComboboxSingleInstitution($(this),entityName);
     });
 }
 
 function getComboboxSingleInstitution(comboboxEl,entityName) {
 
-    //var entityName = 'Institution';
-    //var parentid = 0;
+    //console.log('getComboboxSingleInstitution:');
+    //console.log(comboboxEl);
+
     var thisid = comboboxEl.val();
     //console.log('thisid='+thisid);
 
-    //get this id from tree-node-parent
-//    var parentEl = comboboxEl.closest('.treenode').find('.tree-node-parent');
-//    if( parentEl.length > 0 ) {
-//        parentid = parentEl.val();
-//        console.log('parentid='+parentid);
-//    }
+    if( !thisid ) {
+        thisid = 0;
+    }
 
     var optionData = null;
-    var fetched = false;
+    //var fetched = false;
 
-    //get root level
-    if( !fetched && !thisid && _institutionRoot.length == 0 ) {
-        optionData = getChildrenByParent(entityName,comboboxEl,null,0);
-        _institutionRoot = optionData;
-        fetched = true;
+    if( _treenodedata[entityName].hasOwnProperty(thisid) ) {
+        //optionData = _treenodedata[entityName][thisid];
+        populateComboboxData(entityName,comboboxEl,_treenodedata[entityName][thisid]);
+        return;
     }
 
-    var label = getComboboxNodeLabel(comboboxEl);
-//    if( _institutionRoot && _institutionRoot.length > 0 ) {
-//        console.log('label='+label+"?="+ _institutionRoot[0].leveltitle);
-//    }
 
-    //empty combobox with new label (new level) => initializing with empty value only possible for root combobox => root
-    if( !fetched && !thisid && _institutionRoot.length > 0 && label != _institutionRoot[0].leveltitle ) {
-        optionData = getChildrenByParent(entityName,comboboxEl,null,0);
-        _institutionRoot = optionData;
-        fetched = true;
-    }
+    getChildrenByParent(entityName,comboboxEl,thisid,null).
+    then(function (optionData) {
+        populateComboboxData(entityName,comboboxEl,optionData);
+    });
 
-    //get siblings of thisid
-    if( !fetched && _institutionRoot.length > 0 && thisid && label != _institutionRoot[0].leveltitle ) {
-        //console.log('get new getChildren By Parent: thisid='+thisid);
-        _institutionRoot = getChildrenByParent(entityName,comboboxEl,thisid,null);
-        fetched = true;
-    }
+}
 
-    if( !fetched && _institutionRoot.length == 0 && thisid ) {
-        //console.log('get new getChildren By Parent: thisid='+thisid);
-        _institutionRoot = getChildrenByParent(entityName,comboboxEl,thisid,null);
-        fetched = true;
-    }
+function populateComboboxData(entityName,comboboxEl,optionData) {
+    //console.log('populate combobox data:');
+    //console.log(optionData);
 
     var rowElHtml = comboboxEl.closest('.row')[0].outerHTML;
 
     //console.log('populate combobox');
-    populateSelectCombobox( comboboxEl, _institutionRoot, "Select an option" );
+    populateSelectCombobox( comboboxEl, optionData, "Select an option" );
 
-    comboboxTreeListener( comboboxEl, entityName, rowElHtml );
-
-    comboboxEl.trigger('change');
-
-    //set parent
-    setParentComboboxree(comboboxEl, entityName, rowElHtml);
+    if( !comboboxEl.hasClass('show-as-single-node') ) {
+        comboboxTreeListener( comboboxEl, entityName, rowElHtml );
+        comboboxEl.trigger('change');
+        setParentComboboxree(comboboxEl, entityName, rowElHtml);
+    }
 }
 
 function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
 
-    //do nothing if new element was enetered. In this case pid will be a string with a new element name.
-    if( !isInt(thisid) || !isInt(parentid) ) {
-        return null;
-    }
+    return Q.promise(function(resolve, reject, treedata) {
 
-    var treeHolder = thiselement.closest('.composite-tree-holder');
-    var opt = 'combobox';
-    if( treeHolder.hasClass('institution-with-userpositions') ) {
-        opt = opt + ',userpositions';
-    }
+        //console.log('entityName='+entityName+', thisid='+thisid+", parentid="+parentid);
 
-    //current userid
-    var dataElement = document.getElementById("form-prototype-data");
-    var userid = dataElement.getAttribute('data-userid');
+        //do nothing if new element was enetered. In this case pid will be a string with a new element name.
+        if( !isInt(thisid) || !isInt(parentid) ) {
+            //return null;
+            reject('id and pid null');
+            return;
+        }
 
-    //employees_get_institution
-    var treeUrl = Routing.generate('employees_get_composition_tree');
-    treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
-    //console.log('treeUrl='+treeUrl);
+        //console.log('_treenodedata:');
+        //console.log(_treenodedata);
+        if( thisid != null && _treenodedata[entityName].hasOwnProperty(thisid) ) {
+            //console.log('_treenodedata exists for thisid='+thisid);
+            resolve(_treenodedata[entityName][thisid]);
+            return;
+        }
 
-    var children = new Array();
+        var treeHolder = thiselement.closest('.composite-tree-holder');
+        var opt = 'combobox';
+    //    if( treeHolder.hasClass('institution-with-userpositions') ) {
+    //        opt = opt + ',userpositions';
+    //    }
 
-    $.ajax({
-        url: treeUrl,
-        timeout: _ajaxTimeout,
-        async: false
-    }).success(function(data) {
-        children = data;
+        //current userid
+        var dataElement = document.getElementById("form-prototype-data");
+        var userid = dataElement.getAttribute('data-userid');
+
+        //employees_get_institution
+        var treeUrl = Routing.generate('employees_get_composition_tree');
+        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
+        //console.log('treeUrl='+treeUrl);
+
+        $.ajax({
+            url: treeUrl,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _treenodedata[entityName][thisid] = data;
+            resolve(data);
+        }).error(function() {
+            reject('error getting nodes');
+        });
+
     });
-
-    return children;
 }
 
 function setComboboxInstitution(holder) {

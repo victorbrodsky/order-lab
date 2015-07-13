@@ -22,7 +22,6 @@ class InstitutionType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
-        $this->institutionWithUserPositions = '';
     }
 
 
@@ -50,64 +49,64 @@ class InstitutionType extends AbstractType
             ));
 
             //add userPositions for 'label'=>'Administrative'
-            if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
-                //$institutionWithUserPositions = 'institution-with-userpositions';
-
-                if( !$institution ) {
-                    return;
-                }
-
-                //unmapped field: institution-userpositiontype
-                $positions = $this->params['em']->getRepository('OlegUserdirectoryBundle:PositionTypeList')->findAll();
-                //$positionIds = array();
-                //$positionNames = array();
-                $positionIdName = array();
-                foreach( $positions as $position ) {
-                    //$positionIds[] = $position->getId();
-                    //$positionNames[] = $position->getName();
-                    $positionIdName[] = $position->getId() . '-' . $position->getName();
-                }
-
-
-                $institutionsPositiontypes = array();
-                $dataPositions = array();
-
-                foreach( $institution->getEntityBreadcrumbs() as $institution ) {
-
-                    if( !$institution->getOrganizationalGroupType() ) {
-                        //continue;
-                    }
-
-                    $name = $institution->getOrganizationalGroupType()->getName();
-                    $keyInst = $name.'-'.$institution->getId(); //full key: Division-nodeid-positiontype
-
-                    foreach( $positions as $position ) {
-                        $key = $keyInst.'-'.$position->getId();
-                        $institutionsPositiontypes[$key] = $position->getName() . ' of ' . $name; //Head of Department
-                    }
-
-                    //create position data
-                    $positiontypes = $institution->getUserPositionsByUseridAndNodeid($this->params['user'],$institution);
-                    foreach( $positiontypes as $nodeUserPosition ) {
-                        foreach( $nodeUserPosition->getPositionTypes() as $posType ) {
-                            $key = $keyInst.'-'.$posType->getId();
-                            $dataPositions[] = $key;
-                        }
-                    }
-
-                }
-
-                $form->add('institutionspositiontypes', 'choice', array(
-                    //'mapped' => false,
-                    'label' => 'Position Type:',
-                    'choices' => $institutionsPositiontypes,
-                    'multiple' => true,
-                    'required' => false,
-                    'data' => $dataPositions,
-                    'attr' => array('class' => 'combobox institutionspositiontypes', 'data-positions-idname' => implode(",", $positionIdName) ),
-                ));
-
-            }
+//            if( array_key_exists('label', $this->params) && $this->params['label'] == 'Administrative' ) {
+//                //$institutionWithUserPositions = 'institution-with-userpositions';
+//
+//                if( !$institution ) {
+//                    return;
+//                }
+//
+//                //unmapped field: institution-userpositiontype
+//                $positions = $this->params['em']->getRepository('OlegUserdirectoryBundle:PositionTypeList')->findAll();
+//                //$positionIds = array();
+//                //$positionNames = array();
+//                $positionIdName = array();
+//                foreach( $positions as $position ) {
+//                    //$positionIds[] = $position->getId();
+//                    //$positionNames[] = $position->getName();
+//                    $positionIdName[] = $position->getId() . '-' . $position->getName();
+//                }
+//
+//
+//                $institutionsPositiontypes = array();
+//                $dataPositions = array();
+//
+//                foreach( $institution->getEntityBreadcrumbs() as $institution ) {
+//
+//                    if( !$institution->getOrganizationalGroupType() ) {
+//                        //continue;
+//                    }
+//
+//                    $name = $institution->getOrganizationalGroupType()->getName();
+//                    $keyInst = $name.'-'.$institution->getId(); //full key: Division-nodeid-positiontype
+//
+//                    foreach( $positions as $position ) {
+//                        $key = $keyInst.'-'.$position->getId();
+//                        $institutionsPositiontypes[$key] = $position->getName() . ' of ' . $name; //Head of Department
+//                    }
+//
+//                    //create position data
+//                    $positiontypes = $institution->getUserPositionsByUseridAndNodeid($this->params['user'],$institution);
+//                    foreach( $positiontypes as $nodeUserPosition ) {
+//                        foreach( $nodeUserPosition->getPositionTypes() as $posType ) {
+//                            $key = $keyInst.'-'.$posType->getId();
+//                            $dataPositions[] = $key;
+//                        }
+//                    }
+//
+//                }
+//
+//                $form->add('institutionspositiontypes', 'choice', array(
+//                    //'mapped' => false,
+//                    'label' => 'Position Type:',
+//                    'choices' => $institutionsPositiontypes,
+//                    'multiple' => true,
+//                    'required' => false,
+//                    'data' => $dataPositions,
+//                    'attr' => array('class' => 'combobox institutionspositiontypes', 'data-positions-idname' => implode(",", $positionIdName) ),
+//                ));
+//
+//            }
 
         });
 
@@ -133,61 +132,61 @@ if(0) {
             }
 
             //save institutionspositiontypes to DB
-            $instArr = array();
-            if( array_key_exists('institutionspositiontypes', $institution) ) {
-                foreach( $institution['institutionspositiontypes'] as $institutionspositiontypes ) {
-                    echo "institutionspositiontypes=".$institutionspositiontypes."<br>";
-                    //Division-149-2
-                    $arr = explode("-",$institutionspositiontypes);
-                    $instId = $arr[1];
-                    $posId = $arr[2];
-                    if( $instId && $posId ) {
-                        $instArr[$instId][] = $posId;
-                    }
-                }
-            }
+//            $instArr = array();
+//            if( array_key_exists('institutionspositiontypes', $institution) ) {
+//                foreach( $institution['institutionspositiontypes'] as $institutionspositiontypes ) {
+//                    echo "institutionspositiontypes=".$institutionspositiontypes."<br>";
+//                    //Division-149-2
+//                    $arr = explode("-",$institutionspositiontypes);
+//                    $instId = $arr[1];
+//                    $posId = $arr[2];
+//                    if( $instId && $posId ) {
+//                        $instArr[$instId][] = $posId;
+//                    }
+//                }
+//            }
 
 //            echo "newPositions <br>";
 //            print_r($instArr);
 //            echo "<br>";
 
-            foreach( $instArr as $instId => $newPositions ) {
-
-                $nodeUserPositions = $this->params['em']->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
-                    array(
-                        'user' => $this->params['user']->getId(),
-                        'institution' => $instId
-                    )
-                );
-
-                if( count($nodeUserPositions) > 1 ) {
-                    $error = 'Logical Error: More than one UserPosition found for user ' . $this->params['user'] . ' and institution ID ' . $instId . '. Found ' . count($nodeUserPositions) . ' UserPositions';
-                    throw new LogicException($error);
-                }
-
-                $nodeUserPosition = null;
-                if( count($nodeUserPositions) > 0 ) {
-                    $nodeUserPosition = $nodeUserPositions[0];
-                }
-
-                if( !$nodeUserPosition ) {
-                    //echo 'create new UserPosition<br>';
-                    $nodeUserPosition = new UserPosition();
-                    $nodeUserPosition->setUser($this->params['user']);
-                    $instRef = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
-                    $nodeUserPosition->setInstitution($instRef);
-                }
-
-                $nodeUserPosition->clearPositionTypes();
-
-                foreach( $newPositions as $positionId ) {
-                    $positionRef = $this->params['em']->getReference('OlegUserdirectoryBundle:PositionTypeList', $positionId);
-                    $nodeUserPosition->addPositionType($positionRef);
-                }
-
-                $this->params['em']->persist($nodeUserPosition);
-
-            }
+//            foreach( $instArr as $instId => $newPositions ) {
+//
+//                $nodeUserPositions = $this->params['em']->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+//                    array(
+//                        'user' => $this->params['user']->getId(),
+//                        'institution' => $instId
+//                    )
+//                );
+//
+//                if( count($nodeUserPositions) > 1 ) {
+//                    $error = 'Logical Error: More than one UserPosition found for user ' . $this->params['user'] . ' and institution ID ' . $instId . '. Found ' . count($nodeUserPositions) . ' UserPositions';
+//                    throw new LogicException($error);
+//                }
+//
+//                $nodeUserPosition = null;
+//                if( count($nodeUserPositions) > 0 ) {
+//                    $nodeUserPosition = $nodeUserPositions[0];
+//                }
+//
+//                if( !$nodeUserPosition ) {
+//                    //echo 'create new UserPosition<br>';
+//                    $nodeUserPosition = new UserPosition();
+//                    $nodeUserPosition->setUser($this->params['user']);
+//                    $instRef = $this->params['em']->getReference('OlegUserdirectoryBundle:Institution', $instId);
+//                    $nodeUserPosition->setInstitution($instRef);
+//                }
+//
+//                $nodeUserPosition->clearPositionTypes();
+//
+//                foreach( $newPositions as $positionId ) {
+//                    $positionRef = $this->params['em']->getReference('OlegUserdirectoryBundle:PositionTypeList', $positionId);
+//                    $nodeUserPosition->addPositionType($positionRef);
+//                }
+//
+//                $this->params['em']->persist($nodeUserPosition);
+//
+//            }
 
             //set node by id
             $newInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionId);
@@ -197,25 +196,25 @@ if(0) {
                 $titleForm = $form->getParent();
                 $title = $titleForm->getData();
 
-//                echo "title <br>";
-//                print_r($title);
-//                echo "<br>";
+                echo "title <br>";
+                print_r($title);
+                echo "<br>";
 
-                if( !$title ) {
-                    echo "title <br>";
-                    print_r($title);
-                    echo "<br>";
-                    //return;
-                }
+//                if( !$title ) {
+//                    echo "title <br>";
+//                    print_r($title);
+//                    echo "<br>";
+//                    //return;
+//                }
 
-                if( !$title->getInstitution() ) {
-                    //return;
-                }
+//                if( !$title->getInstitution() ) {
+//                    //return;
+//                }
 
                 //echo "user=".$this->params['user']."<br>";
-                if( !$this->params['user'] ) {
-                    //return;
-                }
+//                if( !$this->params['user'] ) {
+//                    //return;
+//                }
 
                 $titleForm->add('institution', null, array(
                     'required' => false,
@@ -223,28 +222,18 @@ if(0) {
                     'data' => $newInst   //$newInst->getId()
                 ));
 
-//                $positions = $newInst->getUserPositions();
-//                foreach( $positions as $position ) {
-//                    //echo "PRE_SUBMIT newInst position=".$position."<br>";
-//                    if( count($position->getPositionTypes()) == 0 ) {
-//                        //echo 'remove position with empty pos types';
-//                        $newInst->removeUserPosition($position);
-//                    }
-//                }
-
-                //remove old userPosition from institution node
-                $newIdBreadcrumbs = $newInst->getIdBreadcrumbs();
-
-                $originalInstitutionId = $title->getInstitution()->getId();
-                $originalInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($originalInstitutionId);
-                $originalIdBreadcrumbs = $originalInstitution->getIdBreadcrumbs();
-
-                $this->removeUserPositionFromInstitution($this->params['user']->getId(),$originalIdBreadcrumbs,$newIdBreadcrumbs);
+//                //remove old userPosition from institution node
+//                $newIdBreadcrumbs = $newInst->getIdBreadcrumbs();
+//
+//                $originalInstitutionId = $title->getInstitution()->getId();
+//                $originalInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($originalInstitutionId);
+//                $originalIdBreadcrumbs = $originalInstitution->getIdBreadcrumbs();
+//
+//                $this->removeUserPositionFromInstitution($this->params['user']->getId(),$originalIdBreadcrumbs,$newIdBreadcrumbs);
 
                 //echo "PRE_SUBMIT set newInst=".$newInst."<br>";
                 $title->setInstitution($newInst);
-
-                //remove old userPositions_positionTypes
+                //$title['institution'] = $newInst;
 
             }
 
@@ -256,57 +245,57 @@ if(0) {
     }
 
 
-    public function removeUserPositionFromInstitution( $userid, $originalIdBreadcrumbs, $newIdBreadcrumbs ) {
+//    public function removeUserPositionFromInstitution( $userid, $originalIdBreadcrumbs, $newIdBreadcrumbs ) {
+//
+////        echo "originalIdBreadcrumbs:<br>";
+////        print_r($originalIdBreadcrumbs);
+////        echo "<br>";
+////        echo "newIdBreadcrumbs:<br>";
+////        print_r($newIdBreadcrumbs);
+////        echo "<br>";
+//
+//        $mergedArr = array_merge( $originalIdBreadcrumbs, $newIdBreadcrumbs );
+//        $diffIds = array_diff($mergedArr, $newIdBreadcrumbs);
+//
+////        echo "diffIds:<br>";
+////        print_r($diffIds);
+////        echo "<br>";
+//
+//        foreach( $diffIds as $instId ) {
+//
+//            if( !in_array($instId, $newIdBreadcrumbs) ) {
+//                $this->removeUserPositionFromSingleInstitution($userid,$instId);
+//            }
+//
+//        }
+//    }
 
-//        echo "originalIdBreadcrumbs:<br>";
-//        print_r($originalIdBreadcrumbs);
-//        echo "<br>";
-//        echo "newIdBreadcrumbs:<br>";
-//        print_r($newIdBreadcrumbs);
-//        echo "<br>";
-
-        $mergedArr = array_merge( $originalIdBreadcrumbs, $newIdBreadcrumbs );
-        $diffIds = array_diff($mergedArr, $newIdBreadcrumbs);
-
-//        echo "diffIds:<br>";
-//        print_r($diffIds);
-//        echo "<br>";
-
-        foreach( $diffIds as $instId ) {
-
-            if( !in_array($instId, $newIdBreadcrumbs) ) {
-                $this->removeUserPositionFromSingleInstitution($userid,$instId);
-            }
-
-        }
-    }
-
-    public function removeUserPositionFromSingleInstitution( $userid, $instid ) {
-
-        $originalInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
-
-        $originalUserPositions = $this->params['em']->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
-            array(
-                'user' => $userid,
-                'institution' => $instid
-            )
-        );
-
-        if( !$originalInstitution && (!$originalUserPositions || count($originalUserPositions) == 0) ) {
-            return;
-        }
-
-        foreach( $originalUserPositions as $originalUserPosition ) {
-            //echo "!!!PRE_SUBMIT remove userPosition=".$originalUserPosition." from inst=".$originalInstitution."<br>";
-            $originalInstitution->removeUserPosition($originalUserPosition);
-
-            $this->params['em']->remove($originalUserPosition);
-            $this->params['em']->flush($originalUserPosition);
-
-            $this->params['em']->persist($originalInstitution);
-        }
-
-    }
+//    public function removeUserPositionFromSingleInstitution( $userid, $instid ) {
+//
+//        $originalInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+//
+//        $originalUserPositions = $this->params['em']->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+//            array(
+//                'user' => $userid,
+//                'institution' => $instid
+//            )
+//        );
+//
+//        if( !$originalInstitution && (!$originalUserPositions || count($originalUserPositions) == 0) ) {
+//            return;
+//        }
+//
+//        foreach( $originalUserPositions as $originalUserPosition ) {
+//            //echo "!!!PRE_SUBMIT remove userPosition=".$originalUserPosition." from inst=".$originalInstitution."<br>";
+//            $originalInstitution->removeUserPosition($originalUserPosition);
+//
+//            $this->params['em']->remove($originalUserPosition);
+//            $this->params['em']->flush($originalUserPosition);
+//
+//            $this->params['em']->persist($originalInstitution);
+//        }
+//
+//    }
 
 
 

@@ -29,56 +29,17 @@ function setParentComboboxree(targetid, entityName, rowElHtml) {
         return;
     }
 
-    var treeArr = getChildrenByParent(entityName,comboboxEl,thisData.pid,null);
-
-    var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'top' );
-    if( newElementsAppended ) {
-        newElementsAppended.select2('val',thisData.pid);
-        setParentComboboxree(newElementsAppended, entityName, rowElHtml);
-    }
-
-}
-function setTreeByClickingParent_OLD(targetid, entityName) {
-    return; //testing
-
-    var comboboxEl = $(targetid);
-    //console.log('combobox len='+comboboxEl.length);
-
-
-    var treeHolder = comboboxEl.closest('.composite-tree-holder');
-    //console.log(treeHolder);
-
-    var breadcrumbs = treeHolder.find('.tree-node-breadcrumbs').val();
-    console.log('breadcrumbs='+breadcrumbs);
-
-    if( !breadcrumbs ) {
-        return;
-    }
-
-    var breadcrumbsArr = breadcrumbs.split(",");
-
-    //var thisId = treeHolder.find('.tree-node-id').val();
-    //var thisPid = treeHolder.find('.tree-node-parent').val();
-
-    if( breadcrumbsArr.length > 0 ) {
-        //var setid = breadcrumbsArr[0];
-        //console.log('set id='+setid);
-        //comboboxEl.select2('val',setid, true);
-
-        var nextRowSiblings = comboboxEl.closest('.row');
-        for( var i = 0; i < breadcrumbsArr.length; i++ ) {
-            comboboxEl = nextRowSiblings.find('.ajax-combobox-institution');
-            console.log('set id='+breadcrumbsArr[i]);
-            comboboxEl.select2('val',breadcrumbsArr[i]);
-            comboboxEl.trigger('change');
-            var nextRowSiblings = nextRowSiblings.next();
+    getChildrenByParent(entityName,comboboxEl,thisData.pid,null).
+    then(function (treeArr) {
+        var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'top' );
+        if( newElementsAppended ) {
+            newElementsAppended.select2('val',thisData.pid);
+            setParentComboboxree(newElementsAppended, entityName, rowElHtml);
         }
-    }
+    });
 
 }
 
-//TODO: set hidden real institution field in the form every time the combobox is chnaged.
-//Then, use this real institution field and parent field in controller to create a new instituition.
 function comboboxTreeListener( target, entityName, rowElHtml ) {
 
     $(target).on('change', function(e){
@@ -110,15 +71,17 @@ function comboboxTreeListener( target, entityName, rowElHtml ) {
         //add new positions
         addNewPositions(treeHolder,getComboboxNodeLabel(comboboxEl),thisData.id);
 
-        var treeArr = getChildrenByParent(entityName,comboboxEl,null,thisData.id);
-        //console.log( treeArr );
-        //console.log( 'treeArr.length=' + treeArr.length );
-
-        var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'bottom' );
-        if( newElementsAppended ) {
-            //remove id and name for all inputs preceding the input with selected node
-            clearElementsIdName(treeHolder);
-        }
+        getChildrenByParent(entityName,comboboxEl,null,thisData.id).
+        then(function (treeArr) {
+            //console.log( 'treeArr:' );
+            //console.log( treeArr );
+            var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'bottom' );
+            //console.log( newElementsAppended );
+            if( newElementsAppended ) {
+                //remove id and name for all inputs preceding the input with selected node
+                clearElementsIdName(treeHolder);
+            }
+        });
 
     });
 

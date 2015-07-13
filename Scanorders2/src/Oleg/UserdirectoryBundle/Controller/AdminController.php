@@ -2947,10 +2947,25 @@ class AdminController extends Controller
 
         //https://bitbucket.org/weillcornellpathology/scanorder/issue/438/change-institution-division-department
         $types = array(
-            'Head',
-            'Manager',
-            'Primary Contact',
-            'Transcriptionist'
+            'Head of Institution',
+            'Head of Department',
+            'Head of Division',
+            'Head of Service',
+
+            'Manager of Institution',
+            'Manager of Department',
+            'Manager of Division',
+            'Manager of Service',
+
+            'Primary Contact of Institution',
+            'Primary Contact of Department',
+            'Primary Contact of Division',
+            'Primary Contact of Service',
+
+            'Transcriptionist of Institution',
+            'Transcriptionist of Department',
+            'Transcriptionist of Division',
+            'Transcriptionist of Service',
         );
 
         $count = 1;
@@ -2979,18 +2994,18 @@ class AdminController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-//        $em = $this->getDoctrine()->getManager();
-//        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
-//        $htmlTree = $repo->childrenHierarchy(
-//            null, /* starting from root nodes */
-//            false, /* true: load all children, false: only direct */
-//            array(
-//                'decorate' => true,
-//                'representationField' => 'slug',
-//                'html' => true
-//            )
-//        );
-//        echo $htmlTree;
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
+        $htmlTree = $repo->childrenHierarchy(
+            null, /* starting from root nodes */
+            false, /* true: load all children, false: only direct */
+            array(
+                'decorate' => true,
+                'representationField' => 'slug',
+                'html' => true
+            )
+        );
+        echo $htmlTree;
 
         return $this->render('OlegUserdirectoryBundle:Tree:institution-tree.html.twig',
             array(
