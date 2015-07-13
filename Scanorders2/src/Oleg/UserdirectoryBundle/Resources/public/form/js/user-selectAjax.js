@@ -147,8 +147,8 @@ function getComboboxInstitution(holder) {
 
 function getComboboxSingleInstitution(comboboxEl,entityName) {
 
-    //console.log('getComboboxSingleInstitution:');
-    //console.log(comboboxEl);
+    console.log('getComboboxSingleInstitution:');
+    console.log(comboboxEl);
 
     var thisid = comboboxEl.val();
     //console.log('thisid='+thisid);
@@ -157,11 +157,8 @@ function getComboboxSingleInstitution(comboboxEl,entityName) {
         thisid = 0;
     }
 
-    var optionData = null;
-    //var fetched = false;
 
     if( _treenodedata[entityName].hasOwnProperty(thisid) ) {
-        //optionData = _treenodedata[entityName][thisid];
         populateComboboxData(entityName,comboboxEl,_treenodedata[entityName][thisid]);
         return;
     }
@@ -198,7 +195,7 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
 
         //do nothing if new element was enetered. In this case pid will be a string with a new element name.
         if( !isInt(thisid) || !isInt(parentid) ) {
-            //return null;
+            //console.log('thisid and pid not int');
             reject('id and pid null');
             return;
         }
@@ -211,15 +208,19 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
             return;
         }
 
-        var treeHolder = thiselement.closest('.composite-tree-holder');
+        //console.log('get treenode data!!!');
+
         var opt = 'combobox';
+        //var treeHolder = thiselement.closest('.composite-tree-holder');
     //    if( treeHolder.hasClass('institution-with-userpositions') ) {
     //        opt = opt + ',userpositions';
     //    }
 
         //current userid
         var dataElement = document.getElementById("form-prototype-data");
+        //console.log(dataElement);
         var userid = dataElement.getAttribute('data-userid');
+        //console.log('userid='+userid);
 
         //employees_get_institution
         var treeUrl = Routing.generate('employees_get_composition_tree');

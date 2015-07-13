@@ -38,14 +38,17 @@
 
 
         {% if pathname == 'locations' %}
+            <div id="form-prototype-data" data-userid = "{{ entity.id }}"></div>
             {{ usermacros.locationObject(form,cycle,'user-locations','noprototype',employees_sitename,entity) }}
         {% endif %}
 
         {% if pathname == 'buildings' %}
+            <div id="form-prototype-data" data-userid = "{{ entity.id }}"></div>
             {{ usermacros.buildingObject(form,cycle,'user-buildings','noprototype',employees_sitename,entity) }}
         {% endif %}
 
         {% if pathname == 'researchlabs' %}
+            <div id="form-prototype-data" data-userid = "{{ entity.id }}"></div>
             {{ usermacros.researchlabObject(form,cycle,'user-researchlabs','noprototype',employees_sitename,entity) }}
         {% endif %}
 
