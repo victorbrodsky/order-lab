@@ -116,6 +116,9 @@ security:
      - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/site-settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
+    #tree hierarchy: need for all users for public user access request page
+     - { path: ^/directory/tree-util/common/composition-tree/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
      #All other urls: make all /employees accessible only limited special roles
      - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
 

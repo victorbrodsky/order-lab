@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -69,24 +71,64 @@ class UserRequestType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        //institutions
-        $builder->add( 'institution', 'entity', array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
-                'property' => 'name',
-                'label'=>'Institution:',
-                'required'=> false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
+        //requestedInstitutionalPHIScope
+        if( array_key_exists('requestedInstitutionalPHIScope', $this->params) ) {
+            $requestedInstitutionalPHIScope = $this->params['requestedInstitutionalPHIScope'];
+        } else {
+            $requestedInstitutionalPHIScope = null;
+        }
+        //echo "choices=".count($requestedInstitutionalPHIScope)."<br>";
+        $builder->add('requestedInstitutionalPHIScope', 'entity', array(
+            'label' => 'Institutional PHI Scope:',
+            'required'=> true,
+            'multiple' => true,
+            'empty_value' => false,
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'choices' => $requestedInstitutionalPHIScope,
+            'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
+
+        //requestedScanOrderInstitutionScope
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $title = $event->getData();
+//            $form = $event->getForm();
+//
+//            $label = 'Institution:';
+//            if( $title ) {
+//                $institution = $title->getRequestedScanOrderInstitutionScope();
+//                if( $institution && $institution->getOrganizationalGroupType() ) {
+//                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
+//                    $label = $institution->getOrganizationalGroupType()->getName().":";
+//                }
+//            }
+//
+//            $form->add('requestedScanOrderInstitutionScope', 'employees_custom_selector', array(
+//                'label' => $label,
+//                'required' => false,
+//                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+//                'classtype' => 'institution'
+//            ));
+//        });
+
+
+
+//        $builder->add( 'institution', 'entity', array(
+//                'class' => 'OlegUserdirectoryBundle:Institution',
+//                'property' => 'name',
+//                'label'=>'Institution:',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//        ));
         
 //        $builder->add( 'department', 'text', array(
 //                'label'=>'Department:',
@@ -100,13 +142,13 @@ class UserRequestType extends AbstractType
         //}
 
 
-        $builder->add('department', 'entity', array(
-            'label' => 'Department:',
-            'required'=> true,
-            'class' => 'OlegUserdirectoryBundle:Department',
-            'choices' => $this->params['departments'],
-            'attr' => array('class' => 'combobox combobox-width')
-        ));
+//        $builder->add('department', 'entity', array(
+//            'label' => 'Department:',
+//            'required'=> true,
+//            'class' => 'OlegUserdirectoryBundle:Department',
+//            'choices' => $this->params['departments'],
+//            'attr' => array('class' => 'combobox combobox-width')
+//        ));
 
         //services
 //        $attr = array('class' => 'ajax-combobox-service', 'type' => 'hidden');    //new
@@ -116,13 +158,13 @@ class UserRequestType extends AbstractType
 //            'required' => false,
 //            'classtype' => 'userServices'
 //        ));
-        $builder->add('services', 'entity', array(
-            'label' => 'Service(s):',
-            'class' => 'OlegUserdirectoryBundle:Service',
-            'choices' => $this->params['services'],
-            'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width')
-        ));
+//        $builder->add('services', 'entity', array(
+//            'label' => 'Service(s):',
+//            'class' => 'OlegUserdirectoryBundle:Service',
+//            'choices' => $this->params['services'],
+//            'multiple' => true,
+//            'attr' => array('class' => 'combobox combobox-width')
+//        ));
         
         $builder->add('request', 'textarea', array(
             'label'=>'Reason for account request:',
@@ -151,7 +193,7 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add('creationdate');
+        //$builder->add('creationdate');
 
 //        $builder->add("cwidyesno", "choice", array(
 //            'mapped' => false,

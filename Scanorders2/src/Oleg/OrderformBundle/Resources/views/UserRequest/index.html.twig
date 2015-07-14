@@ -29,7 +29,7 @@
             var formEl = formInputEl.closest('.order-urgent-status');
             //console.log(formEl);
 
-            var selections = formEl.find(".institution-combobox").select2("data");
+            var selections = formEl.find(".combobox-institution").select2("data");
 
             var selectionsStr = "";
             for( var i = 0; i < selections.length; i++ )  {
@@ -97,9 +97,9 @@
                 <th>{{ knp_pagination_sortable(entities, 'Email', 'accreq.email') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'accreq.phone') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.job') }}</th>
-                <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Institution(s)', 'accreq.institution') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Service(s)', 'services.name') }}</th>
+                <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Permitted Institutional PHI Scope', 'accreq.requestedScanOrderInstitutionScope') }}</th>
+                {#<th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Service(s)', 'services.name') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Reason for Account Request', 'accreq.request') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Name', 'accreq.referencename') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
@@ -140,16 +140,16 @@
                 <td>{{ entity.job }}</td>
 
                 <td>
-                    {{ form_widget(forms[loop.index0].institution) }}
+                    {{ form_widget(forms[loop.index0].requestedInstitutionalPHIScope) }}
                     {#{{ entity.institution }}#}
                 </td>
 
-                <td>{{ entity.department }}</td>
-                <td>
-                    {% for services in entity.services %}
-                        "{{ services }}"
-                    {% endfor %}
-                </td>
+                {#<td>{{ entity.department }}</td>#}
+                {#<td>#}
+                    {#{% for services in entity.services %}#}
+                        {#"{{ services }}"#}
+                    {#{% endfor %}#}
+                {#</td>#}
                 <td>
                     {#<textarea readonly class="textarea form-control">#}
                         {#{{- entity.request }}#}

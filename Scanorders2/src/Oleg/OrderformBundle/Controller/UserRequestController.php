@@ -71,7 +71,10 @@ class UserRequestController extends Controller
             } else {
                 $disable = true;
             }
-            $forms[] = $this->createForm(new UserRequestApproveType(), $req, array('disabled' => $disable) )->createView();
+
+            $params = $this->getParams();
+
+            $forms[] = $this->createForm(new UserRequestApproveType($params), $req, array('disabled' => $disable) )->createView();
         }
 
         return array(
@@ -221,10 +224,12 @@ class UserRequestController extends Controller
 
         $entity  = new UserRequest();
 
-        $form = $this->createForm(new UserRequestApproveType(), $entity);
+        $params = $this->getParams();
+
+        $form = $this->createForm(new UserRequestApproveType($params), $entity);
         $form->handleRequest($request);
 
-        if( $entity->getId() && $entity->getId() != "" && $entity->getUsername() && $entity->getUsername() != "" && count($entity->getInstitution()) != 0 ) {
+        if( $entity->getId() && $entity->getId() != "" && $entity->getUsername() && $entity->getUsername() != "" && count($entity->getRequestedInstitutionalPHIScope()) != 0 ) {
 
             //echo "form valid!";
             //exit();
@@ -237,7 +242,7 @@ class UserRequestController extends Controller
 
             $entityDb->setStatus('approved');
             $entityDb->setUsername($entity->getUsername());
-            $entityDb->setInstitution($entity->getInstitution());
+            $entityDb->setRequestedInstitutionalPHIScope($entity->getRequestedInstitutionalPHIScope());
 
             $em->persist($entityDb);
             $em->flush();
@@ -255,7 +260,7 @@ class UserRequestController extends Controller
                 $failedArr[] = "username is empty";
             }
 
-            if( count($entity->getInstitution()) == 0 ) {
+            if( count($entity->getRequestedInstitutionalPHIScope()) == 0 ) {
                 $failedArr[] = "Institution list is empty";
             }
 
@@ -276,36 +281,54 @@ class UserRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //departments
-        $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
-        $departments = new ArrayCollection();
-        $departments->add($department);
+        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
 
-        //echo "dep=".$department->getName()."<br>";
 
-        //divisions
-        $divisions = $department->getDivisions();
+        $params['institution'] = $department;
 
-        //services
-        $services = new ArrayCollection();
-        foreach( $divisions as $division ) {
+        $requestedInstitutionalPHIScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+        $params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
 
-            foreach( $division->getServices() as $service ) {
-                $services->add($service);
-            }
-
-        }
-        //$services = $em->getRepository('OlegUserdirectoryBundle:Service')->findByDepartment($department);
-
-        //foreach( $departments as $dep ) {
-        //    echo "dep=".$dep->getName()."<br>";
-        //}
-        //exit('exit');
-
-        $params['departments'] = $departments;
-        $params['services'] = $services;
 
         return $params;
     }
+//    public function getParams_Old() {
+//
+//        $params = array();
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        //departments
+//        $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+//        $departments = new ArrayCollection();
+//        $departments->add($department);
+//
+//        //echo "dep=".$department->getName()."<br>";
+//
+//        //divisions
+//        $divisions = $department->getDivisions();
+//
+//        //services
+//        $services = new ArrayCollection();
+//        foreach( $divisions as $division ) {
+//
+//            foreach( $division->getServices() as $service ) {
+//                $services->add($service);
+//            }
+//
+//        }
+//        //$services = $em->getRepository('OlegUserdirectoryBundle:Service')->findByDepartment($department);
+//
+//        //foreach( $departments as $dep ) {
+//        //    echo "dep=".$dep->getName()."<br>";
+//        //}
+//        //exit('exit');
+//
+//        $params['departments'] = $departments;
+//        $params['services'] = $services;
+//
+//        return $params;
+//    }
 
 
 

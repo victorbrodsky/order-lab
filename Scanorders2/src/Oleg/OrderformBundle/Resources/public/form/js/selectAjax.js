@@ -109,37 +109,37 @@ function customCombobox() {
 
 }
 
-function initDefaultServiceManually() {
-
-    var targetid = ".ajax-combobox-service";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    var url = getCommonBaseUrl("util/"+"default-service");
-
-    var instid = $('.combobox-institution').select2('val');
-
-    //use curid to add current object.
-    var curid = null;
-    var curValue = $(targetid).select2('val');
-    //console.log("curValue="+curValue);
-    if( isInt(curValue) ) {
-        curid = curValue;
-    }
-
-    $.ajax({
-        url: url,
-        type: 'GET',
-        //data: {id: curid, instid: instid, orderid: messageid},
-        data: {id: curid, instid: instid},
-        timeout: _ajaxTimeout,
-        async: asyncflag
-    }).success(function(data) {
-        populateSelectCombobox( targetid, data, "Select an option or type in a new value" );
-    });
-}
+//function initDefaultServiceManually() {
+//
+//    var targetid = ".ajax-combobox-service";
+//
+//    if( $(targetid).length == 0 ) {
+//        return;
+//    }
+//
+//    var url = getCommonBaseUrl("util/"+"default-service");
+//
+//    var instid = $('.combobox-institution').select2('val');
+//
+//    //use curid to add current object.
+//    var curid = null;
+//    var curValue = $(targetid).select2('val');
+//    //console.log("curValue="+curValue);
+//    if( isInt(curValue) ) {
+//        curid = curValue;
+//    }
+//
+//    $.ajax({
+//        url: url,
+//        type: 'GET',
+//        //data: {id: curid, instid: instid, orderid: messageid},
+//        data: {id: curid, instid: instid},
+//        timeout: _ajaxTimeout,
+//        async: asyncflag
+//    }).success(function(data) {
+//        populateSelectCombobox( targetid, data, "Select an option or type in a new value" );
+//    });
+//}
 
 
 //#############  stains  ##############//

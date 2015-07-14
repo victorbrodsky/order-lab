@@ -19,27 +19,27 @@ class UserRequest
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $cwid;
+    private $cwid;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $username;
+    private $username;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $hascwid;
+    private $hascwid;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $name;
+    private $name;
 
     /**
      * @ORM\Column(type="string")
@@ -51,26 +51,38 @@ class UserRequest
      *     checkMX = true
      * )
      */
-    protected $email;
+    private $email;
     
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $phone;
+    private $phone;
     
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $job;
+    private $job;
 
     /**
+     * request permittedInstitutionalPHIScope
+     *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinTable(name="scan_accountrequest_institution",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      * )
      */
-    protected $institution;
+    private $requestedInstitutionalPHIScope;
+
+    /**
+     * requested Institution (ScanOrders Institution Scope)
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
+     **/
+    private $requestedScanOrderInstitutionScope;
+
+
     
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
@@ -108,7 +120,7 @@ class UserRequest
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $creationdate;
 
@@ -137,7 +149,7 @@ class UserRequest
     function __construct()
     {
         //$this->services = new ArrayCollection();
-        $this->institution = new ArrayCollection();
+        $this->requestedInstitutionalPHIScope = new ArrayCollection();
     }
 
     /**
@@ -408,32 +420,50 @@ class UserRequest
     /**
      * @return mixed
      */
-    public function getInstitution()
+    public function getRequestedInstitutionalPHIScope()
     {
-        return $this->institution;
+        return $this->requestedInstitutionalPHIScope;
     }
 
-    public function setInstitution( $institutions )
+    public function setRequestedInstitutionalPHIScope( $requestedInstitutionalPHIScope )
     {
-        $this->institution->clear();
-        foreach( $institutions as $institution ) {
-            $this->addInstitution($institution);
+        $this->requestedInstitutionalPHIScope->clear();
+        foreach( $requestedInstitutionalPHIScope as $institution ) {
+            $this->addRequestedInstitutionalPHIScope($institution);
         }
-        return $this->institution;
+        return $this->requestedInstitutionalPHIScope;
     }
 
-    public function addInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
+    public function addRequestedInstitutionalPHIScope(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
     {
-        if( !$this->institution->contains($institution) ) {
-            $this->institution->add($institution);
+        if( !$this->requestedInstitutionalPHIScope->contains($institution) ) {
+            $this->requestedInstitutionalPHIScope->add($institution);
         }
         return $this;
     }
 
-    public function removeInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
+    public function removeRequestedInstitutionalPHIScope(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
     {
-        $this->institution->removeElement($institution);
+        $this->requestedInstitutionalPHIScope->removeElement($institution);
     }
+
+    /**
+     * @param mixed $requestedScanOrderInstitutionScope
+     */
+    public function setRequestedScanOrderInstitutionScope($requestedScanOrderInstitutionScope)
+    {
+        $this->requestedScanOrderInstitutionScope = $requestedScanOrderInstitutionScope;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestedScanOrderInstitutionScope()
+    {
+        return $this->requestedScanOrderInstitutionScope;
+    }
+
+
 
     /**
      * @param \DateTime $actiondate

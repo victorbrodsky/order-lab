@@ -39,6 +39,7 @@
 
 
 
+
     <title>Request an Aperio eSlide Manager Account</title>
 
     {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}
@@ -55,6 +56,7 @@
 
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     <div class="container text-center">
 
@@ -96,9 +98,17 @@
 
             {{ myform.field(form.phone) }}
             {{ myform.field(form.job) }}
-            {{ myform.field(form.institution) }}
-            {{ myform.field(form.department) }}
-            {{ myform.field(form.services) }}
+
+            {{ myform.field(form.requestedInstitutionalPHIScope) }}
+
+            {% if form.requestedScanOrderInstitutionScope is defined %}
+                {{ treemacros.compositeTreeNode(form.requestedScanOrderInstitutionScope,'','') }}
+            {% endif %}
+
+            {#{{ myform.field(form.institution) }}#}
+            {#{{ myform.field(form.department) }}#}
+            {#{{ myform.field(form.services) }}#}
+
             {{ myform.field(form.request) }}
             {{ myform.field(form.similaruser) }}
 
@@ -126,7 +136,9 @@
             {{ myform.field(form.referenceemail) }}
             {{ myform.field(form.referencephone) }}
 
-            {% do form.creationdate.setRendered %}
+            {% if form.creationdate is defined %}
+                {% do form.creationdate.setRendered %}
+            {% endif %}
 
             {#{{ form_rest(form) }}#}
             {{ form_widget(form._token) }}
@@ -163,8 +175,12 @@
         '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
         '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
         '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+        '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
 		
 		'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+
+        '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
+        '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
 
         '@OlegOrderformBundle/Resources/public/form/js/masking.js'
         '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
@@ -175,15 +191,24 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+    {#FOSJsRoutingBundle#}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+
     <script language="Javascript">
 
         $(document).ready(function() {
+
+            _ajaxTimeout = 20000;
 
             regularCombobox();
             customCombobox();			
             fieldInputMask();
             expandTextarea();
             initConvertEnterToTab();
+
+            getComboboxInstitution();
 
             $('.cwid').val('');
 

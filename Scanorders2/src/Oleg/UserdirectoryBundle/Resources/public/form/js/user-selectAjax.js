@@ -231,16 +231,32 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
         treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
         //console.log('final treeUrl='+treeUrl);
 
-        $.ajax({
-            url: treeUrl,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _treenodedata[entityName][thisid] = data;
-            resolve(data);
-        }).error(function() {
-            reject('error getting nodes');
-        });
+        if( !_ajaxTimeout ) {
+            var _ajaxTimeout = 20000;
+        }
+
+//        console.log('continue:');
+//        console.log('ajaxTimeout='+_ajaxTimeout);
+//        console.log('asyncflag='+asyncflag);
+
+        try {
+            $.ajax({
+                url: treeUrl,
+                timeout: _ajaxTimeout,
+                async: asyncflag
+            }).success(function(data) {
+                //console.log(data);
+                _treenodedata[entityName][thisid] = data;
+                resolve(data);
+            }).error(function() {
+                //console.log('error getting nodes');
+                reject('error getting nodes');
+            });
+        }
+        catch(err) {
+            console.log("ajax tree retrival failed err="+err);
+            throw new Error("ajax tree retrival failed err="+err);
+        }
 
     });
 }

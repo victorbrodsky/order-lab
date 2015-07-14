@@ -442,7 +442,7 @@ class ScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            $statuses = $em->getRepository('OlegUserdirectoryBundle:Service')->findAll();
+            $statuses = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll(); //filter by Level = 4?
         } 
 
         //add special cases
@@ -515,13 +515,13 @@ class ScanOrderController extends Controller {
 
             if( is_numeric($service)  ) {
 
-                $siteUserService = $em->getRepository('OlegUserdirectoryBundle:Service')->find($service);
+                $siteUserService = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($service);
 
                 if( !$siteUserService ) {
-                    throw new \Exception( 'Unable to find Service '.$service );
+                    throw new \Exception( 'Unable to find Service by id '.$service );
                 }
 
-                $criteriastr = " scanorder.service=".$siteUserService->getId();
+                $criteriastr = " scanorder.scanOrderInstitutionScope=".$siteUserService->getId();
 
             }
 
@@ -1251,7 +1251,7 @@ class ScanOrderController extends Controller {
                 $filterStr = " (". $filterStr .") ";
             }
 
-            if( $criteriastr != "" ) {
+            if( $criteriastr != "" && $filterStr != "" ) {
                 $criteriastr .= " AND ". $filterStr ." ";
             } else {
                 $criteriastr .= $filterStr;
@@ -1348,7 +1348,7 @@ class ScanOrderController extends Controller {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= "scanorder.service=".$service;
+                $crituser .= "scanorder.scanOrderInstitutionScope=".$service;
             }
 
             if( $criteriastr != "" && $crituser != "" ) {
@@ -1372,7 +1372,7 @@ class ScanOrderController extends Controller {
             if( is_int($service) ) {
                 //echo "service=".$service."<br>";
                 $showproxyuser = 'true';
-                $critservice = "scanorder.service=".$service;
+                $critservice = "scanorder.scanOrderInstitutionScope=".$service;
             }
 
             if( $criteriastr != "" && $critservice != "" ) {
