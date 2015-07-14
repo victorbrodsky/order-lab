@@ -47,9 +47,11 @@
     '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
 	
 	'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
     '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
     '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
 
     '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
     '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
@@ -85,6 +87,10 @@
         //console.log("_orderDataArr="+_orderDataArr);
 
     </script>
+
+    {#FOSJsRoutingBundle#}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
 {% endblock %}
 

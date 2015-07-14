@@ -92,14 +92,17 @@ $(document).ready(function() {
     initConvertEnterToTab();
 
     //set institutional tree
-    initTreeSelect();   //clearFlag: default true
-    initInstitutionManually();
-    setInstitutionTreeChildren();
-    initDefaultServiceManually();
+    getComboboxInstitution();
+//    initTreeSelect();   //clearFlag: default true
+//    initInstitutionManually();
+//    setInstitutionTreeChildren();
+//    initDefaultServiceManually();
 
     initDatetimepicker();
 
     //initTypeaheadOrderSiteSearch();
+
+
 
 });
 

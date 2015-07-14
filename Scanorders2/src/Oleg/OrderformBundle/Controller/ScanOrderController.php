@@ -484,26 +484,29 @@ class ScanOrderController extends Controller {
         //for "My Orders" get all user services and chief services
         if( $routeName == "my-scan-orders" ) {
 
-            $userServices = $userSiteSettings->getScanOrdersServicesScope();
+            //TODO: now we have a single ScanOrderInstitutionScope. Before, we had multiple ScanOrder Service Scopes
+            $userScanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
+            $criteriastr .= " scanorder.scanOrderInstitutionScope=".$userScanOrderInstitutionScope->getId();
 
-            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
-                $chiefServices = $userSiteSettings->getChiefServices();
-                if( $userServices && count($userServices)>0 ) {
-                    //$services = array_merge($userServices, $chiefServices);
-                    foreach( $chiefServices as $serv ) {
-                        $userServices->add($serv);
-                    }
-                }
-            }
+//            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+//                $chiefServices = $userSiteSettings->getChiefServices();
+//                if( $userScanOrderInstitutionScope && count($userServices)>0 ) {
+//                    //$services = array_merge($userServices, $chiefServices);
+//                    foreach( $chiefServices as $serv ) {
+//                        $userServices->add($serv);
+//                    }
+//                }
+//            }
 
-            foreach( $userServices as $service ) {
-                if( $service && $service != "" ) {
-                    if( $criteriastr != "" ) {
-                        $criteriastr .= " OR ";
-                    }
-                    $criteriastr .= " scanorder.service=".$service->getId();
-                }
-            }//foreach
+            //TODO: now we don't have "Chief of the following Service(s) for Scope" option in "Per Site User Settings Editable by Administrator"
+//            foreach( $userServices as $service ) {
+//                if( $service && $service != "" ) {
+//                    if( $criteriastr != "" ) {
+//                        $criteriastr .= " OR ";
+//                    }
+//                    $criteriastr .= " scanorder.service=".$service->getId();
+//                }
+//            }//foreach
 
         }
 

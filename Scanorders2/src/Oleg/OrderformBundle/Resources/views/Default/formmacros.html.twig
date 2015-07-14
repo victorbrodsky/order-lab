@@ -350,6 +350,7 @@
 {% macro message(form) %}
 
     {% import _self as formmacros %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     {{ formmacros.hiddenInputFieldsForJS(form) }}
 
@@ -359,15 +360,21 @@
     {{ formmacros.field(form.proxyuser) }}
 
     <div class="user-collection-holder">
-        {{ formmacros.field(form.institution) }}
-
-        {#not mapped#}
-        {% if form.department is defined %}
-            {{ formmacros.field(form.department) }}
-            {{ formmacros.field(form.division) }}
+        {#Institutional PHI Scope#}
+        {% if form.institution is defined %}
+            {{ formmacros.field(form.institution) }}
         {% endif %}
-
-        {{ formmacros.field(form.scanorder.service) }}
+        {#Default Institution#}
+        {% if form.scanorder.scanOrderInstitutionScope is defined %}
+            {{ treemacros.compositeTreeNode(form.scanorder.scanOrderInstitutionScope,'','') }}
+        {% endif %}
+        {#{{ formmacros.field(form.institution) }}#}
+        {#not mapped#}
+        {#{% if form.department is defined %}#}
+            {#{{ formmacros.field(form.department) }}#}
+            {#{{ formmacros.field(form.division) }}#}
+        {#{% endif %}#}
+        {#{{ formmacros.field(form.scanorder.service) }}#}
     </div>
 
     {{ formmacros.field(form.equipment) }}

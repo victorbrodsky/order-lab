@@ -51,10 +51,12 @@ class PerSiteSettings extends BaseUserAttributes
 
 
     /**
+     * defaultInstitution (ScanOrders Institution Scope)
+     *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
      **/
-    private $defaultInstitution;
+    private $scanOrderInstitutionScope;
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Department")
@@ -116,6 +118,7 @@ class PerSiteSettings extends BaseUserAttributes
         return $this->user;
     }
 
+
 //    /**
 //     * @param mixed $defaultService
 //     */
@@ -163,22 +166,23 @@ class PerSiteSettings extends BaseUserAttributes
 //    {
 //        return $this->defaultDivision;
 //    }
+//    /**
+//     * @param mixed $defaultInstitution
+//     */
+//    public function setDefaultInstitution($defaultInstitution)
+//    {
+//        $this->defaultInstitution = $defaultInstitution;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDefaultInstitution()
+//    {
+//        return $this->defaultInstitution;
+//    }
 
-    /**
-     * @param mixed $defaultInstitution
-     */
-    public function setDefaultInstitution($defaultInstitution)
-    {
-        $this->defaultInstitution = $defaultInstitution;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getDefaultInstitution()
-    {
-        return $this->defaultInstitution;
-    }
 
 
     //permittedInstitutionalPHIScope
@@ -199,6 +203,25 @@ class PerSiteSettings extends BaseUserAttributes
     {
         $this->permittedInstitutionalPHIScope->removeElement($permittedInstitutionalPHIScope);
     }
+
+    /**
+     * @param mixed $scanOrderInstitutionScope
+     */
+    public function setScanOrderInstitutionScope($scanOrderInstitutionScope)
+    {
+        $this->scanOrderInstitutionScope = $scanOrderInstitutionScope;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScanOrderInstitutionScope()
+    {
+        return $this->scanOrderInstitutionScope;
+    }
+
+
+
 
 //    //ScanOrdersServicesScope
 //    public function getScanOrdersServicesScope()

@@ -163,6 +163,7 @@
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
 
+                '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
 
                 '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
@@ -184,6 +185,10 @@
             %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
+
+            {#FOSJsRoutingBundle#}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
             {#dropzone#}
             {#{% javascripts#}

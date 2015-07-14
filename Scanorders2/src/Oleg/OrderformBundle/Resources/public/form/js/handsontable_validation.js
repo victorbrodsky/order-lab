@@ -424,20 +424,19 @@ function checkPrevGenAndConflictTable(row) {
             function(response) {
                 //console.log("Chaining OK, row="+row+", response="+response);
                 _processedRowCount++;
-            },
-            function(error) {
-                console.error("Failed! error=", error);
-                $('.tableview-submit-btn').button('reset');
             }
+//            function(error) {
+//                console.error("Failed! error=" + error);
+//                //console.log("Failed! error");
+//                $('.tableview-submit-btn').button('reset');
+//            }
         ).
         done(
             function(response) {
-                //console.log("Done ", response);
+                console.log("Done ", response);
+                $('.tableview-submit-btn').button('reset');
             }
         );
-
-
-
 
 }
 

@@ -285,26 +285,21 @@ class MessageType extends AbstractType
             'prototype_name' => '__destinations__',
         ));
 
-        //Institution Tree
-//        if( array_key_exists('institutions', $this->params) ) {
-//            $institutions = $this->params['institutions'];
-//        } else {
-//            $institutions = null;
-//        }
-//        $builder->add('institution', 'entity', array(
-//            'label' => 'Institution:',
-//            'required'=> true,
-//            'multiple' => false,
-//            'empty_value' => false,
-//            'class' => 'OlegUserdirectoryBundle:Institution',
-//            'choices' => $institutions,
-//            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
-//        ));
-        $builder->add('institution', new InstitutionType($this->params), array(
-            'required' => false,
-            'label' => false    //'Institution:'
+        //Institutional PHI Scope
+        if( array_key_exists('institutions', $this->params) ) {
+            $institutions = $this->params['institutions'];
+        } else {
+            $institutions = null;
+        }
+        $builder->add('institution', 'entity', array(
+            'label' => 'Institutional PHI Scope:',
+            'required'=> true,
+            'multiple' => false,
+            'empty_value' => false,
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'choices' => $institutions,
+            'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
-
 //        if( $this->params['cycle'] != 'show' ) {
 //
 //            if( array_key_exists('department', $this->params) ) {

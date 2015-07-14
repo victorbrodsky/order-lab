@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 
 class ScanOrderType extends AbstractType
@@ -23,25 +25,47 @@ class ScanOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( $this->params['cycle'] == 'show' ) {
-            //echo "entity service";
-            $builder->add('service', 'entity', array(
-                'label' => 'Service:',
-                'required'=> false,
-                'multiple' => false,
-                'class' => 'OlegUserdirectoryBundle:Service',
-                //'choices' => $this->params['services'],
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
-        } else {
-            //service. User should be able to add institution to administrative or appointment titles
-            $builder->add('service', 'employees_custom_selector', array(
-                'label' => "Service:",
+//        if( $this->params['cycle'] == 'show' ) {
+//            //echo "entity service";
+//            $builder->add('service', 'entity', array(
+//                'label' => 'Service:',
+//                'required'=> false,
+//                'multiple' => false,
+//                'class' => 'OlegUserdirectoryBundle:Service',
+//                //'choices' => $this->params['services'],
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
+//        } else {
+//            //service. User should be able to add institution to administrative or appointment titles
+//            $builder->add('service', 'employees_custom_selector', array(
+//                'label' => "Service:",
+//                'required' => false,
+//                'attr' => array('class' => 'combobox combobox-width ajax-combobox-service combobox-without-add', 'type' => 'hidden'),
+//                'classtype' => 'service'
+//            ));
+//        }
+
+        //Default Institution
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $title = $event->getData();
+            $form = $event->getForm();
+
+            $label = 'Institution';
+            if( $title ) {
+                $institution = $title->getScanOrderInstitutionScope();
+                if( $institution && $institution->getOrganizationalGroupType() ) {
+                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
+                    $label = $institution->getOrganizationalGroupType()->getName();
+                }
+            }
+
+            $form->add('scanOrderInstitutionScope', 'employees_custom_selector', array(
+                'label' => 'ScanOrder' . ' ' . $label . ' Scope' . ':',
                 'required' => false,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-service combobox-without-add', 'type' => 'hidden'),
-                'classtype' => 'service'
+                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'ScanOrder', 'data-label-postfix' => 'Scope'),
+                'classtype' => 'institution'
             ));
-        }
+        });
 
         //delivery
         $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');

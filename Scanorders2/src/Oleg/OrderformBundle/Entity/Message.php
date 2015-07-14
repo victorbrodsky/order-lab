@@ -140,6 +140,8 @@ class Message {
     private $reportRecipients;
 
     /**
+     * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
+     *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      */
     private $institution;

@@ -632,7 +632,7 @@ class OrderUtil {
 
     public function generateUserFilterOptions( $user ) {
 
-        $choicesServ = array(
+        $choicesInst = array(
             "My Orders"=>"My Orders",
             "Where I am the Submitter"=>"Where I am the Submitter",
             "Where I am the Ordering Provider"=>"Where I am the Ordering Provider",
@@ -643,13 +643,15 @@ class OrderUtil {
 
         if( is_object($user) && $user instanceof User ) {
             $secUtil = $this->container->get('order_security_utility');
-            $services = $secUtil->getUserScanorderServices($user);
-            foreach( $services as $service ) {
-                $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
-            }
+            $institution = $secUtil->getUserScanorderInstitution($user);
+//            foreach( $institutions as $institution ) {
+//                echo "inst=".$institution->getName().'<br>';
+//                $choicesInst[$institution->getId()] = "All ".$institution->getName()." Orders";
+//            }
+            $choicesInst[$institution->getId()] = "All ".$institution->getName()." Orders";
         }
 
-        return $choicesServ;
+        return $choicesInst;
     }
 
     //get the last order

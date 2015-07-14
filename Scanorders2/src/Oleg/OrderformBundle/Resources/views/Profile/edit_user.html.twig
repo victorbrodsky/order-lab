@@ -8,6 +8,8 @@
 
 {% block addcontent %}
 
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+
     {% if cycle == "show_user" %}
         {% set collapsein = "" %}
     {% else %}
@@ -27,7 +29,10 @@
             <div class="panel-body">
 
                 <div class="user-collection-holder">
-                    {{ formmacros.field(form_scansettings.defaultInstitution) }}
+                    {% if form_scansettings.scanOrderInstitutionScope is defined %}
+                        {{ treemacros.compositeTreeNode(form_scansettings.scanOrderInstitutionScope,cycle,'') }}
+                    {% endif %}
+                    {#{{ formmacros.field(form_scansettings.defaultInstitution) }}#}
                     {#{{ formmacros.field(form_scansettings.defaultDepartment) }}#}
                     {#{{ formmacros.field(form_scansettings.defaultDivision) }}#}
                     {#{{ formmacros.field(form_scansettings.defaultService) }}#}

@@ -187,22 +187,23 @@ class TableController extends Controller {
             $fieldstatus = null;
         }
 
-        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+        //$permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+        $scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 
         //set default department and division
-        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($message,$userSiteSettings);
-        $department = $defaultsDepDiv['department'];
-        $division = $defaultsDepDiv['division'];
+        //$defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($message,$userSiteSettings);
+        //$department = $defaultsDepDiv['department'];
+        //$division = $defaultsDepDiv['division'];
 
         $params = array(
             'type'=>$message->getMessageCategory()->getName(),
             'cycle'=>$type,
             'institutions'=>$permittedInstitutions,
-            'services'=>$permittedServices,
+            //'services'=>$permittedServices,
             'user'=>$user,
             'em' => $em,
-            'division'=>$division,
-            'department'=>$department
+            //'division'=>$division,
+            //'department'=>$department
         );
         $form = $this->createForm( new MessageType($params,$message), $message, array('disabled' => $disable) );
 
@@ -252,7 +253,7 @@ class TableController extends Controller {
 
             $scan = $slide->getScan()->first();
             $rowArr['Scan Magnificaiton']['id'] = $scan->getId();
-            $rowArr['Scan Magnificaiton']['value'] = $scan->getField();
+            $rowArr['Scan Magnificaiton']['value'] = $scan->getMagnification()."";
 
             //echo "part:".$part;
             $partdiadnosis = $part->obtainStatusField('disident',$fieldstatus,$id);
@@ -367,10 +368,12 @@ class TableController extends Controller {
             $diseaseType = $part->obtainStatusField('diseaseType',$fieldstatus,$id);
             if( $diseaseType ) {
                 $rowArr['Type of Disease']['id'] = $diseaseType->getId();
-                $rowArr['Type of Disease']['value'] = $diseaseType->getField();
+                //$rowArr['Type of Disease']['value'] = $diseaseType->getField();
+                $rowArr['Type of Disease']['value'] = $diseaseType->getDiseaseTypes()->first().""; //TODO: now it's multiple
 
                 $rowArr['Origin of Disease']['id'] = $diseaseType->getId();
-                $rowArr['Origin of Disease']['value'] = $diseaseType->getOrigin();
+                //$rowArr['Origin of Disease']['value'] = $diseaseType->getOrigin();
+                $rowArr['Origin of Disease']['value'] = $diseaseType->getDiseaseOrigins()->first().""; //TODO: now it's multiple
 
                 $rowArr['Primary Site of Disease Origin']['id'] = $diseaseType->getId();
                 $rowArr['Primary Site of Disease Origin']['value'] = ( $diseaseType->getPrimaryOrgan() ? $diseaseType->getPrimaryOrgan()->getName() : null );
@@ -503,30 +506,26 @@ class TableController extends Controller {
         $res = new Research();
         $entity->setResearch($res);
 
-        //set the default service
-        $entity->getScanorder()->setService($userSiteSettings->getDefaultService());
-
-        ////////////////// set previous service from the last order if default is null //////////////////
-        if( !$userSiteSettings->getDefaultService() ) {
-            //echo "find prev service <br>";
+        ////////////////// set previous ScanOrderInstitutionScope from the last order if default is null //////////////////
+        if( !$userSiteSettings->getScanOrderInstitutionScope() ) {
             $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
-            //$this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
             if( $previousOrder ) {
                 if( $previousOrder->getScanOrder() ) {
-                    $entity->getScanorder()->setService($previousOrder->getScanorder()->getService());
+                    $entity->getScanOrder()->setScanOrderInstitutionScope($previousOrder->getScanOrder()->getScanOrderInstitutionScope());
                 }
-                //echo "prev service set<br>";
             }
+        } else {
+            $entity->getScanOrder()->setScanOrderInstitutionScope($userSiteSettings->getScanOrderInstitutionScope());
         }
-        ////////////////// EOF set previous service from the last order if default is null //////////////////
+        ////////////////// EOF set previous ScanOrderInstitutionScope from the last order if default is null //////////////////
 
-        //set the default institution
+        //set Institutional PHI Scope
         $entity->setInstitution($permittedInstitutions->first());
 
         //set default department and division
-        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
-        $department = $defaultsDepDiv['department'];
-        $division = $defaultsDepDiv['division'];
+        //$defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
+        //$department = $defaultsDepDiv['department'];
+        //$division = $defaultsDepDiv['division'];
 
         $type = "Table-View Scan Order";
 
@@ -534,17 +533,17 @@ class TableController extends Controller {
         $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
         $entity->setMessageCategory($category);
 
-        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+        //$permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
 
         $params = array(
             'type'=>$type,
             'cycle'=>'new',
             'institutions'=>$permittedInstitutions,
-            'services'=>$permittedServices,
+            //'services'=>$permittedServices,
             'user'=>$user,
             'em' => $em,
-            'division'=>$division,
-            'department'=>$department,
+            //'division'=>$division,
+            //'department'=>$department,
             'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity)
         );
         $form = $this->createForm( new MessageType($params, $entity), $entity );
@@ -974,10 +973,19 @@ class TableController extends Controller {
         $partdistypeArr = $this->getValueByHeaderName('Type of Disease',$row,$columnData);
         if( $force || $partdistypeArr['val'] && $partdistypeArr['val'] != '' ) {
             $partDiseaseType = new PartDiseaseType($status,$provider,$system);
-            $partDiseaseType->setField($partdistypeArr['val']);
+            //$partDiseaseType->setField($partdistypeArr['val']);
             $partDiseaseType->setId($partdistypeArr['id']);
+
+            //addDiseaseType
+            //echo "<br>DiseaseType=".$partdistypeArr['val']."<br>";
+            $diseaseType = $em->getRepository('OlegOrderformBundle:DiseaseTypeList')->findOneByName($partdistypeArr['val']);
+            $partDiseaseType->addDiseaseType($diseaseType);
+            //exit();
+
             //Origin of Disease
-            $partDiseaseType->setOrigin($this->getValueByHeaderName('Origin of Disease',$row,$columnData)['val']);
+            $diseaseOrigin = $em->getRepository('OlegOrderformBundle:DiseaseOriginList')->findOneByName($this->getValueByHeaderName('Origin of Disease',$row,$columnData)['val']);
+            $partDiseaseType->addDiseaseOrigin($diseaseOrigin);
+
             //Primary Site of Disease Origin
             $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
             $primaryOrganList = $sourceOrganTransformer->reverseTransform($this->getValueByHeaderName('Primary Site of Disease Origin',$row,$columnData)['val']); //OrganList
@@ -1067,8 +1075,11 @@ class TableController extends Controller {
 
         //Scan: Scan Magnificaiton
         $magArr = $this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData);
-        //echo "<br>mag=".$mag."<br>";
-        $scan->setField($magArr['val']);
+        //echo "<br>mag=".$magArr['id']."<br>";
+
+        //setMagnification
+        $mag = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName($magArr['val']);
+        $scan->setMagnification($mag);
         $scan->setId($magArr['id']);
 
         //Scan: Region to Scan

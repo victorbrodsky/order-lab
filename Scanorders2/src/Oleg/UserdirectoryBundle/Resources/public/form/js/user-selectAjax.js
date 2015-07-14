@@ -147,8 +147,8 @@ function getComboboxInstitution(holder) {
 
 function getComboboxSingleInstitution(comboboxEl,entityName) {
 
-    console.log('getComboboxSingleInstitution:');
-    console.log(comboboxEl);
+    //console.log('getComboboxSingleInstitution:');
+    //console.log(comboboxEl);
 
     var thisid = comboboxEl.val();
     //console.log('thisid='+thisid);
@@ -194,7 +194,7 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
         //console.log('entityName='+entityName+', thisid='+thisid+", parentid="+parentid);
 
         //do nothing if new element was enetered. In this case pid will be a string with a new element name.
-        if( !isInt(thisid) || !isInt(parentid) ) {
+        if( !isInt(thisid) && !isInt(parentid) ) {
             //console.log('thisid and pid not int');
             reject('id and pid null');
             return;
@@ -208,7 +208,7 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
             return;
         }
 
-        //console.log('get treenode data!!!');
+        //console.log('get treenode data by ajax');
 
         var opt = 'combobox';
         //var treeHolder = thiselement.closest('.composite-tree-holder');
@@ -217,15 +217,19 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
     //    }
 
         //current userid
+        var userid = null;
         var dataElement = document.getElementById("form-prototype-data");
         //console.log(dataElement);
-        var userid = dataElement.getAttribute('data-userid');
-        //console.log('userid='+userid);
+        if( dataElement ) {
+            userid = dataElement.getAttribute('data-userid');
+            //console.log('userid='+userid);
+        }
 
         //employees_get_institution
         var treeUrl = Routing.generate('employees_get_composition_tree');
-        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
         //console.log('treeUrl='+treeUrl);
+        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
+        //console.log('final treeUrl='+treeUrl);
 
         $.ajax({
             url: treeUrl,
@@ -241,75 +245,75 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
     });
 }
 
-function setComboboxInstitution(holder) {
-
-    var targetid = ".ajax-combobox-institution";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    var url = getCommonBaseUrl("util/common/"+"institution-all","employees"); //always use "employees" to get institution
-
-    //console.log('cycle='+cycle);
-
-    if( _institution.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _institution = data;
-            populateSelectCombobox( targetid, _institution, null );
-        });
-    } else {
-        populateSelectCombobox( targetid, _institution, null );
-    }
-
-}
-
-function getComboboxInstitution_OLD(holder) {
-
-    setInstitutionTreeChildren(holder);
-
-    var targetid = ".ajax-combobox-institution";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    var url = getCommonBaseUrl("util/common/"+"institution","employees"); //always use "employees" to get institution
-
-    //console.log('cycle='+cycle);
-
-    if( _institution.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _institution = data;
-            populateParentChildTree( targetid, _institution, "Select an option or type in a new value", false, 'ajax-combobox-department' );
-        });
-    } else {
-        populateParentChildTree( targetid, _institution, "Select an option or type in a new value", false, 'ajax-combobox-department' );
-    }
-
-}
+//function setComboboxInstitution(holder) {
+//
+//    var targetid = ".ajax-combobox-institution";
+//
+//    if( $(targetid).length == 0 ) {
+//        return;
+//    }
+//
+//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+//        targetid = holder.find(targetid);
+//
+//        if( targetid.length == 0 )
+//            return;
+//    }
+//
+//    var url = getCommonBaseUrl("util/common/"+"institution-all","employees"); //always use "employees" to get institution
+//
+//    //console.log('cycle='+cycle);
+//
+//    if( _institution.length == 0 ) {
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//            _institution = data;
+//            populateSelectCombobox( targetid, _institution, null );
+//        });
+//    } else {
+//        populateSelectCombobox( targetid, _institution, null );
+//    }
+//
+//}
+//
+//function getComboboxInstitution_OLD(holder) {
+//
+//    setInstitutionTreeChildren(holder);
+//
+//    var targetid = ".ajax-combobox-institution";
+//
+//    if( $(targetid).length == 0 ) {
+//        return;
+//    }
+//
+//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+//        targetid = holder.find(targetid);
+//
+//        if( targetid.length == 0 )
+//            return;
+//    }
+//
+//    var url = getCommonBaseUrl("util/common/"+"institution","employees"); //always use "employees" to get institution
+//
+//    //console.log('cycle='+cycle);
+//
+//    if( _institution.length == 0 ) {
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//            _institution = data;
+//            populateParentChildTree( targetid, _institution, "Select an option or type in a new value", false, 'ajax-combobox-department' );
+//        });
+//    } else {
+//        populateParentChildTree( targetid, _institution, "Select an option or type in a new value", false, 'ajax-combobox-department' );
+//    }
+//
+//}
 
 function getComboboxCommentType(holder) {
 

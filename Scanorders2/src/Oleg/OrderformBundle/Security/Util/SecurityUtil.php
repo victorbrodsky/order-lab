@@ -172,7 +172,7 @@ class SecurityUtil extends UserSecurityUtil {
             //show is allowed if the user belongs to the same service
             if( $action == 'show' ) {
                 //echo "action: show <br>";
-                $userServices = $userSiteSettings->getScanOrdersServicesScope();
+                $userServices = $userSiteSettings->getScanOrderInstitutionScope();
                 if( $userServices->contains($service) ) {
                     return true;
                 }
@@ -206,18 +206,20 @@ class SecurityUtil extends UserSecurityUtil {
         return $entity->getDefaultService();
     }
 
-    public function getUserScanorderServices($user) {
+    public function getUserScanorderInstitution($user) {
 
-        $services = new ArrayCollection();
+        //$institutions = new ArrayCollection();
+        $institution = null;
 
         $entity = $this->getUserPerSiteSettings($user);
 
         if( !$entity )
-            return $services;
+            //echo "!entity <br>";
+            return $institution;
 
-        $services = $entity->getScanOrdersServicesScope();
+        $institution = $entity->getScanOrderInstitutionScope();
 
-        return $services;
+        return $institution;
     }
 
     public function getUserChiefServices($user) {
@@ -243,42 +245,42 @@ class SecurityUtil extends UserSecurityUtil {
         return $entity;
     }
 
-    public function getDefaultDepartmentDivision($message,$userSiteSettings) {
-
-        if( $service = $message->getScanorder()->getService() ) {
-            $division = $service->getParent();
-            $department = $division->getParent();
-        } else {
-            //first get default division and department
-            $department = $userSiteSettings->getDefaultDepartment();
-            if( !$department ) {
-                //set default department to Pathology and Laboratory Medicine
-                $department = $this->em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
-
-            }
-            if( $message->getInstitution() == null || ($message->getInstitution() && $department->getParent()->getId() != $message->getInstitution()->getId()) ) {
-                $department = null;
-            }
-
-            $division = $userSiteSettings->getDefaultDivision();
-            if( !$division ) {
-                //set default division to Anatomic Pathology
-                $division = $this->em->getRepository('OlegUserdirectoryBundle:Division')->findOneByName('Anatomic Pathology');
-            }
-            if( $department == null || ($department && $division && $division->getParent()->getId() != $department->getId()) ) {
-                $division = null;
-            }
-
-        }
-//        echo $department->getParent()->getId()."?=?".$message->getInstitution()->getId()."<br>";
-
-
-        $params = array();
-        $params['department'] = $department;
-        $params['division'] = $division;
-
-        return $params;
-    }
+//    public function getDefaultDepartmentDivision($message,$userSiteSettings) {
+//
+//        if( $service = $message->getScanorder()->getService() ) {
+//            $division = $service->getParent();
+//            $department = $division->getParent();
+//        } else {
+//            //first get default division and department
+//            $department = $userSiteSettings->getDefaultDepartment();
+//            if( !$department ) {
+//                //set default department to Pathology and Laboratory Medicine
+//                $department = $this->em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+//
+//            }
+//            if( $message->getInstitution() == null || ($message->getInstitution() && $department->getParent()->getId() != $message->getInstitution()->getId()) ) {
+//                $department = null;
+//            }
+//
+//            $division = $userSiteSettings->getDefaultDivision();
+//            if( !$division ) {
+//                //set default division to Anatomic Pathology
+//                $division = $this->em->getRepository('OlegUserdirectoryBundle:Division')->findOneByName('Anatomic Pathology');
+//            }
+//            if( $department == null || ($department && $division && $division->getParent()->getId() != $department->getId()) ) {
+//                $division = null;
+//            }
+//
+//        }
+////        echo $department->getParent()->getId()."?=?".$message->getInstitution()->getId()."<br>";
+//
+//
+//        $params = array();
+//        $params['department'] = $department;
+//        $params['division'] = $division;
+//
+//        return $params;
+//    }
 
     public function addInstitutionalPhiScopeWCMC($user,$creator) {
         $inst = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Weill Cornell Medical College');

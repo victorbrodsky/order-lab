@@ -24,6 +24,11 @@ class ScanOrder extends OrderBase {
 //     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
 //     */
 //    private $service;
+    /**
+     * This serves as default institution to set scan order scope (who can view this order: users from the with the same institutional scope can view this order)
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $scanOrderInstitutionScope;
 
     /**
      * Order delivery (string): I'll give slides to ...
@@ -44,6 +49,24 @@ class ScanOrder extends OrderBase {
         $message->setScanorder($this);
     }
 
+    /**
+     * @param mixed $scanOrderInstitutionScope
+     */
+    public function setScanOrderInstitutionScope($scanOrderInstitutionScope)
+    {
+        $this->scanOrderInstitutionScope = $scanOrderInstitutionScope;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScanOrderInstitutionScope()
+    {
+        return $this->scanOrderInstitutionScope;
+    }
+
+
+
 
 //    /**
 //     * @param mixed $service
@@ -60,6 +83,7 @@ class ScanOrder extends OrderBase {
 //    {
 //        return $this->service;
 //    }
+
 
     /**
      * @param mixed $delivery

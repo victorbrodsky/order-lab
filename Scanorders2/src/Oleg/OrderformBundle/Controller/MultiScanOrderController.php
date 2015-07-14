@@ -107,7 +107,7 @@ class MultiScanOrderController extends Controller {
         $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
         $entity->setMessageCategory($category);
 
-        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+        //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 
         $params = array(
             'type'=>$type,  //category
@@ -116,7 +116,7 @@ class MultiScanOrderController extends Controller {
             'em' => $em,
             'serviceContainer' => $this->container,
             'institutions'=>$permittedInstitutions,
-            'services'=>$permittedServices,
+            //'scanOrderInstitutionScope'=>$scanOrderInstitutionScope,
             'datastructure'=>$this->datastructure
         );
 
@@ -406,28 +406,35 @@ class MultiScanOrderController extends Controller {
         $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
         $entity->setMessageCategory($category);
 
-        //set the default service
+        //set the default service (now institution)
         //TODO: implement it
-//        $entity->getScanorder()->setService($userSiteSettings->getDefaultService());
+//        echo 'default inst='.$userSiteSettings->getInstitution()."<br>";
+//        //$entity->setInstitution($userSiteSettings->getInstitution());
+//        $entity->getScanorder()->setInstitution($userSiteSettings->getInstitution());
 
         ////////////////// set previous service from the last order if default is null //////////////////
+        ////////////////// set previous institution from the last order if default getScanOrderInstitutionScope is null //////////////////
         //TODO: implement it
-//        if( !$userSiteSettings->getDefaultService() ) {
-//            //echo "find prev service <br>";
-//            $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
-//            //echo $previousOrder;
-//            //$this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
-//            if( $previousOrder ) {
-//                if( $previousOrder->getScanOrder() ) {
-//                    //echo "prev service=".$previousOrder->getScanOrder()->getService()->getName()."<br>";
-//                    $entity->getScanOrder()->setService($previousOrder->getScanOrder()->getService());
-//                }
-//                //echo "prev service set<br>";
-//            }
-//        }
+        if( !$userSiteSettings->getScanOrderInstitutionScope() ) {
+            //echo "find prev service <br>";
+            $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
+            //echo $previousOrder;
+            //$this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
+            if( $previousOrder ) {
+                if( $previousOrder->getScanOrder() ) {
+                    //echo "prev service=".$previousOrder->getScanOrder()->getService()->getName()."<br>";
+                    //$entity->getScanOrder()->setService($previousOrder->getScanOrder()->getService());
+                    $entity->getScanOrder()->setScanOrderInstitutionScope($previousOrder->getScanOrder()->getScanOrderInstitutionScope());
+                }
+                //echo "prev service set<br>";
+            }
+        } else {
+            $entity->getScanOrder()->setScanOrderInstitutionScope($userSiteSettings->getScanOrderInstitutionScope());
+        }
+        //echo 'default ScanOrderInstitutionScope='.$entity->getScanOrder()->getScanOrderInstitutionScope()."<br>";
         ////////////////// EOF set previous service from the last order if default is null //////////////////
 
-        //set the default institution
+        //set Institutional PHI Scope
         $entity->setInstitution($permittedInstitutions->first());
 
         //set default department and division
@@ -435,13 +442,13 @@ class MultiScanOrderController extends Controller {
 //        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
 //        $department = $defaultsDepDiv['department'];
 //        $division = $defaultsDepDiv['division'];
-//        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+        //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 
         $params = array(
             'type'=>$type,
             'cycle'=>'new',
             'institutions'=>$permittedInstitutions,
-            //'services'=>$permittedServices,
+            //'scanOrderInstitutionScope'=>$scanOrderInstitutionScope,
             'user'=>$user,
             'em' => $em,
             'serviceContainer' => $this->container,
@@ -763,23 +770,23 @@ class MultiScanOrderController extends Controller {
 
         //echo "route=".$routeName.", type=".$type."<br>";
 
-        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+        //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 
         //set default department and division
-        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
-        $department = $defaultsDepDiv['department'];
-        $division = $defaultsDepDiv['division'];
+        //$defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
+        //$department = $defaultsDepDiv['department'];
+        //$division = $defaultsDepDiv['division'];
 
         $params = array(
             'type'=>$single_multy,
             'cycle'=>$type,
             'institutions'=>$permittedInstitutions,
-            'services'=>$permittedServices,
+            //'scanOrderInstitutionScope'=>$scanOrderInstitutionScope,
             'user'=>$user,
             'em' => $em,
             'serviceContainer' => $this->container,
-            'division'=>$division,
-            'department'=>$department,
+            //'division'=>$division,
+            //'department'=>$department,
             'datastructure' => $datastructure
         );
         $form   = $this->createForm( new MessageType($params,$entity), $entity, array('disabled' => $disable) );

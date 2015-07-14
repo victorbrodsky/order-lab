@@ -2,11 +2,14 @@
 
 namespace Oleg\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\InstitutionType;
+//use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 class PerSiteSettingsType extends AbstractType
 {
@@ -44,10 +47,10 @@ class PerSiteSettingsType extends AbstractType
                 },
             ));
 
-            $builder->add('defaultInstitution', new InstitutionType(), array(
-                'required' => false,
-                'label' => false    //'Institution:'
-            ));
+//            $builder->add('defaultInstitution', new InstitutionType(), array(
+//                'required' => false,
+//                'label' => false    //'Institution:'
+//            ));
 
 //            $builder->add( 'scanOrdersServicesScope', null, array(
 //                'label'=>'Service(s) Scope:',
@@ -71,8 +74,7 @@ class PerSiteSettingsType extends AbstractType
 //            ));
 
 
-
-        }
+        } //roleAdmin
 
 
         $builder->add('tooltip', 'checkbox', array(
@@ -82,27 +84,49 @@ class PerSiteSettingsType extends AbstractType
         ));
 
 
+        //Institution
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $title = $event->getData();
+            $form = $event->getForm();
 
-        $builder->add( 'defaultInstitution', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'property' => 'name',
-            'label'=>'Default Institution:',
-            'required'=> false,
-            //'multiple' => false,
-            //'empty_value' => false,
-            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.types","institutiontype")
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'medicalInstitution' => 'Medical'
-                        ));
-                },
-        ));
+            $label = 'Institution:';
+            if( $title ) {
+                $institution = $title->getScanOrderInstitutionScope();
+                if( $institution && $institution->getOrganizationalGroupType() ) {
+                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
+                    $label = $institution->getOrganizationalGroupType()->getName();
+                }
+            }
+
+            $form->add('scanOrderInstitutionScope', 'employees_custom_selector', array(
+                'label' => 'Default ScanOrder '.$label.' Scope',
+                'read_only' => !$this->roleAdmin,
+                'required' => false,
+                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'Default ScanOrder', 'data-label-postfix' => 'Scope'),
+                'classtype' => 'institution'
+            ));
+        });
+
+//        $builder->add( 'defaultInstitution', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'property' => 'name',
+//            'label'=>'Default Institution:',
+//            'required'=> false,
+//            //'multiple' => false,
+//            //'empty_value' => false,
+//            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.types","institutiontype")
+//                        ->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                            'medicalInstitution' => 'Medical'
+//                        ));
+//                },
+//        ));
 //        $builder->add('institution', 'employees_custom_selector', array(
 //            'label' => 'Default Institution:',
 //            'attr' => array('class' => 'ajax-combobox-institution combobox-without-add', 'type' => 'hidden'),
