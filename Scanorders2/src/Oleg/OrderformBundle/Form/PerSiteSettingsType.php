@@ -27,6 +27,7 @@ class PerSiteSettingsType extends AbstractType
     {
 
         if( $this->roleAdmin ) {
+
             $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 'property' => 'name',
@@ -84,49 +85,128 @@ class PerSiteSettingsType extends AbstractType
         ));
 
 
-        //Institution
+        //ScanOrdersServicesScope
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $title = $event->getData();
+//            $form = $event->getForm();
+//
+//            $label = 'Institution';
+//            if( $title ) {
+//                $institutions = $title->getScanOrdersServicesScope();
+//                if( count($institutions) > 0 ) {
+//                    $institution = $institutions->first();
+//                    if( $institution && $institution->getOrganizationalGroupType() ) {
+//                        //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
+//                        $label = $institution->getOrganizationalGroupType()->getName();
+//                    }
+//                }
+//            }
+//
+//            $form->add('scanOrdersServicesScope', 'employees_custom_selector', array(
+//                'label' => 'Default ScanOrder '.$label.' Scope:',
+//                'read_only' => !$this->roleAdmin,
+//                'required' => false,
+//                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'Default ScanOrder', 'data-label-postfix' => 'Scope'),
+//                'classtype' => 'institution-many'
+//            ));
+//        });
+        $builder->add( 'scanOrdersServicesScope', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'property' => 'name',
+            'label'=>'Service(s) Scope:',
+            'required'=> false,
+            'multiple' => true,
+            //'empty_value' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        //->leftJoin("list.types","institutiontype")
+                        ->leftJoin("list.parent","division")
+                        ->leftJoin("division.parent","department")
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                            'pname' => 'Pathology and Laboratory Medicine'
+                            //'medicalInstitution' => 'Medical'
+                        ));
+                },
+        ));
+
+        //chiefServices
+        $builder->add( 'chiefServices', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'property' => 'name',
+            'label'=>'Chief of the following Service(s) for Scope:',
+            'required'=> false,
+            'multiple' => true,
+            //'empty_value' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        //->leftJoin("list.types","institutiontype")
+                        ->leftJoin("list.parent","division")
+                        ->leftJoin("division.parent","department")
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                            'pname' => 'Pathology and Laboratory Medicine'
+                            //'medicalInstitution' => 'Medical'
+                        ));
+                },
+        ));
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $title = $event->getData();
+//            $form = $event->getForm();
+//
+//            $label = 'Institution';
+//            if( $title ) {
+//                $institutions = $title->getScanOrdersServicesScope();
+//                if( count($institutions) > 0 ) {
+//                    $institution = $institutions->first();
+//                    if( $institution && $institution->getOrganizationalGroupType() ) {
+//                        //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
+//                        $label = $institution->getOrganizationalGroupType()->getName();
+//                    }
+//                }
+//            }
+//
+//            $form->add('chiefServices', 'employees_custom_selector', array(
+//                'label' => 'Chief of the following '.$label.'(s) for Scope:',
+//                'read_only' => !$this->roleAdmin,
+//                'required' => false,
+//                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'Chief of the following', 'data-label-postfix' => '(s) for Scope'),
+//                'classtype' => 'institution-many'
+//            ));
+//        });
+
+        //defaultInstitution
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $title = $event->getData();
             $form = $event->getForm();
 
-            $label = 'Institution:';
+            $label = 'Institution';
             if( $title ) {
-                $institution = $title->getScanOrderInstitutionScope();
+                $institution = $title->getDefaultInstitution();
                 if( $institution && $institution->getOrganizationalGroupType() ) {
                     //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
                     $label = $institution->getOrganizationalGroupType()->getName();
                 }
             }
 
-            $form->add('scanOrderInstitutionScope', 'employees_custom_selector', array(
-                'label' => 'Default ScanOrder '.$label.' Scope',
+            $form->add('defaultInstitution', 'employees_custom_selector', array(
+                'label' => 'Default ' . $label . ':',
                 'read_only' => !$this->roleAdmin,
                 'required' => false,
-                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'Default ScanOrder', 'data-label-postfix' => 'Scope'),
+                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'Default'),
                 'classtype' => 'institution'
             ));
         });
 
-//        $builder->add( 'defaultInstitution', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:Institution',
-//            'property' => 'name',
-//            'label'=>'Default Institution:',
-//            'required'=> false,
-//            //'multiple' => false,
-//            //'empty_value' => false,
-//            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset'),
-//            'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->leftJoin("list.types","institutiontype")
-//                        ->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
-//                        ->orderBy("list.orderinlist","ASC")
-//                        ->setParameters( array(
-//                            'typedef' => 'default',
-//                            'typeadd' => 'user-added',
-//                            'medicalInstitution' => 'Medical'
-//                        ));
-//                },
-//        ));
+
 //        $builder->add('institution', 'employees_custom_selector', array(
 //            'label' => 'Default Institution:',
 //            'attr' => array('class' => 'ajax-combobox-institution combobox-without-add', 'type' => 'hidden'),

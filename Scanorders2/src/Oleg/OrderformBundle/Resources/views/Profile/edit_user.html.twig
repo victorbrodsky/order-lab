@@ -29,8 +29,8 @@
             <div class="panel-body">
 
                 <div class="user-collection-holder">
-                    {% if form_scansettings.scanOrderInstitutionScope is defined %}
-                        {{ treemacros.compositeTreeNode(form_scansettings.scanOrderInstitutionScope,cycle,'') }}
+                    {% if form_scansettings.defaultInstitution is defined %}
+                        {{ treemacros.compositeTreeNode(form_scansettings.defaultInstitution,cycle,'') }}
                     {% endif %}
                     {#{{ formmacros.field(form_scansettings.defaultInstitution) }}#}
                     {#{{ formmacros.field(form_scansettings.defaultDepartment) }}#}
@@ -58,8 +58,8 @@
                 <div class="panel-body">
 
                     {{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}
-                    {#{{ formmacros.field(form_scansettings.scanOrdersServicesScope) }}#}
-                    {#{{ formmacros.field(form_scansettings.chiefServices) }}#}
+                    {{ formmacros.field(form_scansettings.scanOrdersServicesScope) }}
+                    {{ formmacros.field(form_scansettings.chiefServices) }}
 
                 </div>
             </div>

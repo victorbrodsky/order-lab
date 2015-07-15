@@ -206,20 +206,21 @@ class SecurityUtil extends UserSecurityUtil {
         return $entity->getDefaultService();
     }
 
-    public function getUserScanorderInstitution($user) {
+    public function getScanOrdersServicesScope($user) {
 
-        //$institutions = new ArrayCollection();
-        $institution = null;
+        $institutions = new ArrayCollection();
+        //$institution = null;
 
         $entity = $this->getUserPerSiteSettings($user);
 
-        if( !$entity )
+        if( !$entity ) {
             //echo "!entity <br>";
-            return $institution;
+            return $institutions;
+        }
 
-        $institution = $entity->getScanOrderInstitutionScope();
+        $institutions = $entity->getScanOrderInstitutionScope();
 
-        return $institution;
+        return $institutions;
     }
 
     public function getUserChiefServices($user) {

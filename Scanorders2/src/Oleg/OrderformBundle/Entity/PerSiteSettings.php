@@ -30,33 +30,41 @@ class PerSiteSettings extends BaseUserAttributes
     private $permittedInstitutionalPHIScope;
 
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-//     * @ORM\JoinTable(name="scan_perSiteSettings_service",
-//     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-//     *      )
-//     **/
-//    private $scanOrdersServicesScope;
-//
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-//     * @ORM\JoinTable(name="scan_chiefServices_service",
-//     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-//     *      )
-//     **/
-//    private $chiefServices;
-
-
+    /**
+     * Service scope: service means one of the node of the institutional tree.
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\JoinTable(name="scan_perSiteSettings_service",
+     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $scanOrdersServicesScope;
 
     /**
-     * defaultInstitution (ScanOrders Institution Scope)
-     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\JoinTable(name="scan_chiefServices_service",
+     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $chiefServices;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
      **/
-    private $scanOrderInstitutionScope;
+    private $defaultInstitution;
+
+
+
+//    /**
+//     * defaultInstitution (ScanOrders Institution Scope)
+//     *
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+//     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
+//     **/
+//    private $scanOrderInstitutionsScope;
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Department")
@@ -93,8 +101,8 @@ class PerSiteSettings extends BaseUserAttributes
         parent::__construct();
 
         $this->permittedInstitutionalPHIScope = new ArrayCollection();
-        //$this->scanOrdersServicesScope = new ArrayCollection();
-        //$this->chiefServices = new ArrayCollection();
+        $this->scanOrdersServicesScope = new ArrayCollection();
+        $this->chiefServices = new ArrayCollection();
         $this->setType(self::TYPE_RESTRICTED);
         $this->tooltip = true;
 
@@ -204,63 +212,52 @@ class PerSiteSettings extends BaseUserAttributes
         $this->permittedInstitutionalPHIScope->removeElement($permittedInstitutionalPHIScope);
     }
 
-    /**
-     * @param mixed $scanOrderInstitutionScope
-     */
-    public function setScanOrderInstitutionScope($scanOrderInstitutionScope)
+
+
+    //ScanOrdersServicesScope
+    public function getScanOrdersServicesScope()
     {
-        $this->scanOrderInstitutionScope = $scanOrderInstitutionScope;
+        return $this->scanOrdersServicesScope;
     }
 
-    /**
-     * @return mixed
-     */
+    public function addScanOrdersServicesScope( $scanOrdersServicesScope )
+    {
+        if( !$this->scanOrdersServicesScope->contains($scanOrdersServicesScope) ) {
+            $this->scanOrdersServicesScope->add($scanOrdersServicesScope);
+        }
+
+    }
+
+    public function removeScanOrdersServicesScope($scanOrdersServicesScope)
+    {
+        $this->scanOrdersServicesScope->removeElement($scanOrdersServicesScope);
+    }
+
+    //getScanOrderInstitutionScope
     public function getScanOrderInstitutionScope()
     {
-        return $this->scanOrderInstitutionScope;
+        return $this->getScanOrdersServicesScope();
     }
 
 
+    //chiefServices
+    public function getChiefServices()
+    {
+        return $this->chiefServices;
+    }
 
+    public function addChiefService( $chiefService )
+    {
+        if( !$this->chiefServices->contains($chiefService) ) {
+            $this->chiefServices->add($chiefService);
+        }
 
-//    //ScanOrdersServicesScope
-//    public function getScanOrdersServicesScope()
-//    {
-//        return $this->scanOrdersServicesScope;
-//    }
-//
-//    public function addScanOrdersServicesScope( $scanOrdersServicesScope )
-//    {
-//        if( !$this->scanOrdersServicesScope->contains($scanOrdersServicesScope) ) {
-//            $this->scanOrdersServicesScope->add($scanOrdersServicesScope);
-//        }
-//
-//    }
-//
-//    public function removeScanOrdersServicesScope($scanOrdersServicesScope)
-//    {
-//        $this->scanOrdersServicesScope->removeElement($scanOrdersServicesScope);
-//    }
-//
-//
-//    //chiefServices
-//    public function getChiefServices()
-//    {
-//        return $this->chiefServices;
-//    }
-//
-//    public function addChiefService( $chiefService )
-//    {
-//        if( !$this->chiefServices->contains($chiefService) ) {
-//            $this->chiefServices->add($chiefService);
-//        }
-//
-//    }
-//
-//    public function removeChiefService($chiefService)
-//    {
-//        $this->chiefServices->removeElement($chiefService);
-//    }
+    }
+
+    public function removeChiefService($chiefService)
+    {
+        $this->chiefServices->removeElement($chiefService);
+    }
 
     /**
      * @param mixed $tooltip
@@ -276,6 +273,22 @@ class PerSiteSettings extends BaseUserAttributes
     public function getTooltip()
     {
         return $this->tooltip;
+    }
+
+    /**
+     * @param mixed $defaultInstitution
+     */
+    public function setDefaultInstitution($defaultInstitution)
+    {
+        $this->defaultInstitution = $defaultInstitution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultInstitution()
+    {
+        return $this->defaultInstitution;
     }
 
 

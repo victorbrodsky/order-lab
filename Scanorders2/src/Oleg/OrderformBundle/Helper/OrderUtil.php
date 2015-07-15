@@ -642,13 +642,29 @@ class OrderUtil {
         );
 
         if( is_object($user) && $user instanceof User ) {
+
             $secUtil = $this->container->get('order_security_utility');
-            $institution = $secUtil->getUserScanorderInstitution($user);
-//            foreach( $institutions as $institution ) {
-//                echo "inst=".$institution->getName().'<br>';
-//                $choicesInst[$institution->getId()] = "All ".$institution->getName()." Orders";
-//            }
-            $choicesInst[$institution->getId()] = "All ".$institution->getName()." Orders";
+
+            //service scope
+            $userServices = $secUtil->getScanOrdersServicesScope($user);
+
+            //chief scope
+            $userSiteSettings = $secUtil->getUserPerSiteSettings($user);
+            if( $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+                $chiefServices = $userSiteSettings->getChiefServices();
+                foreach( $chiefServices as $serv ) {
+                    if( !$userServices->contains($serv) ) {
+                        //echo "add=".$serv."<br>";
+                        $userServices->add($serv);
+                    }
+                }
+            }
+
+            foreach( $userServices as $userService ) {
+                //echo "inst=".$institution->getName().'<br>';
+                $choicesInst[$userService->getId()] = "All ".$userService->getName()." Orders";
+            }
+
         }
 
         return $choicesInst;

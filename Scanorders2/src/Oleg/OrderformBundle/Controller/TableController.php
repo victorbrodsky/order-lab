@@ -506,8 +506,8 @@ class TableController extends Controller {
         $res = new Research();
         $entity->setResearch($res);
 
-        ////////////////// set previous ScanOrderInstitutionScope from the last order if default is null //////////////////
-        if( !$userSiteSettings->getScanOrderInstitutionScope() ) {
+        ////////////////// set previous ScanOrderInstitutionScope from the last order if getDefaultInstitution is null //////////////////
+        if( !$userSiteSettings->getDefaultInstitution() ) {
             $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
             if( $previousOrder ) {
                 if( $previousOrder->getScanOrder() ) {
@@ -515,7 +515,7 @@ class TableController extends Controller {
                 }
             }
         } else {
-            $entity->getScanOrder()->setScanOrderInstitutionScope($userSiteSettings->getScanOrderInstitutionScope());
+            $entity->getScanOrder()->setScanOrderInstitutionScope($userSiteSettings->getDefaultInstitution());
         }
         ////////////////// EOF set previous ScanOrderInstitutionScope from the last order if default is null //////////////////
 

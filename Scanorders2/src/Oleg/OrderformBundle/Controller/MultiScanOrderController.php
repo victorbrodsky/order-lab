@@ -413,9 +413,9 @@ class MultiScanOrderController extends Controller {
 //        $entity->getScanorder()->setInstitution($userSiteSettings->getInstitution());
 
         ////////////////// set previous service from the last order if default is null //////////////////
-        ////////////////// set previous institution from the last order if default getScanOrderInstitutionScope is null //////////////////
+        ////////////////// set previous institution from the last order if default getDefaultInstitution is null //////////////////
         //TODO: implement it
-        if( !$userSiteSettings->getScanOrderInstitutionScope() ) {
+        if( !$userSiteSettings->getDefaultInstitution() ) {
             //echo "find prev service <br>";
             $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
             //echo $previousOrder;
@@ -429,7 +429,7 @@ class MultiScanOrderController extends Controller {
                 //echo "prev service set<br>";
             }
         } else {
-            $entity->getScanOrder()->setScanOrderInstitutionScope($userSiteSettings->getScanOrderInstitutionScope());
+            $entity->getScanOrder()->setScanOrderInstitutionScope($userSiteSettings->getDefaultInstitution());
         }
         //echo 'default ScanOrderInstitutionScope='.$entity->getScanOrder()->getScanOrderInstitutionScope()."<br>";
         ////////////////// EOF set previous service from the last order if default is null //////////////////

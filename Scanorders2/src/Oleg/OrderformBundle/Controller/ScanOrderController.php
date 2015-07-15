@@ -484,29 +484,32 @@ class ScanOrderController extends Controller {
         //for "My Orders" get all user services and chief services
         if( $routeName == "my-scan-orders" ) {
 
-            //TODO: now we have a single ScanOrderInstitutionScope. Before, we had multiple ScanOrder Service Scopes
-            $userScanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
-            $criteriastr .= " scanorder.scanOrderInstitutionScope=".$userScanOrderInstitutionScope->getId();
+            $userServices = $userSiteSettings->getScanOrdersServicesScope();
+            //echo "userServices count=".count($userServices)."<br>";
 
-//            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
-//                $chiefServices = $userSiteSettings->getChiefServices();
-//                if( $userScanOrderInstitutionScope && count($userServices)>0 ) {
-//                    //$services = array_merge($userServices, $chiefServices);
-//                    foreach( $chiefServices as $serv ) {
-//                        $userServices->add($serv);
-//                    }
-//                }
-//            }
+            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+                $chiefServices = $userSiteSettings->getChiefServices();
+                //echo "chief services count=".count($chiefServices)."<br>";
+                //if( $userServices && count($userServices) > 0 ) {
+                //$userServices = array_merge($userServices, $chiefServices);
+                    foreach( $chiefServices as $serv ) {
+                        if( !$userServices->contains($serv) ) {
+                            //echo "add=".$serv."<br>";
+                            $userServices->add($serv);
+                        }
+                    }
+                //}
+            }
 
-            //TODO: now we don't have "Chief of the following Service(s) for Scope" option in "Per Site User Settings Editable by Administrator"
-//            foreach( $userServices as $service ) {
-//                if( $service && $service != "" ) {
-//                    if( $criteriastr != "" ) {
-//                        $criteriastr .= " OR ";
-//                    }
-//                    $criteriastr .= " scanorder.service=".$service->getId();
-//                }
-//            }//foreach
+            //echo "final userServices count=".count($userServices)."<br>";
+            foreach( $userServices as $service ) {
+                if( $service && $service != "" ) {
+                    if( $criteriastr != "" ) {
+                        $criteriastr .= " OR ";
+                    }
+                    $criteriastr .= " scanorder.scanOrderInstitutionScope=".$service->getId();
+                }
+            }//foreach
 
         }
 
@@ -518,7 +521,7 @@ class ScanOrderController extends Controller {
                 $siteUserService = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($service);
 
                 if( !$siteUserService ) {
-                    throw new \Exception( 'Unable to find Service by id '.$service );
+                    throw new \Exception( 'Unable to find Service '.$service );
                 }
 
                 $criteriastr = " scanorder.scanOrderInstitutionScope=".$siteUserService->getId();
@@ -537,6 +540,79 @@ class ScanOrderController extends Controller {
 
         return $criteriastr;
     }
+//    //Service filter
+//    public function addUserServices_new( $service, $routeName, $user, $criterions ) {
+//
+//        $criteriastr = "";
+//        $em = $this->getDoctrine()->getManager();
+//
+//        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
+//            return $criteriastr;
+//        }
+//
+//        //check if user has Per Site Settings
+//        $securityUtil = $this->get('order_security_utility');
+//        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+//        if( !$userSiteSettings ) {
+//            return $criteriastr;
+//        }
+//
+//        //for "My Orders" get all user services and chief services
+//        if( $routeName == "my-scan-orders" ) {
+//
+//            //TODO: now we have a single ScanOrderInstitutionScope. Before, we had multiple ScanOrder Service Scopes
+//            $userScanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
+//            $criteriastr .= " scanorder.scanOrderInstitutionScope=".$userScanOrderInstitutionScope->getId();
+//
+//            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+//                $chiefServices = $userSiteSettings->getChiefServices();
+//                if( $userScanOrderInstitutionScope && count($userServices)>0 ) {
+//                    //$services = array_merge($userServices, $chiefServices);
+//                    foreach( $chiefServices as $serv ) {
+//                        $userServices->add($serv);
+//                    }
+//                }
+//            }
+//
+//            //TODO: now we don't have "Chief of the following Service(s) for Scope" option in "Per Site User Settings Editable by Administrator"
+////            foreach( $userServices as $service ) {
+////                if( $service && $service != "" ) {
+////                    if( $criteriastr != "" ) {
+////                        $criteriastr .= " OR ";
+////                    }
+////                    $criteriastr .= " scanorder.service=".$service->getId();
+////                }
+////            }//foreach
+//
+//        }
+//
+//        //for "Incoming Orders" select only chosen service
+//        if( $routeName == "incoming-scan-orders" ) {
+//
+//            if( is_numeric($service)  ) {
+//
+//                $siteUserService = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($service);
+//
+//                if( !$siteUserService ) {
+//                    throw new \Exception( 'Unable to find Service by id '.$service );
+//                }
+//
+//                $criteriastr = " scanorder.scanOrderInstitutionScope=".$siteUserService->getId();
+//
+//            }
+//
+//        }
+//
+//        if( $criterions != "" ) {
+//            if( $criteriastr != "" ) {
+//                $criteriastr = " OR (" . $criteriastr . ") ";
+//            }
+//        } else {
+//            $criteriastr = " (" . $criteriastr . ") ";
+//        }
+//
+//        return $criteriastr;
+//    }
 
 
     /**
