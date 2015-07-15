@@ -306,7 +306,7 @@ $(document).ready(function() {
     // Wait until idle (busy must be false)
     var _TIMEOUT = 100; // 300 waitfor test rate [msec]
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
-        console.log('The show can resume !');
+        //console.log('The show can resume !');
         handsonTableInit();
     });
 

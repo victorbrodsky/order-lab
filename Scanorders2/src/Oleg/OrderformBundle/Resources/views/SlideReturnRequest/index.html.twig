@@ -150,7 +150,9 @@
                 {% endif %}
 
                 <td>
-                    <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.message.proxyuser.id }) }}">{{ sliderequest.message.proxyuser }}</a>
+                    {% for proxyuser in sliderequest.message.proxyuser %}
+                        <p><a href="{{ path(scan_sitename~'_showuser', { 'id': proxyuser.id }) }}">{{ proxyuser }}</a></p>
+                    {% endfor %}
                 </td>
 
                 <td>

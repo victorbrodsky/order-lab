@@ -190,7 +190,9 @@
         </div>
         <div class="panel-body collapse in">
             {#{{ formmacros.field(form.provider) }}#}
-            {{ formmacros.simplefield( "Submitter:", form.message.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
+            {#{{ formmacros.simplefield( "Submitter:", form.message.vars.value.provider.getUserNameStr(), "", "disabled" ) }}#}
+            {{ formmacros.field(form.message.provider,null,'readonly') }}
+
             {{ formmacros.field(form.message.proxyuser) }}
             {{ formmacros.field(form.message.institution) }}
 

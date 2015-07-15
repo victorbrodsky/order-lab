@@ -958,7 +958,7 @@
                     {% endif %}
 
                     {#controlled by controller and form#}
-                    {% if message.proxyuser is defined %}
+                    {% if field_show_user is defined %}
                         {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
                     {% endif %}
 

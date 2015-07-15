@@ -160,7 +160,8 @@
 
                     {{ formmacros.field(form.returnoption) }}
                     {#{{ formmacros.field(form.provider) }}#}
-                    {{ formmacros.simplefield( "Submitter:", form.message.vars.value.provider.getUserNameStr(), "", "disabled" ) }}
+                    {#{{ formmacros.simplefield( "Submitter:", form.message.vars.value.provider.getUserNameStr(), "", "disabled" ) }}#}
+                    {{ formmacros.field(form.message.provider,null,'readonly') }}
 
                     {% if form.message.proxyuser is defined %}
                         {{ formmacros.field(form.message.proxyuser) }}
