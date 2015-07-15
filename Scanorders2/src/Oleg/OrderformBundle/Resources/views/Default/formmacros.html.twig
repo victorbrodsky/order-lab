@@ -2061,7 +2061,7 @@
     </div>
 {% endmacro %}
 
-{% macro partForm( part, flag, uid, cycle, status, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml,diseaseTypeHtml ) %}
+{% macro partForm( part, flag, uid, cycle, status, partnameHtml,sourceorganHtml,parttitleHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml,diseaseTypeHtml ) %}
 
     {% import _self as formmacros %}
 
@@ -2086,6 +2086,12 @@
             {{ formmacros.inputArrayField(part.sourceOrgan,cycle,"partsourceorgan","","","","",status) }}
         {% else  %}
             <p><div class="partsourceorgan">{{ sourceorganHtml }}</div></p>
+        {% endif %}
+
+        {% if parttitleHtml is not defined or parttitleHtml == "" %}
+            {{ formmacros.inputArrayField(part.parttitle,cycle,"partparttitle","","","","",status) }}
+        {% else  %}
+            <p><div class="partparttitle">{{ parttitleHtml }}</div></p>
         {% endif %}
 
         {% if paperHtml is not defined or paperHtml == "" %}

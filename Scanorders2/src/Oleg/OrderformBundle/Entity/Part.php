@@ -23,6 +23,11 @@ class Part extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="PartPartname", mappedBy="part", cascade={"persist"})
      */
     protected $partname;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PartParttitle", mappedBy="part", cascade={"persist"})
+     */
+    protected $parttitle;
     
     //*********************************************// 
     // optional fields
@@ -85,6 +90,7 @@ class Part extends ObjectAbstract
 
         //fields:
         $this->partname = new ArrayCollection();
+        $this->parttitle = new ArrayCollection();
         $this->sourceOrgan = new ArrayCollection();
         $this->description = new ArrayCollection();
         $this->disident = new ArrayCollection();
@@ -94,6 +100,7 @@ class Part extends ObjectAbstract
 
         if( $withfields ) {
             $this->addPartname( new PartPartname($status,$provider,$source) );
+            $this->addParttitle( new PartParttitle($status,$provider,$source) );
             $this->addSourceOrgan( new PartSourceOrgan($status,$provider,$source) );
             $this->addDescription( new PartDescription($status,$provider,$source) );
             $this->addDisident( new PartDisident($status,$provider,$source) );
@@ -105,6 +112,7 @@ class Part extends ObjectAbstract
 
     public function makeDependClone() {
         $this->partname = $this->cloneDepend($this->partname,$this);
+        $this->parttitle = $this->cloneDepend($this->parttitle,$this);
         $this->sourceOrgan = $this->cloneDepend($this->sourceOrgan,$this);
         $this->description = $this->cloneDepend($this->description,$this);
         $this->disident = $this->cloneDepend($this->disident,$this);
@@ -210,6 +218,24 @@ class Part extends ObjectAbstract
     {
         $this->partname->clear();
     }
+
+    public function getParttitle()
+    {
+        return $this->parttitle;
+    }
+    public function addParttitle($item)
+    {
+        if( $item && !$this->parttitle->contains($item) ) {
+            $this->parttitle->add($item);
+            $item->setPart($this);
+        }
+        return $this;
+    }
+    public function removeParttitle($item)
+    {
+        $this->parttitle->removeElement($item);
+    }
+
 
 
     public function setSourceOrgan($sourceOrgan) {
@@ -576,7 +602,7 @@ class Part extends ObjectAbstract
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Partname','SourceOrgan','Description','Disident','Paper','DiffDisident','DiseaseType');
+        $fieldsArr = array('Partname','Parttitle','SourceOrgan','Description','Disident','Paper','DiffDisident','DiseaseType');
         return $fieldsArr;
     }
 

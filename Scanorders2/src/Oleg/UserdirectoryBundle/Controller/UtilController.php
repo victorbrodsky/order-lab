@@ -1089,7 +1089,13 @@ class UtilController extends Controller {
                 $className = "OrganizationList";
                 break;
 
-            //scan
+            //scan parttitle
+            case "parttitle":
+                $className = "ParttitleList";
+                $bundleName = "OrderformBundle";
+                break;
+
+            //scan labtesttype
             case "labtesttype":
                 $className = "LabTestType";
                 $bundleName = "OrderformBundle";
@@ -1098,6 +1104,8 @@ class UtilController extends Controller {
             case "userpositions":
                 $className = "PositionTypeList";
                 break;
+
+
 
             default:
                 $className = null;

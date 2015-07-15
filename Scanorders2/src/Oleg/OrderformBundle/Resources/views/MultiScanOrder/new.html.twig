@@ -106,6 +106,7 @@
 
         {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
+        {% set parttitleHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.parttitle,type,"","prototype") %}
         {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"paper","prototype") %}
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
         {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
@@ -177,6 +178,7 @@
             {{ formmacros.partForm( form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, form.vars.value.status,
                   partnameHtml,
                   sourceorganHtml,
+                  parttitleHtml,
                   paperHtml,
                   descriptionHtml,
                   diagnosisHtml,

@@ -791,10 +791,10 @@ function getTableDataIndexes() {
             case 'Accession Number':
                 res['acc'] = i;
                 break;
-            case 'Part Name':
+            case 'Part ID':
                 res['part'] = i;
                 break;
-            case 'Block Name':
+            case 'Block ID':
                 res['block'] = i;
                 break;
             case 'Patient DOB':

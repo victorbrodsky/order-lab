@@ -25,6 +25,7 @@ var messageid = $(".message-id").val();
 var _mrntype = new Array();
 var _accessiontype = new Array();
 var _partname = new Array();
+var _parttitle = new Array();
 var _blockname = new Array();
 var _stain = new Array();
 var _scanregion = new Array();
@@ -102,6 +103,10 @@ function customCombobox() {
         getComboboxReturnLocations();
 
         getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
+
+        //parttitle
+        //holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force
+        getComboboxGeneric(null,'parttitle',_parttitle,false,null,null,true);
     }
 
     //scan
@@ -418,11 +423,11 @@ function getComboboxPartname(ids,holder) {
             async: asyncflag
         }).success(function(data) {
             _partname = data;
-            populateSelectCombobox( targetid, _partname, "Part Name" );
+            populateSelectCombobox( targetid, _partname, "Part ID" );
             //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
         });
     } else {
-        populateSelectCombobox( targetid, _partname, "Part Name" );
+        populateSelectCombobox( targetid, _partname, "Part ID" );
         //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
     }
 
@@ -469,10 +474,10 @@ function getComboboxBlockname(ids,holder) {
             async: asyncflag
         }).success(function(data) {
                 _blockname = data;
-            populateSelectCombobox( targetid, _blockname, "Block Name" );
+            populateSelectCombobox( targetid, _blockname, "Block ID" );
         });
     } else {
-        populateSelectCombobox( targetid, _blockname, "Block Name" );
+        populateSelectCombobox( targetid, _blockname, "Block ID" );
     }
 
 }

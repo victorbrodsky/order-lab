@@ -53,32 +53,37 @@ function specificRegularCombobox( comboboxEl ) {
 }
 
 //Generic ajax combobox
-function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename) {
+function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force) {
 
     //console.log('get Combobox Generic: name='+name);
 
     var targetid = ".ajax-combobox-"+name;
 
-    if( $(targetid).length == 0 ) {
+    if( typeof force === 'undefined' ) {
+        force = false;
+    }
+
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
     if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
         targetid = holder.find(targetid);
 
-        if( targetid.length == 0 )
+        if( !force && targetid.length == 0 )
             return;
     }
 
-    if( typeof urlprefix === 'undefined' ) {
+    if( typeof urlprefix === 'undefined' || urlprefix == null ) {
         urlprefix = "generic/";
     }
 
-    if( typeof sitename === 'undefined' ) {
+    if( typeof sitename === 'undefined' || sitename == null ) {
         sitename = "employees";
     }
 
     var url = getCommonBaseUrl("util/common/"+urlprefix+name,sitename);
+    //console.log('get Combobox Generic: url='+url);
 
     if( globalDataArray.length == 0 ) {
         $.ajax({
@@ -88,6 +93,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         }).success(function(data) {
             $.each(data, function(key, val) {
                 globalDataArray.push(val);
+                //console.log(data);
             });
             populateSelectCombobox( targetid, globalDataArray, "Select an option or type in a new value", multipleFlag );
         });

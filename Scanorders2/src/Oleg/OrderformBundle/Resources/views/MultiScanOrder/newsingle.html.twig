@@ -19,6 +19,7 @@
 
         {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,cycle,"key","prototype") %}
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,cycle,"","prototype") %}
+        {% set parttitleHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.parttitle,cycle,"","prototype") %}
         {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,cycle,"paper","prototype") %}
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,cycle,"","prototype") %}
         {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,cycle,"","prototype") %}
@@ -259,6 +260,8 @@
                                         <div class="panel-heading"><h3 class="panel-title">Part</h3></div>
                                         <div class="panel-body form-element-holder">
                                             {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
+
+                                            {{ formmacros.inputArrayField(form_part.parttitle,'new',"partparttitle") }}
 
                                             {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
 

@@ -26,7 +26,7 @@ class PartNameType extends AbstractType
         if( $this->params['cycle'] != 'show' && $this->params['type'] == 'One-Slide Scan Order' && $this->params['cycle'] != 'amend' && $this->params['cycle'] != 'edit' ) {
             $label = false;
         } else {
-            $label = 'Part Name:';
+            $label = 'Part ID:';
         }
 
         if( $this->params['cycle'] != "show" ) {

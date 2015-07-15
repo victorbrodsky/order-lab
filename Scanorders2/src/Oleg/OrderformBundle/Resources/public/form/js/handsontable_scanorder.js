@@ -9,7 +9,7 @@
 var _htableid = "#multi-dataTable";
 
 var _sotable = null;    //scan order table
-var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part Name, Block Name
+var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part ID, Block ID
 var _colHeader = new Array();
 
 var _accessiontypes_simple = new Array();
@@ -19,6 +19,7 @@ var _blockname_simple = new Array();
 var _stains_simple = new Array();
 var _procedures_simple = new Array();
 var _organs_simple = new Array();
+var _parttitle_simple = new Array();
 var _scanregions_simple = new Array();
 var _slidetypes_simple = new Array();
 
@@ -217,10 +218,10 @@ var _columnData_scanorder = [
     { header:'Accession Number', columns:{validator: accession_validator_fn, allowInvalid: true, renderer:redRenderer} },
 
     //part: 1
-    { header:'Part Name', default:0, columns:{type:'autocomplete', source:_partname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
+    { header:'Part ID', default:0, columns:{type:'autocomplete', source:_partname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
 
     //block: 1
-    { header:'Block Name', default:0, columns:{type:'autocomplete', source:_blockname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
+    { header:'Block ID', default:0, columns:{type:'autocomplete', source:_blockname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
 
     //slide: 4
     { header:'Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
@@ -228,8 +229,9 @@ var _columnData_scanorder = [
     { header:'Diagnosis', columns:{} },
     { header:'Reason for Scan/Note', columns:{} },
 
-    //part 1
+    //part 2
     { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false, colWidths:'100px'} },
+    { header:'Part Title', columns:{type:'autocomplete', source:_parttitle_simple, strict:false} },
 
     //patient: 4
     { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
@@ -302,12 +304,10 @@ $(document).ready(function() {
     getSlideTypes();
 
     // Wait until idle (busy must be false)
-    var _TIMEOUT = 300; // waitfor test rate [msec]
+    var _TIMEOUT = 100; // 300 waitfor test rate [msec]
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
-
-        //console.log('The show can resume !');
+        console.log('The show can resume !');
         handsonTableInit();
-
     });
 
     //validation on form submit
@@ -318,6 +318,9 @@ $(document).ready(function() {
 });
 
 function ajaxFinishedCondition() {
+
+    //console.log('_parttitle len='+_parttitle.length);
+
     if(
             _accessiontype.length > 0 &&
             _mrntype.length > 0 &&
@@ -325,7 +328,8 @@ function ajaxFinishedCondition() {
             _procedure.length > 0 &&
             _organ.length > 0 &&
             _scanregion.length > 0 &&
-            _slidetypes.length > 0
+            _slidetypes.length > 0 &&
+            _parttitle.length > 0
     ) {
 
         for(var i = 0; i < _accessiontype.length; i++) {
@@ -365,6 +369,10 @@ function ajaxFinishedCondition() {
 
         for(var i = 0; i < _organ.length; i++) {
             _organs_simple.push( _organ[i].text );
+        }
+
+        for(var i = 0; i < _parttitle.length; i++) {
+            _parttitle_simple.push( _parttitle[i].text );
         }
 
         return true;
@@ -445,7 +453,7 @@ function handsonTableInit() {
     //$('#multi-dataTable').doubleScroll();
 
     //console.log(data);
-    //console.log(colHeader);
+    //console.log(_colHeader);
     //console.log(columnsType);
 
 
@@ -836,8 +844,8 @@ function validateCell( row, col, value ) {
         case 'MRN Type':
         case 'MRN':
         case 'Accession Number':
-        case 'Part Name':
-        case 'Block Name':
+        case 'Part ID':
+        case 'Block ID':
             //if( !value || value == '' || value == null ) {
             if( isValueEmpty(value) ) {
                 //console.log(columnHeader+': value null !!!!!!!!!!!!!');

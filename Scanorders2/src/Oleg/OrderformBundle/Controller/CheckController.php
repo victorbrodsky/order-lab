@@ -569,6 +569,7 @@ class CheckController extends Controller {
                 'id'=>$entity->getId(),
                 'partname'=>$this->getArrayFieldJson($entity->getPartname()),
                 'sourceOrgan'=>$this->getArrayFieldJson($entity->getSourceOrgan()),
+                'parttitle'=>$this->getArrayFieldJson($entity->getParttitle()),
                 'description'=>$this->getArrayFieldJson($entity->getDescription()),
                 'disident'=>$this->getArrayFieldJson($entity->getDisident()),
                 'paper'=>$this->getArrayFieldJson($entity->getPaper(), array("documents")),

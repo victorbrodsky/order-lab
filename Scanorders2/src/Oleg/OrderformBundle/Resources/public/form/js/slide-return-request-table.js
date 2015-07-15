@@ -4,7 +4,7 @@
 
 var _htableid = "#multi-dataTable";
 var _sotable = null;    //scan order table
-var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part Name, Block Name
+var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part ID, Block ID
 
 var _accessiontypes_simple = new Array();
 var _mrntypes_simple = new Array();
@@ -360,8 +360,8 @@ function validateCell( row, col, value ) {
         case 'MRN Type':
         case 'MRN':
         case 'Accession Number':
-        case 'Part Name':
-        case 'Block Name':
+        case 'Part ID':
+        case 'Block ID':
             //if( !value || value == '' || value == null ) {
             if( isValueEmpty(value) ) {
                 //console.log(columnHeader+': value null !!!!!!!!!!!!!');
@@ -695,10 +695,10 @@ function getTableDataIndexes() {
             case 'Accession Number':
                 res['acc'] = i;
                 break;
-            case 'Part Name':
+            case 'Part ID':
                 res['part'] = i;
                 break;
-            case 'Block Name':
+            case 'Block ID':
                 res['block'] = i;
                 break;
             case 'Patient DOB':

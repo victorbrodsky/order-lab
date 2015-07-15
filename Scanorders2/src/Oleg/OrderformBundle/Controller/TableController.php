@@ -10,6 +10,8 @@
 namespace Oleg\OrderformBundle\Controller;
 
 
+use Oleg\OrderformBundle\Entity\PartParttitle;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -238,13 +240,13 @@ class TableController extends Controller {
 
             //part: 1
             $partname = $part->obtainValidKeyField();
-            $rowArr['Part Name']['id'] = $partname->getId();
-            $rowArr['Part Name']['value'] = $partname->getField();
+            $rowArr['Part ID']['id'] = $partname->getId();
+            $rowArr['Part ID']['value'] = $partname->getField();
 
             //block: 1
             $blockname = $block->obtainValidKeyField();
-            $rowArr['Block Name']['id'] = $blockname->getId();
-            $rowArr['Block Name']['value'] = $blockname->getField();
+            $rowArr['Block ID']['id'] = $blockname->getId();
+            $rowArr['Block ID']['value'] = $blockname->getField();
 
             //slide: 4
             $stain = $slide->getStain()->first();
@@ -270,6 +272,13 @@ class TableController extends Controller {
             if( $sourceorgan ) {
                 $rowArr['Source Organ']['id'] = $sourceorgan->getId();
                 $rowArr['Source Organ']['value'] = ( $sourceorgan->getField() ? $sourceorgan->getField()->getName() : null );
+            }
+
+            //part 2
+            $parttitle = $part->obtainStatusField('parttitle',$fieldstatus,$id);
+            if( $parttitle ) {
+                $rowArr['Part Title']['id'] = $parttitle->getId();
+                $rowArr['Part Title']['value'] = ( $parttitle->getField() ? $parttitle->getField()->getName() : null );
             }
 
             //patient: 4
@@ -923,9 +932,9 @@ class TableController extends Controller {
         ///////////////// Part /////////////////
         $part = new Part(false, $status, $provider, $system);
 
-        //part name
+        //part ID
         $partname = new PartPartname($status,$provider,$system);
-        $pnameArr = $this->getValueByHeaderName('Part Name',$row,$columnData);
+        $pnameArr = $this->getValueByHeaderName('Part ID',$row,$columnData);
         //echo "pname=".$pname."<br>";
         $partname->setField($pnameArr['val']);
         $partname->setId($pnameArr['id']);
@@ -940,6 +949,17 @@ class TableController extends Controller {
             $partSourceOrgan->setField($sourceOrganList);
             $partSourceOrgan->setId($partsoArr['id']);
             $part->addSourceOrgan($partSourceOrgan);
+        }
+
+        //Part Title
+        $parttitleArr = $this->getValueByHeaderName('Part Title',$row,$columnData);
+        if( $force || $parttitleArr['val'] && $parttitleArr['val'] != '' ) {
+            $parttitleTransformer = new GenericTreeTransformer($em,$provider,'ParttitleList','OrderformBundle');
+            $parttitleList = $parttitleTransformer->reverseTransform($parttitleArr['val']); //ParttitleList
+            $parttitle = new PartParttitle($status,$provider,$system);
+            $parttitle->setField($parttitleList);
+            $parttitle->setId($partsoArr['id']);
+            $part->addParttitle($parttitle);
         }
 
         //Gross Description
@@ -1002,9 +1022,9 @@ class TableController extends Controller {
         ///////////////// Block /////////////////
         $block = new Block(false, $status, $provider, $system);
 
-        //block name
+        //block ID
         $blockname = new BlockBlockname($status,$provider,$system);
-        $blocknameArr = $this->getValueByHeaderName('Block Name',$row,$columnData);
+        $blocknameArr = $this->getValueByHeaderName('Block ID',$row,$columnData);
         $blockname->setId($blocknameArr['id']);
         $blockname->setField($blocknameArr['val']);
         $block->addBlockname($blockname);
