@@ -44,7 +44,7 @@ function comboboxTreeListener( target, entityName, rowElHtml ) {
 
     $(target).on('change', function(e){
 
-        //printF( $(this), "combobox on change:" );
+        printF( $(this), "combobox on change:" );
 
         var comboboxEl = $(this);
         var thisData = comboboxEl.select2('data');
@@ -63,7 +63,7 @@ function comboboxTreeListener( target, entityName, rowElHtml ) {
         clearElementsIdName(treeHolder);
 
         //check if combobox cleared; if none => do nothing
-        //console.log( thisData );
+        console.log( thisData );
         if( !thisData ) {
             return;
         }
@@ -258,10 +258,10 @@ function setTreeNode( entityName, treeHolder, node, data ) {
     //3 case: data has id and text (both equal to a node name), but does not have pid - new node => pid is previous select box
     //generate new node in DB
     if( data && data.id && !data.hasOwnProperty("pid") ) {
-        //console.log("3 case: new node");
+        console.log("3 case: new node");
 
         var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
-        //console.log(prevNodeData);
+        console.log(prevNodeData);
 
         var conf = "Are you sure you want to create " + "'" + data.id + "?";
         if( prevNodeData && data.hasOwnProperty("leveltitle") ) {
@@ -286,7 +286,7 @@ function setTreeNode( entityName, treeHolder, node, data ) {
             //newnodeid = 0;
             node.select2('data', null);
         }
-        //console.log(node.select2('data'));
+        console.log(node.select2('data'));
     }
 }
 ////////////////////////////// EOF TREE //////////////////////////////////
