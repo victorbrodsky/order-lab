@@ -32,7 +32,7 @@ use Oleg\OrderformBundle\Entity\BlockOrder;
 use Oleg\OrderformBundle\Entity\EncounterDate;
 use Oleg\OrderformBundle\Entity\EncounterPatage;
 use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\InstructionList;
+use Oleg\OrderformBundle\Entity\Instruction;
 use Oleg\OrderformBundle\Entity\Message;
 use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientDob;
@@ -1311,7 +1311,7 @@ class PatientController extends Controller
             $imageAnalysisOrder->setMessage($message);
             $message->setImageAnalysisOrder($imageAnalysisOrder);
 
-            $instruction = new InstructionList($user);
+            $instruction = new Instruction($user);
             $imageAnalysisOrder->setInstruction($instruction);
 
             //Image Analysis Software: Indica HALO (destination(endpoint) -> SourceSystemList "Indica HALO")
@@ -1333,8 +1333,8 @@ class PatientController extends Controller
             $blockorder->setMessage($message);
             $message->setBlockorder($blockorder);
 
-            $instruction = new InstructionList($user);
-            $blockorder->setInstruction($instruction);
+            //$instruction = new Instruction($user);
+            //$blockorder->setInstruction($instruction);
 
             //$em->persist($message);
         }
@@ -1345,7 +1345,7 @@ class PatientController extends Controller
             $message->setSlideorder($slideorder);
 
 
-            $instruction = new InstructionList($user);
+            $instruction = new Instruction($user);
             $slideorder->setInstruction($instruction);
 
             //$em->persist($message);
@@ -1356,7 +1356,7 @@ class PatientController extends Controller
             $stainorder->setMessage($message);
             $message->setStainorder($stainorder);
 
-            $instruction = new InstructionList($user);
+            $instruction = new Instruction($user);
             $stainorder->setInstruction($instruction);
 
             //$em->persist($message);

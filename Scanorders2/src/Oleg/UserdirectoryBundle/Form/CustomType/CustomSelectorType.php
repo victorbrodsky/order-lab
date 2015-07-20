@@ -157,10 +157,10 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new ResearchLabTransformer($this->om, $username, 'Grant');
                 break;
 
-            //labtesttype
-            case "labtesttype":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'LabTestType', 'OrderformBundle');
-                break;
+//            //labtesttype
+//            case "labtesttype":
+//                $transformer = new GenericTreeTransformer($this->om, $username, 'LabTestType', 'OrderformBundle');
+//                break;
 
             //month year date only
             case "month_year_date_only":

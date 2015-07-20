@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\PatientMrn;
 
 //TODO: optimise by removing foreach loops:
 //create optimalShortName: return abbr, or return short, or return name
@@ -31,6 +29,11 @@ class UtilController extends Controller {
      * @Method("GET")
      */
     public function getGenericAction( $name ) {
+
+        return $this->getGenericList($name);
+    }
+
+    public function getGenericList( $name ) {
 
         //echo "name=".$name."<br>";
         $res = $this->getClassBundleByName($name);
@@ -73,6 +76,7 @@ class UtilController extends Controller {
         $response->setContent(json_encode($output));
         return $response;
     }
+
 
 
 
@@ -947,6 +951,8 @@ class UtilController extends Controller {
 
 
     /**
+     * It is used in User mrn type where the link is created between user and patient
+     *
      * @Route("/common/mrntype-identifier", name="employees_check_mrntype_identifier")
      * @Method("GET")
      */
@@ -1088,19 +1094,6 @@ class UtilController extends Controller {
             case "organization":
                 $className = "OrganizationList";
                 break;
-
-            //scan parttitle
-            case "parttitle":
-                $className = "ParttitleList";
-                $bundleName = "OrderformBundle";
-                break;
-
-            //scan labtesttype
-            case "labtesttype":
-                $className = "LabTestType";
-                $bundleName = "OrderformBundle";
-                break;
-
             case "userpositions":
                 $className = "PositionTypeList";
                 break;

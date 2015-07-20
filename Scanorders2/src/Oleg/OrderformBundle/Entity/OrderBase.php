@@ -22,11 +22,12 @@ abstract class OrderBase {
     protected $id;
 
     /**
-     * Instruction (List manager: datetime, author, author roles)
+     * Instruction (datetime, author, author roles, text)
      *
-     * @ORM\ManyToOne(targetEntity="InstructionList", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Instruction", cascade={"persist","remove"})
      */
     protected $instruction;
+
 
     //Prepared On
     /**

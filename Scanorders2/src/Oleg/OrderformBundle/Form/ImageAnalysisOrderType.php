@@ -45,7 +45,7 @@ class ImageAnalysisOrderType extends AbstractType
 
         $params = array('labelPrefix'=>'');
         $builder->add('instruction', new InstructionType($params), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
+            'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
             'label' => false
         ));
 

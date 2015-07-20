@@ -9,6 +9,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\DiseaseOriginList;
 use Oleg\OrderformBundle\Entity\DiseaseTypeList;
+use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -101,7 +102,7 @@ class ScanAdminController extends AdminController
         $count_organ = $this->generateOrgans();
         $count_procedure = $this->generateProcedures();
         $count_status = $this->generateStatuses();
-        //$count_pathservice = $this->generatePathServices();
+        $count_EmbedderInstructionList = $this->generateEmbedderInstructionList();
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
         $count_OrderDelivery = $this->generateOrderDelivery();
@@ -139,6 +140,7 @@ class ScanAdminController extends AdminController
             'Progress and Comments EventTypes='.$count_progressCommentsEventType.', '.
             'Races='.$count_race.', '.
             'Magnifications='.$count_generateMagnifications.', '.
+            'Embedder Instructions ='.$count_EmbedderInstructionList.', '.
             'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.' '.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -406,7 +408,7 @@ class ScanAdminController extends AdminController
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
-        $count = 1;
+        $count = 10;
 
         //for each row in excel
         for( $row = 2; $row <= $highestRow; $row++ ){
@@ -518,7 +520,7 @@ class ScanAdminController extends AdminController
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $organs as $organ ) {
 
             $list = new OrganList();
@@ -549,7 +551,7 @@ class ScanAdminController extends AdminController
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $procedures as $procedure ) {
 
             $list = new ProcedureList();
@@ -583,7 +585,7 @@ class ScanAdminController extends AdminController
             "Filled: Scanned & Returned", "Filled: Some Scanned & Returned", "Filled: Not Scanned & Returned"
         );
 
-        $count = 1;
+        $count = 10;
 
         foreach( $statuses as $statusStr ) {
 
@@ -659,7 +661,7 @@ class ScanAdminController extends AdminController
             return -1;
         }
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $slideType = new SlideType();
@@ -706,7 +708,7 @@ class ScanAdminController extends AdminController
             'Existing Auto-generated MRN'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $mrnType = new MrnType();
@@ -793,7 +795,7 @@ class ScanAdminController extends AdminController
 
         );
 
-        $count = 1;
+        $count = 10;
         $level = 0;
 
         $count = $this->addNestedsetCategory(null,$categories,$level,$username,$count);
@@ -892,7 +894,7 @@ class ScanAdminController extends AdminController
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $accType = new PatientTypeList();
@@ -932,7 +934,7 @@ class ScanAdminController extends AdminController
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $accType = new AccessionType();
@@ -969,7 +971,7 @@ class ScanAdminController extends AdminController
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $encType = new EncounterType();
@@ -1001,7 +1003,7 @@ class ScanAdminController extends AdminController
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $encType = new ProcedureType();
@@ -1044,8 +1046,7 @@ class ScanAdminController extends AdminController
             "Please e-mail me to set the time & pick up slides",
         );
 
-        $count = 1;
-        $rescount = 0;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new OrderDelivery();
@@ -1055,10 +1056,9 @@ class ScanAdminController extends AdminController
             $em->flush();
 
             $count = $count + 10;
-            $rescount++;
         }
 
-        return $rescount;
+        return round($count/10);
     }
 
 
@@ -1079,7 +1079,7 @@ class ScanAdminController extends AdminController
             "Region circled by marker"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new RegionToScan();
@@ -1143,7 +1143,7 @@ class ScanAdminController extends AdminController
             'As soon as possible', 'Urgently (the patient is waiting in my office)'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new Urgency();
@@ -1181,7 +1181,7 @@ class ScanAdminController extends AdminController
             'Slide Return Request Comment Added'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new ProgressCommentsEventTypeList();
@@ -1212,7 +1212,7 @@ class ScanAdminController extends AdminController
             '40X'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new Magnification();
@@ -1248,7 +1248,7 @@ class ScanAdminController extends AdminController
             'Membrane IHC Quantification',
             'SISH & Dual CISH Quantification',
             'Chromogenic RNA ISH',
-            'Steatosis Quantificatio',
+            'Steatosis Quantification',
             'Adipose Tissue Quantification',
             'Muscle Fiber Quantification',
             'Pancreatic Islet Quantification',
@@ -1279,7 +1279,7 @@ class ScanAdminController extends AdminController
             'Serial Section Analysis'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new ImageAnalysisAlgorithmList();
@@ -1316,7 +1316,7 @@ class ScanAdminController extends AdminController
             'White'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new RaceList();
@@ -1350,7 +1350,7 @@ class ScanAdminController extends AdminController
             'Unspecified'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new DiseaseTypeList();
@@ -1382,7 +1382,7 @@ class ScanAdminController extends AdminController
             'Unspecified'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new DiseaseOriginList();
@@ -1397,5 +1397,36 @@ class ScanAdminController extends AdminController
         return round($count/10);
     }
 
+
+    public function generateEmbedderInstructionList() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:EmbedderInstructionList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'On Edge',
+            'En Face'
+        );
+
+        $count = 10;
+        foreach( $types as $type ) {
+
+            $listEntity = new EmbedderInstructionList();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
 }

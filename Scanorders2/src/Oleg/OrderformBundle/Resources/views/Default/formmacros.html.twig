@@ -784,15 +784,16 @@
                         {% endif %}
 
                         {% if message.laborder is defined and message.laborder.vars.value %}
-                            {% if message.laborder.labTestType is defined %}
-                                {{ formmacros.field( message.laborder.labTestType ) }}
-                            {% endif %}
-                            {% if message.laborder.labTestId is defined %}
-                                {{ formmacros.field( message.laborder.labTestId ) }}
-                            {% endif %}
-                            {% if message.laborder.labTestTitle is defined %}
-                                {{ formmacros.field( message.laborder.labTestTitle ) }}
-                            {% endif %}
+                            {#{% if message.laborder.labTest.labTestType is defined %}#}
+                                {#{{ formmacros.field( message.laborder.labTest.labTestType ) }}#}
+                            {#{% endif %}#}
+                            {#{% if message.laborder.labTest.labTestId is defined %}#}
+                                {#{{ formmacros.field( message.laborder.labTest.labTestId ) }}#}
+                            {#{% endif %}#}
+                            {#{% if message.laborder.labTest.labTestTitle is defined %}#}
+                                {#{{ formmacros.field( message.laborder.labTest.labTestTitle ) }}#}
+                            {#{% endif %}#}
+                            {{ formmacros.labtestObject(message.laborder.labTest,cycle,'user-labtests','noprototype') }}
                         {% endif %}
 
                         {% if message.report is defined and message.report.vars.value %}
@@ -851,9 +852,12 @@
                         {% if message.blockorder is defined and message.blockorder.vars.value %}
                             <p>
                                 <div class="well well-sm">
-                                {{ formmacros.fieldDateLabel(message.blockorder.instruction.createdate,'allow-future-date') }}
-                                {{ formmacros.field( message.blockorder.instruction.creator ) }}
-                                {{ formmacros.field( message.blockorder.instruction.instruction ) }}
+                                {{ formmacros.field( message.blockorder.embedderInstruction ) }}
+                                {% if message.blockorder.instruction is defined %}
+                                    {{ formmacros.fieldDateLabel(message.blockorder.instruction.createdate,'allow-future-date') }}
+                                    {{ formmacros.field( message.blockorder.instruction.creator ) }}
+                                    {{ formmacros.field( message.blockorder.instruction.instruction ) }}
+                                {% endif %}
                                 </div>
                             </p>
                         {% endif %}
@@ -2680,4 +2684,43 @@
 {% endmacro %}
 
 {############################ EOF Extra Fields ###########################}
+
+
+{% macro labtestObject( field, cycle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% set standAloneObject = false %}
+    {% if "standalone" in cycle %}
+        {% set standAloneObject = true %}
+    {% endif %}
+
+    {% if standAloneObject %}
+        <div class="user-collection-holder well {{ classname }}">
+    {% endif %}
+
+        {{ formmacros.field(formfield.labTestType) }}
+
+        {{ formmacros.field(formfield.labTestId) }}
+
+        {{ formmacros.field(formfield.labTestTitle) }}
+
+    {% if standAloneObject %}
+        </div>
+    {% endif %}
+
+    {#show list properties#}
+    {% if standAloneObject %}
+        {{ usermacros.listProperties(formfield) }}
+    {% endif %}
+
+    {% do formfield.setRendered %}
+
+{% endmacro %}
 

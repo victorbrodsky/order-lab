@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Controller\UtilController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,8 +19,51 @@ use Oleg\OrderformBundle\Helper\FormHelper;
  *
  * @Route("/util")
  */
-class ScanUtilController extends Controller {
-      
+class ScanUtilController extends UtilController {
+
+    /**
+     * @Route("/common/generic/{name}", name="scan_get_generic_select2")
+     * @Method("GET")
+     */
+    public function getGenericAction( $name ) {
+
+        return $this->getGenericList($name);
+    }
+
+    public function getClassBundleByName($name) {
+
+        $bundleName = "OrderformBundle";
+
+        switch( $name ) {
+
+            case "parttitle":
+                $className = "ParttitleList";
+                break;
+            case "labtesttype":
+                $className = "LabTestType";
+                break;
+            case "embedderinstruction":
+                $className = "EmbedderInstructionList";
+                break;
+
+            default:
+                $className = null;
+        }
+
+        $res = array(
+            'className' => $className,
+            'bundleName' => $bundleName
+        );
+
+        return $res;
+    }
+
+
+
+
+
+////////////////// we can convert almost all functions below to use getGenericAction method by using js getComboboxGeneric(null,'embedderinstruction',_embedderinstruction,false,'','scan');
+
     /**
      * @Route("/stain", name="get-stain")
      * @Method("GET")
@@ -813,77 +857,6 @@ class ScanUtilController extends Controller {
 
 
 
-//    /**
-//     * @Route("/default-service", name="get-default-service")
-//     * @Method("GET")
-//     */
-//    public function getDepartmentAction() {
-//
-//        $request = $this->get('request');
-//        $instid = trim( $request->get('instid') );
-////        $orderid = trim( $request->get('orderid') );
-//        $id = trim( $request->get('id') );
-//
-//        $inst = null;
-//
-//        $user = $this->get('security.context')->getToken()->getUser();
-//
-//        //get current user default service
-//        $secUtil = $this->get('order_security_utility');
-//        $service = $secUtil->getUserDefaultService($user);
-//
-//        if( $service ) {
-//            $division = $service->getParent();
-//            $department = $division->getParent();
-//            $inst = $department->getParent();
-//        } else {
-//            //add service from previous order for this user
-//            $orderUtil = $this->get('scanorder_utility');
-//            $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
-//            if( $previousOrder ) {
-//				if( $previousOrder->getScanOrder() ) {
-//					$service = $previousOrder->getScanOrder()->getService();
-//				}
-//                //echo "prev service=".$service." => ";
-//            }
-//        }
-//
-//        $output = array();
-//
-//        if( $service || $inst && $inst->getId() == $instid ) {
-//            $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
-//            $output[] = $element;
-//        }
-//
-////        //add order's service
-////        if( $orderid ) {
-////            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($orderid);
-////            $service = $message->getService();
-////            if( $service ) {
-////                $element = array('id'=>$service->getId()."", 'text'=>$service->getName()."");
-////                $output[] = $element;
-////            }
-////        }
-//
-//        //add current element by id
-//        if( $id ) {
-//            $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Service')->findOneById($id);
-//            if( $entity ) {
-//                if( array_key_exists($entity->getId(), $output) === false ) {
-//                    $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
-//                    $output[] = $element;
-//                }
-//            }
-//        }
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
-
-
-
     /**
      * @Route("/account", name="get-account")
      * @Method("GET")
@@ -960,7 +933,7 @@ class ScanUtilController extends Controller {
      * @Route("/returnlocation", name="scan_get_returnlocation")
      * @Method("GET")
      */
-    public function getLocationAction(Request $request) {
+    public function getReturnLocationAction(Request $request) {
 
         $providerid = trim( $request->get('providerid') );
         $proxyid = trim( $request->get('proxyid') );
@@ -1046,53 +1019,6 @@ class ScanUtilController extends Controller {
         return $response;
     }
 
-
-//    //TODO: test it according to new Service!
-//    /**
-//     * @Route("/scan-service", name="get-service")
-//     * @Method("GET")
-//     */
-//    public function getServiceAction() {
-//
-//        $whereServicesList = "";
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $request = $this->get('request');
-//        $opt = trim( $request->get('opt') );
-//
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegUserdirectoryBundle:Service', 'list')
-//            ->select("list.id as id, list.name as text")
-//            ->orderBy("list.orderinlist","ASC");
-//
-//        $user = $this->get('security.context')->getToken()->getUser();
-//
-//        if( $opt == 'default' ) {
-//            if( $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
-//                $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
-//            } else {
-//                $query->where('list.type = :type ')->setParameter('type', 'default');
-//            }
-//        } else {
-//            //find user's services to include them in the list
-//            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($opt);
-//            $getServices = $user->getServices();	//TODO: user's or allowed services?
-//
-//            foreach( $getServices as $serviceId ) {
-//                $whereServicesList = $whereServicesList . " OR list.id=".$serviceId->getId();
-//            }
-//            //$query->where('list.type = :type OR list.creator = :user_id ' . $whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
-//            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user_id) ".$whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
-//        }
-//
-//        $output = $query->getQuery()->getResult();
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
 
 
     /**

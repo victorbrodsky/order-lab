@@ -19,4 +19,32 @@ class BlockOrder extends OrderBase {
     protected $message;
 
 
+    /**
+     * @ORM\ManyToOne(targetEntity="EmbedderInstructionList", cascade={"persist"})
+     */
+    private $embedderInstruction;
+
+
+
+
+
+    /**
+     * @param mixed $embedderInstruction
+     */
+    public function setEmbedderInstruction($embedderInstruction)
+    {
+        $this->embedderInstruction = $embedderInstruction;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbedderInstruction()
+    {
+        return $this->embedderInstruction;
+    }
+
+
+
+
 }

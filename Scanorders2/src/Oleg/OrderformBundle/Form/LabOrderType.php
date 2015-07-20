@@ -24,31 +24,10 @@ class LabOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add( 'labTestType', 'custom_selector', array(
-//            'label' => 'Laboratory Test ID Type:',
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width combobox-educational-courseTitle', 'type' => 'hidden'),
-//            'classtype' => 'projectTitle'
-//        ));
-        $builder->add('labTestType', 'employees_custom_selector', array(
-            'label' => "Laboratory Test Type:",
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-labtesttype', 'type' => 'hidden'),
-            'classtype' => 'labtesttype'
+        $builder->add('labTest', new LabTestType($this->params), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\LabTest',
+            'label' => false
         ));
-
-        $builder->add('labTestId', 'text', array(
-            'required'=>false,
-            'label'=>'Laboratory Test ID:',
-            'attr' => array('class'=>'form-control'),
-        ));
-
-        $builder->add('labTestTitle', 'text', array(
-            'required'=>false,
-            'label'=>'Laboratory Test Title:',
-            'attr' => array('class'=>'form-control'),
-        ));
-
 
     }
 

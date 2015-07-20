@@ -66,15 +66,15 @@ class ListController extends Controller
      * @Route("/medical-titles/", name="medicaltitles-list")
      * @Route("/medical-specialties/", name="medicalspecialties-list")
      * @Route("/employment-types/", name="employmenttypes-list")
-     * @Route("/source-organizations/", name="sourceorganizations-list")
+     * @Route("/grant-source-organizations/", name="sourceorganizations-list")
      * @Route("/languages/", name="languages-list")
      * @Route("/locales/", name="locales-list")
-     * @Route("/importances/", name="importances-list")
-     * @Route("/authorshiproles/", name="authorshiproles-list")
-     * @Route("/organizations/", name="organizations-list")
+     * @Route("/ranks-of-importance/", name="importances-list")
+     * @Route("/authorship-roles/", name="authorshiproles-list")
+     * @Route("/lecture-venues/", name="organizations-list")
      * @Route("/cities/", name="cities-list")
-     * @Route("/linktypes/", name="linktypes-list")
-     * @Route("/sex/", name="sexes-list")
+     * @Route("/link-types/", name="linktypes-list")
+     * @Route("/sexes/", name="sexes-list")
      * @Route("/position-types/", name="positiontypes-list")
      * @Route("/organizational-group-types/", name="organizationalgrouptypes-list")
      *
@@ -226,15 +226,15 @@ class ListController extends Controller
      * @Route("/medical-titles/", name="medicaltitles_create")
      * @Route("/medical-specialties/", name="medicalspecialties_create")
      * @Route("/employment-types/", name="employmenttypes_create")
-     * @Route("/source-organizations/", name="sourceorganizations_create")
+     * @Route("/grant-source-organizations/", name="sourceorganizations_create")
      * @Route("/languages/", name="languages_create")
      * @Route("/locales/", name="locales_create")
-     * @Route("/importances/", name="importances_create")
-     * @Route("/authorshiproles/", name="authorshiproles_create")
-     * @Route("/organizations/", name="organizations_create")
+     * @Route("/ranks-of-importance/", name="importances_create")
+     * @Route("/authorship-roles/", name="authorshiproles_create")
+     * @Route("/lecture-venues/", name="organizations_create")
      * @Route("/cities/", name="cities_create")
-     * @Route("/linktypes/", name="linktypes_create")
-     * @Route("/sex/", name="sexes_create")
+     * @Route("/link-types/", name="linktypes_create")
+     * @Route("/sexes/", name="sexes_create")
      * @Route("/position-types/", name="positiontypes_create")
      * @Route("/organizational-group-types/", name="organizationalgrouptypes_create")
      *
@@ -364,15 +364,15 @@ class ListController extends Controller
      * @Route("/medical-titles/new", name="medicaltitles_new")
      * @Route("/medical-specialties/new", name="medicalspecialties_new")
      * @Route("/employment-types/new", name="employmenttypes_new")
-     * @Route("/source-organizations/new", name="sourceorganizations_new")
+     * @Route("/grant-source-organizations/new", name="sourceorganizations_new")
      * @Route("/languages/new", name="languages_new")
      * @Route("/locales/new", name="locales_new")
-     * @Route("/importances/new", name="importances_new")
-     * @Route("/authorshiproles/new", name="authorshiproles_new")
-     * @Route("/organizations/new", name="organizations_new")
+     * @Route("/ranks-of-importance/new", name="importances_new")
+     * @Route("/authorship-roles/new", name="authorshiproles_new")
+     * @Route("/lecture-venues/new", name="organizations_new")
      * @Route("/cities/new", name="cities_new")
-     * @Route("/linktypes/new", name="linktypes_new")
-     * @Route("/sex/new", name="sexes_new")
+     * @Route("/link-types/new", name="linktypes_new")
+     * @Route("/sexes/new", name="sexes_new")
      * @Route("/position-types/new", name="positiontypes_new")
      * @Route("/organizational-group-types/new", name="organizationalgrouptypes_new")
      *
@@ -473,15 +473,15 @@ class ListController extends Controller
      * @Route("/medical-titles/{id}", name="medicaltitles_show")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_show")
      * @Route("/employment-types/{id}", name="employmenttypes_show")
-     * @Route("/source-organizations/{id}", name="sourceorganizations_show")
+     * @Route("/grant-source-organizations/{id}", name="sourceorganizations_show")
      * @Route("/languages/{id}", name="languages_show")
      * @Route("/locales/{id}", name="locales_show")
-     * @Route("/importances/{id}", name="importances_show")
-     * @Route("/authorshiproles/{id}", name="authorshiproles_show")
-     * @Route("/organizations/{id}", name="organizations_show")
+     * @Route("/ranks-of-importance/{id}", name="importances_show")
+     * @Route("/authorship-roles/{id}", name="authorshiproles_show")
+     * @Route("/lecture-venues/{id}", name="organizations_show")
      * @Route("/cities/{id}", name="cities_show")
-     * @Route("/linktypes/{id}", name="linktypes_show")
-     * @Route("/sex/{id}", name="sexes_show")
+     * @Route("/link-types/{id}", name="linktypes_show")
+     * @Route("/sexes/{id}", name="sexes_show")
      * @Route("/position-types/{id}", name="positiontypes_show")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_show")
      *
@@ -572,15 +572,15 @@ class ListController extends Controller
      * @Route("/medical-titles/{id}/edit", name="medicaltitles_edit")
      * @Route("/medical-specialties/{id}/edit", name="medicalspecialties_edit")
      * @Route("/employment-types/{id}/edit", name="employmenttypes_edit")
-     * @Route("/source-organizations/{id}/edit", name="sourceorganizations_edit")
+     * @Route("/grant-source-organizations/{id}/edit", name="sourceorganizations_edit")
      * @Route("/languages/{id}/edit", name="languages_edit")
      * @Route("/locales/{id}/edit", name="locales_edit")
-     * @Route("/importances/{id}/edit", name="importances_edit")
-     * @Route("/authorshiproles/{id}/edit", name="authorshiproles_edit")
-     * @Route("/organizations/{id}/edit", name="organizations_edit")
+     * @Route("/ranks-of-importance/{id}/edit", name="importances_edit")
+     * @Route("/authorship-roles/{id}/edit", name="authorshiproles_edit")
+     * @Route("/lecture-venues/{id}/edit", name="organizations_edit")
      * @Route("/cities/{id}/edit", name="cities_edit")
-     * @Route("/linktypes/{id}/edit", name="linktypes_edit")
-     * @Route("/sex/{id}/edit", name="sexes_edit")
+     * @Route("/link-types/{id}/edit", name="linktypes_edit")
+     * @Route("/sexes/{id}/edit", name="sexes_edit")
      * @Route("/position-types/{id}/edit", name="positiontypes_edit")
      * @Route("/organizational-group-types/{id}/edit", name="organizationalgrouptypes_edit")
      *
@@ -703,15 +703,15 @@ class ListController extends Controller
      * @Route("/medical-titles/{id}", name="medicaltitles_update")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_update")
      * @Route("/employment-types/{id}", name="employmenttypes_update")
-     * @Route("/source-organizations/{id}", name="sourceorganizations_update")
+     * @Route("/grant-source-organizations/{id}", name="sourceorganizations_update")
      * @Route("/languages/{id}", name="languages_update")
      * @Route("/locales/{id}", name="locales_update")
-     * @Route("/importances/{id}", name="importances_update")
-     * @Route("/authorshiproles/{id}", name="authorshiproles_update")
-     * @Route("/organizations/{id}", name="organizations_update")
+     * @Route("/ranks-of-importance/{id}", name="importances_update")
+     * @Route("/authorship-roles/{id}", name="authorshiproles_update")
+     * @Route("/lecture-venues/{id}", name="organizations_update")
      * @Route("/cities/{id}", name="cities_update")
-     * @Route("/linktypes/{id}", name="linktypes_update")
-     * @Route("/sex/{id}", name="sexes_update")
+     * @Route("/link-types/{id}", name="linktypes_update")
+     * @Route("/sexes/{id}", name="sexes_update")
      * @Route("/position-types/{id}", name="positiontypes_update")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_update")
      *
@@ -798,7 +798,7 @@ class ListController extends Controller
 
     //////////////////////// Tree //////////////////////////////
     /**
-     * @Route("/institutions-tree-management/", name="institutions-tree-management")
+     * @Route("/institution-tree-management/", name="institutions-tree-management")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Tree:index.html.twig")
      */
@@ -1044,7 +1044,7 @@ class ListController extends Controller
                 break;
             case "sourceorganizations":
                 $className = "SourceOrganization";
-                $displayName = "Source Organizations";
+                $displayName = "Grant Source Organizations (Sponsors)";
                 break;
             case "languages":
                 $className = "LanguageList";
@@ -1056,7 +1056,7 @@ class ListController extends Controller
                 break;
             case "importances":
                 $className = "ImportanceList";
-                $displayName = "Importances";
+                $displayName = "Ranks of Importance";
                 break;
             case "authorshiproles":
                 $className = "AuthorshipRoles";
@@ -1064,7 +1064,7 @@ class ListController extends Controller
                 break;
             case "organizations":
                 $className = "OrganizationList";
-                $displayName = "Organizations (Lecture Institutions)";
+                $displayName = "Lecture Venues";
                 break;
             case "cities":
                 $className = "CityList";
@@ -1076,7 +1076,7 @@ class ListController extends Controller
                 break;
             case "sexes":
                 $className = "SexList";
-                $displayName = "Sex";
+                $displayName = "Sexes";
                 break;
             case "positiontypes":
                 $className = "PositionTypeList";
@@ -1160,15 +1160,15 @@ class ListController extends Controller
      * @Route("/medical-titles/{id}", name="medicaltitles_delete")
      * @Route("/medical-specialties/{id}", name="medicalspecialties_delete")
      * @Route("/employment-types/{id}", name="employmenttypes_delete")
-     * @Route("/source-organizations/{id}", name="sourceorganizations_delete")
+     * @Route("/grant-source-organizations/{id}", name="sourceorganizations_delete")
      * @Route("/languages/{id}", name="languages_delete")
      * @Route("/locales/{id}", name="locales_delete")
-     * @Route("/importances/{id}", name="importances_delete")
-     * @Route("/authorshiproles/{id}", name="authorshiproles_delete")
-     * @Route("/organizations/{id}", name="organizations_delete")
+     * @Route("/ranks-of-importance/{id}", name="importances_delete")
+     * @Route("/authorship-roles/{id}", name="authorshiproles_delete")
+     * @Route("/lecture-venues/{id}", name="organizations_delete")
      * @Route("/cities/{id}", name="cities_delete")
-     * @Route("/linktypes/{id}", name="linktypes_delete")
-     * @Route("/sex/{id}", name="sexes_delete")
+     * @Route("/link-types/{id}", name="linktypes_delete")
+     * @Route("/sexes/{id}", name="sexes_delete")
      * @Route("/position-types/{id}", name="positiontypes_delete")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_delete")
      *

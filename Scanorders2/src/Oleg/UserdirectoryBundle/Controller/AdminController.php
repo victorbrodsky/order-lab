@@ -371,7 +371,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $role => $aliasDescription ) {
 
             $alias = $aliasDescription[0];
@@ -702,7 +702,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $name ) {
 
             $entity = new InstitutionType();
@@ -737,7 +737,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $name=>$level ) {
 
             $entity = new OrganizationalGroupType();
@@ -1191,7 +1191,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $states as $key => $value ) {
 
             $entity = new States();
@@ -1257,7 +1257,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new Countries();
@@ -1394,7 +1394,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $abbreviation=>$name ) {
 
             //$entity = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findOneByAbbreviation($abbreviation);
@@ -1457,7 +1457,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $locale=>$description ) {
 
 //            $entities = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findByName($locale);
@@ -1516,7 +1516,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new BoardCertifiedSpecialties();
@@ -1557,7 +1557,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new SourceSystemList();
@@ -1600,7 +1600,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new DocumentTypeList();
@@ -1637,7 +1637,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new LinkTypeList();
@@ -1670,7 +1670,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new EmploymentType();
@@ -1706,7 +1706,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new EmploymentTerminationType();
@@ -1746,7 +1746,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new EventTypeList();
@@ -1780,7 +1780,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new IdentifierTypeList();
@@ -1831,7 +1831,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new FellowshipTypeList();
@@ -1864,7 +1864,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new ResidencyTrackList();
@@ -1895,7 +1895,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $value = trim($value);
@@ -1947,7 +1947,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $value = trim($value);
@@ -2000,7 +2000,7 @@ class AdminController extends Controller
 
         $username = $this->get('security.context')->getToken()->getUser();
 
-        $count = 1;
+        $count = 10;
         foreach( $elements as $value ) {
 
             $entity = new LocationTypeList();
@@ -2046,7 +2046,7 @@ class AdminController extends Controller
             'Requisition Form Scanner'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             if( $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findOneByName($type) ) {
@@ -2092,7 +2092,7 @@ class AdminController extends Controller
             'Generic Desktop Scanner' => 'Requisition Form Scanner'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $device => $keytype ) {
 
             if( $em->getRepository('OlegUserdirectoryBundle:Equipment')->findOneByName($device) ) {
@@ -2141,7 +2141,7 @@ class AdminController extends Controller
             "Anyone can see this contact information"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new LocationPrivacyList();
@@ -2185,7 +2185,7 @@ class AdminController extends Controller
             "Oncogenic Transcription Factors in Prostate Cancer",
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new ResearchLab();
@@ -2256,7 +2256,7 @@ class AdminController extends Controller
             return $errorMsg;
         }
 
-        $count = 1;
+        $count = 10;
         foreach( $buildings as $building ) {
 
             $name = $building['name'];
@@ -2324,7 +2324,7 @@ class AdminController extends Controller
             return $errorMsg;
         }
 
-        $count = 1;
+        $count = 10;
         foreach( $locations as $location => $attr ) {
 
             if( $em->getRepository('OlegUserdirectoryBundle:Location')->findOneByName($location) ) {
@@ -2501,7 +2501,7 @@ class AdminController extends Controller
             "Transferred"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new CompletionReasonList();
@@ -2536,7 +2536,7 @@ class AdminController extends Controller
             "ClinPsyD", "EdS", "BSN", "DVM", "VMD", "BVS", "BVSc", "BVMS", "MLIS", "MLS", "MSLIS", "BSW"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new TrainingDegreeList();
@@ -2588,7 +2588,7 @@ class AdminController extends Controller
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
-        $count = 1;
+        $count = 10;
         $subcount = 1;
 
         //for each row in excel
@@ -2680,7 +2680,7 @@ class AdminController extends Controller
             "Magna Cum Laude", "Summa Cum Laude", "Cum Laude", "AOA Member"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new HonorTrainingList();
@@ -2728,7 +2728,7 @@ class AdminController extends Controller
             "F.S.T.S." => "Fellow of the Society of Thoracic Surgeons"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $abbr => $name ) {
 
             $listEntity = new FellowshipTitleList();
@@ -2761,7 +2761,7 @@ class AdminController extends Controller
             "National Institutes of Health" => "NIH"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $name => $abbreviation ) {
 
             $listEntity = new SourceOrganization();
@@ -2799,7 +2799,7 @@ class AdminController extends Controller
             "Other"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $name ) {
 
             $listEntity = new ImportanceList();
@@ -2831,7 +2831,7 @@ class AdminController extends Controller
             "Chapter Author"
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $name ) {
 
             $listEntity = new AuthorshipRoles();
@@ -2884,7 +2884,7 @@ class AdminController extends Controller
 //            'Transcriptionist for the Service'
 //        );
 //
-//        $count = 1;
+//        $count = 10;
 //        foreach( $types as $name ) {
 //
 //            $listEntity = new TitlePositionType();
@@ -2918,7 +2918,7 @@ class AdminController extends Controller
             'Unspecified'
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new SexList();
@@ -2968,7 +2968,7 @@ class AdminController extends Controller
             'Transcriptionist of Service',
         );
 
-        $count = 1;
+        $count = 10;
         foreach( $types as $type ) {
 
             $listEntity = new PositionTypeList();

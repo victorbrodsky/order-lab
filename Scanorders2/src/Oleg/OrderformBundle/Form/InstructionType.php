@@ -46,7 +46,7 @@ class InstructionType extends AbstractType
 
 
 //        $builder->add('others', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
+//            'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
 //            'label' => false,
 //			'attr' => array('style'=>'display:none;')
 //        ));
@@ -57,12 +57,12 @@ class InstructionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
+            'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_instructionlisttype';
+        return 'oleg_orderformbundle_instructiontype';
     }
 }

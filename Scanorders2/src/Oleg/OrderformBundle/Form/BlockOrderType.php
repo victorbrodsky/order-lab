@@ -46,10 +46,18 @@ class BlockOrderType extends AbstractType
 //            'label' => false
 //        ));
 
-        $params = array('labelPrefix'=>' for Embedder');
-        $builder->add('instruction', new InstructionType($params), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
-            'label' => false
+//        $params = array('labelPrefix'=>' for Embedder');
+//        $builder->add('instruction', new InstructionType($params), array(
+//            'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
+//            'label' => false
+//        ));
+
+        //EmbedderInstructionList
+        $builder->add('embedderInstruction', 'custom_selector', array(
+            'label' => 'Instructions for Embedder:',
+            'attr' => array('class' => 'ajax-combobox-embedderinstruction', 'type' => 'hidden'),
+            'required'=>true,
+            'classtype' => 'embedderinstruction'
         ));
 
     }

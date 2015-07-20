@@ -72,6 +72,11 @@
             {{ usermacros.grantObject(form,cycle,'user-grants','noprototype',employees_sitename,entity) }}
         {% endif %}
 
+        {% if pathname == 'labtests' %}
+            <div id="form-prototype-data" data-userid = "{{ entity.id }}"></div>
+            {{ formmacros.labtestObject(form,cycle,'user-labtests','noprototype') }}
+        {% endif %}
+
 
         {# Token CSRF #}
         {{ form_widget(form._token) }}

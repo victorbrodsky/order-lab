@@ -28,6 +28,18 @@
             <th>{{ knp_pagination_sortable(entities, 'Institution(s)', 'institutions.abbreviation') }}</th>
         {% endif %}
 
+        {#for grant list#}
+        {% if pathname == 'grants' %}
+            <th>{{ knp_pagination_sortable(entities, 'Grant Source Organization (Sponsor)', 'sourceOrganization.name') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Grant ID Number', 'ent.grantid') }}</th>
+        {% endif %}
+
+        {#for labtest list#}
+        {% if pathname == 'labtests' %}
+            <th>{{ knp_pagination_sortable(entities, 'Laboratory Test ID Type', 'labTestType') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Laboratory Test ID', 'ent.labTestId') }}</th>
+        {% endif %}
+
         {% if entities|first.user is defined %}
             <th>{{ knp_pagination_sortable(entities, 'Employee', 'user.username') }}</th>
         {% endif %}
@@ -39,6 +51,7 @@
         {% if entities|first.synonyms is defined %}
             <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
         {% endif %}
+
 
         <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
         <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
@@ -70,6 +83,24 @@
                         {% for institution in entity.institutions %}
                             <p>{{ entity.institution.abbreviation }}</p>
                         {% endfor %}
+                    </td>
+                {% endif %}
+
+                {% if pathname == 'grants' %}
+                    <td>
+                        {{ entity.sourceOrganization }}
+                    </td>
+                    <td>
+                        {{ entity.grantid }}
+                    </td>
+                {% endif %}
+
+                {% if pathname == 'labtests' %}
+                    <td>
+                        {{ entity.labTestType }}
+                    </td>
+                    <td>
+                        {{ entity.labTestId }}
                     </td>
                 {% endif %}
 

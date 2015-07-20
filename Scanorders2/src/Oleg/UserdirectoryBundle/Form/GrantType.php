@@ -101,7 +101,7 @@ class GrantType extends AbstractType
 
         $builder->add('sourceOrganization', 'employees_custom_selector', array(
             'read_only' => $readonly,
-            'label' => "Source Sponsor Organization:",
+            'label' => "Grant Source Organization (Sponsor):",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-sourceorganization', 'type' => 'hidden'),
             'classtype' => 'sourceorganization'

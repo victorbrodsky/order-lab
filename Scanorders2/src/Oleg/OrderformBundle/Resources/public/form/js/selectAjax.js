@@ -42,6 +42,8 @@ var _proxyuser = new Array();
 //generic select2 fields
 var _labtesttype = new Array();
 
+var _embedderinstruction = new Array();
+
 
 
 //function regularCombobox() {
@@ -102,15 +104,14 @@ function customCombobox() {
         getComboboxAccount(new Array("0","0","0","0","0","0"));
         getComboboxReturnLocations();
 
-        getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
-
-        //parttitle
         //holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force
-        getComboboxGeneric(null,'parttitle',_parttitle,false,null,null,true);
+        getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
+        getComboboxGeneric(null,'parttitle',_parttitle,false,null,'scan',true);
+        getComboboxGeneric(null,'embedderinstruction',_embedderinstruction,false,null,'scan');
     }
 
     //scan
-    getComboboxGeneric(null,'labtesttype',_labtesttype,false);
+    getComboboxGeneric(null,'labtesttype',_labtesttype,false,null,'scan');
 
 }
 

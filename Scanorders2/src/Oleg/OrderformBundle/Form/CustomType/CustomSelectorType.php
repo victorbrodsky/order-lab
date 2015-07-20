@@ -88,9 +88,18 @@ class CustomSelectorType extends AbstractType {
             case "userWrapper":
                 $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
                 break;
-
             case "parttitle":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'ParttitleList', 'OrderformBundle');
+                break;
+            case "embedderinstruction":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'EmbedderInstructionList', 'OrderformBundle');
+                break;
+
+            case "labtesttype":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'LabTestType', 'OrderformBundle');
+                break;
+            case "labtesttitle":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'labTestTitle', 'OrderformBundle');
                 break;
 
 //            case "returnSlide":

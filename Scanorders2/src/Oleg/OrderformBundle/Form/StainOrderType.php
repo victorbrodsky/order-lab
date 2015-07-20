@@ -36,7 +36,7 @@ class StainOrderType extends AbstractType
 
         $params = array('labelPrefix'=>' for Histotechnologist');
         $builder->add('instruction', new InstructionType($params), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
+            'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
             'label' => false
         ));
 
