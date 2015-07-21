@@ -36,7 +36,7 @@ class LabTestType extends AbstractType
         $builder->add('labTestType', 'custom_selector', array(
             'label' => "Laboratory Test ID Type:",
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-labtesttype', 'type' => 'hidden'),
+            'attr' => array('class' => 'ajax-combobox-labtesttype', 'type' => 'hidden'),
             'classtype' => 'labtesttype'
         ));
 
@@ -46,13 +46,11 @@ class LabTestType extends AbstractType
             'attr' => array('class'=>'form-control'),
         ));
 
-        $builder->add('labTestTitle', 'custom_selector', array(
-            'label' => "Laboratory Test Title:",
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-labtesttitle', 'type' => 'hidden'),
-            'classtype' => 'labtesttitle'
+        $builder->add('name', null, array(
+            'required'=>false,
+            'label'=>"Laboratory Test Title:",
+            'attr' => array('class'=>'form-control'),
         ));
-
 
 
         //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page

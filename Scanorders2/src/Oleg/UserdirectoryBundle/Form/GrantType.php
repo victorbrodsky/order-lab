@@ -153,7 +153,7 @@ class GrantType extends AbstractType
 
                 $form->add('name', 'employees_custom_selector', array(
                     'read_only' => ($grant && $grant->getId() ? true : false),
-                    'label' => "Research Lab Title:",
+                    'label' => "Grant Title:",
                     'required' => false,
                     'attr' => array('class' => 'combobox combobox-width ajax-combobox-grant', 'type' => 'hidden'),
                     'classtype' => 'grant'

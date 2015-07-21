@@ -3,6 +3,7 @@
 {% macro checkbox( value ) %}
     <p>
     <div class="row">
+        {{ form_errors(value) }}
         <div class="col-xs-6" align="right">
             {{ form_label(value) }}
         </div>
@@ -784,15 +785,6 @@
                         {% endif %}
 
                         {% if message.laborder is defined and message.laborder.vars.value %}
-                            {#{% if message.laborder.labTest.labTestType is defined %}#}
-                                {#{{ formmacros.field( message.laborder.labTest.labTestType ) }}#}
-                            {#{% endif %}#}
-                            {#{% if message.laborder.labTest.labTestId is defined %}#}
-                                {#{{ formmacros.field( message.laborder.labTest.labTestId ) }}#}
-                            {#{% endif %}#}
-                            {#{% if message.laborder.labTest.labTestTitle is defined %}#}
-                                {#{{ formmacros.field( message.laborder.labTest.labTestTitle ) }}#}
-                            {#{% endif %}#}
                             {{ formmacros.labtestObject(message.laborder.labTest,cycle,'user-labtests','noprototype') }}
                         {% endif %}
 
@@ -2709,7 +2701,7 @@
 
         {{ formmacros.field(formfield.labTestId) }}
 
-        {{ formmacros.field(formfield.labTestTitle) }}
+        {{ formmacros.field(formfield.name) }}
 
     {% if standAloneObject %}
         </div>
@@ -2720,7 +2712,7 @@
         {{ usermacros.listProperties(formfield) }}
     {% endif %}
 
-    {% do formfield.setRendered %}
+    {#{% do formfield.setRendered %}#}
 
 {% endmacro %}
 

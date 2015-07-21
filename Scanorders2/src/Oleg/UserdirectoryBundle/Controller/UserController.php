@@ -1272,9 +1272,6 @@ class UserController extends Controller
             $user->setUniqueUsername();
 
             //set parents for institution tree for Administrative and Academical Titles
-            $this->setParentsForInstitutionTree($user);
-
-            //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($user);
 
             //set parents for residencySpecialty tree for Trainings

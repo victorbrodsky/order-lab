@@ -40,9 +40,9 @@ class ComplexListController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        return $this->getList($request);
+        return $this->getList($request,$this->container->getParameter('employees.sitename'));
     }
-    public function getList($request) {
+    public function getList($request,$sitename) {
 
         $routeName = $request->get('_route');
 
@@ -121,7 +121,8 @@ class ComplexListController extends Controller
             'entities' => $entities,
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
-            'pathname' => $mapper['pathname']
+            'pathname' => $mapper['pathname'],
+            'sitename' => $sitename
         );
     }
 
@@ -142,14 +143,9 @@ class ComplexListController extends Controller
      *
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
+     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function showListAction(Request $request, $id)
-    {
-
-        return $this->showList($request,$id);
-    }
-    public function showList(Request $request, $id)
     {
 
         $routeName = $request->get('_route');
@@ -161,9 +157,16 @@ class ComplexListController extends Controller
             $routeName == "employees_grants_pathaction_edit_standalone"
         ) {
             if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-                return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+                return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
             }
         }
+
+        return $this->showList($request,$id,$this->container->getParameter('employees.sitename'));
+    }
+    public function showList(Request $request, $id, $sitename)
+    {
+
+        $routeName = $request->get('_route');
 
         $mapper = $this->classListMapper($routeName);
 
@@ -179,7 +182,7 @@ class ComplexListController extends Controller
             $entity->createAttachmentDocument();
         }
 
-        $form = $this->createCreateForm($entity,$cycle,$mapper);
+        $form = $this->createCreateForm($entity,$cycle,$mapper,$sitename);
 
         return array(
             'entity' => $entity,
@@ -188,7 +191,8 @@ class ComplexListController extends Controller
             'id' => $entity->getId(),
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
-            'pathname' => $mapper['pathname']
+            'pathname' => $mapper['pathname'],
+            'sitename' => $sitename
         );
     }
 
@@ -200,18 +204,18 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/new", name="employees_grants_pathaction_new_standalone")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
+     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function newListAction(Request $request)
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        return $this->newList($request);
+        return $this->newList($request,$this->container->getParameter('employees.sitename'));
     }
-    public function newList(Request $request)
+    public function newList(Request $request, $sitename)
     {
 
         $routeName = $request->get('_route');
@@ -226,7 +230,7 @@ class ComplexListController extends Controller
 
         $entity = new $entityClass($user);
 
-        $form = $this->createCreateForm($entity,$cycle,$mapper);
+        $form = $this->createCreateForm($entity,$cycle,$mapper,$sitename);
 
         return array(
             'entity' => $entity,
@@ -235,7 +239,8 @@ class ComplexListController extends Controller
             'id' => '',
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
-            'pathname' => $mapper['pathname']
+            'pathname' => $mapper['pathname'],
+            'sitename' => $sitename
         );
     }
 
@@ -247,23 +252,19 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/new", name="employees_grants_pathaction_new_post_standalone")
      *
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
+     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function createListAction( Request $request )
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        return $this->createList($request);
+        return $this->createList($request,$this->container->getParameter('employees.sitename'));
     }
-    public function createList( Request $request )
+    public function createList( Request $request, $sitename )
     {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
-        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -279,7 +280,7 @@ class ComplexListController extends Controller
 
         $entity = new $entityClass($user);
 
-        $form = $this->createCreateForm($entity,$cycle,$mapper);
+        $form = $this->createCreateForm($entity,$cycle,$mapper,$sitename);
 
         $form->handleRequest($request);
 
@@ -290,6 +291,13 @@ class ComplexListController extends Controller
 //        echo "<br>";
 //        echo "creator=".$entity->getCreator()."<br>";
 //        exit();
+
+//        if( $form->isValid() ) {
+//            exit("ok complex for classname ".$entityClass."<br>");
+//        } else {
+//            echo "labtest name=".$entity->getName()."<br>";
+//            //exit("error complex for classname ".$entityClass."<br>");
+//        }
 
         if( $form->isValid() ) {
 
@@ -338,10 +346,10 @@ class ComplexListController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('employees_'.$mapper['pathname'].'_pathaction_show_standalone', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl($sitename.'_'.$mapper['pathname'].'_pathaction_show_standalone', array('id' => $entity->getId())));
         }
 
-        //echo "error loc <br>";
+        //echo "error complex for classname ".$entityClass."<br>";
 
         return array(
             'entity' => $entity,
@@ -350,7 +358,8 @@ class ComplexListController extends Controller
             'id' => '',
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
-            'pathname' => $mapper['pathname']
+            'pathname' => $mapper['pathname'],
+            'sitename' => $sitename
         );
     }
 
@@ -362,23 +371,19 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/update/{id}", name="employees_grants_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      *
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
+     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function updateListAction( Request $request, $id )
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        return $this->updateList($request,$id);
+        return $this->updateList($request,$id,$this->container->getParameter('employees.sitename'));
     }
-    public function updateList( Request $request, $id )
+    public function updateList( Request $request, $id, $sitename )
     {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
-        }
 
         $routeName = $request->get('_route');
         $mapper = $this->classListMapper($routeName);
@@ -392,7 +397,7 @@ class ComplexListController extends Controller
         //update author can be set to any user, not a current user
         $entity->setUpdateAuthor(null);
 
-        $form = $this->createCreateForm($entity,$cycle,$mapper);
+        $form = $this->createCreateForm($entity,$cycle,$mapper,$sitename);
 
         $form->handleRequest($request);
 
@@ -456,7 +461,7 @@ class ComplexListController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('employees_'.$mapper['pathname'].'_pathaction_show_standalone', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl($sitename.'_'.$mapper['pathname'].'_pathaction_show_standalone', array('id' => $entity->getId())));
         }
 
         //echo "error loc <br>";
@@ -468,13 +473,14 @@ class ComplexListController extends Controller
             'id' => '',
             'singleName' => $mapper['singleName'],
             'displayName' => "List of ".$mapper['displayName'],
-            'pathname' => $mapper['pathname']
+            'pathname' => $mapper['pathname'],
+            'sitename' => $sitename
         );
     }
 
 
 
-    public function createCreateForm($entity,$cycle,$mapper) {
+    public function createCreateForm($entity,$cycle,$mapper,$sitename) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -484,13 +490,13 @@ class ComplexListController extends Controller
         //echo "cycle=".$cycle."<br>";
         //echo "formType=".$mapper['fullFormType']."<br>";
 
-        $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.$cycle;
+        $path = $sitename.'_'.$mapper['pathname'].'_pathaction_'.$cycle;
 
         //create new page
         if( $cycle == "new_standalone" ) {
             //on a new page show a form with method=POST and action=create_post_standalone
             $method = "POST";
-            $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.'new_post_standalone';
+            $path = $sitename.'_'.$mapper['pathname'].'_pathaction_'.'new_post_standalone';
             $action = $this->generateUrl($path);
         }
 
@@ -511,7 +517,7 @@ class ComplexListController extends Controller
         if( $cycle == "edit_standalone" ) {
             //on a edit page show a form with method=PUT and action=edit_put_standalone
             $method = "PUT";
-            $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.'edit_put_standalone';
+            $path = $sitename.'_'.$mapper['pathname'].'_pathaction_'.'edit_put_standalone';
             $action = $this->generateUrl($path, array('id' => $entity->getId()));
         }
 
@@ -574,13 +580,6 @@ class ComplexListController extends Controller
                 $singleName = "Grant";
                 $formType = "GrantType";
                 break;
-//            case "labtests":
-//                $className = "LabTest";
-//                $displayName = "Laboratory Tests";
-//                $singleName = "Laboratory Test";
-//                $formType = "LabTestType";
-//                $bundleName = "OrderformBundle";
-//                break;
             default:
                 $className = null;
                 $displayName = null;

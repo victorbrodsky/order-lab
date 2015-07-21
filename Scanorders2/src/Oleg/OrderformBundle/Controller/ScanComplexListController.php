@@ -27,160 +27,107 @@ class ScanComplexListController extends ComplexListController
 
 
     /**
-     * @Route("/list/laboratoty-tests/", name="employees_labtests_pathaction_list")
+     * @Route("/list/laboratoty-tests/", name="scan_labtests_pathaction_list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ComplexList:index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->getList($request);
+        return $this->getList($request,$this->container->getParameter('scan.sitename'));
     }
 
 
 
 
     /**
-     * @Route("/laboratory-tests/show/{id}", name="employees_labtests_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/admin/laboratory-tests/edit/{id}", name="employees_labtests_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/laboratory-tests/show/{id}", name="scan_labtests_pathaction_show_standalone", requirements={"id" = "\d+"})
+     * @Route("/admin/laboratory-tests/edit/{id}", name="scan_labtests_pathaction_edit_standalone", requirements={"id" = "\d+"})
      *
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
+     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function showListAction(Request $request, $id)
     {
 
-        return $this->showList($request,$id);
+        $routeName = $request->get('_route');
+
+        if(
+            $routeName == $this->container->getParameter('scan.sitename')."_labtests_pathaction_edit_standalone"
+        ) {
+            if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+                return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            }
+        }
+
+        return $this->showList($request,$id,$this->container->getParameter('scan.sitename'));
     }
 
 
     /**
-     * @Route("/admin/laboratory-tests/new", name="employees_labtests_pathaction_new_standalone")
+     * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_standalone")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
+     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function newListAction(Request $request)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->newList($request);
+        return $this->newList($request,$this->container->getParameter('scan.sitename'));
     }
 
 
     /**
-     * @Route("/admin/laboratory-tests/new", name="employees_labtests_pathaction_new_post_standalone")
+     * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_post_standalone")
      *
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
+     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function createListAction( Request $request )
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->createList($request);
+        return $this->createList($request,$this->container->getParameter('scan.sitename'));
     }
 
 
     /**
-     * @Route("/admin/laboratory-tests/{id}", name="employees_labtests_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * @Route("/admin/laboratory-tests/{id}", name="scan_labtests_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      *
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:ComplexList:list.html.twig")
+     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function updateListAction( Request $request, $id )
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->updateList($request,$id);
+        return $this->updateList($request,$id,$this->container->getParameter('scan.sitename'));
     }
 
 
-
-    public function createCreateForm($entity,$cycle,$mapper) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $disabled = false;
-        $method = null;
-
-        //echo "cycle=".$cycle."<br>";
-        //echo "formType=".$mapper['fullFormType']."<br>";
-
-        $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.$cycle;
-
-        //create new page
-        if( $cycle == "new_standalone" ) {
-            //on a new page show a form with method=POST and action=create_post_standalone
-            $method = "POST";
-            $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.'new_post_standalone';
-            $action = $this->generateUrl($path);
-        }
-
-        //create: submit action
-        if( $cycle == "new_post_standalone" ) {
-            $method = "POST";
-            $action = $this->generateUrl($path);
-        }
-
-        //show existing page
-        if( $cycle == "show_standalone" ) {
-            $method = "GET";
-            $action = $this->generateUrl($path, array('id' => $entity->getId()));
-            $disabled = true;
-        }
-
-        //edit existing page
-        if( $cycle == "edit_standalone" ) {
-            //on a edit page show a form with method=PUT and action=edit_put_standalone
-            $method = "PUT";
-            $path = $this->container->getParameter('employees.sitename').'_'.$mapper['pathname'].'_pathaction_'.'edit_put_standalone';
-            $action = $this->generateUrl($path, array('id' => $entity->getId()));
-        }
-
-        //edit: submit action
-        if( $cycle == "edit_put_standalone" ) {
-            $method = "PUT";
-            $action = $this->generateUrl($path, array('id' => $entity->getId()));
-        }
-
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $isAdmin = $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR');
-
-        $params = array('read_only'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cycle'=>$cycle,'em'=>$em,'user'=>$user);
-
-        $form = $this->createForm(new $mapper['fullFormType']($params,$entity), $entity, array(
-            'disabled' => $disabled,
-            'action' => $action,
-            'method' => $method,
-        ));
-
-
-        return $form;
-    }
 
 
 
     public function classListMapper( $route ) {
 
-        //$route = employees_locations_pathaction_list
+        //$route = scan_locations_pathaction_list
         $pieces = explode("_pathaction_", $route);
-        $name = str_replace("employees_","",$pieces[0]);
+        $name = str_replace("scan_","",$pieces[0]);
         $cycle = $pieces[1];
         $bundlePrefix = "Oleg";
         $bundleName = "UserdirectoryBundle";

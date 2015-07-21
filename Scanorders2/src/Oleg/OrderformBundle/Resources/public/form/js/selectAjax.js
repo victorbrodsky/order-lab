@@ -22,27 +22,27 @@ var proxyuser_id = $("#proxyuser_id").val();
 //console.log("urlCommon="+urlCommon);
 var messageid = $(".message-id").val();
 
-var _mrntype = new Array();
-var _accessiontype = new Array();
-var _partname = new Array();
-var _parttitle = new Array();
-var _blockname = new Array();
-var _stain = new Array();
-var _scanregion = new Array();
-var _procedure = new Array();
-var _organ = new Array();
-var _delivery = new Array();
-var _returnLocation = new Array();
-var _projectTitle = new Array();
-var _courseTitle = new Array();
-var _account = new Array();
-var _urgency = new Array();
-var _proxyuser = new Array();
+var _mrntype = [];
+var _accessiontype = [];
+var _partname = [];
+var _parttitle = [];
+var _blockname = [];
+var _stain = [];
+var _scanregion = [];
+var _procedure = [];
+var _organ = [];
+var _delivery = [];
+var _returnLocation = [];
+var _projectTitle = [];
+var _courseTitle = [];
+var _account = [];
+var _urgency = [];
+var _proxyuser = [];
 
 //generic select2 fields
-var _labtesttype = new Array();
+var _labtesttype = [];
 
-var _embedderinstruction = new Array();
+var _embedderinstruction = [];
 
 
 
@@ -86,22 +86,22 @@ function customCombobox() {
     //console.log("cycle="+cycle);
 
     if( cycle && urlBase && cycle != 'edit_user' && cycle != 'accountreq' ) {
-        getComboboxMrnType(new Array("0","0","0","0","0","0"));
-        getComboboxAccessionType(new Array("0","0","0","0","0","0"));
-        getComboboxPartname(new Array("0","0","0","0","0","0"));
-        getComboboxBlockname(new Array("0","0","0","0","0","0"));
-        getComboboxScanregion(new Array("0","0","0","0","0","0"));
-        getComboboxStain(new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(new Array("0","0","0","0","0","0"),true);
-        getComboboxProcedure(new Array("0","0","0","0","0","0"));
-        getComboboxOrgan(new Array("0","0","0","0","0","0"));
-        getComboboxDelivery(new Array("0","0","0","0","0","0"));
+        getComboboxMrnType();
+        getComboboxAccessionType();
+        getComboboxPartname();
+        getComboboxBlockname();
+        getComboboxScanregion();
+        getComboboxStain();
+        getComboboxSpecialStain(["0","0","0","0","0","0"],true);
+        getComboboxProcedure();
+        getComboboxOrgan();
+        getComboboxDelivery();
         //getComboboxReturn(new Array("0","0","0","0","0","0"));
-        slideType(new Array("0","0","0","0","0","0"));
-        getProjectTitle(new Array("0","0","0","0","0","0"));
-        getCourseTitle(new Array("0","0","0","0","0","0"));
+        slideType(["0","0","0","0","0","0"]);
+        getProjectTitle();
+        getCourseTitle();
 
-        getComboboxAccount(new Array("0","0","0","0","0","0"));
+        getComboboxAccount();
         getComboboxReturnLocations();
 
         //holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force
@@ -110,7 +110,6 @@ function customCombobox() {
         getComboboxGeneric(null,'embedderinstruction',_embedderinstruction,false,null,'scan');
     }
 
-    //scan
     getComboboxGeneric(null,'labtesttype',_labtesttype,false,null,'scan');
 
 }
@@ -149,7 +148,7 @@ function customCombobox() {
 
 
 //#############  stains  ##############//
-function getComboboxStain(ids,holder) {
+function getComboboxStain(holder) {
 
     var url = getCommonBaseUrl("util/"+"stain");
 
@@ -160,6 +159,10 @@ function getComboboxStain(ids,holder) {
     var targetid = ".ajax-combobox-stain";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     //console.log("_stain.length="+_stain.length);
@@ -206,6 +209,10 @@ function getComboboxSpecialStain(ids, preset, setId) {
         //console.log("targetid="+targetid);
     }
 
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
     if( _stain.length == 0 ) {
         //console.log("_stain.length is zero");
         $.ajax({
@@ -228,7 +235,7 @@ function getComboboxSpecialStain(ids, preset, setId) {
 }
 
 //#############  scan regions  ##############//
-function getComboboxScanregion(ids,holder) {
+function getComboboxScanregion(holder) {
 
     var url = getCommonBaseUrl("util/"+"scanregion"); //urlCommon+"scanregion";
     //console.log("scanregion.length="+scanregion.length);
@@ -236,6 +243,10 @@ function getComboboxScanregion(ids,holder) {
     var targetid = ".ajax-combobox-scanregion";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
@@ -265,12 +276,16 @@ function getComboboxScanregion(ids,holder) {
 }
 
 //#############  source organs  ##############//
-function getComboboxOrgan(ids,holder) {
+function getComboboxOrgan(holder) {
     var url = getCommonBaseUrl("util/"+"organ");   //urlCommon+"organ";
 
     var targetid = ".ajax-combobox-organ";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     if( cycle == "new" || cycle == "create" ) {
@@ -294,12 +309,16 @@ function getComboboxOrgan(ids,holder) {
 
 
 //#############  procedure types  ##############//
-function getComboboxProcedure(ids,holder) {
+function getComboboxProcedure(holder) {
     var url = getCommonBaseUrl("util/"+"procedure"); //urlCommon+"procedure";
 
     var targetid = ".ajax-combobox-procedure";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     if( cycle == "new" || cycle == "create" ) {
@@ -322,13 +341,17 @@ function getComboboxProcedure(ids,holder) {
 }
 
 //#############  Accession Type  ##############//
-function getComboboxAccessionType(ids,holder) {
+function getComboboxAccessionType(holder) {
 
     var url = getCommonBaseUrl("util/"+"accessiontype");    //urlCommon+"accessiontype";
 
     var targetid = ".accessiontype-combobox";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     if( cycle == "new" || cycle == "create" ) {
@@ -360,13 +383,17 @@ function getComboboxAccessionType(ids,holder) {
 }
 
 //#############  Mrn Type  ##############//
-function getComboboxMrnType(ids,holder) {
+function getComboboxMrnType(holder) {
 
     var url = getCommonBaseUrl("util/"+"mrntype");    //urlCommon+"mrntype";
 
     var targetid = ".mrntype-combobox";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     if( cycle == "new" || cycle == "create" ) {
@@ -398,7 +425,7 @@ function getComboboxMrnType(ids,holder) {
 }
 
 //#############  partname types  ##############//
-function getComboboxPartname(ids,holder) {
+function getComboboxPartname(holder) {
 
     var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
@@ -412,6 +439,10 @@ function getComboboxPartname(ids,holder) {
     }
     //console.log("part targetid="+targetid);
     //console.log("cycle="+cycle);
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+messageid;
@@ -451,7 +482,7 @@ function getComboboxPartname(ids,holder) {
 //}
 
 //#############  blockname types  ##############//
-function getComboboxBlockname(ids,holder) {
+function getComboboxBlockname(holder) {
 
     var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
@@ -463,6 +494,10 @@ function getComboboxBlockname(ids,holder) {
         targetid = holder.find(targetid);
     }
     //console.log("block targetid="+targetid);
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+messageid;
@@ -484,11 +519,18 @@ function getComboboxBlockname(ids,holder) {
 }
 
 //#############  slide delivery  ##############//
-function getComboboxDelivery(ids) {
+function getComboboxDelivery(holder) {
     //var uid = "";   //'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
 //    var id= "#oleg_orderformbundle_messagetype_";
     var url = getCommonBaseUrl("util/"+"delivery");    //urlCommon+"delivery";
-    var target = ".ajax-combobox-delivery";
+    var targetid = ".ajax-combobox-delivery";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
         url = url + "?opt="+messageid;
@@ -504,13 +546,13 @@ function getComboboxDelivery(ids) {
                 _delivery = data;
             populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
             if( cycle == "new"  ) {
-                setElementToId( target, _delivery );
+                setElementToId( targetid, _delivery );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
         if( cycle == "new"  ) {
-            setElementToId( target, _delivery );
+            setElementToId( targetid, _delivery );
         }
     }
 
@@ -518,13 +560,17 @@ function getComboboxDelivery(ids) {
 
 
 //#############  Research Project  ##############//
-function getProjectTitle(ids,holder) {
+function getProjectTitle(holder) {
 
     var url = getCommonBaseUrl("util/"+"projecttitle");  //urlCommon+"projecttitle";
 
     var targetid = ".combobox-research-projectTitle";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
@@ -561,6 +607,10 @@ function getSetTitle() {
     var targetid = ".combobox-research-setTitle";
     var url = getCommonBaseUrl("util/"+"settitle"); //urlCommon+"settitle";
 
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
     //get ProjectTitle value and process children fields (readonly: true or false)
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, false );
     if( idInArr < 0 ) {
@@ -591,13 +641,17 @@ function getSetTitle() {
 
 
 //#############  Educational Course  ##############//
-function getCourseTitle(ids,holder) {
+function getCourseTitle(holder) {
 
     var url = getCommonBaseUrl("util/"+"coursetitle"); //urlCommon+"coursetitle";
 
     var targetid = ".combobox-educational-courseTitle";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
@@ -631,6 +685,10 @@ function getCourseTitle(ids,holder) {
 function getLessonTitle() {
 
     var targetid = ".combobox-educational-lessonTitle";
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
     var url = getCommonBaseUrl("util/"+"lessontitle");  //urlCommon+"lessontitle";
 
     //get CourseTitle value and process children fields (readonly: true or false)
@@ -662,6 +720,10 @@ function getLessonTitle() {
 function getOptionalUserResearch() {
 
     var targetid = ".combobox-optionaluser-research";
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
     var url = getCommonBaseUrl("util/"+"optionaluserresearch"); //urlCommon+"optionaluserresearch";
 
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, true );
@@ -700,6 +762,10 @@ function getOptionalUserResearch() {
 function getOptionalUserEducational() {
 
     var targetid = ".combobox-optionaluser-educational";
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
     var url = getCommonBaseUrl("util/"+"optionalusereducational"); //urlCommon+"optionalusereducational";
 
     var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, true );
@@ -735,6 +801,15 @@ function getOptionalUserEducational() {
 }
 
 function getParentSelectId( ptarget, pArr, target, multiple ) {
+
+    if( $(ptarget).length == 0 ) {
+        return;
+    }
+
+    if( $(target).length == 0 ) {
+        return;
+    }
+
     //get ProjectTitle value
     var parentVal = $(ptarget).select2('val');
     //console.log("parentVal="+parentVal);
@@ -767,13 +842,17 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 
 
 //#############  account  ##############//
-function getComboboxAccount(ids,holder) {
+function getComboboxAccount(holder) {
 
     var url = getCommonBaseUrl("util/"+"account");  //urlCommon+"account";
 
     var targetid = ".ajax-combobox-account";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
+
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
@@ -800,15 +879,12 @@ function getComboboxReturnLocations(holder) {
 
     var targetid = ".ajax-combobox-location";
 
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
+    }
 
-        if( targetid.length == 0 )
-            return;
+    if( $(targetid).length == 0 ) {
+        return;
     }
 
     var url = getCommonBaseUrl("util/"+"returnlocation"+"?providerid="+user_id+"&proxyid="+proxyuser_id);
@@ -830,6 +906,11 @@ function getComboboxReturnLocations(holder) {
 
 function getUrgency() {
 
+    var targetid = ".ajax-combobox-urgency";
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
     var url = getCommonBaseUrl("util/"+"urgency");  //urlCommon+"urgency";
 
     if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
@@ -844,15 +925,15 @@ function getUrgency() {
             async: asyncflag
         }).success(function(data) {
             _urgency = data;
-            populateSelectCombobox( ".ajax-combobox-urgency", _urgency, null );
+            populateSelectCombobox( targetid, _urgency, null );
             if( cycle == "new"  ) {
-                setElementToId( ".ajax-combobox-urgency", _urgency );
+                setElementToId( targetid, _urgency );
             }
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-urgency", _urgency, null );
+        populateSelectCombobox( targetid, _urgency, null );
         if( cycle == "new"  ) {
-            setElementToId( ".ajax-combobox-urgency", _urgency );
+            setElementToId( targetid, _urgency );
         }
     }
 
@@ -866,16 +947,16 @@ function initComboboxJs(ids, holder) {
 
         cycle = 'new';
 
-        getComboboxMrnType(ids,holder);
-        getComboboxAccessionType(ids,holder);
-        getComboboxPartname(ids,holder);
-        getComboboxBlockname(ids,holder);
-        getComboboxProcedure(ids,holder);
-        getComboboxOrgan(ids,holder);
+        getComboboxMrnType(holder);
+        getComboboxAccessionType(holder);
+        getComboboxPartname(holder);
+        getComboboxBlockname(holder);
+        getComboboxProcedure(holder);
+        getComboboxOrgan(holder);
 
         //slide
-        getComboboxStain(ids,holder);
-        getComboboxScanregion(ids,holder);
+        getComboboxStain(holder);
+        getComboboxScanregion(holder);
 
         slideType(ids);
 
@@ -883,9 +964,9 @@ function initComboboxJs(ids, holder) {
         getComboboxSpecialStain(ids,true);
 
         //order
-        getProjectTitle(ids,holder);
-        getCourseTitle(ids,holder);
-        getComboboxAccount(ids,holder);
+        getProjectTitle(holder);
+        getCourseTitle(holder);
+        getComboboxAccount(holder);
         getComboboxReturnLocations(holder);
     }
 }

@@ -388,19 +388,29 @@ class AdminController extends Controller
             $entity->setAlias( trim($alias) );
             $entity->setDescription( trim($description) );
 
+            $attrName = "Call Pager";
+
             //set attributes for ROLE_SCANORDER_ONCALL_TRAINEE
             if( $role == "ROLE_SCANORDER_ONCALL_TRAINEE" ) {
-                $attr = new RoleAttributeList();
-                $this->setDefaultList($attr,1,$username,"Call Pager");
-                $attr->setValue("(111) 111-1111");
-                $entity->addAttribute($attr);
+                $attrValue = "(111) 111-1111";
+                $attrs = $em->getRepository('OlegUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
+                if( count($attrs) == 0 ) {
+                    $attr = new RoleAttributeList();
+                    $this->setDefaultList($attr,1,$username,$attrName);
+                    $attr->setValue($attrValue);
+                    $entity->addAttribute($attr);
+                }
             }
             //set attributes for ROLE_SCANORDER_ONCALL_ATTENDING
             if( $role == "ROLE_SCANORDER_ONCALL_ATTENDING" ) {
-                $attr = new RoleAttributeList();
-                $this->setDefaultList($attr,10,$username,"Call Pager");
-                $attr->setValue("(222) 222-2222");
-                $entity->addAttribute($attr);
+                $attrValue = "(222) 222-2222";
+                $attrs = $em->getRepository('OlegUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
+                if( count($attrs) == 0 ) {
+                    $attr = new RoleAttributeList();
+                    $this->setDefaultList($attr,10,$username,$attrName);
+                    $attr->setValue($attrValue);
+                    $entity->addAttribute($attr);
+                }
             }
 
             $em->persist($entity);

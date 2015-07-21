@@ -1,4 +1,9 @@
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% else %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% endif %}
+{% extends extendStr%}
 
 
 {% block title %}
@@ -68,7 +73,7 @@
 
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path(employees_sitename~'_'~pathname~'_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td><a href="{{ path(sitename~'_'~pathname~'_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.abbreviation }}</td>
                 <td>{{ entity.shortname }}</td>
@@ -132,14 +137,14 @@
                 <td>{{ entity.orderinlist }}</td>
 
                 <td class="rowlink-skip">
-                    <a href="{{ path('employees_showuser', { 'id': entity.creator.id }) }}">{{ entity.creator.getUsernameOptimal() }}</a>
+                    <a href="{{ path(sitename~'_showuser', { 'id': entity.creator.id }) }}">{{ entity.creator.getUsernameOptimal() }}</a>
                 </td>
                 {#<td>{{ entity.creator.getUsernameOptimal() }}</td>#}
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
                 <td class="rowlink-skip">
                     {% if entity.updatedby is defined and entity.updatedby %}
-                        <a href="{{ path('employees_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby.getUsernameOptimal() }}</a>
+                        <a href="{{ path(sitename~'_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby.getUsernameOptimal() }}</a>
                     {% endif %}
                 </td>
 
@@ -159,7 +164,7 @@
         {{ knp_pagination_render(entities) }}
     </div>
 
-    <a href="{{ path(employees_sitename~'_'~pathname~'_pathaction_new_standalone') }}">
+    <a href="{{ path(sitename~'_'~pathname~'_pathaction_new_standalone') }}">
         Create a new entry
     </a>
 

@@ -56,8 +56,7 @@ class ScanListController extends ListController
      * @Route("/image-analysis-algorithms/", name="imageanalysisalgorithm-list")
      * @Route("/disease-types/", name="diseasetypes-list")
      * @Route("/disease-origins/", name="diseaseorigins-list")
-     * @Route("/laboratory-tests/", name="labtesttype-list")
-     * @Route("/laboratory-titles/", name="labtesttitle-list")
+     * @Route("/laboratory-test-id-types/", name="labtesttype-list")
      * @Route("/part-titles/", name="parttitle-list")
      *
      * @Method("GET")
@@ -108,8 +107,7 @@ class ScanListController extends ListController
      * @Route("/image-analysis-algorithms/", name="imageanalysisalgorithm_create")
      * @Route("/disease-types/", name="diseasetypes_create")
      * @Route("/disease-origins/", name="diseaseorigins_create")
-     * @Route("/laboratory-tests/", name="labtesttype_create")
-     * @Route("/laboratory-titles/", name="labtesttitle_create")
+     * @Route("/laboratory-test-id-types/", name="labtesttype_create")
      * @Route("/part-titles/", name="parttitle_create")
      *
      * @Method("POST")
@@ -160,8 +158,7 @@ class ScanListController extends ListController
      * @Route("/image-analysis-algorithms/new", name="imageanalysisalgorithm_new")
      * @Route("/disease-types/new", name="diseasetypes_new")
      * @Route("/disease-origins/new", name="diseaseorigins_new")
-     * @Route("/laboratory-tests/new", name="labtesttype_new")
-     * @Route("/laboratory-titles/new", name="labtesttitle_new")
+     * @Route("/laboratory-test-id-types/new", name="labtesttype_new")
      * @Route("/part-titles/new", name="parttitle_new")
      *
      * @Method("GET")
@@ -212,8 +209,7 @@ class ScanListController extends ListController
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_show")
      * @Route("/disease-types/{id}", name="diseasetypes_show")
      * @Route("/disease-origins/{id}", name="diseaseorigins_show")
-     * @Route("/laboratory-tests/{id}", name="labtesttype_show")
-     * @Route("/laboratory-titles/{id}", name="labtesttitle_show")
+     * @Route("/laboratory-test-id-types/{id}", name="labtesttype_show")
      * @Route("/part-titles/{id}", name="parttitle_show")
      *
      * @Method("GET")
@@ -264,8 +260,7 @@ class ScanListController extends ListController
      * @Route("/image-analysis-algorithms/{id}/edit", name="imageanalysisalgorithm_edit")
      * @Route("/disease-types/{id}/edit", name="diseasetypes_edit")
      * @Route("/disease-origins/{id}/edit", name="diseaseorigins_edit")
-     * @Route("/laboratory-tests/{id}/edit", name="labtesttype_edit")
-     * @Route("/laboratory-titles/{id}/edit", name="labtesttitle_edit")
+     * @Route("/laboratory-test-id-types/{id}/edit", name="labtesttype_edit")
      * @Route("/part-titles/{id}/edit", name="parttitle_edit")
      *
      * @Method("GET")
@@ -316,8 +311,7 @@ class ScanListController extends ListController
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_update")
      * @Route("/disease-types/{id}", name="diseasetypes_update")
      * @Route("/disease-origins/{id}", name="diseaseorigins_update")
-     * @Route("/laboratory-tests/{id}", name="labtesttype_update")
-     * @Route("/laboratory-titles/{id}", name="labtesttitle_update")
+     * @Route("/laboratory-test-id-types/{id}", name="labtesttype_update")
      * @Route("/part-titles/{id}", name="parttitle_update")
      *
      * @Method("PUT")
@@ -418,7 +412,7 @@ class ScanListController extends ListController
             break;
         case "processorcomment":
             $className = "processorcomments";
-            $displayName = "Processor Comments";
+            $displayName = "Scan Order Processor Comments";
             break;
         case "accounts":
             $className = "Account";
@@ -434,7 +428,7 @@ class ScanListController extends ListController
             break;
         case "scanloggereventtypes":
             $className = "EventTypeList";
-            $displayName = "Event Log Types";
+            $displayName = "Event Log's Event Types";
             $classPath = "Oleg\\UserdirectoryBundle\\Entity\\";
             $bundleName = "OlegUserdirectoryBundle";
             break;
@@ -473,10 +467,6 @@ class ScanListController extends ListController
         case "labtesttype":
             $className = "LabTestType";
             $displayName = "Laboratory Test ID Types";
-            break;
-        case "labtesttitle":
-            $className = "LabTestTitle";
-            $displayName = "Laboratory Test Titles";
             break;
         case "parttitle":
             $className = "ParttitleList";
@@ -537,8 +527,7 @@ class ScanListController extends ListController
      * @Route("/image-analysis-algorithms/{id}", name="imageanalysisalgorithm_delete")
      * @Route("/disease-types/{id}", name="diseasetypes_delete")
      * @Route("/disease-origins/{id}", name="diseaseorigins_delete")
-     * @Route("/laboratory-tests/{id}", name="labtesttype_delete")
-     * @Route("/laboratory-titles/{id}", name="labtesttitle_delete")
+     * @Route("/laboratory-test-id-types/{id}", name="labtesttype_delete")
      * @Route("/part-titles/{id}", name="parttitle_delete")
      *
      * @Method("DELETE")

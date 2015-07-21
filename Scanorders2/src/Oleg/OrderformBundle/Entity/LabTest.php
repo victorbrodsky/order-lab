@@ -41,18 +41,7 @@ class LabTest extends ListAbstract {
      */
     private $labTestId;
 
-//    /**
-//     * "Laboratory Test Title"
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $labTestTitle;
-    /**
-     * "Laboratory Test Title"
-     * @ORM\ManyToOne(targetEntity="LabTestTitle", cascade={"persist"})
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
-    private $labTestTitle;
-
+    //"Laboratory Test Title" is list name
 
 
     /**
@@ -72,22 +61,6 @@ class LabTest extends ListAbstract {
     }
 
     /**
-     * @param mixed $labTestTitle
-     */
-    public function setLabTestTitle($labTestTitle)
-    {
-        $this->labTestTitle = $labTestTitle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLabTestTitle()
-    {
-        return $this->labTestTitle;
-    }
-
-    /**
      * @param mixed $labTestType
      */
     public function setLabTestType($labTestType)
@@ -104,16 +77,34 @@ class LabTest extends ListAbstract {
     }
 
 
+    //interface function
+    public function getAuthor()
+    {
+        return $this->getCreator();
+    }
+    public function setAuthor($author)
+    {
+        return $this->setCreator($author);
+    }
+    public function getUpdateAuthor()
+    {
+        return $this->getUpdatedby();
+    }
+    public function setUpdateAuthor($author)
+    {
+        return $this->setUpdatedby($author);
+    }
+
 
     public function __toString() {
         $res = "";
 
-        if( $this->getLabTestTitle() ) {
-            $res = $res . $this->getLabTestTitle() . " ";
+        if( $this->getName() ) {
+            $res = $res . $this->getName() . " ";
         }
 
-        if( $this->labTestType() ) {
-            $res = $res . $this->labTestType() . " ";
+        if( $this->getLabTestType() ) {
+            $res = $res . $this->getLabTestType() . " ";
         }
 
         if( $this->getLabTestId() ) {

@@ -107,15 +107,6 @@ class Logger
 
 
     //user's institution, department, division, service at the moment of creation/update
-//    /**
-//     * @ORM\OneToMany(targetEntity="InstitutionTree", mappedBy="logger", cascade={"persist","remove"})
-//     **/
-//    private $institutionTrees;
-//    /**
-//     * @ORM\OneToMany(targetEntity="Institutions", mappedBy="logger", cascade={"persist","remove"})
-//     **/
-//    private $institutions;
-
     /**
      * @ORM\ManyToMany(targetEntity="Institution")
      * @ORM\JoinTable(name="user_logger_institutions",

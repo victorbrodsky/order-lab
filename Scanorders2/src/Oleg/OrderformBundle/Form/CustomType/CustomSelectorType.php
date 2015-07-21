@@ -98,9 +98,6 @@ class CustomSelectorType extends AbstractType {
             case "labtesttype":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'LabTestType', 'OrderformBundle');
                 break;
-            case "labtesttitle":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'labTestTitle', 'OrderformBundle');
-                break;
 
 //            case "returnSlide":
 //                $transformer = new  GenericTreeTransformer($this->om, $username, 'Location');

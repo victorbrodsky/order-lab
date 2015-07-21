@@ -1,4 +1,10 @@
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% else %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% endif %}
+{% extends extendStr%}
+
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
@@ -36,20 +42,19 @@
 
     {{ form_start(form) }}
 
-
         {% if pathname == 'locations' %}
             <div id="form-prototype-data" data-userid = "{{ entity.id }}"></div>
-            {{ usermacros.locationObject(form,cycle,'user-locations','noprototype',employees_sitename,entity) }}
+            {{ usermacros.locationObject(form,cycle,'user-locations','noprototype',sitename,entity) }}
         {% endif %}
 
         {% if pathname == 'buildings' %}
             <div id="form-prototype-data" data-userid = "{{ entity.id }}"></div>
-            {{ usermacros.buildingObject(form,cycle,'user-buildings','noprototype',employees_sitename,entity) }}
+            {{ usermacros.buildingObject(form,cycle,'user-buildings','noprototype',sitename,entity) }}
         {% endif %}
 
         {% if pathname == 'researchlabs' %}
             <div id="form-prototype-data" data-userid = "{{ entity.id }}"></div>
-            {{ usermacros.researchlabObject(form,cycle,'user-researchlabs','noprototype',employees_sitename,entity) }}
+            {{ usermacros.researchlabObject(form,cycle,'user-researchlabs','noprototype',sitename,entity) }}
         {% endif %}
 
         {% if pathname == 'grants' %}
@@ -69,7 +74,7 @@
                  data-userid = "{{ entity.id }}"
             ></div>
 
-            {{ usermacros.grantObject(form,cycle,'user-grants','noprototype',employees_sitename,entity) }}
+            {{ usermacros.grantObject(form,cycle,'user-grants','noprototype',sitename,entity) }}
         {% endif %}
 
         {% if pathname == 'labtests' %}
@@ -83,23 +88,23 @@
 
 
         {#set if user is ROLE_USERDIRECTORY_EDITOR or ROLE_PLATFORM_DEPUTY_ADMIN#}
-        {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_SCANORDER_PROCESSOR') %}
             {% set userEditor = true %}
         {% else %}
             {% set userEditor = false %}
         {% endif %}
 
-        {% if cycle == "show_standalone" and userEditor %}
+        {% if cycle == "show_standalone" and userEditor and entity.id %}
             <p>
-                <a class="btn btn-success" href="{{ path(employees_sitename~'_'~pathname~'_pathaction_edit_standalone',{id:entity.id}) }}" type='button'>Edit</a>
+                <a class="btn btn-success" href="{{ path(sitename~'_'~pathname~'_pathaction_edit_standalone',{id:entity.id}) }}" type='button'>Edit</a>
             </p>
         {% endif %}
 
-        {% if cycle != "show_standalone" and cycle != "new_standalone" and userEditor %}
+        {% if cycle != "show_standalone" and cycle != "new_standalone" and userEditor and entity.id %}
             <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update {{ singleName }}</button>
-                <a class="btn btn-info" href="{{ path(employees_sitename~'_'~pathname~'_pathaction_show_standalone',{id:entity.id}) }}" type='button'>Cancel</a>
+                <a class="btn btn-info" href="{{ path(sitename~'_'~pathname~'_pathaction_show_standalone',{id:entity.id}) }}" type='button'>Cancel</a>
             </div>
             </p>
         {% endif %}
@@ -110,13 +115,21 @@
             </p>
         {% endif %}
 
+        {#creation failed#}
+        {% if cycle == "new_post_standalone" and userEditor %}
+            <p>
+                <a class="btn btn-success" href="{{ path(sitename~'_'~pathname~'_pathaction_new_standalone') }}" type='button'>Add {{ singleName }}</a>
+            </p>
+        {% endif %}
+
+
     {{ form_end(form,{'render_rest': false}) }}
 
 
     <br>
 
     <p>
-        <a href="{{ path(employees_sitename~'_'~pathname~'_pathaction_list') }}">{{ singleName }} list</a>
+        <a href="{{ path(sitename~'_'~pathname~'_pathaction_list') }}">{{ singleName }} list</a>
     </p>
 
 

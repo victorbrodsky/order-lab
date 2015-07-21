@@ -13,16 +13,6 @@ class RoleAttributeList extends ListAbstract
 {
 
     /**
-     * @ORM\Column(name="value", type="string")
-     */
-    protected $value;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Roles", mappedBy="attributes")
-     **/
-    private $roles;
-
-    /**
      * @ORM\OneToMany(targetEntity="RoleAttributeList", mappedBy="original")
      **/
     protected $synonyms;
@@ -32,6 +22,17 @@ class RoleAttributeList extends ListAbstract
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
+
+
+    /**
+     * @ORM\Column(name="value", type="string")
+     */
+    private $value;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Roles", mappedBy="attributes")
+     **/
+    private $roles;
 
 
     public function __construct() {

@@ -6,43 +6,40 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var _institution = new Array();
-//var _institutionRoot = new Array();
-var _treenodedata = new Array();
-//var _userpositions = new Array();
+var _treenodedata = [];
 
-var _commenttype = new Array();
-var _identifiers = new Array();
-var _fellowshiptype = new Array();
-var _researchlabs = new Array();
-var _locations = new Array();
-var _buildings = new Array();
+var _commenttype = [];
+var _identifiers = [];
+var _fellowshiptype = [];
+var _researchlabs = [];
+var _locations = [];
+var _buildings = [];
 
-var _rooms = new Array();
-var _suites = new Array();
-var _floors = new Array();
-var _mailboxes = new Array();
-var _efforts = new Array();
-var _addmintitles = new Array();
-var _apptitles = new Array();
-var _medicaltitles = new Array();
+var _rooms = [];
+var _suites = [];
+var _floors = [];
+var _mailboxes = [];
+var _efforts = [];
+var _addmintitles = [];
+var _apptitles = [];
+var _medicaltitles = [];
 
 //trainings 6 from 8
-var _residencySpecialtys = new Array();
-var _fellowshipSubspecialtys = new Array();
-var _trainingmajors = new Array();
-var _trainingminors = new Array();
-var _traininghonors = new Array();
-var _fellowshipTitles = new Array();
-var _traininginstitution = new Array();
-var _locationusers = new Array();
+var _residencySpecialtys = [];
+var _fellowshipSubspecialtys = [];
+var _trainingmajors = [];
+var _trainingminors = [];
+var _traininghonors = [];
+var _fellowshipTitles = [];
+var _traininginstitution = [];
+var _locationusers = [];
 
 //grants
-var _sourceorganization = new Array();
-var _grants = new Array();
+var _sourceorganization = [];
+var _grants = [];
 
-var _cities = new Array();
-var _organizations = new Array();
+var _cities = [];
+var _organizations = [];
 
 
 
@@ -138,7 +135,7 @@ function getComboboxInstitution(holder) {
     }
 
     var entityName = 'Institution';
-    _treenodedata[entityName] = new Array();
+    _treenodedata[entityName] = [];
 
     $(targetid).each( function(e){
         getComboboxSingleInstitution($(this),entityName);
@@ -261,75 +258,6 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
     });
 }
 
-//function setComboboxInstitution(holder) {
-//
-//    var targetid = ".ajax-combobox-institution";
-//
-//    if( $(targetid).length == 0 ) {
-//        return;
-//    }
-//
-//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-//        targetid = holder.find(targetid);
-//
-//        if( targetid.length == 0 )
-//            return;
-//    }
-//
-//    var url = getCommonBaseUrl("util/common/"+"institution-all","employees"); //always use "employees" to get institution
-//
-//    //console.log('cycle='+cycle);
-//
-//    if( _institution.length == 0 ) {
-//        $.ajax({
-//            url: url,
-//            timeout: _ajaxTimeout,
-//            async: asyncflag
-//        }).success(function(data) {
-//            _institution = data;
-//            populateSelectCombobox( targetid, _institution, null );
-//        });
-//    } else {
-//        populateSelectCombobox( targetid, _institution, null );
-//    }
-//
-//}
-//
-//function getComboboxInstitution_OLD(holder) {
-//
-//    setInstitutionTreeChildren(holder);
-//
-//    var targetid = ".ajax-combobox-institution";
-//
-//    if( $(targetid).length == 0 ) {
-//        return;
-//    }
-//
-//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-//        targetid = holder.find(targetid);
-//
-//        if( targetid.length == 0 )
-//            return;
-//    }
-//
-//    var url = getCommonBaseUrl("util/common/"+"institution","employees"); //always use "employees" to get institution
-//
-//    //console.log('cycle='+cycle);
-//
-//    if( _institution.length == 0 ) {
-//        $.ajax({
-//            url: url,
-//            timeout: _ajaxTimeout,
-//            async: asyncflag
-//        }).success(function(data) {
-//            _institution = data;
-//            populateParentChildTree( targetid, _institution, "Select an option or type in a new value", false, 'ajax-combobox-department' );
-//        });
-//    } else {
-//        populateParentChildTree( targetid, _institution, "Select an option or type in a new value", false, 'ajax-combobox-department' );
-//    }
-//
-//}
 
 function getComboboxCommentType(holder) {
 

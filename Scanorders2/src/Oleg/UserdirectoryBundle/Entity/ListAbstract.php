@@ -31,7 +31,7 @@ abstract class ListAbstract
 
     /**
      * @ORM\Column(name="name", type="string")
-     * @Assert\NotBlank
+     * @Assert\NotBlank(message = "This value should not be blank.")
      */
     protected $name;
 

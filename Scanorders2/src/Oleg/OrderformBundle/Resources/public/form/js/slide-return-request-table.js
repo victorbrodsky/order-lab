@@ -6,19 +6,19 @@ var _htableid = "#multi-dataTable";
 var _sotable = null;    //scan order table
 var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part ID, Block ID
 
-var _accessiontypes_simple = new Array();
-var _mrntypes_simple = new Array();
-var _partname_simple = new Array();
-var _blockname_simple = new Array();
-var _stains_simple = new Array();
+var _accessiontypes_simple = [];
+var _mrntypes_simple = [];
+var _partname_simple = [];
+var _blockname_simple = [];
+var _stains_simple = [];
 
-var _errorValidatorRows = new Array(); //keep rows with validator error
+var _errorValidatorRows = []; //keep rows with validator error
 
-var _rowToProcessArr = new Array();
+var _rowToProcessArr = [];
 var _processedRowCount = 0;
-var _mrnAccessionArr = new Array();
+var _mrnAccessionArr = [];
 
-var _mrnAccConflictRowArr = new Array();
+var _mrnAccConflictRowArr = [];
 
 var _tableValidated = false;
 
@@ -149,11 +149,11 @@ $(document).ready(function() {
     $(".element-with-tooltip").tooltip();
     attachResearchEducationalTooltip();
 
-    getComboboxMrnType(new Array("0","0","0","0","0","0"));
-    getComboboxAccessionType(new Array("0","0","0","0","0","0"));
-    getComboboxPartname(new Array("0","0","0","0","0","0"));
-    getComboboxBlockname(new Array("0","0","0","0","0","0"));
-    getComboboxStain(new Array("0","0","0","0","0","0"));
+    getComboboxMrnType();
+    getComboboxAccessionType();
+    getComboboxPartname();
+    getComboboxBlockname();
+    getComboboxStain();
 
     $(function(){
         var datepicker = $.fn.datepicker.noConflict;
