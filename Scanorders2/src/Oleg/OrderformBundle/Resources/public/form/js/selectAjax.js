@@ -44,6 +44,9 @@ var _labtesttype = [];
 
 var _embedderinstruction = [];
 
+var _buildings = [];
+var _floors = [];
+
 
 
 //function regularCombobox() {
@@ -111,6 +114,12 @@ function customCombobox() {
     }
 
     getComboboxGeneric(null,'labtesttype',_labtesttype,false,null,'scan');
+
+    //for test patient's contact information
+    getComboboxGeneric(null,'building',_buildings,false,'');
+//    getComboboxGeneric(newForm,'room',_rooms,false);
+//    getComboboxGeneric(newForm,'suite',_suites,false);
+    getComboboxGeneric(null,'floor',_floors,false);
 
 }
 

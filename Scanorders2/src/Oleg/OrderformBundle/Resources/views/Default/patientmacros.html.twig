@@ -204,174 +204,174 @@
 
 
 
+{#Below can be deleted#}
+{#{% macro displayPatient_New( patient, patientCount, status, datastructure, type, formtype ) %}#}
 
-{% macro displayPatient_New( patient, patientCount, status, datastructure, type, formtype ) %}
-
-    {% import _self as patientmacros %}
-
-    {% set objects = [
-            {'object':'patient','display':'show','count':0},
-            {'object':'encounter','display':'show','count':0},
-            {'object':'procedure','display':'show','count':0},
-            {'object':'accession','display':'show','count':0},
-            {'object':'part','display':'show','count':0},
-            {'object':'block','display':'show','count':0},
-            {'object':'slide','display':'show','count':0}
-        ]
-    %}
-
+    {#{% import _self as patientmacros %}#}
 
     {#{% set objects = [#}
             {#{'object':'patient','display':'show','count':0},#}
             {#{'object':'encounter','display':'show','count':0},#}
+            {#{'object':'procedure','display':'show','count':0},#}
+            {#{'object':'accession','display':'show','count':0},#}
             {#{'object':'part','display':'show','count':0},#}
             {#{'object':'block','display':'show','count':0},#}
             {#{'object':'slide','display':'show','count':0}#}
         {#]#}
     {#%}#}
 
-    {#start index: 0 means start with patient#}
-    {% set startIndex = 0 %}
 
-    {{  patientmacros.displayObjectRecursive( patient, objects, startIndex, status, datastructure, type, formtype ) }}
+    {#&#123;&#35;{% set objects = [&#35;&#125;#}
+            {#&#123;&#35;{'object':'patient','display':'show','count':0},&#35;&#125;#}
+            {#&#123;&#35;{'object':'encounter','display':'show','count':0},&#35;&#125;#}
+            {#&#123;&#35;{'object':'part','display':'show','count':0},&#35;&#125;#}
+            {#&#123;&#35;{'object':'block','display':'show','count':0},&#35;&#125;#}
+            {#&#123;&#35;{'object':'slide','display':'show','count':0}&#35;&#125;#}
+        {#&#123;&#35;]&#35;&#125;#}
+    {#&#123;&#35;%}&#35;&#125;#}
 
-{% endmacro %}
+    {#&#123;&#35;start index: 0 means start with patient&#35;&#125;#}
+    {#{% set startIndex = 0 %}#}
 
+    {#{{  patientmacros.displayObjectRecursive( patient, objects, startIndex, status, datastructure, type, formtype ) }}#}
 
-{% macro displayObjectRecursive( formObject, objects, index, startCount, status, datastructure, type, formtype ) %}
-
-    {% import _self as patientmacros %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-
-    {#{% set uid = "" %}#}
-    {% set uidArr = [] %}
-    {% for object in objects %}
-        {#object={{ object['object'] }}#}
-        {#{% set uid = uid ~ "_" ~ object['count'] %}#}
-        {% set uidArr = uidArr|merge([object['count']]) %}
-    {% endfor %}
-
-    {% set uid = uidArr|join('_') %}
-
-    uid:{{ uid }}
-
-    {% set object = objects[index] %}
-
-    {#              patient          encounter   procedure     accession          part          block           slide           scan            stain   #}
-    {#{% set uid = object['count'] ~  '_' ~0~   '_'   ~0~   '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0 %}#}
+{#{% endmacro %}#}
 
 
-    {#panel#}
-    <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">
+{#{% macro displayObjectRecursive( formObject, objects, index, startCount, status, datastructure, type, formtype ) %}#}
 
-        {#header#}
-        {{ formmacros.message_panel_header_object(formObject,object,objects,datastructure,type,formtype,uidArr) }}
+    {#{% import _self as patientmacros %}#}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
 
-        {#body#}
-        <div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+    {#&#123;&#35;{% set uid = "" %}&#35;&#125;#}
+    {#{% set uidArr = [] %}#}
+    {#{% for object in objects %}#}
+        {#&#123;&#35;object={{ object['object'] }}&#35;&#125;#}
+        {#&#123;&#35;{% set uid = uid ~ "_" ~ object['count'] %}&#35;&#125;#}
+        {#{% set uidArr = uidArr|merge([object['count']]) %}#}
+    {#{% endfor %}#}
 
-            {#object form#}
-            {{ patientmacros.callObjectForm( object,formObject,datastructure,uid,type,status ) }}
+    {#{% set uid = uidArr|join('_') %}#}
 
-            {#children#}
-            {{ patientmacros.callObjectChildren( formObject, objects, index, status, datastructure, type, formtype ) }}
+    {#uid:{{ uid }}#}
 
-        </div>
-        {#body#}
+    {#{% set object = objects[index] %}#}
 
-        </div>
-        {#header#}
-
-    </div>
-    {#panel#}
-
-{% endmacro %}
+    {#&#123;&#35;              patient          encounter   procedure     accession          part          block           slide           scan            stain   &#35;&#125;#}
+    {#&#123;&#35;{% set uid = object['count'] ~  '_' ~0~   '_'   ~0~   '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0~     '_'     ~0 %}&#35;&#125;#}
 
 
-{% macro callObjectChildren( formObject, objects, index, status, datastructure, type, formtype ) %}
+    {#&#123;&#35;panel&#35;&#125;#}
+    {#<div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">#}
 
-    {% import _self as patientmacros %}
+        {#&#123;&#35;header&#35;&#125;#}
+        {#{{ formmacros.message_panel_header_object(formObject,object,objects,datastructure,type,formtype,uidArr) }}#}
 
-    {% set object = objects[index] %}
-    {% set objectName = object['object'] %}
+        {#&#123;&#35;body&#35;&#125;#}
+        {#<div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">#}
 
-    {% if objectName == 'patient' %}
-        {% for child in formObject.encounter %}
-            {{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}
-        {% endfor %}
-    {% endif %}
+            {#&#123;&#35;object form&#35;&#125;#}
+            {#{{ patientmacros.callObjectForm( object,formObject,datastructure,uid,type,status ) }}#}
 
-    {% if objectName == 'encounter' %}
-        {% for child in formObject.procedure %}
-            {{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}
-        {% endfor %}
-    {% endif %}
+            {#&#123;&#35;children&#35;&#125;#}
+            {#{{ patientmacros.callObjectChildren( formObject, objects, index, status, datastructure, type, formtype ) }}#}
 
-    {% if objectName == 'procedure' %}
-        {#{% for child in formObject.accession %}#}
+        {#</div>#}
+        {#&#123;&#35;body&#35;&#125;#}
+
+        {#</div>#}
+        {#&#123;&#35;header&#35;&#125;#}
+
+    {#</div>#}
+    {#&#123;&#35;panel&#35;&#125;#}
+
+{#{% endmacro %}#}
+
+
+{#{% macro callObjectChildren( formObject, objects, index, status, datastructure, type, formtype ) %}#}
+
+    {#{% import _self as patientmacros %}#}
+
+    {#{% set object = objects[index] %}#}
+    {#{% set objectName = object['object'] %}#}
+
+    {#{% if objectName == 'patient' %}#}
+        {#{% for child in formObject.encounter %}#}
             {#{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}#}
         {#{% endfor %}#}
-    {% endif %}
+    {#{% endif %}#}
 
-    {% if objectName == 'accession' %}
-        {#{% for child in formObject.part %}#}
+    {#{% if objectName == 'encounter' %}#}
+        {#{% for child in formObject.procedure %}#}
             {#{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}#}
         {#{% endfor %}#}
-    {% endif %}
+    {#{% endif %}#}
 
-    {% if objectName == 'part' %}
-        {% for child in formObject.block %}
-            {{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}
-        {% endfor %}
-    {% endif %}
+    {#{% if objectName == 'procedure' %}#}
+        {#&#123;&#35;{% for child in formObject.accession %}&#35;&#125;#}
+            {#&#123;&#35;{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}&#35;&#125;#}
+        {#&#123;&#35;{% endfor %}&#35;&#125;#}
+    {#{% endif %}#}
 
-    {% if objectName == 'block' %}
-        {% for child in formObject.slide %}
-            {{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}
-        {% endfor %}
-    {% endif %}
+    {#{% if objectName == 'accession' %}#}
+        {#&#123;&#35;{% for child in formObject.part %}&#35;&#125;#}
+            {#&#123;&#35;{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}&#35;&#125;#}
+        {#&#123;&#35;{% endfor %}&#35;&#125;#}
+    {#{% endif %}#}
+
+    {#{% if objectName == 'part' %}#}
+        {#{% for child in formObject.block %}#}
+            {#{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}#}
+        {#{% endfor %}#}
+    {#{% endif %}#}
+
+    {#{% if objectName == 'block' %}#}
+        {#{% for child in formObject.slide %}#}
+            {#{{  patientmacros.displayObjectRecursive( child, objects, index+1, status, datastructure, type, formtype ) }}#}
+        {#{% endfor %}#}
+    {#{% endif %}#}
 
 
-{% endmacro %}
+{#{% endmacro %}#}
 
-{% macro callObjectForm( object,formObject,datastructure,uid,type,status ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{#{% macro callObjectForm( object,formObject,datastructure,uid,type,status ) %}#}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
 
-    {% set objectName = object['object'] %}
+    {#{% set objectName = object['object'] %}#}
 
-    {% if objectName == 'patient' %}
-        {{ formmacros.patientForm(formObject,datastructure,uid,type,status) }}
-    {% endif %}
+    {#{% if objectName == 'patient' %}#}
+        {#{{ formmacros.patientForm(formObject,datastructure,uid,type,status) }}#}
+    {#{% endif %}#}
 
-    {% if objectName == 'encounter' %}
-        {#{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}#}
+    {#{% if objectName == 'encounter' %}#}
+        {#&#123;&#35;{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}&#35;&#125;#}
 
-        {% set procedure = formObject.procedure|first %}
-        {% set accession = procedure.accession|first %}
+        {#{% set procedure = formObject.procedure|first %}#}
+        {#{% set accession = procedure.accession|first %}#}
 
-        {{ formmacros.accessionForm(formObject,procedure,accession,datastructure,uid,type,status) }}
+        {#{{ formmacros.accessionForm(formObject,procedure,accession,datastructure,uid,type,status) }}#}
 
-    {% endif %}
+    {#{% endif %}#}
 
-    {% if objectName == 'procedure' %}
-        {#{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}#}
-    {% endif %}
+    {#{% if objectName == 'procedure' %}#}
+        {#&#123;&#35;{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}&#35;&#125;#}
+    {#{% endif %}#}
 
-    {% if objectName == 'accession' %}
-        {#{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}#}
-        {#{{ formmacros.accessionForm(encounter,procedure,formObject,datastructure,uid,type,status) }}#}
-    {% endif %}
+    {#{% if objectName == 'accession' %}#}
+        {#&#123;&#35;{{ formmacros.accessionForm(formObject,datastructure,uid,type,status) }}&#35;&#125;#}
+        {#&#123;&#35;{{ formmacros.accessionForm(encounter,procedure,formObject,datastructure,uid,type,status) }}&#35;&#125;#}
+    {#{% endif %}#}
 
-    {% if objectName == 'part' %}
-        {{ formmacros.partForm(encounter,procedure,formObject,datastructure,uid,type,status) }}
-    {% endif %}
+    {#{% if objectName == 'part' %}#}
+        {#{{ formmacros.partForm(encounter,procedure,formObject,datastructure,uid,type,status) }}#}
+    {#{% endif %}#}
 
-    {% if objectName == 'block' %}
-        {{ formmacros.blockForm(formObject,datastructure,uid,type,status) }}
-    {% endif %}
+    {#{% if objectName == 'block' %}#}
+        {#{{ formmacros.blockForm(formObject,datastructure,uid,type,status) }}#}
+    {#{% endif %}#}
 
-    {% if objectName == 'slide' %}
-        {{ formmacros.slideForm(formObject,datastructure,uid,type,status) }}
-    {% endif %}
+    {#{% if objectName == 'slide' %}#}
+        {#{{ formmacros.slideForm(formObject,datastructure,uid,type,status) }}#}
+    {#{% endif %}#}
 
-{% endmacro %}
+{#{% endmacro %}#}

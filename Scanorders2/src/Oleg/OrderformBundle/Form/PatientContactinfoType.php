@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\LocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -22,29 +23,18 @@ class PatientContactinfoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $currentUser = true;
+        $cycle = $this->params['cycle'];
+        $em = $this->params['em'];
+        $roleAdmin = true;
+        $read_only = false;
 
-        $builder->add('field', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Location',
-            'label' => 'Contact Info',
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.locationTypes", "locationTypes")
-                        ->where("locationTypes.name = 'Patient Contact Information'")
-                        ->orderBy("list.orderinlist","ASC");
-                },
+        $params = array('read_only'=>$read_only,'admin'=>$roleAdmin,'currentUser'=>$currentUser,'cycle'=>$cycle,'em'=>$em,'institution'=>false);
+        $builder->add('field', new LocationType($params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            'label' => false,
         ));
 
-//        $builder->add('source', null, array(
-//            'label' => 'Location Source System',
-//            'attr' => array('class'=>'form-control')
-//        ));
-//
-//        $builder->add('provider', null, array(
-//            'label' => 'Location Submitter:',
-//            'attr' => array('class'=>'form-control')
-//        ));
 
         //other fields from abstract
         $builder->add('others', new ArrayFieldType(), array(

@@ -26,6 +26,10 @@ class LocationType extends AbstractType
         $this->params = $params;
         $this->entity = $entity;
 
+        if( !array_key_exists('institution', $this->params) ) {
+            $this->params['institution'] = true;
+        }
+
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -208,36 +212,27 @@ class LocationType extends AbstractType
 
 
         ///////////////////////// tree node /////////////////////////
-//        $builder->add('institution', 'employees_custom_selector', array(
-//            'label' => 'Institution:',
-//            'required' => false,
-//            'attr' => array('class' => 'ajax-combobox-institution show-as-single-node', 'type' => 'hidden'),
-//            'classtype' => 'institution'
-//        ));
-//        $builder->add('institution', new InstitutionType($this->params), array(
-//            'required' => false,
-//            'label' => false
-//        ));
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $title = $event->getData();
-            $form = $event->getForm();
+        if( $this->params['institution'] ) {
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $title = $event->getData();
+                $form = $event->getForm();
 
-            $label = 'Institution:';
-            if( $title ) {
-                $institution = $title->getInstitution();
-                if( $institution && $institution->getOrganizationalGroupType() ) {
-                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-                    $label = $institution->getOrganizationalGroupType()->getName().":";
+                $label = 'Institution:';
+                if( $title ) {
+                    $institution = $title->getInstitution();
+                    if( $institution && $institution->getOrganizationalGroupType() ) {
+                        $label = $institution->getOrganizationalGroupType()->getName().":";
+                    }
                 }
-            }
 
-            $form->add('institution', 'employees_custom_selector', array(
-                'label' => $label,
-                'required' => false,
-                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-                'classtype' => 'institution'
-            ));
-        });
+                $form->add('institution', 'employees_custom_selector', array(
+                    'label' => $label,
+                    'required' => false,
+                    'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+                    'classtype' => 'institution'
+                ));
+            });
+        }
         ///////////////////////// EOF tree node /////////////////////////
 
 

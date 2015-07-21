@@ -3,6 +3,8 @@
 namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Oleg\UserdirectoryBundle\Entity\GeoLocation;
+use Oleg\UserdirectoryBundle\Entity\Location;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -711,8 +713,30 @@ class Patient extends ObjectAbstract
     public function addExtraFields($status,$provider,$source) {
         $this->addRace( new PatientRace($status,$provider,$source) );
         $this->addDeceased( new PatientDeceased($status,$provider,$source) );
-        $this->addContactinfo( new PatientContactinfo($status,$provider,$source) );
         $this->addType( new PatientType($status,$provider,$source) );
+        //$this->addContactinfo( new PatientContactinfo($status,$provider,$source) );
+    }
+
+    public function addContactinfoByTypeAndName($status,$user,$system,$locationType,$locationName,$withdummyfields=false) {
+        $patientContactinfo = new PatientContactinfo($status,$user,$system);
+        $patientLocation = new Location($user);
+
+        $patientLocation->addLocationType($locationType);
+        $patientLocation->setName($locationName);
+        $patientLocation->setStatus(1);
+        $patientLocation->setRemovable(false);
+
+        if( $withdummyfields ) {
+            $patientLocation->setPhone("(212) 123-4567");
+            $geoLocation = new GeoLocation();
+            $geoLocation->setStreet1("100");
+            $geoLocation->setStreet1("Broadway");
+            $geoLocation->setZip("10001");
+            $patientLocation->setGeoLocation($geoLocation);
+        }
+
+        $patientContactinfo->setField($patientLocation);
+        $this->addContactinfo($patientContactinfo);
     }
 
     public function getRace()

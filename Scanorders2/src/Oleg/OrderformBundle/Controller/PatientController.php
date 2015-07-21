@@ -6,6 +6,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
+use Oleg\OrderformBundle\Entity\PatientContactinfo;
 use Oleg\OrderformBundle\Entity\ProcedureOrder;
 use Oleg\OrderformBundle\Entity\ReportBlock;
 use Oleg\UserdirectoryBundle\Entity\Link;
@@ -708,6 +709,11 @@ class PatientController extends Controller
         $patient = new Patient($withfields,$status,$user,$system);
         $patient->addExtraFields($status,$user,$system);
 
+        //add two contactinfo: "Test Patient's Primary Residence" and "Test Patient's Secondary Residence"
+        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient Contact Information");
+        $patient->addContactinfoByTypeAndName($status,$user,$system,$locationType,"Test Patient's Primary Residence",true);
+        $patient->addContactinfoByTypeAndName($status,$user,$system,$locationType,"Test Patient's Secondary Residence",true);
+
         if( $withscanorder ) {
             $MultiSlideScanOrder = $this->createSpecificMessage("Multi-Slide Scan Order");
             $patient->addMessage($MultiSlideScanOrder);
@@ -1182,6 +1188,9 @@ class PatientController extends Controller
         //set provider
         $message->setProvider($user);
 
+        //add 2 proxyusers as Signing Provider(s)
+        $this->addTwoSigningProviders($message);
+
         //set Source object
         $source = new Endpoint();
         $source->setSystem($system);
@@ -1250,8 +1259,7 @@ class PatientController extends Controller
             $procedureorder->setMessage($message);
             $message->setProcedureorder($procedureorder);
 
-            //$procedureType = $em->getRepository('OlegOrderformBundle:ProcedureList')->find(1);
-            //$procedureorder->setType($procedureType);
+            //add 2 proxyusers
         }
 
         if( $messageCategoryStr == "Lab Order" || $messageCategoryStr == "Lab Order Requisition" ) {
@@ -1275,16 +1283,6 @@ class PatientController extends Controller
             $message->setReport($report);
 
             //add 2 proxyusers
-            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
-
-            //add first proxyuser
-            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
-            $message->addProxyuser($UserWrappers[0]);
-
-            //add second proxyuser
-            $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
-            $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
-            $message->addProxyuser($UserWrappers[0]);
         }
 
         if( $messageCategoryStr == "Block Report" ) {
@@ -1294,16 +1292,6 @@ class PatientController extends Controller
             $message->setReportBlock($report);
 
             //add 2 proxyusers
-            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
-
-            //add first proxyuser
-            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
-            $message->addProxyuser($UserWrappers[0]);
-
-            //add second proxyuser
-            $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
-            $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
-            $message->addProxyuser($UserWrappers[0]);
         }
 
         if( $messageCategoryStr == "Image Analysis Order" ) {
@@ -1367,6 +1355,22 @@ class PatientController extends Controller
             $scanorder->setMessage($message);
             $message->setScanorder($scanorder);
         }
+
+//        if( $messageCategoryStr == "Encounter Note" ) {
+//
+//            //add 2 proxyusers
+//            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
+//
+//            //add first proxyuser
+//            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
+//            $message->addProxyuser($UserWrappers[0]);
+//
+//            //add second proxyuser
+//            $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
+//            $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
+//            $message->addProxyuser($UserWrappers[0]);
+//        }
+
         /////////////////// EOF set specific message //////////////////////////////
 
 
@@ -1380,6 +1384,25 @@ class PatientController extends Controller
     }
 
 
+    public function addTwoSigningProviders($message) {
+        $em = $this->getDoctrine()->getManager();
+
+        $userSecurity = $this->get('security.context')->getToken()->getUser();
+        //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userSecurity->getId());
+        $user = $em->getReference('OlegUserdirectoryBundle:User',$userSecurity->getId());
+
+        //add 2 proxyusers
+        $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
+
+        //add first proxyuser
+        $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
+        $message->addProxyuser($UserWrappers[0]);
+
+        //add second proxyuser
+        $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
+        $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
+        $message->addProxyuser($UserWrappers[0]);
+    }
 
 
     public function setDocumentContainerWithLinks( $docContainer, $slideId, $user ) {

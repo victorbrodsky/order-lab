@@ -270,8 +270,6 @@
 
         {#{% set userValues = container.vars.value.proxyuser %}#}
         {#{% set userLabel = container.proxyuser.vars.label %}#}
-        {#{% if container.proxyuser is defined %}#}
-            {#{% set userForm = container.proxyuser %}#}
         {% if userForm %}
             {% if showFlag and container.vars.value %}
                 {% set label = userLabel %}
@@ -2281,7 +2279,9 @@
                             {#{% if not scan.vars.value.imageLink and scan.vars.value.documentContainer %}#}
                             {% if scan.vars.value.documentContainer %}
                                 {% for document in scan.vars.value.documentContainer.documents %}
-                                    <a target="_blank" href="{{ path(scan_sitename~'_file_download', { 'id': document.id }) }}">{{ scan.vars.value.imageId }}</a>
+                                    {% if document.id %}
+                                        <a target="_blank" href="{{ path(scan_sitename~'_file_download', { 'id': document.id }) }}">{{ scan.vars.value.imageId }}</a>
+                                    {% endif %}
                                 {% endfor %}
                             {% endif %}
                         </div>
@@ -2327,6 +2327,7 @@
 
     {% if datastructure and datastructure == "datastructure" %}
 
+        {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
         {% import _self as formmacros %}
 
         {#<h5>Extra data structure fields:</h5>#}
@@ -2339,15 +2340,69 @@
             {{ formmacros.inputArrayField(patient.race,cycle,"patientrace","","","","",status) }}
         {% endif %}
 
-        {% if patient.contactinfo is defined %}
-            {{ formmacros.inputArrayField(patient.contactinfo,cycle,"patientcontactinfo","","","","",status) }}
-        {% endif %}
+        {#patient.contactinfo.field test<br>#}
+        {#{% if patient.contactinfo is defined %}#}
+            {#{% for contactinfo in patient.contactinfo %}#}
+                {#&#123;&#35;contactinfo ok<br>&#35;&#125;#}
+                {#&#123;&#35;{{ formmacros.inputArrayField(patient.contactinfo,cycle,"patientcontactinfo","","","","",status) }}&#35;&#125;#}
+                {#{% set sitename = 'scan' %}#}
+                {#{% set entity = app.security.getToken().getUser() %}#}
+                {#{{ usermacros.locationObject(contactinfo.field,cycle,'user-locations','noprototype',sitename,entity) }}#}
+            {#{% endfor %}#}
+        {#{% endif %}#}
 
+        {{ formmacros.patientContactinfoForm(patient,datastructure,uid,cycle,status) }}
 
         {{ formmacros.patientDeceasedForm(patient,datastructure,uid,cycle,status) }}
 
     {% endif %}
 
+{% endmacro %}
+
+{% macro patientContactinfoForm( patient, datastructure, uid, cycle, status ) %}
+    {% if datastructure and datastructure == "datastructure" %}
+
+        {% if patient.contactinfo is defined and patient.contactinfo|length > 0 %}
+
+            {% import _self as formmacros %}
+            {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+            {% set sitename = 'scan' %}
+            {% set entity = app.security.getToken().getUser() %}
+            {% set counter = 0 %}
+
+            {% for contactinfo in patient.contactinfo %}
+
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+
+                        {% if patient.vars.value.id %}
+                            {% set orderUniqueId = patient.vars.value.id %}
+                        {% else %}
+                            {% set orderUniqueId = 0 %}
+                        {% endif %}
+
+                        {% set uniqueId = orderUniqueId~"_"~uid~"_"~counter %}
+
+                        <button
+                                id="form_body_toggle_patientcontactinfo_{{ uniqueId }}" type="button"
+                                class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"
+                                onclick="toggleSinglePanel(this,'#form_body_patientcontactinfo_{{ uniqueId }}');">
+                        </button>
+
+                        <h4 class="panel-title">{{ contactinfo.vars.value.field.name }}</h4>
+                    </div>
+
+                    <div id="form_body_patientcontactinfo_{{ uniqueId }}" class="panel-body collapse">
+                        {{ usermacros.locationObject(contactinfo.field,cycle,'user-locations','noprototype',sitename,entity) }}
+                    </div>
+                </div>
+
+                {% set counter = counter + 1 %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
 {% endmacro %}
 
 {% macro patientDeceasedForm( patient, datastructure, uid, cycle, status ) %}
@@ -2391,6 +2446,8 @@
         {% endif %}
     {% endif %}
 {% endmacro %}
+
+
 
 
 {% macro encounterExtraForm( encounter, datastructure, uid, cycle, status ) %}

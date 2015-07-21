@@ -321,6 +321,12 @@ if( 1 ) {
 
                 //Encounter Note
                 if( $messageCategory == "Encounter Note" ) {
+                    $form->add('proxyuser', 'custom_selector', array(
+                        'label' => $this->labels['proxyuser'],
+                        'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
+                        'required' => false,
+                        'classtype' => 'userWrapper'
+                    ));
                     $form->add('comment', 'text', array(
                         'required' => false,
                         'label' => 'Note:',
@@ -333,6 +339,11 @@ if( 1 ) {
                     $form->add('procedureorder', new ProcedureOrderType($this->params,$this->entity), array(
                         'required' => false,
                         'label' => false
+                    ));
+                    $form->add('comment', 'text', array(
+                        'required' => false,
+                        'label' => 'Indication:',
+                        'attr' => array('class' => 'textarea form-control'),
                     ));
                 }
 

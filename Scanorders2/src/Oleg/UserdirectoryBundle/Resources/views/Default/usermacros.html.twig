@@ -95,8 +95,9 @@
             {#link to open/download file#}
             <div class="file-upload-showlink">
                 <div style="overflow:hidden; white-space:nowrap;">
-                    {#<a href="{{ document.vars.value.getRelativeUploadFullPath() }}" target="_blank">{{ document.vars.value.originalname }}</a>#}
-                    <a target="_blank" href="{{ path(sitename~'_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }}</a>
+                    {% if document.vars.value.id %}
+                        <a target="_blank" href="{{ path(sitename~'_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }}</a>
+                    {% endif %}
                 </div>
             </div>
 
@@ -419,10 +420,9 @@
 
                 {% if homeLocation == false %}
 
-                    {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
-                    {#{{ formmacros.field(formfield.department) }}#}
-                    {#{{ formmacros.field(formfield.division) }}#}
-                    {#{{ formmacros.field(formfield.service) }}#}
+                    {% if formfield.institution is defined %}
+                        {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+                    {% endif %}
 
                     {{ formmacros.field_notempty(formfield.mailbox,cycle) }}
 
