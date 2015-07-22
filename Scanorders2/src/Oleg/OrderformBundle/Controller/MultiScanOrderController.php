@@ -577,17 +577,6 @@ class MultiScanOrderController extends Controller {
             return $this->redirect($this->generateUrl('table_show',array('id'=>$entity->getOid())));
         }
 
-        //echo "cat=".$messageCategory."<br>";
-        if(
-            $messageCategory != "Multi-Slide Scan Order" &&
-            $messageCategory != "One-Slide Scan Order"
-        )
-        {
-            //exit('message_show');
-            return $this->redirect($this->generateUrl('message_show',array('id'=>$id)));
-        }
-        //exit('detail show');
-
         //redirect by status
         $orderUtil = $this->get('scanorder_utility');
         $redirect = $orderUtil->redirectOrderByStatus($entity,$routeName);

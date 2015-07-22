@@ -125,7 +125,7 @@ class Message {
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_message_orderRecipient",
      *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="orderRecipient_id", referencedColumnName="id")}
      *      )
      **/
     private $orderRecipients;
@@ -134,10 +134,19 @@ class Message {
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_message_reportRecipient",
      *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="reportRecipient_id", referencedColumnName="id")}
      *      )
      **/
     private $reportRecipients;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\InstitutionWrapper", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_message_organizationRecipient",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="organizationRecipient_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $organizationRecipients;
 
     /**
      * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
@@ -418,6 +427,7 @@ class Message {
         $this->proxyuser = new ArrayCollection();
         $this->orderRecipients = new ArrayCollection();
         $this->reportRecipients = new ArrayCollection();
+        $this->organizationRecipients = new ArrayCollection();
 
         $this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
@@ -758,6 +768,22 @@ class Message {
         $this->reportRecipients->removeElement($item);
     }
 
+    public function getOrganizationRecipients()
+    {
+        return $this->organizationRecipients;
+    }
+    public function addOrganizationRecipient($item)
+    {
+        if( $item && !$this->organizationRecipients->contains($item) ) {
+            $this->organizationRecipients->add($item);
+        }
+        return $this;
+    }
+    public function removeOrganizationRecipient($item)
+    {
+        $this->organizationRecipients->removeElement($item);
+    }
+
 
     /**
      * @param mixed $purpose
@@ -839,64 +865,6 @@ class Message {
         return $this->attachmentContainer;
     }
 
-
-
-
-
-//    /**
-//     * @param mixed $service
-//     */
-//    public function setService($service)
-//    {
-//        $this->service = $service;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getService()
-//    {
-//        return $this->service;
-//    }
-
-//    /**
-//     * Set priority
-//     *
-//     * @param string $priority
-//     * @return Message
-//     */
-//    public function setPriority($priority)
-//    {
-//        $this->priority = $priority;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get priority
-//     *
-//     * @return string
-//     */
-//    public function getPriority()
-//    {
-//        return $this->priority;
-//    }
-    
-//    public function getScandeadline() {
-//        return $this->scandeadline;
-//    }
-//
-//    public function getReturnoption() {
-//        return $this->returnoption;
-//    }
-//
-//    public function setScandeadline($scandeadline) {
-//        $this->scandeadline = $scandeadline;
-//    }
-//
-//    public function setReturnoption($returnoption) {
-//        $this->returnoption = $returnoption;
-//    }
 
 
     public function getDataqualityMrnAcc()

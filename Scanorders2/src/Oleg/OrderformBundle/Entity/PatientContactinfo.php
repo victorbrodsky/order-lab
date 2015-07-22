@@ -34,7 +34,7 @@ class PatientContactinfo extends PatientArrayFieldAbstract
     //PatientContactinfo with 2 fields: "Source System" (already exists in base class) and a link to our existing Location.
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location", cascade={"persist"})
      * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
      */
     protected $field;

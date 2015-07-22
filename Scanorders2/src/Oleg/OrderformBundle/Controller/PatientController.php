@@ -9,6 +9,7 @@ use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
 use Oleg\OrderformBundle\Entity\PatientContactinfo;
 use Oleg\OrderformBundle\Entity\ProcedureOrder;
 use Oleg\OrderformBundle\Entity\ReportBlock;
+use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
 use Oleg\UserdirectoryBundle\Entity\Link;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Symfony\Component\HttpFoundation\Request;
@@ -148,7 +149,7 @@ class PatientController extends Controller
         $params['message.outputs'] = false;
 
         $labels = array(
-            'proxyuser' => 'Signing Provider(s):'
+            'proxyuser' => 'Signing Provider(s):',
         );
         $params['labels'] = $labels;
 
@@ -226,7 +227,7 @@ class PatientController extends Controller
         $params['message.outputs'] = false;
 
         $labels = array(
-            'proxyuser' => 'Signing Provider(s):'
+            'proxyuser' => 'Signing Provider(s):',
         );
         $params['labels'] = $labels;
 
@@ -1266,6 +1267,17 @@ class PatientController extends Controller
             $laborder = new LabOrder();
             $laborder->setMessage($message);
             $message->setLaborder($laborder);
+
+            //show Report Recipient(s)
+            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
+            $message->addReportRecipient($UserWrappers[0]);
+
+            //add a field for the "Recipient Organization" with a title "Laboratory:"
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("Molecular diagnostics");
+            $organizationRecipient = new InstitutionWrapper();
+            $organizationRecipient->setInstitution($institution);
+            $message->addOrganizationRecipient($organizationRecipient);
         }
 
         if(
@@ -1356,20 +1368,19 @@ class PatientController extends Controller
             $message->setScanorder($scanorder);
         }
 
-//        if( $messageCategoryStr == "Encounter Note" ) {
-//
-//            //add 2 proxyusers
-//            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
-//
-//            //add first proxyuser
-//            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
-//            $message->addProxyuser($UserWrappers[0]);
-//
-//            //add second proxyuser
-//            $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
-//            $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
-//            $message->addProxyuser($UserWrappers[0]);
-//        }
+        if( $messageCategoryStr == "Referral Order" ) {
+
+            //show Order Recipient(s) with title Refer To Individual
+            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
+            $message->addOrderRecipient($UserWrappers[0]);
+
+            //add a field for the "Recipient Organization" with a title "Refer to Organization:"
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("New York Hospital");
+            $organizationRecipient = new InstitutionWrapper();
+            $organizationRecipient->setInstitution($institution);
+            $message->addOrganizationRecipient($organizationRecipient);
+        }
 
         /////////////////// EOF set specific message //////////////////////////////
 

@@ -58,7 +58,7 @@ class MessageController extends Controller {
     /**
      * Finds and displays a Message entity.
      *
-     * @Route("/{id}", name="message_show")
+     * @Route("/{id}", name="scan_message_show")
      * @Method("GET")
      * @Template()
      */
@@ -70,6 +70,18 @@ class MessageController extends Controller {
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Message entity.');
+        }
+
+        //redirect if this is a scan order
+        $messageCategory = $entity->getMessageCategory()->getName()."";
+        if(
+            $messageCategory == "Multi-Slide Scan Order" ||
+            $messageCategory == "One-Slide Scan Order" ||
+            $messageCategory == "Table-View Scan Order"
+        )
+        {
+            //exit('message_show');
+            return $this->redirect($this->generateUrl('multy_show',array('id'=>$id)));
         }
 
         //$deleteForm = $this->createDeleteForm($id);

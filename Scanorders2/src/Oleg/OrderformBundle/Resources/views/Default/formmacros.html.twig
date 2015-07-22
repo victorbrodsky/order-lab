@@ -268,6 +268,7 @@
             {% endif %}
         {% endif %}
 
+
         {#{% set userValues = container.vars.value.proxyuser %}#}
         {#{% set userLabel = container.proxyuser.vars.label %}#}
         {% if userForm %}
@@ -556,6 +557,7 @@
 {% macro renderMessages( object, datastructure, uid, cycle ) %}
 
     {% import _self as formmacros %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     {% if datastructure and datastructure == "datastructure" and object.message is defined %}
 
@@ -654,7 +656,7 @@
 
                         {#make the value of "ID:" into a clickable link to the order.#}
                         {% if orderViewable %}
-                            {% set orderIdHref = '<a href="'~path('multy_show',{'id':orderId})~'">'~orderId~'</a>' %}
+                            {% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}
                         {% else %}
                             {% set orderIdHref = orderId %}
                         {% endif %}
@@ -687,6 +689,15 @@
 
                         {% if message.reportRecipients is defined %}
                             {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
+                        {% endif %}
+
+                        {% if message.organizationRecipients is defined %}
+                            {% for organizationRecipient in message.organizationRecipients %}
+                                <div class="well well-sm">
+                                    <h5>{{ form_label(message.organizationRecipients) }}</h5>
+                                    {{ treemacros.compositeTreeNode(organizationRecipient.institution,'','') }}
+                                </div>
+                            {% endfor %}
                         {% endif %}
 
                         {#associations and backAssociations: controlled by controller and form#}
@@ -928,7 +939,7 @@
 
                     {#make the value of "ID:" into a clickable link to the order.#}
                     {% if orderViewable %}
-                        {% set orderIdHref = '<a href="'~path('multy_show',{'id':orderId})~'">'~orderId~'</a>' %}
+                        {% set orderIdHref = '<a href="'~path('scan_message_show',{'id':orderId})~'">'~orderId~'</a>' %}
                     {% else %}
                         {% set orderIdHref = orderId %}
                     {% endif %}
@@ -962,6 +973,13 @@
 
                     {% if message.reportRecipients is defined %}
                         {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
+                    {% endif %}
+
+                    {% if message.organizationRecipients is defined %}
+                        {% for organizationRecipient in message.organizationRecipients %}
+                            <h5>{{ form_label(message.organizationRecipients) }}</h5>
+                            {{ treemacros.compositeTreeNode(organizationRecipient.institution,'','') }}
+                        {% endfor %}
                     {% endif %}
 
                 </div> {#body#}

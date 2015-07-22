@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,6 +45,9 @@ class MessageObjectType extends AbstractType
         if( !array_key_exists('message.reportRecipients', $this->params) ) {
             $this->params['message.reportRecipients'] = true;
         }
+        if( !array_key_exists('message.organizationRecipients', $this->params) ) {
+            $this->params['message.organizationRecipients'] = true;
+        }
         if( !array_key_exists('message.sources', $this->params) ) {
             $this->params['message.sources'] = true;
         }
@@ -73,6 +77,7 @@ class MessageObjectType extends AbstractType
             'proxyuser' => 'Ordering Provider(s):',
             'orderRecipients' => 'Order Recipient(s):',
             'reportRecipients' => 'Report Recipient(s):',
+            'organizationRecipients' => 'Recipient Organization(s):',
             'provider' => 'Submitter:',
             'returnoption' => 'Return slide(s) by this date even if not scanned:',
             'priority' => 'Priority:',
@@ -163,6 +168,11 @@ class MessageObjectType extends AbstractType
                 'required' => false,
                 'classtype' => 'userWrapper'
             ));
+        }
+
+        if( $this->keyInArrayAndTrue($this->params,'message.organizationRecipients') ) {
+            $this->params['label'] = $this->labels['organizationRecipients'];
+            $this->addFormOrganizationRecipients('organizationRecipients',$builder,$this->params);
         }
 
         if( $this->keyInArrayAndTrue($this->params,'educational') ) {
@@ -347,6 +357,28 @@ if( 1 ) {
                     ));
                 }
 
+                //Referral Order
+                if( $messageCategory == "Referral Order" ) {
+                    //overwrite orderRecipients with new title
+                    $form->add('orderRecipients', 'custom_selector', array(
+                        'label' => 'Refer To Individual:',
+                        'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
+                        'required' => false,
+                        'classtype' => 'userWrapper'
+                    ));
+
+                    //overwrite organizationRecipients with title "Refer to Organization:"
+                    $this->params['label'] = "Refer to Organization:";
+                    $this->addFormOrganizationRecipients('organizationRecipients',$form,$this->params);
+
+                    //show the "Note" field with the title of "Indication"
+                    $form->add('comment', 'text', array(
+                        'required' => false,
+                        'label' => 'Indication:',
+                        'attr' => array('class' => 'textarea form-control'),
+                    ));
+                }
+
                 //Procedure Note
                 if( $messageCategory == "Procedure Note" ) {
                     $form->add('comment', 'text', array(
@@ -362,6 +394,18 @@ if( 1 ) {
                         'required' => false,
                         'label' => false
                     ));
+
+                    //overwrite organizationRecipients with title "Laboratory:"
+                    if( $messageCategory == "Lab Order Requisition" ) {
+//                        $form->add('organizationRecipients', 'custom_selector', array(
+//                            'label' => "Laboratory:",
+//                            'attr' => array('class' => 'combobox combobox-width ajax-combobox-institution'),
+//                            'required' => false,
+//                            'classtype' => 'institution'
+//                        ));
+                        $this->params['label'] = "Laboratory:";
+                        $this->addFormOrganizationRecipients('organizationRecipients',$form,$this->params);
+                    }
 
                     if( $messageCategory != "Lab Order Requisition" ) {
                         $params = array('labelPrefix'=>'Requisition Form Image');
@@ -518,17 +562,20 @@ if( 1 ) {
                 }
 
 
-                //////////////////// message exception fields such as orderRecipients, reportRecipients  ////////////////////
+                //////////////////// message exception fields such as orderRecipients, reportRecipients etc  ////////////////////
                 $showOrderRecipients = true;
                 $showReportRecipients = false;
 
                 if( $messageCategory == "Image Analysis Order" ) {
-                    $showOrderRecipients = true;
                     $showReportRecipients = true;
                 }
 
                 if( strpos($messageCategory,'Report') !== false ) {
                     $showOrderRecipients = false;
+                    $showReportRecipients = true;
+                }
+
+                if( strpos($messageCategory,'Lab Order Requisition') !== false ) {
                     $showReportRecipients = true;
                 }
 
@@ -972,6 +1019,19 @@ if( 1 ) {
         $form->add($field, 'collection', array(
             'type' => new EndpointType($params,$this->entity),
             'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__'.$field.'__',
+        ));
+    }
+
+    public function addFormOrganizationRecipients( $field, $form, $params ) {
+        $form->add($field, 'collection', array(
+            'type' => new InstitutionalWrapperType($params,$this->entity),
+            'label' => $this->params['label'],
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
