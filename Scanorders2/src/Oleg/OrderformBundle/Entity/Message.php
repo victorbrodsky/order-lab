@@ -1394,6 +1394,14 @@ class Message {
         return $fullName;
     }
 
+    public function getUrl($generator,$urlname,$oid) {
+        $url = null;
+        if( $generator && $oid && $urlname ) {
+            $url = $generator->generate($urlname, array('id' => $oid), true);
+        }
+        return $url;
+    }
+
     public function __toString(){
 
 //        $patient_info = "(";

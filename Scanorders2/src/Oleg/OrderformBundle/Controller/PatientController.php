@@ -134,6 +134,7 @@ class PatientController extends Controller
             'cycle' => 'new',
             'user' => $user,
             'em' => $em,
+            'container' => $this->container,
             'datastructure' => 'datastructure',
         );
 
@@ -212,6 +213,7 @@ class PatientController extends Controller
             'cycle' => "show",
             'user' => $user,
             'em' => $em,
+            'container' => $this->container,
             'datastructure' => 'datastructure'
         );
 

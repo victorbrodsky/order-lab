@@ -701,11 +701,15 @@
                         {% endif %}
 
                         {#associations and backAssociations: controlled by controller and form#}
-                        {#message.vars.value.associations|length:{{ message.vars.value.associations|length }}<br>#}
-                        {#message.associations|length:{{ message.associations|length }}#}
                         {% if message.associations is defined %}
                             {% if message.vars.value.id %}
-                                {{ formmacros.field_notempty( message.associations, cycle ) }}
+                                {#{{ formmacros.field_notempty( message.associations, cycle ) }}#}
+                                {% set messageHrefs = [] %}
+                                {% for association in message.vars.value.associations %}
+                                    {% set messageHref = '<p><a href="'~path('scan_message_show',{'id':association.id})~'">'~association.getFullName()~'</a></p>' %}
+                                    {% set messageHrefs = messageHrefs|merge([messageHref]) %}
+                                {% endfor %}
+                                {{ formmacros.simplefield( "Association:", messageHrefs|join(""), "", "disabled" ) }}
                             {% else %}
                                 {% for association in message.vars.value.associations %}
                                     {{ formmacros.simplefield( "Association:", association.getFullName(), "", "disabled" ) }}
@@ -715,7 +719,13 @@
                         {#message.backAssociations|length:{{ message.backAssociations|length }}#}
                         {% if message.backAssociations is defined %}
                             {% if message.vars.value.id %}
-                                {{ formmacros.field_notempty( message.backAssociations, cycle ) }}
+                                {#{{ formmacros.field_notempty( message.backAssociations, cycle ) }}#}
+                                {% set messageHrefs = [] %}
+                                {% for backAssociation in message.vars.value.backAssociations %}
+                                    {% set messageHref = '<p><a href="'~path('scan_message_show',{'id':backAssociation.id})~'">'~backAssociation.getFullName()~'</a></p>' %}
+                                    {% set messageHrefs = messageHrefs|merge([messageHref]) %}
+                                {% endfor %}
+                                {{ formmacros.simplefield( "Back Association:", messageHrefs|join(""), "", "disabled" ) }}
                             {% else %}
                                 {% for backAssociation in message.vars.value.backAssociations %}
                                     {{ formmacros.simplefield( "Back Association:", backAssociation.getFullName(), "", "disabled" ) }}
