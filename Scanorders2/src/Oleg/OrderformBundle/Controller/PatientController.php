@@ -1297,6 +1297,11 @@ class PatientController extends Controller
             $message->setReport($report);
 
             //add 2 proxyusers
+
+            //show Report Recipient(s)
+            $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
+            $UserWrappers = $UserWrapperTransformer->reverseTransform($user."");
+            $message->addReportRecipient($UserWrappers[0]);
         }
 
         if( $messageCategoryStr == "Block Report" ) {

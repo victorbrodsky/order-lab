@@ -240,7 +240,7 @@
     {% endif %}
 
     {% if fieldname == "proxyuser" or fieldname == "orderRecipients" or fieldname == "reportRecipients" %}
-
+        all users!
         {% if fieldname == "proxyuser" %}
             {% set userValues = container.vars.value.proxyuser %}
             {% set userLabel = container.proxyuser.vars.label %}
@@ -260,10 +260,12 @@
         {% endif %}
 
         {% if fieldname == "reportRecipients" %}
+            reportRecipients2!
             {% set userValues = container.vars.value.reportRecipients %}
             {% set userLabel = container.reportRecipients.vars.label %}
             {% set userForm = null %}
             {% if container.reportRecipients is defined %}
+                reportRecipients3!
                 {% set userForm = container.reportRecipients %}
             {% endif %}
         {% endif %}
@@ -273,9 +275,12 @@
         {#{% set userLabel = container.proxyuser.vars.label %}#}
         {% if userForm %}
             {% if showFlag and container.vars.value %}
+                case1!!!
+                userValues|length={{ userValues|length }}
                 {% set label = userLabel %}
                 {{ formmacros.showUserWrapperAsSimpleField( userValues, label, attr ) }}
             {% else %}
+                case2!!!
                 {{ formmacros.field(userForm) }}
             {% endif %}
         {% endif %}
@@ -688,6 +693,7 @@
                         {% endif %}
 
                         {% if message.reportRecipients is defined %}
+                            reportRecipients!
                             {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
                         {% endif %}
 
@@ -702,35 +708,10 @@
 
                         {#associations and backAssociations: controlled by controller and form#}
                         {% if message.associations is defined %}
-                            {% if message.vars.value.id %}
-                                {#{{ formmacros.field_notempty( message.associations, cycle ) }}#}
-                                {% set messageHrefs = [] %}
-                                {% for association in message.vars.value.associations %}
-                                    {% set messageHref = '<p><a href="'~path('scan_message_show',{'id':association.id})~'">'~association.getFullName()~'</a></p>' %}
-                                    {% set messageHrefs = messageHrefs|merge([messageHref]) %}
-                                {% endfor %}
-                                {{ formmacros.simplefield( "Association:", messageHrefs|join(""), "", "disabled" ) }}
-                            {% else %}
-                                {% for association in message.vars.value.associations %}
-                                    {{ formmacros.simplefield( "Association:", association.getFullName(), "", "disabled" ) }}
-                                {% endfor %}
-                            {% endif %}
+                            {{ formmacros.showMessageUrls( message.vars.value.associations, "Association(s):", cycle ) }}
                         {% endif %}
-                        {#message.backAssociations|length:{{ message.backAssociations|length }}#}
                         {% if message.backAssociations is defined %}
-                            {% if message.vars.value.id %}
-                                {#{{ formmacros.field_notempty( message.backAssociations, cycle ) }}#}
-                                {% set messageHrefs = [] %}
-                                {% for backAssociation in message.vars.value.backAssociations %}
-                                    {% set messageHref = '<p><a href="'~path('scan_message_show',{'id':backAssociation.id})~'">'~backAssociation.getFullName()~'</a></p>' %}
-                                    {% set messageHrefs = messageHrefs|merge([messageHref]) %}
-                                {% endfor %}
-                                {{ formmacros.simplefield( "Back Association:", messageHrefs|join(""), "", "disabled" ) }}
-                            {% else %}
-                                {% for backAssociation in message.vars.value.backAssociations %}
-                                    {{ formmacros.simplefield( "Back Association:", backAssociation.getFullName(), "", "disabled" ) }}
-                                {% endfor %}
-                            {% endif %}
+                            {{ formmacros.showMessageUrls( message.vars.value.backAssociations, "Back Association(s):", cycle ) }}
                         {% endif %}
 
                         {#controlled by controller and form#}
@@ -973,7 +954,7 @@
                     {% endif %}
 
                     {#controlled by controller and form#}
-                    {% if field_show_user is defined %}
+                    {% if message.proxyuser is defined %}
                         {{ formmacros.field_show_user( message, "proxyuser", cycle ) }}
                     {% endif %}
 
@@ -992,6 +973,15 @@
                         {% endfor %}
                     {% endif %}
 
+
+                    {#associations and backAssociations: controlled by controller and form#}
+                    {% if message.associations is defined %}
+                        {{ formmacros.showMessageUrls( message.vars.value.associations, "Association(s):", cycle ) }}
+                    {% endif %}
+                    {% if message.backAssociations is defined %}
+                        {{ formmacros.showMessageUrls( message.vars.value.backAssociations, "Back Association(s):", cycle ) }}
+                    {% endif %}
+
                 </div> {#body#}
                 </div> {#panel#}
 
@@ -1004,6 +994,25 @@
     {% endif %}
 
 {% endmacro %}
+
+{% macro showMessageUrls(messageValues,label,cycle) %}
+    {% import _self as formmacros %}
+    {#{{ formmacros.field_notempty( messages, cycle ) }}#}
+    {% set messageHrefs = [] %}
+    {% for messageValue in messageValues %}
+        {% if messageValue.id %}
+            {% set messageHref = '<p><a href="'~path('scan_message_show',{'id':messageValue.id})~'">'~messageValue.getFullName()~'</a></p>' %}
+        {% else %}
+            {% set messageHref = '<p>'~messageValue.getFullName()~'</p>' %}
+        {% endif %}
+        {% set messageHrefs = messageHrefs|merge([messageHref]) %}
+    {% endfor %}
+
+    {% if messageHrefs|length > 0 %}
+        {{ formmacros.simplefield( label, messageHrefs|join(""), "", "disabled" ) }}
+    {% endif %}
+{% endmacro %}
+
 
 {% macro fieldUserWrapper(userWrappers,cycle) %}
     {% import _self as formmacros %}

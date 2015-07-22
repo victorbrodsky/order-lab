@@ -573,11 +573,14 @@ if( 1 ) {
                 if( strpos($messageCategory,'Report') !== false ) {
                     $showOrderRecipients = false;
                     $showReportRecipients = true;
+                    //echo $messageCategory.": showReportRecipients=".$showReportRecipients."<br>";
                 }
 
                 if( strpos($messageCategory,'Lab Order Requisition') !== false ) {
                     $showReportRecipients = true;
                 }
+
+                //echo "showReportRecipients=".$showReportRecipients."<br>";
 
                 //remove fields
                 if( !$showOrderRecipients ) {
