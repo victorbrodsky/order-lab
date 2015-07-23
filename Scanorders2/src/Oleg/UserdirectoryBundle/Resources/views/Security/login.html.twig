@@ -93,9 +93,13 @@
             function setFullUsername() {
 
                 var usertypeAbbreviation = $('#usernametypeid_show').select2('val');
-                if( !usertypeAbbreviation || usertypeAbbreviation == "" ) {
-                    return;
+                if( !usertypeAbbreviation || usertypeAbbreviation == "" || usertypeAbbreviation === null || typeof usertypeAbbreviation === 'object' ) {
+                    //return;
+                    usertypeAbbreviation = 'wcmc-cwid';
                 }
+
+                //console.log(usertypeAbbreviation);
+                //alert(usertypeAbbreviation);
 
                 var username = $('#display-username').val();
                 if( !username || username == "" ) {

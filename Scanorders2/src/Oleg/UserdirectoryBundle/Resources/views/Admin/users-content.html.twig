@@ -59,9 +59,9 @@
             <th>
                 {{ knp_pagination_sortable(entities, 'Institution(s)', 'administrativeInstitution.name') }}
             </th>
-            <th>
-                {{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}
-            </th>
+            {#<th>#}
+                {#{{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}#}
+            {#</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Name', 'infos.displayName') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Administrative Title(s)', 'administrativeName.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Academic Title(s)', 'appointmentName.name') }}</th>
@@ -92,17 +92,17 @@
             <tr>
                 <td style="display:none"><a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td class="rowlink-skip">
-                    {% for institution in entity.getinstitutions %}
+                    {% for institution in entity.getInstitutions %}
                         <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a></p>
                     {% endfor %}
                 </td>
-                <td class="rowlink-skip">
-                    {% for service in entity.getServices %}
-                        {% if service is defined and service != "" %}
-                            <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.name }) }}">{{ service.name }}</a></p>
-                        {% endif %}
-                    {% endfor %}
-                </td>
+                {#<td class="rowlink-skip">#}
+                    {#{% for service in entity.getServices %}#}
+                        {#{% if service is defined and service != "" %}#}
+                            {#<p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.name }) }}">{{ service.name }}</a></p>#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+                {#</td>#}
                 <td>
                     <a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}"><strong>{{ entity.displayName }}</strong></a>
                 </td>
