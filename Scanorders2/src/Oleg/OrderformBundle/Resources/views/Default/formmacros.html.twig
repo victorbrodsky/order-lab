@@ -240,7 +240,6 @@
     {% endif %}
 
     {% if fieldname == "proxyuser" or fieldname == "orderRecipients" or fieldname == "reportRecipients" %}
-        all users!
         {% if fieldname == "proxyuser" %}
             {% set userValues = container.vars.value.proxyuser %}
             {% set userLabel = container.proxyuser.vars.label %}
@@ -260,12 +259,10 @@
         {% endif %}
 
         {% if fieldname == "reportRecipients" %}
-            reportRecipients2!
             {% set userValues = container.vars.value.reportRecipients %}
             {% set userLabel = container.reportRecipients.vars.label %}
             {% set userForm = null %}
             {% if container.reportRecipients is defined %}
-                reportRecipients3!
                 {% set userForm = container.reportRecipients %}
             {% endif %}
         {% endif %}
@@ -275,12 +272,9 @@
         {#{% set userLabel = container.proxyuser.vars.label %}#}
         {% if userForm %}
             {% if showFlag and container.vars.value %}
-                case1!!!
-                userValues|length={{ userValues|length }}
                 {% set label = userLabel %}
                 {{ formmacros.showUserWrapperAsSimpleField( userValues, label, attr ) }}
             {% else %}
-                case2!!!
                 {{ formmacros.field(userForm) }}
             {% endif %}
         {% endif %}
@@ -693,7 +687,6 @@
                         {% endif %}
 
                         {% if message.reportRecipients is defined %}
-                            reportRecipients!
                             {{ formmacros.field_show_user( message, "reportRecipients", cycle ) }}
                         {% endif %}
 
@@ -1168,13 +1161,7 @@
                 {% set btntype = 'none' %}
             {% endif %}
 
-            {#{% if classname == "encounterpatname" %}#}
-                {#{{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype,'norest') }}#}
-                {#{{ formmacros.inputField(field,cycle,"encounterpatfirstname","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}#}
-                {#{{ formmacros.inputField(field,cycle,"encounterpatmiddlename","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}#}
-            {#{% else %}#}
-                {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}
-            {#{% endif %}#}
+            {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}
 
         {% endif %}
         {% set count = count + 1 %}
@@ -1237,6 +1224,8 @@
                         {{ formmacros.labelWithInfo(field,fieldThis.staintype,cycle,prototype,showInfoDate,showInfoProvider) }}
                         {#<br>#}
                         {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}
+                    {% elseif fieldtype == "paper" %}
+                        {{ formmacros.labelWithInfo(field,fieldThis.documents,cycle,prototype,showInfoDate,showInfoProvider) }}
                     {% else %}
                         {% if fieldThis.field is defined %}
                             {{ formmacros.labelWithInfo(field,fieldThis.field,cycle,prototype,showInfoDate,showInfoProvider) }}
@@ -1942,9 +1931,10 @@
         {#{{ formmacros.inputArrayField(encounter.number,cycle,"encounternumber",key,"","","",status) }}#}
         {#{{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}#}
 
+        {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
         {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
         {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
-        {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+
         {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
         {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
         {{ formmacros.inputArrayField(encounter.patage,cycle,"encounterpatage","","","","",status) }}
@@ -2040,6 +2030,12 @@
                 <p><div class="encounterdate">{{ encounterdateHtml }}</div></p>
             {% endif %}
 
+            {% if patlastnameHtml is not defined or patlastnameHtml == "" %}
+                {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+            {% else  %}
+                <p><div class="encounterpatlastname">{{ patlastnameHtml }}</div></p>
+            {% endif %}
+
             {% if patfirstameHtml is not defined or patfirstnameHtml == "" %}
                 {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
             {% else  %}
@@ -2052,11 +2048,6 @@
                 <p><div class="encounterpatmiddlename">{{ patmiddlenameHtml }}</div></p>
             {% endif %}
 
-            {% if patlastnameHtml is not defined or patlastnameHtml == "" %}
-                {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
-            {% else  %}
-                <p><div class="encounterpatlastname">{{ patlastnameHtml }}</div></p>
-            {% endif %}
 
             {% if patsuffixHtml is not defined or patsuffixHtml == "" %}
                 {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
@@ -2275,7 +2266,7 @@
 
         <p>
         {% if flag and flag == "datastructure" %}
-            <div class="panel panel-scan">
+            <div class="panel panel-imaging">
 
                 {#panel-heading-min-height panel-heading-hierarchy#}
                 <div class="panel-heading panel-heading-hierarchy">

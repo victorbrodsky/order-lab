@@ -117,6 +117,8 @@ class GrantType extends AbstractType
         //Relevant Documents
         $params = array('labelPrefix'=>'Relevant Document');
         $params['document.showall'] = false;
+        $params['document.imageId'] = false;
+        $params['document.source'] = false;
         //$params['read_only'] = $readonly;
         $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
             'required' => false,

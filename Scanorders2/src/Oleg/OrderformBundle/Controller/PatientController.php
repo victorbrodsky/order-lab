@@ -1446,7 +1446,8 @@ class PatientController extends Controller
         $linkTypeDownload = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
         $linkTypeDownloadClean = $linkTypeDownload->getName();
 
-        $docContainer->setTitle('Image from ' . $sourceSystemAperio);
+        //$docContainer->setTitle('Image from ' . $sourceSystemAperio);
+        $docContainer->setTitle('Sample Test Whole Slide Image');
 
         $router = $this->container->get('router');
 

@@ -238,25 +238,6 @@ class MessageObjectType extends AbstractType
         }
 
         //Institution Tree
-//        if( $this->keyInArray($this->params,'institutions') ) {
-//            $institutions = $this->params['institutions'];
-//        } else {
-//            $institutions = null;
-//        }
-//        $builder->add('institution', 'entity', array(
-//            'label' => $this->labels['institution'],
-//            'required'=> true,
-//            'multiple' => false,
-//            'empty_value' => false,
-//            'class' => 'OlegUserdirectoryBundle:Institution',
-//            'choices' => $institutions,
-//            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
-//        ));
-//        $builder->add('institution', new InstitutionType($this->params), array(
-//            'required' => false,
-//            'label' => false    //'Institution:'
-//        ));
-        //Institutional PHI Scope
         if( array_key_exists('institutions', $this->params) ) {
             $institutions = $this->params['institutions'];
         } else {
@@ -397,12 +378,6 @@ if( 1 ) {
 
                     //overwrite organizationRecipients with title "Laboratory:"
                     if( $messageCategory == "Lab Order Requisition" ) {
-//                        $form->add('organizationRecipients', 'custom_selector', array(
-//                            'label' => "Laboratory:",
-//                            'attr' => array('class' => 'combobox combobox-width ajax-combobox-institution'),
-//                            'required' => false,
-//                            'classtype' => 'institution'
-//                        ));
                         $this->params['label'] = "Laboratory:";
                         $this->addFormOrganizationRecipients('organizationRecipients',$form,$this->params);
                     }
@@ -441,6 +416,12 @@ if( 1 ) {
                         'label' => false
                     ));
 
+                    $form->add('comment', 'text', array(
+                        'required' => false,
+                        'label' => 'Comment:',
+                        'attr' => array('class' => 'textarea form-control'),
+                    ));
+
                     if( $messageCategory != "Slide Report" &&
                         $messageCategory != "Stain Report" &&
                         $messageCategory != "Scan Report"
@@ -453,6 +434,8 @@ if( 1 ) {
                             'label' => false
                         ));
                     }
+
+
                 }
 
                 //report block
@@ -461,17 +444,7 @@ if( 1 ) {
                         'required' => false,
                         'label' => false
                     ));
-                }
 
-                if( $messageCategory == "Lab Report" || $messageCategory == "Outside Report" ) {
-                    $form->add('comment', 'text', array(
-                        'required' => false,
-                        'label' => 'Report Text:',
-                        'attr' => array('class' => 'textarea form-control'),
-                    ));
-                }
-
-                if( $messageCategory == "Block Report" ) {
                     $form->add('comment', 'text', array(
                         'required' => false,
                         'label' => 'Comment:',
@@ -576,7 +549,7 @@ if( 1 ) {
                     //echo $messageCategory.": showReportRecipients=".$showReportRecipients."<br>";
                 }
 
-                if( strpos($messageCategory,'Lab Order Requisition') !== false ) {
+                if( $messageCategory == 'Lab Order Requisition' ) {
                     $showReportRecipients = true;
                 }
 
@@ -584,11 +557,11 @@ if( 1 ) {
 
                 //remove fields
                 if( !$showOrderRecipients ) {
-                    $form->remove('orderRecipients');
+                    //$form->remove('orderRecipients');
                 }
 
                 if( !$showReportRecipients ) {
-                    $form->remove('reportRecipients');
+                    //$form->remove('reportRecipients');
                 }
                 //////////////////// EOF message exception fields such as orderRecipients, reportRecipients ////////////////////
 

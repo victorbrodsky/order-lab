@@ -618,36 +618,6 @@ class Patient extends ObjectAbstract
     }
 
 
-//    /**
-//     * Add age
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\PatientAge $age
-//     * @return Patient
-//     */
-//    public function addAge($age)
-//    {
-////        if( $age == null ) {
-////            $age = new PatientAge();
-////        }
-//
-//        if( !$this->age->contains($age) && !$this->hasSimpleField($age,"getAge") ) {
-//            $age->setPatient($this);
-//            $this->age->add($age);
-//        }
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove age
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\PatientAge $age
-//     */
-//    public function removeAge($age)
-//    {
-//        $this->age->removeElement($age);
-//    }
-
     /**
      * Add sex
      *
@@ -656,10 +626,6 @@ class Patient extends ObjectAbstract
      */
     public function addSex($sex)
     {
-//        if( $sex == null ) {
-//            $sex = new PatientSex();
-//        }
-
         if( !$this->sex->contains($sex) && !$this->hasSimpleField($sex,"getSex") ) {
             $sex->setPatient($this);
             $this->sex->add($sex);
@@ -985,7 +951,7 @@ class Patient extends ObjectAbstract
         return $patientFullName ;
     }
 
-
+    //Lastname, Firstname, Middlename
     public function patientName($status) {
 
         $patientFullNameArr = array();
@@ -1037,9 +1003,11 @@ class Patient extends ObjectAbstract
 
             $patientFullName = "";
 
+            //order is important: Lastname, Firstname, Middlename
+            $patientFullName = $this->patientPartialName($patientFullName,$lastNameArrOrder,$orderId,"No Last Name Provided");
             $patientFullName = $this->patientPartialName($patientFullName,$firstNameArrOrder,$orderId,"No First Name Provided");
             $patientFullName = $this->patientPartialName($patientFullName,$middleNameArrOrder,$orderId,"No Middle Name Provided");
-            $patientFullName = $this->patientPartialName($patientFullName,$lastNameArrOrder,$orderId,"No Last Name Provided");
+
             $patientFullName = $this->patientPartialName($patientFullName,$suffixArrOrder,$orderId,"");
 
             if( $patientFullName != "" ) {

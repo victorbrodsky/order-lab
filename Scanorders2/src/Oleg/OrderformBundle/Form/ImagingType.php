@@ -48,46 +48,6 @@ class ImagingType extends AbstractType
                 'attr' => array('class'=>'textarea form-control'),   //form-control
         ));
 
-//        //abstract data
-//        $builder->add('others', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\Imaging',
-//            'label' => false,
-//			'attr' => array('style'=>'display:none;')
-//        ));
-
-
-//        ///////////// mag /////////////
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//
-//            $scan = $event->getData();
-//            $form = $event->getForm();
-//
-//            $tooltip =  "Scanning at 40X magnification is done Friday to Monday. ".
-//                        "Some of the slides (about 7% of the batch) may have to be rescanned the following week in order to obtain sufficient image quality. ".
-//                        "We will do our best to expedite the process.";
-//
-//            $magArr = array(
-//                'label' => 'Magnification:',
-//                'choices' => $this->getArrayOfMaginifications(),
-//                'required' => true,
-//                'multiple' => false,
-//                'expanded' => true,
-//                'attr' => array('class' => 'horizontal_type element-with-tooltip', 'required'=>'required', 'title'=>$tooltip),
-//                //'classtype' => 'magnification'
-//            );
-//
-//            // check if the Scan object is "new"
-//            if( !$scan || null === $scan->getId() ) {
-//                $magArr['data'] = 0;    //'20X';
-//            }
-//
-//            //$form->add( 'magnification', 'employees_custom_selector', $magArr );
-//            $form->add( 'magnification', 'choice', $magArr );
-//
-//        });
-//        ///////////// EOF mag /////////////
-
-
         ///////////// mag /////////////
         $tooltip =  "Scanning at 40X magnification is done Friday to Monday. ".
             "Some of the slides (about 7% of the batch) may have to be rescanned the following week in order to obtain sufficient image quality. ".
@@ -111,51 +71,6 @@ class ImagingType extends AbstractType
                 },
         ));
 
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//
-////            $scan = $event->getData();
-//            $form = $event->getForm();
-//
-//
-//
-////            $magArr = array(
-////                'label' => 'Magnification:',
-////                'choices' => $this->getArrayOfMaginifications(),
-////                'required' => true,
-////                'multiple' => false,
-////                'expanded' => true,
-////                'attr' => array('class' => 'horizontal_type element-with-tooltip', 'required'=>'required', 'title'=>$tooltip),
-////                'classtype' => 'magnification'
-////            );
-//
-//            // check if the Scan object is "new"
-////            if( !$scan || null === $scan->getId() ) {
-////                $maginification = $this->params['em']->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
-////                //echo "set default data=".$maginification."<br>";
-////                $magArr['data'] = $maginification;    //'20X';
-////            }
-//
-//            $form->add('magnification', 'entity', array(
-//                'class' => 'OlegOrderformBundle:Magnification',
-//                'property' => 'name',
-//                'label'=>'Magnification:',
-//                'required'=> true,
-//                'multiple' => false,
-//                'attr' => array('class'=>'combobox combobox-width', 'title'=>$tooltip),
-//                'query_builder' => function(EntityRepository $er) {
-//                        return $er->createQueryBuilder('list')
-//                            ->where("list.type = :typedef OR list.type = :typeadd")
-//                            ->orderBy("list.orderinlist","ASC")
-//                            ->setParameters( array(
-//                                'typedef' => 'default',
-//                                'typeadd' => 'user-added',
-//                            ));
-//                    },
-//            ));
-//
-//        });
-        ///////////// EOF mag /////////////
-
         if( array_key_exists('datastructure', $this->params) &&  $this->params['datastructure'] == true ) {
 
             $builder->add('imageId', 'text', array(
@@ -164,54 +79,18 @@ class ImagingType extends AbstractType
                 'attr' => array('class'=>'form-control'),
             ));
 
-//            $builder->add('imageLink', 'text', array(
-//                'required'=>false,
-//                'label'=>'Image Link:',
-//                'attr' => array('class'=>'form-control'),
-//            ));
-
             $builder->add('source', null, array(
                 'required'=>false,
                 'label'=>'Image ID Source System:',
                 'attr' => array('class' => 'combobox combobox-width'),
             ));
 
-//            $builder->add('provider', null, array(
-//                'required'=>false,
-//                'label'=>'Image Acquired By:',
-//                'attr' => array('class' => 'combobox combobox-width'),
-//            ));
-
-//            $builder->add('creationdate','date',array(
-//                'widget' => 'single_text',
-//                'format' => 'MM/dd/yyyy, H:mm:ss',
-//                'attr' => array('class' => 'datepicker form-control'),
-//                'required' => false,
-//                'label'=>'Image Acquisition Date & Time:',
-//            ));
-
-//            $builder->add( 'equipment', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:Equipment',
-//                'property' => 'name',
-//                'label' => 'Image Acquisition Device:',
-//                'required'=> true,
-//                'multiple' => false,
-//                'attr' => array('class'=>'combobox combobox-width'),
-//                'query_builder' => function(EntityRepository $er) {
-//                        return $er->createQueryBuilder('i')
-//                            ->leftJoin('i.keytype','keytype')
-//                            ->where("keytype.name = :keytype AND i.type != :type")
-//                            ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
-//                    },
-//            ));
-
             //Image container
-            $params = array('labelPrefix'=>'Acquired Image');
+            $params = array('labelPrefix'=>'Attached Image');
             $equipmentTypes = array('Whole Slide Scanners','Microscope Camera');
             $params['device.types'] = $equipmentTypes;
-            //$params['document.device'] = false;
-            //$params['document.datetime'] = false;
-            //$params['document.provider'] = false;
+            $params['document.imageId'] = false;
+            $params['document.source'] = false;
             $params['document.device.label'] = 'Image Acquisition Device:';
             $params['document.datetime.label'] = 'Image Acquisition Date:';
             $params['document.time.label'] = 'Image Acquisition Time:';
@@ -258,31 +137,5 @@ class ImagingType extends AbstractType
         return 'oleg_orderformbundle_imagingtype';
     }
 
-
-//    private function getArrayOfMaginifications(){
-//
-//        $query = $this->params['em']->createQueryBuilder()
-//            ->from('OlegOrderformBundle:Magnification', 'list')
-//            ->select("list")
-//            ->where("list.type = :typedef OR list.type = :typeadd")
-//            ->orderBy("list.orderinlist","ASC")
-//            ->setParameters( array(
-//                'typedef' => 'default',
-//                'typeadd' => 'user-added',
-//            ));
-//
-//        $mags = $query->getQuery()->getResult();
-//
-//        //echo "mags count=".count($mags)."<br>";
-//
-//        $list = array();
-//        foreach( $mags as $mag ){
-//            $list[] = $mag."";
-//        }
-//
-//        //print_r($list);
-//
-//        return $list;
-//    }
 
 }

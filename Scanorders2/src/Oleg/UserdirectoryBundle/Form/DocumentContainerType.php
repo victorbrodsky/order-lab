@@ -52,6 +52,18 @@ class DocumentContainerType extends AbstractType
         ///////////////////////////////////////////////////////////
 
         ///////////////// set default as true /////////////////
+        if( $params && !array_key_exists('document.imageId',$params) ) {
+            $params['document.imageId'] = true;
+        } else {
+            $params['document.imageId'] = false;
+        }
+
+        if( $params && !array_key_exists('document.source',$params) ) {
+            $params['document.source'] = true;
+        } else {
+            $params['document.source'] = false;
+        }
+
         if( $params && !array_key_exists('document.datetime',$params) ) {
             $params['document.datetime'] = true;
         } else {
@@ -100,18 +112,6 @@ class DocumentContainerType extends AbstractType
         ));
 
         if( $this->params['document.showall'] == true ) {
-
-            $builder->add('imageId', 'text', array(
-                'required'=>false,
-                'label'=>'Image ID:',
-                'attr' => array('class'=>'form-control'),
-            ));
-
-            $builder->add('source', null, array(
-                'required'=>false,
-                'label'=>'Image ID Source System:',
-                'attr' => array('class' => 'combobox combobox-width'),
-            ));
 
             $builder->add('title', null, array(
                 'label' => $this->params['labelPrefix'] . ' Title:',
@@ -164,6 +164,22 @@ class DocumentContainerType extends AbstractType
                             },
                     ));
                 }
+            }
+
+            if( $this->params['document.imageId'] ) {
+                $builder->add('imageId', 'text', array(
+                    'required'=>false,
+                    'label'=>'Image ID:',
+                    'attr' => array('class'=>'form-control'),
+                ));
+            }
+
+            if( $this->params['document.source'] ) {
+                $builder->add('source', null, array(
+                    'required'=>false,
+                    'label'=>'Image ID Source System:',
+                    'attr' => array('class' => 'combobox combobox-width'),
+                ));
             }
 
             if( $this->params['document.datetime'] ) {
