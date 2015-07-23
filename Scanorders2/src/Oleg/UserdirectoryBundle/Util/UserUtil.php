@@ -546,9 +546,10 @@ class UserUtil {
         $dql->leftJoin("location.user", "locationuser");
 
         //TODO: show supervisers of this location: get institution => get administrativeTitles joined for institutions => get users and positions
-        //TODO: show supervisers of this location: get user => get administrativeTitles joined for institutions => get users and positions
         $dql->leftJoin("location.institution", "institution");
-        //$dql->leftJoin("institution.administrativeTitles", "userPositions");
+        $dql->leftJoin("institution.administrativeTitles", "administrativeTitles");
+        $dql->leftJoin("administrativeTitles.user", "administrativeTitleUser");
+        //$dql->leftJoin("administrativeTitles.userPositions", "userPositions");
 
         //$dql->leftJoin("locationuser.administrativeTitles", "administrativeTitles");
         //$dql->leftJoin("administrativeTitles.userPositions", "userPositions");
@@ -565,7 +566,7 @@ class UserUtil {
             if(
                 strpos($postData['sort'],'location.') !== false ||
                 //strpos($postData['sort'],'heads.') !== false
-                strpos($postData['sort'],'institution') !== false
+                strpos($postData['sort'],'administrativeTitleUser') !== false
             ) {
                 $sort = $postData['sort'];
             }

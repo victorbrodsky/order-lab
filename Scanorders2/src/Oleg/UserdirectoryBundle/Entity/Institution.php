@@ -52,12 +52,6 @@ class Institution extends BaseCompositeNode {
      **/
     protected $original;
 
-
-    /**
-     * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="institutions")
-     **/
-    private $buildings;
-
     /**
      * Medical, Educational
      * @ORM\ManyToMany(targetEntity="InstitutionType", inversedBy="institutions")
@@ -74,6 +68,26 @@ class Institution extends BaseCompositeNode {
      */
     private $organizationalGroupType;
 
+    //Mapped objects: BaseTitle, BuildingList, Location, Training, Logger
+    /**
+     * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="institutions")
+     **/
+    private $buildings;
+
+//    /**
+//     * @ORM\ManyToMany(targetEntity="AdministrativeTitle", mappedBy="institution")
+//     **/
+//    private $administrativeTitle;
+    /**
+     * @ORM\ManyToMany(targetEntity="AdministrativeTitle", mappedBy="institution")
+     * @ORM\JoinTable(name="user_institution_administrativeTitle",
+     *      joinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="administrativeTitle_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $administrativeTitles;
+
+
 
     //dummy field not linked to DB
     //private $institutionspositiontypes;
@@ -84,8 +98,10 @@ class Institution extends BaseCompositeNode {
     public function __construct() {
         parent::__construct();
 
-        $this->buildings = new ArrayCollection();
         $this->types = new ArrayCollection();
+
+        $this->buildings = new ArrayCollection();
+        $this->administrativeTitles = new ArrayCollection();
     }
 
 
@@ -120,10 +136,29 @@ class Institution extends BaseCompositeNode {
 
         return $this;
     }
-    public function removeBuilding($building)
+    public function removeBuilding($item)
     {
-        $this->buildings->removeElement($building);
+        $this->buildings->removeElement($item);
     }
+
+    public function getAdministrativeTitles()
+    {
+        return $this->administrativeTitles;
+    }
+    public function addAdministrativeTitle($item)
+    {
+        if( !$this->administrativeTitles->contains($item) ) {
+            $this->administrativeTitles->add($item);
+        }
+
+        return $this;
+    }
+    public function removeAdministrativeTitle($item)
+    {
+        $this->administrativeTitles->removeElement($item);
+    }
+
+
 
     public function addType($type)
     {

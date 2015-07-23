@@ -713,8 +713,9 @@ class PatientController extends Controller
         $patient->addExtraFields($status,$user,$system);
 
         //add two contactinfo: "Test Patient's Primary Residence" and "Test Patient's Secondary Residence"
-        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient Contact Information");
-        $patient->addContactinfoByTypeAndName($status,$user,$system,$locationType,"Test Patient's Primary Residence",true);
+        $locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
+        $patient->addContactinfoByTypeAndName($status,$user,$system,$locationTypePrimary,"Test Patient's Primary Residence",true);
+        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Contact Information");
         $patient->addContactinfoByTypeAndName($status,$user,$system,$locationType,"Test Patient's Secondary Residence",true);
 
         if( $withscanorder ) {

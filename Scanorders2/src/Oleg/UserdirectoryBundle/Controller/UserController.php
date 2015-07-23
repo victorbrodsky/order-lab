@@ -373,7 +373,7 @@ class UserController extends Controller
         if( isset($postData['sort']) ) {
             //check for location sort
             //if( strpos($postData['sort'],'location.') === false && strpos($postData['sort'],'heads.') === false ) {
-            if( strpos($postData['sort'],'location.') === false && strpos($postData['sort'],'institution') === false ) {
+            if( strpos($postData['sort'],'location.') === false && strpos($postData['sort'],'administrativeTitleUser') === false ) {
                 $sort = $postData['sort'];
             }
         }

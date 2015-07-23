@@ -47,6 +47,21 @@ class AdministrativeTitle extends BaseTitle
     private $userPositions;
 
 
+//    /**
+//     * Overwrite institution
+//     *
+//     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="buildings")
+//     * @ORM\JoinTable(name="user_buildings_institutions")
+//     **/
+//    private $institution;
+    /**
+     * Overwrite institution to have inversedBy
+     *
+     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="administrativeTitles", cascade={"persist"})
+     */
+    protected $institution;
+
+
 
     function __construct($author=null)
     {
