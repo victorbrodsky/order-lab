@@ -74,19 +74,10 @@ class Institution extends BaseCompositeNode {
      **/
     private $buildings;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="AdministrativeTitle", mappedBy="institution")
-//     **/
-//    private $administrativeTitle;
     /**
-     * @ORM\ManyToMany(targetEntity="AdministrativeTitle", mappedBy="institution")
-     * @ORM\JoinTable(name="user_institution_administrativeTitle",
-     *      joinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="administrativeTitle_id", referencedColumnName="id", unique=true)}
-     *      )
+     * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="institution", cascade={"persist"})
      **/
     private $administrativeTitles;
-
 
 
     //dummy field not linked to DB

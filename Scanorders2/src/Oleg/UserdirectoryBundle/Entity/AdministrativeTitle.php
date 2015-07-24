@@ -33,10 +33,6 @@ class AdministrativeTitle extends BaseTitle
      **/
     private $boss;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="UserPosition", mappedBy="administrativeTitle", cascade={"persist","remove"})
-//     */
-//    private $userPositions;
     /**
      * @ORM\ManyToMany(targetEntity="PositionTypeList")
      * @ORM\JoinTable(name="user_administrative_userPosition",
@@ -46,18 +42,10 @@ class AdministrativeTitle extends BaseTitle
      **/
     private $userPositions;
 
-
-//    /**
-//     * Overwrite institution
-//     *
-//     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="buildings")
-//     * @ORM\JoinTable(name="user_buildings_institutions")
-//     **/
-//    private $institution;
     /**
-     * Overwrite institution to have inversedBy
+     * Overwrite institution, so we can use join to find out Supervisors for location search.
      *
-     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="administrativeTitles", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="administrativeTitles", cascade={"persist"})
      */
     protected $institution;
 

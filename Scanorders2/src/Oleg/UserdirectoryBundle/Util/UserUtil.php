@@ -542,17 +542,16 @@ class UserUtil {
         $repository = $doctrine->getRepository('OlegUserdirectoryBundle:Location');
         $dql =  $repository->createQueryBuilder("location");
         $dql->addSelect('location');
-
+        //$dql->addSelect('COUNT(administrativeTitles) as administrativeTitlesCount');
+        //$dql->GroupBy('location');
         $dql->leftJoin("location.user", "locationuser");
 
         //TODO: show supervisers of this location: get institution => get administrativeTitles joined for institutions => get users and positions
         $dql->leftJoin("location.institution", "institution");
         $dql->leftJoin("institution.administrativeTitles", "administrativeTitles");
+        //$dql->leftJoin("administrativeTitles.name", "administrativeTitleName");
         $dql->leftJoin("administrativeTitles.user", "administrativeTitleUser");
-        //$dql->leftJoin("administrativeTitles.userPositions", "userPositions");
-
-        //$dql->leftJoin("locationuser.administrativeTitles", "administrativeTitles");
-        //$dql->leftJoin("administrativeTitles.userPositions", "userPositions");
+        $dql->leftJoin("administrativeTitleUser.infos", "administrativeTitleUserInfos");
 
         //$dql->leftJoin("location.service", "service");
         //$dql->leftJoin("service.heads", "heads");
@@ -566,7 +565,7 @@ class UserUtil {
             if(
                 strpos($postData['sort'],'location.') !== false ||
                 //strpos($postData['sort'],'heads.') !== false
-                strpos($postData['sort'],'administrativeTitleUser') !== false
+                strpos($postData['sort'],'administrativeTitle') !== false
             ) {
                 $sort = $postData['sort'];
             }
