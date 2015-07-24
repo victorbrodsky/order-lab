@@ -375,7 +375,9 @@ function adjustHolderHeight( commentHolder ) {
 
 
 
-
+//output example:
+// id=   oleg_userdirectorybundle_user_privateComments_0_documents_0_id
+// name= oleg_userdirectorybundle_user[privateComments][0][documents][0][id]
 function constractDocumentIdFieldHtml(commentHolder,documentid) {
 
     var res = getNewDocumentInfoByHolder(commentHolder);
@@ -390,10 +392,13 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
 
     //var documentCount = maxFiles + comments.length;    //'1'; //maximum number of comments is limited, so use this number
 
-    var idHtml =    '<input type="hidden" id="'+beginIdStr+'_documents_'+documentCount+'_id" '+
-        'name="'+beginNameStr+'[documents]['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
+    //var idHtml =    '<input type="hidden" id="'+beginIdStr+'_documents_'+documentCount+'_id" '+
+    //    'name="'+beginNameStr+'[documents]['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
 
-    //console.log("idHtml="+idHtml);
+    var idHtml =    '<input type="hidden" id="'+beginIdStr+documentCount+'_id" '+
+        'name="'+beginNameStr+'['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
+
+    console.log("idHtml="+idHtml);
 
     return idHtml;
 }
@@ -421,8 +426,10 @@ function getNewDocumentInfoByHolder( commentHolder ) {
 
     if( uploadid.length == 0 ) {
         //no existing documents in comment => use alternative id (i.e. first input id)
-        //console.log('upload id does not exist: try alternative id');
-        uploadid = commentHolder.find('input').filter(':visible').not("*[id^='s2id_']"); //.ajax-combobox-partname
+        console.log('upload id does not exist: try alternative id');
+        //uploadid = commentHolder.find('input').filter(':visible').not("*[id^='s2id_']"); //.ajax-combobox-partname
+        //uploadid = commentHolder.find('input.document-holder-id'); //.ajax-combobox-partname
+        throw new Error("upload id is empty, uploadid="+uploadid);
     }
 
     var id = uploadid.first().attr('id');
@@ -441,8 +448,8 @@ function getNewDocumentInfoByHolder( commentHolder ) {
 //get id and name up to _documents_
 function getElementInfoById( id, name ) {
 
-    //console.log('id='+id);
-    //console.log('name='+name);
+    console.log('id='+id);
+    console.log('name='+name);
 
     if( !id || id == ""  ) {
         throw new Error("id is empty, id="+id+", name="+name);
@@ -453,75 +460,21 @@ function getElementInfoById( id, name ) {
     }
 
 
-    if( id.indexOf("orderformbundle") !== -1 ) {
-        var res = getElementInfoById_Scan( id, name );
-    } else {
-        var res = getElementInfoById_User( id, name );
-    }
-
-    //check document count
-//    var holder = $('#'+id).closest('.file-upload-dropzone');
-//    var documents = holder.find('.dz-image-preview');
-//    var documentCount = documents.length;
-//    console.log( parseInt(res['documentCount']) + "<" + parseInt(documentCount) );
-//    if( parseInt(res['documentCount']) < parseInt(documentCount) ) {
-//        res['documentCount'] = documentCount;
-//        console.log( "documentCount=" + res['documentCount'] );
+//    if( id.indexOf("orderformbundle") !== -1 ) {
+//        var res = getElementInfoById_Scan( id, name );
+//    } else {
+//        var res = getElementInfoById_User( id, name );
 //    }
 
-    return res;
-}
 
-function getElementInfoById_User( id, name ) {
+    //id: oleg_userdirectorybundle_user[publicComments][0][documents][__document__][id]
+    var idArr = id.split("__document__");
+    var beginIdStr = idArr[0];
+    console.log('beginIdStr='+beginIdStr);
 
-    var beginIdStr = null;
-    var beginNameStr = null;
-
-    //adding document to existing documentContainer with existing document(s)
-    //input: oleg_userdirectorybundle_user_publicComments_0_documents_1_id
-    //goal:  oleg_userdirectorybundle_user_publicComments_0
-    if( id.indexOf("_documents_") !== -1 ) {
-
-        /////////////// adding document //////////////////
-        var idArr = id.split("_documents");
-        beginIdStr = idArr[0];
-        var nameArr = name.split("[documents]");
-        beginNameStr = nameArr[0];
-
-    } else {
-
-        /////////////// new document //////////////////
-        //comment's document
-        //input: oleg_userdirectorybundle_user_publicComments_0_commentType
-        //goal:  oleg_userdirectorybundle_user_publicComments_0
-        if( id.indexOf("_commentType") !== -1 ) {
-            var idArr = id.split("_commentType");
-            beginIdStr = idArr[0];
-            var nameArr = name.split("[commentType]");
-            beginNameStr = nameArr[0];
-        }
-
-        //grant's document
-        //input: oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0_id
-        //goal:  oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0
-        if( id.indexOf("_documentContainers_") !== -1 ) {
-            var idArr = id.split("_documentContainers_");
-            var containerIndexArr = idArr[1].split("_id");
-            beginIdStr = idArr[0]+"_documentContainers_"+containerIndexArr[0];
-
-            var nameArr = name.split("[documentContainers]");
-            beginNameStr = nameArr[0]+"[documentContainers]"+"["+containerIndexArr[0]+"]";
-        }
-
-    }
-
-    if( beginIdStr == null ) {
-        throw new Error("beginIdStr is empty, beginIdStr="+beginIdStr);
-    }
-
-    if( beginNameStr == null ) {
-        throw new Error("beginNameStr is empty, beginNameStr="+beginNameStr);
-    }
+    var nameArr = name.split("[__document__]");
+    var beginNameStr = nameArr[0];
+    console.log('beginNameStr='+beginNameStr);
 
 
     var res = new Array();
@@ -531,90 +484,149 @@ function getElementInfoById_User( id, name ) {
     return res;
 }
 
-function getElementInfoById_Scan( id, name ) {
-
-    //console.log('id='+id);
-    //console.log('name='+name);
-
-    //id=oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_name
-
-    //result error:
-    //                                                        _accession_0_part_0_documents_0_id
-
-    //  0           1           2           3    4    5      6      7    8   9  10   11     12   13     14  15
-    //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id
-
-    //var documentCount = 0;
-    var beginIdStr = null;
-    var beginNameStr = null;
-
-    if( id.indexOf("_documents_") !== -1 ) {
-        var idArr = id.split("_documents");
-        beginIdStr = idArr[0];
-        var nameArr = name.split("[documents]");
-        beginNameStr = nameArr[0];
-    } else {
-
-        //when collection does not have a file => use first collection field
-        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_partname_0_field
-        //goal:  oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0
-        if( id.indexOf("_partname_") !== -1 ) {
-            //need id up to _paper_0 => attach
-            var idArr = id.split("_partname_");
-            beginIdStr = idArr[0] + "_paper_0";
-            var nameArr = name.split("[partname]");
-            beginNameStr = nameArr[0] + "[paper][0]";
-        }
-
-        //TODO: test it
-        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_sourceOrgan_0_field
-        //goal:  oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0
-//        if( id.indexOf("_sourceOrgan_") !== -1 ) {
-//            var idArr = id.split("_sourceOrgan_");
+//function getElementInfoById_User( id, name ) {
+//
+//    var beginIdStr = null;
+//    var beginNameStr = null;
+//
+//    //adding document to existing documentContainer with existing document(s)
+//    //input: oleg_userdirectorybundle_user_publicComments_0_documents_1_id
+//    //goal:  oleg_userdirectorybundle_user_publicComments_0
+//    if( id.indexOf("_documents_") !== -1 ) {
+//
+//        /////////////// adding document //////////////////
+//        var idArr = id.split("_documents");
+//        beginIdStr = idArr[0];
+//        var nameArr = name.split("[documents]");
+//        beginNameStr = nameArr[0];
+//
+//    } else {
+//
+//        /////////////// new document //////////////////
+//        //comment's document
+//        //input: oleg_userdirectorybundle_user_publicComments_0_commentType
+//        //goal:  oleg_userdirectorybundle_user_publicComments_0
+//        if( id.indexOf("_commentType") !== -1 ) {
+//            var idArr = id.split("_commentType");
 //            beginIdStr = idArr[0];
-//            var nameArr = name.split("[sourceOrgan]");
+//            var nameArr = name.split("[commentType]");
 //            beginNameStr = nameArr[0];
 //        }
-
-        //TODO: test it
-        //name: oleg_orderformbundle_messagetype[patient][0][procedure][0][accession][0][laborder][0][imageTitle]
-        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_laborder_0_imageTitle
-        //goal:  oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_laborder_0
-//        if( id.indexOf("_imageTitle") !== -1 ) {
-//            containerName = "";
-//            containerId = "";
-//            var idArr = id.split("_imageTitle");
-//            beginIdStr = idArr[0];
-//            var nameArr = name.split("[imageTitle]");
-//            beginNameStr = nameArr[0];
+//
+//        //grant's document
+//        //input: oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0_id
+//        //goal:  oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0
+//        if( id.indexOf("_documentContainers_") !== -1 ) {
+//            var idArr = id.split("_documentContainers_");
+//            var containerIndexArr = idArr[1].split("_id");
+//            beginIdStr = idArr[0]+"_documentContainers_"+containerIndexArr[0];
+//
+//            var nameArr = name.split("[documentContainers]");
+//            beginNameStr = nameArr[0]+"[documentContainers]"+"["+containerIndexArr[0]+"]";
 //        }
-    }
+//
+//    }
+//
+//    if( beginIdStr == null ) {
+//        throw new Error("beginIdStr is empty, beginIdStr="+beginIdStr);
+//    }
+//
+//    if( beginNameStr == null ) {
+//        throw new Error("beginNameStr is empty, beginNameStr="+beginNameStr);
+//    }
+//
+//
+//    var res = new Array();
+//    res['beginIdStr'] = beginIdStr;
+//    res['beginNameStr'] = beginNameStr;
+//
+//    return res;
+//}
 
-    //document is part of the document container
-    //name=oleg_orderformbundle_messagetype[patient][0][encounter][0][procedure][0][accession][0][laborder][0][documentContainer][id]
-    //input: oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_laborder_0_documentContainer_id
-    //goal:  oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_laborder_0
-    if( id.indexOf("_documentContainer_") !== -1 ) {
-        var idArr = id.split("_documentContainer_");
-        beginIdStr = idArr[0] + "_documentContainer";
-        var nameArr = name.split("[documentContainer]");
-        beginNameStr = nameArr[0] + "[documentContainer]";
-    }
-
-    if( beginIdStr == null ) {
-        throw new Error("beginIdStr is empty, beginIdStr="+beginIdStr);
-    }
-
-    if( beginNameStr == null ) {
-        throw new Error("beginNameStr is empty, beginNameStr="+beginNameStr);
-    }
-
-    var res = new Array();
-    res['beginIdStr'] = beginIdStr;
-    res['beginNameStr'] = beginNameStr;
-
-    return res;
-}
+//function getElementInfoById_Scan( id, name ) {
+//
+//    //console.log('id='+id);
+//    //console.log('name='+name);
+//
+//    //id=oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_name
+//
+//    //result error:
+//    //                                                        _accession_0_part_0_documents_0_id
+//
+//    //  0           1           2           3    4    5      6      7    8   9  10   11     12   13     14  15
+//    //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id
+//
+//    //var documentCount = 0;
+//    var beginIdStr = null;
+//    var beginNameStr = null;
+//
+//    if( id.indexOf("_documents_") !== -1 ) {
+//        var idArr = id.split("_documents");
+//        beginIdStr = idArr[0];
+//        var nameArr = name.split("[documents]");
+//        beginNameStr = nameArr[0];
+//    } else {
+//
+//        //when collection does not have a file => use first collection field
+//        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+//        //goal:  oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0
+//        if( id.indexOf("_partname_") !== -1 ) {
+//            //need id up to _paper_0 => attach
+//            var idArr = id.split("_partname_");
+//            beginIdStr = idArr[0] + "_paper_0";
+//            var nameArr = name.split("[partname]");
+//            beginNameStr = nameArr[0] + "[paper][0]";
+//        }
+//
+//        //TODO: test it
+//        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_sourceOrgan_0_field
+//        //goal:  oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0
+////        if( id.indexOf("_sourceOrgan_") !== -1 ) {
+////            var idArr = id.split("_sourceOrgan_");
+////            beginIdStr = idArr[0];
+////            var nameArr = name.split("[sourceOrgan]");
+////            beginNameStr = nameArr[0];
+////        }
+//
+//        //TODO: test it
+//        //name: oleg_orderformbundle_messagetype[patient][0][procedure][0][accession][0][laborder][0][imageTitle]
+//        //input: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_laborder_0_imageTitle
+//        //goal:  oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_laborder_0
+////        if( id.indexOf("_imageTitle") !== -1 ) {
+////            containerName = "";
+////            containerId = "";
+////            var idArr = id.split("_imageTitle");
+////            beginIdStr = idArr[0];
+////            var nameArr = name.split("[imageTitle]");
+////            beginNameStr = nameArr[0];
+////        }
+//    }
+//
+//    //document is part of the document container
+//    //name=oleg_orderformbundle_messagetype[patient][0][encounter][0][procedure][0][accession][0][laborder][0][documentContainer][id]
+//    //input: oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_laborder_0_documentContainer_id
+//    //goal:  oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_laborder_0
+//    if( id.indexOf("_documentContainer_") !== -1 ) {
+//        var idArr = id.split("_documentContainer_");
+//        beginIdStr = idArr[0] + "_documentContainer";
+//        var nameArr = name.split("[documentContainer]");
+//        beginNameStr = nameArr[0] + "[documentContainer]";
+//    }
+//
+//    if( beginIdStr == null ) {
+//        throw new Error("beginIdStr is empty, beginIdStr="+beginIdStr);
+//    }
+//
+//    if( beginNameStr == null ) {
+//        throw new Error("beginNameStr is empty, beginNameStr="+beginNameStr);
+//    }
+//
+//    var res = new Array();
+//    res['beginIdStr'] = beginIdStr;
+//    res['beginNameStr'] = beginNameStr;
+//
+//    return res;
+//}
 
 
 //fieldSelector - any element's id or class in the collection with proper id

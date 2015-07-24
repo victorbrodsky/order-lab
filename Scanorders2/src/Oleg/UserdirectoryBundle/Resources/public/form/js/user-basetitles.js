@@ -49,8 +49,8 @@ function initBaseAdd(newForm) {
     fieldInputMask(newForm);
 
     //init comboboxes
-    getComboboxInstitution(newForm);   //init institution for administrative and appointnment titles
-    getComboboxCommentType(newForm);
+    getComboboxCompositetree(newForm);   //init composite tree for administrative and appointnment titles
+    //getComboboxCommentType(newForm);
     getComboboxResidencyspecialty(newForm);
 
     //init generic comboboxes

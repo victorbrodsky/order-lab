@@ -9,6 +9,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+
 
 class BaseCommentsType extends AbstractType
 {
@@ -51,20 +54,20 @@ class BaseCommentsType extends AbstractType
         }
 
 
-        $builder->add('commentType', 'employees_custom_selector', array(
-            'label' => 'Comment Category:',
-            'attr' => array('class' => 'ajax-combobox-commenttype', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'commentType'
-        ));
-
-
-        $builder->add('commentSubType', 'employees_custom_selector', array(
-            'label' => 'Comment Name:',
-            'attr' => array('class' => 'ajax-combobox-commentsubtype', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'commentSubType'
-        ));
+//        $builder->add('commentType', 'employees_custom_selector', array(
+//            'label' => 'Comment Category:',
+//            'attr' => array('class' => 'ajax-combobox-commenttype', 'type' => 'hidden'),
+//            'required' => false,
+//            'classtype' => 'commentType'
+//        ));
+//
+//
+//        $builder->add('commentSubType', 'employees_custom_selector', array(
+//            'label' => 'Comment Name:',
+//            'attr' => array('class' => 'ajax-combobox-commentsubtype', 'type' => 'hidden'),
+//            'required' => false,
+//            'classtype' => 'commentSubType'
+//        ));
 
 
         $builder->add('documents', 'collection', array(
@@ -76,6 +79,55 @@ class BaseCommentsType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__document__',
         ));
+
+        //on submit process document
+//        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+//
+//            $comment = $event->getData();
+//            //$form = $event->getForm();
+//
+//            echo "PRE_SUBMIT institution:<br>";
+//            print_r($comment);
+//            echo "<br>";
+//
+//            if( !$comment ) {
+//                return;
+//            }
+//
+//            $this->params['em']->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $comment );
+//        });
+
+
+        ///////////////////////// tree node /////////////////////////
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $title = $event->getData();
+            $form = $event->getForm();
+
+            $label = 'Comment Category:';
+            if( $title ) {
+                $commentType = $title->getCommentType();
+                if( $commentType && $commentType->getOrganizationalGroupType() ) {
+                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
+                    $label = $commentType->getOrganizationalGroupType()->getName().":";
+                }
+            }
+
+            $form->add('commentType', 'employees_custom_selector', array(
+                'label' => $label,
+                'required' => false,
+                'attr' => array(
+                    'class' => 'ajax-combobox-compositetree',
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                    'data-compositetree-classname' => 'CommentTypeList'
+                ),
+                'classtype' => 'commenttype'
+            ));
+        });
+        ///////////////////////// EOF tree node /////////////////////////
+
+
+
 
 
     }

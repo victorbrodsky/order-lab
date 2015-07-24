@@ -98,7 +98,9 @@ class GenericListType extends AbstractType
         }
 
         //level for OrganizationalGroupType
-        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ) {
+        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ||
+            strtolower($this->mapper['className']) == strtolower("CommentGroupType")
+        ) {
             $builder->add('level',null,array(
                 'label'=>'Level:',
                 'attr' => array('class' => 'form-control')

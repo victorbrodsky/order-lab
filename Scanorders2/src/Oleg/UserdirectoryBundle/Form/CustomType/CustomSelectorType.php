@@ -54,8 +54,11 @@ class CustomSelectorType extends AbstractType {
                 $params = array('type'=>'Medical');
                 $transformer = new GenericTreeTransformer($this->om, $username, 'Institution', null, $params);
                 break;
-            case "institution-many":
-                $transformer = new GenericManytomanyTransformer($this->om, $username, 'Institution');
+//            case "institution-many":
+//                $transformer = new GenericManytomanyTransformer($this->om, $username, 'Institution');
+//                break;
+            case "commenttype":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'CommentTypeList', null);
                 break;
 //            case "institution_id":
 //                $params = array('field'=>'id');

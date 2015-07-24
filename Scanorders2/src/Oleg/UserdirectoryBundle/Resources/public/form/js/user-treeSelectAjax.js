@@ -5,10 +5,10 @@
 ////////////////////////////// TREE //////////////////////////////////
 
 //attach parent combobox above current
-function setParentComboboxree(targetid, entityName, rowElHtml) {
+function setParentComboboxree(targetid, bundleName, entityName, rowElHtml) {
 
     var comboboxEl = $(targetid);
-    //console.log('combobox len='+comboboxEl.length);
+    //console.log('set parent: this combobox len='+comboboxEl.length);
 
     var treeHolder = comboboxEl.closest('.composite-tree-holder');
     //console.log(treeHolder);
@@ -29,18 +29,18 @@ function setParentComboboxree(targetid, entityName, rowElHtml) {
         return;
     }
 
-    getChildrenByParent(entityName,comboboxEl,thisData.pid,null).
+    getChildrenByParent(bundleName,entityName,comboboxEl,thisData.pid,null).
     then(function (treeArr) {
-        var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'top' );
+        var newElementsAppended = createNewTreenodeCombobox( bundleName,entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'top' );
         if( newElementsAppended ) {
             newElementsAppended.select2('val',thisData.pid);
-            setParentComboboxree(newElementsAppended, entityName, rowElHtml);
+            setParentComboboxree(newElementsAppended,bundleName,entityName,rowElHtml);
         }
     });
 
 }
 
-function comboboxTreeListener( target, entityName, rowElHtml ) {
+function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
 
     $(target).on('change', function(e){
 
@@ -54,7 +54,7 @@ function comboboxTreeListener( target, entityName, rowElHtml ) {
         //console.log( thisData );
 
         /////////////////// create and set id if node is new ///////////////////
-        setTreeNode( entityName, treeHolder, comboboxEl, thisData );
+        setTreeNode( bundleName, entityName, treeHolder, comboboxEl, thisData );
         var thisData = comboboxEl.select2('data');
         /////////////////// EOF create and set id if node is new ///////////////////
 
@@ -68,11 +68,11 @@ function comboboxTreeListener( target, entityName, rowElHtml ) {
             return;
         }
 
-        getChildrenByParent(entityName,comboboxEl,null,thisData.id).
+        getChildrenByParent(bundleName,entityName,comboboxEl,null,thisData.id).
         then(function (treeArr) {
             //console.log( 'treeArr:' );
             //console.log( treeArr );
-            var newElementsAppended = createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'bottom' );
+            var newElementsAppended = createNewTreenodeCombobox( bundleName, entityName, treeHolder, comboboxEl, treeArr, rowElHtml, 'bottom' );
             //console.log( newElementsAppended );
             if( newElementsAppended ) {
                 //remove id and name for all inputs preceding the input with selected node
@@ -95,7 +95,7 @@ function getComboboxNodeLabel(comboboxEl) {
     return label;
 }
 
-function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr, rowElHtml, attachflag ) {
+function createNewTreenodeCombobox( bundleName, entityName, treeHolder, comboboxEl, treeArr, rowElHtml, attachflag ) {
 
     if( treeArr == null ) {
         //console.log('do nothing if new element was enetered');
@@ -127,7 +127,7 @@ function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr,
 
         var comboboxHtml = rowElHtml;
 
-        //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-institution" type="text"/>';
+        //var comboboxHtml = '<input id="new-tree" class="ajax-combobox-compositetree" type="text"/>';
 
         //var treeHolder = comboboxEl.closest('.composite-tree-holder');
         //console.log( treeHolder );
@@ -146,12 +146,12 @@ function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr,
         newElementsAppendedRaw.find('label').text(label+":");
 
         ///////////// initialize the node
-        var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-institution');
+        var newElementsAppended = newElementsAppendedRaw.find('.ajax-combobox-compositetree');
         //console.log( 'newElementsAppended.id='+newElementsAppended.attr('id') );
         populateSelectCombobox( newElementsAppended, treeArr, "Select an option");
 
         //add listener to this element
-        comboboxTreeListener( newElementsAppended, entityName, rowElHtml );
+        comboboxTreeListener( newElementsAppended, bundleName, entityName, rowElHtml );
 
         return newElementsAppended;
     } //if
@@ -159,7 +159,7 @@ function createNewTreenodeCombobox( entityName, treeHolder, comboboxEl, treeArr,
     return false;
 }
 
-//modify all id and name by attaching a prefix "newelement_" to all ajax-combobox-institution element prior to the last not empty combobox
+//modify all id and name by attaching a prefix "newelement_" to all ajax-combobox-compositetree element prior to the last not empty combobox
 function clearElementsIdName(treeHolder) {
     //console.log('treeHolder=');
     //console.log(treeHolder);
@@ -180,8 +180,8 @@ function clearRecursivelyIdName(treenode) {
         return;
     }
 
-    var lastComboboxEl = treenode.find('div.ajax-combobox-institution');
-    var lastInputEl = treenode.find('input.ajax-combobox-institution');
+    var lastComboboxEl = treenode.find('div.ajax-combobox-compositetree');
+    var lastInputEl = treenode.find('input.ajax-combobox-compositetree');
     if( lastComboboxEl.length == 0 || lastInputEl.length == 0 ) {
         //console.log('lastComboboxEl or lastInputEl is null');
         return;
@@ -212,7 +212,7 @@ function clearRecursivelyIdName(treenode) {
     if( comboboxData && comboboxData.id ) {
         //unmap all previous siblings
         treenode.prevAll().each( function(){
-            var inputEl = $(this).find('input.ajax-combobox-institution');
+            var inputEl = $(this).find('input.ajax-combobox-compositetree');
             mapTreeNode(inputEl,false);
         });
         //map element
@@ -254,13 +254,13 @@ function mapTreeNode( element, mapped ) {
     element.attr('name',elName);
 }
 
-function setTreeNode( entityName, treeHolder, node, data ) {
+function setTreeNode( bundleName, entityName, treeHolder, node, data ) {
     //3 case: data has id and text (both equal to a node name), but does not have pid - new node => pid is previous select box
     //generate new node in DB
     if( data && data.id && !data.hasOwnProperty("pid") ) {
         //console.log("3 case: new node");
 
-        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-institution').select2('data');
+        var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-compositetree').select2('data');
         //console.log(prevNodeData);
 
         var conf = "Are you sure you want to create " + "'" + data.id + "?";
@@ -278,7 +278,7 @@ function setTreeNode( entityName, treeHolder, node, data ) {
             thisPid = prevNodeData.id;
         }
 
-        var newnodeid = jstree_action_node(entityName, 'create_node', null, data.id, thisPid, null, null, null, null, 'combobox');
+        var newnodeid = jstree_action_node(bundleName, entityName, 'create_node', null, data.id, thisPid, null, null, null, null, 'combobox');
         if( newnodeid ) {
             node.select2("data", {id: newnodeid, text: data.id});
             //node.trigger('change');

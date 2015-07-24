@@ -113,17 +113,17 @@ function getDataIdByText(arr,text) {
 }
 
 
-//#############  institution  ##############//
+//#############  compositetree  ##############//
 
-//this function is used for form institution hierarchy using select2, not jstree
-function getComboboxInstitution(holder) {
+//this function is used for form compositetree hierarchy using select2, not jstree
+function getComboboxCompositetree(holder) {
 
     if( typeof cycle === 'undefined' ) {
         var cycle = 'edit';
     }
     //console.log('inst cycle='+cycle);
 
-    var targetid = ".ajax-combobox-institution";
+    var targetid = ".ajax-combobox-compositetree";
     if( $(targetid).length == 0 ) {
         return;
     }
@@ -134,17 +134,25 @@ function getComboboxInstitution(holder) {
         }
     }
 
-    var entityName = 'Institution';
-    _treenodedata[entityName] = [];
-
     $(targetid).each( function(e){
-        getComboboxSingleInstitution($(this),entityName);
+
+        var entityName =$(this).attr("data-compositetree-classname");
+        //console.log('entityName='+entityName);
+
+        var bundleName =$(this).attr("data-compositetree-bundlename");
+        //console.log('bundleName='+bundleName);
+
+        //var entityName = 'Institution';
+        _treenodedata[bundleName+entityName] = [];
+
+        getComboboxSingleCompositetree($(this),bundleName,entityName);
     });
 }
 
-function getComboboxSingleInstitution(comboboxEl,entityName) {
 
-    //console.log('getComboboxSingleInstitution:');
+function getComboboxSingleCompositetree(comboboxEl,bundleName,entityName) {
+
+    //console.log('getComboboxSingleCompositetree:');
     //console.log(comboboxEl);
 
     var thisid = comboboxEl.val();
@@ -155,20 +163,20 @@ function getComboboxSingleInstitution(comboboxEl,entityName) {
     }
 
 
-    if( _treenodedata[entityName].hasOwnProperty(thisid) ) {
-        populateComboboxData(entityName,comboboxEl,_treenodedata[entityName][thisid]);
+    if( _treenodedata[bundleName+entityName].hasOwnProperty(thisid) ) {
+        populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,_treenodedata[bundleName+entityName][thisid]);
         return;
     }
 
 
-    getChildrenByParent(entityName,comboboxEl,thisid,null).
+    getChildrenByParent(bundleName,entityName,comboboxEl,thisid,null).
     then(function (optionData) {
-        populateComboboxData(entityName,comboboxEl,optionData);
+        populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,optionData);
     });
 
 }
 
-function populateComboboxData(entityName,comboboxEl,optionData) {
+function populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,optionData) {
     //console.log('populate combobox data:');
     //console.log(optionData);
 
@@ -178,13 +186,13 @@ function populateComboboxData(entityName,comboboxEl,optionData) {
     populateSelectCombobox( comboboxEl, optionData, "Select an option" );
 
     if( !comboboxEl.hasClass('show-as-single-node') ) {
-        comboboxTreeListener( comboboxEl, entityName, rowElHtml );
+        comboboxTreeListener( comboboxEl, bundleName, entityName, rowElHtml );
         comboboxEl.trigger('change');
-        setParentComboboxree(comboboxEl, entityName, rowElHtml);
+        setParentComboboxree(comboboxEl, bundleName, entityName, rowElHtml);
     }
 }
 
-function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
+function getChildrenByParent( bundleName, entityName, thiselement, thisid, parentid, opt ) {
 
     return Q.promise(function(resolve, reject, treedata) {
 
@@ -199,9 +207,9 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
 
         //console.log('_treenodedata:');
         //console.log(_treenodedata);
-        if( thisid != null && _treenodedata[entityName].hasOwnProperty(thisid) ) {
+        if( thisid != null && _treenodedata[bundleName+entityName].hasOwnProperty(thisid) ) {
             //console.log('_treenodedata exists for thisid='+thisid);
-            resolve(_treenodedata[entityName][thisid]);
+            resolve(_treenodedata[bundleName+entityName][thisid]);
             return;
         }
 
@@ -209,7 +217,7 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
 
         var opt = 'combobox';
         //var treeHolder = thiselement.closest('.composite-tree-holder');
-    //    if( treeHolder.hasClass('institution-with-userpositions') ) {
+    //    if( treeHolder.hasClass('compositetree-with-userpositions') ) {
     //        opt = opt + ',userpositions';
     //    }
 
@@ -222,10 +230,10 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
             //console.log('userid='+userid);
         }
 
-        //employees_get_institution
+        //employees_get_compositetree
         var treeUrl = Routing.generate('employees_get_composition_tree');
         //console.log('treeUrl='+treeUrl);
-        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
+        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&bundlename=' + bundleName + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid;
         //console.log('final treeUrl='+treeUrl);
 
         if( !_ajaxTimeout ) {
@@ -243,7 +251,7 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
                 async: asyncflag
             }).success(function(data) {
                 //console.log(data);
-                _treenodedata[entityName][thisid] = data;
+                _treenodedata[bundleName+entityName][thisid] = data;
                 resolve(data);
             }).error(function() {
                 //console.log('error getting nodes');
@@ -259,39 +267,39 @@ function getChildrenByParent( entityName, thiselement, thisid, parentid, opt ) {
 }
 
 
-function getComboboxCommentType(holder) {
-
-    setCommentTypeTreeChildren(holder);
-
-    var targetid = ".ajax-combobox-commenttype";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( targetid.length == 0 )
-            return;
-    }
-
-    var url = getCommonBaseUrl("util/common/"+"commenttype","employees"); //always use "employees" to get commenttype
-
-    if( _commenttype.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _commenttype = data;
-            populateParentChildTree( targetid, _commenttype, "Select an option or type in a new value", false, 'ajax-combobox-commentsubtype' );
-        });
-    } else {
-        populateParentChildTree( targetid, _commenttype, "Select an option or type in a new value", false, 'ajax-combobox-commentsubtype' );
-    }
-
-}
+//function getComboboxCommentType(holder) {
+//
+//    setCommentTypeTreeChildren(holder);
+//
+//    var targetid = ".ajax-combobox-commenttype";
+//
+//    if( $(targetid).length == 0 ) {
+//        return;
+//    }
+//
+//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+//        targetid = holder.find(targetid);
+//
+//        if( targetid.length == 0 )
+//            return;
+//    }
+//
+//    var url = getCommonBaseUrl("util/common/"+"commenttype","employees"); //always use "employees" to get commenttype
+//
+//    if( _commenttype.length == 0 ) {
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//            _commenttype = data;
+//            populateParentChildTree( targetid, _commenttype, "Select an option or type in a new value", false, 'ajax-combobox-commentsubtype' );
+//        });
+//    } else {
+//        populateParentChildTree( targetid, _commenttype, "Select an option or type in a new value", false, 'ajax-combobox-commentsubtype' );
+//    }
+//
+//}
 
 function getComboboxResidencyspecialty(holder) {
 

@@ -390,9 +390,6 @@
         <p>
             {{ form_widget(edit_form.submit) }}
             <a class="btn btn-info" type="button" href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">Cancel</a>
-            {#{% if delete_form is defined and delete_form.submit is defined %}#}
-                {#{{ form_widget(delete_form.submit) }}#}
-            {#{% endif %}#}
         </p>
     {% endif %}
 

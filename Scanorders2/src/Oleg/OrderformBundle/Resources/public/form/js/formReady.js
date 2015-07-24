@@ -91,12 +91,8 @@ $(document).ready(function() {
 
     initConvertEnterToTab();
 
-    //set institutional tree
-    getComboboxInstitution();
-//    initTreeSelect();   //clearFlag: default true
-//    initInstitutionManually();
-//    setInstitutionTreeChildren();
-//    initDefaultServiceManually();
+    //set composite tree
+    getComboboxCompositetree();
 
     initDatetimepicker();
 

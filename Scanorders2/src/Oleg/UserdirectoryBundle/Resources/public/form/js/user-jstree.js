@@ -5,7 +5,7 @@
 
 
 //used by admin page
-function getJstree(entityName) {
+function getJstree(bundleName,entityName) {
 
     //console.log('cycle='+cycle);
 
@@ -22,7 +22,7 @@ function getJstree(entityName) {
 
         //employees_get_institution
         var institutionUrl = Routing.generate('employees_get_composition_tree');
-        institutionUrl = institutionUrl + '?lazy&$opt=none&classname='+entityName;
+        institutionUrl = institutionUrl + '?lazy&$opt=none&classname='+entityName+'&bundlename='+bundleName;
         //console.log('institutionUrl='+institutionUrl);
 
         //_institution
@@ -56,7 +56,7 @@ function getJstree(entityName) {
                             if( !window.confirm("Are you sure?") ) {
                                 return false;
                             }
-                            return jstree_wrapper_action_node(entityName, operation, node, parent, position, more);
+                            return jstree_wrapper_action_node(bundleName, entityName, operation, node, parent, position, more);
                         } else {
                             return true;
                         }
@@ -162,7 +162,7 @@ function getJstree(entityName) {
         $(targetid).bind('create_node.jstree', function(e, data) {
             //console.log('create_node');
             var operation = 'create_node';
-            var newnodeid = jstree_action_node(entityName, operation, null, data.node.text, data.parent, data.position, null, null, null, null);
+            var newnodeid = jstree_action_node(bundleName, entityName, operation, null, data.node.text, data.parent, data.position, null, null, null, null);
             if( newnodeid != false ) {
                 $(this).jstree(true).set_id(data.node,newnodeid);
             } else {
@@ -172,7 +172,7 @@ function getJstree(entityName) {
 
         $(targetid).bind('rename_node.jstree', function(e, data) {
             var operation = 'rename_node';
-            var res = jstree_action_node(entityName, operation, data.node.id, data.node.text, data.parent, data.position, null, null, null, null);
+            var res = jstree_action_node(bundleName, entityName, operation, data.node.id, data.node.text, data.parent, data.position, null, null, null, null);
             if( res == false ) {
                 failedOperation($(this),operation);
             }
@@ -186,15 +186,15 @@ function getJstree(entityName) {
 //node - node being copied
 //parent - new parent
 //position - the position to insert at (besides integer values, "first" and "last" are supported, as well as "before" and "after"), defaults to integer `0`
-function jstree_wrapper_action_node(entityName, operation, node, parent, position, more) {
+function jstree_wrapper_action_node(bundleName, entityName, operation, node, parent, position, more) {
     //console.log(entityName+':' + operation + ' id='+node.id+", text="+node.text);
     //console.log('position='+position);
     //console.log('parent.id='+parent.id);
     //console.log(more);
-    return jstree_action_node(entityName, operation, node.id, node.text, parent.id, position, null, null, more, null);
+    return jstree_action_node(bundleName, entityName, operation, node.id, node.text, parent.id, position, null, null, more, null);
 }
 
-function jstree_move_node(entityName,data) {
+function jstree_move_node(bundleName, entityName,data) {
 
 //    console.log('move_node');
 //    console.log(data);
@@ -205,10 +205,10 @@ function jstree_move_node(entityName,data) {
 //    console.log("old_position="+data.old_position);
 
     var operation = 'move_node';
-    return jstree_action_node(entityName, operation, data.node.id, null, data.parent, data.position, data.old_parent, data.old_position, null, null);
+    return jstree_action_node(bundleName, entityName, operation, data.node.id, null, data.parent, data.position, data.old_parent, data.old_position, null, null);
 }
 
-function jstree_action_node(entityName, operation, nodeid, nodetext, parentid, position, oldparentid, oldposition, more, opt) {
+function jstree_action_node(bundleName, entityName, operation, nodeid, nodetext, parentid, position, oldparentid, oldposition, more, opt) {
     var url = Routing.generate('employees_tree_edit_node');
     var res = false;
 
@@ -217,7 +217,7 @@ function jstree_action_node(entityName, operation, nodeid, nodetext, parentid, p
         url: url,
         timeout: _ajaxTimeout,
         async: false,
-        data: { action: operation, pid: parentid, position: position, oldpid: oldparentid, oldposition: oldposition, nodeid: nodeid, nodetext: nodetext, classname: entityName, opt: opt }
+        data: { action: operation, pid: parentid, position: position, oldpid: oldparentid, oldposition: oldposition, nodeid: nodeid, nodetext: nodetext, bundlename: bundleName, classname: entityName, opt: opt }
     }).success(function(data) {
         //console.log('data='+data);
         if( isInt(data) ) {
@@ -252,66 +252,66 @@ function failedOperation(jstreeObj,operation) {
 
 
 //modal node edit: not used
-function actionNodeModal( entityName, operation, obj, node, parent ) {
-
-    console.log(obj);
-    console.log(node);
-
-    if( !$('#editNodeModal').length ) {
-
-        var dataNodeLabel = 'Edit ' + node.text + ' with ID:' + node.id + ' level:' + node.original.leveltitle;
-
-        var modalHtml =
-            '<div id="editNodeModal" class="modal fade data-node-modal">' +
-                '<div class="modal-dialog">' +
-                '<div class="modal-content">' +
-                '<div class="modal-header text-center">' +
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                '<h3 id="dataNodeLabel">' + dataNodeLabel + '</h3>' +
-                '</div>' +
-                '<div class="modal-body text-center">' +
-                '</div>' +
-                '<div class="modal-footer">' +
-                '<button class="btn btn-primary data-node-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                '<a class="btn btn-primary data-node-save" id="dataNodeSave">Save</a>' +
-                //'<button class="btn btn-primary data-node-save" onclick="submitNode("'+entityName+'","'+operation+'",'+node+','+parent+')">OK</button>' +
-                //'<button class="btn btn-primary data-node-save" onclick="submitNode(entityName,operation,node,parent)">OK</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-
-        $('body').append(modalHtml);
-
-        var nameHtml = '<br><br>Name:' +
-            '<p><input id="'+node.id+'-name" class="form-control" type="text" value="'+node.text+'" required></input></p>';
-        $('#editNodeModal').find('.modal-body').append(nameHtml);
-
-    }
-
-
-    //$('#editNodeModal').find('.modal-body').text( $(this).attr('data-node') );
-    //$('#dataNodeSave').attr('href', href); //testing
-
-    $('#editNodeModal').modal({show:true});
-
-    $( "#dataNodeSave" ).click(function() {
-        submitNode(entityName,operation,node,parent);
-    });
-
-    return false;
-}
-
-function submitNode(entityName,operation,node,parent) {
-
-    //var nameValue = $('#dataConfirmModal').find('.modal-body').find('input').val();
-    var nameValue = node.text;
-    console.log("nameValue="+nameValue);
-
-    if( operation == 'rename_node' ) {
-        var position = nameValue;
-        var more = null;
-    }
-
-    jstree_wrapper_action_node(entityName, operation, node, parent, position, more)
-}
+//function actionNodeModal( entityName, operation, obj, node, parent ) {
+//
+//    console.log(obj);
+//    console.log(node);
+//
+//    if( !$('#editNodeModal').length ) {
+//
+//        var dataNodeLabel = 'Edit ' + node.text + ' with ID:' + node.id + ' level:' + node.original.leveltitle;
+//
+//        var modalHtml =
+//            '<div id="editNodeModal" class="modal fade data-node-modal">' +
+//                '<div class="modal-dialog">' +
+//                '<div class="modal-content">' +
+//                '<div class="modal-header text-center">' +
+//                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+//                '<h3 id="dataNodeLabel">' + dataNodeLabel + '</h3>' +
+//                '</div>' +
+//                '<div class="modal-body text-center">' +
+//                '</div>' +
+//                '<div class="modal-footer">' +
+//                '<button class="btn btn-primary data-node-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+//                '<a class="btn btn-primary data-node-save" id="dataNodeSave">Save</a>' +
+//                //'<button class="btn btn-primary data-node-save" onclick="submitNode("'+entityName+'","'+operation+'",'+node+','+parent+')">OK</button>' +
+//                //'<button class="btn btn-primary data-node-save" onclick="submitNode(entityName,operation,node,parent)">OK</button>' +
+//                '</div>' +
+//                '</div>' +
+//                '</div>' +
+//                '</div>';
+//
+//        $('body').append(modalHtml);
+//
+//        var nameHtml = '<br><br>Name:' +
+//            '<p><input id="'+node.id+'-name" class="form-control" type="text" value="'+node.text+'" required></input></p>';
+//        $('#editNodeModal').find('.modal-body').append(nameHtml);
+//
+//    }
+//
+//
+//    //$('#editNodeModal').find('.modal-body').text( $(this).attr('data-node') );
+//    //$('#dataNodeSave').attr('href', href); //testing
+//
+//    $('#editNodeModal').modal({show:true});
+//
+//    $( "#dataNodeSave" ).click(function() {
+//        submitNode(entityName,operation,node,parent);
+//    });
+//
+//    return false;
+//}
+//
+//function submitNode(entityName,operation,node,parent) {
+//
+//    //var nameValue = $('#dataConfirmModal').find('.modal-body').find('input').val();
+//    var nameValue = node.text;
+//    console.log("nameValue="+nameValue);
+//
+//    if( operation == 'rename_node' ) {
+//        var position = nameValue;
+//        var more = null;
+//    }
+//
+//    jstree_wrapper_action_node(entityName, operation, node, parent, position, more)
+//}

@@ -77,6 +77,8 @@ class ListController extends Controller
      * @Route("/sexes/", name="sexes-list")
      * @Route("/position-types/", name="positiontypes-list")
      * @Route("/organizational-group-types/", name="organizationalgrouptypes-list")
+     * @Route("/comment-group-types/", name="commentgrouptypes-list")
+     * @Route("/comment-types/", name="commenttypes-list", options={"expose"=true})
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -96,7 +98,6 @@ class ListController extends Controller
         //get object name: stain-list => stain
         $pieces = explode("-", $type);
         $pathbase = $pieces[0];
-        //echo "pathbase=".$pathbase."<br>";
 
         $mapper= $this->classListMapper($pathbase);
 
@@ -187,9 +188,6 @@ class ListController extends Controller
      * @Route("/source-systems/", name="sourcesystems_create")
      * @Route("/roles/", name="role_create")
      * @Route("/institutions/", name="institutions_create")
-     * @Route("/departments/", name="departments_create")
-     * @Route("/divisions/", name="divisions_create")
-     * @Route("/services/", name="services_create")
      * @Route("/states/", name="states_create")
      * @Route("/countries/", name="countries_create")
      * @Route("/board-certifications/", name="boardcertifications_create")
@@ -237,6 +235,8 @@ class ListController extends Controller
      * @Route("/sexes/", name="sexes_create")
      * @Route("/position-types/", name="positiontypes_create")
      * @Route("/organizational-group-types/", name="organizationalgrouptypes_create")
+     * @Route("/comment-group-types/", name="commentgrouptypes_create")
+     * @Route("/comment-types/", name="commenttypes_createt")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -324,9 +324,6 @@ class ListController extends Controller
      *
      * @Route("/source-systems/new", name="sourcesystems_new")
      * @Route("/roles/new", name="role_new")
-     * @Route("/departments/new", name="departments_new")
-     * @Route("/divisions/new", name="divisions_new")
-     * @Route("/services/new", name="services_new")
      * @Route("/institutions/new", name="institutions_new")
      * @Route("/states/new", name="states_new")
      * @Route("/countries/new", name="countries_new")
@@ -375,6 +372,8 @@ class ListController extends Controller
      * @Route("/sexes/new", name="sexes_new")
      * @Route("/position-types/new", name="positiontypes_new")
      * @Route("/organizational-group-types/new", name="organizationalgrouptypes_new")
+     * @Route("/comment-group-types/new", name="commentgrouptypes_new")
+     * @Route("/comment-types/new", name="commenttypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -433,9 +432,6 @@ class ListController extends Controller
      *
      * @Route("/source-systems/{id}", name="sourcesystems_show")
      * @Route("/roles/{id}", name="role_show")
-     * @Route("/departments/{id}", name="departments_show")
-     * @Route("/divisions/{id}", name="divisions_show")
-     * @Route("/services/{id}", name="services_show")
      * @Route("/institutions/{id}", name="institutions_show", options={"expose"=true})
      * @Route("/states/{id}", name="states_show")
      * @Route("/countries/{id}", name="countries_show")
@@ -484,6 +480,8 @@ class ListController extends Controller
      * @Route("/sexes/{id}", name="sexes_show")
      * @Route("/position-types/{id}", name="positiontypes_show")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_show")
+     * @Route("/comment-group-types/{id}", name="commentgrouptypes_show")
+     * @Route("/comment-types/{id}", name="commenttypes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -532,9 +530,6 @@ class ListController extends Controller
      *
      * @Route("/source-systems/{id}/edit", name="sourcesystems_edit")
      * @Route("/roles/{id}/edit", name="role_edit")
-     * @Route("/departments/{id}/edit", name="departments_edit")
-     * @Route("/divisions/{id}/edit", name="divisions_edit")
-     * @Route("/services/{id}/edit", name="services_edit")
      * @Route("/institutions/{id}/edit", name="institutions_edit")
      * @Route("/states/{id}/edit", name="states_edit")
      * @Route("/countries/{id}/edit", name="countries_edit")
@@ -583,6 +578,8 @@ class ListController extends Controller
      * @Route("/sexes/{id}/edit", name="sexes_edit")
      * @Route("/position-types/{id}/edit", name="positiontypes_edit")
      * @Route("/organizational-group-types/{id}/edit", name="organizationalgrouptypes_edit")
+     * @Route("/comment-group-types/{id}/edit", name="commentgrouptypes_edit")
+     * @Route("/comment-types/{id}/edit", name="commenttypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -663,9 +660,6 @@ class ListController extends Controller
      *
      * @Route("/source-systems/{id}", name="sourcesystems_update")
      * @Route("/roles/{id}", name="role_update")
-     * @Route("/departments/{id}", name="departments_update")
-     * @Route("/divisions/{id}", name="divisions_update")
-     * @Route("/services/{id}", name="services_update")
      * @Route("/institutions/{id}", name="institutions_update")
      * @Route("/states/{id}", name="states_update")
      * @Route("/countries/{id}", name="countries_update")
@@ -714,6 +708,8 @@ class ListController extends Controller
      * @Route("/sexes/{id}", name="sexes_update")
      * @Route("/position-types/{id}", name="positiontypes_update")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_update")
+     * @Route("/comment-group-types/{id}", name="commentgrouptypes_update")
+     * @Route("/comment-types/{id}", name="commenttypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -884,18 +880,6 @@ class ListController extends Controller
             case "institutions":
                 $className = "Institution";
                 $displayName = "Institutions";
-                break;
-            case "departments":
-                $className = "Department";
-                $displayName = "Departments";
-                break;
-            case "divisions":
-                $className = "Division";
-                $displayName = "Divisions";
-                break;
-            case "services":
-                $className = "Service";
-                $displayName = "Services";
                 break;
             case "states":
                 $className = "States";
@@ -1086,6 +1070,14 @@ class ListController extends Controller
                 $className = "OrganizationalGroupType";
                 $displayName = "Organizational Group Types";
                 break;
+            case "commenttypes":
+                $className = "CommentTypeList";
+                $displayName = "Comment Types";
+                break;
+            case "commentgrouptypes":
+                $className = "CommentGroupType";
+                $displayName = "Comment Group Types";
+                break;
 
 
             default:
@@ -1120,9 +1112,6 @@ class ListController extends Controller
      *
      * @Route("/source-systems/{id}", name="sourcesystems_delete")
      * @Route("/roles/{id}", name="role_delete")
-     * @Route("/departments/{id}", name="departments_delete")
-     * @Route("/divisions/{id}", name="divisions_delete")
-     * @Route("/services/{id}", name="services_delete")
      * @Route("/institutions/{id}", name="institutions_delete")
      * @Route("/states/{id}", name="states_delete")
      * @Route("/countries/{id}", name="countries_delete")
@@ -1171,6 +1160,8 @@ class ListController extends Controller
      * @Route("/sexes/{id}", name="sexes_delete")
      * @Route("/position-types/{id}", name="positiontypes_delete")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_delete")
+     * @Route("/comment-group-types/{id}", name="commentgrouptypes_delete")
+     * @Route("/comment-types/{id}", name="commenttypes_delete")
      *
      * @Method("DELETE")
      */

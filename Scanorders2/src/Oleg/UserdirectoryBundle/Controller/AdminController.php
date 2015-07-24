@@ -5,6 +5,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CityList;
+use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
@@ -120,6 +121,8 @@ class AdminController extends Controller
         $count_OrganizationalGroupType = $this->generateOrganizationalGroupType();                  //must be first
         $count_institution = $this->generateInstitutions();                  //must be first
 
+        $count_CommentGroupType = $this->generateCommentGroupType();
+
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
 
         $count_roles = $this->generateRoles();
@@ -225,6 +228,7 @@ class AdminController extends Controller
             'LinkTypes='.$count_generateLinkTypes.', '.
             'Sex='.$count_sex.', '.
             'Position Types='.$count_PositionTypeList.', '.
+            'Comment Group Types='.$count_CommentGroupType.', '.
             //'TitlePositionTypes='.$count_generateTitlePositionTypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -2994,7 +2998,46 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+    public function generateCommentGroupType() {
 
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:CommentGroupType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Comment Category' => 0,
+            'Comment Name' => 1,
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name=>$level ) {
+
+            $entity = new CommentGroupType();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $entity->setLevel($level);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+
+
+
+
+    ////////////////// Util Methods //////////////////////
     /**
      * @Route("/list/institutional-tree/", name="employees_institutiontree_list")
      * @Method("GET")

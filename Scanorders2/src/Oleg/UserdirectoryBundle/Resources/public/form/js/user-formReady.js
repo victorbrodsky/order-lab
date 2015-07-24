@@ -31,15 +31,15 @@ $(document).ready(function() {
 
     initTreeSelect();
 
-    //nstitution tree as combobox select2 view
-    getComboboxInstitution();
+    //composite tree as combobox select2 view
+    getComboboxCompositetree();
 
     //jstree in admin page for Institution tree
-    getJstree('Institution');
+    getJstree('UserdirectoryBundle','Institution');
 
     getComboboxResidencyspecialty();
 
-    getComboboxCommentType();
+    //getComboboxCommentType();
 
     //init generic comboboxes
     initAllComboboxGeneric();

@@ -24,20 +24,20 @@ abstract class BaseComment extends BaseUserAttributes {
     private $comment;
 
     /**
-     * This field is required for orderby functionality
      * @ORM\ManyToOne(targetEntity="CommentTypeList", cascade={"persist"})
      **/
     private $commentType;
 
     /**
+     * This field is required for orderby functionality
      * @ORM\Column(type="string", nullable=true)
      **/
     private $commentTypeStr;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CommentSubTypeList", cascade={"persist"})
-     **/
-    private $commentSubType;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="CommentSubTypeList", cascade={"persist"})
+//     **/
+//    private $commentSubType;
 
 
 
@@ -66,25 +66,25 @@ abstract class BaseComment extends BaseUserAttributes {
         return $this->comment;
     }
 
-    /**
-     * @param mixed $commentSubType
-     */
-    public function setCommentSubType($commentSubType)
-    {
-        $this->commentSubType = $commentSubType;
-    }
-    public function setCommentSubTypeList($commentSubType)
-    {
-        $this->setCommentSubType($commentSubType);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCommentSubType()
-    {
-        return $this->commentSubType;
-    }
+//    /**
+//     * @param mixed $commentSubType
+//     */
+//    public function setCommentSubType($commentSubType)
+//    {
+//        $this->commentSubType = $commentSubType;
+//    }
+//    public function setCommentSubTypeList($commentSubType)
+//    {
+//        $this->setCommentSubType($commentSubType);
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getCommentSubType()
+//    {
+//        return $this->commentSubType;
+//    }
 
     /**
      * @param mixed $commentType
@@ -139,11 +139,11 @@ abstract class BaseComment extends BaseUserAttributes {
      */
     public function addDocument($document)
     {
-        if( $document == null ) {
-            $document = new Document($this->getAuthor());
-        }
+//        if( $document == null ) {
+//            $document = new Document($this->getAuthor());
+//        }
 
-        if( !$this->documents->contains($document) ) {
+        if( $document && !$this->documents->contains($document) ) {
             $this->documents->add($document);
         }
 

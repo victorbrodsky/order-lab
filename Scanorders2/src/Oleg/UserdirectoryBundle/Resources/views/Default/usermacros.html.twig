@@ -39,20 +39,6 @@
 
             {{ formmacros.fieldpaper(container,cycle,prototype,3,'default') }}
 
-            {#<div class="dropzone file-upload-dropzone" style="min-height: 150px; margin-bottom: 5px;">#}
-
-                {#{% if cycle != "show_user" %}#}
-                    {#<div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum 3 files, 10 MB each)</span></div>#}
-                {#{% else %}#}
-                    {#<div class="dz-message" style="padding-bottom:5px;"><span></span></div>#}
-                {#{% endif %}#}
-
-                {#{{ usermacros.document( container, cycle, prototype ) }}#}
-
-            {#</div>#}
-
-            {#{% do comment.documents.setRendered %}#}
-
         </div>
     </div>
     </p>
@@ -111,6 +97,8 @@
         {% do document.setRendered %}
 
     {% endfor %}
+
+    {{ formmacros.field(container.documents.vars.prototype.id) }}
 
     {% do container.documents.setRendered %}
 

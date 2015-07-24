@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -10,9 +11,26 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity()
  * @ORM\Table(name="user_commentTypeList")
  */
-class CommentTypeList extends ListAbstract
-{
 
+/**
+ * Use Composite pattern:
+ * The composite pattern describes that a group of objects is to be treated in the same
+ * way as a single instance of an object. The intent of a composite is to "compose" objects into tree structures
+ * to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects
+ * and compositions uniformly.
+ * Use Doctrine Extension Tree for tree manipulation.
+ *
+ * @Gedmo\Tree(type="nested")
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Table(
+ *  name="user_commentTypeList",
+ *  indexes={
+ *      @ORM\Index( name="name_idx", columns={"name"} ),
+ *  }
+ * )
+ */
+class CommentTypeList extends BaseCompositeNode
+{
 
     /**
      * @ORM\OneToMany(targetEntity="CommentTypeList", mappedBy="original")
@@ -26,68 +44,80 @@ class CommentTypeList extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="CommentSubTypeList", mappedBy="parent")
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="CommentTypeList", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     **/
+    protected $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CommentTypeList", mappedBy="parent", cascade={"persist","remove"})
+     * @ORM\OrderBy({"lft" = "ASC"})
+     **/
+    protected $children;
+
+    /**
+     * Organizational Group Types
+     * level int in OrganizationalGroupType corresponds to this level integer: 1-Comment Category, 2-Comment Name
+     * For example, OrganizationalGroupType with level=1, set this level to 1.
+     *
+     * @ORM\ManyToOne(targetEntity="CommentGroupType", cascade={"persist"})
      */
-    protected $commentSubTypes;
+    private $organizationalGroupType;
 
 
 
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
-        $this->commentSubTypes = new ArrayCollection();
+    public function __construct($author=null) {
+        parent::__construct($author);
     }
 
 
 
-
+    /**
+     * @param mixed $organizationalGroupType
+     */
+    public function setOrganizationalGroupType($organizationalGroupType)
+    {
+        $this->organizationalGroupType = $organizationalGroupType;
+        $this->setLevel($organizationalGroupType->getLevel());
+    }
 
     /**
-     * Add commentSubTypeList
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\CommentSubTypeList $commentSubType
-     * @return Institution
+     * @return mixed
      */
-    public function addCommentSubType(\Oleg\UserdirectoryBundle\Entity\CommentSubTypeList $commentSubType)
+    public function getOrganizationalGroupType()
     {
-        if( !$this->commentSubTypes->contains($commentSubType) ) {
-            $commentSubType->setParent($this);
-            $this->commentSubTypes->add($commentSubType);
+        return $this->organizationalGroupType;
+    }
+
+    /**
+     * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
+     * @param mixed $parent
+     */
+    public function setParent(CompositeNodeInterface $parent = null)
+    {
+        $this->parent = $parent;
+
+        //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
+        if( $parent && count($parent->getChildren()) > 0 ) {
+            $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
+            $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
         }
     }
-    public function addCommentSubTypeList($commentSubType) {
-        $this->addCommentSubType($commentSubType);
-    }
-    /**
-     * Remove commentSubTypeList
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\CommentSubTypeList $commentSubType
-     */
-    public function removeCommentSubType(\Oleg\UserdirectoryBundle\Entity\CommentSubTypeList $commentSubType)
+
+
+    public function __toString()
     {
-        $this->commentSubTypes->removeElement($commentSubType);
-    }
-    /**
-     * Get order
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCommentSubTypes()
-    {
-        return $this->commentSubTypes;
+        if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
+            return $this->getAbbreviation()."";
+        }
+
+        return $this->getName()."";
     }
 
-    public function getChildren()
+    public function getClassName()
     {
-        return $this->getCommentSubTypes();
+        return "CommentType";
     }
-    public function addChild($child)
-    {
-        return $this->addCommentSubType($child);
-    }
-    public function removeChild($child)
-    {
-        return $this->removeCommentSubType($child);
-    }
-
 
 }

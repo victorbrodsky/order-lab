@@ -454,6 +454,7 @@
 {% macro comments( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -490,9 +491,11 @@
                 {{ usermacros.statusVerifiedField(formfield,cycle) }}
             {% endif %}
 
-            {{ formmacros.field(formfield.commentType) }}
-
-            {{ formmacros.field(formfield.commentSubType) }}
+            {#{{ formmacros.field(formfield.commentType) }}#}
+            {#{{ formmacros.field(formfield.commentSubType) }}#}
+            {% if formfield.commentType is defined %}
+                {{ treemacros.compositeTreeNode(formfield.commentType,cycle,prototype) }}
+            {% endif %}
 
             {{ formmacros.field(formfield.comment) }}
 
@@ -500,7 +503,7 @@
                 {{ usermacros.fileuploadLabelField( formfield, cycle, classname, prototype ) }}
             {% endif %}
 
-            {% if showFlag and formfield.vars.value and formfield.vars.value.updateAuthor%}
+            {% if showFlag and formfield.vars.value and formfield.vars.value.updateAuthor %}
                 {% set authorHref = path(employees_sitename~'_showuser',{'id':formfield.vars.value.updateAuthor.getId()}) %}
                 {% set authorAndDate =
                     "Updated by <a href=\"" ~ authorHref ~ "\">" ~
@@ -515,7 +518,7 @@
     {% else %}
 
         {% do formfield.commentType.setRendered %}
-        {% do formfield.commentSubType.setRendered %}
+        {#{% do formfield.commentSubType.setRendered %}#}
         {% do formfield.comment.setRendered %}
 
         {% if formfield.status is defined %}

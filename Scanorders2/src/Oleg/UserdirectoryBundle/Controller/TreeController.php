@@ -3,7 +3,6 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Entity\Institution;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,6 +35,7 @@ class TreeController extends Controller {
         $thisid = trim( $request->get('thisid') );
         $pid = trim( $request->get('id') );
         $className = trim( $request->get('classname') );
+        $bundleName = trim( $request->get('bundlename') );
         //$level = trim( $request->get('pid') );
         //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
@@ -66,8 +66,7 @@ class TreeController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        //$repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Institution');
-        $mapper = $this->classMapper($className);
+        $mapper = $this->classMapper($bundleName,$className);
         $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -139,11 +138,6 @@ class TreeController extends Controller {
         $entities = $query->getResult();
         //echo "count=".count($entities)."<br>";
 
-//        $output = array(
-//            'id' => 0,
-//            'text' => "Institutions",
-//        );
-
         $output = array();
         foreach( $entities as $entity ) {
 
@@ -205,9 +199,29 @@ class TreeController extends Controller {
         //construct an empty element for combobox to allow to enter a new node
         if( $combobox && count($output) == 0 ) {
             if( $pid != 0 && $pid != '#' && is_numeric($pid) ) {
+
                 $parent = $treeRepository->find($pid);
-                $childLevel = intval($parent->getLevel()) + 1;
-                $organizationalGroupType = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByLevel($childLevel);
+                if( $parent ) {
+                    $childLevel = intval($parent->getLevel()) + 1;
+                } else {
+                    $childLevel = 0;
+                }
+
+                $organizationalGroupTypes = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+                    array(
+                        "level" => $childLevel,
+                        "type" => array('default','user-added')
+                    )
+                );
+
+                if( count($organizationalGroupTypes) > 0 ) {
+                    $organizationalGroupType = $organizationalGroupTypes[0];
+                }
+
+                if( count($organizationalGroupTypes) == 0 ) {
+                    $organizationalGroupType = null;
+                }
+
                 if( $organizationalGroupType ) {
                     $levelTitle = $organizationalGroupType->getName();
                     $element = array(
@@ -220,8 +234,9 @@ class TreeController extends Controller {
                     );
                     $output[] = $element;
                 }
-            }
-        }
+
+            }//if
+        }//if
 
         //$output['children'] = array($children);
 
@@ -252,6 +267,7 @@ class TreeController extends Controller {
         $action = trim( $request->get('action') );
         //$action = 'none'; //testing
         $className = trim( $request->get('classname') );
+        $bundleName = trim( $request->get('bundlename') );
         //echo "nodeid=".$nodeid."<br>";
         //echo "pid=".$pid."<br>";
         //echo "action=".$action."<br>";
@@ -272,7 +288,7 @@ class TreeController extends Controller {
 
         $output = 'Failed: not supported action ' . $action;
 
-        $mapper = $this->classMapper($className);
+        $mapper = $this->classMapper($bundleName,$className);
 
         $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
@@ -345,7 +361,7 @@ class TreeController extends Controller {
                 } else {
                     $childLevel = 0;
                 }
-                $organizationalGroupType = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByLevel($childLevel);
+                $organizationalGroupType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findOneByLevel($childLevel);
 
                 //////////// get max ordeinlist ////////////////////
                 $query = $treeRepository->createQueryBuilder('s');
@@ -362,7 +378,8 @@ class TreeController extends Controller {
                 }
                 //////////// EOF get max ordeinlist ////////////////////
 
-                $node = new Institution();
+                $fullClassName = "Oleg\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+                $node = new $fullClassName();
                 $userutil = new UserUtil();
                 $userutil->setDefaultList($node,$orderinlist,$username,$nodetext);
                 $node->setOrganizationalGroupType($organizationalGroupType);
@@ -393,23 +410,28 @@ class TreeController extends Controller {
 
 
 
-    public function classMapper($name) {
+    public function classMapper($bundleName,$className) {
 
         $prefix = "Oleg";
-        $bundleName = "UserdirectoryBundle";
+        //$bundleName = "UserdirectoryBundle";
+        $organizationalGroupType = "OrganizationalGroupType";
 
-        switch( $name ) {
+        switch( $className ) {
             case "Institution":
-                $className = "Institution";
+                $organizationalGroupType = "OrganizationalGroupType";
+                break;
+            case "CommentTypeList":
+                $organizationalGroupType = "CommentGroupType";
                 break;
             default:
-                $className = null;
+                //$className = null;
         }
 
         $res = array(
             'prefix' => $prefix,
             'className' => $className,
-            'bundleName' => $bundleName
+            'bundleName' => $bundleName,
+            'organizationalGroupType' => $organizationalGroupType
         );
 
         return $res;

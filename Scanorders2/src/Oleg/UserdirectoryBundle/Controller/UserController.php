@@ -1793,7 +1793,7 @@ class UserController extends Controller
             //exit('before processing');
 
             //set parents for institution tree for Administrative and Academical Titles
-            $this->setCompositeTreeNode($entity);
+            //$this->setCompositeTreeNode($entity);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForCommentTypeTree($entity);
@@ -2046,41 +2046,41 @@ class UserController extends Controller
         }
     }
 
-    //Process all holder containing institutional tree
-    public function setCompositeTreeNode($entity) {
-
-        return;
-
+//    //Process all holder containing institutional tree
+//    public function setCompositeTreeNode($entity) {
+//
+//        return;
+//
+////        foreach( $entity->getAdministrativeTitles() as $title) {
+////            echo "/////////// title=".$title."<br>";
+////            $inst = $title->getInstitution();
+////            if( $inst ) {
+////                echo "inst id=".$inst->getId().", name=".$inst->getName()."<br>";
+////            }
+////        }
+////        //exit('set composite tree node');
+////        return;
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $sc = $this->get('security.context');
+//        $userUtil = new UserUtil();
+//
+//        echo "AdministrativeTitles count=".count($entity->getAdministrativeTitles())."<br>";
 //        foreach( $entity->getAdministrativeTitles() as $title) {
-//            echo "/////////// title=".$title."<br>";
-//            $inst = $title->getInstitution();
-//            if( $inst ) {
-//                echo "inst id=".$inst->getId().", name=".$inst->getName()."<br>";
-//            }
+//            $userUtil->processInstTree($title,$em,$sc,$entity);
 //        }
 //        //exit('set composite tree node');
-//        return;
-
-        $em = $this->getDoctrine()->getManager();
-        $sc = $this->get('security.context');
-        $userUtil = new UserUtil();
-
-        echo "AdministrativeTitles count=".count($entity->getAdministrativeTitles())."<br>";
-        foreach( $entity->getAdministrativeTitles() as $title) {
-            $userUtil->processInstTree($title,$em,$sc,$entity);
-        }
-        //exit('set composite tree node');
-
-        foreach( $entity->getAppointmentTitles() as $title) {
-            $userUtil->processInstTree($title,$em,$sc,$entity);
-        }
-        foreach( $entity->getMedicalTitles() as $title) {
-            $userUtil->processInstTree($title,$em,$sc,$entity);
-        }
-        foreach( $entity->getLocations() as $location) {
-            $userUtil->processInstTree($location,$em,$sc,$entity);
-        }
-    }
+//
+//        foreach( $entity->getAppointmentTitles() as $title) {
+//            $userUtil->processInstTree($title,$em,$sc,$entity);
+//        }
+//        foreach( $entity->getMedicalTitles() as $title) {
+//            $userUtil->processInstTree($title,$em,$sc,$entity);
+//        }
+//        foreach( $entity->getLocations() as $location) {
+//            $userUtil->processInstTree($location,$em,$sc,$entity);
+//        }
+//    }
 
     public function setParentsForCommentTypeTree($entity) {
 
@@ -2112,8 +2112,12 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+
         ///////////////////////// process documents /////////////////////////
-        $comment = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $comment );
+        //oleg_userdirectorybundle_user[publicComments][0][comment]
+        //newnode_oleg_userdirectorybundle_user[publicComments][0][documents][0][id]
+
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $comment );
 
         if( $comment == null ) {
             return;
@@ -2124,34 +2128,34 @@ class UserController extends Controller
         $sc = $this->get('security.context');
         $userUtil->setUpdateInfo($comment,$em,$sc);
 
-        //echo "<br>Comment text=".$comment->getComment()."<br>";
-
-        //if comment text is empty => remove from user
-        if( $comment->getComment() == "" && count($comment->getDocuments()) == 0 ) {
-
-            $user = $comment->getUser();
-
-            $comment->setCommentType(null);
-            $comment->setCommentSubType(null);
-
-            $fullClassName = new \ReflectionClass($comment);
-            $className = $fullClassName->getShortName();
-
-            $removeMethod = "remove".$className;
-            //echo "removeMethod=".$removeMethod."<br>";
-
-            $user->$removeMethod($comment);
-
-            return;
-        }
-
-        $type = $comment->getCommentType();
-        $subtype = $comment->getCommentSubType();
-
-        $user = $this->get('security.context')->getToken()->getUser();
-        $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
-
-        $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
+//        //echo "<br>Comment text=".$comment->getComment()."<br>";
+//
+//        //if comment text is empty => remove from user
+//        if( $comment->getComment() == "" && count($comment->getDocuments()) == 0 ) {
+//
+//            $user = $comment->getUser();
+//
+//            $comment->setCommentType(null);
+//            $comment->setCommentSubType(null);
+//
+//            $fullClassName = new \ReflectionClass($comment);
+//            $className = $fullClassName->getShortName();
+//
+//            $removeMethod = "remove".$className;
+//            //echo "removeMethod=".$removeMethod."<br>";
+//
+//            $user->$removeMethod($comment);
+//
+//            return;
+//        }
+//
+//        $type = $comment->getCommentType();
+//        $subtype = $comment->getCommentSubType();
+//
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+//
+//        $subtype = $em->getRepository('OlegUserdirectoryBundle:CommentSubTypeList')->checkAndSetParent($author,$comment,$type,$subtype);
     }
 
 

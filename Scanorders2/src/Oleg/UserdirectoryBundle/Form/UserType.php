@@ -333,7 +333,7 @@ class UserType extends AbstractType
             $readOnlyComment = false;
         }
 
-        $params = array('read_only'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments');
+        $params = array('read_only'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments','em'=>$this->params['em']);
         $builder->add('publicComments', 'collection', array(
             'type' => new BaseCommentsType($params),
             'label' => false,
@@ -346,7 +346,7 @@ class UserType extends AbstractType
         ));
 
         if( $this->roleAdmin || $currentUser ) {
-            $params = array('roleAdmin'=>$this->roleAdmin,'read_only'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments');
+            $params = array('roleAdmin'=>$this->roleAdmin,'read_only'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments','em'=>$this->params['em']);
             $builder->add('privateComments', 'collection', array(
                 'type' => new BaseCommentsType($params),
                 'label' => false,
@@ -360,7 +360,7 @@ class UserType extends AbstractType
         }
 
         if( $this->roleAdmin ) {
-            $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments');
+            $params = array('read_only'=>$read_only,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments','em'=>$this->params['em']);
             $builder->add('adminComments', 'collection', array(
                 'type' => new BaseCommentsType($params),
                 'label' => false,
@@ -374,7 +374,7 @@ class UserType extends AbstractType
         }
 
         if( $this->roleAdmin || ($currentUser && $this->cycle == 'show') ) {
-            $params = array('read_only'=>$read_only,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments');
+            $params = array('read_only'=>$read_only,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments','em'=>$this->params['em']);
             $builder->add('confidentialComments', 'collection', array(
                 'type' => new BaseCommentsType($params),
                 'label' => false,
