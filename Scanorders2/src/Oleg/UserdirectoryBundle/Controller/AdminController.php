@@ -3049,7 +3049,7 @@ class AdminController extends Controller
         }
 
         //show html tree
-        if(0) {
+        if( 0 ) {
             $em = $this->getDoctrine()->getManager();
             $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
             $htmlTree = $repo->childrenHierarchy(

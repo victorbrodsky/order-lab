@@ -221,7 +221,7 @@ class LocationType extends AbstractType
                 if( $title ) {
                     $institution = $title->getInstitution();
                     if( $institution && $institution->getOrganizationalGroupType() ) {
-                        $label = $institution->getOrganizationalGroupType()->getName().":";
+                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                     }
                 }
 

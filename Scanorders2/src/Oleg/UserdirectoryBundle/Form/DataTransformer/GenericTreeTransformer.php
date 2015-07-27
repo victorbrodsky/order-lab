@@ -11,6 +11,8 @@ namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
 
 
+use Oleg\UserdirectoryBundle\Entity\CommentTypeList;
+use Oleg\UserdirectoryBundle\Entity\Institution;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -222,6 +224,45 @@ class GenericTreeTransformer implements DataTransformerInterface
         $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM Oleg'.$this->bundleName.':'.$className.' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
+
+        //set OrganizationalGroupType
+        if( method_exists($entity,'setOrganizationalGroupType') ) {
+            if( $entity instanceof Institution ) {
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'organizationalGroupType' => "OrganizationalGroupType",
+                    'bundleName' => "UserdirectoryBundle"
+                );
+            }
+
+            if( $entity instanceof CommentTypeList ) {
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'organizationalGroupType' => "CommentGroupType",
+                    'bundleName' => "UserdirectoryBundle"
+                );
+            }
+
+            $organizationalGroupTypes = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+                array(
+                    "level" => 0,
+                    "type" => array('default','user-added')
+                )
+            );
+
+            if( count($organizationalGroupTypes) > 0 ) {
+                $organizationalGroupType = $organizationalGroupTypes[0];
+            }
+
+            if( count($organizationalGroupTypes) == 0 ) {
+                $organizationalGroupType = null;
+            }
+
+            if( $organizationalGroupType ) {
+                $entity->setOrganizationalGroupType($organizationalGroupType);
+            }
+
+        }
 
         return $entity;
     }

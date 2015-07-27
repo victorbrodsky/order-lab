@@ -34,8 +34,7 @@ class InstitutionalWrapperType extends AbstractType
             if( $title ) {
                 $institution = $title->getInstitution();
                 if( $institution && $institution->getOrganizationalGroupType() ) {
-                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-                    $label = $institution->getOrganizationalGroupType()->getName().":";
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
 

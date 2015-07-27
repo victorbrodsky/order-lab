@@ -99,10 +99,10 @@ class BaseTitleType extends AbstractType
             $label = 'Institution:';
             if( $title ) {
                 $institution = $title->getInstitution();
-                if( $institution && $institution->getOrganizationalGroupType() ) {
-                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-                    $label = $institution->getOrganizationalGroupType()->getName().":";
+                if( $institution ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
+
             }
 
             $form->add('institution', 'employees_custom_selector', array(

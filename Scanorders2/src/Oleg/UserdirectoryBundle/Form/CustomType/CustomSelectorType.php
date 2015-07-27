@@ -58,7 +58,7 @@ class CustomSelectorType extends AbstractType {
 //                $transformer = new GenericManytomanyTransformer($this->om, $username, 'Institution');
 //                break;
             case "commenttype":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'CommentTypeList', null);
+                $transformer = new GenericTreeTransformer($this->om, $username, 'CommentTypeList');
                 break;
 //            case "institution_id":
 //                $params = array('field'=>'id');
@@ -78,12 +78,6 @@ class CustomSelectorType extends AbstractType {
                 break;
             case "fellowshiptype":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipTypeList');
-                break;
-            case "commentType":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'CommentTypeList');
-                break;
-            case "commentSubType":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'CommentSubTypeList');
                 break;
             case "researchlab":
                 $transformer = new ResearchLabTransformer($this->om, $username, 'ResearchLab');

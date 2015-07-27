@@ -37,7 +37,7 @@ class GenericListType extends AbstractType
         ));
 
 
-        //tree classes: BaseCompositeNode (Institution, MessageCatergory), CommentSubTypeList, FellowshipSubspecialty
+        //tree classes: BaseCompositeNode (Institution, MessageCatergory, CommentTypeList), FellowshipSubspecialty
         if( method_exists($this->params['entity'],'getParent') ) {
             //echo "cycle=".$this->params['cycle']."<br>";
             if( $this->params['cycle'] == "show" ) {
@@ -49,6 +49,16 @@ class GenericListType extends AbstractType
                 'label' => $this->mapper['parentClassName'].' (Parent):',
                 //'attr' => array('class' => 'combobox combobox-width')
                 'attr' => $attr
+            ));
+
+
+        }
+
+        //tree: add group title
+        if( method_exists($this->params['entity'],'getOrganizationalGroupType') ) {
+            $builder->add('organizationalGroupType',null,array(
+                'label' => 'Organizational Group Type:',
+                'attr' => array('class' => 'combobox combobox-width')
             ));
         }
 
@@ -126,7 +136,6 @@ class GenericListType extends AbstractType
 
         ///////////////// Many To Many relationship /////////////////
 
-        //Department:
         //not editable: suites, rooms
         if( strtolower($this->mapper['className']) == strtolower("Department") ) {
             $builder->add('suites','entity',array(
@@ -175,7 +184,7 @@ class GenericListType extends AbstractType
         }
 
 
-        //Suite: departments, buildings, floors
+        //Suite: buildings, floors
         if( strtolower($this->mapper['className']) == strtolower("SuiteList") ) {
             $builder->add('buildings','entity',array(
                 'class' => 'OlegUserdirectoryBundle:BuildingList',
@@ -185,14 +194,14 @@ class GenericListType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width')
             ));
 
-            $builder->add('departments','entity',array(
-                'class' => 'OlegUserdirectoryBundle:Department',
-                'label'=>'Department(s):',
-                'required'=> false,
-                'multiple' => true,
-                //'by_reference' => false,
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
+//            $builder->add('departments','entity',array(
+//                'class' => 'OlegUserdirectoryBundle:Department',
+//                'label'=>'Department(s):',
+//                'required'=> false,
+//                'multiple' => true,
+//                //'by_reference' => false,
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
 
             $builder->add('floors','entity',array(
                 'class' => 'OlegUserdirectoryBundle:FloorList',
@@ -203,7 +212,7 @@ class GenericListType extends AbstractType
             ));
         }
 
-        //Room: departments, buildings, suite
+        //Room: buildings, suite
         if( strtolower($this->mapper['className']) == strtolower("RoomList") ) {
             $builder->add('buildings','entity',array(
                 'class' => 'OlegUserdirectoryBundle:BuildingList',
@@ -214,13 +223,13 @@ class GenericListType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width')
             ));
 
-            $builder->add('departments','entity',array(
-                'class' => 'OlegUserdirectoryBundle:Department',
-                'label'=>'Department(s):',
-                'required'=> false,
-                'multiple' => true,
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
+//            $builder->add('departments','entity',array(
+//                'class' => 'OlegUserdirectoryBundle:Department',
+//                'label'=>'Department(s):',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
 
             $builder->add('suites','entity',array(
                 'class' => 'OlegUserdirectoryBundle:SuiteList',

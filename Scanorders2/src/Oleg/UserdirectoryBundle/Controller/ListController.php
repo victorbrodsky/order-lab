@@ -129,6 +129,11 @@ class ListController extends Controller
             $dql->addGroupBy('parent.name');
         }
 
+        if( method_exists($entityClass,'getOrganizationalGroupType') ) {
+            $dql->leftJoin("ent.organizationalGroupType", "organizationalGroupType");
+            $dql->addGroupBy('organizationalGroupType.name');
+        }
+
         if( method_exists($entityClass,'getRoles') ) {
             $dql->leftJoin("ent.roles", "roles");
             $dql->addGroupBy('roles.name');

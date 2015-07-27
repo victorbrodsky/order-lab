@@ -19,6 +19,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Level', 'ent.level') }}</th>
             {% endif %}
 
+            {% if entities|first.organizationalGroupType is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Organizational Group Type', 'organizationalGroupType.name') }}</th>
+            {% endif %}
+
             {% if entities|first.nativeName is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Native Name', 'ent.nativeName') }}</th>
             {% endif %}
@@ -86,6 +90,12 @@
                 {% if entity.level is defined %}
                     <td>
                         {{ entity.level }}
+                    </td>
+                {% endif %}
+
+                {% if entity.organizationalGroupType is defined %}
+                    <td>
+                        {{ entity.organizationalGroupType }}
                     </td>
                 {% endif %}
 
@@ -226,6 +236,10 @@
         {{ formmacros.field(form.level) }}
     {% endif %}
 
+    {% if form.organizationalGroupType is defined %}
+        {{ formmacros.field(form.organizationalGroupType) }}
+    {% endif %}
+
     {% if form.nativeName is defined %}
         {{ formmacros.field(form.nativeName) }}
     {% endif %}
@@ -323,6 +337,10 @@
 
     {% if entity.level is defined %}
         {{ formmacros.field(edit_form.level) }}
+    {% endif %}
+
+    {% if entity.organizationalGroupType is defined %}
+        {{ formmacros.field(edit_form.organizationalGroupType) }}
     {% endif %}
 
     {% if entity.nativeName is defined %}

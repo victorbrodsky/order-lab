@@ -88,83 +88,7 @@ class UserRequestType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 
-        //requestedScanOrderInstitutionScope
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//            $title = $event->getData();
-//            $form = $event->getForm();
-//
-//            $label = 'Institution:';
-//            if( $title ) {
-//                $institution = $title->getRequestedScanOrderInstitutionScope();
-//                if( $institution && $institution->getOrganizationalGroupType() ) {
-//                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-//                    $label = $institution->getOrganizationalGroupType()->getName().":";
-//                }
-//            }
-//
-//            $form->add('requestedScanOrderInstitutionScope', 'employees_custom_selector', array(
-//                'label' => $label,
-//                'required' => false,
-//                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-//                'classtype' => 'institution'
-//            ));
-//        });
 
-
-
-//        $builder->add( 'institution', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:Institution',
-//                'property' => 'name',
-//                'label'=>'Institution:',
-//                'required'=> false,
-//                'multiple' => true,
-//                'attr' => array('class'=>'combobox combobox-width'),
-//                'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->where("list.type = :typedef OR list.type = :typeadd")
-//                        ->orderBy("list.orderinlist","ASC")
-//                        ->setParameters( array(
-//                            'typedef' => 'default',
-//                            'typeadd' => 'user-added',
-//                        ));
-//                },
-//        ));
-        
-//        $builder->add( 'department', 'text', array(
-//                'label'=>'Department:',
-//                'required'=> false,
-//                'data'=>'Pathology and Laboratory Medicine',
-//                'attr' => array('class'=>'form-control form-control-modif'),
-//        ));
-
-        //foreach( $this->params['departments'] as $dep ) {
-        //    echo "dep=".$dep->getName()."<br>";
-        //}
-
-
-//        $builder->add('department', 'entity', array(
-//            'label' => 'Department:',
-//            'required'=> true,
-//            'class' => 'OlegUserdirectoryBundle:Department',
-//            'choices' => $this->params['departments'],
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
-
-        //services
-//        $attr = array('class' => 'ajax-combobox-service', 'type' => 'hidden');    //new
-//        $builder->add('services', 'custom_selector', array(
-//            'label' => 'Departmental Service(s):',
-//            'attr' => $attr,
-//            'required' => false,
-//            'classtype' => 'userServices'
-//        ));
-//        $builder->add('services', 'entity', array(
-//            'label' => 'Service(s):',
-//            'class' => 'OlegUserdirectoryBundle:Service',
-//            'choices' => $this->params['services'],
-//            'multiple' => true,
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
         
         $builder->add('request', 'textarea', array(
             'label'=>'Reason for account request:',
@@ -172,19 +96,6 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'textarea form-control form-control-modif'),
         ));
 
-//        $attr = array('class' => 'combobox combobox-width ');
-//        $builder->add('similaruser', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:User',
-//            'label'=>'Access permissions similar to:',
-//            'required' => false,
-//            //'multiple' => true,
-//            'attr' => $attr,
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('u')
-//                    ->where('u.username <> :username')
-//                    ->setParameter('username', 'system');
-//            },
-//        ));
 
         //$refLabel = "For reference, please provide the name and contact information of your supervisor or of the person who can confirm the validity of your request below.\r\nAccess permissions similar to (user name):";
         $builder->add( 'similaruser', 'text', array(
@@ -193,21 +104,9 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        //$builder->add('creationdate');
-
-//        $builder->add("cwidyesno", "choice", array(
-//            'mapped' => false,
-//            'multiple' => false,
-//            'expanded' => true,
-//            'label' => false,
-//            'choices' => array("Yes"=>"Yes", "No"=>"No"),
-//            'attr' => array('class' => 'horizontal_type cwidyesno')
-//        ));
-
         $builder->add( 'referencename', 'text', array(
             'label'=>'Reference Name:',
             'required'=> false,
-//            'attr' => array('class'=>'form-control form-control-modif element-with-tooltip', 'data-toggle'=>'tooltip', 'title' => 'name of your supervisor or of the person who can confirm the validity of your request'),
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 

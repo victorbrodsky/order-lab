@@ -86,30 +86,6 @@ class PerSiteSettingsType extends AbstractType
 
 
         //ScanOrdersServicesScope
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//            $title = $event->getData();
-//            $form = $event->getForm();
-//
-//            $label = 'Institution';
-//            if( $title ) {
-//                $institutions = $title->getScanOrdersServicesScope();
-//                if( count($institutions) > 0 ) {
-//                    $institution = $institutions->first();
-//                    if( $institution && $institution->getOrganizationalGroupType() ) {
-//                        //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-//                        $label = $institution->getOrganizationalGroupType()->getName();
-//                    }
-//                }
-//            }
-//
-//            $form->add('scanOrdersServicesScope', 'employees_custom_selector', array(
-//                'label' => 'Default ScanOrder '.$label.' Scope:',
-//                'read_only' => !$this->roleAdmin,
-//                'required' => false,
-//                'attr' => array('class' => 'ajax-combobox-compositetree', 'type' => 'hidden', 'data-label-prefix' => 'Default ScanOrder', 'data-label-postfix' => 'Scope'),
-//                'classtype' => 'institution-many'
-//            ));
-//        });
         $builder->add( 'scanOrdersServicesScope', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
             'property' => 'name',
@@ -158,30 +134,6 @@ class PerSiteSettingsType extends AbstractType
                         ));
                 },
         ));
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//            $title = $event->getData();
-//            $form = $event->getForm();
-//
-//            $label = 'Institution';
-//            if( $title ) {
-//                $institutions = $title->getScanOrdersServicesScope();
-//                if( count($institutions) > 0 ) {
-//                    $institution = $institutions->first();
-//                    if( $institution && $institution->getOrganizationalGroupType() ) {
-//                        //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-//                        $label = $institution->getOrganizationalGroupType()->getName();
-//                    }
-//                }
-//            }
-//
-//            $form->add('chiefServices', 'employees_custom_selector', array(
-//                'label' => 'Chief of the following '.$label.'(s) for Scope:',
-//                'read_only' => !$this->roleAdmin,
-//                'required' => false,
-//                'attr' => array('class' => 'ajax-combobox-compositetree', 'type' => 'hidden', 'data-label-prefix' => 'Chief of the following', 'data-label-postfix' => '(s) for Scope'),
-//                'classtype' => 'institution-many'
-//            ));
-//        });
 
         //defaultInstitution
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -192,8 +144,7 @@ class PerSiteSettingsType extends AbstractType
             if( $title ) {
                 $institution = $title->getDefaultInstitution();
                 if( $institution && $institution->getOrganizationalGroupType() ) {
-                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-                    $label = $institution->getOrganizationalGroupType()->getName();
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
 

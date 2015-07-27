@@ -89,9 +89,13 @@ class BaseCommentsType extends AbstractType
             $label = 'Comment Category:';
             if( $title ) {
                 $commentType = $title->getCommentType();
-                if( $commentType && $commentType->getOrganizationalGroupType() ) {
-                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-                    $label = $commentType->getOrganizationalGroupType()->getName().":";
+                if( $commentType ) {
+                    $mapper = array(
+                        'prefix' => "Oleg",
+                        'className' => "CommentTypeList",
+                        'bundleName' => "UserdirectoryBundle"
+                    );
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:CommentTypeList')->getLevelLabels($commentType,$mapper) . ":";
                 }
             }
 

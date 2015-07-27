@@ -82,10 +82,6 @@ class UtilController extends Controller {
 
 
     /**
-     * @Route("/common/department", name="get-departments-by-parent")
-     * @Route("/common/division", name="get-divisions-by-parent")
-     * @Route("/common/service", name="get-services-by-parent")
-     * @Route("/common/commentsubtype", name="get-commentsubtype-by-parent")
      * @Route("/common/fellowshipsubspecialty", name="get-fellowshipsubspecialty-by-parent")
      * @Method({"GET", "POST"})
      */
@@ -138,6 +134,31 @@ class UtilController extends Controller {
         }
 
         //print_r($output);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/common/traininginstitution", name="employees_get_traininginstitution")
+     * @Method({"GET"})
+     */
+    public function getTrainingInstitutionAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:Institution', 'list')
+            ->select("list.id as id, list.name as text")
+            ->leftJoin("list.types","types")
+            ->orderBy("list.orderinlist","ASC");
+
+        $query->where("types.name LIKE :instType AND list.level = 0 AND (list.type = :typedef OR list.type = :typeadd)")
+            ->setParameters(array('typedef' => 'default','typeadd' => 'user-added', 'instType' => 'Educational' ));
+
+        $output = $query->getQuery()->getResult();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -206,28 +227,28 @@ class UtilController extends Controller {
     }
 
 
-    /**
-     * @Route("/common/commenttype", name="employees_get_commenttype")
-     * @Method("GET")
-     */
-    public function getCommenttypeAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:CommentTypeList', 'list')
-            ->select("list.id as id, list.name as text")
-            ->orderBy("list.orderinlist","ASC");
-
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-
-        $output = $query->getQuery()->getResult();
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
+//    /**
+//     * @Route("/common/commenttype", name="employees_get_commenttype")
+//     * @Method("GET")
+//     */
+//    public function getCommenttypeAction() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegUserdirectoryBundle:CommentTypeList', 'list')
+//            ->select("list.id as id, list.name as text")
+//            ->orderBy("list.orderinlist","ASC");
+//
+//        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+//
+//        $output = $query->getQuery()->getResult();
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+//    }
 
 
 
@@ -1053,10 +1074,7 @@ class UtilController extends Controller {
                 break;
             case "trainingfellowshiptitle":
                 $className = "FellowshipTitleList";
-                break;
-            case "traininginstitution":
-                $className = "Institution";
-                break;
+                break;            
 
             //training tree
             case "residencyspecialty":

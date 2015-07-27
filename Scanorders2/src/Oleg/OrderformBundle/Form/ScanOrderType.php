@@ -54,14 +54,14 @@ class ScanOrderType extends AbstractType
             if( $title ) {
                 $institution = $title->getScanOrderInstitutionScope();
                 if( $institution && $institution->getOrganizationalGroupType() ) {
-                    //echo "PRE_SET_DATA inst id:".$institution->getId().", name=".$institution->getName()."<br>";
-                    $label = $institution->getOrganizationalGroupType()->getName();
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
 
             $form->add('scanOrderInstitutionScope', 'employees_custom_selector', array(
                 'label' => 'ScanOrder' . ' ' . $label . ' Scope' . ':',
                 'required' => false,
+
                 'attr' => array(
                     'class' => 'ajax-combobox-compositetree',
                     'type' => 'hidden',

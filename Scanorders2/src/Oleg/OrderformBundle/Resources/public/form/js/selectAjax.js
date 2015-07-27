@@ -165,7 +165,7 @@ function getComboboxStain(holder) {
         url = url + "?opt=default";
     }
 
-    var targetid = ".ajax-combobox-stain";
+    var targetid = ".ajax-combobox-staintype";
     if( typeof holder !== 'undefined' && holder.length > 0 ) {
         targetid = holder.find(targetid);
     }
@@ -184,12 +184,10 @@ function getComboboxStain(holder) {
         }).success(function(data) {
                 _stain = data;
             populateSelectCombobox( targetid, _stain, null );
-            //populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
         });
     } else {
         //console.log("stain exists");
         populateSelectCombobox( targetid, _stain, null );
-        //populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
     }
 
     if( cycle == "new"  ) {

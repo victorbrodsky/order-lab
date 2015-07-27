@@ -185,5 +185,108 @@ class TreeRepository extends NestedTreeRepository {
 
     }
 
+
+
+//    public function getLevelLabels( $nodes ) {
+//        $labelsStr = "";
+//        $labels = array();
+//
+//        foreach( $nodes as $node ) {
+//            $nodeLabel = $node->getOrganizationalGroupType()->getName()."";
+//            if( $node && !in_array($nodeLabel,$labels) ) {
+//                $labels[] = $nodeLabel;
+//            }
+//        }
+//
+//        if( count($labels) > 0 ){
+//            $labelsStr = implode(",", $labels);
+//        }
+//
+//        return $labelsStr;
+//    }
+
+    public function getLevelLabels( $node, $mapper=null ) {
+
+        $labelsStr = "";
+
+        //get labels for all siblings of this node
+
+        if( !$mapper ) {
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "Institution",
+                'bundleName' => "UserdirectoryBundle"
+            );
+        }
+
+        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('DISTINCT(organizationalGroupType.name) AS levelLabel');
+        $dql->leftJoin("list.organizationalGroupType","organizationalGroupType");
+
+        $where = "(list.type = :typedef OR list.type = :typeadd)";
+        $params = array('typedef' => 'default','typeadd' => 'user-added');
+
+        $parent = $node->getParent();
+
+        if( $parent ) {
+            $pid = $parent->getId();
+            $dql->leftJoin("list.parent", "parent");
+            $where = $where . " AND parent.id = :id";
+            $params['id'] = $pid;
+        } else {
+            $dql->leftJoin("list.parent", "parent");
+            $where = $where . " AND parent.id is NULL";
+        }
+
+        $dql->where($where);
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($params);
+        //echo "dql=".$dql."<br>";
+
+        $results = $query->getResult();
+
+        $count = 0;
+
+        //3 cases:
+        //Department
+        //Department or Group
+        //Department, Group, or Collaboration
+        foreach( $results as $result ) {
+            $label = $result['levelLabel'];
+            //echo "label=".$result['levelLabel']."<br>";
+
+            if( !$label ) {
+                continue;
+            }
+
+            if( $count == 0 ) {
+                $labelsStr = $label;
+                $count++;
+                continue;
+            }
+
+            if( count($results) > $count + 1 ) {
+                $labelsStr = $labelsStr . ", " . $label;
+                //continue;
+            }
+
+            if( count($results) == $count + 1 ) {
+                if( count($results) == 2 ) {
+                    $labelsStr = $labelsStr . " or " . $label;
+                } else {
+                    $labelsStr = $labelsStr . ", or " . $label;
+                }
+                //continue;
+            }
+
+            $count++;
+        }
+
+        return $labelsStr;
+    }
+
+
 }
 

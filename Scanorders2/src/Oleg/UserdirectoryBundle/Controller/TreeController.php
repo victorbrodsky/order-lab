@@ -138,15 +138,23 @@ class TreeController extends Controller {
         $entities = $query->getResult();
         //echo "count=".count($entities)."<br>";
 
+        $levelTitles = null;
+        if( count($entities) > 0 ) {
+            $levelTitles = $treeRepository->getLevelLabels($entities[0],$mapper);
+        }
+
         $output = array();
         foreach( $entities as $entity ) {
 
-            if( !$entity->getOrganizationalGroupType() ) {
-                //echo "entity without org group = ".$entity->getId()."<br>";
-                continue;
+            if( $entity->getOrganizationalGroupType() ) {
+                $levelTitle = $entity->getOrganizationalGroupType()->getName()."";
+            } else {
+                $levelTitle = $this->getDefaultLevelLabel($mapper,$entity->getLevel());
             }
 
-            $levelTitle = $entity->getOrganizationalGroupType()->getName()."";
+            if( !$levelTitles ) {
+                $levelTitles = $levelTitle;
+            }
 
             if( $combobox ) {
                 $text = $entity->getName()."";
@@ -161,40 +169,20 @@ class TreeController extends Controller {
                 //'text' => $entity->getName()." [" . $levelTitle . "]",
                 'text' => $text,
                 'level' => $entity->getLevel(),
-                'type' => $levelTitle,          //set js icon by level title
-                'leveltitle' => $levelTitle,
+                'type' => 'icon'.$entity->getLevel(),            //set js icon by level title
+                'leveltitle' => $levelTitles,   //$levelTitle,
                 //'children' => ( count($entity->getChildren()) > 0 ? true : false)
             );
 
             if( $combobox ) {
                 //for combobox
-
-//                if( $userpositions ) {
-//                    //find user positions by $userid and nodeid
-//                    $nodeUserPositions = $em->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
-//                        array(
-//                            'user' => $userid,
-//                            'institution' => $entity->getId()
-//                        )
-//                    );
-//
-//                    $positiontypes = array();
-//                    foreach( $nodeUserPositions as $nodeUserPosition ) {
-//                        foreach( $nodeUserPosition->getPositionTypes() as $posType ) {
-//                            $positiontypes[] = $posType->getId();
-//                        }
-//                    }
-//
-//                    $element['positiontypes'] = implode(",", $positiontypes);
-//                }
-
             } else {
                 //for jstree
                 $element['children'] = ( count($entity->getChildren()) > 0 ? true : false);
             }
 
             $output[] = $element;
-        }
+        }//foreach
 
         //construct an empty element for combobox to allow to enter a new node
         if( $combobox && count($output) == 0 ) {
@@ -207,30 +195,16 @@ class TreeController extends Controller {
                     $childLevel = 0;
                 }
 
-                $organizationalGroupTypes = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
-                    array(
-                        "level" => $childLevel,
-                        "type" => array('default','user-added')
-                    )
-                );
+                $defaultOrganizationalGroupType = $this->getDefaultLevelLabel($mapper,$childLevel);
 
-                if( count($organizationalGroupTypes) > 0 ) {
-                    $organizationalGroupType = $organizationalGroupTypes[0];
-                }
-
-                if( count($organizationalGroupTypes) == 0 ) {
-                    $organizationalGroupType = null;
-                }
-
-                if( $organizationalGroupType ) {
-                    $levelTitle = $organizationalGroupType->getName();
+                if( $defaultOrganizationalGroupType ) {
                     $element = array(
                         'id' => null,
                         'pid' => $pid,
                         'text' => "",
                         'level' => $childLevel,
-                        'type' => $levelTitle,          //set js icon by level title
-                        'leveltitle' => $levelTitle,
+                        'type' => 'icon'.$childLevel,
+                        'leveltitle' => $defaultOrganizationalGroupType,
                     );
                     $output[] = $element;
                 }
@@ -436,5 +410,51 @@ class TreeController extends Controller {
 
         return $res;
     }
+
+    public function getDefaultLevelLabel( $mapper, $level ) {
+
+        $levelTitle = null;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $organizationalGroupTypes = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+            array(
+                "level" => $level,
+                "type" => array('default','user-added')
+            )
+        );
+
+        if( count($organizationalGroupTypes) > 0 ) {
+            $organizationalGroupType = $organizationalGroupTypes[0];
+        }
+
+        if( count($organizationalGroupTypes) == 0 ) {
+            $organizationalGroupType = null;
+        }
+
+        if( $organizationalGroupType ) {
+            $levelTitle = $organizationalGroupType->getName()."";
+        }
+
+        return $levelTitle;
+    }
+
+//    public function getLevelLabels( $nodes ) {
+//        $labelsStr = "";
+//        $labels = array();
+//
+//        foreach( $nodes as $node ) {
+//            $nodeLabel = $node->getOrganizationalGroupType()->getName()."";
+//            if( $node && !in_array($nodeLabel,$labels) ) {
+//                $labels[] = $nodeLabel;
+//            }
+//        }
+//
+//        if( count($labels) > 0 ){
+//            $labelsStr = implode(",", $labels);
+//        }
+//
+//        return $labelsStr;
+//    }
 
 }

@@ -46,6 +46,7 @@ function getJstree(bundleName,entityName) {
                     //create_node, rename_node, delete_node, move_node, copy_node
                     if( operation === "copy_node" || operation === "move_node" ) {
                         if( parent.id === "#" ) {
+                            console.log(operation+' is not supported, parent.id='+parent.id);
                             return false; // prevent moving a child above or below the root
                         }
                     }
@@ -106,16 +107,16 @@ function getJstree(bundleName,entityName) {
                 }
             },
             "types" : {
-                "Institution" : {
+                "icon0" : {
                     "icon" : "glyphicon glyphicon-home"
                 },
-                "Department" : {
+                "icon1" : {
                     "icon" : "glyphicon glyphicon-leaf"
                 },
-                "Division" : {
+                "icon2" : {
                     "icon" : "glyphicon glyphicon-tag"
                 },
-                "Service" : {
+                "icon3" : {
                     "icon" : "glyphicon glyphicon-ok"
                 }
             },
