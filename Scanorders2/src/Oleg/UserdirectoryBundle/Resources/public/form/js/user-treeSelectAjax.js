@@ -520,19 +520,19 @@ function clearTreeToDown(targetId,holder,fieldClass,parentId) {
 }
 
 //This function executes twice (?)
-var _initInstitutionManuallyCount = 0;
-function initInstitutionManually() {
-    if( _initInstitutionManuallyCount > 0 ) {
-        return;
-    }
-    _initInstitutionManuallyCount = 1;
-
-    $('.ajax-combobox-institution-preset').each(function(e){
-        //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! init inst manually" );
-        var clearFlag = true; //clear children and default service
-        getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
-    });
-}
+//var _initInstitutionManuallyCount = 0;
+//function initInstitutionManually() {
+//    if( _initInstitutionManuallyCount > 0 ) {
+//        return;
+//    }
+//    _initInstitutionManuallyCount = 1;
+//
+//    $('.ajax-combobox-institution-preset').each(function(e){
+//        //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! init inst manually" );
+//        var clearFlag = true; //clear children and default service
+//        getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
+//    });
+//}
 
 
 
@@ -545,25 +545,25 @@ function initTreeSelect(clearFlag) {
         clearFlag == true;
     }
 
-    $('.ajax-combobox-institution,.ajax-combobox-institution-preset').on('change', function(e){
-        //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! institution on change" );
-        getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
-    });
-
-    $('.ajax-combobox-department').on('change', function(e){
-        //console.log( "department on change" );
-        getComboboxTreeByPid($(this),'ajax-combobox-division',null,clearFlag);
-    });
-
-    $('.ajax-combobox-division').on('change', function(e){
-        //console.log( "division on change" );
-        getComboboxTreeByPid($(this),'ajax-combobox-service',null,clearFlag);
-    });
-
-    //comments type and subtypes
-    $('.ajax-combobox-commenttype').on('change', function(e){
-        getComboboxTreeByPid($(this),'ajax-combobox-commentsubtype',null,clearFlag);
-    });
+//    $('.ajax-combobox-institution,.ajax-combobox-institution-preset').on('change', function(e){
+//        //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! institution on change" );
+//        getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
+//    });
+//
+//    $('.ajax-combobox-department').on('change', function(e){
+//        //console.log( "department on change" );
+//        getComboboxTreeByPid($(this),'ajax-combobox-division',null,clearFlag);
+//    });
+//
+//    $('.ajax-combobox-division').on('change', function(e){
+//        //console.log( "division on change" );
+//        getComboboxTreeByPid($(this),'ajax-combobox-service',null,clearFlag);
+//    });
+//
+//    //comments type and subtypes
+//    $('.ajax-combobox-commenttype').on('change', function(e){
+//        getComboboxTreeByPid($(this),'ajax-combobox-commentsubtype',null,clearFlag);
+//    });
 
     //residencyspecialty and fellowshipsubspecialty
     $('.ajax-combobox-residencyspecialty').on('change', function(e){
@@ -577,20 +577,20 @@ function getChildrenTargetClass(fieldClass) {
 
     var childrenTargetClass = null;
 
-    if( fieldClass == "ajax-combobox-institution" ) {
-        childrenTargetClass = "ajax-combobox-department";
-    }
-    if( fieldClass == "ajax-combobox-department" ) {
-        childrenTargetClass = "ajax-combobox-division";
-    }
-    if( fieldClass == "ajax-combobox-division" ) {
-        childrenTargetClass = "ajax-combobox-service";
-    }
-
-    //comments type and subtypes
-    if( fieldClass == "ajax-combobox-commenttype" ) {
-        childrenTargetClass = "ajax-combobox-commentsubtype";
-    }
+//    if( fieldClass == "ajax-combobox-institution" ) {
+//        childrenTargetClass = "ajax-combobox-department";
+//    }
+//    if( fieldClass == "ajax-combobox-department" ) {
+//        childrenTargetClass = "ajax-combobox-division";
+//    }
+//    if( fieldClass == "ajax-combobox-division" ) {
+//        childrenTargetClass = "ajax-combobox-service";
+//    }
+//
+//    //comments type and subtypes
+//    if( fieldClass == "ajax-combobox-commenttype" ) {
+//        childrenTargetClass = "ajax-combobox-commentsubtype";
+//    }
 
     return childrenTargetClass;
 }
@@ -600,24 +600,24 @@ function getChildrenTargetClass(fieldClass) {
 
 
 ///////////////// Institution Tree ///////////////////
-function setInstitutionTreeChildren(holder) {
-
-    //console.log( "set Institution Tree Children" );
-
-    if( typeof holder == 'undefined' ) {
-        holder = $('body');
-    }
-
-    //department
-    populateSelectCombobox( holder.find(".ajax-combobox-department"), null, "Select an option or type in a new value", false );
-
-    //division
-    populateSelectCombobox( holder.find(".ajax-combobox-division"), null, "Select an option or type in a new value", false );
-
-    //service
-    populateSelectCombobox( holder.find(".ajax-combobox-service"), null, "Select an option or type in a new value", false );
-
-}
+//function setInstitutionTreeChildren(holder) {
+//
+//    //console.log( "set Institution Tree Children" );
+//
+//    if( typeof holder == 'undefined' ) {
+//        holder = $('body');
+//    }
+//
+//    //department
+//    populateSelectCombobox( holder.find(".ajax-combobox-department"), null, "Select an option or type in a new value", false );
+//
+//    //division
+//    populateSelectCombobox( holder.find(".ajax-combobox-division"), null, "Select an option or type in a new value", false );
+//
+//    //service
+//    populateSelectCombobox( holder.find(".ajax-combobox-service"), null, "Select an option or type in a new value", false );
+//
+//}
 ///////////////// EOF Institution Tree ///////////////////
 
 
@@ -654,66 +654,66 @@ function setResidencyspecialtyTreeChildren(holder) {
 
 ///////////////// Tree managemenet ///////////////////
 //redirect to correct controller with node id and parent
-function editTreeNode(btn) {
-    var holder = $(btn).closest('.tree-node-holder');
-    //console.log(holder);
-
-    //get node id
-    var inputEl = holder.find('input.combobox:text').not("*[id^='s2id_']");
-    //console.log(inputEl);
-    var nodeid = inputEl.select2('val');
-    var res = getInstitutionNodeInfo(inputEl);
-    var nodename = res['name'];
-    //console.log('nodeid='+nodeid+', nodename='+nodename);
-
-    if( nodename == null ) {
-        return;
-    }
-    //redirect to edit page
-    var url = getCommonBaseUrl("admin/list/"+nodename+"s/"+nodeid,"employees");
-    //console.log("url="+url);
-
-    window.open(url);
-    //window.location.href = url;
-}
+//function editTreeNode(btn) {
+//    var holder = $(btn).closest('.tree-node-holder');
+//    //console.log(holder);
+//
+//    //get node id
+//    var inputEl = holder.find('input.combobox:text').not("*[id^='s2id_']");
+//    //console.log(inputEl);
+//    var nodeid = inputEl.select2('val');
+//    var res = getInstitutionNodeInfo(inputEl);
+//    var nodename = res['name'];
+//    //console.log('nodeid='+nodeid+', nodename='+nodename);
+//
+//    if( nodename == null ) {
+//        return;
+//    }
+//    //redirect to edit page
+//    var url = getCommonBaseUrl("admin/list/"+nodename+"s/"+nodeid,"employees");
+//    //console.log("url="+url);
+//
+//    window.open(url);
+//    //window.location.href = url;
+//}
 
 //redirect to correct controller with node id and parent
-function addTreeNode(btn) {
-    var holder = $(btn).closest('.tree-node-holder');
-    //console.log(holder);
-
-    //get node id
-    var inputEl = holder.find('input.combobox:text').not("*[id^='s2id_']");
-    //console.log(inputEl);
-    var nodeid = inputEl.select2('val');
-
-    //get parent id
-    var res = getInstitutionNodeInfo(inputEl);
-    var parentClass = res['parentClass'];
-    var nodename = res['name'];
-
-    if( nodename == null ) {
-        return;
-    }
-
-    if( parentClass ) {
-        //console.log('parentClass='+parentClass);
-        var treeHolder = $(btn).closest('.user-collection-holder');
-        var parentEl = treeHolder.find('.'+parentClass);
-        //console.log(parentEl);
-        var parentid = parentEl.select2('val');
-        if( !parentid || parentid == "" ) {
-            alert("Parent is not specified");
-            return;
-        }
-        var url = getCommonBaseUrl("admin/list/"+nodename+"/new/parent/"+parentid,"employees");
-    } else {
-        var url = getCommonBaseUrl("admin/list/institutions/new","employees");
-    }
-    //redirect to add page
-    window.open(url);
-    //window.location.href = url;
-}
+//function addTreeNode(btn) {
+//    var holder = $(btn).closest('.tree-node-holder');
+//    //console.log(holder);
+//
+//    //get node id
+//    var inputEl = holder.find('input.combobox:text').not("*[id^='s2id_']");
+//    //console.log(inputEl);
+//    var nodeid = inputEl.select2('val');
+//
+//    //get parent id
+//    var res = getInstitutionNodeInfo(inputEl);
+//    var parentClass = res['parentClass'];
+//    var nodename = res['name'];
+//
+//    if( nodename == null ) {
+//        return;
+//    }
+//
+//    if( parentClass ) {
+//        //console.log('parentClass='+parentClass);
+//        var treeHolder = $(btn).closest('.user-collection-holder');
+//        var parentEl = treeHolder.find('.'+parentClass);
+//        //console.log(parentEl);
+//        var parentid = parentEl.select2('val');
+//        if( !parentid || parentid == "" ) {
+//            alert("Parent is not specified");
+//            return;
+//        }
+//        var url = getCommonBaseUrl("admin/list/"+nodename+"/new/parent/"+parentid,"employees");
+//    } else {
+//        var url = getCommonBaseUrl("admin/list/institutions/new","employees");
+//    }
+//    //redirect to add page
+//    window.open(url);
+//    //window.location.href = url;
+//}
 
 //function getNodeParentClass(nodeInputElement) {
 //
@@ -731,32 +731,32 @@ function addTreeNode(btn) {
 //
 //    return parentClass;
 //}
-
-function getInstitutionNodeInfo(nodeInputElement) {
-
-    var name = null;
-    var parentClass = null;
-
-    if( nodeInputElement.hasClass("ajax-combobox-institution") ) {
-        name = "institution";
-    }
-    if( nodeInputElement.hasClass("ajax-combobox-department") ) {
-        name = "department";
-        parentClass = "ajax-combobox-institution";
-    }
-    if( nodeInputElement.hasClass("ajax-combobox-division") ) {
-        name = "division";
-        parentClass = "ajax-combobox-department";
-    }
-    if( nodeInputElement.hasClass("ajax-combobox-service") ) {
-        name = "service";
-        parentClass = "ajax-combobox-division";
-    }
-
-    var res = new Array();
-    res['name'] = name;
-    res['parentClass'] = parentClass;
-
-    return res;
-}
+//
+//function getInstitutionNodeInfo(nodeInputElement) {
+//
+//    var name = null;
+//    var parentClass = null;
+//
+//    if( nodeInputElement.hasClass("ajax-combobox-institution") ) {
+//        name = "institution";
+//    }
+//    if( nodeInputElement.hasClass("ajax-combobox-department") ) {
+//        name = "department";
+//        parentClass = "ajax-combobox-institution";
+//    }
+//    if( nodeInputElement.hasClass("ajax-combobox-division") ) {
+//        name = "division";
+//        parentClass = "ajax-combobox-department";
+//    }
+//    if( nodeInputElement.hasClass("ajax-combobox-service") ) {
+//        name = "service";
+//        parentClass = "ajax-combobox-division";
+//    }
+//
+//    var res = new Array();
+//    res['name'] = name;
+//    res['parentClass'] = parentClass;
+//
+//    return res;
+//}
 ///////////////// EOF Tree managemenet ///////////////////

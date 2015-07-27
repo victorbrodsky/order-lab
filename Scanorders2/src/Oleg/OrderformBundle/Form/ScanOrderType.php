@@ -62,7 +62,14 @@ class ScanOrderType extends AbstractType
             $form->add('scanOrderInstitutionScope', 'employees_custom_selector', array(
                 'label' => 'ScanOrder' . ' ' . $label . ' Scope' . ':',
                 'required' => false,
-                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'ScanOrder', 'data-label-postfix' => 'Scope'),
+                'attr' => array(
+                    'class' => 'ajax-combobox-compositetree',
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                    'data-compositetree-classname' => 'Institution',
+                    'data-label-prefix' => 'ScanOrder',
+                    'data-label-postfix' => 'Scope'
+                ),
                 'classtype' => 'institution'
             ));
         });

@@ -106,7 +106,7 @@ class PerSiteSettingsType extends AbstractType
 //                'label' => 'Default ScanOrder '.$label.' Scope:',
 //                'read_only' => !$this->roleAdmin,
 //                'required' => false,
-//                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'Default ScanOrder', 'data-label-postfix' => 'Scope'),
+//                'attr' => array('class' => 'ajax-combobox-compositetree', 'type' => 'hidden', 'data-label-prefix' => 'Default ScanOrder', 'data-label-postfix' => 'Scope'),
 //                'classtype' => 'institution-many'
 //            ));
 //        });
@@ -178,7 +178,7 @@ class PerSiteSettingsType extends AbstractType
 //                'label' => 'Chief of the following '.$label.'(s) for Scope:',
 //                'read_only' => !$this->roleAdmin,
 //                'required' => false,
-//                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'Chief of the following', 'data-label-postfix' => '(s) for Scope'),
+//                'attr' => array('class' => 'ajax-combobox-compositetree', 'type' => 'hidden', 'data-label-prefix' => 'Chief of the following', 'data-label-postfix' => '(s) for Scope'),
 //                'classtype' => 'institution-many'
 //            ));
 //        });
@@ -201,7 +201,13 @@ class PerSiteSettingsType extends AbstractType
                 'label' => 'Default ' . $label . ':',
                 'read_only' => !$this->roleAdmin,
                 'required' => false,
-                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden', 'data-label-prefix' => 'Default'),
+                'attr' => array(
+                    'class' => 'ajax-combobox-compositetree',
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                    'data-compositetree-classname' => 'Institution',
+                    'data-label-prefix' => 'Default'
+                ),
                 'classtype' => 'institution'
             ));
         });
@@ -209,7 +215,7 @@ class PerSiteSettingsType extends AbstractType
 
 //        $builder->add('institution', 'employees_custom_selector', array(
 //            'label' => 'Default Institution:',
-//            'attr' => array('class' => 'ajax-combobox-institution combobox-without-add', 'type' => 'hidden'),
+//            'attr' => array('class' => 'ajax-combobox-compositetree combobox-without-add', 'type' => 'hidden'),
 //            'required' => false,
 //            'classtype' => 'institution'
 //        ));

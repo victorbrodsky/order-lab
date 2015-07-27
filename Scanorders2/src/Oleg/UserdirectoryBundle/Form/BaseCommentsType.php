@@ -80,23 +80,6 @@ class BaseCommentsType extends AbstractType
             'prototype_name' => '__document__',
         ));
 
-        //on submit process document
-//        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-//
-//            $comment = $event->getData();
-//            //$form = $event->getForm();
-//
-//            echo "PRE_SUBMIT institution:<br>";
-//            print_r($comment);
-//            echo "<br>";
-//
-//            if( !$comment ) {
-//                return;
-//            }
-//
-//            $this->params['em']->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $comment );
-//        });
-
 
         ///////////////////////// tree node /////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

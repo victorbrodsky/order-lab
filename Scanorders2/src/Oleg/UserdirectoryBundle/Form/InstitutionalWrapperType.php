@@ -42,7 +42,12 @@ class InstitutionalWrapperType extends AbstractType
             $form->add('institution', 'employees_custom_selector', array(
                 'label' => $label,
                 'required' => false,
-                'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+                'attr' => array(
+                    'class' => 'ajax-combobox-compositetree',
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                    'data-compositetree-classname' => 'Institution'
+                ),
                 'classtype' => 'institution'
             ));
         });

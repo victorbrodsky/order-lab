@@ -12,54 +12,71 @@ class DocumentRepository extends EntityRepository {
     public function processDocuments($documentHolder) {
 
         if( $documentHolder == null ) {
-            echo "not exists: document=".$documentHolder."<br>";
+           // echo "not exists: document=".$documentHolder."<br>";
             return $documentHolder;
         }
 
-        $class = new \ReflectionClass($documentHolder);
-        $className = $class->getShortName();
-        echo "className=".$className."<br>";
+        //$class = new \ReflectionClass($documentHolder);
+        //$className = $class->getShortName();
+        //echo "<br><br>className=".$className."<br>";
 
         if( count($documentHolder->getDocuments()) == 0 ) {
-            echo "return: no documents<br>";
+            //echo "return: no documents<br>";
             return $documentHolder;
         }
 
-        echo $documentHolder. ", id=".$documentHolder->getId()."<br>";
-        echo "<br>before processing holder count=".count($documentHolder->getDocuments())."<br>";
+//        echo $documentHolder. ", id=".$documentHolder->getId()."<br>";
+//        echo "<br>before processing holder count=".count($documentHolder->getDocuments())."<br>";
 
         //get type by $documentHolder class
         $docType = $this->getDocumentTypeByHolder($documentHolder);
 
         foreach( $documentHolder->getDocuments() as $doc ) {
-            echo "doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+
+//            echo "document id:<br>";
+//            print_r($doc->getId());
+//            echo "<br>";
+
+            $documentHolder->removeDocument($doc);
+
             //if document does not have an original or unique names then this is a newly added document => find it in DB and attach it to this holder
-            if( $doc->getId() && ( !$doc->getOriginalname() || !$doc->getUniquename() ) ) {
+//            if( $doc->getId() && ( !$doc->getOriginalname() || !$doc->getUniquename() ) ) {
+//
+//                $documentHolder->removeDocument($doc);
+//
+////                echo "before get doc: id=".$doc->getId()."<br>";
+//
+//                $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
+//
+//                if( $docDb ) {
+//
+//
+//
+//                    //echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
+//                    $documentHolder->addDocument($docDb);
+//                }
+//            }
 
-                $documentHolder->removeDocument($doc);
-
-                echo "before get doc: id=".$doc->getId()."<br>";
+            if( $doc->getId() ) {
 
                 $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
+                //$docDb = $this->_em->getReference('OlegUserdirectoryBundle:User',$userSecurity->getId());
 
-                if( $docDb ) {
-
-                    //set type if not set
-                    if( !$docDb->getType() && $docType ) {
-                        $docDb->setType($docType);
-                    }
-
-                    //echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
-                    $documentHolder->addDocument($docDb);
+                //set type if not set
+                if( !$docDb->getType() && $docType ) {
+                    $docDb->setType($docType);
                 }
-            }
-            $this->_em->persist($doc);
-        }
 
-        echo "after processing holder count=".count($documentHolder->getDocuments())."<br>";
-        foreach( $documentHolder->getDocuments() as $doc ) {
-            echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
-        }
+                $documentHolder->addDocument($docDb);
+
+            } //if
+
+        } //foreach
+
+//        echo "after processing holder count=".count($documentHolder->getDocuments())."<br>";
+//        foreach( $documentHolder->getDocuments() as $doc ) {
+//            echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+//        }
 
         //exit('eof documents processing');
 

@@ -4,10 +4,13 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 
 class DocumentType extends AbstractType
@@ -26,6 +29,13 @@ class DocumentType extends AbstractType
         $builder->add('id', 'hidden', array(
             'label' => false,
             'attr' => array('class' => 'file-upload-id')
+        ));
+
+        //use title to get id and name prototype for adding new document
+        $builder->add('title', 'hidden', array(
+            'mapped' => false,
+            'label' => false,
+            'attr' => array('class' => 'file-upload-title')
         ));
 
     }

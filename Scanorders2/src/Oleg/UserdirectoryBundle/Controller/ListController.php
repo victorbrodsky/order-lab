@@ -27,9 +27,6 @@ class ListController extends Controller
      * @Route("/source-systems/", name="sourcesystems-list")
      * @Route("/roles/", name="role-list")
      * @Route("/institutions/", name="institutions-list", options={"expose"=true})
-     * @Route("/departments/", name="departments-list")
-     * @Route("/divisions/", name="divisions-list")
-     * @Route("/services/", name="services-list")
      * @Route("/states/", name="states-list")
      * @Route("/countries/", name="countries-list")
      * @Route("/board-certifications/", name="boardcertifications-list")
@@ -793,48 +790,35 @@ class ListController extends Controller
 
 
     //////////////////////// Tree //////////////////////////////
-    /**
-     * @Route("/institution-tree-management/", name="institutions-tree-management")
-     * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Tree:index.html.twig")
-     */
-    public function indexTreeAction(Request $request)
-    {
-        //exit('tree');
-        return array(
-            'name' => 'Institution'
-        );
-    }
-
-    /**
-     * Displays a form to create a new entity with parent.
-     *
-     * @Route("/department/new/parent/{pid}", name="departments_new_with_parent")
-     * @Route("/division/new/parent/{pid}", name="divisions_new_with_parent")
-     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
-     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
-     * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
-     */
-    public function newNodeWithParentAction(Request $request,$pid)
-    {
-        return $this->newList($request,$pid);
-    }
+//    /**
+//     * Displays a form to create a new entity with parent.
+//     *
+//     * @Route("/department/new/parent/{pid}", name="departments_new_with_parent")
+//     * @Route("/division/new/parent/{pid}", name="divisions_new_with_parent")
+//     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
+//     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
+//     * @Method("GET")
+//     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+//     */
+//    public function newNodeWithParentAction(Request $request,$pid)
+//    {
+//        return $this->newList($request,$pid);
+//    }
 
     public function getParentName( $className ) {
 
         //echo "className=".$className."<br>";
 
         switch( $className ) {
-            case "Department":
-                $parentClassName = "Institution";
-                break;
-            case "Division":
-                $parentClassName = "Department";
-                break;
-            case "Service":
-                $parentClassName = "Division";
-                break;
+//            case "Department":
+//                $parentClassName = "Institution";
+//                break;
+//            case "Division":
+//                $parentClassName = "Department";
+//                break;
+//            case "Service":
+//                $parentClassName = "Division";
+//                break;
             case "FellowshipSubspecialty":
                 $parentClassName = "ResidencySpecialty";
                 break;

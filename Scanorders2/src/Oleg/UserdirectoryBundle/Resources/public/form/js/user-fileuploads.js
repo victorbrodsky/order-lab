@@ -326,7 +326,8 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
             adjustHolderHeight(holderTop);
             //}
         }).fail(function(data) {
-            console.log('remove failed, data='+data);
+            //console.log('remove failed, data='+data);
+            throw new Error('remove failed, data='+data);
         }) ;
 
     //}
@@ -398,7 +399,7 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
     var idHtml =    '<input type="hidden" id="'+beginIdStr+documentCount+'_id" '+
         'name="'+beginNameStr+'['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
 
-    console.log("idHtml="+idHtml);
+    //console.log("idHtml="+idHtml);
 
     return idHtml;
 }
@@ -416,24 +417,23 @@ function getNewDocumentInfoByHolder( commentHolder ) {
         throw new Error("Collection holder for file upload is not found");
     }
 
-    var uploadid = commentHolder.find('input.file-upload-id');
+    //use title to get id and name prototype for adding new document
+    var uploadid = commentHolder.find('input.file-upload-title[id*="__document__"]');
 
     if( uploadid.length == 0 ) {
-        //no existing documents in comment => use hidden document container container id
-        //console.log('upload id does not exist: try class=documentcontainer-field-id');
-        uploadid = commentHolder.find('.documentcontainer-field-id');
+        uploadid = commentHolder.find('input.file-upload-title');
     }
 
     if( uploadid.length == 0 ) {
-        //no existing documents in comment => use alternative id (i.e. first input id)
-        console.log('upload id does not exist: try alternative id');
-        //uploadid = commentHolder.find('input').filter(':visible').not("*[id^='s2id_']"); //.ajax-combobox-partname
-        //uploadid = commentHolder.find('input.document-holder-id'); //.ajax-combobox-partname
-        throw new Error("upload id is empty, uploadid="+uploadid);
+        throw new Error("Can't find id and name prototype");
     }
 
     var id = uploadid.first().attr('id');
     var name = uploadid.first().attr('name');
+
+    if( id == null  || name == null ) {
+        throw new Error("upload id or name are null");
+    }
 
     //console.log('id='+id+', name='+name);
 
@@ -448,8 +448,8 @@ function getNewDocumentInfoByHolder( commentHolder ) {
 //get id and name up to _documents_
 function getElementInfoById( id, name ) {
 
-    console.log('id='+id);
-    console.log('name='+name);
+    //console.log('id='+id);
+    //console.log('name='+name);
 
     if( !id || id == ""  ) {
         throw new Error("id is empty, id="+id+", name="+name);
@@ -470,11 +470,11 @@ function getElementInfoById( id, name ) {
     //id: oleg_userdirectorybundle_user[publicComments][0][documents][__document__][id]
     var idArr = id.split("__document__");
     var beginIdStr = idArr[0];
-    console.log('beginIdStr='+beginIdStr);
+    //console.log('beginIdStr='+beginIdStr);
 
     var nameArr = name.split("[__document__]");
     var beginNameStr = nameArr[0];
-    console.log('beginNameStr='+beginNameStr);
+    //console.log('beginNameStr='+beginNameStr);
 
 
     var res = new Array();
