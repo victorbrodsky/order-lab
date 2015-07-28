@@ -86,17 +86,20 @@ class BaseCommentsType extends AbstractType
             $title = $event->getData();
             $form = $event->getForm();
 
-            $label = 'Comment Category:';
-            if( $title ) {
-                $commentType = $title->getCommentType();
-                if( $commentType ) {
-                    $mapper = array(
+            $label = null;
+			$mapper = array(
                         'prefix' => "Oleg",
                         'className' => "CommentTypeList",
                         'bundleName' => "UserdirectoryBundle"
                     );
+            if( $title ) {
+                $commentType = $title->getCommentType();
+                if( $commentType ) {                  
                     $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:CommentTypeList')->getLevelLabels($commentType,$mapper) . ":";
                 }
+            }
+			if( !$label ) {
+                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:CommentTypeList')->getLevelLabels(null,$mapper) . ":";
             }
 
             $form->add('commentType', 'employees_custom_selector', array(

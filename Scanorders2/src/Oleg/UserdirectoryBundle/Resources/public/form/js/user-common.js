@@ -148,6 +148,17 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         createSearchChoice = null;
     }
 
+    //filter disbaled options from data
+//    if( filterFlag === true ) {
+//        var filter = true;
+//    } else {
+//        var filter = false;
+//    }
+//    if( filter ) {
+//        data = filterDisabledOptions(data,target);
+//    }
+    data = filterDisabledOptions(data,target);
+
     $(target).select2({
         placeholder: placeholder,
         allowClear: allowClear,
@@ -158,7 +169,7 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         quietMillis: 100,
         multiple: multiple,
         data: data,
-        createSearchChoice:createSearchChoice
+        createSearchChoice:createSearchChoice,
     });
 
     if( $(target).attr("readonly") ) {
@@ -166,6 +177,72 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     }
 
 }
+
+var filterDisabledOptions = function(data,target) {
+
+    var selectedId = $(target).val();
+//    console.log('selected selectedId='+selectedId);
+//    console.log($(target));
+//    console.log(data);
+
+    //filter
+//    data = data.filter(function( obj ) {
+//        var result = true;
+//        if( obj.disabled == true ) {
+//            //remove this option because it is disabled or draft
+//            console.log(selectedId + '?=> remove disbaled ' + obj.id);
+//            if( selectedId ) {
+//                if( selectedId != obj.id ) {
+//                    console.log('remove ' + obj.id);
+//                    //console.log(obj);
+//                    result = false;
+//                }
+//            } else {
+//                result = false;
+//            }
+//        } //if
+//        return result;
+//    });
+
+    for (var i = 0; i < data.length; i++) {
+
+        var remove = checkRemove(data[i],selectedId);
+
+        if( remove ) {
+            //console.log('!!!!!!!!!!!!!!! remove index:' + i + "=>" + data[i].id);
+            data.splice(i,1);
+
+            //console.log('after data clean:');
+            //console.log(data);
+        }
+    }
+
+//    if( selectedId == 142 ) {
+//        console.log('after data clean:');
+//        console.log(data);
+//    }
+
+    function checkRemove(dataOption,selectedId) {
+        var remove = false;
+        if( dataOption.disabled == true ) {
+            //remove this option because it is disabled or draft
+            //console.log(selectedId + '?=> remove disbaled ################# ' + dataOption.id);
+            if( selectedId ) {
+                if( selectedId == dataOption.id ) {
+                    remove = false;
+                } else {
+                    remove = true;
+                }
+            } else {
+                remove = true;
+            }
+        } //if
+
+        return remove;
+    }
+
+    return data;
+};
 
 
 function initDatetimepicker() {

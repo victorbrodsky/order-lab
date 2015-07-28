@@ -31,11 +31,11 @@ class DocumentType extends AbstractType
             'attr' => array('class' => 'file-upload-id')
         ));
 
-        //use title to get id and name prototype for adding new document
-        $builder->add('title', 'hidden', array(
+        //use dummyprototypefield to get id and name prototype for adding new document
+        $builder->add('dummyprototypefield', 'hidden', array(
             'mapped' => false,
             'label' => false,
-            'attr' => array('class' => 'file-upload-title')
+            'attr' => array('class' => 'dummyprototypefield')
         ));
 
     }

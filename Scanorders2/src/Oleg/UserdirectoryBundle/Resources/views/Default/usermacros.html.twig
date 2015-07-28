@@ -98,8 +98,8 @@
 
     {% endfor %}
 
-    {#use title to get id and name prototype for adding new document#}
-    {{ formmacros.field(container.documents.vars.prototype.title) }}
+    {#use dummy-prototype-field to get id and name prototype for adding new document#}
+    {{ formmacros.field(container.documents.vars.prototype.dummyprototypefield) }}
 
     {% do container.documents.setRendered %}
 

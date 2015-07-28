@@ -39,6 +39,7 @@ class TreeController extends Controller {
         //$level = trim( $request->get('pid') );
         //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
+        //echo "userid=".$userid."<br>";
 
         $combobox = false;
         //$userpositions = false;
@@ -72,8 +73,14 @@ class TreeController extends Controller {
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->orderBy("list.lft","ASC");
 
-        $where = "(list.type = :typedef OR list.type = :typeadd)";
-        $params = array('typedef' => 'default','typeadd' => 'user-added');
+        //init where and params
+        $where = "";
+        $params = array();
+
+//        if( $combobox ) {
+//            $where = "(list.type = :typedef OR list.type = :typeadd)";
+//            $params = array('typedef' => 'default','typeadd' => 'user-added');
+//        }
 
         $addwhere = false;
 
@@ -81,7 +88,8 @@ class TreeController extends Controller {
             //children: where parent is NULL => root
             //echo "by root pid=".$pid."<br>";
             $dql->leftJoin("list.parent", "parent");
-            $where = $where . " AND parent.id is NULL";
+            //$where = $where . " AND parent.id is NULL";
+            $where = $this->addToWhere($where,"parent.id is NULL");
             $addwhere = true;
         }
 
@@ -91,7 +99,8 @@ class TreeController extends Controller {
             //$where = $where . " AND list.level = :level";
             //$params['level'] = 0;
             $dql->leftJoin("list.parent", "parent");
-            $where = $where . " AND parent.id is NULL";
+            //$where = $where . " AND parent.id is NULL";
+            $where = $this->addToWhere($where,"parent.id is NULL");
             $addwhere = true;
         }
 
@@ -99,7 +108,8 @@ class TreeController extends Controller {
             //children: where parent = $pid
             //echo "by pid=".$pid."<br>";
             $dql->leftJoin("list.parent", "parent");
-            $where = $where . " AND parent.id = :id";
+            //$where = $where . " AND parent.id = :id";
+            $where = $this->addToWhere($where,"parent.id = :id");
             $params['id'] = $pid;
             $addwhere = true;
         }
@@ -113,20 +123,16 @@ class TreeController extends Controller {
             if( $parent ) {
                 $pid = $parent->getId();
                 $dql->leftJoin("list.parent", "parent");
-                $where = $where . " AND parent.id = :id";
+                //$where = $where . " AND parent.id = :id";
+                $where = $this->addToWhere($where,"parent.id = :id");
                 $params['id'] = $pid;
             } else {
                 $dql->leftJoin("list.parent", "parent");
-                $where = $where . " AND parent.id is NULL";
+                //$where = $where . " AND parent.id is NULL";
+                $where = $this->addToWhere($where,"parent.id is NULL");
             }
             $addwhere = true;
         }
-
-//        if( $level && is_numeric($level) ) {
-//            //root
-//            $where = $where . " AND list.level = :level";
-//            $params['level'] = $level;
-//        }
 
         //$query->where($where)->setParameters($params);
         $dql->where($where);
@@ -162,6 +168,13 @@ class TreeController extends Controller {
                 $text = $entity->getName()." [" . $levelTitle . "]";
             }
 
+            //disabled or not
+            if( $entity->getType()."" == 'default' || $entity->getType()."" == 'user-added' ) {
+                $optionDisabled = false;
+            } else {
+                $optionDisabled = true;
+            }
+
             $element = array(
                 'id' => $entity->getId(),
                 'pid' => ($entity->getParent() ? $entity->getParent()->getId() : 0),
@@ -170,7 +183,8 @@ class TreeController extends Controller {
                 'text' => $text,
                 'level' => $entity->getLevel(),
                 'type' => 'icon'.$entity->getLevel(),            //set js icon by level title
-                'leveltitle' => $levelTitles,   //$levelTitle,
+                'leveltitle' => $levelTitles,                   //$levelTitle,
+                'disabled' => $optionDisabled
                 //'children' => ( count($entity->getChildren()) > 0 ? true : false)
             );
 
@@ -361,6 +375,14 @@ class TreeController extends Controller {
                     $node->setType('user-added');
                 }
 
+                //add type for institution: Medical and Educational
+                if( method_exists($node,'addType') && $mapper['className'] == 'Institution' ) {
+                    $institutionMedicalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+                    $node->addType($institutionMedicalType);
+                    $institutionEducationalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+                    $node->addType($institutionEducationalType);
+                }
+
                 if( $parent ) {
                     $treeRepository->persistAsLastChildOf($node,$parent);
                 } else {
@@ -439,22 +461,14 @@ class TreeController extends Controller {
         return $levelTitle;
     }
 
-//    public function getLevelLabels( $nodes ) {
-//        $labelsStr = "";
-//        $labels = array();
-//
-//        foreach( $nodes as $node ) {
-//            $nodeLabel = $node->getOrganizationalGroupType()->getName()."";
-//            if( $node && !in_array($nodeLabel,$labels) ) {
-//                $labels[] = $nodeLabel;
-//            }
-//        }
-//
-//        if( count($labels) > 0 ){
-//            $labelsStr = implode(",", $labels);
-//        }
-//
-//        return $labelsStr;
-//    }
+    public function addToWhere( $where, $addwhere ) {
+        if( $where != "" ) {
+            $where = $where . " AND " . $addwhere;
+        } else {
+            $where = $addwhere;
+        }
+
+        return $where;
+    }
 
 }

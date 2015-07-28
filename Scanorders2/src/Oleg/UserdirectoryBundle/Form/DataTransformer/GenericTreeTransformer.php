@@ -264,6 +264,14 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         }
 
+        //add type for institution: Medical and Educational
+        if( method_exists($entity,'addType') && $className == 'Institution' ) {
+            $institutionMedicalType = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+            $entity->addType($institutionMedicalType);
+            $institutionEducationalType = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+            $entity->addType($institutionEducationalType);
+        }
+
         return $entity;
     }
 

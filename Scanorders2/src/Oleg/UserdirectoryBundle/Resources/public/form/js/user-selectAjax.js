@@ -183,6 +183,7 @@ function populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,opti
     var rowElHtml = comboboxEl.closest('.row')[0].outerHTML;
 
     //console.log('populate combobox');
+    //target, data, placeholder, multipleFlag, filter
     populateSelectCombobox( comboboxEl, optionData, "Select an option" );
 
     if( !comboboxEl.hasClass('show-as-single-node') ) {

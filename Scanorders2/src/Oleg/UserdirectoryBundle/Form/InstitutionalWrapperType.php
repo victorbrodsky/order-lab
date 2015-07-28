@@ -30,12 +30,15 @@ class InstitutionalWrapperType extends AbstractType
             $title = $event->getData();
             $form = $event->getForm();
 
-            $label = 'Institution:';
+            $label = null;
             if( $title ) {
                 $institution = $title->getInstitution();
-                if( $institution && $institution->getOrganizationalGroupType() ) {
+                if( $institution ) {
                     $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
+            }
+			if( !$label ) {
+                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
 
             $form->add('institution', 'employees_custom_selector', array(

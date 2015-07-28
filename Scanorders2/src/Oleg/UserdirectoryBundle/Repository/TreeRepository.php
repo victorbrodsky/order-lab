@@ -205,7 +205,7 @@ class TreeRepository extends NestedTreeRepository {
 //        return $labelsStr;
 //    }
 
-    public function getLevelLabels( $node, $mapper=null ) {
+    public function getLevelLabels( $node=null, $mapper=null ) {
 
         $labelsStr = "";
 
@@ -219,6 +219,8 @@ class TreeRepository extends NestedTreeRepository {
             );
         }
 
+        //echo "<br>get labels for ".$mapper['className']."<br>";
+
         $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('DISTINCT(organizationalGroupType.name) AS levelLabel');
@@ -227,7 +229,11 @@ class TreeRepository extends NestedTreeRepository {
         $where = "(list.type = :typedef OR list.type = :typeadd)";
         $params = array('typedef' => 'default','typeadd' => 'user-added');
 
-        $parent = $node->getParent();
+        if( $node ) {
+            $parent = $node->getParent();
+        } else {
+            $parent = null;
+        }
 
         if( $parent ) {
             $pid = $parent->getId();
@@ -240,10 +246,10 @@ class TreeRepository extends NestedTreeRepository {
         }
 
         $dql->where($where);
+        //echo "dql=".$dql."<br>";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters($params);
-        //echo "dql=".$dql."<br>";
 
         $results = $query->getResult();
 
@@ -283,6 +289,7 @@ class TreeRepository extends NestedTreeRepository {
 
             $count++;
         }
+        //echo "labelsStr=".$labelsStr."<br>";
 
         return $labelsStr;
     }

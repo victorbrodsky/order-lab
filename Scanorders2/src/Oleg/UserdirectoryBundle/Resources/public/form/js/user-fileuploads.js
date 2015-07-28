@@ -417,11 +417,11 @@ function getNewDocumentInfoByHolder( commentHolder ) {
         throw new Error("Collection holder for file upload is not found");
     }
 
-    //use title to get id and name prototype for adding new document
-    var uploadid = commentHolder.find('input.file-upload-title[id*="__document__"]');
+    //use dummyprototypefield to get id and name prototype for adding new document
+    var uploadid = commentHolder.find('input.dummyprototypefield[id*="__document__"]');
 
     if( uploadid.length == 0 ) {
-        uploadid = commentHolder.find('input.file-upload-title');
+        uploadid = commentHolder.find('input.dummyprototypefield');
     }
 
     if( uploadid.length == 0 ) {

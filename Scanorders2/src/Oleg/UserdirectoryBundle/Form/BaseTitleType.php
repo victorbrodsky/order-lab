@@ -80,30 +80,21 @@ class BaseTitleType extends AbstractType
 
 
         ///////////////////////// tree node /////////////////////////
-//        echo "base title user=".$this->params['user']."<br>";
-//        $builder->add('institution', new InstitutionType($this->params), array(
-//            'required' => false,
-//            'label' => false    //'Institution:'
-//        ));
-//        $label = 'Institution:';
-//        $builder->add('institution', 'employees_custom_selector', array(
-//            'label' => $label,
-//            'required' => false,
-//            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-//            'classtype' => 'institution'
-//        ));
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $title = $event->getData();
             $form = $event->getForm();
 
-            $label = 'Institution:';
+            $label = null;
             if( $title ) {
                 $institution = $title->getInstitution();
                 if( $institution ) {
                     $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
-
             }
+            if( !$label ) {
+                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+            }
+            //echo "label=".$label."<br>";
 
             $form->add('institution', 'employees_custom_selector', array(
                 'label' => $label,
