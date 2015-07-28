@@ -149,14 +149,6 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     }
 
     //filter disbaled options from data
-//    if( filterFlag === true ) {
-//        var filter = true;
-//    } else {
-//        var filter = false;
-//    }
-//    if( filter ) {
-//        data = filterDisabledOptions(data,target);
-//    }
     data = filterDisabledOptions(data,target);
 
     $(target).select2({
@@ -180,48 +172,6 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
 var filterDisabledOptions = function(data,target) {
 
-    var selectedId = $(target).val();
-//    console.log('selected selectedId='+selectedId);
-//    console.log($(target));
-//    console.log(data);
-
-    //filter
-//    data = data.filter(function( obj ) {
-//        var result = true;
-//        if( obj.disabled == true ) {
-//            //remove this option because it is disabled or draft
-//            console.log(selectedId + '?=> remove disbaled ' + obj.id);
-//            if( selectedId ) {
-//                if( selectedId != obj.id ) {
-//                    console.log('remove ' + obj.id);
-//                    //console.log(obj);
-//                    result = false;
-//                }
-//            } else {
-//                result = false;
-//            }
-//        } //if
-//        return result;
-//    });
-
-    for (var i = 0; i < data.length; i++) {
-
-        var remove = checkRemove(data[i],selectedId);
-
-        if( remove ) {
-            //console.log('!!!!!!!!!!!!!!! remove index:' + i + "=>" + data[i].id);
-            data.splice(i,1);
-
-            //console.log('after data clean:');
-            //console.log(data);
-        }
-    }
-
-//    if( selectedId == 142 ) {
-//        console.log('after data clean:');
-//        console.log(data);
-//    }
-
     function checkRemove(dataOption,selectedId) {
         var remove = false;
         if( dataOption.disabled == true ) {
@@ -240,6 +190,34 @@ var filterDisabledOptions = function(data,target) {
 
         return remove;
     }
+
+    var selectedId = $(target).val();
+//    console.log('selected selectedId='+selectedId);
+//    console.log($(target));
+//    console.log(data);
+
+    //filter: data is new array
+//    data = data.filter(function( dataOption ) {
+//        var remove = checkRemove(dataOption,selectedId);
+//        return !remove;
+//    });
+
+    for (var i = 0; i < data.length; i++) {
+
+        var remove = checkRemove(data[i],selectedId);
+
+        if( remove ) {
+            //console.log('remove index:' + i + "=>" + data[i].id);
+            data.splice(i,1);
+            //console.log('after data clean:');
+            //console.log(data);
+        }
+    }
+
+//    if( selectedId == 142 ) {
+//        console.log('after data clean:');
+//        console.log(data);
+//    }
 
     return data;
 };

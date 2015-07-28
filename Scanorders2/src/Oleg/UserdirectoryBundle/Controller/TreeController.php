@@ -376,7 +376,7 @@ class TreeController extends Controller {
                 }
 
                 //add type for institution: Medical and Educational
-                if( method_exists($node,'addType') && $mapper['className'] == 'Institution' ) {
+                if( method_exists($node,'addType') && $mapper['className'] == 'Institution' && $childLevel == 0 ) {
                     $institutionMedicalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
                     $node->addType($institutionMedicalType);
                     $institutionEducationalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
