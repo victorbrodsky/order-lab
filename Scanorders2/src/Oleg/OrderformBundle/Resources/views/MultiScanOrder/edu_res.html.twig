@@ -1,4 +1,5 @@
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
 {% if type is not defined %}
     {% set type = "new"  %}
@@ -15,8 +16,9 @@
         <div class="tab-content">
             <div id="research" class="tab-pane active">
                 <p>
-                    {{ formmacros.field(form.research.projectTitleStr) }}
-                    {{ formmacros.field(form.research.setTitleStr) }}
+                    {#{{ formmacros.field(form.research.projectTitleStr) }}#}
+                    {#{{ formmacros.field(form.research.setTitleStr) }}#}
+                    {{ treemacros.compositeTreeNode(form.research.projectTitle,'','') }}
                     {{ formmacros.field(form.research.principalWrappers) }}
                 </p>
             </div>
@@ -46,8 +48,9 @@
         <div class="panel-body collapse in">
             <p>
             <h4 class="text-info">Research</h4>
-            {{ formmacros.field(form.research.projectTitleStr) }}
-            {{ formmacros.field(form.research.setTitleStr) }}
+            {#{{ formmacros.field(form.research.projectTitleStr) }}#}
+            {#{{ formmacros.field(form.research.setTitleStr) }}#}
+            {{ treemacros.compositeTreeNode(form.research.projectTitle,'','') }}
             {{ formmacros.field(form.research.principalWrappers) }}
             </p>
 

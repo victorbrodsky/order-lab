@@ -2,35 +2,66 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="scan_projectTitleList")
+ * Use Composite pattern:
+ * The composite pattern describes that a group of objects is to be treated in the same
+ * way as a single instance of an object. The intent of a composite is to "compose" objects into tree structures
+ * to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects
+ * and compositions uniformly.
+ * Use Doctrine Extension Tree for tree manipulation.
+ *
+ * @Gedmo\Tree(type="nested")
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Table(
+ *  name="scan_projectTitleTree",
+ *  indexes={
+ *      @ORM\Index( name="name_idx", columns={"name"} ),
+ *  }
+ * )
  */
-class ProjectTitleList extends ListAbstract
-{
+class ProjectTitleTree extends BaseCompositeNode {
 
     /**
-     * @ORM\OneToMany(targetEntity="ProjectTitleList", mappedBy="original", cascade={"persist"})
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="ProjectTitleTree", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     **/
+    protected $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProjectTitleTree", mappedBy="parent", cascade={"persist","remove"})
+     * @ORM\OrderBy({"lft" = "ASC"})
+     **/
+    protected $children;
+
+    /**
+     * Organizational Group Types
+     * level int in OrganizationalGroupType corresponds to this level integer: 1-Research Project Title, 2-Research Set Title
+     * For example, OrganizationalGroupType with level=1, set this level to 1.
+     *
+     * @ORM\ManyToOne(targetEntity="ResearchGroupType", cascade={"persist"})
+     */
+    private $organizationalGroupType;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProjectTitleTree", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="ProjectTitleTree", inversedBy="synonyms")
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
 
-    //list of set titles belongs to this project title.
-    /**
-     * @ORM\OneToMany(targetEntity="SetTitleList", mappedBy="projectTitle", cascade={"persist"})
-     */
-    protected $setTitles;
+
 
     /**
      * @ORM\ManyToMany(targetEntity="PIList", inversedBy="projectTitles", cascade={"persist"})
@@ -44,49 +75,26 @@ class ProjectTitleList extends ListAbstract
     protected $primaryPrincipal;
 
 
-    public function __construct() {
-        $this->setTitles = new ArrayCollection();
-        $this->synonyms = new ArrayCollection();
-        $this->principals = new ArrayCollection();
-    }
 
 
-    
 
-
-    public function addSetTitle(SetTitleList $setTitle = null)
+    /**
+     * @param mixed $organizationalGroupType
+     */
+    public function setOrganizationalGroupType($organizationalGroupType)
     {
-        if( $setTitle && !$this->setTitles->contains($setTitle) ) {
-            $this->setTitles->add($setTitle);
-            $setTitle->setProjectTitle($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSetTitle(SetTitleList $setTitle)
-    {
-        $this->setTitles->removeElement($setTitle);
+        $this->organizationalGroupType = $organizationalGroupType;
+        $this->setLevel($organizationalGroupType->getLevel());
     }
 
     /**
      * @return mixed
      */
-    public function getSetTitles()
+    public function getOrganizationalGroupType()
     {
-        return $this->setTitles;
+        return $this->organizationalGroupType;
     }
 
-//    public function setSetTitles( $settitle )
-//    {
-//        if( $settitle ) {
-//            $this->addSetTitles($settitle);
-//            //$settitle->setProjectTitle($this);
-//        } else {
-//            $this->setTitles = new ArrayCollection();
-//        }
-//        return $this;
-//    }
 
     /**
      * Add principal

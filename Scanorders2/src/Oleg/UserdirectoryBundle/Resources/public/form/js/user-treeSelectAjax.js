@@ -623,17 +623,17 @@ function getChildrenTargetClass(fieldClass) {
 
 
 ///////////////// Comments Types Tree - initialize the children to null ///////////////////
-function setCommentTypeTreeChildren(holder) {
-
-    if( typeof holder == 'undefined' ) {
-        holder = $('body');
-    }
-
-    var targetId = holder.find(".ajax-combobox-commentsubtype");
-
-    //subTypes
-    populateSelectCombobox( targetId, null, "Select an option or type in a new value", false );
-}
+//function setCommentTypeTreeChildren(holder) {
+//
+//    if( typeof holder == 'undefined' ) {
+//        holder = $('body');
+//    }
+//
+//    var targetId = holder.find(".ajax-combobox-commentsubtype");
+//
+//    //subTypes
+//    populateSelectCombobox( targetId, null, "Select an option or type in a new value", false );
+//}
 ///////////////// EOF Comments Types ///////////////////
 
 

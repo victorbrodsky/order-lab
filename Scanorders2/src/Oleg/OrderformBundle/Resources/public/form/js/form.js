@@ -755,7 +755,7 @@ function setResearch() {
     //get value of project title field on change
     $('.combobox-research-projectTitle').on("change", function(e) {
         //console.log('listener: project Title changed');
-        getSetTitle();
+        //getSetTitle();
         getOptionalUserResearch();
     });
 }

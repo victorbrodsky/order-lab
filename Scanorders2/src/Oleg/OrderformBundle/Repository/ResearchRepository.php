@@ -8,6 +8,7 @@ use Oleg\UserdirectoryBundle\Repository\ListAbstractRepository;
 
 class ResearchRepository extends ListAbstractRepository {
 
+
     public function processEntity( $message, $user ) {
 
         $research = $message->getResearch();
@@ -17,41 +18,60 @@ class ResearchRepository extends ListAbstractRepository {
             return $message;
         }
 
-        //process Project Title
-        $objectParams = array(
-            'className' => 'ProjectTitleList',
-            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."ProjectTitleList",
-            'fullBundleName' => 'OlegOrderformBundle'
-        );
-        $projectTitle = $this->convertStrToObject( $research->getProjectTitleStr(), $objectParams, $user );
-        $research->setProjectTitle($projectTitle);
-        //echo "projectTitle name=".$projectTitle->getName()."<br>";
+        $projectTitle = $research->getProjectTitle();
 
-        //echo "SetTitleStr=".$research->getSetTitleStr()."<br>";
-
-        //process Set Title
-        $objectParams = array(
-            'className' => 'SetTitleList',
-            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."SetTitleList",
-            'fullBundleName' => 'OlegOrderformBundle'
-        );
-        $setTitle = $this->convertStrToObject( $research->getSetTitleStr(), $objectParams, $user, 'projectTitle', $projectTitle->getId() );
-
-        //process principals and primary principal
-        $this->processPrincipals( $research, $projectTitle );
-        //exit();
-
-        //set this new SetTitle to Research and ProjectTitle objects
-        $projectTitle->addSetTitle($setTitle);
-
-//        foreach( $projectTitle->getSetTitles() as $settitle ) {
-//            echo "SetTitleList name=".$settitle->getName().", id=".$settitle->getId()."<br>";
-//        }
-//        echo "SetTitleStr=".$message->getResearch()->getSetTitleStr()."<br>";
+        if( $projectTitle ) {
+            //process principals and primary principal
+            $this->processPrincipals( $research, $projectTitle );
+        }
 
         //exit('res');
         return $message;
     }
+//    public function processEntity_Old( $message, $user ) {
+//
+//        $research = $message->getResearch();
+//
+//        if( !$research || $research->isEmpty() ) {
+//            $message->setResearch(NULL);
+//            return $message;
+//        }
+//
+//        //process Project Title
+//        $objectParams = array(
+//            'className' => 'ProjectTitleList',
+//            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."ProjectTitleList",
+//            'fullBundleName' => 'OlegOrderformBundle'
+//        );
+//        $projectTitle = $this->convertStrToObject( $research->getProjectTitleStr(), $objectParams, $user );
+//        $research->setProjectTitle($projectTitle);
+//        //echo "projectTitle name=".$projectTitle->getName()."<br>";
+//
+//        //echo "SetTitleStr=".$research->getSetTitleStr()."<br>";
+//
+//        //process Set Title
+//        $objectParams = array(
+//            'className' => 'SetTitleList',
+//            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."SetTitleList",
+//            'fullBundleName' => 'OlegOrderformBundle'
+//        );
+//        $setTitle = $this->convertStrToObject( $research->getSetTitleStr(), $objectParams, $user, 'projectTitle', $projectTitle->getId() );
+//
+//        //process principals and primary principal
+//        $this->processPrincipals( $research, $projectTitle );
+//        //exit();
+//
+//        //set this new SetTitle to Research and ProjectTitle objects
+//        $projectTitle->addSetTitle($setTitle);
+//
+////        foreach( $projectTitle->getSetTitles() as $settitle ) {
+////            echo "SetTitleList name=".$settitle->getName().", id=".$settitle->getId()."<br>";
+////        }
+////        echo "SetTitleStr=".$message->getResearch()->getSetTitleStr()."<br>";
+//
+//        //exit('res');
+//        return $message;
+//    }
 
 
 

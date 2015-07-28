@@ -90,7 +90,8 @@ class BaseCommentsType extends AbstractType
 			$mapper = array(
                         'prefix' => "Oleg",
                         'className' => "CommentTypeList",
-                        'bundleName' => "UserdirectoryBundle"
+                        'bundleName' => "UserdirectoryBundle",
+                        'organizationalGroupType' => "CommentGroupType"
                     );
             if( $title ) {
                 $commentType = $title->getCommentType();

@@ -155,7 +155,7 @@ class TreeController extends Controller {
             if( $entity->getOrganizationalGroupType() ) {
                 $levelTitle = $entity->getOrganizationalGroupType()->getName()."";
             } else {
-                $levelTitle = $this->getDefaultLevelLabel($mapper,$entity->getLevel());
+                $levelTitle = $treeRepository->getDefaultLevelLabel($mapper,$entity->getLevel());
             }
 
             if( !$levelTitles ) {
@@ -209,7 +209,7 @@ class TreeController extends Controller {
                     $childLevel = 0;
                 }
 
-                $defaultOrganizationalGroupType = $this->getDefaultLevelLabel($mapper,$childLevel);
+                $defaultOrganizationalGroupType = $treeRepository->getDefaultLevelLabel($mapper,$childLevel);
 
                 if( $defaultOrganizationalGroupType ) {
                     $element = array(
@@ -419,6 +419,9 @@ class TreeController extends Controller {
             case "CommentTypeList":
                 $organizationalGroupType = "CommentGroupType";
                 break;
+            case "ProjectTitleTree":
+                $organizationalGroupType = "ResearchGroupType";
+                break;
             default:
                 //$className = null;
         }
@@ -431,34 +434,6 @@ class TreeController extends Controller {
         );
 
         return $res;
-    }
-
-    public function getDefaultLevelLabel( $mapper, $level ) {
-
-        $levelTitle = null;
-
-        $em = $this->getDoctrine()->getManager();
-
-        $organizationalGroupTypes = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
-            array(
-                "level" => $level,
-                "type" => array('default','user-added')
-            )
-        );
-
-        if( count($organizationalGroupTypes) > 0 ) {
-            $organizationalGroupType = $organizationalGroupTypes[0];
-        }
-
-        if( count($organizationalGroupTypes) == 0 ) {
-            $organizationalGroupType = null;
-        }
-
-        if( $organizationalGroupType ) {
-            $levelTitle = $organizationalGroupType->getName()."";
-        }
-
-        return $levelTitle;
     }
 
     public function addToWhere( $where, $addwhere ) {

@@ -215,7 +215,8 @@ class TreeRepository extends NestedTreeRepository {
             $mapper = array(
                 'prefix' => "Oleg",
                 'className' => "Institution",
-                'bundleName' => "UserdirectoryBundle"
+                'bundleName' => "UserdirectoryBundle",
+                'organizationalGroupType' => "OrganizationalGroupType"
             );
         }
 
@@ -291,7 +292,39 @@ class TreeRepository extends NestedTreeRepository {
         }
         //echo "labelsStr=".$labelsStr."<br>";
 
+        //if not found (no nodes exists), then get default label for 0 level
+        if( !$labelsStr ) {
+            $labelsStr = $this->getDefaultLevelLabel($mapper,0);
+        }
+
         return $labelsStr;
+    }
+
+
+    public function getDefaultLevelLabel( $mapper, $level ) {
+
+        $levelTitle = null;
+
+        $organizationalGroupTypes = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+            array(
+                "level" => $level,
+                "type" => array('default','user-added')
+            )
+        );
+
+        if( count($organizationalGroupTypes) > 0 ) {
+            $organizationalGroupType = $organizationalGroupTypes[0];
+        }
+
+        if( count($organizationalGroupTypes) == 0 ) {
+            $organizationalGroupType = null;
+        }
+
+        if( $organizationalGroupType ) {
+            $levelTitle = $organizationalGroupType->getName()."";
+        }
+
+        return $levelTitle;
     }
 
 

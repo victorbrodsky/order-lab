@@ -37,7 +37,7 @@ class PIList extends ListAbstract
     //use name as $principalstr
 
     /**
-     * @ORM\ManyToMany(targetEntity="ProjectTitleList", mappedBy="principals", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="ProjectTitleTree", mappedBy="principals", cascade={"persist"})
      **/
     private $projectTitles;
 
@@ -81,10 +81,10 @@ class PIList extends ListAbstract
     /**
      * Add projectTitles
      *
-     * @param ProjectTitleList $research
+     * @param ProjectTitleTree $research
      * @return PIList
      */
-    public function addProjectTitle(ProjectTitleList $research)
+    public function addProjectTitle(ProjectTitleTree $research)
     {
         if( !$this->projectTitles->contains($research) ) {
             $this->projectTitles->add($research);
@@ -96,9 +96,9 @@ class PIList extends ListAbstract
     /**
      * Remove researches
      *
-     * @param ProjectTitleList $research
+     * @param ProjectTitleTree $research
      */
-    public function removeProjectTitle(ProjectTitleList $research)
+    public function removeProjectTitle(ProjectTitleTree $research)
     {
         $this->projectTitles->removeElement($research);
     }

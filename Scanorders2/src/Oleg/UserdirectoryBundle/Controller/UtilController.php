@@ -1093,10 +1093,7 @@ class UtilController extends Controller {
                 break;
             case "services":
                 $className = "Service";
-                break;
-            case "commentsubtype":
-                $className = "CommentSubTypeList";
-                break;
+                break;            
 
             //grants
             case "sourceorganization":

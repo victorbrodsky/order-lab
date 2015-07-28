@@ -13,14 +13,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
+//* @ORM\Table(name="scan_research",
+// *  indexes={
+//    *      @ORM\Index( name="projectTitleStr_idx", columns={"projectTitleStr"} ),
+// *      @ORM\Index( name="setTitleStr_idx", columns={"setTitleStr"} )
+// *  }
+
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ResearchRepository")
- * @ORM\Table(name="scan_research",
- *  indexes={
- *      @ORM\Index( name="projectTitleStr_idx", columns={"projectTitleStr"} ),
- *      @ORM\Index( name="setTitleStr_idx", columns={"setTitleStr"} )
- *  }
- * )
+ * @ORM\Table(name="scan_research")
  */
 class Research
 {
@@ -50,29 +51,35 @@ class Research
      */
     protected $principalWrappers;
 
-    //project title as entered by a user
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $projectTitleStr;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleList", cascade={"persist"})
-     * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
-     */
-    protected $projectTitle;
-
-    //principal as entered by a user
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $setTitleStr;
-
     /**
      * primarySet - name of the primary PI. Indicates if the primaryPrincipal was set by this order
      * @ORM\Column(type="string", nullable=true)
      */
     protected $primarySet;
+
+
+    //project title as entered by a user
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $projectTitleStr;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="ProjectTitleList", cascade={"persist"})
+//     * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $projectTitle;
+//
+//    //principal as entered by a user
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $setTitleStr;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ProjectTitleTree",cascade={"persist"})
+     */
+    protected $projectTitle;
 
 
     public function __construct() {
@@ -225,37 +232,37 @@ class Research
         $this->principalWrappers->removeElement($principalWrapper);
     }
 
-    /**
-     * @param mixed $projectTitleStr
-     */
-    public function setProjectTitleStr($projectTitleStr)
-    {
-        $this->projectTitleStr = $projectTitleStr;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProjectTitleStr()
-    {
-        return $this->projectTitleStr."";
-    }
-
-    /**
-     * @param mixed $setTitleStr
-     */
-    public function setSetTitleStr($setTitleStr)
-    {
-        $this->setTitleStr = $setTitleStr;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSetTitleStr()
-    {
-        return $this->setTitleStr."";
-    }
+//    /**
+//     * @param mixed $projectTitleStr
+//     */
+//    public function setProjectTitleStr($projectTitleStr)
+//    {
+//        $this->projectTitleStr = $projectTitleStr;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getProjectTitleStr()
+//    {
+//        return $this->projectTitleStr."";
+//    }
+//
+//    /**
+//     * @param mixed $setTitleStr
+//     */
+//    public function setSetTitleStr($setTitleStr)
+//    {
+//        $this->setTitleStr = $setTitleStr;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSetTitleStr()
+//    {
+//        return $this->setTitleStr."";
+//    }
 
     /**
      * @param mixed $primarySet
@@ -277,7 +284,8 @@ class Research
 
     public function isEmpty()
     {
-        if( $this->getProjectTitleStr() == '' ) {
+        //if( $this->getProjectTitleStr() == '' ) {
+        if( $this->getProjectTitle()."" == "" ) {
             return true;
         } else {
             return false;

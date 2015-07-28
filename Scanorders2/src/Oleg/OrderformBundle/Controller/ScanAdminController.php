@@ -12,6 +12,7 @@ use Oleg\OrderformBundle\Entity\DiseaseTypeList;
 use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\Magnification;
+use Oleg\OrderformBundle\Entity\ResearchGroupType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -115,6 +116,7 @@ class ScanAdminController extends AdminController
         $count_race = $this->generateRace();
         $count_DiseaseTypeList = $this->generateDiseaseTypeList();
         $count_DiseaseOriginList = $this->generateDiseaseOriginList();
+        $count_ResearchGroupType = $this->generateResearchGroupType();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -141,7 +143,8 @@ class ScanAdminController extends AdminController
             'Races='.$count_race.', '.
             'Magnifications='.$count_generateMagnifications.', '.
             'Embedder Instructions ='.$count_EmbedderInstructionList.', '.
-            'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.' '.
+            'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.', '.
+            'Research Group Types='.$count_ResearchGroupType.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1427,6 +1430,41 @@ class ScanAdminController extends AdminController
         }
 
         return round($count/10);
+    }
+
+    public function generateResearchGroupType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:ResearchGroupType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Research Project Title' => 0,
+            'Research Set Title' => 1,
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name=>$level ) {
+
+            $entity = new ResearchGroupType();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $entity->setLevel($level);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
     }
 
 }

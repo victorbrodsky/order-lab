@@ -101,7 +101,7 @@ function customCombobox() {
         getComboboxDelivery();
         //getComboboxReturn(new Array("0","0","0","0","0","0"));
         slideType(["0","0","0","0","0","0"]);
-        getProjectTitle();
+        //getProjectTitle();
         getCourseTitle();
 
         getComboboxAccount();
@@ -567,83 +567,106 @@ function getComboboxDelivery(holder) {
 
 
 //#############  Research Project  ##############//
-function getProjectTitle(holder) {
-
-    var url = getCommonBaseUrl("util/"+"projecttitle");  //urlCommon+"projecttitle";
-
-    var targetid = ".combobox-research-projectTitle";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-    }
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "?opt="+messageid;
-    }
-
-    if( _projectTitle.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-                _projectTitle = data;
-                populateSelectCombobox( targetid, _projectTitle, "Research Project Title", false );
-
-                //get id if set
-                var projectTitleVal = $(targetid).select2('val');
-                //console.log("finished: projectTitleVal="+projectTitleVal);
-                if( projectTitleVal != "" ) {
-                    getSetTitle();
-                    getOptionalUserResearch();
-                }
-
-            });
-    } else {
-        populateSelectCombobox( targetid, _projectTitle, "Research Project Title", false );
-    }
-
-}
-
-//#############  set title  ##############//
-function getSetTitle() {
-
-    var targetid = ".combobox-research-setTitle";
-    var url = getCommonBaseUrl("util/"+"settitle"); //urlCommon+"settitle";
-
-    if( $(targetid).length == 0 ) {
-        return;
-    }
-
-    //get ProjectTitle value and process children fields (readonly: true or false)
-    var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, false );
-    if( idInArr < 0 ) {
-        return;
-    }
-
-    url = url + "?opt="+idInArr;
-
-    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-        url = url + "&orderoid="+messageid;
-    }
-
-    $.ajax({
-        url: url,
-        timeout: _ajaxTimeout,
-        async: asyncflag
-    }).success(function(data) {
-        if( data ) {
-            //console.log("populate title: id="+data[0].id+", text="+data[0].text);
-            populateSelectCombobox( targetid, data, "Select an option or type in a new value");
-            //$(targetid).select2("readonly", false);
-            //setElementToId( targetid, data );
-        }
-    });
-
-}
+//function getProjectTitle(holder) {
+//
+//    var targetid = ".combobox-research-projectTitle";
+//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+//        targetid = holder.find(targetid);
+//    }
+//
+//    if( $(targetid).length == 0 ) {
+//        return;
+//    }
+//
+//    $(targetid).on('change', function(e){
+//
+//        //get id if set
+//        var projectTitleVal = $(targetid).select2('val');
+//        //console.log("finished: projectTitleVal="+projectTitleVal);
+//        if( projectTitleVal != "" ) {
+//            getOptionalUserResearch();
+//        }
+//
+//    });
+//
+//}
+//function getProjectTitle_Old(holder) {
+//
+//    var url = getCommonBaseUrl("util/"+"projecttitle");  //urlCommon+"projecttitle";
+//
+//    var targetid = ".combobox-research-projectTitle";
+//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+//        targetid = holder.find(targetid);
+//    }
+//
+//    if( $(targetid).length == 0 ) {
+//        return;
+//    }
+//
+//    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
+//        url = url + "?opt="+messageid;
+//    }
+//
+//    if( _projectTitle.length == 0 ) {
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//                _projectTitle = data;
+//                populateSelectCombobox( targetid, _projectTitle, "Research Project Title", false );
+//
+//                //get id if set
+//                var projectTitleVal = $(targetid).select2('val');
+//                //console.log("finished: projectTitleVal="+projectTitleVal);
+//                if( projectTitleVal != "" ) {
+//                    getSetTitle();
+//                    getOptionalUserResearch();
+//                }
+//
+//            });
+//    } else {
+//        populateSelectCombobox( targetid, _projectTitle, "Research Project Title", false );
+//    }
+//
+//}
+//
+////#############  set title  ##############//
+//function getSetTitle() {
+//
+//    var targetid = ".combobox-research-setTitle";
+//    var url = getCommonBaseUrl("util/"+"settitle"); //urlCommon+"settitle";
+//
+//    if( $(targetid).length == 0 ) {
+//        return;
+//    }
+//
+//    //get ProjectTitle value and process children fields (readonly: true or false)
+//    var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, false );
+//    if( idInArr < 0 ) {
+//        return;
+//    }
+//
+//    url = url + "?opt="+idInArr;
+//
+//    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
+//        url = url + "&orderoid="+messageid;
+//    }
+//
+//    $.ajax({
+//        url: url,
+//        timeout: _ajaxTimeout,
+//        async: asyncflag
+//    }).success(function(data) {
+//        if( data ) {
+//            //console.log("populate title: id="+data[0].id+", text="+data[0].text);
+//            populateSelectCombobox( targetid, data, "Select an option or type in a new value");
+//            //$(targetid).select2("readonly", false);
+//            //setElementToId( targetid, data );
+//        }
+//    });
+//
+//}
 //#############  EOF Research Project  ##############//
 
 
@@ -971,7 +994,7 @@ function initComboboxJs(ids, holder) {
         getComboboxSpecialStain(ids,true);
 
         //order
-        getProjectTitle(holder);
+        //getProjectTitle(holder);
         getCourseTitle(holder);
         getComboboxAccount(holder);
         getComboboxReturnLocations(holder);
