@@ -498,7 +498,6 @@ class AccessRequestController extends Controller
 
 
         if( $msg != "" ) {
-            exit('send email');
             $email = $subjectUser->getEmail();
             $emailUtil = new EmailUtil();
             $em = $this->getDoctrine()->getManager();
