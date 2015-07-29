@@ -475,7 +475,7 @@ class AccessRequestController extends Controller
 
         if( $user->getEmail() ) {
             $adminEmail = $user->getEmail();
-            $adminEmailStr = " (".$adminEmail.").";
+            $adminEmailStr = " (".$adminEmail.")";
         } else {
             $adminEmailStr = "";
         }
