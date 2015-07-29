@@ -471,7 +471,7 @@ class AccessRequestController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $siteLink = $this->generateUrl( $sitename.'_home', array(), true );
         $newline = "\r\n";
-        $msg = null;
+        $msg = "";
 
         if( $user->getEmail() ) {
             $adminEmail = " (".$user->getEmail().").";
@@ -497,7 +497,8 @@ class AccessRequestController extends Controller
         }
 
 
-        if( $msg ) {
+        if( $msg != "" ) {
+            exit('send email');
             $email = $subjectUser->getEmail();
             $emailUtil = new EmailUtil();
             $em = $this->getDoctrine()->getManager();
