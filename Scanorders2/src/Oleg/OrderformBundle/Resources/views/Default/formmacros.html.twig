@@ -1011,7 +1011,7 @@
     {% import _self as formmacros %}
     <p>
         {% for userWrapper in userWrappers %}
-            {{ formmacros.field( userWrapper.userStr ) }}
+            {{ formmacros.field( userWrapper.name ) }}
             {{ formmacros.field( userWrapper.user ) }}
         {% endfor %}
     </p>

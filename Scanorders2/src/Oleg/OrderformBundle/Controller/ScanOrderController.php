@@ -1231,8 +1231,8 @@ class ScanOrderController extends Controller {
         $dql->leftJoin("directorWrappers.director", "director");
 
         $dql->leftJoin("message.research", "research");
-        $dql->leftJoin("research.principalWrappers", "principalWrappers");
-        $dql->leftJoin("principalWrappers.principal", "principal");
+        $dql->leftJoin("research.userWrappers", "userWrappers");
+        $dql->leftJoin("userWrappers.user", "principal");
 
 
 

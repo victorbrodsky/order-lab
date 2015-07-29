@@ -69,8 +69,8 @@ function setResearchEducational() {
 //    }
 
     //research
-    populateSelectCombobox( ".combobox-research-setTitle", null, "Select an option or type in a new value", false );
-    $(".combobox-research-setTitle").select2("readonly", true);
+    //populateSelectCombobox( ".combobox-research-setTitle", null, "Select an option or type in a new value", false );
+    //$(".combobox-research-setTitle").select2("readonly", true);
     populateSelectCombobox( ".combobox-optionaluser-research", null, "Select an option or type in a new value", false );
     $(".combobox-optionaluser-research").select2("readonly", true);
 
@@ -759,22 +759,6 @@ function getOptionalUserResearch() {
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, true );
 
     url = url + "?opt=" + idInArr;
-
-//    if( idInArr < 0 ) {
-//
-//        //new project entered: get default users
-//        $.ajax({
-//            url: url,
-//            timeout: _ajaxTimeout,
-//            async: asyncflag
-//        }).success(function(data) {
-//                if( data ) {
-//                    populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
-//                }
-//            });
-//
-//        return;
-//    }
 
     $.ajax({
         url: url,

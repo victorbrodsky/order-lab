@@ -13,8 +13,7 @@
     {% if withCreateNewEntityLink is not defined %}
         {% set withCreateNewEntityLink = true %}
     {% endif %}
-
-    pathbase:{{ pathbase }}
+    
     {{ listmacros.listIndex( entities, pathbase, withCreateNewEntityLink ) }}
 
 {% endblock %}

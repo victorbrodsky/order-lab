@@ -16,19 +16,34 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserWrapperRepository")
  * @ORM\Table(name="user_userWrapper")
  */
-class UserWrapper {
+class UserWrapper extends ListAbstract {
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+     * @ORM\OneToMany(targetEntity="UserWrapper", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $userStr;
+     * @ORM\ManyToOne(targetEntity="UserWrapper", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
+
+
+//    /**
+//     * @ORM\Id
+//     * @ORM\Column(type="integer")
+//     * @ORM\GeneratedValue(strategy="AUTO")
+//     */
+//    private $id;
+
+//    /**
+//     * must be synchronised with name in ListAbstract
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $userStr;
+    //use name in ListAbstract as userStr
 
     /**
      * User object
@@ -40,21 +55,21 @@ class UserWrapper {
 
 
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * @param mixed $id
+//     */
+//    public function setId($id)
+//    {
+//        $this->id = $id;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * @param mixed $user
@@ -77,7 +92,8 @@ class UserWrapper {
      */
     public function setUserStr($userStr)
     {
-        $this->userStr = $userStr;
+        //$this->userStr = $userStr;
+        $this->setName($userStr);
     }
 
     /**
@@ -85,7 +101,8 @@ class UserWrapper {
      */
     public function getUserStr()
     {
-        return $this->userStr;
+        //return $this->userStr;
+        return $this->getName();
     }
 
     public function __toString() {
@@ -99,11 +116,11 @@ class UserWrapper {
             $fullName = $fullName . $this->getUser()."";
         }
 
-        if( $this->getUserStr() ) {
+        if( $this->getName() ) {
             if( $fullName ) {
-                $fullName = $fullName . " " .$this->getUserStr()."";
+                $fullName = $fullName . " " .$this->getName()."";
             } else {
-                $fullName = $this->getUserStr()."";
+                $fullName = $this->getName()."";
             }
         }
 

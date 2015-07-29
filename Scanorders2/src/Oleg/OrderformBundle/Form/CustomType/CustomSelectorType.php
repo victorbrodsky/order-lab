@@ -74,7 +74,8 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new UserListTransformer($this->om, $this->serviceContainer, $username, 'DirectorList');
                 break;
             case "optionalUserResearch":
-                $transformer = new UserListTransformer($this->om, $this->serviceContainer, $username, 'PIList');
+                //$transformer = new UserListTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper', 'UserdirectoryBundle');
+                $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
                 break;
             case "account":
                 $transformer = new AccountTransformer($this->om, $username);

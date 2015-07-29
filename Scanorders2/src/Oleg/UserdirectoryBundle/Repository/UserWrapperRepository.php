@@ -21,7 +21,7 @@ class UserWrapperRepository extends EntityRepository {
 
         if( $userStr && $userStr != "" ) {
             //echo "userStr=".$userStr."<br>";
-            $query->where("list.user=:user OR list.userStr=:userStr");
+            $query->where("list.user=:user OR list.name=:userStr");
             $query->setParameters( array(
                 'user' => $user,
                 'userStr' => $userStr

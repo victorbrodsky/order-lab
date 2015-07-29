@@ -347,7 +347,8 @@ class ScanUserController extends UserController
             $disabled = false;
         }
 
-        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
+        $params = array('em' => $em );
+        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN'),$params), $entity, array(
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
             'disabled' => $disabled
@@ -405,7 +406,8 @@ class ScanUserController extends UserController
         $entity->setUpdateAuthor($user);
         $entity->setUpdateAuthorRoles($user->getRoles());
 
-        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
+        $params = array('em' => $em );
+        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN'),$params), $entity, array(
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
         ));
@@ -444,12 +446,16 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:ProjectTitleList');
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:ProjectTitleTree');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
         $dql->groupBy("project");
-        $dql->innerJoin("project.principals", "principal");
-        $dql->where("principal.principal = :userid");
+        //$dql->innerJoin("project.principals", "principal");
+        //$dql->where("principal.principal = :userid");
+        $dql->innerJoin("project.researches", "researches");
+        $dql->innerJoin("researches.userWrappers", "userWrappers");
+        $dql->innerJoin("userWrappers.user", "userWrapperUser");
+        $dql->where("userWrapperUser.id = :userid");
 
         $query = $em->createQuery($dql)->setParameters( array( 'userid'=>$userid ) );
 

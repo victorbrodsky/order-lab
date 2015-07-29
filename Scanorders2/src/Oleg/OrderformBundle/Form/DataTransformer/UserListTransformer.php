@@ -73,7 +73,7 @@ class UserListTransformer implements DataTransformerInterface
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {
-                    $idArr[] = $entity->getUserStr();
+                    $idArr[] = $entity->getName();
                 }
             }
             

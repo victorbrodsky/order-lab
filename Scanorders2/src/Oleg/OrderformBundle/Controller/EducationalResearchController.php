@@ -90,12 +90,17 @@ class EducationalResearchController extends Controller {
         $entityHolder = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
         $editForm = $this->createEditForm($entityHolder);
 
-        $editForm->bind($request);
+        //$editForm->bind($request);
+        $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             //exit("form is valid!");
 
-            //echo "name=(".$entity->getName()."), user=(".$entity->getPrincipal().")<br>";
+//            echo "user wrappers count=".count($entity->getUserWrappers())."<br>";
+//            foreach( $entity->getUserWrappers() as $userWrapper ) {
+//                echo "userWrapper=".$userWrapper->getId().", name=".$userWrapper->getName().", user=".$userWrapper->getUser()."<br>";
+//                echo "research id=".$entity->getId()."<br>";
+//            }
 
             $em->persist($entity);
             $em->flush();
@@ -113,12 +118,20 @@ class EducationalResearchController extends Controller {
                 $reviewLink = '<br> <a href="'.$url.'">Back to Data Review</a>';
             }
             if( $routeName == "research_update" ) {
-                $principals = $entity->getProjectTitle()->getPrincipals();
+
+                $principalInvestigator = "";
                 $principalsArr = array();
-                foreach( $principals as $principal ) {
-                    $principalsArr[] = $principal->getName();
+                if( $entity->getProjectTitle() ) {
+                    $principals = $entity->getProjectTitle()->getUserWrappers();
+                    foreach( $principals as $principal ) {
+                        $principalsArr[] = $principal->getName();
+                    }
+                    if( count($principalsArr) > 0 ) {
+                        $principalInvestigator = $principalsArr[0];
+                    }
                 }
-                $msg = "Values saved for Order ".$orderoid.": User Associations for Principal Investigator(s) = ".implode(", ", $principalsArr)."; Primary Principal Investigator = ".$principalsArr[0];
+
+                $msg = "Values saved for Order ".$orderoid.": User Associations for Principal Investigator(s) = ".implode(", ", $principalsArr)."; Primary Principal Investigator = ".$principalInvestigator;
                 $url = $this->generateUrl( 'scan-order-data-review-full', array('id' => $orderoid) );
                 $reviewLink = '<br> <a href="'.$url.'">Back to Data Review</a>';
             }
@@ -162,7 +175,12 @@ class EducationalResearchController extends Controller {
 
     private function createEditForm($entity, $cycle = null) {
 
-        $params = array('type'=>'SingleObject');
+        $params = array(
+            'type' => 'SingleObject',
+            'em' => $this->getDoctrine()->getManager(),
+            'container' => $this->container
+        );
+
         $disable = false;
 
         if( $cycle == 'show' ) {

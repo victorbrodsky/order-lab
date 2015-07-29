@@ -76,6 +76,7 @@ class ListController extends Controller
      * @Route("/organizational-group-types/", name="organizationalgrouptypes-list")
      * @Route("/comment-group-types/", name="commentgrouptypes-list")
      * @Route("/comment-types/", name="commenttypes-list", options={"expose"=true})
+     * @Route("/user-wrappers/", name="userwrappers-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -239,6 +240,7 @@ class ListController extends Controller
      * @Route("/organizational-group-types/", name="organizationalgrouptypes_create")
      * @Route("/comment-group-types/", name="commentgrouptypes_create")
      * @Route("/comment-types/", name="commenttypes_createt")
+     * @Route("/user-wrappers/", name="userwrappers_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -376,6 +378,7 @@ class ListController extends Controller
      * @Route("/organizational-group-types/new", name="organizationalgrouptypes_new")
      * @Route("/comment-group-types/new", name="commentgrouptypes_new")
      * @Route("/comment-types/new", name="commenttypes_new")
+     * @Route("/user-wrappers/new", name="userwrappers_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -484,6 +487,7 @@ class ListController extends Controller
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_show")
      * @Route("/comment-group-types/{id}", name="commentgrouptypes_show")
      * @Route("/comment-types/{id}", name="commenttypes_show")
+     * @Route("/user-wrappers/{id}", name="userwrappers_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -582,6 +586,7 @@ class ListController extends Controller
      * @Route("/organizational-group-types/{id}/edit", name="organizationalgrouptypes_edit")
      * @Route("/comment-group-types/{id}/edit", name="commentgrouptypes_edit")
      * @Route("/comment-types/{id}/edit", name="commenttypes_edit")
+     * @Route("/user-wrappers/{id}/edit", name="userwrappers_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -712,6 +717,7 @@ class ListController extends Controller
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_update")
      * @Route("/comment-group-types/{id}", name="commentgrouptypes_update")
      * @Route("/comment-types/{id}", name="commenttypes_update")
+     * @Route("/user-wrappers/{id}", name="userwrappers_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1067,6 +1073,10 @@ class ListController extends Controller
                 $className = "CommentGroupType";
                 $displayName = "Comment Group Types";
                 break;
+            case "userwrappers":
+                $className = "UserWrapper";
+                $displayName = "User Wrappers";
+                break;
 
 
             default:
@@ -1151,6 +1161,7 @@ class ListController extends Controller
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_delete")
      * @Route("/comment-group-types/{id}", name="commentgrouptypes_delete")
      * @Route("/comment-types/{id}", name="commenttypes_delete")
+     * @Route("/user-wrappers/{id}", name="userwrappers_delete")
      *
      * @Method("DELETE")
      */

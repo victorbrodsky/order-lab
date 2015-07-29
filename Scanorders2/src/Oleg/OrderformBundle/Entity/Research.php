@@ -31,31 +31,68 @@ class Research
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\OneToOne(targetEntity="Message", mappedBy="research")
      */
-    protected $message;
+    private $message;
 
     /**
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="research")
      */
-    protected $slides;
+    private $slides;
 
     //principal as entered by a user. Use a wrapper because research can have multiple PIs
+//    /**
+//     * Keep info as principal name as entered by a user and id to a principal
+//     * @ORM\OneToMany(targetEntity="PrincipalWrapper", mappedBy="research", cascade={"persist"})
+//     * @ORM\JoinColumn(name="principal_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $principalWrappers;
+    //principal as entered by a user. Use a wrapper because research can have multiple PIs
+//    /**
+//     * Keep info as principal name as entered by a user and id to a principal
+//     * @ORM\OneToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist"})
+//     * @ORM\JoinColumn(name="principal_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $principalWrappers;
     /**
-     * Keep info as principal name as entered by a user and id to a principal
-     * @ORM\OneToMany(targetEntity="PrincipalWrapper", mappedBy="research", cascade={"persist"})
-     * @ORM\JoinColumn(name="principal_id", referencedColumnName="id", nullable=true)
-     */
-    protected $principalWrappers;
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_research_userWrapper",
+     *      joinColumns={@ORM\JoinColumn(name="research_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $userWrappers;
 
     /**
      * primarySet - name of the primary PI. Indicates if the primaryPrincipal was set by this order
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $primarySet;
+    private $primarySet;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ProjectTitleTree", inversedBy="researches", cascade={"persist"})
+     */
+    private $projectTitle;
+
+//    /**
+//     * @ORM\ManyToMany(targetEntity="PIList", inversedBy="projectTitles", cascade={"persist"})
+//     * @ORM\JoinTable(name="scan_projectTitles_principals")
+//     **/
+//    private $principals;
+
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $primaryPrincipal;
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist"})
+     */
+    private $primaryPrincipal;
+
 
 
     //project title as entered by a user
@@ -76,15 +113,14 @@ class Research
 //     */
 //    protected $setTitleStr;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleTree",cascade={"persist"})
-     */
-    protected $projectTitle;
+
 
 
     public function __construct() {
-        $this->principalWrappers = new ArrayCollection();
         $this->slides = new ArrayCollection();
+
+        $this->userWrappers = new ArrayCollection();
+        //$this->principals = new ArrayCollection();
     }
 
 //    public function __clone() {
@@ -188,10 +224,10 @@ class Research
     /**
      * @return mixed
      */
-    public function getPrincipalWrappers()
+    public function getUserWrappers()
     {
         //entity is PrincipalWrapper class => order will show the same order as entered by a user
-        return $this->principalWrappers;
+        return $this->userWrappers;
 
         //entity is PIList class => we can shows Primary PI as the first principal
 //        if( $this->getProjectTitle() ) {
@@ -203,33 +239,28 @@ class Research
     }
 
     /**
-     * Add principalWrappers
+     * Add userWrappers
      *
-     * @param $principal
+     * @param $userWrappers
      * @return Research
      */
-    public function addPrincipalWrapper($principal)
+    public function addUserWrapper($userWrapper)
     {
-        $principalWrapper = new principalWrapper();
-        $principalWrapper->setPrincipalStr( $principal->getName() );
-        $principalWrapper->setPrincipal( $principal );
-
-        if( !$this->principalWrappers->contains($principalWrapper) ) {
-            $this->principalWrappers->add($principalWrapper);
-            $principalWrapper->setResearch($this);
+        if( !$this->userWrappers->contains($userWrapper) ) {
+            $this->userWrappers->add($userWrapper);
         }
 
         return $this;
     }
 
     /**
-     * Remove principalWrappers
+     * Remove userWrappers
      *
-     * @param PrincipalWrappers $principalWrappers
+     * @param userWrappers $userWrappers
      */
-    public function removePrincipalWrapper($principalWrapper)
+    public function removeUserWrapper($userWrappers)
     {
-        $this->principalWrappers->removeElement($principalWrapper);
+        $this->userWrappers->removeElement($userWrappers);
     }
 
 //    /**
@@ -280,6 +311,98 @@ class Research
         return $this->primarySet;
     }
 
+//    /**
+//     * Add principal
+//     *
+//     * @param PIList $principal
+//     * @return ProjectTitleList
+//     */
+//    public function addPrincipal(PIList $principal)
+//    {
+//        if( $principal && !$this->principals->contains($principal) ) {
+//            $this->principals->add($principal);
+//        }
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove principal
+//     *
+//     * @param PIList $principal
+//     */
+//    public function removePrincipal(PIList $principal)
+//    {
+//        $this->principals->removeElement($principal);
+//    }
+//
+//    /**
+//     * Get principals
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getPrincipals() {
+//
+//        $resArr = new ArrayCollection();
+//        foreach( $this->principals as $principal ) {
+//
+//            //echo $principal->getId() . "?=" . $this->getPrimaryPrincipal()."<br>";
+//            if( $principal->getId()."" == $this->getPrimaryPrincipal()."" ) {  //this principal is a primary one => put as the first element
+//
+//                $firstEl = $resArr->first();
+//                if( count($this->principals) > 1 && $firstEl ) {
+//
+//                    $resArr->set(0,$principal); //set( mixed $key, mixed $value ) Adds/sets an element in the collection at the index / with the specified key.
+//                    $resArr->add($firstEl);
+//                } else {
+//                    $resArr->add($principal);
+//                }
+//            } else {    //this principal is not a primary one
+//                $resArr->add($principal);
+//            }
+//        }
+//
+//        return $resArr;
+//    }
+//
+//    //$principal might be empty or PIList
+//    public function setPrincipals( $principals )
+//    {
+//        //echo "principals=".$principals;
+//        //echo "<br>set principals: count=".count($principals)."<br>";
+//
+//        //set primary PI
+//        if( $principals->first() ) {
+//            $this->primaryPrincipal = $principals->first()->getId();
+//        } else {
+//            $this->primaryPrincipal = NULL;
+//        }
+//
+//        $this->principals = $principals;
+//
+//        //echo "<br>count principals=".count($this->getPrincipals())."<br>";
+//        //echo "primary principal=".$this->primaryPrincipal."<br>";
+//        //exit();
+//
+//        return $this;
+//    }
+
+    /**
+     * @param mixed $primaryPrincipal
+     */
+    public function setPrimaryPrincipal($primaryPrincipal)
+    {
+        $this->primaryPrincipal = $primaryPrincipal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimaryPrincipal()
+    {
+        return $this->primaryPrincipal;
+    }
+
 
 
     public function isEmpty()
@@ -291,6 +414,7 @@ class Research
             return false;
         }
     }
+
 
     public function __toString(){
         //return "Research: id=".$this->id.", project=".$this->projectTitle.", project type=".$this->getProjectTitle()->getType().", principal=".$this->principal.", countSetTitles=".count($this->projectTitle->getSetTitles())."<br>";

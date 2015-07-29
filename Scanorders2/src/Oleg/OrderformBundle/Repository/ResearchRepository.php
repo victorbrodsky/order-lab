@@ -20,10 +20,10 @@ class ResearchRepository extends ListAbstractRepository {
 
         $projectTitle = $research->getProjectTitle();
 
-        if( $projectTitle ) {
+        //if( $projectTitle ) {
             //process principals and primary principal
-            $this->processPrincipals( $research, $projectTitle );
-        }
+            //$this->processPrincipals( $research, $projectTitle );
+        //}
 
         //exit('res');
         return $message;
@@ -75,37 +75,37 @@ class ResearchRepository extends ListAbstractRepository {
 
 
 
-    //inputs: source $research, destination ProjectTitle
-    public function processPrincipals( $research, $foundprojectTitle ) {
-
-        $principalWrappers = $research->getPrincipalWrappers();
-
-        foreach( $principalWrappers as $principalWrapper ) {
-
-            $principalstr = $principalWrapper->getPrincipalStr();
-            //echo "principalstr=".$principalstr."<br>";
-            $foundPrincipal = $this->_em->getRepository('OlegOrderformBundle:PIList')->findOneByName($principalstr);
-
-            if( !$foundPrincipal ) {
-                throw new \Exception( 'Principal was not found with name '.$principalstr );
-            }
-
-            $foundprojectTitle->addPrincipal($foundPrincipal);
-            $foundPrincipal->addProjectTitle($foundprojectTitle);
-
-            //set primaryPrincipal as a first principal
-            if( $principalWrappers->first() ) {
-                if( !$foundprojectTitle->getPrimaryPrincipal() ) {
-                    $foundprojectTitle->setPrimaryPrincipal( $principalWrappers->first()->getPrincipal()->getId() );
-                    $research->setPrimarySet( $principalWrappers->first()->getPrincipal()->getName() );
-                }
-            } else {
-                $foundprojectTitle->setPrimaryPrincipal( NULL );
-            }
-
-        }//foreach
-
-    }
+//    //inputs: source $research, destination ProjectTitle
+//    public function processPrincipals( $research, $foundprojectTitle ) {
+//
+//        $userWrappers = $research->getUserWrappers();
+//
+//        foreach( $userWrappers as $userWrapper ) {
+//
+//            $userstr = $userWrapper->getName()."";
+//            //echo "userstr=".$userstr."<br>";
+//            $foundPrincipal = $this->_em->getRepository('UserdirectoryBundle:UserWrapper')->findOneByName($userstr);
+//
+//            if( !$foundPrincipal ) {
+//                throw new \Exception( 'Principal was not found with name '.$userstr );
+//            }
+//
+//            $foundprojectTitle->addPrincipal($foundPrincipal);
+//            $foundPrincipal->addProjectTitle($foundprojectTitle);
+//
+//            //set primaryPrincipal as a first principal
+//            if( $userWrappers->first() ) {
+//                if( !$foundprojectTitle->getPrimaryPrincipal() ) {
+//                    $foundprojectTitle->setPrimaryPrincipal( $userWrappers->first()->getPrincipal()->getId() );
+//                    $research->setPrimarySet( $userWrappers->first()->getPrincipal()->getName() );
+//                }
+//            } else {
+//                $foundprojectTitle->setPrimaryPrincipal( NULL );
+//            }
+//
+//        }//foreach
+//
+//    }
 
 
 }

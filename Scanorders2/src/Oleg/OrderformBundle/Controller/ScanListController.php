@@ -335,13 +335,13 @@ class ScanListController extends ListController
         switch( $route ) {
 
         case "researchprojecttitles":
-            $className = "projecttitlelist";
+            $className = "ProjectTitleTree";
             $displayName = "Project Titles";
             break;
-        case "researchsettitles":
-            $className = "settitlelist";
-            $displayName = "Set Titles";
-            break;
+//        case "researchsettitles":
+//            $className = "settitlelist";
+//            $displayName = "Set Titles";
+//            break;
         case "educationalcoursetitles":
             $className = "CourseTitleList";
             $displayName = "Course Titles";

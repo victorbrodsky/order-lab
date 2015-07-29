@@ -16,11 +16,13 @@ class PerSiteSettingsType extends AbstractType
 
     protected $user;
     protected $roleAdmin;
+    protected $params;
 
-    public function __construct( $user, $roleAdmin )
+    public function __construct( $user, $roleAdmin, $params )
     {
         $this->user = $user;
         $this->roleAdmin = $roleAdmin;
+        $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

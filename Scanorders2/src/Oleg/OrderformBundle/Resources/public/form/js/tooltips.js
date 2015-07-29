@@ -91,7 +91,7 @@ function attachResearchEducationalTooltip() {
     //research
     attachResEduOnMouseEvent(
                                 '.combobox-research-projectTitle',
-                                '.combobox-research-setTitle',
+                                //'.combobox-research-setTitle',
                                 '.combobox-optionaluser-research',
                                 "Please enter the Research Project Title to access this field"
                             );

@@ -587,95 +587,95 @@ class ScanUtilController extends UtilController {
 
 
 
-    /**
-     * @Route("/projecttitle", name="get-projecttitle")
-     * @Method("GET")
-     */
-    public function getProjectTitleAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $request = $this->get('request');
-        $opt = trim( $request->get('opt') );
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:ProjectTitleList', 'list')
-            ->select("list.name as id, list.name as text")
-            //->where("list.type = 'default'")
-            ->orderBy("list.orderinlist","ASC");
-
-//        if( $opt ) {
-            $user = $this->get('security.context')->getToken()->getUser();
-            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
-            $query->setParameters( array('type' => 'default', 'user' => $user) );
+//    /**
+//     * @Route("/projecttitle", name="get-projecttitle")
+//     * @Method("GET")
+//     */
+//    public function getProjectTitleAction() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $request = $this->get('request');
+//        $opt = trim( $request->get('opt') );
+//
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:ProjectTitleList', 'list')
+//            ->select("list.name as id, list.name as text")
+//            //->where("list.type = 'default'")
+//            ->orderBy("list.orderinlist","ASC");
+//
+////        if( $opt ) {
+//            $user = $this->get('security.context')->getToken()->getUser();
+//            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
+//            $query->setParameters( array('type' => 'default', 'user' => $user) );
+////        }
+//
+//        //echo "query=".$query."<br \>";
+//
+//        $output = $query->getQuery()->getResult();
+//
+//        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
+//        if( $opt && $opt != "undefined" ) {
+//            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($opt);
+//            if( $message->getResearch() ) {
+//                $strEneterd = $message->getResearch()->getProjectTitleStr();
+//                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+//                if( !$this->in_complex_array($element,$output) ) {
+//                    $output[] = $element;
+//                }
+//            }
 //        }
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+//    }
 
-        //echo "query=".$query."<br \>";
-
-        $output = $query->getQuery()->getResult();
-
-        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
-        if( $opt && $opt != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($opt);
-            if( $message->getResearch() ) {
-                $strEneterd = $message->getResearch()->getProjectTitleStr();
-                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-                if( !$this->in_complex_array($element,$output) ) {
-                    $output[] = $element;
-                }
-            }
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
-    /**
-     * @Route("/settitle", name="get-settitle")
-     * @Method("GET")
-     */
-    public function getSetTitleAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $request = $this->get('request');
-        $opt = trim( $request->get('opt') ); //projectTitle name
-        $orderoid = trim( $request->get('orderoid') );
-        //echo 'opt='.$opt.' => ';
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:SetTitleList', 'list')
-            ->select("list.name as id, list.name as text")
-            ->leftJoin("list.projectTitle","parent")
-            ->where("parent.name = :pname AND list.type = :type")
-            ->orderBy("list.orderinlist","ASC")
-            ->setParameters( array(
-                'pname' => $opt,
-                'type' => 'default'
-            ));
-
-        //echo "query=".$query."<br>";
-        $output = $query->getQuery()->getResult();
-
-        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
-        if( $orderoid ) {
-            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($orderoid);
-            if( $message->getResearch() ) {
-                $strEneterd = $message->getResearch()->getSetTitleStr();
-                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-                if( !$this->in_complex_array($element,$output) ) {
-                    $output[] = $element;
-                }
-            }
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
+//    /**
+//     * @Route("/settitle", name="get-settitle")
+//     * @Method("GET")
+//     */
+//    public function getSetTitleAction() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $request = $this->get('request');
+//        $opt = trim( $request->get('opt') ); //projectTitle name
+//        $orderoid = trim( $request->get('orderoid') );
+//        //echo 'opt='.$opt.' => ';
+//
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:SetTitleList', 'list')
+//            ->select("list.name as id, list.name as text")
+//            ->leftJoin("list.projectTitle","parent")
+//            ->where("parent.name = :pname AND list.type = :type")
+//            ->orderBy("list.orderinlist","ASC")
+//            ->setParameters( array(
+//                'pname' => $opt,
+//                'type' => 'default'
+//            ));
+//
+//        //echo "query=".$query."<br>";
+//        $output = $query->getQuery()->getResult();
+//
+//        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
+//        if( $orderoid ) {
+//            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($orderoid);
+//            if( $message->getResearch() ) {
+//                $strEneterd = $message->getResearch()->getSetTitleStr();
+//                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+//                if( !$this->in_complex_array($element,$output) ) {
+//                    $output[] = $element;
+//                }
+//            }
+//        }
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+//    }
 
 
     /**
@@ -785,23 +785,29 @@ class ScanUtilController extends UtilController {
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
-        $opt = trim( $request->get('opt') ); //parent name: courseTitle name
+        $holderId = trim( $request->get('opt') ); //associated object ProjectTitleTree id
         $routeName = $request->get('_route');
 
         if( $routeName == "get-optionalusereducational" ) {
             $role = "ROLE_SCANORDER_COURSE_DIRECTOR";
+            $prefix = 'Oleg';
+            $bundleName = 'OrderformBundle';
             $className = 'DirectorList';
-            $pname = 'courses';
+            $holderName = 'courses';
         }
         if( $routeName == "get-optionaluserresearch" ) {
             $role = "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR";
-            $className = 'PIList';
-            $pname = 'projectTitles';
+            $prefix = 'Oleg';
+            //$bundleName = 'UserdirectoryBundle';
+            $bundleName = 'OrderformBundle';
+            $className = 'ProjectTitleTree';    //'PIList';
+            $holderName = 'researches';
+            $userWrappers = 'userWrappers';
         }
 
         if(0) {
-            echo "opt=".$opt." => ";
-            $project = $this->getDoctrine()->getRepository('OlegOrderformBundle:CourseTitleList')->findOneById($opt);
+            echo "opt=".$holderId." => ";
+            $project = $this->getDoctrine()->getRepository('OlegOrderformBundle:CourseTitleList')->findOneById($holderId);
             $pis = $project->getDirectors();
             echo "countpis=".count($pis)." => ";
             foreach( $project->getDirectors() as $pi ) {
@@ -809,19 +815,25 @@ class ScanUtilController extends UtilController {
             }
         }
 
-        //1) add PIList with parent name = $opt
-        if( $opt && $opt != "undefined" ) {
+        //1) ProjectTitleTree id => get research => get principalWrappers
+        if( $holderId && $holderId != "undefined" ) {
             $query = $em->createQueryBuilder()
-                ->from('OlegOrderformBundle:'.$className, 'list')
-                ->select("list.name as id, list.name as text")
-                ->leftJoin("list.".$pname,"parents")
-                ->where("parents.name = :pname AND (list.type = :type OR list.type = :type2)")
+                ->from($prefix.$bundleName.':'.$className, 'list')
+                //->select("list.name as id, list.name as text")
+                ->select("userWrappers.id as id, userWrappers.name as text")
+                ->leftJoin("list.".$holderName,"holders")
+                ->leftJoin("holders.userWrappers","userWrappers")
+                //->where("list.id = :holderId")
+                ->where("list.id = :holderId AND (userWrappers.type = :type OR userWrappers.type = :type2)")
+                //->where("holders.id = :holderId AND (list.type = :type OR list.type = :type2)")
                 ->orderBy("list.orderinlist","ASC")
                 ->setParameters( array(
-                    'pname' => $opt,
+                    'holderId' => $holderId,
                     'type' => 'default',
                     'type2' => 'user-added'
                 ));
+
+            //echo "query=".$query."<br>";
 
             $output = $query->getQuery()->getResult();
         } else {
