@@ -461,10 +461,6 @@ class AccessRequestController extends Controller
 
     public function createAccessRequestUserNotification( $subjectUser, $status, $sitename ) {
 
-        if( $status != "approved" && $status != "approve" ) {
-            return;
-        }
-
         if( $sitename == $this->container->getParameter('employees.sitename') ) {
             $sitenameFull = "Employee Directory";
         }
@@ -472,15 +468,43 @@ class AccessRequestController extends Controller
             $sitenameFull = "Scan Orders";
         }
 
-        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
         $siteLink = $this->generateUrl( $sitename.'_home', array(), true );
-        $subject = "Access granted to site: ".$sitenameFull;
-        $msg = "You have been granted access to the " . $sitenameFull . ": " . $siteLink;
+        $newline = "\r\n";
+        $msg = null;
 
-        $email = $subjectUser->getEmail();
+        if( $user->getEmail() ) {
+            $adminEmail = " (".$user->getEmail().").";
+        } else {
+            $adminEmail = "";
+        }
 
-        $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $email, $subject, $msg, $em );
+        if( $status == "approved" || $status == "approve" ) {
+            $subject = "Your request to access ".$sitenameFull." has been approved";  //"Access granted to site: ".$sitenameFull;
+
+            $msg = $subjectUser->getUsernameOptimal().",".$newline.$newline.
+                "Your request to access ".$sitenameFull.": ".$siteLink." has been approved. You can now log in.".$newline.$newline.
+                $user->getUsernameOptimal().$adminEmail;
+        }
+
+
+        if( $status == "declined" || $status == "decline" ) {
+            $subject = "Your request to access ".$sitenameFull." has been denied";
+
+            $msg = $subjectUser->getUsernameOptimal().",".$newline.$newline.
+                "Your request to access ".$sitenameFull.": ".$siteLink." has been denied. For additional details please email ".$user->getUsernameOptimal().$adminEmail.".".$newline.$newline.
+                $user->getUsernameOptimal().$adminEmail;
+        }
+
+
+        if( $msg ) {
+            $email = $subjectUser->getEmail();
+            $emailUtil = new EmailUtil();
+            $em = $this->getDoctrine()->getManager();
+
+            //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
+            $emailUtil->sendEmail( $email, $subject, $msg, $em, $adminEmail, $adminEmail );
+        }
     }
 
 
