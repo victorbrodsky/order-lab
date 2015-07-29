@@ -474,9 +474,10 @@ class AccessRequestController extends Controller
         $msg = "";
 
         if( $user->getEmail() ) {
-            $adminEmail = " (".$user->getEmail().").";
+            $adminEmail = $user->getEmail();
+            $adminEmailStr = " (".$adminEmail.").";
         } else {
-            $adminEmail = "";
+            $adminEmailStr = "";
         }
 
         if( $status == "approved" || $status == "approve" ) {
@@ -484,7 +485,7 @@ class AccessRequestController extends Controller
 
             $msg = $subjectUser->getUsernameOptimal().",".$newline.$newline.
                 "Your request to access ".$sitenameFull.": ".$siteLink." has been approved. You can now log in.".$newline.$newline.
-                $user->getUsernameOptimal().$adminEmail;
+                $user->getUsernameOptimal().$adminEmailStr;
         }
 
 
@@ -492,8 +493,8 @@ class AccessRequestController extends Controller
             $subject = "Your request to access ".$sitenameFull." has been denied";
 
             $msg = $subjectUser->getUsernameOptimal().",".$newline.$newline.
-                "Your request to access ".$sitenameFull.": ".$siteLink." has been denied. For additional details please email ".$user->getUsernameOptimal().$adminEmail.".".$newline.$newline.
-                $user->getUsernameOptimal().$adminEmail;
+                "Your request to access ".$sitenameFull.": ".$siteLink." has been denied. For additional details please email ".$user->getUsernameOptimal().$adminEmailStr.".".$newline.$newline.
+                $user->getUsernameOptimal().$adminEmailStr;
         }
 
 
@@ -503,7 +504,7 @@ class AccessRequestController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
-            $emailUtil->sendEmail( $email, $subject, $msg, $em, $adminEmail, $adminEmail );
+            $emailUtil->sendEmail( $email, $subject, $msg, $em, null, $adminEmail );
         }
     }
 
