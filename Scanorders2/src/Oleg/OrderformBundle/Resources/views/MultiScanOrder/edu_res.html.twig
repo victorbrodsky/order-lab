@@ -24,9 +24,10 @@
             </div>
             <div id="educational" class="tab-pane">
                 <p>
-                    {{ formmacros.field(form.educational.courseTitleStr) }}
-                    {{ formmacros.field(form.educational.lessonTitleStr) }}
-                    {{ formmacros.field(form.educational.directorWrappers) }}
+                    {#{{ formmacros.field(form.educational.courseTitleStr) }}#}
+                    {#{{ formmacros.field(form.educational.lessonTitleStr) }}#}
+                    {{ treemacros.compositeTreeNode(form.educational.courseTitle,'','') }}
+                    {{ formmacros.field(form.educational.userWrappers) }}
                 </p>
             </div>
         </div>
@@ -56,9 +57,10 @@
 
             <p>
             <h4 class="text-info">Education</h4>
-            {{ formmacros.field(form.educational.courseTitleStr) }}
-            {{ formmacros.field(form.educational.lessonTitleStr) }}
-            {{ formmacros.field(form.educational.directorWrappers) }}
+            {#{{ formmacros.field(form.educational.courseTitleStr) }}#}
+            {#{{ formmacros.field(form.educational.lessonTitleStr) }}#}
+            {{ treemacros.compositeTreeNode(form.educational.courseTitle,'','') }}
+            {{ formmacros.field(form.educational.userWrappers) }}
             </p>
         </div>
     </div>

@@ -78,6 +78,12 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
                 //remove id and name for all inputs preceding the input with selected node
                 clearElementsIdName(treeHolder);
             }
+        }).
+        then(function () {
+            //run function to init node by data-compositetree-initnode-function
+            var initNodeFunctionStr = comboboxEl.attr("data-compositetree-initnode-function");
+            var initNodeFunction = window[initNodeFunctionStr];
+            initNodeFunction();
         });
 
     });
@@ -120,10 +126,10 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
         }
 
         //readonly combobox
-        var readonly = "";
-        if( cycle.indexOf("show") != -1 ) {
-            readonly = "readonly";
-        }
+        //var readonly = "";
+        //if( cycle.indexOf("show") != -1 ) {
+        //    readonly = "readonly";
+        //}
 
         var comboboxHtml = rowElHtml;
 

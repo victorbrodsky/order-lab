@@ -136,7 +136,7 @@
                         {{ destination.location }}
                     {% endfor %}
                 </td>
-                <td>{{ entity.type }}</td>
+                <td>{{ entity.messageCategory }}</td>
                 {% if showprovider is defined and showprovider == 'true' %}
                     <td>
                         {% for provider in entity.provider %}
@@ -172,7 +172,7 @@
                         {{ destination.location }}
                     {% endfor %}
                 </td>
-                <td>{{ entity.type }}</td>
+                <td>{{ entity.messageCategory }}</td>
                     
             {% endif %}
                 <td class="rowlink-skip">

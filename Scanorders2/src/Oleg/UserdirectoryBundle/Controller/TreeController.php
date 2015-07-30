@@ -422,6 +422,9 @@ class TreeController extends Controller {
             case "ProjectTitleTree":
                 $organizationalGroupType = "ResearchGroupType";
                 break;
+            case "CourseTitleTree":
+                $organizationalGroupType = "CourseGroupType";
+                break;
             default:
                 //$className = null;
         }

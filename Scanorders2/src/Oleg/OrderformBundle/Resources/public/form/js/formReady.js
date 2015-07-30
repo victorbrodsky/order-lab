@@ -29,9 +29,8 @@ $(document).ready(function() {
 
     customCombobox();
 
-    setResearch();  //set research listener
-
-    setEducational(); //set educational listener
+    //setResearch();  //set research listener
+    //setEducational(); //set educational listener
 
     //add diseaseType radio listener for new form
     diseaseTypeListener();

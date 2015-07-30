@@ -792,8 +792,9 @@ class ScanUtilController extends UtilController {
             $role = "ROLE_SCANORDER_COURSE_DIRECTOR";
             $prefix = 'Oleg';
             $bundleName = 'OrderformBundle';
-            $className = 'DirectorList';
-            $holderName = 'courses';
+            $bundleName = 'OrderformBundle';
+            $className = 'CourseTitleTree';
+            $holderName = 'educationals';
         }
         if( $routeName == "get-optionaluserresearch" ) {
             $role = "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR";
@@ -802,7 +803,6 @@ class ScanUtilController extends UtilController {
             $bundleName = 'OrderformBundle';
             $className = 'ProjectTitleTree';    //'PIList';
             $holderName = 'researches';
-            $userWrappers = 'userWrappers';
         }
 
         if(0) {
@@ -819,8 +819,10 @@ class ScanUtilController extends UtilController {
         if( $holderId && $holderId != "undefined" ) {
             $query = $em->createQueryBuilder()
                 ->from($prefix.$bundleName.':'.$className, 'list')
-                //->select("list.name as id, list.name as text")
                 ->select("userWrappers.id as id, userWrappers.name as text")
+                //->select("DISTINCT(userWrappers.id) as id, userWrappers.name as text")
+                //->groupBy("list.orderinlist")
+                //->groupBy("userWrappers")
                 ->leftJoin("list.".$holderName,"holders")
                 ->leftJoin("holders.userWrappers","userWrappers")
                 //->where("list.id = :holderId")
@@ -854,11 +856,16 @@ class ScanUtilController extends UtilController {
         $users = $query->getQuery()->getResult();
 
         foreach( $users as $user ) {
-            $element = array('id'=>$user."", 'text'=>$user."");
+            $element = array('id'=>$user->getPrimaryPublicUserId()."", 'text'=>$user."");
             if( !$this->in_complex_array($user."",$output) ) {
+                //echo "add user id=".$user->getId()."\n";
                 $output[] = $element;
             }
         }
+
+        //echo "\nfinal output:";
+        //var_dump($output);
+        //echo "\n";
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

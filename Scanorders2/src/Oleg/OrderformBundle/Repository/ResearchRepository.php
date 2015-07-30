@@ -13,13 +13,23 @@ class ResearchRepository extends ListAbstractRepository {
 
         $research = $message->getResearch();
 
+        echo "research=".$research."<br>";
+        //exit();
+
         if( !$research || $research->isEmpty() ) {
             $message->setResearch(NULL);
+            echo "research is empty<br>";
+            //exit();
             return $message;
         }
 
-        $projectTitle = $research->getProjectTitle();
+        foreach( $research->getUserWrappers() as $userWrapper ) {
+            if( $research->getProjectTitle() ) {
+                $research->getProjectTitle()->addUserWrapper($userWrapper);
+            }
+        }
 
+        //$projectTitle = $research->getProjectTitle();
         //if( $projectTitle ) {
             //process principals and primary principal
             //$this->processPrincipals( $research, $projectTitle );

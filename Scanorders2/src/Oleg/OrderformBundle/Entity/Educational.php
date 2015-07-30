@@ -6,15 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
+//*  indexes={
+//    *      @ORM\Index( name="courseTitleStr_idx", columns={"courseTitleStr"} ),
+// *      @ORM\Index( name="lessonTitleStr_idx", columns={"lessonTitleStr"} )
+// *  }
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EducationalRepository")
- * @ORM\Table( name="scan_educational",
- *  indexes={
- *      @ORM\Index( name="courseTitleStr_idx", columns={"courseTitleStr"} ),
- *      @ORM\Index( name="lessonTitleStr_idx", columns={"lessonTitleStr"} )
- *  }
- * )
+ * @ORM\Table( name="scan_educational")
  */
 class Educational
 {
@@ -24,54 +23,51 @@ class Educational
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
 
     /**
      * @ORM\OneToOne(targetEntity="Message", mappedBy="educational")
      */
-    protected $message;
+    private $message;
 
     /**
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="educational")
      */
-    protected $slides;
+    private $slides;
 
     //directors
     /**
-     * Keep info as director name as entered by a user and id to a director object
-     * @ORM\OneToMany(targetEntity="DirectorWrapper", mappedBy="educational", cascade={"persist"})
-     * @ORM\JoinColumn(name="director_id", referencedColumnName="id", nullable=true)
-     */
-    protected $directorWrappers;
-
-    //course
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $courseTitleStr;
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_educational_userWrapper",
+     *      joinColumns={@ORM\JoinColumn(name="educational_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $userWrappers;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CourseTitleList", cascade={"persist"})
-     * @ORM\JoinColumn(name="courseTitle_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="CourseTitleTree", inversedBy="educationals", cascade={"persist"})
      */
-    protected $courseTitle;
+    private $courseTitle;
 
-    //lesson
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * primaryDirector
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist"})
      */
-    protected $lessonTitleStr;
+    private $primaryPrincipal;
+
 
     /**
      * primarySet - name of the primary Director. Indicates if the primaryDirector was set by this order
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $primarySet;
+    private $primarySet;
 
 
     public function __construct() {
-        $this->directorWrappers = new ArrayCollection();
+        $this->userWrappers = new ArrayCollection();
         $this->slides = new ArrayCollection();
     }
 
@@ -102,21 +98,6 @@ class Educational
         return $this->message;
     }
 
-//    /**
-//     * @param mixed $slide
-//     */
-//    public function setSlide($slide)
-//    {
-//        $this->slide = $slide;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getSlide()
-//    {
-//        return $this->slide;
-//    }
     /**
      * @param Slide $slide
      * @return Block
@@ -167,75 +148,25 @@ class Educational
         return $this->courseTitle;
     }
 
-    /**
-     * @param mixed $courseTitleStr
-     */
-    public function setCourseTitleStr($courseTitleStr)
+
+    public function getUserWrappers()
     {
-        $this->courseTitleStr = $courseTitleStr;
+        return $this->userWrappers;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCourseTitleStr()
+    public function addUserWrapper($userWrapper)
     {
-        return $this->courseTitleStr;
-    }
-
-    /**
-     * @param mixed $lessonTitleStr
-     */
-    public function setLessonTitleStr($lessonTitleStr)
-    {
-        $this->lessonTitleStr = $lessonTitleStr;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLessonTitleStr()
-    {
-        return $this->lessonTitleStr;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDirectorWrappers()
-    {
-        //entity is DirectorWrapper class => order will show the same order as entered by a user
-        return $this->directorWrappers;
-    }
-
-    /**
-     * Add DirectorWrappers
-     *
-     * @param $director
-     * @return Educational
-     */
-    public function addDirectorWrapper($director)
-    {
-        $directorWrapper = new directorWrapper();
-        $directorWrapper->setDirectorStr( $director->getName() );
-        $directorWrapper->setDirector( $director );
-
-        if( !$this->directorWrappers->contains($directorWrapper) ) {
-            $this->directorWrappers->add($directorWrapper);
-            $directorWrapper->setEducational($this);
+        if( !$this->userWrappers->contains($userWrapper) ) {
+            $this->userWrappers->add($userWrapper);
+//            if( $this->getCourseTitle() ) {
+//                $this->getCourseTitle()->addUserWrapper($userWrapper);
+//            }
         }
 
         return $this;
     }
-
-    /**
-     * Remove directorWrappers
-     *
-     * @param $directorWrappers
-     */
-    public function removeDirectorWrapper($directorWrapper)
+    public function removeUserWrapper($userWrappers)
     {
-        $this->directorWrappers->removeElement($directorWrapper);
+        $this->userWrappers->removeElement($userWrappers);
     }
 
     /**
@@ -254,12 +185,27 @@ class Educational
         return $this->primarySet;
     }
 
+    /**
+     * @param mixed $primaryPrincipal
+     */
+    public function setPrimaryPrincipal($primaryPrincipal)
+    {
+        $this->primaryPrincipal = $primaryPrincipal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimaryPrincipal()
+    {
+        return $this->primaryPrincipal;
+    }
 
 
 
     public function isEmpty()
     {
-        if( $this->getCourseTitleStr() == '' ) {
+        if( $this->getCourseTitle()."" == '' ) {
             return true;
         } else {
             return false;
@@ -268,8 +214,6 @@ class Educational
 
 
     public function __toString(){
-
-        //return "Educational: id=".$this->id.", course=".$this->courseTitle.", course type=".$this->getCourseTitle()->getType().", director=".$this->director.", countLessonTitles=".count($this->courseTitle->getLessonTitles())."<br>";
         return "Educational: id=".$this->id.", course=".$this->courseTitle."<br>";
     }
 

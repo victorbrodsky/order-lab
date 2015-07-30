@@ -90,66 +90,67 @@ function attachResearchEducationalTooltip() {
 
     //research
     attachResEduOnMouseEvent(
-                                '.combobox-research-projectTitle',
+                                '.combobox-research-projectTitle',  //projectTitle tree node
                                 //'.combobox-research-setTitle',
-                                '.combobox-optionaluser-research',
+                                '.combobox-optionaluser-research', //users
                                 "Please enter the Research Project Title to access this field"
                             );
 
     //educational
     attachResEduOnMouseEvent(
                                 '.combobox-educational-courseTitle',
-                                '.combobox-educational-lessonTitle',
+                                //'.combobox-educational-lessonTitle',
                                 '.combobox-optionaluser-educational',
                                 "Please enter the Course Title to access this field"
     );
 
 }
 
-function attachResEduOnMouseEvent( parentTarget, elementTarget1, elementTarget2,  title ) {
+function attachResEduOnMouseEvent( treenode, user,  title ) {
 
-    setResEduTooltip( parentTarget, elementTarget1, title );
-    setResEduTooltip( parentTarget, elementTarget2, title );
+    setResEduTooltip( treenode, user, title );
+    //setResEduTooltip( parentTarget, elementTarget2, title );
 
-    $(parentTarget).on("change", function(e) {
-        //console.log('attach ResEdu On MouseEvent on change');
+    $(treenode).on("change", function(e) {
+        console.log('attach ResEdu On MouseEvent on change');
+        printF($(user),"User Element:");
 
-        if( $(elementTarget1).hasClass('select2-container-disabled') ) {
-            setResEduTooltip( parentTarget, elementTarget1, title );
+        if( $(user).hasClass('select2-container-disabled') ) {
+            setResEduTooltip( treenode, user, title );
         } else {
-            $(elementTarget1).parent().tooltip('destroy');
+            $(user).parent().tooltip('destroy');
         }
 
-        if( $(elementTarget2).hasClass('select2-container-disabled') ) {
-            setResEduTooltip( parentTarget, elementTarget2, title );
-        } else {
-            $(elementTarget2).parent().tooltip('destroy');
-        }
+//        if( $(elementTarget2).hasClass('select2-container-disabled') ) {
+//            setResEduTooltip( parentTarget, elementTarget2, title );
+//        } else {
+//            $(elementTarget2).parent().tooltip('destroy');
+//        }
 
     });
 }
 
-function setResEduTooltip( parentTarget, elementTarget, title ) {
-    $(elementTarget).parent().tooltip({
+function setResEduTooltip( treenode, user, title ) {
+    $(user).parent().tooltip({
         'title': title
     });
-    highlightResEduParentElement( elementTarget, parentTarget );
+    highlightResEduParentElement( treenode, user );
 }
 
 
-function highlightResEduParentElement( elementTarget, parentTarget ) {
+function highlightResEduParentElement( treenode, user ) {
 
-    $(elementTarget).parent().on('show.bs.tooltip', function () {
+    $(user).parent().on('show.bs.tooltip', function () {
         //console.log('on show tooltip');
-        var parent = $(parentTarget).parent();
+        var parent = $(treenode).parent();
         var inputEl = parent.find('.select2-chosen');
         //inputEl.addClass("highlightSelect");
         inputEl.addClass("alert-info");
     });
 
-    $(elementTarget).parent().on('hide.bs.tooltip', function () {
+    $(user).parent().on('hide.bs.tooltip', function () {
         //console.log('on hide tooltip');
-        var parent = $(parentTarget).parent();
+        var parent = $(treenode).parent();
         var inputEl = parent.find('.select2-chosen');
         //inputEl.removeClass("highlightSelect");
         inputEl.removeClass("alert-info");

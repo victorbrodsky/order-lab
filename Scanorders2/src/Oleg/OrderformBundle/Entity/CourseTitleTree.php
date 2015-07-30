@@ -21,59 +21,60 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Gedmo\Tree(type="nested")
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
- *  name="scan_projectTitleTree",
+ *  name="scan_courseTitleTree",
  *  indexes={
  *      @ORM\Index( name="name_idx", columns={"name"} ),
  *  }
  * )
  */
-class ProjectTitleTree extends BaseCompositeNode {
+class CourseTitleTree extends BaseCompositeNode {
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="ProjectTitleTree", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="CourseTitleTree", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
     protected $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="ProjectTitleTree", mappedBy="parent", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="CourseTitleTree", mappedBy="parent", cascade={"persist","remove"})
      * @ORM\OrderBy({"lft" = "ASC"})
      **/
     protected $children;
 
     /**
      * Organizational Group Types
-     * level int in OrganizationalGroupType corresponds to this level integer: 1-Research Project Title, 2-Research Set Title
+     * level int in OrganizationalGroupType corresponds to this level integer: 1-Course Title, 2-Lesson Title
      * For example, OrganizationalGroupType with level=1, set this level to 1.
      *
-     * @ORM\ManyToOne(targetEntity="ResearchGroupType", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="CourseGroupType", cascade={"persist"})
      */
     private $organizationalGroupType;
 
     /**
-     * @ORM\OneToMany(targetEntity="ProjectTitleTree", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="CourseTitleTree", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleTree", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="CourseTitleTree", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Research", mappedBy="projectTitle", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Educational", mappedBy="courseTitle", cascade={"persist"})
      **/
-    private $researches;
+    private $educationals;
+
 
     /**
-     * keep copy of all users: userWrappers in Research are subset of this userWrappers
+     * keep copy of all users: userWrappers in Educational are subset of this userWrappers
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_projectTitleTree_userWrapper",
-     *      joinColumns={@ORM\JoinColumn(name="projectTitleTree_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="scan_courseTitleTree_userWrapper",
+     *      joinColumns={@ORM\JoinColumn(name="courseTitleTree_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
      *      )
      **/
@@ -83,7 +84,7 @@ class ProjectTitleTree extends BaseCompositeNode {
     public function __construct() {
         parent::__construct();
 
-        $this->researches = new ArrayCollection();
+        $this->educationals = new ArrayCollection();
         $this->userWrappers = new ArrayCollection();
     }
 
@@ -107,21 +108,21 @@ class ProjectTitleTree extends BaseCompositeNode {
     }
 
 
-    public function getResearches()
+    public function getEducationals()
     {
-        return $this->researches;
+        return $this->educationals;
     }
-    public function addResearch($item)
+    public function addEducational($item)
     {
-        if( !$this->researches->contains($item) ) {
-            $this->researches->add($item);
+        if( !$this->educationals->contains($item) ) {
+            $this->educationals->add($item);
         }
 
         return $this;
     }
-    public function removeResearch($item)
+    public function removeEducational($item)
     {
-        $this->researches->removeElement($item);
+        $this->educationals->removeElement($item);
     }
 
     /**
@@ -159,7 +160,6 @@ class ProjectTitleTree extends BaseCompositeNode {
 
 
 
-
     /**
  * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
  * @param mixed $parent
@@ -185,9 +185,9 @@ class ProjectTitleTree extends BaseCompositeNode {
         return $this->getName()."";
     }
 
-    //return string to match with name of this class instance in the holder (here, Research) object. Used by complex tree
+    //return string to match with name of this class instance in the holder (here, Educational) object. Used by complex tree
     public function getClassName()
     {
-        return "ProjectTitle";
+        return "CourseTitle";
     }
 }

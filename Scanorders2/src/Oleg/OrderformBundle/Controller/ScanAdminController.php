@@ -7,6 +7,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 
+use Oleg\OrderformBundle\Entity\CourseGroupType;
 use Oleg\OrderformBundle\Entity\DiseaseOriginList;
 use Oleg\OrderformBundle\Entity\DiseaseTypeList;
 use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
@@ -117,6 +118,7 @@ class ScanAdminController extends AdminController
         $count_DiseaseTypeList = $this->generateDiseaseTypeList();
         $count_DiseaseOriginList = $this->generateDiseaseOriginList();
         $count_ResearchGroupType = $this->generateResearchGroupType();
+        $count_CourseGroupType = $this->generateCourseGroupType();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -144,7 +146,8 @@ class ScanAdminController extends AdminController
             'Magnifications='.$count_generateMagnifications.', '.
             'Embedder Instructions ='.$count_EmbedderInstructionList.', '.
             'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.', '.
-            'Research Group Types='.$count_ResearchGroupType.' '.
+            'Research Group Types='.$count_ResearchGroupType.', '.
+            'Educational Group Types='.$count_CourseGroupType.' '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -1452,6 +1455,42 @@ class ScanAdminController extends AdminController
         foreach( $elements as $name=>$level ) {
 
             $entity = new ResearchGroupType();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $entity->setLevel($level);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+
+    public function generateCourseGroupType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:CourseGroupType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Course Title' => 0,
+            'Lesson Title' => 1,
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name=>$level ) {
+
+            $entity = new CourseGroupType();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $entity->setLevel($level);

@@ -244,7 +244,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         //echo "found user=".$user."<br>";
 
         $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,$userStr);
-        //echo "found userWrapper=".$userWrapper."<br>";
+        //echo "found userWrapper=".$userWrapper->getId()."<br>";
 
         //exit('1');
 
@@ -256,6 +256,7 @@ class UserWrapperTransformer implements DataTransformerInterface
 
             $userWrapper = new UserWrapper();
             $userWrapper->setUser($user);
+            $userWrapper->setUserStr($userStr);
 
         } else {
 

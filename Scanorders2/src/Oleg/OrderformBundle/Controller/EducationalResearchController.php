@@ -107,6 +107,7 @@ class EducationalResearchController extends Controller {
 
             $orderoid = $entity->getMessage()->getOid();
 
+
             if( $routeName == "educational_update" ) {
                 $directors = $entity->getCourseTitle()->getDirectors();
                 $directorsArr = array();
@@ -121,15 +122,22 @@ class EducationalResearchController extends Controller {
 
                 $principalInvestigator = "";
                 $principalsArr = array();
-                if( $entity->getProjectTitle() ) {
-                    $principals = $entity->getProjectTitle()->getUserWrappers();
+                if( $entity->getUserWrappers() ) {
+                    $principals = $entity->getUserWrappers();
                     foreach( $principals as $principal ) {
-                        $principalsArr[] = $principal->getName();
-                    }
-                    if( count($principalsArr) > 0 ) {
-                        $principalInvestigator = $principalsArr[0];
+                        if( $principal->getUser() ) {
+                            $principalsArr[] = $principal->getName();
+                        }
                     }
                 }
+
+                if( $entity->getPrimaryPrincipal() ) {
+                    $principalInvestigator = $entity->getPrimaryPrincipal();
+                }
+
+                //echo "principalInvestigator=".$principalInvestigator."<br>";
+                //echo "principalsArr=".implode(", ", $principalsArr)."<br>";
+                //exit();
 
                 $msg = "Values saved for Order ".$orderoid.": User Associations for Principal Investigator(s) = ".implode(", ", $principalsArr)."; Primary Principal Investigator = ".$principalInvestigator;
                 $url = $this->generateUrl( 'scan-order-data-review-full', array('id' => $orderoid) );

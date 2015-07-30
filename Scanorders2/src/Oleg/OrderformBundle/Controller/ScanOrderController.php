@@ -731,10 +731,8 @@ class ScanOrderController extends Controller {
 
         $searchObjects = [
             'message.oid',
-            'educational.courseTitleStr',
-            'educational.lessonTitleStr',
-            'research.projectTitleStr',
-            'research.setTitleStr',
+            'educational.courseTitle',
+            'research.projectTitle',
             'provider',
             'proxyuser',
             'directorUser',
@@ -934,8 +932,9 @@ class ScanOrderController extends Controller {
                 $criteriastr .= "educational.lessonTitleStr".$searchStr;
                 $searchObjectName = "Lesson Title";
                 break;
-            case 'research.projectTitleStr':
-                $criteriastr .= "research.projectTitleStr".$searchStr;
+            case 'research.projectTitle':
+                $dql->leftJoin("research.projectTitle", "projectTitle");
+                $criteriastr .= "projectTitle.name".$searchStr;
                 $searchObjectName = "Research Project Title";
                 break;
             case 'research.setTitleStr':
@@ -961,7 +960,7 @@ class ScanOrderController extends Controller {
                 $searchObjectName = "Course Director";
                 break;
             case 'principalUser':
-                $dql->leftJoin("principal.principal", "principalUser");
+                //$dql->leftJoin("principal.principal", "principalUser");
                 $dql->leftJoin("principalUser.infos", "principalUserInfos");
                 $criteriastr .= "principalUser.username".$searchStr;
                 $criteriastr .= " OR principalUserInfos.displayName".$searchStr;
@@ -1227,12 +1226,12 @@ class ScanOrderController extends Controller {
         $dql->leftJoin("history.eventtype", "eventtype");
 
         $dql->leftJoin("message.educational", "educational");
-        $dql->leftJoin("educational.directorWrappers", "directorWrappers");
-        $dql->leftJoin("directorWrappers.director", "director");
+        $dql->leftJoin("educational.userWrappers", "directorUserWrappers");
+        $dql->leftJoin("directorUserWrappers.user", "directorUser");
 
         $dql->leftJoin("message.research", "research");
         $dql->leftJoin("research.userWrappers", "userWrappers");
-        $dql->leftJoin("userWrappers.user", "principal");
+        $dql->leftJoin("userWrappers.user", "principalUser");
 
 
 
@@ -1314,10 +1313,10 @@ class ScanOrderController extends Controller {
                     $filterStr = " message.priority = 'Stat' AND status.name LIKE '%Filled%'";
                     break;
                 case "No Course Director Link":
-                    $filterStr = " message.educational IS NOT NULL AND director.director IS NULL AND status.name != 'Superseded'";
+                    $filterStr = " educational IS NOT NULL AND directorUser IS NULL AND status.name != 'Superseded'";
                     break;
                 case "No Principal Investigator Link":
-                    $filterStr = " message.research IS NOT NULL AND principal.principal IS NULL AND status.name != 'Superseded'";
+                    $filterStr = " research IS NOT NULL AND principalUser IS NULL AND status.name != 'Superseded'";
                     break;
                 default:
                     ;
@@ -1401,13 +1400,13 @@ class ScanOrderController extends Controller {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= "director.director=".$user->getId();
+                $crituser .= "directorUser.id=".$user->getId();
             }
             if( $service == "Where I am the Principal Investigator" ) {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= "principal.principal=".$user->getId();
+                $crituser .= "principalUser.id=".$user->getId();
             }
             //use history to get amended author
             if( $service == "Where I am the Amendment Author" ) {
@@ -1477,22 +1476,24 @@ class ScanOrderController extends Controller {
             }
 
             //educational
-            $criteriastr .= " educational.courseTitleStr".$searchStr;
-            $criteriastr .= " OR educational.lessonTitleStr".$searchStr;
+            $dql->leftJoin("educational.courseTitle", "courseTitle");
+            $criteriastr .= " courseTitle.name".$searchStr;
+            //$criteriastr .= " OR educational.lessonTitleStr".$searchStr;
 
             //Course Director
-            $dql->leftJoin("director.director", "directorUser");
+            $dql->leftJoin("directorUser.infos", "directorUserInfos");
             $criteriastr .= " OR directorUser.username".$searchStr;
-            $criteriastr .= " OR directorUser.displayName".$searchStr;
+            $criteriastr .= " OR directorUserInfos.displayName".$searchStr;
 
             //reasearch
-            $criteriastr .= " OR research.projectTitleStr".$searchStr;
-            $criteriastr .= " OR research.setTitleStr".$searchStr;
+            $dql->leftJoin("research.projectTitle", "projectTitle");
+            $criteriastr .= " OR projectTitle.name".$searchStr;
+            //$criteriastr .= " OR research.setTitleStr".$searchStr;
 
-            //Principal Investigator
-            $dql->leftJoin("principal.principal", "principalUser");
+            //Principal Investigator: principalUser
+            $dql->leftJoin("principalUser.infos", "principalUserInfos");
             $criteriastr .= " OR principalUser.username".$searchStr;
-            $criteriastr .= " OR principalUser.displayName".$searchStr;
+            $criteriastr .= " OR principalUserInfos.displayName".$searchStr;
 
             //Submitter
             $criteriastr .= " OR provider.username".$searchStr;

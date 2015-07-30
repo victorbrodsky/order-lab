@@ -751,23 +751,23 @@ function processDatepicker( element, remove ) {
 }
 
 
-function setResearch() {
-    //get value of project title field on change
-    $('.combobox-research-projectTitle').on("change", function(e) {
-        //console.log('listener: project Title changed');
-        //getSetTitle();
-        getOptionalUserResearch();
-    });
-}
+//function setResearch() {
+//    //get value of project title field on change
+////    $('.combobox-research-projectTitle').on("change", function(e) {
+////        console.log('listener: project Title changed');
+////        //getSetTitle();
+////        getOptionalUserResearch();
+////    });
+//}
 
-function setEducational() {
-    //get value of project title field on change
-    $('.combobox-educational-courseTitle').on("change", function(e) {
-        //console.log('listener: course Title changed');
-        getLessonTitle();
-        getOptionalUserEducational();
-    });
-}
+//function setEducational() {
+//    //get value of project title field on change
+////    $('.combobox-educational-courseTitle').on("change", function(e) {
+////        //console.log('listener: course Title changed');
+////        //getLessonTitle();
+////        getOptionalUserEducational();
+////    });
+//}
 
 //collapse content of patient hierarchy
 //Note: for bootstrap's "hide.bs.collapse" event use datepicker fix https://github.com/eternicode/bootstrap-datepicker/issues/978
