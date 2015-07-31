@@ -21,7 +21,6 @@ use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\UserListTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccountTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 
@@ -71,11 +70,9 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new SourceOrganTransformer($this->om, $username);
                 break;
             case "optionalUserEducational":
-                //$transformer = new UserListTransformer($this->om, $this->serviceContainer, $username, 'DirectorList');
                 $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
                 break;
             case "optionalUserResearch":
-                //$transformer = new UserListTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper', 'UserdirectoryBundle');
                 $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
                 break;
             case "account":

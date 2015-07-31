@@ -587,194 +587,6 @@ class ScanUtilController extends UtilController {
 
 
 
-//    /**
-//     * @Route("/projecttitle", name="get-projecttitle")
-//     * @Method("GET")
-//     */
-//    public function getProjectTitleAction() {
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $request = $this->get('request');
-//        $opt = trim( $request->get('opt') );
-//
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegOrderformBundle:ProjectTitleList', 'list')
-//            ->select("list.name as id, list.name as text")
-//            //->where("list.type = 'default'")
-//            ->orderBy("list.orderinlist","ASC");
-//
-////        if( $opt ) {
-//            $user = $this->get('security.context')->getToken()->getUser();
-//            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
-//            $query->setParameters( array('type' => 'default', 'user' => $user) );
-////        }
-//
-//        //echo "query=".$query."<br \>";
-//
-//        $output = $query->getQuery()->getResult();
-//
-//        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
-//        if( $opt && $opt != "undefined" ) {
-//            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($opt);
-//            if( $message->getResearch() ) {
-//                $strEneterd = $message->getResearch()->getProjectTitleStr();
-//                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-//                if( !$this->in_complex_array($element,$output) ) {
-//                    $output[] = $element;
-//                }
-//            }
-//        }
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
-
-//    /**
-//     * @Route("/settitle", name="get-settitle")
-//     * @Method("GET")
-//     */
-//    public function getSetTitleAction() {
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $request = $this->get('request');
-//        $opt = trim( $request->get('opt') ); //projectTitle name
-//        $orderoid = trim( $request->get('orderoid') );
-//        //echo 'opt='.$opt.' => ';
-//
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegOrderformBundle:SetTitleList', 'list')
-//            ->select("list.name as id, list.name as text")
-//            ->leftJoin("list.projectTitle","parent")
-//            ->where("parent.name = :pname AND list.type = :type")
-//            ->orderBy("list.orderinlist","ASC")
-//            ->setParameters( array(
-//                'pname' => $opt,
-//                'type' => 'default'
-//            ));
-//
-//        //echo "query=".$query."<br>";
-//        $output = $query->getQuery()->getResult();
-//
-//        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
-//        if( $orderoid ) {
-//            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($orderoid);
-//            if( $message->getResearch() ) {
-//                $strEneterd = $message->getResearch()->getSetTitleStr();
-//                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-//                if( !$this->in_complex_array($element,$output) ) {
-//                    $output[] = $element;
-//                }
-//            }
-//        }
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
-
-
-    /**
-     * @Route("/coursetitle", name="get-coursetitle")
-     * @Method("GET")
-     */
-    public function getCourseTitleAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $request = $this->get('request');
-        $opt = trim( $request->get('opt') );
-        //$type = trim( $request->get('type') );
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:CourseTitleList', 'list')
-            ->select("list.name as id, list.name as text")
-            ->where("list.type = 'default'")
-            ->orderBy("list.orderinlist","ASC");
-
-//        if( $opt ) {
-            $user = $this->get('security.context')->getToken()->getUser();
-            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
-            $query->setParameters( array('type' => 'default', 'user' => $user) );
-//        }
-
-        //echo "query=".$query."<br>";
-
-        $output = $query->getQuery()->getResult();
-        //$output = array();
-
-        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
-        if( $opt && $opt != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($opt);
-            if( $strEneterd = $message->getEducational() ) {
-                $strEneterd = $message->getEducational()->getCourseTitleStr();
-                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-                if( !$this->in_complex_array($element,$output) ) {
-                    $output[] = $element;
-                }
-            }
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
-    /**
-     * @Route("/lessontitle", name="get-lessontitle")
-     * @Method("GET")
-     */
-    public function getLessonTitleAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $request = $this->get('request');
-        $opt = trim( $request->get('opt') ); //parent id: courseTitle id
-        $orderoid = trim( $request->get('orderoid') );
-        //echo 'opt='.$opt.' => ';
-
-        if( $opt && $opt != "undefined" ) {
-            $query = $em->createQueryBuilder()
-                ->from('OlegOrderformBundle:LessonTitleList', 'list')
-                ->select("list.name as id, list.name as text")
-                ->leftJoin("list.courseTitle","parent")
-                ->where("parent.name = :pname AND list.type = :type")
-                ->orderBy("list.orderinlist","ASC")
-                ->setParameters( array(
-                    'pname' => $opt,
-                    'type' => 'default'
-                ));
-
-            //echo "query=".$query."<br>";
-
-            $output = $query->getQuery()->getResult();
-        } else {
-            $output = array();
-        }
-
-        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
-        if( $orderoid ) {
-            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($orderoid);
-            if( $message->getEducational() ) {
-                $strEneterd = $message->getEducational()->getLessonTitleStr();
-                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-                if( !$this->in_complex_array($element,$output) ) {
-                    $output[] = $element;
-                }
-            }
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
     /**
      * @Route("/optionalusereducational", name="get-optionalusereducational")
      * @Route("/optionaluserresearch", name="get-optionaluserresearch")
@@ -792,27 +604,15 @@ class ScanUtilController extends UtilController {
             $role = "ROLE_SCANORDER_COURSE_DIRECTOR";
             $prefix = 'Oleg';
             $bundleName = 'OrderformBundle';
-            $bundleName = 'OrderformBundle';
             $className = 'CourseTitleTree';
             $holderName = 'educationals';
         }
         if( $routeName == "get-optionaluserresearch" ) {
             $role = "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR";
             $prefix = 'Oleg';
-            //$bundleName = 'UserdirectoryBundle';
             $bundleName = 'OrderformBundle';
-            $className = 'ProjectTitleTree';    //'PIList';
+            $className = 'ProjectTitleTree';
             $holderName = 'researches';
-        }
-
-        if(0) {
-            echo "opt=".$holderId." => ";
-            $project = $this->getDoctrine()->getRepository('OlegOrderformBundle:CourseTitleList')->findOneById($holderId);
-            $pis = $project->getDirectors();
-            echo "countpis=".count($pis)." => ";
-            foreach( $project->getDirectors() as $pi ) {
-                echo "pi name=".$pi->getName()." | ";
-            }
         }
 
         //1) ProjectTitleTree id => get research => get principalWrappers

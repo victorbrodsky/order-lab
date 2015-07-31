@@ -17,9 +17,14 @@
     {% endif %}
 
 
-
     {% if educationals|length > 0 %}
-        <br />
+
+        <br>
+        <hr>
+        <hr>
+        <hr>
+        <br>
+
         <p>
             {% render url('educational_edit', {'id': entity.educational.id}) %}
         </p>

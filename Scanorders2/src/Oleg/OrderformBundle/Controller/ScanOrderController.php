@@ -1106,7 +1106,7 @@ class ScanOrderController extends Controller {
             }
         }
 
-        //echo "dql=".$dql;
+        echo "<br>dql=".$dql."<br>";
 
         if( $increaseMaxExecTime ) {
             $max_exec_time = ini_get('max_execution_time');

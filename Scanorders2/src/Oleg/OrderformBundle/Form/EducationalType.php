@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -25,46 +26,6 @@ class EducationalType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        ///////////////////////// tree node /////////////////////////
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $title = $event->getData();
-            $form = $event->getForm();
-
-            $label = null;
-            $mapper = array(
-                'prefix' => "Oleg",
-                'className' => "CourseTitleTree",
-                'bundleName' => "OrderformBundle",
-                'organizationalGroupType' => "CourseGroupType"
-            );
-            if( $title ) {
-                $educationalTitle = $title->getCourseTitle();
-                if( $educationalTitle ) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:CourseTitleTree')->getLevelLabels($educationalTitle,$mapper) . ":";
-                }
-            }
-            if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:CourseTitleTree')->getLevelLabels(null,$mapper) . ":";
-            }
-            //echo "label=".$label."<br>";
-
-            $form->add('courseTitle', 'custom_selector', array(
-                'label' => $label,
-                'required' => false,
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree combobox-educational-courseTitle',
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'OrderformBundle',
-                    'data-compositetree-classname' => 'CourseTitleTree',
-                    'data-compositetree-initnode-function' => 'setOptionalUserEducational'
-                ),
-                'classtype' => 'courseTitle'
-            ));
-        });
-        ///////////////////////// EOF tree node /////////////////////////
-
-
 
         //Display fields for Data Review
         if( $this->params['type'] == 'SingleObject' ) {
@@ -134,14 +95,49 @@ class EducationalType extends AbstractType
                 ));
                 ///////////////////// EOF primaryPrincipal /////////////////////
 
-
-
-
-
             });
 
 
         } else {
+
+            ///////////////////////// tree node /////////////////////////
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $title = $event->getData();
+                $form = $event->getForm();
+
+                $label = null;
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'className' => "CourseTitleTree",
+                    'bundleName' => "OrderformBundle",
+                    'organizationalGroupType' => "CourseGroupType"
+                );
+                if( $title ) {
+                    $educationalTitle = $title->getCourseTitle();
+                    if( $educationalTitle ) {
+                        $label = $this->params['em']->getRepository('OlegOrderformBundle:CourseTitleTree')->getLevelLabels($educationalTitle,$mapper) . ":";
+                    }
+                }
+                if( !$label ) {
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:CourseTitleTree')->getLevelLabels(null,$mapper) . ":";
+                }
+                //echo "label=".$label."<br>";
+
+                $form->add('courseTitle', 'custom_selector', array(
+                    'label' => $label,
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'ajax-combobox-compositetree combobox-educational-courseTitle',
+                        'type' => 'hidden',
+                        'data-compositetree-bundlename' => 'OrderformBundle',
+                        'data-compositetree-classname' => 'CourseTitleTree',
+                        'data-compositetree-initnode-function' => 'setOptionalUserEducational'
+                    ),
+                    'classtype' => 'courseTitle'
+                ));
+            });
+            ///////////////////////// EOF tree node /////////////////////////
+
             //TODO: add mask: comma is not allowed
             $builder->add('userWrappers', 'custom_selector', array(
                 'label' => 'Course Director(s):',

@@ -72,14 +72,6 @@ class EducationalResearchController extends Controller {
         $pieces = explode("_", $routeName);
         $type = $pieces[0];
 
-        if( $type == 'research' ) {
-            $className = 'PIList';
-        }
-
-        if( $type == 'educational' ) {
-            $className = 'DirectorList';
-        }
-
         //$entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
         $entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
 
@@ -90,7 +82,6 @@ class EducationalResearchController extends Controller {
         $entityHolder = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
         $editForm = $this->createEditForm($entityHolder);
 
-        //$editForm->bind($request);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
@@ -109,12 +100,22 @@ class EducationalResearchController extends Controller {
 
 
             if( $routeName == "educational_update" ) {
-                $directors = $entity->getCourseTitle()->getDirectors();
-                $directorsArr = array();
-                foreach( $directors as $director ) {
-                    $directorsArr[] = $director->getName();
+                $principalDirector = "";
+                $principalsArr = array();
+                if( $entity->getUserWrappers() ) {
+                    $principals = $entity->getUserWrappers();
+                    foreach( $principals as $principal ) {
+                        if( $principal->getUser() ) {
+                            $principalsArr[] = $principal->getName();
+                        }
+                    }
                 }
-                $msg = "Values saved for Order ".$orderoid.": User Associations for Course Director(s) = ".implode(", ", $directorsArr)."; Primary Course Director = ".$directorsArr[0];
+
+                if( $entity->getPrimaryPrincipal() ) {
+                    $principalDirector = $entity->getPrimaryPrincipal();
+                }
+
+                $msg = "Values saved for Order ".$orderoid.": User Associations for Course Director(s) = ".implode(", ", $principalsArr)."; Primary Course Director = ".$principalDirector;
                 $url = $this->generateUrl( 'educational_edit', array('id' => $id) );
                 $reviewLink = '<br> <a href="'.$url.'">Back to Data Review</a>';
             }
@@ -134,10 +135,6 @@ class EducationalResearchController extends Controller {
                 if( $entity->getPrimaryPrincipal() ) {
                     $principalInvestigator = $entity->getPrimaryPrincipal();
                 }
-
-                //echo "principalInvestigator=".$principalInvestigator."<br>";
-                //echo "principalsArr=".implode(", ", $principalsArr)."<br>";
-                //exit();
 
                 $msg = "Values saved for Order ".$orderoid.": User Associations for Principal Investigator(s) = ".implode(", ", $principalsArr)."; Primary Principal Investigator = ".$principalInvestigator;
                 $url = $this->generateUrl( 'scan-order-data-review-full', array('id' => $orderoid) );

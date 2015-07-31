@@ -8,45 +8,28 @@
     {% include 'OlegOrderformBundle::DataReview/message.html.twig' %}
 
 
-    {{ myform.simplefield( "Course Title:", entity.courseTitleStr, "input", "disabled" ) }}
-
-    {{ myform.simplefield( "Lesson Title:", entity.lessonTitleStr, "input", "disabled" ) }}
-
     <br>
 
-    {#The goal of this page: user can change primary PI and link PI to a User#}
-    <h4 class="text-info">Associated Educational Course Title ID {{ entity.id }}: {{ entity.courseTitleStr }}</h4>
+    {% if entity.courseTitle %}
+        {% set projectName = entity.courseTitle.__toString() %}
+    {% else %}
+        {% set projectName = 'Unknown Course' %}
+    {% endif %}
 
-    {{ myform.field(edit_form.courseTitle.primaryDirector) }}
+    {#The goal of this page: user can change primary PI and link PI to a User#}
+    <h4 class="text-info">Associated Educational Course Title ID {{ entity.id }}: {{ projectName }}</h4>
+
+    {{ myform.field(edit_form.primaryPrincipal) }}
     <hr>
 
-    {#get array of Directors for this project#}
-    {% set nameArr = [] %}
-    {% for pwraper in entity.directorWrappers  %}
-        {% if pwraper.educational.id == entity.id %}
-            {% set nameArr = nameArr|merge([pwraper.directorStr]) %}
-        {% endif %}
-    {% endfor %}
 
-    {% for director in edit_form.courseTitle.directors %}
-
-        {% if director.vars.value.name in nameArr %}
-            {% set label = 'Primary Principal Investigator (as entered by user for this order):' %}
-        {% else %}
-            {% set label = null %}
-        {% endif %}
-
-        {{ myform.field(director.name,label) }}
-
-        {{ myform.field(director.director) }}
-
+    {% for userWrapper in edit_form.userWrappers %}
+        {{ myform.field(userWrapper.name) }}
+        {{ myform.field(userWrapper.user) }}
         <hr>
-
     {% endfor %}
 
     <br/>
-
-    {% do edit_form.courseTitle.setRendered %}
 
 
     {{ form(edit_form) }}

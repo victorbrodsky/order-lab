@@ -338,26 +338,10 @@ class ScanListController extends ListController
             $className = "ProjectTitleTree";
             $displayName = "Project Titles";
             break;
-//        case "researchsettitles":
-//            $className = "settitlelist";
-//            $displayName = "Set Titles";
-//            break;
         case "educationalcoursetitles":
             $className = "CourseTitleTree";
             $displayName = "Course Titles";
             break;
-//        case "educationallessontitles":
-//            $className = "LessonTitleList";
-//            $displayName = "Lesson Titles";
-//            break;
-//        case "principalinvestigators":
-//            $className = "PIList";
-//            $displayName = "Principal Investigators";
-//            break;
-//        case "coursedirectors":
-//            $className = "DirectorList";
-//            $displayName = "Course Directors";
-//            break;
         case "mrntype":
             $className = "mrntype";
             $displayName = "MRN Types";

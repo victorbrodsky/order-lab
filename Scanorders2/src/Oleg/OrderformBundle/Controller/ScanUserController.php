@@ -469,12 +469,17 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:CourseTitleList');
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:CourseTitleTree');
         $dql =  $repository->createQueryBuilder("course");
         $dql->select('course');
         $dql->groupBy("course");
-        $dql->innerJoin("course.directors", "director");
-        $dql->where("director.director = :userid");
+        //$dql->innerJoin("course.directors", "director");
+        //$dql->where("director.director = :userid");
+
+        $dql->innerJoin("course.educationals", "educationals");
+        $dql->innerJoin("educationals.userWrappers", "userWrappers");
+        $dql->innerJoin("userWrappers.user", "userWrapperUser");
+        $dql->where("userWrapperUser.id = :userid");
 
         $query = $em->createQuery($dql)->setParameters( array( 'userid'=>$userid ) );
 

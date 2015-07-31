@@ -26,49 +26,10 @@ class ResearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        ///////////////////////// tree node /////////////////////////
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $title = $event->getData();
-            $form = $event->getForm();
-
-            $label = null;
-            $mapper = array(
-                'prefix' => "Oleg",
-                'className' => "ProjectTitleTree",
-                'bundleName' => "OrderformBundle",
-                'organizationalGroupType' => "ResearchGroupType"
-            );
-            if( $title ) {
-                $projectTitle = $title->getProjectTitle();
-                if( $projectTitle ) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:ProjectTitleTree')->getLevelLabels($projectTitle,$mapper) . ":";
-                }
-            }
-            if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:ProjectTitleTree')->getLevelLabels(null,$mapper) . ":";
-            }
-            //echo "label=".$label."<br>";
-
-            $form->add('projectTitle', 'custom_selector', array(
-                'label' => $label,
-                'required' => false,
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree combobox-research-projectTitle',
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'OrderformBundle',
-                    'data-compositetree-classname' => 'ProjectTitleTree',
-                    'data-compositetree-initnode-function' => 'setOptionalUserResearch'
-                ),
-                'classtype' => 'projectTitle'
-            ));
-        });
-        ///////////////////////// EOF tree node /////////////////////////
-
-
-
         //Display fields for Data Review
         if( $this->params['type'] == 'SingleObject' ) {
 
+            //$builder->remove('projectTitle');
 
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $holder = $event->getData();
@@ -134,14 +95,49 @@ class ResearchType extends AbstractType
                 ));
                 ///////////////////// EOF primaryPrincipal /////////////////////
 
-
-
-
-
             });
 
 
         } else {
+
+            ///////////////////////// tree node /////////////////////////
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $title = $event->getData();
+                $form = $event->getForm();
+
+                $label = null;
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'className' => "ProjectTitleTree",
+                    'bundleName' => "OrderformBundle",
+                    'organizationalGroupType' => "ResearchGroupType"
+                );
+                if( $title ) {
+                    $projectTitle = $title->getProjectTitle();
+                    if( $projectTitle ) {
+                        $label = $this->params['em']->getRepository('OlegOrderformBundle:ProjectTitleTree')->getLevelLabels($projectTitle,$mapper) . ":";
+                    }
+                }
+                if( !$label ) {
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:ProjectTitleTree')->getLevelLabels(null,$mapper) . ":";
+                }
+                //echo "label=".$label."<br>";
+
+                $form->add('projectTitle', 'custom_selector', array(
+                    'label' => $label,
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'ajax-combobox-compositetree combobox-research-projectTitle',
+                        'type' => 'hidden',
+                        'data-compositetree-bundlename' => 'OrderformBundle',
+                        'data-compositetree-classname' => 'ProjectTitleTree',
+                        'data-compositetree-initnode-function' => 'setOptionalUserResearch'
+                    ),
+                    'classtype' => 'projectTitle'
+                ));
+            });
+            ///////////////////////// EOF tree node /////////////////////////
+
             //TODO: add mask: comma is not allowed
             $builder->add('userWrappers', 'custom_selector', array(
                 'label' => 'Principal Investigator(s):',
