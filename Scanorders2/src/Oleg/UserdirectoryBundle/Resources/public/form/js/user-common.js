@@ -15,15 +15,13 @@ var user_id = $("#user_id").val();
 
 function regularCombobox(holder) {
     var targetid = "select.combobox";
+
+    targetid = getElementTargetByHolder(holder,targetid);
+
     if( $(targetid).length == 0 ) {
         return;
     }
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-        if( targetid.length == 0 ) {
-            return;
-        }
-    }
+
     $(targetid).each( function() {
         specificRegularCombobox( $(this) )
     });
@@ -52,12 +50,20 @@ function specificRegularCombobox( comboboxEl ) {
 //        }
 }
 
+function getElementTargetByHolder(holder,target) {
+    if( holder && typeof holder !== 'undefined' && holder.length > 0 ) {
+        target = holder.find(target);
+    }
+    return target;
+}
+
 //Generic ajax combobox
 function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force) {
 
     //console.log('get Combobox Generic: name='+name);
 
     var targetid = ".ajax-combobox-"+name;
+    targetid = getElementTargetByHolder(holder,targetid);
 
     if( typeof force === 'undefined' ) {
         force = false;
@@ -65,13 +71,6 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
 
     if( !force && $(targetid).length == 0 ) {
         return;
-    }
-
-    if( typeof holder !== 'undefined' && holder && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-
-        if( !force && targetid.length == 0 )
-            return;
     }
 
     if( typeof urlprefix === 'undefined' || urlprefix == null ) {
@@ -134,7 +133,7 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     }
 
     if( !data ) {
-        data = new Array();
+        data = [];  //new Array();
     }
 
     var createSearchChoice = function(term, data) {

@@ -811,7 +811,7 @@ function checkIfTableWasModified() {
 
     var modified = false;
 
-    if( typeof _sotable === 'undefined' ) {
+    if( !_sotable || typeof _sotable === 'undefined' ) {
         return modified;
     }
 

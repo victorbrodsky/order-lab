@@ -57,7 +57,7 @@ class EducationalType extends AbstractType
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'CourseTitleTree',
-                    'data-compositetree-initnode-function' => 'getOptionalUserEducational'
+                    'data-compositetree-initnode-function' => 'setOptionalUserEducational'
                 ),
                 'classtype' => 'courseTitle'
             ));

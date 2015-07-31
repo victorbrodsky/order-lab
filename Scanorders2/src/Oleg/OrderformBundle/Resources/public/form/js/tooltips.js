@@ -81,53 +81,22 @@ function highlightEncounterSexElement( element, parentTarget ) {
 }
 
 ////////////////// tooltip for research and educational //////////////////
-function attachResearchEducationalTooltip() {
+function checkForTooltipByElement( element, parent, title ) {
+    //console.log('attach ResEdu On MouseEvent on change');
+    //printF($(element),"Element:");
 
     var userPreferencesTooltip = $("#user-preferences-tooltip").val();
     if( userPreferencesTooltip == 0 ) {
         return false;
     }
 
-    //research
-    attachResEduOnMouseEvent(
-                                '.combobox-research-projectTitle',  //projectTitle tree node
-                                //'.combobox-research-setTitle',
-                                '.combobox-optionaluser-research', //users
-                                "Please enter the Research Project Title to access this field"
-                            );
-
-    //educational
-    attachResEduOnMouseEvent(
-                                '.combobox-educational-courseTitle',
-                                //'.combobox-educational-lessonTitle',
-                                '.combobox-optionaluser-educational',
-                                "Please enter the Course Title to access this field"
-    );
-
-}
-
-function attachResEduOnMouseEvent( treenode, user,  title ) {
-
-    setResEduTooltip( treenode, user, title );
-    //setResEduTooltip( parentTarget, elementTarget2, title );
-
-    $(treenode).on("change", function(e) {
-        console.log('attach ResEdu On MouseEvent on change');
-        printF($(user),"User Element:");
-
-        if( $(user).hasClass('select2-container-disabled') ) {
-            setResEduTooltip( treenode, user, title );
-        } else {
-            $(user).parent().tooltip('destroy');
-        }
-
-//        if( $(elementTarget2).hasClass('select2-container-disabled') ) {
-//            setResEduTooltip( parentTarget, elementTarget2, title );
-//        } else {
-//            $(elementTarget2).parent().tooltip('destroy');
-//        }
-
-    });
+    if( $(element).hasClass('select2-container-disabled') ) {
+        //console.log('element is disabled, class='+$(element).attr('class'));
+        setResEduTooltip( parent, element, title );
+    } else {
+        //console.log('element is enabled, class='+$(element).attr('class'));
+        $(element).parent().tooltip('destroy');
+    }
 }
 
 function setResEduTooltip( treenode, user, title ) {

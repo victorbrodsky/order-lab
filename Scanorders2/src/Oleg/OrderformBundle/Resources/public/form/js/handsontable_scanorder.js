@@ -291,7 +291,19 @@ $(document).ready(function() {
 //        }
 //    }
 
-    attachResearchEducationalTooltip();
+    //attachResearchEducationalTooltip();
+
+    getComboboxMrnType(null,true);
+    getComboboxAccessionType(null,true);
+    getComboboxPartname(null,true);
+    getComboboxBlockname(null,true);
+    getComboboxStain(null,true);
+    getComboboxProcedure(null,true);
+    getComboboxOrgan(null,true);
+    getComboboxScanregion(null,true);
+
+    //holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force
+    //getComboboxGeneric(null,'parttitle',_parttitle,false,null,'scan',true);
 
     $(function(){
         var datepicker = $.fn.datepicker.noConflict;
@@ -319,17 +331,28 @@ $(document).ready(function() {
 
 function ajaxFinishedCondition() {
 
-    //console.log('_parttitle len='+_parttitle.length);
+//    console.log('_parttitle='+_parttitle);
+//    console.log('_accessiontype.length='+_accessiontype.length);
+//    console.log('_mrntype.length='+_mrntype.length);
+//    console.log('_partname.length='+_partname.length);
+//    console.log('_blockname.length='+_blockname.length);
+//    console.log('_stain.length='+_stain.length);
+//    console.log('_procedure.length='+_procedure.length);
+//    console.log('_organ.length='+_organ.length);
+//    console.log('_scanregion.length='+_scanregion.length);
+//    console.log('_slidetypes.length='+_slidetypes.length);
 
     if(
             _accessiontype.length > 0 &&
-            _mrntype.length > 0 &&
-            _stain.length > 0 &&
             _procedure.length > 0 &&
+            _mrntype.length > 0 &&
+            _partname.length > 0 &&
+            _blockname.length > 0 &&
+            _stain.length > 0 &&
             _organ.length > 0 &&
             _scanregion.length > 0 &&
-            _slidetypes.length > 0 &&
-            _parttitle.length > 0
+            _slidetypes.length > 0
+            //&& _parttitle != null //_parttitle might have no element
     ) {
 
         for(var i = 0; i < _accessiontype.length; i++) {

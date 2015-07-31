@@ -57,7 +57,7 @@ class ResearchType extends AbstractType
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'ProjectTitleTree',
-                    'data-compositetree-initnode-function' => 'getOptionalUserResearch'
+                    'data-compositetree-initnode-function' => 'setOptionalUserResearch'
                 ),
                 'classtype' => 'projectTitle'
             ));
@@ -145,6 +145,7 @@ class ResearchType extends AbstractType
             //TODO: add mask: comma is not allowed
             $builder->add('userWrappers', 'custom_selector', array(
                 'label' => 'Principal Investigator(s):',
+                'read_only' => true,
                 'attr' => array('class' => 'combobox combobox-width combobox-optionaluser-research', 'type' => 'hidden'),
                 'required'=>false,
                 'classtype' => 'optionalUserResearch'

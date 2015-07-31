@@ -147,13 +147,13 @@ $(document).ready(function() {
     
     setNavBar("scan");
     $(".element-with-tooltip").tooltip();
-    attachResearchEducationalTooltip();
+    //attachResearchEducationalTooltip();
 
-    getComboboxMrnType();
-    getComboboxAccessionType();
-    getComboboxPartname();
-    getComboboxBlockname();
-    getComboboxStain();
+    getComboboxMrnType(null,true);
+    getComboboxAccessionType(null,true);
+    getComboboxPartname(null,true);
+    getComboboxBlockname(null,true);
+    getComboboxStain(null,true);
 
     $(function(){
         var datepicker = $.fn.datepicker.noConflict;
@@ -165,6 +165,8 @@ $(document).ready(function() {
 
     // Wait until idle (busy must be false)
     var _TIMEOUT = 300; // waitfor test rate [msec]
+
+    //console.log('before wait for');
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
         //console.log('The show can resume !');
         handsonTableInit();
@@ -179,6 +181,8 @@ $(document).ready(function() {
 
 
 function handsonTableInit() {
+
+    //console.log('init table for slide request');
 
     var data = new Array();
     var columnsType = new Array();
@@ -415,6 +419,15 @@ function setErrorToRow(row,type,setError) {
 }
 
 function ajaxFinishedCondition() {
+
+    //console.log('ajax finished condition check');
+
+    //console.log('_accessiontype.length='+_accessiontype.length);
+//    console.log('_mrntype.length='+_mrntype.length);
+//    console.log('_partname.length='+_partname.length);
+//    console.log('_blockname.length='+_blockname.length);
+//    console.log('_stain.length='+_stain.length);
+
     if(
             _accessiontype.length > 0 &&
             _mrntype.length > 0 &&
@@ -736,7 +749,7 @@ function checkIfTableWasModified() {
 
     var modified = false;
 
-    if( typeof _sotable === 'undefined' ) {
+    if( !_sotable || typeof _sotable === 'undefined' ) {
         return modified;
     }
 

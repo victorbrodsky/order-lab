@@ -87,6 +87,7 @@ function setResearchEducational() {
 function customCombobox() {
 
     //console.log("cycle="+cycle);
+    //console.log("urlBase="+urlBase);
 
     if( cycle && urlBase && cycle != 'edit_user' && cycle != 'accountreq' ) {
         getComboboxMrnType();
@@ -157,7 +158,7 @@ function customCombobox() {
 
 
 //#############  stains  ##############//
-function getComboboxStain(holder) {
+function getComboboxStain(holder,force) {
 
     var url = getCommonBaseUrl("util/"+"stain");
 
@@ -166,11 +167,13 @@ function getComboboxStain(holder) {
     }
 
     var targetid = ".ajax-combobox-staintype";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
+    targetid = getElementTargetByHolder(holder,targetid);
+
+    if( typeof force === 'undefined' ) {
+        force = false;
     }
 
-    if( $(targetid).length == 0 ) {
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
@@ -182,7 +185,7 @@ function getComboboxStain(holder) {
             async: asyncflag,
             timeout: _ajaxTimeout
         }).success(function(data) {
-                _stain = data;
+            _stain = data;
             populateSelectCombobox( targetid, _stain, null );
         });
     } else {
@@ -242,17 +245,19 @@ function getComboboxSpecialStain(ids, preset, setId) {
 }
 
 //#############  scan regions  ##############//
-function getComboboxScanregion(holder) {
+function getComboboxScanregion(holder,force) {
 
     var url = getCommonBaseUrl("util/"+"scanregion"); //urlCommon+"scanregion";
     //console.log("scanregion.length="+scanregion.length);
 
     var targetid = ".ajax-combobox-scanregion";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
+    targetid = getElementTargetByHolder(holder,targetid);
+
+    if( typeof force === 'undefined' ) {
+        force = false;
     }
 
-    if( $(targetid).length == 0 ) {
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
@@ -283,15 +288,17 @@ function getComboboxScanregion(holder) {
 }
 
 //#############  source organs  ##############//
-function getComboboxOrgan(holder) {
+function getComboboxOrgan(holder,force) {
     var url = getCommonBaseUrl("util/"+"organ");   //urlCommon+"organ";
 
     var targetid = ".ajax-combobox-organ";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
+    targetid = getElementTargetByHolder(holder,targetid);
+
+    if( typeof force === 'undefined' ) {
+        force = false;
     }
 
-    if( $(targetid).length == 0 ) {
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
@@ -316,15 +323,17 @@ function getComboboxOrgan(holder) {
 
 
 //#############  procedure types  ##############//
-function getComboboxProcedure(holder) {
+function getComboboxProcedure(holder,force) {
     var url = getCommonBaseUrl("util/"+"procedure"); //urlCommon+"procedure";
 
     var targetid = ".ajax-combobox-procedure";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
+    targetid = getElementTargetByHolder(holder,targetid);
+
+    if( typeof force === 'undefined' ) {
+        force = false;
     }
 
-    if( $(targetid).length == 0 ) {
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
@@ -348,22 +357,27 @@ function getComboboxProcedure(holder) {
 }
 
 //#############  Accession Type  ##############//
-function getComboboxAccessionType(holder) {
+function getComboboxAccessionType(holder,force) {
 
     var url = getCommonBaseUrl("util/"+"accessiontype");    //urlCommon+"accessiontype";
+    //console.log("getComboboxAccessionType url="+url);
 
     var targetid = ".accessiontype-combobox";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
+    targetid = getElementTargetByHolder(holder,targetid);
+
+    if( typeof force === 'undefined' ) {
+        force = false;
     }
 
-    if( $(targetid).length == 0 ) {
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
     if( cycle == "new" || cycle == "create" ) {
         url = url + "?opt=default&type="+orderformtype;
     }
+
+    //console.log("run url="+url);
 
     if( _accessiontype.length == 0 ) {
         $.ajax({
@@ -390,16 +404,18 @@ function getComboboxAccessionType(holder) {
 }
 
 //#############  Mrn Type  ##############//
-function getComboboxMrnType(holder) {
+function getComboboxMrnType(holder,force) {
 
     var url = getCommonBaseUrl("util/"+"mrntype");    //urlCommon+"mrntype";
 
     var targetid = ".mrntype-combobox";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
+    targetid = getElementTargetByHolder(holder,targetid);
+
+    if( typeof force === 'undefined' ) {
+        force = false;
     }
 
-    if( $(targetid).length == 0 ) {
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
@@ -432,22 +448,18 @@ function getComboboxMrnType(holder) {
 }
 
 //#############  partname types  ##############//
-function getComboboxPartname(holder) {
+function getComboboxPartname(holder,force) {
 
     var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
     var targetid = ".ajax-combobox-partname";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_partname_0_field
-//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
-//        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
-//        var targetid = id+"partname_0_field";
-        targetid = holder.find(targetid);
-    }
-    //console.log("part targetid="+targetid);
-    //console.log("cycle="+cycle);
+    targetid = getElementTargetByHolder(holder,targetid);
 
-    if( $(targetid).length == 0 ) {
+    if( typeof force === 'undefined' ) {
+        force = false;
+    }
+
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
@@ -489,20 +501,18 @@ function getComboboxPartname(holder) {
 //}
 
 //#############  blockname types  ##############//
-function getComboboxBlockname(holder) {
+function getComboboxBlockname(holder,force) {
 
     var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
     var targetid = ".ajax-combobox-blockname";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
-//        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
-//        var targetid = id+"blockname_0_field";
-        targetid = holder.find(targetid);
-    }
-    //console.log("block targetid="+targetid);
+    targetid = getElementTargetByHolder(holder,targetid);
 
-    if( $(targetid).length == 0 ) {
+    if( typeof force === 'undefined' ) {
+        force = false;
+    }
+
+    if( !force && $(targetid).length == 0 ) {
         return;
     }
 
@@ -531,9 +541,7 @@ function getComboboxDelivery(holder) {
 //    var id= "#oleg_orderformbundle_messagetype_";
     var url = getCommonBaseUrl("util/"+"delivery");    //urlCommon+"delivery";
     var targetid = ".ajax-combobox-delivery";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-    }
+    targetid = getElementTargetByHolder(holder,targetid);
 
     if( $(targetid).length == 0 ) {
         return;
@@ -566,286 +574,84 @@ function getComboboxDelivery(holder) {
 }
 
 
-//#############  Research Project  ##############//
-//function getProjectTitle(holder) {
-//
-//    var targetid = ".combobox-research-projectTitle";
-//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-//        targetid = holder.find(targetid);
-//    }
-//
-//    if( $(targetid).length == 0 ) {
-//        return;
-//    }
-//
-//    $(targetid).on('change', function(e){
-//
-//        //get id if set
-//        var projectTitleVal = $(targetid).select2('val');
-//        //console.log("finished: projectTitleVal="+projectTitleVal);
-//        if( projectTitleVal != "" ) {
-//            getOptionalUserResearch();
-//        }
-//
-//    });
-//
-//}
-//function getProjectTitle_Old(holder) {
-//
-//    var url = getCommonBaseUrl("util/"+"projecttitle");  //urlCommon+"projecttitle";
-//
-//    var targetid = ".combobox-research-projectTitle";
-//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-//        targetid = holder.find(targetid);
-//    }
-//
-//    if( $(targetid).length == 0 ) {
-//        return;
-//    }
-//
-//    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-//        url = url + "?opt="+messageid;
-//    }
-//
-//    if( _projectTitle.length == 0 ) {
-//        $.ajax({
-//            url: url,
-//            timeout: _ajaxTimeout,
-//            async: asyncflag
-//        }).success(function(data) {
-//                _projectTitle = data;
-//                populateSelectCombobox( targetid, _projectTitle, "Research Project Title", false );
-//
-//                //get id if set
-//                var projectTitleVal = $(targetid).select2('val');
-//                //console.log("finished: projectTitleVal="+projectTitleVal);
-//                if( projectTitleVal != "" ) {
-//                    getSetTitle();
-//                    getOptionalUserResearch();
-//                }
-//
-//            });
-//    } else {
-//        populateSelectCombobox( targetid, _projectTitle, "Research Project Title", false );
-//    }
-//
-//}
-//
-////#############  set title  ##############//
-//function getSetTitle() {
-//
-//    var targetid = ".combobox-research-setTitle";
-//    var url = getCommonBaseUrl("util/"+"settitle"); //urlCommon+"settitle";
-//
-//    if( $(targetid).length == 0 ) {
-//        return;
-//    }
-//
-//    //get ProjectTitle value and process children fields (readonly: true or false)
-//    var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, false );
-//    if( idInArr < 0 ) {
-//        return;
-//    }
-//
-//    url = url + "?opt="+idInArr;
-//
-//    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-//        url = url + "&orderoid="+messageid;
-//    }
-//
-//    $.ajax({
-//        url: url,
-//        timeout: _ajaxTimeout,
-//        async: asyncflag
-//    }).success(function(data) {
-//        if( data ) {
-//            //console.log("populate title: id="+data[0].id+", text="+data[0].text);
-//            populateSelectCombobox( targetid, data, "Select an option or type in a new value");
-//            //$(targetid).select2("readonly", false);
-//            //setElementToId( targetid, data );
-//        }
-//    });
-//
-//}
-//#############  EOF Research Project  ##############//
-
-
-//#############  Educational Course  ##############//
-//function getCourseTitle(holder) {
-//
-//    var url = getCommonBaseUrl("util/"+"coursetitle"); //urlCommon+"coursetitle";
-//
-//    var targetid = ".combobox-educational-courseTitle";
-//    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-//        targetid = holder.find(targetid);
-//    }
-//
-//    if( $(targetid).length == 0 ) {
-//        return;
-//    }
-//
-//    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-//        url = url + "?opt="+messageid;
-//    }
-//
-//    if( _courseTitle.length == 0 ) {
-//        $.ajax({
-//            url: url,
-//            timeout: _ajaxTimeout,
-//            async: asyncflag
-//        }).success(function(data) {
-//                _courseTitle = data;
-//                populateSelectCombobox( targetid, _courseTitle, "Course Title", false );
-//
-//                //get id if set
-//                var courseTitleVal = $(targetid).select2('val');
-//                if( courseTitleVal != "" ) {
-//                    getLessonTitle();
-//                    getOptionalUserEducational();
-//                }
-//
-//            });
-//    } else {
-//        populateSelectCombobox( targetid, _courseTitle, "Course Title", false );
-//    }
-//
-//}
-
-//#############  lesson title  ##############//
-//function getLessonTitle() {
-//
-//    var targetid = ".combobox-educational-lessonTitle";
-//    if( $(targetid).length == 0 ) {
-//        return;
-//    }
-//
-//    var url = getCommonBaseUrl("util/"+"lessontitle");  //urlCommon+"lessontitle";
-//
-//    //get CourseTitle value and process children fields (readonly: true or false)
-//    var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, false );
-//    if( idInArr < 0 ) {
-//        return;
-//    }
-//
-//    url = url + "?opt="+idInArr;
-//
-//    if( cycle == "edit" || cycle == "show" || cycle == "amend" ) {
-//        url = url + "&orderoid="+messageid;
-//    }
-//
-//    $.ajax({
-//        url: url,
-//        timeout: _ajaxTimeout,
-//        async: asyncflag
-//    }).success(function(data) {
-//            if( data ) {
-//                populateSelectCombobox( targetid, data, "Select an option or type in a new value");
-//            }
-//    });
-//
-//}
-//#############  EOF Educational Course  ##############//
 
 //#############  Research Educational Utils  ##############//
-function getOptionalUserResearch() {
 
-    var targetid = ".combobox-optionaluser-research";
-    if( $(targetid).length == 0 ) {
-        return;
-    }
+function setOptionalUserResearch(treeHolder,node) {
+    var userComboboxClass = ".combobox-optionaluser-research";
+    var utilUrlString = "optionaluserresearch";
+    var tooltip = "Please enter the Research Project Title to access this field";
+    setOptionalUserWrapperByNodeid(treeHolder,node,userComboboxClass,utilUrlString,tooltip);
+}
 
-    var url = getCommonBaseUrl("util/"+"optionaluserresearch"); //urlCommon+"optionaluserresearch";
+function setOptionalUserEducational(treeHolder,node) {
+    var userComboboxClass = ".combobox-optionaluser-educational";
+    var utilUrlString = "optionalusereducational";
+    var tooltip = "Please enter the Course Title to access this field";
+    setOptionalUserWrapperByNodeid(treeHolder,node,userComboboxClass,utilUrlString,tooltip);
+}
 
-    var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, true );
+function setOptionalUserWrapperByNodeid(treeHolder,node,userComboboxClass,utilUrlString,tooltip) {
 
-    url = url + "?opt=" + idInArr;
-    console.log('getOptionalUserResearch url='+url);
+    //clear user combobox
+    $(userComboboxClass).select2('data',null);
 
-    $.ajax({
-        url: url,
-        timeout: _ajaxTimeout,
-        async: asyncflag
-    }).success(function(data) {
+    if( node ) {
+        //Case 1) nodeid is not null => new node is choosen => clear users and get new users for this node
+        //console.log(userComboboxClass+": Case 1) nodeid is not null => new node is choosen => clear users and get new users for this node");
+        getUserWrappersByNodeid( node.id, userComboboxClass, utilUrlString );
+        //enable user combobox
+        $(userComboboxClass).select2('readonly',false);
+    } else {
+        //Case 2) nodeid is null => node is cleared => clear users and disable user combobox
+        //console.log(userComboboxClass+": Case 2) nodeid is null => node is cleared => clear users => check for parent node => get users or disable user combobox");
 
-        if( data ) {
-            populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
+        //check if parent node is set
+        var activeNode = treeHolder.find('.active-tree-node');
+        if( activeNode.length > 0 ) {
+            var activeNodeData = activeNode.select2('data');
+            if( activeNodeData ) {
+                //console.log(userComboboxClass+": Case 3) parent nodeid is not null => clear users and get new users for this node");
+                getUserWrappersByNodeid( activeNodeData.id, userComboboxClass, utilUrlString );
+                $(userComboboxClass).select2('readonly',false);
+            } else {
+                //console.log(userComboboxClass+": Case 4) parent nodeid is null => node is cleared => clear users => disable user combobox");
+                $(userComboboxClass).select2('readonly',true);
+            }
         } else {
-            populateSelectCombobox( targetid, null, "Select an option or type in a new value", true );
+            $(userComboboxClass).select2('readonly',true);
         }
 
-        //enable user combobox
-        $(targetid).select2('readonly',false);
+    }
 
-    });
-
-    //enable user combobox
-    $(targetid).select2('readonly',false);
+    checkForTooltipByElement( userComboboxClass, treeHolder.find('.ajax-combobox-compositetree'), tooltip );
 
 }
 
-function getOptionalUserEducational() {
+//get users by node id with ajax
+function getUserWrappersByNodeid( nodeid, userComboboxClass, utilUrlString ) {
 
-    var targetid = ".combobox-optionaluser-educational";
-    if( $(targetid).length == 0 ) {
+    if( $(userComboboxClass).length == 0 ) {
         return;
     }
 
-    var url = getCommonBaseUrl("util/"+"optionalusereducational"); //urlCommon+"optionalusereducational";
+    var url = getCommonBaseUrl("util/"+utilUrlString);
 
-    var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, true );
+    //var idInArr = getParentSelectId( nodeComboboxClass, _projectTitle, userComboboxClass, true );
 
-    url = url + "?opt=" + idInArr;
-    console.log('getOptionalUserEducational url='+url);
+    url = url + "?opt=" + nodeid;
+    //console.log('get UserWrappers By Nodeid url='+url);
 
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
         async: asyncflag
     }).success(function(data) {
-            if( data ) {
-                populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
-            }
+        if( data ) {
+            populateSelectCombobox( userComboboxClass, data, "Select an option or type in a new value", true );
+        }
     });
 
-}
-
-function getParentSelectId( ptarget, pArr, target, multiple ) {
-
-    if( $(ptarget).length == 0 ) {
-        return;
-    }
-
-    if( $(target).length == 0 ) {
-        return;
-    }
-
-    //get ProjectTitle value
-    var parentVal = $(ptarget).select2('val');
-    //console.log("parentVal="+parentVal);
-    //console.log(_projectTitle);
-    //var projectTitleData = $(".combobox-research-projectTitle").select2('data');
-    //console.log("id="+projectTitleData.id+", text="+projectTitleData.text);
-
-    if( parentVal == '' ) {
-        //console.log('not in array');
-        populateSelectCombobox( target, null, "Select an option or type in a new value", multiple );
-        $(target).select2("readonly", true);
-        return -1;
-    }
-
-    var idInArr = inArrayCheck( pArr, parentVal );
-    //console.log('idInArr='+idInArr);
-
-    if( idInArr == -1 ) {
-        //console.log('not in array');
-        populateSelectCombobox( target, null, "Select an option or type in a new value", multiple );
-        $(target).select2("readonly", false);
-        return -1;
-    }
-
-    $(target).select2("readonly", false);
-
-    return idInArr;
 }
 //#############  EOF Research Educational Utils  ##############//
 
@@ -856,9 +662,7 @@ function getComboboxAccount(holder) {
     var url = getCommonBaseUrl("util/"+"account");  //urlCommon+"account";
 
     var targetid = ".ajax-combobox-account";
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-    }
+    targetid = getElementTargetByHolder(holder,targetid);
 
     if( $(targetid).length == 0 ) {
         return;
@@ -887,10 +691,7 @@ function getComboboxAccount(holder) {
 function getComboboxReturnLocations(holder) {
 
     var targetid = ".ajax-combobox-location";
-
-    if( typeof holder !== 'undefined' && holder.length > 0 ) {
-        targetid = holder.find(targetid);
-    }
+    targetid = getElementTargetByHolder(holder,targetid);
 
     if( $(targetid).length == 0 ) {
         return;
@@ -1039,3 +840,6 @@ function setElementToId( target, dataarr, setId ) {
     //console.log("setId="+setId+", target="+target);
     $(target).select2('val', setId);
 }
+
+
+

@@ -62,6 +62,11 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
         var allNextSiblings = comboboxEl.closest('.row').nextAll().remove();
         clearElementsIdName(treeHolder);
 
+        //run function to init node by data-compositetree-initnode-function
+        var initNodeFunctionStr = comboboxEl.attr("data-compositetree-initnode-function"); //i.e. getOptionalUserResearch or
+        var initNodeFunction = window[initNodeFunctionStr];
+        initNodeFunction(treeHolder,thisData);
+
         //check if combobox cleared; if none => do nothing
         //console.log( thisData );
         if( !thisData ) {
@@ -78,13 +83,14 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
                 //remove id and name for all inputs preceding the input with selected node
                 clearElementsIdName(treeHolder);
             }
-        }).
-        then(function () {
-            //run function to init node by data-compositetree-initnode-function
-            var initNodeFunctionStr = comboboxEl.attr("data-compositetree-initnode-function");
-            var initNodeFunction = window[initNodeFunctionStr];
-            initNodeFunction();
+            //return newElementsAppended;
         });
+//        .then(function (newElementsAppended) {
+//            if( newElementsAppended ) {
+//                //run function to init node by data-compositetree-initnode-function
+//                initNodeFunction(thisData);
+//            }
+//        });
 
     });
 
@@ -233,6 +239,7 @@ function mapTreeNode( element, mapped ) {
     //console.log('modify element:');
     //console.log(element.prevObject);
     //printF(element,'modify id and name:');
+    var activeNodeClass = 'active-tree-node';
     var prefix = 'newnode_';
     var elId = element.attr('id');
     var elName = element.attr('name');
@@ -243,17 +250,19 @@ function mapTreeNode( element, mapped ) {
     }
 
     if( mapped ) {
-        //remove prefix
+        //active node => remove prefix
         elId = elId.replace(prefix, "");
         elName = elName.replace(prefix, "");
+        element.addClass(activeNodeClass);
     } else {
-        //add prefix
+        //not active node => add prefix
         if( elId.indexOf(prefix) == -1 ) {
             elId = prefix+elId;
         }
         if( elName.indexOf(prefix) == -1 ) {
             elName = prefix+elName;
         }
+        element.removeClass(activeNodeClass);
     }
 
     element.attr('id',elId);
