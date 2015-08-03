@@ -74,7 +74,7 @@ class ListController extends Controller
      * @Route("/sexes/", name="sexes-list")
      * @Route("/position-types/", name="positiontypes-list")
      * @Route("/organizational-group-types/", name="organizationalgrouptypes-list")
-     * @Route("/comment-group-types/", name="commentgrouptypes-list")
+     * @Route("/profile-comment-group-types/", name="commentgrouptypes-list")
      * @Route("/comment-types/", name="commenttypes-list", options={"expose"=true})
      * @Route("/user-wrappers/", name="userwrappers-list")
      *
@@ -238,7 +238,7 @@ class ListController extends Controller
      * @Route("/sexes/", name="sexes_create")
      * @Route("/position-types/", name="positiontypes_create")
      * @Route("/organizational-group-types/", name="organizationalgrouptypes_create")
-     * @Route("/comment-group-types/", name="commentgrouptypes_create")
+     * @Route("/profile-comment-group-types/", name="commentgrouptypes_create")
      * @Route("/comment-types/", name="commenttypes_createt")
      * @Route("/user-wrappers/", name="userwrappers_create")
      *
@@ -376,7 +376,7 @@ class ListController extends Controller
      * @Route("/sexes/new", name="sexes_new")
      * @Route("/position-types/new", name="positiontypes_new")
      * @Route("/organizational-group-types/new", name="organizationalgrouptypes_new")
-     * @Route("/comment-group-types/new", name="commentgrouptypes_new")
+     * @Route("/profile-comment-group-types/new", name="commentgrouptypes_new")
      * @Route("/comment-types/new", name="commenttypes_new")
      * @Route("/user-wrappers/new", name="userwrappers_new")
      *
@@ -485,8 +485,8 @@ class ListController extends Controller
      * @Route("/sexes/{id}", name="sexes_show")
      * @Route("/position-types/{id}", name="positiontypes_show")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_show")
-     * @Route("/comment-group-types/{id}", name="commentgrouptypes_show")
-     * @Route("/comment-types/{id}", name="commenttypes_show")
+     * @Route("/profile-comment-group-types/{id}", name="commentgrouptypes_show")
+     * @Route("/comment-types/{id}", name="commenttypes_show", options={"expose"=true})
      * @Route("/user-wrappers/{id}", name="userwrappers_show")
      *
      * @Method("GET")
@@ -584,7 +584,7 @@ class ListController extends Controller
      * @Route("/sexes/{id}/edit", name="sexes_edit")
      * @Route("/position-types/{id}/edit", name="positiontypes_edit")
      * @Route("/organizational-group-types/{id}/edit", name="organizationalgrouptypes_edit")
-     * @Route("/comment-group-types/{id}/edit", name="commentgrouptypes_edit")
+     * @Route("/profile-comment-group-types/{id}/edit", name="commentgrouptypes_edit")
      * @Route("/comment-types/{id}/edit", name="commenttypes_edit")
      * @Route("/user-wrappers/{id}/edit", name="userwrappers_edit")
      *
@@ -715,7 +715,7 @@ class ListController extends Controller
      * @Route("/sexes/{id}", name="sexes_update")
      * @Route("/position-types/{id}", name="positiontypes_update")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_update")
-     * @Route("/comment-group-types/{id}", name="commentgrouptypes_update")
+     * @Route("/profile-comment-group-types/{id}", name="commentgrouptypes_update")
      * @Route("/comment-types/{id}", name="commenttypes_update")
      * @Route("/user-wrappers/{id}", name="userwrappers_update")
      *
@@ -1071,7 +1071,7 @@ class ListController extends Controller
                 break;
             case "commentgrouptypes":
                 $className = "CommentGroupType";
-                $displayName = "Comment Group Types";
+                $displayName = "Profile Comment Group Types";
                 break;
             case "userwrappers":
                 $className = "UserWrapper";
@@ -1092,7 +1092,7 @@ class ListController extends Controller
         $res['fullClassName'] = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
         $res['bundleName'] = "OlegUserdirectoryBundle";
         $res['displayName'] = $displayName;
-        $res['labels'] = $labels;
+        //$res['labels'] = $labels;
 
         //check parent name
         $parentMapper = $this->getParentName($className);
@@ -1159,7 +1159,7 @@ class ListController extends Controller
      * @Route("/sexes/{id}", name="sexes_delete")
      * @Route("/position-types/{id}", name="positiontypes_delete")
      * @Route("/organizational-group-types/{id}", name="organizationalgrouptypes_delete")
-     * @Route("/comment-group-types/{id}", name="commentgrouptypes_delete")
+     * @Route("/profile-comment-group-types/{id}", name="commentgrouptypes_delete")
      * @Route("/comment-types/{id}", name="commenttypes_delete")
      * @Route("/user-wrappers/{id}", name="userwrappers_delete")
      *

@@ -93,6 +93,10 @@ $(document).ready(function() {
     //set composite tree
     getComboboxCompositetree();
 
+    //jstree in admin page for Project Title and Course Title tree
+    getJstree('OrderformBundle','ProjectTitleTree');
+    getJstree('OrderformBundle','CourseTitleTree');
+
     initDatetimepicker();
 
     //initTypeaheadOrderSiteSearch();

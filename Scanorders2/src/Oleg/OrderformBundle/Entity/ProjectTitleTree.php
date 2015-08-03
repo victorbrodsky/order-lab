@@ -188,6 +188,6 @@ class ProjectTitleTree extends BaseCompositeNode {
     //return string to match with name of this class instance in the holder (here, Research) object. Used by complex tree
     public function getClassName()
     {
-        return "ProjectTitle";
+        return "researchprojecttitle";  //"ProjectTitle";
     }
 }

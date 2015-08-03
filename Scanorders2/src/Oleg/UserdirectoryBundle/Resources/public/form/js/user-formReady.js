@@ -36,6 +36,7 @@ $(document).ready(function() {
 
     //jstree in admin page for Institution tree
     getJstree('UserdirectoryBundle','Institution');
+    getJstree('UserdirectoryBundle','CommentTypeList');
 
     getComboboxResidencyspecialty();
 

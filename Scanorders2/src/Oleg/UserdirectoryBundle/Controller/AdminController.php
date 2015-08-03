@@ -99,6 +99,33 @@ class AdminController extends Controller
         return $this->render('OlegUserdirectoryBundle:Admin:index.html.twig', array('environment'=>$environment));
     }
 
+    /**
+     * Admin Page
+     *
+     * @Route("/hierarchies/", name="user_admin_hierarchy_index")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Admin:hierarchy-index.html.twig")
+     */
+    public function indexHierarchyAction()
+    {
+
+        $environment = 'dev'; //default
+
+        $em = $this->getDoctrine()->getManager();
+        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+
+        if( count($params) > 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+        }
+
+        if( count($params) == 1 ) {
+            $param = $params[0];
+            $environment = $param->getEnvironment();
+        }
+
+        return $this->render('OlegUserdirectoryBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment));
+    }
+
 
     /**
      * Populate DB
@@ -3037,9 +3064,11 @@ class AdminController extends Controller
 
 
 
-    ////////////////// Util Methods //////////////////////
+    ////////////////// Employee Tree Util //////////////////////
     /**
-     * @Route("/list/institutional-tree/", name="employees_institutiontree_list")
+     * @Route("/list/institutional-tree/", name="employees_tree_institutiontree_list")
+     * @Route("/list/comment-tree/", name="employees_tree_commenttree_list")
+     *
      * @Method("GET")
      */
     public function institutionTreeAction(Request $request)
@@ -3048,10 +3077,18 @@ class AdminController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
+        return $this->compositeTree($request,$this->container->getParameter('employees.sitename'));
+    }
+
+    public function compositeTree(Request $request, $sitename)
+    {
+
+        $mapper = $this->getMapper($request->get('_route'));
+
         //show html tree
         if( 0 ) {
             $em = $this->getDoctrine()->getManager();
-            $repo = $em->getRepository('OlegUserdirectoryBundle:Institution');
+            $repo = $em->getRepository($mapper['bundlePreffix'].$mapper['bundleName'].':'.$mapper['className']);
             $htmlTree = $repo->childrenHierarchy(
                 null, /* starting from root nodes */
                 false, /* true: load all children, false: only direct */
@@ -3064,11 +3101,49 @@ class AdminController extends Controller
             echo $htmlTree;
         }
 
-        return $this->render('OlegUserdirectoryBundle:Tree:institution-tree.html.twig',
+        return $this->render('OlegUserdirectoryBundle:Tree:composition-tree.html.twig',
             array(
-                'title' => "Institutional Tree Management"
+                'title' => $mapper['title'],
+                'bundleName' => $mapper['bundleName'],
+                'entityName' => $mapper['className'],
+                'nodeshowpath' => $mapper['nodeshowpath'],
+                'sitename' => $sitename
             )
         );
+    }
+
+
+    public function getMapper($routeName) {
+
+        $bundlePreffix = "Oleg";
+        $bundleName = "UserdirectoryBundle";
+        $className = null;
+        $title = null;
+        $nodeshowpath = null;
+
+        if( $routeName == "employees_tree_institutiontree_list" ) {
+            $bundleName = "UserdirectoryBundle";
+            $className = "Institution";
+            $title = "Institutional Tree Management";
+            $nodeshowpath = "institutions_show";
+        }
+
+        if( $routeName == "employees_tree_commenttree_list" ) {
+            $bundleName = "UserdirectoryBundle";
+            $className = "CommentTypeList";
+            $title = "Comment Type Tree Management";
+            $nodeshowpath = "commenttypes_show";
+        }
+
+        $mapper = array(
+            'bundlePreffix' => $bundlePreffix,
+            'bundleName' => $bundleName,
+            'className' => $className,
+            'title' => $title,
+            'nodeshowpath' => $nodeshowpath
+        );
+
+        return $mapper;
     }
 
 }

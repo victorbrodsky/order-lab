@@ -43,6 +43,12 @@
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
+        {% stylesheets
+        'bundles/oleguserdirectory/vakata-jstree/themes/default/style.min.css' filter='cssrewrite'
+        %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
     {% endblock %}
 
     {% block additionalcss %}{% endblock %}

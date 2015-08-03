@@ -15,9 +15,16 @@ function getJstree(bundleName,entityName) {
 
     if( cycle.indexOf("show") == -1 ) {
 
-        var targetid = ".composite-tree";
+        var targetid = ".composite-tree.composite-tree"+"-"+bundleName+"-"+entityName;
         if( $(targetid).length == 0 ) {
             return;
+        }
+
+        var nodeShowPath = $(targetid).attr("data-compositetree-node-showpath"); //i.e. 'institutions_show'
+        console.log('nodeShowPath='+nodeShowPath);
+        if( !nodeShowPath ) {
+            throw new Error('Node show path is undefined, nodeShowPath='+nodeShowPath);
+            //console.log('Node show path is undefined, nodeShowPath='+nodeShowPath);
         }
 
         //employees_get_institution
@@ -90,18 +97,20 @@ function getJstree(bundleName,entityName) {
                     delete tmp.remove;
 
                     //add Edit link to open a modal edit windows
-                    tmp.editbyurl = {
-                        "label": "Edit",
-                        "action": function (obj) {
-                            //this.edit_node(obj);
-                            //console.log(obj);
-                            var treeUrl = Routing.generate('institutions_show', {id: node.id});
-                            window.open(treeUrl);
-                            //open modal edit
-                            //var parent = {id:node.parent};
-                            //actionNodeModal(entityName,'edit_node',obj,node,parent);
-                        }
-                    };
+                    if( nodeShowPath && nodeShowPath != 'undefined' ) {
+                        tmp.editbyurl = {
+                            "label": "Edit",
+                            "action": function (obj) {
+                                //this.edit_node(obj);
+                                //console.log(obj);
+                                var treeUrl = Routing.generate(nodeShowPath, {id: node.id});
+                                window.open(treeUrl);
+                                //open modal edit
+                                //var parent = {id:node.parent};
+                                //actionNodeModal(entityName,'edit_node',obj,node,parent);
+                            }
+                        };
+                    }
 
                     return tmp;
                 }

@@ -64,8 +64,10 @@ function comboboxTreeListener( target, bundleName, entityName, rowElHtml ) {
 
         //run function to init node by data-compositetree-initnode-function
         var initNodeFunctionStr = comboboxEl.attr("data-compositetree-initnode-function"); //i.e. getOptionalUserResearch or
-        var initNodeFunction = window[initNodeFunctionStr];
-        initNodeFunction(treeHolder,thisData);
+        if( initNodeFunctionStr ) {
+            var initNodeFunction = window[initNodeFunctionStr];
+            initNodeFunction(treeHolder,thisData);
+        }
 
         //check if combobox cleared; if none => do nothing
         //console.log( thisData );

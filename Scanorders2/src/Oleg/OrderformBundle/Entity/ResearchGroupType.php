@@ -6,9 +6,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * "Organizational Group Types" with a url of /list/organizational-group-types
  * @ORM\Entity
+ * @UniqueEntity(
+ *     fields={"level"},
+ *     errorPath="level",
+ *     message="This Default Tree Level Association Type is already associated with another tree level. Please remove that association or enter a different tree level."
+ * )
  * @ORM\Table(name="scan_researchGroupType")
  */
 class ResearchGroupType extends ListAbstract

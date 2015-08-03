@@ -5,9 +5,17 @@ namespace Oleg\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * "Organizational Group Types" with a url of /list/organizational-group-types
  * @ORM\Entity
+ * @UniqueEntity(
+ *     fields={"level"},
+ *     errorPath="level",
+ *     message="This Default Tree Level Association Type is already associated with another tree level. Please remove that association or enter a different tree level."
+ * )
  * @ORM\Table(name="user_commentGroupType")
  */
 class CommentGroupType extends ListAbstract

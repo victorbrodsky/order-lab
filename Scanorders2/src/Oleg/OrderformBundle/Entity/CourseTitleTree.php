@@ -188,6 +188,6 @@ class CourseTitleTree extends BaseCompositeNode {
     //return string to match with name of this class instance in the holder (here, Educational) object. Used by complex tree
     public function getClassName()
     {
-        return "CourseTitle";
+        return "educationalcoursetitle";
     }
 }

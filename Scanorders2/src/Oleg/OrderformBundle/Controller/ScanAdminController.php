@@ -79,6 +79,33 @@ class ScanAdminController extends AdminController
         return $this->render('OlegOrderformBundle:Admin:index.html.twig', array('environment'=>$environment));
     }
 
+    /**
+     * Admin Page
+     *
+     * @Route("/hierarchies/", name="scan_admin_hierarchy_index")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Admin:hierarchy-index.html.twig")
+     */
+    public function indexHierarchyAction()
+    {
+
+        $environment = 'dev'; //default
+
+        $em = $this->getDoctrine()->getManager();
+        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+
+        if( count($params) > 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+        }
+
+        if( count($params) == 1 ) {
+            $param = $params[0];
+            $environment = $param->getEnvironment();
+        }
+
+        return $this->render('OlegOrderformBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment));
+    }
+
 
     /**
      * Populate DB
@@ -1505,5 +1532,62 @@ class ScanAdminController extends AdminController
         return round($count/10);
 
     }
+
+
+
+
+
+    ////////////////// Scan Tree Util //////////////////////
+    /**
+     * @Route("/list/research-project-titles-tree/", name="scan_tree_researchprojecttitles_list")
+     * @Route("/list/educational-course-titles-tree/", name="scan_tree_educationalcoursetitles_list")
+     *
+     * @Method("GET")
+     */
+    public function institutionTreeAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+        }
+
+        return $this->compositeTree($request,$this->container->getParameter('scan.sitename'));
+    }
+
+    public function getMapper($routeName) {
+
+        $bundlePreffix = "Oleg";
+        $bundleName = "OrderformBundle";
+        $className = null;
+        $title = null;
+        $nodeshowpath = null;
+
+        if( $routeName == "scan_tree_researchprojecttitles_list" ) {
+            $bundleName = "OrderformBundle";
+            $className = "ProjectTitleTree";
+            $title = "Project Titles Tree Management";
+            $nodeshowpath = "researchprojecttitles_show";
+        }
+
+        if( $routeName == "scan_tree_educationalcoursetitles_list" ) {
+            $bundleName = "OrderformBundle";
+            $className = "CourseTitleTree";
+            $title = "Course Titles Tree Management";
+            $nodeshowpath = "commenttypes_show";
+        }
+
+        $mapper = array(
+            'bundlePreffix' => $bundlePreffix,
+            'bundleName' => $bundleName,
+            'className' => $className,
+            'title' => $title,
+            'nodeshowpath' => $nodeshowpath
+        );
+
+        return $mapper;
+    }
+
+
+
+
 
 }

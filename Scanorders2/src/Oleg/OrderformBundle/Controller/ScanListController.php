@@ -20,15 +20,16 @@ use Oleg\UserdirectoryBundle\Controller\ListController;
 class ScanListController extends ListController
 {
 
+//* @Route("/principal-investigators/", name="principalinvestigators-list")
+//* @Route("/course-directors/", name="coursedirectors-list")
+
     /**
      * Lists all entities.
      *
-     * @Route("/research-project-titles/", name="researchprojecttitles-list")
-     * @Route("/research-set-titles/", name="researchsettitles-list")
-     * @Route("/educational-course-titles/", name="educationalcoursetitles-list")
-     * @Route("/educational-lesson-titles/", name="educationallessontitles-list")
-     * @Route("/principal-investigators/", name="principalinvestigators-list")
-     * @Route("/course-directors/", name="coursedirectors-list")
+     * @Route("/research-project-titles/", name="researchprojecttitles-list", options={"expose"=true})
+     * @Route("/research-project-group-types/", name="researchprojectgrouptype-list")
+     * @Route("/educational-course-titles/", name="educationalcoursetitles-list", options={"expose"=true})
+     * @Route("/educational-course-group-types/", name="educationalcoursegrouptypes-list")
      * @Route("/mrn-types/", name="mrntype-list")
      * @Route("/accession-types/", name="accessiontype-list")
      * @Route("/encounter-number-types/", name="encountertype-list")
@@ -75,11 +76,9 @@ class ScanListController extends ListController
      * Creates a new entity.
      *
      * @Route("/research-project-titles/", name="researchprojecttitles_create")
-     * @Route("/research-set-titles/", name="researchsettitles_create")
+     * @Route("/research-project-group-types/", name="researchprojectgrouptype_create")
      * @Route("/educational-course-titles/", name="educationalcoursetitles_create")
-     * @Route("/educational-lesson-titles/", name="educationallessontitles_create")
-     * @Route("/principal-investigators/", name="principalinvestigators_create")
-     * @Route("/course-directors/", name="coursedirectors_create")
+     * @Route("/educational-course-group-types/", name="educationalcoursegrouptypes_create")
      * @Route("/mrn-types/", name="mrntype_create")
      * @Route("/accession-types/", name="accessiontype_create")
      * @Route("/encounter-number-types/", name="encountertype_create")
@@ -126,11 +125,9 @@ class ScanListController extends ListController
      * Displays a form to create a new entity.
      *
      * @Route("/research-project-titles/new", name="researchprojecttitles_new")
-     * @Route("/research-set-titles/new", name="researchsettitles_new")
+     * @Route("/research-project-group-types/new", name="researchprojectgrouptype_new")
      * @Route("/educational-course-titles/new", name="educationalcoursetitles_new")
-     * @Route("/educational-lesson-titles/new", name="educationallessontitles_new")
-     * @Route("/principal-investigators/new", name="principalinvestigators_new")
-     * @Route("/course-directors/new", name="coursedirectors_new")
+     * @Route("/educational-course-group-types/new", name="educationalcoursegrouptypes_new")
      * @Route("/mrn-types/new", name="mrntype_new")
      * @Route("/accession-types/new", name="accessiontype_new")
      * @Route("/encounter-number-types/new", name="encountertype_new")
@@ -176,12 +173,10 @@ class ScanListController extends ListController
     /**
      * Finds and displays a entity.
      *
-     * @Route("/research-project-titles/{id}", name="researchprojecttitles_show")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_show")
-     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_show")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_show")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_show")
-     * @Route("/course-directors/{id}", name="coursedirectors_show")
+     * @Route("/research-project-titles/{id}", name="researchprojecttitles_show", options={"expose"=true})
+     * @Route("/research-project-group-types/{id}", name="researchprojectgrouptype_show")
+     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_show", options={"expose"=true})
+     * @Route("/educational-course-group-types/{id}", name="educationalcoursegrouptypes_show")
      * @Route("/mrn-types/{id}", name="mrntype_show")
      * @Route("/accession-types/{id}", name="accessiontype_show")
      * @Route("/encounter-number-types/{id}", name="encountertype_show")
@@ -228,11 +223,9 @@ class ScanListController extends ListController
      * Displays a form to edit an existing entity.
      *
      * @Route("/research-project-titles/{id}/edit", name="researchprojecttitles_edit")
-     * @Route("/research-set-titles/{id}/edit", name="researchsettitles_edit")
+     * @Route("/research-project-group-types/{id}/edit", name="researchprojectgrouptype_edit")
      * @Route("/educational-course-titles/{id}/edit", name="educationalcoursetitles_edit")
-     * @Route("/educational-lesson-titles/{id}/edit", name="educationallessontitles_edit")
-     * @Route("/principal-investigators/{id}/edit", name="principalinvestigators_edit")
-     * @Route("/course-directors/{id}/edit", name="coursedirectors_edit")
+     * @Route("/educational-course-group-types/{id}/edit", name="educationalcoursegrouptypes_edit")
      * @Route("/mrn-types/{id}/edit", name="mrntype_edit")
      * @Route("/accession-types/{id}/edit", name="accessiontype_edit")
      * @Route("/encounter-number-types/{id}/edit", name="encountertype_edit")
@@ -279,11 +272,9 @@ class ScanListController extends ListController
      * Edits an existing entity.
      *
      * @Route("/research-project-titles/{id}", name="researchprojecttitles_update")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_update")
+     * @Route("/research-project-group-types/{id}", name="researchprojectgrouptype_update")
      * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_update")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_update")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_update")
-     * @Route("/course-directors/{id}", name="coursedirectors_update")
+     * @Route("/educational-course-group-types/{id}", name="educationalcoursegrouptypes_update")
      * @Route("/mrn-types/{id}", name="mrntype_update")
      * @Route("/accession-types/{id}", name="accessiontype_update")
      * @Route("/encounter-number-types/{id}", name="encountertype_update")
@@ -338,9 +329,17 @@ class ScanListController extends ListController
             $className = "ProjectTitleTree";
             $displayName = "Project Titles";
             break;
+        case "researchprojectgrouptype":
+            $className = "ResearchGroupType";
+            $displayName = "Research Project Group Types";
+            break;
         case "educationalcoursetitles":
             $className = "CourseTitleTree";
             $displayName = "Course Titles";
+            break;
+        case "educationalcoursegrouptypes":
+            $className = "CourseGroupType";
+            $displayName = "Educational Course Group Types";
             break;
         case "mrntype":
             $className = "mrntype";
@@ -479,11 +478,9 @@ class ScanListController extends ListController
      * Deletes a entity.
      *
      * @Route("/research-project-titles/{id}", name="researchprojecttitles_delete")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_delete")
+     * @Route("/research-project-group-types/{id}", name="researchprojectgrouptype_delete")
      * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_delete")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_delete")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_delete")
-     * @Route("/course-directors/{id}", name="coursedirectors_delete")
+     * @Route("/educational-course-group-types/{id}", name="educationalcoursegrouptypes_delete")
      * @Route("/mrn-types/{id}", name="mrntype_delete")
      * @Route("/accession-types/{id}", name="accessiontype_delete")
      * @Route("/encounter-number-types/{id}", name="encountertype_delete")

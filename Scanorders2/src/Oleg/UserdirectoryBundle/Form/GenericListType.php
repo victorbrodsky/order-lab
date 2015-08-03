@@ -108,11 +108,14 @@ class GenericListType extends AbstractType
         }
 
         //level for OrganizationalGroupType
-        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ||
-            strtolower($this->mapper['className']) == strtolower("CommentGroupType")
-        ) {
+//        if( strtolower($this->mapper['className']) == strtolower("OrganizationalGroupType") ||
+//            strtolower($this->mapper['className']) == strtolower("CommentGroupType") ||
+//            strtolower($this->mapper['className']) == strtolower("ResearchGroupType") ||
+//            strtolower($this->mapper['className']) == strtolower("CourseGroupType")
+//        ) {
+        if( method_exists($this->params['entity'],'getLevel') ) {
             $builder->add('level',null,array(
-                'label'=>'Level:',
+                'label'=>'Default Tree Level Association:',
                 'attr' => array('class' => 'form-control')
             ));
         }
@@ -121,7 +124,7 @@ class GenericListType extends AbstractType
         if( $this->params['entity'] instanceof CompositeNodeInterface ) {
             //always read only - do not allow to change level
             $builder->add('level',null,array(
-                'label'=>'Level:',
+                'label'=>'Default Tree Level Association:',
                 'read_only' => true,
                 'attr' => array('class' => 'form-control')
             ));

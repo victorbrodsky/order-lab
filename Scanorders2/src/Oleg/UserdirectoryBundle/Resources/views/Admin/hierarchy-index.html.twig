@@ -1,0 +1,33 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Hierarchy Manager
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">Hierarchy Manager</h3>
+
+    <br>
+
+    {#<p>#}
+        {#<a href="{{ path('scan_tree_researchprojecttitles_list') }}">Research Project Titles Management</a>#}
+    {#</p>#}
+
+    {#<p>#}
+        {#<a href="{{ path('scan_tree_educationalcoursetitles_list') }}">Educational Course Titles Management</a>#}
+    {#</p>#}
+
+    <p>
+        <a href="{{ path('employees_tree_institutiontree_list') }}">Institution Tree Management</a>
+    </p>
+
+    <p>
+        <a href="{{ path('employees_tree_commenttree_list') }}">Comment Types Tree Management</a>
+    </p>
+
+
+    <br>
+
+{% endblock %}
+

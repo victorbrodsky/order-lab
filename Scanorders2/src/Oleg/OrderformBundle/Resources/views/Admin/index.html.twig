@@ -10,30 +10,38 @@
 
     <br><br>
 
+    <hr>
+    <h4 class="text-info">Research Project Titles Hierarchy</h4>
+    {#ResearchGroupType#}
     <p>
-        <a href="{{ path('researchprojecttitles-list') }}">Research Project Titles</a>
+        <a href="{{ path('researchprojectgrouptype-list') }}">Research Project Group Types</a>
     </p>
-
     {#<p>#}
-        {#<a href="{{ path('researchsettitles-list') }}">Research Set Titles</a>#}
+        {#<a href="{{ path('scan_tree_researchprojecttitles_list') }}">Research Project Titles Management</a>#}
     {#</p>#}
-
+    <p>
+        <a href="{{ path('researchprojecttitles-list') }}">Flat Research Project Titles Tree</a>
+    </p>
     {#<p>#}
         {#<a href="{{ path('principalinvestigators-list') }}">Principal Investigators</a>#}
     {#</p>#}
 
-
+    <hr>
+    <h4 class="text-info">Educational Course Titles Hierarchy</h4>
+    {#CourseGroupType#}
     <p>
-        <a href="{{ path('educationalcoursetitles-list') }}">Educational Course Titles</a>
+        <a href="{{ path('educationalcoursegrouptypes-list') }}">Educational Course Group Types</a>
     </p>
-
     {#<p>#}
-        {#<a href="{{ path('educationallessontitles-list') }}">Educational Lesson Titles</a>#}
+        {#<a href="{{ path('scan_tree_educationalcoursetitles_list') }}">Educational Course Titles Management</a>#}
     {#</p>#}
-
+    <p>
+        <a href="{{ path('educationalcoursetitles-list') }}">Flat Educational Course Titles</a>
+    </p>
     {#<p>#}
         {#<a href="{{ path('coursedirectors-list') }}">Course Directors</a>#}
     {#</p>#}
+    <hr>
 
     <p>
         <a href="{{ path('magnifications-list') }}">Magnifications</a>

@@ -39,11 +39,11 @@
     <p>
         <a href="{{ path('organizationalgrouptypes-list') }}">Organizational Group Types</a>
     </p>
+    {#<p>#}
+        {#<a href="{{ path('employees_tree_institutiontree_list') }}">Institution Tree Management</a>#}
+    {#</p>#}
     <p>
-        <a href="{{ path('employees_institutiontree_list') }}">Institution Tree Management</a>
-    </p>
-    <p>
-        <a href="{{ path('institutions-list') }}">Flat Institution Tree (optional)</a>
+        <a href="{{ path('institutions-list') }}">Flat Institution Tree</a>
     </p>
     <hr>
 
@@ -51,10 +51,13 @@
     <hr>
     <h4 class="text-info">Comment Type Hierarchy</h4>
     <p>
-        <a href="{{ path('commentgrouptypes-list') }}">Comment Group Types</a>
+        <a href="{{ path('commentgrouptypes-list') }}">Profile Comment Group Types</a>
     </p>
+    {#<p>#}
+        {#<a href="{{ path('employees_tree_commenttree_list') }}">Comment Types Tree Management</a>#}
+    {#</p>#}
     <p>
-        <a href="{{ path('commenttypes-list') }}">Flat Comment Types Tree (optional)</a>
+        <a href="{{ path('commenttypes-list') }}">Flat Comment Types Tree</a>
     </p>
 
     <hr>

@@ -1,0 +1,23 @@
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% else %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% endif %}
+{% extends extendStr%}
+
+{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">{{ title }}</h3>
+
+    <br>
+
+    {{ treemacros.jstreemacros('composite-tree',bundleName,entityName,nodeshowpath) }}
+
+{% endblock %}
+
