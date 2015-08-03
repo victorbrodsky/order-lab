@@ -130,6 +130,7 @@ class UserWrapper extends ListAbstract {
     //get user id or user string
     //used for transformer
     public function getEntity() {
+
         if( $this->getId() ) {
             return $this->getId();
         }
@@ -140,8 +141,8 @@ class UserWrapper extends ListAbstract {
 //            //return $this->getUser()->getId();
 //            return $this->getUser()."";
 //        }
-//        if( $this->getUserStr() ) {
-//            return $this->getUserStr();
+//        if( $this->getName() ) {
+//            return $this->getName();
 //        }
 //        return null;
     }

@@ -1,7 +1,7 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
-{% if search is not defined %}
-    {% set search = "" %}
+{% if patientsearch is not defined %}
+    {% set patientsearch = "" %}
 {% endif %}
 
 {% block title %}
@@ -14,7 +14,7 @@
 
     <br>
 
-    {% if search and entities|length == 0 %}
+    {% if patientsearch and patiententities|length == 0 %}
 
         <br><br>
         <h5 class="text-info">No results found.</h5>
@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody class="rowlink" data-link="row">
-            {% for entity in entities %}
+            {% for entity in patiententities %}
                 <tr>
 
                     {#<td style="display:none"><a href="{{ path('scan-patient-show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
@@ -92,7 +92,7 @@
         </table>
 
         <div class="navigation">
-            {{ knp_pagination_render(entities) }}
+            {{ knp_pagination_render(patiententities) }}
         </div>
 
     {% endif %}

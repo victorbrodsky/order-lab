@@ -67,7 +67,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         $array = new \Doctrine\Common\Collections\ArrayCollection();
 
         if( !$entities || null === $entities->toArray() ) {
-            //echo $this->className.": return empty array";
+//            echo "return empty array";
             return $array;
         }
 
@@ -76,6 +76,11 @@ class UserWrapperTransformer implements DataTransformerInterface
         }
 
         if( count($entities) > 0 ) {
+
+//            foreach( $entities as $entity ) {
+//                echo "userWrapper=".$entity->getId()."<br>";
+//            }
+
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {

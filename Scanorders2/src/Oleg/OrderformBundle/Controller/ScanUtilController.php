@@ -605,29 +605,26 @@ class ScanUtilController extends UtilController {
             $prefix = 'Oleg';
             $bundleName = 'OrderformBundle';
             $className = 'CourseTitleTree';
-            $holderName = 'educationals';
         }
         if( $routeName == "get-optionaluserresearch" ) {
             $role = "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR";
             $prefix = 'Oleg';
             $bundleName = 'OrderformBundle';
             $className = 'ProjectTitleTree';
-            $holderName = 'researches';
         }
 
         //1) ProjectTitleTree id => get research => get principalWrappers
         if( $holderId && $holderId != "undefined" ) {
             $query = $em->createQueryBuilder()
                 ->from($prefix.$bundleName.':'.$className, 'list')
-                ->select("userWrappers.id as id, userWrappers.name as text")
-                //->select("DISTINCT(userWrappers.id) as id, userWrappers.name as text")
-                //->groupBy("list.orderinlist")
-                //->groupBy("userWrappers")
-                ->leftJoin("list.".$holderName,"holders")
-                ->leftJoin("holders.userWrappers","userWrappers")
-                //->where("list.id = :holderId")
+                //->select("userWrappers.id as id, CONCAT(userWrappers.name,CONCAT(' - ',userWrappersUserInfos.displayName)) as text")
+                ->select("userWrappers.id as id, (CASE WHEN userWrappersUser IS NULL THEN userWrappers.name ELSE userWrappers.name+' - '+userWrappersUserInfos.displayName END) as text")
+                //->select("userWrappers.id as id, userWrappers.name as text")
+                ->leftJoin("list.userWrappers","userWrappers")
+                ->leftJoin("userWrappers.user","userWrappersUser")
+                ->leftJoin("userWrappersUser.infos","userWrappersUserInfos")
+
                 ->where("list.id = :holderId AND (userWrappers.type = :type OR userWrappers.type = :type2)")
-                //->where("holders.id = :holderId AND (list.type = :type OR list.type = :type2)")
                 ->orderBy("list.orderinlist","ASC")
                 ->setParameters( array(
                     'holderId' => $holderId,

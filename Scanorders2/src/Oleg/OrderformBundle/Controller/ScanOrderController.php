@@ -117,6 +117,8 @@ class ScanOrderController extends Controller {
         $params['services'] = $services;
         $params['statuses'] = $this->getFilter($routeName);
         $form = $this->createForm(new FilterType( $params ), null);
+
+
         $form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 
         $search = $form->get('search')->getData();
@@ -922,26 +924,28 @@ class ScanOrderController extends Controller {
                 //}
                 $searchObjectName = "Order ID";
                 break;
-            case 'educational.courseTitleStr':
+            case 'educational.courseTitle':
                 //educational
-                $criteriastr .= "educational.courseTitleStr".$searchStr;
+                //$criteriastr .= "educational.courseTitleStr".$searchStr;
+                $dql->leftJoin("educational.courseTitle", "courseTitle");
+                $criteriastr .= " courseTitle.name".$searchStr;
                 $searchObjectName = "Course Title";
                 break;
-            case 'educational.lessonTitleStr':
-                //educational
-                $criteriastr .= "educational.lessonTitleStr".$searchStr;
-                $searchObjectName = "Lesson Title";
-                break;
+//            case 'educational.lessonTitleStr':
+//                //educational
+//                $criteriastr .= "educational.lessonTitleStr".$searchStr;
+//                $searchObjectName = "Lesson Title";
+//                break;
             case 'research.projectTitle':
                 $dql->leftJoin("research.projectTitle", "projectTitle");
                 $criteriastr .= "projectTitle.name".$searchStr;
                 $searchObjectName = "Research Project Title";
                 break;
-            case 'research.setTitleStr':
-                //educational
-                $criteriastr .= "research.setTitleStr".$searchStr;
-                $searchObjectName = "Research Set Title";
-                break;
+//            case 'research.setTitleStr':
+//                //educational
+//                $criteriastr .= "research.setTitleStr".$searchStr;
+//                $searchObjectName = "Research Set Title";
+//                break;
             case 'provider':
                 $criteriastr .= "provider.username".$searchStr;
                 $criteriastr .= " OR providerinfos.displayName".$searchStr;
@@ -953,7 +957,7 @@ class ScanOrderController extends Controller {
                 $searchObjectName = "Ordering Provider";
                 break;
             case 'directorUser':
-                $dql->leftJoin("director.director", "directorUser");
+                //$dql->leftJoin("director.director", "directorUser");
                 $dql->leftJoin("directorUser.infos", "directorUserInfos");
                 $criteriastr .= "directorUser.username".$searchStr;
                 $criteriastr .= "OR directorUserInfos.displayName".$searchStr;
@@ -1106,7 +1110,7 @@ class ScanOrderController extends Controller {
             }
         }
 
-        echo "<br>dql=".$dql."<br>";
+        //echo "<br>dql=".$dql."<br>";
 
         if( $increaseMaxExecTime ) {
             $max_exec_time = ini_get('max_execution_time');
