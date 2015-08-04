@@ -690,7 +690,7 @@ class Patient extends ObjectAbstract
         $patientLocation->addLocationType($locationType);
         $patientLocation->setName($locationName);
         $patientLocation->setStatus(1);
-        $patientLocation->setRemovable(false);
+        $patientLocation->setRemovable(true);
 
         if( $withdummyfields ) {
             $patientLocation->setPhone("(212) 123-4567");

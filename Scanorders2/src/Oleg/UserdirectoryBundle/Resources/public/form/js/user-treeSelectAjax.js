@@ -563,7 +563,9 @@ function initTreeSelect(clearFlag) {
     });
 
     //init tooltip for ajax-combobox-fellowshipsubspecialty
-    attachTooltipToSelectCombobox('.ajax-combobox-fellowshipsubspecialty',null);
+    if( cycle && cycle.indexOf("show") == -1 ) {
+        attachTooltipToSelectCombobox('.ajax-combobox-fellowshipsubspecialty',null);
+    }
 }
 
 function getChildrenTargetClass(fieldClass) {

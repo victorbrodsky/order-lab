@@ -314,7 +314,7 @@
     {% if showRegularFields1 or showRegularFields2 %}
         <div class="user-collection-holder {{ alertClass }} {{ classname }} {{ wellclass }}">
 
-            {% if cycle != 'show_user' and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
+            {% if not showFlag and (prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true) %}
                 {% if not standAloneLocation and cycle != "new_standalone" %}
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" >
@@ -335,7 +335,11 @@
                     {% endif %}
                 {% endif %}
 
-                {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
+                {% if standAloneLocation %}
+                    {{ formmacros.field(formfield.removable) }}
+                {% endif %}
+
+                {% if standAloneLocation or prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
                     {{ formmacros.field(formfield.name) }}
                 {% else %}
                     {{ formmacros.field(formfield.name,"","readonly") }}

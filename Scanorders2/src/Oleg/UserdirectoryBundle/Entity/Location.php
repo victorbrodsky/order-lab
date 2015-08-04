@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="user_location")
  * @ORM\HasLifecycleCallbacks
  */
-class Location extends ListAbstract //extends BaseLocation
+class Location extends ListAbstract
 {
 
     const STATUS_UNVERIFIED = 0;    //unverified (not trusted)
