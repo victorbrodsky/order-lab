@@ -26,12 +26,12 @@ class StainType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $attr = array('class' => 'ajax-combobox-stain', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox-staintype', 'type' => 'hidden');
         $options = array(
             'label' => 'Stain:',
             'required' => true,
             'attr' => $attr,
-            'classtype' => 'stain',
+            'classtype' => 'staintype',
         );
 
         if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
