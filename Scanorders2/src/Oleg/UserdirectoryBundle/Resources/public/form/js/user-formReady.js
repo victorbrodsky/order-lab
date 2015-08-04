@@ -17,7 +17,8 @@ $(document).ready(function() {
     fieldInputMask();
 
     //tooltip
-    $(".element-with-tooltip").tooltip();
+    //$(".element-with-tooltip").tooltip();
+    initTooltips();
 
     initConvertEnterToTab();
 

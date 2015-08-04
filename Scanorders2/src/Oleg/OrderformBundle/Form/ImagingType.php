@@ -59,7 +59,7 @@ class ImagingType extends AbstractType
             'label'=>'Magnification:',
             'required'=> true,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width element-with-select2-tooltip', 'title'=>$tooltip, 'data-toggle'=>'tooltip'),
+            'attr' => array('class'=>'combobox combobox-width element-with-select2-tooltip-always', 'title'=>$tooltip, 'data-toggle'=>'tooltip'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")

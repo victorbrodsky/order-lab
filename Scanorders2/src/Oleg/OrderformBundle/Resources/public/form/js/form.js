@@ -96,15 +96,17 @@ function initAdd() {
     //clean validation elements
     cleanValidationAlert();
 
-    //tooltip
-    $(".element-with-tooltip").tooltip();
+//    //tooltip
+//    $(".element-with-tooltip").tooltip();
+//
+//    $('.element-with-select2-tooltip').parent().tooltip({
+//        title: function() {
+//            var titleText = $(this).find('select.element-with-select2-tooltip').attr('title');
+//            return titleText;
+//        }
+//    });
 
-    $('.element-with-select2-tooltip').parent().tooltip({
-        title: function() {
-            var titleText = $(this).find('select.element-with-select2-tooltip').attr('title');
-            return titleText;
-        }
-    });
+    initTooltips();
 
     //attach dob-encounter date calculation
     setPatientAndEncounterAgeListener();

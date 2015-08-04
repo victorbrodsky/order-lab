@@ -75,7 +75,7 @@
                             <li id="nav-bar-myscanorders" class="divider-vertical">
                                 {% if comments is defined and comments > 0 %}
                                     <a id="incoming-orders-menu-title" href="{{ path('my-scan-orders') }}">My Scan Orders</a><!--
-                                    --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>
+                                    --><a id="incoming-orders-menu-badge" class="element-with-tooltip-always" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>
                                 {% else %}
                                     <a href="{{ path('my-scan-orders') }}" >My Scan Orders</a>
                                 {% endif %}
@@ -191,7 +191,7 @@
                             <li id="nav-bar-incomingscanorders">
                                 {% if admincomments is defined and admincomments > 0 %}
                                     <a id="incoming-orders-menu-title" href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a><!--
-                                    --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ admincomments }}</span></a>
+                                    --><a id="incoming-orders-menu-badge" class="element-with-tooltip-always" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ admincomments }}</span></a>
                                 {% else %}
                                     <a href="{{ path('incoming-scan-orders') }}" >Incoming Scan Orders</a>
                                 {% endif %}

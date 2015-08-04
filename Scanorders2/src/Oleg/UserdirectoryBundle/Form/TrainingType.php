@@ -175,10 +175,11 @@ class TrainingType extends AbstractType
             'classtype' => 'residencyspecialty'
         ));
         //fellowshipSubspecialty
+        $tooltip = "To select a Fellowship, please choose the the Residency Specialty category first.";
         $builder->add('fellowshipSubspecialty', 'employees_custom_selector', array(
             'label' => "Fellowship Subspecialty:",
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden'),
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden', 'title'=>$tooltip), //'data-toggle'=>'tooltip'
             'classtype' => 'fellowshipsubspecialty'
         ));
 

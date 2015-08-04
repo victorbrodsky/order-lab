@@ -420,6 +420,9 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
                 $(targetId).select2("readonly", false);
             }
 
+            //remove tooltip
+            $(targetId).parent().tooltip('destroy');
+
 //            //test value
 //            console.log(fieldClass+': after value='+$(targetId).select2('val'));
 //            if( $(targetId).select2('data') ) {
@@ -536,22 +539,6 @@ function clearTreeToDown(targetId,holder,fieldClass,parentId) {
 
 }
 
-//This function executes twice (?)
-//var _initInstitutionManuallyCount = 0;
-//function initInstitutionManually() {
-//    if( _initInstitutionManuallyCount > 0 ) {
-//        return;
-//    }
-//    _initInstitutionManuallyCount = 1;
-//
-//    $('.ajax-combobox-institution-preset').each(function(e){
-//        //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! init inst manually" );
-//        var clearFlag = true; //clear children and default service
-//        getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
-//    });
-//}
-
-
 
 ////////////////// mixed functions ////////////////////
 function initTreeSelect(clearFlag) {
@@ -562,30 +549,21 @@ function initTreeSelect(clearFlag) {
         clearFlag == true;
     }
 
-//    $('.ajax-combobox-institution,.ajax-combobox-institution-preset').on('change', function(e){
-//        //console.log( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! institution on change" );
-//        getComboboxTreeByPid($(this),'ajax-combobox-department',null,clearFlag);
-//    });
-//
-//    $('.ajax-combobox-department').on('change', function(e){
-//        //console.log( "department on change" );
-//        getComboboxTreeByPid($(this),'ajax-combobox-division',null,clearFlag);
-//    });
-//
-//    $('.ajax-combobox-division').on('change', function(e){
-//        //console.log( "division on change" );
-//        getComboboxTreeByPid($(this),'ajax-combobox-service',null,clearFlag);
-//    });
-//
-//    //comments type and subtypes
-//    $('.ajax-combobox-commenttype').on('change', function(e){
-//        getComboboxTreeByPid($(this),'ajax-combobox-commentsubtype',null,clearFlag);
-//    });
-
     //residencyspecialty and fellowshipsubspecialty
     $('.ajax-combobox-residencyspecialty').on('change', function(e){
         getComboboxTreeByPid($(this),'ajax-combobox-fellowshipsubspecialty',null,clearFlag);
+
+        //add tooltip if disabled
+        var holder = $(this).closest('.user-collection-holder');
+        var thisFellowshipSubSpecialtyEl = holder.find('.ajax-combobox-fellowshipsubspecialty');
+        if( thisFellowshipSubSpecialtyEl.length > 0 && thisFellowshipSubSpecialtyEl.hasClass('select2-container-disabled') ) {
+            //console.log('init tooltip');
+            attachTooltipToSelectCombobox('.ajax-combobox-fellowshipsubspecialty',thisFellowshipSubSpecialtyEl);
+        }
     });
+
+    //init tooltip for ajax-combobox-fellowshipsubspecialty
+    attachTooltipToSelectCombobox('.ajax-combobox-fellowshipsubspecialty',null);
 }
 
 function getChildrenTargetClass(fieldClass) {

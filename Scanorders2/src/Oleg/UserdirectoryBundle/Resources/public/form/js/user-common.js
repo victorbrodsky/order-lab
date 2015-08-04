@@ -13,6 +13,50 @@ var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
 
 
+function initTooltips() {
+
+    //tooltip always
+    $(".element-with-tooltip-always").tooltip();
+    attachTooltipToSelectCombobox('.element-with-select2-tooltip-always',null);
+
+    //element-with-select2-tooltip-always-when-readonly
+    //console.log('cycle='+cycle);
+//    if( cycle && cycle.indexOf("show") == -1 ) {
+//        $('.element-with-select2-tooltip-always-when-readonly').each( function(){
+//            //printF($(this),'element-with-select2-tooltip-always-when-readonly:');
+//            if( $(this).hasClass('select2-container-disabled') ) {
+//                attachTooltipToSelectCombobox('.element-with-select2-tooltip-always-when-readonly',$(this));
+//            }
+//
+//            //add on enable/disable event
+//        });
+//    }
+
+    var userPreferencesTooltip = $("#user-preferences-tooltip").val();
+    if( userPreferencesTooltip == 0 ) {
+        return false;
+    }
+
+    //tooltip if user preferences is set
+    $(".element-with-tooltip").tooltip();
+    attachTooltipToSelectCombobox('.element-with-select2-tooltip',null);
+}
+
+function attachTooltipToSelectCombobox( comboboxSelector, comboboxEl ) {
+    //console.log('attachTooltipToSelectCombobox; comboboxSelector='+comboboxSelector);
+    if( comboboxEl == null ) {
+        comboboxEl = $(comboboxSelector);
+    }
+    //console.log(comboboxEl);
+    comboboxEl.parent().tooltip({
+        title: function() {
+            var titleText = $(this).find('select,input'+comboboxSelector).attr('title');
+            //console.log('titleText='+titleText);
+            return titleText;
+        }
+    });
+}
+
 function regularCombobox(holder) {
     var targetid = "select.combobox";
 

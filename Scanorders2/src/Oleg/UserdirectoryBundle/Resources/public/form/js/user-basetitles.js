@@ -40,7 +40,8 @@ function initBaseAdd(newForm) {
     regularCombobox();
 
     //tooltip
-    $(".element-with-tooltip").tooltip();
+    //$(".element-with-tooltip").tooltip();
+    initTooltips();
 
     initTreeSelect();
 

@@ -69,16 +69,16 @@ $(document).ready(function() {
         deleteItem(id);
     });
 
-    //tooltip
-    $(".element-with-tooltip").tooltip();
-
-    $('.element-with-select2-tooltip').parent().tooltip({
-        title: function() {
-            var titleText = $(this).find('select.element-with-select2-tooltip').attr('title');
-            return titleText;
-        }
-    });
-
+//    //tooltip
+//    $(".element-with-tooltip").tooltip();
+//
+//    $('.element-with-select2-tooltip').parent().tooltip({
+//        title: function() {
+//            var titleText = $(this).find('select.element-with-select2-tooltip').attr('title');
+//            return titleText;
+//        }
+//    });
+    initTooltips();
 
     initAllElements(); //init disable all fields
 
