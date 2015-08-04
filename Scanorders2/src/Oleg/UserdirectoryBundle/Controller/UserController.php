@@ -1829,86 +1829,87 @@ class UserController extends Controller
             /////////////// Process Removed Collections ///////////////
             $removedCollections = array();
 
-            $removedInfo = $this->removeCollection($originalAdminTitles,$entity->getAdministrativeTitles());
+            $removedInfo = $this->removeCollection($originalAdminTitles,$entity->getAdministrativeTitles(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalAppTitles,$entity->getAppointmentTitles());
+            $removedInfo = $this->removeCollection($originalAppTitles,$entity->getAppointmentTitles(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalMedicalTitles,$entity->getMedicalTitles());
+            $removedInfo = $this->removeCollection($originalMedicalTitles,$entity->getMedicalTitles(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalLocations,$entity->getLocations());
+            $removedInfo = $this->removeCollection($originalLocations,$entity->getLocations(),$entity);
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+            //exit('location');
+
+            $removedInfo = $this->removeCollection($originalTrainings,$entity->getTrainings(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalTrainings,$entity->getTrainings());
+            $removedInfo = $this->removeCollection($originalPublications,$entity->getPublications(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalPublications,$entity->getPublications());
+            $removedInfo = $this->removeCollection($originalBooks,$entity->getBooks(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalBooks,$entity->getBooks());
-            if( $removedInfo ) {
-                $removedCollections[] = $removedInfo;
-            }
-
-            $removedInfo = $this->removeCollection($originalLectures,$entity->getLectures());
+            $removedInfo = $this->removeCollection($originalLectures,$entity->getLectures(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
             //check for removed collection for Credentials: identifiers, stateLicense, boardCertification, codeNYPH
-            $removedInfo = $this->removeCollection($originalIdentifiers,$entity->getCredentials()->getIdentifiers());
+            $removedInfo = $this->removeCollection($originalIdentifiers,$entity->getCredentials()->getIdentifiers(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalStateLicense,$entity->getCredentials()->getStateLicense());
+            $removedInfo = $this->removeCollection($originalStateLicense,$entity->getCredentials()->getStateLicense(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalBoardCertification,$entity->getCredentials()->getBoardCertification());
+            $removedInfo = $this->removeCollection($originalBoardCertification,$entity->getCredentials()->getBoardCertification(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalCodeNYPH,$entity->getCredentials()->getCodeNYPH());
+            $removedInfo = $this->removeCollection($originalCodeNYPH,$entity->getCredentials()->getCodeNYPH(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
             //eof removed collection for Credentials
 
-            $removedEmplStatus = $this->removeCollection($originalEmplStatus,$entity->getEmploymentStatus());
+            $removedEmplStatus = $this->removeCollection($originalEmplStatus,$entity->getEmploymentStatus(),$entity);
             if( $removedEmplStatus ) {
                 $removedCollections[] = $removedEmplStatus;
             }
 
-            $removedInfo = $this->removeCollection($originalPublicComments,$entity->getPublicComments());
+            $removedInfo = $this->removeCollection($originalPublicComments,$entity->getPublicComments(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
-            $removedInfo = $this->removeCollection($originalPrivateComments,$entity->getPrivateComments());
+            $removedInfo = $this->removeCollection($originalPrivateComments,$entity->getPrivateComments(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
-            $removedInfo = $this->removeCollection($originalAdminComments,$entity->getAdminComments());
+            $removedInfo = $this->removeCollection($originalAdminComments,$entity->getAdminComments(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
-            $removedInfo = $this->removeCollection($originalConfidentialComments,$entity->getConfidentialComments());
+            $removedInfo = $this->removeCollection($originalConfidentialComments,$entity->getConfidentialComments(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
@@ -2208,6 +2209,7 @@ class UserController extends Controller
 
             //check if location is not home and main
             if( method_exists($title,'getRemovable') ) {
+                //echo "remove location=".$title."<br>";
                 if( $title->getRemovable() == false ) {
                     continue;
                 }
@@ -2219,29 +2221,38 @@ class UserController extends Controller
             if( false === $currentArr->contains($title) ) {
                 $removeArr[] = "<strong>"."Removed: ".$title." ".$this->getEntityId($title)."</strong>";
                 //echo "before delete <br>";
-                if( is_subclass_of($title, 'Oleg\UserdirectoryBundle\Entity\ListAbstract') === false ) {
-                    //echo "delete object entirely <br>";
-                    // delete object entirely
-                    $em->remove($title);
-                    $em->flush();
-                } else {
+//                if( is_subclass_of($title, 'Oleg\UserdirectoryBundle\Entity\ListAbstract') === false ) {
+//                    //echo "delete object entirely <br>";
+//                    // delete object entirely
+//                    $em->remove($title);
+//                    $em->flush();
+//                } else {
                     //echo 'no delete from DB because list <br>';
+                    //echo "subjectUser=".$subjectUser."<br>";
                     if( $subjectUser ) {
-                        $title->removeUser($subjectUser);
 
                         if( $title instanceof ResearchLab ) {
                             //remove dependents: remove comments and id from lab
                             $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->removeDependents( $subjectUser, $title );
-                        }
-
-                        if( $title instanceof Grant ) {
+                        } elseif ( $title instanceof Grant ) {
                             //remove dependents: remove documents
                             $em->getRepository('OlegUserdirectoryBundle:Grant')->removeDependents( $subjectUser, $title );
+                        } else {
+                            if( method_exists($title,'removeUser') ) {
+                                $title->removeUser($subjectUser);
+                            }
+                            if( method_exists($title,'setUser') ) {
+                                $title->setUser($subjectUser);
+                            }
+                            //echo "delete object entirely <br>";
+                            // delete object entirely
+                            $em->remove($title);
+                            $em->flush();
                         }
 
                         //TODO: remove documents from comments?
                     }
-                }
+                //}
             } else {
                 //echo "no delete <br>";
             }

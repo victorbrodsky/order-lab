@@ -7,6 +7,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -49,11 +50,6 @@ class LocationType extends AbstractType
         $builder->add('name',null,array(
             'label'=>"* Location's Name:",
             'attr' => array('class'=>'form-control user-location-name-field', 'required'=>'required')
-        ));
-
-        $builder->add('removable',null,array(
-            'label'=>"Removable:",
-            //'attr' => array('class'=>'form-control', 'required'=>'required')
         ));
 
         $builder->add('phone',null,array(
@@ -291,6 +287,10 @@ class LocationType extends AbstractType
 //                        return $list;
 //                    },
 //            ));
+
+            $builder->add('removable','checkbox',array(
+                'label' => "Removable:",
+            ));
         }
 
         //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page

@@ -40,11 +40,6 @@ class Location extends ListAbstract
      */
     protected $removable;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="LocationTypeList",cascade={"persist"})
-//     * @ORM\JoinColumn(name="locationType", referencedColumnName="id")
-//     */
-//    protected $locationType;
     /**
      * @ORM\ManyToMany(targetEntity="LocationTypeList", inversedBy="locations", cascade={"persist"})
      * @ORM\JoinTable(name="location_locationtype")
@@ -156,21 +151,6 @@ class Location extends ListAbstract
      */
     private $institution;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
-//     */
-//    private $department;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Division",cascade={"persist"})
-//     */
-//    private $division;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Service",cascade={"persist"})
-//     */
-//    private $service;
-
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -191,6 +171,7 @@ class Location extends ListAbstract
         $this->locationTypes = new ArrayCollection();
 
         $this->setRemovable(true);
+
         $this->setStatus(self::STATUS_UNVERIFIED);
 
         //set mandatory list attributes

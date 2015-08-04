@@ -10,6 +10,7 @@
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManytomanyTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -150,9 +151,6 @@ class CustomSelectorType extends AbstractType {
             case "sourceorganization":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'SourceOrganization');
                 break;
-            case "grant":
-                $transformer = new ResearchLabTransformer($this->om, $username, 'Grant');
-                break;
 
 //            //labtesttype
 //            case "labtesttype":
@@ -162,6 +160,10 @@ class CustomSelectorType extends AbstractType {
             //month year date only
             case "month_year_date_only":
                 $transformer = new MonthYearDateTransformer($this->om, $username);
+                break;
+
+            case "grant":
+                $transformer = new ResearchLabTransformer($this->om, $username, 'Grant');
                 break;
 
             default:

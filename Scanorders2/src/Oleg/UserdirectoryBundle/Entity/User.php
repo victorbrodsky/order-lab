@@ -120,7 +120,7 @@ class User extends BaseUser {
     private $trainings;
 
     /**
-     * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist","remove"})
      */
     private $locations;
 
