@@ -2388,7 +2388,6 @@
             {% set entity = app.security.getToken().getUser() %}
             {% set counter = 0 %}
 
-            patient.tracker.spots|length:{{ patient.tracker.spots|length }}
             {% for spot in patient.tracker.spots %}
 
                 <div class="panel panel-default">
