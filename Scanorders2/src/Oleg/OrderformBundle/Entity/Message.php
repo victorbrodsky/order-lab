@@ -265,17 +265,17 @@ class Message {
      */
     private $history;
 
-    /**
-     * Tracking: can be many
-     * One-To-Many unidirectional with Join table
-     *
-     * @ORM\ManyToMany(targetEntity="Tracking")
-     * @ORM\JoinTable(name="scan_message_tracking",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tracking_id", referencedColumnName="id", unique=true)}
-     *      )
-     **/
-    private $tracking;
+//    /**
+//     * Tracking: can be many
+//     * One-To-Many unidirectional with Join table
+//     *
+//     * @ORM\ManyToMany(targetEntity="Tracking")
+//     * @ORM\JoinTable(name="scan_message_tracking",
+//     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="tracking_id", referencedColumnName="id", unique=true)}
+//     *      )
+//     **/
+//    private $tracking;
 
 
 
@@ -431,7 +431,7 @@ class Message {
 
         $this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
-        $this->tracking = new ArrayCollection();
+        //$this->tracking = new ArrayCollection();
 
         //TODO: test cloning
         $this->sources = new ArrayCollection();
@@ -491,13 +491,13 @@ class Message {
             //$proxyuser = $this->getProxyuser();
             $dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
             $histories = $this->getHistory();
-            $trackings = $this->getTracking();
+            //$trackings = $this->getTracking();
 
             //$this->setProvider( new ArrayCollection() );
             //$this->proxyuser = new ArrayCollection();
             $this->dataqualitymrnacc = new ArrayCollection();
             $this->history = new ArrayCollection();
-            $this->tracking = new ArrayCollection();
+            //$this->tracking = new ArrayCollection();
 
             $this->setProvider( $provider );
             //$this->setProxyuser( $proxyuser );
@@ -510,9 +510,9 @@ class Message {
                 $this->addHistory($history);
             }
 
-            foreach( $trackings as $tracking ) {
-                $this->addTracking($tracking);
-            }
+//            foreach( $trackings as $tracking ) {
+//                $this->addTracking($tracking);
+//            }
 
             foreach( $children as $child ) {
                 //echo "1 clone Children: ".$child;
@@ -907,21 +907,21 @@ class Message {
         $this->history->removeElement($history);
     }
 
-    public function getTracking()
-    {
-        return $this->tracking;
-    }
-    public function addTracking($tracking)
-    {
-        if( $tracking && !$this->tracking->contains($tracking) ) {
-            $this->tracking->add($tracking);
-        }
-        return $this;
-    }
-    public function removeTracking($tracking)
-    {
-        $this->tracking->removeElement($tracking);
-    }
+//    public function getTracking()
+//    {
+//        return $this->tracking;
+//    }
+//    public function addTracking($tracking)
+//    {
+//        if( $tracking && !$this->tracking->contains($tracking) ) {
+//            $this->tracking->add($tracking);
+//        }
+//        return $this;
+//    }
+//    public function removeTracking($tracking)
+//    {
+//        $this->tracking->removeElement($tracking);
+//    }
 
     public function getSources()
     {
