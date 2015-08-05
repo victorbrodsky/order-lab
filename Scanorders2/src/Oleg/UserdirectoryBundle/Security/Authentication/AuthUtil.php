@@ -31,7 +31,7 @@ class AuthUtil {
     //TODO: remove unused classes related to aperio provider: AperioProvider, AperioFactory, AperioListener and all classes that use them
     public function AperioAuthentication($token, $userProvider) {
 
-        echo "AperioAuthentication<br>";
+        //echo "AperioAuthentication<br>";
         //exit();
 
         $userSecUtil = $this->sc->get('user_security_utility');
@@ -59,7 +59,7 @@ class AuthUtil {
 
     public function LdapAuthentication($token, $userProvider) {
 
-        echo "LdapAuthentication<br>";
+        //echo "LdapAuthentication<br>";
         //exit();
 
         //get clean username
@@ -78,7 +78,7 @@ class AuthUtil {
             return NULL;
         }
 
-        echo "user exists in ldap directory<br>";
+        //echo "user exists in ldap directory<br>";
 
         //if user exists in ldap, try bind this user and password
         $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
@@ -90,19 +90,19 @@ class AuthUtil {
 
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
-        echo "Ldap user =".$user."<br>";
+        //echo "Ldap user =".$user."<br>";
 
         if( $user ) {
-            echo "DB user found=".$user->getUsername()."<br>";
+            //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
             return $user;
         }
 
-        echo "1<br>";
+        //echo "1<br>";
 
         //////////////////// constract a new user ////////////////////
         $user = $userSecUtil->constractNewUser($token->getUsername());
-        echo "user=".$user->getUsername()."<br>";
+        //echo "user=".$user->getUsername()."<br>";
 
         $user->setCreatedby('ldap');
 
@@ -113,7 +113,7 @@ class AuthUtil {
             $userUtil = new UserUtil();
             $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
             $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
-            echo "userkeytype=".$userkeytype."<br>";
+            //echo "userkeytype=".$userkeytype."<br>";
         }
 
         $user->setKeytype($userkeytype);
@@ -221,7 +221,7 @@ class AuthUtil {
 
         $res = ldap_sasl_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
         if( !$res ) {
-            echo $mech." - could not sasl bind to LDAP by SASL<br>";
+            //echo $mech." - could not sasl bind to LDAP by SASL<br>";
             ldap_error($cnx);
             ldap_unbind($cnx);
             return NULL;
@@ -234,11 +234,11 @@ class AuthUtil {
 
     public function searchLdap($username) {
 
-        echo "username=".$username."<br>";
+        //echo "username=".$username."<br>";
 
 
         $LDAPHost = $this->sc->getParameter('ldaphost');
-        echo "LDAPHost=".$LDAPHost."<br>";
+        //echo "LDAPHost=".$LDAPHost."<br>";
 
         //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
         $dn = "CN=Users";
@@ -247,7 +247,7 @@ class AuthUtil {
         foreach( $dcArr as $dc ) {
             $dn = $dn . ",DC=".$dc;
         }
-        echo "dn=".$dn."<br>";
+        //echo "dn=".$dn."<br>";
 
         $LDAPUserAdmin = $this->sc->getParameter('ldapusername');
         $LDAPUserPasswordAdmin = $this->sc->getParameter('ldappassword');
@@ -274,7 +274,7 @@ class AuthUtil {
         $sr = ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
 
         if( !$sr ) {
-            echo 'Search failed <br>';
+            //echo 'Search failed <br>';
             ldap_error($cnx);
             ldap_unbind($cnx);
             return NULL;
@@ -326,7 +326,7 @@ class AuthUtil {
         }
 
 //        if( count($searchRes) == 0 ) {
-//            echo "no search results <br>";
+//            //echo "no search results <br>";
 //        }
 
         return $searchRes;

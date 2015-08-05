@@ -23,6 +23,17 @@ class Spot {
      */
     private $id;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Tracker", inversedBy="spots", cascade={"persist"})
+     * @ORM\JoinColumn(name="tracker_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     */
+    private $tracker;
+
+    //Source System
+    /**
+     * @ORM\ManyToOne(targetEntity="SourceSystemList")
+     */
+    private $source;
 
     /**
      * @var \DateTime
@@ -57,10 +68,10 @@ class Spot {
 
     //Location Spot Purpose
     /**
-     * @ORM\ManyToOne(targetEntity="LocationSpotPurpose", cascade={"persist"})
-     * @ORM\JoinColumn(name="locationSpotPurpose_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="SpotPurpose", cascade={"persist"})
+     * @ORM\JoinColumn(name="spotPurpose_id", referencedColumnName="id", nullable=true)
      */
-    private $locationSpotPurpose;
+    private $spotPurpose;
 
     //Current Location
     /**
@@ -77,6 +88,30 @@ class Spot {
     private $intendedLocation;
 
 
+    //Entity: [Patient/Encounter/Procedure/Accession/Part/Block/Slide] Dropdown
+    /**
+     * @ORM\ManyToOne(targetEntity="SpotEntity", cascade={"persist"})
+     */
+    private $spotEntity;
+
+    //Patient's MRN Type:
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MrnType", cascade={"persist"})
+     */
+    private $mrnType;
+
+    //Patient's MRN:
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $mrn;
+
+
+    public function __construct( $author=null, $source = null )
+    {
+        $this->setAuthor($author);
+        $this->setSource($source);
+    }
 
 
     /**
@@ -213,19 +248,99 @@ class Spot {
     }
 
     /**
-     * @param mixed $locationSpotPurpose
+     * @param mixed $mrn
      */
-    public function setLocationSpotPurpose($locationSpotPurpose)
+    public function setMrn($mrn)
     {
-        $this->locationSpotPurpose = $locationSpotPurpose;
+        $this->mrn = $mrn;
     }
 
     /**
      * @return mixed
      */
-    public function getLocationSpotPurpose()
+    public function getMrn()
     {
-        return $this->locationSpotPurpose;
+        return $this->mrn;
+    }
+
+    /**
+     * @param mixed $mrnType
+     */
+    public function setMrnType($mrnType)
+    {
+        $this->mrnType = $mrnType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMrnType()
+    {
+        return $this->mrnType;
+    }
+
+    /**
+     * @param mixed $spotEntity
+     */
+    public function setSpotEntity($spotEntity)
+    {
+        $this->spotEntity = $spotEntity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpotEntity()
+    {
+        return $this->spotEntity;
+    }
+
+    /**
+     * @param mixed $spotPurpose
+     */
+    public function setSpotPurpose($spotPurpose)
+    {
+        $this->spotPurpose = $spotPurpose;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpotPurpose()
+    {
+        return $this->spotPurpose;
+    }
+
+    /**
+     * @param mixed $tracker
+     */
+    public function setTracker($tracker)
+    {
+        $this->tracker = $tracker;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTracker()
+    {
+        return $this->tracker;
+    }
+
+    /**
+     * @param mixed $source
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 
 

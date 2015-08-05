@@ -77,6 +77,8 @@ class ListController extends Controller
      * @Route("/profile-comment-group-types/", name="commentgrouptypes-list")
      * @Route("/comment-types/", name="commenttypes-list", options={"expose"=true})
      * @Route("/user-wrappers/", name="userwrappers-list")
+     * @Route("/spot-entities/", name="spotentities-list")
+     * @Route("/spot-purposes/", name="spotpurposes-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -241,6 +243,8 @@ class ListController extends Controller
      * @Route("/profile-comment-group-types/", name="commentgrouptypes_create")
      * @Route("/comment-types/", name="commenttypes_createt")
      * @Route("/user-wrappers/", name="userwrappers_create")
+     * @Route("/spot-entities/", name="spotentities_create")
+     * @Route("/spot-purposes/", name="spotpurposes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -379,6 +383,8 @@ class ListController extends Controller
      * @Route("/profile-comment-group-types/new", name="commentgrouptypes_new")
      * @Route("/comment-types/new", name="commenttypes_new")
      * @Route("/user-wrappers/new", name="userwrappers_new")
+     * @Route("/spot-entities/new", name="spotentities_new")
+     * @Route("/spot-purposes/new", name="spotpurposes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -488,6 +494,8 @@ class ListController extends Controller
      * @Route("/profile-comment-group-types/{id}", name="commentgrouptypes_show")
      * @Route("/comment-types/{id}", name="commenttypes_show", options={"expose"=true})
      * @Route("/user-wrappers/{id}", name="userwrappers_show")
+     * @Route("/spot-entities/{id}", name="spotentities_show")
+     * @Route("/spot-purposes/{id}", name="spotpurposes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -587,6 +595,8 @@ class ListController extends Controller
      * @Route("/profile-comment-group-types/{id}/edit", name="commentgrouptypes_edit")
      * @Route("/comment-types/{id}/edit", name="commenttypes_edit")
      * @Route("/user-wrappers/{id}/edit", name="userwrappers_edit")
+     * @Route("/spot-entities/{id}/edit", name="spotentities_edit")
+     * @Route("/spot-purposes/{id}/edit", name="spotpurposes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -718,6 +728,8 @@ class ListController extends Controller
      * @Route("/profile-comment-group-types/{id}", name="commentgrouptypes_update")
      * @Route("/comment-types/{id}", name="commenttypes_update")
      * @Route("/user-wrappers/{id}", name="userwrappers_update")
+     * @Route("/spot-entities/{id}", name="spotentities_update")
+     * @Route("/spot-purposes/{id}", name="spotpurposes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1077,7 +1089,14 @@ class ListController extends Controller
                 $className = "UserWrapper";
                 $displayName = "User Wrappers";
                 break;
-
+            case "spotentities":
+                $className = "SpotEntity";
+                $displayName = "Spot Entities";
+                break;
+            case "spotpurposes":
+                $className = "SpotPurpose";
+                $displayName = "Spot Purposes";
+                break;
 
             default:
                 $className = null;
@@ -1162,6 +1181,8 @@ class ListController extends Controller
      * @Route("/profile-comment-group-types/{id}", name="commentgrouptypes_delete")
      * @Route("/comment-types/{id}", name="commenttypes_delete")
      * @Route("/user-wrappers/{id}", name="userwrappers_delete")
+     * @Route("/spot-entities/{id}", name="spotentities_delete")
+     * @Route("/spot-purposes/{id}", name="spotpurposes_delete")
      *
      * @Method("DELETE")
      */

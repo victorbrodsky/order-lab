@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -136,15 +137,19 @@ class PatientType extends AbstractType
                 'prototype_name' => '__patientdeceased__',
             ));
 
-            $builder->add('contactinfo', 'collection', array(
-                'type' => new PatientContactinfoType($this->params, null),
-                'read_only' => $flag,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__patientcontactinfo__',
+//            $builder->add('contactinfo', 'collection', array(
+//                'type' => new PatientContactinfoType($this->params, null),
+//                'read_only' => $flag,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'required' => false,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__patientcontactinfo__',
+//            ));
+            $builder->add('tracker', new TrackerType($this->params), array(
+                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+                'label' => false,
             ));
 
             $builder->add('type', 'collection', array(

@@ -12,6 +12,7 @@ use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
+use Oleg\UserdirectoryBundle\Entity\SpotEntity;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -178,6 +179,8 @@ class AdminController extends Controller
         $count_buildings = $this->generateBuildings();
         $count_locations = $this->generateLocations();
 
+        $count_SpotEntity = $this->generateSpotEntity();
+
         $count_reslabs = $this->generateResLabs();
 
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
@@ -256,6 +259,7 @@ class AdminController extends Controller
             'Sex='.$count_sex.', '.
             'Position Types='.$count_PositionTypeList.', '.
             'Comment Group Types='.$count_CommentGroupType.', '.
+            'Spot Entities='.$count_SpotEntity.', '.
             //'TitlePositionTypes='.$count_generateTitlePositionTypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
@@ -3060,6 +3064,43 @@ class AdminController extends Controller
 
     }
 
+    public function generateSpotEntity() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SpotEntity')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Patient',
+            'Encounter',
+            'Procedure',
+            'Accession',
+            'Part',
+            'Block',
+            'Slide'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new SpotEntity();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
 
 

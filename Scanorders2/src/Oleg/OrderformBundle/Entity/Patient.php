@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\Location;
+use Oleg\UserdirectoryBundle\Entity\Spot;
+use Oleg\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -87,10 +89,10 @@ class Patient extends ObjectAbstract
      */
     private $deceased;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientContactinfo", mappedBy="patient", cascade={"persist"})
-     */
-    private $contactinfo;
+//    /**
+//     * @ORM\OneToMany(targetEntity="PatientContactinfo", mappedBy="patient", cascade={"persist"})
+//     */
+//    private $contactinfo;
 
     /**
      * Hierarchy Tree
@@ -124,7 +126,7 @@ class Patient extends ObjectAbstract
         //extra
         $this->race = new ArrayCollection();
         $this->deceased = new ArrayCollection();
-        $this->contactinfo = new ArrayCollection();
+        //$this->contactinfo = new ArrayCollection();
         $this->type = new ArrayCollection();
 
         if( $withfields ) {
@@ -158,7 +160,7 @@ class Patient extends ObjectAbstract
         //extra fields
         $this->race = $this->cloneDepend($this->race,$this);
         $this->deceased = $this->cloneDepend($this->deceased,$this);
-        $this->contactinfo = $this->cloneDepend($this->contactinfo,$this);
+        //$this->contactinfo = $this->cloneDepend($this->contactinfo,$this);
         $this->type = $this->cloneDepend($this->type,$this);
 
     }
@@ -680,11 +682,9 @@ class Patient extends ObjectAbstract
         $this->addRace( new PatientRace($status,$provider,$source) );
         $this->addDeceased( new PatientDeceased($status,$provider,$source) );
         $this->addType( new PatientType($status,$provider,$source) );
-        //$this->addContactinfo( new PatientContactinfo($status,$provider,$source) );
     }
 
-    public function addContactinfoByTypeAndName($status,$user,$system,$locationType,$locationName,$withdummyfields=false) {
-        $patientContactinfo = new PatientContactinfo($status,$user,$system);
+    public function addContactinfoByTypeAndName($user,$system,$locationType,$locationName,$spotEntity,$withdummyfields=false) {
         $patientLocation = new Location($user);
 
         $patientLocation->addLocationType($locationType);
@@ -701,8 +701,19 @@ class Patient extends ObjectAbstract
             $patientLocation->setGeoLocation($geoLocation);
         }
 
-        $patientContactinfo->setField($patientLocation);
-        $this->addContactinfo($patientContactinfo);
+        $tracker = $this->getTracker();
+        if( !$tracker) {
+            $tracker = new Tracker();
+            $this->setTracker($tracker);
+        }
+
+        $spot = new Spot($user,$system);
+        $spot->setCurrentLocation($patientLocation);
+        $spot->setSpotEntity($spotEntity);
+        $spot->setCreation(new \DateTime());
+        $spot->setSpottedOn(new \DateTime());
+
+        $tracker->addSpot($spot);
     }
 
     public function getRace()
@@ -742,23 +753,23 @@ class Patient extends ObjectAbstract
         $this->deceased->removeElement($deceased);
     }
 
-    public function getContactinfo()
-    {
-        return $this->contactinfo;
-    }
-    public function addContactinfo($contactinfo)
-    {
-        if( $contactinfo && !$this->contactinfo->contains($contactinfo) ) {
-            $this->contactinfo->add($contactinfo);
-            $contactinfo->setPatient($this);
-        }
-
-        return $this;
-    }
-    public function removeContactinfo($contactinfo)
-    {
-        $this->contactinfo->removeElement($contactinfo);
-    }
+//    public function getContactinfo()
+//    {
+//        return $this->contactinfo;
+//    }
+//    public function addContactinfo($contactinfo)
+//    {
+//        if( $contactinfo && !$this->contactinfo->contains($contactinfo) ) {
+//            $this->contactinfo->add($contactinfo);
+//            $contactinfo->setPatient($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeContactinfo($contactinfo)
+//    {
+//        $this->contactinfo->removeElement($contactinfo);
+//    }
 
     public function getType()
     {
@@ -1141,7 +1152,7 @@ class Patient extends ObjectAbstract
         $fieldsArr = array(
             'Mrn','Suffix','Lastname','Firstname','Middlename','Sex','Dob','ClinicalHistory',
             //extra fields
-            'Race','Deceased','Contactinfo'
+            'Race','Deceased'
         );
         return $fieldsArr;
     }

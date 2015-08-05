@@ -6,7 +6,6 @@ namespace Oleg\OrderformBundle\Controller;
 
 use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
-use Oleg\OrderformBundle\Entity\PatientContactinfo;
 use Oleg\OrderformBundle\Entity\ProcedureOrder;
 use Oleg\OrderformBundle\Entity\ReportBlock;
 use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
@@ -713,10 +712,11 @@ class PatientController extends Controller
         $patient->addExtraFields($status,$user,$system);
 
         //add two contactinfo: "Test Patient's Primary Residence" and "Test Patient's Secondary Residence"
+        $spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:SpotEntity')->findOneByName("Patient");
         $locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
-        $patient->addContactinfoByTypeAndName($status,$user,$system,$locationTypePrimary,"Test Patient's Primary Residence",true);
+        $patient->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Test Patient's Primary Residence",$spotEntityPatient,true);
         $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Contact Information");
-        $patient->addContactinfoByTypeAndName($status,$user,$system,$locationType,"Test Patient's Secondary Residence",true);
+        $patient->addContactinfoByTypeAndName($user,$system,$locationType,"Test Patient's Secondary Residence",$spotEntityPatient,true);
 
         if( $withscanorder ) {
             $MultiSlideScanOrder = $this->createSpecificMessage("Multi-Slide Scan Order");

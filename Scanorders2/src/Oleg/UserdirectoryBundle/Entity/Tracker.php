@@ -24,7 +24,7 @@ class Tracker {
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Spot", mappedBy="message", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Spot", mappedBy="tracker", cascade={"persist"})
      */
     private $spots;
 
@@ -63,6 +63,7 @@ class Tracker {
     {
         if( $item && !$this->spots->contains($item) ) {
             $this->spots->add($item);
+            $item->setTracker($this);
         }
         return $this;
     }

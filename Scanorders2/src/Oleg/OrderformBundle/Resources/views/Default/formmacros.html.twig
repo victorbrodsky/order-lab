@@ -2368,17 +2368,6 @@
             {{ formmacros.inputArrayField(patient.race,cycle,"patientrace","","","","",status) }}
         {% endif %}
 
-        {#patient.contactinfo.field test<br>#}
-        {#{% if patient.contactinfo is defined %}#}
-            {#{% for contactinfo in patient.contactinfo %}#}
-                {#&#123;&#35;contactinfo ok<br>&#35;&#125;#}
-                {#&#123;&#35;{{ formmacros.inputArrayField(patient.contactinfo,cycle,"patientcontactinfo","","","","",status) }}&#35;&#125;#}
-                {#{% set sitename = 'scan' %}#}
-                {#{% set entity = app.security.getToken().getUser() %}#}
-                {#{{ usermacros.locationObject(contactinfo.field,cycle,'user-locations','noprototype',sitename,entity) }}#}
-            {#{% endfor %}#}
-        {#{% endif %}#}
-
         {{ formmacros.patientContactinfoForm(patient,datastructure,uid,cycle,status) }}
 
         {{ formmacros.patientDeceasedForm(patient,datastructure,uid,cycle,status) }}
@@ -2390,7 +2379,7 @@
 {% macro patientContactinfoForm( patient, datastructure, uid, cycle, status ) %}
     {% if datastructure and datastructure == "datastructure" %}
 
-        {% if patient.contactinfo is defined and patient.contactinfo|length > 0 %}
+        {% if patient.tracker.spots is defined and patient.tracker.spots|length > 0 %}
 
             {% import _self as formmacros %}
             {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
@@ -2399,7 +2388,8 @@
             {% set entity = app.security.getToken().getUser() %}
             {% set counter = 0 %}
 
-            {% for contactinfo in patient.contactinfo %}
+            patient.tracker.spots|length:{{ patient.tracker.spots|length }}
+            {% for spot in patient.tracker.spots %}
 
                 <div class="panel panel-default">
 
@@ -2419,11 +2409,11 @@
                                 onclick="toggleSinglePanel(this,'#form_body_patientcontactinfo_{{ uniqueId }}');">
                         </button>
 
-                        <h4 class="panel-title">{{ contactinfo.vars.value.field.name }}</h4>
+                        <h4 class="panel-title">{{ spot.currentLocation.vars.value.name }}</h4>
                     </div>
 
                     <div id="form_body_patientcontactinfo_{{ uniqueId }}" class="panel-body collapse">
-                        {{ usermacros.locationObject(contactinfo.field,cycle,'user-locations','noprototype',sitename,entity) }}
+                        {{ usermacros.locationObject(spot.currentLocation,cycle,'user-locations','noprototype',sitename,entity) }}
                     </div>
                 </div>
 
