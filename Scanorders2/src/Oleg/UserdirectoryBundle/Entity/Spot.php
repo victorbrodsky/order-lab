@@ -55,13 +55,27 @@ class Spot {
     private $updatedBy;
 
 
-    //updatedOn
+    //Location Spot Purpose
+    /**
+     * @ORM\ManyToOne(targetEntity="LocationSpotPurpose", cascade={"persist"})
+     * @ORM\JoinColumn(name="locationSpotPurpose_id", referencedColumnName="id", nullable=true)
+     */
+    private $locationSpotPurpose;
 
+    //Current Location
+    /**
+     * @ORM\ManyToOne(targetEntity="Location", cascade={"persist"})
+     * @ORM\JoinColumn(name="currentLocation_id", referencedColumnName="id", nullable=true)
+     */
+    private $currentLocation;
 
-    public function __construct()
-    {
+    //Intended Destination
+    /**
+     * @ORM\ManyToOne(targetEntity="Location", cascade={"persist"})
+     * @ORM\JoinColumn(name="intendedLocation_id", referencedColumnName="id", nullable=true)
+     */
+    private $intendedLocation;
 
-    }
 
 
 
@@ -164,6 +178,54 @@ class Spot {
     public function getSpottedOn()
     {
         return $this->spottedOn;
+    }
+
+    /**
+     * @param mixed $currentLocation
+     */
+    public function setCurrentLocation($currentLocation)
+    {
+        $this->currentLocation = $currentLocation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentLocation()
+    {
+        return $this->currentLocation;
+    }
+
+    /**
+     * @param mixed $intendedLocation
+     */
+    public function setIntendedLocation($intendedLocation)
+    {
+        $this->intendedLocation = $intendedLocation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntendedLocation()
+    {
+        return $this->intendedLocation;
+    }
+
+    /**
+     * @param mixed $locationSpotPurpose
+     */
+    public function setLocationSpotPurpose($locationSpotPurpose)
+    {
+        $this->locationSpotPurpose = $locationSpotPurpose;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocationSpotPurpose()
+    {
+        return $this->locationSpotPurpose;
     }
 
 

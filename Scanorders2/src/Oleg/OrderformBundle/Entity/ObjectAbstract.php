@@ -69,6 +69,11 @@ abstract class ObjectAbstract
      **/
     protected $attachmentContainer;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Tracker", cascade={"persist","remove"})
+     **/
+    protected $tracker;
+
 
 
     public function __construct( $status='invalid', $provider=null, $source = null ) {
@@ -273,6 +278,22 @@ abstract class ObjectAbstract
     public function getAttachmentContainer()
     {
         return $this->attachmentContainer;
+    }
+
+    /**
+     * @param mixed $tracker
+     */
+    public function setTracker($tracker)
+    {
+        $this->tracker = $tracker;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTracker()
+    {
+        return $this->tracker;
     }
 
 //    /**
