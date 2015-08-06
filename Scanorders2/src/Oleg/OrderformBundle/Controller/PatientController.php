@@ -232,13 +232,15 @@ class PatientController extends Controller
         );
         $params['labels'] = $labels;
 
-        //$time_pre = microtime(true);
+        $time_pre = microtime(true);
 
         $form = $this->createForm( new PatientType($params,$entity), $entity, array('disabled' => true) );
 
-        //$time_post = microtime(true);
-        //$exec_time = $time_post - $time_pre;
+        $time_post = microtime(true);
+        $exec_time = $time_post - $time_pre;
         //exit('form created: exec_time='.round($exec_time));
+        echo 'form created: exec_time='.round($exec_time)."<br>";
+        //phpinfo();
 
         return array(
             'entity' => $entity,

@@ -88,23 +88,23 @@ class Spot {
     private $intendedLocation;
 
 
-    //Entity: [Patient/Encounter/Procedure/Accession/Part/Block/Slide] Dropdown
-    /**
-     * @ORM\ManyToOne(targetEntity="SpotEntity", cascade={"persist"})
-     */
-    private $spotEntity;
-
-    //Patient's MRN Type:
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MrnType", cascade={"persist"})
-     */
-    private $mrnType;
-
-    //Patient's MRN:
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $mrn;
+//    //Entity: [Patient/Encounter/Procedure/Accession/Part/Block/Slide] Dropdown
+//    /**
+//     * @ORM\ManyToOne(targetEntity="SpotEntity", cascade={"persist"})
+//     */
+//    private $spotEntity;
+//
+//    //Patient's MRN Type:
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MrnType", cascade={"persist"})
+//     */
+//    private $mrnType;
+//
+//    //Patient's MRN:
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $mrn;
 
 
     public function __construct( $author=null, $source = null )
@@ -245,54 +245,6 @@ class Spot {
     public function getIntendedLocation()
     {
         return $this->intendedLocation;
-    }
-
-    /**
-     * @param mixed $mrn
-     */
-    public function setMrn($mrn)
-    {
-        $this->mrn = $mrn;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMrn()
-    {
-        return $this->mrn;
-    }
-
-    /**
-     * @param mixed $mrnType
-     */
-    public function setMrnType($mrnType)
-    {
-        $this->mrnType = $mrnType;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMrnType()
-    {
-        return $this->mrnType;
-    }
-
-    /**
-     * @param mixed $spotEntity
-     */
-    public function setSpotEntity($spotEntity)
-    {
-        $this->spotEntity = $spotEntity;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSpotEntity()
-    {
-        return $this->spotEntity;
     }
 
     /**

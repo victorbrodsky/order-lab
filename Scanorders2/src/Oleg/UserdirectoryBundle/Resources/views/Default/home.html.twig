@@ -33,6 +33,14 @@
         <br>
 
 
+        {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+        <a href="#" onclick="displayInstitutionUserTree();">Organizational Tree</a>
+        <div id="displayInstitutionUserTree" style="display:none;">
+            {{ treemacros.jstreemacros('composite-tree','UserdirectoryBundle','Institution_User','employees_showuser','nosearch') }}
+        </div>
+
+        <br>
+
         {#display search result for locations #}
         {% set locationShowed = false %}
         {% if locations %}

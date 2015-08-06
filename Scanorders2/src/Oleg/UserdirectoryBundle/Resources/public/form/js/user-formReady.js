@@ -39,6 +39,10 @@ $(document).ready(function() {
     getJstree('UserdirectoryBundle','Institution');
     getJstree('UserdirectoryBundle','CommentTypeList');
 
+    //home page institution with user leafs
+    //displayInstitutionUserTree();
+    //getJstree('UserdirectoryBundle','Institution_User','nomenu','nosearch','closeall');
+
     getComboboxResidencyspecialty();
 
     //getComboboxCommentType();

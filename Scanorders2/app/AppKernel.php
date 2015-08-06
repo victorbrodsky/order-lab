@@ -31,11 +31,17 @@ class AppKernel extends Kernel
 		//print_r($this->getEnvironment());
 		
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+
+            //disable opcache for dev and test environment
+            ini_set('opcache.enable',false);
+
             //$bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
-            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();           
+            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
         }
+
+        ini_set('memory_limit','2048M');
 
         return $bundles;
     }

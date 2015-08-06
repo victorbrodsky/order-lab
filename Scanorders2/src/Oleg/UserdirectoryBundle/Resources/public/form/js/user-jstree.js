@@ -5,7 +5,7 @@
 
 
 //used by admin page
-function getJstree(bundleName,entityName) {
+function getJstree(bundleName,entityName,menu,search,closeall) {
 
     //console.log('cycle='+cycle);
 
@@ -17,27 +17,53 @@ function getJstree(bundleName,entityName) {
 
         var targetid = ".composite-tree.composite-tree"+"-"+bundleName+"-"+entityName;
         if( $(targetid).length == 0 ) {
+            //console.log('no target='+targetid);
             return;
         }
 
         var nodeShowPath = $(targetid).attr("data-compositetree-node-showpath"); //i.e. 'institutions_show'
-        console.log('nodeShowPath='+nodeShowPath);
+        //console.log('nodeShowPath='+nodeShowPath);
         if( !nodeShowPath ) {
             throw new Error('Node show path is undefined, nodeShowPath='+nodeShowPath);
             //console.log('Node show path is undefined, nodeShowPath='+nodeShowPath);
         }
 
-        //employees_get_institution
-        var institutionUrl = Routing.generate('employees_get_composition_tree');
-        institutionUrl = institutionUrl + '?lazy&$opt=none&classname='+entityName+'&bundlename='+bundleName;
-        //console.log('institutionUrl='+institutionUrl);
+        var withsearch = "search";
+        if( typeof search != 'undefined' && search == "nosearch" ) {
+            withsearch = null;
+        }
 
-        //_institution
+        var withmenu = "contextmenu";
+        if( typeof menu != 'undefined' && menu == "nomenu" ) {
+            withmenu = null;
+        }
+        //console.log('withmenu='+withmenu);
+
+        var withcloseall = false;
+        if( typeof closeall != 'undefined' || closeall == "closeall" ) {
+            withcloseall = true;
+        }
+
+        var state = "state";
+        //var expand_selected_onload = true;
+        if( withcloseall ) {
+            state = null;
+            //expand_selected_onload = false;
+        }
+
+        var withlazy = "lazy&";
+
+        var treeUrl = Routing.generate('employees_get_composition_tree');
+        treeUrl = treeUrl + '?'+withlazy+'$opt=none&classname='+entityName+'&bundlename='+bundleName;
+        //console.log('treeUrl='+treeUrl);
+
+        //js tree
         $(targetid).jstree({
             'core' : {
+                //"expand_selected_onload" : expand_selected_onload,
                 "themes" : { "stripes" : true },
                 'data' : {
-                    "url" : institutionUrl,     //"//www.jstree.com/fiddle/",
+                    "url" : treeUrl,     //"//www.jstree.com/fiddle/",
                     "dataType" : "json",        // needed only if you do not supply JSON headers
                     "data" : function (node) {
                         return { "id" : node.id };
@@ -90,7 +116,9 @@ function getJstree(bundleName,entityName) {
                 }
             },
             "contextmenu": {
+
                 items: function(node) {
+
                     var tmp = $.jstree.defaults.contextmenu.items();
                     delete tmp.ccp;
                     delete tmp.rename;
@@ -127,13 +155,19 @@ function getJstree(bundleName,entityName) {
                 },
                 "icon3" : {
                     "icon" : "glyphicon glyphicon-ok"
+                },
+                "icon4" : {
+                    "icon" : "glyphicon glyphicon-zoom-in"
+                },
+                "iconUser" : {
+                    "icon" : "glyphicon glyphicon-user"
                 }
             },
             "plugins" : [
-                "contextmenu",
+                withmenu,   //"contextmenu",
                 "dnd",
-                "search",
-                "state",
+                withsearch, //"search",
+                state,      //"state",
                 "types",
                 "wholerow"
             ]
@@ -187,6 +221,25 @@ function getJstree(bundleName,entityName) {
                 failedOperation($(this),operation);
             }
         });
+
+
+
+
+        if( withmenu == null ) {
+
+            $(targetid).bind('changed.jstree', function(e, data) {
+                //console.log('data.selected.length='+data.selected.length);
+                if( data.selected.length == 1 ) {
+                    var addnodeid = data.node.original.addnodeid;
+                    //console.log('addnodeid='+addnodeid);
+                    if( addnodeid ) {
+                        var treeUrl = Routing.generate(nodeShowPath, {id: addnodeid});
+                        window.open(treeUrl);
+                    }
+                }
+            });
+
+        }//if menu
 
 
     } //if
@@ -251,8 +304,11 @@ function failedOperation(jstreeObj,operation) {
     jstreeObj.jstree("refresh");
 }
 
-
-
+//home page institution with user leafs
+function displayInstitutionUserTree() {
+    $('#displayInstitutionUserTree').show();
+    getJstree('UserdirectoryBundle','Institution_User','nomenu','nosearch','closeall');
+}
 
 
 

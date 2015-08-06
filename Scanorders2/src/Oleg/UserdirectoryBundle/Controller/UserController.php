@@ -1322,7 +1322,7 @@ class UserController extends Controller
 
     /**
      * @Route("/user/show/ee", name="employees_showuser_notstrict")
-     * @Route("/user/{id}", name="employees_showuser", requirements={"id" = "\d+"})
+     * @Route("/user/{id}", name="employees_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
