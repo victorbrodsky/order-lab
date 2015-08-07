@@ -120,6 +120,12 @@ class User extends BaseUser {
     private $trainings;
 
     /**
+     * @ORM\OneToMany(targetEntity="FellowshipApplication", mappedBy="user", cascade={"persist","remove"})
+     * @ORM\OrderBy({"orderinlist" = "ASC"})
+     */
+    private $fellowshipApplications;
+
+    /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist","remove"})
      */
     private $locations;
@@ -226,6 +232,7 @@ class User extends BaseUser {
         $this->researchLabs = new ArrayCollection();
         $this->grants = new ArrayCollection();
         $this->trainings = new ArrayCollection();
+        $this->fellowshipApplications = new ArrayCollection();
         $this->publications = new ArrayCollection();
         $this->books = new ArrayCollection();
         $this->lectures = new ArrayCollection();
@@ -447,6 +454,24 @@ class User extends BaseUser {
     public function getTrainings()
     {
         return $this->trainings;
+    }
+
+    public function addFellowshipApplication($training)
+    {
+        if( $training && !$this->fellowshipApplications->contains($training) ) {
+            $this->fellowshipApplications->add($training);
+            $training->setUser($this);
+        }
+
+        return $this;
+    }
+    public function removeFellowshipApplication($training)
+    {
+        $this->fellowshipApplications->removeElement($training);
+    }
+    public function getFellowshipApplications()
+    {
+        return $this->fellowshipApplications;
     }
 
 

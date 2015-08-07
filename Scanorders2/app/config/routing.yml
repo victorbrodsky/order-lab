@@ -13,6 +13,14 @@ oleg_userdirectory:
     type:     annotation
     prefix:   /directory
 
+oleg_fellapp:
+    resource: "@OlegUserdirectoryBundle/Controller/FellAppController"
+    type:     annotation
+    prefix:   /fellowship-applications
+
+
+
+
 #acme_demo:
 #    resource: "@AcmeDemoBundle/Controller/"
 #    type:     annotation
@@ -42,6 +50,12 @@ employees_login_check:
     path:   /directory/login_check
 employees_logout:
     path:   /directory/logout
+
+fellapp_login_check:
+    path:   /fellowship-applications/login_check
+fellapp_logout:
+    path:   /fellowship-applications/logout
+
 
 #fos user bundle
 #fos_user_security:

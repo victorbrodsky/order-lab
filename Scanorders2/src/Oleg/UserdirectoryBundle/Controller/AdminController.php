@@ -402,6 +402,31 @@ class AdminController extends Controller
             "ROLE_USERDIRECTORY_BANNED" => array("EmployeeDirectory Banned User","Does not allow to visit Employee Directory site"),
             "ROLE_USERDIRECTORY_UNAPPROVED" => array("EmployeeDirectory Unapproved User","Does not allow to visit Employee Directory site"),
 
+
+            //////////// FellApp roles ////////////
+            "ROLE_FELLAPP_ADMIN" => array("Fellowship Applications Administrator","Full access for Fellowship Applications site"),
+            "ROLE_FELLAPP_USER" => array("Fellowship Applications User","Allow to view the Fellowship Applications site"),
+            "ROLE_FELLAPP_BANNED" => array("Fellowship Applications Banned User","Does not allow to visit Fellowship Applications site"),
+            "ROLE_FELLAPP_UNAPPROVED" => array("Fellowship Applications Unapproved User","Does not allow to visit Fellowship Applications site"),
+            //Directors
+            "ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY" => array("Fellowship Program Director WCMC FELLOWSHIP Breast Pathology","Access to specific Fellowship Application type as Director"),
+            "ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY" => array("Fellowship Program Director WCMC Cytopathology","Access to specific Fellowship Application type as Director"),
+            "ROLE_FELLAPP_DIRECTOR_WCMC_GYNECOLOGICPATHOLOGY" => array("Fellowship Program Director WCMC Gynecologic Pathology","Access to specific Fellowship Application type as Director"),
+            "ROLE_FELLAPP_DIRECTOR_WCMC_GASTROINTESTINALPATHOLOGY" => array("Fellowship Program Director WCMC Gastrointestinal Pathology","Access to specific Fellowship Application type as Director"),
+            "ROLE_FELLAPP_DIRECTOR_WCMC_GENITOURINARYPATHOLOGY" => array("Fellowship Program Director WCMC Genitourinary Pathology","Access to specific Fellowship Application type as Director"),
+            "ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY" => array("Fellowship Program Director WCMC Hematopathology","Access to specific Fellowship Application type as Director"),
+            "ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY" => array("Fellowship Program Director WCMC Molecular Genetic Pathology","Access to specific Fellowship Application type as Director"),
+            //Program-Coordinator
+            "ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC FELLOWSHIP Breast Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Cytopathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Gynecologic Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Gastrointestinal Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Genitourinary Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Hematopathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Molecular Genetic Pathology","Access to specific Fellowship Application type as Coordinator"),
+
+
+
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

@@ -14,8 +14,14 @@
 
         {% if sitename == employees_sitename %}
             {% set title = "Employee Directory" %}
-        {% else %}
+        {% endif %}
+
+        {% if sitename == scan_sitename %}
             {% set title = "Scan Orders" %}
+        {% endif %}
+
+        {% if sitename == fellapp_sitename %}
+            {% set title = "Fellowship Applications" %}
         {% endif %}
 
         <title>{{ title }}</title>

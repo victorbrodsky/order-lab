@@ -19,6 +19,9 @@ security:
         ROLE_USERDIRECTORY_EDITOR: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
         ROLE_USERDIRECTORY_ADMIN: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER, ROLE_USERDIRECTORY_EDITOR]
 
+        # FellApp roles
+        ROLE_FELLAPP_ADMIN: [ROLE_USER, ROLE_FELLAPP_USER]
+
         # General roles
 #        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
 #        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED_SUBMITTER]
@@ -27,7 +30,7 @@ security:
         ROLE_USERDIRECTORY_EDITOR: [ROLE_EDITOR]
 
 #        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
-        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN]
+        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN]
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
 
@@ -93,6 +96,23 @@ security:
             anonymous:  true
             access_denied_url: /directory/access-requests/new/create
 
+        ldap_fellapp_firewall:
+            pattern: ^/fellowship-applications
+            context: scan_auth
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: fellapp_authentication_handler
+                failure_handler: fellapp_authentication_handler
+                check_path: /fellowship-applications/login_check
+                login_path: /fellowship-applications/login
+            logout:
+                path:   /fellowship-applications/logout
+                target: /fellowship-applications/login
+            anonymous:  true
+            access_denied_url: /fellowship-applications/access-requests/new/create
+
+
     #Note: first match is used, the later would be ignored
     access_control:
 
@@ -156,4 +176,11 @@ security:
 
      #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
      - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') and !has_role('ROLE_SCANORDER_BANNED')" }
+
+
+    ############################## Fellowship Applications SITE SETTINGS ##############################
+     - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/fellowship-applications/, role: ROLE_USER }
 

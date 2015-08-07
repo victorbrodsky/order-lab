@@ -35,11 +35,23 @@ class SecurityController extends Controller
 
     /**
      * @Route("/login", name="employees_login")
+     *
      * @Method("GET")
      * @Template()
      */
     public function loginAction( Request $request ) {
-        $sitename = $this->container->getParameter('employees.sitename');
+
+        $routename = $request->get('_route');
+        //echo "routename=".$routename."<br>";
+
+        if( $routename == "employees_login" ) {
+            $sitename = $this->container->getParameter('employees.sitename');
+        }
+        if( $routename == "fellapp_login" ) {
+            $sitename = $this->container->getParameter('fellapp.sitename');
+        }
+
+        //$sitename = $this->container->getParameter('employees.sitename');
         $formArr = $this->loginPage($sitename);
 
         if( $formArr == null ) {
@@ -120,6 +132,7 @@ class SecurityController extends Controller
     /**
      * @Route("/idlelogout", name="employees_idlelogout")
      * @Route("/idlelogout/{flag}", name="employees_idlelogout-saveorder")
+     *
      * @Template()
      */
     public function idlelogoutAction( Request $request, $flag = null )
@@ -131,6 +144,7 @@ class SecurityController extends Controller
 
     /**
      * @Route("/setloginvisit/", name="employees_setloginvisit")
+     *
      * @Method("GET")
      */
     public function setAjaxLoginVisit( Request $request )
@@ -139,7 +153,15 @@ class SecurityController extends Controller
         $options = array();
         $em = $this->getDoctrine()->getManager();
         $userUtil = new UserUtil();
-        $options['sitename'] = $this->container->getParameter('employees.sitename');
+
+        $routename = $request->get('_route');
+        if( $routename == "employees_setloginvisit" ) {
+            $options['sitename'] = $this->container->getParameter('employees.sitename');
+        }
+        if( $routename == "fellapp_setloginvisit" ) {
+            $options['sitename'] = $this->container->getParameter('fellapp.sitename');
+        }
+
         $options['eventtype'] = "Login Page Visit";
         $options['event'] = "Employee Directory login page visit";
         $options['serverresponse'] = "";

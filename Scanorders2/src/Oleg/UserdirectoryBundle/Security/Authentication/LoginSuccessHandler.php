@@ -24,11 +24,15 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
 
-    private $container;
-    private $security;
-    private $em;
-    private $router;
-    private $siteName;
+    protected $container;
+    protected $security;
+    protected $em;
+    protected $router;
+    protected $siteName;
+    protected $siteNameStr;
+    protected $roleBanned;
+    protected $roleUser;
+    protected $roleUnapproved;
 
     public function __construct( $container, SecurityContext $security, $em )
     {
@@ -37,6 +41,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $this->security = $security;
         $this->em = $em;
         $this->siteName = $container->getParameter('employees.sitename');
+        $this->siteNameStr = 'Employee Directory';
+        $this->roleBanned = 'ROLE_USERDIRECTORY_BANNED';
+        $this->roleUser = 'ROLE_USERDIRECTORY_OBSERVER';
+        $this->roleUnapproved = 'ROLE_USERDIRECTORY_UNAPPROVED';
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
@@ -51,12 +59,15 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $options['sitename'] = $this->siteName;
 
-        //echo "employees authentication success: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
+        //echo "userdirectory: employees authentication success: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
         //exit;
 
-        if( $this->security->isGranted('ROLE_USERDIRECTORY_BANNED') ) {
+        //echo "roleBanned=".$this->roleBanned."<br>";
+        //echo "siteName=".$this->siteName."<br>";
+
+        if( $this->security->isGranted($this->roleBanned) ) {
             $options['eventtype'] = 'Banned User Login Attempt';
-            $options['event'] = 'Banned user login attempt to Employee Directory site';
+            $options['event'] = 'Banned user login attempt to '.$this->siteNameStr.' site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
@@ -64,21 +75,21 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //detect if the user was first time logged in by ldap: assign role UNAPPROVED user
         //all users must have at least an OBSERVER role
-        if( !$this->security->isGranted('ROLE_USERDIRECTORY_OBSERVER')  ) {
+        if( !$this->security->isGranted($this->roleUser)  ) {
             //echo "assign role UNAPPROVED user <br>";
-            $user->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
+            $user->addRole($this->roleUnapproved);
         }
 
-        if( $this->security->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') ) {
+        if( $this->security->isGranted($this->roleUnapproved) ) {
             $options['eventtype'] = 'Unapproved User Login Attempt';
-            $options['event'] = 'Unapproved user login attempt to Employee Directory site';
+            $options['event'] = 'Unapproved user login attempt to '.$this->siteNameStr.' site';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
         }
 
         $options['eventtype'] = "Successful Login";
-        $options['event'] = 'Successful login to Employee Directory site';
+        $options['event'] = 'Successful login to '.$this->siteNameStr.' site';
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
@@ -128,7 +139,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $options['sitename'] = $this->siteName;
         $options['eventtype'] = "Bad Credentials";
-        $options['event'] = 'Bad credentials provided on login for Employee Directory site';
+        $options['event'] = 'Bad credentials provided on login for '.$this->siteNameStr.' site';
         $options['serverresponse'] = $exception->getMessage();
 
         //testing

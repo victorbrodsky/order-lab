@@ -4,6 +4,8 @@ parameters:
   employees.uploadpath:
   employees.avataruploadpath:
 
+  fellapp.sitename: fellapp
+
   default_time_zone: America/New_York
   default_system_email:
   institution_url:
@@ -26,6 +28,7 @@ parameters:
   eventlog_title:
   sitesettings_title:
   contentabout_page:
+
 
 #  maintenance:
 #  maintenanceenddate:
@@ -86,6 +89,10 @@ parameters:
 #        ldap_manager:  oleg.security.ldap_manager
 
 
+twig:
+    globals:
+        fellapp_sitename: %fellapp.sitename%
+
 #fos user bundle
 fos_user:
     db_driver: orm
@@ -128,6 +135,10 @@ services:
     #Redirect admin to index
     employees_authentication_handler:
         class: Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler
+        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+
+    fellapp_authentication_handler:
+        class: Oleg\UserdirectoryBundle\Security\Authentication\FellAppLoginSuccessHandler
         arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
 
     #twig listener

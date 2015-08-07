@@ -1,0 +1,44 @@
+{% set urltype = "home" %}
+
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+
+{% block title %}
+    Fellowship Applications
+{% endblock %}
+
+
+{% block content %}
+
+    <div style="margin-top:25px;">
+
+        <table class="records_list table table-hover table-condensed text-left">
+            <thead>
+            <tr>
+
+                <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+
+            {% for entity in entities %}
+                <tr>
+
+                    <td>
+                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                    </td>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+{% endblock %}
+
+
+
+
