@@ -308,7 +308,7 @@ function failedOperation(jstreeObj,operation) {
 
 //home page institution with user leafs
 function displayInstitutionUserTree() {
-    $('#displayInstitutionUserTree').show();
+    //$('#displayInstitutionUserTree').show();
     getJstree('UserdirectoryBundle','Institution_User','nomenu','nosearch','closeall');
 }
 

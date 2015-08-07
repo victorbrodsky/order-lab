@@ -215,25 +215,17 @@ class TreeController extends Controller {
                 $element['children'] = $children;    //( count($entity->getChildren()) > 0 ? true : false);
             }
 
-//            if( $addNodeRepository ) {
-//                $element['state'] = array("opened"=>false,"selected"=>false);
-//            }
-
             $output[] = $element;
         }//foreach
 
 
         //additional nodes ie. users
         if( $addNodeRepository ) {
-
             if( $pid && $pid != 0 && $pid != '#' && is_numeric($pid) ) {
-
                 $addNodes = $addNodeRepository->findAllByInstitutionNodeAsUserArray($pid);
-
                 if( count($addNodes) > 0 ) {
                     $output = array_merge($output, $addNodes);
                 }
-
             }//if
         }//if
 
