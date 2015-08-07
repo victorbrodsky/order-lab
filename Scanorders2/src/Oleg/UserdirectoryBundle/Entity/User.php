@@ -1288,7 +1288,7 @@ class User extends BaseUser {
         $phonesArr = array();
         //get all locations phones
         foreach( $this->getLocations() as $location ) {
-            if( count($location->getLocationTypes()) == 0 || $location->hasLocationTypeName("Employee Home") ) {
+            if( count($location->getLocationTypes()) == 0 || !$location->hasLocationTypeName("Employee Home") ) {
                 if( $location->getPhone() ) {
                     $phone = array();
                     $phone['prefix'] = $location->getName()." Line: ";
