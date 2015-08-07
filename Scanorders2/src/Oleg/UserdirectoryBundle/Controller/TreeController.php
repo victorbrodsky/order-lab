@@ -193,11 +193,26 @@ class TreeController extends Controller {
                 'disabled' => $optionDisabled,
             );
 
+
             if( $combobox ) {
                 //for combobox
             } else {
                 //for jstree
-                $element['children'] = ( count($entity->getChildren()) > 0 ? true : false);
+                $addNodes = array();
+                if( $addNodeRepository ) {
+                    $addNodes = $addNodeRepository->findAllByInstitutionNodeAsUserArray($entity->getId());
+                }
+
+                $children = false;
+                if( count($entity->getChildren()) > 0 ) {
+                    $children = true;
+                } else {
+                    if( count($addNodes) > 0 ) {
+                        $children = $addNodes;
+                    }
+                }
+
+                $element['children'] = $children;    //( count($entity->getChildren()) > 0 ? true : false);
             }
 
 //            if( $addNodeRepository ) {
@@ -207,46 +222,20 @@ class TreeController extends Controller {
             $output[] = $element;
         }//foreach
 
+
         //additional nodes ie. users
         if( $addNodeRepository ) {
 
-            if( $entity->getParent() ) {
+            if( $pid && $pid != 0 && $pid != '#' && is_numeric($pid) ) {
 
-                $addNodeDql =  $addNodeRepository->createQueryBuilder("addnode");
-                //$addNodeDql->select("addnode.id as id, userInfos.displayName as text");
-                //$addNodeDql->leftJoin("addnode.infos", "userInfos");
-                $addNodeDql->select("addnode");
-                $addNodeDql->groupBy("addnode");
-                $addNodeDql->orderBy("addnode.primaryPublicUserId","ASC");
+                $addNodes = $addNodeRepository->findAllByInstitutionNodeAsUserArray($pid);
 
-                $addNodes = null;
-                if( $mapper['addNodeClassName'] == "User" ) {
-                    $addNodeDql->leftJoin("addnode.administrativeTitles", "administrativeTitles");
-                    $addNodeDql->leftJoin("addnode.appointmentTitles", "appointmentTitles");
-                    $addNodeDql->leftJoin("addnode.medicalTitles", "medicalTitles");
-                    $addNodeDql->where("administrativeTitles.institution = :nodeid OR appointmentTitles.institution = :nodeid OR medicalTitles.institution = :nodeid");
-                    $params = array("nodeid"=>$entity->getParent()->getId());
-                    $addNodeQuery = $em->createQuery($addNodeDql);
-                    $addNodeQuery->setParameters($params);
-                    $addNodes = $addNodeQuery->getResult();
-                    //echo "addNodes count=".count($addNodes)."<br>";
-
-                    foreach( $addNodes as $addnode ) {
-                        if( $addnode && $addnode->getId() ) {
-                            $element = array(
-                                'id' => 'addnodeid-'.$addnode->getId(),
-                                'addnodeid' => $addnode->getId(),
-                                'text' => $addnode."",
-                                'type' => 'iconUser',
-                                //'children' => false,
-                            );
-                            $output[] = $element;
-                        }
-                    }//foreach
-                }//if
+                if( count($addNodes) > 0 ) {
+                    $output = array_merge($output, $addNodes);
+                }
 
             }//if
-        }
+        }//if
 
 
         //construct an empty element for combobox to allow to enter a new node

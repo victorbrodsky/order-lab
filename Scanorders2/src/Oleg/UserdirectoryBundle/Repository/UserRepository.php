@@ -9,5 +9,73 @@ use Doctrine\ORM\EntityRepository;
 class UserRepository extends EntityRepository {
 
 
+    public function findAllByInstitutionNodeAsUserArray( $nodeid ) {
+
+        $users = $this->findAllByInstitutionNode($nodeid);
+        $output = $this->convertUsersToArray($users);
+
+        return $output;
+    }
+
+    public function findAllByInstitutionNode( $nodeid ) {
+
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'user')
+            ->select("user")
+            ->groupBy('user');
+
+
+        $query->orderBy("user.primaryPublicUserId","ASC");
+        $query->leftJoin("user.administrativeTitles", "administrativeTitles");
+        $query->leftJoin("user.appointmentTitles", "appointmentTitles");
+        $query->leftJoin("user.medicalTitles", "medicalTitles");
+        $query->where("administrativeTitles.institution = :nodeid OR appointmentTitles.institution = :nodeid OR medicalTitles.institution = :nodeid");
+        $query->setParameters( array("nodeid"=>$nodeid) );
+
+        $users = $query->getQuery()->getResult();
+
+        return $users;
+    }
+
+
+    public function convertUsersToArray( $users ) {
+
+        $output = array();
+        foreach( $users as $user ) {
+
+            $userStr = $user->getUsernameShortest();
+
+            $phoneArr = array();
+            foreach( $user->getAllPhones() as $phone ) {
+                $phoneArr[] = $phone['prefix'] . $phone['phone'];
+            }
+            if( count($phoneArr) > 0 ) {
+                $userStr = $userStr . " " . implode(",", $phoneArr);
+            }
+
+            $emailArr = array();
+            foreach( $user->getAllEmail() as $email ) {
+                $emailArr[] = $email['prefix'] . $email['email'];
+            }
+            if( count($emailArr) > 0 ) {
+                $userStr = $userStr . " " . implode(",", $emailArr);
+            }
+
+            $element = array(
+                'id' => 'addnodeid-'.$user->getId(),
+                'addnodeid' => $user->getId(),
+                'text' => $userStr,         //$user."",
+                'type' => 'iconUser',
+            );
+            $output[] = $element;
+
+        }//foreach
+
+        return $output;
+    }
+
+
+
+
 }
 

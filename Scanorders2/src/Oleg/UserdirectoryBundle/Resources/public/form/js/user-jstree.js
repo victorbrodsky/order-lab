@@ -44,10 +44,12 @@ function getJstree(bundleName,entityName,menu,search,closeall) {
             withcloseall = true;
         }
 
-        var state = "state";
+        var withstate = "state";
+        var withdnd = "dnd";
         //var expand_selected_onload = true;
         if( withcloseall ) {
-            state = null;
+            withstate = null;
+            withdnd = null;
             //expand_selected_onload = false;
         }
 
@@ -160,14 +162,14 @@ function getJstree(bundleName,entityName,menu,search,closeall) {
                     "icon" : "glyphicon glyphicon-zoom-in"
                 },
                 "iconUser" : {
-                    "icon" : "glyphicon glyphicon-user"
+                    "icon" : "glyphicon glyphicon-user text-primary"
                 }
             },
             "plugins" : [
                 withmenu,   //"contextmenu",
-                "dnd",
+                withdnd,    //"dnd",
                 withsearch, //"search",
-                state,      //"state",
+                withstate,  //"state",
                 "types",
                 "wholerow"
             ]
@@ -294,7 +296,7 @@ function jstree_action_node(bundleName, entityName, operation, nodeid, nodetext,
         }
     }).fail(function(data) {
         console.log('failed: '+data);
-    }) ;
+    });
 
     return res;
 }
