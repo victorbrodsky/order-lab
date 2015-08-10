@@ -137,8 +137,15 @@ class SecurityController extends Controller
      */
     public function idlelogoutAction( Request $request, $flag = null )
     {
+        $routename = $request->get('_route');
+        if( $routename == "employees_login" ) {
+            $sitename = $this->container->getParameter('employees.sitename');
+        }
+        if( $routename == "fellapp_login" ) {
+            $sitename = $this->container->getParameter('fellapp.sitename');
+        }
+
         $userSecUtil = $this->get('user_security_utility');
-        $sitename = $this->container->getParameter('employees.sitename');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
 

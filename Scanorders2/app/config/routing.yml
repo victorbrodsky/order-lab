@@ -3,20 +3,23 @@ main_common_home:
     path:      /
     defaults:  { _controller: OlegUserdirectoryBundle:Home:mainCommonHome }
 
+#order is important: base bundle userdirectory must be the last one
 oleg_orderform:
     resource: "@OlegOrderformBundle/Controller/"
     type:     annotation
     prefix:   /scan
+
+oleg_fellapp:
+    resource: "@OlegUserdirectoryBundle/FellAppController"
+    type:     annotation
+    prefix:   /fellowship-applications
 
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
     type:     annotation
     prefix:   /directory
 
-oleg_fellapp:
-    resource: "@OlegUserdirectoryBundle/Controller/FellAppController"
-    type:     annotation
-    prefix:   /fellowship-applications
+
 
 
 

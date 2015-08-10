@@ -280,7 +280,7 @@ function setTreeNode( bundleName, entityName, treeHolder, node, data ) {
         var prevNodeData = node.closest('.row').prev().find('.ajax-combobox-compositetree').select2('data');
         //console.log(prevNodeData);
 
-        var conf = "Are you sure you want to create " + "'" + data.id + "?";
+        var conf = "Are you sure you want to create " + "'" + data.id + "'?";
         if( prevNodeData && data.hasOwnProperty("leveltitle") ) {
             conf = "Are you sure you want to create " + "'" + data.id + "' under " + prevNodeData.leveltitle + "?";
         }

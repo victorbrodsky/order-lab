@@ -1,6 +1,6 @@
 {% set urltype = "home" %}
 
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "OlegUserdirectoryBundle::FellApp/base.html.twig" %}
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -11,6 +11,10 @@
 
 
 {% block content %}
+
+    <p>
+        <a href="{{ path('fellapp_import') }}">Import from Google</a>
+    </p>
 
     <div style="margin-top:25px;">
 
