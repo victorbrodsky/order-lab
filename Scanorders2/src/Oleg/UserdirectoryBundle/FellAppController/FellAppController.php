@@ -189,6 +189,10 @@ class FellAppController extends Controller {
             $trainingPeriodEnd = $this->getValueByHeaderName('trainingPeriodEnd',$rowData,$headers);
             $fellowshipApplication->setEndDate($trainingPeriodEnd);
 
+            //uploadedPhotoUrl
+            $uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl',$rowData,$headers);
+            echo "uploadedPhotoUrl=".$uploadedPhotoUrl."<br>";
+
             //presentAddressStreet1
 
 
@@ -227,24 +231,44 @@ class FellAppController extends Controller {
 
         echo "fellapp import <br>";
 
-        $credentials = '{
-  "private_key_id": "2917cc7b719694a2e6e9f77bdc0d8d0411c0451e",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCoZVCjuANc+ftL\nY3vd0EtXCwqJHxypuKJIAoeJnpEfBh24PJete22u305gFNZYmvkTzJUXXyTfSNIy\nVPckby8TCpeUP/gNZ9DwlRStxI7FKxsV6I7pd64UDvArcwAAu2MK0EOZXkM8ukEb\n65G/RqiGFqO1b18TNMLcuUJuhUJ1n/wJoQFUDW5AmKbmKMquNjZ1eNHr0enMMKr0\n3PbsmT6H3e1/mVxcRqYOtftc3fCbrYzvRPinfTdhmgc1uvwuC19ecoLms4bCxFq7\nvrzRUYotd3zuM02idzbsUz57p8Ek6FQC0FibwqN/naAkGjzM4b/tmqmixJ2O3N6D\nNGVlJcUDAgMBAAECggEBAI3hn0nyFtNVxIdGcOz5PSE/qkbSMeJGMGUfzHcFZRyQ\nmKXMV7fRkR6QA4csx1SsbkRiURP6FCUVRBUoRXsrOqx+dixwoV0aJY8u7NdkDy7N\nHOseoJrRPZik5XKWWGBFgjNwOiSUqW4XOBiAKLLSo9cmaBTMm3yhLbWvWeuo19Al\n9tZPwUTC/vA5hhb+3hr44Y9V2Ztsm4ljkU9zRIi9sMd4dPaVf78aZ/2l0d1cjPlk\ndXtxrN19LF8uwqgLJNiNW1ynTgSamPRjxd7bkO5K0FUPKwl7q559Aovoef0cQaT2\nKKxUQH2cbAjYJLLeho+a+coei0H1oujnTDMIJZFzqAECgYEA4FWTfgd76gzc6wzT\nSn7VNqw+8pxU/aksAVk/NIXAVDgVbE3yc/tOhELxe2qqGSOv/tgTX0OVV8Ua4VG1\ndv/ug1rru3LW/umzILOVdQtFYT7vKRKv5LYRJYTK8FXhkx+c3QgMEiH5MGlU6Mfd\nhPLlnyjToqAsxUTjA8d5ARRmFwMCgYEAwCpf1awSgVvtQYHfcxDBzybQg//3p+kz\nNzg2zwV32sssfHzw9IEUI4B3wUFGbACod89DShQbmsDWyBjnEzS5FIdUZj3nIYhI\nhpTVorVGZ+Q7uBREGjzVVM0BEZUiQCbX0AUCIvQ7shiS0En3CggZLlj5xxyzLPrh\nyZ/UdiODOgECgYA/Di6/7PCaj/UEqH03YkEh9fZXkTOefQ+ebWyDodi2k3EKGTq9\n+PRP3tUrgIbBPDO66RdA3qk6m297x9C+2x86krLR5GykCCJOXcvzszBULjFhFRyV\np8tYBWRZe3pFNUyNIDbsXdpCDklMiOkt9mwueXZLLsSGyl8Y79eGQyqS6wKBgHWe\n+j3dLw6C5/v6tHzHuvlCtsq0+C+Mq86W1+VrYWtIhRhFmW7vOxZn4eUmQSaGWJfN\nA1DqceMNOeoMZBP7Z3XLR7u1FC4QLuRBYWpQLqIUrwEDVpQAvEtFl+vdLrO5kss+\n5YnjmE5wgByByXYYcuFNkMVxKbLUdTNmYzNUlVQBAoGBALKJQsuwuQYaunTytDrz\nyHIPvz46QnktwPvluxMeIfUN41c0aaAocYpYwomEsnSXfOs0px7CyRHv0qlBF4Lz\njmOZONkyWtgIwXLEZOe3DOnx52g6MLhWyd4hkIKR2pYwnfkTzkCYrS/iueHVUlDQ\nmSEvVUdlEfGbhtjZTVnFtzGh\n-----END PRIVATE KEY-----\n",
-  "client_email": "1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com",
-  "client_id": "1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5.apps.googleusercontent.com",
-  "type": "service_account"
-}';
+//        $credentials = '{
+//          "private_key_id": "1b61c9fb73ac18736622fdb95d08b8056b87f579",
+//          "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDh2VtnsxKxMap7\nH/QE7i+UT6lck27eZ0dHa8SMV9312uYpkRzgceL2kwp8I3NRN0OXwbOG+8zUC+jV\nXR74DWmoUmlwAqaPiB4TKLIFc+inJOcS+wKvNWGlDM5cv6I1TUqfXBckRjQ3SzCE\nEYauOrZHbS/Db8AQJVENlqYTwav4PlN+rZTLmJO81tJuyAwEFm5ymD+fc8ibu/04\nUELXKY8hSKTnGFUBwBIl6A0fs/d4djTOyrgDsxFWAky5AbobAjIDJI+AX+mr/rVx\np/CH1dW+/OzMiZgQ/34d+phuyr/F/iRz3BPXJt54GUFJHbeXbC+X4dJ0qDSE8bMq\nvjwcb8n5AgMBAAECggEBAJveVLUW43mjG1NqVBDrCa9D41De949Km+jwuW9aXPeG\noX5ihhlowAkIph3SoY2VpHKh3nL0aQKXTZOjdvIe36Kpbdc+HRHGEWuLlIEq45An\nacqxrcKaBs/QLMPaBerfcvbUqawBP5xBqjQbnGW2Y4KcGnC5OUZrWqsUI35TFYp2\nvTOkXNAA5yG8lpvLUoNB/BLO1UyyIot37NsSdPZmhctxS6MJv3GBJoW02VMUexEz\nIAyv/FDMXkxBt+JdG/Q76vaekL45qXFXjncROre0VBRQx8Jw7QgfZ5D+4MxzyFdu\nv1bhX3qB4A+UY1Y+wgOs89ivNJ2BK7pOOxWsB/X37GECgYEA+PVvW9lUrYmENvbv\n8Z7ZocrRHHtckyVAaSCUFdqLJz6W/pAXNx7+eCSwOu43mKX3DxshfVWVrAyxn/Vq\nz/KHkGfUPaJpCntIyWK/2iI91XHavRmj9TLDKSUTjvMZg9LVSk/B/SKJdG792gpT\nQitUl3g2k3mqyoWzXHaxGrZBZa0CgYEA6DyZLOlEez8KVsbVvzAFDXgAr+gnplA3\n/ymFxaGNjKFTmQaXVFDw5WP86AejHh6QwQYDZeUo4/bN3G6GqFBZOCt/jNP6Vm27\nDRYS5pCdZumpGMH7ixFU0ZRm1xFq6QwUcwHgtLt3lG6H7vqWeeQiazVUTTpqp9c6\nUtUcR1IlRv0CgYAygxG6EAlnQFyMDmQ2oOVFN3JgFgN9c3RzIAILwRC0wLVAJxoe\nu/IjjEYZXtX26c2LyhRsap34j4bGjrPCR1IMEZT1gGtRjhwBiECm0IW9NeGMtpQW\nntsMERK70UUfAvr1neMdKhG7hv2IbMnhxgrexKxGFcx6VNBEdWyPn+T67QKBgHU7\nmetU+e/pO9PgXag8mmBZMqeZ3uIS3qGdGV1Rlz3ldmjqLdwvW9vAZLvQlyQuM85s\ntaxrSQAC55qd5LX0kYVMWAAERfv5OpJ5kSL436xCycyop81k+1csvdlVfo2UPoJr\n8T3q4It6XH5j2zA+3K0X561wjsSZXmTQFY1fR1gVAoGAFIV6vBKsh/tqJ19mrh+h\nAWp0rFWpJWMLNNhU8fvrMwm0ZswCWei+tMnDDDsgLko1hwUXvbKQGVmxrb3o42nI\n4um7f27gPCs/gNksYibg3jKWplPhbYybWTRdFZ0Q4FUfP/tuL3cbw605TcQEjDW5\ni1Onh2wEBQYAZYwFER7Ssak\u003d\n-----END PRIVATE KEY-----\n",
+//          "client_email": "1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com",
+//          "client_id": "1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah.apps.googleusercontent.com",
+//          "type": "service_account"
+//        }';
+//        $service = $this->buildService($credentials);
 
-        //$service = $this->buildService($credentials);
+        //$this->getFilesByAuthUrl();
+        //$this->getFilesByPkey();
+        $client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
+        $pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+        $user_to_impersonate = 'olegivanov@pathologysystems.org';
+        $res = $this->authenticationP12Key($pkey,$client_email,$user_to_impersonate);
 
-        $client_id = "1040591934373-hhm896qpgdaiiblaco9jdfvirkh5f65q.apps.googleusercontent.com";
-        $client_secret = "RgXkEm2_1T8yKYa3Vw_tIhoO";
-        $redirect_uri = 'urn:ietf:wg:oauth:2.0:oob';    //"http://localhost";
+        $service = $res['service'];
 
-        $service = $this->buildService($client_id,$client_secret,$redirect_uri);
+//        $files = $service->files->listFiles();
+//        echo "count files=".count($files)."<br>";
+//        //echo "<pre>"; print_r($files);
+//        foreach( $files as $item ) {
+//            echo "title=".$item['title']."<br>";
+//        }
 
-        //$authUrl = $client->createAuthUrl();
-        //echo "authUrl=".$authUrl."<br>";
+        //https://drive.google.com/open?id=0B2FwyaXvFk1edWdMdTlFTUt1aVU
+        $folderId = "0B2FwyaXvFk1edWdMdTlFTUt1aVU";
+        //https://drive.google.com/open?id=0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E
+        //$folderId = "0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E";
+        //$files = $this->printFilesInFolder($service, $folderId);
+
+
+        $photoId = "0B2FwyaXvFk1eRnJVS1N0MWhkc0E";
+        $file = $this->printFile($service, $photoId);
+        //$response = $this->downloadFile($service, $file);
+        //echo "response=".$response."<br>";
+
+        exit('1');
 
         // Exchange authorization code for access token
         //$accessToken = $client->authenticate($authCode);
@@ -267,6 +291,142 @@ class FellAppController extends Controller {
         return $this->redirect( $this->generateUrl('fellapp_home') );
     }
 
+    //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
+    //https://developers.google.com/api-client-library/php/auth/service-accounts
+    //1) Create a service account by Google Developers Console.
+    //2) Delegate domain-wide authority to the service account.
+    //3) Impersonate a user account.
+    public function authenticationP12Key($pkey,$client_email,$user_to_impersonate) {
+        $private_key = file_get_contents($pkey); //notasecret
+        $scopes = array('https://www.googleapis.com/auth/drive');
+        $credentials = new \Google_Auth_AssertionCredentials(
+            $client_email,
+            $scopes,
+            $private_key,
+            'notasecret',                                 // Default P12 password
+            'http://oauth.net/grant_type/jwt/1.0/bearer', // Default grant type
+            $user_to_impersonate
+        );
+
+        $client = new \Google_Client();
+        $client->setAssertionCredentials($credentials);
+        if ($client->getAuth()->isAccessTokenExpired()) {
+            $client->getAuth()->refreshTokenWithAssertion();
+        }
+
+        $service = new \Google_Service_Drive($client);
+
+        $res = array(
+            'client' => $client,
+            'credentials' => $credentials,
+            'service' => $service
+        );
+
+        return $res;
+    }
+
+    /**
+     * Print files belonging to a folder.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param String $folderId ID of the folder to print files from.
+     */
+    function printFilesInFolder($service, $folderId) {
+        $pageToken = NULL;
+
+        do {
+            try {
+                $parameters = array();
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+                $children = $service->children->listChildren($folderId, $parameters);
+                echo "count=".count($children->getItems())."<br>";
+
+                foreach ($children->getItems() as $child) {
+                    //print 'File Id: ' . $child->getId()."<br>";
+                    //print_r($child);
+                    $this->printFile($service,$child->getId());
+                }
+                $pageToken = $children->getNextPageToken();
+            } catch (Exception $e) {
+                print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
+            }
+        } while ($pageToken);
+    }
+
+//    function getFilesByPkey() {
+//
+//        $client_id = "1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5.apps.googleusercontent.com";
+//        $client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
+//
+//        $pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+//        $private_key = file_get_contents($pkey); //notasecret
+//
+//        $scopes = array('https://www.googleapis.com/auth/drive');   //array('https://www.googleapis.com/auth/sqlservice.admin');
+//
+////        $credentials = new \Google_Auth_AssertionCredentials(
+////            $client_email,
+////            $scopes,
+////            $private_key
+////        );
+//
+//        $user_to_impersonate = 'olegivanov@pathologysystems.org';
+//        $credentials = new \Google_Auth_AssertionCredentials(
+//            $client_email,
+//            $scopes,
+//            $private_key,
+//            'notasecret',                                 // Default P12 password
+//            'http://oauth.net/grant_type/jwt/1.0/bearer', // Default grant type
+//            $user_to_impersonate
+//        );
+//
+//        $client = new \Google_Client();
+//        //$client->setAccessType('offline');
+//        $client->setAssertionCredentials($credentials);
+//        if ($client->getAuth()->isAccessTokenExpired()) {
+//            $client->getAuth()->refreshTokenWithAssertion();
+//        }
+//
+////        $sqladmin = new \Google_Service_SQLAdmin($client);
+////        $response = $sqladmin->instances->listInstances('examinable-example-123')->getItems();
+////        echo json_encode($response) . "\n";
+//
+//        $service = new \Google_Service_Drive($client);
+//
+//        $files = $service->files->listFiles();
+//        echo "count files=".count($files)."<br>";
+//        //echo "<pre>"; print_r($files);
+//
+//        foreach( $files as $item ) {
+//            echo "title=".$item['title']."<br>";
+//        }
+//
+//    }
+
+    function getFilesByAuthUrl() {
+        $client_id = "1040591934373-hhm896qpgdaiiblaco9jdfvirkh5f65q.apps.googleusercontent.com";
+        $client_secret = "RgXkEm2_1T8yKYa3Vw_tIhoO";
+        $redirect_uri = 'urn:ietf:wg:oauth:2.0:oob';    //"http://localhost";
+
+        $res = $this->buildService($client_id,$client_secret,$redirect_uri);
+
+        $service = $res['service'];
+        $client = $res['client'];
+
+        $authUrl = $client->createAuthUrl();
+        echo "authUrl=".$authUrl."<br>";
+
+        // Exchange authorization code for access token
+        $accessToken = $client->authenticate('4/OrVeRdkw9eByckCs7Gtn0B4eUwhERny8AqFOAwy29fY');
+        $client->setAccessToken($accessToken);
+
+        $files = $service->files->listFiles();
+        echo "count files=".count($files)."<br>";
+        echo "<pre>"; print_r($files);
+    }
+
 
     /**
      * Build a Drive service object.
@@ -287,8 +447,18 @@ class FellAppController extends Controller {
         $client->setClientId($client_id);
         $client->setClientSecret($client_secret);
         $client->setRedirectUri($redirect_uri);
-        $client->addScope("https://www.googleapis.com/auth/drive");
-        return new \Google_Service_Drive($client);
+
+        //$client->addScope("https://www.googleapis.com/auth/drive");
+        $client->setScopes(array('https://www.googleapis.com/auth/drive'));
+        $client->setAccessType('offline');
+
+        $service = new \Google_Service_Drive($client);
+
+        $res = array(
+            'client' => $client,
+            'service' => $service
+        );
+        return $res;
     }
 
     /**
@@ -302,9 +472,11 @@ class FellAppController extends Controller {
         try {
             $file = $service->files->get($fileId);
 
-            print "Title: " . $file->getTitle();
-            print "Description: " . $file->getDescription();
-            print "MIME type: " . $file->getMimeType();
+            print "Title: " . $file->getTitle()."<br>";
+            print "ID: " . $file->getId()."<br>";
+            //print "URL: " . $file->getDownloadUrl()."<br>";
+            print "Description: " . $file->getDescription()."<br>";
+            print "MIME type: " . $file->getMimeType()."<br>"."<br>";
 
         } catch (Exception $e) {
             print "An error occurred: " . $e->getMessage();
