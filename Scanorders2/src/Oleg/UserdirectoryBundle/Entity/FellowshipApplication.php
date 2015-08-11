@@ -41,12 +41,21 @@ class FellowshipApplication extends BaseUserAttributes
      */
     private $institution;
 
+    /**
+     * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
+     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
+     **/
+    private $attachmentContainer;
+
 
 
 
 
     public function __construct($author=null) {
         parent::__construct($author);
+
+        //add one document
+        $this->createAttachmentDocument();
     }
 
 
@@ -131,6 +140,34 @@ class FellowshipApplication extends BaseUserAttributes
         return $this->user;
     }
 
+    /**
+     * @param mixed $attachmentContainer
+     */
+    public function setAttachmentContainer($attachmentContainer)
+    {
+        $this->attachmentContainer = $attachmentContainer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttachmentContainer()
+    {
+        return $this->attachmentContainer;
+    }
+
+    //create attachmentDocument holder with one DocumentContainer if not exists
+    public function createAttachmentDocument() {
+        //add one document
+        $attachmentContainer = $this->getAttachmentContainer();
+        if( !$attachmentContainer ) {
+            $attachmentContainer = new AttachmentContainer();
+            $this->setAttachmentContainer($attachmentContainer);
+        }
+        if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
+            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
+        }
+    }
 
 
 

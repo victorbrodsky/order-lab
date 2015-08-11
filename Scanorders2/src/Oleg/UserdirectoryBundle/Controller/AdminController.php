@@ -1664,7 +1664,9 @@ class AdminController extends Controller
             'Microscopic Image',
             'Whole Slide Image',
             'Requisition Form Image',
-            'Outside Report Reference Representation'
+            'Outside Report Reference Representation',
+            'Fellowship Application Spreadsheet',
+            'Fellowship Application Upload'
         );
 
 

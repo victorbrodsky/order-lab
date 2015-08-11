@@ -3,12 +3,15 @@
 namespace Oleg\UserdirectoryBundle\FellAppController;
 
 
+use Oleg\UserdirectoryBundle\Entity\CurriculumVitae;
+use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -70,7 +73,20 @@ class FellAppController extends Controller {
 
         echo "fellapp populateSpreadsheet <br>";
 
-        $inputFileName = 'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
+        //get latest spreadsheet file from Uploaded/fellapp/Spreadsheets
+        $em = $this->getDoctrine()->getManager();
+        $fellappSpreadsheetType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
+        $documents = $em->getRepository('OlegUserdirectoryBundle:Document')->findBy(
+            array('type' => $fellappSpreadsheetType),
+            array('createdate'=>'desc'),
+            1   //limit to one
+        );
+
+        if( count($documents) == 1 ) {
+            $document = $documents[0];
+        }
+
+        $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
         $this->populateSpreadsheet($inputFileName);
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
@@ -81,12 +97,26 @@ class FellAppController extends Controller {
 
         echo "inputFileName=".$inputFileName."<br>";
 
+        $service = $this->getGoogleService();
+        if( !$service ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "Google API service failed!"
+            );
+            $logger = $this->container->get('logger');
+            $logger->warning("Google API service failed!");
+
+            return $this->redirect( $this->generateUrl('fellapp_home') );
+        }
+
+        $uploadPath = 'Uploaded/fellapp/FellowshipApplicantUploads/';
+
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
-            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+            throw new IOException('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
@@ -97,8 +127,6 @@ class FellAppController extends Controller {
 
         $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getUsernameType('local-user');
-
-        $count = 0;
 
         ////////////// add system user /////////////////
         $systemUser = $userSecUtil->findSystemUser();
@@ -114,8 +142,13 @@ class FellAppController extends Controller {
             FALSE);
         //print_r($headers);
 
+        $count = 0;
+
         //for each user in excel
         for ($row = 3; $row <= $highestRow; $row++){
+
+            $count++;
+
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
                 NULL,
@@ -165,6 +198,7 @@ class FellAppController extends Controller {
             $user->setPassword("");
             $user->setCreatedby('googleapi');
             $user->getPreferences()->setTimezone($default_time_zone);
+            $em->persist($user);
 
             //fellowshipType
             $fellowshipType = $this->getValueByHeaderName('fellowshipType',$rowData,$headers);
@@ -191,14 +225,44 @@ class FellAppController extends Controller {
 
             //uploadedPhotoUrl
             $uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl',$rowData,$headers);
-            echo "uploadedPhotoUrl=".$uploadedPhotoUrl."<br>";
+            //echo "uploadedPhotoUrl=".$uploadedPhotoUrl."<br>";
+            $uploadedPhotoId = $this->getFileIdByUrl( $uploadedPhotoUrl );
+            $uploadedPhotoDb = $this->downloadFileToServer($user, $service, $uploadedPhotoId, null, $uploadPath);
+            if( !$uploadedPhotoDb ) {
+                throw new IOException('Unable to download file to server: uploadedPhotoUrl='.$uploadedPhotoUrl.', fileID='.$uploadedPhotoDb->getId());
+            }
+            $user->setAvatar($uploadedPhotoDb); //set this file as Avatar
+
+            //uploadedCVUrl
+            $uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl',$rowData,$headers);
+            $uploadedCVUrlId = $this->getFileIdByUrl( $uploadedCVUrl );
+            $uploadedCVUrlDb = $this->downloadFileToServer($user, $service, $uploadedCVUrlId, null, $uploadPath);
+            if( !$uploadedCVUrlDb ) {
+                throw new IOException('Unable to download file to server: uploadedCVUrl='.$uploadedCVUrl.', fileID='.$uploadedCVUrlDb->getId());
+            }
+            $cv = new CurriculumVitae($user);
+            $cv->getAttachmentContainer()->getDocumentContainers()->first()->addDocument($uploadedCVUrlDb);
+            $user->getCredentials()->addCv($cv);
+
+            //uploadedCoverLetterUrl
+            $uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl',$rowData,$headers);
+            $uploadedCoverLetterUrlId = $this->getFileIdByUrl( $uploadedCoverLetterUrl );
+            $uploadedCoverLetterUrlDb = $this->downloadFileToServer($user, $service, $uploadedCoverLetterUrlId, null, $uploadPath);
+            if( !$uploadedCoverLetterUrlDb ) {
+                throw new IOException('Unable to download file to server: uploadedCoverLetterUrl='.$uploadedCoverLetterUrl.', fileID='.$uploadedCoverLetterUrlDb->getId());
+            }
+            $fellowshipApplication->getAttachmentContainer()->getDocumentContainers()->first()->addDocument($uploadedCoverLetterUrlDb);
+
+            //usl upload
 
             //presentAddressStreet1
 
 
+            exit(1);
         }
 
 
+        echo "count=".$count."<br>";
         exit('end populate');
     }
 
@@ -221,9 +285,20 @@ class FellAppController extends Controller {
         return $res;
     }
 
+    //parse url and get file id
+    public function getFileIdByUrl( $url ) {
+        //https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eSDQ0MkJKSjhLN1U/view?usp=drivesdk
+        $urlArr = explode("/d/", $url);
+        $urlSecond = $urlArr[1];
+        $urlSecondArr = explode("/", $urlSecond);
+        $url = $urlSecondArr[0];
+        return $url;
+    }
+
+
 
     /**
-     * Show home page
+     * Import spreadsheet to C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Spreadsheets
      *
      * @Route("/import", name="fellapp_import")
      */
@@ -231,64 +306,105 @@ class FellAppController extends Controller {
 
         echo "fellapp import <br>";
 
-//        $credentials = '{
-//          "private_key_id": "1b61c9fb73ac18736622fdb95d08b8056b87f579",
-//          "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDh2VtnsxKxMap7\nH/QE7i+UT6lck27eZ0dHa8SMV9312uYpkRzgceL2kwp8I3NRN0OXwbOG+8zUC+jV\nXR74DWmoUmlwAqaPiB4TKLIFc+inJOcS+wKvNWGlDM5cv6I1TUqfXBckRjQ3SzCE\nEYauOrZHbS/Db8AQJVENlqYTwav4PlN+rZTLmJO81tJuyAwEFm5ymD+fc8ibu/04\nUELXKY8hSKTnGFUBwBIl6A0fs/d4djTOyrgDsxFWAky5AbobAjIDJI+AX+mr/rVx\np/CH1dW+/OzMiZgQ/34d+phuyr/F/iRz3BPXJt54GUFJHbeXbC+X4dJ0qDSE8bMq\nvjwcb8n5AgMBAAECggEBAJveVLUW43mjG1NqVBDrCa9D41De949Km+jwuW9aXPeG\noX5ihhlowAkIph3SoY2VpHKh3nL0aQKXTZOjdvIe36Kpbdc+HRHGEWuLlIEq45An\nacqxrcKaBs/QLMPaBerfcvbUqawBP5xBqjQbnGW2Y4KcGnC5OUZrWqsUI35TFYp2\nvTOkXNAA5yG8lpvLUoNB/BLO1UyyIot37NsSdPZmhctxS6MJv3GBJoW02VMUexEz\nIAyv/FDMXkxBt+JdG/Q76vaekL45qXFXjncROre0VBRQx8Jw7QgfZ5D+4MxzyFdu\nv1bhX3qB4A+UY1Y+wgOs89ivNJ2BK7pOOxWsB/X37GECgYEA+PVvW9lUrYmENvbv\n8Z7ZocrRHHtckyVAaSCUFdqLJz6W/pAXNx7+eCSwOu43mKX3DxshfVWVrAyxn/Vq\nz/KHkGfUPaJpCntIyWK/2iI91XHavRmj9TLDKSUTjvMZg9LVSk/B/SKJdG792gpT\nQitUl3g2k3mqyoWzXHaxGrZBZa0CgYEA6DyZLOlEez8KVsbVvzAFDXgAr+gnplA3\n/ymFxaGNjKFTmQaXVFDw5WP86AejHh6QwQYDZeUo4/bN3G6GqFBZOCt/jNP6Vm27\nDRYS5pCdZumpGMH7ixFU0ZRm1xFq6QwUcwHgtLt3lG6H7vqWeeQiazVUTTpqp9c6\nUtUcR1IlRv0CgYAygxG6EAlnQFyMDmQ2oOVFN3JgFgN9c3RzIAILwRC0wLVAJxoe\nu/IjjEYZXtX26c2LyhRsap34j4bGjrPCR1IMEZT1gGtRjhwBiECm0IW9NeGMtpQW\nntsMERK70UUfAvr1neMdKhG7hv2IbMnhxgrexKxGFcx6VNBEdWyPn+T67QKBgHU7\nmetU+e/pO9PgXag8mmBZMqeZ3uIS3qGdGV1Rlz3ldmjqLdwvW9vAZLvQlyQuM85s\ntaxrSQAC55qd5LX0kYVMWAAERfv5OpJ5kSL436xCycyop81k+1csvdlVfo2UPoJr\n8T3q4It6XH5j2zA+3K0X561wjsSZXmTQFY1fR1gVAoGAFIV6vBKsh/tqJ19mrh+h\nAWp0rFWpJWMLNNhU8fvrMwm0ZswCWei+tMnDDDsgLko1hwUXvbKQGVmxrb3o42nI\n4um7f27gPCs/gNksYibg3jKWplPhbYybWTRdFZ0Q4FUfP/tuL3cbw605TcQEjDW5\ni1Onh2wEBQYAZYwFER7Ssak\u003d\n-----END PRIVATE KEY-----\n",
-//          "client_email": "1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com",
-//          "client_id": "1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah.apps.googleusercontent.com",
-//          "type": "service_account"
-//        }';
-//        $service = $this->buildService($credentials);
+        $service = $this->getGoogleService();
+        if( !$service ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "Google API service failed!"
+            );
+            $logger = $this->container->get('logger');
+            $logger->warning("Google API service failed!");
+        }
 
-        //$this->getFilesByAuthUrl();
-        //$this->getFilesByPkey();
+        if( $service ) {
+
+            //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
+            $excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
+
+            $user = $this->get('security.context')->getToken()->getUser();
+            $path = 'Uploaded/fellapp/Spreadsheets/';
+            $fileDb = $this->downloadFileToServer($user, $service, $excelId, 'excel', $path);
+
+            if( $fileDb ) {
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename()
+                );
+            } else {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "Fellowship Application Spreadsheet download failed!"
+                );
+                $logger = $this->container->get('logger');
+                $logger->warning("Fellowship Application Spreadsheet download failed!");
+            }
+
+        }
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+
+//        //$excelFile = $this->printFile($service, $excelId);
+//
+//        //$response = $this->downloadFile($service, $excelFile, 'excel');
+//
+//        //echo "response=".$response."<br>";
+//
+//        exit(1);
+//
+//
+////        $files = $service->files->listFiles();
+////        echo "count files=".count($files)."<br>";
+////        //echo "<pre>"; print_r($files);
+////        foreach( $files as $item ) {
+////            echo "title=".$item['title']."<br>";
+////        }
+//
+//        //https://drive.google.com/open?id=0B2FwyaXvFk1edWdMdTlFTUt1aVU
+//        $folderId = "0B2FwyaXvFk1edWdMdTlFTUt1aVU";
+//        //https://drive.google.com/open?id=0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E
+//        //$folderId = "0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E";
+//        //$files = $this->printFilesInFolder($service, $folderId);
+//
+//
+//        $photoId = "0B2FwyaXvFk1eRnJVS1N0MWhkc0E";
+//        $file = $this->printFile($service, $photoId);
+//        $response = $this->downloadFile($service, $file);
+//        echo "response=".$response."<br>";
+//
+//        exit('1');
+//
+//        // Exchange authorization code for access token
+//        //$accessToken = $client->authenticate($authCode);
+//        //$client->setAccessToken($accessToken);
+//
+//        $fileId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
+//
+//        $file = $this->printFile($service, $fileId);
+//
+//        echo "after file <br>";
+//
+//        $response = $this->downloadFile($service,$file);
+//
+//        print_r($response);
+//
+//        echo "response=".$response."<br>";
+//        //exit();
+//        return $response;
+//
+//        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
+
+
+
+
+
+
+    public function getGoogleService() {
         $client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
         $pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
         $user_to_impersonate = 'olegivanov@pathologysystems.org';
         $res = $this->authenticationP12Key($pkey,$client_email,$user_to_impersonate);
-
-        $service = $res['service'];
-
-//        $files = $service->files->listFiles();
-//        echo "count files=".count($files)."<br>";
-//        //echo "<pre>"; print_r($files);
-//        foreach( $files as $item ) {
-//            echo "title=".$item['title']."<br>";
-//        }
-
-        //https://drive.google.com/open?id=0B2FwyaXvFk1edWdMdTlFTUt1aVU
-        $folderId = "0B2FwyaXvFk1edWdMdTlFTUt1aVU";
-        //https://drive.google.com/open?id=0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E
-        //$folderId = "0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E";
-        //$files = $this->printFilesInFolder($service, $folderId);
-
-
-        $photoId = "0B2FwyaXvFk1eRnJVS1N0MWhkc0E";
-        $file = $this->printFile($service, $photoId);
-        //$response = $this->downloadFile($service, $file);
-        //echo "response=".$response."<br>";
-
-        exit('1');
-
-        // Exchange authorization code for access token
-        //$accessToken = $client->authenticate($authCode);
-        //$client->setAccessToken($accessToken);
-
-        $fileId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
-
-        $file = $this->printFile($service, $fileId);
-
-        echo "after file <br>";
-
-        $response = $this->downloadFile($service,$file);
-
-        print_r($response);
-
-        echo "response=".$response."<br>";
-        //exit();
-        return $response;
-
-        return $this->redirect( $this->generateUrl('fellapp_home') );
+        return $res['service'];
     }
 
     //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
@@ -323,6 +439,85 @@ class FellAppController extends Controller {
         );
 
         return $res;
+    }
+
+    public function downloadFileToServer($user, $service, $fileId, $type, $path) {
+        $file = null;
+        try {
+            $file = $service->files->get($fileId);
+        } catch (Exception $e) {
+            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        if( $file ) {
+
+            //check if file already exists by file id
+            $documentDb = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
+            if( $documentDb ) {
+                return $documentDb;
+            }
+
+            $response = $this->downloadFile($service, $file, $type);
+            //echo "response=".$response."<br>";
+            if( !$response ) {
+                throw new IOException('Error file response is empty: file id='.$fileId);
+            }
+
+            //create unique file name
+            $currentDatetime = new \DateTime();
+            $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+
+            //$fileTitle = trim($file->getTitle());
+            //$fileTitle = str_replace(" ","",$fileTitle);
+            //$fileTitle = str_replace("-","_",$fileTitle);
+            //$fileTitle = 'testfile.jpg';
+            //$fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
+
+            $fileUniqueName = $currentDatetimeTimestamp.'_id='.$file->getId();  //.'_title='.$fileTitle;
+
+            $filesize = $file->getFileSize();
+            if( !$filesize ) {
+                $filesize = mb_strlen($response) / 1024; //KBs,
+            }
+
+            $object = new Document($user);
+            $object->setUniqueid($file->getId());
+            $object->setOriginalname($file->getTitle());
+            $object->setUniquename($fileUniqueName);
+            $object->setUploadDirectory($path);
+            $object->setSize($filesize);
+
+            if( $type && $type == 'excel' ) {
+                $fellappSpreadsheetType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
+            } else {
+                $fellappSpreadsheetType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Upload');
+            }
+            if( $fellappSpreadsheetType ) {
+                $object->setType($fellappSpreadsheetType);
+            }
+
+            $em->persist($object);
+            $em->flush($object);
+
+            $fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
+            $target_file = $fullpath . $fileUniqueName;
+
+            //$target_file = $fullpath . 'uploadtestfile.jpg';
+            //echo "target_file=".$target_file."<br>";
+            if( !file_exists($fullpath) ) {
+                // 0600 - Read and write for owner, nothing for everybody else
+                mkdir($fullpath, 0600, true);
+                chmod($fullpath, 0600);
+            }
+
+            file_put_contents($target_file, $response);
+
+            return $object;
+        }
+
+        return null;
     }
 
     /**
@@ -474,6 +669,7 @@ class FellAppController extends Controller {
 
             print "Title: " . $file->getTitle()."<br>";
             print "ID: " . $file->getId()."<br>";
+            print "Size: " . $file->getFileSize()."<br>";
             //print "URL: " . $file->getDownloadUrl()."<br>";
             print "Description: " . $file->getDescription()."<br>";
             print "MIME type: " . $file->getMimeType()."<br>"."<br>";
@@ -492,11 +688,17 @@ class FellAppController extends Controller {
      * @param Google_Servie_Drive_DriveFile $file Drive File instance.
      * @return String The file's content if successful, null otherwise.
      */
-    function downloadFile($service, $file) {
-        $downloadUrl = $file->getDownloadUrl();
+    function downloadFile($service, $file, $type=null) {
+        if( $type && $type == 'excel' ) {
+            $downloadUrl = $file->getExportLinks()['text/csv'];
+        } else {
+            $downloadUrl = $file->getDownloadUrl();
+        }
+        echo "downloadUrl=".$downloadUrl."<br>";
         if ($downloadUrl) {
             $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+            echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
             if ($httpRequest->getResponseHttpCode() == 200) {
                 return $httpRequest->getResponseBody();
             } else {

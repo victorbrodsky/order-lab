@@ -83,9 +83,16 @@ class Document {
      */
     private $title;
 
+    /**
+     * Unique ID of the file. For example, google drive file id
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $uniqueid;
+
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
+        $this->setCreatedate(new \DateTime());
     }
 
 
@@ -169,6 +176,22 @@ class Document {
         return $this->size;
     }
 
+    /**
+     * @param mixed $uniqueid
+     */
+    public function setUniqueid($uniqueid)
+    {
+        $this->uniqueid = $uniqueid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUniqueid()
+    {
+        return $this->uniqueid;
+    }
+
 
 
 
@@ -191,9 +214,12 @@ class Document {
     /**
      * @ORM\PreUpdate
      */
-    public function setCreatedate()
+    public function setCreatedate($date=null)
     {
-        $this->createdate = new \DateTime();
+        if( !$date ) {
+            $date = new \DateTime();
+        }
+        $this->createdate = $date;
     }
     public function getCreatedate()
     {

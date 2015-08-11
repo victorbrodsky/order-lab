@@ -90,6 +90,11 @@ class Credentials extends BaseUserAttributes
      */
     private $identifiers;
 
+    /**
+     * @ORM\OneToMany(targetEntity="CurriculumVitae", mappedBy="credentials", cascade={"persist"})
+     */
+    private $cvs;
+
 
     public function __construct($user) {
 
@@ -99,6 +104,7 @@ class Credentials extends BaseUserAttributes
         $this->boardCertification = new ArrayCollection();
         $this->codeNYPH = new ArrayCollection();
         $this->identifiers = new ArrayCollection();
+        $this->cvs = new ArrayCollection();
 
 
         $this->setType(self::TYPE_RESTRICTED);
@@ -386,6 +392,23 @@ class Credentials extends BaseUserAttributes
     public function removeIdentifier($identifier)
     {
         $this->identifiers->removeElement($identifier);
+    }
+
+    public function getCvs()
+    {
+        return $this->cvs;
+    }
+    public function addCv($item)
+    {
+        if( $item && !$this->cvs->contains($item) ) {
+            $item->setCredentials($this);
+            $this->cvs->add($item);
+        }
+
+    }
+    public function removeCv($item)
+    {
+        $this->cvs->removeElement($item);
     }
 
 
