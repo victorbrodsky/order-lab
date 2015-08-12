@@ -3,12 +3,24 @@
 namespace Oleg\UserdirectoryBundle\FellAppController;
 
 
+use Oleg\UserdirectoryBundle\Entity\BoardCertification;
+use Oleg\UserdirectoryBundle\Entity\Citizenship;
+use Oleg\UserdirectoryBundle\Entity\Countries;
 use Oleg\UserdirectoryBundle\Entity\CurriculumVitae;
 use Oleg\UserdirectoryBundle\Entity\Document;
+use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
+use Oleg\UserdirectoryBundle\Entity\Examination;
 use Oleg\UserdirectoryBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty;
+use Oleg\UserdirectoryBundle\Entity\GeoLocation;
+use Oleg\UserdirectoryBundle\Entity\Location;
+use Oleg\UserdirectoryBundle\Entity\Reference;
+use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManytomanyTransformer;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Form\FellowshipApplicationType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -60,6 +72,42 @@ class FellAppController extends Controller {
 
         return array(
             'entities' => $fellApps,
+            'pathbase' => 'fellapp'
+        );
+    }
+
+    /**
+     * Show home page
+     *
+     * @Route("/show/{id}", name="fellapp_show")
+     * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
+     */
+    public function showAction($id) {
+
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('login') );
+        }
+
+        //echo "fellapp home <br>";
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
+        $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+        }
+
+        $form = $this->createForm( new FellowshipApplicationType(), $entity );
+
+        return array(
+            'form' => $form->createView(),
+            'entity' => $entity,
+            'pathbase' => 'fellapp'
         );
     }
 
@@ -128,6 +176,12 @@ class FellAppController extends Controller {
         $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getUsernameType('local-user');
 
+        $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
+        $presentLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Present Address");
+        $permanentLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Permanent Address");
+        $workLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Work Address");
+
+
         ////////////// add system user /////////////////
         $systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
@@ -159,7 +213,7 @@ class FellAppController extends Controller {
 
             //$id = $rowData[0][0];
             $id = $this->getValueByHeaderName('ID',$rowData,$headers);
-            echo "id=".$id."<br>";
+            echo "row=".$row.": id=".$id."<br>";
 
             //check if the user already exists in DB by $id
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($id);
@@ -198,67 +252,310 @@ class FellAppController extends Controller {
             $user->setPassword("");
             $user->setCreatedby('googleapi');
             $user->getPreferences()->setTimezone($default_time_zone);
+            $user->setLocked(true);
             $em->persist($user);
 
+
+            //Pathology Fellowship Applicant in EmploymentStatus
+            $employmentStatus = new EmploymentStatus($user);
+            $employmentStatus->setEmploymentType($employmentType);
+            $user->addEmploymentStatus($employmentStatus);
+
+            $fellowshipApplication = new FellowshipApplication($user);
+            $user->addFellowshipApplication($fellowshipApplication);
             //fellowshipType
             $fellowshipType = $this->getValueByHeaderName('fellowshipType',$rowData,$headers);
-            $fellowshipTypeEntity = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipType);
-            if( !$fellowshipTypeEntity ) {
-                $fellTypeCount = count($em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findAll())*10;
-                $fellowshipTypeEntity = new FellowshipSubspecialty();
-                $userutil = new UserUtil();
-                $userutil->setDefaultList($fellowshipTypeEntity,$fellTypeCount,$user,$fellowshipType);
-                $em->persist($fellowshipTypeEntity);
+            if( $fellowshipType ) {
+                $transformer = new GenericTreeTransformer($em, $user, 'FellowshipSubspecialty');
+                $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
+                $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
             }
-            $training = new Training($user);
-            $training->setFellowshipSubspecialty($fellowshipTypeEntity);
-            $user->addTraining($training);
 
             //trainingPeriodStart
-            $trainingPeriodStart = $this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers);
-            $fellowshipApplication = new FellowshipApplication($user);
-            $fellowshipApplication->setStartDate($trainingPeriodStart);
+            $fellowshipApplication->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers)));
 
             //trainingPeriodEnd
-            $trainingPeriodEnd = $this->getValueByHeaderName('trainingPeriodEnd',$rowData,$headers);
-            $fellowshipApplication->setEndDate($trainingPeriodEnd);
+            $fellowshipApplication->setEndDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodEnd',$rowData,$headers)));
 
             //uploadedPhotoUrl
             $uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl',$rowData,$headers);
             //echo "uploadedPhotoUrl=".$uploadedPhotoUrl."<br>";
             $uploadedPhotoId = $this->getFileIdByUrl( $uploadedPhotoUrl );
-            $uploadedPhotoDb = $this->downloadFileToServer($user, $service, $uploadedPhotoId, null, $uploadPath);
-            if( !$uploadedPhotoDb ) {
-                throw new IOException('Unable to download file to server: uploadedPhotoUrl='.$uploadedPhotoUrl.', fileID='.$uploadedPhotoDb->getId());
+            if( $uploadedPhotoId ) {
+                $uploadedPhotoDb = $this->downloadFileToServer($user, $service, $uploadedPhotoId, null, $uploadPath);
+                if( !$uploadedPhotoDb ) {
+                    throw new IOException('Unable to download file to server: uploadedPhotoUrl='.$uploadedPhotoUrl.', fileDB='.$uploadedPhotoDb);
+                }
+                $user->setAvatar($uploadedPhotoDb); //set this file as Avatar
             }
-            $user->setAvatar($uploadedPhotoDb); //set this file as Avatar
 
             //uploadedCVUrl
             $uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl',$rowData,$headers);
             $uploadedCVUrlId = $this->getFileIdByUrl( $uploadedCVUrl );
-            $uploadedCVUrlDb = $this->downloadFileToServer($user, $service, $uploadedCVUrlId, null, $uploadPath);
-            if( !$uploadedCVUrlDb ) {
-                throw new IOException('Unable to download file to server: uploadedCVUrl='.$uploadedCVUrl.', fileID='.$uploadedCVUrlDb->getId());
+            if( $uploadedCVUrlId ) {
+                $uploadedCVUrlDb = $this->downloadFileToServer($user, $service, $uploadedCVUrlId, null, $uploadPath);
+                if( !$uploadedCVUrlDb ) {
+                    throw new IOException('Unable to download file to server: uploadedCVUrl='.$uploadedCVUrl.', fileDB='.$uploadedCVUrlDb);
+                }
+                $cv = new CurriculumVitae($user);
+                $cv->addCoverLetter($uploadedCVUrlDb);
+                $user->getCredentials()->addCv($cv);
             }
-            $cv = new CurriculumVitae($user);
-            $cv->getAttachmentContainer()->getDocumentContainers()->first()->addDocument($uploadedCVUrlDb);
-            $user->getCredentials()->addCv($cv);
 
             //uploadedCoverLetterUrl
             $uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl',$rowData,$headers);
             $uploadedCoverLetterUrlId = $this->getFileIdByUrl( $uploadedCoverLetterUrl );
-            $uploadedCoverLetterUrlDb = $this->downloadFileToServer($user, $service, $uploadedCoverLetterUrlId, null, $uploadPath);
-            if( !$uploadedCoverLetterUrlDb ) {
-                throw new IOException('Unable to download file to server: uploadedCoverLetterUrl='.$uploadedCoverLetterUrl.', fileID='.$uploadedCoverLetterUrlDb->getId());
+            if( $uploadedCoverLetterUrlId ) {
+                $uploadedCoverLetterUrlDb = $this->downloadFileToServer($user, $service, $uploadedCoverLetterUrlId, null, $uploadPath);
+                if( !$uploadedCoverLetterUrlDb ) {
+                    throw new IOException('Unable to download file to server: uploadedCoverLetterUrl='.$uploadedCoverLetterUrl.', fileDB='.$uploadedCoverLetterUrlDb);
+                }
+                $fellowshipApplication->addCoverLetter($uploadedCoverLetterUrlDb);
             }
-            $fellowshipApplication->getAttachmentContainer()->getDocumentContainers()->first()->addDocument($uploadedCoverLetterUrlDb);
 
-            //usl upload
+            $examination = new Examination($user);
+            $user->getCredentials()->addExamination($examination);
+            //uploadedUSMLEScoresUrl
+            $uploadedUSMLEScoresUrl = $this->getValueByHeaderName('uploadedUSMLEScoresUrl',$rowData,$headers);
+            $uploadedUSMLEScoresUrlId = $this->getFileIdByUrl( $uploadedUSMLEScoresUrl );
+            if( $uploadedUSMLEScoresUrlId ) {
+                $uploadedUSMLEScoresUrlDb = $this->downloadFileToServer($user, $service, $uploadedUSMLEScoresUrlId, null, $uploadPath);
+                if( !$uploadedUSMLEScoresUrlDb ) {
+                    throw new IOException('Unable to download file to server: uploadedUSMLEScoresUrl='.$uploadedUSMLEScoresUrl.', fileDB='.$uploadedUSMLEScoresUrlDb);
+                }
+                $examination->addScore($uploadedUSMLEScoresUrlDb);
+            }
 
-            //presentAddressStreet1
+            //presentAddress
+            $presentLocation = new Location($user);
+            $presentLocation->setName('Fellowship Applicant Present Address');
+            $presentLocation->addLocationType($presentLocationType);
+            $geoLocation = $this->createGeoLocation($em,$user,'presentAddress',$rowData,$headers);
+            //$geoLocation = new GeoLocation();
+            $presentLocation->setGeoLocation($geoLocation);
+            $user->addLocation($presentLocation);
 
+//            //popuilate geoLocation
+//            $geoLocation->setStreet1($this->getValueByHeaderName('presentAddressStreet1',$rowData,$headers));
+//            $geoLocation->setStreet2($this->getValueByHeaderName('presentAddressStreet2',$rowData,$headers));
+//            $geoLocation->setZip($this->getValueByHeaderName('presentAddressZip',$rowData,$headers));
+//            //presentAddressCity
+//            $presentAddressCity = $this->getValueByHeaderName('presentAddressCity',$rowData,$headers);
+//            if( $presentAddressCity ) {
+//                $transformer = new GenericTreeTransformer($em, $user, 'CityList');
+//                $presentAddressCityEntity = $transformer->reverseTransform($presentAddressCity);
+//                $geoLocation->setCity($presentAddressCityEntity);
+//            }
+//            //presentAddressState
+//            $presentAddressState = $this->getValueByHeaderName('presentAddressState',$rowData,$headers);
+//            if( $presentAddressState ) {
+//                $transformer = new GenericTreeTransformer($em, $user, 'States');
+//                $presentAddressStateEntity = $transformer->reverseTransform($presentAddressState);
+//                $geoLocation->setState($presentAddressStateEntity);
+//            }
+//            //presentAddressCountry
+//            $presentAddressCountry = $this->getValueByHeaderName('presentAddressCountry',$rowData,$headers);
+//            if( $presentAddressCountry ) {
+//                $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+//                $presentAddressCountryEntity = $transformer->reverseTransform($presentAddressCountry);
+//                $geoLocation->setCountry($presentAddressCountryEntity);
+//            }
+
+            //telephoneHome
+            //telephoneMobile
+            //telephoneFax
+            $presentLocation->setPhone($this->getValueByHeaderName('telephoneHome',$rowData,$headers));
+            $presentLocation->setMobile($this->getValueByHeaderName('telephoneMobile',$rowData,$headers));
+            $presentLocation->setFax($this->getValueByHeaderName('telephoneFax',$rowData,$headers));
+
+            //permanentAddress
+            $permanentLocation = new Location($user);
+            $permanentLocation->setName('Fellowship Applicant Permanent Address');
+            $permanentLocation->addLocationType($permanentLocationType);
+            $geoLocation = $this->createGeoLocation($em,$user,'permanentAddress',$rowData,$headers);
+            $permanentLocation->setGeoLocation($geoLocation);
+            $user->addLocation($permanentLocation);
+
+//            //popuilate geoLocation
+//            $geoLocation->setStreet1($this->getValueByHeaderName('permanentAddressStreet1',$rowData,$headers));
+//            $geoLocation->setStreet2($this->getValueByHeaderName('permanentAddressStreet2',$rowData,$headers));
+//            $geoLocation->setZip($this->getValueByHeaderName('permanentAddressZip',$rowData,$headers));
+//            //permanentAddressCity
+//            $permanentAddressCity = $this->getValueByHeaderName('permanentAddressCity',$rowData,$headers);
+//            if( $permanentAddressCity ) {
+//                $transformer = new GenericTreeTransformer($em, $user, 'CityList');
+//                $permanentAddressCityEntity = $transformer->reverseTransform($permanentAddressCity);
+//                $geoLocation->setCity($permanentAddressCityEntity);
+//            }
+//            //permanentAddressState
+//            $permanentAddressState = $this->getValueByHeaderName('permanentAddressState',$rowData,$headers);
+//            if( $permanentAddressState ) {
+//                $transformer = new GenericTreeTransformer($em, $user, 'States');
+//                $permanentAddressStateEntity = $transformer->reverseTransform($permanentAddressState);
+//                $geoLocation->setState($permanentAddressStateEntity);
+//            }
+//            //permanentAddressCountry
+//            $permanentAddressCountry = $this->getValueByHeaderName('permanentAddressCountry',$rowData,$headers);
+//            if( $permanentAddressCountry ) {
+//                $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+//                $permanentAddressCountryEntity = $transformer->reverseTransform($permanentAddressCountry);
+//                $geoLocation->setCountry($permanentAddressCountryEntity);
+//            }
+
+            //telephoneWork
+            $workLocation = new Location($user);
+            $workLocation->setName('Fellowship Applicant Work Address');
+            $workLocation->addLocationType($workLocationType);
+            $presentLocation->setPhone($this->getValueByHeaderName('telephoneWork',$rowData,$headers));
+            $user->addLocation($workLocation);
+
+
+            $citizenship = new Citizenship($user);
+            $user->getCredentials()->addCitizenship($citizenship);
+            //visaStatus
+            $citizenship->setVisa($this->getValueByHeaderName('visaStatus',$rowData,$headers));
+            //citizenshipCountry
+            $citizenshipCountry = $this->getValueByHeaderName('citizenshipCountry',$rowData,$headers);
+            if( $citizenshipCountry ) {
+                $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+                $citizenshipCountryEntity = $transformer->reverseTransform($citizenshipCountry);
+                $citizenship->setCountry($citizenshipCountryEntity);
+            }
+
+            //undergraduate
+            $undergraduateEducation = $this->createFellAppTraining($em,$user,"undergraduateSchool",$rowData,$headers);
+            $user->addTraining($undergraduateEducation);
+
+            //graduate
+            $graduateEducation = $this->createFellAppTraining($em,$user,"graduateSchool",$rowData,$headers);
+            $user->addTraining($graduateEducation);
+
+            //medical
+            $medicalEducation = $this->createFellAppTraining($em,$user,"medicalSchool",$rowData,$headers);
+            $user->addTraining($medicalEducation);
+
+            //residency
+            $residencyEducation = $this->createFellAppTraining($em,$user,"residency",$rowData,$headers);
+            $user->addTraining($residencyEducation);
+            //residencyArea => ResidencySpecialty
+            $residencyArea = $this->getValueByHeaderName('residencyArea',$rowData,$headers);
+            $transformer = new GenericTreeTransformer($em, $user, 'ResidencySpecialty');
+            $residencyAreaEntity = $transformer->reverseTransform($residencyArea);
+            $residencyEducation->setResidencySpecialty($residencyAreaEntity);
+
+            //gme1: gme1Start, gme1End, gme1Name, gme1Area => Major
+            $gme1Education = $this->createFellAppTraining($em,$user,"gme1",$rowData,$headers);
+            $user->addTraining($gme1Education);
+
+            //gme2: gme2Start, gme2End, gme2Name, gme2Area => Major
+            $gme2Education = $this->createFellAppTraining($em,$user,"gme2",$rowData,$headers);
+            $user->addTraining($gme2Education);
+
+            //otherExperience1Start	otherExperience1End	otherExperience1Name=>Major
+            $otherExperience1Education = $this->createFellAppTraining($em,$user,"otherExperience1",$rowData,$headers);
+            $user->addTraining($otherExperience1Education);
+
+            //otherExperience2Start	otherExperience2End	otherExperience2Name=>Major
+            $otherExperience2Education = $this->createFellAppTraining($em,$user,"otherExperience2",$rowData,$headers);
+            $user->addTraining($otherExperience2Education);
+
+            //otherExperience3Start	otherExperience3End	otherExperience3Name=>Major
+            $otherExperience3Education = $this->createFellAppTraining($em,$user,"otherExperience3",$rowData,$headers);
+            $user->addTraining($otherExperience3Education);
+
+            //USMLEStep1DatePassed	USMLEStep1Score
+            $examination->setUSMLEStep1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep1DatePassed',$rowData,$headers)));
+            $examination->setUSMLEStep1Score($this->getValueByHeaderName('USMLEStep1Score',$rowData,$headers));
+
+            //USMLEStep2CKDatePassed	USMLEStep2CKScore	USMLEStep2CSDatePassed	USMLEStep2CSScore
+            $examination->setUSMLEStep2CKDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CKDatePassed',$rowData,$headers)));
+            $examination->setUSMLEStep2CKScore($this->getValueByHeaderName('USMLEStep2CKScore',$rowData,$headers));
+            $examination->setUSMLEStep2CSDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CSDatePassed',$rowData,$headers)));
+            $examination->setUSMLEStep2CSScore($this->getValueByHeaderName('USMLEStep2CSScore',$rowData,$headers));
+
+            //USMLEStep3DatePassed	USMLEStep3Score
+            $examination->setUSMLEStep3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep3DatePassed',$rowData,$headers)));
+            $examination->setUSMLEStep3Score($this->getValueByHeaderName('USMLEStep3Score',$rowData,$headers));
+
+            //ECFMGCertificate
+            $ECFMGCertificateStr = $this->getValueByHeaderName('ECFMGCertificate',$rowData,$headers);
+            $ECFMGCertificate = false;
+            if( $ECFMGCertificateStr == 'Yes' ) {
+                $ECFMGCertificate = true;
+            }
+            $examination->setECFMGCertificate($ECFMGCertificate);
+
+            //ECFMGCertificateNumber	ECFMGCertificateDate
+            $examination->setECFMGCertificateNumber($this->getValueByHeaderName('ECFMGCertificateNumber',$rowData,$headers));
+            $examination->setECFMGCertificateDate($this->transformDatestrToDate($this->getValueByHeaderName('ECFMGCertificateDate',$rowData,$headers)));
+
+            //COMLEXLevel1DatePassed	COMLEXLevel1Score	COMLEXLevel2DatePassed	COMLEXLevel2Score	COMLEXLevel3DatePassed	COMLEXLevel3Score
+            $examination->setCOMLEXLevel1Score($this->getValueByHeaderName('COMLEXLevel1Score',$rowData,$headers));
+            $examination->setCOMLEXLevel1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel1DatePassed',$rowData,$headers)));
+            $examination->setCOMLEXLevel2Score($this->getValueByHeaderName('COMLEXLevel2Score',$rowData,$headers));
+            $examination->setCOMLEXLevel2DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel2DatePassed',$rowData,$headers)));
+            $examination->setCOMLEXLevel3Score($this->getValueByHeaderName('COMLEXLevel3Score',$rowData,$headers));
+            $examination->setCOMLEXLevel3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel3DatePassed',$rowData,$headers)));
+
+            //medicalLicensure1Country	medicalLicensure1State	medicalLicensure1DateIssued	medicalLicensure1Number	medicalLicensure1Active
+            $medicalLicensure1 = $this->createFellAppMedicalLicense($em,$user,"medicalLicensure1",$rowData,$headers);
+            $user->getCredentials()->addStateLicense($medicalLicensure1);
+
+            //medicalLicensure2
+            $medicalLicensure2 = $this->createFellAppMedicalLicense($em,$user,"medicalLicensure2",$rowData,$headers);
+            $user->getCredentials()->addStateLicense($medicalLicensure2);
+
+            //suspendedLicensure
+            $fellowshipApplication->setReprimand($this->getValueByHeaderName('suspendedLicensure',$rowData,$headers));
+            //uploadedReprimandExplanationUrl
+            $uploadedReprimandExplanationUrl = $this->getValueByHeaderName('uploadedReprimandExplanationUrl',$rowData,$headers);
+            $uploadedReprimandExplanationUrlId = $this->getFileIdByUrl( $uploadedReprimandExplanationUrl );
+            if( $uploadedReprimandExplanationUrlId ) {
+                $uploadedReprimandExplanationUrlDb = $this->downloadFileToServer($user, $service, $uploadedReprimandExplanationUrlId, null, $uploadPath);
+                if( !$uploadedReprimandExplanationUrlDb ) {
+                    throw new IOException('Unable to download file to server: uploadedReprimandExplanationUrl='.$uploadedReprimandExplanationUrl.', fileID='.$uploadedReprimandExplanationUrlDb->getId());
+                }
+                $fellowshipApplication->addReprimandDocument($uploadedReprimandExplanationUrlDb);
+            }
+
+            //legalSuit
+            $fellowshipApplication->setLawsuit($this->getValueByHeaderName('legalSuit',$rowData,$headers));
+            //uploadedLegalExplanationUrl
+            $uploadedLegalExplanationUrl = $this->getValueByHeaderName('uploadedLegalExplanationUrl',$rowData,$headers);
+            $uploadedLegalExplanationUrlId = $this->getFileIdByUrl( $uploadedLegalExplanationUrl );
+            if( $uploadedLegalExplanationUrlId ) {
+                $uploadedLegalExplanationUrlDb = $this->downloadFileToServer($user, $service, $uploadedLegalExplanationUrlId, null, $uploadPath);
+                if( !$uploadedLegalExplanationUrlDb ) {
+                    throw new IOException('Unable to download file to server: uploadedLegalExplanationUrl='.$uploadedLegalExplanationUrl.', fileID='.$uploadedLegalExplanationUrlDb->getId());
+                }
+                $fellowshipApplication->addReprimandDocument($uploadedLegalExplanationUrlDb);
+            }
+
+            //boardCertification1Board	boardCertification1Area	boardCertification1Date
+            $boardCertification1 = $this->createFellAppBoardCertification($em,$user,"boardCertification1",$rowData,$headers);
+            $user->getCredentials()->addBoardCertification($boardCertification1);
+            //boardCertification2
+            $boardCertification2 = $this->createFellAppBoardCertification($em,$user,"boardCertification2",$rowData,$headers);
+            $user->getCredentials()->addBoardCertification($boardCertification2);
+            //boardCertification3
+            $boardCertification3 = $this->createFellAppBoardCertification($em,$user,"boardCertification3",$rowData,$headers);
+            $user->getCredentials()->addBoardCertification($boardCertification3);
+
+            //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1	recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
+            $ref1 = $this->createFellAppReference($em,$user,'recommendation1',$rowData,$headers);
+            $fellowshipApplication->addReference($ref1);
+            $ref2 = $this->createFellAppReference($em,$user,'recommendation2',$rowData,$headers);
+            $fellowshipApplication->addReference($ref2);
+            $ref3 = $this->createFellAppReference($em,$user,'recommendation3',$rowData,$headers);
+            $fellowshipApplication->addReference($ref3);
+            $ref4 = $this->createFellAppReference($em,$user,'recommendation4',$rowData,$headers);
+            $fellowshipApplication->addReference($ref4);
+
+            //honors
 
             exit(1);
+
+            $em->flush();
         }
 
 
@@ -266,33 +563,218 @@ class FellAppController extends Controller {
         exit('end populate');
     }
 
+    public function createFellAppReference($em,$user,$typeStr,$rowData,$headers) {
+
+        $reference = new Reference($user);
+        $geoLocation = $this->createGeoLocation($em,$user,$typeStr,$rowData,$headers);
+        $reference->setGeoLocation($geoLocation);
+
+        $instStr = $this->getValueByHeaderName($typeStr."Institution",$rowData,$headers);
+        if( $instStr ) {
+            $params = array('type'=>'Educational');
+            $transformer = new GenericTreeTransformer($em, $user, 'Institution', null, $params);
+            $instEntity = $transformer->reverseTransform($instStr);
+            $reference->setInstitution($instEntity);
+        }
+
+        return $reference;
+    }
+
+    public function createGeoLocation($em,$user,$typeStr,$rowData,$headers) {
+        $geoLocation = new GeoLocation();
+        //popuilate geoLocation
+        $geoLocation->setStreet1($this->getValueByHeaderName($typeStr.'Street1',$rowData,$headers));
+        $geoLocation->setStreet2($this->getValueByHeaderName($typeStr.'Street2',$rowData,$headers));
+        $geoLocation->setZip($this->getValueByHeaderName($typeStr.'Zip',$rowData,$headers));
+        //presentAddressCity
+        $presentAddressCity = $this->getValueByHeaderName($typeStr.'City',$rowData,$headers);
+        if( $presentAddressCity ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'CityList');
+            $presentAddressCityEntity = $transformer->reverseTransform($presentAddressCity);
+            $geoLocation->setCity($presentAddressCityEntity);
+        }
+        //presentAddressState
+        $presentAddressState = $this->getValueByHeaderName($typeStr.'State',$rowData,$headers);
+        if( $presentAddressState ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'States');
+            $presentAddressStateEntity = $transformer->reverseTransform($presentAddressState);
+            $geoLocation->setState($presentAddressStateEntity);
+        }
+        //presentAddressCountry
+        $presentAddressCountry = $this->getValueByHeaderName($typeStr.'Country',$rowData,$headers);
+        if( $presentAddressCountry ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+            $presentAddressCountryEntity = $transformer->reverseTransform($presentAddressCountry);
+            $geoLocation->setCountry($presentAddressCountryEntity);
+        }
+
+        return $geoLocation;
+    }
+
+    public function transformDatestrToDate($datestr) {
+        if( !$datestr ) {
+            return null;
+        }
+        return new \DateTime($datestr);
+    }
+
+    public function createFellAppBoardCertification($em,$user,$typeStr,$rowData,$headers) {
+
+        $boardCertification = new BoardCertification($user);
+        $user->getCredentials()->addBoardCertification($boardCertification);
+
+        //boardCertification1Board
+        $boardCertificationBoard = $this->getValueByHeaderName($typeStr.'Board',$rowData,$headers);
+        if( $boardCertificationBoard ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'BoardCertifiedSpecialties');
+            $boardCertificationBoardEntity = $transformer->reverseTransform($boardCertificationBoard);
+            $boardCertification->setCertifyingBoardOrganization($boardCertificationBoardEntity);
+        }
+
+        //boardCertification1Area => BoardCertifiedSpecialties
+        $boardCertificationArea = $this->getValueByHeaderName($typeStr.'Area',$rowData,$headers);
+        if( $boardCertificationArea ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'BoardCertifiedSpecialties');
+            $boardCertificationAreaEntity = $transformer->reverseTransform($boardCertificationArea);
+            $boardCertification->setSpecialty($boardCertificationAreaEntity);
+        }
+
+        //boardCertification1Date
+        $boardCertification->setIssueDate($this->transformDatestrToDate($this->getValueByHeaderName($typeStr.'Date',$rowData,$headers)));
+
+        return $boardCertification;
+    }
+
+    public function createFellAppMedicalLicense($em,$user,$typeStr,$rowData,$headers) {
+
+        $license = new StateLicense($user);
+        $user->getCredentials()->addStateLicense($license);
+
+        //medicalLicensure1DateIssued
+        $license->setLicenseIssuedDate($this->transformDatestrToDate($this->getValueByHeaderName($typeStr.'DateIssued',$rowData,$headers)));
+
+        //medicalLicensure1Active
+        $medicalLicensureActive = $this->getValueByHeaderName($typeStr.'Active',$rowData,$headers);
+        if( $medicalLicensureActive ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'MedicalLicenseStatus');
+            $medicalLicensureActiveEntity = $transformer->reverseTransform($medicalLicensureActive);
+            $license->setActive($medicalLicensureActiveEntity);
+        }
+
+        //medicalLicensure1Country
+        $medicalLicensureCountry = $this->getValueByHeaderName($typeStr.'Country',$rowData,$headers);
+        if( $medicalLicensureCountry ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+            $medicalLicensureCountryEntity = $transformer->reverseTransform($medicalLicensureCountry);
+            $license->setCountry($medicalLicensureCountryEntity);
+        }
+
+        //medicalLicensure1State
+        $medicalLicensureState = $this->getValueByHeaderName($typeStr.'State',$rowData,$headers);
+        if( $medicalLicensureState ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'States');
+            $medicalLicensureStateEntity = $transformer->reverseTransform($medicalLicensureState);
+            $license->setState($medicalLicensureStateEntity);
+        }
+
+        //medicalLicensure1Number
+        $license->setLicenseNumber($this->getValueByHeaderName($typeStr.'Number',$rowData,$headers));
+
+        return $license;
+    }
+
+    public function createFellAppTraining($em,$user,$typeStr,$rowData,$headers) {
+        $training = new Training($user);
+        $user->addTraining($training);
+
+        $majorMatchString = $typeStr.'Major';
+        $nameMatchString = $typeStr.'Name';
+
+        if( strpos($typeStr,'otherExperience') !== false ) {
+            //exception for otherExperience: Name == Major (otherExperience1Name => otherExperience1Major)
+            $majorMatchString = $typeStr.'Name';
+            $nameMatchString = null;
+        }
+
+        if( strpos($typeStr,'gme') !== false ) {
+            //exception for gme2Area => Major (gme2Area => gme2Major)
+            $majorMatchString = $typeStr.'Major';
+        }
+
+        //Start
+        $training->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName($typeStr.'Start',$rowData,$headers)));
+
+        //End
+        $training->setCompletionDate($this->transformDatestrToDate($this->getValueByHeaderName($typeStr.'End',$rowData,$headers)));
+
+        //Name
+        $schoolName = $this->getValueByHeaderName($nameMatchString,$rowData,$headers);
+        if( $schoolName ) {
+            $params = array('type'=>'Educational');
+            $transformer = new GenericTreeTransformer($em, $user, 'Institution', null, $params);
+            $schoolNameEntity = $transformer->reverseTransform($schoolName);
+            $training->setInstitution($schoolNameEntity);
+        }
+
+        //Major
+        $schoolMajor = $this->getValueByHeaderName($majorMatchString,$rowData,$headers);
+        if( $schoolMajor ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'MajorTrainingList');
+            $schoolMajorEntity = $transformer->reverseTransform($schoolMajor);
+            $training->addMajor($schoolMajorEntity);
+        }
+
+        //Degree
+        $schoolDegree = $this->getValueByHeaderName($typeStr.'Degree',$rowData,$headers);
+        if( $schoolDegree ) {
+            $transformer = new GenericTreeTransformer($em, $user, 'TrainingDegreeList');
+            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+            $training->setDegree($schoolDegreeEntity);
+        }
+
+        return $training;
+    }
+
 
     public function getValueByHeaderName($header, $row, $headers) {
 
         $res = null;
 
+        if( !$header ) {
+            return $res;
+        }
+
         //echo "header=".$header."<br>";
         //print_r($headers);
-        //print_r($row);
+        //print_r($row[0]);
 
         $key = array_search($header, $headers[0]);
         //echo "key=".$key."<br>";
+
+        if( $key === false ) {
+            //echo "key is false !!!!!!!!!!<br>";
+            return $res;
+        }
 
         if( array_key_exists($key, $row[0]) ) {
             $res = $row[0][$key];
         }
 
+        //echo "res=".$res."<br>";
         return $res;
     }
 
     //parse url and get file id
     public function getFileIdByUrl( $url ) {
+        if( !$url ) {
+            return null;
+        }
         //https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eSDQ0MkJKSjhLN1U/view?usp=drivesdk
         $urlArr = explode("/d/", $url);
         $urlSecond = $urlArr[1];
         $urlSecondArr = explode("/", $urlSecond);
-        $url = $urlSecondArr[0];
-        return $url;
+        $fileId = $urlSecondArr[0];
+        return $fileId;
     }
 
 
@@ -499,7 +981,7 @@ class FellAppController extends Controller {
             }
 
             $em->persist($object);
-            $em->flush($object);
+            //$em->flush($object);
 
             $fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
             $target_file = $fullpath . $fileUniqueName;

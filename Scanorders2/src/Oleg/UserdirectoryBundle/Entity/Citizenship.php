@@ -4,13 +4,12 @@ namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_curriculumVitae")
+ * @ORM\Table(name="user_citizenship")
  */
-class CurriculumVitae
+class Citizenship
 {
 
     /**
@@ -34,27 +33,31 @@ class CurriculumVitae
     private $createdBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="cvs")
+     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="citizenships")
      * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $credentials;
 
 
+    //country
     /**
-     * @ORM\ManyToMany(targetEntity="Document")
-     * @ORM\JoinTable(name="user_curriculumVitae_coverLetter",
-     *      joinColumns={@ORM\JoinColumn(name="curriculumVitae_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true)}
-     *      )
-     **/
-    private $coverLetters;
+     * @ORM\ManyToOne(targetEntity="Countries")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $country;
+
+    //visa
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $visa;
+
+
 
 
     public function __construct( $user ) {
         $this->setCreatedBy($user);
         $this->setCreationDate( new \DateTime());
-
-        $this->coverLetters = new ArrayCollection();
     }
 
     /**
@@ -114,33 +117,43 @@ class CurriculumVitae
     }
 
     /**
-     * @return mixed
+     * @param mixed $country
      */
-    public function getCreatedBy()
+    public function setCountry($country)
     {
-        return $this->createdBy;
+        $this->country = $country;
     }
 
-    public function addCoverLetter($item)
+    /**
+     * @return mixed
+     */
+    public function getCountry()
     {
-        if( $item && !$this->coverLetters->contains($item) ) {
-            $this->coverLetters->add($item);
-        }
-        return $this;
+        return $this->country;
     }
-    public function removeCoverLetter($item)
+
+    /**
+     * @param mixed $visa
+     */
+    public function setVisa($visa)
     {
-        $this->coverLetters->removeElement($item);
+        $this->visa = $visa;
     }
-    public function getCoverLetters()
+
+    /**
+     * @return mixed
+     */
+    public function getVisa()
     {
-        return $this->coverLetters;
+        return $this->visa;
     }
+
+
 
 
 
     public function __toString() {
-        return "Curriculum Vitae";
+        return "Citizenship";
     }
 
 }

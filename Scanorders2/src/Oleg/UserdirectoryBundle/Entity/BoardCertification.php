@@ -44,7 +44,13 @@ class BoardCertification
      * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="boardCertification")
      * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $credentials;
+    private $credentials;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CertifyingBoardOrganization")
+     **/
+    private $certifyingBoardOrganization;
 
 
     /**
@@ -126,6 +132,24 @@ class BoardCertification
     {
         return $this->specialty;
     }
+
+    /**
+     * @param mixed $certifyingBoardOrganization
+     */
+    public function setCertifyingBoardOrganization($certifyingBoardOrganization)
+    {
+        $this->certifyingBoardOrganization = $certifyingBoardOrganization;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCertifyingBoardOrganization()
+    {
+        return $this->certifyingBoardOrganization;
+    }
+
+
 
     public function __toString() {
         return "Board Certification";

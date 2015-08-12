@@ -41,6 +41,11 @@ class StateLicense
     /**
      * @ORM\Column(type="date", nullable=true)
      */
+    private $licenseIssuedDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
     private $licenseExpirationDate;
 
 
@@ -48,7 +53,13 @@ class StateLicense
      * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="stateLicense")
      * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $credentials;
+    private $credentials;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="MedicalLicenseStatus")
+     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
+     **/
+    private $active;
 
 
     /**
@@ -145,6 +156,38 @@ class StateLicense
     public function getCountry()
     {
         return $this->country;
+    }
+
+    /**
+     * @param mixed $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param mixed $licenseIssuedDate
+     */
+    public function setLicenseIssuedDate($licenseIssuedDate)
+    {
+        $this->licenseIssuedDate = $licenseIssuedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenseIssuedDate()
+    {
+        return $this->licenseIssuedDate;
     }
 
 

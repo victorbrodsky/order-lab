@@ -139,7 +139,9 @@ class Spot {
         if( $updated ) {
             $this->updatedOn = $updated;
         } else {
-            $this->updatedOn = new \DateTime();
+            if( $this->id ) {
+                $this->updatedOn = new \DateTime();
+            }
         }
     }
 

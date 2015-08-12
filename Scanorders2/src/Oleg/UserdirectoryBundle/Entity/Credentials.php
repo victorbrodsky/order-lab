@@ -95,6 +95,16 @@ class Credentials extends BaseUserAttributes
      */
     private $cvs;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Examination", mappedBy="credentials", cascade={"persist"})
+     */
+    private $examinations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Citizenship", mappedBy="credentials", cascade={"persist"})
+     */
+    private $citizenships;
+
 
     public function __construct($user) {
 
@@ -105,6 +115,8 @@ class Credentials extends BaseUserAttributes
         $this->codeNYPH = new ArrayCollection();
         $this->identifiers = new ArrayCollection();
         $this->cvs = new ArrayCollection();
+        $this->examinations = new ArrayCollection();
+        $this->citizenships = new ArrayCollection();
 
 
         $this->setType(self::TYPE_RESTRICTED);
@@ -409,6 +421,38 @@ class Credentials extends BaseUserAttributes
     public function removeCv($item)
     {
         $this->cvs->removeElement($item);
+    }
+
+    public function addExamination($item)
+    {
+        if( $item && !$this->examinations->contains($item) ) {
+            $this->examinations->add($item);
+        }
+        return $this;
+    }
+    public function removeExamination($item)
+    {
+        $this->examinations->removeElement($item);
+    }
+    public function getExaminations()
+    {
+        return $this->examinations;
+    }
+
+    public function addCitizenship($item)
+    {
+        if( $item && !$this->citizenships->contains($item) ) {
+            $this->citizenships->add($item);
+        }
+        return $this;
+    }
+    public function removeCitizenship($item)
+    {
+        $this->citizenships->removeElement($item);
+    }
+    public function getCitizenships()
+    {
+        return $this->citizenships;
     }
 
 

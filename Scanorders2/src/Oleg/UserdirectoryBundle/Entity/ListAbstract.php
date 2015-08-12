@@ -474,10 +474,14 @@ abstract class ListAbstract
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedon($date=null)
+    public function setUpdatedon($updated=null)
     {
-        if( $this->id ) {
-            $this->updatedon = new \DateTime();
+        if( $updated ) {
+            $this->updatedon = $updated;
+        } else {
+            if( $this->id ) {
+                $this->updatedon = new \DateTime();
+            }
         }
     }
 

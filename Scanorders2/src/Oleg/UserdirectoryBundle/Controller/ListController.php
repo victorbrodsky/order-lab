@@ -79,6 +79,8 @@ class ListController extends Controller
      * @Route("/user-wrappers/", name="userwrappers-list")
      * @Route("/spot-entities/", name="spotentities-list")
      * @Route("/spot-purposes/", name="spotpurposes-list")
+     * @Route("/medical-license-statuses/", name="medicalstatuses-list")
+     * @Route("/certifying-board-organizations/", name="certifyingboardorganizations-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -245,6 +247,8 @@ class ListController extends Controller
      * @Route("/user-wrappers/", name="userwrappers_create")
      * @Route("/spot-entities/", name="spotentities_create")
      * @Route("/spot-purposes/", name="spotpurposes_create")
+     * @Route("/medical-license-statuses/", name="medicalstatuses_create")
+     * @Route("/certifying-board-organizations/", name="certifyingboardorganizations_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -385,6 +389,8 @@ class ListController extends Controller
      * @Route("/user-wrappers/new", name="userwrappers_new")
      * @Route("/spot-entities/new", name="spotentities_new")
      * @Route("/spot-purposes/new", name="spotpurposes_new")
+     * @Route("/medical-license-statuses/new", name="medicalstatuses_new")
+     * @Route("/certifying-board-organizations/new", name="certifyingboardorganizations_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -496,6 +502,8 @@ class ListController extends Controller
      * @Route("/user-wrappers/{id}", name="userwrappers_show")
      * @Route("/spot-entities/{id}", name="spotentities_show")
      * @Route("/spot-purposes/{id}", name="spotpurposes_show")
+     * @Route("/medical-license-statuses/{id}", name="medicalstatuses_show")
+     *@Route("/certifying-board-organizations/{id}", name="certifyingboardorganizations_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -597,6 +605,8 @@ class ListController extends Controller
      * @Route("/user-wrappers/{id}/edit", name="userwrappers_edit")
      * @Route("/spot-entities/{id}/edit", name="spotentities_edit")
      * @Route("/spot-purposes/{id}/edit", name="spotpurposes_edit")
+     * @Route("/medical-license-statuses/{id}/edit", name="medicalstatuses_edit")
+     * @Route("/certifying-board-organizations/{id}/edit", name="certifyingboardorganizations_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -730,6 +740,8 @@ class ListController extends Controller
      * @Route("/user-wrappers/{id}", name="userwrappers_update")
      * @Route("/spot-entities/{id}", name="spotentities_update")
      * @Route("/spot-purposes/{id}", name="spotpurposes_update")
+     * @Route("/medical-license-statuses/{id}", name="medicalstatuses_update")
+     * @Route("/certifying-board-organizations/{id}", name="certifyingboardorganizations_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1097,6 +1109,14 @@ class ListController extends Controller
                 $className = "SpotPurpose";
                 $displayName = "Spot Purposes";
                 break;
+            case "medicalstatuses":
+                $className = "MedicalLicenseStatus";
+                $displayName = "Medical License Statuses";
+                break;
+            case "certifyingboardorganizations":
+                $className = "CertifyingBoardOrganization";
+                $displayName = "Certifying Board Organizations";
+                break;
 
             default:
                 $className = null;
@@ -1183,6 +1203,8 @@ class ListController extends Controller
      * @Route("/user-wrappers/{id}", name="userwrappers_delete")
      * @Route("/spot-entities/{id}", name="spotentities_delete")
      * @Route("/spot-purposes/{id}", name="spotpurposes_delete")
+     * @Route("/medical-license-statuses/{id}", name="medicalstatuses_delete")
+     * @Route("/certifying-board-organizations/{id}", name="certifyingboardorganizations_delete")
      *
      * @Method("DELETE")
      */

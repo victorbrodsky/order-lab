@@ -4,9 +4,11 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
+use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
+use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
@@ -210,7 +212,10 @@ class AdminController extends Controller
         $count_sex = $this->generateSex();
 
         $count_PositionTypeList = $this->generatePositionTypeList();
-        //$count_generateTitlePositionTypes = $this->generateTitlePositionTypes();
+
+        $count_generateMedicalLicenseStatus = $this->generateMedicalLicenseStatus();
+
+        $count_generateCertifyingBoardOrganization = generateCertifyingBoardOrganization();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -260,7 +265,8 @@ class AdminController extends Controller
             'Position Types='.$count_PositionTypeList.', '.
             'Comment Group Types='.$count_CommentGroupType.', '.
             'Spot Entities='.$count_SpotEntity.', '.
-            //'TitlePositionTypes='.$count_generateTitlePositionTypes.' '.
+            'Medical License Statuses='.$count_generateMedicalLicenseStatus.', '.
+            'Certifying Board Organizations='.$count_generateCertifyingBoardOrganization.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -1737,7 +1743,8 @@ class AdminController extends Controller
 
         $elements = array(
             'Full Time',
-            'Part Time'
+            'Part Time',
+            'Pathology Fellowship Applicant'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -2068,7 +2075,10 @@ class AdminController extends Controller
             'Accessioning',
             'Storage',
             'Filing Room',
-            'Off Site Slide Storage'
+            'Off Site Slide Storage',
+            'Present Address',
+            'Permanent Address',
+            'Work Address'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -3129,6 +3139,71 @@ class AdminController extends Controller
 
     }
 
+    public function generateMedicalLicenseStatus() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:MedicalLicenseStatus')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Yes',
+            'No',
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new MedicalLicenseStatus();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+
+    public function generateCertifyingBoardOrganization() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:CertifyingBoardOrganization')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'American Board of Pathology',
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new CertifyingBoardOrganization();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
 
 

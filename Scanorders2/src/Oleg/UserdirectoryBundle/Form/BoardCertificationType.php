@@ -13,6 +13,25 @@ class BoardCertificationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $builder->add( 'certifyingBoardOrganization', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:CertifyingBoardOrganization',
+            'property' => 'name',
+            'label'=>'Certifying Board Organization:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+        ));
+
+
         $builder->add( 'specialty', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:BoardCertifiedSpecialties',
             'property' => 'name',

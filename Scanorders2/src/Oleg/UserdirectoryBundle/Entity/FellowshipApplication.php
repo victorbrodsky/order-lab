@@ -42,20 +42,59 @@ class FellowshipApplication extends BaseUserAttributes
     private $institution;
 
     /**
-     * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="Document")
+     * @ORM\JoinTable(name="user_fellApp_coverLetter",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true)}
+     *      )
      **/
-    private $attachmentContainer;
+    private $coverLetters;
 
 
+    //Reprimands
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $reprimand;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Document")
+     * @ORM\JoinTable(name="user_fellApp_reprimandDocument",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="reprimandDocument_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $reprimandDocuments;
+
+    //Lawsuits
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $lawsuit;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Document")
+     * @ORM\JoinTable(name="user_fellApp_lawsuitDocument",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="lawsuitDocument_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $lawsuitDocuments;
+
+    /**
+     * Accession Number
+     * @ORM\OneToMany(targetEntity="Reference", mappedBy="fellapp", cascade={"persist"})
+     */
+    private $references;
 
 
     public function __construct($author=null) {
         parent::__construct($author);
 
-        //add one document
-        $this->createAttachmentDocument();
+        $this->coverLetters = new ArrayCollection();
+        $this->reprimandDocuments = new ArrayCollection();
+        $this->lawsuitDocuments = new ArrayCollection();
+        $this->references = new ArrayCollection();
     }
 
 
@@ -140,34 +179,112 @@ class FellowshipApplication extends BaseUserAttributes
         return $this->user;
     }
 
-    /**
-     * @param mixed $attachmentContainer
-     */
-    public function setAttachmentContainer($attachmentContainer)
+
+
+    public function addCoverLetter($item)
     {
-        $this->attachmentContainer = $attachmentContainer;
+        if( $item && !$this->coverLetters->contains($item) ) {
+            $this->coverLetters->add($item);
+        }
+        return $this;
+    }
+    public function removeCoverLetter($item)
+    {
+        $this->coverLetters->removeElement($item);
+    }
+    public function getCoverLetters()
+    {
+        return $this->coverLetters;
+    }
+
+    public function addReprimandDocument($item)
+    {
+        if( $item && !$this->reprimandDocuments->contains($item) ) {
+            $this->reprimandDocuments->add($item);
+        }
+        return $this;
+    }
+    public function removeReprimandDocument($item)
+    {
+        $this->reprimandDocuments->removeElement($item);
+    }
+    public function getReprimandDocuments()
+    {
+        return $this->reprimandDocuments;
+    }
+
+    public function addLawsuitDocument($item)
+    {
+        if( $item && !$this->lawsuitDocuments->contains($item) ) {
+            $this->lawsuitDocuments->add($item);
+        }
+        return $this;
+    }
+    public function removeLawsuitDocument($item)
+    {
+        $this->lawsuitDocuments->removeElement($item);
+    }
+    public function getLawsuitDocuments()
+    {
+        return $this->lawsuitDocuments;
+    }
+
+    /**
+     * @param mixed $lawsuit
+     */
+    public function setLawsuit($lawsuit)
+    {
+        $this->lawsuit = $lawsuit;
     }
 
     /**
      * @return mixed
      */
-    public function getAttachmentContainer()
+    public function getLawsuit()
     {
-        return $this->attachmentContainer;
+        return $this->lawsuit;
     }
 
-    //create attachmentDocument holder with one DocumentContainer if not exists
-    public function createAttachmentDocument() {
-        //add one document
-        $attachmentContainer = $this->getAttachmentContainer();
-        if( !$attachmentContainer ) {
-            $attachmentContainer = new AttachmentContainer();
-            $this->setAttachmentContainer($attachmentContainer);
-        }
-        if( count($attachmentContainer->getDocumentContainers()) == 0 ) {
-            $attachmentContainer->addDocumentContainer( new DocumentContainer() );
-        }
+    /**
+     * @param mixed $reprimand
+     */
+    public function setReprimand($reprimand)
+    {
+        $this->reprimand = $reprimand;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReprimand()
+    {
+        return $this->reprimand;
+    }
+
+    public function addReference($item)
+    {
+        if( $item && !$this->references->contains($item) ) {
+            $this->references->add($item);
+        }
+        return $this;
+    }
+    public function removeReference($item)
+    {
+        $this->references->removeElement($item);
+    }
+    public function getReferences()
+    {
+        return $this->references;
+    }
+
+
+
+//    //create attachmentDocument holder with one Document if not exists
+//    public function createCoverLetter() {
+//        if( count($this->getCoverLetters()) == 0 ) {
+//            $this->addCoverLetter( new Document() );
+//        }
+//    }
 
 
 

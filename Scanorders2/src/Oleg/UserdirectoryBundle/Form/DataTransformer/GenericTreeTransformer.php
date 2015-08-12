@@ -19,6 +19,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 class GenericTreeTransformer implements DataTransformerInterface
 {
@@ -145,7 +146,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
     public function createNew($name) {
 
-        //echo "enter create new name=".$name."<br>";
+        //echo $this->className.": enter create new name=".$name."<br>";
         //exit('create new !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
         if( !$name || $name == "" ) {
@@ -177,7 +178,8 @@ class GenericTreeTransformer implements DataTransformerInterface
                 return $newEntity;
             }
 
-            //echo "persist and flush !!!!!!!!!!!!!!!! <br>";
+            //echo $this->className.": persist and flush !!!!!!!!!!!!!!!! <br>";
+
             $this->em->persist($newEntity);
             $this->em->flush($newEntity);
 
