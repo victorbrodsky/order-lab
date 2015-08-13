@@ -95,6 +95,7 @@ class FellAppController extends Controller {
 
         //echo "fellapp home <br>";
 
+        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
@@ -104,7 +105,16 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find entity by id='.$id);
         }
 
-        $form = $this->createForm( new FellowshipApplicationType(), $entity, array('disabled' => true) );
+        $params = array(
+            'cycle' => 'show',
+            'sc' => $this->get('security.context'),
+            'em' => $em,
+            'user' => $entity->getUser(),
+            'cloneuser' => null,
+            'roles' => $user->getRoles()
+        );
+
+        $form = $this->createForm( new FellowshipApplicationType($params), $entity, array('disabled' => true) );
 
         return array(
             'form' => $form->createView(),
@@ -168,7 +178,15 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find entity by id='.$id);
         }
 
-        $form = $this->createForm( new FellowshipApplicationType(), $entity );
+        $params = array(
+            'cycle' => 'edit',
+            'sc' => $this->get('security.context'),
+            'em' => $this->getDoctrine()->getManager(),
+            'user' => $entity->getUser(),
+            'cloneuser' => null
+        );
+
+        $form = $this->createForm( new FellowshipApplicationType($params), $entity );
 
         return array(
             'form' => $form->createView(),

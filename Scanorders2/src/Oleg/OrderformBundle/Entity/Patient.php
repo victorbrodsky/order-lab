@@ -707,13 +707,14 @@ class Patient extends ObjectAbstract
             $this->setTracker($tracker);
         }
 
-        $spot = new Spot($user,$system);
-        $spot->setCurrentLocation($patientLocation);
-        $spot->setSpotEntity($spotEntity);
-        $spot->setCreation(new \DateTime());
-        $spot->setSpottedOn(new \DateTime());
+        if( !$spotEntity ) {
+            $spotEntity = new Spot($user,$system);
+        }
+        $spotEntity->setCurrentLocation($patientLocation);
+        $spotEntity->setCreation(new \DateTime());
+        $spotEntity->setSpottedOn(new \DateTime());
 
-        $tracker->addSpot($spot);
+        $tracker->addSpot($spotEntity);
     }
 
     public function getRace()

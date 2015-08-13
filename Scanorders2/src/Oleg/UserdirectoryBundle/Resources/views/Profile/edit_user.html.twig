@@ -2374,11 +2374,13 @@
 
         {#FellowshipApplication#}
         {% set showFellowshipApplications = false %}
-        {% for fellowshipApplication in form.fellowshipApplications %}
-            {% if fellowshipApplication.vars.value or fellowshipApplication.timestamp.vars.value %}
-                {% set showFellowshipApplications = true %}
-            {% endif %}
-        {% endfor %}
+        {% if form.fellowshipApplications is defined %}
+            {% for fellowshipApplication in form.fellowshipApplications %}
+                {% if fellowshipApplication.vars.value or fellowshipApplication.timestamp.vars.value %}
+                    {% set showFellowshipApplications = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
         {% if showFellowshipApplications and form.fellowshipApplications is defined %}
 
@@ -2406,7 +2408,9 @@
                 </div>
             </div>
         {% else %}
-            {% do form.fellowshipApplications.setRendered %}
+            {% if form.fellowshipApplications is defined %}
+                {% do form.fellowshipApplications.setRendered %}
+            {% endif %}
         {% endif %}
 
 

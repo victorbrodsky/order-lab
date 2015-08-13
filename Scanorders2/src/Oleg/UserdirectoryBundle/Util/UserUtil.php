@@ -25,6 +25,7 @@ class UserUtil {
 
     private $usernamePrefix = 'wcmc-cwid';
 
+    //TODO: rewrite using Aperio's DB not SOAP functions
     public function generateUsersExcel( $em, $serviceContainer ) {
         $inputFileName = __DIR__ . '/../Util/users.xlsx';
 
@@ -130,9 +131,11 @@ class UserUtil {
             $aperioUtil = new AperioUtil();
             //echo "username=".$username."<br>";
             $userid = $aperioUtil->getUserIdByUserName($username);
-            //echo "userid=".$userid."<br>";
-            $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
-            $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+            if( $userid ) {
+                //echo "userid=".$userid."<br>";
+                $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
+                $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+            }
             //************** end of  Aperio group roles **************//
 
             //TODO: implement service!

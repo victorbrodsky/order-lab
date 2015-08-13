@@ -22,20 +22,37 @@
     {{ formmacros.simplefield( "Applicant:", hreflink, "", "disabled" ) }}
     </p>
 
+    {{ formmacros.simplefield( 'Application Creation Date:', entity.timestamp|date('m/d/Y H:i'), "" ) }}
+
+    <br>
+    <p>
+        <button id="collapseAll" type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All Application Sections</button>
+        <button id="expandAll" type="button" class="btn btn-default btn-sm btn-pressed-default" onClick="extendAll()" >Expand All Application Sections</button>
+    </p>
+    <br>
+
+
 
     {{ form_start(form) }}
 
+    {#{{ form_errors(form) }}#}
+
+    {#{{ formmacros.fieldDateLabel(form.timestamp,'allow-future-date') }}#}
+
+    <!-- Fellowship Type, Training period, Applicant Name -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:FellowshipType.html.twig' %}
+
+    <!-- Personal Data -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:PersonalData.html.twig' %}
+
+    {#{{ formmacros.field(form.fellowshipSubspecialty) }}#}
+
+    {#{{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}#}
+
+    {#{{ formmacros.fieldDateLabel(form.endDate,'allow-future-date') }}#}
 
 
-    {{ formmacros.field(form.fellowshipSubspecialty) }}
-
-    {{ formmacros.fieldDateLabel(form.timestamp,'allow-future-date') }}
-
-    {{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}
-
-    {{ formmacros.fieldDateLabel(form.endDate,'allow-future-date') }}
-
-
+    {% do form.setRendered %}
 
     {{ form_end(form) }}
 

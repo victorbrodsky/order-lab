@@ -135,7 +135,7 @@ class AperioUtil {
 
 
             //get roles: Faculty, Residents, or Fellows
-            $_SESSION ['AuthToken'] = $AuthResult['Token'];
+            $_SESSION['AuthToken'] = $AuthResult['Token'];
             $userid = $AuthResult['UserId'];
 
             //echo "aperio userid=".$userid."<br>";
@@ -325,6 +325,12 @@ class AperioUtil {
         $UserId = null;
 
         //echo "user name=".$UserName."<br>";
+        if( !isset($_SESSION['AuthToken']) || empty($_SESSION['AuthToken'])) {
+            echo 'Set and not empty, and no undefined index error!';
+            return null;
+        }
+
+        echo "AuthToken=".$_SESSION['AuthToken']."<br>";
 
         $Users = ADB_GetFilteredRecordList(
             'Users',                        //$TableName
@@ -337,9 +343,10 @@ class AperioUtil {
             array('Users')                  //$FilterTables
         );
 
-//        echo "res count=".count($Users).":";
-//        var_dump($Users);
-//        echo "<br>";
+        echo "res count=".count($Users).":";
+        var_dump($Users);
+        echo "<br>";
+        exit('1');
 
         if( count($Users) == 1 ) {
             $User = $Users[0];

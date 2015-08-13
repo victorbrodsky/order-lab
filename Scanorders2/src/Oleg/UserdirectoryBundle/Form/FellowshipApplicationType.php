@@ -23,6 +23,7 @@ class FellowshipApplicationType extends AbstractType
         $this->params = $params;
         $this->entity = $entity;
 
+        //print_r($this->params);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -58,7 +59,11 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
         ));
 
-
+        $builder->add('user', new UserType($this->params), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'label' => false,
+            'required' => false,
+        ));
 
     }
 

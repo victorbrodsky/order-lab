@@ -32,14 +32,25 @@ class UserType extends AbstractType
 
     public function __construct( $params )
     {
+
+
         $this->params = $params;
 
         $this->cycle = $params['cycle'];
         $this->subjectUser = $params['user'];
         $this->cloneUser = $params['cloneuser'];
-        $this->roles = $params['roles'];
         $this->sc = $params['sc'];
         $this->em = $params['em'];
+
+        if( !array_key_exists('showfellapp', $params) ) {
+            $this->params['showfellapp'] = null;
+        }
+
+        if( array_key_exists('roles', $params) ) {
+            $this->roles = $params['roles'];
+        } else {
+            $this->roles = null;
+        }
 
         //echo "cycle=".$cycle."<br>";
         if( $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -157,7 +168,7 @@ class UserType extends AbstractType
         ));
 
         //Roles
-        if( $this->cycle == "show" || $this->roleAdmin ) {
+        if( $this->roles && ($this->cycle == "show" || $this->roleAdmin) ) {
             $attr = array('class' => 'combobox combobox-width');
             $builder->add('roles', 'choice', array(
                 'choices' => $this->roles,
@@ -387,17 +398,18 @@ class UserType extends AbstractType
             ));
         }
 
-
-        $builder->add('fellowshipApplications', 'collection', array(
-            'type' => new FellowshipApplicationType($params),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__fellowshipapplications__',
-        ));
+        if( $this->params['showfellapp'] ) {
+            $builder->add('fellowshipApplications', 'collection', array(
+                'type' => new FellowshipApplicationType($params),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__fellowshipapplications__',
+            ));
+        }
 
     }
 

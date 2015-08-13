@@ -14,7 +14,7 @@ use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
-use Oleg\UserdirectoryBundle\Entity\SpotEntity;
+use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -181,10 +181,11 @@ class AdminController extends Controller
         $count_buildings = $this->generateBuildings();
         $count_locations = $this->generateLocations();
 
-        $count_SpotEntity = $this->generateSpotEntity();
+        $count_SpotPurpose = $this->generateSpotPurpose();
 
         $count_reslabs = $this->generateResLabs();
 
+        //TODO: rewrite using DB not Aperio's SOAP
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
         $count_testusers = $this->generateTestUsers();
@@ -215,7 +216,7 @@ class AdminController extends Controller
 
         $count_generateMedicalLicenseStatus = $this->generateMedicalLicenseStatus();
 
-        $count_generateCertifyingBoardOrganization = generateCertifyingBoardOrganization();
+        $count_generateCertifyingBoardOrganization = $this->generateCertifyingBoardOrganization();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -264,7 +265,7 @@ class AdminController extends Controller
             'Sex='.$count_sex.', '.
             'Position Types='.$count_PositionTypeList.', '.
             'Comment Group Types='.$count_CommentGroupType.', '.
-            'Spot Entities='.$count_SpotEntity.', '.
+            'Spot Purposes='.$count_SpotPurpose.', '.
             'Medical License Statuses='.$count_generateMedicalLicenseStatus.', '.
             'Certifying Board Organizations='.$count_generateCertifyingBoardOrganization.
 
@@ -3101,10 +3102,10 @@ class AdminController extends Controller
 
     }
 
-    public function generateSpotEntity() {
+    public function generateSpotPurpose() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SpotEntity')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findAll();
 
         if( $entities ) {
             return -1;
@@ -3125,7 +3126,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = new SpotEntity();
+            $entity = new SpotPurpose();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);

@@ -108,6 +108,7 @@
     {% endif %}
 {% endmacro %}
 
+
 {% macro fieldDateLabel_notempty( field, cycle, classname, attr ) %}
     {% import _self as formmacros %}
 
@@ -122,6 +123,27 @@
     {% else %}
         {% do field.setRendered %}
     {% endif %}
+{% endmacro %}
+
+{% macro fieldDateLabel_vertical( field, classname, attr ) %}
+    <p>
+        {{ form_errors(field) }}
+        {{ form_label(field) }}
+
+        <div class="input-group input-group-reg date {{ classname }}">
+            {% if attr == "disabled" %}
+                {#value of disabled field will be ignored#}
+                {{ form_widget(field,{ 'disabled':'disabled' }) }}
+            {% elseif attr == "readonly" %}
+                {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+            {% else %}
+                {{ form_widget(field) }}
+            {% endif %}
+            <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+        </div>
+
+        {{ form_rest(field) }}
+    </p>
 {% endmacro %}
 
 {% macro fieldDateLabel( field, classname, attr ) %}
