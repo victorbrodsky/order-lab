@@ -110,6 +110,7 @@ class User extends BaseUser {
 
     /**
      * @ORM\OneToOne(targetEntity="Credentials", inversedBy="user", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $credentials;
 

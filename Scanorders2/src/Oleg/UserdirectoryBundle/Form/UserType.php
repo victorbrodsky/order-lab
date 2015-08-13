@@ -387,6 +387,18 @@ class UserType extends AbstractType
             ));
         }
 
+
+        $builder->add('fellowshipApplications', 'collection', array(
+            'type' => new FellowshipApplicationType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__fellowshipapplications__',
+        ));
+
     }
 
     /**

@@ -5,16 +5,36 @@
 
 
 {% block title %}
-    Fellowship Application {{ entity.id }}
+    Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
 {% endblock %}
 
 
 {% block content %}
 
+    <h4 class="text-info" align="center">
+        Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+    </h4>
+
+    <br>
+
+    <p>
+    {% set hreflink = '<a href="'~path(employees_sitename~'_showuser', { 'id': entity.user.id })~'">'~entity.user.getDisplayName()~'</a>' %}
+    {{ formmacros.simplefield( "Applicant:", hreflink, "", "disabled" ) }}
+    </p>
+
+
     {{ form_start(form) }}
 
 
-        {{ formmacros.field(form.fellowshipSubspecialty) }}
+
+    {{ formmacros.field(form.fellowshipSubspecialty) }}
+
+    {{ formmacros.fieldDateLabel(form.timestamp,'allow-future-date') }}
+
+    {{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}
+
+    {{ formmacros.fieldDateLabel(form.endDate,'allow-future-date') }}
+
 
 
     {{ form_end(form) }}

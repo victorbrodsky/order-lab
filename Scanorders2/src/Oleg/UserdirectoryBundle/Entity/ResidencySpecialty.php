@@ -15,12 +15,12 @@ class ResidencySpecialty extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="ResidencySpecialty", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ResidencySpecialty", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialty", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ResidencySpecialty", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
@@ -45,7 +45,6 @@ class ResidencySpecialty extends ListAbstract
         $this->children = new ArrayCollection();
         parent::__construct();
     }
-
 
 
     public function addChild($child)

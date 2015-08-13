@@ -20,24 +20,156 @@
         <a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a>
     </p>
 
+    {% set trclassname = "" %}
+
     <div style="margin-top:25px;">
 
         <table class="records_list table table-hover table-condensed text-left">
             <thead>
             <tr>
 
-                <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+                {#<th {% if entities.isSorted('fellapp.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>#}
+                <th>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Status', 'fellapp.applicationStatus') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Created', 'fellapp.timestamp') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Start Date', 'fellapp.startDate') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'End Date', 'fellapp.endDate') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicant.lastName') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicant.firstName') }}</th>
+                <th>Photo Thumbnail</th>
+                <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
+
+                {% if is_granted('ROLE_FELLAPP_ADMIN') %}
+                <th>
+                    Actions
+                </th>
+                {% endif %}
 
             </tr>
             </thead>
             <tbody data-link="row" class="rowlink">
 
             {% for entity in entities %}
-                <tr>
+
+            {% if entity.applicationStatus == 'complete' or entity.applicationStatus == 'disable' %}
+                {#No attention required - plain completed order#}
+                {% set trclassname = "order-neutral-status" %}
+            {% endif %}
+
+            {% if entity.applicationStatus == 'active' %}
+                {#urgent attention required#}
+                {% set trclassname = "order-urgent-status" %}
+            {% endif %}
+
+            {#{% if entity.applicationStatus == 'complete' %}#}
+                {#&#123;&#35;some attention required&#35;&#125;#}
+                {#{% set trclassname = "order-someattention-status" %}#}
+            {#{% endif %}#}
+
+                <tr class="{{ trclassname }}">
 
                     <td>
                         <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
                     </td>
+
+                    <td>
+                        {{  entity.applicationStatus }}
+                    </td>
+
+                    <td>
+                        {{ entity.timestamp|date('m/d/Y H:i') }}
+                    </td>
+
+                    <td>
+                        {{  entity.fellowshipSubspecialty.name }}
+                    </td>
+
+                    <td>
+                        {{ entity.startDate|date('m/d/Y') }}
+                    </td>
+
+                    <td>
+                        {{ entity.endDate|date('m/d/Y') }}
+                    </td>
+
+                    <td>
+                        {{ entity.user.lastName }}
+                    </td>
+
+                    <td>
+                        {{ entity.user.firstName }}
+                    </td>
+
+                    <td>
+                        {% if entity.user.avatar %}
+                            <img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" height="60" width="60">
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ entity.interviewScore }}
+                    </td>
+
+                    {% if is_granted('ROLE_FELLAPP_ADMIN') %}
+                        <td class="rowlink-skip">
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    Action <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-right">
+
+                                    <li>
+                                        <a
+                                            data-confirm="Are you sure you want to disable this Applicant?"
+                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'disable' }) }}">Disable
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a
+                                            data-confirm="Are you sure you want to change status of this Application to 'Active'?"
+                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }) }}">Active
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a
+                                            data-confirm="Are you sure you want to change status of this Application to 'Complete'?"
+                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }) }}">Complete
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a
+                                            data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"
+                                            href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Resend Email to Interviewers
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a
+                                            href="{{ path('fellapp_edit', { 'id': entity.id}) }}">Edit
+                                        </a>
+                                    </li>
+
+                                    {% if is_granted('ROLE_PLATFORM_ADMIN') %}
+                                    <li>
+                                        <a
+                                            data-confirm="Are you sure you want to completely remove this Applicant and all related documents?"
+                                            href="{{ path('fellapp_remove', { 'id': entity.id}) }}">Remove Applicant and all related documents
+                                        </a>
+                                    </li>
+                                    {% endif %}
+
+                                </ul>
+
+                            </div>
+
+                        </td>
+                    {% endif %}
 
                 </tr>
             {% endfor %}

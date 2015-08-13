@@ -66,7 +66,6 @@ class BoardCertificationType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

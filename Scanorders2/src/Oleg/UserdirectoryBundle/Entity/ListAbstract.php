@@ -136,8 +136,6 @@ abstract class ListAbstract
     }
 
 
-
-
     public function addSynonym($synonym)
     {
         if( !$this->synonyms->contains($synonym) ) {

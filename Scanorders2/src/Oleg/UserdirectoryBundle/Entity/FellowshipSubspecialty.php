@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//TODO: turn it to BaseCompositeNode
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_fellowshipSubspecialty")

@@ -148,6 +148,17 @@ class CredentialsType extends AbstractType
             'prototype_name' => '__identifiers__',
         ));
 
+        $builder->add('cvs', 'collection', array(
+            'type' => new CurriculumVitaeType($this->params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__cvs__',
+        ));
+
     }
 
     /**

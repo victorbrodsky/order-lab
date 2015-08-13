@@ -34,6 +34,32 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
+        $builder->add('timestamp','date',array(
+            'widget' => 'single_text',
+            'label' => "Creation Date:",
+            'format' => 'MM/dd/yyyy, H:mm:ss',
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
+        ));
+
+        $builder->add('startDate','date',array(
+            'widget' => 'single_text',
+            'label' => "Start Date:",
+            'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
+        ));
+
+        $builder->add('endDate','date',array(
+            'widget' => 'single_text',
+            'label' => "End Date:",
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
+        ));
+
+
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -41,20 +41,22 @@ class CurriculumVitae
 
 
     /**
+     * documents
+     *
      * @ORM\ManyToMany(targetEntity="Document")
      * @ORM\JoinTable(name="user_curriculumVitae_coverLetter",
      *      joinColumns={@ORM\JoinColumn(name="curriculumVitae_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true)}
      *      )
      **/
-    private $coverLetters;
+    private $documents;
 
 
     public function __construct( $user ) {
         $this->setCreatedBy($user);
         $this->setCreationDate( new \DateTime());
 
-        $this->coverLetters = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     /**
@@ -121,20 +123,20 @@ class CurriculumVitae
         return $this->createdBy;
     }
 
-    public function addCoverLetter($item)
+    public function addDocument($item)
     {
-        if( $item && !$this->coverLetters->contains($item) ) {
-            $this->coverLetters->add($item);
+        if( $item && !$this->documents->contains($item) ) {
+            $this->documents->add($item);
         }
         return $this;
     }
-    public function removeCoverLetter($item)
+    public function removeDocument($item)
     {
-        $this->coverLetters->removeElement($item);
+        $this->documents->removeElement($item);
     }
-    public function getCoverLetters()
+    public function getDocuments()
     {
-        return $this->coverLetters;
+        return $this->documents;
     }
 
 

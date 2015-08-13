@@ -196,9 +196,34 @@
             </div>
         {% endif %}
 
+        {{ formmacros.field(formfield.certifyingBoardOrganization) }}
         {{ formmacros.field(formfield.specialty) }}
         {{ formmacros.fieldDateLabel(formfield.issueDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.expirationDate,'allow-future-date') }}
+
+    </div>
+{% endmacro %}
+
+{% macro cvsForm( field, cycle, classname, prototype ) %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {% if formfield.documents is defined or prototype == 'prototype' %}
+            {{ usermacros.fileuploadLabelField( formfield, cycle, classname, prototype ) }}
+        {% endif %}
 
     </div>
 {% endmacro %}
@@ -491,8 +516,6 @@
                 {{ usermacros.statusVerifiedField(formfield,cycle) }}
             {% endif %}
 
-            {#{{ formmacros.field(formfield.commentType) }}#}
-            {#{{ formmacros.field(formfield.commentSubType) }}#}
             {% if formfield.commentType is defined %}
                 {{ treemacros.compositeTreeNode(formfield.commentType,cycle,prototype) }}
             {% endif %}
@@ -1263,6 +1286,9 @@
         {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
             {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cycle,'user-codenyph','prototype') %}
         {% endif %}
+        {% if form.credentials is defined and form.credentials.cvs is defined %}
+            {% set cvsPrototype = userform.cvsForm(form.credentials.cvs,cycle,'user-cvs','prototype') %}
+        {% endif %}
 
         {#{% if form.administrativeTitles is defined %}#}
             {#{% set userPositionPrototype = treemacros.userPositionField(form.administrativeTitles.vars.prototype.institution.userPositions,cycle,'prototype') %}#}
@@ -1285,6 +1311,7 @@
              data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
              data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
              data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
+             data-prototype-user-cvs = "{{ cvsPrototype|e }}"
              data-prototype-user-employmentstatus = "{{ employmentStatusPrototype|e }}"
              data-prototype-user-identifiers = "{{ identifiersPrototype|e }}"
              data-prototype-user-publiccomments = "{{ publicCommentsPrototype|e }}"
@@ -2099,7 +2126,30 @@
                             </div>
 
 
+                            {#cvs#}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title text-left">
+                                        <a data-toggle="collapse" href="#cvs">
+                                            Curriculum Vitae(s)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="cvs" class="panel-collapse collapse in">
+                                    <div class="panel-body">
 
+                                        <div class="user-cvs-holder">
+
+                                            {% for cv in form.credentials.cvs %}
+                                                {{ userform.cvsForm(cv,cycle,'user-cvs','noprototype') }}
+                                            {% endfor %}
+                                            {{ usermacros.addNewObjectBtn(cycle,'user-cvs','Add Curriculum Vitae') }}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -2318,6 +2368,45 @@
         {#Audit Log#}
         {% if userEditor == true and cycle == "show_user" %}
             {{ usermacros.auditLog(entity,'profile',sitename,postData,"") }}
+        {% endif %}
+
+
+
+        {#FellowshipApplication#}
+        {% set showFellowshipApplications = false %}
+        {% for fellowshipApplication in form.fellowshipApplications %}
+            {% if fellowshipApplication.vars.value or fellowshipApplication.timestamp.vars.value %}
+                {% set showFellowshipApplications = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if showFellowshipApplications and form.fellowshipApplications is defined %}
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-left">
+                        <a data-toggle="collapse" href="#FellowshipApplications">
+                            FellowshipApplication(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="FellowshipApplications" class="panel-collapse collapse {{ collapsein }}">
+                    <div class="panel-body">
+
+                        <div class="user-fellowshipApplications-holder">
+                            {% set fellowshipApplicationCount = 0 %}
+                            {% for fellowshipApplication in form.fellowshipApplications %}
+                                {{ usermacros.fellowshipApplicationObject(fellowshipApplication,cycle,'user-fellowshipApplications','noprototype',sitename,entity) }}
+                            {% endfor %}
+                            {% do form.fellowshipApplications.setRendered %}
+                            {{ usermacros.addNewObjectBtn( cycle, 'user-fellowshipApplications', 'Add Fellowship Application' ) }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% do form.fellowshipApplications.setRendered %}
         {% endif %}
 
 

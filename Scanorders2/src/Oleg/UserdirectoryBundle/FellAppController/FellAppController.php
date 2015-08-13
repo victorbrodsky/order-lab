@@ -40,7 +40,7 @@ class FellAppController extends Controller {
      * @Route("/", name="fellapp_home")
      * @Template("OlegUserdirectoryBundle:FellApp:home.html.twig")
      */
-    public function indexAction() {
+    public function indexAction(Request $request) {
 
         if(
             false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
@@ -55,10 +55,12 @@ class FellAppController extends Controller {
 
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication');
-        $dql =  $repository->createQueryBuilder("ent");
-        $dql->select('ent');
-        $dql->groupBy('ent');
-        //$dql->leftJoin("ent.creator", "creator");
+        $dql =  $repository->createQueryBuilder("fellapp");
+        $dql->select('fellapp');
+        //$dql->groupBy('fellapp');
+        $dql->orderBy("fellapp.timestamp","DESC");
+        $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
+        $dql->leftJoin("fellapp.user", "applicant");
 
         $limit = 100;
         $query = $em->createQuery($dql);
@@ -66,8 +68,10 @@ class FellAppController extends Controller {
         $fellApps = $paginator->paginate(
             $query,
             $this->get('request')->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
+            //$request->query->getInt('page', 1),
+            $limit      /*limit per page*/
         );
+
 
 
         return array(
@@ -77,8 +81,6 @@ class FellAppController extends Controller {
     }
 
     /**
-     * Show home page
-     *
      * @Route("/show/{id}", name="fellapp_show")
      * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
      */
@@ -102,7 +104,7 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find entity by id='.$id);
         }
 
-        $form = $this->createForm( new FellowshipApplicationType(), $entity );
+        $form = $this->createForm( new FellowshipApplicationType(), $entity, array('disabled' => true) );
 
         return array(
             'form' => $form->createView(),
@@ -110,6 +112,149 @@ class FellAppController extends Controller {
             'pathbase' => 'fellapp'
         );
     }
+
+
+    /**
+     * @Route("/status/{id}/{status}", name="fellapp_status")
+     */
+    public function statusAction($id,$status) {
+
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('login') );
+        }
+
+        echo "status <br>";
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
+        $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+        }
+
+
+        $entity->setApplicationStatus($status);
+
+        $em->persist($entity);
+        $em->flush();
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
+
+
+    /**
+     * @Route("/edit/{id}", name="fellapp_edit")
+     * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
+     */
+    public function editAction($id) {
+
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('login') );
+        }
+
+        echo "edit <br>";
+
+        $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+        }
+
+        $form = $this->createForm( new FellowshipApplicationType(), $entity );
+
+        return array(
+            'form' => $form->createView(),
+            'entity' => $entity,
+            'pathbase' => 'fellapp'
+        );
+
+
+    }
+
+
+    /**
+     * @Route("/resend-emails/{id}", name="fellapp_resendemails")
+     */
+    public function resendemailsAction($id) {
+
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('login') );
+        }
+
+        echo "resendemails <br>";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+        }
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
+
+
+    /**
+     * @Route("/remove/{id}", name="fellapp_remove")
+     */
+    public function removeAction($id) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        echo "remove <br>";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+        }
+
+        $user = $entity->getUser();
+
+        $credentials = $user->getCredentials();
+
+        echo "training count=".count($user->getTrainings())."<br>";
+        foreach( $user->getTrainings() as $training  ) {
+            echo "remove training<br>";
+            $em->remove($training);
+            $em->flush();
+        }
+
+
+        $em->remove($credentials);
+        $em->flush();
+
+        exit('ok');
+
+        $em->remove($user);
+        $em->flush();
+
+        $em->remove($entity);
+        $em->flush();
+
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
+
+
+
+
 
 
     /**
@@ -262,7 +407,12 @@ class FellAppController extends Controller {
             $user->addEmploymentStatus($employmentStatus);
 
             $fellowshipApplication = new FellowshipApplication($user);
+            $fellowshipApplication->setApplicationStatus('active');
             $user->addFellowshipApplication($fellowshipApplication);
+
+            //timestamp
+            $fellowshipApplication->setTimestamp($this->transformDatestrToDate($this->getValueByHeaderName('timestamp',$rowData,$headers)));
+
             //fellowshipType
             $fellowshipType = $this->getValueByHeaderName('fellowshipType',$rowData,$headers);
             if( $fellowshipType ) {
@@ -298,7 +448,7 @@ class FellAppController extends Controller {
                     throw new IOException('Unable to download file to server: uploadedCVUrl='.$uploadedCVUrl.', fileDB='.$uploadedCVUrlDb);
                 }
                 $cv = new CurriculumVitae($user);
-                $cv->addCoverLetter($uploadedCVUrlDb);
+                $cv->addDocument($uploadedCVUrlDb);
                 $user->getCredentials()->addCv($cv);
             }
 
@@ -331,35 +481,8 @@ class FellAppController extends Controller {
             $presentLocation->setName('Fellowship Applicant Present Address');
             $presentLocation->addLocationType($presentLocationType);
             $geoLocation = $this->createGeoLocation($em,$user,'presentAddress',$rowData,$headers);
-            //$geoLocation = new GeoLocation();
             $presentLocation->setGeoLocation($geoLocation);
             $user->addLocation($presentLocation);
-
-//            //popuilate geoLocation
-//            $geoLocation->setStreet1($this->getValueByHeaderName('presentAddressStreet1',$rowData,$headers));
-//            $geoLocation->setStreet2($this->getValueByHeaderName('presentAddressStreet2',$rowData,$headers));
-//            $geoLocation->setZip($this->getValueByHeaderName('presentAddressZip',$rowData,$headers));
-//            //presentAddressCity
-//            $presentAddressCity = $this->getValueByHeaderName('presentAddressCity',$rowData,$headers);
-//            if( $presentAddressCity ) {
-//                $transformer = new GenericTreeTransformer($em, $user, 'CityList');
-//                $presentAddressCityEntity = $transformer->reverseTransform($presentAddressCity);
-//                $geoLocation->setCity($presentAddressCityEntity);
-//            }
-//            //presentAddressState
-//            $presentAddressState = $this->getValueByHeaderName('presentAddressState',$rowData,$headers);
-//            if( $presentAddressState ) {
-//                $transformer = new GenericTreeTransformer($em, $user, 'States');
-//                $presentAddressStateEntity = $transformer->reverseTransform($presentAddressState);
-//                $geoLocation->setState($presentAddressStateEntity);
-//            }
-//            //presentAddressCountry
-//            $presentAddressCountry = $this->getValueByHeaderName('presentAddressCountry',$rowData,$headers);
-//            if( $presentAddressCountry ) {
-//                $transformer = new GenericTreeTransformer($em, $user, 'Countries');
-//                $presentAddressCountryEntity = $transformer->reverseTransform($presentAddressCountry);
-//                $geoLocation->setCountry($presentAddressCountryEntity);
-//            }
 
             //telephoneHome
             //telephoneMobile
@@ -376,38 +499,15 @@ class FellAppController extends Controller {
             $permanentLocation->setGeoLocation($geoLocation);
             $user->addLocation($permanentLocation);
 
-//            //popuilate geoLocation
-//            $geoLocation->setStreet1($this->getValueByHeaderName('permanentAddressStreet1',$rowData,$headers));
-//            $geoLocation->setStreet2($this->getValueByHeaderName('permanentAddressStreet2',$rowData,$headers));
-//            $geoLocation->setZip($this->getValueByHeaderName('permanentAddressZip',$rowData,$headers));
-//            //permanentAddressCity
-//            $permanentAddressCity = $this->getValueByHeaderName('permanentAddressCity',$rowData,$headers);
-//            if( $permanentAddressCity ) {
-//                $transformer = new GenericTreeTransformer($em, $user, 'CityList');
-//                $permanentAddressCityEntity = $transformer->reverseTransform($permanentAddressCity);
-//                $geoLocation->setCity($permanentAddressCityEntity);
-//            }
-//            //permanentAddressState
-//            $permanentAddressState = $this->getValueByHeaderName('permanentAddressState',$rowData,$headers);
-//            if( $permanentAddressState ) {
-//                $transformer = new GenericTreeTransformer($em, $user, 'States');
-//                $permanentAddressStateEntity = $transformer->reverseTransform($permanentAddressState);
-//                $geoLocation->setState($permanentAddressStateEntity);
-//            }
-//            //permanentAddressCountry
-//            $permanentAddressCountry = $this->getValueByHeaderName('permanentAddressCountry',$rowData,$headers);
-//            if( $permanentAddressCountry ) {
-//                $transformer = new GenericTreeTransformer($em, $user, 'Countries');
-//                $permanentAddressCountryEntity = $transformer->reverseTransform($permanentAddressCountry);
-//                $geoLocation->setCountry($permanentAddressCountryEntity);
-//            }
-
             //telephoneWork
-            $workLocation = new Location($user);
-            $workLocation->setName('Fellowship Applicant Work Address');
-            $workLocation->addLocationType($workLocationType);
-            $presentLocation->setPhone($this->getValueByHeaderName('telephoneWork',$rowData,$headers));
-            $user->addLocation($workLocation);
+            $telephoneWork = $this->getValueByHeaderName('telephoneWork',$rowData,$headers);
+            if( $telephoneWork ) {
+                $workLocation = new Location($user);
+                $workLocation->setName('Fellowship Applicant Work Address');
+                $workLocation->addLocationType($workLocationType);
+                $workLocation->setPhone($telephoneWork);
+                $user->addLocation($workLocation);
+            }
 
 
             $citizenship = new Citizenship($user);
@@ -552,15 +652,28 @@ class FellAppController extends Controller {
             $fellowshipApplication->addReference($ref4);
 
             //honors
+            $fellowshipApplication->setHonors($this->getValueByHeaderName('honors',$rowData,$headers));
+            //publications
+            $fellowshipApplication->setPublications($this->getValueByHeaderName('publications',$rowData,$headers));
+            //memberships
+            $fellowshipApplication->setMemberships($this->getValueByHeaderName('memberships',$rowData,$headers));
 
-            exit(1);
+            //signatureName
+            $fellowshipApplication->setSignatureName($this->getValueByHeaderName('signatureName',$rowData,$headers));
+            //signatureDate
+            $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
+            $fellowshipApplication->setSignatureDate($signatureDate);
 
             $em->flush();
+
+            exit(1);
         }
 
 
         echo "count=".$count."<br>";
         exit('end populate');
+
+        return $count;
     }
 
     public function createFellAppReference($em,$user,$typeStr,$rowData,$headers) {
@@ -615,7 +728,10 @@ class FellAppController extends Controller {
         if( !$datestr ) {
             return null;
         }
+        $datestr = trim($datestr);
+        //echo "#######datestr=".$datestr."<br>";
         return new \DateTime($datestr);
+        //return \DateTime::createFromFormat('m/d/Y H:i', $datestr)->format('m/d/Y H:i');
     }
 
     public function createFellAppBoardCertification($em,$user,$typeStr,$rowData,$headers) {
@@ -626,9 +742,9 @@ class FellAppController extends Controller {
         //boardCertification1Board
         $boardCertificationBoard = $this->getValueByHeaderName($typeStr.'Board',$rowData,$headers);
         if( $boardCertificationBoard ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'BoardCertifiedSpecialties');
-            $boardCertificationBoardEntity = $transformer->reverseTransform($boardCertificationBoard);
-            $boardCertification->setCertifyingBoardOrganization($boardCertificationBoardEntity);
+            $transformer = new GenericTreeTransformer($em, $user, 'CertifyingBoardOrganization');
+            $CertifyingBoardOrganizationEntity = $transformer->reverseTransform($boardCertificationBoard);
+            $boardCertification->setCertifyingBoardOrganization($CertifyingBoardOrganizationEntity);
         }
 
         //boardCertification1Area => BoardCertifiedSpecialties
@@ -955,9 +1071,9 @@ class FellAppController extends Controller {
             //$fileTitle = str_replace(" ","",$fileTitle);
             //$fileTitle = str_replace("-","_",$fileTitle);
             //$fileTitle = 'testfile.jpg';
-            //$fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
+            $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
 
-            $fileUniqueName = $currentDatetimeTimestamp.'_id='.$file->getId();  //.'_title='.$fileTitle;
+            $fileUniqueName = $currentDatetimeTimestamp.'_id='.$file->getId().".".$fileExt;  //.'_title='.$fileTitle;
 
             $filesize = $file->getFileSize();
             if( !$filesize ) {
@@ -981,7 +1097,6 @@ class FellAppController extends Controller {
             }
 
             $em->persist($object);
-            //$em->flush($object);
 
             $fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
             $target_file = $fullpath . $fileUniqueName;

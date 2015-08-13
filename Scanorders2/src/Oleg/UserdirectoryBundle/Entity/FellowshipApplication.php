@@ -14,8 +14,8 @@ class FellowshipApplication extends BaseUserAttributes
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="fellowshipApplications")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="fellowshipApplications", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $user;
 
@@ -42,10 +42,10 @@ class FellowshipApplication extends BaseUserAttributes
     private $institution;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Document")
+     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="user_fellApp_coverLetter",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true)}
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
      *      )
      **/
     private $coverLetters;
@@ -88,6 +88,49 @@ class FellowshipApplication extends BaseUserAttributes
     private $references;
 
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $honors;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $publications;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $memberships;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $signatureName;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $signatureDate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $interviewScore;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $applicationStatus;
+
+    /**
+     * timestamp when google form is opened
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $timestamp;
+
+
     public function __construct($author=null) {
         parent::__construct($author);
 
@@ -95,6 +138,8 @@ class FellowshipApplication extends BaseUserAttributes
         $this->reprimandDocuments = new ArrayCollection();
         $this->lawsuitDocuments = new ArrayCollection();
         $this->references = new ArrayCollection();
+
+        $this->setApplicationStatus('active');
     }
 
 
@@ -276,6 +321,140 @@ class FellowshipApplication extends BaseUserAttributes
     {
         return $this->references;
     }
+
+    /**
+     * @param mixed $honors
+     */
+    public function setHonors($honors)
+    {
+        $this->honors = $honors;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHonors()
+    {
+        return $this->honors;
+    }
+
+    /**
+     * @param mixed $memberships
+     */
+    public function setMemberships($memberships)
+    {
+        $this->memberships = $memberships;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMemberships()
+    {
+        return $this->memberships;
+    }
+
+    /**
+     * @param mixed $publications
+     */
+    public function setPublications($publications)
+    {
+        $this->publications = $publications;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublications()
+    {
+        return $this->publications;
+    }
+
+    /**
+     * @param mixed $signatureName
+     */
+    public function setSignatureName($signatureName)
+    {
+        $this->signatureName = $signatureName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSignatureName()
+    {
+        return $this->signatureName;
+    }
+
+    /**
+     * @param mixed $signatureDate
+     */
+    public function setSignatureDate($signatureDate)
+    {
+        $this->signatureDate = $signatureDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSignatureDate()
+    {
+        return $this->signatureDate;
+    }
+
+    /**
+     * @param mixed $interviewScore
+     */
+    public function setInterviewScore($interviewScore)
+    {
+        $this->interviewScore = $interviewScore;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInterviewScore()
+    {
+        return $this->interviewScore;
+    }
+
+    /**
+     * @param mixed $applicationStatus
+     */
+    public function setApplicationStatus($applicationStatus)
+    {
+        $this->applicationStatus = $applicationStatus;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicationStatus()
+    {
+        return $this->applicationStatus;
+    }
+
+    /**
+     * @param mixed $timestamp
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
+    }
+
+
+
+
+
+
 
 
 
