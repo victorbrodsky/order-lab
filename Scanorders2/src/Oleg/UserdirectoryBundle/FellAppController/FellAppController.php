@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Form\FellowshipApplicationType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -114,7 +115,9 @@ class FellAppController extends Controller {
             'roles' => $user->getRoles()
         );
 
-        $form = $this->createForm( new FellowshipApplicationType($params), $entity, array('disabled' => true) );
+        $disabled = false;
+
+        $form = $this->createForm( new FellowshipApplicationType($params), $entity, array('disabled' => $disabled) );
 
         return array(
             'form' => $form->createView(),
@@ -340,9 +343,21 @@ class FellAppController extends Controller {
         $userkeytype = $userSecUtil->getUsernameType('local-user');
 
         $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
+        if( !$employmentType ) {
+            throw $this->createNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
+        }
         $presentLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Present Address");
+        if( !$presentLocationType ) {
+            throw $this->createNotFoundException('Unable to find entity by name='."Present Address");
+        }
         $permanentLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Permanent Address");
+        if( !$permanentLocationType ) {
+            throw $this->createNotFoundException('Unable to find entity by name='."Permanent Address");
+        }
         $workLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Work Address");
+        if( !$workLocationType ) {
+            throw $this->createNotFoundException('Unable to find entity by name='."Work Address");
+        }
 
 
         ////////////// add system user /////////////////

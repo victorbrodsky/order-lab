@@ -24,16 +24,15 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 class FellAppLoginSuccessHandler extends LoginSuccessHandler {
 
-    protected $container;
-    protected $security;
-    protected $em;
-    protected $router;
-    protected $siteName;
-    protected $siteNameStr;
-    protected $roleBanned;
-    protected $roleUser;
-    protected $roleUnapproved;
-
+//    protected $container;
+//    protected $security;
+//    protected $em;
+//    protected $router;
+//    protected $siteName;
+//    protected $siteNameStr;
+//    protected $roleBanned;
+//    protected $roleUser;
+//    protected $roleUnapproved;
 
     public function __construct( $container, SecurityContext $security, $em )
     {
@@ -46,6 +45,7 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
         $this->roleBanned = 'ROLE_FELLAPP_BANNED';
         $this->roleUser = 'ROLE_FELLAPP_USER';
         $this->roleUnapproved = 'ROLE_FELLAPP_UNAPPROVED';
+        $this->firewallName = 'ldap_fellapp_firewall';
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {

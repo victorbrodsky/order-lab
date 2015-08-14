@@ -427,6 +427,7 @@ class Credentials extends BaseUserAttributes
     {
         if( $item && !$this->examinations->contains($item) ) {
             $this->examinations->add($item);
+            $item->setCredentials($this);
         }
         return $this;
     }
@@ -443,6 +444,7 @@ class Credentials extends BaseUserAttributes
     {
         if( $item && !$this->citizenships->contains($item) ) {
             $this->citizenships->add($item);
+            $item->setCredentials($this);
         }
         return $this;
     }

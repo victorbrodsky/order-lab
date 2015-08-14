@@ -159,6 +159,17 @@ class CredentialsType extends AbstractType
             'prototype_name' => '__cvs__',
         ));
 
+        $builder->add('citizenships', 'collection', array(
+            'type' => new CitizenshipType($this->params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__citizenships__',
+        ));
+
     }
 
     /**

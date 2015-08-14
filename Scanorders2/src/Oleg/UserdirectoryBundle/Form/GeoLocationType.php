@@ -47,17 +47,12 @@ class GeoLocationType extends AbstractType
         ));
 
         //state
-        $defaultState = null;
-        if( $this->params['cycle'] == 'new_standalone' ) {
-            $defaultState = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
-        }
-        $builder->add( 'state', 'entity', array(
+        $stateArray = array(
             'class' => 'OlegUserdirectoryBundle:States',
             //'property' => 'name',
             'label'=>'State:',
             'required'=> false,
             'multiple' => false,
-            'data' => $defaultState,
             'attr' => array('class'=>'combobox combobox-width geo-field-state'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -68,22 +63,20 @@ class GeoLocationType extends AbstractType
                             'typeadd' => 'user-added',
                         ));
                 },
-        ));
+        );
+        if( $this->params['cycle'] == 'new_standalone' ) {
+            $stateArray['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
+        }
+        $builder->add( 'state', 'entity', $stateArray);
 
         //country
-        $preferredCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
-        $defaultCountry = null;
-        if( $this->params['cycle'] == 'new_standalone' ) {
-            $defaultCountry = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
-        }
-        $builder->add( 'country', 'entity', array(
+        $countryArray = array(
             'class' => 'OlegUserdirectoryBundle:Countries',
             'property' => 'name',
             'label'=>'Country:',
             'required'=> false,
             'multiple' => false,
-            'data' => $defaultCountry,
-            'preferred_choices' => $preferredCountries,
+            //'preferred_choices' => $preferredCountries,
             'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -94,7 +87,12 @@ class GeoLocationType extends AbstractType
                             'typeadd' => 'user-added',
                         ));
                 },
-        ));
+        );
+        $countryArray['preferred_choices'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+        if( $this->params['cycle'] == 'new_standalone' ) {
+            $countryArray['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
+        }
+        $builder->add( 'country', 'entity', $countryArray);
 
         $builder->add('county',null,array(
             'label'=>'County:',

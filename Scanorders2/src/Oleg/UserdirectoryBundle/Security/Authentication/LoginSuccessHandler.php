@@ -33,6 +33,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
     protected $roleBanned;
     protected $roleUser;
     protected $roleUnapproved;
+    protected $firewallName;
 
     public function __construct( $container, SecurityContext $security, $em )
     {
@@ -45,6 +46,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $this->roleBanned = 'ROLE_USERDIRECTORY_BANNED';
         $this->roleUser = 'ROLE_USERDIRECTORY_OBSERVER';
         $this->roleUnapproved = 'ROLE_USERDIRECTORY_UNAPPROVED';
+        $this->firewallName = 'ldap_employees_firewall';
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
@@ -99,7 +101,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //return $response;
 
         //I should be redirected to the URL I was trying to visit after login.
-        $indexLastRoute = '_security.ldap_employees_firewall.target_path';
+        $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
         $lastRoute = $request->getSession()->get($indexLastRoute);
 
         $loginpos = strpos($lastRoute, '/login');
@@ -109,7 +111,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $idlelogout = strpos($lastRoute, '/idlelogout');
 
         //echo "keepalive=".$keepalive."<br>";
-        //echo "lastRoute=".$lastRoute."<br>";
+        echo "lastRoute=".$lastRoute."<br>";
 
 
         if( $lastRoute && $lastRoute != '' && $loginpos === false && $nopermpos === false && $nocheck === false && $keepalive === false && $idlelogout === false ) {

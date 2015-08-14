@@ -42,7 +42,7 @@ class Location extends ListAbstract
 
     /**
      * @ORM\ManyToMany(targetEntity="LocationTypeList", inversedBy="locations", cascade={"persist"})
-     * @ORM\JoinTable(name="location_locationtype")
+     * @ORM\JoinTable(name="user_location_locationtype")
      **/
     protected $locationTypes;
 

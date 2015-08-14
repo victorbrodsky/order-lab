@@ -30,6 +30,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
     private $em;
     private $router;
     private $siteName;
+    protected $firewallName;
 
     public function __construct( $container, SecurityContext $security, $em )
     {
@@ -38,6 +39,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $this->security = $security;
         $this->em = $em;
         $this->siteName = $container->getParameter('scan.sitename');
+        $this->firewallName = 'aperio_ldap_firewall';
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
@@ -93,7 +95,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //return $response;
 
         //I should be redirected to the URL I was trying to visit after login.
-        $indexLastRoute = '_security.aperio_ldap_firewall.target_path';
+        $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
         $lastRoute = $request->getSession()->get($indexLastRoute);
         //exit("lastRoute=".$lastRoute."<br>");
 
