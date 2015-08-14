@@ -106,8 +106,10 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find entity by id='.$id);
         }
 
+        $cycle = 'show';
+
         $params = array(
-            'cycle' => 'show',
+            'cycle' => $cycle,
             'sc' => $this->get('security.context'),
             'em' => $em,
             'user' => $entity->getUser(),
@@ -122,7 +124,8 @@ class FellAppController extends Controller {
         return array(
             'form' => $form->createView(),
             'entity' => $entity,
-            'pathbase' => 'fellapp'
+            'pathbase' => 'fellapp',
+            'cycle' => $cycle
         );
     }
 
@@ -181,8 +184,10 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find entity by id='.$id);
         }
 
+        $cycle = 'edit';
+
         $params = array(
-            'cycle' => 'edit',
+            'cycle' => $cycle,
             'sc' => $this->get('security.context'),
             'em' => $this->getDoctrine()->getManager(),
             'user' => $entity->getUser(),
@@ -194,7 +199,8 @@ class FellAppController extends Controller {
         return array(
             'form' => $form->createView(),
             'entity' => $entity,
-            'pathbase' => 'fellapp'
+            'pathbase' => 'fellapp',
+            'cycle' => $cycle
         );
 
 
@@ -514,7 +520,9 @@ class FellAppController extends Controller {
             $presentLocation->setName('Fellowship Applicant Present Address');
             $presentLocation->addLocationType($presentLocationType);
             $geoLocation = $this->createGeoLocation($em,$user,'presentAddress',$rowData,$headers);
-            $presentLocation->setGeoLocation($geoLocation);
+            if( $geoLocation ) {
+                $presentLocation->setGeoLocation($geoLocation);
+            }
             $user->addLocation($presentLocation);
 
             //telephoneHome
@@ -529,7 +537,9 @@ class FellAppController extends Controller {
             $permanentLocation->setName('Fellowship Applicant Permanent Address');
             $permanentLocation->addLocationType($permanentLocationType);
             $geoLocation = $this->createGeoLocation($em,$user,'permanentAddress',$rowData,$headers);
-            $permanentLocation->setGeoLocation($geoLocation);
+            if( $geoLocation ) {
+                $permanentLocation->setGeoLocation($geoLocation);
+            }
             $user->addLocation($permanentLocation);
 
             //telephoneWork
@@ -556,45 +566,31 @@ class FellAppController extends Controller {
             }
 
             //undergraduate
-            $undergraduateEducation = $this->createFellAppTraining($em,$user,"undergraduateSchool",$rowData,$headers);
-            $user->addTraining($undergraduateEducation);
+            $this->createFellAppTraining($em,$user,"undergraduateSchool",$rowData,$headers);
 
             //graduate
-            $graduateEducation = $this->createFellAppTraining($em,$user,"graduateSchool",$rowData,$headers);
-            $user->addTraining($graduateEducation);
+            $this->createFellAppTraining($em,$user,"graduateSchool",$rowData,$headers);
 
             //medical
-            $medicalEducation = $this->createFellAppTraining($em,$user,"medicalSchool",$rowData,$headers);
-            $user->addTraining($medicalEducation);
+            $this->createFellAppTraining($em,$user,"medicalSchool",$rowData,$headers);
 
-            //residency
-            $residencyEducation = $this->createFellAppTraining($em,$user,"residency",$rowData,$headers);
-            $user->addTraining($residencyEducation);
-            //residencyArea => ResidencySpecialty
-            $residencyArea = $this->getValueByHeaderName('residencyArea',$rowData,$headers);
-            $transformer = new GenericTreeTransformer($em, $user, 'ResidencySpecialty');
-            $residencyAreaEntity = $transformer->reverseTransform($residencyArea);
-            $residencyEducation->setResidencySpecialty($residencyAreaEntity);
+            //residency: residencyStart	residencyEnd	residencyName	residencyArea
+            $this->createFellAppTraining($em,$user,"residency",$rowData,$headers);
 
             //gme1: gme1Start, gme1End, gme1Name, gme1Area => Major
-            $gme1Education = $this->createFellAppTraining($em,$user,"gme1",$rowData,$headers);
-            $user->addTraining($gme1Education);
+            $this->createFellAppTraining($em,$user,"gme1",$rowData,$headers);
 
             //gme2: gme2Start, gme2End, gme2Name, gme2Area => Major
-            $gme2Education = $this->createFellAppTraining($em,$user,"gme2",$rowData,$headers);
-            $user->addTraining($gme2Education);
+            $this->createFellAppTraining($em,$user,"gme2",$rowData,$headers);
 
             //otherExperience1Start	otherExperience1End	otherExperience1Name=>Major
-            $otherExperience1Education = $this->createFellAppTraining($em,$user,"otherExperience1",$rowData,$headers);
-            $user->addTraining($otherExperience1Education);
+            $this->createFellAppTraining($em,$user,"otherExperience1",$rowData,$headers);
 
             //otherExperience2Start	otherExperience2End	otherExperience2Name=>Major
-            $otherExperience2Education = $this->createFellAppTraining($em,$user,"otherExperience2",$rowData,$headers);
-            $user->addTraining($otherExperience2Education);
+            $this->createFellAppTraining($em,$user,"otherExperience2",$rowData,$headers);
 
             //otherExperience3Start	otherExperience3End	otherExperience3Name=>Major
-            $otherExperience3Education = $this->createFellAppTraining($em,$user,"otherExperience3",$rowData,$headers);
-            $user->addTraining($otherExperience3Education);
+           $this->createFellAppTraining($em,$user,"otherExperience3",$rowData,$headers);
 
             //USMLEStep1DatePassed	USMLEStep1Score
             $examination->setUSMLEStep1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep1DatePassed',$rowData,$headers)));
@@ -631,12 +627,10 @@ class FellAppController extends Controller {
             $examination->setCOMLEXLevel3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel3DatePassed',$rowData,$headers)));
 
             //medicalLicensure1Country	medicalLicensure1State	medicalLicensure1DateIssued	medicalLicensure1Number	medicalLicensure1Active
-            $medicalLicensure1 = $this->createFellAppMedicalLicense($em,$user,"medicalLicensure1",$rowData,$headers);
-            $user->getCredentials()->addStateLicense($medicalLicensure1);
+            $this->createFellAppMedicalLicense($em,$user,"medicalLicensure1",$rowData,$headers);
 
             //medicalLicensure2
-            $medicalLicensure2 = $this->createFellAppMedicalLicense($em,$user,"medicalLicensure2",$rowData,$headers);
-            $user->getCredentials()->addStateLicense($medicalLicensure2);
+            $this->createFellAppMedicalLicense($em,$user,"medicalLicensure2",$rowData,$headers);
 
             //suspendedLicensure
             $fellowshipApplication->setReprimand($this->getValueByHeaderName('suspendedLicensure',$rowData,$headers));
@@ -665,24 +659,29 @@ class FellAppController extends Controller {
             }
 
             //boardCertification1Board	boardCertification1Area	boardCertification1Date
-            $boardCertification1 = $this->createFellAppBoardCertification($em,$user,"boardCertification1",$rowData,$headers);
-            $user->getCredentials()->addBoardCertification($boardCertification1);
+            $this->createFellAppBoardCertification($em,$user,"boardCertification1",$rowData,$headers);
             //boardCertification2
-            $boardCertification2 = $this->createFellAppBoardCertification($em,$user,"boardCertification2",$rowData,$headers);
-            $user->getCredentials()->addBoardCertification($boardCertification2);
+            $this->createFellAppBoardCertification($em,$user,"boardCertification2",$rowData,$headers);
             //boardCertification3
-            $boardCertification3 = $this->createFellAppBoardCertification($em,$user,"boardCertification3",$rowData,$headers);
-            $user->getCredentials()->addBoardCertification($boardCertification3);
+            $this->createFellAppBoardCertification($em,$user,"boardCertification3",$rowData,$headers);
 
             //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1	recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
             $ref1 = $this->createFellAppReference($em,$user,'recommendation1',$rowData,$headers);
-            $fellowshipApplication->addReference($ref1);
+            if( $ref1 ) {
+                $fellowshipApplication->addReference($ref1);
+            }
             $ref2 = $this->createFellAppReference($em,$user,'recommendation2',$rowData,$headers);
-            $fellowshipApplication->addReference($ref2);
+            if( $ref2 ) {
+                $fellowshipApplication->addReference($ref2);
+            }
             $ref3 = $this->createFellAppReference($em,$user,'recommendation3',$rowData,$headers);
-            $fellowshipApplication->addReference($ref3);
+            if( $ref3 ) {
+                $fellowshipApplication->addReference($ref3);
+            }
             $ref4 = $this->createFellAppReference($em,$user,'recommendation4',$rowData,$headers);
-            $fellowshipApplication->addReference($ref4);
+            if( $ref4 ) {
+                $fellowshipApplication->addReference($ref4);
+            }
 
             //honors
             $fellowshipApplication->setHonors($this->getValueByHeaderName('honors',$rowData,$headers));
@@ -711,9 +710,23 @@ class FellAppController extends Controller {
 
     public function createFellAppReference($em,$user,$typeStr,$rowData,$headers) {
 
+        //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1
+        //recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
+
+        $recommendationName = $this->getValueByHeaderName($typeStr."Name",$rowData,$headers);
+        $recommendationTitle = $this->getValueByHeaderName($typeStr."Title",$rowData,$headers);
+
+        if( !$recommendationName && !$recommendationTitle ) {
+            return null;
+        }
+
         $reference = new Reference($user);
-        $geoLocation = $this->createGeoLocation($em,$user,$typeStr,$rowData,$headers);
-        $reference->setGeoLocation($geoLocation);
+
+        //recommendation1Name
+        $reference->setName($recommendationName);
+
+        //recommendation1Title
+        $reference->setTitle($recommendationTitle);
 
         $instStr = $this->getValueByHeaderName($typeStr."Institution",$rowData,$headers);
         if( $instStr ) {
@@ -723,10 +736,22 @@ class FellAppController extends Controller {
             $reference->setInstitution($instEntity);
         }
 
+        $geoLocation = $this->createGeoLocation($em,$user,$typeStr,$rowData,$headers);
+        if( $geoLocation ) {
+            $reference->setGeoLocation($geoLocation);
+        }
+
         return $reference;
     }
 
     public function createGeoLocation($em,$user,$typeStr,$rowData,$headers) {
+
+        $geoLocationStreet1 = $this->getValueByHeaderName($typeStr.'Street1',$rowData,$headers);
+        $geoLocationStreet2 = $this->getValueByHeaderName($typeStr.'Street2',$rowData,$headers);
+        if( !$geoLocationStreet1 && !$geoLocationStreet2 ) {
+            return null;
+        }
+
         $geoLocation = new GeoLocation();
         //popuilate geoLocation
         $geoLocation->setStreet1($this->getValueByHeaderName($typeStr.'Street1',$rowData,$headers));
@@ -769,6 +794,11 @@ class FellAppController extends Controller {
 
     public function createFellAppBoardCertification($em,$user,$typeStr,$rowData,$headers) {
 
+        $boardCertificationIssueDate = $this->getValueByHeaderName($typeStr.'Date',$rowData,$headers);
+        if( !$boardCertificationIssueDate ) {
+            return null;
+        }
+
         $boardCertification = new BoardCertification($user);
         $user->getCredentials()->addBoardCertification($boardCertification);
 
@@ -789,18 +819,25 @@ class FellAppController extends Controller {
         }
 
         //boardCertification1Date
-        $boardCertification->setIssueDate($this->transformDatestrToDate($this->getValueByHeaderName($typeStr.'Date',$rowData,$headers)));
+        $boardCertification->setIssueDate($this->transformDatestrToDate($boardCertificationIssueDate));
 
         return $boardCertification;
     }
 
     public function createFellAppMedicalLicense($em,$user,$typeStr,$rowData,$headers) {
 
+        $licenseNumber = $this->getValueByHeaderName($typeStr.'Number',$rowData,$headers);
+        $licenseIssuedDate = $this->getValueByHeaderName($typeStr.'DateIssued',$rowData,$headers);
+
+        if( !$licenseNumber && !$licenseIssuedDate ) {
+            return null;
+        }
+
         $license = new StateLicense($user);
         $user->getCredentials()->addStateLicense($license);
 
         //medicalLicensure1DateIssued
-        $license->setLicenseIssuedDate($this->transformDatestrToDate($this->getValueByHeaderName($typeStr.'DateIssued',$rowData,$headers)));
+        $license->setLicenseIssuedDate($this->transformDatestrToDate($licenseIssuedDate));
 
         //medicalLicensure1Active
         $medicalLicensureActive = $this->getValueByHeaderName($typeStr.'Active',$rowData,$headers);
@@ -827,27 +864,74 @@ class FellAppController extends Controller {
         }
 
         //medicalLicensure1Number
-        $license->setLicenseNumber($this->getValueByHeaderName($typeStr.'Number',$rowData,$headers));
+        $license->setLicenseNumber($licenseNumber);
 
         return $license;
     }
 
     public function createFellAppTraining($em,$user,$typeStr,$rowData,$headers) {
+
+        //Start
+        $trainingStart = $this->getValueByHeaderName($typeStr.'Start',$rowData,$headers);
+        //End
+        $trainingEnd = $this->getValueByHeaderName($typeStr.'End',$rowData,$headers);
+
+        if( !$trainingStart && !$trainingEnd ) {
+            return null;
+        }
+
         $training = new Training($user);
         $user->addTraining($training);
+
+        //set TrainingType
+        if( $typeStr == 'undergraduateSchool' ) {
+            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Undergraduate');
+            $training->setTrainingType($trainingType);
+        }
+        if( $typeStr == 'graduateSchool' ) {
+            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Graduate');
+            $training->setTrainingType($trainingType);
+        }
+        if( strpos($typeStr,'medical') !== false ) {
+            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+            $training->setTrainingType($trainingType);
+        }
+        if( strpos($typeStr,'residency') !== false ) {
+            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Residency');
+            $training->setTrainingType($trainingType);
+        }
+        if( strpos($typeStr,'gme') !== false ) {
+            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('GME');
+            $training->setTrainingType($trainingType);
+        }
+        if( strpos($typeStr,'other') !== false ) {
+            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Other');
+            $training->setTrainingType($trainingType);
+        }
 
         $majorMatchString = $typeStr.'Major';
         $nameMatchString = $typeStr.'Name';
 
         if( strpos($typeStr,'otherExperience') !== false ) {
-            //exception for otherExperience: Name == Major (otherExperience1Name => otherExperience1Major)
+            //otherExperience1Start	otherExperience1End	otherExperience1Name
+            //exception for otherExperience: Name => Major
             $majorMatchString = $typeStr.'Name';
             $nameMatchString = null;
         }
 
         if( strpos($typeStr,'gme') !== false ) {
-            //exception for gme2Area => Major (gme2Area => gme2Major)
-            $majorMatchString = $typeStr.'Major';
+            //gme1Start	gme1End	gme1Name gme1Area
+            //exception for Area: gmeArea => Major
+            $majorMatchString = $typeStr.'Area';
+        }
+
+        if( strpos($typeStr,'residency') !== false ) {
+            //residencyStart	residencyEnd	residencyName	residencyArea
+            //residencyArea => ResidencySpecialty
+            $residencyArea = $this->getValueByHeaderName('residencyArea',$rowData,$headers);
+            $transformer = new GenericTreeTransformer($em, $user, 'ResidencySpecialty');
+            $residencyAreaEntity = $transformer->reverseTransform($residencyArea);
+            $training->setResidencySpecialty($residencyAreaEntity);
         }
 
         //Start

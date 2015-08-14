@@ -724,7 +724,16 @@
                     {% else %}
                         {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                     {% endif %}
-                    <img src="{{ avatarImage }}" alt="Avatar">
+                    {#<img src="{{ avatarImage }}" alt="Avatar">#}
+
+                    {% if '.pdf' in avatarImage %}
+                        <div style="width: 140px; height: 140px;">
+                            <object data="{{ avatarImage }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>
+                        </div>
+                    {% else %}
+                        <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                    {% endif %}
+
                 </div>
 
                 <!--<img src="profile-pic.jpg"> -->
@@ -965,14 +974,19 @@
                         <div class="col-xs-3" align="left">
 
                             {#avatar#}
-                            {#<div class="image-box">#}
+                            <div class="image-box">
                                 {% if user.avatar %}
                                     {% set avatarImage = user.avatar.getAbsoluteUploadFullPath %}
                                 {% else %}
                                     {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                                 {% endif %}
-                                <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
-                            {#</div>#}
+                                {#<img src="{{ avatarImage }}" alt="Avatar">#}
+                                {% if '.pdf' in avatarImage %}
+                                    <object data="{{ avatarImage }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>
+                                {% else %}
+                                    <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                                {% endif %}
+                            </div>
 
                         </div>
 

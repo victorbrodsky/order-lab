@@ -103,7 +103,15 @@
 
                     <td>
                         {% if entity.user.avatar %}
-                            <img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" height="60" width="60">
+                            {#height="60" width="60"#}
+                            <div style="height: 60px; width: 60px;">
+                            {% if '.pdf' in entity.user.avatar.getAbsoluteUploadFullPath %}
+                                {#<embed src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;" type='application/pdf' >#}
+                                <object data="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>
+                            {% else %}
+                                <img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                            {% endif %}
+                            </div>
                         {% endif %}
                     </td>
 

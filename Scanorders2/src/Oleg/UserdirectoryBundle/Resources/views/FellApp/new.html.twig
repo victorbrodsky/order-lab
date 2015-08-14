@@ -11,6 +11,12 @@
 
 {% block content %}
 
+    {#On Medium devices (Desktops (≥992px)) limit the width#}
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+
+
+
     <h4 class="text-info" align="center">
         Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
     </h4>
@@ -32,7 +38,6 @@
     <br>
 
 
-
     {{ form_start(form) }}
 
     {#{{ form_errors(form) }}#}
@@ -48,16 +53,18 @@
     <!-- Education -->
     {% include 'OlegUserdirectoryBundle:FellAPp:Education.html.twig' %}
 
-    {#{{ formmacros.field(form.fellowshipSubspecialty) }}#}
-
-    {#{{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}#}
-
-    {#{{ formmacros.fieldDateLabel(form.endDate,'allow-future-date') }}#}
+    <!-- Uploads -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:Uploads.html.twig' %}
 
 
     {% do form.setRendered %}
 
     {{ form_end(form) }}
+
+
+
+    </div>
+    <div class="col-md-2"></div>
 
 {% endblock %}
 

@@ -88,6 +88,13 @@ class Training extends BaseUserAttributes
      */
     private $institution;
 
+    /**
+     * Graduate, Undergraduate, Medical, Residency, GME, Other
+     *
+     * @ORM\ManyToOne(targetEntity="TrainingTypeList",cascade={"persist"})
+     */
+    private $trainingType;
+
 
 
     public function __construct($author=null) {
@@ -329,6 +336,22 @@ class Training extends BaseUserAttributes
     public function getInstitution()
     {
         return $this->institution;
+    }
+
+    /**
+     * @param mixed $trainingType
+     */
+    public function setTrainingType($trainingType)
+    {
+        $this->trainingType = $trainingType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrainingType()
+    {
+        return $this->trainingType;
     }
 
 

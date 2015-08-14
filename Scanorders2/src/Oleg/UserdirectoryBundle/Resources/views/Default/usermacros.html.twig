@@ -62,6 +62,9 @@
     {% if '/directory/' in currentPath %}
         {% set sitename = employees_sitename %}
     {% endif %}
+    {% if '/fellowship-applications/' in currentPath %}
+        {% set sitename = employees_sitename %}
+    {% endif %}
 
     {% if "show" in cycle %}
         {% set showFlag = true %}
@@ -77,7 +80,16 @@
             <div class="dz-details">
                 <div class="dz-filename"><span data-dz-name>{{ document.vars.value.uniquename }}</span></div>
                 <div class="dz-size" data-dz-size><strong>{{ document.vars.value.getSizeStr() }}</strong></div>
-                <img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />
+
+                {#<img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />#}
+                {% if '.pdf' in document.vars.value.getAbsoluteUploadFullPath %}
+                    <object data-dz-thumbnail alt="{{ document.vars.value.originalname }}" data="{{ document.vars.value.getAbsoluteUploadFullPath }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>
+                {% elseif '.doc' in document.vars.value.getAbsoluteUploadFullPath %}
+                    <object data-dz-thumbnail alt="{{ document.vars.value.originalname }}" data="{{ document.vars.value.getAbsoluteUploadFullPath }}" type="application/msword" style="max-width:100%; max-height:100%;"></object>
+                {% else %}
+                    <img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />
+                {% endif %}
+
             </div>
             <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
             <div class="dz-success-mark"><span>✔</span></div>

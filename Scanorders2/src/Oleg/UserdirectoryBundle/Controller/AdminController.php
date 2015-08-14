@@ -16,6 +16,7 @@ use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
 use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
 use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
+use Oleg\UserdirectoryBundle\Entity\TrainingTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -217,6 +218,7 @@ class AdminController extends Controller
         $count_generateMedicalLicenseStatus = $this->generateMedicalLicenseStatus();
 
         $count_generateCertifyingBoardOrganization = $this->generateCertifyingBoardOrganization();
+        $count_TrainingTypeList = $this->generateTrainingTypeList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -267,7 +269,8 @@ class AdminController extends Controller
             'Comment Group Types='.$count_CommentGroupType.', '.
             'Spot Purposes='.$count_SpotPurpose.', '.
             'Medical License Statuses='.$count_generateMedicalLicenseStatus.', '.
-            'Certifying Board Organizations='.$count_generateCertifyingBoardOrganization.
+            'Certifying Board Organizations='.$count_generateCertifyingBoardOrganization.', '.
+            'Training Types='.$count_TrainingTypeList.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -3206,6 +3209,42 @@ class AdminController extends Controller
 
     }
 
+    public function generateTrainingTypeList() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Undergraduate',
+            'Graduate',
+            'Medical',
+            'Residency',
+            'GME',
+            'Other'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new TrainingTypeList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
 
     ////////////////// Employee Tree Util //////////////////////

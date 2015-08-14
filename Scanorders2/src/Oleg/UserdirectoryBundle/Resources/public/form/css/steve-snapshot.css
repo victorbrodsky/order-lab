@@ -59,8 +59,10 @@
     //background-image: url('profile-pic.jpg');
 }
 .snapshot-all .image-box img {
-    height: 126px;
-    width: 116px;
+    /*height: 126px;*/
+    /*width: 116px;*/
+    height: 140px;
+    /*max-width: 120px;*/
 }
 
 .snapshot-all .left-text {
@@ -335,8 +337,10 @@ body {
 }
 
 .snapshot-all .image-box img {
-    height: 126px;
-    width: 116px;
+    /*height: 126px;*/
+    /*width: 116px;*/
+    height: 140px;
+    /*max-width: 120px;*/
 }
 
 .snapshot-all .left-text {
