@@ -25,7 +25,7 @@ class Reference
      * @ORM\ManyToOne(targetEntity="FellowshipApplication", inversedBy="references", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="fellapp_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    protected $fellapp;
+    private $fellapp;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -175,6 +175,22 @@ class Reference
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @param mixed $fellapp
+     */
+    public function setFellapp($fellapp)
+    {
+        $this->fellapp = $fellapp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellapp()
+    {
+        return $this->fellapp;
     }
 
 

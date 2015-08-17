@@ -125,6 +125,31 @@ class FellowshipApplicationType extends AbstractType
         ));
 
 
+        $builder->add('references', 'collection', array(
+            'type' => new ReferenceType($this->params),
+            'label' => 'Reference(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__references__',
+        ));
+
+        $builder->add('signatureName',null, array(
+            'label' => 'Signature:',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+
+        $builder->add('signatureDate', null, array(
+            'label' => 'Date:',
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

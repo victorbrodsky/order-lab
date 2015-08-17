@@ -81,9 +81,13 @@ class StateLicenseType extends AbstractType
         ));
 
 
-        $builder->add('active', 'checkbox', array(
+//        $builder->add('active', 'checkbox', array(
+//            'label' => 'Active:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+        $builder->add('active', null, array(
             'label' => 'Active:',
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'combobox')
         ));
 
     }

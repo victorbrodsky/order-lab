@@ -310,6 +310,7 @@ class FellowshipApplication extends BaseUserAttributes
     {
         if( $item && !$this->references->contains($item) ) {
             $this->references->add($item);
+            $item->setFellapp($this);
         }
         return $this;
     }
