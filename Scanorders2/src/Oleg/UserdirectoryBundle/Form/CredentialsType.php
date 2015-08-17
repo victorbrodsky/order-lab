@@ -170,6 +170,17 @@ class CredentialsType extends AbstractType
             'prototype_name' => '__citizenships__',
         ));
 
+        $builder->add('examinations', 'collection', array(
+            'type' => new ExaminationType($this->params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__examinations__',
+        ));
+
     }
 
     /**

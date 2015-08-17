@@ -30,7 +30,7 @@
 {% endmacro %}
 
 {#constract full input element with label and dropzone; used only by comments macros#}
-{% macro fileuploadLabelField( container, cycle, classname, prototype ) %}
+{% macro fileuploadLabelField( container, documents, cycle, classname, prototype ) %}
 
     {% import _self as usermacros %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -43,7 +43,7 @@
         </div>
         <div class="col-xs-6" align="left">
 
-            {#{{ usermacros.documentsContainer(container,cycle,prototype,3,'default',containerDocuments,documentsPrototype) }}#}
+            {{ usermacros.documentsContainer(container,documents,cycle,prototype,3,'default') }}
 
         </div>
     </div>
@@ -54,30 +54,11 @@
 {#dropzoneInit = 'inactive':          inactive by default#}
 {#dropzoneInit = 'active':         active by default#}
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
-{% macro documentsContainer(container,cycle,prototype,documentspercontainer,dropzoneInit,containerDocuments,documentsPrototype) %}
+{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    {#container.documents|length:{{ container.documents|length }}#}
-    {#{% if container.documents|first %}#}
-    {#container.documents|first:{{ container.documents|first.vars.value.id }}#}
-    {#{% endif %}#}
-
-    {#&#123;&#35;containerDocuments&#35;&#125;#}
-    {#{% if containerDocuments is not defined %}#}
-        {#{% if attribute(container, 'documents') is defined %}#}
-            {#{% set containerDocuments = attribute(container, 'documents') %}#}
-        {#{% endif %}#}
-    {#{% endif %}#}
-
-    {#&#123;&#35;container.documents.vars.prototype.dummyprototypefield&#35;&#125;#}
-    {#{% if documentsPrototype is not defined %}#}
-        {#{% if containerDocuments.vars.prototype is defined %}#}
-            {#{% set documentsPrototype = containerDocuments.vars.prototype.dummyprototypefield %}#}
-        {#{% endif %}#}
-    {#{% endif %}#}
-
-    {% if container.documents is defined or prototype == 'prototype' %}
+    {% if documents is defined or prototype == 'prototype' %}
 
         {% if "show" in cycle %}
             {% set showFlag = true %}
@@ -139,7 +120,7 @@
 
             {% endif %}
 
-            {{ usermacros.document( container, cycle, prototype, addRemoveLink, containerDocuments, documentsPrototype ) }}
+            {{ usermacros.document( documents, cycle, prototype, addRemoveLink ) }}
 
             {#render field "other". id of this field will be used to get the containerid in js#}
             {% if not showFlag %}
@@ -155,8 +136,7 @@
 
 {% endmacro %}
 
-{#must be used together with documentsContainer#}
-{% macro document( container, cycle, prototype, addRemoveLink, containerDocuments, documentsPrototype  ) %}
+{% macro document( documents, cycle, prototype, addRemoveLink ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {#get sitename#}
@@ -177,7 +157,7 @@
         {% set showFlag = false %}
     {% endif %}
 
-    {% for document in containerDocuments %}
+    {% for document in documents %}
 
         {#document:{{ document.vars.value.id }}#}
 
@@ -222,43 +202,13 @@
     {% endfor %}
 
     {#use dummy-prototype-field to get id and name prototype for adding new document#}
-    {#{{ formmacros.field(container.documents.vars.prototype.dummyprototypefield) }}#}
-    {{ formmacros.field(documentsPrototype) }}
+    {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
 
-    {% do containerDocuments.setRendered %}
+    {% do documents.setRendered %}
 
 {% endmacro %}
 
-{% macro singleUploadWell( field, cycle, classname, prototype, nocontrolbtn, containerDocuments, documentsPrototype ) %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    {% if prototype == "prototype" %}
-        {% set formfield = field.vars.prototype %}
-    {% else %}
-        {% set formfield = field %}
-    {% endif %}
-
-    {% if "show" in cycle %}
-        {% set showFlag = true %}
-    {% else %}
-        {% set showFlag = false %}
-    {% endif %}
-
-    <div class="well {{ classname }}">
-        {% if not showFlag %}
-            {% if nocontrolbtn is not defined or nocontrolbtn != 'nocontrolbtn' %}
-                <div class="text-right">
-                    <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-                </div>
-            {% endif %}
-        {% endif %}
-
-        {% if formfield.documents is defined or prototype == 'prototype' %}
-            {{ usermacros.fileuploadLabelField( formfield, cycle, classname, prototype, containerDocuments, documentsPrototype ) }}
-        {% endif %}
-
-    </div>
-{% endmacro %}
 
 {% macro getInstitutionalTree( entity, linktype ) %}
 

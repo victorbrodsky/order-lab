@@ -21,7 +21,6 @@
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
-                    form.user.avatar:{{ form.user.vars.value.avatar }}
                     {#{{ usermacros.fileuploadLabelField( form.user.avatar, cycle, 'avatar', '' ) }}#}
                     {#{{ usermacros.singleUploadWell(form.user.vars.value.avatar,cycle,'user-avatar','noprototype') }}#}
                     {{ usermacros.avatarForm(entity.user,cycle) }}
@@ -38,17 +37,9 @@
 
                     {% if form.user.credentials.cvs is defined %}
                         {% for cv in form.user.credentials.cvs %}
-                            {% if cv is defined and cv != null %}
-                                cvs:{{ cv.documents|length }}
-                                {#formfield, cycle, classname, prototype, containerDocuments, documentsPrototype#}
-                                {{ usermacros.fileuploadLabelField( cv, cycle, 'user-cvs', 'noprototype' ) }}
-                            {% endif %}
+                            {{ usermacros.fileuploadLabelField( cv, cv.documents, cycle, 'user-cvs', 'noprototype' ) }}
                         {% endfor %}
                     {% endif %}
-
-                    {#{% for cv in form.user.credentials.cvs %}#}
-                        {#{{ usermacros.singleUploadWell(cv,cycle,'user-cvs','noprototype') }}#}
-                    {#{% endfor %}#}
 
                 </div>
             </div>
@@ -59,8 +50,7 @@
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
-                    {#{{ usermacros.singleUploadWell(form,cycle,'user-coverLetters','noprototype','nocontrolbtn',form.coverLetters,'coverLetters-prototype') }}#}
-                    {{ usermacros.fileuploadLabelField( form, cycle, 'user-cvs', 'noprototype', form.coverLetters ) }}
+                    {{ usermacros.fileuploadLabelField( form, form.coverLetters, cycle, 'user-coverLetters', 'noprototype', form.coverLetters ) }}
 
                 </div>
             </div>
@@ -71,13 +61,11 @@
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
-                    {% for examination in form.user.credentials.vars.value.examinations %}
-                        {#{{ usermacros.fileuploadLabelField( examination, cycle, 'user-cvs', 'noprototype', examination.scores, 'scores-prototype' ) }}#}
-
-                        {#{% for score in examination.scores %}#}
-                            {#{{ usermacros.singleUploadWell(examination,cycle,'user-scores','noprototype','nocontrolbtn',examination.scores,'scores-prototype') }}#}
-                        {#{% endfor %}#}
-                    {% endfor %}
+                    {% if form.user.credentials.examinations is defined %}
+                        {% for examination in form.user.credentials.examinations %}
+                            {{ usermacros.fileuploadLabelField( examination, examination.scores, cycle, 'user-scores', 'noprototype' ) }}
+                        {% endfor %}
+                    {% endif %}
 
                 </div>
             </div>

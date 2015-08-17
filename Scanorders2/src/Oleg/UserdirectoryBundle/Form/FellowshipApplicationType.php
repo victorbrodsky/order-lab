@@ -65,16 +65,16 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
         ));
 
-//        $builder->add('coverLetters', 'collection', array(
-//            'type' => new DocumentType($this->params),
-//            'label' => 'Cover Letter(s):',
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__document__',
-//        ));
+        $builder->add('coverLetters', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => 'Cover Letter(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__document__',
+        ));
 
     }
 

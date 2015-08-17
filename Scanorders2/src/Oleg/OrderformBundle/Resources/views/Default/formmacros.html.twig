@@ -1277,7 +1277,7 @@
                 {% elseif fieldtype == "lockdate" %}
                     {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
                 {% elseif fieldtype == "paper" %}
-                    {{ usermacros.documentsContainer(fieldThis,cycle,prototype,3,'default') }}
+                    {{ usermacros.documentsContainer(fieldThis,fieldThis.documents,cycle,prototype,3,'default') }}
                 {% elseif classname == "patientmrn" %}
                     {{ form_widget(fieldThis.keytype) }}
                     {{ form_widget(fieldThis.field) }}
@@ -1516,7 +1516,6 @@
 
 {% endmacro %}
 
-
 {% macro encounterNameWithAlias(field) %}
     {% if field.alias is defined %}
         {% import _self as formmacros %}
@@ -1709,7 +1708,7 @@
                 {{form_label(container.documents)}}
             </div>
             <div class="col-xs-6" align="left">
-                {{ usermacros.documentsContainer(container,cycle,'prototype',documentspercontainer,dropzoneInit) }}
+                {{ usermacros.documentsContainer(container,container.documents,cycle,'prototype',documentspercontainer,dropzoneInit) }}
             </div>
         </div>
 
