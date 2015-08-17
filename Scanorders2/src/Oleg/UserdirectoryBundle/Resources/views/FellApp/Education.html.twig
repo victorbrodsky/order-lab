@@ -56,12 +56,12 @@
                 <div class="col-xs-6">
                     {#<label for="undergraduateSchoolStart" class="control-label">Start Date</label>#}
                     {#<input type="text" class="datepicker form-control allow-future-date" id="undergraduateSchoolStart" name="undergraduateSchoolStart" placeholder="Start Date">#}
-                    {{ form_row(training.startDate) }}
+                    {{ formmacros.fieldDateLabel_vertical(training.startDate,'allow-future-date') }}
                 </div>
                 <div class="col-xs-6">
                     {#<label for="undergraduateSchoolEnd" class="control-label">Finish Date</label>#}
                     {#<input type="text" class="datepicker form-control allow-future-date" id="undergraduateSchoolEnd" name="undergraduateSchoolEnd" placeholder="Finish Date">#}
-                    {{ form_row(training.completionDate) }}
+                    {{ formmacros.fieldDateLabel_vertical(training.completionDate,'allow-future-date') }}
                 </div>
             </div>
             <div class="row withpaddingtop">
@@ -149,12 +149,12 @@
                     <div class="col-xs-6">
                         {#<label for="otherExperience1Start" class="control-label">Start</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="otherExperience1Start" name="otherExperience1Start" placeholder="Start">#}
-                        {{ form_row(training.startDate) }}
+                        {{ formmacros.fieldDateLabel_vertical(training.startDate,'allow-future-date') }}
                     </div>
                     <div class="col-xs-6">
                         {#<label for="otherExperience1End" class="control-label">Finish</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="otherExperience1End" name="otherExperience1End" placeholder="Finish">#}
-                        {{ form_row(training.completionDate) }}
+                        {{ formmacros.fieldDateLabel_vertical(training.completionDate,'allow-future-date') }}
                     </div>
                 </div>
                 <div class="row withpaddingtop">

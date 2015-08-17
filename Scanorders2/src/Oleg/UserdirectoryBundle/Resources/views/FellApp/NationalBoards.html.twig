@@ -23,7 +23,7 @@
                     <div class="col-xs-6">
                         {#<label for="USMLEStep1DatePassed" class="control-label">Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="USMLEStep1DatePassed" name="USMLEStep1DatePassed" placeholder="Date passed">#}
-                        {{ form_row(examination.USMLEStep1DatePassed) }}
+                        {{ formmacros.fieldDateLabel_vertical(examination.USMLEStep1DatePassed,'allow-future-date') }}
                     </div>
                     <div class="col-xs-6">
                         {#<label for="USMLEStep1Score" class="control-label">Score</label>#}
@@ -39,7 +39,7 @@
                     <div class="col-xs-6">
                         {#<label for="USMLEStep2CKDatePassed" class="control-label">CK - Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="USMLEStep2CKDatePassed" name="USMLEStep2CKDatePassed" placeholder="CK - Date passed">#}
-                        {{ form_row(examination.USMLEStep2CKDatePassed) }}
+                        {{ formmacros.fieldDateLabel_vertical(examination.USMLEStep2CKDatePassed,'allow-future-date') }}
                     </div>
                     <div class="col-xs-6">
                         {#<label for="USMLEStep2CKScore" class="control-label">CK - Score (optional)</label>#}
@@ -51,7 +51,7 @@
                     <div class="col-xs-6">
                         {#<label for="USMLEStep2CSDatePassed" class="control-label">CS - Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="USMLEStep2CSDatePassed" name="USMLEStep2CSDatePassed" placeholder="CS - Date passed">#}
-                        {{ form_row(examination.USMLEStep2CSDatePassed) }}
+                        {{ formmacros.fieldDateLabel_vertical(examination.USMLEStep2CSDatePassed,'allow-future-date') }}
                     </div>
                     <div class="col-xs-6">
                         {#<label for="USMLEStep2CSScore" class="control-label">CS - Score (optional)</label>#}
@@ -67,7 +67,7 @@
                     <div class="col-xs-6">
                         {#<label for="USMLEStep3DatePassed" class="control-label">Date passed</label>#}
                         {#<input type="text" class="datepicker form-control allow-future-date" id="USMLEStep3DatePassed" name="USMLEStep3DatePassed" placeholder="Date passed">#}
-                        {{ form_row(examination.USMLEStep3DatePassed) }}
+                        {{ formmacros.fieldDateLabel_vertical(examination.USMLEStep3DatePassed,'allow-future-date') }}
                     </div>
                     <div class="col-xs-6">
                         {#<label for="USMLEStep3Score" class="control-label">Score (optional)</label>#}
