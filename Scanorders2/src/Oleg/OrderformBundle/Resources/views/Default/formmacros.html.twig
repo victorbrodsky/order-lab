@@ -1195,6 +1195,7 @@
 {#input array field with separate label#}
 {% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname,withspace,btntype,norest) %}
     {% import _self as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if prototype == "prototype" %}
         {% set fieldThis = field.vars.prototype %}
@@ -1276,7 +1277,7 @@
                 {% elseif fieldtype == "lockdate" %}
                     {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
                 {% elseif fieldtype == "paper" %}
-                    {{ formmacros.fieldpaper(fieldThis,cycle,prototype,3,'default') }}
+                    {{ usermacros.documentsContainer(fieldThis,cycle,prototype,3,'default') }}
                 {% elseif classname == "patientmrn" %}
                     {{ form_widget(fieldThis.keytype) }}
                     {{ form_widget(fieldThis.field) }}
@@ -1515,96 +1516,6 @@
 
 {% endmacro %}
 
-{#dropzoneInit = 'inactive':          inactive by default#}
-{#dropzoneInit = 'active':         active by default#}
-{#dropzoneInit = 'default':     inactive if show or active otherwise#}
-{% macro fieldpaper(paper,cycle,prototype,documentspercontainer,dropzoneInit) %}
-
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-
-    {#paper.documents|length:{{ paper.documents|length }}#}
-    {#{% if paper.documents|first %}#}
-        {#paper.documents|first:{{ paper.documents|first.vars.value.id }}#}
-    {#{% endif %}#}
-
-    {% if paper.documents is defined or prototype == 'prototype' %}
-
-        {% if "show" in cycle %}
-            {% set showFlag = true %}
-        {% else %}
-            {% set showFlag = false %}
-        {% endif %}
-
-        {% if documentspercontainer is not defined or documentspercontainer == "" or documentspercontainer == 0 %}
-            {% set dz_maxFiles = 3 %}
-        {% else %}
-            {% set dz_maxFiles = documentspercontainer %}
-        {% endif %}
-
-        {#dropzoneInit:{{ dropzoneInit }}<br>#}
-        {% if dropzoneInit is not defined %}
-            {#dropzoneInit is not defined<br>#}
-            {% set dropzoneInit = 'default' %}
-            {% set addRemoveLink = 'default' %}
-        {% endif %}
-
-        {% if dropzoneInit == 'inactive' %}
-            {#dropzoneInit == true<br>#}
-            {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
-            {% set addRemoveLink = false %}
-        {% elseif dropzoneInit == 'active' %}
-            {#dropzoneInit == false<br>#}
-            {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
-            {% set addRemoveLink = true %}
-        {% elseif dropzoneInit == 'default' %}
-            {#dropzoneInit == 'default'<br>#}
-            {% if showFlag %}
-                {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
-                {% set addRemoveLink = false %}
-            {% else %}
-                {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
-                {% set addRemoveLink = true %}
-            {% endif %}
-        {% else %}
-            {#dropzoneInactive else<br>#}
-            {% if showFlag %}
-                {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
-                {% set addRemoveLink = false %}
-            {% else %}
-                {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
-                {% set addRemoveLink = true %}
-            {% endif %}
-        {% endif %}
-
-        <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">
-
-            {% if not showFlag %}
-
-                <input type="hidden" id="documentcontainer-documentspercontainer" value="{{ dz_maxFiles }}">
-                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span></div>
-
-            {% else %}
-
-                <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
-
-            {% endif %}
-
-            {{ usermacros.document( paper, cycle, prototype, addRemoveLink ) }}
-
-            {#render field "other". id of this field will be used to get the paperid in js#}
-            {% if not showFlag %}
-                {% if paper.others is defined %}
-                    {{ form_widget(paper.others) }}
-                {% endif %}
-                {{ form_rest(paper) }}
-            {% endif %}
-
-        </div>
-        
-    {% endif %}
-
-{% endmacro %}
-
 
 {% macro encounterNameWithAlias(field) %}
     {% if field.alias is defined %}
@@ -1798,7 +1709,7 @@
                 {{form_label(container.documents)}}
             </div>
             <div class="col-xs-6" align="left">
-                {{ formmacros.fieldpaper(container,cycle,'prototype',documentspercontainer,dropzoneInit) }}
+                {{ usermacros.documentsContainer(container,cycle,'prototype',documentspercontainer,dropzoneInit) }}
             </div>
         </div>
 

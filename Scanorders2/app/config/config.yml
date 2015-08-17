@@ -171,6 +171,10 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: Uploaded/%scan.uploadpath%
+        fellapp_gallery:
+            frontend: dropzone
+            storage:
+                directory: Uploaded/%fellapp.uploadpath%
 
 
 stof_doctrine_extensions:

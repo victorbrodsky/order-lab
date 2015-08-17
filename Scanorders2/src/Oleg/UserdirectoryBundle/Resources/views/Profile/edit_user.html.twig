@@ -204,30 +204,6 @@
     </div>
 {% endmacro %}
 
-{% macro cvsForm( field, cycle, classname, prototype ) %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-
-    {% if prototype == "prototype" %}
-        {% set formfield = field.vars.prototype %}
-    {% else %}
-        {% set formfield = field %}
-    {% endif %}
-
-    <div class="well {{ classname }}">
-
-        {% if cycle != 'show_user' %}
-            <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
-        {% endif %}
-
-        {% if formfield.documents is defined or prototype == 'prototype' %}
-            {{ usermacros.fileuploadLabelField( formfield, cycle, classname, prototype ) }}
-        {% endif %}
-
-    </div>
-{% endmacro %}
-
 
 {% macro codenyphs( field, cycle, classname, prototype ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -1301,7 +1277,7 @@
             {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cycle,'user-codenyph','prototype') %}
         {% endif %}
         {% if form.credentials is defined and form.credentials.cvs is defined %}
-            {% set cvsPrototype = userform.cvsForm(form.credentials.cvs,cycle,'user-cvs','prototype') %}
+            {% set cvsPrototype = usermacros.singleUploadWell(form.credentials.cvs,cycle,'user-cvs','prototype') %}
         {% endif %}
 
         {#{% if form.administrativeTitles is defined %}#}
@@ -2155,7 +2131,7 @@
                                         <div class="user-cvs-holder">
 
                                             {% for cv in form.credentials.cvs %}
-                                                {{ userform.cvsForm(cv,cycle,'user-cvs','noprototype') }}
+                                                {{ usermacros.singleUploadWell(cv,cycle,'user-cvs','noprototype') }}
                                             {% endfor %}
                                             {{ usermacros.addNewObjectBtn(cycle,'user-cvs','Add Curriculum Vitae') }}
 

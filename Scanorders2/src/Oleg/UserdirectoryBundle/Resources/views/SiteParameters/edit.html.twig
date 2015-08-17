@@ -164,6 +164,10 @@
         {{ formmacros.field(edit_form.scanuploadpath) }}
     {% endif %}
 
+    {% if edit_form.fellappuploadpath is defined %}
+        {{ formmacros.field(edit_form.fellappuploadpath) }}
+    {% endif %}
+
     {% if edit_form.employeesuploadpath is defined %}
         {{ formmacros.field(edit_form.employeesuploadpath) }}
     {% endif %}

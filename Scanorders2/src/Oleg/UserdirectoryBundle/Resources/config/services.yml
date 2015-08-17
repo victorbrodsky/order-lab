@@ -5,6 +5,7 @@ parameters:
   employees.avataruploadpath:
 
   fellapp.sitename: fellapp
+  fellapp.uploadpath:
 
   default_time_zone: America/New_York
   default_system_email:

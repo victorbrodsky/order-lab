@@ -25,11 +25,15 @@ $connectionParams = array(
  
 //upload paths can't be NULL
 $employeesuploadpath = "directory/documents";
-$scanuploadpath = "scan-order/documents";
 $employeesavataruploadpath = "directory/avatars";
 $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
 $container->setParameter('employees.uploadpath',$employeesuploadpath);
+//scan
+$scanuploadpath = "scan-order/documents";
 $container->setParameter('scan.uploadpath',$scanuploadpath);
+//fellapp
+$fellappuploadpath = "fellapp/FellowshipApplicantUploads";
+$container->setParameter('fellapp.uploadpath',$fellappuploadpath);
 
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
@@ -109,10 +113,13 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $department_url = $row['departmenturl'];
             $department_name = $row['departmentname'];
 
+            //employees
             $employeesuploadpath = $row['employeesuploadpath'];
-            $scanuploadpath = $row['scanuploadpath'];
             $employeesavataruploadpath = $row['avataruploadpath'];
-
+            //scan
+            $scanuploadpath = $row['scanuploadpath'];
+            //fellapp
+            $fellappuploadpath = $row['fellappuploadpath'];
 
             //titles
             $mainhome_title = $row['mainHomeTitle'];
@@ -157,6 +164,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
         $container->setParameter('employees.uploadpath',$employeesuploadpath);
         $container->setParameter('scan.uploadpath',$scanuploadpath);
+        $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
 
         //titles
         $mainhome_title = str_replace("%","%%",$mainhome_title);

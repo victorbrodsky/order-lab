@@ -216,6 +216,11 @@ class SiteParameters {
      */
     private $avataruploadpath;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fellappuploadpath;
+
 
     //site titles and messages
     /**
@@ -868,6 +873,22 @@ class SiteParameters {
     public function getScanuploadpath()
     {
         return $this->scanuploadpath;
+    }
+
+    /**
+     * @param mixed $fellappuploadpath
+     */
+    public function setFellappuploadpath($fellappuploadpath)
+    {
+        $this->fellappuploadpath = $fellappuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellappuploadpath()
+    {
+        return $this->fellappuploadpath;
     }
 
     /**

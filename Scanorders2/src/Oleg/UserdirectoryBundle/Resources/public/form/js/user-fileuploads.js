@@ -41,7 +41,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     }
 
-    //console.log('cycle='+cycle);
+    console.log('cycle='+cycle);
 
     var showFlag = true;
     if( cycle.indexOf("show") === -1 ) {

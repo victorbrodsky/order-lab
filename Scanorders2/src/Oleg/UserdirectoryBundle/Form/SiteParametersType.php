@@ -274,6 +274,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'fellappuploadpath' )
+            $builder->add('fellappuploadpath',null,array(
+                'label'=>'Fellowship Application Upload Folder:',
+                'attr' => array('class'=>'form-control')
+            ));
+
 
         //titles and messages
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mainHomeTitle' )

@@ -38,9 +38,24 @@
     <br>
 
 
+    {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
+
     {{ form_start(form) }}
 
-    {#{{ form_errors(form) }}#}
+    {{ form_errors(form) }}
+
+
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+         data-userid = "{{ entity.id }}"
+    ></div>
+
+        <input type="hidden" id="user_id" value="{{ form.vars.value.user.id }}" />
+        <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+        <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
 
     {#{{ formmacros.fieldDateLabel(form.timestamp,'allow-future-date') }}#}
 
