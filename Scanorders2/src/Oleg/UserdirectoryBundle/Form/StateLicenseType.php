@@ -64,6 +64,14 @@ class StateLicenseType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('licenseIssuedDate', null, array(
+            'label' => 'License Issued Date:',
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+        ));
+
         $builder->add('licenseExpirationDate', null, array(
             'label' => 'License Expiration Date:',
             'widget' => 'single_text',
@@ -72,6 +80,11 @@ class StateLicenseType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
+
+        $builder->add('active', 'checkbox', array(
+            'label' => 'Active:',
+            'attr' => array('class'=>'form-control')
+        ));
 
     }
 

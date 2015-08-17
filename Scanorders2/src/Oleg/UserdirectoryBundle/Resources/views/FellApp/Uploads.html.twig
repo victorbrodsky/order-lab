@@ -37,7 +37,8 @@
 
                     {% if form.user.credentials.cvs is defined %}
                         {% for cv in form.user.credentials.cvs %}
-                            {{ usermacros.fileuploadLabelField( null, cv.documents, cycle, 'user-cvs', 'noprototype' ) }}
+                            {#{{ usermacros.fileuploadLabelField( null, cv.documents, cycle, 'user-cvs', 'noprototype' ) }}#}
+                            {{ usermacros.documentsContainer(null,cv.documents,'user-cvs', 'noprototype',3,'default') }}
                         {% endfor %}
                     {% endif %}
 
@@ -51,7 +52,8 @@
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
-                    {{ usermacros.fileuploadLabelField( null, form.coverLetters, cycle, 'user-coverLetters', 'noprototype' ) }}
+                    {#{{ usermacros.fileuploadLabelField( null, form.coverLetters, cycle, 'user-coverLetters', 'noprototype' ) }}#}
+                    {{ usermacros.documentsContainer(null,form.coverLetters,'user-coverLetters', 'noprototype',3,'default') }}
 
                 </div>
             </div>
@@ -64,11 +66,10 @@
 
                     {% if form.user.credentials.examinations is defined %}
                         {% for examination in form.user.credentials.examinations %}
-                            {{ usermacros.fileuploadLabelField( null, examination.scores, cycle, 'user-scores', 'noprototype' ) }}
+                            {#{{ usermacros.fileuploadLabelField( null, examination.scores, cycle, 'user-scores', 'noprototype' ) }}#}
+                            {{ usermacros.documentsContainer(null,examination.scores,'user-scores', 'noprototype',3,'default') }}
                         {% endfor %}
                     {% endif %}
-
-                    {#{% do form.user.credentials.examinations.scores.setRendered %}#}
 
                 </div>
             </div>

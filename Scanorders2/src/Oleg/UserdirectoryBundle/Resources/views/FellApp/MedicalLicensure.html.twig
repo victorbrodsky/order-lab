@@ -1,2 +1,104 @@
 
+<div class="panel panel-info">
 
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#medicalLicensure">
+                Medical Licensure
+            </a>
+        </h4>
+    </div>
+
+    <div id="medicalLicensure" class="panel-collapse collapse in">
+        <div class="panel-body">
+
+
+            <p>
+                Please list any states in which you hold a license to practice medicine. Please provide a license number. If an application is pending in a state, please write “pending.”
+            </p>
+
+
+            {% for stateLicense in form.user.credentials.stateLicense %}
+
+
+            <div class="well">
+
+                <div class="row withpaddingtop">
+                    <div class="col-xs-6">
+                        {#<label for="medicalLicensure1Country" class="control-label">Country</label>#}
+                        {#<input type="text" class="form-control" id="medicalLicensure1Country" name="medicalLicensure1Country" placeholder="Country">#}
+                        {{ form_row(stateLicense.country) }}
+                    </div>
+                    <div class="col-xs-6">
+                        {#<label for="medicalLicensure1State" class="control-label">State</label>#}
+                        {#<input type="hidden" class="combobox usstates" id="medicalLicensure1State" name="medicalLicensure1State" placeholder="State">#}
+                        {{ form_row(stateLicense.state) }}
+                    </div>
+                </div>
+
+                <div class="row withpaddingtop">
+                    <div class="col-xs-6">
+                        {#<label for="medicalLicensure1Number" class="control-label">Medical License Number</label>#}
+                        {#<input type="text" class="form-control" id="medicalLicensure1Number" name="medicalLicensure1Number" placeholder="Medical License Number">#}
+                        {{ form_row(stateLicense.licenseNumber) }}
+                    </div>
+                    <div class="col-xs-6">
+                        {#<label for="medicalLicensure1DateIssued" class="control-label">Date Issued</label>#}
+                        {#<input type="text" class="datepicker form-control allow-future-date" id="medicalLicensure1DateIssued" name="medicalLicensure1DateIssued" placeholder="Date Issued">#}
+                        {{ form_row(stateLicense.licenseIssuedDate) }}
+                    </div>
+                </div>
+
+                <div class="row withpaddingtop">
+                    {#<div class="col-xs-6">#}
+                        {#<div class="row withpaddingtop">#}
+                            {#<label for="medicalLicensure1Active" class="control-label">Active</label>#}
+                        {#</div>#}
+                        {#<div class="row withpaddingtop">#}
+                            {#<input type="radio" name="medicalLicensure1Active" value="Yes">&nbsp;Yes#}
+                            {#&nbsp;#}
+                            {#<input type="radio" name="medicalLicensure1Active" value="No">&nbsp;No#}
+                        {#</div>#}
+                    {#</div>#}
+                    {{ form_row(stateLicense.active) }}
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+
+
+
+
+            <div class="form-element-holder">
+                <div class="well">
+
+                    {{ form_row(form.reprimand) }}
+
+                    <div class="wellcollapsable" style="display:none">
+                        {#{{ usermacros.fileuploadLabelField( null, form.reprimandDocuments, cycle, 'user-reprimandDocuments', 'noprototype' ) }}#}
+                        {{ usermacros.documentsContainer(null,form.reprimandDocuments,'user-reprimandDocuments', 'noprototype',3,'default') }}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-element-holder">
+                <div class="well">
+
+                    {{ form_row(form.lawsuit) }}
+
+                    <div class="wellcollapsable" style="display:none">
+                        {#{{ usermacros.fileuploadLabelField( null, form.lawsuitDocuments, cycle, 'user-lawsuitDocuments', 'noprototype' ) }}#}
+                        {{ usermacros.documentsContainer(null,form.lawsuitDocuments,'user-lawsuitDocuments', 'noprototype',3,'default') }}
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+
+</div> <!-- panel panel-info -->

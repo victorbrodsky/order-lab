@@ -74,6 +74,11 @@
     <!-- MedicalLicensure -->
     {% include 'OlegUserdirectoryBundle:FellAPp:MedicalLicensure.html.twig' %}
 
+    <!-- Board Certification -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:BoardCertification.html.twig' %}
+
+
+
 
     <!-- Uploads -->
     {% include 'OlegUserdirectoryBundle:FellAPp:Uploads.html.twig' %}
@@ -112,20 +117,24 @@
     $(document).ready(function() {
 
         showHideWell('.fellapp-ecfmgcertificate-field');
+        showHideWell('.fellapp-reprimand-field');
+        showHideWell('.fellapp-lawsuit-field');
 
     });
 
     function hideWell(element) {
-        $(element).closest('.form-holder-element').find('.wellcollapsable').hide(500);
-        $(element).closest('.form-holder-element').find('.wellcollapsable').find('input,textarea').val('');
-        //resetUploadBtn($(element).closest('.form-holder-element').find('.wellcollapsable'));
+        $(element).closest('.form-element-holder').find('.wellcollapsable').hide(500);
+        $(element).closest('.form-element-holder').find('.wellcollapsable').find('input,textarea').val('');
+        //resetUploadBtn($(element).closest('.form-element-holder').find('.wellcollapsable'));
     }
 
     function showWell(element) {
-        $(element).closest('.form-holder-element').find('.wellcollapsable').show(500);
+        $(element).closest('.form-element-holder').find('.wellcollapsable').show(500);
     }
 
     function showHideWell(element) {
+
+        //console.log('showHideWell');
 
         if( $(element).is(':checked') ) {
             showWell(element);
@@ -133,6 +142,7 @@
             hideWell(element);
         }
 
+        //listener
         $(element).click( function() {
             showHideWell(this);
         });

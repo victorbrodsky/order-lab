@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\DataTransformer\StringToBooleanTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -75,6 +76,54 @@ class FellowshipApplicationType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__document__',
         ));
+
+
+//        $builder->add('reprimand','choice', array(
+//            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+//            'required' => false,
+//            'choices' => array('Yes'=>'Yes','No'=>'No'),
+//            'attr' => array('class' => 'combobox'),
+//        ));
+        $builder->add('reprimand','checkbox', array(
+            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+            'required' => false,
+            'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick'=>'showHideWell(this)'),
+        ));
+        $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
+        $builder->add('reprimandDocuments', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => 'Upload Reprimand Explanation(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__document__',
+        ));
+
+//        $builder->add('lawsuit','choice', array(
+//            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+//            'required' => false,
+//            'choices' => array('Yes'=>'Yes','No'=>'No'),
+//            'attr' => array('class' => 'combobox'),
+//        ));
+        $builder->add('lawsuit','checkbox', array(
+            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+            'required' => false,
+            'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick'=>'showHideWell(this)'),
+        ));
+        $builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
+        $builder->add('lawsuitDocuments', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => 'Upload Legal Explanation(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__document__',
+        ));
+
 
     }
 
