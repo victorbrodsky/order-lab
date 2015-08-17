@@ -68,11 +68,16 @@
     <!-- Education -->
     {% include 'OlegUserdirectoryBundle:FellAPp:Education.html.twig' %}
 
+    <!-- National Boards -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:NationalBoards.html.twig' %}
+
+    <!-- MedicalLicensure -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:MedicalLicensure.html.twig' %}
+
+
     <!-- Uploads -->
     {% include 'OlegUserdirectoryBundle:FellAPp:Uploads.html.twig' %}
 
-    <!-- National Boards -->
-    {% include 'OlegUserdirectoryBundle:FellAPp:NationalBoards.html.twig' %}
 
 
     {% do form.setRendered %}
@@ -98,5 +103,42 @@
 {% endblock %}
 
 
+
+
+{% block additionaljs %}
+<script language="Javascript">
+
+
+    $(document).ready(function() {
+
+        showHideWell('.fellapp-ecfmgcertificate-field');
+
+    });
+
+    function hideWell(element) {
+        $(element).closest('.form-holder-element').find('.wellcollapsable').hide(500);
+        $(element).closest('.form-holder-element').find('.wellcollapsable').find('input,textarea').val('');
+        //resetUploadBtn($(element).closest('.form-holder-element').find('.wellcollapsable'));
+    }
+
+    function showWell(element) {
+        $(element).closest('.form-holder-element').find('.wellcollapsable').show(500);
+    }
+
+    function showHideWell(element) {
+
+        if( $(element).is(':checked') ) {
+            showWell(element);
+        } else {
+            hideWell(element);
+        }
+
+        $(element).click( function() {
+            showHideWell(this);
+        });
+    }
+
+</script>
+{% endblock %}
 
 

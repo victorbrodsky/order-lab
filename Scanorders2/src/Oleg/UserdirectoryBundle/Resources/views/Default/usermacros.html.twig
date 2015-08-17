@@ -123,11 +123,14 @@
             {{ usermacros.document( documents, cycle, prototype, addRemoveLink ) }}
 
             {#render field "other". id of this field will be used to get the containerid in js#}
-            {% if not showFlag %}
-                {% if container.others is defined %}
-                    {{ form_widget(container.others) }}
+            {% if container is not null %}
+                {% if not showFlag %}
+                    {% if container.others is defined %}
+                        {{ form_widget(container.others) }}
+                    {% endif %}
+                    form_rest!!!
+                    {{ form_rest(container) }}
                 {% endif %}
-                {{ form_rest(container) }}
             {% endif %}
 
         </div>

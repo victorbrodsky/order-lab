@@ -16,7 +16,7 @@
     <div class="panel-body">
 
 
-        <div class="well">
+        <div class="well form-element-holder">
             <label class="col-xs-12 control-label">Applicant Photo</label>
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
@@ -30,48 +30,45 @@
         </div>
 
 
-        <div class="well">
+        <div class="well form-element-holder">
             <label class="col-xs-12 control-label">Curriculum Vitae (CV)</label>
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
                     {% if form.user.credentials.cvs is defined %}
                         {% for cv in form.user.credentials.cvs %}
-                            {{ usermacros.fileuploadLabelField( cv, cv.documents, cycle, 'user-cvs', 'noprototype' ) }}
+                            {{ usermacros.fileuploadLabelField( null, cv.documents, cycle, 'user-cvs', 'noprototype' ) }}
                         {% endfor %}
                     {% endif %}
-
-                    {% do form.user.credentials.cvs.setRendered %}
 
                 </div>
             </div>
         </div>
 
-        <div class="well">
+
+        <div class="well form-element-holder">
             <label class="col-xs-12 control-label">Cover Letter and/or Personal Statement</label>
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
-                    {{ usermacros.fileuploadLabelField( form, form.coverLetters, cycle, 'user-coverLetters', 'noprototype', form.coverLetters ) }}
-
-                    {% do form.coverLetters.setRendered %}
+                    {{ usermacros.fileuploadLabelField( null, form.coverLetters, cycle, 'user-coverLetters', 'noprototype' ) }}
 
                 </div>
             </div>
         </div>
 
-        <div class="well">
+        <div class="well form-element-holder">
             <label class="col-xs-12 control-label">USMLE Scores</label>
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
 
                     {% if form.user.credentials.examinations is defined %}
                         {% for examination in form.user.credentials.examinations %}
-                            {{ usermacros.fileuploadLabelField( examination, examination.scores, cycle, 'user-scores', 'noprototype' ) }}
+                            {{ usermacros.fileuploadLabelField( null, examination.scores, cycle, 'user-scores', 'noprototype' ) }}
                         {% endfor %}
                     {% endif %}
 
-                    {% do form.user.credentials.examinations.setRendered %}
+                    {#{% do form.user.credentials.examinations.scores.setRendered %}#}
 
                 </div>
             </div>

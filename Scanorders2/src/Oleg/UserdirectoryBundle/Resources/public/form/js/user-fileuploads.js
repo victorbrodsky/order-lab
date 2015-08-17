@@ -399,6 +399,10 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
     var idHtml =    '<input type="hidden" id="'+beginIdStr+documentCount+'_id" '+
         'name="'+beginNameStr+'['+documentCount+'][id]" class="file-upload-id" value="'+documentid+'">';
 
+    if( idHtml.indexOf("__") != -1 ) {
+        throw new Error("Html input can not contain prototype substring '__': idHtml="+idHtml);
+    }
+
     //console.log("idHtml="+idHtml);
 
     return idHtml;
