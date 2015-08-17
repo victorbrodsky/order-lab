@@ -71,12 +71,26 @@
     <!-- Uploads -->
     {% include 'OlegUserdirectoryBundle:FellAPp:Uploads.html.twig' %}
 
+    <!-- National Boards -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:NationalBoards.html.twig' %}
+
 
     {% do form.setRendered %}
 
     {{ form_end(form) }}
 
 
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
+        </p>
+    {% endif %}
+
+    {% if cycle == "edit" %}
+        <p>
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>
+        </p>
+    {% endif %}
 
     </div>
     <div class="col-md-2"></div>

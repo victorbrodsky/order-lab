@@ -195,6 +195,7 @@
             {% endif %}
 
             {{ formmacros.field(document.id) }}
+            {{ formmacros.field(document.dummyprototypefield) }}
         </div>
 
         {% do document.setRendered %}
@@ -203,6 +204,7 @@
 
     {#use dummy-prototype-field to get id and name prototype for adding new document#}
     {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
+
 
     {% do documents.setRendered %}
 

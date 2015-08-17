@@ -83,9 +83,11 @@ class FellAppController extends Controller {
 
     /**
      * @Route("/show/{id}", name="fellapp_show")
+     * @Route("/edit/{id}", name="fellapp_edit")
+     *
      * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
      */
-    public function showAction($id) {
+    public function showAction(Request $request, $id) {
 
         if(
             false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
@@ -106,7 +108,18 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find entity by id='.$id);
         }
 
-        $cycle = 'show';
+
+        $routeName = $request->get('_route');
+
+        if( $routeName == "fellapp_show" ) {
+            $cycle = 'show';
+            $disabled = true;
+        }
+
+        if( $routeName == "fellapp_edit" ) {
+            $cycle = 'edit';
+            $disabled = false;
+        }
 
         $params = array(
             'cycle' => $cycle,
@@ -117,7 +130,7 @@ class FellAppController extends Controller {
             'roles' => $user->getRoles()
         );
 
-        $disabled = false;
+
 
         $form = $this->createForm( new FellowshipApplicationType($params), $entity, array('disabled' => $disabled) );
 
@@ -164,10 +177,11 @@ class FellAppController extends Controller {
 
 
     /**
-     * @Route("/edit/{id}", name="fellapp_edit")
+     * @Route("/edit/{id}", name="fellapp_update")
+     * @Method("POST")
      * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
      */
-    public function editAction($id) {
+    public function editAction(Request $request, $id) {
 
         if(
             false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
@@ -195,6 +209,17 @@ class FellAppController extends Controller {
         );
 
         $form = $this->createForm( new FellowshipApplicationType($params), $entity );
+
+        $form->handleRequest($request);
+
+        if( $form->isValid() ) {
+
+
+
+
+            return $this->redirect($this->generateUrl('fellap_show'));
+        }
+
 
         return array(
             'form' => $form->createView(),
