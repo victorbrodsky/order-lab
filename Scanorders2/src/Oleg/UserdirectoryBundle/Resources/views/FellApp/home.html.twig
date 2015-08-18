@@ -3,6 +3,7 @@
 {% extends "OlegUserdirectoryBundle::FellApp/base.html.twig" %}
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 
 {% block title %}
@@ -12,12 +13,49 @@
 
 {% block content %}
 
-    <p>
-        <a href="{{ path('fellapp_import') }}">Import from Google</a>
-    </p>
+    {% if lastImportTimestamp %}
+        <p>
+            Last succesful import: {{ lastImportTimestamp|date('m/d/Y H:i') }}
+        </p>
+    {% endif %}
+
+    {#<p>#}
+        {#<a href="{{ path('fellapp_import') }}">Import from Google</a>#}
+    {#</p>#}
+
+    {#<p>#}
+        {#<a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a>#}
+    {#</p>#}
 
     <p>
-        <a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a>
+        <form action="{{ path('fellapp_home') }}" method="get" {{ form_enctype(fellappfilter) }} class="well form-search">
+            <div class="row">
+                <div class="col-xs-2">
+                    {#{{ formmacros.fieldDateLabel_vertical(fellappfilter.startDate,'allow-future-date') }}#}
+                    <div class="input-group input-group-reg date allow-future-date">
+                        {{ form_row(fellappfilter.startDate, {'attr': {'placeholder': 'Start Date less than'}}) }}
+                        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </div>
+                {#<div class="col-xs-2">#}
+                    {#{{ formmacros.fieldDateLabel_vertical(fellappfilter.endDate,'allow-future-date') }}#}
+                {#</div>#}
+                <div class="col-xs-4">
+                    {{ form_row(fellappfilter.filter,{'attr': {'placeholder': 'Fellowship Type'}}) }}
+                </div>
+                <div class="col-xs-4">
+                    {{ form_row(fellappfilter.search, {'attr': {'placeholder': 'Search'}}) }}
+                </div>
+                <div class="col-xs-2">
+                    <div class="btn-group btn-group-justified">
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-sm btn-default fellapp-filter-btn"><i class="icon-search"></i>Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_rest(fellappfilter) }}
+        </form>
     </p>
 
     {% set trclassname = "" %}
@@ -37,8 +75,9 @@
                 <th>{{ knp_pagination_sortable(entities, 'End Date', 'fellapp.endDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicant.lastName') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicant.firstName') }}</th>
-                <th>Photo Thumbnail</th>
+                <th>Photo</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'USMLE Step 1', 'examinations.USMLEStep1Score') }}</th>
 
                 {% if is_granted('ROLE_FELLAPP_ADMIN') %}
                 <th>
@@ -119,6 +158,12 @@
                         {{ entity.interviewScore }}
                     </td>
 
+                    <td>
+                        {% for examination in entity.user.credentials.examinations %}
+                            {{ examination.USMLEStep1Score }}
+                        {% endfor %}
+                    </td>
+
                     {% if is_granted('ROLE_FELLAPP_ADMIN') %}
                         <td class="rowlink-skip">
 
@@ -129,33 +174,41 @@
 
                                 <ul class="dropdown-menu dropdown-menu-right">
 
-                                    <li>
-                                        <a
-                                            data-confirm="Are you sure you want to disable this Applicant?"
-                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'disable' }) }}">Disable
-                                        </a>
-                                    </li>
+                                    {% if entity.applicationStatus != 'disable' %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to disable this Applicant?"
+                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'disable' }) }}">Disable
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
-                                    <li>
-                                        <a
-                                            data-confirm="Are you sure you want to change status of this Application to 'Active'?"
-                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }) }}">Active
-                                        </a>
-                                    </li>
+                                    {% if entity.applicationStatus != 'active' %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
+                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }) }}">Active
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
-                                    <li>
-                                        <a
-                                            data-confirm="Are you sure you want to change status of this Application to 'Complete'?"
-                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }) }}">Complete
-                                        </a>
-                                    </li>
+                                    {% if entity.applicationStatus != 'complete' %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to change status of this Application to 'Complete'?"
+                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }) }}">Complete
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
-                                    <li>
-                                        <a
-                                            data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"
-                                            href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Resend Email to Interviewers
-                                        </a>
-                                    </li>
+                                    {% if entity.applicationStatus != 'complete' %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"
+                                                href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Resend Email to Interviewers
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
                                     <li>
                                         <a
@@ -166,7 +219,7 @@
                                     {% if is_granted('ROLE_PLATFORM_ADMIN') %}
                                     <li>
                                         <a
-                                            data-confirm="Are you sure you want to completely remove this Applicant and all related documents?"
+                                            general-data-confirm="Are you sure you want to completely remove this Applicant and all related documents?"
                                             href="{{ path('fellapp_remove', { 'id': entity.id}) }}">Remove Applicant and all related documents
                                         </a>
                                     </li>

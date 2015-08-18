@@ -80,18 +80,23 @@
     <!-- Recommendations -->
     {% include 'OlegUserdirectoryBundle:FellAPp:Recommendations.html.twig' %}
 
-    <!-- Signature -->
-    {% include 'OlegUserdirectoryBundle:FellAPp:Signature.html.twig' %}
-
     <!-- Uploads -->
     {% include 'OlegUserdirectoryBundle:FellAPp:Uploads.html.twig' %}
 
+    <!-- Honors and Awards -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:Honors.html.twig' %}
+
+    <!-- Signature -->
+    {% include 'OlegUserdirectoryBundle:FellAPp:Signature.html.twig' %}
 
 
     {% do form.setRendered %}
+    {{ form_widget(form._token) }}
 
-    {{ form_end(form) }}
+    {#{{ form_end(form) }}#}
+    {{ form_end(form, {'render_rest': false}) }}
 
+    <br>
 
     {% if cycle == "show" %}
         <p>
@@ -101,7 +106,8 @@
 
     {% if cycle == "edit" %}
         <p>
-            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>
+            <a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
         </p>
     {% endif %}
 

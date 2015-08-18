@@ -19,7 +19,9 @@
         <div class="col-xs-6">
             {#<label for="signatureName" class="control-label required">Signature</label>#}
             {#<input type="text" class="form-control" id="signatureName" name="signatureName" placeholder="Signature (Please Type Your Full Name)">#}
-            {{ form_row(form.signatureName) }}
+            <p>
+                {{ form_row(form.signatureName) }}
+            </p>
         </div>
         <div class="col-xs-6">
             {#<label for="signatureDate" class="control-label required">Date</label>#}

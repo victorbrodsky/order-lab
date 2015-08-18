@@ -107,7 +107,7 @@ class Credentials extends BaseUserAttributes
     private $citizenships;
 
 
-    public function __construct($user) {
+    public function __construct($user,$addobjects=true) {
 
         parent::__construct();
 
@@ -122,14 +122,16 @@ class Credentials extends BaseUserAttributes
 
         $this->setType(self::TYPE_RESTRICTED);
 
-        //create new state License
-        $this->addStateLicense( new StateLicense() );
+        if( $addobjects ) {
+            //create new state License
+            $this->addStateLicense( new StateLicense() );
 
-        //create new board Certification
-        $this->addBoardCertification( new BoardCertification() );
+            //create new board Certification
+            $this->addBoardCertification( new BoardCertification() );
 
-        //create new Code NYPH
-        $this->addCodeNYPH( new CodeNYPH() );
+            //create new Code NYPH
+            $this->addCodeNYPH( new CodeNYPH() );
+        }
 
     }
 

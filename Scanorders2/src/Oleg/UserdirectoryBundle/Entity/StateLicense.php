@@ -57,7 +57,7 @@ class StateLicense
 
     /**
      * @ORM\ManyToOne(targetEntity="MedicalLicenseStatus")
-     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="active", referencedColumnName="id", nullable=true)
      **/
     private $active;
 

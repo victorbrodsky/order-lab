@@ -101,7 +101,7 @@ $(document).ready(function() {
 
     //initTypeaheadOrderSiteSearch();
 
-
+    generalConfirmAction();
 
 });
 

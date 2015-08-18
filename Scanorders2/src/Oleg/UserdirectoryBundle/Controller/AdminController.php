@@ -1825,7 +1825,12 @@ class AdminController extends Controller
             'Banned User Login Attempt',
             'User Created',
             'User Updated',
-            'Search'
+            'Search',
+            'Import of Fellowship Applications',
+            'Populate of Fellowship Applications',
+            'Fellowship Application Created',
+            'Fellowship Application Updated',
+            'Fellowship Application Resend Emails'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

@@ -136,6 +136,27 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__references__',
         ));
 
+
+        $builder->add('honors',null,array(
+            'required' => false,
+            'label'=>false,
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('publications',null,array(
+            'required' => false,
+            'label'=>false,
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('memberships',null,array(
+            'required' => false,
+            'label'=>false,
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+
+
         $builder->add('signatureName',null, array(
             'label' => 'Signature:',
             'required' => false,
@@ -149,6 +170,9 @@ class FellowshipApplicationType extends AbstractType
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
+
+
+
 
     }
 

@@ -2,7 +2,7 @@
 
 {% block navbar %}
 
-    {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
+    {#{% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}#}
 
     <nav class="navbar navbar-default" role="navigation">
 
@@ -33,8 +33,7 @@
 
                     <li id="nav-bar-fellapphome" class="hidden-xs divider-vertical">
                         <a href="{{ path(fellapp_sitename~'_home') }}">
-                            <span class="glyphicon glyphicon-save-file"></span>
-                            Home
+                            <span class="glyphicon glyphicon-file"></span> Home
                         </a>
                     </li>
 
@@ -97,11 +96,14 @@
 
                             {% if is_granted('ROLE_USERDIRECTORY_ADMIN') %}
                                 <li class="divider"></li>
-                                {#<li><a href="{{ path(employees_sitename~'_listusers') }}">Users</a></li>#}
+                                <li><a href="{{ path(employees_sitename~'_listusers') }}">Users</a></li>
                                 <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
                                 <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
-                                <li><a href="{{ path(employees_sitename~'_logger') }}">Event Log</a></li>
+                                <li><a href="{{ path(fellapp_sitename~'_logger') }}">Event Log</a></li>
                                 <li><a href="{{ path(employees_sitename~'_siteparameters') }}">Site Settings</a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ path('fellapp_import') }}">Import from Google</a></li>
+                                <li><a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a></li>
                             {% endif %}
 
                         </ul>

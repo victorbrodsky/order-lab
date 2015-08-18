@@ -222,7 +222,7 @@ class User extends BaseUser {
 
 
 
-    function __construct()
+    function __construct( $addobjects=true )
     {
         $this->infos = new ArrayCollection();
         $this->locations = new ArrayCollection();
@@ -255,7 +255,7 @@ class User extends BaseUser {
         $this->setPreferences($userPref);
 
         //create credentials
-        $this->setCredentials(new Credentials($this));
+        $this->setCredentials(new Credentials($this,$addobjects));
 
         //set unlocked, enabled
         $this->setLocked(false);

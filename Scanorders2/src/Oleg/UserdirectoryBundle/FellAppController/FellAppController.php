@@ -20,11 +20,13 @@ use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManytomanyTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Form\FellAppFilterType;
 use Oleg\UserdirectoryBundle\Form\FellowshipApplicationType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -54,6 +56,19 @@ class FellAppController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
+        //create filters
+        $filterform = $this->createForm(new FellAppFilterType(), null);
+
+        $filterform->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
+
+        $search = $filterform['search']->getData();
+        $filter = $filterform['filter']->getData();
+        $startDate = $filterform['startDate']->getData();
+        $page = $request->get('page');
+        //echo "<br>startDate=".$startDate."<br>";
+        //echo "<br>filter=".$filter->getId()."<br>";
+        //echo "<br>search=".$search."<br>";
+
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication');
         $dql =  $repository->createQueryBuilder("fellapp");
@@ -62,6 +77,24 @@ class FellAppController extends Controller {
         $dql->orderBy("fellapp.timestamp","DESC");
         $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
         $dql->leftJoin("fellapp.user", "applicant");
+        $dql->leftJoin("applicant.credentials", "credentials");
+        $dql->leftJoin("credentials.examinations", "examinations");
+
+        if( $search ) {
+            $dql->leftJoin("applicant.infos", "userinfos");
+            $dql->andWhere("userinfos.firstName LIKE '%".$search."%' OR userinfos.lastName LIKE '%".$search."%'");
+        }
+
+        if( $filter ) {
+            $dql->andWhere("fellowshipSubspecialty.id = ".$filter->getId());
+        }
+
+        if( $startDate ) {
+            //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d');
+            //$dateStr = $transformer->transform($startDate);
+            //$dql->andWhere("fellapp.startDate >= '".$dateStr."'");
+            $dql->andWhere("fellapp.startDate >= '".$startDate->format('Y-m-d')."'");
+        }
 
         $limit = 100;
         $query = $em->createQuery($dql);
@@ -74,12 +107,25 @@ class FellAppController extends Controller {
         );
 
 
+        $em = $this->getDoctrine()->getManager();
+        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications");
+        $lastImportTimestamps = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
+        if( count($lastImportTimestamps) != 1 ) {
+            $lastImportTimestamp = null;
+        } else {
+            $lastImportTimestamp = $lastImportTimestamps[0]->getCreationdate();
+        }
 
         return array(
             'entities' => $fellApps,
-            'pathbase' => 'fellapp'
+            'pathbase' => 'fellapp',
+            'lastImportTimestamp' => $lastImportTimestamp,
+            'fellappfilter' => $filterform->createView()
         );
     }
+
+
+
 
     /**
      * @Route("/show/{id}", name="fellapp_show")
@@ -177,7 +223,7 @@ class FellAppController extends Controller {
 
 
     /**
-     * @Route("/edit/{id}", name="fellapp_update")
+     * @Route("/update/{id}", name="fellapp_update")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
      */
@@ -190,7 +236,8 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('login') );
         }
 
-        echo "edit <br>";
+        echo "update <br>";
+        exit('update');
 
         $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->find($id);
 
@@ -212,10 +259,18 @@ class FellAppController extends Controller {
 
         $form->handleRequest($request);
 
+        echo "errors:<br>";
+        print_r($form->getErrors());
+        echo "<br>string errors:<br>";
+        print_r($form->getErrorsAsString());
+        echo "<br>";
+        exit();
+
         if( $form->isValid() ) {
 
-
-
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
 
             return $this->redirect($this->generateUrl('fellap_show'));
         }
@@ -235,7 +290,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/resend-emails/{id}", name="fellapp_resendemails")
      */
-    public function resendemailsAction($id) {
+    public function resendemailsAction(Request $request, $id) {
 
         if(
             false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
@@ -253,6 +308,12 @@ class FellAppController extends Controller {
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find entity by id='.$id);
         }
+
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        $event = "Resend emails for fellowship application ID " . $id;
+        $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Resend Emails');
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
     }
@@ -308,13 +369,40 @@ class FellAppController extends Controller {
 
 
 
+    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action) {
+        $userSecUtil = $this->get('user_security_utility');
+        $eventLog = $userSecUtil->constructEventLog($sitename,$user,$request);
+        $eventLog->setEvent($event);
+
+        //set Event Type
+        $em = $this->getDoctrine()->getManager();
+        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
+        $eventLog->setEventType($eventtype);
+
+        if( $subjectEntity ) {
+            //get classname, entity name and id of subject entity
+            $class = new \ReflectionClass($subjectEntity);
+            $className = $class->getShortName();
+            $classNamespace = $class->getNamespaceName();
+
+            //set classname, entity name and id of subject entity
+            $eventLog->setEntityNamespace($classNamespace);
+            $eventLog->setEntityName($className);
+            $eventLog->setEntityId($subjectEntity->getId());
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($eventLog);
+        $em->flush();
+    }
+
 
     /**
      * Show home page
      *
      * @Route("/populate", name="fellapp_populate")
      */
-    public function populateSpreadsheetAction() {
+    public function populateSpreadsheetAction(Request $request) {
 
         echo "fellapp populateSpreadsheet <br>";
 
@@ -332,13 +420,23 @@ class FellAppController extends Controller {
         }
 
         $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
-        $this->populateSpreadsheet($inputFileName);
+        $populatedCount = $this->populateSpreadsheet($request,$inputFileName);
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        $event = "Populated fellowship applicantions " . $populatedCount;
+        $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,$request,'Populate of Fellowship Applications');
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $event
+        );
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
     }
 
 
-    public function populateSpreadsheet( $inputFileName ) {
+    public function populateSpreadsheet( $request, $inputFileName ) {
 
         echo "inputFileName=".$inputFileName."<br>";
 
@@ -432,7 +530,8 @@ class FellAppController extends Controller {
             }
 
             //create excel user
-            $user = new User();
+            $addobjects = false;
+            $user = new User($addobjects);
             $user->setKeytype($userkeytype);
             $user->setPrimaryPublicUserId($id);
 
@@ -591,31 +690,31 @@ class FellAppController extends Controller {
             }
 
             //undergraduate
-            $this->createFellAppTraining($em,$user,"undergraduateSchool",$rowData,$headers);
+            $this->createFellAppTraining($em,$user,"undergraduateSchool",$rowData,$headers,1);
 
             //graduate
-            $this->createFellAppTraining($em,$user,"graduateSchool",$rowData,$headers);
+            $this->createFellAppTraining($em,$user,"graduateSchool",$rowData,$headers,2);
 
             //medical
-            $this->createFellAppTraining($em,$user,"medicalSchool",$rowData,$headers);
+            $this->createFellAppTraining($em,$user,"medicalSchool",$rowData,$headers,3);
 
             //residency: residencyStart	residencyEnd	residencyName	residencyArea
-            $this->createFellAppTraining($em,$user,"residency",$rowData,$headers);
+            $this->createFellAppTraining($em,$user,"residency",$rowData,$headers,4);
 
             //gme1: gme1Start, gme1End, gme1Name, gme1Area => Major
-            $this->createFellAppTraining($em,$user,"gme1",$rowData,$headers);
+            $this->createFellAppTraining($em,$user,"gme1",$rowData,$headers,5);
 
             //gme2: gme2Start, gme2End, gme2Name, gme2Area => Major
-            $this->createFellAppTraining($em,$user,"gme2",$rowData,$headers);
+            $this->createFellAppTraining($em,$user,"gme2",$rowData,$headers,6);
 
             //otherExperience1Start	otherExperience1End	otherExperience1Name=>Major
-            $this->createFellAppTraining($em,$user,"otherExperience1",$rowData,$headers);
+            $this->createFellAppTraining($em,$user,"otherExperience1",$rowData,$headers,7);
 
             //otherExperience2Start	otherExperience2End	otherExperience2Name=>Major
-            $this->createFellAppTraining($em,$user,"otherExperience2",$rowData,$headers);
+            $this->createFellAppTraining($em,$user,"otherExperience2",$rowData,$headers,8);
 
             //otherExperience3Start	otherExperience3End	otherExperience3Name=>Major
-           $this->createFellAppTraining($em,$user,"otherExperience3",$rowData,$headers);
+           $this->createFellAppTraining($em,$user,"otherExperience3",$rowData,$headers,9);
 
             //USMLEStep1DatePassed	USMLEStep1Score
             $examination->setUSMLEStep1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep1DatePassed',$rowData,$headers)));
@@ -724,6 +823,9 @@ class FellAppController extends Controller {
             $em->flush();
 
             exit(1);
+
+            $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
+            $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,$request,'Fellowship Application Created');
         }
 
 
@@ -741,7 +843,11 @@ class FellAppController extends Controller {
         $recommendationName = $this->getValueByHeaderName($typeStr."Name",$rowData,$headers);
         $recommendationTitle = $this->getValueByHeaderName($typeStr."Title",$rowData,$headers);
 
+        echo "recommendationName=".$recommendationName."<br>";
+        echo "recommendationTitle=".$recommendationTitle."<br>";
+
         if( !$recommendationName && !$recommendationTitle ) {
+            echo "no ref<br>";
             return null;
         }
 
@@ -761,7 +867,7 @@ class FellAppController extends Controller {
             $reference->setInstitution($instEntity);
         }
 
-        $geoLocation = $this->createGeoLocation($em,$user,$typeStr,$rowData,$headers);
+        $geoLocation = $this->createGeoLocation($em,$user,$typeStr."Address",$rowData,$headers);
         if( $geoLocation ) {
             $reference->setGeoLocation($geoLocation);
         }
@@ -773,7 +879,11 @@ class FellAppController extends Controller {
 
         $geoLocationStreet1 = $this->getValueByHeaderName($typeStr.'Street1',$rowData,$headers);
         $geoLocationStreet2 = $this->getValueByHeaderName($typeStr.'Street2',$rowData,$headers);
+        echo "geoLocationStreet1=".$geoLocationStreet1."<br>";
+        echo "geoLocationStreet2=".$geoLocationStreet2."<br>";
+
         if( !$geoLocationStreet1 && !$geoLocationStreet2 ) {
+            echo "no geoLocation<br>";
             return null;
         }
 
@@ -851,6 +961,8 @@ class FellAppController extends Controller {
 
     public function createFellAppMedicalLicense($em,$user,$typeStr,$rowData,$headers) {
 
+        //medicalLicensure1Country	medicalLicensure1State	medicalLicensure1DateIssued	medicalLicensure1Number	medicalLicensure1Active
+
         $licenseNumber = $this->getValueByHeaderName($typeStr.'Number',$rowData,$headers);
         $licenseIssuedDate = $this->getValueByHeaderName($typeStr.'DateIssued',$rowData,$headers);
 
@@ -877,6 +989,7 @@ class FellAppController extends Controller {
         if( $medicalLicensureCountry ) {
             $transformer = new GenericTreeTransformer($em, $user, 'Countries');
             $medicalLicensureCountryEntity = $transformer->reverseTransform($medicalLicensureCountry);
+            echo "MedCountry=".$medicalLicensureCountryEntity.", ID+".$medicalLicensureCountryEntity->getId()."<br>";
             $license->setCountry($medicalLicensureCountryEntity);
         }
 
@@ -885,6 +998,7 @@ class FellAppController extends Controller {
         if( $medicalLicensureState ) {
             $transformer = new GenericTreeTransformer($em, $user, 'States');
             $medicalLicensureStateEntity = $transformer->reverseTransform($medicalLicensureState);
+            echo "MedState=".$medicalLicensureStateEntity."<br>";
             $license->setState($medicalLicensureStateEntity);
         }
 
@@ -894,7 +1008,7 @@ class FellAppController extends Controller {
         return $license;
     }
 
-    public function createFellAppTraining($em,$user,$typeStr,$rowData,$headers) {
+    public function createFellAppTraining($em,$user,$typeStr,$rowData,$headers,$orderinlist) {
 
         //Start
         $trainingStart = $this->getValueByHeaderName($typeStr.'Start',$rowData,$headers);
@@ -906,6 +1020,7 @@ class FellAppController extends Controller {
         }
 
         $training = new Training($user);
+        $training->setOrderinlist($orderinlist);
         $user->addTraining($training);
 
         //set TrainingType
@@ -1042,7 +1157,7 @@ class FellAppController extends Controller {
      *
      * @Route("/import", name="fellapp_import")
      */
-    public function importAction() {
+    public function importAction(Request $request) {
 
         echo "fellapp import <br>";
 
@@ -1061,25 +1176,37 @@ class FellAppController extends Controller {
             //https://drive.google.com/open?id=1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc
             $excelId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
 
-            $user = $this->get('security.context')->getToken()->getUser();
+            //$user = $this->get('security.context')->getToken()->getUser();
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+
             $path = 'Uploaded/fellapp/Spreadsheets/';
-            $fileDb = $this->downloadFileToServer($user, $service, $excelId, 'excel', $path);
+            $fileDb = $this->downloadFileToServer($systemUser, $service, $excelId, 'excel', $path);
 
             if( $fileDb ) {
+                $em = $this->getDoctrine()->getManager();
+                $em->flush($fileDb);
+                $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
                 $this->get('session')->getFlashBag()->add(
                     'notice',
-                    "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename()
+                    $event
                 );
             } else {
+                $event = "Fellowship Application Spreadsheet download failed!";
                 $this->get('session')->getFlashBag()->add(
                     'warning',
-                    "Fellowship Application Spreadsheet download failed!"
+                    $event
                 );
+
                 $logger = $this->container->get('logger');
                 $logger->warning("Fellowship Application Spreadsheet download failed!");
             }
 
+            $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,$request,'Import of Fellowship Applications');
+
         }
+
+        //exit('import event'.$event);
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
 
@@ -1195,7 +1322,8 @@ class FellAppController extends Controller {
 
             //check if file already exists by file id
             $documentDb = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
-            if( $documentDb ) {
+            if( $documentDb && $type != 'excel' ) {
+                //echo "already exists file ID=".$file->getId()."<br>";
                 return $documentDb;
             }
 
@@ -1216,6 +1344,7 @@ class FellAppController extends Controller {
             $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
 
             $fileUniqueName = $currentDatetimeTimestamp.'_id='.$file->getId().".".$fileExt;  //.'_title='.$fileTitle;
+            //echo "fileUniqueName=".$fileUniqueName."<br>";
 
             $filesize = $file->getFileSize();
             if( !$filesize ) {
