@@ -36,13 +36,13 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
-        $builder->add('timestamp','date',array(
-            'widget' => 'single_text',
-            'label' => "Creation Date:",
-            'format' => 'MM/dd/yyyy, H:mm:ss',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
+//        $builder->add('timestamp','date',array(
+//            'widget' => 'single_text',
+//            'label' => "Creation Date:",
+//            'format' => 'MM/dd/yyyy, H:mm:ss',
+//            'attr' => array('class' => 'datepicker form-control'),
+//            'required' => false,
+//        ));
 
         $builder->add('startDate','date',array(
             'widget' => 'single_text',
@@ -60,7 +60,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
         ));
 
-        $builder->add('user', new UserType($this->params), array(
+        $builder->add('user', new FellAppUserType($this->params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
             'label' => false,
             'required' => false,

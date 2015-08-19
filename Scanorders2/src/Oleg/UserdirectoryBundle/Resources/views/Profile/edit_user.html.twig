@@ -173,7 +173,9 @@
         {{ formmacros.field_notempty(formfield.country,cycle) }}
         {{ formmacros.field(formfield.state) }}
         {{ formmacros.field(formfield.licenseNumber) }}
+        {{ formmacros.fieldDateLabel(formfield.licenseIssuedDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.licenseExpirationDate,'allow-future-date') }}
+        {{ formmacros.field(formfield.active) }}
 
     </div>
 {% endmacro %}

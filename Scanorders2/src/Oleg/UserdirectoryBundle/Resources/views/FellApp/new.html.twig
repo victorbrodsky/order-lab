@@ -40,7 +40,7 @@
 
     {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
 
-    {{ form_start(form) }}
+    {{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}
 
     {{ form_errors(form) }}
 
@@ -90,8 +90,9 @@
     {% include 'OlegUserdirectoryBundle:FellAPp:Signature.html.twig' %}
 
 
-    {% do form.setRendered %}
-    {{ form_widget(form._token) }}
+    {#{% do form.setRendered %}#}
+    {#{{ form_widget(form._token) }}#}
+
 
     {#{{ form_end(form) }}#}
     {{ form_end(form, {'render_rest': false}) }}
@@ -106,7 +107,9 @@
 
     {% if cycle == "edit" %}
         <p>
-            <a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>
+            {#<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>#}
+            <button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form">Update</button>
+
             <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
         </p>
     {% endif %}

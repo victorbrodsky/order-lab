@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\FellAppController;
 
 
+use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
 use Oleg\UserdirectoryBundle\Entity\Citizenship;
 use Oleg\UserdirectoryBundle\Entity\Countries;
@@ -160,11 +161,15 @@ class FellAppController extends Controller {
         if( $routeName == "fellapp_show" ) {
             $cycle = 'show';
             $disabled = true;
+            $method = "GET";
+            $action = $this->generateUrl('fellapp_edit', array('id' => $entity->getId()));
         }
 
         if( $routeName == "fellapp_edit" ) {
             $cycle = 'edit';
             $disabled = false;
+            $method = "PUT";
+            $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
 
         $params = array(
@@ -176,9 +181,15 @@ class FellAppController extends Controller {
             'roles' => $user->getRoles()
         );
 
-
-
-        $form = $this->createForm( new FellowshipApplicationType($params), $entity, array('disabled' => $disabled) );
+        $form = $this->createForm(
+            new FellowshipApplicationType($params),
+            $entity,
+            array(
+                'disabled' => $disabled,
+                'method' => $method,
+                'action' => $action
+            )
+        );
 
         return array(
             'form' => $form->createView(),
@@ -186,6 +197,90 @@ class FellAppController extends Controller {
             'pathbase' => 'fellapp',
             'cycle' => $cycle
         );
+    }
+
+
+    /**
+     * @Route("/update/{id}", name="fellapp_update")
+     * @Method("PUT")
+     * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
+     */
+    public function editAction(Request $request, $id) {
+
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('login') );
+        }
+
+        echo "update <br>";
+        //exit('update');
+
+        $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+        }
+
+        $cycle = 'edit';
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $params = array(
+            'cycle' => $cycle,
+            'sc' => $this->get('security.context'),
+            'em' => $this->getDoctrine()->getManager(),
+            'user' => $entity->getUser(),
+            'cloneuser' => null,
+            'roles' => $user->getRoles()
+        );
+
+        $form = $this->createForm( new FellowshipApplicationType($params), $entity );
+
+        $form->handleRequest($request);
+
+
+
+        echo "errors:<br>";
+        $string = (string) $form->getErrors(true);
+        echo "string errors=".$string."<br>";
+        echo "getErrors count=".count($form->getErrors())."<br>";
+        echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
+//        print_r($form->getErrors());
+//        echo "<br>string errors:<br>";
+//        print_r($form->getErrorsAsString());
+//        echo "<br>";
+//        exit();
+
+        if(1) {
+            $errorHelper = new ErrorHelper();
+            $errors = $errorHelper->getErrorMessages($form);
+            echo "<br>form errors:<br>";
+            print_r($errors);
+        }
+
+        if( $form->isValid() ) {
+
+            exit('form valid');
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('fellap_show'));
+        }
+
+        echo 'form invalid <br>';
+        //exit('form invalid');
+
+        return array(
+            'form' => $form->createView(),
+            'entity' => $entity,
+            'pathbase' => 'fellapp',
+            'cycle' => $cycle
+        );
+
+
     }
 
 
@@ -219,71 +314,6 @@ class FellAppController extends Controller {
         $em->flush();
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
-    }
-
-
-    /**
-     * @Route("/update/{id}", name="fellapp_update")
-     * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
-     */
-    public function editAction(Request $request, $id) {
-
-        if(
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-        ){
-            return $this->redirect( $this->generateUrl('login') );
-        }
-
-        echo "update <br>";
-        exit('update');
-
-        $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->find($id);
-
-        if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find entity by id='.$id);
-        }
-
-        $cycle = 'edit';
-
-        $params = array(
-            'cycle' => $cycle,
-            'sc' => $this->get('security.context'),
-            'em' => $this->getDoctrine()->getManager(),
-            'user' => $entity->getUser(),
-            'cloneuser' => null
-        );
-
-        $form = $this->createForm( new FellowshipApplicationType($params), $entity );
-
-        $form->handleRequest($request);
-
-        echo "errors:<br>";
-        print_r($form->getErrors());
-        echo "<br>string errors:<br>";
-        print_r($form->getErrorsAsString());
-        echo "<br>";
-        exit();
-
-        if( $form->isValid() ) {
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('fellap_show'));
-        }
-
-
-        return array(
-            'form' => $form->createView(),
-            'entity' => $entity,
-            'pathbase' => 'fellapp',
-            'cycle' => $cycle
-        );
-
-
     }
 
 
