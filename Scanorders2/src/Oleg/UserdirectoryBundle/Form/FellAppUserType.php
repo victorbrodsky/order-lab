@@ -51,16 +51,6 @@ class FellAppUserType extends UserType
     }
 
 
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-        ));
-    }
-
 
     public function userLocations($builder) {
         $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);

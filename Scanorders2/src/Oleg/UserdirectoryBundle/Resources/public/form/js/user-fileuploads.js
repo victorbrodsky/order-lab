@@ -3,7 +3,7 @@
  */
 
 //dropzone globals
-var _dz_maxFiles = 3;
+var _dz_maxFiles = 6;
 var _dz_maxFilesize = 10; //MB
 
 
@@ -41,7 +41,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     }
 
-    console.log('cycle='+cycle);
+    //console.log('cycle='+cycle);
 
     var showFlag = true;
     if( cycle.indexOf("show") === -1 ) {
@@ -274,19 +274,31 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
     var holderTop = $(dropzone.element).closest('.user-collection-holder,.form-element-holder');
     var commentid = holderTop.find('.comment-field-id').val();
 
-    var commenttype = null;
-    if( holderTop.hasClass('user-publiccomments') ) {
-        commenttype = "OlegUserdirectoryBundle:PublicComment";
-    }
-    if( holderTop.hasClass('user-privatecomments') ) {
-        commenttype = "OlegUserdirectoryBundle:PrivateComment";
-    }
-    if( holderTop.hasClass('user-admincomments') ) {
-        commenttype = "OlegUserdirectoryBundle:AdminComment";
-    }
-    if( holderTop.hasClass('user-confidentialcomment') ) {
-        commenttype = "OlegUserdirectoryBundle:ConfidentialComment";
-    }
+//    var commenttype = null;
+//    if( holderTop.hasClass('user-publiccomments') ) {
+//        commenttype = "OlegUserdirectoryBundle:PublicComment";
+//    }
+//    if( holderTop.hasClass('user-privatecomments') ) {
+//        commenttype = "OlegUserdirectoryBundle:PrivateComment";
+//    }
+//    if( holderTop.hasClass('user-admincomments') ) {
+//        commenttype = "OlegUserdirectoryBundle:AdminComment";
+//    }
+//    if( holderTop.hasClass('user-confidentialcomment') ) {
+//        commenttype = "OlegUserdirectoryBundle:ConfidentialComment";
+//    }
+//
+//    if( holderTop.hasClass('user-CurriculumVitae') ) {
+//        commenttype = "OlegUserdirectoryBundle:CurriculumVitae";
+//    }
+//    if( holderTop.hasClass('user-FellowshipApplication') ) {
+//        commenttype = "OlegUserdirectoryBundle:FellowshipApplication";
+//    }
+//    if( holderTop.hasClass('user-Examination') ) {
+//        commenttype = "OlegUserdirectoryBundle:Examination";
+//    }
+
+    var commenttype = mapperHolderDocument(holderTop);
 
 //    //for scan orders don't delete from DB. Just remove from form
 //    if( holderTop.hasClass('scan-partpaper') ) {
@@ -307,7 +319,7 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
         //console.log('url='+url);
         //use comment id and documentid
         $.ajax({
-            type: "POST",
+            type: "DELETE",
             url: url,
             timeout: _ajaxTimeout,
             async: true,
@@ -375,6 +387,46 @@ function adjustHolderHeight( commentHolder ) {
 }
 
 
+function mapperHolderDocument(holderTop) {
+    var holdertype = null;
+    var fieldname = 'documents';
+    if( holderTop.hasClass('user-publiccomments') ) {
+        holdertype = "OlegUserdirectoryBundle:PublicComment";
+        fieldname = 'documents';
+    }
+    if( holderTop.hasClass('user-privatecomments') ) {
+        holdertype = "OlegUserdirectoryBundle:PrivateComment";
+        fieldname = 'documents';
+    }
+    if( holderTop.hasClass('user-admincomments') ) {
+        holdertype = "OlegUserdirectoryBundle:AdminComment";
+        fieldname = 'documents';
+    }
+    if( holderTop.hasClass('user-confidentialcomment') ) {
+        holdertype = "OlegUserdirectoryBundle:ConfidentialComment";
+        fieldname = 'documents';
+    }
+
+    if( holderTop.hasClass('user-CurriculumVitae') ) {
+        holdertype = "OlegUserdirectoryBundle:CurriculumVitae";
+        fieldname = 'documents';
+    }
+    if( holderTop.hasClass('user-FellowshipApplication') ) {
+        holdertype = "OlegUserdirectoryBundle:FellowshipApplication";
+        fieldname = ['coverLetters','lawsuitDocuments','reprimandDocuments'];
+    }
+    if( holderTop.hasClass('user-Examination') ) {
+        holdertype = "OlegUserdirectoryBundle:Examination";
+        fieldname = 'scores';
+    }
+
+//    var res = new Array();
+//    res['holdertype'] = holdertype;
+//    res['fieldname'] = fieldname;
+
+    return holdertype;
+}
+
 
 //output example:
 // id=   oleg_userdirectorybundle_user_privateComments_0_documents_0_id
@@ -422,7 +474,7 @@ function getNewDocumentInfoByHolder( commentHolder ) {
     }
 
     //use dummyprototypefield to get id and name prototype for adding new document
-    var uploadid = commentHolder.find('input.dummyprototypefield[id*="__document__"]');
+    var uploadid = commentHolder.find('input.dummyprototypefield[id*="__documents__"]');
 
     if( uploadid.length == 0 ) {
         uploadid = commentHolder.find('input.dummyprototypefield');
@@ -471,12 +523,12 @@ function getElementInfoById( id, name ) {
 //    }
 
 
-    //id: oleg_userdirectorybundle_user[publicComments][0][documents][__document__][id]
-    var idArr = id.split("__document__");
+    //id: oleg_userdirectorybundle_user[publicComments][0][documents][__documents__][id]
+    var idArr = id.split("__documents__");
     var beginIdStr = idArr[0];
     //console.log('beginIdStr='+beginIdStr);
 
-    var nameArr = name.split("[__document__]");
+    var nameArr = name.split("[__documents__]");
     var beginNameStr = nameArr[0];
     //console.log('beginNameStr='+beginNameStr);
 
@@ -486,6 +538,59 @@ function getElementInfoById( id, name ) {
     res['beginNameStr'] = beginNameStr;
 
     return res;
+}
+
+//fieldSelector - any element's id or class in the collection with proper id
+function getNextCollectionCount( holder, fieldSelector ) {
+    var maxCount = 0;
+
+    var len = holder.find(fieldSelector).length;
+    //console.log('len='+len);
+
+    var counter = 0;
+
+    holder.find(fieldSelector).each( function(){
+
+        var count = getDocumentIndexById($(this).attr('id'));
+        //console.log('count='+count);
+
+        if( parseInt(count) > parseInt(maxCount) ) {
+            maxCount = count;
+        }
+        //console.log('iteration maxCount='+maxCount);
+
+        counter++;
+    });
+
+    if( counter > 0 ) {
+        maxCount = parseInt(maxCount)+1;
+    }
+
+    //console.log('maxCount='+maxCount);
+
+    return maxCount;
+}
+
+function getDocumentIndexById(id) {
+    //console.log('doc id='+id);
+    var documentIndex = 0;
+    //id: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id  => get index id
+    //id: oleg_userdirectorybundle_fellowshipapplication_coverLetters_1_id
+    //id must have "_documentfieldname_index_id" string => get the last 3 elements from split
+    var idArr = id.split("_");
+    var documentfieldname = idArr[idArr.length-3];
+    //console.log('documentfieldname='+documentfieldname);
+    var documentspliter = "_"+documentfieldname+"_";
+
+    if( id.indexOf(documentspliter) !== -1 ) {
+        //get documentcount
+        var docArr = id.split(documentspliter);
+        var documentId = docArr[1];
+        //console.log('documentId='+documentId);
+        documentIndex = documentId.replace("_id", "");
+        documentIndex = parseInt(documentIndex);
+    }
+    return documentIndex;
 }
 
 //function getElementInfoById_User( id, name ) {
@@ -633,50 +738,6 @@ function getElementInfoById( id, name ) {
 //}
 
 
-//fieldSelector - any element's id or class in the collection with proper id
-function getNextCollectionCount( holder, fieldSelector ) {
-    var maxCount = 0;
-
-    var len = holder.find(fieldSelector).length;
-    //console.log('len='+len);
-
-    var counter = 0;
-
-    holder.find(fieldSelector).each( function(){
-
-        var count = getDocumentIndexById($(this).attr('id'));
-        //console.log('count='+count);
-
-        if( parseInt(count) > parseInt(maxCount) ) {
-            maxCount = count;
-        }
-        //console.log('iteration maxCount='+maxCount);
-
-        counter++;
-    });
-
-    if( counter > 0 ) {
-        maxCount = parseInt(maxCount)+1;
-    }
-
-    //console.log('maxCount='+maxCount);
-
-    return maxCount;
-}
-
-function getDocumentIndexById(id) {
-    var documentIndex = 0;
-    //id: oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id  => get index id
-    //id must have "_documents_index" string
-    if( id.indexOf("_documents_") !== -1 ) {
-        //get documentcount
-        var docArr = id.split("_documents_");
-        var documentId = docArr[1];
-        documentIndex = documentId.replace("_id", "");
-        documentIndex = parseInt(documentIndex);
-    }
-    return documentIndex;
-}
 
 
 

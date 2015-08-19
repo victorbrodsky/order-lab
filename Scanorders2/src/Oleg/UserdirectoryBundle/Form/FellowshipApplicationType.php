@@ -74,7 +74,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__document__',
+            'prototype_name' => '__documents__',
         ));
 
 
@@ -98,7 +98,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__document__',
+            'prototype_name' => '__documents__',
         ));
 
 //        $builder->add('lawsuit','choice', array(
@@ -121,7 +121,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__document__',
+            'prototype_name' => '__documents__',
         ));
 
 
@@ -180,6 +180,7 @@ class FellowshipApplicationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\FellowshipApplication',
+            'csrf_protection' => false
         ));
     }
 

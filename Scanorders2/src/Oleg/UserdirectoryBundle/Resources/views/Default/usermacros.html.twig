@@ -50,8 +50,8 @@
 
 {% endmacro %}
 
-{#dropzoneInit = 'inactive':          inactive by default#}
-{#dropzoneInit = 'active':         active by default#}
+{#dropzoneInit = 'inactive':    inactive by default#}
+{#dropzoneInit = 'active':      active by default#}
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
 {% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit) %}
 
@@ -66,10 +66,11 @@
         {% endif %}
 
         {% if documentspercontainer is not defined or documentspercontainer == "" or documentspercontainer == 0 %}
-            {% set dz_maxFiles = 3 %}
+            {% set dz_maxFiles = 6 %}
         {% else %}
             {% set dz_maxFiles = documentspercontainer %}
         {% endif %}
+        {#documentspercontainer:{{ documentspercontainer }}#}
 
         {#dropzoneInit:{{ dropzoneInit }}<br>#}
         {% if dropzoneInit is not defined %}
@@ -106,6 +107,7 @@
             {% endif %}
         {% endif %}
 
+
         <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">
 
             {% if not showFlag %}
@@ -140,6 +142,7 @@
 
 {% macro document( documents, cycle, prototype, addRemoveLink ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {#get sitename#}
     {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
@@ -159,7 +162,7 @@
         {% set showFlag = false %}
     {% endif %}
 
-    {% for document in documents %}
+    {% for document in documents if document.vars.value %}
 
         {#document:{{ document.vars.value.id }}#}
 
@@ -168,14 +171,7 @@
                 <div class="dz-filename"><span data-dz-name>{{ document.vars.value.uniquename }}</span></div>
                 <div class="dz-size" data-dz-size><strong>{{ document.vars.value.getSizeStr() }}</strong></div>
 
-                {#<img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />#}
-                {% if '.pdf' in document.vars.value.getAbsoluteUploadFullPath %}
-                    <object data-dz-thumbnail alt="{{ document.vars.value.originalname }}" data="{{ document.vars.value.getAbsoluteUploadFullPath }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>
-                {% elseif '.doc' in document.vars.value.getAbsoluteUploadFullPath %}
-                    <object data-dz-thumbnail alt="{{ document.vars.value.originalname }}" data="{{ document.vars.value.getAbsoluteUploadFullPath }}" type="application/msword" style="max-width:100%; max-height:100%;"></object>
-                {% else %}
-                    <img data-dz-thumbnail alt="{{ document.vars.value.originalname }}" src="{{ document.vars.value.getAbsoluteUploadFullPath }}" style="display:block;" />
-                {% endif %}
+                {{ usermacros.showDocumentAsImage(document.vars.value,'Document', 'data-dz-thumbnail') }}
 
             </div>
             <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
@@ -1649,22 +1645,24 @@
 
 {% macro avatarForm(user,cycle) %}
 
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
     {% if "show" in cycle %}
         {% set showFlag = true %}
     {% else %}
         {% set showFlag = false %}
     {% endif %}
 
-    {% if user.avatar %}
-        {% set avatarImage = user.avatar.getAbsoluteUploadFullPath %}
-    {% else %}
-        {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
-    {% endif %}
-
     {% if showFlag %}
 
         <div class="avatar-view-clean-default">
-            <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
+            {% if user.avatar %}
+                {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
+            {% else %}
+                {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
+            {% endif %}
+
         </div>
 
     {% else %}
@@ -1673,7 +1671,13 @@
 
             <!-- Current avatar -->
             <div class="avatar-view" title="Change the photo" style="height:126px; width:116px;">
-                <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
+                {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">                #}
+                {% if user.avatar %}
+                    {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
+                {% else %}
+                    {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                    <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
+                {% endif %}
             </div>
 
             <!-- Cropping modal -->
@@ -1879,7 +1883,37 @@
     {% endif %}
 {% endmacro %}
 
+
 {% macro userUrlLink() %}
     <a href="{{ path(employees_sitename~'_showuser_notstrict', { 'id': 'user_replacement_id' }) }}">{{ 'user_replacement_username' }}</a><br>
+{% endmacro %}
+
+
+{% macro showDocumentAsImage( documentEntity, alt, atr ) %}
+
+    {% if '.pdf' in documentEntity.getAbsoluteUploadFullPath %}
+        {#pdf!!!#}
+        <object {{ atr }} alt="{{ documentEntity.getOriginalname }}"
+                data="{{ documentEntity.getAbsoluteUploadFullPath }}"
+                type="application/pdf"
+                style="display:block; max-width:100%; max-height:100%;"
+        >
+        </object>
+    {% elseif '.doc' in documentEntity.getAbsoluteUploadFullPath %}
+        {#doc!!!#}
+        <object {{ atr }} alt="{{ documentEntity.getOriginalname }}"
+                data="{{ documentEntity.getAbsoluteUploadFullPath }}"
+                type="application/msword"
+                style="display:block; max-width:100%; max-height:100%;"
+        >
+        </object>
+    {% else %}
+        <img {{ atr }} alt="{{ documentEntity.getOriginalname }}"
+             src="{{ documentEntity.getAbsoluteUploadFullPath }}"
+             alt="{{ alt }}"
+             style="display:block; max-width:100%; max-height:100%;"
+        />
+    {% endif %}
+
 {% endmacro %}
 

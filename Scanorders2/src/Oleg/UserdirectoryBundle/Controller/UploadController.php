@@ -22,7 +22,7 @@ class UploadController extends Controller {
 
     /**
      * @Route("/file-delete", name="employees_file_delete")
-     * @Method("POST")
+     * @Method("DELETE")
      */
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
@@ -59,14 +59,15 @@ class UploadController extends Controller {
                 $repository = $this->getDoctrine()->getRepository($commentclass);
                 $dql = $repository->createQueryBuilder("comment");
                 $dql->select('comment');
-                $dql->innerJoin("comment.documents", "documents");
+                //$dql->innerJoin("comment.documents", "documents");
+                $this->setHolderDocumentsDql($dql,$commentclass);
                 $dql->where("documents = :document");
                 $query = $em->createQuery($dql)->setParameter("document",$document);
                 $comments = $query->getResult();
 
                 //echo "comment count=".count($comments)." ";
                 if( count($comments) > 1 ) {
-                    throw new \Exception( 'More than one comment found, count='.count($comments) );
+                    throw new \Exception( 'More than one holder found, count='.count($comments) );
                 }
 
                 if( count($comments) > 0 ) {
@@ -95,6 +96,27 @@ class UploadController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent($count);
         return $response;
+    }
+
+    public function setHolderDocumentsDql($dql,$commentclass) {
+
+        switch( $commentclass ) {
+            case "OlegUserdirectoryBundle:CurriculumVitae":
+                $str = "comment.documents";
+                break;
+            case "OlegUserdirectoryBundle:FellowshipApplication":
+                $str = "comment.coverLetters";
+                break;
+            case "OlegUserdirectoryBundle:Examination":
+                $str = "comment.scores";
+                break;
+            default:
+                $str = "comment.documents";
+        }
+
+        //echo "dql str=".$str."<br>";
+
+        $dql->innerJoin($str, "documents");
     }
 
 

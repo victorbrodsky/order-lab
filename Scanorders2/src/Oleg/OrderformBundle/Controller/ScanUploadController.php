@@ -24,7 +24,7 @@ class ScanUploadController extends UploadController {
 
     /**
      * @Route("/file-delete", name="scan_file_delete")
-     * @Method("POST")
+     * @Method("DELETE")
      */
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);

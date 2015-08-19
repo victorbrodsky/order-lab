@@ -144,12 +144,13 @@
                         {% if entity.user.avatar %}
                             {#height="60" width="60"#}
                             <div style="height: 60px; width: 60px;">
-                            {% if '.pdf' in entity.user.avatar.getAbsoluteUploadFullPath %}
-                                {#<embed src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;" type='application/pdf' >#}
-                                <object data="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>
-                            {% else %}
-                                <img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;">
-                            {% endif %}
+                            {#{% if '.pdf' in entity.user.avatar.getAbsoluteUploadFullPath %}#}
+                                {#&#123;&#35;<embed src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;" type='application/pdf' >&#35;&#125;#}
+                                {#<object data="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>#}
+                            {#{% else %}#}
+                                {#<img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
+                            {#{% endif %}#}
+                            {{ usermacros.showDocumentAsImage(entity.user.avatar,'Avatar','') }}
                             </div>
                         {% endif %}
                     </td>

@@ -722,20 +722,13 @@
                     {#avatar form modal#}
                     {#{{ usermacros.avatarForm(user,cycle) }}#}
                     {% if user.avatar %}
-                        {% set avatarImage = user.avatar.getAbsoluteUploadFullPath %}
+                        {#{% set avatarImage = user.avatar.getAbsoluteUploadFullPath %}#}
+                        {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
                     {% else %}
                         {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
-                    {% endif %}
-                    {#<img src="{{ avatarImage }}" alt="Avatar">#}
-
-                    {% if '.pdf' in avatarImage %}
-                        <div style="width: 140px; height: 140px;">
-                            <object data="{{ avatarImage }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>
-                        </div>
-                    {% else %}
                         <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
                     {% endif %}
-
+                    {#<img src="{{ avatarImage }}" alt="Avatar">#}
                 </div>
 
                 <!--<img src="profile-pic.jpg"> -->
@@ -959,210 +952,19 @@
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    <div class="panel panel-default">
+    <h1>{{ user.getUsernameOptimal }}</h1>
 
-        {#<div class="panel-heading">#}
-            {#<h3 class="panel-title">{{ user.getUsernameOptimal }}</h3>#}
-        {#</div>#}
-
-        <div class="panel-body">
-
-            <div class="row">
-
-                <div class="col-xs-7">
-
-                    <div class="row">
-
-                        <div class="col-xs-3" align="left">
-
-                            {#avatar#}
-                            <div class="image-box">
-                                {% if user.avatar %}
-                                    {% set avatarImage = user.avatar.getAbsoluteUploadFullPath %}
-                                {% else %}
-                                    {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
-                                {% endif %}
-                                {#<img src="{{ avatarImage }}" alt="Avatar">#}
-                                {% if '.pdf' in avatarImage %}
-                                    <object data="{{ avatarImage }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>
-                                {% else %}
-                                    <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
-                                {% endif %}
-                            </div>
-
-                        </div>
-
-
-                        <div class="col-xs-9">
-
-                            <div class="alert alert-danger" role="alert">
-                                <h1>{{ user.getUsernameOptimal }}</h1>
-                            </div>
-
-                            {#<h1>#}
-                                {#<span class="label label-danger">#}
-                                    {#{{ user.getUsernameOptimal }}#}
-                                {#</span>#}
-                            {#</h1>#}
-
-                            {#user info#}
-                            {#head/cheaf#}
-                            {#Chief, Eyebrow Pathology, Assistant Professor of Pathology and Laboratory Medicine#}
-                            {% set headInfo = user.getHeadInfo %}
-                            {% if headInfo %}
-                                <h4>
-                                    <i>{{ headInfo }}</i>
-                                </h4>
-                            {% endif %}
-
-                            {#services#}
-                            <p>
-                                {#&#123;&#35;services&#35;&#125;#}
-                                {#{% for service in user.getServices %}#}
-                                    {#{{ service.name }}<br>#}
-                                {#{% endfor %}#}
-                                {#&#123;&#35;divisions&#35;&#125;#}
-                                {#{% for division in user.getDivisions %}#}
-                                    {#{{ division.name }}<br>#}
-                                {#{% endfor %}#}
-                                {#&#123;&#35;departments&#35;&#125;#}
-                                {#{% for department in user.getDepartments %}#}
-                                    {#{{ department.name }}<br>#}
-                                {#{% endfor %}#}
-                                {#institutions#}
-                                {% for institution in user.getInstitutions %}
-                                    {{ institution.name }}
-                                {% endfor %}
-                            </p>
-
-                        </div>
-
-
-
-                    </div>  {#left panel#}
-
-                </div>
-
-
-                <div class="col-xs-5">
-
-                    <div class="well" style="padding-left:20px">
-
-                        {% for location in user.getLocations %}
-
-                            {% if location.hasLocationTypeName("Employee Home") == false %}
-
-                                <div>
-                                    <h4>{{ location.getLocationFullName }}:</h4>
-
-                                    <table class="table table-condensed text-left">
-                                        {% if location.room %}
-                                            <tr>
-                                                <td>room:</td>
-                                                <td>{{ location.room }}</td>
-                                            </tr>
-                                        {% endif %}
-
-                                        {% if location.phone %}
-                                            <tr>
-                                                <td>ph:</td>
-                                                <td>
-                                                    {#{{ location.phone }}#}
-                                                    {{ usermacros.phoneHref(location.phone) }}
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-
-                                        {% if location.pager %}
-                                            <tr>
-                                                <td>pager:</td>
-                                                <td>{{ location.pager }}</td>
-                                            </tr>
-                                        {% endif %}
-
-                                        {% if location.ic %}
-                                            <tr>
-                                                <td>i/c:</td>
-                                                <td>{{ location.ic }}</td>
-                                            </tr>
-                                        {% endif %}
-
-                                        {% if location.fax %}
-                                            <tr>
-                                                <td>fax:</td>
-                                                <td>{{ location.fax }}</td>
-                                            </tr>
-                                        {% endif %}
-
-                                        {% if location.email %}
-                                            <tr>
-                                                <td>email:</td>
-                                                <td>
-                                                    {#<a href="mailto:name123@med.cornell.edu">name123@med.cornell.edu</a>#}
-                                                    <a href="mailto:{{ location.email }}" target="_top">{{ location.email }}</a>
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-
-                                    </table>
-                                </div>
-
-
-                                {% if location.getAssistant|length > 0 %}
-                                    <div>
-                                        <h4>Assistant:</h4>
-
-                                        {% for assistant in location.getAssistant %}
-
-                                            <table style="padding-bottom: 10px;" class="table table-condensed text-left">
-                                                <tr>
-                                                    <td valign="top">name:</td>
-                                                    <td>
-                                                        {#{{ assistant.getUsernameOptimal }}#}
-                                                        <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameOptimal() }}</a>
-                                                    </td>
-                                                </tr>
-                                                {#<tr>phone(s):</tr>#}
-                                                <tr>
-                                                    <td valign="top">ph:</td>
-                                                    <td>
-                                                        <p>
-                                                            {% for phone in assistant.getAllPhones() %}
-                                                                <p style="padding-bottom:0; margin-bottom:0;">{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
-                                                            {% endfor %}
-                                                        </p>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td valign="top">email:</td>
-                                                    <td>
-                                                        {#<a href="mailto:name123@med.cornell.edu">name123@med.cornell.edu</a>#}
-                                                        {#<a href="mailto:{{ assistant.email }}" target="_top">{{ assistant.email }}</a>#}
-                                                        {% for email in assistant.getAllEmail() %}
-                                                            <p style="padding-bottom:0;margin-bottom:0;"><a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a></p>
-                                                        {% endfor %}
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-                                        {% endfor %}
-
-                                    </div>
-                                {% endif %}
-
-                            {% endif %} {#main locations only#}
-
-                        {% endfor %}
-
-                    </div>
-
-                </div>
-
-
-            </div>
-        </div>
+    {#avatar#}
+    <div align="center" style="height: 160px;">
+        {#avatar form modal#}
+        {% if user.avatar %}
+            {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
+        {% else %}
+            {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+        {% endif %}
     </div>
+
 
 {% endmacro %}
 

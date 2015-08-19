@@ -191,11 +191,13 @@ class FellAppController extends Controller {
             )
         );
 
+
         return array(
             'form' => $form->createView(),
             'entity' => $entity,
             'pathbase' => 'fellapp',
-            'cycle' => $cycle
+            'cycle' => $cycle,
+            'sitename' => $this->container->getParameter('fellapp.sitename')
         );
     }
 
@@ -239,20 +241,30 @@ class FellAppController extends Controller {
 
         $form->handleRequest($request);
 
+        if( !$form->isSubmitted() ) {
+            echo "form is not submitted<br>";
+            $form->submit($request);
+        }
 
 
-        echo "errors:<br>";
-        $string = (string) $form->getErrors(true);
-        echo "string errors=".$string."<br>";
-        echo "getErrors count=".count($form->getErrors())."<br>";
-        echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
-//        print_r($form->getErrors());
+//        if ($form->isDisabled()) {
+//            echo "form is disabled<br>";
+//        }
+//        if (count($form->getErrors(true)) > 0) {
+//            echo "form has errors<br>";
+//        }
+//        echo "errors:<br>";
+//        $string = (string) $form->getErrors(true);
+//        echo "string errors=".$string."<br>";
+//        echo "getErrors count=".count($form->getErrors())."<br>";
+//        echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
+        //print_r($form->getErrors());
 //        echo "<br>string errors:<br>";
 //        print_r($form->getErrorsAsString());
 //        echo "<br>";
 //        exit();
 
-        if(1) {
+        if(0) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
             echo "<br>form errors:<br>";
@@ -261,16 +273,30 @@ class FellAppController extends Controller {
 
         if( $form->isValid() ) {
 
-            exit('form valid');
+            //exit('form valid');
+
+            $this->processDocuments($entity);
+
+            //set update author application
+            $em = $this->getDoctrine()->getManager();
+            $userUtil = new UserUtil();
+            $sc = $this->get('security.context');
+            $userUtil->setUpdateInfo($entity,$em,$sc);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('fellap_show'));
+            //set logger for update
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+            $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
+            $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Updated');
+
+            return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
         }
 
-        echo 'form invalid <br>';
+        //echo 'form invalid <br>';
         //exit('form invalid');
 
         return array(
@@ -280,6 +306,33 @@ class FellAppController extends Controller {
             'cycle' => $cycle
         );
 
+
+    }
+
+    //process upload documents: CurriculumVitae(documents), FellowshipApplication(coverLetters), Examination(scores), FellowshipApplication(lawsuitDocuments), FellowshipApplication(reprimandDocuments)
+    public function processDocuments($application) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $userUtil = new UserUtil();
+        $sc = $this->get('security.context');
+
+        $subjectUser = $application->getUser();
+
+        //CurriculumVitae
+        foreach( $subjectUser->getCredentials()->getCvs() as $cv ) {
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $cv );
+        }
+
+        //FellowshipApplication(coverLetters)
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'coverLetter' );
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'lawsuitDocument');
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'reprimandDocument' );
+
+        //Examination
+        foreach( $subjectUser->getCredentials()->getExaminations() as $examination ) {
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $examination );
+        }
 
     }
 
@@ -852,15 +905,15 @@ class FellAppController extends Controller {
 
             $em->flush();
 
-            exit(1);
+            //exit(1);
 
             $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
             $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,$request,'Fellowship Application Created');
         }
 
 
-        echo "count=".$count."<br>";
-        exit('end populate');
+        //echo "count=".$count."<br>";
+        //exit('end populate');
 
         return $count;
     }

@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 class DocumentRepository extends EntityRepository {
 
 
-    public function processDocuments($documentHolder) {
+    public function processDocuments($documentHolder, $docfieldname=null) {
 
         if( $documentHolder == null ) {
            // echo "not exists: document=".$documentHolder."<br>";
@@ -20,61 +20,52 @@ class DocumentRepository extends EntityRepository {
         //$className = $class->getShortName();
         //echo "<br><br>className=".$className."<br>";
 
-        if( count($documentHolder->getDocuments()) == 0 ) {
+        if( $docfieldname ) {
+
+        } else {
+            $docfieldname = "Document";
+        }
+
+        $addMethodName = "add".$docfieldname;
+        $removeMethodName = "remove".$docfieldname;
+        $getMethod = "get".$docfieldname."s";
+
+        if( count($documentHolder->$getMethod()) == 0 ) {
             //echo "return: no documents<br>";
             return $documentHolder;
         }
 
 //        echo $documentHolder. ", id=".$documentHolder->getId()."<br>";
-//        echo "<br>before processing holder count=".count($documentHolder->getDocuments())."<br>";
+//        echo "<br>before processing holder count=".count($documentHolder->$getMethod())."<br>";
 
         //get type by $documentHolder class
         $docType = $this->getDocumentTypeByHolder($documentHolder);
 
-        foreach( $documentHolder->getDocuments() as $doc ) {
+        foreach( $documentHolder->$getMethod() as $doc ) {
 
 //            echo "document id:<br>";
 //            print_r($doc->getId());
 //            echo "<br>";
 
-            $documentHolder->removeDocument($doc);
-
-            //if document does not have an original or unique names then this is a newly added document => find it in DB and attach it to this holder
-//            if( $doc->getId() && ( !$doc->getOriginalname() || !$doc->getUniquename() ) ) {
-//
-//                $documentHolder->removeDocument($doc);
-//
-////                echo "before get doc: id=".$doc->getId()."<br>";
-//
-//                $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
-//
-//                if( $docDb ) {
-//
-//
-//
-//                    //echo "add found doc id=".$docDb->getId().", originalname=".$docDb->getOriginalname().", uniquename=".$docDb->getUniquename()."<br>";
-//                    $documentHolder->addDocument($docDb);
-//                }
-//            }
+            $documentHolder->$removeMethodName($doc);
 
             if( $doc->getId() ) {
 
                 $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
-                //$docDb = $this->_em->getReference('OlegUserdirectoryBundle:User',$userSecurity->getId());
 
                 //set type if not set
                 if( !$docDb->getType() && $docType ) {
                     $docDb->setType($docType);
                 }
 
-                $documentHolder->addDocument($docDb);
+                $documentHolder->$addMethodName($docDb);
 
             } //if
 
         } //foreach
 
-//        echo "after processing holder count=".count($documentHolder->getDocuments())."<br>";
-//        foreach( $documentHolder->getDocuments() as $doc ) {
+//        echo "after processing holder count=".count($documentHolder->$getMethod())."<br>";
+//        foreach( $documentHolder->$getMethod() as $doc ) {
 //            echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
 //        }
 
@@ -82,6 +73,9 @@ class DocumentRepository extends EntityRepository {
 
         return $documentHolder;
     }
+
+
+
 
 
     public function getDocumentTypeByHolder( $documentHolder ) {
@@ -108,6 +102,11 @@ class DocumentRepository extends EntityRepository {
                 break;
             case 'User':
                 $doctypeStr = 'Avatar Image';
+                break;
+            case 'CurriculumVitae':
+            case 'FellowshipApplication':
+            case 'Examination':
+                $doctypeStr = 'Fellowship Application Upload';
                 break;
             default:
                 //

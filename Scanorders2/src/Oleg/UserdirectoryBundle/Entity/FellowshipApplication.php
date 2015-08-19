@@ -42,9 +42,9 @@ class FellowshipApplication extends BaseUserAttributes
     private $institution;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="Document")
      * @ORM\JoinTable(name="user_fellApp_coverLetter",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
      *      )
      **/
@@ -453,7 +453,20 @@ class FellowshipApplication extends BaseUserAttributes
 
 
 
-
+    //interface methods
+    public function addDocument($item)
+    {
+        $this->addCoverLetter($item);
+        return $this;
+    }
+    public function removeDocument($item)
+    {
+        $this->removeCoverLetter($item);
+    }
+    public function getDocuments()
+    {
+        return $this->getCoverLetters();
+    }
 
 
 

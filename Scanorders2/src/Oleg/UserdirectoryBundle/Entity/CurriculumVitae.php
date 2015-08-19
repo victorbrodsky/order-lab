@@ -44,9 +44,9 @@ class CurriculumVitae
      * documents
      *
      * @ORM\ManyToMany(targetEntity="Document")
-     * @ORM\JoinTable(name="user_curriculumVitae_coverLetter",
+     * @ORM\JoinTable(name="user_curriculumVitae_document",
      *      joinColumns={@ORM\JoinColumn(name="curriculumVitae_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
      *      )
      **/
     private $documents;

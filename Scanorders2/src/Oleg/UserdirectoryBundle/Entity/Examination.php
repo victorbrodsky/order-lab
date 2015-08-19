@@ -44,7 +44,7 @@ class Examination
      * @ORM\ManyToMany(targetEntity="Document")
      * @ORM\JoinTable(name="user_examination_score",
      *      joinColumns={@ORM\JoinColumn(name="examination_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="score_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="score_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
      *      )
      **/
     private $scores;
@@ -496,6 +496,20 @@ class Examination
     }
 
 
+    //interface methods
+    public function addDocument($item)
+    {
+        $this->addScore($item);
+        return $this;
+    }
+    public function removeDocument($item)
+    {
+        $this->removeScore($item);
+    }
+    public function getDocuments()
+    {
+        return $this->getScores();
+    }
 
 
 

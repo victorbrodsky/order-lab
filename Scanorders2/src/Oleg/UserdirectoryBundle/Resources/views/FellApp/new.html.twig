@@ -2,6 +2,7 @@
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Profile/edit_user.html.twig" as userform %}
 
 
 {% block title %}
@@ -12,23 +13,39 @@
 {% block content %}
 
     {#On Medium devices (Desktops (≥992px)) limit the width#}
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
+    <div class="col-md-1"></div>
+    <div class="col-md-9">
 
 
 
     <h4 class="text-info" align="center">
-        Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+        Fellowship Application ID {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
     </h4>
 
     <br>
 
-    <p>
-    {% set hreflink = '<a href="'~path(employees_sitename~'_showuser', { 'id': entity.user.id })~'">'~entity.user.getDisplayName()~'</a>' %}
-    {{ formmacros.simplefield( "Applicant:", hreflink, "", "disabled" ) }}
-    </p>
 
-    {{ formmacros.simplefield( 'Application Creation Date:', entity.timestamp|date('m/d/Y H:i'), "" ) }}
+    {#user's snapshot#}
+    {{ userform.snapshot(entity.user,sitename,cycle) }}
+    {#{% if "show" in cycle %}#}
+        {#{% set showFlag = true %}#}
+    {#{% else %}#}
+        {#{% set showFlag = false %}#}
+    {#{% endif %}   #}
+    {#{% if showFlag %}#}
+        {#{{ userform.snapshot(entity.user,sitename,cycle) }}        #}
+    {#{% else %}#}
+        {#&#123;&#35;avatar form modal&#35;&#125;#}
+        {#{{ usermacros.avatarForm(entity.user,cycle) }}#}
+    {#{% endif %}#}
+
+
+    {#<p>#}
+    {#{% set hreflink = '<a href="'~path(employees_sitename~'_showuser', { 'id': entity.user.id })~'">'~entity.user.getDisplayName()~'</a>' %}#}
+    {#{{ formmacros.simplefield( "Applicant:", hreflink, "", "disabled" ) }}#}
+    {#</p>#}
+
+    {#{{ formmacros.simplefield( 'Application Creation Date:', entity.timestamp|date('m/d/Y H:i'), "" ) }}#}
 
     <br>
     <p>
@@ -93,6 +110,8 @@
     {#{% do form.setRendered %}#}
     {#{{ form_widget(form._token) }}#}
 
+    {#{{ form_row(form.submit) }}#}
+    {#{{ form_widget(form.update) }}#}
 
     {#{{ form_end(form) }}#}
     {{ form_end(form, {'render_rest': false}) }}
@@ -115,7 +134,7 @@
     {% endif %}
 
     </div>
-    <div class="col-md-2"></div>
+    <div class="col-md-1"></div>
 
 {% endblock %}
 

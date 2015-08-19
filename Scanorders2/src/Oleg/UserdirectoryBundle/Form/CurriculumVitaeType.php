@@ -29,7 +29,7 @@ class CurriculumVitaeType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__document__',
+            'prototype_name' => '__documents__',
         ));
 
     }

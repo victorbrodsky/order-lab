@@ -77,7 +77,7 @@
                     {{ form_row(form.reprimand) }}
 
                     <div class="wellcollapsable" style="display:none">
-                        {{ usermacros.documentsContainer(null,form.reprimandDocuments,'user-reprimandDocuments', 'noprototype',3,'default') }}
+                        {{ usermacros.documentsContainer(null,form.reprimandDocuments,cycle, 'noprototype',8,'default') }}
                     </div>
 
                 </div>
@@ -90,7 +90,7 @@
 
                     <div class="wellcollapsable" style="display:none">
 
-                        {{ usermacros.documentsContainer(null,form.lawsuitDocuments,'user-lawsuitDocuments', 'noprototype',3,'default') }}
+                        {{ usermacros.documentsContainer(null,form.lawsuitDocuments,cycle, 'noprototype',8,'default') }}
                     </div>
 
                 </div>
