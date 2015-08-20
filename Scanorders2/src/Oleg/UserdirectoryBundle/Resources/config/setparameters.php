@@ -119,7 +119,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             //scan
             $scanuploadpath = $row['scanuploadpath'];
             //fellapp
-            $fellappuploadpath = $row['fellappuploadpath'];
+            if (array_key_exists('fellappuploadpath', $row)) {
+                $fellappuploadpath = $row['fellappuploadpath'];
+            }
 
             //titles
             $mainhome_title = $row['mainHomeTitle'];
@@ -249,3 +251,5 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
     //exit("table false<br>");
     //echo("table false<br>");
 }
+
+
