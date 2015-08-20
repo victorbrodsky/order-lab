@@ -166,7 +166,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
         $container->setParameter('employees.uploadpath',$employeesuploadpath);
         $container->setParameter('scan.uploadpath',$scanuploadpath);
-        $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
+        if( $fellappuploadpath )
+            $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
 
         //titles
         $mainhome_title = str_replace("%","%%",$mainhome_title);
