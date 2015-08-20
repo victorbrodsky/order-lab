@@ -69,7 +69,7 @@ class CronCommand extends ContainerAwareCommand {
         $fellappUtil = $this->getContainer()->get('fellapp_import');
         $result = "";
 
-    if(0) {
+    if(1) {
         $fileDb = $fellappUtil->importFellApp();
         if( $fileDb ) {
             $eventImport = 'FellApp Imported: '.$fileDb;
