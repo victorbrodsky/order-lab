@@ -143,8 +143,8 @@ class AdminController extends Controller
         $userutil = new UserUtil();
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $max_exec_time = ini_get('max_execution_time');
-        ini_set('max_execution_time', 900); //900 seconds = 15 minutes
+        //$max_exec_time = ini_get('max_execution_time');
+        ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes; it will set back to original value after execution of this script
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
@@ -275,7 +275,7 @@ class AdminController extends Controller
             ' (Note: -1 means that this table is already exists)'
         );
 
-        ini_set('max_execution_time', $max_exec_time); //set back to the original value
+        //ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
         return $this->redirect($this->generateUrl('user_admin_index'));
     }
@@ -1397,8 +1397,8 @@ class AdminController extends Controller
             //var_dump($rowData);
             //echo "<br>";
 
-            $countryPersisted = false;
-            $cityPersisted = false;
+            //$countryPersisted = false;
+            //$cityPersisted = false;
 
             $country = trim($rowData[0][0]);
             $city = trim($rowData[0][1]);
@@ -1415,10 +1415,10 @@ class AdminController extends Controller
 
 
                 $em->persist($newCountry);
-                $countryPersisted = true;
+                $em->flush();
+                //$countryPersisted = true;
 
                 $countryCount = $countryCount + 10;
-
             }
 
             //city
@@ -1431,20 +1431,18 @@ class AdminController extends Controller
                 $newCity = new CityList();
                 $this->setDefaultList($newCity,$cityCount,$user,$city);
 
-
                 $em->persist($newCity);
-                $cityPersisted = true;
+                //$cityPersisted = true;
 
                 $cityCount = $cityCount + 10;
-
             }
 
-            if( $countryPersisted || $cityPersisted ) {
+            //if( $countryPersisted || $cityPersisted ) {
                 if( ($row % $batchSize) === 0 ) {
                     $em->flush();
                     //$em->clear(); // Detaches all objects from Doctrine!
                 }
-            }
+            //}
 
         } //for loop
 
@@ -1829,6 +1827,7 @@ class AdminController extends Controller
             'Import of Fellowship Applications',
             'Populate of Fellowship Applications',
             'Fellowship Application Created',
+            'Fellowship Application Creation Failed',
             'Fellowship Application Updated',
             'Fellowship Application Resend Emails'
         );

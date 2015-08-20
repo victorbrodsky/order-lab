@@ -291,7 +291,7 @@ class FellAppController extends Controller {
             $userSecUtil = $this->container->get('user_security_utility');
             $systemUser = $userSecUtil->findSystemUser();
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
-            $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Updated');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Updated');
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
         }
@@ -396,7 +396,7 @@ class FellAppController extends Controller {
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = "Resend emails for fellowship application ID " . $id;
-        $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Resend Emails');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Resend Emails');
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
     }
@@ -449,37 +449,6 @@ class FellAppController extends Controller {
     }
 
 
-
-
-
-    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action) {
-        $userSecUtil = $this->get('user_security_utility');
-        $eventLog = $userSecUtil->constructEventLog($sitename,$user,$request);
-        $eventLog->setEvent($event);
-
-        //set Event Type
-        $em = $this->getDoctrine()->getManager();
-        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
-        $eventLog->setEventType($eventtype);
-
-        if( $subjectEntity ) {
-            //get classname, entity name and id of subject entity
-            $class = new \ReflectionClass($subjectEntity);
-            $className = $class->getShortName();
-            $classNamespace = $class->getNamespaceName();
-
-            //set classname, entity name and id of subject entity
-            $eventLog->setEntityNamespace($classNamespace);
-            $eventLog->setEntityName($className);
-            $eventLog->setEntityId($subjectEntity->getId());
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($eventLog);
-        $em->flush();
-    }
-
-
     /**
      * Show home page
      *
@@ -508,7 +477,7 @@ class FellAppController extends Controller {
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = "Populated fellowship applicantions " . $populatedCount;
-        $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,$request,'Populate of Fellowship Applications');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,$request,'Populate of Fellowship Applications');
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -522,6 +491,8 @@ class FellAppController extends Controller {
     public function populateSpreadsheet( $request, $inputFileName ) {
 
         echo "inputFileName=".$inputFileName."<br>";
+
+        ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
 
         $service = $this->getGoogleService();
         if( !$service ) {
@@ -553,6 +524,9 @@ class FellAppController extends Controller {
 
         $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getUsernameType('local-user');
+        if( !$userkeytype ) {
+            throw $this->createNotFoundException('Unable to find local user keytype');
+        }
 
         $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
         if( !$employmentType ) {
@@ -634,6 +608,10 @@ class FellAppController extends Controller {
                 $displayName = $firstName." ".$middleName." ".$lastName;
             }
 
+            //create logger which must be deleted on successefull creation of application
+            $eventAttempt = "Attempt of creating Fellowship Applicant ".$displayName." with unique ID=".$id;
+            $eventLogAttempt =  $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$eventAttempt,$systemUser,null,$request,'Fellowship Application Creation Failed');
+
             $user->setEmail($email);
             $user->setEmailCanonical($email);
             $user->setFirstName($firstName);
@@ -644,15 +622,15 @@ class FellAppController extends Controller {
             $user->setCreatedby('googleapi');
             $user->getPreferences()->setTimezone($default_time_zone);
             $user->setLocked(true);
-            $em->persist($user);
+            //$em->persist($user);
 
 
             //Pathology Fellowship Applicant in EmploymentStatus
-            $employmentStatus = new EmploymentStatus($user);
+            $employmentStatus = new EmploymentStatus($systemUser);
             $employmentStatus->setEmploymentType($employmentType);
             $user->addEmploymentStatus($employmentStatus);
 
-            $fellowshipApplication = new FellowshipApplication($user);
+            $fellowshipApplication = new FellowshipApplication($systemUser);
             $fellowshipApplication->setApplicationStatus('active');
             $user->addFellowshipApplication($fellowshipApplication);
 
@@ -662,7 +640,7 @@ class FellAppController extends Controller {
             //fellowshipType
             $fellowshipType = $this->getValueByHeaderName('fellowshipType',$rowData,$headers);
             if( $fellowshipType ) {
-                $transformer = new GenericTreeTransformer($em, $user, 'FellowshipSubspecialty');
+                $transformer = new GenericTreeTransformer($em, $systemUser, 'FellowshipSubspecialty');
                 $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
                 $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
             }
@@ -678,7 +656,7 @@ class FellAppController extends Controller {
             //echo "uploadedPhotoUrl=".$uploadedPhotoUrl."<br>";
             $uploadedPhotoId = $this->getFileIdByUrl( $uploadedPhotoUrl );
             if( $uploadedPhotoId ) {
-                $uploadedPhotoDb = $this->downloadFileToServer($user, $service, $uploadedPhotoId, null, $uploadPath);
+                $uploadedPhotoDb = $this->downloadFileToServer($systemUser, $service, $uploadedPhotoId, null, $uploadPath);
                 if( !$uploadedPhotoDb ) {
                     throw new IOException('Unable to download file to server: uploadedPhotoUrl='.$uploadedPhotoUrl.', fileDB='.$uploadedPhotoDb);
                 }
@@ -689,11 +667,11 @@ class FellAppController extends Controller {
             $uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl',$rowData,$headers);
             $uploadedCVUrlId = $this->getFileIdByUrl( $uploadedCVUrl );
             if( $uploadedCVUrlId ) {
-                $uploadedCVUrlDb = $this->downloadFileToServer($user, $service, $uploadedCVUrlId, null, $uploadPath);
+                $uploadedCVUrlDb = $this->downloadFileToServer($systemUser, $service, $uploadedCVUrlId, null, $uploadPath);
                 if( !$uploadedCVUrlDb ) {
                     throw new IOException('Unable to download file to server: uploadedCVUrl='.$uploadedCVUrl.', fileDB='.$uploadedCVUrlDb);
                 }
-                $cv = new CurriculumVitae($user);
+                $cv = new CurriculumVitae($systemUser);
                 $cv->addDocument($uploadedCVUrlDb);
                 $user->getCredentials()->addCv($cv);
             }
@@ -702,20 +680,20 @@ class FellAppController extends Controller {
             $uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl',$rowData,$headers);
             $uploadedCoverLetterUrlId = $this->getFileIdByUrl( $uploadedCoverLetterUrl );
             if( $uploadedCoverLetterUrlId ) {
-                $uploadedCoverLetterUrlDb = $this->downloadFileToServer($user, $service, $uploadedCoverLetterUrlId, null, $uploadPath);
+                $uploadedCoverLetterUrlDb = $this->downloadFileToServer($systemUser, $service, $uploadedCoverLetterUrlId, null, $uploadPath);
                 if( !$uploadedCoverLetterUrlDb ) {
                     throw new IOException('Unable to download file to server: uploadedCoverLetterUrl='.$uploadedCoverLetterUrl.', fileDB='.$uploadedCoverLetterUrlDb);
                 }
                 $fellowshipApplication->addCoverLetter($uploadedCoverLetterUrlDb);
             }
 
-            $examination = new Examination($user);
+            $examination = new Examination($systemUser);
             $user->getCredentials()->addExamination($examination);
             //uploadedUSMLEScoresUrl
             $uploadedUSMLEScoresUrl = $this->getValueByHeaderName('uploadedUSMLEScoresUrl',$rowData,$headers);
             $uploadedUSMLEScoresUrlId = $this->getFileIdByUrl( $uploadedUSMLEScoresUrl );
             if( $uploadedUSMLEScoresUrlId ) {
-                $uploadedUSMLEScoresUrlDb = $this->downloadFileToServer($user, $service, $uploadedUSMLEScoresUrlId, null, $uploadPath);
+                $uploadedUSMLEScoresUrlDb = $this->downloadFileToServer($systemUser, $service, $uploadedUSMLEScoresUrlId, null, $uploadPath);
                 if( !$uploadedUSMLEScoresUrlDb ) {
                     throw new IOException('Unable to download file to server: uploadedUSMLEScoresUrl='.$uploadedUSMLEScoresUrl.', fileDB='.$uploadedUSMLEScoresUrlDb);
                 }
@@ -723,10 +701,10 @@ class FellAppController extends Controller {
             }
 
             //presentAddress
-            $presentLocation = new Location($user);
+            $presentLocation = new Location($systemUser);
             $presentLocation->setName('Fellowship Applicant Present Address');
             $presentLocation->addLocationType($presentLocationType);
-            $geoLocation = $this->createGeoLocation($em,$user,'presentAddress',$rowData,$headers);
+            $geoLocation = $this->createGeoLocation($em,$systemUser,'presentAddress',$rowData,$headers);
             if( $geoLocation ) {
                 $presentLocation->setGeoLocation($geoLocation);
             }
@@ -740,10 +718,10 @@ class FellAppController extends Controller {
             $presentLocation->setFax($this->getValueByHeaderName('telephoneFax',$rowData,$headers));
 
             //permanentAddress
-            $permanentLocation = new Location($user);
+            $permanentLocation = new Location($systemUser);
             $permanentLocation->setName('Fellowship Applicant Permanent Address');
             $permanentLocation->addLocationType($permanentLocationType);
-            $geoLocation = $this->createGeoLocation($em,$user,'permanentAddress',$rowData,$headers);
+            $geoLocation = $this->createGeoLocation($em,$systemUser,'permanentAddress',$rowData,$headers);
             if( $geoLocation ) {
                 $permanentLocation->setGeoLocation($geoLocation);
             }
@@ -752,7 +730,7 @@ class FellAppController extends Controller {
             //telephoneWork
             $telephoneWork = $this->getValueByHeaderName('telephoneWork',$rowData,$headers);
             if( $telephoneWork ) {
-                $workLocation = new Location($user);
+                $workLocation = new Location($systemUser);
                 $workLocation->setName('Fellowship Applicant Work Address');
                 $workLocation->addLocationType($workLocationType);
                 $workLocation->setPhone($telephoneWork);
@@ -760,44 +738,44 @@ class FellAppController extends Controller {
             }
 
 
-            $citizenship = new Citizenship($user);
+            $citizenship = new Citizenship($systemUser);
             $user->getCredentials()->addCitizenship($citizenship);
             //visaStatus
             $citizenship->setVisa($this->getValueByHeaderName('visaStatus',$rowData,$headers));
             //citizenshipCountry
             $citizenshipCountry = $this->getValueByHeaderName('citizenshipCountry',$rowData,$headers);
             if( $citizenshipCountry ) {
-                $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+                $transformer = new GenericTreeTransformer($em, $systemUser, 'Countries');
                 $citizenshipCountryEntity = $transformer->reverseTransform($citizenshipCountry);
                 $citizenship->setCountry($citizenshipCountryEntity);
             }
 
             //undergraduate
-            $this->createFellAppTraining($em,$user,"undergraduateSchool",$rowData,$headers,1);
+            $this->createFellAppTraining($em,$user,$systemUser,"undergraduateSchool",$rowData,$headers,1);
 
             //graduate
-            $this->createFellAppTraining($em,$user,"graduateSchool",$rowData,$headers,2);
+            $this->createFellAppTraining($em,$user,$systemUser,"graduateSchool",$rowData,$headers,2);
 
             //medical
-            $this->createFellAppTraining($em,$user,"medicalSchool",$rowData,$headers,3);
+            $this->createFellAppTraining($em,$user,$systemUser,"medicalSchool",$rowData,$headers,3);
 
             //residency: residencyStart	residencyEnd	residencyName	residencyArea
-            $this->createFellAppTraining($em,$user,"residency",$rowData,$headers,4);
+            $this->createFellAppTraining($em,$user,$systemUser,"residency",$rowData,$headers,4);
 
             //gme1: gme1Start, gme1End, gme1Name, gme1Area => Major
-            $this->createFellAppTraining($em,$user,"gme1",$rowData,$headers,5);
+            $this->createFellAppTraining($em,$user,$systemUser,"gme1",$rowData,$headers,5);
 
             //gme2: gme2Start, gme2End, gme2Name, gme2Area => Major
-            $this->createFellAppTraining($em,$user,"gme2",$rowData,$headers,6);
+            $this->createFellAppTraining($em,$user,$systemUser,"gme2",$rowData,$headers,6);
 
             //otherExperience1Start	otherExperience1End	otherExperience1Name=>Major
-            $this->createFellAppTraining($em,$user,"otherExperience1",$rowData,$headers,7);
+            $this->createFellAppTraining($em,$user,$systemUser,"otherExperience1",$rowData,$headers,7);
 
             //otherExperience2Start	otherExperience2End	otherExperience2Name=>Major
-            $this->createFellAppTraining($em,$user,"otherExperience2",$rowData,$headers,8);
+            $this->createFellAppTraining($em,$user,$systemUser,"otherExperience2",$rowData,$headers,8);
 
             //otherExperience3Start	otherExperience3End	otherExperience3Name=>Major
-           $this->createFellAppTraining($em,$user,"otherExperience3",$rowData,$headers,9);
+            $this->createFellAppTraining($em,$user,$systemUser,"otherExperience3",$rowData,$headers,9);
 
             //USMLEStep1DatePassed	USMLEStep1Score
             $examination->setUSMLEStep1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep1DatePassed',$rowData,$headers)));
@@ -834,10 +812,10 @@ class FellAppController extends Controller {
             $examination->setCOMLEXLevel3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel3DatePassed',$rowData,$headers)));
 
             //medicalLicensure1Country	medicalLicensure1State	medicalLicensure1DateIssued	medicalLicensure1Number	medicalLicensure1Active
-            $this->createFellAppMedicalLicense($em,$user,"medicalLicensure1",$rowData,$headers);
+            $this->createFellAppMedicalLicense($em,$user,$systemUser,"medicalLicensure1",$rowData,$headers);
 
             //medicalLicensure2
-            $this->createFellAppMedicalLicense($em,$user,"medicalLicensure2",$rowData,$headers);
+            $this->createFellAppMedicalLicense($em,$user,$systemUser,"medicalLicensure2",$rowData,$headers);
 
             //suspendedLicensure
             $fellowshipApplication->setReprimand($this->getValueByHeaderName('suspendedLicensure',$rowData,$headers));
@@ -845,7 +823,7 @@ class FellAppController extends Controller {
             $uploadedReprimandExplanationUrl = $this->getValueByHeaderName('uploadedReprimandExplanationUrl',$rowData,$headers);
             $uploadedReprimandExplanationUrlId = $this->getFileIdByUrl( $uploadedReprimandExplanationUrl );
             if( $uploadedReprimandExplanationUrlId ) {
-                $uploadedReprimandExplanationUrlDb = $this->downloadFileToServer($user, $service, $uploadedReprimandExplanationUrlId, null, $uploadPath);
+                $uploadedReprimandExplanationUrlDb = $this->downloadFileToServer($systemUser, $service, $uploadedReprimandExplanationUrlId, null, $uploadPath);
                 if( !$uploadedReprimandExplanationUrlDb ) {
                     throw new IOException('Unable to download file to server: uploadedReprimandExplanationUrl='.$uploadedReprimandExplanationUrl.', fileID='.$uploadedReprimandExplanationUrlDb->getId());
                 }
@@ -858,7 +836,7 @@ class FellAppController extends Controller {
             $uploadedLegalExplanationUrl = $this->getValueByHeaderName('uploadedLegalExplanationUrl',$rowData,$headers);
             $uploadedLegalExplanationUrlId = $this->getFileIdByUrl( $uploadedLegalExplanationUrl );
             if( $uploadedLegalExplanationUrlId ) {
-                $uploadedLegalExplanationUrlDb = $this->downloadFileToServer($user, $service, $uploadedLegalExplanationUrlId, null, $uploadPath);
+                $uploadedLegalExplanationUrlDb = $this->downloadFileToServer($systemUser, $service, $uploadedLegalExplanationUrlId, null, $uploadPath);
                 if( !$uploadedLegalExplanationUrlDb ) {
                     throw new IOException('Unable to download file to server: uploadedLegalExplanationUrl='.$uploadedLegalExplanationUrl.', fileID='.$uploadedLegalExplanationUrlDb->getId());
                 }
@@ -866,26 +844,26 @@ class FellAppController extends Controller {
             }
 
             //boardCertification1Board	boardCertification1Area	boardCertification1Date
-            $this->createFellAppBoardCertification($em,$user,"boardCertification1",$rowData,$headers);
+            $this->createFellAppBoardCertification($em,$user,$systemUser,"boardCertification1",$rowData,$headers);
             //boardCertification2
-            $this->createFellAppBoardCertification($em,$user,"boardCertification2",$rowData,$headers);
+            $this->createFellAppBoardCertification($em,$user,$systemUser,"boardCertification2",$rowData,$headers);
             //boardCertification3
-            $this->createFellAppBoardCertification($em,$user,"boardCertification3",$rowData,$headers);
+            $this->createFellAppBoardCertification($em,$user,$systemUser,"boardCertification3",$rowData,$headers);
 
             //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1	recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
-            $ref1 = $this->createFellAppReference($em,$user,'recommendation1',$rowData,$headers);
+            $ref1 = $this->createFellAppReference($em,$systemUser,'recommendation1',$rowData,$headers);
             if( $ref1 ) {
                 $fellowshipApplication->addReference($ref1);
             }
-            $ref2 = $this->createFellAppReference($em,$user,'recommendation2',$rowData,$headers);
+            $ref2 = $this->createFellAppReference($em,$systemUser,'recommendation2',$rowData,$headers);
             if( $ref2 ) {
                 $fellowshipApplication->addReference($ref2);
             }
-            $ref3 = $this->createFellAppReference($em,$user,'recommendation3',$rowData,$headers);
+            $ref3 = $this->createFellAppReference($em,$systemUser,'recommendation3',$rowData,$headers);
             if( $ref3 ) {
                 $fellowshipApplication->addReference($ref3);
             }
-            $ref4 = $this->createFellAppReference($em,$user,'recommendation4',$rowData,$headers);
+            $ref4 = $this->createFellAppReference($em,$systemUser,'recommendation4',$rowData,$headers);
             if( $ref4 ) {
                 $fellowshipApplication->addReference($ref4);
             }
@@ -903,13 +881,37 @@ class FellAppController extends Controller {
             $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
             $fellowshipApplication->setSignatureDate($signatureDate);
 
+            if( !$fellowshipApplication->getSignatureName() ) {
+                $event = "Error: Applicant signature is null after populating Fellowship Applicant " . $displayName . " with unique ID=".$id."; Application ID " . $fellowshipApplication->getId();
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,$request,'Fellowship Application Creation Failed');
+                $logger = $this->container->get('logger');
+                $logger->error($event);
+
+                //send email
+                $emailUtil = new EmailUtil();
+                $userSecUtil = $this->get('user_security_utility');
+                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+                $headers = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
+                if( !$emails ) {
+                    $emails = $headers;
+                    $headers = null;
+                }
+                $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique ID=".$id, $event, $em, $headers );
+            }
+
+            //exit('end applicant');
+
+            $em->persist($user);
             $em->flush();
 
-            //exit(1);
+            //everything looks fine => remove creation attempt log
+            $em->remove($eventLogAttempt);
+            $em->flush();
 
             $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
-            $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,$request,'Fellowship Application Created');
-        }
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,$request,'Fellowship Application Created');
+
+        } //for
 
 
         //echo "count=".$count."<br>";
@@ -918,7 +920,7 @@ class FellAppController extends Controller {
         return $count;
     }
 
-    public function createFellAppReference($em,$user,$typeStr,$rowData,$headers) {
+    public function createFellAppReference($em,$author,$typeStr,$rowData,$headers) {
 
         //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1
         //recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
@@ -926,15 +928,15 @@ class FellAppController extends Controller {
         $recommendationName = $this->getValueByHeaderName($typeStr."Name",$rowData,$headers);
         $recommendationTitle = $this->getValueByHeaderName($typeStr."Title",$rowData,$headers);
 
-        echo "recommendationName=".$recommendationName."<br>";
-        echo "recommendationTitle=".$recommendationTitle."<br>";
+        //echo "recommendationName=".$recommendationName."<br>";
+        //echo "recommendationTitle=".$recommendationTitle."<br>";
 
         if( !$recommendationName && !$recommendationTitle ) {
-            echo "no ref<br>";
+            //echo "no ref<br>";
             return null;
         }
 
-        $reference = new Reference($user);
+        $reference = new Reference($author);
 
         //recommendation1Name
         $reference->setName($recommendationName);
@@ -945,12 +947,12 @@ class FellAppController extends Controller {
         $instStr = $this->getValueByHeaderName($typeStr."Institution",$rowData,$headers);
         if( $instStr ) {
             $params = array('type'=>'Educational');
-            $transformer = new GenericTreeTransformer($em, $user, 'Institution', null, $params);
+            $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
             $instEntity = $transformer->reverseTransform($instStr);
             $reference->setInstitution($instEntity);
         }
 
-        $geoLocation = $this->createGeoLocation($em,$user,$typeStr."Address",$rowData,$headers);
+        $geoLocation = $this->createGeoLocation($em,$author,$typeStr."Address",$rowData,$headers);
         if( $geoLocation ) {
             $reference->setGeoLocation($geoLocation);
         }
@@ -958,15 +960,15 @@ class FellAppController extends Controller {
         return $reference;
     }
 
-    public function createGeoLocation($em,$user,$typeStr,$rowData,$headers) {
+    public function createGeoLocation($em,$author,$typeStr,$rowData,$headers) {
 
         $geoLocationStreet1 = $this->getValueByHeaderName($typeStr.'Street1',$rowData,$headers);
         $geoLocationStreet2 = $this->getValueByHeaderName($typeStr.'Street2',$rowData,$headers);
-        echo "geoLocationStreet1=".$geoLocationStreet1."<br>";
-        echo "geoLocationStreet2=".$geoLocationStreet2."<br>";
+        //echo "geoLocationStreet1=".$geoLocationStreet1."<br>";
+        //echo "geoLocationStreet2=".$geoLocationStreet2."<br>";
 
         if( !$geoLocationStreet1 && !$geoLocationStreet2 ) {
-            echo "no geoLocation<br>";
+            //echo "no geoLocation<br>";
             return null;
         }
 
@@ -978,21 +980,21 @@ class FellAppController extends Controller {
         //presentAddressCity
         $presentAddressCity = $this->getValueByHeaderName($typeStr.'City',$rowData,$headers);
         if( $presentAddressCity ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'CityList');
+            $transformer = new GenericTreeTransformer($em, $author, 'CityList');
             $presentAddressCityEntity = $transformer->reverseTransform($presentAddressCity);
             $geoLocation->setCity($presentAddressCityEntity);
         }
         //presentAddressState
         $presentAddressState = $this->getValueByHeaderName($typeStr.'State',$rowData,$headers);
         if( $presentAddressState ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'States');
+            $transformer = new GenericTreeTransformer($em, $author, 'States');
             $presentAddressStateEntity = $transformer->reverseTransform($presentAddressState);
             $geoLocation->setState($presentAddressStateEntity);
         }
         //presentAddressCountry
         $presentAddressCountry = $this->getValueByHeaderName($typeStr.'Country',$rowData,$headers);
         if( $presentAddressCountry ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+            $transformer = new GenericTreeTransformer($em, $author, 'Countries');
             $presentAddressCountryEntity = $transformer->reverseTransform($presentAddressCountry);
             $geoLocation->setCountry($presentAddressCountryEntity);
         }
@@ -1001,29 +1003,60 @@ class FellAppController extends Controller {
     }
 
     public function transformDatestrToDate($datestr) {
+        $date = null;
+
         if( !$datestr ) {
-            return null;
+            return $date;
         }
         $datestr = trim($datestr);
-        //echo "#######datestr=".$datestr."<br>";
-        return new \DateTime($datestr);
-        //return \DateTime::createFromFormat('m/d/Y H:i', $datestr)->format('m/d/Y H:i');
-    }
+        //echo "###datestr=".$datestr."<br>";
 
-    public function createFellAppBoardCertification($em,$user,$typeStr,$rowData,$headers) {
+        if( strtotime($datestr) === false ) {
+            // bad format
+            $msg = 'transformDatestrToDate: Bad format of datetime string='.$datestr;
+            //throw new \UnexpectedValueException($msg);
+            $logger = $this->container->get('logger');
+            $logger->error($msg);
+            //exit('bad');
+            return $date;
+        }
+
+//        if( !$this->valid_date($datestr) ) {
+//            $msg = 'Date string is not valid'.$datestr;
+//            throw new \UnexpectedValueException($msg);
+//            $logger = $this->container->get('logger');
+//            $logger->error($msg);
+//        }
+
+        try {
+            $date = new \DateTime($datestr);
+        } catch (Exception $e) {
+            $msg = 'Failed to convert string'.$datestr.'to DateTime:'.$e->getMessage();
+            //throw new \UnexpectedValueException($msg);
+            $logger = $this->container->get('logger');
+            $logger->error($msg);
+        }
+
+        return $date;
+    }
+//    function valid_date($date) {
+//        return (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date));
+//    }
+
+    public function createFellAppBoardCertification($em,$user,$author,$typeStr,$rowData,$headers) {
 
         $boardCertificationIssueDate = $this->getValueByHeaderName($typeStr.'Date',$rowData,$headers);
         if( !$boardCertificationIssueDate ) {
             return null;
         }
 
-        $boardCertification = new BoardCertification($user);
+        $boardCertification = new BoardCertification($author);
         $user->getCredentials()->addBoardCertification($boardCertification);
 
         //boardCertification1Board
         $boardCertificationBoard = $this->getValueByHeaderName($typeStr.'Board',$rowData,$headers);
         if( $boardCertificationBoard ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'CertifyingBoardOrganization');
+            $transformer = new GenericTreeTransformer($em, $author, 'CertifyingBoardOrganization');
             $CertifyingBoardOrganizationEntity = $transformer->reverseTransform($boardCertificationBoard);
             $boardCertification->setCertifyingBoardOrganization($CertifyingBoardOrganizationEntity);
         }
@@ -1031,7 +1064,7 @@ class FellAppController extends Controller {
         //boardCertification1Area => BoardCertifiedSpecialties
         $boardCertificationArea = $this->getValueByHeaderName($typeStr.'Area',$rowData,$headers);
         if( $boardCertificationArea ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'BoardCertifiedSpecialties');
+            $transformer = new GenericTreeTransformer($em, $author, 'BoardCertifiedSpecialties');
             $boardCertificationAreaEntity = $transformer->reverseTransform($boardCertificationArea);
             $boardCertification->setSpecialty($boardCertificationAreaEntity);
         }
@@ -1042,7 +1075,7 @@ class FellAppController extends Controller {
         return $boardCertification;
     }
 
-    public function createFellAppMedicalLicense($em,$user,$typeStr,$rowData,$headers) {
+    public function createFellAppMedicalLicense($em,$user,$author,$typeStr,$rowData,$headers) {
 
         //medicalLicensure1Country	medicalLicensure1State	medicalLicensure1DateIssued	medicalLicensure1Number	medicalLicensure1Active
 
@@ -1053,7 +1086,7 @@ class FellAppController extends Controller {
             return null;
         }
 
-        $license = new StateLicense($user);
+        $license = new StateLicense($author);
         $user->getCredentials()->addStateLicense($license);
 
         //medicalLicensure1DateIssued
@@ -1062,7 +1095,7 @@ class FellAppController extends Controller {
         //medicalLicensure1Active
         $medicalLicensureActive = $this->getValueByHeaderName($typeStr.'Active',$rowData,$headers);
         if( $medicalLicensureActive ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'MedicalLicenseStatus');
+            $transformer = new GenericTreeTransformer($em, $author, 'MedicalLicenseStatus');
             $medicalLicensureActiveEntity = $transformer->reverseTransform($medicalLicensureActive);
             $license->setActive($medicalLicensureActiveEntity);
         }
@@ -1070,18 +1103,18 @@ class FellAppController extends Controller {
         //medicalLicensure1Country
         $medicalLicensureCountry = $this->getValueByHeaderName($typeStr.'Country',$rowData,$headers);
         if( $medicalLicensureCountry ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+            $transformer = new GenericTreeTransformer($em, $author, 'Countries');
             $medicalLicensureCountryEntity = $transformer->reverseTransform($medicalLicensureCountry);
-            echo "MedCountry=".$medicalLicensureCountryEntity.", ID+".$medicalLicensureCountryEntity->getId()."<br>";
+            //echo "MedCountry=".$medicalLicensureCountryEntity.", ID+".$medicalLicensureCountryEntity->getId()."<br>";
             $license->setCountry($medicalLicensureCountryEntity);
         }
 
         //medicalLicensure1State
         $medicalLicensureState = $this->getValueByHeaderName($typeStr.'State',$rowData,$headers);
         if( $medicalLicensureState ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'States');
+            $transformer = new GenericTreeTransformer($em, $author, 'States');
             $medicalLicensureStateEntity = $transformer->reverseTransform($medicalLicensureState);
-            echo "MedState=".$medicalLicensureStateEntity."<br>";
+            //echo "MedState=".$medicalLicensureStateEntity."<br>";
             $license->setState($medicalLicensureStateEntity);
         }
 
@@ -1091,7 +1124,7 @@ class FellAppController extends Controller {
         return $license;
     }
 
-    public function createFellAppTraining($em,$user,$typeStr,$rowData,$headers,$orderinlist) {
+    public function createFellAppTraining($em,$user,$author,$typeStr,$rowData,$headers,$orderinlist) {
 
         //Start
         $trainingStart = $this->getValueByHeaderName($typeStr.'Start',$rowData,$headers);
@@ -1102,7 +1135,7 @@ class FellAppController extends Controller {
             return null;
         }
 
-        $training = new Training($user);
+        $training = new Training($author);
         $training->setOrderinlist($orderinlist);
         $user->addTraining($training);
 
@@ -1152,7 +1185,7 @@ class FellAppController extends Controller {
             //residencyStart	residencyEnd	residencyName	residencyArea
             //residencyArea => ResidencySpecialty
             $residencyArea = $this->getValueByHeaderName('residencyArea',$rowData,$headers);
-            $transformer = new GenericTreeTransformer($em, $user, 'ResidencySpecialty');
+            $transformer = new GenericTreeTransformer($em, $author, 'ResidencySpecialty');
             $residencyAreaEntity = $transformer->reverseTransform($residencyArea);
             $training->setResidencySpecialty($residencyAreaEntity);
         }
@@ -1167,7 +1200,7 @@ class FellAppController extends Controller {
         $schoolName = $this->getValueByHeaderName($nameMatchString,$rowData,$headers);
         if( $schoolName ) {
             $params = array('type'=>'Educational');
-            $transformer = new GenericTreeTransformer($em, $user, 'Institution', null, $params);
+            $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
             $schoolNameEntity = $transformer->reverseTransform($schoolName);
             $training->setInstitution($schoolNameEntity);
         }
@@ -1175,7 +1208,7 @@ class FellAppController extends Controller {
         //Major
         $schoolMajor = $this->getValueByHeaderName($majorMatchString,$rowData,$headers);
         if( $schoolMajor ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'MajorTrainingList');
+            $transformer = new GenericTreeTransformer($em, $author, 'MajorTrainingList');
             $schoolMajorEntity = $transformer->reverseTransform($schoolMajor);
             $training->addMajor($schoolMajorEntity);
         }
@@ -1183,7 +1216,7 @@ class FellAppController extends Controller {
         //Degree
         $schoolDegree = $this->getValueByHeaderName($typeStr.'Degree',$rowData,$headers);
         if( $schoolDegree ) {
-            $transformer = new GenericTreeTransformer($em, $user, 'TrainingDegreeList');
+            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
             $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
             $training->setDegree($schoolDegreeEntity);
         }
@@ -1242,7 +1275,7 @@ class FellAppController extends Controller {
      */
     public function importAction(Request $request) {
 
-        echo "fellapp import <br>";
+        //echo "fellapp import <br>";
 
         $service = $this->getGoogleService();
         if( !$service ) {
@@ -1285,7 +1318,7 @@ class FellAppController extends Controller {
                 $logger->warning("Fellowship Application Spreadsheet download failed!");
             }
 
-            $this->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,$request,'Import of Fellowship Applications');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,$request,'Import of Fellowship Applications');
 
         }
 
@@ -1391,7 +1424,7 @@ class FellAppController extends Controller {
         return $res;
     }
 
-    public function downloadFileToServer($user, $service, $fileId, $type, $path) {
+    public function downloadFileToServer($author, $service, $fileId, $type, $path) {
         $file = null;
         try {
             $file = $service->files->get($fileId);
@@ -1434,7 +1467,7 @@ class FellAppController extends Controller {
                 $filesize = mb_strlen($response) / 1024; //KBs,
             }
 
-            $object = new Document($user);
+            $object = new Document($author);
             $object->setUniqueid($file->getId());
             $object->setOriginalname($file->getTitle());
             $object->setUniquename($fileUniqueName);
@@ -1471,6 +1504,11 @@ class FellAppController extends Controller {
         return null;
     }
 
+
+
+
+
+    
     /**
      * Print files belonging to a folder.
      *

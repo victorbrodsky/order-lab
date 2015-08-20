@@ -297,18 +297,22 @@ class UserSecurityUtil {
         $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
         $eventLog->setEventType($eventtype);
 
-        //get classname, entity name and id of subject entity
-        $class = new \ReflectionClass($subjectEntity);
-        $className = $class->getShortName();
-        $classNamespace = $class->getNamespaceName();
+        if( $subjectEntity ) {
+            //get classname, entity name and id of subject entity
+            $class = new \ReflectionClass($subjectEntity);
+            $className = $class->getShortName();
+            $classNamespace = $class->getNamespaceName();
 
-        //set classname, entity name and id of subject entity
-        $eventLog->setEntityNamespace($classNamespace);
-        $eventLog->setEntityName($className);
-        $eventLog->setEntityId($subjectEntity->getId());
+            //set classname, entity name and id of subject entity
+            $eventLog->setEntityNamespace($classNamespace);
+            $eventLog->setEntityName($className);
+            $eventLog->setEntityId($subjectEntity->getId());
+        }
 
         $em->persist($eventLog);
         $em->flush();
+
+        return $eventLog;
     }
 
     //add type to tree entity if exists
