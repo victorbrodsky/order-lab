@@ -9,6 +9,7 @@
 namespace Oleg\UserdirectoryBundle\Util;
 
 
+use Oleg\UserdirectoryBundle\Entity\BoardCertification;
 use Oleg\UserdirectoryBundle\Entity\Citizenship;
 use Oleg\UserdirectoryBundle\Entity\CurriculumVitae;
 use Oleg\UserdirectoryBundle\Entity\Document;
