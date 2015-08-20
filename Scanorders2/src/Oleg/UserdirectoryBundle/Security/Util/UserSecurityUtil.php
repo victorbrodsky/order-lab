@@ -141,9 +141,10 @@ class UserSecurityUtil {
         $logger->setUser($user);
         $logger->setRoles($user->getRoles());
         $logger->setUsername($user."");
-        $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
+
 
         if( $request ) {
+            $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
             $logger->setIp($request->getClientIp());
             $logger->setWidth($request->get('display_width'));
             $logger->setHeight($request->get('display_height'));

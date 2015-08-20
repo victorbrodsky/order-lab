@@ -59,14 +59,14 @@ class ExaminationType extends AbstractType
         ));
 
         $builder->add('USMLEStep2CSDatePassed', null, array(
-            'label' => 'CK - Date passed:',
+            'label' => 'CS - Date passed:',
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('USMLEStep2CSScore', null, array(
-            'label' => 'CK - Score (optional):',
+            'label' => 'CS - Score (optional):',
             'attr' => array('class'=>'form-control')
         ));
 

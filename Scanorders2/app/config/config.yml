@@ -5,6 +5,7 @@ imports:
     - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
     - { resource: "@OlegUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
 
+
 #    - { resource: assets_version.php }
 
 framework:
@@ -127,7 +128,7 @@ monolog:
 #        applog:
 #            type: stream
 #            path: /logs/symfony.log
-#            level: error
+#            level: info
         main:
             type: fingers_crossed
             action_level: warning
@@ -138,6 +139,13 @@ monolog:
         syslog:
             type: syslog
             level: error
+        console:
+            type: console
+#            verbosity_levels:
+#                VERBOSITY_NORMAL:       WARNING
+#                VERBOSITY_VERBOSE:      NOTICE
+#                VERBOSITY_VERY_VERBOSE: INFO
+#                VERBOSITY_DEBUG:        DEBUG
 
 
 

@@ -88,7 +88,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     var previewHtml =
         '<div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">'+
             '<div class="dz-details">'+
-            '<div class="dz-filename"><span data-dz-name></span></div>'+
+            //'<div class="dz-filename"><span data-dz-name></span></div>'+
             '<div class="dz-size" data-dz-size></div>'+
             '<img data-dz-thumbnail />'+
             '</div>'+

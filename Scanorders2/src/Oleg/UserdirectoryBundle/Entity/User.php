@@ -800,6 +800,7 @@ class User extends BaseUser {
     public function setUsernameForce($username)
     {
         $this->username = $username;
+        $this->setUsernameCanonicalForce($username);
         return $this;
     }
     //do not overwrite username when user id is set (user already exists in DB)
@@ -815,6 +816,10 @@ class User extends BaseUser {
         $this->username = $username;
 
         return $this;
+    }
+    public function setUsernameCanonicalForce($usernameCanonical)
+    {
+        $this->usernameCanonical = $usernameCanonical;
     }
     public function setUsernameCanonical($usernameCanonical)
     {

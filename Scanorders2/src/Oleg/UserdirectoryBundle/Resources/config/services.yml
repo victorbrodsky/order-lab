@@ -169,3 +169,7 @@ services:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
 
 
+    #fellowship application import
+    fellapp_import:
+        class: Oleg\UserdirectoryBundle\Util\FellAppUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]

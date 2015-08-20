@@ -285,6 +285,7 @@ class Document {
     //get server path to delete file: /var/www/test/folder/images/image_name.jpeg
     public function getServerPath()
     {
+        //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
         return $this->getUploadDirectory().'/'.$this->getUniquename();
     }
 
@@ -304,6 +305,11 @@ class Document {
     protected function getPrefixPath() {
         return '../../../../order/';
     }
+
+//    public function getFileSystemPath() {
+//        echo "getcwd=".getcwd()."<br>";
+//        return getcwd() . "/web/" . $this->getServerPath();
+//    }
 
 
     public function getSizeStr()

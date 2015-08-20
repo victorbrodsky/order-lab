@@ -67,17 +67,24 @@
             <tr>
 
                 {#<th {% if entities.isSorted('fellapp.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>#}
-                <th>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Status', 'fellapp.applicationStatus') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Created', 'fellapp.timestamp') }}</th>
+                {#<th>{{ knp_pagination_sortable(entities, 'Status', 'fellapp.applicationStatus') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Created', 'fellapp.timestamp') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'fellapp.startDate') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'End Date', 'fellapp.endDate') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>
+                <th>Photo</th>
                 <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicant.lastName') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicant.firstName') }}</th>
-                <th>Photo</th>
+
+                <th>{{ knp_pagination_sortable(entities, 'U1', 'examinations.USMLEStep1Score') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'U2', 'examinations.USMLEStep2CKScore') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'U3', 'examinations.USMLEStep3Score') }}</th>
+
+                <th>{{ knp_pagination_sortable(entities, 'C1', 'examinations.COMLEXLevel1Score') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'C2', 'examinations.COMLEXLevel2Score') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>
+
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'USMLE Step 1', 'examinations.USMLEStep1Score') }}</th>
 
                 {% if is_granted('ROLE_FELLAPP_ADMIN') %}
                 <th>
@@ -91,34 +98,40 @@
 
             {% for entity in entities %}
 
-            {% if entity.applicationStatus == 'complete' or entity.applicationStatus == 'disable' %}
-                {#No attention required - plain completed order#}
-                {% set trclassname = "order-neutral-status" %}
-            {% endif %}
+                {% set trclassname = "" %}
 
-            {% if entity.applicationStatus == 'active' %}
-                {#urgent attention required#}
-                {% set trclassname = "order-urgent-status" %}
-            {% endif %}
+                {% if entity.applicationStatus == 'archive' %}
+                    {#No attention required - plain completed order#}
+                    {% set trclassname = "action-cancel-status" %}
+                {% endif %}
 
-            {#{% if entity.applicationStatus == 'complete' %}#}
-                {#&#123;&#35;some attention required&#35;&#125;#}
-                {#{% set trclassname = "order-someattention-status" %}#}
-            {#{% endif %}#}
+                {% if entity.applicationStatus == 'hide' %}
+                    {#urgent attention required#}
+                    {% set trclassname = "order-urgent-status" %}
+                {% endif %}
+
+                {% if entity.applicationStatus == 'complete' %}
+                    {#urgent attention required#}
+                    {% set trclassname = "order-neutral-status" %}
+                {% endif %}
+
+                {% set u1 = "" %}
+                {% set u2 = "" %}
+                {% set u3 = "" %}
+                {% set c1 = "" %}
+                {% set c2 = "" %}
+                {% set c3 = "" %}
+                {% for examination in entity.user.credentials.examinations %}
+                    {% set u1 = examination.USMLEStep1Score %}
+                    {% set u2 = examination.USMLEStep2CKScore %}
+                    {% set u3 = examination.USMLEStep3Score %}
+                    {% set c1 = examination.COMLEXLevel1Score %}
+                    {% set c2 = examination.COMLEXLevel2Score %}
+                    {% set c3 = examination.COMLEXLevel3Score %}
+                {% endfor %}
+
 
                 <tr class="{{ trclassname }}">
-
-                    <td>
-                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
-                    </td>
-
-                    <td>
-                        {{  entity.applicationStatus }}
-                    </td>
-
-                    <td>
-                        {{ entity.timestamp|date('m/d/Y H:i') }}
-                    </td>
 
                     <td>
                         {{  entity.fellowshipSubspecialty.name }}
@@ -129,8 +142,35 @@
                     </td>
 
                     <td>
-                        {{ entity.endDate|date('m/d/Y') }}
+                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
                     </td>
+
+                    <td>
+                        {% if entity.user.avatar %}
+                            {#height="60" width="60"#}
+                            <div style="height: 60px; width: 60px;">
+                                {#{% if '.pdf' in entity.user.avatar.getAbsoluteUploadFullPath %}#}
+                                {#&#123;&#35;<embed src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;" type='application/pdf' >&#35;&#125;#}
+                                {#<object data="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>#}
+                                {#{% else %}#}
+                                {#<img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
+                                {#{% endif %}#}
+                                {{ usermacros.showDocumentAsImage(entity.user.avatar,'Avatar','') }}
+                            </div>
+                        {% endif %}
+                    </td>
+
+                    {#<td>#}
+                        {#{{  entity.applicationStatus }}#}
+                    {#</td>#}
+
+                    {#<td>#}
+                        {#{{ entity.timestamp|date('m/d/Y H:i') }}#}
+                    {#</td>                                       #}
+
+                    {#<td>#}
+                        {#{{ entity.endDate|date('m/d/Y') }}#}
+                    {#</td>#}
 
                     <td>
                         {{ entity.user.lastName }}
@@ -140,30 +180,37 @@
                         {{ entity.user.firstName }}
                     </td>
 
+
                     <td>
-                        {% if entity.user.avatar %}
-                            {#height="60" width="60"#}
-                            <div style="height: 60px; width: 60px;">
-                            {#{% if '.pdf' in entity.user.avatar.getAbsoluteUploadFullPath %}#}
-                                {#&#123;&#35;<embed src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;" type='application/pdf' >&#35;&#125;#}
-                                {#<object data="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" type="application/pdf" style="max-width:100%; max-height:100%;"></object>#}
-                            {#{% else %}#}
-                                {#<img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
-                            {#{% endif %}#}
-                            {{ usermacros.showDocumentAsImage(entity.user.avatar,'Avatar','') }}
-                            </div>
-                        {% endif %}
+                        {{ u1 }}
                     </td>
+
+                    <td>
+                        {{ u2 }}
+                    </td>
+
+                    <td>
+                        {{ u3 }}
+                    </td>
+
+
+                    <td>
+                        {{ c1 }}
+                    </td>
+
+                    <td>
+                        {{ c2 }}
+                    </td>
+
+                    <td>
+                        {{ c3 }}
+                    </td>
+
 
                     <td>
                         {{ entity.interviewScore }}
                     </td>
 
-                    <td>
-                        {% for examination in entity.user.credentials.examinations %}
-                            {{ examination.USMLEStep1Score }}
-                        {% endfor %}
-                    </td>
 
                     {% if is_granted('ROLE_FELLAPP_ADMIN') %}
                         <td class="rowlink-skip">
@@ -175,11 +222,11 @@
 
                                 <ul class="dropdown-menu dropdown-menu-right">
 
-                                    {% if entity.applicationStatus != 'disable' %}
+                                    {% if entity.applicationStatus != 'hide' %}
                                         <li>
                                             <a
-                                                general-data-confirm="Are you sure you want to disable this Applicant?"
-                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'disable' }) }}">Disable
+                                                general-data-confirm="Are you sure you want to hide this Applicant?"
+                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'hide' }) }}">Hide
                                             </a>
                                         </li>
                                     {% endif %}
@@ -193,20 +240,20 @@
                                         </li>
                                     {% endif %}
 
-                                    {% if entity.applicationStatus != 'complete' %}
+                                    {% if entity.applicationStatus != 'archive' %}
                                         <li>
                                             <a
-                                                general-data-confirm="Are you sure you want to change status of this Application to 'Complete'?"
-                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }) }}">Complete
+                                                general-data-confirm="Are you sure you want to change status of this Application to 'Archive'?"
+                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'archive' }) }}">Archive
                                             </a>
                                         </li>
                                     {% endif %}
 
-                                    {% if entity.applicationStatus != 'complete' %}
+                                    {% if entity.applicationStatus == 'active' %}
                                         <li>
                                             <a
                                                 general-data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"
-                                                href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Resend Email to Interviewers
+                                                href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Send Email to Interviewers
                                             </a>
                                         </li>
                                     {% endif %}

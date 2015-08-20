@@ -32,7 +32,7 @@ $container->setParameter('employees.uploadpath',$employeesuploadpath);
 $scanuploadpath = "scan-order/documents";
 $container->setParameter('scan.uploadpath',$scanuploadpath);
 //fellapp
-$fellappuploadpath = "fellapp/FellowshipApplicantUploads";
+$fellappuploadpath = "fellapp";
 $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
 
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);

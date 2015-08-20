@@ -45,7 +45,7 @@ class FellowshipApplication extends BaseUserAttributes
      * @ORM\ManyToMany(targetEntity="Document")
      * @ORM\JoinTable(name="user_fellApp_coverLetter",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true)}
      *      )
      **/
     private $coverLetters;

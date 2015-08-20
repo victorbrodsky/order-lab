@@ -548,7 +548,7 @@ class AdminController extends Controller
             "avataruploadpath" => "directory/avatars",
             "employeesuploadpath" => "directory/documents",
             "scanuploadpath" => "scan-order/documents",
-            "fellappuploadpath" => "fellapp/FellowshipApplicantUploads",
+            "fellappuploadpath" => "fellapp",
 
             "mainHomeTitle" => "Welcome to the O R D E R platform!",
             "listManagerTitle" => "List Manager",
@@ -1829,7 +1829,9 @@ class AdminController extends Controller
             'Fellowship Application Created',
             'Fellowship Application Creation Failed',
             'Fellowship Application Updated',
-            'Fellowship Application Resend Emails'
+            'Fellowship Application Resend Emails',
+            'Warning',
+            'Error'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

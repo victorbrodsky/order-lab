@@ -98,3 +98,5 @@ oneup_uploader:
 #FOSJsRoutingBundle
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+
