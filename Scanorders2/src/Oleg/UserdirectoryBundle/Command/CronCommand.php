@@ -63,6 +63,7 @@ class CronCommand extends ContainerAwareCommand {
             ->setDescription('Import and Populate Fellowship Applications from Google Form');
     }
 
+    //php app/console cron:importfellapp
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $logger = $this->getContainer()->get('logger');

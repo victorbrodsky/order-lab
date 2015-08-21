@@ -135,7 +135,6 @@ security:
      - { path: ^/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
      - { path: ^/directory/site-settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
-     - { path: ^/directory/cron-manager, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
     #tree hierarchy: need for all users for public user access request page
      - { path: ^/directory/tree-util/common/composition-tree/, role: IS_AUTHENTICATED_ANONYMOUSLY }

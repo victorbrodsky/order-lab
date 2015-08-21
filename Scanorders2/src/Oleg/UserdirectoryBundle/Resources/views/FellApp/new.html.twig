@@ -16,10 +16,27 @@
     <div class="col-md-1"></div>
     <div class="col-md-9">
 
-
+    {% set fellappStatus = "" %}
+    {% set trclassname = "well well-sm" %}
+    {% if entity.applicationStatus == 'archive' %}
+        {% set fellappStatus = "Archived" %}
+        {% set trclassname = "alert alert-info" %}
+    {% endif %}
+    {% if entity.applicationStatus == 'hide' %}
+        {% set fellappStatus = "Hidden" %}
+        {% set trclassname = "alert alert-danger" %}
+    {% endif %}
+    {% if entity.applicationStatus == 'complete' %}
+        {% set fellappStatus = "Completed" %}
+        {% set trclassname = "alert alert-success" %}
+    {% endif %}
 
     <h4 class="text-info" align="center">
-        Fellowship Application ID {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+
+        <div class="{{ trclassname }}">
+            <p>{{ fellappStatus }}</p>
+            Fellowship Application ID {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+        </div>
     </h4>
 
     <br>

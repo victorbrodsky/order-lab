@@ -10,6 +10,8 @@ $(document).ready(function() {
 
     //console.log('user form ready');
 
+    setCicleShow();
+
     $(this).scrollTop(0);
 
     setNavBar("employees");

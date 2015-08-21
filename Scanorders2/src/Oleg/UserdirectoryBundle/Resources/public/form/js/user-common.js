@@ -3,6 +3,7 @@
  */
 
 
+var _cycleShow = false;
 var _sitename = "";
 var asyncflag = true;
 var combobox_width = '100%'; //'element'
@@ -12,6 +13,17 @@ var cycle = $("#formcycle").val();
 var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
 
+
+function setCicleShow() {
+    //console.log("setCicleShow: cycle="+cycle);
+    //console.log("setCicleShow: cycle.indexOf="+cycle.indexOf("show"));
+    if( cycle && cycle.indexOf("show") != -1 ) {
+        _cycleShow = true;
+        //console.log("setCicleShow: true");
+    } else {
+        //console.log("setCicleShow: false");
+    }
+}
 
 function initTooltips() {
 

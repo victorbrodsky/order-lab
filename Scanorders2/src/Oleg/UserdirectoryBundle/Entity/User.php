@@ -1003,6 +1003,28 @@ class User extends BaseUser {
         return $value;
     }
 
+    public function getLastNameUppercase() {
+        return $this->capitalizeIfNotAllCapital($this->getLastName());
+    }
+    public function getFirstNameUppercase() {
+        return $this->capitalizeIfNotAllCapital($this->getFirstName());
+    }
+    function capitalizeIfNotAllCapital($s) {
+        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
+            $s = ucfirst(strtolower($s));
+        }
+        return $s;
+    }
+//    function isAllCapital($s) {
+//        if( $this->count_capitals($s) == strlen($s) ) {
+//            return true;
+//        }
+//        return false;
+//    }
+//    function count_capitals($s) {
+//        return strlen(preg_replace('![^A-Z]+!', '', $s));
+//    }
+
     /**
      * @param mixed $displayName
      */

@@ -57,17 +57,20 @@ class FellAppController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        //create filters
-        $filterform = $this->createForm(new FellAppFilterType(), null);
+        //create fellapp filter
+        $params = array( 'fellTypes' => $this->getFellowshipTypesWithSpecials() );
+        $filterform = $this->createForm(new FellAppFilterType($params), null);
 
         $filterform->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 
         $search = $filterform['search']->getData();
         $filter = $filterform['filter']->getData();
         $startDate = $filterform['startDate']->getData();
-        $page = $request->get('page');
+        $hidden = $filterform['hidden']->getData();
+        $archived = $filterform['archived']->getData();
+        //$page = $request->get('page');
         //echo "<br>startDate=".$startDate."<br>";
-        //echo "<br>filter=".$filter->getId()."<br>";
+        //echo "<br>filter=".$filter."<br>";
         //echo "<br>search=".$search."<br>";
 
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
@@ -78,6 +81,7 @@ class FellAppController extends Controller {
         $dql->orderBy("fellapp.timestamp","DESC");
         $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
         $dql->leftJoin("fellapp.user", "applicant");
+        $dql->leftJoin("applicant.infos", "applicantinfos");
         $dql->leftJoin("applicant.credentials", "credentials");
         $dql->leftJoin("credentials.examinations", "examinations");
 
@@ -86,18 +90,32 @@ class FellAppController extends Controller {
             $dql->andWhere("userinfos.firstName LIKE '%".$search."%' OR userinfos.lastName LIKE '%".$search."%'");
         }
 
-        if( $filter ) {
-            $dql->andWhere("fellowshipSubspecialty.id = ".$filter->getId());
+        if( $filter && $filter != "ALL" ) {
+            $dql->andWhere("fellowshipSubspecialty.id = ".$filter);
+        }
+
+        if( !$hidden ) {
+            $dql->andWhere("fellapp.applicationStatus != 'hide'");
+        }
+
+        if( !$archived ) {
+            $dql->andWhere("fellapp.applicationStatus != 'archive'");
         }
 
         if( $startDate ) {
             //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d');
             //$dateStr = $transformer->transform($startDate);
-            //$dql->andWhere("fellapp.startDate >= '".$dateStr."'");
-            $dql->andWhere("fellapp.startDate >= '".$startDate->format('Y-m-d')."'");
+            //$dql->andWhere("fellapp.startDate >= '".$startDate."'");
+            //$dql->andWhere("year(fellapp.startDate) = '".$startDate->format('Y')."'");
+            $bottomDate = "01-01-".$startDate->format('Y');
+            $topDate = "12-31-".$startDate->format('Y');
+            $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
         }
 
-        $limit = 100;
+
+        //echo "dql=".$dql."<br>";
+
+        $limit = 10;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $fellApps = $paginator->paginate(
@@ -121,11 +139,45 @@ class FellAppController extends Controller {
             'entities' => $fellApps,
             'pathbase' => 'fellapp',
             'lastImportTimestamp' => $lastImportTimestamp,
-            'fellappfilter' => $filterform->createView()
+            'fellappfilter' => $filterform->createView(),
+            'startDate' => $startDate
         );
     }
 
+    public function getFellowshipTypesWithSpecials() {
+        $em = $this->getDoctrine()->getManager();
 
+        //get list of fellowship type with extra "ALL"
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
+        $dql = $repository->createQueryBuilder('list')
+            //->select("list.id as id, list.name as text")
+            ->where("list.type = :typedef OR list.type = :typeadd")
+            ->orderBy("list.orderinlist","ASC");
+        $query = $em->createQuery($dql);
+        $query->setParameters( array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+        ));
+        $fellTypes = $query->getResult();
+
+        //add special cases
+        $specials = array(
+            "ALL" => "ALL",
+        );
+
+        $filterType = array();
+        foreach( $specials as $key => $value ) {
+            $filterType[$key] = $value;
+        }
+
+        //add statuses
+        foreach( $fellTypes as $type ) {
+            //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
+            $filterType[$type->getId()] = $type->getName();
+        }
+
+        return $filterType;
+    }
 
 
     /**
@@ -412,6 +464,7 @@ class FellAppController extends Controller {
         }
 
         echo "remove <br>";
+        exit('not supported');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -421,22 +474,24 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find entity by id='.$id);
         }
 
-        $user = $entity->getUser();
+        if(0) {
+            $user = $entity->getUser();
 
-        $entity->setApplicationStatus('archive');
+            $entity->setApplicationStatus('archive');
 
-        $user->setUsernameForce($user->getUsername()."-deleted");
+            $user->setUsernameForce($user->getUsername()."-deleted");
 
-        $user->setPrimaryPublicUserId($user->getPrimaryPublicUserId()."-deleted");
+            $user->setPrimaryPublicUserId($user->getPrimaryPublicUserId()."-deleted");
 
-        $avatar = $user->getAvatar();
-        $em->persist($avatar);
-        $em->remove($avatar);
-        $user->setAvatar(NULL);
+            $avatar = $user->getAvatar();
+            $em->persist($avatar);
+            $em->remove($avatar);
+            $user->setAvatar(NULL);
 
-        //$em->remove($entity);
+            //$em->remove($entity);
 
-        $em->flush();
+            $em->flush();
+        }
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
 

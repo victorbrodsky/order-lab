@@ -9,7 +9,10 @@ function windowCloseAlert() {
 
     //console.log("window Close Alert");
 
-    if( cycle == "show_user" ) {
+    //console.log("cycle="+cycle);
+    //console.log("_cycleShow="+_cycleShow);
+
+    if( _cycleShow ) {
         return;
     }
 
@@ -43,7 +46,7 @@ function windowCloseAlert() {
 // When the user adds another one, then show an [X] next to each one.
 function processEmploymentStatusRemoveButtons( btn, action ) {
 
-    if( cycle == "show_user" ) {
+    if( _cycleShow ) {
         return;
     }
 

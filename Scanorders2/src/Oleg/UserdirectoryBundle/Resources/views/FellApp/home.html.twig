@@ -15,7 +15,7 @@
 
     {% if lastImportTimestamp %}
         <p>
-            Last succesful import: {{ lastImportTimestamp|date('m/d/Y H:i') }}
+            <b>Total: {{ entities.getTotalItemCount }}</b>      <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y H:i') }}</i>
         </p>
     {% endif %}
 
@@ -32,16 +32,29 @@
             <div class="row">
                 <div class="col-xs-2">
                     {#{{ formmacros.fieldDateLabel_vertical(fellappfilter.startDate,'allow-future-date') }}#}
-                    <div class="input-group input-group-reg date allow-future-date">
-                        {{ form_row(fellappfilter.startDate, {'attr': {'placeholder': 'Start Date less than'}}) }}
-                        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
-                    </div>
+                    {#<div class="input-group input-group-reg date allow-future-date">#}
+                        {#{{ form_row(fellappfilter.startDate, {'attr': {'placeholder': 'Start Year'}}) }}#}
+                        {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+                    {#</div>#}
+
+                    {{ form_row(fellappfilter.startDate, {'attr': {'placeholder': 'Start Year'}}) }}
+
                 </div>
                 {#<div class="col-xs-2">#}
                     {#{{ formmacros.fieldDateLabel_vertical(fellappfilter.endDate,'allow-future-date') }}#}
                 {#</div>#}
                 <div class="col-xs-4">
                     {{ form_row(fellappfilter.filter,{'attr': {'placeholder': 'Fellowship Type'}}) }}
+
+                    <div class="row">
+                        <div class="col-xs-6" >
+                            {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }}
+                        </div>
+                        <div class="col-xs-6" >
+                            {{ form_widget(fellappfilter.archived) }}   {{ form_label(fellappfilter.archived) }}
+                        </div>
+                    </div>
+
                 </div>
                 <div class="col-xs-4">
                     {{ form_row(fellappfilter.search, {'attr': {'placeholder': 'Search'}}) }}
@@ -73,8 +86,8 @@
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'fellapp.startDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>
                 <th>Photo</th>
-                <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicant.lastName') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicant.firstName') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicantinfos.lastName') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicantinfos.firstName') }}</th>
 
                 <th>{{ knp_pagination_sortable(entities, 'U1', 'examinations.USMLEStep1Score') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'U2', 'examinations.USMLEStep2CKScore') }}</th>
@@ -102,17 +115,20 @@
 
                 {% if entity.applicationStatus == 'archive' %}
                     {#No attention required - plain completed order#}
-                    {% set trclassname = "action-cancel-status" %}
+                    {#{% set trclassname = "action-cancel-status" %}#}
+                    {% set trclassname = "info" %}
                 {% endif %}
 
                 {% if entity.applicationStatus == 'hide' %}
                     {#urgent attention required#}
-                    {% set trclassname = "order-urgent-status" %}
+                    {#{% set trclassname = "order-urgent-status" %}#}
+                    {% set trclassname = "danger" %}
                 {% endif %}
 
                 {% if entity.applicationStatus == 'complete' %}
                     {#urgent attention required#}
-                    {% set trclassname = "order-neutral-status" %}
+                    {#{% set trclassname = "order-neutral-status" %}#}
+                    {% set trclassname = "success" %}
                 {% endif %}
 
                 {% set u1 = "" %}
@@ -142,7 +158,7 @@
                     </td>
 
                     <td>
-                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}" target="_blank">{{ entity.id }}</a>
                     </td>
 
                     <td>
@@ -173,11 +189,11 @@
                     {#</td>#}
 
                     <td>
-                        {{ entity.user.lastName }}
+                        {{ entity.user.getLastNameUppercase() }}
                     </td>
 
                     <td>
-                        {{ entity.user.firstName }}
+                        {{ entity.user.getFirstNameUppercase() }}
                     </td>
 
 
@@ -264,14 +280,14 @@
                                         </a>
                                     </li>
 
-                                    {% if is_granted('ROLE_PLATFORM_ADMIN') %}
-                                    <li>
-                                        <a
-                                            general-data-confirm="Are you sure you want to completely remove this Applicant and all related documents?"
-                                            href="{{ path('fellapp_remove', { 'id': entity.id}) }}">Remove Applicant and all related documents
-                                        </a>
-                                    </li>
-                                    {% endif %}
+                                    {#{% if is_granted('ROLE_PLATFORM_ADMIN') %}#}
+                                    {#<li>#}
+                                        {#<a#}
+                                            {#general-data-confirm="Are you sure you want to completely remove this Applicant and all related documents?"#}
+                                            {#href="{{ path('fellapp_remove', { 'id': entity.id}) }}">Remove Applicant and all related documents#}
+                                        {#</a>#}
+                                    {#</li>#}
+                                    {#{% endif %}#}
 
                                 </ul>
 
@@ -286,8 +302,51 @@
             </tbody>
         </table>
 
+        {# display navigation #}
+        <div class="navigation">
+            {{ knp_pagination_render(entities) }}
+        </div>
+
 {% endblock %}
 
+
+
+{% block additionaljs %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+
+            var year = parseInt(new Date().getFullYear()) + 2;
+            //var target = "#filter_startDate";
+            var target = ".datepicker-only-year";
+
+            var datefilter = $(target).datepicker( {
+                autoclose: true,
+                format: " yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                orientation: 'auto top'
+            });
+
+            var datas = [
+                new Date(year,1,1) //remember months in javascript starts with 0 for january
+            ];
+
+            //console.log('datepicker val='+datefilter.val());
+
+            if( !datefilter.val() ) {
+                datefilter.datepicker('setDate', datas);
+            }
+
+        });
+
+    </script>
+
+{% endblock %}
 
 
 

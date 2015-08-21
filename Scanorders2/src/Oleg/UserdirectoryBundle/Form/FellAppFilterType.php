@@ -25,35 +25,38 @@ class FellAppFilterType extends AbstractType
             'widget' => 'single_text',
             //'placeholder' => 'Start Date',
             'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
+            //'format' => 'MM/dd/yyyy',
+            'format' => 'yyyy',
+            //'attr' => array('class' => 'datepicker form-control'),
+            'attr' => array('class' => 'datepicker-only-year form-control'),
+            'attr' => array('class'=>'datepicker-only-year form-control', 'title'=>'Fellowship Start Date', 'data-toggle'=>'tooltip'),
         ));
 
-//        $builder->add('endDate', 'datetime', array(
-//            'label' => 'End Date:',
-//            'widget' => 'single_text',
-//            'required' => false,
-//            'format' => 'MM/dd/yyyy',
-//            'attr' => array('class' => 'datepicker form-control'),
+//        $builder->add('filter', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+//            //'placeholder' => 'Fellowship Type',
+//            'property' => 'name',
+//            'label' => false,
+//            'required'=> false,
+//            'multiple' => false,
+//            'attr' => array('class' => 'combobox fellapp-fellowshipSubspecialty-filter'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
 //        ));
 
-        $builder->add('filter', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
-            //'placeholder' => 'Fellowship Type',
-            'property' => 'name',
+        $builder->add('filter', 'choice', array(
             'label' => false,
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class' => 'combobox fellapp-fellowshipSubspecialty-filter'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
+            'required'=> true,
+            //'multiple' => false,
+            'choices' => $this->params['fellTypes'],
+            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty-filter'),
         ));
         
         $builder->add('search', 'text', array(
@@ -62,6 +65,17 @@ class FellAppFilterType extends AbstractType
             'required'=>false,
             'label' => false,
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+        ));
+
+
+        $builder->add('hidden', 'checkbox', array(
+            'required'=>false,
+            'label' => 'Hidden',
+        ));
+
+        $builder->add('archived', 'checkbox', array(
+            'required'=>false,
+            'label' => 'Archived',
         ));
         
     }
