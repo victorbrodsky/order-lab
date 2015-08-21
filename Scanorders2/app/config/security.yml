@@ -13,7 +13,7 @@ security:
         ROLE_SCANORDER_PATHOLOGY_FACULTY: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
 
         ROLE_SCANORDER_PROCESSOR:   [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
-        ROLE_SCANORDER_ADMIN:       [ROLE_USER, ROLE_ALLOWED_TO_SWITCH, ROLE_SCANORDER_PROCESSOR, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
+        ROLE_SCANORDER_ADMIN:       [ROLE_USER, ROLE_SCANORDER_PROCESSOR, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
 
         # Userdirectory roles
         ROLE_USERDIRECTORY_EDITOR: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
@@ -30,7 +30,7 @@ security:
         ROLE_USERDIRECTORY_EDITOR: [ROLE_EDITOR]
 
 #        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
-        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN]
+        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN, ROLE_ALLOWED_TO_SWITCH]
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
 
@@ -60,6 +60,7 @@ security:
             #aperio: true
             #fr3d_ldap:  ~
             context: scan_auth
+            switch_user: true
             simple_form:
                  authenticator: custom_authenticator
 #                 always_use_default_target_path: false
@@ -79,6 +80,7 @@ security:
             #fr3d_ldap:  ~
             #ldap_authenticator: true
             context: scan_auth
+            switch_user: true
             simple_form:
                 authenticator: custom_authenticator
 #                always_use_default_target_path: true
@@ -99,6 +101,7 @@ security:
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications
             context: scan_auth
+            switch_user: true
             simple_form:
                 authenticator: custom_authenticator
                 use_referer: true
@@ -182,5 +185,5 @@ security:
      - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/fellowship-applications/, role: ROLE_USER }
+     - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
 
