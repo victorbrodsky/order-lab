@@ -1104,9 +1104,9 @@
         {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
             {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cycle,'user-codenyph','prototype') %}
         {% endif %}
-        {% if form.credentials is defined and form.credentials.cvs is defined %}
-            {% set cvsPrototype = userform.cvsForm(form.credentials.cvs,cycle,'user-cvs','prototype') %}
-        {% endif %}
+        {#{% if form.credentials is defined and form.credentials.cvs is defined %}#}
+            {#{% set cvsPrototype = userform.cvsForm(form.credentials.cvs,cycle,'user-cvs','prototype') %}#}
+        {#{% endif %}#}
 
         {#{% if form.administrativeTitles is defined %}#}
             {#{% set userPositionPrototype = treemacros.userPositionField(form.administrativeTitles.vars.prototype.institution.userPositions,cycle,'prototype') %}#}
@@ -1129,7 +1129,7 @@
              data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
              data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
              data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
-             data-prototype-user-cvs = "{{ cvsPrototype|e }}"
+             {#data-prototype-user-cvs = "{{ cvsPrototype|e }}"#}
              data-prototype-user-employmentstatus = "{{ employmentStatusPrototype|e }}"
              data-prototype-user-identifiers = "{{ identifiersPrototype|e }}"
              data-prototype-user-publiccomments = "{{ publicCommentsPrototype|e }}"
@@ -1944,30 +1944,30 @@
                             </div>
 
 
-                            {#cvs#}
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title text-left">
-                                        <a data-toggle="collapse" href="#cvs">
-                                            Curriculum Vitae(s)
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="cvs" class="panel-collapse collapse in">
-                                    <div class="panel-body">
+                            {#&#123;&#35;cvs&#35;&#125;#}
+                            {#<div class="panel panel-info">#}
+                                {#<div class="panel-heading">#}
+                                    {#<h4 class="panel-title text-left">#}
+                                        {#<a data-toggle="collapse" href="#cvs">#}
+                                            {#Curriculum Vitae(s)#}
+                                        {#</a>#}
+                                    {#</h4>#}
+                                {#</div>#}
+                                {#<div id="cvs" class="panel-collapse collapse in">#}
+                                    {#<div class="panel-body">#}
 
-                                        <div class="user-cvs-holder">
+                                        {#<div class="user-cvs-holder">#}
 
-                                            {% for cv in form.credentials.cvs %}
-                                                {{ userform.cvsForm(cv,cycle,'user-cvs','noprototype') }}
-                                            {% endfor %}
-                                            {{ usermacros.addNewObjectBtn(cycle,'user-cvs','Add Curriculum Vitae') }}
+                                            {#{% for cv in form.credentials.cvs %}#}
+                                                {#{{ userform.cvsForm(cv,cycle,'user-cvs','noprototype') }}#}
+                                            {#{% endfor %}#}
+                                            {#{{ usermacros.addNewObjectBtn(cycle,'user-cvs','Add Curriculum Vitae') }}#}
 
-                                        </div>
+                                        {#</div>#}
 
-                                    </div>
-                                </div>
-                            </div>
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
 
                         </div>
 
@@ -2259,7 +2259,7 @@
             </p>
         {% endif %}
 
-    {{ form_end(form) }}
+    {{ form_end(form,{'render_rest': false}) }}
 
 
     {% if userEditor == true or entity.id == app.security.getToken().getUser().getId() %}

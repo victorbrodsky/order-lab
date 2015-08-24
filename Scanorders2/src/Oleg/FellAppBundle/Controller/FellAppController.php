@@ -4,6 +4,7 @@ namespace Oleg\FellAppBundle\Controller;
 
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
+use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\Reference;
 use Oleg\FellAppBundle\Form\FellAppFilterType;
 use Oleg\FellAppBundle\Form\FellowshipApplicationType;
@@ -25,7 +26,7 @@ class FellAppController extends Controller {
      * Show home page
      *
      * @Route("/", name="fellapp_home")
-     * @Template("OlegUserdirectoryBundle:FellApp:home.html.twig")
+     * @Template("OlegFellAppBundle:Default:home.html.twig")
      */
     public function indexAction(Request $request) {
 
@@ -39,9 +40,16 @@ class FellAppController extends Controller {
         //echo "fellapp home <br>";
 
         $em = $this->getDoctrine()->getManager();
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $searchFlag = false;
+        $currentYear = date("Y")+2;
+
 
         //create fellapp filter
-        $params = array( 'fellTypes' => $this->getFellowshipTypesWithSpecials() );
+        $params = array(
+            'fellTypes' => $fellappUtil->getFellowshipTypesWithSpecials(),
+        );
         $filterform = $this->createForm(new FellAppFilterType($params), null);
 
         $filterform->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
@@ -55,6 +63,10 @@ class FellAppController extends Controller {
         //echo "<br>startDate=".$startDate."<br>";
         //echo "<br>filter=".$filter."<br>";
         //echo "<br>search=".$search."<br>";
+
+        if( !$startDate ) {
+            return $this->redirect( $this->generateUrl('fellapp_home',array('filter[startDate]'=>$currentYear)) );
+        }
 
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
         $repository = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication');
@@ -71,18 +83,24 @@ class FellAppController extends Controller {
         if( $search ) {
             $dql->leftJoin("applicant.infos", "userinfos");
             $dql->andWhere("userinfos.firstName LIKE '%".$search."%' OR userinfos.lastName LIKE '%".$search."%'");
+            $searchFlag = true;
         }
 
         if( $filter && $filter != "ALL" ) {
             $dql->andWhere("fellowshipSubspecialty.id = ".$filter);
+            $searchFlag = true;
         }
 
         if( !$hidden ) {
             $dql->andWhere("fellapp.applicationStatus != 'hide'");
+        } else {
+            $searchFlag = true;
         }
 
         if( !$archived ) {
             $dql->andWhere("fellapp.applicationStatus != 'archive'");
+        } else {
+            $searchFlag = true;
         }
 
         if( $startDate ) {
@@ -90,9 +108,14 @@ class FellAppController extends Controller {
             //$dateStr = $transformer->transform($startDate);
             //$dql->andWhere("fellapp.startDate >= '".$startDate."'");
             //$dql->andWhere("year(fellapp.startDate) = '".$startDate->format('Y')."'");
-            $bottomDate = "01-01-".$startDate->format('Y');
-            $topDate = "12-31-".$startDate->format('Y');
+            $startDateStr = $startDate->format('Y');
+            $bottomDate = "01-01-".$startDateStr;
+            $topDate = "12-31-".$startDateStr;
             $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+
+            if( $startDateStr != $currentYear ) {
+                $searchFlag = true;
+            }
         }
 
 
@@ -118,56 +141,53 @@ class FellAppController extends Controller {
             $lastImportTimestamp = $lastImportTimestamps[0]->getCreationdate();
         }
 
+        $accessreqs = $fellappUtil->getActiveAccessReq();
+
+        $hidden = $fellappUtil->getFellAppByStatusAndYear('hide',$currentYear);
+        $hiddenTotal = $fellappUtil->getFellAppByStatusAndYear('hide');
+
+        $archived = $fellappUtil->getFellAppByStatusAndYear('archive',$currentYear);
+        $archivedTotal = $fellappUtil->getFellAppByStatusAndYear('archive');
+
+        $active = $fellappUtil->getFellAppByStatusAndYear('active',$currentYear);
+        $activeTotal = $fellappUtil->getFellAppByStatusAndYear('active');
+
         return array(
             'entities' => $fellApps,
             'pathbase' => 'fellapp',
             'lastImportTimestamp' => $lastImportTimestamp,
             'fellappfilter' => $filterform->createView(),
-            'startDate' => $startDate
+            'startDate' => $startDate,
+            'accessreqs' => count($accessreqs),
+            'currentYear' => $currentYear,
+            'hiddenTotal' => count($hiddenTotal),
+            'archivedTotal' => count($archivedTotal),
+            'hidden' => count($hidden),
+            'archived' => count($archived),
+            'active' => count($active),
+            'activeTotal' => count($activeTotal),
+            'searchFlag' => $searchFlag
         );
     }
 
-    public function getFellowshipTypesWithSpecials() {
-        $em = $this->getDoctrine()->getManager();
+//    //check for active access requests
+//    public function getActiveAccessReq() {
+//        if( !$this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+//            return null;
+//        }
+//        $userSecUtil = $this->get('user_security_utility');
+//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('fellapp.sitename'),AccessRequest::STATUS_ACTIVE);
+//        return $accessreqs;
+//    }
 
-        //get list of fellowship type with extra "ALL"
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
-        $dql = $repository->createQueryBuilder('list')
-            //->select("list.id as id, list.name as text")
-            ->where("list.type = :typedef OR list.type = :typeadd")
-            ->orderBy("list.orderinlist","ASC");
-        $query = $em->createQuery($dql);
-        $query->setParameters( array(
-            'typedef' => 'default',
-            'typeadd' => 'user-added',
-        ));
-        $fellTypes = $query->getResult();
 
-        //add special cases
-        $specials = array(
-            "ALL" => "ALL",
-        );
-
-        $filterType = array();
-        foreach( $specials as $key => $value ) {
-            $filterType[$key] = $value;
-        }
-
-        //add statuses
-        foreach( $fellTypes as $type ) {
-            //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
-            $filterType[$type->getId()] = $type->getName();
-        }
-
-        return $filterType;
-    }
 
 
     /**
      * @Route("/show/{id}", name="fellapp_show")
      * @Route("/edit/{id}", name="fellapp_edit")
      *
-     * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
+     * @Template("OlegFellAppBundle:Form:new.html.twig")
      */
     public function showAction(Request $request, $id) {
 
@@ -240,7 +260,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/update/{id}", name="fellapp_update")
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:FellApp:new.html.twig")
+     * @Template("OlegFellAppBundle:Form:new.html.twig")
      */
     public function editAction(Request $request, $id) {
 
@@ -518,7 +538,7 @@ class FellAppController extends Controller {
      */
     public function populateSpreadsheetAction(Request $request) {
 
-        $fellappUtil = $this->container->get('fellapp_import');
+        $fellappUtil = $this->container->get('fellapp_util');
         $populatedCount = $fellappUtil->populateFellApp();
 
         if( $populatedCount >= 0 ) {
@@ -545,7 +565,7 @@ class FellAppController extends Controller {
      */
     public function importAction(Request $request) {
 
-        $fellappUtil = $this->container->get('fellapp_import');
+        $fellappUtil = $this->container->get('fellapp_util');
         $fileDb = $fellappUtil->importFellApp();
 
         if( $fileDb ) {

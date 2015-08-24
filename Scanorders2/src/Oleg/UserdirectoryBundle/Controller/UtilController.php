@@ -680,7 +680,7 @@ class UtilController extends Controller {
     public function checkCwidAction(Request $request) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $cwid = trim( $request->get('number') );
@@ -708,7 +708,7 @@ class UtilController extends Controller {
     public function checkSsnAction(Request $request) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $ssn = trim( $request->get('number') );
@@ -750,7 +750,7 @@ class UtilController extends Controller {
     public function checkEinAction(Request $request) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $ein = trim( $request->get('number') );
@@ -792,7 +792,7 @@ class UtilController extends Controller {
     public function checkUsertypeUseridAction(Request $request) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $userType = trim( $request->get('userType') );
@@ -980,7 +980,7 @@ class UtilController extends Controller {
     public function checkMrntypeIdentifierAction(Request $request) {
 
         if( false === $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $mrntype = $request->get('mrntype');

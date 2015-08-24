@@ -191,7 +191,7 @@ class SlideReturnRequestController extends Controller
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $slideReturnRequest  = new SlideReturnRequest();
@@ -303,7 +303,7 @@ class SlideReturnRequestController extends Controller
 
             $securityUtil = $this->get('order_security_utility');
             if( $message && !$securityUtil->isUserAllowOrderActions($message, $user, array('show')) ) {
-                return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+                return $this->redirect( $this->generateUrl('scan-nopermission') );
             }
         } else {
             $message = new Message();
@@ -570,11 +570,11 @@ class SlideReturnRequestController extends Controller
         $url = $request->headers->get('referer');
         if( strpos($url,'my-slide-return-requests') ) {
             if( false === $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
-                return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+                return $this->redirect( $this->generateUrl('scan-nopermission') );
             }
         } else {
             if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-                return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+                return $this->redirect( $this->generateUrl('scan-nopermission') );
             }
         }
 
@@ -590,7 +590,7 @@ class SlideReturnRequestController extends Controller
         $message = $entity->getMessage();
         $securityUtil = $this->get('order_security_utility');
         if( $message && !$securityUtil->hasUserPermission($message,$user) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $entity->setStatus($status);

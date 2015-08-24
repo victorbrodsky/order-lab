@@ -32,7 +32,7 @@ class UserRequestController extends Controller
     public function indexAction( Request $request )
     {
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
         
         $em = $this->getDoctrine()->getManager();
@@ -157,7 +157,7 @@ class UserRequestController extends Controller
     public function showAction($id)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -188,7 +188,7 @@ class UserRequestController extends Controller
     {
         
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
         
         $em = $this->getDoctrine()->getManager();
@@ -219,7 +219,7 @@ class UserRequestController extends Controller
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $entity  = new UserRequest();
@@ -351,7 +351,7 @@ class UserRequestController extends Controller
     public function editAction($id)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -386,7 +386,7 @@ class UserRequestController extends Controller
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -431,7 +431,7 @@ class UserRequestController extends Controller
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $form = $this->createDeleteForm($id);

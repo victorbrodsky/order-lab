@@ -119,7 +119,7 @@ class UserType extends AbstractType
         $this->addComments($builder);
 
         if( $this->params['showfellapp'] ) {
-            //$this->addFellowshipApplication($builder);
+            $this->addFellowshipApplication($builder);
         }
 
     }

@@ -320,7 +320,7 @@ class UserController extends Controller
     public function indexUserAction(Request $request)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect($this->generateUrl('employees-order-nopermission'));
+            return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $filter = trim( $request->get('filter') );
@@ -1117,7 +1117,7 @@ class UserController extends Controller
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -1207,7 +1207,7 @@ class UserController extends Controller
     public function createUser($request) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -1330,7 +1330,7 @@ class UserController extends Controller
     {
         //$secUtil = $this->get('user_security_utility');
         if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         return $this->showUser($id,$this->container->getParameter('employees.sitename'));
@@ -1405,7 +1405,7 @@ class UserController extends Controller
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         return $this->editUser($id, $this->container->getParameter('employees.sitename'));
@@ -1562,7 +1562,7 @@ class UserController extends Controller
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         return $this->updateUser( $request, $id, $this->container->getParameter('employees.sitename') );
@@ -2281,7 +2281,7 @@ class UserController extends Controller
                 'notice',
                 'You do not have permission to visit this page'
             );
-            return $this->redirect($this->generateUrl('employees-order-nopermission'));
+            return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
@@ -2312,7 +2312,7 @@ class UserController extends Controller
     public function lockUnlockChangeAction($id, $status) {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $this->lockUnlock($id, $status, $this->container->getParameter('employees.sitename'));
@@ -2606,7 +2606,7 @@ class UserController extends Controller
 
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($userid) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $uploadPath = "Uploaded/".$this->container->getParameter('employees.avataruploadpath');

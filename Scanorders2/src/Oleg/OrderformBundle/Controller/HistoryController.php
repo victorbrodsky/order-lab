@@ -30,7 +30,7 @@ class HistoryController extends Controller
 //    {
 //
 //        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-//            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+//            return $this->redirect( $this->generateUrl('scan-nopermission') );
 //        }
 //
 //        $em = $this->getDoctrine()->getManager();
@@ -160,7 +160,7 @@ class HistoryController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -191,7 +191,7 @@ class HistoryController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $editForm = $this->createEditForm($entity);
@@ -242,7 +242,7 @@ class HistoryController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -322,7 +322,7 @@ class HistoryController extends Controller
             false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')           
         )
         {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -333,7 +333,7 @@ class HistoryController extends Controller
 
         $securityUtil = $this->get('order_security_utility');
         if( count($entities)>0 && !$securityUtil->hasUserPermission($entities[0]->getMessage(),$user) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $viewcount = 0;

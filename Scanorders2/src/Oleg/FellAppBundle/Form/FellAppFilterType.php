@@ -28,7 +28,7 @@ class FellAppFilterType extends AbstractType
             //'format' => 'MM/dd/yyyy',
             'format' => 'yyyy',
             //'attr' => array('class' => 'datepicker form-control'),
-            'attr' => array('class' => 'datepicker-only-year form-control'),
+            //'attr' => array('class' => 'datepicker-only-year form-control'),
             'attr' => array('class'=>'datepicker-only-year form-control', 'title'=>'Fellowship Start Date', 'data-toggle'=>'tooltip'),
         ));
 

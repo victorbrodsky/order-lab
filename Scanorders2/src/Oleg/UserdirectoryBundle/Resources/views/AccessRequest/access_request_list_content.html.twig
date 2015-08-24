@@ -34,7 +34,7 @@
             <tr>
         {% endif %}
 
-            <td><a href="{{ path(sitename~'_showuser', { 'id': entity.user.id }) }}">{{ entity.id }}</a></td>
+            <td><a href="{{ path(sitenameshowuser~'_showuser', { 'id': entity.user.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.createdate|date('Y-m-d H:i') }}</td>
             <td>{{ entity.getStatusStr|capitalize }}</td>
             <td>{{ entity.user }}</td>
@@ -51,10 +51,16 @@
             </td>
             <td>{{ entity.user.lastLogin|date('Y-m-d H:i') }}</td>
 
-            <td>{{ entity.updatedate|date('Y-m-d H:i') }}</td>
+            <td>
+                {% if entity.updatedate %}
+                    {{ entity.updatedate|date('Y-m-d H:i') }}
+                {% endif %}
+            </td>
 
             <td class="rowlink-skip">
-                <a href="{{ path(sitename~'_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby }}</a>
+                {% if entity.updatedby %}
+                    <a href="{{ path(sitenameshowuser~'_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby }}</a>
+                {% endif %}
             </td>
 
 
@@ -67,7 +73,7 @@
 
                     <ul class="dropdown-menu dropdown-menu-right">
 
-                        <li><a href="{{ path(sitename~'_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>
+                        <li><a href="{{ path(sitenameshowuser~'_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>
 
                         <li class="divider"></li>
 

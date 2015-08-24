@@ -229,6 +229,10 @@ class UserSecurityUtil {
                 $roles = array("ROLE_USERDIRECTORY_ADMIN");
             }
 
+            if( $sitename == $this->container->getParameter('fellapp.sitename') ) {
+                $roles = array("ROLE_FELLAPP_ADMIN");
+            }
+
         } else {
             return null;
         }

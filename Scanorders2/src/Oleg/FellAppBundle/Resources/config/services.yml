@@ -15,7 +15,7 @@ services:
         class: Oleg\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler
         arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
 
-    #fellowship application import
-    fellapp_import:
+    #fellowship application utilities
+    fellapp_util:
         class: Oleg\FellAppBundle\Util\FellAppUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]

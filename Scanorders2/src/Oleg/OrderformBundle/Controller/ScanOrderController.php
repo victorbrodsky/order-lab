@@ -95,7 +95,7 @@ class ScanOrderController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
         //echo "user=".$user;
         if( !is_object($user) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         if( $routeName == "incoming-scan-orders" ) {
@@ -267,7 +267,7 @@ class ScanOrderController extends Controller {
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $form = $this->createDeleteForm($id);
@@ -306,7 +306,7 @@ class ScanOrderController extends Controller {
     public function statusAction(Request $request, $id, $status) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
         
         $em = $this->getDoctrine()->getManager();
@@ -327,7 +327,7 @@ class ScanOrderController extends Controller {
         }
 
         if( $res['result'] == 'nopermission' ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $this->get('session')->getFlashBag()->add('status-changed',$res['message']);

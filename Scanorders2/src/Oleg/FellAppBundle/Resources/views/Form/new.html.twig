@@ -1,0 +1,204 @@
+{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegUserdirectoryBundle::Profile/edit_user.html.twig" as userform %}
+
+
+
+
+{% block title %}
+    Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+{% endblock %}
+
+
+{% block content %}
+
+    {#On Medium devices (Desktops (≥992px)) limit the width#}
+    <div class="col-md-1"></div>
+    <div class="col-md-9">
+
+    {% set fellappStatus = "" %}
+    {% set trclassname = "well well-sm" %}
+    {% if entity.applicationStatus == 'archive' %}
+        {% set fellappStatus = "Archived" %}
+        {% set trclassname = "alert alert-info" %}
+    {% endif %}
+    {% if entity.applicationStatus == 'hide' %}
+        {% set fellappStatus = "Hidden" %}
+        {% set trclassname = "alert alert-danger" %}
+    {% endif %}
+    {% if entity.applicationStatus == 'complete' %}
+        {% set fellappStatus = "Completed" %}
+        {% set trclassname = "alert alert-success" %}
+    {% endif %}
+
+    <h4 class="text-info" align="center">
+
+        <div class="{{ trclassname }}">
+            <p>{{ fellappStatus }}</p>
+            Fellowship Application ID {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+        </div>
+    </h4>
+
+    <br>
+
+
+    {#user's snapshot#}
+    {{ userform.snapshot(entity.user,sitename,cycle) }}
+    {#{% if "show" in cycle %}#}
+        {#{% set showFlag = true %}#}
+    {#{% else %}#}
+        {#{% set showFlag = false %}#}
+    {#{% endif %}   #}
+    {#{% if showFlag %}#}
+        {#{{ userform.snapshot(entity.user,sitename,cycle) }}        #}
+    {#{% else %}#}
+        {#&#123;&#35;avatar form modal&#35;&#125;#}
+        {#{{ usermacros.avatarForm(entity.user,cycle) }}#}
+    {#{% endif %}#}
+
+
+    {#<p>#}
+    {#{% set hreflink = '<a href="'~path(employees_sitename~'_showuser', { 'id': entity.user.id })~'">'~entity.user.getDisplayName()~'</a>' %}#}
+    {#{{ formmacros.simplefield( "Applicant:", hreflink, "", "disabled" ) }}#}
+    {#</p>#}
+
+    {#{{ formmacros.simplefield( 'Application Creation Date:', entity.timestamp|date('m/d/Y H:i'), "" ) }}#}
+
+    <br>
+    <p>
+        <button id="collapseAll" type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All Application Sections</button>
+        <button id="expandAll" type="button" class="btn btn-default btn-sm btn-pressed-default" onClick="extendAll()" >Expand All Application Sections</button>
+    </p>
+    <br>
+
+
+    {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
+
+    {{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}
+
+    {{ form_errors(form) }}
+
+
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+         data-userid = "{{ entity.id }}"
+    ></div>
+
+        <input type="hidden" id="user_id" value="{{ form.vars.value.user.id }}" />
+        <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+        <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
+
+    {#{{ formmacros.fieldDateLabel(form.timestamp,'allow-future-date') }}#}
+
+    <!-- Fellowship Type, Training period, Applicant Name -->
+    {% include 'OlegFellAppBundle:Form:FellowshipType.html.twig' %}
+
+    <!-- Personal Data -->
+    {% include 'OlegFellAppBundle:Form:PersonalData.html.twig' %}
+
+    <!-- Education -->
+    {% include 'OlegFellAppBundle:Form:Education.html.twig' %}
+
+    <!-- National Boards -->
+    {% include 'OlegFellAppBundle:Form:NationalBoards.html.twig' %}
+
+    <!-- MedicalLicensure -->
+    {% include 'OlegFellAppBundle:Form:MedicalLicensure.html.twig' %}
+
+    <!-- Board Certification -->
+    {% include 'OlegFellAppBundle:Form:BoardCertification.html.twig' %}
+
+    <!-- Recommendations -->
+    {% include 'OlegFellAppBundle:Form:Recommendations.html.twig' %}
+
+    <!-- Uploads -->
+    {% include 'OlegFellAppBundle:Form:Uploads.html.twig' %}
+
+    <!-- Honors and Awards -->
+    {% include 'OlegFellAppBundle:Form:Honors.html.twig' %}
+
+    <!-- Signature -->
+    {% include 'OlegFellAppBundle:Form:Signature.html.twig' %}
+
+
+    {#{% do form.setRendered %}#}
+    {#{{ form_widget(form._token) }}#}
+
+    {#{{ form_row(form.submit) }}#}
+    {#{{ form_widget(form.update) }}#}
+
+    {#{{ form_end(form) }}#}
+    {{ form_end(form, {'render_rest': false}) }}
+
+    <br>
+
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
+        </p>
+    {% endif %}
+
+    {% if cycle == "edit" %}
+        <p>
+            {#<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>#}
+            <button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form">Update</button>
+
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
+        </p>
+    {% endif %}
+
+    </div>
+    <div class="col-md-1"></div>
+
+{% endblock %}
+
+
+
+
+{% block additionaljs %}
+<script language="Javascript">
+
+
+    $(document).ready(function() {
+
+        showHideWell('.fellapp-ecfmgcertificate-field');
+        showHideWell('.fellapp-reprimand-field');
+        showHideWell('.fellapp-lawsuit-field');
+
+    });
+
+    function hideWell(element) {
+        $(element).closest('.form-element-holder').find('.wellcollapsable').hide(500);
+        $(element).closest('.form-element-holder').find('.wellcollapsable').find('input,textarea').val('');
+        //resetUploadBtn($(element).closest('.form-element-holder').find('.wellcollapsable'));
+    }
+
+    function showWell(element) {
+        $(element).closest('.form-element-holder').find('.wellcollapsable').show(500);
+    }
+
+    function showHideWell(element) {
+
+        //console.log('showHideWell');
+
+        if( $(element).is(':checked') ) {
+            showWell(element);
+        } else {
+            hideWell(element);
+        }
+
+        //listener
+        $(element).click( function() {
+            showHideWell(this);
+        });
+    }
+
+</script>
+{% endblock %}
+
+

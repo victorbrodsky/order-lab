@@ -31,7 +31,7 @@ class ScanUserController extends UserController
     public function indexUserAction(Request $request)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {
-            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+            return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
         $filter = trim( $request->get('filter') );
@@ -59,7 +59,7 @@ class ScanUserController extends UserController
     {
         //$secUtil = $this->get('user_security_utility');
         if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {    //!$secUtil->isCurrentUser($id) &&
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
 
@@ -90,7 +90,7 @@ class ScanUserController extends UserController
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $userViewArr = $this->editUser($id,$this->container->getParameter('scan.sitename'));
@@ -120,7 +120,7 @@ class ScanUserController extends UserController
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $scanSecUtil = $this->get('order_security_utility');
@@ -253,7 +253,7 @@ class ScanUserController extends UserController
     public function lockUnlockChangeAction($id, $status) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $this->lockUnlock($id, $status, $this->container->getParameter('scan.sitename'));
@@ -285,7 +285,7 @@ class ScanUserController extends UserController
     {
         $secUtil = $this->get('order_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         return $this->getScanSettings($id,'show');
@@ -299,7 +299,7 @@ class ScanUserController extends UserController
     public function editScanSettingsAction($id)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         return $this->getScanSettings($id,'edit');
@@ -371,7 +371,7 @@ class ScanUserController extends UserController
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $updateArr = $this->updateScanSettings($request, $id);
@@ -386,7 +386,7 @@ class ScanUserController extends UserController
         $secUtil = $secUtil = $this->get('order_security_utility');
 
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $entity = $secUtil->getUserPerSiteSettings($id);

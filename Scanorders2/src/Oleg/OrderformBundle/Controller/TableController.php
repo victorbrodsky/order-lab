@@ -111,7 +111,7 @@ class TableController extends Controller {
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -149,7 +149,7 @@ class TableController extends Controller {
 
         $secUtil = $this->get('order_security_utility');
         if( $message && !$secUtil->isUserAllowOrderActions($message, $user, $actions) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         //redirect by status

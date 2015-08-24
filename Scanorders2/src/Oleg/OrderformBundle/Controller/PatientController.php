@@ -185,7 +185,7 @@ class PatientController extends Controller
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();

@@ -24,17 +24,20 @@ class AccessRequestController extends Controller
 
     protected $router;
     protected $siteName;
+    protected $siteNameShowuser;
     protected $siteNameStr;
     protected $roleBanned;
     protected $roleUser;
     protected $roleUnapproved;
 
     public function __construct() {
-        $this->siteName = $this->container->getParameter('employees.sitename');
+        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
+        $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Employee Directory';
         $this->roleBanned = 'ROLE_USERDIRECTORY_BANNED';
         $this->roleUser = 'ROLE_USERDIRECTORY_OBSERVER';
         $this->roleUnapproved = 'ROLE_USERDIRECTORY_UNAPPROVED';
+        $this->roleEditor = 'ROLE_USERDIRECTORY_EDITOR';
     }
 
     /**
@@ -45,39 +48,77 @@ class AccessRequestController extends Controller
     public function accessRequestCreatePlainAction()
     {
 
+        return accessRequestCreatePlain();
+//        $userSecUtil = $this->get('user_security_utility');
+//
+//        $user = $this->get('security.context')->getToken()->getUser();
+//
+//        //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
+//        if( false === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
+//            $user->addRole($this->roleUnapproved);
+//        }
+//
+////        if( true === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
+////            return $this->redirect($this->generateUrl('employees-nopermission'));
+////        }
+//
+//        if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
+//
+//            //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
+//            //return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
+//
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have permission to visit this page on ".$this->siteNameStr." site."."<br>".
+//                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->siteName.'_logout',true).">Re-Login</a>"
+//            );
+//            return $this->redirect( $this->generateUrl('main_common_home') );
+//        }
+//
+//        $roles = array(
+//            "unnaproved" => $this->roleUnapproved,
+//            "banned" => $this->roleBanned,
+//        );
+//
+//        return $this->accessRequestCreateNew($user->getId(),$this->siteName,$roles);
+    }
+    public function accessRequestCreatePlain()
+    {
+
         $userSecUtil = $this->get('user_security_utility');
 
         $user = $this->get('security.context')->getToken()->getUser();
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_OBSERVER',$user) ) {
-            $user->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
+        if( false === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
+            $user->addRole($this->roleUnapproved);
         }
 
-//        if( true === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_OBSERVER',$user) ) {
-//            return $this->redirect($this->generateUrl('employees-order-nopermission'));
+//        if( true === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
+//            return $this->redirect($this->generateUrl('employees-nopermission'));
 //        }
 
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED',$user) ) {
+        if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
 
             //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
             //return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
 
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                "You don't have permission to visit this page on Employee Directory site."."<br>".
-                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('employees.sitename').'_logout',true).">Re-Login</a>"
+                "You don't have permission to visit this page on ".$this->siteNameStr." site."."<br>".
+                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->siteName.'_logout',true).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
 
         $roles = array(
-            "unnaproved" => "ROLE_USERDIRECTORY_UNAPPROVED",
-            "banned" => "ROLE_USERDIRECTORY_BANNED",
+            "unnaproved" => $this->roleUnapproved,
+            "banned" => $this->roleBanned,
         );
 
-        return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('employees.sitename'),$roles);
+        return $this->accessRequestCreateNew($user->getId(),$this->siteName,$roles);
     }
+
 
     /**
      * @Route("/access-requests/new", name="employees_access_request_new")
@@ -87,18 +128,18 @@ class AccessRequestController extends Controller
     public function accessRequestCreateAction()
     {
 
-        $sitename = $this->container->getParameter('employees.sitename');
+        $sitename = $this->siteName;
 
         $user = $this->get('security.context')->getToken()->getUser();
 
         $userSecUtil = $this->get('user_security_utility');
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED',$user) ) {
+        if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
         $roles = array(
-            "unnaproved" => "ROLE_USERDIRECTORY_UNAPPROVED",
-            "banned" => "ROLE_USERDIRECTORY_BANNED",
+            "unnaproved" => $this->roleUnapproved,
+            "banned" => $this->roleBanned,
         );
 
         return $this->accessRequestCreateNew($user->getId(),$sitename,$roles);
@@ -126,12 +167,13 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
-        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-            $sitenameFull = "Employee Directory";
-        }
-        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-            $sitenameFull = "Scan Orders";
-        }
+//        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+//            $sitenameFull = "Employee Directory";
+//        }
+//        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+//            $sitenameFull = "Scan Orders";
+//        }
+        $sitenameFull = $this->siteNameStr;
 
         // Case 1: user has active accreq
         if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_ACTIVE ) {
@@ -201,7 +243,7 @@ class AccessRequestController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $id = $user->getId();
-        $sitename = $this->container->getParameter('employees.sitename');
+        $sitename = $this->siteName;
 
         return $this->accessRequestCreate($id,$sitename);
 
@@ -224,12 +266,13 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
-        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-            $sitenameFull = "Employee Directory";
-        }
-        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-            $sitenameFull = "Scan Orders";
-        }
+//        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+//            $sitenameFull = "Employee Directory";
+//        }
+//        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+//            $sitenameFull = "Scan Orders";
+//        }
+        $sitenameFull = $this->siteNameStr;
 
         //echo "sitename=".$sitename."<br>";
 
@@ -338,11 +381,11 @@ class AccessRequestController extends Controller
      */
     public function accessRequestIndexAction()
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        if( false === $this->get('security.context')->isGranted($this->roleEditor) ) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
-        return $this->accessRequestIndexList($this->container->getParameter('employees.sitename'));
+        return $this->accessRequestIndexList($this->siteName);
     }
     public function accessRequestIndexList( $sitename ) {
 
@@ -386,17 +429,19 @@ class AccessRequestController extends Controller
             $limit/*limit per page*/
         );
 
-        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-            $sitenameFull = "Employee Directory";
-        }
-        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-            $sitenameFull = "Scan Orders";
-        }
+//        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+//            $sitenameFull = "Employee Directory";
+//        }
+//        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+//            $sitenameFull = "Scan Orders";
+//        }
+        $sitenameFull = $this->siteNameStr;
 
         return array(
             'entities' => $pagination,
             'roles' => $rolesArr,
             'sitename' => $sitename,
+            'sitenameshowuser' => $this->siteNameShowuser,
             'sitenamefull'=>$sitenameFull
         );
 
@@ -411,8 +456,8 @@ class AccessRequestController extends Controller
     public function accessRequestChangeAction($id, $status)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
-            return $this->redirect( $this->generateUrl('employees-order-nopermission') );
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -424,7 +469,7 @@ class AccessRequestController extends Controller
         }
 
         $userSecUtil = $this->get('user_security_utility');
-        $accReq = $userSecUtil->getUserAccessRequest($id,$this->container->getParameter('employees.sitename'));
+        $accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
 
         if( !$accReq ) {
             throw new \Exception( 'AccessRequest is not found by id=' . $id );
@@ -432,28 +477,28 @@ class AccessRequestController extends Controller
 
         if( $status == "approved" || $status == "approve" ) {
             //$entity->setRoles(array());
-            $entity->removeRole('ROLE_USERDIRECTORY_UNAPPROVED');
-            $entity->removeRole('ROLE_USERDIRECTORY_BANNED');
+            $entity->removeRole($this->roleUnapproved);
+            $entity->removeRole($this->roleBanned);
 
-            $entity->addRole('ROLE_USERDIRECTORY_OBSERVER');
+            $entity->addRole($this->roleUser);
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
 
         if( $status == "declined" || $status == "decline" ) {
             //$entity->setRoles(array());
-            $entity->removeRole('ROLE_USERDIRECTORY_OBSERVER');
+            $entity->removeRole($this->roleUser);
 
-            $entity->addRole('ROLE_USERDIRECTORY_BANNED');
+            $entity->addRole($this->roleBanned);
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_DECLINED);
         }
 
         if( $status == "active" ) {
             //$entity->setRoles(array());
-            $entity->removeRole('ROLE_USERDIRECTORY_OBSERVER');
+            $entity->removeRole($this->roleUser);
 
-            $entity->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
+            $entity->addRole($this->roleUnapproved);
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         }
@@ -468,20 +513,21 @@ class AccessRequestController extends Controller
         $em->flush();
 
         //////// When the user's Access Request has been approved, send an email to the user from the email address in Site Settings with... ////
-        $this->createAccessRequestUserNotification( $entity, $status, $this->container->getParameter('employees.sitename') );
+        $this->createAccessRequestUserNotification( $entity, $status, $this->siteName );
         //////////////////// EOF ////////////////////
 
-        return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_accessrequest_list'));
+        return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
     }
 
     public function createAccessRequestUserNotification( $subjectUser, $status, $sitename ) {
 
-        if( $sitename == $this->container->getParameter('employees.sitename') ) {
-            $sitenameFull = "Employee Directory";
-        }
-        if( $sitename == $this->container->getParameter('scan.sitename') ) {
-            $sitenameFull = "Scan Orders";
-        }
+//        if( $sitename == $this->container->getParameter('employees.sitename') ) {
+//            $sitenameFull = "Employee Directory";
+//        }
+//        if( $sitename == $this->container->getParameter('scan.sitename') ) {
+//            $sitenameFull = "Scan Orders";
+//        }
+        $sitenameFull = $this->siteNameStr;
 
         $user = $this->get('security.context')->getToken()->getUser();
         $siteLink = $this->generateUrl( $sitename.'_home', array(), true );

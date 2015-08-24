@@ -37,7 +37,7 @@ class ScanAccessRequestController extends AccessRequestController
         }
 
 //        if( true === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_SUBMITTER',$user) ) {
-//            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+//            return $this->redirect($this->generateUrl('scan-nopermission'));
 //        }
 
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED',$user) ) {
@@ -114,7 +114,7 @@ class ScanAccessRequestController extends AccessRequestController
     public function accessRequestIndexAction()
     {
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         return $this->accessRequestIndexList($this->container->getParameter('scan.sitename'));
@@ -130,7 +130,7 @@ class ScanAccessRequestController extends AccessRequestController
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();

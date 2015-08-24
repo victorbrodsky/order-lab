@@ -105,7 +105,7 @@ class SessionIdleHandler
         if(
             //$thisRoute == $routeData['name'] ||
             $routeName == 'login' ||
-            //$routeName == 'scan-order-nopermission' ||
+            //$routeName == 'scan-nopermission' ||
             $routeName == 'scan_setloginvisit' ||
             $routeName == 'employees_setloginvisit' ||
             $routeName == 'logout' ||

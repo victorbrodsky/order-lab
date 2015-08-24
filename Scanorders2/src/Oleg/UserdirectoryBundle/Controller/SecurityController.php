@@ -266,7 +266,7 @@ class SecurityController extends Controller
 
 
     /**
-     * @Route("/no-permission", name="employees-order-nopermission")
+     * @Route("/no-permission", name="employees-nopermission")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
      */

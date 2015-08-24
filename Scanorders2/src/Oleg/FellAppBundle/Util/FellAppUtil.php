@@ -6,9 +6,10 @@
  * Time: 4:21 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace Oleg\FellAppBundle\Util;
 
 
+use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
 use Oleg\UserdirectoryBundle\Entity\Citizenship;
 use Oleg\UserdirectoryBundle\Entity\CurriculumVitae;
@@ -18,7 +19,7 @@ use Oleg\UserdirectoryBundle\Entity\Examination;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\Reference;
+use Oleg\FellAppBundle\Entity\Reference;
 use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
@@ -1073,6 +1074,81 @@ class FellAppUtil {
         $urlSecondArr = explode("/", $urlSecond);
         $fileId = $urlSecondArr[0];
         return $fileId;
+    }
+
+
+
+
+
+
+    //check for active access requests
+    public function getActiveAccessReq() {
+        if( !$this->sc->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            return null;
+        }
+        $userSecUtil = $this->container->get('user_security_utility');
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('fellapp.sitename'),AccessRequest::STATUS_ACTIVE);
+        return $accessreqs;
+    }
+
+    public function getFellAppByStatusAndYear($status,$year=null) {
+
+        $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
+        $dql =  $repository->createQueryBuilder("fellapp");
+        $dql->select('fellapp');
+        $dql->where("fellapp.applicationStatus = '" . $status . "'");
+
+        if( $year ) {
+            $bottomDate = "01-01-".$year;
+            $topDate = "12-31-".$year;
+            $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+        }
+
+        $query = $this->em->createQuery($dql);
+        $applicants = $query->getResult();
+
+        return $applicants;
+    }
+
+    public function getFellowshipTypesWithSpecials() {
+        $em = $this->em;
+
+        //get list of fellowship type with extra "ALL"
+        $repository = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
+        $dql = $repository->createQueryBuilder('list');
+        //$dql->select("list.id as id, list.name as text")
+        $dql->leftJoin("list.parent","parent");
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("parent.name LIKE '%Pathology%' OR parent.name LIKE '%Clinical Molecular Genetics%' OR parent IS NULL");
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters( array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            //'parentName' => 'Pathology'
+        ));
+
+        $fellTypes = $query->getResult();
+
+        //add special cases
+        $specials = array(
+            "ALL" => "ALL",
+        );
+
+        $filterType = array();
+        foreach( $specials as $key => $value ) {
+            $filterType[$key] = $value;
+        }
+
+        //add statuses
+        foreach( $fellTypes as $type ) {
+            //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
+            $filterType[$type->getId()] = $type->getName();
+        }
+
+        return $filterType;
     }
 
 } 

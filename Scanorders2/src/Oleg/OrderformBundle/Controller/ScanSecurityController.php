@@ -90,7 +90,7 @@ class ScanSecurityController extends SecurityController
 
 
     /**
-     * @Route("/scan-order/no-permission", name="scan-order-nopermission")
+     * @Route("/scan-order/no-permission", name="scan-nopermission")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Security:nopermission.html.twig")
      */
@@ -142,7 +142,7 @@ class ScanSecurityController extends SecurityController
                 'notice',
                 'You do not have permission to visit this page'
             );
-            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+            return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
         $notfoundusers = array();
