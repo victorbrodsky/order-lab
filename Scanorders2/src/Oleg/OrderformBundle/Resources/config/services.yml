@@ -21,7 +21,7 @@ services:
 
     #Redirect admin to index
     authentication_handler:
-        class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler
+        class: Oleg\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
         arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
 
 #    #aperio authentication

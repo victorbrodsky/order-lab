@@ -122,8 +122,10 @@ class PatientController extends Controller
             'part.attachmentContainer' => 1,
             'block.attachmentContainer' => 1
         );
-        $res = $this->createPatientDatastructure($thisparams);
-        $patient = $res['patient'];
+
+
+        $patient = $this->createPatientDatastructure($thisparams);
+        //$patient = $res['patient'];
 
         $disabled = true;
         //$disabled = false;
@@ -160,7 +162,7 @@ class PatientController extends Controller
 //        $params['message.slideorder'] = true;
 //        $params['message.stainorder'] = true;
 
-        $form = $this->createForm( new PatientType($params,$patient), $patient, array('disabled' => $disabled) );
+        $form = $this->createForm( new PatientType($params), $patient, array('disabled' => $disabled) );
 
         return array(
             'entity' => $patient,
@@ -234,7 +236,7 @@ class PatientController extends Controller
 
         $time_pre = microtime(true);
 
-        $form = $this->createForm( new PatientType($params,$entity), $entity, array('disabled' => true) );
+        $form = $this->createForm( new PatientType($params), $entity, array('disabled' => true) );
 
         $time_post = microtime(true);
         $exec_time = $time_post - $time_pre;
@@ -375,9 +377,9 @@ class PatientController extends Controller
             'part.attachmentContainer' => 1,
             'block.attachmentContainer' => 1
         );
-        $res = $this->createPatientDatastructure($thisparams);
-        $patient = $res['patient'];
-        $slides = $res['slides'];
+        $patient = $this->createPatientDatastructure($thisparams);
+        //$patient = $res['patient'];
+        //$slides = $res['slides'];
         ///////////////////// EOF prepare test patient /////////////////////
 
         //echo "messages=".count($patient->getMessage())."<br>";
@@ -676,7 +678,9 @@ class PatientController extends Controller
             $document = new Document($user);
             $document->setOriginalname('testimage.jpg');
             $document->setUniquename($uniqueName);
-            $dir = 'Uploaded/scan-order/documents';
+            //$dir = 'Uploaded/scan-order/documents';
+            //scan.uploadpath
+            $dir = 'Uploaded/'.$this->container->getParameter('scan.uploadpath');
             $document->setUploadDirectory($dir);
             $filename = $dir."/".$uniqueName;
             if( file_exists($filename) ) {
@@ -684,13 +688,26 @@ class PatientController extends Controller
                 //echo "The imagesize=$imagesize<br>";
                 $document->setSize($imagesize);
             } else {
-                //echo "The file $filename does not exist<br>";
-                $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    'The file'.$filename.' does not exist. Please copy this file to web/'.$dir
-                );
-                return $this->redirect( $this->generateUrl('scan-patient-list') );
-                //throw new \Exception( 'The file'.$filename.' does not exist' );
+                //copy file to
+
+                $originalFile = __DIR__."/../../UserdirectoryBundle/Util/".$uniqueName;
+                if( !file_exists($originalFile) ) {
+                    throw new \Exception( 'There is no original file '.$originalFile );
+                }
+                if( !file_exists($dir) ) {
+                    // 0700 - Read and write, execute for owner, nothing for everybody else
+                    mkdir($dir, 0700, true);
+                    chmod($dir, 0700);
+                    //throw new \Exception( 'There is no dir '.$dir );
+                }
+                if( !copy($originalFile,$filename) ) {
+                    throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to web/'.$dir );
+                }
+
+            }
+
+            if( !file_exists($filename) ) {
+                throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to web/'.$dir );
             }
         }
 
@@ -714,7 +731,8 @@ class PatientController extends Controller
         $patient->addExtraFields($status,$user,$system);
 
         //add two contactinfo: "Test Patient's Primary Residence" and "Test Patient's Secondary Residence"
-        $spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:Spot')->findOneByName("Patient");
+        $patientSpotPurpose = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findOneByName("Patient");
+        $spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
         $locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
         $patient->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Test Patient's Primary Residence",$spotEntityPatient,true);
         $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Contact Information");
@@ -729,7 +747,7 @@ class PatientController extends Controller
             $em->persist($patient);
         }
 
-        $slideArr = array();
+        //$slideArr = array();
 
         for( $countObject = 0; $countObject < $objectNumber; $countObject++ ) {
 
@@ -845,7 +863,7 @@ class PatientController extends Controller
                 $slide->setSlidetype($slidetype);
             }
 
-            $slideArr[] = $slide;
+            //$slideArr[] = $slide;
 
             //add scan (Imaging) to a slide
             if( $dropzoneImageNumber > 0 || $aperioImageNumber > 0 ) {
@@ -1136,12 +1154,12 @@ class PatientController extends Controller
             $em->flush();
         }
 
-        $res = array(
-            'patient' => $patient,
-            'slides' => $slideArr
-        );
+//        $res = array(
+//            'patient' => $patient,
+//            'slides' => $slideArr
+//        );
 
-        return $res;
+        return $patient;
     }
 
     public function addSpecificMessage($message,$patient,$encounter,$procedure,$accession,$part,$block,$slide,$scan=null) {
