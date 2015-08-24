@@ -116,7 +116,7 @@ class AperioUtil {
                     $user->addRole('ROLE_PLATFORM_ADMIN');
                 }
                 if( $this->test ) {
-                    $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+                    $user->addRole('ROLE_SCANORDER_UNAPPROVED');
                     $user->removeRole('ROLE_SCANORDER_SUBMITTER');
                 }
 

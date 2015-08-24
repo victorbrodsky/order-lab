@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Controller;
+namespace Oleg\FellAppBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,11 +15,11 @@ use Oleg\UserdirectoryBundle\Controller\AccessRequestController;
 /**
  * AccessRequest controller.
  */
-class ScanAccessRequestController extends AccessRequestController
+class FellAppAccessRequestController extends AccessRequestController
 {
 
     /**
-     * @Route("/access-requests/new/create", name="scan_access_request_new_plain")
+     * @Route("/access-requests/new/create", name="fellapp_access_request_new_plain")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
@@ -50,7 +50,7 @@ class ScanAccessRequestController extends AccessRequestController
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 "You don't have permission to visit this page on Scan Order site."."<br>".
-                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('fellapp.sitename').'_logout',true).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -60,18 +60,18 @@ class ScanAccessRequestController extends AccessRequestController
             "banned" => "ROLE_SCANORDER_BANNED",
         );
 
-        return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('scan.sitename'),$roles);
+        return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('fellapp.sitename'),$roles);
     }
 
     /**
-     * @Route("/access-requests/new", name="scan_access_request_new")
+     * @Route("/access-requests/new", name="fellapp_access_request_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreateAction()
     {
 
-        $sitename = $this->container->getParameter('scan.sitename');
+        $sitename = $this->container->getParameter('fellapp.sitename');
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -89,7 +89,7 @@ class ScanAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/access-requests/new/pending", name="scan_access_request_create")
+     * @Route("/access-requests/new/pending", name="fellapp_access_request_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
@@ -98,7 +98,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         $user = $this->get('security.context')->getToken()->getUser();
         $id = $user->getId();
-        $sitename = $this->container->getParameter('scan.sitename');
+        $sitename = $this->container->getParameter('fellapp.sitename');
 
         return $this->accessRequestCreate($id,$sitename);
     }
@@ -107,22 +107,22 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * Lists all Access Request.
      *
-     * @Route("/access-requests", name="scan_accessrequest_list")
+     * @Route("/access-requests", name="fellapp_accessrequest_list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:AccessRequest:access_request_list.html.twig")
      */
     public function accessRequestIndexAction()
     {
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        return $this->accessRequestIndexList($this->container->getParameter('scan.sitename'));
+        return $this->accessRequestIndexList($this->container->getParameter('fellapp.sitename'));
     }
 
 
     /**
-     * @Route("/access-requests/change-status/{id}/{status}", name="scan_accessrequest_change", requirements={"id" = "\d+"})
+     * @Route("/access-requests/change-status/{id}/{status}", name="fellapp_accessrequest_change", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -130,7 +130,7 @@ class ScanAccessRequestController extends AccessRequestController
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -143,7 +143,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         //$accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneByUser($id);
         $userSecUtil = $this->get('user_security_utility');
-        $accReq = $userSecUtil->getUserAccessRequest($id,$this->container->getParameter('scan.sitename'));
+        $accReq = $userSecUtil->getUserAccessRequest($id,$this->container->getParameter('fellapp.sitename'));
 
         if( !$accReq ) {
             throw new \Exception( 'AccessRequest is not found by id=' . $id );
@@ -191,9 +191,9 @@ class ScanAccessRequestController extends AccessRequestController
         $em->persist($accReq);
         $em->flush();
 
-        $this->createAccessRequestUserNotification( $entity, $status, $this->container->getParameter('scan.sitename') );
+        $this->createAccessRequestUserNotification( $entity, $status, $this->container->getParameter('fellapp.sitename') );
 
-        return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_accessrequest_list'));
+        return $this->redirect($this->generateUrl($this->container->getParameter('fellapp.sitename').'_accessrequest_list'));
     }
     
 }

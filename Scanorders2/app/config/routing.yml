@@ -9,8 +9,8 @@ oleg_orderform:
     type:     annotation
     prefix:   /scan
 
-oleg_fellapp:
-    resource: "@OlegUserdirectoryBundle/FellAppController"
+oleg_fell_app:
+    resource: "@OlegFellAppBundle/Controller/"
     type:     annotation
     prefix:   /fellowship-applications
 
@@ -18,8 +18,6 @@ oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
     type:     annotation
     prefix:   /directory
-
-
 
 
 

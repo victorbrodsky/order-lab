@@ -399,7 +399,7 @@ class AdminController extends Controller
             "ROLE_SCANORDER_COURSE_DIRECTOR" => array("ScanOrder Course Director","Allow to be a Course Director in Educational orders"),
             "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => array("ScanOrder Principal Investigator","Allow to be a Principal Investigator in Research orders"),
 
-            "ROLE_SCANORDER_UNAPPROVED_SUBMITTER" => array("ScanOrder Unapproved Submitter","Does not allow to visit Scan Order site"),
+            "ROLE_SCANORDER_UNAPPROVED" => array("ScanOrder Unapproved User","Does not allow to visit Scan Order site"),
             "ROLE_SCANORDER_BANNED" => array("ScanOrder Banned User","Does not allow to visit Scan Order site"),
 
             "ROLE_SCANORDER_ONCALL_TRAINEE" => array("OrderPlatform On Call Trainee","Allow to see the phone numbers & email of Home location"),

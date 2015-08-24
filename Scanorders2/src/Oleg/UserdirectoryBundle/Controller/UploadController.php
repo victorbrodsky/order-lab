@@ -104,7 +104,7 @@ class UploadController extends Controller {
             case "OlegUserdirectoryBundle:CurriculumVitae":
                 $str = "comment.documents";
                 break;
-            case "OlegUserdirectoryBundle:FellowshipApplication":
+            case "OlegFellAppBundle:FellowshipApplication":
                 $str = "comment.coverLetters";
                 break;
             case "OlegUserdirectoryBundle:Examination":

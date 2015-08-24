@@ -24,7 +24,7 @@ security:
 
         # General roles
 #        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
-#        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED_SUBMITTER]
+#        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED]
 #        ROLE_EDITOR: [ROLE_SCANORDER_PROCESSOR, ROLE_USERDIRECTORY_EDITOR]  #permission to edit the content of DB such as change access request status
         ROLE_SCANORDER_PROCESSOR: [ROLE_EDITOR]
         ROLE_USERDIRECTORY_EDITOR: [ROLE_EDITOR]
@@ -179,7 +179,7 @@ security:
      - { path: ^/scan/image-viewer/, role: [ROLE_SCANORDER_SUBMITTER] }
 
      #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
-     - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') and !has_role('ROLE_SCANORDER_BANNED')" }
+     - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED') and !has_role('ROLE_SCANORDER_BANNED')" }
 
 
     ############################## Fellowship Applications SITE SETTINGS ##############################

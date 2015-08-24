@@ -19,12 +19,14 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new FOS\UserBundle\FOSUserBundle(),
-            new Oleg\OrderformBundle\OlegOrderformBundle(),
-            //new Acme\DemoBundle\AcmeDemoBundle(),
-            new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+
+            //new Acme\DemoBundle\AcmeDemoBundle(),
+            new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
+            new Oleg\OrderformBundle\OlegOrderformBundle(),
+            new Oleg\FellAppBundle\OlegFellAppBundle(),
         );
 
 		//echo "environment:<br>";

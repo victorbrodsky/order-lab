@@ -4,9 +4,6 @@ parameters:
   employees.uploadpath:
   employees.avataruploadpath:
 
-  fellapp.sitename: fellapp
-  fellapp.uploadpath:
-
   default_time_zone: America/New_York
   default_system_email:
   institution_url:
@@ -90,10 +87,6 @@ parameters:
 #        ldap_manager:  oleg.security.ldap_manager
 
 
-twig:
-    globals:
-        fellapp_sitename: %fellapp.sitename%
-
 #fos user bundle
 fos_user:
     db_driver: orm
@@ -138,10 +131,6 @@ services:
         class: Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler
         arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
 
-    fellapp_authentication_handler:
-        class: Oleg\UserdirectoryBundle\Security\Authentication\FellAppLoginSuccessHandler
-        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
-
     #twig listener
     twigdate.listener.request:
         class: Oleg\UserdirectoryBundle\Services\TwigDateRequestListener
@@ -167,9 +156,3 @@ services:
         class: Oleg\UserdirectoryBundle\Services\DoctrineListener
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
-
-
-    #fellowship application import
-    fellapp_import:
-        class: Oleg\UserdirectoryBundle\Util\FellAppUtil
-        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]

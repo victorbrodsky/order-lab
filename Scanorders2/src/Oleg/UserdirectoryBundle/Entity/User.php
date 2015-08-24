@@ -121,7 +121,7 @@ class User extends BaseUser {
     private $trainings;
 
     /**
-     * @ORM\OneToMany(targetEntity="FellowshipApplication", mappedBy="user", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="Oleg\FellAppBundle\Entity\FellowshipApplication", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"orderinlist" = "ASC"})
      */
     private $fellowshipApplications;

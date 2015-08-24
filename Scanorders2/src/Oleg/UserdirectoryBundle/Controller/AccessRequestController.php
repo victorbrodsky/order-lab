@@ -22,6 +22,21 @@ use Oleg\UserdirectoryBundle\Util\EmailUtil;
 class AccessRequestController extends Controller
 {
 
+    protected $router;
+    protected $siteName;
+    protected $siteNameStr;
+    protected $roleBanned;
+    protected $roleUser;
+    protected $roleUnapproved;
+
+    public function __construct() {
+        $this->siteName = $this->container->getParameter('employees.sitename');
+        $this->siteNameStr = 'Employee Directory';
+        $this->roleBanned = 'ROLE_USERDIRECTORY_BANNED';
+        $this->roleUser = 'ROLE_USERDIRECTORY_OBSERVER';
+        $this->roleUnapproved = 'ROLE_USERDIRECTORY_UNAPPROVED';
+    }
+
     /**
      * @Route("/access-requests/new/create", name="employees_access_request_new_plain")
      * @Method("GET")

@@ -1,0 +1,21 @@
+parameters:
+
+  fellapp.sitename: fellapp
+  fellapp.uploadpath:
+
+
+twig:
+    globals:
+        fellapp_sitename: %fellapp.sitename%
+
+
+services:
+
+    fellapp_authentication_handler:
+        class: Oleg\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler
+        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+
+    #fellowship application import
+    fellapp_import:
+        class: Oleg\FellAppBundle\Util\FellAppUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]

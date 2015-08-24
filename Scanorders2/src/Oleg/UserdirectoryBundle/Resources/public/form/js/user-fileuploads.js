@@ -412,7 +412,7 @@ function mapperHolderDocument(holderTop) {
         fieldname = 'documents';
     }
     if( holderTop.hasClass('user-FellowshipApplication') ) {
-        holdertype = "OlegUserdirectoryBundle:FellowshipApplication";
+        holdertype = "OlegFellAppBundle:FellowshipApplication";
         fieldname = ['coverLetters','lawsuitDocuments','reprimandDocuments'];
     }
     if( holderTop.hasClass('user-Examination') ) {
