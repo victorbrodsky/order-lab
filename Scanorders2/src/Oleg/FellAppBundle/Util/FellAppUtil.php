@@ -245,9 +245,9 @@ class FellAppUtil {
             //$target_file = $fullpath . 'uploadtestfile.jpg';
             //echo "target_file=".$target_file."<br>";
             if( !file_exists($fullpath) ) {
-                // 0600 - Read and write for owner, nothing for everybody else
-                mkdir($fullpath, 0600, true);
-                chmod($fullpath, 0600);
+                // 0600 - Read/write/execute for owner, nothing for everybody else
+                mkdir($fullpath, 0700, true);
+                chmod($fullpath, 0700);
             }
 
             file_put_contents($target_file, $response);
