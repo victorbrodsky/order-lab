@@ -162,6 +162,8 @@ class FellAppController extends Controller {
         $active = $fellappUtil->getFellAppByStatusAndYear('active',$currentYear);
         $activeTotal = $fellappUtil->getFellAppByStatusAndYear('active');
 
+        //echo "timezone=".date_default_timezone_get()."<br>";
+
         return array(
             'entities' => $fellApps,
             'pathbase' => 'fellapp',
@@ -178,7 +180,8 @@ class FellAppController extends Controller {
             'activeTotal' => count($activeTotal),
             'completed' => count($completed),
             'completedTotal' => count($completedTotal),
-            'searchFlag' => $searchFlag
+            'searchFlag' => $searchFlag,
+            'serverTimeZone' => "" //date_default_timezone_get()
         );
     }
 

@@ -30,14 +30,18 @@
     {% endif %}
     {% if entity.applicationStatus == 'complete' %}
         {% set fellappStatus = "Completed" %}
-        {% set trclassname = "alert alert-success" %}
+        {% set trclassname = "alert order-neutral-status" %}
+    {% endif %}
+    {% if entity.applicationStatus == 'active' %}
+        {% set fellappStatus = "Active" %}
+        {#{% set trclassname = "alert order-neutral-status" %}#}
     {% endif %}
 
     <h4 class="text-info" align="center">
 
         <div class="{{ trclassname }}">
             <p>{{ fellappStatus }}</p>
-            Fellowship Application ID {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+            Fellowship Application ID {{ entity.id }}, submitted on {{ entity.timestamp|date('m/d/Y H:i') }}, imported on {{ entity.createdate|date('m/d/Y H:i') }}
         </div>
     </h4>
 

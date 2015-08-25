@@ -383,7 +383,6 @@ class FellAppUtil {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($id);
             if( $user ) {
                 //skip this applicant because it's already exists in DB
-                if( $row != 40 )
                 continue;
             }
 

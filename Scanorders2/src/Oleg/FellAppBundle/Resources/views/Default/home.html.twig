@@ -28,7 +28,7 @@
         Active:{{ activeTotal }} ({{ active }} for {{ currentYear }})
         Hidden:{{ hiddenTotal }} ({{ hidden }} for {{ currentYear }})
         Archived:{{ archivedTotal }} ({{ archived }} for {{ currentYear }})
-        <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y H:i') }}</i>
+        <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }}</i>
     </p>
 
     {% if searchFlag %}
