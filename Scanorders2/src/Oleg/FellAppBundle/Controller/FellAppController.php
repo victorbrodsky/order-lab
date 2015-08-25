@@ -59,6 +59,7 @@ class FellAppController extends Controller {
         $startDate = $filterform['startDate']->getData();
         $hidden = $filterform['hidden']->getData();
         $archived = $filterform['archived']->getData();
+        $completed = $filterform['completed']->getData();
         //$page = $request->get('page');
         //echo "<br>startDate=".$startDate."<br>";
         //echo "<br>filter=".$filter."<br>";
@@ -103,6 +104,12 @@ class FellAppController extends Controller {
             $searchFlag = true;
         }
 
+        if( !$completed ) {
+            $dql->andWhere("fellapp.applicationStatus != 'complete'");
+        } else {
+            $searchFlag = true;
+        }
+
         if( $startDate ) {
             //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d');
             //$dateStr = $transformer->transform($startDate);
@@ -143,6 +150,9 @@ class FellAppController extends Controller {
 
         $accessreqs = $fellappUtil->getActiveAccessReq();
 
+        $completed = $fellappUtil->getFellAppByStatusAndYear('complete',$currentYear);
+        $completedTotal = $fellappUtil->getFellAppByStatusAndYear('complete');
+
         $hidden = $fellappUtil->getFellAppByStatusAndYear('hide',$currentYear);
         $hiddenTotal = $fellappUtil->getFellAppByStatusAndYear('hide');
 
@@ -166,6 +176,8 @@ class FellAppController extends Controller {
             'archived' => count($archived),
             'active' => count($active),
             'activeTotal' => count($activeTotal),
+            'completed' => count($completed),
+            'completedTotal' => count($completedTotal),
             'searchFlag' => $searchFlag
         );
     }
@@ -530,6 +542,58 @@ class FellAppController extends Controller {
         return $this->redirect( $this->generateUrl('fellapp_home') );
     }
 
+
+
+
+    /**
+     * Import and populate applicants from Google
+     *
+     * @Route("/populate_import", name="fellapp_import_populate")
+     */
+    public function importAndPopulateAction(Request $request) {
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $error = false;
+
+        //1) import
+        $fileDb = $fellappUtil->importFellApp();
+
+        if( $fileDb ) {
+            $event = "Fellowship Application Spreadsheet file has been successful downloaded to the server with id=" . $fileDb->getId().", title=".$fileDb->getUniquename();
+            $flashType = 'notice';
+        } else {
+            $event = "Fellowship Application Spreadsheet download failed!";
+            $flashType = 'warning';
+            $error = true;
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            $flashType,
+            $event
+        );
+
+        if( $error ) {
+            return $this->redirect( $this->generateUrl('fellapp_home') );
+        }
+
+        //2) populate
+        $populatedCount = $fellappUtil->populateFellApp();
+
+        if( $populatedCount >= 0 ) {
+            $event = "Populated ".$populatedCount." Fellowship Applicantions.";
+            $flashType = 'notice';
+        } else {
+            $event = "Google API service failed!";
+            $flashType = 'warning';
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            $flashType,
+            $event
+        );
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
 
     /**
      * Show home page

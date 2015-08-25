@@ -29,7 +29,7 @@ class FellAppFilterType extends AbstractType
             'format' => 'yyyy',
             //'attr' => array('class' => 'datepicker form-control'),
             //'attr' => array('class' => 'datepicker-only-year form-control'),
-            'attr' => array('class'=>'datepicker-only-year form-control', 'title'=>'Fellowship Start Date', 'data-toggle'=>'tooltip'),
+            'attr' => array('class'=>'datepicker-only-year form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
         ));
 
 //        $builder->add('filter', 'entity', array(
@@ -76,6 +76,11 @@ class FellAppFilterType extends AbstractType
         $builder->add('archived', 'checkbox', array(
             'required'=>false,
             'label' => 'Archived',
+        ));
+
+        $builder->add('completed', 'checkbox', array(
+            'required'=>false,
+            'label' => 'Completed',
         ));
         
     }

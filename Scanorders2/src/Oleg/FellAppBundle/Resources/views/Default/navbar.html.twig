@@ -85,19 +85,19 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
                         <ul class="dropdown-menu">
 
-                            <li><a href="{{ path(employees_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(fellapp_sitename~'_accessrequest_list') }}">Access Requests</a></li>
                             {#<li><a href="{{ path('accountrequest') }}">Account Requests</a></li>#}
 
                             {% if is_granted('ROLE_USERDIRECTORY_ADMIN') %}
                                 <li class="divider"></li>
-                                <li><a href="{{ path(employees_sitename~'_listusers') }}">Users</a></li>
                                 <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
                                 <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_logger') }}">Event Log</a></li>
                                 <li><a href="{{ path(employees_sitename~'_siteparameters') }}">Site Settings</a></li>
                                 <li class="divider"></li>
-                                <li><a href="{{ path('fellapp_import') }}">Import from Google</a></li>
-                                <li><a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a></li>
+                                <li><a href="{{ path('fellapp_import_populate') }}">Check for new applications now</a></li>
+                                {#<li><a href="{{ path('fellapp_import') }}">Import from Google</a></li>#}
+                                {#<li><a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a></li>#}
                             {% endif %}
 
                         </ul>
@@ -119,7 +119,7 @@
                                 <li><a href="{{ path(employees_sitename~'_about_page') }}">About</a></li>
                             {% endif %}
 
-                            <li><a href="{{ path(employees_sitename~'_logout') }}">Log Out</a></li>
+                            <li><a href="{{ path(fellapp_sitename~'_logout') }}">Log Out</a></li>
 
                         </ul>
                     </li>

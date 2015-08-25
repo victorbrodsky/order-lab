@@ -121,7 +121,7 @@ class FellAppUtil {
 
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
-        $event = "Populated ".$populatedCount." Fellowship Applicantions.";
+        $event = "Populated ".$populatedCount." Fellowship Applications.";
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Populate of Fellowship Applications');
 
         return $populatedCount;
