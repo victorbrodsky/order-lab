@@ -22,6 +22,9 @@ class AppKernel extends Kernel
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new Ensepar\Html2pdfBundle\EnseparHtml2pdfBundle(),
+            new Spraed\PDFGeneratorBundle\SpraedPDFGeneratorBundle(),
+            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
 
             //new Acme\DemoBundle\AcmeDemoBundle(),
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),

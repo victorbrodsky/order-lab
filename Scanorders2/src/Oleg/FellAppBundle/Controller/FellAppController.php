@@ -206,15 +206,74 @@ class FellAppController extends Controller {
      */
     public function showAction(Request $request, $id) {
 
-        if(
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-        ){
-            return $this->redirect( $this->generateUrl('login') );
-        }
+//        if(
+//            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+//            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+//        ){
+//            return $this->redirect( $this->generateUrl('login') );
+//        }
 
         //echo "fellapp home <br>";
 
+        //$user = $this->get('security.context')->getToken()->getUser();
+        //$em = $this->getDoctrine()->getManager();
+
+        //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+        }
+
+
+        $routeName = $request->get('_route');
+
+        return $this->getShowParameters($id,$routeName);
+
+//        if( $routeName == "fellapp_show" ) {
+//            $cycle = 'show';
+//            $disabled = true;
+//            $method = "GET";
+//            $action = $this->generateUrl('fellapp_edit', array('id' => $entity->getId()));
+//        }
+//
+//        if( $routeName == "fellapp_edit" ) {
+//            $cycle = 'edit';
+//            $disabled = false;
+//            $method = "PUT";
+//            $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
+//        }
+//
+//        $params = array(
+//            'cycle' => $cycle,
+//            'sc' => $this->get('security.context'),
+//            'em' => $em,
+//            'user' => $entity->getUser(),
+//            'cloneuser' => null,
+//            'roles' => $user->getRoles()
+//        );
+//
+//        $form = $this->createForm(
+//            new FellowshipApplicationType($params),
+//            $entity,
+//            array(
+//                'disabled' => $disabled,
+//                'method' => $method,
+//                'action' => $action
+//            )
+//        );
+//
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'entity' => $entity,
+//            'pathbase' => 'fellapp',
+//            'cycle' => $cycle,
+//            'sitename' => $this->container->getParameter('fellapp.sitename')
+//        );
+    }
+
+    public function getShowParameters($id,$routeName) {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -226,7 +285,7 @@ class FellAppController extends Controller {
         }
 
 
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
 
         if( $routeName == "fellapp_show" ) {
             $cycle = 'show';
@@ -706,6 +765,95 @@ class FellAppController extends Controller {
 
 
 
+
+
+    /**
+     * Download application using
+     * https://github.com/KnpLabs/KnpSnappyBundle
+     * https://github.com/devandclick/EnseparHtml2pdfBundle
+     *
+     * @Route("/download-pdf/{id}", name="fellapp_download_pdf")
+     */
+    public function downloadPdfAction(Request $request, $id) {
+
+        $session = $this->get('session');
+        $session->save();
+        session_write_close();
+
+        //$params = $this->getShowParameters($id,'fellapp_show');
+        //$html = $this->renderView('OlegFellAppBundle:Form:new.html.twig', $params);
+
+        //C:\Program Files\wkhtmltopdf\bin
+
+        //$pageUrl = "http://192.168.37.128/order/app_dev.php/fellowship-applications/show/39";
+        $pageUrl = $this->generateUrl('fellapp_show',array('id' => $id),true);
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutput(
+                $pageUrl,
+                array('cookie' => array($session->getName() => $session->getId()))
+            ),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="file.pdf"'
+            )
+        );
+
+
+        exit;
+
+    }
+
+    public function spraed($html) {
+        $pdfGenerator = $this->get('spraed.pdf.generator');
+
+        return new Response($pdfGenerator->generatePDF($html),
+            200,
+            array(
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="out.pdf"'
+            )
+        );
+
+        exit;
+    }
+
+    public function html2pdf($html) {
+
+        try {
+
+            //$html2pdf = $this->get('html2pdf_factory')->create('P','A4','fr');
+            $html2pdf = $this->get('html2pdf_factory')->create();
+
+            //require_once('C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\html2pdf\html2pdf_v4.03\html2pdf.class.php');
+            //$html2pdf = new \HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(15, 5, 15, 5));
+
+
+
+            //echo "html=".$html."<br>";
+
+//            $html = "
+//                <page>
+//                    <h1>Exemple d'utilisation</h1>
+//                    <br>
+//                    Ceci est un <b>exemple d'utilisation</b>
+//                    de<br>
+//                </page>";
+
+            $html2pdf->pdf->SetDisplayMode('real');
+            //$html2pdf->pdf->SetDisplayMode('fullpage');
+            $html2pdf->writeHTML($html);
+            $html2pdf->Output('examplepdf.pdf');
+
+            //return new Response();
+            exit;
+
+        } catch(HTML2PDF_exception $e) {
+            echo $e;
+            exit;
+        }
+    }
 
 
 

@@ -255,7 +255,7 @@
                     </td>
 
 
-                    {% if is_granted('ROLE_FELLAPP_ADMIN') %}
+
                         <td class="rowlink-skip">
 
                             <div class="btn-group">
@@ -265,56 +265,60 @@
 
                                 <ul class="dropdown-menu dropdown-menu-right">
 
-                                    {% if entity.applicationStatus != 'complete' %}
+                                    {% if is_granted('ROLE_FELLAPP_ADMIN') %}
+
+                                        {% if entity.applicationStatus != 'complete' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to mark this Application as Complete?"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }) }}">Mark as Complete
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.applicationStatus != 'hide' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to hide this Application?"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'hide' }) }}">Hide
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.applicationStatus != 'active' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }) }}">Active
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.applicationStatus != 'archive' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Archive'?"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'archive' }) }}">Archive
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.applicationStatus == 'active' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"
+                                                    href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Send Email to Interviewers
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
                                         <li>
                                             <a
-                                                general-data-confirm="Are you sure you want to mark this Application as Complete?"
-                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }) }}">Mark as Complete
+                                                href="{{ path('fellapp_edit', { 'id': entity.id}) }}">Edit
                                             </a>
                                         </li>
-                                    {% endif %}
 
-                                    {% if entity.applicationStatus != 'hide' %}
-                                        <li>
-                                            <a
-                                                general-data-confirm="Are you sure you want to hide this Application?"
-                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'hide' }) }}">Hide
-                                            </a>
-                                        </li>
                                     {% endif %}
-
-                                    {% if entity.applicationStatus != 'active' %}
-                                        <li>
-                                            <a
-                                                general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
-                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }) }}">Active
-                                            </a>
-                                        </li>
-                                    {% endif %}
-
-                                    {% if entity.applicationStatus != 'archive' %}
-                                        <li>
-                                            <a
-                                                general-data-confirm="Are you sure you want to change status of this Application to 'Archive'?"
-                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'archive' }) }}">Archive
-                                            </a>
-                                        </li>
-                                    {% endif %}
-
-                                    {% if entity.applicationStatus == 'active' %}
-                                        <li>
-                                            <a
-                                                general-data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"
-                                                href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Send Email to Interviewers
-                                            </a>
-                                        </li>
-                                    {% endif %}
-
-                                    <li>
-                                        <a
-                                            href="{{ path('fellapp_edit', { 'id': entity.id}) }}">Edit
-                                        </a>
-                                    </li>
 
                                     {#{% if is_granted('ROLE_PLATFORM_ADMIN') %}#}
                                     {#<li>#}
@@ -325,12 +329,18 @@
                                     {#</li>#}
                                     {#{% endif %}#}
 
+                                    <li>
+                                        <a
+                                            href="{{ path('fellapp_download_pdf', { 'id': entity.id}) }}">Download Application
+                                        </a>
+                                    </li>
+
                                 </ul>
 
                             </div>
 
                         </td>
-                    {% endif %}
+
 
                 </tr>
             {% endfor %}
