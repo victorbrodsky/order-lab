@@ -30,12 +30,12 @@ class Training extends BaseUserAttributes
     private $completionDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CompletionReasonList",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="CompletionReasonList")
      */
     private $completionReason;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TrainingDegreeList",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="TrainingDegreeList")
      */
     private $degree;
 
@@ -46,12 +46,12 @@ class Training extends BaseUserAttributes
 
     /**
      * Contains children - FellowshipSubspecialty
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialty",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ResidencySpecialty")
      */
     private $residencySpecialty;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty")
      */
     private $fellowshipSubspecialty;
 
@@ -74,7 +74,7 @@ class Training extends BaseUserAttributes
     private $honors;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FellowshipTitleList",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="FellowshipTitleList")
      */
     private $fellowshipTitle;
 
@@ -84,14 +84,14 @@ class Training extends BaseUserAttributes
     private $appendFellowshipTitleToName;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Institution")
      */
     private $institution;
 
     /**
      * Graduate, Undergraduate, Medical, Residency, GME, Other
      *
-     * @ORM\ManyToOne(targetEntity="TrainingTypeList",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="TrainingTypeList")
      */
     private $trainingType;
 

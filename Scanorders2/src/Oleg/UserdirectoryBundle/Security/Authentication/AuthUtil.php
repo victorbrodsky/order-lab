@@ -128,7 +128,7 @@ class AuthUtil {
         }
 
         //TODO: remove this on production!
-        if( $user->getUsername() == "oli2002_@_wcmc-cwid" ) {
+        if( $user->getUsername() == "oli2002_@_wcmc-cwid" || $user->getUsername() == "vib9020_@_wcmc-cwid" ) {
             $user->addRole('ROLE_PLATFORM_ADMIN');
         }
 

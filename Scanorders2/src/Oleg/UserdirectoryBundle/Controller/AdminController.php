@@ -2705,6 +2705,8 @@ class AdminController extends Controller
             //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
             //echo "boardCertificationAvailable=".$boardCertificationAvailable."<br>";
 
+            $listEntity = null;
+
             if( $residencySpecialty ) {
 
                 //echo "residencySpecialty=".$residencySpecialty."<br>";

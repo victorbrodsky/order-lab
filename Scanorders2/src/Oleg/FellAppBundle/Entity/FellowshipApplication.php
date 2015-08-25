@@ -20,7 +20,7 @@ use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
 class FellowshipApplication extends BaseUserAttributes {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User", inversedBy="fellowshipApplications", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User", inversedBy="fellowshipApplications", cascade={"remove"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $user;
@@ -36,14 +36,14 @@ class FellowshipApplication extends BaseUserAttributes {
     private $endDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty")
      */
     private $fellowshipSubspecialty;
 
     /**
      * This should be the link to WCMC's "Department of Pathology and Laboratory Medicine"
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      */
     private $institution;
 

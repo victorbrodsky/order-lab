@@ -31,12 +31,12 @@ class BaseTitle extends BaseUserAttributes
     protected $endDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="EffortList",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="EffortList")
      **/
     protected $effort;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Institution")
      */
     protected $institution;
 

@@ -11,6 +11,7 @@ namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
 
 
+use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
 use Oleg\UserdirectoryBundle\Entity\CommentTypeList;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -170,7 +171,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             $newEntity = $this->createNewEntity($name."",$this->className,$this->user);
 
-            if( method_exists($newEntity,'getParent')  ) {
+            if( method_exists($newEntity,'getParent') && !($newEntity instanceof BaseCompositeNode) ) {
                 //don't flush this entity because it has parent and parent can not be set here
                 //echo "this entity has parent => don't create <br>";
                 //echo "name=".$newEntity->getName()."<br>";
@@ -179,13 +180,14 @@ class GenericTreeTransformer implements DataTransformerInterface
             }
 
             //echo $this->className.": persist and flush !!!!!!!!!!!!!!!! <br>";
+            //exit('1');
 
             $this->em->persist($newEntity);
             $this->em->flush($newEntity);
 
             return $newEntity;
         } else {
-
+            //echo "entity is found in DB:".$entity."<br>";
             return $entity;
         }
 

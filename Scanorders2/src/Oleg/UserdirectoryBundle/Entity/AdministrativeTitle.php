@@ -45,7 +45,7 @@ class AdministrativeTitle extends BaseTitle
     /**
      * Overwrite institution, so we can use join to find out Supervisors for location search.
      *
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="administrativeTitles", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="administrativeTitles")
      */
     protected $institution;
 

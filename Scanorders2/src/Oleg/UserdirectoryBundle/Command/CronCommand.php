@@ -67,7 +67,7 @@ class CronCommand extends ContainerAwareCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $logger = $this->getContainer()->get('logger');
-        $fellappUtil = $this->getContainer()->get('fellapp_import');
+        $fellappUtil = $this->getContainer()->get('fellapp_util');
         $result = "";
 
     if(1) {

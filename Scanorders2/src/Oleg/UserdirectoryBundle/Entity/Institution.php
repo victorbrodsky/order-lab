@@ -30,7 +30,7 @@ class Institution extends BaseCompositeNode {
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="children", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
     protected $parent;

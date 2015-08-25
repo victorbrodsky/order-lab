@@ -26,7 +26,7 @@ class InstitutionWrapper {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Institution")
      */
     private $institution;
 

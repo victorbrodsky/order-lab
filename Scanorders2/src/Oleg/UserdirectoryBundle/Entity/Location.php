@@ -147,7 +147,7 @@ class Location extends ListAbstract
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Institution")
      */
     private $institution;
 

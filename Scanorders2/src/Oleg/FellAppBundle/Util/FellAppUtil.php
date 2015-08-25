@@ -320,7 +320,7 @@ class FellAppUtil {
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
         //var_dump($sheetData);
 
-        $fellappUtil = $this->container->get('fellapp_import');
+        $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
@@ -383,6 +383,7 @@ class FellAppUtil {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($id);
             if( $user ) {
                 //skip this applicant because it's already exists in DB
+                if( $row != 40 )
                 continue;
             }
 
@@ -712,6 +713,8 @@ class FellAppUtil {
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Created');
 
             $count++;
+
+            //exit('end applicant');
 
         } //for
 

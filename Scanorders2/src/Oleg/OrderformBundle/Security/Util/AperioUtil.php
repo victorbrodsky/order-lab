@@ -326,7 +326,7 @@ class AperioUtil {
 
         //echo "user name=".$UserName."<br>";
         if( !isset($_SESSION['AuthToken']) || empty($_SESSION['AuthToken'])) {
-            echo 'Set and not empty, and no undefined index error!';
+            echo 'Set and not empty, and no undefined index error! <br>';
             return null;
         }
 
