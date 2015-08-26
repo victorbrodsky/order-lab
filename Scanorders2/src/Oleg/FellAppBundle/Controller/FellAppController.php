@@ -222,7 +222,7 @@ class FellAppController extends Controller {
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
 
@@ -281,7 +281,7 @@ class FellAppController extends Controller {
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
 
@@ -351,7 +351,7 @@ class FellAppController extends Controller {
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
         $cycle = 'edit';
@@ -486,7 +486,7 @@ class FellAppController extends Controller {
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
 
@@ -518,7 +518,7 @@ class FellAppController extends Controller {
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
 
@@ -548,7 +548,7 @@ class FellAppController extends Controller {
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find entity by id='.$id);
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
         if(0) {
@@ -776,16 +776,27 @@ class FellAppController extends Controller {
      */
     public function downloadPdfAction(Request $request, $id) {
 
+        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+
+        //generate file name: LastName_FirstName_FellowshipType_StartYear.pdf
+        $subjectUser = $entity->getUser();
+        $filename =
+            $subjectUser->getLastNameUppercase().
+            "_".$subjectUser->getFirstNameUppercase().
+            "_".$entity->getFellowshipSubspecialty()->getName().
+            "_".$entity->getStartDate()->format('Y').
+            ".pdf";
+
+        //save session
         $session = $this->get('session');
         $session->save();
         session_write_close();
 
-        //$params = $this->getShowParameters($id,'fellapp_show');
-        //$html = $this->renderView('OlegFellAppBundle:Form:new.html.twig', $params);
-
-        //C:\Program Files\wkhtmltopdf\bin
-
-        //$pageUrl = "http://192.168.37.128/order/app_dev.php/fellowship-applications/show/39";
+        //generate application URL
         $pageUrl = $this->generateUrl('fellapp_show',array('id' => $id),true);
 
         return new Response(
@@ -796,7 +807,7 @@ class FellAppController extends Controller {
             200,
             array(
                 'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="file.pdf"'
+                'Content-Disposition'   => 'attachment; filename="'.$filename.'"'
             )
         );
 
