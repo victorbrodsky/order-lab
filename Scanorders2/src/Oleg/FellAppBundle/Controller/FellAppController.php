@@ -201,6 +201,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/show/{id}", name="fellapp_show")
      * @Route("/edit/{id}", name="fellapp_edit")
+     * @Route("/download/{id}", name="fellapp_download")
      *
      * @Template("OlegFellAppBundle:Form:new.html.twig")
      */
@@ -228,49 +229,13 @@ class FellAppController extends Controller {
 
         $routeName = $request->get('_route');
 
-        return $this->getShowParameters($id,$routeName);
+        $args = $this->getShowParameters($id,$routeName);
 
-//        if( $routeName == "fellapp_show" ) {
-//            $cycle = 'show';
-//            $disabled = true;
-//            $method = "GET";
-//            $action = $this->generateUrl('fellapp_edit', array('id' => $entity->getId()));
-//        }
-//
-//        if( $routeName == "fellapp_edit" ) {
-//            $cycle = 'edit';
-//            $disabled = false;
-//            $method = "PUT";
-//            $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
-//        }
-//
-//        $params = array(
-//            'cycle' => $cycle,
-//            'sc' => $this->get('security.context'),
-//            'em' => $em,
-//            'user' => $entity->getUser(),
-//            'cloneuser' => null,
-//            'roles' => $user->getRoles()
-//        );
-//
-//        $form = $this->createForm(
-//            new FellowshipApplicationType($params),
-//            $entity,
-//            array(
-//                'disabled' => $disabled,
-//                'method' => $method,
-//                'action' => $action
-//            )
-//        );
-//
-//
-//        return array(
-//            'form' => $form->createView(),
-//            'entity' => $entity,
-//            'pathbase' => 'fellapp',
-//            'cycle' => $cycle,
-//            'sitename' => $this->container->getParameter('fellapp.sitename')
-//        );
+        if( $routeName == 'fellapp_download' ) {
+            return $this->render('OlegFellAppBundle:Form:download.html.twig', $args);
+        }
+
+        return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }
 
     public function getShowParameters($id,$routeName) {
@@ -299,6 +264,13 @@ class FellAppController extends Controller {
             $disabled = false;
             $method = "PUT";
             $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
+        }
+
+        if( $routeName == "fellapp_download" ) {
+            $cycle = 'download';
+            $disabled = true;
+            $method = "GET";
+            $action = null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
 
         $params = array(
@@ -776,6 +748,11 @@ class FellAppController extends Controller {
      */
     public function downloadPdfAction(Request $request, $id) {
 
+//        $params = $this->getShowParameters($id,'fellapp_download');
+//        $html = $this->renderView('OlegFellAppBundle:Form:download.html.twig',$params);
+//        $this->html2pdf($html);
+//        return;
+
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
@@ -797,7 +774,7 @@ class FellAppController extends Controller {
         session_write_close();
 
         //generate application URL
-        $pageUrl = $this->generateUrl('fellapp_show',array('id' => $id),true);
+        $pageUrl = $this->generateUrl('fellapp_download',array('id' => $id),true);
 
         return new Response(
             $this->get('knp_snappy.pdf')->getOutput(
@@ -831,6 +808,9 @@ class FellAppController extends Controller {
     }
 
     public function html2pdf($html) {
+
+        //$params = $this->getShowParameters($id,'fellapp_download');
+        //$html = $this->renderView('OlegFellAppBundle:Form:download.html.twig',$params);
 
         try {
 

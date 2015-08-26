@@ -1,4 +1,8 @@
-{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% block header %}
+{% endblock %}
+
 
 {% block title %}
     Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
@@ -8,7 +12,6 @@
 {% block content %}
     {% include 'OlegFellAppBundle:Form:applicant-content.html.twig' %}
 {% endblock %}
-
 
 {% block additionaljs %}
     {% include 'OlegFellAppBundle:Form:applicant-content-js.html.twig' %}
