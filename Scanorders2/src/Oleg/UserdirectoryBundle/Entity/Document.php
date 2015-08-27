@@ -280,7 +280,6 @@ class Document {
 
     public function __toString() {
         return $this->getRelativeUploadFullPath();
-        return $this->getRelativeUploadFullPath();
     }
 
     //get server path to delete file: /var/www/test/folder/images/image_name.jpeg

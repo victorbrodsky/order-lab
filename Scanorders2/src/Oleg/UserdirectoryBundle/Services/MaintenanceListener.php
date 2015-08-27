@@ -12,6 +12,7 @@ namespace Oleg\UserdirectoryBundle\Services;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -24,19 +25,25 @@ class MaintenanceListener {
     private $container;
     private $em;
     private $sc;
+    private $logger;
 
     public function __construct(ContainerInterface $container, $em, SecurityContext $sc)
     {
         $this->container = $container;
         $this->em = $em;
         $this->sc = $sc;
+        $this->logger = $this->container->get('logger');
     }
 
 
     public function onKernelRequest(GetResponseEvent $event)
     {
 
-        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
+//        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
+//            return;
+//        }
+
+        if( !$event->isMasterRequest() ) {
             return;
         }
 
@@ -136,5 +143,37 @@ class MaintenanceListener {
         }
 
     }
+
+
+//    //perform heavy jobs
+//    public function onKernelTerminate(PostResponseEvent $event) {
+//
+//        $request = $event->getRequest();
+//        $routeName = $request->get('_route');
+//
+//        //echo 'Kernel Terminate: route=' . $routeName . "<br>";
+//
+//        $this->logger->debug('Kernel Terminate: route=' . $routeName);
+//
+//        //generate fellapp report
+//        if( $routeName === "fellapp_update" ) {
+//            $this->updateReport($request);
+//            return;
+//        }
+//
+//        //employees_file_delete
+//    }
+
+
+//    public function updateReport($request) {
+//        $id = $request->get('id');
+//        //$id = $response->getContent();    //->get('id');
+//
+//        $this->logger->notice('fellapp id='.$id);
+//
+//        //update report
+//        $fellappUtil = $this->container->get('fellapp_util');
+//        $fellappUtil->generateFellAppReport( $id );
+//    }
 
 } 

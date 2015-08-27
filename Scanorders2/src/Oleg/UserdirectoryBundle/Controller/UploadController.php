@@ -8,6 +8,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,6 +77,13 @@ class UploadController extends Controller {
                         $comment->removeDocument($document);
                         $em->persist($comment);
                         $count++;
+
+                        //update report for fellapp
+                        if( $comment instanceof FellowshipApplication ) {
+                            //update report
+                            $fellappUtil = $this->container->get('fellapp_util');
+                            $fellappUtil->generateFellAppReport( $comment->getId() );
+                        }
                     }
                 }
 

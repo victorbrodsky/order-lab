@@ -208,12 +208,19 @@ class FellAppController extends Controller {
      */
     public function showAction(Request $request, $id) {
 
-//        if(
-//            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-//            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-//        ){
-//            return $this->redirect( $this->generateUrl('login') );
-//        }
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER')
+        ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $routeName = $request->get('_route');
+
+        if( $routeName == "fellapp_edit" ) {
+            if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            }
+        }
 
         //echo "fellapp home <br>";
 
@@ -227,10 +234,16 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-
-        $routeName = $request->get('_route');
-
         $args = $this->getShowParameters($id,$routeName);
+
+        //event log
+        $actionStr = "viewed";
+        $eventType = 'Fellowship Applicant Page Viewed';
+        $user = $this->get('security.context')->getToken()->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
+
 
         if( $routeName == 'fellapp_download' ) {
             return $this->render('OlegFellAppBundle:Form:download.html.twig', $args);
@@ -309,7 +322,7 @@ class FellAppController extends Controller {
      * @Method("PUT")
      * @Template("OlegFellAppBundle:Form:new.html.twig")
      */
-    public function editAction(Request $request, $id) {
+    public function updateAction(Request $request, $id) {
 
         if(
             false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
@@ -389,13 +402,23 @@ class FellAppController extends Controller {
             $em->persist($entity);
             $em->flush();
 
+//            //update report
+//            $fellappUtil = $this->container->get('fellapp_util');
+//            $fellappUtil->generateFellAppReport( $id );
+
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
             $systemUser = $userSecUtil->findSystemUser();
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Updated');
 
+            //$response = new Response($id);
+            //$this->container->get('kernel')->terminate($request,$response);
+
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
+
+            //$args = $this->getShowParameters($id,"fellapp_show");
+            //return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
         }
 
         //echo 'form invalid <br>';
@@ -738,6 +761,22 @@ class FellAppController extends Controller {
 
 
 
+    /**
+     * @Route("/update-report/", name="fellapp_update_report", options={"expose"=true})
+     * @Method("POST")
+     */
+    public function updateReportAction(Request $request) {
+
+        $id = $request->get('id');
+
+        //update report
+        $fellappUtil = $this->container->get('fellapp_util');
+        $res = $fellappUtil->generateFellAppReport( $id );
+
+        $response = new Response();
+        $response->setContent($res['size']);
+        return $response;
+    }
 
 
     /**
@@ -747,273 +786,55 @@ class FellAppController extends Controller {
      *
      * @Route("/download-pdf/{id}", name="fellapp_download_pdf")
      */
-    public function downloadPdfAction(Request $request, $id) {
+    public function downloadReportAction(Request $request, $id) {
 
-        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
 
-//        $params = $this->getShowParameters($id,'fellapp_download');
-//        $html = $this->renderView('OlegFellAppBundle:Form:download.html.twig',$params);
-//        $this->html2pdf($html);
-//        return;
+        $em = $this->getDoctrine()->getManager();
 
-        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        //generate file name: LastName_FirstName_FellowshipType_StartYear.pdf
-        $subjectUser = $entity->getUser();
-        $filename =
-            "ID".$id.
-            "_".$subjectUser->getLastNameUppercase().
-            "_".$subjectUser->getFirstNameUppercase().
-            "_".$entity->getFellowshipSubspecialty()->getName().
-            "_".$entity->getStartDate()->format('Y').
-            ".pdf";
+        //event log
+        $user = $this->get('security.context')->getToken()->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $event = "Report for Fellowship Application with ID".$id." has been downloaded by ".$user;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application Downloaded');
 
-        //cv
-        $recentDocumentCv = $entity->getRecentCv();
-        $abspathCv = $recentDocumentCv->getFileSystemPath();
-        //echo "abspathCv=".$abspathCv."<br>";
+        $reportDocument = $entity->getRecentReport();
 
-        //cover letter
-        $recentCoverLetter = $entity->getRecentCoverLetter();
-        $abspathCoverLetter = $recentCoverLetter->getFileSystemPath();
+        if( $reportDocument ) {
 
-        //scores
-        $scores = $entity->getRecentExaminationScores();
+            return $this->redirect( $this->generateUrl('employees_file_download',array('id' => $reportDocument->getId())) );
 
-        //fellapp.uploadpath = fellapp
-        //$rootDir = $this->get('kernel')->getRootDir();
-        //$rootDirClean = str_replace("app","",$rootDir);
-        $reportPath = $this->get('kernel')->getRootDir() . '/../web/' . 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/reports/';
-
-        $testFlag = false;
-        if($testFlag) {
-            //$applicationPath = "C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\web\\Uploaded\\fellapp\\reports\\".$filename;
-            $applicationFilePath = $reportPath . "application_ID" . $id . ".pdf";
-            $this->generateApplicationPdf($id,$applicationFilePath);
-
-            $filenameMerged = $reportPath . "report_ID" . $id . ".pdf";
-            $filesArr = array($applicationFilePath,$abspathCv,$abspathCoverLetter);
-            foreach( $scores as $score ) {
-                $filesArr[] = $score->getFileSystemPath();
-            }
-            $this->mergeByPDFMerger($filesArr,$filenameMerged );
         }
 
+        //create report
+        $fellappUtil = $this->container->get('fellapp_util');
+        $res = $fellappUtil->generateFellAppReport( $id );
+        $filename = $res['filename'];
+        $report = $res['report'];
+        $size = $res['size'];
 
-
-        //'.$abspathCv.'
-        //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf *.docx
-        //$output = shell_exec('libreoffice --headless -convert-to pdf '.$recentDocumentCv.' -outdir '.$reportPath);
-
-        //$reportPath = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\reports"';
-        //$fileReportPdf = $reportPath . "report_ID" . $id . ".pdf";
-        //$outdir = $reportPath.'/temp_'.$id.'/';
-        //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'" "'.$abspathCv.'"';
-        //echo "cmd=".$cmd."<br>";
-        //$output = shell_exec( $cmd );
-        //echo "$output<br>";
-
-        $outdir = $reportPath.'temp_'.$id.'/';
-
-    if(!$testFlag) {
-
-        //0) generate application pdf
-        $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
-        $this->generateApplicationPdf($id,$applicationFilePath);
-
-        //1) get all upload documents
-        $filePathsArr = array($applicationFilePath,$abspathCv,$abspathCoverLetter);
-        foreach( $scores as $score ) {
-            $filePathsArr[] = $score->getFileSystemPath();
-        }
-
-        //2) convert all uploads to pdf using LibreOffice
-        $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
-
-        $filenameMerged = $reportPath . "report_ID" . $id . ".pdf";
-        $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
-
-        $logger = $this->container->get('logger');
-        $logger->notice("download Application report pdf ok; path=" . $filenameMerged );
-    }
-        //exit('1');
-
-
+        //render report
         $response = new Response();
         $response->headers->set('Content-Type', 'application/pdf');
-        //$response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Description', 'File Transfer');
         $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
-        //$response->headers->set('Content-Length', 10);
-        //$response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->setContent(file_get_contents($filenameMerged));
-
-        //delete application pdf
-        //unlink($applicationFilePath);
-        $this->deleteDir($outdir);
+        $response->headers->set('Content-Length', $size);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->setContent(file_get_contents($report));
 
         return $response;
-
-    }
-
-    public function convertToPdf( $filePathsArr, $outdir ) {
-
-        $fileNamesArr = array();
-
-        $cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
-
-        foreach( $filePathsArr as $filePath ) {
-
-            //$outFilename = $outdir . basename($filePath);
-            $outFilename = $outdir . pathinfo($filePath, PATHINFO_FILENAME) . ".pdf";
-            //echo "outFilename=".$outFilename."<br>";
-            //exit('1');
-
-            $fileNamesArr[] = $outFilename;
-
-            //if( file_exists($filePath) ) {
-                //echo "exists filePath=".$filePath."<br>";
-                //continue;
-            //}
-
-            $cmd = $cmd .' "'.$filePath.'"';
-
-            //$shellout = shell_exec( $cmd );
-            $shellout = exec( $cmd );
-
-            if( $shellout ) {
-                //echo "shellout=".$shellout."<br>";
-                $logger = $this->container->get('logger');
-                $logger->debug("LibreOffice: " . $shellout);
-            }
-
-        }
-
-        return $fileNamesArr;
-    }
-
-    //use KnpSnappyBundle to convert html to pdf
-    public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
-        if( file_exists($applicationOutputFilePath) ) {
-            $logger = $this->container->get('logger');
-            $logger->notice("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
-            return;
-        }
-
-        //generate application URL
-        $pageUrl = $this->generateUrl('fellapp_download',array('id' => $applicationId),true);
-
-        //save session
-        $session = $this->get('session');
-        $session->save();
-        session_write_close();
-
-        //$application =
-        $this->get('knp_snappy.pdf')->generate(
-            $pageUrl,
-            $applicationOutputFilePath,
-            array('cookie' => array($session->getName() => $session->getId()))
-        );
-
-    }
-
-    //TODO: try https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
-    //if file already exists then it is replaced with a new one
-    public function mergeByPDFMerger( $filesArr, $filenameMerged ) {
-
-        $pdf = new PDFMerger();
-
-        //failed: C:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/app/../web/Uploaded/fellapp/reports/temp_36/application_ID36.pdf
-        //    ok: C:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/app/../web/Uploaded/fellapp/reports/application_ID36.pdf
-
-        foreach( $filesArr as $file ) {
-//            echo "add merge: filepath=(".$file.") => ";
-            if( file_exists($file) ) {
-                $pdf->addPDF($file, 'all');
-            } else {
-                $logger = $this->container->get('logger');
-                $logger->notice("PDFMerger: pdf file doe snot exists path=" . $file );
-            }
-        }
-
-        $pdf->merge('file', $filenameMerged);
-    }
-
-    public static function deleteDir($dirPath) {
-        if (! is_dir($dirPath)) {
-            throw new InvalidArgumentException("$dirPath must be a directory");
-        }
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-            $dirPath .= '/';
-        }
-        $files = glob($dirPath . '*', GLOB_MARK);
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                self::deleteDir($file);
-            } else {
-                unlink($file);
-            }
-        }
-        rmdir($dirPath);
     }
 
 
 
-    public function spraed($html) {
-        $pdfGenerator = $this->get('spraed.pdf.generator');
-
-        return new Response($pdfGenerator->generatePDF($html),
-            200,
-            array(
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="out.pdf"'
-            )
-        );
-
-        exit;
-    }
-
-    public function html2pdf($html) {
-
-        //$params = $this->getShowParameters($id,'fellapp_download');
-        //$html = $this->renderView('OlegFellAppBundle:Form:download.html.twig',$params);
-
-        try {
-
-            //$html2pdf = $this->get('html2pdf_factory')->create('P','A4','fr');
-            $html2pdf = $this->get('html2pdf_factory')->create();
-
-            //require_once('C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\html2pdf\html2pdf_v4.03\html2pdf.class.php');
-            //$html2pdf = new \HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(15, 5, 15, 5));
-
-
-
-            //echo "html=".$html."<br>";
-
-//            $html = "
-//                <page>
-//                    <h1>Exemple d'utilisation</h1>
-//                    <br>
-//                    Ceci est un <b>exemple d'utilisation</b>
-//                    de<br>
-//                </page>";
-
-            $html2pdf->pdf->SetDisplayMode('real');
-            //$html2pdf->pdf->SetDisplayMode('fullpage');
-            $html2pdf->writeHTML($html);
-            $html2pdf->Output('examplepdf.pdf');
-
-            //return new Response();
-            exit;
-
-        } catch(HTML2PDF_exception $e) {
-            echo $e;
-            exit;
-        }
-    }
 
 
 

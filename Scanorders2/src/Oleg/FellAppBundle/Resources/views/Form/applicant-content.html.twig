@@ -65,9 +65,10 @@
 <div id="form-prototype-data"
      data-userurllink = "{{ usermacros.userUrlLink()|e }}"
      data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
-     data-userid = "{{ entity.id }}"
+     data-userid = "{{ entity.user.id }}"
 ></div>
 
+    <input type="hidden" id="fellapp_id" value="{{ entity.id }}" />
     <input type="hidden" id="user_id" value="{{ form.vars.value.user.id }}" />
     <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
@@ -129,7 +130,7 @@
 {% if cycle == "edit" %}
     <p>
         {#<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>#}
-        <button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form">Update</button>
+        <button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>
 
         <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
     </p>

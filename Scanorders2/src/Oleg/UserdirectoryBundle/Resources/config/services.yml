@@ -106,6 +106,7 @@ services:
         arguments: ["@service_container","@doctrine.orm.entity_manager","@security.context"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
     #Custom selector fields
     oleg.type.employees_custom_selector:
@@ -154,5 +155,8 @@ services:
     #Doctrine listenere for postPersist
     doctrine.listener:
         class: Oleg\UserdirectoryBundle\Services\DoctrineListener
+        arguments: [@service_container]
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
+
+

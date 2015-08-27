@@ -9,12 +9,23 @@
 namespace Oleg\UserdirectoryBundle\Services;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\OrderformBundle\Entity\Message;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 
 class DoctrineListener {
+
+
+    private $container;
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+    }
+
 
     public function postPersist(LifecycleEventArgs $args)
     {
@@ -36,8 +47,72 @@ class DoctrineListener {
 
         }
 
+
+        if( $entity instanceof FellowshipApplication ) {
+            //update report
+            $fellappUtil = $this->container->get('fellapp_util');
+            $fellappUtil->generateFellAppReport( $entity->getId() );
+        }
+
+
     }
 
+
+//    public function postUpdate(LifecycleEventArgs $args)
+//    {
+//
+//        //$em = $args->getEntityManager();
+//        $entity = $args->getEntity();
+//
+//        if( $entity instanceof FellowshipApplication ) {
+//            //update report
+//            $fellappUtil = $this->container->get('fellapp_util');
+//            $fellappUtil->generateFellAppReport( $entity->getId() );
+//        }
+//
+//    }
+//
+//
+//    public function onFlush(OnFlushEventArgs $args)
+//    {
+//
+//        $em = $args->getEntityManager();
+//        $uow = $em->getUnitOfWork();
+//
+//        foreach ($uow->getScheduledEntityUpdates() as $entity) {
+//
+//            if( $entity instanceof FellowshipApplication ) {
+//                //update report
+//                $fellappUtil = $this->container->get('fellapp_util');
+//                $fellappUtil->generateFellAppReport( $entity->getId() );
+//            }
+//
+//        }
+//
+//    }
+//
+//
+//    public function postFlush(PostFlushEventArgs $args)
+//    {
+//
+//        $em = $args->getEntityManager();
+//
+////        $entity = $args->getEntity();
+////        if( $entity instanceof FellowshipApplication ) {
+////            //update report
+////            $fellappUtil = $this->container->get('fellapp_util');
+////            $fellappUtil->generateFellAppReport( $entity->getId() );
+////        }
+//
+//        foreach( $em->getUnitOfWork()->getScheduledEntityDeletions() as $entity ) {
+//            if( $entity instanceof FellowshipApplication ) {
+//                //update report
+//                $fellappUtil = $this->container->get('fellapp_util');
+//                $fellappUtil->generateFellAppReport( $entity->getId() );
+//            }
+//        }
+//
+//    }
 
 
 } 

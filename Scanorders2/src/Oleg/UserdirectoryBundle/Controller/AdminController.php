@@ -1675,7 +1675,8 @@ class AdminController extends Controller
             'Requisition Form Image',
             'Outside Report Reference Representation',
             'Fellowship Application Spreadsheet',
-            'Fellowship Application Upload'
+            'Fellowship Application Upload',
+            'Fellowship Application Report'
         );
 
 
@@ -1824,12 +1825,26 @@ class AdminController extends Controller
             'User Created',
             'User Updated',
             'Search',
+
             'Import of Fellowship Applications',
             'Populate of Fellowship Applications',
             'Fellowship Application Created',
             'Fellowship Application Creation Failed',
             'Fellowship Application Updated',
             'Fellowship Application Resend Emails',
+            'Fellowship Applicant Page Viewed',
+            'Complete Fellowship Application Downloaded',
+            'Fellowship Interview Itinerary Downloaded',
+            'Fellowship CV Downloaded',
+            'Fellowship Cover Letter Downloaded',
+            'Fellowship USMLE Scores Downloaded',
+            'Fellowship Recommendation Downloaded',
+            'Fellowship Interview Itinerary Uploaded',
+            'Fellowship CV Downloaded',
+            'Fellowship Cover Letter Downloaded',
+            'Fellowship USMLE Scores Downloaded',
+            'Fellowship Recommendation Downloaded',
+
             'Warning',
             'Error'
         );

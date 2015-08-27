@@ -172,7 +172,16 @@ class FellowshipApplicationType extends AbstractType
         ));
 
 
-
+        $builder->add('reports', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => 'Report(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documents__',
+        ));
 
     }
 

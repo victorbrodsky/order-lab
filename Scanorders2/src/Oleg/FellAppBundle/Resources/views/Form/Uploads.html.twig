@@ -76,6 +76,20 @@
         </div>
 
 
+        {% if is_granted('ROLE_FELLAPP_ADMIN') %}
+            <div class="well form-element-holder user-Report">
+                <label class="col-xs-12 control-label">Fellowship Application Report</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+
+                        {{ usermacros.documentsContainer(null,form.reports,cycle,'noprototype',8,'default') }}
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+
     </div> <!-- panel-body -->
 </div> <!-- panel-collapse -->
 

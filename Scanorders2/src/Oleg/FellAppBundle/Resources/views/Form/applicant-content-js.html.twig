@@ -36,6 +36,36 @@
         });
     }
 
+    function updateFellapp(fellappId) {
+
+        //first update report
+        //TODO: use messaging
+        updateFellAppReport(fellappId);
+
+        //submit form
+        $('#fellapp-applicant-form').submit();
+    }
+
+    //TODO: use messaging
+    function updateFellAppReport(fellappId) {
+        var url = Routing.generate('fellapp_update_report');
+
+        //var fellappId = $('#fellapp_id').val();
+        //console.log('fellappId='+fellappId);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            timeout: _ajaxTimeout,
+            async: true,
+            data: {id: fellappId}
+        }).success(function(data) {
+            //console.log('data='+data);
+        }).fail(function(data) {
+            console.log('fellapp update report failed: '+data);
+        });
+    }
+
 </script>
 
 

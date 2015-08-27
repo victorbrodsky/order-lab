@@ -50,8 +50,8 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document")
      * @ORM\JoinTable(name="fellapp_fellApp_coverLetter",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true)}
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
      *      )
      * @ORM\OrderBy({"createdate" = "ASC"})
      **/
@@ -67,8 +67,8 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document")
      * @ORM\JoinTable(name="fellapp_fellApp_reprimandDocument",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="reprimandDocument_id", referencedColumnName="id", unique=true)}
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="reprimandDocument_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
      *      )
      **/
     private $reprimandDocuments;
@@ -82,8 +82,8 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document")
      * @ORM\JoinTable(name="fellapp_fellApp_lawsuitDocument",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="lawsuitDocument_id", referencedColumnName="id", unique=true)}
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="lawsuitDocument_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
      *      )
      **/
     private $lawsuitDocuments;
@@ -138,6 +138,17 @@ class FellowshipApplication extends BaseUserAttributes {
     private $timestamp;
 
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document")
+     * @ORM\JoinTable(name="fellapp_fellApp_report",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $reports;
+
+
     public function __construct($author=null) {
         parent::__construct($author);
 
@@ -145,6 +156,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->reprimandDocuments = new ArrayCollection();
         $this->lawsuitDocuments = new ArrayCollection();
         $this->references = new ArrayCollection();
+        $this->reports = new ArrayCollection();
 
         $this->setApplicationStatus('active');
     }
@@ -330,6 +342,24 @@ class FellowshipApplication extends BaseUserAttributes {
         return $this->references;
     }
 
+
+    public function addReport($item)
+    {
+        if( $item && !$this->reports->contains($item) ) {
+            $this->reports->add($item);
+        }
+        return $this;
+    }
+    public function removeReport($item)
+    {
+        $this->reports->removeElement($item);
+    }
+    public function getReports()
+    {
+        return $this->reports;
+    }
+
+
     /**
      * @param mixed $honors
      */
@@ -458,6 +488,14 @@ class FellowshipApplication extends BaseUserAttributes {
         return $this->timestamp;
     }
 
+
+    public function clearReports() {
+        $this->reports->clear();
+    }
+
+    public function getRecentReport() {
+        return $this->getReports()->last();
+    }
 
     public function getRecentCoverLetter() {
         return $this->getCoverLetters()->last();

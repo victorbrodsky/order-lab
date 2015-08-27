@@ -127,10 +127,6 @@ doctrine:
 
 monolog:
     handlers:
-#        applog:
-#            type: stream
-#            path: /logs/symfony.log
-#            level: info
         main:
             type: fingers_crossed
             action_level: notice
