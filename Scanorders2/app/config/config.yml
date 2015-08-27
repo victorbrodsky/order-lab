@@ -133,7 +133,7 @@ monolog:
 #            level: info
         main:
             type: fingers_crossed
-            action_level: warning
+            action_level: notice
             handler: file
         file:
             type: stream
@@ -143,11 +143,6 @@ monolog:
             level: error
         console:
             type: console
-#            verbosity_levels:
-#                VERBOSITY_NORMAL:       WARNING
-#                VERBOSITY_VERBOSE:      NOTICE
-#                VERBOSITY_VERY_VERBOSE: INFO
-#                VERBOSITY_DEBUG:        DEBUG
 
 
 

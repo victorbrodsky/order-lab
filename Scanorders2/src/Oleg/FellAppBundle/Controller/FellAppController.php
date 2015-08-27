@@ -789,7 +789,8 @@ class FellAppController extends Controller {
         //$rootDirClean = str_replace("app","",$rootDir);
         $reportPath = $this->get('kernel')->getRootDir() . '/../web/' . 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/reports/';
 
-        if(0) {
+        $testFlag = false;
+        if($testFlag) {
             //$applicationPath = "C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\web\\Uploaded\\fellapp\\reports\\".$filename;
             $applicationFilePath = $reportPath . "application_ID" . $id . ".pdf";
             $this->generateApplicationPdf($id,$applicationFilePath);
@@ -818,7 +819,8 @@ class FellAppController extends Controller {
 
         $outdir = $reportPath.'temp_'.$id.'/';
 
-    if(1) {
+    if(!$testFlag) {
+
         //0) generate application pdf
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
         $this->generateApplicationPdf($id,$applicationFilePath);
@@ -831,18 +833,15 @@ class FellAppController extends Controller {
 
         //2) convert all uploads to pdf using LibreOffice
         $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
-    }
-    if(1) {
-        //3) merge all
-//        $fileNamesArr = array(
-//            "C:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web/Uploaded/fellapp/reports/temp_33/application_ID33.pdf",
-//            "C:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web/Uploaded/fellapp/reports/temp_33/1440523577_id=0B2FwyaXvFk1eeC1xMjQ3eDYwbkk.pdf",
-//        );
 
         $filenameMerged = $reportPath . "report_ID" . $id . ".pdf";
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
+
+        $logger = $this->container->get('logger');
+        $logger->notice("download Application report pdf ok; path=" . $filenameMerged );
     }
         //exit('1');
+
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/pdf');
@@ -868,15 +867,29 @@ class FellAppController extends Controller {
 
         foreach( $filePathsArr as $filePath ) {
 
-            $cmd = $cmd .' "'.$filePath.'"';
-
-            shell_exec( $cmd );
-
-            $outFilename = $outdir . basename($filePath).PHP_EOL;
+            //$outFilename = $outdir . basename($filePath);
+            $outFilename = $outdir . pathinfo($filePath, PATHINFO_FILENAME) . ".pdf";
             //echo "outFilename=".$outFilename."<br>";
             //exit('1');
 
             $fileNamesArr[] = $outFilename;
+
+            //if( file_exists($filePath) ) {
+                //echo "exists filePath=".$filePath."<br>";
+                //continue;
+            //}
+
+            $cmd = $cmd .' "'.$filePath.'"';
+
+            //$shellout = shell_exec( $cmd );
+            $shellout = exec( $cmd );
+
+            if( $shellout ) {
+                //echo "shellout=".$shellout."<br>";
+                $logger = $this->container->get('logger');
+                $logger->debug("LibreOffice: " . $shellout);
+            }
+
         }
 
         return $fileNamesArr;
@@ -885,6 +898,8 @@ class FellAppController extends Controller {
     //use KnpSnappyBundle to convert html to pdf
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
         if( file_exists($applicationOutputFilePath) ) {
+            $logger = $this->container->get('logger');
+            $logger->notice("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
             return;
         }
 
@@ -911,9 +926,17 @@ class FellAppController extends Controller {
 
         $pdf = new PDFMerger();
 
+        //failed: C:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/app/../web/Uploaded/fellapp/reports/temp_36/application_ID36.pdf
+        //    ok: C:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/app/../web/Uploaded/fellapp/reports/application_ID36.pdf
+
         foreach( $filesArr as $file ) {
-            //$file = str_replace("app/../","",$file);
-            $pdf->addPDF($file, 'all');
+//            echo "add merge: filepath=(".$file.") => ";
+            if( file_exists($file) ) {
+                $pdf->addPDF($file, 'all');
+            } else {
+                $logger = $this->container->get('logger');
+                $logger->notice("PDFMerger: pdf file doe snot exists path=" . $file );
+            }
         }
 
         $pdf->merge('file', $filenameMerged);
