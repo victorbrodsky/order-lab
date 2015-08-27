@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,6 +49,7 @@ class CurriculumVitae
      *      joinColumns={@ORM\JoinColumn(name="curriculumVitae_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
      *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $documents;
 

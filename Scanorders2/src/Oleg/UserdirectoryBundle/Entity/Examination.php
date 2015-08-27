@@ -46,6 +46,7 @@ class Examination
      *      joinColumns={@ORM\JoinColumn(name="examination_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="score_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
      *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $scores;
 

@@ -123,5 +123,28 @@ class DocumentRepository extends EntityRepository {
 
     }
 
+
+//    public function findOneRecentDocument( $holder, $holderBundleName, $holderClassName, $documentStr ) {
+//
+//        $repository = $this->_em->getRepository($holderBundleName.':'.$holderClassName);
+//        $dql = $repository->createQueryBuilder('holder');
+//        $dql->select("holder.documents");
+//        $dql->leftJoin("holder.".$documentStr,"documents");
+//        //$dql->groupBy("holder.id");
+//        //$dql->groupBy("documents");
+//        $dql->where("holder.id=".$holder->getId());
+//        $dql->setMaxResults(1);
+//        $dql->orderBy("documents.createdate","DESC");
+//
+//        $query = $this->_em->createQuery($dql);
+//
+//        $documents = $query->getResult();
+//
+//        echo "doc count=".count($documents)."<br>";
+//        echo "doc=".$documents[0]."<br>";
+//
+//        return $documents[0];
+//    }
+
 }
 

@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -458,6 +459,29 @@ class Credentials extends BaseUserAttributes
     public function getCitizenships()
     {
         return $this->citizenships;
+    }
+
+
+    public function getOneRecentCv() {
+        $items = $this->getCvs();
+        $criteria = Criteria::create()
+            //->where(Criteria::expr()->eq("user", $user))
+            ->orderBy(array("creationDate" => Criteria::DESC))
+        ;
+        $itemsFiltered = $items->matching($criteria);
+
+        return $itemsFiltered[0];
+    }
+
+    public function getOneRecentExamination() {
+        $items = $this->getExaminations();
+        $criteria = Criteria::create()
+            //->where(Criteria::expr()->eq("user", $user))
+            ->orderBy(array("creationDate" => Criteria::DESC))
+        ;
+        $itemsFiltered = $items->matching($criteria);
+
+        return $itemsFiltered[0];
     }
 
 

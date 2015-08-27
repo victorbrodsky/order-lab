@@ -98,7 +98,9 @@
 {% include 'OlegFellAppBundle:Form:Recommendations.html.twig' %}
 
 <!-- Uploads -->
-{% include 'OlegFellAppBundle:Form:Uploads.html.twig' %}
+{% if cycle != "download" %}
+    {% include 'OlegFellAppBundle:Form:Uploads.html.twig' %}
+{% endif %}
 
 <!-- Honors and Awards -->
 {% include 'OlegFellAppBundle:Form:Honors.html.twig' %}
@@ -135,6 +137,5 @@
 
 </div>
 <div class="col-md-1"></div>
-
 
 

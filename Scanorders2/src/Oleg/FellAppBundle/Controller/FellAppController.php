@@ -3,6 +3,7 @@
 namespace Oleg\FellAppBundle\Controller;
 
 
+use Clegginabox\PDFMerger\PDFMerger;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\Reference;
@@ -748,6 +749,8 @@ class FellAppController extends Controller {
      */
     public function downloadPdfAction(Request $request, $id) {
 
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+
 //        $params = $this->getShowParameters($id,'fellapp_download');
 //        $html = $this->renderView('OlegFellAppBundle:Form:download.html.twig',$params);
 //        $this->html2pdf($html);
@@ -762,36 +765,179 @@ class FellAppController extends Controller {
         //generate file name: LastName_FirstName_FellowshipType_StartYear.pdf
         $subjectUser = $entity->getUser();
         $filename =
-            $subjectUser->getLastNameUppercase().
+            "ID".$id.
+            "_".$subjectUser->getLastNameUppercase().
             "_".$subjectUser->getFirstNameUppercase().
             "_".$entity->getFellowshipSubspecialty()->getName().
             "_".$entity->getStartDate()->format('Y').
             ".pdf";
+
+        //cv
+        $recentDocumentCv = $entity->getRecentCv();
+        $abspathCv = $recentDocumentCv->getFileSystemPath();
+        //echo "abspathCv=".$abspathCv."<br>";
+
+        //cover letter
+        $recentCoverLetter = $entity->getRecentCoverLetter();
+        $abspathCoverLetter = $recentCoverLetter->getFileSystemPath();
+
+        //scores
+        $scores = $entity->getRecentExaminationScores();
+
+        //fellapp.uploadpath = fellapp
+        //$rootDir = $this->get('kernel')->getRootDir();
+        //$rootDirClean = str_replace("app","",$rootDir);
+        $reportPath = $this->get('kernel')->getRootDir() . '/../web/' . 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath').'/reports/';
+
+        if(0) {
+            //$applicationPath = "C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\web\\Uploaded\\fellapp\\reports\\".$filename;
+            $applicationFilePath = $reportPath . "application_ID" . $id . ".pdf";
+            $this->generateApplicationPdf($id,$applicationFilePath);
+
+            $filenameMerged = $reportPath . "report_ID" . $id . ".pdf";
+            $filesArr = array($applicationFilePath,$abspathCv,$abspathCoverLetter);
+            foreach( $scores as $score ) {
+                $filesArr[] = $score->getFileSystemPath();
+            }
+            $this->mergeByPDFMerger($filesArr,$filenameMerged );
+        }
+
+
+
+        //'.$abspathCv.'
+        //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf *.docx
+        //$output = shell_exec('libreoffice --headless -convert-to pdf '.$recentDocumentCv.' -outdir '.$reportPath);
+
+        //$reportPath = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\reports"';
+        //$fileReportPdf = $reportPath . "report_ID" . $id . ".pdf";
+        //$outdir = $reportPath.'/temp_'.$id.'/';
+        //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'" "'.$abspathCv.'"';
+        //echo "cmd=".$cmd."<br>";
+        //$output = shell_exec( $cmd );
+        //echo "$output<br>";
+
+        $outdir = $reportPath.'temp_'.$id.'/';
+
+    if(1) {
+        //0) generate application pdf
+        $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
+        $this->generateApplicationPdf($id,$applicationFilePath);
+
+        //1) get all upload documents
+        $filePathsArr = array($applicationFilePath,$abspathCv,$abspathCoverLetter);
+        foreach( $scores as $score ) {
+            $filePathsArr[] = $score->getFileSystemPath();
+        }
+
+        //2) convert all uploads to pdf using LibreOffice
+        $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
+    }
+    if(1) {
+        //3) merge all
+//        $fileNamesArr = array(
+//            "C:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web/Uploaded/fellapp/reports/temp_33/application_ID33.pdf",
+//            "C:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web/Uploaded/fellapp/reports/temp_33/1440523577_id=0B2FwyaXvFk1eeC1xMjQ3eDYwbkk.pdf",
+//        );
+
+        $filenameMerged = $reportPath . "report_ID" . $id . ".pdf";
+        $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
+    }
+        //exit('1');
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/pdf');
+        //$response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        //$response->headers->set('Content-Length', 10);
+        //$response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->setContent(file_get_contents($filenameMerged));
+
+        //delete application pdf
+        //unlink($applicationFilePath);
+        $this->deleteDir($outdir);
+
+        return $response;
+
+    }
+
+    public function convertToPdf( $filePathsArr, $outdir ) {
+
+        $fileNamesArr = array();
+
+        $cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
+
+        foreach( $filePathsArr as $filePath ) {
+
+            $cmd = $cmd .' "'.$filePath.'"';
+
+            shell_exec( $cmd );
+
+            $outFilename = $outdir . basename($filePath).PHP_EOL;
+            //echo "outFilename=".$outFilename."<br>";
+            //exit('1');
+
+            $fileNamesArr[] = $outFilename;
+        }
+
+        return $fileNamesArr;
+    }
+
+    //use KnpSnappyBundle to convert html to pdf
+    public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
+        if( file_exists($applicationOutputFilePath) ) {
+            return;
+        }
+
+        //generate application URL
+        $pageUrl = $this->generateUrl('fellapp_download',array('id' => $applicationId),true);
 
         //save session
         $session = $this->get('session');
         $session->save();
         session_write_close();
 
-        //generate application URL
-        $pageUrl = $this->generateUrl('fellapp_download',array('id' => $id),true);
-
-        return new Response(
-            $this->get('knp_snappy.pdf')->getOutput(
-                $pageUrl,
-                array('cookie' => array($session->getName() => $session->getId()))
-            ),
-            200,
-            array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="'.$filename.'"'
-            )
+        //$application =
+        $this->get('knp_snappy.pdf')->generate(
+            $pageUrl,
+            $applicationOutputFilePath,
+            array('cookie' => array($session->getName() => $session->getId()))
         );
 
-
-        exit;
-
     }
+
+    //TODO: try https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
+    //if file already exists then it is replaced with a new one
+    public function mergeByPDFMerger( $filesArr, $filenameMerged ) {
+
+        $pdf = new PDFMerger();
+
+        foreach( $filesArr as $file ) {
+            //$file = str_replace("app/../","",$file);
+            $pdf->addPDF($file, 'all');
+        }
+
+        $pdf->merge('file', $filenameMerged);
+    }
+
+    public static function deleteDir($dirPath) {
+        if (! is_dir($dirPath)) {
+            throw new InvalidArgumentException("$dirPath must be a directory");
+        }
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+            $dirPath .= '/';
+        }
+        $files = glob($dirPath . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                self::deleteDir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($dirPath);
+    }
+
+
 
     public function spraed($html) {
         $pdfGenerator = $this->get('spraed.pdf.generator');

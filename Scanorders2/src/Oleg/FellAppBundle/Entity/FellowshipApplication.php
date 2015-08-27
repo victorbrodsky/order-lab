@@ -53,6 +53,7 @@ class FellowshipApplication extends BaseUserAttributes {
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", unique=true)}
      *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $coverLetters;
 
@@ -458,6 +459,19 @@ class FellowshipApplication extends BaseUserAttributes {
     }
 
 
+    public function getRecentCoverLetter() {
+        return $this->getCoverLetters()->last();
+    }
+
+    public function getRecentCv() {
+        $recentCv = $this->getUser()->getCredentials()->getOneRecentCv();
+        return $recentCv->getDocuments()->last();
+    }
+
+    public function getRecentExaminationScores() {
+        $recentExamination = $this->getUser()->getCredentials()->getOneRecentExamination();
+        return $recentExamination->getScores();
+    }
 
     //interface methods
     public function addDocument($item)

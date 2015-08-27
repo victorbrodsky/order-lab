@@ -31,7 +31,9 @@
         "google/apiclient": "1.0.*@beta",
         "ensepar/html2pdf-bundle": "~2.0",
         "spraed/pdf-generator-bundle": "v1.0",
-        "knplabs/knp-snappy-bundle": "v1.3"
+        "knplabs/knp-snappy-bundle": "v1.3",
+        "itbz/fpdi": "dev-master",
+        "clegginabox/pdf-merger": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
