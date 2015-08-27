@@ -732,6 +732,24 @@ class AdminController extends Controller
                         <a href="http://handsontable.com/">Handsontable</a>
                     </li>
 
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/KnpLabs/KnpSnappyBundle">KnpSnappyBundle with wkhtmltopdf</a>
+                    </li>
+
+                     <br>
+
+                    <li>
+                        <a href="https://www.libreoffice.org/">LibreOffice</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="https://github.com/myokyawhtun/PDFMerger">PDFMerger</a>
+                    </li>
+
 
                 </ul>
                 </p>
