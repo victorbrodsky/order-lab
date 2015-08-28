@@ -193,6 +193,7 @@ class ReportGenerator {
     }
 
     //use KnpSnappyBundle to convert html to pdf
+    //http://wkhtmltopdf.org must be installed on server
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
         if( file_exists($applicationOutputFilePath) ) {
             $logger = $this->container->get('logger');
