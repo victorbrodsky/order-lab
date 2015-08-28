@@ -1827,11 +1827,11 @@ class AdminController extends Controller
 
     public function generateEventTypeList() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+        //$entities = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findAll();
+        //if( $entities ) {
+        //    return -1;
+        //}
 
         $elements = array(
             'Login Page Visit',
@@ -1862,6 +1862,10 @@ class AdminController extends Controller
             'Fellowship Cover Letter Downloaded',
             'Fellowship USMLE Scores Downloaded',
             'Fellowship Recommendation Downloaded',
+            'Fellowship Application Status changed to Active',
+            'Fellowship Application Status changed to Archived',
+            'Fellowship Application Status changed to Hidden',
+            'Fellowship Application Status changed to Complete',
 
             'Warning',
             'Error'
@@ -1871,6 +1875,10 @@ class AdminController extends Controller
 
         $count = 10;
         foreach( $elements as $value ) {
+
+            if( $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($value) ) {
+                continue;
+            }
 
             $entity = new EventTypeList();
             $this->setDefaultList($entity,$count,$username,null);

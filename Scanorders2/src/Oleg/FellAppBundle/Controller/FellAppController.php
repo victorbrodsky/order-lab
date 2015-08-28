@@ -464,7 +464,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/status/{id}/{status}", name="fellapp_status")
      */
-    public function statusAction($id,$status) {
+    public function statusAction(Request $request, $id,$status) {
 
         if(
             false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
@@ -489,6 +489,28 @@ class FellAppController extends Controller {
 
         $em->persist($entity);
         $em->flush();
+
+        switch($status) {
+            case 'active':
+                $eventType = 'Fellowship Application Status changed to Active';
+                break;
+            case 'archive':
+                $eventType = 'Fellowship Application Status changed to Archived';
+                break;
+            case 'hide':
+                $eventType = 'Fellowship Application Status changed to Hidden';
+                break;
+            case 'complete':
+                $eventType = 'Fellowship Application Status changed to Complete';
+                break;
+            default:
+                $eventType = 'Fellowship Application Status changed to Active';
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $event = $eventType . '; application ID ' . $id . ' by user ' . $user;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
     }
