@@ -81,14 +81,14 @@ class UploadController extends Controller {
                         $em->persist($comment);
                         $count++;
 
-                        //update report for fellapp
-                        $logger = $this->container->get('logger');
-                        $logger->notice("delete document from comment=".$comment);
-                        if( $comment instanceof FellowshipApplication ) {
-                            //update report
-                            $fellappUtil = $this->container->get('fellapp_util');
-                            $fellappUtil->generateFellAppReport( $comment->getId() );
-                        }
+//                        //update report for fellapp
+//                        $logger = $this->container->get('logger');
+//                        $logger->notice("delete document from comment=".$comment);
+//                        if( $comment instanceof FellowshipApplication ) {
+//                            //update report
+//                            $fellappUtil = $this->container->get('fellapp_util');
+//                            $fellappUtil->addFellAppReportToQueue( $comment->getId() );
+//                        }
                     }
                 }
 

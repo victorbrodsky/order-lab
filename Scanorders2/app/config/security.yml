@@ -50,8 +50,8 @@ security:
 #        in_memory:
 #            memory:
 #                users:
-#                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-#                    admin: { password: adminpass123, roles: [ 'ROLE_PLATFORM_DEPUTY_ADMIN' ] }
+#                    systemuser:  { password: systempassword, roles: [ 'ROLE_PLATFORM_DEPUTY_ADMIN' ] }
+#                   admin: { password: adminpass123, roles: [ 'ROLE_PLATFORM_DEPUTY_ADMIN' ] }
 
     firewalls:
 
@@ -102,6 +102,7 @@ security:
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications
             context: scan_auth
+#            http_basic: ~
             switch_user: true
             simple_form:
                 authenticator: custom_authenticator
@@ -186,5 +187,7 @@ security:
      - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#     - { path: ^/fellowship-applications/download/, role: IS_AUTHENTICATED_ANONYMOUSLY } #TODO: fix report generator to simulate auth user
      - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
+
 

@@ -50,8 +50,8 @@ class DoctrineListener {
 
         if( $entity instanceof FellowshipApplication ) {
             //update report
-            $fellappUtil = $this->container->get('fellapp_util');
-            $fellappUtil->generateFellAppReport( $entity->getId() );
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $fellappRepGen->addFellAppReportToQueue( $entity->getId() );
         }
 
 
@@ -67,7 +67,7 @@ class DoctrineListener {
 //        if( $entity instanceof FellowshipApplication ) {
 //            //update report
 //            $fellappUtil = $this->container->get('fellapp_util');
-//            $fellappUtil->generateFellAppReport( $entity->getId() );
+//            $fellappUtil->addFellAppReportToQueue( $entity->getId() );
 //        }
 //
 //    }
@@ -84,7 +84,7 @@ class DoctrineListener {
 //            if( $entity instanceof FellowshipApplication ) {
 //                //update report
 //                $fellappUtil = $this->container->get('fellapp_util');
-//                $fellappUtil->generateFellAppReport( $entity->getId() );
+//                $fellappUtil->addFellAppReportToQueue( $entity->getId() );
 //            }
 //
 //        }
@@ -101,14 +101,14 @@ class DoctrineListener {
 ////        if( $entity instanceof FellowshipApplication ) {
 ////            //update report
 ////            $fellappUtil = $this->container->get('fellapp_util');
-////            $fellappUtil->generateFellAppReport( $entity->getId() );
+////            $fellappUtil->addFellAppReportToQueue( $entity->getId() );
 ////        }
 //
 //        foreach( $em->getUnitOfWork()->getScheduledEntityDeletions() as $entity ) {
 //            if( $entity instanceof FellowshipApplication ) {
 //                //update report
 //                $fellappUtil = $this->container->get('fellapp_util');
-//                $fellappUtil->generateFellAppReport( $entity->getId() );
+//                $fellappUtil->addFellAppReportToQueue( $entity->getId() );
 //            }
 //        }
 //

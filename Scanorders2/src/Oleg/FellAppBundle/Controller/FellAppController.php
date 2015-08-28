@@ -3,7 +3,6 @@
 namespace Oleg\FellAppBundle\Controller;
 
 
-use Clegginabox\PDFMerger\PDFMerger;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\Reference;
@@ -208,16 +207,16 @@ class FellAppController extends Controller {
      */
     public function showAction(Request $request, $id) {
 
-        if(
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER')
-        ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-        }
+//        if(
+//            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER')
+//        ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
 
         $routeName = $request->get('_route');
 
         if( $routeName == "fellapp_edit" ) {
-            if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+            if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -404,7 +403,7 @@ class FellAppController extends Controller {
 
 //            //update report
 //            $fellappUtil = $this->container->get('fellapp_util');
-//            $fellappUtil->generateFellAppReport( $id );
+//            $fellappUtil->addFellAppReportToQueue( $id );
 
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
@@ -770,11 +769,11 @@ class FellAppController extends Controller {
         $id = $request->get('id');
 
         //update report
-        $fellappUtil = $this->container->get('fellapp_util');
-        $res = $fellappUtil->generateFellAppReport( $id );
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        $fellappRepGen->addFellAppReportToQueue( $id );
 
         $response = new Response();
-        $response->setContent($res['size']);
+        $response->setContent('Sent to queue');
         return $response;
     }
 
@@ -812,11 +811,29 @@ class FellAppController extends Controller {
 
             return $this->redirect( $this->generateUrl('employees_file_download',array('id' => $reportDocument->getId())) );
 
+        } else {
+
+            //TODO: implement report generator manager
+            if(0) {
+            //create report
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $fellappRepGen->addFellAppReportToQueue( $id, true );
+
+            //exit('1');
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Applicantion Report is not ready yet. Please try again later.'
+            );
+
+            return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
+            }
+
         }
 
         //create report
-        $fellappUtil = $this->container->get('fellapp_util');
-        $res = $fellappUtil->generateFellAppReport( $id );
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        $res = $fellappRepGen->addFellAppReportToQueue( $id, true ); //create report on download click
         $filename = $res['filename'];
         $report = $res['report'];
         $size = $res['size'];

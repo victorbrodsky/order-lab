@@ -20,3 +20,7 @@ services:
         class: Oleg\FellAppBundle\Util\FellAppUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
 
+    fellapp_reportgenerator:
+        class: Oleg\FellAppBundle\Util\ReportGenerator
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container", "@templating"]
+

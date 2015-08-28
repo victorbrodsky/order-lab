@@ -173,7 +173,7 @@ class MaintenanceListener {
 //
 //        //update report
 //        $fellappUtil = $this->container->get('fellapp_util');
-//        $fellappUtil->generateFellAppReport( $id );
+//        $fellappUtil->addFellAppReportToQueue( $id );
 //    }
 
 } 

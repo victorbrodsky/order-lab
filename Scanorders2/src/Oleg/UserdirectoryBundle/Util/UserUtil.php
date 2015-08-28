@@ -689,7 +689,7 @@ class UserUtil {
             $systemuser->setEmailCanonical($adminemail);
             $systemuser->setPassword("");
             $systemuser->setCreatedby('system');
-            $systemuser->addRole('ROLE_SCANORDER_PROCESSOR');
+            $systemuser->addRole('ROLE_PLATFORM_DEPUTY_ADMIN');
             $systemuser->getPreferences()->setTimezone($default_time_zone);
             $systemuser->setEnabled(true);
             $systemuser->setLocked(true); //system is locked, so no one can logged in with this account

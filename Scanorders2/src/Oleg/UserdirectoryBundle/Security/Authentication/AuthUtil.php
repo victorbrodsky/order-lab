@@ -38,7 +38,7 @@ class AuthUtil {
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
         if( in_array($usernamePrefix, $this->supportedUsertypesAperio) == false ) {
-            $this->logger->warning('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesAperio));
+            $this->logger->notice('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesAperio));
             return NULL;
         }
 
@@ -68,7 +68,7 @@ class AuthUtil {
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
         if( in_array($usernamePrefix, $this->supportedUsertypesLdap) == false ) {
-            $this->logger->warning('LDAP Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesLdap));
+            $this->logger->notice('LDAP Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesLdap));
             return NULL;
         }
 
