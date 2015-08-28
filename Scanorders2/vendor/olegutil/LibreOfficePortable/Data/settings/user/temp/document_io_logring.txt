@@ -1,0 +1,10 @@
+
+Rethrow
+
+Rethrow
+C:/cygwin64/home/buildslave/source/libo-core/sfx2/source/doc/sfxbasemodel.cxx:1700: storeToURL
+C:/cygwin64/home/buildslave/source/libo-core/sfx2/source/doc/objstor.cxx:1124: Begin
+C:/cygwin64/home/buildslave/source/libo-core/sfx2/source/doc/objstor.cxx:1210: Save
+C:/cygwin64/home/buildslave/source/libo-core/sfx2/source/doc/objstor.cxx:1218: 
+C:/cygwin64/home/buildslave/source/libo-core/sfx2/source/doc/objmisc.cxx:260: Resetting Error.
+C:/cygwin64/home/buildslave/source/libo-core/sfx2/source/doc/sfxbasemodel.cxx:3124: Storing failed!

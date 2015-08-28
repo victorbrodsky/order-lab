@@ -1,0 +1,18 @@
+36 com.sun.star.wiki.MediaWiki.SendToMediaWiki.MinorCheck 14f अपलोड कीते दे सफे गी उस्सै शीर्शक आह्‌ले पैह्‌लें शा मजूद सफे दे इक लौह्‌के संपादन दे तौरा पर चिॕन्नत करने लेई इस खान्ने गी जाचो.
+37 com.sun.star.wiki.MediaWiki.SendToMediaWiki.ArticleText 2b2 अपनी विकी प्रविश्टी दा शीर्शक प्रविश्ट करो. एह् थुआढ़ी विकी प्रविश्टी दा सर्वोत्तम सिरनांऽ ऐ. इस विकी पर इक नमीं प्रविश्टी लेई इक नोखा शीर्शक होना लोड़चदा.जेकर तुस कोई पैह्‌लें शा मजूद शीर्शक प्रविश्ट करदे ओ,थुआढ़ा अपलोड मजूदा विकी प्रविश्टी गी ओवरराइट करी ओड़ग.
+22 vnd.com.sun.star.wiki%3AsendDialog 141 ओह् मीडिया विकी चुनो  ,जित्थै तुस अपना दस्तावेज प्रकाशत करना चांह्‌दे ओ. सूची च नमां सर्वर जमा करने लेई जमा करो पर क्लिक करो.
+34 com.sun.star.wiki.MediaWiki.SendToMediaWiki.WikiList 141 ओह् मीडिया विकी चुनो  ,जित्थै तुस अपना दस्तावेज प्रकाशत करना चांह्‌दे ओ. सूची च नमां सर्वर जमा करने लेई जमा करो पर क्लिक करो.
+37 com.sun.star.wiki.MediaWiki.SendToMediaWiki.CommentText e1 इक विकल्पी लौह्‌का सार जां टिप्पणी प्रविश्ट करो . दिक्खो http://meta.wikimedia.org/wiki/Help:सार _संपादत करो.
+38 com.sun.star.wiki.MediaWiki.SendToMediaWiki.BrowserCheck ec अपने सिस्टम वैब तपाशी गी खोह्‌ल्लने लेई इस खान्ने गी जाचो  ते अपलोड कीते दा विकी सफा दस्सो .
+1f vnd.com.sun.star.wiki%3Aaccount b1 http://  कन्नै शुरू होने आह्‌ले इक मीडिया विकी सर्वर दा URL प्रविश्ट करोhttp://
+30 com.sun.star.wiki.MediaWiki.EditSetting.UrlField b1 http://  कन्नै शुरू होने आह्‌ले इक मीडिया विकी सर्वर दा URL प्रविश्ट करोhttp://
+35 com.sun.star.wiki.MediaWiki.EditSetting.UsernameField db मीडिया विकी सर्वर अपना बरतूनी- नांऽ प्रविश्ट करो . बेनाम पुज्ज लेई सक्खना छोड़ी देओ .
+35 com.sun.star.wiki.MediaWiki.EditSetting.PasswordField d0 मीडिया विकी सर्वर अपना पासवर्ड प्रविश्ट करो . बेनाम पुज्ज लेई सक्खना छोड़ी देओ .
+2f com.sun.star.wiki.MediaWiki.EditSetting.SaveBox 13b गी समर्थ करो. मास्टर पासवर्ड गी समर्थ कीता लोड़दा, दिक्खो <आइटम किस्म ="मेन्युआइटम">उपकरण - आप्शन - %PRODUCTNAME - सुरक्षा</आइटम> चुनो.
+20 vnd.com.sun.star.wiki%3Aaboutbox a7 By using the Wiki Publisher you can upload your current Writer text document to a MediaWiki server. After uploading, all Wiki users can read your document on the Wiki.
+1c vnd.com.sun.star.wiki%3Asend 5e Choose File - Send - To MediaWiki to upload the current Writer document to a MediaWiki server.
+20 vnd.com.sun.star.wiki%3Asettings 204 इक नमां सर्वर जमा करने लेई जमा करो पर क्लिक करो. खाता सैट्टिंगें गी संपादत करने लेई इक प्रविश्टी चुनो ते संपादत करो पर क्लिक करो. सूची चा प्रविश्टी गी हटाने लेई इक प्रविश्टी चुनो ते हटाओ पर क्लिक करो.
+2d com.sun.star.wiki.MediaWiki.Settings.WikiList 204 इक नमां सर्वर जमा करने लेई जमा करो पर क्लिक करो. खाता सैट्टिंगें गी संपादत करने लेई इक प्रविश्टी चुनो ते संपादत करो पर क्लिक करो. सूची चा प्रविश्टी गी हटाने लेई इक प्रविश्टी चुनो ते हटाओ पर क्लिक करो.
+2f com.sun.star.wiki.MediaWiki.Settings.EditButton ae चुनंदा प्रविश्टी गी संपादत करने लेई  मीडिया विकी संवाद खोह्‌लदा ऐ.
+2e com.sun.star.wiki.MediaWiki.Settings.AddButton af सूची च इक नमीं प्रविश्टी जमा करने लेई मीडिया विकी संवाद खोह्‌लदा ऐ.
+31 com.sun.star.wiki.MediaWiki.Settings.RemoveButton 61 सूची चा चुनंदा प्रविश्टी गी हटांदा ऐ.

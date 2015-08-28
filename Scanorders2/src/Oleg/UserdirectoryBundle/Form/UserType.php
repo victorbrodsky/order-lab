@@ -131,6 +131,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'csrf_protection' => false,
         ));
     }
 

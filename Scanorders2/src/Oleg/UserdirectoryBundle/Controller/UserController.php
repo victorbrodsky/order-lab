@@ -1748,14 +1748,14 @@ class UserController extends Controller
         $form->handleRequest($request);
 
 
-//        if( $form->isValid() ) {
-//            echo "form is valid <br>";
-//        } else {
-//            echo "form has error <br>";
-//        }
-//        echo "<br>loc string errors:<br>";
-//        print_r($form->getErrorsAsString());
-//        echo "<br>";
+        if( $form->isValid() ) {
+            echo "form is valid <br>";
+        } else {
+            echo "form has error <br>";
+        }
+        echo "<br>loc string errors:<br>";
+        print_r($form->getErrorsAsString());
+        echo "<br>";
 
 
         if( $form->isValid() ) {

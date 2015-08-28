@@ -1,0 +1,18 @@
+36 com.sun.star.wiki.MediaWiki.SendToMediaWiki.MinorCheck bf Бұл баптауды жүктелетін бет бар болып тұрған дайын беттің шағын ғана өзгерісі болатын кезде белгілеңіз.
+37 com.sun.star.wiki.MediaWiki.SendToMediaWiki.ArticleText 1a9 Өзіңіздің Wiki мақаласының атауын енгізіңіз. Ол атауы мақаланың тақырыптамасы болады. Жаңа мақала атауы ол Wiki ішінде қайталанбас болуы тиіс. Егер бар болып тұрған атауды көрсетсеңіз, бар болып тұрған Wiki беті үстінен жазылатын болады.
+22 vnd.com.sun.star.wiki%3AsendDialog a1 Құжатты жариялау үшін MediaWiki серверін таңдаңыз. Жаңа серверді қосу үшін, «Қосу» шертіңіз.
+34 com.sun.star.wiki.MediaWiki.SendToMediaWiki.WikiList a1 Құжатты жариялау үшін MediaWiki серверін таңдаңыз. Жаңа серверді қосу үшін, «Қосу» шертіңіз.
+37 com.sun.star.wiki.MediaWiki.SendToMediaWiki.CommentText 86 Беттің міндетті емес қысқаша анықтамасын немесе түсіндірмені енгізіңіз.
+38 com.sun.star.wiki.MediaWiki.SendToMediaWiki.BrowserCheck aa Бұл баптауды жүйелік веб браузерін ашу және жаңа жүктелген Wiki бетін көрсету үшін белгілеңіз.
+1f vnd.com.sun.star.wiki%3Aaccount 72 MediaWiki серверінің сілтемесін енгізіңіз, басында http:// болуы тиіс
+30 com.sun.star.wiki.MediaWiki.EditSetting.UrlField 72 MediaWiki серверінің сілтемесін енгізіңіз, басында http:// болуы тиіс
+35 com.sun.star.wiki.MediaWiki.EditSetting.UsernameField a7 MediaWiki серверіндегі пайдаланушы атын енгізіңіз. Анонимді түрде қатынау үшін бос қалдырыңыз.
+35 com.sun.star.wiki.MediaWiki.EditSetting.PasswordField 98 MediaWiki серверіндегі парольді енгізіңіз. Анонимді түрде қатынау үшін бос қалдырыңыз.
+2f com.sun.star.wiki.MediaWiki.EditSetting.SaveBox 104 Сессиялар арасында парольді сақтау үшін іске қосыңыз. Басты пароль іске қосулы болуы тиіс, Саймандар - Опциялар - %PRODUCTNAME - Қауіпсіздік қараңыз.
+20 vnd.com.sun.star.wiki%3Aaboutbox ed Wiki Publisher көмегімен ағымдағы Writer мәтіндік құжатын MediaWiki серверіне жүктеуге болады. Құжат Wiki пайдаланушыларына қолжетерлік болады.
+1c vnd.com.sun.star.wiki%3Asend 77 Құжатты MediaWiki серверіне жүктеу үшін Файл - Жіберу - MediaWiki таңдаңыз.
+20 vnd.com.sun.star.wiki%3Asettings 152 Жаңа Wiki серверін қосу үшін «Қосу» шертіңіз.Элементті таңдап, тіркелгі баптауларын өзгерту үшін, «Түзету» шертіңіз.Тізімнен элементті өшіру үшін, ол элементті таңдап, «Өшіру» шертіңіз.
+2d com.sun.star.wiki.MediaWiki.Settings.WikiList 152 Жаңа Wiki серверін қосу үшін «Қосу» шертіңіз.Элементті таңдап, тіркелгі баптауларын өзгерту үшін, «Түзету» шертіңіз.Тізімнен элементті өшіру үшін, ол элементті таңдап, «Өшіру» шертіңіз.
+2f com.sun.star.wiki.MediaWiki.Settings.EditButton 62 Таңдалған элементті түзету үшін MediaWiki сұхбатын ашады.
+2e com.sun.star.wiki.MediaWiki.Settings.AddButton 63 Тізімге жаңа элементті қосу үшін MediaWiki сұхбатын ашады.
+31 com.sun.star.wiki.MediaWiki.Settings.RemoveButton 46 Тізімнен таңдалған элементті өшіреді.
