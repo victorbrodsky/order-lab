@@ -709,8 +709,9 @@ class FellAppUtil {
             $em->remove($eventLogAttempt);
             $em->flush();
 
-//            //update report => it is done by postPersist in DoctrineListener
-//            $this->addFellAppReportToQueue( $fellowshipApplication->getId() );
+            //update report => it is done by postPersist in DoctrineListener
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId() );
 
             $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Created');

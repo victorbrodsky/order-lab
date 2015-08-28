@@ -48,11 +48,11 @@ class DoctrineListener {
         }
 
 
-        if( $entity instanceof FellowshipApplication ) {
-            //update report
-            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-            $fellappRepGen->addFellAppReportToQueue( $entity->getId() );
-        }
+//        if( $entity instanceof FellowshipApplication ) {
+//            //update report
+//            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+//            $fellappRepGen->addFellAppReportToQueue( $entity->getId() );
+//        }
 
 
     }
