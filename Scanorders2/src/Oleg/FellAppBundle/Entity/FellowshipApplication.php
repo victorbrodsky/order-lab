@@ -70,6 +70,7 @@ class FellowshipApplication extends BaseUserAttributes {
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="reprimandDocument_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
      *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $reprimandDocuments;
 
@@ -85,6 +86,7 @@ class FellowshipApplication extends BaseUserAttributes {
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="lawsuitDocument_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
      *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $lawsuitDocuments;
 
@@ -509,6 +511,22 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getRecentExaminationScores() {
         $recentExamination = $this->getUser()->getCredentials()->getOneRecentExamination();
         return $recentExamination->getScores();
+    }
+
+    public function getRecentReprimand() {
+        if( count($this->getReprimandDocuments()) > 0 ) {
+            return $this->getReprimandDocuments()->last();
+        } else {
+            return null;
+        }
+    }
+
+    public function getRecentLegalExplanation() {
+        if( count($this->getLawsuitDocuments()) > 0 ) {
+            return $this->getLawsuitDocuments()->last();
+        } else {
+            return null;
+        }
     }
 
     //interface methods

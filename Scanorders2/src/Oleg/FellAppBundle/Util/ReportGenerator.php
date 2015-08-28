@@ -92,6 +92,12 @@ class ReportGenerator {
         //scores
         $scores = $entity->getRecentExaminationScores();
 
+        //Reprimand
+        $reprimand = $entity->getRecentReprimand();
+
+        //Legal Explanation
+        $legalExplanation = $entity->getRecentLegalExplanation();
+
         //fellapp.uploadpath = fellapp
         //$rootDir = $this->get('kernel')->getRootDir();
         //$rootDirClean = str_replace("app","",$rootDir);
@@ -127,8 +133,17 @@ class ReportGenerator {
 
         //1) get all upload documents
         $filePathsArr = array($applicationFilePath,$abspathCv,$abspathCoverLetter);
+
         foreach( $scores as $score ) {
             $filePathsArr[] = $score->getFileSystemPath();
+        }
+
+        if( $reprimand ) {
+            $filePathsArr[] = $reprimand;
+        }
+
+        if( $legalExplanation ) {
+            $filePathsArr[] = $legalExplanation;
         }
 
         //2) convert all uploads to pdf using LibreOffice
