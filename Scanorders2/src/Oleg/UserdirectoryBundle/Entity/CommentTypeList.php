@@ -25,7 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(
  *  name="user_commentTypeList",
  *  indexes={
- *      @ORM\Index( name="name_idx", columns={"name"} ),
+ *      @ORM\Index( name="commentTypeList_name_idx", columns={"name"} ),
  *  }
  * )
  */

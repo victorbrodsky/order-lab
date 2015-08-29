@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="scan_partDiffDisident",
  *  indexes={
- *      @ORM\Index( name="part_field_idx", columns={"field"} )
+ *      @ORM\Index( name="partdiffdisident_field_idx", columns={"field"} )
  *  }
  * )
  */

@@ -471,9 +471,7 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "email": "fabien@symfony.com"
                 },
                 {
                     "name": "Symfony Community",
@@ -965,16 +963,16 @@
         },
         {
             "name": "gedmo/doctrine-extensions",
-            "version": "v2.4.5",
+            "version": "v2.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Atlantic18/DoctrineExtensions.git",
-                "reference": "12da6e0c6ffbc7702d9f83ff12f3649a0bc5b600"
+                "reference": "5d330411e27ab0ced67e1e5383ccae975c23c17d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/12da6e0c6ffbc7702d9f83ff12f3649a0bc5b600",
-                "reference": "12da6e0c6ffbc7702d9f83ff12f3649a0bc5b600",
+                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/5d330411e27ab0ced67e1e5383ccae975c23c17d",
+                "reference": "5d330411e27ab0ced67e1e5383ccae975c23c17d",
                 "shasum": ""
             },
             "require": {
@@ -1040,7 +1038,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2015-08-11 16:33:57"
+            "time": "2015-08-28 11:07:14"
         },
         {
             "name": "google/apiclient",
@@ -2560,9 +2558,7 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "This bundle provides a way to configure your controllers with annotations",

@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(
  *  name="scan_messageCategory",
  *  indexes={
- *      @ORM\Index( name="name_idx", columns={"name"} ),
+ *      @ORM\Index( name="messageCategory_name_idx", columns={"name"} ),
  *  }
  * )
  */

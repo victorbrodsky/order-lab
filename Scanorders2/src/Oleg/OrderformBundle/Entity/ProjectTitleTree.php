@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(
  *  name="scan_projectTitleTree",
  *  indexes={
- *      @ORM\Index( name="name_idx", columns={"name"} ),
+ *      @ORM\Index( name="projectTitleTree_name_idx", columns={"name"} ),
  *  }
  * )
  */
