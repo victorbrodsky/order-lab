@@ -220,10 +220,13 @@ class FellAppController extends Controller {
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
-             
+
+        $logger = $this->container->get('logger');
+        $logger->notice("download fellapp view: routeName=".$routeName);
         if( $routeName == 'fellapp_download' ) {
+            $user = $this->get('security.context')->getToken()->getUser();
             //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually           
-            if( !($this->get('security.context')->getToken()->getUser() instanceof User) ) {
+            if( !($user instanceof User) ) {
                 $firewall = 'ldap_fellapp_firewall';               
                 $systemUser = $userSecUtil->findSystemUser();
                 if( $systemUser ) {
@@ -231,8 +234,9 @@ class FellAppController extends Controller {
                     $this->get('security.context')->setToken($token);
                     //$this->get('security.token_storage')->setToken($token);
                 }
-                $logger = $this->container->get('logger');
                 $logger->notice("Logged in as systemUser=".$systemUser);
+            } else {
+                $logger->notice("Token user is valid user=".$user);
             }
         }
 
