@@ -811,7 +811,7 @@ class FellAppController extends Controller {
 
         //update report
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-        $fellappRepGen->addFellAppReportToQueue( $id );
+        $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
 
         $response = new Response();
         $response->setContent('Sent to queue');
@@ -831,6 +831,8 @@ class FellAppController extends Controller {
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
+
+
 
         $em = $this->getDoctrine()->getManager();
 
@@ -857,9 +859,12 @@ class FellAppController extends Controller {
             //TODO: implement report generator manager
             if(1) {
                 //create report
-                $env = $this->container->get('kernel')->getEnvironment();
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-                $fellappRepGen->addFellAppReportToQueue( $id, true, $env );
+                $argument = 'asap';
+                if( $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+                    $argument = 'overwrite';
+                }
+                $fellappRepGen->addFellAppReportToQueue( $id, $argument );
 
                 //exit('fellapp_download_pdf exit');
 

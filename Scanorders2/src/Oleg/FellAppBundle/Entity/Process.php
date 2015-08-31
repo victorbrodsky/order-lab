@@ -42,6 +42,13 @@ class Process {
      * @ORM\JoinColumn(name="reportQueue_id", referencedColumnName="id")
      **/
     private $reportQueue;
+
+    /**
+     * overwrite, asap
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $argument;
         
     
     
@@ -91,6 +98,26 @@ class Process {
     public function setQueueTimestamp($queueTimestamp) {
         $this->queueTimestamp = $queueTimestamp;
     }
+
+    /**
+     * @param mixed $argument
+     */
+    public function setArgument($argument)
+    {
+        $this->argument = $argument;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArgument()
+    {
+        return $this->argument;
+    }
+
+
+
+
 
     public function __toString() {
         return "Process id=".$this->getId()."<br>";

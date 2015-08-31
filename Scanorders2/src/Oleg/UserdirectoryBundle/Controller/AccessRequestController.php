@@ -48,7 +48,7 @@ class AccessRequestController extends Controller
     public function accessRequestCreatePlainAction()
     {
 
-        return accessRequestCreatePlain();
+        return $this->accessRequestCreatePlain();
 //        $userSecUtil = $this->get('user_security_utility');
 //
 //        $user = $this->get('security.context')->getToken()->getUser();

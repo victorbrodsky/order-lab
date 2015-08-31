@@ -26,9 +26,9 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
             ->setName('fellapp:generatereportrun')
             ->setDescription('Try to generate fellowship application report')
 //            ->addArgument(
-//                'id',
-//                InputArgument::REQUIRED,
-//                'Fellowship Application id'
+//                'argument',
+//                InputArgument::OPTIONAL,
+//                'Fellowship Application Report request argument (asap,overwrite)'
 //            )
             ;
     }
@@ -40,7 +40,10 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
         $logger->warning("Run Command: try run");      
         
         //$result = ReportGeneratorManager::getInstance($this->getContainer())->tryRun();
-        
+
+        //$argument = $input->getArgument('argument');
+        //echo "argument=".$argument."<br>";
+
         $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
         $result = $fellappRepGen->tryRun();
 

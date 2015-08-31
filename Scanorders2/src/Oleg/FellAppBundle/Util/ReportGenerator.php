@@ -103,7 +103,7 @@ class ReportGenerator {
     
     
     //starting entry to generate report request
-    public function addFellAppReportToQueue( $id, $asap=false, $env='prod' ) {
+    public function addFellAppReportToQueue( $id, $argument='overwrite' ) {
         
         $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
         
@@ -118,22 +118,20 @@ class ReportGenerator {
             $this->em->flush();
         }
 
-//        $processesDb = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
-//            array(
-//                'fellappId' => $id,
-//                'startTimestamp' => 'NULL'
-//            )
-//        );
-//        if( $queue->getRunningProcess()->getId() != ) {
-//            foreach( $processesDb as $processDb ) {
-//                $queue->removeProcess($processDb);
-//                $this->em->flush();
-//            }
-//        }
+        $processesDb = null;
+        if( $argument != 'overwrite' ) {
+            $processesDb = $this->em->getRepository('OlegFellAppBundle:Process')->findOneByFellappId($id);
+        }
 
-        $process = new Process($id);
-        $queue->addProcess($process);
-        $this->em->flush();
+        //add as a new process only if argument is 'overwrite'
+        if( !$processesDb ) {
+            $process = new Process($id);
+            $process->setArgument($argument);
+            $queue->addProcess($process);
+            $this->em->flush();
+        }
+
+        //$resArr->set(0,$service);
         
         //try to run in command console by process component
         //$this->tryRun();
@@ -173,19 +171,45 @@ class ReportGenerator {
     
     public function tryRun() {
 
+        $logger = $this->container->get('logger');
+
         $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
-        
         //must be only one
         if( count($queues) > 0 ) {
             $queue = $queues[0];
         }
-        
-        $logger = $this->container->get('logger');
-        
-        echo "Echo: try Run queue count " . count($queue->getProcesses()) . ": running process id=".$queue->getRunningProcess()."<br>";
-        $logger->notice("try Run: processes count " . count($queue->getProcesses()) );
 
-        if( !$this->runningGenerationReport && !$queue->getRunningProcess() && count($queue->getProcesses()) > 0 ) {
+//        if( $argument == 'asap' ) {
+//            //order by => most recent will be the first
+//            $orderBy = array( 'queueTimestamp' => 'DESC' );
+//        } else {
+//            //order by => most recent will be the last
+//            $orderBy = array( 'queueTimestamp' => 'ASC' );
+//        }
+
+        $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
+            array('argument' => 'asap'),
+            array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
+        );
+        if( count($processes) == 0 ) {
+            $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
+                array(),
+                array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
+            );
+        }
+
+        //get the first process
+        $process = $processes[0];
+
+        $starttime = 'not started yet';
+        if( $process->getStartTimestamp() ) {
+            $starttime = $process->getStartTimestamp()->format('Y-m-d H:i:s');
+        }
+
+        echo "Echo: try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."<br>";
+        $logger->notice("Try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess().", process starttime=".$starttime);
+
+        if( !$process->getStartTimestamp() && !$this->runningGenerationReport && !$queue->getRunningProcess() && count($processes) > 0 ) {
 
             $this->runningGenerationReport = true;
 
@@ -200,9 +224,6 @@ class ReportGenerator {
             } else {
                 //echo 'task is not running <br>';
             }
-
-            $processes = $queue->getProcesses();
-            $process = $processes->first(); //Pop the element off the end of array
 
             //set running flag
             $queue->setRunningProcess($process);
