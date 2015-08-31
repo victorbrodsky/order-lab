@@ -182,10 +182,7 @@ class ReportGenerator {
         //reset old running process in queue
         if( $queue->getRunningProcess() ) {
 
-            $now = new \DateTime();
-            $nowtime = $now->getTimestamp();
-            $started = $queue->getRunningProcess()->getStartTimestamp()->getTimestamp();
-            if( round(abs($now - $started)) > 600 ) { //10*60sec=600 minuts limit
+            if( $this->isProcessHang($queue->getRunningProcess()) ) { //10*60sec=600 minuts limit
                 //reset queue
                 $queue->setRunningProcess(NULL);
                 $queue->setRunning(false);
@@ -231,11 +228,16 @@ class ReportGenerator {
             //make sure libreoffice is not running
             //soffice.bin
             //$task_pattern = '~(helpctr|jqs|javaw?|iexplore|acrord32)\.exe~i';
-            $task_pattern = '~(LibreOffice?|soffice.bin)~i';
+            $task_pattern = '~(soffice.bin|soffice.exe)~i';
             if( $this->isTaskRunning($task_pattern) ) {
                 //echo 'task running!!! <br>';
                 $logger->warning("libreoffice task is running!");
-                return; 
+                if( $this->isProcessHang($process) ) {
+                    $this->killTaskByName("soffice");
+                } else {
+                    $this->killTaskByName("soffice");
+                    return;
+                }
             } else {
                 //echo 'task is not running <br>';
             }
@@ -281,6 +283,20 @@ class ReportGenerator {
 
         return;
     }
+
+    //check if the process has been running for 10 minutes
+    public function isProcessHang($process) {
+        if( !$process->getStartTimestamp() ) {
+            return false;
+        }
+        $now = new \DateTime();
+        $nowtime = $now->getTimestamp();
+        $started = $process->getStartTimestamp()->getTimestamp();
+        if( round(abs($nowtime - $started)) > 600 ) { //10*60sec=600 minuts limit
+            return true;
+        }
+        return false;
+    }
     
     //$kill_pattern = '~(helpctr|jqs|javaw?|iexplore|acrord32)\.exe~i';
     public function isTaskRunning($kill_pattern) {
@@ -292,15 +308,29 @@ class ReportGenerator {
 
         foreach ($task_list AS $task_line)
         {
-          if (preg_match($kill_pattern, $task_line, $out))
-          {
-            echo "=> Detected: ".$out[1]."\n";
-            $logger->warning("Task Detected: ".$out[1]);
-            //exec("taskkill /F /IM ".$out[1].".exe 2>NUL");
-            return true;
-          }
+            //$logger->warning('taskline='.$task_line);
+            if (preg_match($kill_pattern, $task_line, $out))
+            {
+                echo "=> Detected: ".$out[1]."\n";
+                $logger->warning("Task Detected: ".$out[1]);
+                $logger->warning(print_r($out));
+                //exec("taskkill /F /IM ".$out[1].".exe 2>NUL");
+                return true;
+            }
         }
         return false;
+    }
+
+    public function killTaskByName($taskname) {
+        $logger = $this->container->get('logger');
+        $logger->warning('killing task='.$taskname);
+        exec("taskkill /F /IM ".$taskname.".* 2>NUL");
+        $task_pattern = '~(soffice.bin|soffice.exe)~i';
+        if( !$this->isTaskRunning($task_pattern) ) {
+            $logger->notice('Deleted task='.$taskname);
+        } else {
+            $logger->notice('Failed to delete task='.$taskname);
+        }
     }
     
 
