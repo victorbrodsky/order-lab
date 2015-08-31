@@ -188,12 +188,16 @@ class ReportGenerator {
 //        }
 
         $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
-            array('argument' => 'asap'),
+            array(
+                'startTimestamp' => NULL,
+                'argument' => 'asap'
+            ),
             array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
         );
+        
         if( count($processes) == 0 ) {
             $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
-                array(),
+                array('startTimestamp' => NULL),
                 array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
             );
         }
