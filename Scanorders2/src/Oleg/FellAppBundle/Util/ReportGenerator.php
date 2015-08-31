@@ -182,7 +182,8 @@ class ReportGenerator {
         //reset old running process in queue
         if( $queue->getRunningProcess() ) {
 
-            $now = \DateTime()->getTimestamp();
+            $now = new \DateTime();
+            $nowtime = $now->getTimestamp();
             $started = $queue->getRunningProcess()->getStartTimestamp()->getTimestamp();
             if( round(abs($now - $started)) > 600 ) { //10*60sec=600 minuts limit
                 //reset queue
