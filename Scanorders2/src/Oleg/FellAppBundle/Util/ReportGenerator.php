@@ -199,17 +199,20 @@ class ReportGenerator {
         }
 
         //get the first process
-        $process = $processes[0];
+        $process = null;
+        if( count($processes) > 0 ) {
+            $process = $processes[0];
+        }
 
         $starttime = 'not started yet';
-        if( $process->getStartTimestamp() ) {
+        if( $process && $process->getStartTimestamp() ) {
             $starttime = $process->getStartTimestamp()->format('Y-m-d H:i:s');
         }
 
         echo "Echo: try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."<br>";
         $logger->notice("Try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess().", process starttime=".$starttime);
 
-        if( !$process->getStartTimestamp() && !$this->runningGenerationReport && !$queue->getRunningProcess() && count($processes) > 0 ) {
+        if( $process && !$process->getStartTimestamp() && !$this->runningGenerationReport && !$queue->getRunningProcess() ) {
 
             $this->runningGenerationReport = true;
 
