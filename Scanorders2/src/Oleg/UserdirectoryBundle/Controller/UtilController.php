@@ -855,52 +855,29 @@ class UtilController extends Controller {
             }
         }
 
-        if( $type == "service" ) {
+        if( $type == "institution" ) {
             $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
-            $dql->leftJoin("administrativeTitles.service", "administrativeService");
+            $dql->leftJoin("administrativeTitles.institution", "administrativeInstitution");
             $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
-            $dql->leftJoin("appointmentTitles.service", "appointmentService");
+            $dql->leftJoin("appointmentTitles.institution", "appointmentInstitution");
             $dql->leftJoin("user.medicalTitles", "medicalTitles");
-            $dql->leftJoin("medicalTitles.service", "medicalService");
+            $dql->leftJoin("medicalTitles.institution", "medicalInstitution");
 
             if( $search == "min" ) {
-                $criteriastr = "administrativeService.name IS NOT NULL OR ";
-                $criteriastr .= "appointmentService.name IS NOT NULL OR ";
-                $criteriastr .= "medicalService.name IS NOT NULL";
+                $criteriastr = "administrativeInstitution.name IS NOT NULL OR ";
+                $criteriastr .= "appointmentInstitution.name IS NOT NULL OR ";
+                $criteriastr .= "medicalInstitution.name IS NOT NULL";
             } else {
-                $criteriastr = "administrativeService.name LIKE '%".$search."%' OR ";
-                $criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
-                $criteriastr .= "medicalService.name LIKE '%".$search."%'";
+                $criteriastr = "administrativeInstitution.name LIKE '%".$search."%' OR ";
+                //$criteriastr .= "administrativeInstitution.abbreviation LIKE '%".$search."%' OR ";
+                $criteriastr .= "appointmentInstitution.name LIKE '%".$search."%' OR ";
+                $criteriastr .= "medicalInstitution.name LIKE '%".$search."%'";
             }
 
             //time
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
-        }
-
-        if( $type == "division" ) {
-            $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
-            $dql->leftJoin("administrativeTitles.division", "administrativeDivision");
-            $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
-            $dql->leftJoin("appointmentTitles.division", "appointmentDivision");
-            $dql->leftJoin("user.medicalTitles", "medicalTitles");
-            $dql->leftJoin("medicalTitles.division", "medicalDivision");
-
-            if( $search == "min" ) {
-                $criteriastr = "administrativeDivision.name IS NOT NULL OR ";
-                $criteriastr .= "appointmentDivision.name IS NOT NULL OR ";
-                $criteriastr .= "medicalDivision.name IS NOT NULL";
-            } else {
-                $criteriastr = "administrativeDivision.name LIKE '%".$search."%' OR ";
-                $criteriastr .= "appointmentDivision.name LIKE '%".$search."%' OR ";
-                $criteriastr .= "medicalDivision.name LIKE '%".$search."%'";
-            }
-
-            //time
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentInstitution', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
         if( $type == "cwid" ) {
@@ -922,9 +899,9 @@ class UtilController extends Controller {
             }
 
             //time
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
-            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
-            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentInstitution', $criteriastr );
+            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
         //academic title
@@ -938,9 +915,9 @@ class UtilController extends Controller {
             }
 
             //time
-            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeService', $criteriastr );
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentService', $criteriastr );
-            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
+            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
         //medical title
@@ -954,9 +931,10 @@ class UtilController extends Controller {
             }
 
             //time
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalService', $criteriastr );
+            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
+        //echo "criteriastr=".$criteriastr."<br>";
 
         $dql->where($criteriastr);
 
@@ -1085,15 +1063,9 @@ class UtilController extends Controller {
                 break;
 
             //tree
-            case "departments":
-                $className = "Department";
+            case "institutions":
+                $className = "Institution";
                 break;
-            case "divisions":
-                $className = "Division";
-                break;
-            case "services":
-                $className = "Service";
-                break;            
 
             //grants
             case "sourceorganization":

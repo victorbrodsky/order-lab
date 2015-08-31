@@ -22,20 +22,11 @@ function initTypeaheadUserSiteSearch() {
         limit: suggestions_limit
     });
 
-    var serviceDB = new Bloodhound({
+    var institutionDB = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         //prefetch: getCommonBaseUrl("util/common/user-data-search/service/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/service/"+suggestions_limit+"/%QUERY","employees"),
-        dupDetector: duplicationDetector,
-        limit: suggestions_limit
-    });
-
-    var divisionDB = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //prefetch: getCommonBaseUrl("util/common/user-data-search/division/min","employees"),
-        remote: getCommonBaseUrl("util/common/user-data-search/division/"+suggestions_limit+"/%QUERY","employees"),
+        remote: getCommonBaseUrl("util/common/user-data-search/institution/"+suggestions_limit+"/%QUERY","employees"),
         dupDetector: duplicationDetector,
         limit: suggestions_limit
     });
@@ -77,8 +68,7 @@ function initTypeaheadUserSiteSearch() {
 //    });
 
     userDB.initialize();
-    serviceDB.initialize();
-    divisionDB.initialize();
+    institutionDB.initialize();
     cwidDB.initialize();
     admintitleDB.initialize();
     //academictitleDB.initialize();
@@ -120,19 +110,11 @@ function initTypeaheadUserSiteSearch() {
 //            }
 //        },
         {
-            name: 'service',
+            name: 'institution',
             displayKey: 'text',
-            source: serviceDB.ttAdapter(),
+            source: institutionDB.ttAdapter(),
             templates: {
-                header: '<h3 class="search-name">Service</h3>'
-            }
-        },
-        {
-            name: 'division',
-            displayKey: 'text',
-            source: divisionDB.ttAdapter(),
-            templates: {
-                header: '<h3 class="search-name">Division</h3>'
+                header: '<h3 class="search-name">Organization</h3>'
             }
         },
         {
