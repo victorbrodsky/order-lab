@@ -696,8 +696,8 @@ else {
         $fileNamesArr = array();
 
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
-        //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
-        $cmd = '"'.$this->container->get('kernel')->getRootDir() . '\..\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice" --headless -convert-to pdf -outdir "' . $outdir . '"';
+        $cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
+        //$cmd = '"'.$this->container->get('kernel')->getRootDir() . '\..\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice" --headless -convert-to pdf -outdir "' . $outdir . '"';
         //$cmd = '"../../../../../vendors/olegutil/LibreOfficePortable\App\libreoffice\program\soffice" --headless -convert-to pdf -outdir "' . $outdir . '"';
 
         //echo "cmd=" . $cmd . "<br>";
