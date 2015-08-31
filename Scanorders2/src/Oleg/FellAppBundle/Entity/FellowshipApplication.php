@@ -36,7 +36,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $endDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty", cascade={"persist"})
      */
     private $fellowshipSubspecialty;
 

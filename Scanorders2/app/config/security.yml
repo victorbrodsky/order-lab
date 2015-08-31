@@ -97,7 +97,7 @@ security:
                 path:   /directory/logout
                 target: /directory/login
             anonymous:  true
-            access_denied_url: /directory/access-requests/new/create
+            access_denied_url: /directory/access-requests/new/create        
 
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications
@@ -116,7 +116,7 @@ security:
                 target: /fellowship-applications/login
             anonymous:  true
             access_denied_url: /fellowship-applications/access-requests/new/create
-
+        
 
     #Note: first match is used, the later would be ignored
     access_control:
@@ -183,11 +183,13 @@ security:
      - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED') and !has_role('ROLE_SCANORDER_BANNED')" }
 
 
-    ############################## Fellowship Applications SITE SETTINGS ##############################
+    ############################## Fellowship Applications SITE SETTINGS ##############################     
      - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#     - { path: ^/fellowship-applications/download/, role: IS_AUTHENTICATED_ANONYMOUSLY } #TODO: fix report generator to simulate auth user
+     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" } 
+#     - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
+#     - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
      - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
 
 

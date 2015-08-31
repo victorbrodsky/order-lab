@@ -710,8 +710,8 @@ class FellAppUtil {
             $em->flush();
 
             //update report => it is done by postPersist in DoctrineListener
-            //$fellappRepGen = $this->container->get('fellapp_reportgenerator');
-            //$fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId() );
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId() );
 
             $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Created');
@@ -1105,6 +1105,8 @@ class FellAppUtil {
         $dql->select('fellapp');
         $dql->where("fellapp.applicationStatus = '" . $status . "'");
 
+        $ldap = false;
+        if($ldap) 
         if( $year ) {
             $bottomDate = "01-01-".$year;
             $topDate = "12-31-".$year;

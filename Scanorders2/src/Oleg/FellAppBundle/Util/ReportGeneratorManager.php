@@ -19,15 +19,21 @@ class ReportGeneratorManager {
      */
     private static $instance;
 
-    private $container;
+    private static $container;
+    
+    private static $logger;
 
-    private $running = false;
+    private static $running = false;
 
-    private $queue = array();
+    private static $queue = array();   
 
     private $currentQueueElementId;
 
-    private $timestamp;
+    private static $timestamp;
+    
+    private $processes = array();
+    
+    private $consoledir = '"cd C:\Php\Wampp\wamp\www\scanorder\Scanorders2\"';
 
 
     /**
@@ -35,12 +41,21 @@ class ReportGeneratorManager {
      *
      * @return Singleton The *Singleton* instance.
      */
-    public static function getInstance( $container )
+    public static function getInstance( $container=null )
     {
         if (null === static::$instance) {
             static::$instance = new static();
-            static::$instance->setContainer($container);
+            //static::$instance->setContainer($container);
+            if( $container ) {
+                static::$container = $container;
+                static::$logger = static::$container->get('logger');
+            }
+            self::$logger->notice("test logger init!");
+        } else {
+            self::$logger->notice("test logger already initialized");
         }
+               
+        
 
         return static::$instance;
     }
@@ -73,9 +88,13 @@ class ReportGeneratorManager {
     {
     }
 
-    private function setContainer($container) {
-        $this->container = $container;
-    }
+//    private function setContainer($container) {
+//        $this->container = $container;
+//    }
+//    
+//    private function getContainer() {
+//        return $this->container;
+//    }
 
 
 
@@ -86,77 +105,125 @@ class ReportGeneratorManager {
 
         $newQueueElement = array('id'=>$id, 'timestamp'=> new \DateTime());
 
-        if( $asap ) {
-            array_unshift($this->queue, $newQueueElement); //Prepend one or more elements to the beginning of an array
-        } else {
-            array_push($this->queue, $newQueueElement); //Push one or more elements onto the end of array
+//        if( $asap ) {
+//            array_unshift(self::$queue, $newQueueElement); //Prepend one or more elements to the beginning of an array
+//        } else {
+//            array_push(self::$queue, $newQueueElement); //Push one or more elements onto the end of array
+//        }
+        self::$queue[] = $newQueueElement;
+        
+        //Running Processes Asynchronously
+        $process = new Process('php ../app/console fellapp:generatereportrun');       
+        $process->mustRun();             
+        
+        $this->processes[] = $process;
+        self::$logger->notice("create process pid " . $process->getPid() );
+        if( $process->isRunning() ) {
+            echo "process is running with pid=".$process->getPid()."<br>";
         }
+        echo "added to queue id=".$id." => queue count " . count(self::$queue) . "<br>"; 
+        echo "processes count " . count($this->processes) . "<br>";    
+        
+        while( $process->isRunning() ) {
+            echo ".";
+            usleep(50000);
+        }
+        echo "<br>";
+        
+//        $process->wait(function ($type, $buffer) {
+//            if (Process::ERR === $type) {
+//                echo 'ERR > '.$buffer;
+//            } else {
+//                echo 'OUT > '.$buffer;
+//            }
+//        });
+        
+//        while (count($processes) > 0) {
+//            foreach ($processes as $i => $process) {
+//                if( !$process->isStarted() ) {
+//                    echo "Process starts pid=".$process->getPid()."\n";
+//                    $process->start();
+//                    continue;
+//                } 
+//                
+//                //echo "Process running pid=".$process->getPid()."\n";
+//
+//                echo $process->getIncrementalOutput();
+//                echo $process->getIncrementalErrorOutput();
+//
+//                if (!$process->isRunning()) {
+//                    echo "Process stopped pid=".$process->getPid()."\n";
+//                    unset($processes[$i]);
+//                }
+//            }//foreach
+//        }//while
 
+        
         //try to run in command console by process component
         //$this->tryRun();
-        $process = new Process('php app/console fellapp:generatereportrun');
-        $process->start();
-
+        
         return;
     }
 
     public function tryRun() {
 
-        $logger = $this->container->get('logger');
-        $logger->notice("try Run queue count " . count($this->queue) );
+        //echo "Echo: try Run queue count " . count($this->queue) . "<br>";
+        self::$logger->notice("try Run queue count " . count(self::$queue) );
 
-        if( !$this->running && count($this->queue) > 0 ) {
+        if( !self::$running && count(self::$queue) > 0 ) {
 
             //make sure libreoffice is not running
 
-            $this->running = true;
-            $this->timestamp = new \DateTime();
+            self::$running = true;
+            self::$timestamp = new \DateTime();
 
-            $currentQueueElement = array_pop($this->queue); //Pop the element off the end of array
+            $currentQueueElement = array_pop(self::$queue); //Pop the element off the end of array
 
             //logger start event
-            $logger->notice("Start running fell report id=" . $currentQueueElement['id'] . "; remaining in queue " . count($this->queue) );
+            self::$logger->notice("Start running fell report id=" . $currentQueueElement['id'] . "; remaining in queue " . count(self::$queue) );
 
             $time_start = microtime(true);
 
-            //$fellappRepGen = $this->container->get('fellapp_reportgenerator');
-            //$res = $fellappRepGen->generateFellAppReport( $currentQueueElement['id'] );
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $res = $fellappRepGen->generateFellAppReport( $currentQueueElement['id'] );
             //////////////// run by process component ////////////////
-            try {
-                $process = new Process( 'php app/console fellapp:generatereport fellappid ' . $currentQueueElement['id'] );
-                $process->setTimeout(1200); //secs => 20 min
-                $process->run();
-                $this->currentQueueElementId = $process->getPid();
-
-                //executes after the command finishes
-                if (!$process->isSuccessful()) {
-                    //throw new \RuntimeException($process->getErrorOutput());
-                    //logger finish event
-                    $logger->warning('Process: "php app/console fellapp:generatereport fellappid ' . $currentQueueElement['id'] . '"' . ' failed: ' . $process->getErrorOutput() );
-                }
-
-                //get output
-                $res = $process->getOutput();
-
-            } catch( ProcessFailedException $e ) {
-                echo $e->getMessage();
-                $logger->warning('Process: "php app/console fellapp:generatereport fellappid ' . $currentQueueElement['id'] . '"' . ' failed: ' . $e->getMessage() );
-            }
+//            try {
+//                $process = new Process( 'php ../app/console fellapp:generatereport ' . $currentQueueElement['id'] );
+//                $process->setTimeout(1200); //secs => 20 min
+//                $process->run();
+//                $this->currentQueueElementId = $process->getPid();
+//
+//                //executes after the command finishes
+//                if (!$process->isSuccessful()) {
+//                    //throw new \RuntimeException($process->getErrorOutput());
+//                    //logger finish event
+//                    self::$logger->warning('Process: "php app/console fellapp:generatereport fellappid=' . $currentQueueElement['id'] . '"' . ' isSuccessful: ' . $process->getErrorOutput() );
+//                }
+//
+//                //get output
+//                $res = $process->getOutput();
+//
+//            } catch( ProcessFailedException $e ) {
+//                echo $e->getMessage();
+//                self::$logger->warning('Process: "php app/console fellapp:generatereport fellappid=' . $currentQueueElement['id'] . '"' . ' failed: ' . $e->getMessage() );
+//            }
             //////////////// EOF run by process component ////////////////
 
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
 
             //logger finish event
-            $logger->notice("Finished running fell report id=" . $currentQueueElement['id'] . "; executed in " . $execution_time . " sec" . "; report path=" . $res['report'] );
+            //self::$logger->notice("Finished running fell report fellappid=" . $currentQueueElement['id'] . "; executed in " . $execution_time . " sec" . "; report path=" . $res['report'] );
+            self::$logger->notice("Finished running fell report fellappid=" . $currentQueueElement['id'] . "; executed in " . $execution_time . " sec" . "; res=" . $res );
 
+            
             //reset all queue related parameters
-            $this->running = false;
-            $this->timestamp = null;
+            $self::$running = false;
+            $self::$timestamp = null;
             $this->currentQueueElementId = null;
 
             //run next in queue
-            $this->tryRun();
+            //$this->tryRun();
 
         }
 

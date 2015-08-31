@@ -24,7 +24,7 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
     protected function configure() {
         $this
             ->setName('fellapp:generatereportrun')
-            ->setDescription('Import and Populate Fellowship Applications from Google Form')
+            ->setDescription('Try to generate fellowship application report')
 //            ->addArgument(
 //                'id',
 //                InputArgument::REQUIRED,
@@ -36,9 +36,16 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
     //php app/console fellapp:generatereportrun
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $result = ReportGeneratorManager::tryRun();
+        $logger = $this->getContainer()->get('logger');
+        $logger->warning("Run Command: try run");      
+        
+        //$result = ReportGeneratorManager::getInstance($this->getContainer())->tryRun();
+        
+        $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
+        $result = $fellappRepGen->tryRun();
 
         $output->writeln($result);
+        //$output->writeln('run finished');
 
     }
 

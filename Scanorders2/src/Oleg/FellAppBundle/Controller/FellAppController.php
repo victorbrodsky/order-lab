@@ -2,7 +2,7 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
-
+use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\Reference;
@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
 
@@ -28,8 +29,8 @@ class FellAppController extends Controller {
      * @Route("/", name="fellapp_home")
      * @Template("OlegFellAppBundle:Default:home.html.twig")
      */
-    public function indexAction(Request $request) {
-
+    public function indexAction(Request $request) {        
+        
         if(
             false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
             false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
@@ -110,6 +111,8 @@ class FellAppController extends Controller {
             $searchFlag = true;
         }
 
+        $ldap = false;
+        if($ldap) 
         if( $startDate ) {
             //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d');
             //$dateStr = $transformer->transform($startDate);
@@ -207,26 +210,34 @@ class FellAppController extends Controller {
      */
     public function showAction(Request $request, $id) {
 
-//        if(
-//            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER')
-//        ){
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-
+        //echo "clientip=",$request->getClientIp(),"<br>";
+        
         $routeName = $request->get('_route');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         if( $routeName == "fellapp_edit" ) {
             if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
+             
+        if( $routeName == 'fellapp_download' ) {
+            //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually           
+            if( !($this->get('security.context')->getToken()->getUser() instanceof User) ) {
+                $firewall = 'ldap_fellapp_firewall';               
+                $systemUser = $userSecUtil->findSystemUser();
+                $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());       
+                $this->get('security.context')->setToken($token);
+                //$this->get('security.token_storage')->setToken($token);  
+            }                                    
+        }
 
-        //echo "fellapp home <br>";
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+        
+        //echo "fellapp download!!!!!!!!!!!!!!! <br>";       
 
-        //$user = $this->get('security.context')->getToken()->getUser();
-        //$em = $this->getDoctrine()->getManager();
-
-        //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
@@ -235,24 +246,32 @@ class FellAppController extends Controller {
 
         $args = $this->getShowParameters($id,$routeName);
 
-        //event log
-        $actionStr = "viewed";
-        $eventType = 'Fellowship Applicant Page Viewed';
-        $user = $this->get('security.context')->getToken()->getUser();
-        $userSecUtil = $this->container->get('user_security_utility');
-        $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
-
-
         if( $routeName == 'fellapp_download' ) {
             return $this->render('OlegFellAppBundle:Form:download.html.twig', $args);
         }
 
+        //event log
+        $actionStr = "viewed";
+        $eventType = 'Fellowship Applicant Page Viewed';
+        $user = $this->get('security.context')->getToken()->getUser();
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
+        
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }
 
     public function getShowParameters($id,$routeName) {
-        $user = $this->get('security.context')->getToken()->getUser();
+             
+        $user = $this->get('security.context')->getToken()->getUser(); 
+
+//        echo "user=".$user."<br>";
+//        if( !($user instanceof User) ) {
+//            echo "no user object <br>";
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $user = $userSecUtil->findSystemUser();
+//        }               
+        
         $em = $this->getDoctrine()->getManager();
 
         //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
@@ -836,19 +855,19 @@ class FellAppController extends Controller {
         } else {
 
             //TODO: implement report generator manager
-            if(0) {
-            //create report
-            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-            $fellappRepGen->addFellAppReportToQueue( $id, true );
+            if(1) {
+                //create report
+                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+                $fellappRepGen->addFellAppReportToQueue( $id, true );
 
-            //exit('1');
+                exit('1');
 
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                'Applicantion Report is not ready yet. Please try again later.'
-            );
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    'Applicantion Report is not ready yet. Please try again later.'
+                );
 
-            return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
+                return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
             }
 
         }

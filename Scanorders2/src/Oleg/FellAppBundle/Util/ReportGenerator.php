@@ -20,6 +20,11 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+//use Symfony\Component\Process\Exception\ProcessFailedException;
+//use Symfony\Component\Process\Process;
+
+use Oleg\FellAppBundle\Entity\ReportQueue;
+use Oleg\FellAppBundle\Entity\Process;
 
 class ReportGenerator {
 
@@ -29,6 +34,9 @@ class ReportGenerator {
     protected $container;
     protected $templating;
     protected $uploadDir;
+    protected $processes;
+    
+    protected $WshShell;
 
 
     public function __construct( $em, $sc, $container, $templating ) {
@@ -39,10 +47,13 @@ class ReportGenerator {
 
         //fellapp.uploadpath = fellapp
         $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
+        
+        $this->WshShell = new \COM("WScript.Shell"); 
     }
 
 
-    public function addFellAppReportToQueue( $id, $asap=false ) {
+    //starting entry to generate report request
+    public function addFellAppReportToQueue_Old( $id, $asap=false ) {
 
         //TODO: implement queuing
         if(0) {
@@ -51,8 +62,188 @@ class ReportGenerator {
             return;
         }
 
-        return $this->generateFellAppReport( $id );
+        
+        //return $this->generateFellAppReport( $id );       
+        
+        //Running Processes Asynchronously
+        $process = new Process('php ../app/console fellapp:generatereportrun');       
+        $process->start();        
+        //$process->mustRun();                     
+        echo "process started pid=".$process->getPid()."<br>";
+        
+        $processes[] = $process;
+          
+        while( $process->isRunning() ) {
+            echo ".";
+            usleep(50000);
+        }
+        echo "<br>";
+
+//        echo $process->getOutput();
+        
+        if( $process->isRunning() ) {
+            echo "process is running with pid=".$process->getPid()."<br>";
+        }  
+        
     }
+    
+//    //run by /app/console fellapp:generatereportrun
+//    public function runTest() {     
+//        $logger = $this->container->get('logger');
+//        $logger->warning( "try test Run queue count" );      
+//        return "run test ok";
+//    }
+    
+    
+    
+    
+    
+    //starting entry to generate report request
+    public function addFellAppReportToQueue( $id, $asap=false ) {
+        
+        $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
+        
+        //must be only one
+        if( count($queues) > 0 ) {
+            $queue = $queues[0];
+        }
+        
+        if( count($queues) == 0 ) {
+            $queue = new ReportQueue();
+            $this->em->persist($queue);
+            $this->em->flush();
+        }
+        
+        $process = new Process($id);
+        $queue->addProcess($process);
+        $this->em->flush();
+        
+        //try to run in command console by process component
+        //$this->tryRun();
+        
+        //'php ../app/console fellapp:generatereportrun'
+        $cwd = @getcwd();
+        echo "cwd=".$cwd."<br>";
+        //@chdir($cwd);
+        //$WshShell = new \COM("WScript.Shell");
+        //$WshShell->CurrentDirectory = str_replace('/', '\\', $cwd);
+        //$oExec = $WshShell->Run("php ..\\app\\console fellapp:generatereportrun", 0, false);
+        $oExec = $this->WshShell->Run('php ../app/console fellapp:generatereportrun',0,true);
+        //$oExec = exec('php ../app/console fellapp:generatereportrun');
+        echo "oExec=".$oExec."<br>";
+        
+    }
+    
+    public function tryRun() {
+
+        $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
+        
+        //must be only one
+        if( count($queues) > 0 ) {
+            $queue = $queues[0];
+        }
+        
+        $logger = $this->container->get('logger');
+        
+        echo "Echo: try Run queue count " . count($queue->getProcesses()) . ": running process id=".$queue->getRunningProcess()."<br>";
+        $logger->notice("try Run: processes count " . count($queue->getProcesses()) );
+
+        if( !$queue->getRunningProcess() && count($queue->getProcesses()) > 0 ) {
+
+            //make sure libreoffice is not running
+            //soffice.bin
+            //$task_pattern = '~(helpctr|jqs|javaw?|iexplore|acrord32)\.exe~i';
+            $task_pattern = '~(LibreOffice?|soffice.bin)~i';
+            if( $this->isTaskRunning($task_pattern) ) {
+                echo 'task running!!! <br>';
+                return; 
+            } else {
+                echo 'task is not running <br>';
+            }
+
+            $processes = $queue->getProcesses();
+            $process = $processes->first(); //Pop the element off the end of array
+            
+            $queue->setRunningProcess($process);
+            $queue->setRunning(true);
+            $process->setStartTimestamp(new \DateTime());           
+
+            //logger start event
+            echo "Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . (count($processes)-1) ."<br>";
+            $logger->notice("Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . count($processes)-1 );
+
+            $time_start = microtime(true);
+
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $res = $fellappRepGen->generateFellAppReport( $process->getFellappId() );
+            //////////////// run by process component ////////////////
+//            try {
+//                $process = new Process( 'php ../app/console fellapp:generatereport ' . $currentQueueElement['id'] );
+//                $process->setTimeout(1200); //secs => 20 min
+//                $process->run();
+//                $this->currentQueueElementId = $process->getPid();
+//
+//                //executes after the command finishes
+//                if (!$process->isSuccessful()) {
+//                    //throw new \RuntimeException($process->getErrorOutput());
+//                    //logger finish event
+//                    self::$logger->warning('Process: "php app/console fellapp:generatereport fellappid=' . $currentQueueElement['id'] . '"' . ' isSuccessful: ' . $process->getErrorOutput() );
+//                }
+//
+//                //get output
+//                $res = $process->getOutput();
+//
+//            } catch( ProcessFailedException $e ) {
+//                echo $e->getMessage();
+//                self::$logger->warning('Process: "php app/console fellapp:generatereport fellappid=' . $currentQueueElement['id'] . '"' . ' failed: ' . $e->getMessage() );
+//            }
+            //////////////// EOF run by process component ////////////////
+
+            $time_end = microtime(true);
+            $execution_time = ($time_end - $time_start);
+
+            //logger finish event
+            //self::$logger->notice("Finished running fell report fellappid=" . $currentQueueElement['id'] . "; executed in " . $execution_time . " sec" . "; report path=" . $res['report'] );
+            $logger->notice("Finished running fell report fellappid=" . $process->getFellappId() . "; executed in " . $execution_time . " sec" . "; res=" . $res['report'] );
+
+            
+            //reset all queue related parameters    
+            $queue->removeProcess($process);
+            $queue->setRunningProcess(NULL);
+            $queue->setRunning(false);
+            $this->em->remove($process);
+            $this->em->flush();
+
+            //run next in queue
+            //$this->tryRun();                     
+            //$oExec = $this->WshShell->Run("php ..\\app\\console fellapp:generatereportrun", 0, false);
+
+        }
+
+        return;
+    }
+    
+    //$kill_pattern = '~(helpctr|jqs|javaw?|iexplore|acrord32)\.exe~i';
+    public function isTaskRunning($kill_pattern) {
+        $logger = $this->container->get('logger');
+        // get tasklist
+        $task_list = array();
+
+        exec("tasklist 2>NUL", $task_list);
+
+        foreach ($task_list AS $task_line)
+        {
+          if (preg_match($kill_pattern, $task_line, $out))
+          {
+            echo "=> Detected: ".$out[1]."\n";
+            $logger->warning("=> Detected: ".$out[1]);
+            //exec("taskkill /F /IM ".$out[1].".exe 2>NUL");
+            return true;
+          }
+        }
+        return false;
+    }
+    
 
 
     //generate Fellowship Application Report
@@ -64,6 +255,9 @@ class ReportGenerator {
 //        $this->html2pdf($html);
 //        return;
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        
         $entity = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
@@ -124,8 +318,7 @@ class ReportGenerator {
 //        }
 
 
-        $outdir = $reportPath.'temp_'.$id.'/';
-
+        $outdir = $reportPath.'temp_'.$id.'/';                
 
         //0) generate application pdf
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
@@ -145,7 +338,9 @@ class ReportGenerator {
         if( $legalExplanation ) {
             $filePathsArr[] = $legalExplanation;
         }
-
+        
+        $createFlag = true;
+if(0) {
         //2) convert all uploads to pdf using LibreOffice
         $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
 
@@ -157,31 +352,34 @@ class ReportGenerator {
         $logger = $this->container->get('logger');
         $logger->notice("download Application report pdf ok; path=" . $filenameMerged );
 
-        $createFlag = true;
         if( count($entity->getReports()) > 0 ) {
             $createFlag = false;
         }
 
-        //3) add the report to application report DB
-        $author = $this->sc->getToken()->getUser();
+        //3) add the report to application report DB                       
         $filesize = filesize($filenameMerged);
         if(1) { //testing: do not save to DB
-        $this->createFellAppReportDB($entity,$author,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
+        $this->createFellAppReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
         }
-
-        //log event
-        $userSecUtil = $this->container->get('user_security_utility');
+} else {
+        $filename = 'test filename';
+        $filenameMerged = "test filenameMerged";
+        $filesize = null;
+}
+        
+        //log event       
         if( $createFlag ) {
             $actionStr = "created";
         } else {
             $actionStr = "updated";
         }
         $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $filename;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$author,$entity,null,'Fellowship Application Updated');
+        echo $event."<br>";
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,null,'Fellowship Application Updated');
 
 
         //delete application temp folder
-        $this->deleteDir($outdir);
+        //$this->deleteDir($outdir);
 
         $res = array(
             'filename' => $filename,
@@ -198,7 +396,8 @@ class ReportGenerator {
         if( file_exists($applicationOutputFilePath) ) {
             $logger = $this->container->get('logger');
             $logger->warning("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
-            return;
+            //return;
+            unlink($applicationOutputFilePath);
         }
 
         ini_set('max_execution_time', 300); //300 sec
@@ -207,34 +406,65 @@ class ReportGenerator {
         //generate application URL
         $router = $this->container->get('router');
 
-        //$url = $router->generate('fellapp_download',array('id' => $applicationId)); //fellowship-applications/show/43
+        $context = $this->container->get('router')->getContext();
+        
+        $rootDir = $this->container->get('kernel')->getRootDir();
+        //echo "rootDir=".$rootDir."<br>";
+        
+        $env = $this->container->get('kernel')->getEnvironment();
+        //echo "env=".$env."<br>";
+        
+        if( $env == 'dev' ) {
+            $context->setHost('localhost');
+            $context->setScheme('http');
+            $context->setBaseUrl('/web');
+        }
+        
+        if( $env == 'prod' ) {
+            $context->setHost('collage');
+            $context->setScheme('http');
+            $context->setBaseUrl('/web');
+        }
+                
+        $context->setHost('localhost');
+        $context->setScheme('http');
+        $context->setBaseUrl('/scanorder/Scanorders2/web');
+        
+        //$url = $router->generate('fellapp_download',array('id' => $applicationId),true); //fellowship-applications/show/43
+        //echo "url=". $url . "<br>";
         //$pageUrl = "http://localhost/order".$url;
-
+        //http://localhost/scanorder/Scanorders2/web/fellowship-applications/
+        //http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/?filter[startDate]=2017#
+        
+        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/download/".$applicationId;
+        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
+        
         $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),true); //this does not work from console: 'order' is missing
         //echo "pageurl=". $pageUrl . "<br>";
 
-        //save session
-        $session = $this->container->get('session');
-        $session->save();
-        session_write_close();
-
+        //save session        
+        //$session = $this->container->get('session');
+        //$session->save();
+        //session_write_close();
+        //echo "seesion name=".$session->getName().", id=".$session->getId()."<br>";       
+        
         //$application =
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
-            $applicationOutputFilePath,
-            array('cookie' => array($session->getName() => $session->getId()))
+            $applicationOutputFilePath
+            //array('cookie' => array($session->getName() => $session->getId()))
         );
     }//if
 
-        if(0) {
-            $this->logIn();
-            $this->generateFromTwig($applicationId,$applicationOutputFilePath);
-            //exit('exit 1');
-        }//if
+//        if(0) {
+//            $this->logIn();
+//            $this->generateFromTwig($applicationId,$applicationOutputFilePath);
+//            //exit('exit 1');
+//        }//if
     }
 
     public function generateFromTwig($applicationId,$applicationOutputFilePath) {
-        $args = $this->getShowParameters($applicationId,'fellapp_download');
+        $args = $this->getShowParameters($applicationId,'fellapp_home'); //fellapp_download
         $this->container->get('knp_snappy.pdf')->generateFromHtml(
             $this->renderView(
                 'OlegFellAppBundle:Form:download.html.twig',
@@ -245,7 +475,80 @@ class ReportGenerator {
     }
 
 
-//    public function getShowParameters($id,$routeName) {
+  
+//    private function logIn()
+//    {
+//        $firewall = 'ldap_fellapp_firewall';
+//        
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $systemUser = $userSecUtil->findSystemUser();
+//        $token = new UsernamePasswordToken($systemUser, null, $firewall, array('ROLE_PLATFORM_ADMIN'));
+//        $this->container->get('security.context')->setToken($token);
+//        $session = $this->container->get('session');
+//        $session->set('_security_'.$firewall, serialize($token));
+//        
+//        //$this->container->get('security.token_storage')->setToken($token);
+//        //We no longer need to manually save the token to the session either. 
+//        //The token storage handles that                     
+//        //$this->container->get('security.context')->setToken($token);
+//        //$session = $this->container->get('session'); 
+//        //$session->set('_security_'.$firewall, serialize($token));
+//        $session->save(); 
+//        session_write_close();
+//        return $session;
+//        
+//        $session = $this->container->get('session');       
+//        $token = new UsernamePasswordToken('systemuser_@_wcmc-cwid', 'systempassword', $firewall, array('ROLE_PLATFORM_ADMIN')); 
+//        //$token->setAuthenticated(true);
+//        $session->set('_security_'.$firewall, serialize($token));              
+//        $this->sc->setToken($token);
+//        //$session->save();
+//        $tokenExisted = $this->sc->getToken();
+//        if($tokenExisted->isAuthenticated() ) {
+//            echo "token auth! <br>";
+//        } else {
+//            echo "token is not auth!!!!!!<br>";
+//        }
+//        //$session->save();
+//        return $session;
+//    }   
+//    private function logIn1()
+//    {
+//        $session = $this->container->get('session');
+//
+//        $firewall = 'ldap_fellapp_firewall';
+//        $token = new UsernamePasswordToken('system', null, $firewall, array('ROLE_FELLAPP_ADMIN'));
+//        $session->set('_security_'.$firewall, serialize($token));
+//        $session->save();
+//
+//        //$cookie = new Cookie($session->getName(), $session->getId());
+//        //$this->container->getCookieJar()->set($cookie);
+//    }
+//    private function logIn2() {
+//        $firewall = 'ldap_fellapp_firewall';
+//        // create the authentication token
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $systemUser = $userSecUtil->findSystemUser();
+//        $token = new UsernamePasswordToken(
+//            $systemUser,
+//            null,
+//            $firewall,
+//            $systemUser->getRoles());
+//
+//        // give it to the security context
+//        $this->container->get('security.context')->setToken($token);
+//
+//        $session = $this->container->get('session');
+//        $session->set('_security_'.$firewall, serialize($token));
+//        //$session->save();
+//
+//        //save session
+//        $session = $this->container->get('session');
+////        $session->save();
+////        session_write_close();
+////        echo "session=".$session->getName() . ", id=". $session->getId() . "<br>";
+//    }
+    //    public function getShowParameters($id,$routeName) {
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $user = $userSecUtil->findSystemUser();
 //        $em = $this->em;
@@ -293,43 +596,6 @@ class ReportGenerator {
 //        );
 //    }
 
-    private function logIn1()
-    {
-        $session = $this->container->get('session');
-
-        $firewall = 'ldap_fellapp_firewall';
-        $token = new UsernamePasswordToken('system', null, $firewall, array('ROLE_FELLAPP_ADMIN'));
-        $session->set('_security_'.$firewall, serialize($token));
-        $session->save();
-
-        //$cookie = new Cookie($session->getName(), $session->getId());
-        //$this->container->getCookieJar()->set($cookie);
-    }
-    private function logIn() {
-        $firewall = 'ldap_fellapp_firewall';
-        // create the authentication token
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $token = new UsernamePasswordToken(
-            $systemUser,
-            null,
-            $firewall,
-            $systemUser->getRoles());
-
-        // give it to the security context
-        $this->container->get('security.context')->setToken($token);
-
-        $session = $this->container->get('session');
-        $session->set('_security_'.$firewall, serialize($token));
-        //$session->save();
-
-        //save session
-        $session = $this->container->get('session');
-//        $session->save();
-//        session_write_close();
-//        echo "session=".$session->getName() . ", id=". $session->getId() . "<br>";
-    }
-
 
     protected function convertToPdf( $filePathsArr, $outdir ) {
 
@@ -352,6 +618,11 @@ class ReportGenerator {
             $fileNamesArr[] = $outFilename;
 
             //if( file_exists($filePath) ) {
+            //C:\Php\Wampp\wamp\www\scanorder\Scanorders2\web\Uploaded\fellapp\FellowshipApplicantUploads
+            //C:\Php\Wampp\wamp\www\scanorder\Scanorders2\Uploaded/fellapp/FellowshipApplicantUploads/1440850972_id=0B2FwyaXvFk1eSDBwb1ZnUktkU3c.docx
+            //quick fix for home
+            $filePath = str_replace("Wampp\wamp\www\scanorder\Scanorders2", "Wampp\wamp\www\scanorder\Scanorders2\web", $filePath);
+            
             //echo "exists filePath=".$filePath."<br>";
             //continue;
             //}
@@ -489,5 +760,8 @@ class ReportGenerator {
 //        }
 //    }
 
+    
+    
+    
 
 } 
