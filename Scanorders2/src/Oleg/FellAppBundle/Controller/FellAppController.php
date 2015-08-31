@@ -226,13 +226,13 @@ class FellAppController extends Controller {
             if( !($this->get('security.context')->getToken()->getUser() instanceof User) ) {
                 $firewall = 'ldap_fellapp_firewall';               
                 $systemUser = $userSecUtil->findSystemUser();
-                $logger = $this->container->get('logger');
-                $logger->notice("systemUser=".$systemUser.", id=".$systemUser->getId());
                 if( $systemUser ) {
                     $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
                     $this->get('security.context')->setToken($token);
                     //$this->get('security.token_storage')->setToken($token);
                 }
+                $logger = $this->container->get('logger');
+                $logger->notice("Logged in as systemUser=".$systemUser);
             }
         }
 
