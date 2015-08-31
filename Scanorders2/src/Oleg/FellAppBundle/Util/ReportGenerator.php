@@ -38,7 +38,7 @@ class ReportGenerator {
     
     //protected $WshShell;
     protected $runningGenerationReport;
-    protected $env;
+    //protected $env;
 
 
     public function __construct( $em, $sc, $container, $templating ) {
@@ -151,8 +151,9 @@ class ReportGenerator {
         //$oExec = exec('php ../app/console fellapp:generatereportrun');
         //echo "oExec=".$oExec."<br>";
 
-        $this->env = $env;
-        $cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
+        //$this->env = $env;
+        //$cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
+        $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
         $this->windowsCmdRunAsync($cmd);
         
     }
@@ -193,10 +194,11 @@ class ReportGenerator {
             //$task_pattern = '~(helpctr|jqs|javaw?|iexplore|acrord32)\.exe~i';
             $task_pattern = '~(LibreOffice?|soffice.bin)~i';
             if( $this->isTaskRunning($task_pattern) ) {
-                echo 'task running!!! <br>';
+                //echo 'task running!!! <br>';
+                $logger->warning("libreoffice task is running!");
                 return; 
             } else {
-                echo 'task is not running <br>';
+                //echo 'task is not running <br>';
             }
 
             $processes = $queue->getProcesses();
@@ -235,7 +237,8 @@ class ReportGenerator {
 
             //run next in queue
             //$this->tryRun();
-            $cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
+            //$cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
+            $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
             $this->windowsCmdRunAsync($cmd);
 
         }
@@ -442,16 +445,14 @@ else {
         $context->setScheme('http');
         $context->setBaseUrl('/order');
 
-        if( $env == 'dev' ) {
-            //$context->setHost('localhost');
-            $context->setBaseUrl('/order/app_dev.php');
-            //$context->setBaseUrl('/order');
-        }
-        
-        if( $env == 'prod' ) {
-            //$context->setHost('localhost');
-            $context->setBaseUrl('/order');
-        }
+//        if( $env == 'dev' ) {
+//            //$context->setHost('localhost');
+//            $context->setBaseUrl('/order/app_dev.php');
+//        }
+//        if( $env == 'prod' ) {
+//            //$context->setHost('localhost');
+//            $context->setBaseUrl('/order');
+//        }
                 
         //$context->setHost('localhost');
         //$context->setScheme('http');
@@ -467,7 +468,7 @@ else {
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
         
         $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),true); //this does not work from console: 'order' is missing
-        echo "pageurl=". $pageUrl . "<br>";
+        //echo "pageurl=". $pageUrl . "<br>";
 
         //save session        
         //$session = $this->container->get('session');

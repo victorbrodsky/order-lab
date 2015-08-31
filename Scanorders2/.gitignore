@@ -12,6 +12,7 @@
 /vendor/*
 !/vendor/aperio
 !/vendor/olegutil
+/vendor/olegutil/LibreOfficePortable/Data/settings/.*
 /bin/
 /composer.phar
 /src/Oleg/OrderformBundle/Entity/*.php~
