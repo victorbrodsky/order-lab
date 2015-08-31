@@ -857,14 +857,15 @@ class FellAppController extends Controller {
             //TODO: implement report generator manager
             if(1) {
                 //create report
+                $env = $this->container->get('kernel')->getEnvironment();
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-                $fellappRepGen->addFellAppReportToQueue( $id, true );
+                $fellappRepGen->addFellAppReportToQueue( $id, true, $env );
 
-                exit('1');
+                //exit('fellapp_download_pdf exit');
 
                 $this->get('session')->getFlashBag()->add(
                     'warning',
-                    'Applicantion Report is not ready yet. Please try again later.'
+                    'Application Report is not ready yet. Please try again later.'
                 );
 
                 return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );

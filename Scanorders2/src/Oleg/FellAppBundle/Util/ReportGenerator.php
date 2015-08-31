@@ -36,7 +36,9 @@ class ReportGenerator {
     protected $uploadDir;
     protected $processes;
     
-    protected $WshShell;
+    //protected $WshShell;
+    protected $runningGenerationReport;
+    protected $env;
 
 
     public function __construct( $em, $sc, $container, $templating ) {
@@ -47,46 +49,48 @@ class ReportGenerator {
 
         //fellapp.uploadpath = fellapp
         $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
-        
-        $this->WshShell = new \COM("WScript.Shell"); 
+
+        $this->runningGenerationReport = false;
+
+        //$this->WshShell = new \COM("WScript.Shell");
     }
 
 
-    //starting entry to generate report request
-    public function addFellAppReportToQueue_Old( $id, $asap=false ) {
-
-        //TODO: implement queuing
-        if(0) {
-            $manager = ReportGeneratorManager::getInstance($this->container);
-            $manager->addToQueue($id,$asap);
-            return;
-        }
-
-        
-        //return $this->generateFellAppReport( $id );       
-        
-        //Running Processes Asynchronously
-        $process = new Process('php ../app/console fellapp:generatereportrun');       
-        $process->start();        
-        //$process->mustRun();                     
-        echo "process started pid=".$process->getPid()."<br>";
-        
-        $processes[] = $process;
-          
-        while( $process->isRunning() ) {
-            echo ".";
-            usleep(50000);
-        }
-        echo "<br>";
-
-//        echo $process->getOutput();
-        
-        if( $process->isRunning() ) {
-            echo "process is running with pid=".$process->getPid()."<br>";
-        }  
-        
-    }
-    
+//    //starting entry to generate report request
+//    public function addFellAppReportToQueue_Old( $id, $asap=false ) {
+//
+//        //TODO: implement queuing
+//        if(0) {
+//            $manager = ReportGeneratorManager::getInstance($this->container);
+//            $manager->addToQueue($id,$asap);
+//            return;
+//        }
+//
+//
+//        //return $this->generateFellAppReport( $id );
+//
+//        //Running Processes Asynchronously
+//        $process = new Process('php ../app/console fellapp:generatereportrun');
+//        $process->start();
+//        //$process->mustRun();
+//        echo "process started pid=".$process->getPid()."<br>";
+//
+//        $processes[] = $process;
+//
+//        while( $process->isRunning() ) {
+//            echo ".";
+//            usleep(50000);
+//        }
+//        echo "<br>";
+//
+////        echo $process->getOutput();
+//
+//        if( $process->isRunning() ) {
+//            echo "process is running with pid=".$process->getPid()."<br>";
+//        }
+//
+//    }
+//
 //    //run by /app/console fellapp:generatereportrun
 //    public function runTest() {     
 //        $logger = $this->container->get('logger');
@@ -99,7 +103,7 @@ class ReportGenerator {
     
     
     //starting entry to generate report request
-    public function addFellAppReportToQueue( $id, $asap=false ) {
+    public function addFellAppReportToQueue( $id, $asap=false, $env='prod' ) {
         
         $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
         
@@ -113,25 +117,57 @@ class ReportGenerator {
             $this->em->persist($queue);
             $this->em->flush();
         }
-        
+
+//        $processesDb = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
+//            array(
+//                'fellappId' => $id,
+//                'startTimestamp' => 'NULL'
+//            )
+//        );
+//        if( $queue->getRunningProcess()->getId() != ) {
+//            foreach( $processesDb as $processDb ) {
+//                $queue->removeProcess($processDb);
+//                $this->em->flush();
+//            }
+//        }
+
         $process = new Process($id);
         $queue->addProcess($process);
         $this->em->flush();
         
         //try to run in command console by process component
         //$this->tryRun();
+        //return;
         
         //'php ../app/console fellapp:generatereportrun'
-        $cwd = @getcwd();
-        echo "cwd=".$cwd."<br>";
+        //$cwd = @getcwd();
+        //echo "cwd=".$cwd."<br>";
         //@chdir($cwd);
         //$WshShell = new \COM("WScript.Shell");
         //$WshShell->CurrentDirectory = str_replace('/', '\\', $cwd);
-        //$oExec = $WshShell->Run("php ..\\app\\console fellapp:generatereportrun", 0, false);
-        $oExec = $this->WshShell->Run('php ../app/console fellapp:generatereportrun',0,true);
+        //$oExec = $WshShell->Run('php ../app/console fellapp:generatereportrun', 0, false);
+        //$oExec = $WshShell->Run('php ..\\app\\console fellapp:generatereportrun', 1, true);
+        //$oExec = $this->WshShell->Run('php ../app/console fellapp:generatereportrun',0,true);
         //$oExec = exec('php ../app/console fellapp:generatereportrun');
-        echo "oExec=".$oExec."<br>";
+        //echo "oExec=".$oExec."<br>";
+
+        $this->env = $env;
+        $cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
+        $this->windowsCmdRunAsync($cmd);
         
+    }
+
+    //http://www.somacon.com/p395.php
+    public function windowsCmdRunAsync($cmd) {
+        $oExec = null;
+        //$WshShell = new \COM("WScript.Shell");
+        //$oExec = $WshShell->Run($cmd, 0, false);
+
+        //$oExec = pclose(popen("start ". $cmd, "r"));
+        $oExec = pclose(popen("start /B ". $cmd, "r"));
+        //$oExec = exec($cmd);
+
+        return $oExec;
     }
     
     public function tryRun() {
@@ -148,7 +184,9 @@ class ReportGenerator {
         echo "Echo: try Run queue count " . count($queue->getProcesses()) . ": running process id=".$queue->getRunningProcess()."<br>";
         $logger->notice("try Run: processes count " . count($queue->getProcesses()) );
 
-        if( !$queue->getRunningProcess() && count($queue->getProcesses()) > 0 ) {
+        if( !$this->runningGenerationReport && !$queue->getRunningProcess() && count($queue->getProcesses()) > 0 ) {
+
+            $this->runningGenerationReport = true;
 
             //make sure libreoffice is not running
             //soffice.bin
@@ -163,10 +201,12 @@ class ReportGenerator {
 
             $processes = $queue->getProcesses();
             $process = $processes->first(); //Pop the element off the end of array
-            
+
+            //set running flag
             $queue->setRunningProcess($process);
             $queue->setRunning(true);
-            $process->setStartTimestamp(new \DateTime());           
+            $process->setStartTimestamp(new \DateTime());
+            $this->em->flush();
 
             //logger start event
             echo "Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . (count($processes)-1) ."<br>";
@@ -176,28 +216,6 @@ class ReportGenerator {
 
             $fellappRepGen = $this->container->get('fellapp_reportgenerator');
             $res = $fellappRepGen->generateFellAppReport( $process->getFellappId() );
-            //////////////// run by process component ////////////////
-//            try {
-//                $process = new Process( 'php ../app/console fellapp:generatereport ' . $currentQueueElement['id'] );
-//                $process->setTimeout(1200); //secs => 20 min
-//                $process->run();
-//                $this->currentQueueElementId = $process->getPid();
-//
-//                //executes after the command finishes
-//                if (!$process->isSuccessful()) {
-//                    //throw new \RuntimeException($process->getErrorOutput());
-//                    //logger finish event
-//                    self::$logger->warning('Process: "php app/console fellapp:generatereport fellappid=' . $currentQueueElement['id'] . '"' . ' isSuccessful: ' . $process->getErrorOutput() );
-//                }
-//
-//                //get output
-//                $res = $process->getOutput();
-//
-//            } catch( ProcessFailedException $e ) {
-//                echo $e->getMessage();
-//                self::$logger->warning('Process: "php app/console fellapp:generatereport fellappid=' . $currentQueueElement['id'] . '"' . ' failed: ' . $e->getMessage() );
-//            }
-            //////////////// EOF run by process component ////////////////
 
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
@@ -213,10 +231,12 @@ class ReportGenerator {
             $queue->setRunning(false);
             $this->em->remove($process);
             $this->em->flush();
+            $this->runningGenerationReport = false;
 
             //run next in queue
-            //$this->tryRun();                     
-            //$oExec = $this->WshShell->Run("php ..\\app\\console fellapp:generatereportrun", 0, false);
+            //$this->tryRun();
+            $cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
+            $this->windowsCmdRunAsync($cmd);
 
         }
 
@@ -236,7 +256,7 @@ class ReportGenerator {
           if (preg_match($kill_pattern, $task_line, $out))
           {
             echo "=> Detected: ".$out[1]."\n";
-            $logger->warning("=> Detected: ".$out[1]);
+            $logger->warning("Task Detected: ".$out[1]);
             //exec("taskkill /F /IM ".$out[1].".exe 2>NUL");
             return true;
           }
@@ -340,7 +360,7 @@ class ReportGenerator {
         }
         
         $createFlag = true;
-if(0) {
+if(1) {
         //2) convert all uploads to pdf using LibreOffice
         $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
 
@@ -361,11 +381,12 @@ if(0) {
         if(1) { //testing: do not save to DB
         $this->createFellAppReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
         }
-} else {
+}
+else {
         $filename = 'test filename';
         $filenameMerged = "test filenameMerged";
         $filesize = null;
-}
+}//else
         
         //log event       
         if( $createFlag ) {
@@ -379,7 +400,7 @@ if(0) {
 
 
         //delete application temp folder
-        //$this->deleteDir($outdir);
+        $this->deleteDir($outdir);
 
         $res = array(
             'filename' => $filename,
@@ -393,8 +414,8 @@ if(0) {
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
+        $logger = $this->container->get('logger');
         if( file_exists($applicationOutputFilePath) ) {
-            $logger = $this->container->get('logger');
             $logger->warning("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
             //return;
             unlink($applicationOutputFilePath);
@@ -408,27 +429,33 @@ if(0) {
 
         $context = $this->container->get('router')->getContext();
         
-        $rootDir = $this->container->get('kernel')->getRootDir();
+        //$rootDir = $this->container->get('kernel')->getRootDir();
         //echo "rootDir=".$rootDir."<br>";
+        //echo "getcwd=".getcwd()."<br>";
         
         $env = $this->container->get('kernel')->getEnvironment();
         //echo "env=".$env."<br>";
-        
+        $logger->warning("env=".$env."<br>");
+
+        //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
+        $context->setHost('localhost');
+        $context->setScheme('http');
+        $context->setBaseUrl('/order');
+
         if( $env == 'dev' ) {
-            $context->setHost('localhost');
-            $context->setScheme('http');
-            $context->setBaseUrl('/web');
+            //$context->setHost('localhost');
+            $context->setBaseUrl('/order/app_dev.php');
+            //$context->setBaseUrl('/order');
         }
         
         if( $env == 'prod' ) {
-            $context->setHost('collage');
-            $context->setScheme('http');
-            $context->setBaseUrl('/web');
+            //$context->setHost('localhost');
+            $context->setBaseUrl('/order');
         }
                 
-        $context->setHost('localhost');
-        $context->setScheme('http');
-        $context->setBaseUrl('/scanorder/Scanorders2/web');
+        //$context->setHost('localhost');
+        //$context->setScheme('http');
+        //$context->setBaseUrl('/scanorder/Scanorders2/web');
         
         //$url = $router->generate('fellapp_download',array('id' => $applicationId),true); //fellowship-applications/show/43
         //echo "url=". $url . "<br>";
@@ -440,7 +467,7 @@ if(0) {
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
         
         $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),true); //this does not work from console: 'order' is missing
-        //echo "pageurl=". $pageUrl . "<br>";
+        echo "pageurl=". $pageUrl . "<br>";
 
         //save session        
         //$session = $this->container->get('session');
@@ -621,7 +648,7 @@ if(0) {
             //C:\Php\Wampp\wamp\www\scanorder\Scanorders2\web\Uploaded\fellapp\FellowshipApplicantUploads
             //C:\Php\Wampp\wamp\www\scanorder\Scanorders2\Uploaded/fellapp/FellowshipApplicantUploads/1440850972_id=0B2FwyaXvFk1eSDBwb1ZnUktkU3c.docx
             //quick fix for home
-            $filePath = str_replace("Wampp\wamp\www\scanorder\Scanorders2", "Wampp\wamp\www\scanorder\Scanorders2\web", $filePath);
+            //$filePath = str_replace("Wampp\wamp\www\scanorder\Scanorders2", "Wampp\wamp\www\scanorder\Scanorders2\web", $filePath);
             
             //echo "exists filePath=".$filePath."<br>";
             //continue;
