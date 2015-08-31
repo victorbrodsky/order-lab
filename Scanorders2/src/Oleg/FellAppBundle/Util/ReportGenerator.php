@@ -440,6 +440,7 @@ if(1) {
 
         $logger = $this->container->get('logger');
         $logger->notice("download Application report pdf ok; path=" . $filenameMerged );
+        $logger->notice("0systemUser=".$systemUser);
 
         if( count($entity->getReports()) > 0 ) {
             $createFlag = false;
@@ -464,7 +465,9 @@ else {
             $actionStr = "updated";
         }
         $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $filename;
-        echo $event."<br>";
+        //echo $event."<br>";
+        $logger->notice($event);
+        $logger->notice("1systemUser=".$systemUser);
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,null,'Fellowship Application Updated');
 
 
