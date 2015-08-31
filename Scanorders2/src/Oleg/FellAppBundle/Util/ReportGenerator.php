@@ -179,13 +179,20 @@ class ReportGenerator {
             $queue = $queues[0];
         }
 
-//        if( $argument == 'asap' ) {
-//            //order by => most recent will be the first
-//            $orderBy = array( 'queueTimestamp' => 'DESC' );
-//        } else {
-//            //order by => most recent will be the last
-//            $orderBy = array( 'queueTimestamp' => 'ASC' );
-//        }
+        //reset old running process in queue
+        if( $queue->getRunningProcess() ) {
+
+            $now = \DateTime()->getTimestamp();
+            $started = $queue->getRunningProcess()->getStartTimestamp()->getTimestamp();
+            if( round(abs($now - $started)) > 600 ) { //10*60sec=600 minuts limit
+                //reset queue
+                $queue->setRunningProcess(NULL);
+                $queue->setRunning(false);
+                $this->em->flush();
+                $this->runningGenerationReport = false;
+            }
+        }
+
 
         $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
             array(
@@ -194,7 +201,7 @@ class ReportGenerator {
             ),
             array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
         );
-        
+
         if( count($processes) == 0 ) {
             $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
                 array('startTimestamp' => NULL),
@@ -214,9 +221,9 @@ class ReportGenerator {
         }
 
         echo "Echo: try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."<br>";
-        $logger->notice("Try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess().", process starttime=".$starttime);
+        $logger->notice("Try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."; process starttime=".$starttime);
 
-        if( $process && !$process->getStartTimestamp() && !$this->runningGenerationReport && !$queue->getRunningProcess() ) {
+        if( !$this->runningGenerationReport && $process && !$queue->getRunningProcess() ) {
 
             $this->runningGenerationReport = true;
 
@@ -466,7 +473,7 @@ else {
         
         $env = $this->container->get('kernel')->getEnvironment();
         //echo "env=".$env."<br>";
-        $logger->warning("env=".$env."<br>");
+        $logger->notice("env=".$env."<br>");
 
         //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
         $context->setHost('localhost');
