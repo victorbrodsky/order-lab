@@ -343,8 +343,7 @@ class ReportGenerator {
 
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
-        $logger->notice("systemUser=".$systemUser.", id=".$systemUser->getId());
-        
+
         $entity = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
@@ -437,7 +436,6 @@ if(1) {
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
 
         $logger->notice("download Application report pdf ok; path=" . $filenameMerged );
-        $logger->notice("0systemUser=".$systemUser);
 
         if( count($entity->getReports()) > 0 ) {
             $createFlag = false;
@@ -464,7 +462,6 @@ else {
         $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $filename;
         //echo $event."<br>";
         $logger->notice($event);
-        $logger->notice("1systemUser=".$systemUser);
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,null,'Fellowship Application Updated');
 
 

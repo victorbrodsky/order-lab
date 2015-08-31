@@ -278,7 +278,7 @@ class UserSecurityUtil {
 
         $systemusers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findBy(
             array(
-                'keytype' => NULL,
+                //'keytype' => NULL,
                 'primaryPublicUserId' => 'system'
             )
         );
