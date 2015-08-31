@@ -337,15 +337,13 @@ class ReportGenerator {
 
     //generate Fellowship Application Report
     public function generateFellAppReport( $id ) {
-        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 
-//        $params = $this->getShowParameters($id,'fellapp_download');
-//        $html = $this->renderView('OlegFellAppBundle:Form:download.html.twig',$params);
-//        $this->html2pdf($html);
-//        return;
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        $logger = $this->container->get('logger');
 
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
+        $logger->notice("systemUser=".$systemUser.", id=".$systemUser->getId());
         
         $entity = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
@@ -438,7 +436,6 @@ if(1) {
         $filenameMerged = $reportPath . $fileUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
 
-        $logger = $this->container->get('logger');
         $logger->notice("download Application report pdf ok; path=" . $filenameMerged );
         $logger->notice("0systemUser=".$systemUser);
 
