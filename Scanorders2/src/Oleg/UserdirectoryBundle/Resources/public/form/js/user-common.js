@@ -562,10 +562,12 @@ function initSingleDatepicker( datepickerElement ) {
 function expandTextarea() {
     //var elements = document.getElementsByClassName('textarea');
 
-
-    $('textarea').each(function(){
-        $(this).autosize();
-    });
+    if( cycle != 'download' ) {
+//        $('textarea').each(function(){
+//            $(this).autosize();
+//        });
+        $('textarea').autosize();
+    }
 
 //    var elements = $('.textarea');
 //    for (var i = 0; i < elements.length; ++i) {

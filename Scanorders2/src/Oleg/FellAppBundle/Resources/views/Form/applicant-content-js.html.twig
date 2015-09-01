@@ -8,7 +8,24 @@
         showHideWell('.fellapp-reprimand-field');
         showHideWell('.fellapp-lawsuit-field');
 
+
+
+        $('.textarea').bind('keydown keyup keypress cut copy past blur change', function(){
+            copy_to_print_helper(this); // consider debouncing this to avoid slowdowns!
+        });
+
+        $('textarea').each(function(){
+            copy_to_print_helper(this); // on initial page load
+        });
+
     });
+
+    function copy_to_print_helper(element){
+        var print_helper = $(element).closest('.well').find('.print_helper');
+        if( print_helper ) {
+            print_helper.text($(element).val());
+        }
+    }
 
     function hideWell(element) {
         $(element).closest('.form-element-holder').find('.wellcollapsable').hide(500);

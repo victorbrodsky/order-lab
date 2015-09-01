@@ -17,7 +17,15 @@
                     Honors and Awards <br>(if explicitly listed on CV, include highlights here with reference to location on CV)
                 </p>
 
-                {{ form_row(form.honors) }}
+                {#{{ form_row(form.honors) }}#}
+                {% if cycle != "download" %}
+                    {{ form_row(form.honors) }}
+                {% else %}
+                    <div style="display: none;">
+                        {{ form_row(form.honors) }}
+                    </div>
+                    <div class="print_helper"></div>
+                {% endif %}
 
             </div>
 
@@ -28,7 +36,15 @@
                     Publications and Presentations <br>(if explicitly listed on CV, include highlights here with reference to location on CV)
                 </p>
 
-                {{ form_row(form.publications) }}
+
+                {% if cycle != "download" %}
+                    {{ form_row(form.publications) }}
+                {% else %}
+                    <div style="display: none;">
+                        {{ form_row(form.publications) }}
+                    </div>
+                    <div class="print_helper"></div>
+                {% endif %}
 
             </div>
 
@@ -41,7 +57,15 @@
 
                 {#<textarea class="form-control textarea" id="memberships" name="memberships" rows="20"></textarea>#}
 
-                {{ form_row(form.memberships) }}
+                {#{{ form_row(form.memberships) }}#}
+                {% if cycle != "download" %}
+                    {{ form_row(form.memberships) }}
+                {% else %}
+                    <div style="display: none;">
+                        {{ form_row(form.memberships) }}
+                    </div>
+                    <div class="print_helper"></div>
+                {% endif %}
 
             </div>
 
