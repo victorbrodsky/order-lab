@@ -373,9 +373,12 @@
 /*.ordersearch .select2-results {height: 200px;}*/
 /*.ordersearch .select2-choices {height: 200px;}*/
 
-.textarea {
-    min-height: 75px;
-}
+/*.textarea {*/
+    /*min-height: 75px;*/
+/*}*/
+
+
+
 
 /*Comment counter*/
 #incoming-orders-menu-title, #incoming-orders-menu-badge {

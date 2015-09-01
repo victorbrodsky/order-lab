@@ -909,7 +909,55 @@ class FellAppController extends Controller {
         return $response;
     }
 
+    /**
+     * @Route("/regenerate_all_reports/", name="fellapp_regenerate_reports")
+     *
+     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     */
+    public function regenerateAllReportsAction(Request $request) {
 
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        $fellappRepGen->regenerateAllReports();
+
+        $em = $this->getDoctrine()->getManager();
+        $fellapps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+        $estimatedTime = count($fellapps)*5; //5 min for each report
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'All Application Reports will be regenerated. Estimated processing time for ' . count($fellapps) . ' reports is ' . $estimatedTime . ' minutes.'
+        );
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
+
+    /**
+     * @Route("/reset_queue_run/", name="fellapp_reset_queue_run")
+     *
+     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     */
+    public function resetQueueRunAction(Request $request) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        $numUpdated = $fellappRepGen->resetQueueRun();
+
+        $em = $this->getDoctrine()->getManager();
+        $processes = $em->getRepository('OlegFellAppBundle:Process')->findAll();
+        $estimatedTime = count($processes)*5; //5 min for each report
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Queue with ' . count($processes) . ' will be re-run. Estimated processing time is ' . $estimatedTime . ' minutes. Number of reset processe = ' . $numUpdated
+        );
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
 
 
 

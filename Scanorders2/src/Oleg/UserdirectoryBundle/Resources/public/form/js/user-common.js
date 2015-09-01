@@ -561,22 +561,37 @@ function initSingleDatepicker( datepickerElement ) {
 
 function expandTextarea() {
     //var elements = document.getElementsByClassName('textarea');
-    var elements = $('.textarea');
 
-    for (var i = 0; i < elements.length; ++i) {
-        var element = elements[i];
 
-        //console.log('resize textarea');
-        //$(element).height($(element).prop('scrollHeight'));
+    $('textarea').each(function(){
+        $(this).autosize();
+    });
 
-        addEvent('keyup', element, function() {
-            this.style.overflow = 'hidden';
-            this.style.height = 0;
-            var newH = this.scrollHeight + 10;
-            //console.log("cur h="+this.style.height+", newH="+newH);
-            this.style.height = newH + 'px';
-        }, false);
-    }
+//    var elements = $('.textarea');
+//    for (var i = 0; i < elements.length; ++i) {
+//        var element = elements[i];
+//
+//        $(element).autosize();
+//        //autosize(document.querySelector('textarea'));
+
+//        //resize text area to fit the current text. It cause freeze html to pdf converter when downloading report.
+//        if( cycle != 'download' ) {
+//            console.log('resize textarea');
+//            $(element).height($(element).prop('scrollHeight'));
+//        }
+//
+//        addEvent('keyup', element, function() {
+//            this.style.overflow = 'hidden';
+//            this.style.height = 0;
+//            var newH = this.scrollHeight + 10;
+//            //console.log("cur h="+this.style.height+", newH="+newH);
+//            this.style.height = newH + 'px';
+//        }, false);
+//
+//    }
+
+    //http://www.jacklmoore.com/autosize/
+    //autosize(document.querySelectorAll('textarea'));
 
 }
 

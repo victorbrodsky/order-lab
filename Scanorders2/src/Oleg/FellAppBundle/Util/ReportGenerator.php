@@ -56,67 +56,59 @@ class ReportGenerator {
     }
 
 
-//    //starting entry to generate report request
-//    public function addFellAppReportToQueue_Old( $id, $asap=false ) {
-//
-//        //TODO: implement queuing
-//        if(0) {
-//            $manager = ReportGeneratorManager::getInstance($this->container);
-//            $manager->addToQueue($id,$asap);
-//            return;
-//        }
-//
-//
-//        //return $this->generateFellAppReport( $id );
-//
-//        //Running Processes Asynchronously
-//        $process = new Process('php ../app/console fellapp:generatereportrun');
-//        $process->start();
-//        //$process->mustRun();
-//        echo "process started pid=".$process->getPid()."<br>";
-//
-//        $processes[] = $process;
-//
-//        while( $process->isRunning() ) {
-//            echo ".";
-//            usleep(50000);
-//        }
-//        echo "<br>";
-//
-////        echo $process->getOutput();
-//
-//        if( $process->isRunning() ) {
-//            echo "process is running with pid=".$process->getPid()."<br>";
-//        }
-//
-//    }
-//
-//    //run by /app/console fellapp:generatereportrun
-//    public function runTest() {     
-//        $logger = $this->container->get('logger');
-//        $logger->warning( "try test Run queue count" );      
-//        return "run test ok";
-//    }
-    
-    
+
+    public function regenerateAllReports() {
+
+        $queue = $this->getQueue();
+
+        //reset queue
+        $this->resetQueue($queue);
+
+        //remove all waiting processes
+        //$processes = $this->em->getRepository('OlegFellAppBundle:Process')->findAll();
+        $repository = $this->getDoctrine()->getRepository('OlegFellAppBundle:Process');
+        $dql =  $repository->createQueryBuilder();
+        $dql->delete('Process', 'p');
+        $query = $this->em->createQuery($dql);
+        $numDeleted = $query->execute();
+
+        //add all reports generation to queue
+        $fellapps = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+        foreach( $fellapps as $fellapp ) {
+            $this->addFellAppReportToQueue($fellapp->getId());
+        }
+
+        return $numDeleted;
+    }
+
+    public function resetQueueRun() {
+
+        $queue = $this->getQueue();
+
+        //reset queue
+        $this->resetQueue($queue);
+
+        //reset processes
+//        $repository = $this->em->getRepository('OlegFellAppBundle:Process');
+//        $dql =  $repository->createQueryBuilder("process");
+//        $dql->select('process');
+//        $dql->where("process.startTimestamp IS NOT NULL");
+
+        $query = $this->em->createQuery('UPDATE OlegFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+        $numUpdated = $query->execute();
+
+        $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
+        $this->windowsCmdRunAsync($cmd);
+
+        return $numUpdated;
+    }
     
     
     
     //starting entry to generate report request
     public function addFellAppReportToQueue( $id, $argument='overwrite' ) {
-        
-        $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
-        
-        //must be only one
-        if( count($queues) > 0 ) {
-            $queue = $queues[0];
-        }
-        
-        if( count($queues) == 0 ) {
-            $queue = new ReportQueue();
-            $this->em->persist($queue);
-            $this->em->flush();
-        }
+
+        $queue = $this->getQueue();
 
         $processesDb = null;
         if( $argument != 'overwrite' ) {
@@ -173,21 +165,14 @@ class ReportGenerator {
 
         $logger = $this->container->get('logger');
 
-        $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
-        //must be only one
-        if( count($queues) > 0 ) {
-            $queue = $queues[0];
-        }
+        $queue = $this->getQueue();
 
         //reset old running process in queue
         if( $queue->getRunningProcess() ) {
 
             if( $this->isProcessHang($queue->getRunningProcess()) ) { //10*60sec=600 minuts limit
                 //reset queue
-                $queue->setRunningProcess(NULL);
-                $queue->setRunning(false);
-                $this->em->flush();
-                $this->runningGenerationReport = false;
+                $this->resetQueue($queue);
             }
         }
 
@@ -265,13 +250,8 @@ class ReportGenerator {
             $logger->notice("Finished running fell report fellappid=" . $process->getFellappId() . "; executed in " . $execution_time . " sec" . "; res=" . $res['report'] );
 
             
-            //reset all queue related parameters    
-            $queue->removeProcess($process);
-            $queue->setRunningProcess(NULL);
-            $queue->setRunning(false);
-            $this->em->remove($process);
-            $this->em->flush();
-            $this->runningGenerationReport = false;
+            //reset all queue related parameters
+            $this->resetQueue($queue,$process);
 
             //run next in queue
             //$this->tryRun();
@@ -332,10 +312,46 @@ class ReportGenerator {
             $logger->notice('Failed to delete task='.$taskname);
         }
     }
-    
+
+    public function getQueue() {
+
+        $queue = null;
+
+        $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
+
+        //must be only one
+        if( count($queues) > 0 ) {
+            $queue = $queues[0];
+        }
+
+        if( count($queues) == 0 ) {
+            $queue = new ReportQueue();
+            $this->em->persist($queue);
+            $this->em->flush();
+        }
+
+        return $queue;
+    }
+
+    public function resetQueue($queue,$process=null) {
+        //reset queue
+        if( $process ) {
+            $queue->removeProcess($process);
+            $this->em->remove($process);
+        }
+
+        $queue->setRunningProcess(NULL);
+        $queue->setRunning(false);
+
+        $this->em->flush();
+        $this->runningGenerationReport = false;
+    }
 
 
-    //generate Fellowship Application Report
+
+    //**************************************************************************************//
+    ////////////////// generate Fellowship Application Report //////////////////////////////
+    //generate Fellowship Application Report; can be run from console by: "php app/console fellapp:generatereport fellappid". fellappid is id of the fellowship application.
     public function generateFellAppReport( $id ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
@@ -360,82 +376,75 @@ class ReportGenerator {
             "_".$entity->getStartDate()->format('Y').
             ".pdf";
 
-        //cv
-        $recentDocumentCv = $entity->getRecentCv();
-        $abspathCv = $recentDocumentCv->getFileSystemPath();
-        //echo "abspathCv=".$abspathCv."<br>";
+        $logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
 
-        //cover letter
-        $recentCoverLetter = $entity->getRecentCoverLetter();
-        $abspathCoverLetter = $recentCoverLetter->getFileSystemPath();
-
-        //scores
-        $scores = $entity->getRecentExaminationScores();
-
-        //Reprimand
-        $reprimand = $entity->getRecentReprimand();
-
-        //Legal Explanation
-        $legalExplanation = $entity->getRecentLegalExplanation();
-
-        //fellapp.uploadpath = fellapp
-        //$rootDir = $this->get('kernel')->getRootDir();
-        //$rootDirClean = str_replace("app","",$rootDir);
+        //check and create Report and temp folders
         $uploadReportPath = 'Uploaded/' . $this->container->getParameter('fellapp.uploadpath').'/Reports';
         $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath.'/';
-
         if( !file_exists($uploadReportPath) ) {
             mkdir($uploadReportPath, 0700, true);
             chmod($uploadReportPath, 0700);
         }
 
-//        $testFlag = false;
-//        if($testFlag) {
-//            //$applicationPath = "C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\web\\Uploaded\\fellapp\\Reports\\".$filename;
-//            $applicationFilePath = $reportPath . "application_ID" . $id . ".pdf";
-//            $this->generateApplicationPdf($id,$applicationFilePath);
-//
-//            $filenameMerged = $reportPath . "report_ID" . $id . ".pdf";
-//            $filesArr = array($applicationFilePath,$abspathCv,$abspathCoverLetter);
-//            foreach( $scores as $score ) {
-//                $filesArr[] = $score->getFileSystemPath();
-//            }
-//            $this->mergeByPDFMerger($filesArr,$filenameMerged );
-//        }
+        $outdir = $reportPath.'temp_'.$id.'/';
 
-
-        $outdir = $reportPath.'temp_'.$id.'/';                
-
+        echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
         $this->generateApplicationPdf($id,$applicationFilePath);
+        $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
         //1) get all upload documents
-        $filePathsArr = array($applicationFilePath,$abspathCv,$abspathCoverLetter);
+        $filePathsArr = array();
 
+        //check if photo is not image
+        $photo = $entity->getUser()->getAvatar();
+        $ext = pathinfo($photo->getOriginalName(), PATHINFO_EXTENSION);
+        $photoUrl = null;
+        if( $ext == 'pdf' ) {
+            $filePathsArr[] = $photo->getFileSystemPath();
+        }
+
+        //application form
+        $filePathsArr[] = $applicationFilePath;
+
+        //cv
+        $recentDocumentCv = $entity->getRecentCv();
+        $filePathsArr[] = $recentDocumentCv->getFileSystemPath();
+
+        //cover letter
+        $recentCoverLetter = $entity->getRecentCoverLetter();
+        $filePathsArr[] = $recentCoverLetter->getFileSystemPath();
+
+        //scores
+        $scores = $entity->getRecentExaminationScores();
         foreach( $scores as $score ) {
             $filePathsArr[] = $score->getFileSystemPath();
         }
 
+        //Reprimand
+        $reprimand = $entity->getRecentReprimand();
         if( $reprimand ) {
             $filePathsArr[] = $reprimand;
         }
 
+        //Legal Explanation
+        $legalExplanation = $entity->getRecentLegalExplanation();
         if( $legalExplanation ) {
             $filePathsArr[] = $legalExplanation;
         }
         
         $createFlag = true;
-if(1) {
+
         //2) convert all uploads to pdf using LibreOffice
         $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
+        $logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
 
         $uniqueid = "report_ID" . $id;
         $fileUniqueName = $uniqueid . ".pdf";
         $filenameMerged = $reportPath . $fileUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
-
-        $logger->notice("download Application report pdf ok; path=" . $filenameMerged );
+        $logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
         if( count($entity->getReports()) > 0 ) {
             $createFlag = false;
@@ -443,16 +452,8 @@ if(1) {
 
         //3) add the report to application report DB                       
         $filesize = filesize($filenameMerged);
-        if(1) { //testing: do not save to DB
         $this->createFellAppReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
-        }
-}
-else {
-        $filename = 'test filename';
-        $filenameMerged = "test filenameMerged";
-        $filesize = null;
-}//else
-        
+
         //log event       
         if( $createFlag ) {
             $actionStr = "created";
@@ -476,20 +477,21 @@ else {
 
         return $res;
     }
+    ////////////////// EOF generate Fellowship Application Report //////////////////////////////
+    //**************************************************************************************//
+
 
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
         if( file_exists($applicationOutputFilePath) ) {
-            $logger->warning("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
-            //return;
+            $logger->notice("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
             unlink($applicationOutputFilePath);
         }
 
         ini_set('max_execution_time', 300); //300 sec
 
-    if(1) {
         //generate application URL
         $router = $this->container->get('router');
 
@@ -529,29 +531,25 @@ else {
         
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/download/".$applicationId;
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
-        
+
+        //fellapp_download
         $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),true); //this does not work from console: 'order' is missing
-        //echo "pageurl=". $pageUrl . "<br>";
+        echo "pageurl=". $pageUrl . "<br>";
 
         //save session        
         //$session = $this->container->get('session');
         //$session->save();
         //session_write_close();
         //echo "seesion name=".$session->getName().", id=".$session->getId()."<br>";       
-        
+
         //$application =
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath
             //array('cookie' => array($session->getName() => $session->getId()))
         );
-    }//if
 
-//        if(0) {
-//            $this->logIn();
-//            $this->generateFromTwig($applicationId,$applicationOutputFilePath);
-//            //exit('exit 1');
-//        }//if
+        echo "generated ok! <br>";
     }
 
     public function generateFromTwig($applicationId,$applicationOutputFilePath) {
@@ -690,6 +688,7 @@ else {
 
     protected function convertToPdf( $filePathsArr, $outdir ) {
 
+        $logger = $this->container->get('logger');
         $fileNamesArr = array();
 
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
@@ -725,9 +724,10 @@ else {
 
             if( $shellout ) {
                 //echo "shellout=".$shellout."<br>";
-                $logger = $this->container->get('logger');
-                $logger->debug("LibreOffice: " . $shellout);
+                $logger->debug("LibreOffice converted input file=" . $filePath);
             }
+
+            $logger->debug("LibreOffice: " . $shellout);
 
         }
 
@@ -737,18 +737,17 @@ else {
     //TODO: try https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
     //if file already exists then it is replaced with a new one
     protected function mergeByPDFMerger( $filesArr, $filenameMerged ) {
-
+        $logger = $this->container->get('logger');
         $pdf = new PDFMerger();
 
         foreach( $filesArr as $file ) {
 //            echo "add merge: filepath=(".$file.") => ";
             if( file_exists($file) ) {
                 $pdf->addPDF($file, 'all');
+                $logger->notice("PDFMerger: merged file path=" . $file );
             } else {
-                $logger = $this->container->get('logger');
                 $logger->warning("PDFMerger: pdf file does not exists path=" . $file );
-
-                new \Exception("PDFMerger: pdf file does not exists path=" . $file);
+                //new \Exception("PDFMerger: pdf file does not exists path=" . $file);
             }
         }
 
