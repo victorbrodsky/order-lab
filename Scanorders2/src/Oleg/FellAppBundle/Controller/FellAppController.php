@@ -210,19 +210,22 @@ class FellAppController extends Controller {
      */
     public function showAction(Request $request, $id) {
 
-        //echo "clientip=",$request->getClientIp(),"<br>";
-        
+        //echo "clientip=".$request->getClientIp()."<br>";
+        //$ip = $this->container->get('request')->getClientIp();
+        //echo "ip=".$ip."<br>";
+
+        $logger = $this->container->get('logger');
         $routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
 
+        //admin can edit
         if( $routeName == "fellapp_edit" ) {
             if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
 
-        $logger = $this->container->get('logger');
-        $logger->notice("download fellapp view: routeName=".$routeName);
+        //download: user or localhost
         if( $routeName == 'fellapp_download' ) {
             $user = $this->get('security.context')->getToken()->getUser();
             //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually           
@@ -234,12 +237,13 @@ class FellAppController extends Controller {
                     $this->get('security.context')->setToken($token);
                     //$this->get('security.token_storage')->setToken($token);
                 }
-                $logger->notice("Logged in as systemUser=".$systemUser);
+                $logger->notice("Download view: Logged in as systemUser=".$systemUser);
             } else {
-                $logger->notice("Token user is valid user=".$user);
+                $logger->notice("Download view: Token user is valid security.context user=".$user);
             }
         }
 
+        //user can view
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }

@@ -187,9 +187,9 @@ security:
      - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" } 
-#     - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
-#     - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
+#     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
+     - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+     - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
      - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
 
 
