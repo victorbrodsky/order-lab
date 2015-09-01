@@ -562,6 +562,8 @@ function initSingleDatepicker( datepickerElement ) {
 function expandTextarea() {
     //var elements = document.getElementsByClassName('textarea');
 
+    //http://www.jacklmoore.com/autosize/ v.1
+    //for downlaod it append lots of white space on the bottom
     if( cycle != 'download' ) {
 //        $('textarea').each(function(){
 //            $(this).autosize();
