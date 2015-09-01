@@ -565,7 +565,10 @@ function expandTextarea() {
 
     for (var i = 0; i < elements.length; ++i) {
         var element = elements[i];
-        //element.addEventListener('keyup', function() {
+
+        console.log('resize textarea');
+        $(element).height($(element).prop('scrollHeight'));
+
         addEvent('keyup', element, function() {
             this.style.overflow = 'hidden';
             this.style.height = 0;
@@ -574,6 +577,7 @@ function expandTextarea() {
             this.style.height = newH + 'px';
         }, false);
     }
+
 }
 
 //Internet Explorer (up to version 8) used an alternate attachEvent method.
