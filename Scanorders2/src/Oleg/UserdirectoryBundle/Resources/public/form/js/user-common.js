@@ -566,8 +566,8 @@ function expandTextarea() {
     for (var i = 0; i < elements.length; ++i) {
         var element = elements[i];
 
-        console.log('resize textarea');
-        $(element).height($(element).prop('scrollHeight'));
+        //console.log('resize textarea');
+        //$(element).height($(element).prop('scrollHeight'));
 
         addEvent('keyup', element, function() {
             this.style.overflow = 'hidden';
