@@ -873,9 +873,9 @@ class FellAppController extends Controller {
                 //create report
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
                 $argument = 'asap';
-                if( $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+                //if( $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ) {
                     $argument = 'overwrite';
-                }
+                //}
                 $fellappRepGen->addFellAppReportToQueue( $id, $argument );
 
                 //exit('fellapp_download_pdf exit');
