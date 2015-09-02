@@ -3,6 +3,7 @@
 namespace Oleg\FellAppBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\Identifier;
+use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,6 +45,19 @@ class ReferenceType extends AbstractType
             'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'traininginstitution'
+        ));
+
+
+        //Reference Letters
+        $builder->add('documents', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => 'Reference Letter(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documents__',
         ));
 
     }

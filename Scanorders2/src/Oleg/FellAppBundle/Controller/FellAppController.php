@@ -495,8 +495,13 @@ class FellAppController extends Controller {
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $examination );
         }
 
-        //reports
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'report' );
+        //Reference .documents
+        foreach( $application->getReferences() as $reference ) {
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $reference );
+        }
+
+        //Other .documents
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application );
 
 
     }

@@ -78,12 +78,17 @@
 
 .form-control {
     font-size: 18px;
-    color: rgba(14, 14, 14, 0.87);
+    color: #313030;
 }
 
 .select2-container .select2-choice {
     font-size: 18px;
-    color: rgba(14, 14, 14, 0.87);
+    color: #313030;
+}
+
+.select2-container .select2-choices {
+    font-size: 18px;
+    color: #313030;
 }
 
 /*.form-control-modif {*/
@@ -121,7 +126,7 @@
 }
 
 .withpaddingtop {
-    padding-top: 10px;
+    padding-top: 20px;
 }
 
 .form_label_input {

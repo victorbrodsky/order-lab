@@ -58,8 +58,24 @@ class Reference
      **/
     private $geoLocation;
 
+    /**
+     * Reference Letters
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_reference_document",
+     *      joinColumns={@ORM\JoinColumn(name="reference_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $documents;
+
+
 
     public function __construct($author=null) {
+
+        $this->documents = new ArrayCollection();
+
         $this->setCreatedBy($author);
         $this->setCreationDate(new \DateTime());
     }
@@ -193,6 +209,22 @@ class Reference
         return $this->fellapp;
     }
 
+
+    public function addDocument($item)
+    {
+        if( $item && !$this->documents->contains($item) ) {
+            $this->documents->add($item);
+        }
+        return $this;
+    }
+    public function removeDocument($item)
+    {
+        $this->documents->removeElement($item);
+    }
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
 
 
 

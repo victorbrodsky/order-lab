@@ -150,6 +150,18 @@ class FellowshipApplication extends BaseUserAttributes {
      **/
     private $reports;
 
+    /**
+     * Other Documents
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellApp_document",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $documents;
+
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -159,6 +171,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->lawsuitDocuments = new ArrayCollection();
         $this->references = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->documents = new ArrayCollection();
 
         $this->setApplicationStatus('active');
     }
@@ -490,6 +503,24 @@ class FellowshipApplication extends BaseUserAttributes {
         return $this->timestamp;
     }
 
+    public function addDocument($item)
+    {
+        if( $item && !$this->documents->contains($item) ) {
+            $this->documents->add($item);
+        }
+        return $this;
+    }
+    public function removeDocument($item)
+    {
+        $this->documents->removeElement($item);
+    }
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+
+
 
     public function clearReports() {
         $this->reports->clear();
@@ -512,6 +543,29 @@ class FellowshipApplication extends BaseUserAttributes {
         $recentExamination = $this->getUser()->getCredentials()->getOneRecentExamination();
         return $recentExamination->getScores();
     }
+    public function getExaminationScores() {
+        $scores = new ArrayCollection();
+        foreach( $this->getUser()->getCredentials()->getExaminations() as $examination ) {
+            foreach( $examination->getScores() as $score ) {
+                if( $score && !$scores->contains($score) ) {
+                    $scores->add($score);
+                }
+            }
+        }
+        return $scores;
+    }
+
+    public function getReferenceLetters() {
+        $refletters = new ArrayCollection();
+        foreach( $this->getReferences() as $reference ) {
+            foreach( $reference->getDocuments() as $refletter ) {
+                if( $refletter && !$refletters->contains($refletter) ) {
+                    $refletters->add($refletter);
+                }
+            }
+        }
+        return $refletters;
+    }
 
     public function getRecentReprimand() {
         if( count($this->getReprimandDocuments()) > 0 ) {
@@ -529,20 +583,20 @@ class FellowshipApplication extends BaseUserAttributes {
         }
     }
 
-    //interface methods
-    public function addDocument($item)
-    {
-        $this->addCoverLetter($item);
-        return $this;
-    }
-    public function removeDocument($item)
-    {
-        $this->removeCoverLetter($item);
-    }
-    public function getDocuments()
-    {
-        return $this->getCoverLetters();
-    }
+//    //interface methods
+//    public function addDocument($item)
+//    {
+//        $this->addCoverLetter($item);
+//        return $this;
+//    }
+//    public function removeDocument($item)
+//    {
+//        $this->removeCoverLetter($item);
+//    }
+//    public function getDocuments()
+//    {
+//        return $this->getCoverLetters();
+//    }
 
 
 

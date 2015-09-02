@@ -425,7 +425,7 @@ class ReportGenerator {
         $filePathsArr[] = $recentCoverLetter->getFileSystemPath();
 
         //scores
-        $scores = $entity->getRecentExaminationScores();
+        $scores = $entity->getExaminationScores();
         foreach( $scores as $score ) {
             $filePathsArr[] = $score->getFileSystemPath();
         }
@@ -441,7 +441,19 @@ class ReportGenerator {
         if( $legalExplanation ) {
             $filePathsArr[] = $legalExplanation;
         }
-        
+
+        //references
+        $references = $entity->getReferenceLetters();
+        foreach( $references as $reference ) {
+            $filePathsArr[] = $reference->getFileSystemPath();
+        }
+
+        //other documents
+        $otherDocuments = $entity->getDocuments();
+        foreach( $otherDocuments as $otherDocument ) {
+            $filePathsArr[] = $otherDocument->getFileSystemPath();
+        }
+
         $createFlag = true;
 
         //2) convert all uploads to pdf using LibreOffice

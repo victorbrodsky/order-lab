@@ -95,6 +95,13 @@ class Training extends BaseUserAttributes
      */
     private $trainingType;
 
+    /**
+     * Graduate, Undergraduate, Medical, Residency, GME, Other
+     *
+     * @ORM\ManyToOne(targetEntity="JobTitleList")
+     */
+    private $jobTitle;
+
 
 
     public function __construct($author=null) {
@@ -352,6 +359,22 @@ class Training extends BaseUserAttributes
     public function getTrainingType()
     {
         return $this->trainingType;
+    }
+
+    /**
+     * @param mixed $jobTitle
+     */
+    public function setJobTitle($jobTitle)
+    {
+        $this->jobTitle = $jobTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJobTitle()
+    {
+        return $this->jobTitle;
     }
 
 

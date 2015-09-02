@@ -718,7 +718,7 @@ class FellAppUtil {
 
             $count++;
 
-            //exit('end applicant');
+            exit( 'Test: end of fellowship applicant id='.$fellowshipApplication->getId() );
 
         } //for
 
@@ -985,10 +985,13 @@ class FellAppUtil {
         $nameMatchString = $typeStr.'Name';
 
         if( strpos($typeStr,'otherExperience') !== false ) {
-            //otherExperience1Start	otherExperience1End	otherExperience1Name
-            //exception for otherExperience: Name => Major
-            $majorMatchString = $typeStr.'Name';
+            //otherExperience1Name => jobTitle
             $nameMatchString = null;
+            $majorMatchString = null;
+            $jobTitle = $this->getValueByHeaderName($typeStr.'Name',$rowData,$headers);
+            $transformer = new GenericTreeTransformer($em, $author, 'JobTitleList');
+            $jobTitleEntity = $transformer->reverseTransform($jobTitle);
+            $training->setJobTitle($jobTitleEntity);
         }
 
         if( strpos($typeStr,'gme') !== false ) {

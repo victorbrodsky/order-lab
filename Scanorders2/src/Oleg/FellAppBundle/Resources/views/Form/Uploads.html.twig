@@ -76,6 +76,33 @@
         </div>
 
 
+        {#<div class="well form-element-holder user-Reference">#}
+            {#<label class="col-xs-12 control-label">Reference Letters</label>#}
+            {#<div class="row withpaddingtop">#}
+                {#<div class="col-xs-12">#}
+
+                    {#{% if form.references is defined %}#}
+                        {#{% for reference in form.references %}#}
+                            {#{{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default') }}#}
+                        {#{% endfor %}#}
+                    {#{% endif %}#}
+
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+
+
+        <div class="well form-element-holder user-Otherdocuments">
+            <label class="col-xs-12 control-label">Other Documents</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+
+                    {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default') }}
+
+                </div>
+            </div>
+        </div>
+
 
     </div> <!-- panel-body -->
 </div> <!-- panel-collapse -->

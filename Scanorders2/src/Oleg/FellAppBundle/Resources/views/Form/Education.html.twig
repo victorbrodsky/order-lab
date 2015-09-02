@@ -157,12 +157,24 @@
                         {{ formmacros.fieldDateLabel_vertical(training.completionDate,'allow-future-date') }}
                     </div>
                 </div>
+
+                {% if training.majors.vars.value %}
                 <div class="row withpaddingtop">
                     <div class="col-xs-12">
                         {#<input type="text" class="form-control" id="otherExperience1Name" name="otherExperience1Name" placeholder="Other Experience">#}
                         {{ form_row(training.majors,{'label':'Other Experience:'}) }}
                     </div>
                 </div>
+                {% endif %}
+
+                {% if training.jobTitle.vars.value %}
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
+                    </div>
+                </div>
+                {% endif %}
+
             </div>
             {% endif %}
 

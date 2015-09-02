@@ -73,6 +73,14 @@ class FellAppTrainingType extends AbstractType
             'classtype' => 'residencyspecialty'
         ));
 
+        //jobTitle
+        $builder->add('jobTitle', 'employees_custom_selector', array(
+            'label' => 'Job or Experience Title:',
+            'attr' => array('class' => 'ajax-combobox-jobTitle', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'jobTitle'
+        ));
+
 
 
     }
