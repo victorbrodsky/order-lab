@@ -66,10 +66,13 @@ class ReportGenerator {
 
         //remove all waiting processes
         //$processes = $this->em->getRepository('OlegFellAppBundle:Process')->findAll();
-        $repository = $this->getDoctrine()->getRepository('OlegFellAppBundle:Process');
-        $dql =  $repository->createQueryBuilder();
-        $dql->delete('Process', 'p');
-        $query = $this->em->createQuery($dql);
+//        $repository = $this->em->getRepository('OlegFellAppBundle:Process');
+//        $dql =  $repository->createQueryBuilder("p");
+//        $dql->delete('Process', 'p');
+//        $query = $this->em->createQuery($dql);
+//        $numDeleted = $query->execute();
+
+        $query = $this->em->createQuery('DELETE FROM OlegFellAppBundle:Process p');
         $numDeleted = $query->execute();
 
         //add all reports generation to queue

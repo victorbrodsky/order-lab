@@ -921,14 +921,14 @@ class FellAppController extends Controller {
         }
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-        $fellappRepGen->regenerateAllReports();
+        $numDeleted = $fellappRepGen->regenerateAllReports();
 
         $em = $this->getDoctrine()->getManager();
         $fellapps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
         $estimatedTime = count($fellapps)*5; //5 min for each report
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'All Application Reports will be regenerated. Estimated processing time for ' . count($fellapps) . ' reports is ' . $estimatedTime . ' minutes.'
+            'All Application Reports will be regenerated. Estimated processing time for ' . count($fellapps) . ' reports is ' . $estimatedTime . ' minutes. Number of deleted processes ' . $numDeleted
         );
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
