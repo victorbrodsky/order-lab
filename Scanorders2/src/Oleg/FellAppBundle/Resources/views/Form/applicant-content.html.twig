@@ -116,6 +116,16 @@
 {#{{ form_row(form.submit) }}#}
 {#{{ form_widget(form.update) }}#}
 
+{% if cycle == "edit" %}
+    <p>
+        <button class="btn btn-warning" type="submit">Update</button>
+        {#<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>#}
+        {#<button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>#}
+
+        <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
+    </p>
+{% endif %}
+
 {#{{ form_end(form) }}#}
 {{ form_end(form, {'render_rest': false}) }}
 
@@ -127,14 +137,15 @@
     </p>
 {% endif %}
 
-{% if cycle == "edit" %}
-    <p>
-        <a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>
-        {#<button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>#}
+{#{% if cycle == "edit" %}#}
+    {#<p>#}
+        {#<button class="btn btn-warning" type="submit">Update</button>#}
+        {#&#123;&#35;<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>&#35;&#125;#}
+        {#&#123;&#35;<button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>&#35;&#125;#}
 
-        <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
-    </p>
-{% endif %}
+        {#<a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>#}
+    {#</p>#}
+{#{% endif %}#}
 
 </div>
 <div class="col-md-1"></div>

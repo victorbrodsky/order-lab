@@ -858,14 +858,13 @@ class FellAppController extends Controller {
      * https://github.com/devandclick/EnseparHtml2pdfBundle
      *
      * @Route("/download-pdf/{id}", name="fellapp_download_pdf")
+     * @Method("GET")
      */
     public function downloadReportAction(Request $request, $id) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
-
-
 
         $em = $this->getDoctrine()->getManager();
 
@@ -882,6 +881,8 @@ class FellAppController extends Controller {
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application Downloaded');
 
         $reportDocument = $entity->getRecentReport();
+        echo "report=".$reportDocument."<br>";
+        exit();
 
         if( $reportDocument ) {
 
