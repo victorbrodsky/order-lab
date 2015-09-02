@@ -611,7 +611,7 @@ class ListController extends Controller
      * @Route("/medical-license-statuses/{id}/edit", name="medicalstatuses_edit")
      * @Route("/certifying-board-organizations/{id}/edit", name="certifyingboardorganizations_edit")
      * @Route("/training-types/{id}/edit", name="trainingtypes_edit")
-     * @Route("/job-titles/{id}", name="joblists_edit")
+     * @Route("/job-titles/{id}/edit", name="joblists_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
