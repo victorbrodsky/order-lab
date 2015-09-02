@@ -881,8 +881,8 @@ class FellAppController extends Controller {
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application Downloaded');
 
         $reportDocument = $entity->getRecentReport();
-        echo "report=".$reportDocument."<br>";
-        exit();
+        //echo "report=".$reportDocument."<br>";
+        //exit();
 
         if( $reportDocument ) {
 
