@@ -432,9 +432,15 @@ class FellAppController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-//            //update report
-//            $fellappUtil = $this->container->get('fellapp_util');
-//            $fellappUtil->addFellAppReportToQueue( $id );
+            //update report if report does not exists
+            if( count($entity->getReports()) == 0 ) {
+                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+                $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    'A new Complete Fellowship Application PDF will be generated.'
+                );
+            }
 
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
@@ -813,22 +819,37 @@ class FellAppController extends Controller {
 
 
 
-    /**
-     * @Route("/update-report/", name="fellapp_update_report", options={"expose"=true})
-     * @Method("POST")
-     */
-    public function updateReportAction(Request $request) {
-
-        $id = $request->get('id');
-
-        //update report
-        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-        $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
-
-        $response = new Response();
-        $response->setContent('Sent to queue');
-        return $response;
-    }
+//    /**
+//     * NOT USED NOW
+//     * update report by js
+//     *
+//     * @Route("/update-report/", name="fellapp_update_report", options={"expose"=true})
+//     * @Method("POST")
+//     */
+//    public function updateReportAction(Request $request) {
+//
+//        $id = $request->get('id');
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+//
+//        if( !$entity ) {
+//            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+//        }
+//
+//        echo "reports = " . count($entity->getReports()) . "<br>";
+//        exit();
+//
+//        //update report if report does not exists
+//        if( count($entity->getReports()) == 0 ) {
+//            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+//            $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
+//        }
+//
+//        $response = new Response();
+//        $response->setContent('Sent to queue');
+//        return $response;
+//    }
 
 
     /**
@@ -874,7 +895,7 @@ class FellAppController extends Controller {
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
                 $argument = 'asap';
                 //if( $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ) {
-                    $argument = 'overwrite';
+                    //$argument = 'overwrite';
                 //}
                 $fellappRepGen->addFellAppReportToQueue( $id, $argument );
 
@@ -890,23 +911,23 @@ class FellAppController extends Controller {
 
         }
 
-        //create report
-        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-        $res = $fellappRepGen->addFellAppReportToQueue( $id, true ); //create report on download click
-        $filename = $res['filename'];
-        $report = $res['report'];
-        $size = $res['size'];
-
-        //render report
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
-        $response->headers->set('Content-Length', $size);
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->setContent(file_get_contents($report));
-
-        return $response;
+//        //create report
+//        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+//        $res = $fellappRepGen->addFellAppReportToQueue( $id, true ); //create report on download click
+//        $filename = $res['filename'];
+//        $report = $res['report'];
+//        $size = $res['size'];
+//
+//        //render report
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/pdf');
+//        $response->headers->set('Content-Description', 'File Transfer');
+//        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
+//        $response->headers->set('Content-Length', $size);
+//        $response->headers->set('Content-Transfer-Encoding', 'binary');
+//        $response->setContent(file_get_contents($report));
+//
+//        return $response;
     }
 
     /**

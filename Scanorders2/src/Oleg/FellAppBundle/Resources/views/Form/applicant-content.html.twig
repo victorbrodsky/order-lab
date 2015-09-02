@@ -129,8 +129,8 @@
 
 {% if cycle == "edit" %}
     <p>
-        {#<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>#}
-        <button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>
+        <a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>
+        {#<button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>#}
 
         <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
     </p>
