@@ -68,7 +68,7 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'trainingfellowshiptitle',_fellowshipTitles,false);
     getComboboxGeneric(newForm,'traininginstitution',_traininginstitution,false,'');
     getComboboxGeneric(newForm,'locationusers',_locationusers,false,'');
-    getComboboxGeneric(newForm,'jobtitles',_jobTitles,false);
+    getComboboxGeneric(newForm,'jobtitle',_jobTitles,false);
     //getComboboxGeneric(newForm,'fellowshipsubspecialty',_fellowshipSubspecialtys,false);
 
     //grants
