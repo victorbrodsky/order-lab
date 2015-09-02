@@ -579,7 +579,7 @@ function expandTextarea() {
 
         //resize text area to fit the current text. It cause freeze html to pdf converter when downloading report.
         if( cycle != 'download' ) {
-            console.log('resize textarea');
+            //console.log('resize textarea');
             $(element).height($(element).prop('scrollHeight'));
         }
 
