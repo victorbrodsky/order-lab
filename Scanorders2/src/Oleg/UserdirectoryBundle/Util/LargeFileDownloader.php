@@ -50,6 +50,24 @@ class LargeFileDownloader {
         if( $ext == 'pdf' ) {
             $mimeType = 'application/pdf';
         }
+        if( $ext == 'doc' ) {
+            $mimeType = 'application/msword';
+        }
+        if( $ext == 'xlc' || $ext == 'xls' ) {
+            $mimeType = 'application/vnd.ms-excel';
+        }
+        if( $ext == 'jpe' || $ext == 'jpeg' || $ext == 'jpg' ) {
+            $mimeType = 'image/jpeg';
+        }
+        if( $ext == 'bmp' ) {
+            $mimeType = 'image/bmp';
+        }
+        if( $ext == 'gif' ) {
+            $mimeType = 'image/gif';
+        }
+        if( $ext == 'tif' ) {
+            $mimeType = 'image/tif';
+        }
 
         header('Content-Description: File Transfer');
         header('Content-Type: '.$mimeType);
