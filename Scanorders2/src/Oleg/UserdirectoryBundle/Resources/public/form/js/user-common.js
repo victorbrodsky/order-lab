@@ -562,40 +562,36 @@ function initSingleDatepicker( datepickerElement ) {
 function expandTextarea() {
     //var elements = document.getElementsByClassName('textarea');
 
-    //http://www.jacklmoore.com/autosize/ v.1
+    //http://www.jacklmoore.com/autosize/ v.2
     //for downlaod it append lots of white space on the bottom
-    if( cycle != 'download' ) {
-//        $('textarea').each(function(){
-//            $(this).autosize();
-//        });
-        $('textarea').autosize();
-    }
-
-//    var elements = $('.textarea');
-//    for (var i = 0; i < elements.length; ++i) {
-//        var element = elements[i];
-//
-//        $(element).autosize();
-//        //autosize(document.querySelector('textarea'));
-
-//        //resize text area to fit the current text. It cause freeze html to pdf converter when downloading report.
-//        if( cycle != 'download' ) {
-//            console.log('resize textarea');
-//            $(element).height($(element).prop('scrollHeight'));
-//        }
-//
-//        addEvent('keyup', element, function() {
-//            this.style.overflow = 'hidden';
-//            this.style.height = 0;
-//            var newH = this.scrollHeight + 10;
-//            //console.log("cur h="+this.style.height+", newH="+newH);
-//            this.style.height = newH + 'px';
-//        }, false);
-//
+//    if( cycle != 'download' ) {
+//        autosize(document.querySelectorAll('textarea'));
+////        $('textarea').each(function(){
+////            //$(this).autosize();  //v1
+////            autosize($(this));  //v2
+////        });
+////        $('textarea').autosize();
 //    }
 
-    //http://www.jacklmoore.com/autosize/
-    //autosize(document.querySelectorAll('textarea'));
+    var elements = $('.textarea');
+    for (var i = 0; i < elements.length; ++i) {
+        var element = elements[i];
+
+        //resize text area to fit the current text. It cause freeze html to pdf converter when downloading report.
+        if( cycle != 'download' ) {
+            console.log('resize textarea');
+            $(element).height($(element).prop('scrollHeight'));
+        }
+
+        addEvent('keyup', element, function() {
+            this.style.overflow = 'hidden';
+            this.style.height = 0;
+            var newH = this.scrollHeight + 10;
+            //console.log("cur h="+this.style.height+", newH="+newH);
+            this.style.height = newH + 'px';
+        }, false);
+
+    }
 
 }
 

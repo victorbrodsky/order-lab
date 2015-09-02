@@ -928,7 +928,7 @@ class FellAppController extends Controller {
         $estimatedTime = count($fellapps)*5; //5 min for each report
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'All Application Reports will be regenerated. Estimated processing time for ' . count($fellapps) . ' reports is ' . $estimatedTime . ' minutes. Number of deleted processes ' . $numDeleted
+            'All Application Reports will be regenerated. Estimated processing time for ' . count($fellapps) . ' reports is ' . $estimatedTime . ' minutes. Number of deleted processes in queue ' . $numDeleted
         );
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
@@ -953,7 +953,7 @@ class FellAppController extends Controller {
         $estimatedTime = count($processes)*5; //5 min for each report
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Queue with ' . count($processes) . ' will be re-run. Estimated processing time is ' . $estimatedTime . ' minutes. Number of reset processe = ' . $numUpdated
+            'Queue with ' . count($processes) . ' will be re-run. Estimated processing time is ' . $estimatedTime . ' minutes. Number of reset processes in queue ' . $numUpdated
         );
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
