@@ -312,7 +312,7 @@ class FellAppController extends Controller {
 
         if( $routeName == "fellapp_download" ) {
             $cycle = 'download';
-            $disabled = true;
+            $disabled = false;
             $method = "GET";
             $action = null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
