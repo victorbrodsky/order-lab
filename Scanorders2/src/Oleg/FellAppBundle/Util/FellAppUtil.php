@@ -718,7 +718,7 @@ class FellAppUtil {
 
             $count++;
 
-            exit( 'Test: end of fellowship applicant id='.$fellowshipApplication->getId() );
+            //exit( 'Test: end of fellowship applicant id='.$fellowshipApplication->getId() );
 
         } //for
 
