@@ -1052,7 +1052,10 @@ class UtilController extends Controller {
                 break;
             case "trainingfellowshiptitle":
                 $className = "FellowshipTitleList";
-                break;            
+                break;
+            case "jobtitles":
+                $className = "JobTitleList";
+                break;
 
             //training tree
             case "residencyspecialty":
