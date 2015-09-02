@@ -363,13 +363,25 @@ class ReportGenerator {
         }
 
         //generate file name: LastName_FirstName_FellowshipType_StartYear.pdf
+        $currentDate = new \DateTime();
         $subjectUser = $entity->getUser();
+//        $filename =
+//            "ID".$id.
+//            "_".$subjectUser->getLastNameUppercase().
+//            "_".$subjectUser->getFirstNameUppercase().
+//            "_".$entity->getFellowshipSubspecialty()->getName().
+//            "_".$entity->getStartDate()->format('Y').
+//            ".pdf";
+        //Cytopathology-Fellowship-Application-2017-ID47-Smith-John-generated-on-12-25-2015-at-02-13-pm.pdf
+        $fellappType = $entity->getFellowshipSubspecialty()->getName();
+        $fellappType = str_replace(" ","-",$fellappType);
         $filename =
-            "ID".$id.
-            "_".$subjectUser->getLastNameUppercase().
-            "_".$subjectUser->getFirstNameUppercase().
-            "_".$entity->getFellowshipSubspecialty()->getName().
-            "_".$entity->getStartDate()->format('Y').
+            $fellappType."-Fellowship-Application".
+            "-".$entity->getStartDate()->format('Y').
+            "-ID".$id.
+            "-".$subjectUser->getLastNameUppercase().
+            "-".$subjectUser->getFirstNameUppercase().
+            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-a').
             ".pdf";
 
         $logger->notice("Start to generate report for ID=".$id."; filename=".$filename);

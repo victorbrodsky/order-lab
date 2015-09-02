@@ -43,8 +43,16 @@ class LargeFileDownloader {
             $size = filesize($filenameClean);
         }
 
+        $mimeType = 'application/octet-stream';
+
+        //extension
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if( $ext == 'pdf' ) {
+            $mimeType = 'application/pdf';
+        }
+
         header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
+        header('Content-Type: '.$mimeType);
         header('Content-Disposition: attachment; filename='.$filename);
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
