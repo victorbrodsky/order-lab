@@ -76,6 +76,15 @@
 }
 /*end of sign in*/
 
+.form-control {
+    font-size: 18px;
+    color: rgba(14, 14, 14, 0.87);
+}
+
+.select2-container .select2-choice {
+    font-size: 18px;
+}
+
 /*.form-control-modif {*/
     /*margin: 0;*/
     /*display: inline;*/
@@ -154,6 +163,7 @@
 .oleg-form-nomargin-bottom {
     margin-bottom: 0;
 }
+
 
 .panel-heading > .element-title-extended-width {
     width: 85%;

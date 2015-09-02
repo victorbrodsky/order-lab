@@ -312,7 +312,7 @@ class FellAppController extends Controller {
 
         if( $routeName == "fellapp_download" ) {
             $cycle = 'download';
-            $disabled = false;
+            $disabled = true;
             $method = "GET";
             $action = null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
@@ -494,6 +494,10 @@ class FellAppController extends Controller {
         foreach( $subjectUser->getCredentials()->getExaminations() as $examination ) {
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $examination );
         }
+
+        //reports
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'report' );
+
 
     }
 
