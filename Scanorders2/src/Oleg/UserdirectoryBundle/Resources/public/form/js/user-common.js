@@ -216,7 +216,7 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         quietMillis: 100,
         multiple: multiple,
         data: data,
-        createSearchChoice:createSearchChoice,
+        createSearchChoice:createSearchChoice
     });
 
     if( $(target).attr("readonly") ) {
