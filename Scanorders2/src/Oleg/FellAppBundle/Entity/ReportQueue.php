@@ -22,7 +22,7 @@ class ReportQueue {
     private $id;           
     
     /**
-     * @ORM\OneToMany(targetEntity="Process", mappedBy="reportQueue", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Process", mappedBy="reportQueue", cascade={"persist","remove"})
      **/
     private $processes;
     
@@ -32,7 +32,7 @@ class ReportQueue {
     private $running;
     
     /**
-     * @ORM\OneToOne(targetEntity="Process", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Process", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="runningProcess_id", referencedColumnName="id")
      **/
     private $runningProcess;

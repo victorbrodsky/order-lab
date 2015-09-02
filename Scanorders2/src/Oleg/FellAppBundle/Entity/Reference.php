@@ -54,7 +54,7 @@ class Reference
     private $institution;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\GeoLocation", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\GeoLocation", cascade={"persist","remove"})
      **/
     private $geoLocation;
 
