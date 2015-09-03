@@ -418,11 +418,15 @@ class ReportGenerator {
 
         //cv
         $recentDocumentCv = $entity->getRecentCv();
-        $filePathsArr[] = $recentDocumentCv->getFileSystemPath();
+        if( $recentDocumentCv ) {
+            $filePathsArr[] = $recentDocumentCv->getFileSystemPath();
+        }
 
         //cover letter
         $recentCoverLetter = $entity->getRecentCoverLetter();
-        $filePathsArr[] = $recentCoverLetter->getFileSystemPath();
+        if( $recentCoverLetter ) {
+            $filePathsArr[] = $recentCoverLetter->getFileSystemPath();
+        }
 
         //scores
         $scores = $entity->getExaminationScores();
