@@ -11,8 +11,10 @@ security:
         ROLE_SCANORDER_PATHOLOGY_RESIDENT: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
         ROLE_SCANORDER_PATHOLOGY_FELLOW: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
         ROLE_SCANORDER_PATHOLOGY_FACULTY: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
+        ROLE_SCANORDER_SUBMITTER: [ROLE_USER]
+        ROLE_SCANORDER_ORDERING_PROVIDER: [ROLE_USER]
 
-        ROLE_SCANORDER_PROCESSOR:   [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
+        ROLE_SCANORDER_PROCESSOR:   [ROLE_USER, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
         ROLE_SCANORDER_ADMIN:       [ROLE_USER, ROLE_SCANORDER_PROCESSOR, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
 
         # Userdirectory roles
@@ -21,6 +23,7 @@ security:
 
         # FellApp roles
         ROLE_FELLAPP_ADMIN: [ROLE_USER, ROLE_FELLAPP_USER, ROLE_USERDIRECTORY_EDITOR]
+        ROLE_FELLAPP_USER: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
 
         # General roles
 #        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
@@ -127,6 +130,9 @@ security:
      - { path: ^/directory/common/, role: ROLE_USER }
      ############################## common institution tree ##############################
      - { path: ^/directory/util/common/, role: ROLE_USER }
+     ################################# common download file ####################################
+     - { path: ^/directory/file-download/, role: ROLE_USER }
+     - { path: ^/directory/file-delete/, role: ROLE_USER }
 
      ############################## EMPLOYEES SITE SETTINGS ##############################
      - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
