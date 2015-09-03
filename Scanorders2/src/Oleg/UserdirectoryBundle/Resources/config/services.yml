@@ -144,6 +144,11 @@ services:
         class: Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
 
+    #user generator util
+    user_generator:
+        class: Oleg\UserdirectoryBundle\Util\UserGenerator
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
     #OneupUploaderBundle upload listener
     oleg.upload_listener:
         class: Oleg\UserdirectoryBundle\Services\UploadListener

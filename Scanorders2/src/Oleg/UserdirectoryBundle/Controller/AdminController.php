@@ -187,7 +187,8 @@ class AdminController extends Controller
         $count_reslabs = $this->generateResLabs();
 
         //TODO: rewrite using DB not Aperio's SOAP
-        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
+        $userGenerator = $this->container->get('user_generator');
+        $count_users = $userGenerator->generateUsersExcel();
 
         $count_testusers = $this->generateTestUsers();
 
@@ -1089,7 +1090,7 @@ class AdminController extends Controller
             'Obstetrics and Gynecology' => null,
             'Ophthalmology' => null,
             'Pain Medicine' => null,
-            'Pathology' => null,
+            'Pathology and Laboratory Medicine' => null,
             'Pediatrics' => null,
             'Preventive Medicine and Nutrition' => null,
             'Psychiatry and Mental Health' => null,
@@ -1135,7 +1136,7 @@ class AdminController extends Controller
 
         $institutions = array(
             'Weill Cornell Medical College'=>$wcmc,
-            "New York Hospital"=>$nyh,
+            "New York-Presbyterian Hospital"=>$nyh,
             "Weill Cornell Medical College Qatar"=>$wcmcq,
             "Memorial Sloan Kettering Cancer Center"=>$msk,
             "Hospital for Special Surgery"=>$hss
@@ -2524,6 +2525,7 @@ class AdminController extends Controller
         );
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $userGenerator = $this->container->get('user_generator');
         $userUtil = new UserUtil();
         $em = $this->getDoctrine()->getManager();
         $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->get('security.context')->getToken()->getUser();
@@ -2570,7 +2572,7 @@ class AdminController extends Controller
             $user->getPreferences()->setTimezone($default_time_zone);
 
             //add default locations
-            $user = $userUtil->addDefaultLocations($user,$systemuser,$em,$this->container);
+            $user = $userGenerator->addDefaultLocations($user,$systemuser);
 
             //phone, fax, office are stored in Location object
             $mainLocation = $user->getMainLocation();

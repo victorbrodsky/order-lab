@@ -464,6 +464,7 @@ class ReportGenerator {
         $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
         $logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
 
+        //3) merge all pdfs
         $uniqueid = "report_ID" . $id;
         $fileUniqueName = $uniqueid . ".pdf";
         $filenameMerged = $reportPath . $fileUniqueName;
@@ -474,7 +475,7 @@ class ReportGenerator {
             $createFlag = false;
         }
 
-        //3) add the report to application report DB                       
+        //4) add the report to application report DB
         $filesize = filesize($filenameMerged);
         $this->createFellAppReportDB($entity,$systemUser,$uniqueid,$filename,$fileUniqueName,$uploadReportPath,$filesize);
 

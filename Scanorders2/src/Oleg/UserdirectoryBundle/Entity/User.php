@@ -214,6 +214,7 @@ class User extends BaseUser {
 
     /**
      * @ORM\OneToOne(targetEntity="Document")
+     * @ORM\OneToOne(targetEntity="Document")
      * @ORM\JoinColumn(name="avatar_id", referencedColumnName="id")
      **/
     private $avatar;
@@ -1002,6 +1003,29 @@ class User extends BaseUser {
         }
         return $value;
     }
+
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setSalutation($salutation)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setSalutation($salutation);
+        }
+    }
+
+    public function getSalutation()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getSalutation();
+        }
+        return $value;
+    }
+
 
     public function getLastNameUppercase() {
         return $this->capitalizeIfNotAllCapital($this->getLastName());

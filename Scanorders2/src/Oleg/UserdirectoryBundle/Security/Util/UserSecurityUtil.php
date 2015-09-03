@@ -389,8 +389,8 @@ class UserSecurityUtil {
         $user->getPreferences()->setTimezone($default_time_zone);
 
         //add default locations
-        $userUtil = new UserUtil();
-        $userUtil->addDefaultLocations($user,null,$em,$serviceContainer);
+        $userGenerator = $this->container->get('user_generator');
+        $userGenerator->addDefaultLocations($user,null);
 
         $user->setPassword("");
 

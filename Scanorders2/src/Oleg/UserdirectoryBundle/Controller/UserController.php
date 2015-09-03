@@ -1122,6 +1122,8 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $userGenerator = $this->container->get('user_generator');
+
         //echo "user id=".$id."<br>";
         //exit();
 
@@ -1129,8 +1131,7 @@ class UserController extends Controller
         $user = $userManager->createUser();
 
         $creator = $this->get('security.context')->getToken()->getUser();
-        $userUtil = new UserUtil();
-        $user = $userUtil->addDefaultLocations($user,$creator,$em,$this->container);
+        $user = $userGenerator->addDefaultLocations($user,$creator);
 
         $userSecUtil = $this->get('user_security_utility');
         $userkeytype = $userSecUtil->getDefaultUsernameType();
@@ -2284,10 +2285,11 @@ class UserController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $default_time_zone = $this->container->getParameter('default_time_zone');
+        //$userutil = new UserUtil();
+        //$usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
 
-        $userutil = new UserUtil();
-        $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->container);
+        $userGenerator = $this->container->get('user_generator');
+        $count_users = $userGenerator->generateUsersExcel();
 
         //exit();
         return $this->redirect($this->generateUrl('employees_listusers'));
