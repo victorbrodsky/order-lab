@@ -22,8 +22,42 @@ class TreeRepository extends NestedTreeRepository {
         return $child;
     }
 
+    public function findByChildnameAndParent($childName,$parent,$mapper) {
 
-    public function findCategoryByNameAndParentId($category,$parent) {
+        if( !$childName || !$parent ) {
+            //exit('Logical Error: category and/or parent is null');
+            throw new \Exception('Logical Error: child name and/or parent is null');
+        }
+
+        $foundChildEntity = null;
+
+//        $fullClassName = new \ReflectionClass($parent);
+//        $className = $fullClassName->getShortName();
+//        //echo "<br><br>find Category className=".$className."<br>";
+
+        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.parent","parent");
+        $dql->where("(list.parent = :parent AND list.name = :childname)");
+
+        $query = $this->_em->createQuery($dql);
+
+        $params = array('parent' => $parent, 'childname' => $childName);
+
+        $query->setParameters($params);
+
+        $results = $query->getResult();
+
+       if( count($results) > 0 ) {
+           $foundChildEntity = $results[0];
+       }
+
+        return $foundChildEntity;
+    }
+
+
+    public function findCategoryByChildAndParent($category,$parent) {
 
         if( !$category || !$parent ) {
             //exit('Logical Error: category and/or parent is null');
@@ -144,7 +178,7 @@ class TreeRepository extends NestedTreeRepository {
         //echo "child=".$child.", id=".$child->getId()."<br>";
 
         //find child in DB by name and parent
-        $foundChild = $this->findCategoryByNameAndParentId($child,$parent);
+        $foundChild = $this->findCategoryByChildAndParent($child,$parent);
 
         //echo "foundChild=".$foundChild."<br>";
         //exit();

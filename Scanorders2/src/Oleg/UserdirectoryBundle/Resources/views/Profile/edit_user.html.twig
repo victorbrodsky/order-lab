@@ -1765,7 +1765,7 @@
                             {#Certificate of Qualification#}
 
                             {#HIDE ENTIRE SECTION Certificate of Qualification if both fields are empty / no array members#}
-                            {% if form.credentials.numberCOQ.vars.value or form.credentials.coqExpirationDate.vars.value or not (cycle == "show" or cycle == "show_user") %}
+                            {% if form.credentials.coqCode.vars.value or form.credentials.numberCOQ.vars.value or form.credentials.coqExpirationDate.vars.value or not (cycle == "show" or cycle == "show_user") %}
                                 {% set showCOQ = true %}
                             {% else %}
                                 {% set showCOQ = false %}
@@ -1784,6 +1784,7 @@
                                         <div class="panel-body">
                                             <div class="user-coq-holder">
 
+												{{ formmacros.field_notempty(form.credentials.coqCode,cycle) }}
                                                 {{ formmacros.field_notempty(form.credentials.numberCOQ,cycle) }}
                                                 {{ formmacros.fieldDateLabel_notempty(form.credentials.coqExpirationDate,cycle,'allow-future-date') }}
 
@@ -1792,6 +1793,7 @@
                                     </div>
                                 </div>
                             {% else %}
+								{% do form.credentials.coqCode.setRendered %}
                                 {% do form.credentials.numberCOQ.setRendered %}
                                 {% do form.credentials.coqExpirationDate.setRendered %}
                             {% endif %}

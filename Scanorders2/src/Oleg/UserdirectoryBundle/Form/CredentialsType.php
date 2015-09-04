@@ -81,7 +81,12 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('numberCOQ', null, array(
-            'label' => 'Certificate of Qualification (COQ):',
+            'label' => 'COQ Serial Number:',
+            'attr' => array('class'=>'form-control form-control-modif')
+        ));
+
+        $builder->add('coqCode', null, array(
+            'label' => 'Certificate of Qualification (COQ) Code:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 

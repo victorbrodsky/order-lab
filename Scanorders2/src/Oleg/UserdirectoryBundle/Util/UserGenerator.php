@@ -10,12 +10,14 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 
 use Oleg\OrderformBundle\Entity\Educational;
+use Oleg\UserdirectoryBundle\Entity\AdminComment;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
 use Oleg\UserdirectoryBundle\Entity\CodeNYPH;
 use Oleg\UserdirectoryBundle\Entity\Credentials;
 use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
+use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\MedicalTitle;
 use Oleg\UserdirectoryBundle\Entity\ResearchLab;
@@ -326,34 +328,151 @@ class UserGenerator {
             $AdministrativeCommentCategory = $this->getValueByHeaderName('Administrative Comment - Category', $rowData, $headers);
             if( $AdministrativeCommentCategory ) {
 
+                $comment = new AdminComment($systemuser);
+
+                //Administrative Comment - Name
+                $AdministrativeCommentName = $this->getValueByHeaderName('Administrative Comment - Name', $rowData, $headers);
+
+                //Administrative Comment - Comment
+                $AdministrativeCommentComment = $this->getValueByHeaderName('Administrative Comment - Comment', $rowData, $headers);
+
+                //check if Category exists (root)
+                $AdministrativeCommentCategoryObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentCategory,$systemuser);
+
+                $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'CommentTypeList');
+                $AdministrativeCommentNameObj = $this->em->getRepository('OlegUserdirectoryBundle:CommentTypeList')->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
+
+                if( !$AdministrativeCommentNameObj ) {
+                    $AdministrativeCommentNameObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentName,$systemuser);
+                    $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
+                }
+
+                //set comment category tree node
+                if( $AdministrativeCommentCategoryObj ) {
+                    $comment->setCommentType($AdministrativeCommentCategoryObj);
+                }
+
+                //overwrite comment category tree node
+                if( $AdministrativeCommentNameObj ) {
+                    $comment->setCommentType($AdministrativeCommentNameObj);
+                }
+
+                $comment->setComment($AdministrativeCommentComment);
+
+                $user->addAdminComment($comment);
             }
 
-            //Administrative Comment - Name
 
-            //Administrative Comment - Comment
+            //Identifier: Multi
+            $IdentifierNumberStr = $this->getValueByHeaderName('Identifier', $rowData, $headers);
+            if( $IdentifierNumberStr ) {
 
-            //Multi
-            //Identifier - Type
-            //Identifier
-            //Identifier - link
+                $IdentifierNumberArr = explode(";", $IdentifierNumberStr);
+
+                $IdentifierTypeStr = $this->getValueByHeaderName('Identifier - Type', $rowData, $headers);
+                $IdentifierTypeArr = explode(";", $IdentifierTypeStr);
+
+                $IdentifierLinkStr = $this->getValueByHeaderName('Identifier - link', $rowData, $headers);
+                $IdentifierLinkArr = explode(";", $IdentifierLinkStr);
+
+                $index = 0;
+                foreach( $IdentifierNumberArr as $IdentifierStr ) {
+
+                    $IdentifierTypeStr = $IdentifierTypeArr[$index];
+                    $IdentifierLinkStr = $IdentifierLinkArr[$index];
+
+                    $Identifier = new Identifier();
+                    $Identifier->setStatus($Identifier::STATUS_VERIFIED);
+
+                    //Identifier
+                    $Identifier->setField($IdentifierStr);
+
+                    //Identifier - Type
+                    $IdentifierTypeStrObj = $this->getObjectByNameTransformer('CommentTypeList',$IdentifierTypeStr,$systemuser);
+                    $Identifier->setKeytype($IdentifierTypeStrObj);
+
+                    //Identifier - link
+                    $Identifier->setLink($IdentifierLinkStr);
+
+                    $credentials->addIdentifier($Identifier);
+
+                    $index++;
+                }
+            }
 
             //Certificate of Qualification - Code
-            //Certificate of Qualification - Serial Number
-            //Certificate of Qualification - Expiration Date
+            $CertificateCodeStr = $this->getValueByHeaderName('Certificate of Qualification - Code', $rowData, $headers);
+            if( $CertificateCodeStr ) {
+                $credentials->setCoqCode($CertificateCodeStr);
+            }
 
+            //Certificate of Qualification - Serial Number
+            $CertificateSerialNumberStr = $this->getValueByHeaderName('Certificate of Qualification - Serial Number', $rowData, $headers);
+            if( $CertificateSerialNumberStr ) {
+                $credentials->setNumberCOQ($CertificateSerialNumberStr);
+            }
+
+            //Certificate of Qualification - Expiration Date
+            $CertificateExpirationDateStr = $this->getValueByHeaderName('Certificate of Qualification - Expiration Date', $rowData, $headers);
+            if( $CertificateExpirationDateStr ) {
+                $CertificateExpirationDate = $this->transformDatestrToDate($CertificateExpirationDateStr);
+                $credentials->setCoqExpirationDate($CertificateExpirationDate);
+            }
+s
             //CLIA - Number
+            $CLIAStr = $this->getValueByHeaderName('CLIA - Number', $rowData, $headers);
+            if( $CLIAStr ) {
+                $credentials->setNumberCLIA($CLIAStr);
+            }
+
+            //CLIA - Expiration Date
+            $CLIAExpDateStr = $this->getValueByHeaderName('CLIA - Expiration Date', $rowData, $headers);
+            if( $CLIAExpDateStr ) {
+                $CLIAExpDate = $this->transformDatestrToDate($CLIAExpDateStr);
+                $credentials->setCliaExpirationDate($CLIAExpDate);
+            }
 
             //PFI
+            $PFI = $this->getValueByHeaderName('PFI', $rowData, $headers);
+            if( $PFI ) {
+                $credentials->setNumberPFI($PFI);
+            }
 
             //POPS Link => Identifier Type:POPS, Identifier:link, Link:link
+            $POPS = $this->getValueByHeaderName('POPS Link', $rowData, $headers);
+            if( $POPS ) {
+                $popsIdentifier = new Identifier();
+                $Identifier->setStatus($Identifier::STATUS_VERIFIED);
+
+                $popsIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','POPS',$systemuser);
+                $popsIdentifier->setKeytype($popsIdentifierTypeObj);
+                $popsIdentifier->setLink($POPS);
+            }
 
             //Pubmed Link
+            $Pubmed = $this->getValueByHeaderName('Pubmed Link', $rowData, $headers);
+            if( $Pubmed ) {
+                $PubmedIdentifier = new Identifier();
+                $PubmedIdentifier->setStatus($Identifier::STATUS_VERIFIED);
+
+                $PubmedIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','Pubmed',$systemuser);
+                $PubmedIdentifier->setKeytype($PubmedIdentifierTypeObj);
+                $PubmedIdentifier->setLink($Pubmed);
+            }
 
             //VIVO link
+            $VIVO = $this->getValueByHeaderName('VIVO link', $rowData, $headers);
+            if( $VIVO ) {
+                $VIVOIdentifier = new Identifier();
+                $VIVOIdentifier->setStatus($Identifier::STATUS_VERIFIED);
+
+                $VIVOIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','VIVO',$systemuser);
+                $VIVOIdentifier->setKeytype($VIVOIdentifierTypeObj);
+                $VIVOIdentifier->setLink($VIVO);
+            }
 
 
 
-            exit('1');
 
             //add scanorder Roles
             $user->addRole('ROLE_SCANORDER_SUBMITTER');
@@ -362,10 +481,6 @@ class UserGenerator {
             //TODO: remove in prod
             if( $user->getUsername() == "oli2002_@_wcmc-cwid" || $user->getUsername() == "vib9020_@_wcmc-cwid" ) {
                 $user->addRole('ROLE_PLATFORM_ADMIN');
-            }
-
-            if( $user->getUsername() == "oli2002_@_wcmc-cwid" ) {
-                exit('1');
             }
 
             //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
@@ -434,6 +549,10 @@ class UserGenerator {
             $event = "User ".$user." has been created by ".$systemuser."<br>";
             $userSecUtil->createUserEditEvent($serviceContainer->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
 //            }
+
+
+
+            exit('eof user');
 
         }//for each user
 
@@ -558,51 +677,75 @@ class UserGenerator {
         $DivisionObj = null;
         $ServiceObj = null;
 
+        $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'Institution');
+
         $params = array('type'=>'Medical');
 
-        if( $Institution )
+        if( $Institution ) {
             $InstitutionObj = $this->getObjectByNameTransformer('Institution',$Institution,$systemuser,$params);
 
-        if( $Department )
-            $DepartmentObj = $this->getObjectByNameTransformer('Institution',$Department,$systemuser,$params);
-
-        if( $Division )
-            $DivisionObj = $this->getObjectByNameTransformer('Institution',$Division,$systemuser,$params);
-
-        if( $Service )
-            $ServiceObj = $this->getObjectByNameTransformer('Institution',$Service,$systemuser,$params);
-
-
-        if( $ServiceObj ) {
-            if( strtolower($HeadService) == 'yes' ) {
-                $HeadServiceObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadService,$systemuser);
-                $holder->addUserPosition($HeadServiceObj);
+            if( $InstitutionObj ) {
+                //set Institution tree node
+                $holder->setInstitution($InstitutionObj);
             }
-            $DivisionObj->addChild($ServiceObj);
-            $holder->setInstitution($ServiceObj);
         }
 
-        if( $DivisionObj ) {
-            if( strtolower($HeadDivision) == 'yes' ) {
-                $HeadDivisionObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadDivision,$systemuser);
-                $holder->addUserPosition($HeadDivisionObj);
+        //department
+        if( $Department && $InstitutionObj ) {
+
+            $DepartmentObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Department,$InstitutionObj,$mapper);
+            if( !$DepartmentObj ) {
+                $DepartmentObj = $this->getObjectByNameTransformer('Institution',$Department,$systemuser,$params);
+                $InstitutionObj->addChild($DepartmentObj);
             }
-            $DepartmentObj->addChild($DivisionObj);
-            $holder->setInstitution($DivisionObj);
+
+            if( $DepartmentObj ) {
+                if( strtolower($HeadDepartment) == 'yes' ) {
+                    $HeadDepartmentObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadDepartment,$systemuser);
+                    $holder->addUserPosition($HeadDepartmentObj);
+                }
+                //overwrite Institution tree node
+                $holder->setInstitution($DepartmentObj);
+            }
         }
 
-        if( $DepartmentObj ) {
-            //oleg_userdirectorybundle_user_administrativeTitles_0_userPositions: PositionTypeList
-            if( strtolower($HeadDepartment) == 'yes' ) {
-                $HeadDepartmentObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadDepartment,$systemuser);
-                $holder->addUserPosition($HeadDepartmentObj);
+        //division
+        if( $Division && $DepartmentObj ) {
+
+            $DivisionObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Division,$DepartmentObj,$mapper);
+            if( !$DivisionObj ) {
+                $DivisionObj = $this->getObjectByNameTransformer('Institution',$Division,$systemuser,$params);
+                $DepartmentObj->addChild($DivisionObj);
             }
-            $InstitutionObj->addChild($DepartmentObj);
-            $holder->setInstitution($DepartmentObj);
+
+            if( $DivisionObj ) {
+                if( strtolower($HeadDivision) == 'yes' ) {
+                    $HeadDivisionObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadDivision,$systemuser);
+                    $holder->addUserPosition($HeadDivisionObj);
+                }
+                //overwrite Institution tree node
+                $holder->setInstitution($DivisionObj);
+            }
         }
 
-        if( $InstitutionObj ) {
-            $holder->setInstitution($InstitutionObj);
+        //service
+        if( $Service && $DivisionObj ) {
+
+
+            $ServiceObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Service,$DivisionObj,$mapper);
+            if( !$ServiceObj ) {
+                $ServiceObj = $this->getObjectByNameTransformer('Institution',$Service,$systemuser,$params);
+                $DivisionObj->addChild($ServiceObj);
+            }
+
+            if( $ServiceObj ) {
+                if( strtolower($HeadService) == 'yes' ) {
+                    $HeadServiceObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadService,$systemuser);
+                    $holder->addUserPosition($HeadServiceObj);
+                }
+                //overwrite Institution tree node
+                $holder->setInstitution($ServiceObj);
+            }
         }
 
         return $holder;

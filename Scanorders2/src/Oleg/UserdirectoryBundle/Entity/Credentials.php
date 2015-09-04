@@ -47,11 +47,19 @@ class Credentials extends BaseUserAttributes
     private $numberPFI;
 
     /**
+     * Certificate of Qualification - Serial Number
      * @ORM\Column(type="string", nullable=true)
      */
     private $numberCOQ;
 
     /**
+     * Certificate of Qualification - Code
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coqCode;
+
+    /**
+     * Certificate of Qualification - Expiration Date
      * @ORM\Column(type="date", nullable=true)
      */
     private $coqExpirationDate;
@@ -231,6 +239,24 @@ class Credentials extends BaseUserAttributes
     {
         return $this->numberCOQ;
     }
+
+    /**
+     * @param mixed $coqCode
+     */
+    public function setCoqCode($coqCode)
+    {
+        $this->coqCode = $coqCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoqCode()
+    {
+        return $this->coqCode;
+    }
+
+
 
     /**
      * @param mixed $numberPFI
