@@ -836,7 +836,7 @@ class ReportGenerator {
 
         echo "filenameMerged=".$filenameMerged."<br>";
 
-        $cmd = '"C:\Users\DevServer\Desktop\php\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"' . $filesStr . ' cat output ' . $filenameMerged;
+        $cmd = '"C:\Users\DevServer\Desktop\php\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"' . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
         //echo "cmd=".$cmd."<br>";
 
         //$output = null;

@@ -135,7 +135,8 @@ class BaseTitleType extends AbstractType
                     'Resident'   => 'Resident',
                     'Fellow' => 'Fellow',
                     'Clinical Faculty' => 'Clinical Faculty',
-                    'Research Faculty' => 'Research Faculty'
+                    'Research Faculty' => 'Research Faculty',
+                    'Clinical Faculty, Research Faculty' => 'Clinical Faculty, Research Faculty'
                 ),
                 'label' => "Position Track Type:",
                 'required' => false,

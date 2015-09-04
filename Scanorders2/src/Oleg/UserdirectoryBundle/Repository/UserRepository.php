@@ -75,6 +75,33 @@ class UserRepository extends EntityRepository {
     }
 
 
+    //Castro Martinez, Mario A: lastName, firstName
+    public function findOneByNameStr( $nameStr ) {
+
+        $user = null;
+
+        $nameStrArr = explode(",",$nameStr);
+
+        $lastName = trim($nameStrArr[0]);
+        $firstName = trim($nameStrArr[1]);
+
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'user')
+            ->select("user");
+
+        $query->leftJoin("user.infos", "infos");
+
+        $query->where("infos.firstName = :firstName OR infos.lastName = :lastName");
+        $query->setParameters( array("firstName"=>$firstName, "lastName"=>$lastName) );
+
+        $users = $query->getQuery()->getResult();
+
+        if( count($users) > 0 ) {
+            $user = $users[0];
+        }
+
+        return $user;
+    }
 
 
 }

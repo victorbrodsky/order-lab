@@ -2291,6 +2291,11 @@ class UserController extends Controller
         $userGenerator = $this->container->get('user_generator');
         $count_users = $userGenerator->generateUsersExcel();
 
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Imported ' . $count_users . ' new users from Excel.'
+        );
+
         //exit();
         return $this->redirect($this->generateUrl('employees_listusers'));
     }

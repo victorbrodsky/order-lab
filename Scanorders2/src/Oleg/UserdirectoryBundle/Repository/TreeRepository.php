@@ -35,15 +35,17 @@ class TreeRepository extends NestedTreeRepository {
 //        $className = $fullClassName->getShortName();
 //        //echo "<br><br>find Category className=".$className."<br>";
 
+        echo "rep=".$mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']."<br>";
+
         $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.parent","parent");
-        $dql->where("(list.parent = :parent AND list.name = :childname)");
+        $dql->where('parent.id = :parentid AND list.name = :childname');
 
         $query = $this->_em->createQuery($dql);
 
-        $params = array('parent' => $parent, 'childname' => $childName);
+        $params = array('parentid' => $parent->getId(), 'childname' => "'".$childName."'");
 
         $query->setParameters($params);
 
@@ -337,7 +339,18 @@ class TreeRepository extends NestedTreeRepository {
 
     public function getDefaultLevelLabel( $mapper, $level ) {
 
-        $levelTitle = null;
+        $organizationalGroupType = $this->getDefaultLevelEntity( $mapper, $level );
+
+        if( $organizationalGroupType ) {
+            $levelTitle = $organizationalGroupType->getName()."";
+        }
+
+        return $levelTitle;
+    }
+
+
+
+    public function getDefaultLevelEntity( $mapper, $level ) {
 
         $organizationalGroupTypes = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
             array(
@@ -354,11 +367,7 @@ class TreeRepository extends NestedTreeRepository {
             $organizationalGroupType = null;
         }
 
-        if( $organizationalGroupType ) {
-            $levelTitle = $organizationalGroupType->getName()."";
-        }
-
-        return $levelTitle;
+        return $organizationalGroupType;
     }
 
 

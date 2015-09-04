@@ -10,6 +10,8 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 
 use Oleg\OrderformBundle\Entity\Educational;
+use Oleg\OrderformBundle\Entity\PerSiteSettings;
+use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Oleg\UserdirectoryBundle\Entity\AdminComment;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
@@ -56,6 +58,7 @@ class UserGenerator {
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
         //var_dump($sheetData);
 
+        $assistantsArr = array();
 
         $count = 0;
         //$serviceCount = 0;
@@ -81,8 +84,10 @@ class UserGenerator {
             TRUE,
             FALSE);
 
+
+
         //for each user in excel (start at row 2)
-        for( $row = 4; $row <= $highestRow; $row++ ) {
+        for( $row = 2; $row <= $highestRow; $row++ ) {
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -97,7 +102,7 @@ class UserGenerator {
 
 
             $cwid = $this->getValueByHeaderName('CWID', $rowData, $headers);
-            echo "cwid=".$cwid."<br>";
+            //echo "cwid=".$cwid."<br>";
 
             if( !$cwid ) {
                 continue; //ignore users without cwid
@@ -110,7 +115,14 @@ class UserGenerator {
 
             //username: oli2002_@_wcmc-cwid
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
-            echo "DB user=".$user."<br>";
+            //echo "DB user=".$user."<br>";
+
+            $updateUsers = true;
+            if( $user ) {
+                if( !$updateUsers ) {
+                    continue; //ignore existing users to prevent overwrite
+                }
+            }
 
             if( !$user ) {
                 //create excel user
@@ -141,10 +153,13 @@ class UserGenerator {
             $user->setCreatedby('excel');
             $user->getPreferences()->setTimezone($default_time_zone);
 
+            echo "new user=".$user."<br>";
+
             //Degree: TrainingDegreeList
             $degree = $this->getValueByHeaderName('Degree', $rowData, $headers);
             if( $degree ) {
                 $training = new Training($systemuser);
+                $training->setStatus($training::STATUS_VERIFIED);
                 $degreeObj = $this->getObjectByNameTransformer('TrainingDegreeList',$degree,$systemuser);
                 $training->setDegree($degreeObj);
                 $user->addTraining($training);
@@ -166,9 +181,12 @@ class UserGenerator {
 
             //phone, fax, office are stored in Location object
             $mainLocation = $user->getMainLocation();
+            $mainLocation->setStatus($mainLocation::STATUS_VERIFIED);
             $mainLocation->setPhone($this->getValueByHeaderName('Business Phone', $rowData, $headers));
             $mainLocation->setFax($this->getValueByHeaderName('Fax Number', $rowData, $headers));
             $mainLocation->setIc($this->getValueByHeaderName('Intercom', $rowData, $headers));
+            $mainLocation->setPager($this->getValueByHeaderName('Pager', $rowData, $headers));
+
 
             //set room object
             $office = $this->getValueByHeaderName('Office Location', $rowData, $headers);
@@ -178,14 +196,6 @@ class UserGenerator {
             //title is stored in Administrative Title
             $administrativeTitleStr = $this->getValueByHeaderName('Administrative Title', $rowData, $headers);
             if( $administrativeTitleStr ) {
-                $administrativeTitle = new AdministrativeTitle($systemuser);
-
-                //set title object: Administrative Title
-                $titleObj = $this->getObjectByNameTransformer('AdminTitleList',$administrativeTitleStr,$systemuser);
-                $administrativeTitle->setName($titleObj);
-
-                $user->addAdministrativeTitle($administrativeTitle);
-
                 //Administrative - Institution
                 $Institution = $this->getValueByHeaderName('Administrative - Institution', $rowData, $headers);
                 $Department = $this->getValueByHeaderName('Administrative - Department', $rowData, $headers);
@@ -196,19 +206,24 @@ class UserGenerator {
                 $HeadDivision = $this->getValueByHeaderName('Administrative - Head of this Division', $rowData, $headers);
                 $HeadService = $this->getValueByHeaderName('Administrative - Head of this Service', $rowData, $headers);
                 //set institutional hierarchys
-                $this->addInstitutinalTree($administrativeTitle,$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+                $administrativeTitles = $this->addInstitutinalTree('AdministrativeTitle',$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+
+                if( count($administrativeTitles) == 0 ) {
+                    $administrativeTitles[] = new AdministrativeTitle();
+                }
+
+                foreach( $administrativeTitles as $administrativeTitle ) {
+                    //set title object: Administrative Title
+                    $titleObj = $this->getObjectByNameTransformer('AdminTitleList',$administrativeTitleStr,$systemuser);
+                    $administrativeTitle->setName($titleObj);
+
+                    $user->addAdministrativeTitle($administrativeTitle);
+                }
             }//if admin title
 
             //Medical Staff Appointment (MSA) Title
             $msaTitleStr = $this->getValueByHeaderName('Medical Staff Appointment (MSA) Title', $rowData, $headers);
             if( $msaTitleStr ) {
-
-                $msaTitle = new MedicalTitle($systemuser);
-
-                $titleObj = $this->getObjectByNameTransformer('MedicalTitleList',$msaTitleStr,$systemuser);
-                $msaTitle->setName($titleObj);
-
-                $user->addMedicalTitle($msaTitle);
 
                 //Administrative - Institution
                 $Institution = $this->getValueByHeaderName('MSA - Institution', $rowData, $headers);
@@ -220,19 +235,24 @@ class UserGenerator {
                 $HeadDivision = $this->getValueByHeaderName('MSA - Head of Division', $rowData, $headers);
                 $HeadService = $this->getValueByHeaderName('MSA - Head of Service', $rowData, $headers);
                 //set institutional hierarchys
-                $this->addInstitutinalTree($msaTitle,$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+                $msaTitles = $this->addInstitutinalTree('MedicalTitle',$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+
+                if( count($msaTitles) == 0 ) {
+                    $msaTitles[] = new MedicalTitle();
+                }
+
+                foreach( $msaTitles as $msaTitle ) {
+                    $titleObj = $this->getObjectByNameTransformer('MedicalTitleList',$msaTitleStr,$systemuser);
+                    $msaTitle->setName($titleObj);
+
+                    $user->addMedicalTitle($msaTitle);
+                }
+
             }
 
             //Academic Title
             $academicTitleStr = $this->getValueByHeaderName('Academic Title', $rowData, $headers);
             if( $academicTitleStr ) {
-
-                $academicTitle = new AppointmentTitle($systemuser);
-
-                $titleObj = $this->getObjectByNameTransformer('AppTitleList',$academicTitleStr,$systemuser);
-                $academicTitle->setName($titleObj);
-
-                $user->addAppointmentTitle($academicTitle);
 
                 //Administrative - Institution
                 $Institution = $this->getValueByHeaderName('Academic Appt - Institution', $rowData, $headers);
@@ -244,16 +264,36 @@ class UserGenerator {
                 $HeadDivision = $this->getValueByHeaderName('Academic Appt - Head of Division', $rowData, $headers);
                 $HeadService = $this->getValueByHeaderName('Academic Appt - Head of Service', $rowData, $headers);
                 //set institutional hierarchys
-                $this->addInstitutinalTree($academicTitle,$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+                $academicTitles = $this->addInstitutinalTree('AppointmentTitle',$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
 
-                //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_position
-                $facultyTrackStr = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
-                $academicTitle->setPosition($facultyTrackStr);
+                if( count($academicTitles) == 0 ) {
+                    $academicTitles[] = new AppointmentTitle();
+                }
 
-                //Academic Appointment start date
-                $academicAppointmentStartDateStr = $this->getValueByHeaderName('Academic Appointment start date', $rowData, $headers);
-                $academicAppointmentStartDate = $this->transformDatestrToDate($academicAppointmentStartDateStr);
-                $academicTitle->setStartDate($academicAppointmentStartDate);
+                foreach( $academicTitles as $academicTitle ) {
+                    $titleObj = $this->getObjectByNameTransformer('AppTitleList',$academicTitleStr,$systemuser);
+                    $academicTitle->setName($titleObj);
+
+                    $user->addAppointmentTitle($academicTitle);
+
+                    //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_position
+                    $facultyTrackStr = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
+                    if( strpos($facultyTrackStr,'Clinical') !== false ) {
+                        $facultyTrackStr = 'Clinical Faculty';
+                    }
+                    if( strpos($facultyTrackStr,'Research') !== false ) {
+                        $facultyTrackStr = 'Research Faculty';
+                    }
+                    if( strpos($facultyTrackStr,'Clinical') !== false && strpos($facultyTrackStr,'Research') !== false ) {
+                        $facultyTrackStr = 'Clinical Faculty, Research Faculty';
+                    }
+                    $academicTitle->setPosition($facultyTrackStr);
+
+                    //Academic Appointment start date
+                    $academicAppointmentStartDateStr = $this->getValueByHeaderName('Academic Appointment start date', $rowData, $headers);
+                    $academicAppointmentStartDate = $this->transformDatestrToDate($academicAppointmentStartDateStr);
+                    $academicTitle->setStartDate($academicAppointmentStartDate);
+                }
 
             }
 
@@ -278,7 +318,8 @@ class UserGenerator {
             $licenseNumberStr = $this->getValueByHeaderName('License number', $rowData, $headers);
 
             if( $boardCertSpec || $nyphCodeStr || $licenseNumberStr ) {
-                $credentials = new Credentials($systemuser);
+                $addobjects = false;
+                $credentials = new Credentials($systemuser,$addobjects);
                 $user->setCredentials($credentials);
             }
 
@@ -312,18 +353,6 @@ class UserGenerator {
                 $credentials->addStateLicense($licenseState);
             }
 
-            //Assistants : s2id_oleg_userdirectorybundle_user_locations_0_assistant
-            $assistants = $this->getValueByHeaderName('Assistants', $rowData, $headers);
-            //TODO: add $assistants first
-//            if( $assistants ) {
-//                $mainLocation = $user->getMainLocation();
-//
-//                foreach( $assistants as $assistant ) {
-//                    $assistantObj = $this->getObjectByNameTransformer('User',$assistant,$systemuser);
-//                    $mainLocation->addAssistant($assistantObj);
-//                }
-//            }
-
             //Administrative Comment - Category
             $AdministrativeCommentCategory = $this->getValueByHeaderName('Administrative Comment - Category', $rowData, $headers);
             if( $AdministrativeCommentCategory ) {
@@ -339,12 +368,18 @@ class UserGenerator {
                 //check if Category exists (root)
                 $AdministrativeCommentCategoryObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentCategory,$systemuser);
 
-                $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'CommentTypeList');
+                $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'CommentTypeList','organizationalGroupType'=>'CommentGroupType');
                 $AdministrativeCommentNameObj = $this->em->getRepository('OlegUserdirectoryBundle:CommentTypeList')->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
 
                 if( !$AdministrativeCommentNameObj ) {
-                    $AdministrativeCommentNameObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentName,$systemuser);
+                    //$AdministrativeCommentNameObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentName,$systemuser);
+                    $transformer = new GenericTreeTransformer($this->em, $systemuser, 'CommentTypeList', 'UserdirectoryBundle');
+                    $AdministrativeCommentNameObj = $transformer->createNewEntity($AdministrativeCommentName,'CommentTypeList',$systemuser);
+
                     $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
+                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, $AdministrativeCommentNameObj->getLevel());
+                    $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
+                    $this->em->persist($AdministrativeCommentNameObj);
                 }
 
                 //set comment category tree node
@@ -375,11 +410,18 @@ class UserGenerator {
                 $IdentifierLinkStr = $this->getValueByHeaderName('Identifier - link', $rowData, $headers);
                 $IdentifierLinkArr = explode(";", $IdentifierLinkStr);
 
+                $IdentifierTypeStr = null;
+                $IdentifierLinkStr = null;
+
                 $index = 0;
                 foreach( $IdentifierNumberArr as $IdentifierStr ) {
 
-                    $IdentifierTypeStr = $IdentifierTypeArr[$index];
-                    $IdentifierLinkStr = $IdentifierLinkArr[$index];
+                    if( array_key_exists($index, $IdentifierTypeArr) ) {
+                        $IdentifierTypeStr = $IdentifierTypeArr[$index];
+                    }
+                    if( array_key_exists($index, $IdentifierLinkArr) ) {
+                        $IdentifierLinkStr = $IdentifierLinkArr[$index];
+                    }
 
                     $Identifier = new Identifier();
                     $Identifier->setStatus($Identifier::STATUS_VERIFIED);
@@ -388,7 +430,7 @@ class UserGenerator {
                     $Identifier->setField($IdentifierStr);
 
                     //Identifier - Type
-                    $IdentifierTypeStrObj = $this->getObjectByNameTransformer('CommentTypeList',$IdentifierTypeStr,$systemuser);
+                    $IdentifierTypeStrObj = $this->getObjectByNameTransformer('IdentifierTypeList',$IdentifierTypeStr,$systemuser);
                     $Identifier->setKeytype($IdentifierTypeStrObj);
 
                     //Identifier - link
@@ -418,7 +460,7 @@ class UserGenerator {
                 $CertificateExpirationDate = $this->transformDatestrToDate($CertificateExpirationDateStr);
                 $credentials->setCoqExpirationDate($CertificateExpirationDate);
             }
-s
+
             //CLIA - Number
             $CLIAStr = $this->getValueByHeaderName('CLIA - Number', $rowData, $headers);
             if( $CLIAStr ) {
@@ -447,6 +489,9 @@ s
                 $popsIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','POPS',$systemuser);
                 $popsIdentifier->setKeytype($popsIdentifierTypeObj);
                 $popsIdentifier->setLink($POPS);
+                $popsIdentifier->setField($POPS);
+
+                $credentials->addIdentifier($popsIdentifier);
             }
 
             //Pubmed Link
@@ -458,6 +503,9 @@ s
                 $PubmedIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','Pubmed',$systemuser);
                 $PubmedIdentifier->setKeytype($PubmedIdentifierTypeObj);
                 $PubmedIdentifier->setLink($Pubmed);
+                $PubmedIdentifier->setField($Pubmed);
+
+                $credentials->addIdentifier($PubmedIdentifier);
             }
 
             //VIVO link
@@ -469,6 +517,9 @@ s
                 $VIVOIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','VIVO',$systemuser);
                 $VIVOIdentifier->setKeytype($VIVOIdentifierTypeObj);
                 $VIVOIdentifier->setLink($VIVO);
+                $VIVOIdentifier->setField($VIVO);
+
+                $credentials->addIdentifier($VIVOIdentifier);
             }
 
 
@@ -487,30 +538,14 @@ s
             //TODO: this should be located on scanorder site
             //TODO: rewrite using Aperio's DB not SOAP functions
             $aperioUtil = new AperioUtil();
-            //echo "username=".$username."<br>";
+            echo "username=".$username."<br>";
             $userid = $aperioUtil->getUserIdByUserName($username);
             if( $userid ) {
-                //echo "userid=".$userid."<br>";
+                echo "userid=".$userid."<br>";
                 $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
                 $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
             }
             //************** end of  Aperio group roles **************//
-
-            //TODO: implement service!
-            foreach( $services as $service ) {
-
-                $service = trim($service);
-
-                if( $service != "" ) {
-                    //echo " (".$service.") ";
-                    $serviceEntity  = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($service);
-
-                    if( $serviceEntity ) {
-                        $administrativeTitle->setInstitution($serviceEntity);
-                    }
-                } //if
-
-            } //foreach
 
             $user->setEnabled(true);
             $user->setLocked(false);
@@ -521,42 +556,77 @@ s
 //                //
 //            } else {
             //echo $username." not found ";
-            $em->persist($user);
-            $em->flush();
+            $this->em->persist($user);
+            $this->em->flush();
             $count++;
+
+
+            //Assistants : s2id_oleg_userdirectorybundle_user_locations_0_assistant
+            $assistants = $this->getValueByHeaderName('Assistants', $rowData, $headers);
+            if( $assistants ) {
+                $assistantsArr[$user->getId()] = $assistants;
+            }
 
 
             //**************** create PerSiteSettings for this user **************//
             //TODO: this should be located on scanorder site
-            $securityUtil = $serviceContainer->get('order_security_utility');
+            $securityUtil = $this->container->get('order_security_utility');
             $perSiteSettings = $securityUtil->getUserPerSiteSettings($user);
             if( !$perSiteSettings ) {
                 $perSiteSettings = new PerSiteSettings($systemuser);
                 $perSiteSettings->setUser($user);
             }
-            $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
             if( count($params) != 1 ) {
                 throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
             }
             $param = $params[0];
             $institution = $param->getAutoAssignInstitution();
             $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
-            $em->persist($perSiteSettings);
-            $em->flush();
+            $this->em->persist($perSiteSettings);
+            $this->em->flush();
             //**************** EOF create PerSiteSettings for this user **************//
 
             //record user log create
             $event = "User ".$user." has been created by ".$systemuser."<br>";
-            $userSecUtil->createUserEditEvent($serviceContainer->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'User Created');
 //            }
 
-
-
-            exit('eof user');
+            //exit('eof user');
 
         }//for each user
 
-        //exit();
+
+        //process assistants
+        echo "count ass=".count($assistantsArr)."<br>";
+        if( count($assistantsArr) > 0 ) {
+            foreach( $assistantsArr as $userid => $assistants ) {
+
+                echo "userid=".$userid."assistants=".$assistants."<br>";
+                $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+                $assistantsStrArr = explode(";",$assistants);
+
+                foreach( $assistantsStrArr as $assistantsStr ) {
+                    if( strtolower($assistantsStr) != 'null' ) {
+                        $assistant = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByNameStr($assistantsStr);
+                        echo "found assistant=".$assistant."<br>";
+                        if( $assistant ) {
+                            $mainLocation = $user->getMainLocation();
+                            $mainLocation->addAssistant($assistant);
+                        }
+
+                    }
+                } //foreach
+
+                if( count($assistantsStrArr) > 0 ) {
+                    $this->em->flush();
+                }
+
+            } //foreach
+        } //if
+
+
+        exit();
         return $count;
     }
 
@@ -643,7 +713,9 @@ s
 
 
     //$Institution, $Department, $HeadDepartment, $Division, $HeadDivision, $Service, $HeadService can be separated by ";"
-    public function addInstitutinalTree( $holder, $systemuser, $Institution, $Department, $HeadDepartment, $Division, $HeadDivision, $Service, $HeadService ) {
+    public function addInstitutinalTree( $holderClassName, $systemuser, $Institution, $Department, $HeadDepartment, $Division, $HeadDivision, $Service, $HeadService ) {
+
+        $holders = array();
 
         $InstitutionArr = explode(";", $Institution);
         $DepartmentArr = explode(";", $Department);
@@ -654,35 +726,71 @@ s
         $HeadDivisionArr = explode(";", $HeadDivision);
         $HeadServiceArr = explode(";", $HeadService);
 
+        $DepartmentStr = null;
+        $DivisionStr = null;
+        $ServiceStr = null;
+
+        $HeadDepartmentStr = null;
+        $HeadDivisionStr = null;
+        $HeadServiceStr = null;
+
         $index = 0;
         foreach( $InstitutionArr as $InstitutionStr ) {
             $InstitutionStr = trim($InstitutionStr);
-            $DepartmentStr = trim($DepartmentArr[$index]);
-            $DivisionStr = trim($DivisionArr[$index]);
-            $ServiceStr = trim($ServiceArr[$index]);
+            if( array_key_exists($index, $DepartmentArr) ) {
+                $DepartmentStr = trim($DepartmentArr[$index]);
+            }
+            if( array_key_exists($index, $DivisionArr) ) {
+                $DivisionStr = trim($DivisionArr[$index]);
+            }
+            if( array_key_exists($index, $ServiceArr) ) {
+                $ServiceStr = trim($ServiceArr[$index]);
+            }
 
-            $HeadDepartmentStr = trim($HeadDepartmentArr[$index]);
-            $HeadDivisionStr = trim($HeadDivisionArr[$index]);
-            $HeadServiceStr = trim($HeadServiceArr[$index]);
+            if( array_key_exists($index, $HeadDepartmentArr) ) {
+                $HeadDepartmentStr = trim($HeadDepartmentArr[$index]);
+            }
+            if( array_key_exists($index, $HeadDivisionArr) ) {
+                $HeadDivisionStr = trim($HeadDivisionArr[$index]);
+            }
+            if( array_key_exists($index, $HeadServiceArr) ) {
+                $HeadServiceStr = trim($HeadServiceArr[$index]);
+            }
 
-            $this->addSingleInstitutinalTree( $holder,$systemuser,$InstitutionStr,$DepartmentStr,$HeadDepartmentStr,$DivisionStr,$HeadDivisionStr,$ServiceStr,$HeadServiceStr );
+            $holder = $this->addSingleInstitutinalTree( $holderClassName,$systemuser,$InstitutionStr,$DepartmentStr,$HeadDepartmentStr,$DivisionStr,$HeadDivisionStr,$ServiceStr,$HeadServiceStr );
+            if( $holder ) {
+                $holders[] = $holder;
+            }
+
             $index++;
         }
+
+        return $holders;
     }
 
-    public function addSingleInstitutinalTree( $holder,$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService ) {
+    public function addSingleInstitutinalTree( $holderClassName,$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService ) {
+
+        $holder = null;
 
         $InstitutionObj = null;
         $DepartmentObj = null;
         $DivisionObj = null;
         $ServiceObj = null;
 
-        $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'Institution');
+        $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'Institution','organizationalGroupType'=>'OrganizationalGroupType');
 
         $params = array('type'=>'Medical');
 
-        if( $Institution ) {
+        $transformer = new GenericTreeTransformer($this->em, $systemuser, $mapper['className'], $mapper['bundleName'], $params);
+
+        if( $Institution && strtolower($Institution) != 'null' ) {
+
+            $entityClass = "Oleg\\UserdirectoryBundle\\Entity\\".$holderClassName;
+            $holder = new $entityClass($systemuser);
+            $holder->setStatus($holder::STATUS_VERIFIED);
+
             $InstitutionObj = $this->getObjectByNameTransformer('Institution',$Institution,$systemuser,$params);
+            //$InstitutionObj = $transformer->createNewEntity($Institution,$mapper['className'],$systemuser);
 
             if( $InstitutionObj ) {
                 //set Institution tree node
@@ -691,18 +799,31 @@ s
         }
 
         //department
-        if( $Department && $InstitutionObj ) {
+        if( $Department && strtolower($Department) != 'null' && $InstitutionObj ) {
 
             $DepartmentObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Department,$InstitutionObj,$mapper);
             if( !$DepartmentObj ) {
-                $DepartmentObj = $this->getObjectByNameTransformer('Institution',$Department,$systemuser,$params);
-                $InstitutionObj->addChild($DepartmentObj);
+                //$DepartmentObj = $this->getObjectByNameTransformer('Institution',$Department,$systemuser,$params);
+                $DepartmentObj = $transformer->createNewEntity($Department,$mapper['className'],$systemuser);
+
+                if( !$DepartmentObj->getParent() ) {
+                    $InstitutionObj->addChild($DepartmentObj);
+                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, $DepartmentObj->getLevel());
+                    $DepartmentObj->setOrganizationalGroupType($organizationalGroupType);
+                    $this->em->persist($DepartmentObj);
+                } else {
+                    if( $DepartmentObj->getParent()->getId() != $InstitutionObj->getId() ) {
+                        throw new \Exception('Department: Tree node object ' . $DepartmentObj . ' already has a parent, but it is different: existing pid=' . $DepartmentObj->getParent()->getId() . ', new pid='.$InstitutionObj->getId());
+                    }
+                }
             }
 
             if( $DepartmentObj ) {
                 if( strtolower($HeadDepartment) == 'yes' ) {
-                    $HeadDepartmentObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadDepartment,$systemuser);
-                    $holder->addUserPosition($HeadDepartmentObj);
+                    $HeadDepartmentObj = $this->getObjectByNameTransformer('PositionTypeList','Head of Department',$systemuser);
+                    if( method_exists($holder,'addUserPosition') ) {
+                        $holder->addUserPosition($HeadDepartmentObj);
+                    }
                 }
                 //overwrite Institution tree node
                 $holder->setInstitution($DepartmentObj);
@@ -710,18 +831,31 @@ s
         }
 
         //division
-        if( $Division && $DepartmentObj ) {
+        if( $Division && strtolower($Division) != 'null' && $DepartmentObj ) {
 
             $DivisionObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Division,$DepartmentObj,$mapper);
             if( !$DivisionObj ) {
-                $DivisionObj = $this->getObjectByNameTransformer('Institution',$Division,$systemuser,$params);
-                $DepartmentObj->addChild($DivisionObj);
+                //$DivisionObj = $this->getObjectByNameTransformer('Institution',$Division,$systemuser,$params);
+                $DivisionObj = $transformer->createNewEntity($Division,$mapper['className'],$systemuser);
+
+                if( !$DivisionObj->getParent() ) {
+                    $DepartmentObj->addChild($DivisionObj);
+                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, $DivisionObj->getLevel());
+                    $DivisionObj->setOrganizationalGroupType($organizationalGroupType);
+                    $this->em->persist($DivisionObj);
+                } else {
+                    if( $DivisionObj->getParent()->getId() != $DepartmentObj->getId() ) {
+                        throw new \Exception('Division: Tree node object ' . $DivisionObj . ' already has a parent, but it is different: existing pid=' . $DivisionObj->getParent()->getId() . ', new pid='.$DepartmentObj->getId());
+                    }
+                }
             }
 
             if( $DivisionObj ) {
                 if( strtolower($HeadDivision) == 'yes' ) {
-                    $HeadDivisionObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadDivision,$systemuser);
-                    $holder->addUserPosition($HeadDivisionObj);
+                    $HeadDivisionObj = $this->getObjectByNameTransformer('PositionTypeList','Head of Division',$systemuser);
+                    if( method_exists($holder,'addUserPosition') ) {
+                        $holder->addUserPosition($HeadDivisionObj);
+                    }
                 }
                 //overwrite Institution tree node
                 $holder->setInstitution($DivisionObj);
@@ -729,19 +863,31 @@ s
         }
 
         //service
-        if( $Service && $DivisionObj ) {
-
+        if( $Service && strtolower($Service) != 'null' && $DivisionObj ) {
 
             $ServiceObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Service,$DivisionObj,$mapper);
             if( !$ServiceObj ) {
-                $ServiceObj = $this->getObjectByNameTransformer('Institution',$Service,$systemuser,$params);
-                $DivisionObj->addChild($ServiceObj);
+                //$ServiceObj = $this->getObjectByNameTransformer('Institution',$Service,$systemuser,$params);
+                $ServiceObj = $transformer->createNewEntity($Service,$mapper['className'],$systemuser);
+
+                if( !$ServiceObj->getParent() ) {
+                    $DivisionObj->addChild($ServiceObj);
+                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, $ServiceObj->getLevel());
+                    $ServiceObj->setOrganizationalGroupType($organizationalGroupType);
+                    $this->em->persist($ServiceObj);
+                } else {
+                    if( $ServiceObj->getParent()->getId() != $DivisionObj->getId() ) {
+                        throw new \Exception('Service: Tree node object ' . $ServiceObj . ' already has a parent, but it is different: existing pid=' . $ServiceObj->getParent()->getId() . ', new pid='.$DivisionObj->getId());
+                    }
+                }
             }
 
             if( $ServiceObj ) {
                 if( strtolower($HeadService) == 'yes' ) {
-                    $HeadServiceObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadService,$systemuser);
-                    $holder->addUserPosition($HeadServiceObj);
+                    $HeadServiceObj = $this->getObjectByNameTransformer('PositionTypeList','Head of Service',$systemuser);
+                    if( method_exists($holder,'addUserPosition') ) {
+                        $holder->addUserPosition($HeadServiceObj);
+                    }
                 }
                 //overwrite Institution tree node
                 $holder->setInstitution($ServiceObj);
@@ -763,14 +909,24 @@ s
         $recertDateStr = $this->getValueByHeaderName('Board Certification - Recertification Date', $rowData, $headers);
         $recertDateArr = explode(";", $recertDateStr);
 
+        $issueDate = null;
+        $expDate = null;
+        $recertDate = null;
+
         $index = 0;
-        foreach( $boardCertSpecArr as $boardCert ) {
+        foreach( $boardCertSpecArr as $boardCertSpecStr ) {
 
-            $issueDate = $issueDateArr[$index];
-            $expDate = $expDateArr[$index];
-            $recertDate = $recertDateArr[$index];
+            if( array_key_exists($index, $issueDateArr) ) {
+                $issueDate = $issueDateArr[$index];
+            }
+            if( array_key_exists($index, $expDateArr) ) {
+                $expDate = $expDateArr[$index];
+            }
+            if( array_key_exists($index, $recertDateArr) ) {
+                $recertDate = $recertDateArr[$index];
+            }
 
-            $boardCert = $this->addSingleBoardCertification($systemuser,$rowData, $headers, $boardCert, $issueDate, $expDate, $recertDate);
+            $boardCert = $this->addSingleBoardCertification($systemuser,$rowData, $headers, $boardCertSpecStr, $issueDate, $expDate, $recertDate);
             if( $boardCert ) {
                 $credentials->addBoardCertification($boardCert);
             }
@@ -780,23 +936,30 @@ s
 
     }
 
-    public function addSingleBoardCertification($systemuser,$rowData, $headers, $boardCert, $issueDate, $expDate, $recertDate) {
-        if( $boardCert ) {
+    public function addSingleBoardCertification($systemuser,$rowData, $headers, $boardCertSpecStr, $issueDate, $expDate, $recertDate) {
+        if( $boardCertSpecStr && strtolower($boardCertSpecStr) != 'null' ) {
             $boardCert = new BoardCertification();
-            $boardCertSpecObj = $this->getObjectByNameTransformer('BoardCertifiedSpecialties',$boardCert,$systemuser);
+            $boardCertSpecObj = $this->getObjectByNameTransformer('BoardCertifiedSpecialties',$boardCertSpecStr,$systemuser);
             $boardCert->setSpecialty($boardCertSpecObj);
 
             //Board Certification - Date Issued
-            $issueDate = $this->transformDatestrToDate($issueDate);
-            $boardCert->setIssueDate($issueDate);
+            if( strtolower($issueDate) != 'null' ) {
+                $issueDate = $this->transformDatestrToDate($issueDate);
+                $boardCert->setIssueDate($issueDate);
+            }
 
             //Board Certification - Expiration Date
-            $expDate = $this->transformDatestrToDate($expDate);
-            $boardCert->setExpirationDate($expDate);
+            if( strtolower($expDate) != 'null' ) {
+                $expDate = $this->transformDatestrToDate($expDate);
+                $boardCert->setExpirationDate($expDate);
+            }
 
             //Board Certification - Recertification Date
-            $recertDate = $this->transformDatestrToDate($recertDate);
-            $boardCert->setRecertificationDate($recertDate);
+            if( strtolower($recertDate) != 'null' ) {
+                $recertDate = $this->transformDatestrToDate($recertDate);
+                $boardCert->setRecertificationDate($recertDate);
+            }
+
             return $boardCert;
         }
         return null;
