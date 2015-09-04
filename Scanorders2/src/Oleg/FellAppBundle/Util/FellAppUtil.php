@@ -211,7 +211,7 @@ class FellAppUtil {
                 $fileExtStr = ".".$fileExt;
             }
 
-            $fileUniqueName = $currentDatetimeTimestamp.'_id='.$file->getId().$fileExtStr;  //.'_title='.$fileTitle;
+            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$file->getId().$fileExtStr;  //.'_title='.$fileTitle;
             //echo "fileUniqueName=".$fileUniqueName."<br>";
 
             $filesize = $file->getFileSize();

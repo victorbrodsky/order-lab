@@ -11,9 +11,15 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
+use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
+use Oleg\UserdirectoryBundle\Entity\BoardCertification;
+use Oleg\UserdirectoryBundle\Entity\CodeNYPH;
+use Oleg\UserdirectoryBundle\Entity\Credentials;
 use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\MedicalTitle;
+use Oleg\UserdirectoryBundle\Entity\ResearchLab;
+use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
@@ -160,6 +166,7 @@ class UserGenerator {
             $mainLocation = $user->getMainLocation();
             $mainLocation->setPhone($this->getValueByHeaderName('Business Phone', $rowData, $headers));
             $mainLocation->setFax($this->getValueByHeaderName('Fax Number', $rowData, $headers));
+            $mainLocation->setIc($this->getValueByHeaderName('Intercom', $rowData, $headers));
 
             //set room object
             $office = $this->getValueByHeaderName('Office Location', $rowData, $headers);
@@ -215,6 +222,135 @@ class UserGenerator {
             }
 
             //Academic Title
+            $academicTitleStr = $this->getValueByHeaderName('Academic Title', $rowData, $headers);
+            if( $academicTitleStr ) {
+
+                $academicTitle = new AppointmentTitle($systemuser);
+
+                $titleObj = $this->getObjectByNameTransformer('AppTitleList',$academicTitleStr,$systemuser);
+                $academicTitle->setName($titleObj);
+
+                $user->addAppointmentTitle($academicTitle);
+
+                //Administrative - Institution
+                $Institution = $this->getValueByHeaderName('Academic Appt - Institution', $rowData, $headers);
+                $Department = $this->getValueByHeaderName('Academic Appt - Department', $rowData, $headers);
+                $Division = $this->getValueByHeaderName('Academic Appt - Division', $rowData, $headers);
+                $Service = $this->getValueByHeaderName('Academic Appt - Service', $rowData, $headers);
+                //Heads
+                $HeadDepartment = $this->getValueByHeaderName('Academic Appt - Head of Department', $rowData, $headers);
+                $HeadDivision = $this->getValueByHeaderName('Academic Appt - Head of Division', $rowData, $headers);
+                $HeadService = $this->getValueByHeaderName('Academic Appt - Head of Service', $rowData, $headers);
+                //set institutional hierarchys
+                $this->addInstitutinalTree($academicTitle,$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+
+                //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_position
+                $facultyTrackStr = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
+                $academicTitle->setPosition($facultyTrackStr);
+
+                //Academic Appointment start date
+                $academicAppointmentStartDateStr = $this->getValueByHeaderName('Academic Appointment start date', $rowData, $headers);
+                $academicAppointmentStartDate = $this->transformDatestrToDate($academicAppointmentStartDateStr);
+                $academicTitle->setStartDate($academicAppointmentStartDate);
+
+            }
+
+            //Research Lab Title : s2id_oleg_userdirectorybundle_user_researchLabs_0_name
+            $researchLabTitleStr = $this->getValueByHeaderName('Research Lab Title', $rowData, $headers);
+            if( $researchLabTitleStr ) {
+                $researchLab = new ResearchLab($systemuser);
+                $researchLab->setName($researchLabTitleStr);
+                $user->addResearchLab($researchLab);
+
+                //Principle Investigator of this Lab
+                $piStr = $this->getValueByHeaderName('Principle Investigator of this Lab', $rowData, $headers);
+                if( strtolower($piStr) == 'yes' ) {
+                    $researchLab->setPiUser($user);
+                }
+
+            }
+
+            //credentials
+            $boardCertSpec = $this->getValueByHeaderName('Board Certification - Specialty', $rowData, $headers);
+            $nyphCodeStr = $this->getValueByHeaderName('NYPH Code', $rowData, $headers);
+            $licenseNumberStr = $this->getValueByHeaderName('License number', $rowData, $headers);
+
+            if( $boardCertSpec || $nyphCodeStr || $licenseNumberStr ) {
+                $credentials = new Credentials($systemuser);
+                $user->setCredentials($credentials);
+            }
+
+            //Board Certification - Specialty : BoardCertifiedSpecialties
+            if( $boardCertSpec ) {
+                $this->processBoardCertification($credentials, $systemuser,$rowData, $headers, $boardCertSpec);
+            }
+
+            //NYPH Code: oleg_userdirectorybundle_user_credentials_codeNYPH_0_field
+            if( $nyphCodeStr ) {
+                $nyphCode = new CodeNYPH();
+                $nyphCode->setField($nyphCodeStr);
+                $credentials->addCodeNYPH($nyphCode);
+            }
+
+            //License number
+            $licenseNumberStr = $this->getValueByHeaderName('License number', $rowData, $headers);
+            if( $licenseNumberStr ) {
+                $licenseState = new StateLicense();
+
+                $licenseState->setLicenseNumber($licenseNumberStr);
+
+                $licenseStateStr = $this->getValueByHeaderName('License state', $rowData, $headers);
+                $licenseState->setLicenseNumber($licenseStateStr);
+
+                //License expiration
+                $expDateStr = $this->getValueByHeaderName('License expiration', $rowData, $headers);
+                $expDate = $this->transformDatestrToDate($expDateStr);
+                $licenseState->setLicenseExpirationDate($expDate);
+
+                $credentials->addStateLicense($licenseState);
+            }
+
+            //Assistants : s2id_oleg_userdirectorybundle_user_locations_0_assistant
+            $assistants = $this->getValueByHeaderName('Assistants', $rowData, $headers);
+            //TODO: add $assistants first
+//            if( $assistants ) {
+//                $mainLocation = $user->getMainLocation();
+//
+//                foreach( $assistants as $assistant ) {
+//                    $assistantObj = $this->getObjectByNameTransformer('User',$assistant,$systemuser);
+//                    $mainLocation->addAssistant($assistantObj);
+//                }
+//            }
+
+            //Administrative Comment - Category
+            $AdministrativeCommentCategory = $this->getValueByHeaderName('Administrative Comment - Category', $rowData, $headers);
+            if( $AdministrativeCommentCategory ) {
+
+            }
+
+            //Administrative Comment - Name
+
+            //Administrative Comment - Comment
+
+            //Multi
+            //Identifier - Type
+            //Identifier
+            //Identifier - link
+
+            //Certificate of Qualification - Code
+            //Certificate of Qualification - Serial Number
+            //Certificate of Qualification - Expiration Date
+
+            //CLIA - Number
+
+            //PFI
+
+            //POPS Link => Identifier Type:POPS, Identifier:link, Link:link
+
+            //Pubmed Link
+
+            //VIVO link
+
 
 
             exit('1');
@@ -438,7 +574,7 @@ class UserGenerator {
 
 
         if( $ServiceObj ) {
-            if( $HeadService ) {
+            if( strtolower($HeadService) == 'yes' ) {
                 $HeadServiceObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadService,$systemuser);
                 $holder->addUserPosition($HeadServiceObj);
             }
@@ -447,7 +583,7 @@ class UserGenerator {
         }
 
         if( $DivisionObj ) {
-            if( $HeadDivision ) {
+            if( strtolower($HeadDivision) == 'yes' ) {
                 $HeadDivisionObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadDivision,$systemuser);
                 $holder->addUserPosition($HeadDivisionObj);
             }
@@ -457,7 +593,7 @@ class UserGenerator {
 
         if( $DepartmentObj ) {
             //oleg_userdirectorybundle_user_administrativeTitles_0_userPositions: PositionTypeList
-            if( $HeadDepartment ) {
+            if( strtolower($HeadDepartment) == 'yes' ) {
                 $HeadDepartmentObj = $this->getObjectByNameTransformer('PositionTypeList',$HeadDepartment,$systemuser);
                 $holder->addUserPosition($HeadDepartmentObj);
             }
@@ -472,5 +608,101 @@ class UserGenerator {
         return $holder;
     }
 
+    public function processBoardCertification($credentials, $systemuser,$rowData, $headers, $boardCertSpec) {
+        $boardCertSpecArr = explode(";", $boardCertSpec);
+
+        $issueDateStr = $this->getValueByHeaderName('Board Certification - Specialty', $rowData, $headers);
+        $issueDateArr = explode(";", $issueDateStr);
+
+        $expDateStr = $this->getValueByHeaderName('Board Certification - Expiration Date', $rowData, $headers);
+        $expDateArr = explode(";", $expDateStr);
+
+        $recertDateStr = $this->getValueByHeaderName('Board Certification - Recertification Date', $rowData, $headers);
+        $recertDateArr = explode(";", $recertDateStr);
+
+        $index = 0;
+        foreach( $boardCertSpecArr as $boardCert ) {
+
+            $issueDate = $issueDateArr[$index];
+            $expDate = $expDateArr[$index];
+            $recertDate = $recertDateArr[$index];
+
+            $boardCert = $this->addSingleBoardCertification($systemuser,$rowData, $headers, $boardCert, $issueDate, $expDate, $recertDate);
+            if( $boardCert ) {
+                $credentials->addBoardCertification($boardCert);
+            }
+
+            $index++;
+        }
+
+    }
+
+    public function addSingleBoardCertification($systemuser,$rowData, $headers, $boardCert, $issueDate, $expDate, $recertDate) {
+        if( $boardCert ) {
+            $boardCert = new BoardCertification();
+            $boardCertSpecObj = $this->getObjectByNameTransformer('BoardCertifiedSpecialties',$boardCert,$systemuser);
+            $boardCert->setSpecialty($boardCertSpecObj);
+
+            //Board Certification - Date Issued
+            $issueDate = $this->transformDatestrToDate($issueDate);
+            $boardCert->setIssueDate($issueDate);
+
+            //Board Certification - Expiration Date
+            $expDate = $this->transformDatestrToDate($expDate);
+            $boardCert->setExpirationDate($expDate);
+
+            //Board Certification - Recertification Date
+            $recertDate = $this->transformDatestrToDate($recertDate);
+            $boardCert->setRecertificationDate($recertDate);
+            return $boardCert;
+        }
+        return null;
+    }
+
+
+    public function transformDatestrToDate($datestr) {
+        $date = null;
+
+        if( !$datestr ) {
+            return $date;
+        }
+        $datestr = trim($datestr);
+        //echo "###datestr=".$datestr."<br>";
+
+        if( strtotime($datestr) === false ) {
+            // bad format
+            $msg = 'transformDatestrToDate: Bad format of datetime string='.$datestr;
+            //throw new \UnexpectedValueException($msg);
+            $logger = $this->container->get('logger');
+            $logger->error($msg);
+
+            //send email
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+            $event = "Fellowship Applicantions warning: " . $msg;
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Warning');
+
+            //exit('bad');
+            return $date;
+        }
+
+//        if( !$this->valid_date($datestr) ) {
+//            $msg = 'Date string is not valid'.$datestr;
+//            throw new \UnexpectedValueException($msg);
+//            $logger = $this->container->get('logger');
+//            $logger->error($msg);
+//        }
+
+        try {
+            $date = new \DateTime($datestr);
+        } catch (Exception $e) {
+            $msg = 'Failed to convert string'.$datestr.'to DateTime:'.$e->getMessage();
+            //throw new \UnexpectedValueException($msg);
+            $logger = $this->container->get('logger');
+            $logger->error($msg);
+        }
+
+        return $date;
+    }
 
 } 

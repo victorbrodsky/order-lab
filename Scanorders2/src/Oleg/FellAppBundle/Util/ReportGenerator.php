@@ -146,6 +146,11 @@ class ReportGenerator {
 
     //http://www.somacon.com/p395.php
     public function windowsCmdRunAsync($cmd) {
+
+        //TESTING
+        //$this->tryRun();
+        //return;
+
         $oExec = null;
         //$WshShell = new \COM("WScript.Shell");
         //$oExec = $WshShell->Run($cmd, 0, false);
@@ -744,15 +749,44 @@ class ReportGenerator {
 
             $cmd = $cmd .' "'.$filePath.'"';
 
-            //$shellout = shell_exec( $cmd );
-            $shellout = exec( $cmd );
+            $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+            if( $ext != 'pdf' ) { //TESTING!!!
 
-            if( $shellout ) {
-                //echo "shellout=".$shellout."<br>";
-                $logger->debug("LibreOffice converted input file=" . $filePath);
+                //$shellout = shell_exec( $cmd );
+                $shellout = exec( $cmd );
+
+                if( $shellout ) {
+                    //echo "shellout=".$shellout."<br>";
+                    $logger->notice("LibreOffice converted input file=" . $filePath);
+                }
+
+            } else {
+
+                //$filePath = str_replace("/","\\",$filePath);
+                //$filePath = '"'.$filePath.'"';
+
+                echo "\nsource=".$filePath."\n<br>";
+                echo "dest=".$outFilename."\n<br>";
+
+
+                if( file_exists($filePath) ) {
+                    echo "source exists \n<br>";
+                } else {
+                    echo "source does not exist\n<br>";
+                }
+
+                if( !file_exists($outFilename) ) {
+                //if( strpos($filePath,'application_ID') === false ) {
+                    if( !copy($filePath, $outFilename ) ) {
+                        echo "failed to copy $filePath...\n<br>";
+                    }
+                }
+
+                $shellout = ' pdf => just copied ';
             }
 
-            $logger->debug("LibreOffice: " . $shellout);
+
+            $logger->debug("convertToPdf: " . $shellout);
 
         }
 
@@ -761,7 +795,7 @@ class ReportGenerator {
 
     //TODO: try https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
     //if file already exists then it is replaced with a new one
-    protected function mergeByPDFMerger( $filesArr, $filenameMerged ) {
+    protected function mergeByPDFMerger_ORIG( $filesArr, $filenameMerged ) {
         $logger = $this->container->get('logger');
         $pdf = new PDFMerger();
 
@@ -778,6 +812,58 @@ class ReportGenerator {
 
         $pdf->merge('file', $filenameMerged);
     }
+
+    protected function mergeByPDFMerger( $filesArr, $filenameMerged ) {
+
+        $logger = $this->container->get('logger');
+
+        $filesStr = "";
+        //$filesStr = implode(' ', $filesArr);
+
+        foreach( $filesArr as $file ) {
+
+            echo "add merge: filepath=(".$file.") <br>";
+            $filesStr = $filesStr . ' ' . '"' . $file . '"';
+
+        }
+
+        $filesStr = str_replace("/","\\", $filesStr);
+        $filesStr = str_replace("app\..","", $filesStr);
+
+        $filenameMerged = str_replace("/","\\", $filenameMerged);
+        $filenameMerged = str_replace("app\..","", $filenameMerged);
+        $filenameMerged = '"'.$filenameMerged.'"';
+
+        echo "filenameMerged=".$filenameMerged."<br>";
+
+        $cmd = '"C:\Users\DevServer\Desktop\php\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"' . $filesStr . ' cat output ' . $filenameMerged;
+        //echo "cmd=".$cmd."<br>";
+
+        //$output = null;
+        //$return = null;
+        $shellout = exec( $cmd, $output, $return );
+
+        $logger->debug("pdftk output: " . print_r($output));
+        $logger->debug("pdftk return: " . $return);
+
+        if( $shellout ) {
+            $logger->debug("pdftk error!!!!!!!!!!!!!!!!: " . $shellout);
+        } else {
+            $logger->debug("pdftk ok: " . $shellout);
+        }
+
+        echo "shellout=".$shellout."<br>";
+
+
+//        if( file_exists($filenameMerged) ) {
+//            echo "filenameMerged exists \n<br>";
+//        } else {
+//            echo "filenameMerged does not exist\n<br>";
+//            //exit('my error');
+//        }
+
+    }
+
 
     protected static function deleteDir($dirPath) {
         if (! is_dir($dirPath)) {

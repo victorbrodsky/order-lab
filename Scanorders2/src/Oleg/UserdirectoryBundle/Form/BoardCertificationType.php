@@ -59,6 +59,14 @@ class BoardCertificationType extends AbstractType
         ));
 
         $builder->add('expirationDate', null, array(
+            'label' => 'Expiration Date:',
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+        ));
+
+        $builder->add('recertificationDate', null, array(
             'label' => 'Recertification Date:',
             'widget' => 'single_text',
             'required' => false,

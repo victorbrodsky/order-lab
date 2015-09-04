@@ -33,11 +33,18 @@ class BoardCertification
     private $issueDate;
 
     /**
-     * Recertification Date
+     * Expiration Date
      *
      * @ORM\Column(type="date", nullable=true)
      */
     private $expirationDate;
+
+    /**
+     * Recertification Date
+     *
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $recertificationDate;
 
 
     /**
@@ -147,6 +154,22 @@ class BoardCertification
     public function getCertifyingBoardOrganization()
     {
         return $this->certifyingBoardOrganization;
+    }
+
+    /**
+     * @param mixed $recertificationDate
+     */
+    public function setRecertificationDate($recertificationDate)
+    {
+        $this->recertificationDate = $recertificationDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecertificationDate()
+    {
+        return $this->recertificationDate;
     }
 
 

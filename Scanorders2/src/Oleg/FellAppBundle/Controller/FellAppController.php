@@ -913,7 +913,7 @@ class FellAppController extends Controller {
 
                 $this->get('session')->getFlashBag()->add(
                     'warning',
-                    'Application Report is not ready yet. Please try again later.'
+                    'Complete Application PDF is not ready yet. Please try again later.'
                 );
 
                 return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
