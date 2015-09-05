@@ -82,6 +82,16 @@ class FellAppFilterType extends AbstractType
             'required'=>false,
             'label' => 'Completed',
         ));
+
+        $builder->add('interviewee', 'checkbox', array(
+            'required'=>false,
+            'label' => 'Interviewee',
+        ));
+
+        $builder->add('active', 'checkbox', array(
+            'required'=>false,
+            'label' => 'Active',
+        ));
         
     }
 

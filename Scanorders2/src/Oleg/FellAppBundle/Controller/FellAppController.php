@@ -61,13 +61,22 @@ class FellAppController extends Controller {
         $hidden = $filterform['hidden']->getData();
         $archived = $filterform['archived']->getData();
         $completed = $filterform['completed']->getData();
+        $interviewee = $filterform['interviewee']->getData();
+        $active = $filterform['active']->getData();
         //$page = $request->get('page');
         //echo "<br>startDate=".$startDate."<br>";
         //echo "<br>filter=".$filter."<br>";
         //echo "<br>search=".$search."<br>";
 
         if( !$startDate ) {
-            return $this->redirect( $this->generateUrl('fellapp_home',array('filter[startDate]'=>$currentYear)) );
+            return $this->redirect( $this->generateUrl('fellapp_home',
+                array(
+                    'filter[startDate]' => $currentYear,
+                    //'filter[active]' => 1,
+                    //'filter[completed]' => 1,
+                    //'filter[interviewee]' => 1,
+                )
+            ) );
         }
 
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
@@ -93,22 +102,46 @@ class FellAppController extends Controller {
             $searchFlag = true;
         }
 
-        if( !$hidden ) {
-            $dql->andWhere("fellapp.applicationStatus != 'hide'");
+        $orWhere = array();
+
+        if( $hidden ) {
+            //$dql->orWhere("fellapp.applicationStatus = 'hide'");
+            $orWhere[] = "fellapp.applicationStatus = 'hide'";
         } else {
             $searchFlag = true;
         }
 
-        if( !$archived ) {
-            $dql->andWhere("fellapp.applicationStatus != 'archive'");
+        if( $archived ) {
+            //$dql->orWhere("fellapp.applicationStatus = 'archive'");
+            $orWhere[] = "fellapp.applicationStatus = 'archive'";
         } else {
             $searchFlag = true;
         }
 
-        if( !$completed ) {
-            $dql->andWhere("fellapp.applicationStatus != 'complete'");
+        if( $completed ) {
+            //$dql->orWhere("fellapp.applicationStatus = 'complete'");
+            $orWhere[] = "fellapp.applicationStatus = 'complete'";
         } else {
             $searchFlag = true;
+        }
+
+        if( $interviewee ) {
+            //$dql->orWhere("fellapp.applicationStatus = 'interviewee'");
+            $orWhere[] = "fellapp.applicationStatus = 'interviewee'";
+        } else {
+            $searchFlag = true;
+        }
+
+        if( $active ) {
+            //$dql->orWhere("fellapp.applicationStatus = 'active'");
+            $orWhere[] = "fellapp.applicationStatus = 'active'";
+        } else {
+            $searchFlag = true;
+        }
+
+        if( count($orWhere) > 0 ) {
+            $orWhereStr = implode(" OR ",$orWhere);
+            $dql->andWhere("(".$orWhereStr.")");
         }
 
         $ldap = false;
@@ -165,6 +198,9 @@ class FellAppController extends Controller {
         $active = $fellappUtil->getFellAppByStatusAndYear('active',$currentYear);
         $activeTotal = $fellappUtil->getFellAppByStatusAndYear('active');
 
+        $interviewee = $fellappUtil->getFellAppByStatusAndYear('interviewee',$currentYear);
+        $intervieweeTotal = $fellappUtil->getFellAppByStatusAndYear('interviewee');
+
         //echo "timezone=".date_default_timezone_get()."<br>";
 
         return array(
@@ -183,6 +219,8 @@ class FellAppController extends Controller {
             'activeTotal' => count($activeTotal),
             'completed' => count($completed),
             'completedTotal' => count($completedTotal),
+            'interviewee' => count($interviewee),
+            'intervieweeTotal' => count($intervieweeTotal),
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "" //date_default_timezone_get()
         );

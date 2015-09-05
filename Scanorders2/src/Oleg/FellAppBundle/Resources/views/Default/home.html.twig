@@ -25,6 +25,7 @@
 
     <p>
         Completed:{{ completedTotal }} ({{ completed }} for {{ currentYear }})
+        Interviewee:{{ intervieweeTotal }} ({{ interviewee }} for {{ currentYear }})
         Active:{{ activeTotal }} ({{ active }} for {{ currentYear }})
         Hidden:{{ hiddenTotal }} ({{ hidden }} for {{ currentYear }})
         Archived:{{ archivedTotal }} ({{ archived }} for {{ currentYear }})
@@ -53,6 +54,7 @@
 
     <p>
         <form action="{{ path('fellapp_home') }}" method="get" {{ form_enctype(fellappfilter) }} class="well form-search">
+
             <div class="row">
                 <div class="col-xs-2">
                     {#{{ formmacros.fieldDateLabel_vertical(fellappfilter.startDate,'allow-future-date') }}#}
@@ -69,19 +71,6 @@
                 {#</div>#}
                 <div class="col-xs-4">
                     {{ form_row(fellappfilter.filter,{'attr': {'placeholder': 'Fellowship Type'}}) }}
-
-                    <div class="row">
-                        <div class="col-xs-4">
-                            {{ form_widget(fellappfilter.completed) }}   {{ form_label(fellappfilter.completed) }}
-                        </div>
-                        <div class="col-xs-4">
-                            {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }}
-                        </div>
-                        <div class="col-xs-4">
-                            {{ form_widget(fellappfilter.archived) }}   {{ form_label(fellappfilter.archived) }}
-                        </div>
-                    </div>
-
                 </div>
                 <div class="col-xs-4">
                     {{ form_row(fellappfilter.search, {'attr': {'placeholder': 'Search'}}) }}
@@ -94,6 +83,26 @@
                     </div>
                 </div>
             </div>
+
+            <br>
+            <div class="row text-center">
+                <div class="col-xs-2">
+                    {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }}
+                </div>
+                <div class="col-xs-2">
+                    {{ form_widget(fellappfilter.completed) }}   {{ form_label(fellappfilter.completed) }}
+                </div>
+                <div class="col-xs-2">
+                    {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }}
+                </div>
+                <div class="col-xs-2">
+                    {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }}
+                </div>
+                <div class="col-xs-2">
+                    {{ form_widget(fellappfilter.archived) }}   {{ form_label(fellappfilter.archived) }}
+                </div>
+            </div>
+
             {{ form_rest(fellappfilter) }}
         </form>
     </p>
@@ -272,6 +281,15 @@
                                                 <a
                                                     general-data-confirm="Are you sure you want to mark this Application as Complete?"
                                                     href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }) }}">Mark as Complete
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.applicationStatus != 'interviewee' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to mark this Application as Interviewee?"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }) }}">Mark as Interviewee
                                                 </a>
                                             </li>
                                         {% endif %}
