@@ -135,6 +135,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'C2', 'examinations.COMLEXLevel2Score') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>
 
+                <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
 
                 {% if is_granted('ROLE_FELLAPP_ADMIN') %}
@@ -260,6 +261,10 @@
                         {{ c3 }}
                     </td>
 
+
+                    <td>
+                        {{ entity.interviewDate }}
+                    </td>
 
                     <td>
                         {{ entity.interviewScore }}
