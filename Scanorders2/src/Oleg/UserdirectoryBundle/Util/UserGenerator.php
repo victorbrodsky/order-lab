@@ -45,7 +45,7 @@ class UserGenerator {
 
 
     public function generateUsersExcel() {
-        $inputFileName = __DIR__ . '/../Util/UsersFull.xlsx';
+        $inputFileName = __DIR__ . '/../Util/UsersFullTest.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -270,29 +270,42 @@ class UserGenerator {
                     $academicTitles[] = new AppointmentTitle();
                 }
 
+                //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_position
+                $facultyTrackStrMulti = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
+                $facultyTrackStrArr = explode(";",$facultyTrackStrMulti);
+
+                $index = 0;
+
                 foreach( $academicTitles as $academicTitle ) {
+
                     $titleObj = $this->getObjectByNameTransformer('AppTitleList',$academicTitleStr,$systemuser);
                     $academicTitle->setName($titleObj);
 
                     $user->addAppointmentTitle($academicTitle);
 
-                    //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_position
-                    $facultyTrackStr = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
+                    $facultyTrackStr = null;
+
+                    if( array_key_exists($index, $facultyTrackStrArr) ) {
+                        $facultyTrackStr = $facultyTrackStrArr[$index];
+                    }
+
                     if( strpos($facultyTrackStr,'Clinical') !== false ) {
                         $facultyTrackStr = 'Clinical Faculty';
                     }
                     if( strpos($facultyTrackStr,'Research') !== false ) {
                         $facultyTrackStr = 'Research Faculty';
                     }
-                    if( strpos($facultyTrackStr,'Clinical') !== false && strpos($facultyTrackStr,'Research') !== false ) {
-                        $facultyTrackStr = 'Clinical Faculty, Research Faculty';
-                    }
+//                    if( strpos($facultyTrackStr,'Clinical') !== false && strpos($facultyTrackStr,'Research') !== false ) {
+//                        $facultyTrackStr = 'Clinical Faculty, Research Faculty';
+//                    }
                     $academicTitle->setPosition($facultyTrackStr);
 
                     //Academic Appointment start date
                     $academicAppointmentStartDateStr = $this->getValueByHeaderName('Academic Appointment start date', $rowData, $headers);
                     $academicAppointmentStartDate = $this->transformDatestrToDate($academicAppointmentStartDateStr);
                     $academicTitle->setStartDate($academicAppointmentStartDate);
+
+                    $index++;
                 }
 
             }
@@ -366,20 +379,35 @@ class UserGenerator {
                 $AdministrativeCommentComment = $this->getValueByHeaderName('Administrative Comment - Comment', $rowData, $headers);
 
                 //check if Category exists (root)
-                $AdministrativeCommentCategoryObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentCategory,$systemuser);
-
+                $transformer = new GenericTreeTransformer($this->em, $systemuser, 'CommentTypeList', 'UserdirectoryBundle');
                 $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'CommentTypeList','organizationalGroupType'=>'CommentGroupType');
-                $AdministrativeCommentNameObj = $this->em->getRepository('OlegUserdirectoryBundle:CommentTypeList')->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
+                $AdministrativeCommentCategoryObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentCategory,$systemuser);
+                //$AdministrativeCommentCategoryObj = $transformer->createNewEntity($AdministrativeCommentCategory,$mapper['className'],$systemuser);
+                $this->em->persist($AdministrativeCommentCategoryObj);
+
+                $AdministrativeCommentNameObj = null;
+                if( $AdministrativeCommentCategoryObj ) {
+                    $AdministrativeCommentNameObj = $this->em->getRepository('OlegUserdirectoryBundle:CommentTypeList')->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
+                }
 
                 if( !$AdministrativeCommentNameObj ) {
-                    //$AdministrativeCommentNameObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentName,$systemuser);
-                    $transformer = new GenericTreeTransformer($this->em, $systemuser, 'CommentTypeList', 'UserdirectoryBundle');
                     $AdministrativeCommentNameObj = $transformer->createNewEntity($AdministrativeCommentName,'CommentTypeList',$systemuser);
 
-                    $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
-                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, $AdministrativeCommentNameObj->getLevel());
-                    $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
-                    $this->em->persist($AdministrativeCommentNameObj);
+                    if( !$AdministrativeCommentNameObj->getParent() ) {
+                        $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
+                        $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
+                        $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
+                        $this->em->persist($AdministrativeCommentNameObj);
+                    } else {
+                        if( $AdministrativeCommentNameObj->getParent()->getId() != $AdministrativeCommentCategoryObj->getId() ) {
+                            throw new \Exception('Comment Name: Tree node object ' . $AdministrativeCommentNameObj . ' already has a parent, but it is different: existing pid=' . $AdministrativeCommentNameObj->getParent()->getId() . ', new pid='.$AdministrativeCommentCategoryObj->getId());
+                        }
+                    }
+
+//                    $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
+//                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
+//                    $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
+//                    $this->em->persist($AdministrativeCommentNameObj);
                 }
 
                 //set comment category tree node
@@ -410,11 +438,12 @@ class UserGenerator {
                 $IdentifierLinkStr = $this->getValueByHeaderName('Identifier - link', $rowData, $headers);
                 $IdentifierLinkArr = explode(";", $IdentifierLinkStr);
 
-                $IdentifierTypeStr = null;
-                $IdentifierLinkStr = null;
 
                 $index = 0;
                 foreach( $IdentifierNumberArr as $IdentifierStr ) {
+
+                    $IdentifierTypeStr = null;
+                    $IdentifierLinkStr = null;
 
                     if( array_key_exists($index, $IdentifierTypeArr) ) {
                         $IdentifierTypeStr = $IdentifierTypeArr[$index];
@@ -626,7 +655,7 @@ class UserGenerator {
         } //if
 
 
-        exit();
+        //exit();
         return $count;
     }
 
@@ -726,16 +755,17 @@ class UserGenerator {
         $HeadDivisionArr = explode(";", $HeadDivision);
         $HeadServiceArr = explode(";", $HeadService);
 
-        $DepartmentStr = null;
-        $DivisionStr = null;
-        $ServiceStr = null;
-
-        $HeadDepartmentStr = null;
-        $HeadDivisionStr = null;
-        $HeadServiceStr = null;
-
         $index = 0;
         foreach( $InstitutionArr as $InstitutionStr ) {
+
+            $DepartmentStr = null;
+            $DivisionStr = null;
+            $ServiceStr = null;
+
+            $HeadDepartmentStr = null;
+            $HeadDivisionStr = null;
+            $HeadServiceStr = null;
+
             $InstitutionStr = trim($InstitutionStr);
             if( array_key_exists($index, $DepartmentArr) ) {
                 $DepartmentStr = trim($DepartmentArr[$index]);
@@ -763,7 +793,8 @@ class UserGenerator {
             }
 
             $index++;
-        }
+
+        } //foreach
 
         return $holders;
     }
@@ -791,6 +822,8 @@ class UserGenerator {
 
             $InstitutionObj = $this->getObjectByNameTransformer('Institution',$Institution,$systemuser,$params);
             //$InstitutionObj = $transformer->createNewEntity($Institution,$mapper['className'],$systemuser);
+            //$levelInstitution = $this->em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
+            //$InstitutionObj->setOrganizationalGroupType($levelInstitution);
 
             if( $InstitutionObj ) {
                 //set Institution tree node
@@ -808,7 +841,7 @@ class UserGenerator {
 
                 if( !$DepartmentObj->getParent() ) {
                     $InstitutionObj->addChild($DepartmentObj);
-                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, $DepartmentObj->getLevel());
+                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
                     $DepartmentObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($DepartmentObj);
                 } else {
@@ -840,7 +873,7 @@ class UserGenerator {
 
                 if( !$DivisionObj->getParent() ) {
                     $DepartmentObj->addChild($DivisionObj);
-                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, $DivisionObj->getLevel());
+                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 2);
                     $DivisionObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($DivisionObj);
                 } else {
@@ -872,7 +905,7 @@ class UserGenerator {
 
                 if( !$ServiceObj->getParent() ) {
                     $DivisionObj->addChild($ServiceObj);
-                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, $ServiceObj->getLevel());
+                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 3);
                     $ServiceObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($ServiceObj);
                 } else {
@@ -894,13 +927,22 @@ class UserGenerator {
             }
         }
 
+//        echo "inst level title=".$InstitutionObj->getOrganizationalGroupType().", level=".$InstitutionObj->getLevel()."<br>";
+//        echo "dep level title=".$DepartmentObj->getOrganizationalGroupType().", level=".$DepartmentObj->getLevel()."<br>";
+//        echo "div level title=".$DivisionObj->getOrganizationalGroupType().", level=".$DivisionObj->getLevel()."<br>";
+//        echo "ser level title=".$ServiceObj->getOrganizationalGroupType().", level=".$ServiceObj->getLevel()."<br>";
+//        exit();
+
         return $holder;
     }
 
-    public function processBoardCertification($credentials, $systemuser,$rowData, $headers, $boardCertSpec) {
+    public function processBoardCertification($credentials, $systemuser, $rowData, $headers, $boardCertSpec) {
         $boardCertSpecArr = explode(";", $boardCertSpec);
 
-        $issueDateStr = $this->getValueByHeaderName('Board Certification - Specialty', $rowData, $headers);
+        $CertifyingBoardOrganizationStr = $this->getValueByHeaderName('Certifying Board Organization', $rowData, $headers);
+        $CertifyingBoardOrganizationArr = explode(";", $CertifyingBoardOrganizationStr);
+
+        $issueDateStr = $this->getValueByHeaderName('Board Certification - Date Issued', $rowData, $headers);
         $issueDateArr = explode(";", $issueDateStr);
 
         $expDateStr = $this->getValueByHeaderName('Board Certification - Expiration Date', $rowData, $headers);
@@ -909,12 +951,13 @@ class UserGenerator {
         $recertDateStr = $this->getValueByHeaderName('Board Certification - Recertification Date', $rowData, $headers);
         $recertDateArr = explode(";", $recertDateStr);
 
-        $issueDate = null;
-        $expDate = null;
-        $recertDate = null;
-
         $index = 0;
         foreach( $boardCertSpecArr as $boardCertSpecStr ) {
+
+            $issueDate = null;
+            $expDate = null;
+            $recertDate = null;
+            $CertifyingBoardOrganization = null;
 
             if( array_key_exists($index, $issueDateArr) ) {
                 $issueDate = $issueDateArr[$index];
@@ -925,8 +968,11 @@ class UserGenerator {
             if( array_key_exists($index, $recertDateArr) ) {
                 $recertDate = $recertDateArr[$index];
             }
+            if( array_key_exists($index, $CertifyingBoardOrganizationArr) ) {
+                $CertifyingBoardOrganization = $CertifyingBoardOrganizationArr[$index];
+            }
 
-            $boardCert = $this->addSingleBoardCertification($systemuser,$rowData, $headers, $boardCertSpecStr, $issueDate, $expDate, $recertDate);
+            $boardCert = $this->addSingleBoardCertification($systemuser, $boardCertSpecStr, $issueDate, $expDate, $recertDate, $CertifyingBoardOrganization);
             if( $boardCert ) {
                 $credentials->addBoardCertification($boardCert);
             }
@@ -936,7 +982,7 @@ class UserGenerator {
 
     }
 
-    public function addSingleBoardCertification($systemuser,$rowData, $headers, $boardCertSpecStr, $issueDate, $expDate, $recertDate) {
+    public function addSingleBoardCertification($systemuser, $boardCertSpecStr, $issueDate, $expDate, $recertDate, $CertifyingBoardOrganization) {
         if( $boardCertSpecStr && strtolower($boardCertSpecStr) != 'null' ) {
             $boardCert = new BoardCertification();
             $boardCertSpecObj = $this->getObjectByNameTransformer('BoardCertifiedSpecialties',$boardCertSpecStr,$systemuser);
@@ -958,6 +1004,13 @@ class UserGenerator {
             if( strtolower($recertDate) != 'null' ) {
                 $recertDate = $this->transformDatestrToDate($recertDate);
                 $boardCert->setRecertificationDate($recertDate);
+            }
+
+            //Certifying Board Organization
+            $CertifyingBoardOrganization = 'American Board of Pathology'; //temporary fix => add to user excel
+            if( strtolower($CertifyingBoardOrganization) != 'null' ) {
+                $CertifyingBoardOrganizationObj = $this->getObjectByNameTransformer('CertifyingBoardOrganization',$CertifyingBoardOrganization,$systemuser);
+                $boardCert->setCertifyingBoardOrganization($CertifyingBoardOrganizationObj);
             }
 
             return $boardCert;

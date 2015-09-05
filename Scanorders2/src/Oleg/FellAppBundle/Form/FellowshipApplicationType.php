@@ -196,6 +196,26 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__documents__',
         ));
 
+        $builder->add('itinerarys', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => 'Itinerary / Interview Schedule(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documents__',
+        ));
+
+
+        $builder->add('interviewDate', null, array(
+            'label' => 'Interview Date:',
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

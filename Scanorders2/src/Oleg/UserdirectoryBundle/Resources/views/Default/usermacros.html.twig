@@ -707,6 +707,7 @@
     {% endif %}
 {% endmacro %}
 
+
 {% macro phoneHref(phone) %}
     {% set valueclean = phone|replace({('+'): "", (' '): "", (')'): "", ('('): "", ('-'): ""}) %}
     <a href="tel:{{ valueclean }}" target="_top">{{ phone }}</a>

@@ -463,6 +463,12 @@ class ReportGenerator {
             $filePathsArr[] = $otherDocument->getFileSystemPath();
         }
 
+        //itinerarys
+        $itineraryDocuments = $entity->getItinerarys();
+        foreach( $itineraryDocuments as $itineraryDocument ) {
+            $filePathsArr[] = $itineraryDocument->getFileSystemPath();
+        }
+
         $createFlag = true;
 
         //2) convert all uploads to pdf using LibreOffice
@@ -564,7 +570,7 @@ class ReportGenerator {
 
         //fellapp_download
         $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),true); //this does not work from console: 'order' is missing
-        echo "pageurl=". $pageUrl . "<br>";
+        //echo "pageurl=". $pageUrl . "<br>";
 
         //save session        
         //$session = $this->container->get('session');
@@ -579,7 +585,7 @@ class ReportGenerator {
             //array('cookie' => array($session->getName() => $session->getId()))
         );
 
-        echo "generated ok! <br>";
+        //echo "generated ok! <br>";
     }
 
     public function generateFromTwig($applicationId,$applicationOutputFilePath) {
@@ -817,43 +823,64 @@ class ReportGenerator {
 
         $logger = $this->container->get('logger');
 
-        $filesStr = "";
-        //$filesStr = implode(' ', $filesArr);
-
-        foreach( $filesArr as $file ) {
-
-            echo "add merge: filepath=(".$file.") <br>";
-            $filesStr = $filesStr . ' ' . '"' . $file . '"';
-
-        }
-
-        $filesStr = str_replace("/","\\", $filesStr);
-        $filesStr = str_replace("app\..","", $filesStr);
+        $filesStr = $this->convertFilesArrToString($filesArr);
 
         $filenameMerged = str_replace("/","\\", $filenameMerged);
         $filenameMerged = str_replace("app\..","", $filenameMerged);
         $filenameMerged = '"'.$filenameMerged.'"';
 
-        echo "filenameMerged=".$filenameMerged."<br>";
+        //echo "filenameMerged=".$filenameMerged."<br>";
 
         $cmd = '"C:\Users\DevServer\Desktop\php\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"' . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
         //echo "cmd=".$cmd."<br>";
 
-        //$output = null;
-        //$return = null;
+        $output = null;
+        $return = null;
         $shellout = exec( $cmd, $output, $return );
+        //$shellout = exec( $cmd );
 
-        $logger->debug("pdftk output: " . print_r($output));
-        $logger->debug("pdftk return: " . $return);
+        //$logger->error("pdftk output: " . print_r($output));
+        //$logger->error("pdftk return: " . $return);
 
-        if( $shellout ) {
-            $logger->debug("pdftk error!!!!!!!!!!!!!!!!: " . $shellout);
-        } else {
-            $logger->debug("pdftk ok: " . $shellout);
+        //return 0 => ok, return 1 => failed
+        if( $return == 1 ) {
+
+            //event log
+            $event = "Probably encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
+            //echo $event."<br>";
+            $logger->notice($event);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+
+            $filesInArr = $this->processFilesGostscript($filesArr);
+
+            $filesInStr = $this->convertFilesArrToString($filesInArr, false);
+            $logger->notice('pdftk encrypted filesInStr='.$filesInStr);
+
+            $cmd = '"C:\Users\DevServer\Desktop\php\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"' . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
+            $logger->notice('pdftk encrypted: cmd='.$cmd);
+
+            $output = null;
+            $return = null;
+            $shellout = exec( $cmd, $output, $return );
+            //$shellout = exec( $cmd );
+
+            //$logger->error("pdftk 2 output: " . print_r($output));
+            //$logger->error("pdftk 2 return: " . $return);
+
+            if( $return == 1 ) { //error
+                //event log
+                $event = "ERROR: 'Complete Application PDF' will no be generated! pdftk failed: " . $cmd;
+                $logger->error($event);
+                $userSecUtil = $this->container->get('user_security_utility');
+                $systemUser = $userSecUtil->findSystemUser();
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+            }
+
         }
-
-        echo "shellout=".$shellout."<br>";
-
 
 //        if( file_exists($filenameMerged) ) {
 //            echo "filenameMerged exists \n<br>";
@@ -862,6 +889,82 @@ class ReportGenerator {
 //            //exit('my error');
 //        }
 
+    }
+
+    public function convertFilesArrToString($filesArr,$withquotes=true) {
+        $filesStr = "";
+
+        foreach( $filesArr as $file ) {
+
+            //echo "add merge: filepath=(".$file.") <br>";
+
+            if( $withquotes ) {
+                $filesStr = $filesStr . ' ' . '"' . $file . '"';
+            } else {
+                $filesStr = $filesStr . ' '  . $file;
+            }
+
+        }
+
+        $filesStr = str_replace("/","\\", $filesStr);
+        $filesStr = str_replace("app\..","", $filesStr);
+
+        return $filesStr;
+    }
+
+    public function processFilesGostscript( $filesArr ) {
+
+        $logger = $this->container->get('logger');
+
+        $filesOutArr = array();
+
+        foreach( $filesArr as $file ) {
+
+            //$ "C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe" -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="C:\Temp New\out\out.pdf" -c .setpdfwrite -f "C:\Temp New\test.pdf"
+            //"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64.exe"
+            $cmd = '"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe"' . ' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite ';
+
+            //echo "add merge: filepath=(".$file.") <br>";
+            $filesStr = '"' . $file . '"';
+
+            $filesStr = str_replace("/","\\", $filesStr);
+            $filesStr = str_replace("app\..","", $filesStr);
+
+            $outFilename = pathinfo($file, PATHINFO_DIRNAME) . '\\' . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
+
+            $outFilename = '"'.$outFilename.'"';
+
+            $outFilename = str_replace("/","\\", $outFilename);
+            $outFilename = str_replace("app\..","", $outFilename);
+
+            //$logger->notice('GS: outFilename='.$outFilename);
+
+            //gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=unencrypted.pdf -c .setpdfwrite -f encrypted.pdf
+            $cmd = $cmd . '-sOutputFile=' . $outFilename . ' -c .setpdfwrite -f ' . $filesStr ;
+            //$logger->notice('GS: cmd='.$cmd);
+
+            $output = null;
+            $return = null;
+            exec( $cmd, $output, $return );
+
+            //$logger->error("GS output: " . print_r($output));
+            //$logger->error("GS return: " . $return);
+
+            if( $return == 1 ) {
+                //event log
+                $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd;
+                $logger->error($event);
+                $userSecUtil = $this->container->get('user_security_utility');
+                $systemUser = $userSecUtil->findSystemUser();
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+            }
+
+            $filesOutArr[] = $outFilename;
+
+        }
+
+        return $filesOutArr;
     }
 
 
@@ -897,7 +1000,7 @@ class ReportGenerator {
         $object->setUploadDirectory($path);
         $object->setSize($filesize);
 
-        $fellappReportType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Report');
+        $fellappReportType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Complete Fellowship Application in PDF');
 
         if( $fellappReportType ) {
             $object->setType($fellappReportType);

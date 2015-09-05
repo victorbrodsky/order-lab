@@ -1696,7 +1696,8 @@ class AdminController extends Controller
             'Outside Report Reference Representation',
             'Fellowship Application Spreadsheet',
             'Fellowship Application Upload',
-            'Fellowship Application Report'
+            'Complete Fellowship Application in PDF',
+            'Old Complete Fellowship Application in PDF'
         );
 
 

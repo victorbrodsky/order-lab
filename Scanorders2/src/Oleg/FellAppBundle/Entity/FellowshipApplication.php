@@ -162,6 +162,23 @@ class FellowshipApplication extends BaseUserAttributes {
      **/
     private $documents;
 
+    /**
+     * Other Documents
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellApp_itinerary",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="itinerary_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $itinerarys;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $interviewDate;
+
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -172,6 +189,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->references = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->itinerarys = new ArrayCollection();
 
         $this->setApplicationStatus('active');
     }
@@ -375,6 +393,23 @@ class FellowshipApplication extends BaseUserAttributes {
     }
 
 
+    public function addItinerary($item)
+    {
+        if( $item && !$this->itinerarys->contains($item) ) {
+            $this->itinerarys->add($item);
+        }
+        return $this;
+    }
+    public function removeItinerary($item)
+    {
+        $this->itinerarys->removeElement($item);
+    }
+    public function getItinerarys()
+    {
+        return $this->itinerarys;
+    }
+
+
     /**
      * @param mixed $honors
      */
@@ -517,6 +552,22 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * @param mixed $interviewDate
+     */
+    public function setInterviewDate($interviewDate)
+    {
+        $this->interviewDate = $interviewDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInterviewDate()
+    {
+        return $this->interviewDate;
     }
 
 

@@ -16,7 +16,13 @@
                 {#<label for="email" class="control-label required">E-mail</label>#}
                 {#<input type="text" class="form-control" id="email" name="email" placeholder="E-mail">#}
                 {% for info in form.user.infos %}
-                    {{ form_row(info.email) }}
+                    {% if cycle != "show" %}
+                        {{ form_row(info.email) }}
+                    {% else %}
+                        <div class="form-control form-control-modif" disabled>
+                            <a href="mailto:{{ info.email.vars.value }}" target="_top">{{ info.email.vars.value }}</a>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </p>
 
@@ -152,7 +158,14 @@
                             {% for location in form.user.locations %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Present Address' %}
-                                        {{ form_row(location.phone) }}
+                                        {% if cycle != "show" %}
+                                            {{ form_row(location.phone) }}
+                                        {% else %}
+                                            {{ form_label(location.phone) }}<br>
+                                            <div class="form-control form-control-modif" disabled>
+                                                {{ usermacros.phoneHref(location.phone.vars.value) }}
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
@@ -163,7 +176,14 @@
                             {% for location in form.user.locations %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Work Address' %}
-                                        {{ form_row(location.phone,{'label': 'Work:'}) }}
+                                        {% if cycle != "show" %}
+                                            {{ form_row(location.phone,{'label': 'Work:'}) }}
+                                        {% else %}
+                                            {{ form_label(location.phone) }}<br>
+                                            <div class="form-control form-control-modif" disabled>
+                                                {{ usermacros.phoneHref(location.phone.vars.value) }}
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
@@ -176,7 +196,14 @@
                             {% for location in form.user.locations %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Present Address' %}
-                                        {{ form_row(location.mobile) }}
+                                        {% if cycle != "show" %}
+                                            {{ form_row(location.mobile) }}
+                                        {% else %}
+                                            {{ form_label(location.mobile) }}<br>
+                                            <div class="form-control form-control-modif" disabled>
+                                                {{ usermacros.phoneHref(location.mobile.vars.value) }}
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
