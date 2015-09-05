@@ -32,11 +32,13 @@
         <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }}</i>
     </p>
 
-    {% if searchFlag %}
-        {% set resStr = "Applications matching search criteria" %}
-    {% else %}
-        {% set resStr = "Total" %}
-    {% endif %}
+    {#{% if searchFlag %}#}
+        {#{% set resStr = "Applications matching search criteria" %}#}
+    {#{% else %}#}
+        {#{% set resStr = "Total" %}#}
+    {#{% endif %}#}
+
+    {% set resStr = "Applications matching search criteria" %}
 
     {% if lastImportTimestamp %}
         <p>

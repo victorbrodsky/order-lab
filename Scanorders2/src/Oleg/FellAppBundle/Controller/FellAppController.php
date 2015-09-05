@@ -72,9 +72,9 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp_home',
                 array(
                     'filter[startDate]' => $currentYear,
-                    //'filter[active]' => 1,
-                    //'filter[completed]' => 1,
-                    //'filter[interviewee]' => 1,
+                    'filter[active]' => 1,
+                    'filter[completed]' => 1,
+                    'filter[interviewee]' => 1,
                 )
             ) );
         }
@@ -107,36 +107,41 @@ class FellAppController extends Controller {
         if( $hidden ) {
             //$dql->orWhere("fellapp.applicationStatus = 'hide'");
             $orWhere[] = "fellapp.applicationStatus = 'hide'";
-        } else {
             $searchFlag = true;
+        } else {
+            //$searchFlag = true;
         }
 
         if( $archived ) {
             //$dql->orWhere("fellapp.applicationStatus = 'archive'");
             $orWhere[] = "fellapp.applicationStatus = 'archive'";
-        } else {
             $searchFlag = true;
+        } else {
+            //$searchFlag = true;
         }
 
         if( $completed ) {
             //$dql->orWhere("fellapp.applicationStatus = 'complete'");
             $orWhere[] = "fellapp.applicationStatus = 'complete'";
-        } else {
             $searchFlag = true;
+        } else {
+            //$searchFlag = true;
         }
 
         if( $interviewee ) {
             //$dql->orWhere("fellapp.applicationStatus = 'interviewee'");
             $orWhere[] = "fellapp.applicationStatus = 'interviewee'";
-        } else {
             $searchFlag = true;
+        } else {
+            //$searchFlag = true;
         }
 
         if( $active ) {
             //$dql->orWhere("fellapp.applicationStatus = 'active'");
             $orWhere[] = "fellapp.applicationStatus = 'active'";
-        } else {
             $searchFlag = true;
+        } else {
+            //$searchFlag = true;
         }
 
         if( count($orWhere) > 0 ) {
