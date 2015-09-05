@@ -45,7 +45,7 @@ class UserGenerator {
 
 
     public function generateUsersExcel() {
-        $inputFileName = __DIR__ . '/../Util/UsersFullTest.xlsx';
+        $inputFileName = __DIR__ . '/../Util/UsersFull.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
