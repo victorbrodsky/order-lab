@@ -175,7 +175,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $itinerarys;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $interviewDate;
 

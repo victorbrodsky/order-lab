@@ -263,7 +263,9 @@
 
 
                     <td>
-                        {{ entity.interviewDate|date('m/d/Y') }}
+                        {% if entity.interviewDate is not empty %}
+                            {{ entity.interviewDate|date('m/d/Y') }}
+                        {% endif %}
                     </td>
 
                     <td>
