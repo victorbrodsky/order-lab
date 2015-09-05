@@ -730,7 +730,6 @@ class ReportGenerator {
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
         $cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
         //$cmd = '"'.$this->container->get('kernel')->getRootDir() . '\..\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice" --headless -convert-to pdf -outdir "' . $outdir . '"';
-        //$cmd = '"../../../../../vendors/olegutil/LibreOfficePortable\App\libreoffice\program\soffice" --headless -convert-to pdf -outdir "' . $outdir . '"';
 
         //echo "cmd=" . $cmd . "<br>";
 
@@ -834,6 +833,11 @@ class ReportGenerator {
         //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
         $pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
 
+        //quick fix for c.med running on E:
+        if( strpos(getcwd(),'E:') !== false ) {
+            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
+        }
+
         $cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
         //echo "cmd=".$cmd."<br>";
 
@@ -922,6 +926,11 @@ class ReportGenerator {
         $filesOutArr = array();
 
         $gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+
+        //quick fix for c.med running on E:
+        if( strpos(getcwd(),'E:') !== false ) {
+            $gsLocation = str_replace('C:','E:',$gsLocation);
+        }
 
         foreach( $filesArr as $file ) {
 
