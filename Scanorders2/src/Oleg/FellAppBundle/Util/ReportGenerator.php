@@ -831,7 +831,10 @@ class ReportGenerator {
 
         //echo "filenameMerged=".$filenameMerged."<br>";
 
-        $cmd = '"C:\Users\DevServer\Desktop\php\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"' . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
+        //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
+        $pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
+
+        $cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
         //echo "cmd=".$cmd."<br>";
 
         $output = null;
@@ -859,7 +862,7 @@ class ReportGenerator {
             $filesInStr = $this->convertFilesArrToString($filesInArr, false);
             $logger->notice('pdftk encrypted filesInStr='.$filesInStr);
 
-            $cmd = '"C:\Users\DevServer\Desktop\php\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"' . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
+            $cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
             $logger->notice('pdftk encrypted: cmd='.$cmd);
 
             $output = null;
@@ -918,11 +921,13 @@ class ReportGenerator {
 
         $filesOutArr = array();
 
+        $gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+
         foreach( $filesArr as $file ) {
 
             //$ "C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe" -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="C:\Temp New\out\out.pdf" -c .setpdfwrite -f "C:\Temp New\test.pdf"
             //"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64.exe"
-            $cmd = '"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe"' . ' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite ';
+            $cmd = $gsLocation . ' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite ';
 
             //echo "add merge: filepath=(".$file.") <br>";
             $filesStr = '"' . $file . '"';
