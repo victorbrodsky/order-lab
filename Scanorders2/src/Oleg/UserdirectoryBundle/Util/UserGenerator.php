@@ -45,6 +45,9 @@ class UserGenerator {
 
 
     public function generateUsersExcel() {
+
+        ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes;
+
         $inputFileName = __DIR__ . '/../Util/UsersFull.xlsx';
 
         try {
