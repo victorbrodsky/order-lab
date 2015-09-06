@@ -46,7 +46,7 @@ class UserGenerator {
 
     public function generateUsersExcel() {
 
-        ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes;
+        ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
         $inputFileName = __DIR__ . '/../Util/UsersFull.xlsx';
 
@@ -120,11 +120,11 @@ class UserGenerator {
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
             //echo "DB user=".$user."<br>";
 
-            $updateUsers = true;
+            //$updateUsers = true;
             if( $user ) {
-                if( !$updateUsers ) {
+                //if( !$updateUsers ) {
                     continue; //ignore existing users to prevent overwrite
-                }
+                //}
             }
 
             if( !$user ) {
