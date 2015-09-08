@@ -149,8 +149,6 @@ class FellAppController extends Controller {
             $dql->andWhere("(".$orWhereStr.")");
         }
 
-        $ldap = false;
-        if($ldap) 
         if( $startDate ) {
             //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d');
             //$dateStr = $transformer->transform($startDate);
