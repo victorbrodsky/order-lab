@@ -70,6 +70,10 @@
             {{ formmacros.field(edit_form.smtpServerAddress) }}
         {% endif %}
 
+        {% if edit_form.allowPopulateFellApp is defined %}
+            {{ formmacros.field(edit_form.allowPopulateFellApp) }}
+        {% endif %}
+
     {% if cycle == 'show' %}
         <hr>
         <h3 class="text-info">ScanOrder DB</h3>

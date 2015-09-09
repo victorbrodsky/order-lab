@@ -56,6 +56,13 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'smtpServerAddress'}) }}">Edit</a></td>
             </tr>
 
+            {#AllowPopulateFellApp#}
+            <tr>
+                <td>Allow to populate Fellowship Applications from Google Form by cron job</td>
+                <td>{{ entity.allowPopulateFellApp }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'allowPopulateFellApp'}) }}">Edit</a></td>
+            </tr>
+
 
             {#ScanOrder DB#}
             <tr>

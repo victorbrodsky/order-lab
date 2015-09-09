@@ -48,7 +48,7 @@ class UserGenerator {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
-        $inputFileName = __DIR__ . '/../Util/UsersFullTest.xlsx';
+        $inputFileName = __DIR__ . '/../Util/UsersFull.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -797,9 +797,9 @@ class UserGenerator {
         //echo "leadArr count=".count($leadArr)."<br>";
 
         $lastInstitutionStr = null;
-        $lastDepartmentStr = null;
-        $lastDivisionStr = null;
-        $lastServiceStr = null;
+        //$lastDepartmentStr = null;
+        //$lastDivisionStr = null;
+        //$lastServiceStr = null;
         $lastTitleStr = null;
 
         $index = 0;
@@ -844,23 +844,23 @@ class UserGenerator {
 
             if( array_key_exists($index, $DepartmentArr) ) {
                 $DepartmentStr = trim($DepartmentArr[$index]);
-                $lastDepartmentStr = $DepartmentStr;
+                //$lastDepartmentStr = $DepartmentStr;
             } else {
-                $DepartmentStr = $lastDepartmentStr;
+                //$DepartmentStr = $lastDepartmentStr;
             }
 
             if( array_key_exists($index, $DivisionArr) ) {
                 $DivisionStr = trim($DivisionArr[$index]);
-                $lastDivisionStr = $DivisionStr;
+                //$lastDivisionStr = $DivisionStr;
             } else {
-                $DivisionStr = $lastDivisionStr;
+                //$DivisionStr = $lastDivisionStr;
             }
 
             if( array_key_exists($index, $ServiceArr) ) {
                 $ServiceStr = trim($ServiceArr[$index]);
-                $lastServiceStr = $ServiceStr;
+                //$lastServiceStr = $ServiceStr;
             } else {
-                $ServiceStr = $lastServiceStr;
+                //$ServiceStr = $lastServiceStr;
             }
 
             if( array_key_exists($index, $HeadDepartmentArr) ) {
@@ -882,22 +882,26 @@ class UserGenerator {
                 $holder->setStatus($holder::STATUS_VERIFIED);
             }
 
-            $holders[] = $holder;
+            if( $holder ) {
 
-            //set title object: Administrative Title
-            if( $holderClassName == 'AdministrativeTitle' ) {
-                $titleClassName = 'AdminTitleList';
+                $holders[] = $holder;
+
+                //set title object: Administrative Title
+                if( $holderClassName == 'AdministrativeTitle' ) {
+                    $titleClassName = 'AdminTitleList';
+                }
+                if( $holderClassName == 'MedicalTitle' ) {
+                    $titleClassName = 'MedicalTitleList';
+                }
+                if( $holderClassName == 'AppointmentTitle' ) {
+                    $titleClassName = 'AppTitleList';
+                }
+                $titleObj = $this->getObjectByNameTransformer($titleClassName,$titleStr,$systemuser);
+                $holder->setName($titleObj);
+                $addMethod = "add".$holderClassName;
+                $subjectUser->$addMethod($holder);
+
             }
-            if( $holderClassName == 'MedicalTitle' ) {
-                $titleClassName = 'MedicalTitleList';
-            }
-            if( $holderClassName == 'AppointmentTitle' ) {
-                $titleClassName = 'AppTitleList';
-            }
-            $titleObj = $this->getObjectByNameTransformer($titleClassName,$titleStr,$systemuser);
-            $holder->setName($titleObj);
-            $addMethod = "add".$holderClassName;
-            $subjectUser->$addMethod($holder);
 
 
             $index++;

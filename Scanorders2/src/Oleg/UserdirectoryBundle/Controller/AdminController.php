@@ -756,6 +756,18 @@ class AdminController extends Controller
                         <a href="https://github.com/myokyawhtun/PDFMerger">PDFMerger</a>
                     </li>
 
+                    <br>
+
+                    <li>
+                        <a href="https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/">PDFTK</a>
+                    </li>
+
+                    <br>
+
+                    <li>
+                        <a href="http://www.ghostscript.com/">Ghostscript</a>
+                    </li>
+
 
                 </ul>
                 </p>
@@ -781,6 +793,9 @@ class AdminController extends Controller
             throw new \Exception( 'Institution was not found for name='.$institutionName );
         }
         $params->setAutoAssignInstitution($institution);
+
+        //set AllowPopulateFellApp to false
+        $params->setAllowPopulateFellApp(false);
 
         $em->persist($params);
         $em->flush();

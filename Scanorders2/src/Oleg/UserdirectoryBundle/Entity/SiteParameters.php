@@ -258,7 +258,10 @@ class SiteParameters {
      */
     private $underLoginMsgScan;
 
-
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $allowPopulateFellApp;
 
 
 
@@ -1049,6 +1052,22 @@ class SiteParameters {
     public function getLdapExePath()
     {
         return $this->ldapExePath;
+    }
+
+    /**
+     * @param mixed $allowPopulateFellApp
+     */
+    public function setAllowPopulateFellApp($allowPopulateFellApp)
+    {
+        $this->allowPopulateFellApp = $allowPopulateFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAllowPopulateFellApp()
+    {
+        return $this->allowPopulateFellApp;
     }
 
 

@@ -386,6 +386,7 @@ class UserController extends Controller
 
         $dql->leftJoin("user.infos", "infos");
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
 
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
         $dql->leftJoin("administrativeTitles.name", "administrativeName");
@@ -466,6 +467,9 @@ class UserController extends Controller
 
             //filter out system user
             $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
+
+            //filter out Pathology Fellowship Applicants
+            $totalcriteriastr = $totalcriteriastr . " AND employmentType.name != 'Pathology Fellowship Applicant'";
 
             if( $criteriastr ) {
                 $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";

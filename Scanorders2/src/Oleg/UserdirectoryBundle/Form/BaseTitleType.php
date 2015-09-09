@@ -277,6 +277,14 @@ class BaseTitleType extends AbstractType
                     },
             ));
 
+            $builder->add('userPositions','entity',array(
+                'class' => 'OlegUserdirectoryBundle:PositionTypeList',
+                'label' => "Position Type:",
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'required' => false
+            ));
+
         }
 
     }

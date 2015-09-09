@@ -24,6 +24,7 @@ use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 
@@ -38,10 +39,9 @@ class FellAppUtil {
     protected $container;
     protected $uploadDir;
 
-    protected $disableImport = true;
-
 
     public function __construct( $em, $sc, $container ) {
+
         $this->em = $em;
         $this->sc = $sc;
         $this->container = $container;
@@ -49,14 +49,15 @@ class FellAppUtil {
         //fellapp.uploadpath = fellapp
         $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
 
-
     }
 
 
     //1) Import google form spreadsheet and download it on the server; create Document object
     public function importFellApp() {
 
-        if( $this->disableImport ) {
+        $userUtil = new UserUtil();
+        $allowPopulateFellApp = $userUtil->getSiteSetting($this->em,'AllowPopulateFellApp');
+        if( !$allowPopulateFellApp ) {
             return;
         }
 
@@ -106,7 +107,9 @@ class FellAppUtil {
     //2) populate fellowship applications from spreadsheet to DB (using uploaded files from Google Drive)
     public function populateFellApp( $path=null ) {
 
-        if( $this->disableImport ) {
+        $userUtil = new UserUtil();
+        $allowPopulateFellApp = $userUtil->getSiteSetting($this->em,'AllowPopulateFellApp');
+        if( !$allowPopulateFellApp ) {
             return;
         }
 
