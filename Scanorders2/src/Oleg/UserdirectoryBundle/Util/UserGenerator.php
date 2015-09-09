@@ -243,6 +243,8 @@ class UserGenerator {
 //
 //                    $user->addAdministrativeTitle($administrativeTitle);
 //                }
+                //echo "count admin titles=".count($administrativeTitles)."<br>";
+                //exit('admin title exit');
             }//if admin title
 
             //Medical Staff Appointment (MSA) Title
@@ -766,6 +768,9 @@ class UserGenerator {
 
         $holders = array();
 
+        //echo "titles=".$titles."<br>";
+        //echo "Institution=".$Institution."<br>";
+
         $titleArr = explode(";", $titles);
 
         $InstitutionArr = explode(";", $Institution);
@@ -782,10 +787,14 @@ class UserGenerator {
             //lead inst
             $leadArr = $InstitutionArr;
             $leadInst = true;
+            //echo "leadArr Inst<br>";
         } else {
             $leadArr = $titleArr;
             $leadInst = false;
+            //echo "leadArr Title<br>";
         }
+
+        //echo "leadArr count=".count($leadArr)."<br>";
 
         $lastInstitutionStr = null;
         $lastDepartmentStr = null;
@@ -795,6 +804,14 @@ class UserGenerator {
 
         $index = 0;
         foreach( $leadArr as $leadStr ) {
+
+            //echo "index=".$index."<br>";
+
+            $leadStr = trim($leadStr);
+
+            if( !$leadStr ) {
+                continue;
+            }
 
             $InstitutionStr = null;
             $titleStr = null;
@@ -858,7 +875,8 @@ class UserGenerator {
 
             $holder = $this->addSingleInstitutinalTree( $holderClassName,$systemuser,$InstitutionStr,$DepartmentStr,$HeadDepartmentStr,$DivisionStr,$HeadDivisionStr,$ServiceStr,$HeadServiceStr );
 
-            if( !$holder ) {
+            //echo "holders < leadArr=".count($holders)." < ".count($leadArr)."<br>";
+            if( !$holder && count($holders) < count($leadArr)-1 ) {
                 $entityClass = "Oleg\\UserdirectoryBundle\\Entity\\".$holderClassName;
                 $holder = new $entityClass($systemuser);
                 $holder->setStatus($holder::STATUS_VERIFIED);
@@ -893,6 +911,23 @@ class UserGenerator {
 
         $holder = null;
 
+        $Institution = trim($Institution);
+        $Department = trim($Department);
+        $Division = trim($Division);
+        $Service = trim($Service);
+
+        $HeadDepartment = trim($HeadDepartment);
+        $HeadDivision = trim($HeadDivision);
+        $HeadService = trim($HeadService);
+
+        //echo "Institution=(".$Institution.")<br>";
+        if( !$Institution ) {
+            //exit('no inst');
+            return $holder;
+        } else {
+            //exit('inst ok');
+        }
+
         $InstitutionObj = null;
         $DepartmentObj = null;
         $DivisionObj = null;
@@ -922,7 +957,7 @@ class UserGenerator {
         }
 
         //department
-        if( $Department && strtolower($Department) != 'null' && $InstitutionObj ) {
+        if( $Institution && $Department && strtolower($Department) != 'null' && $InstitutionObj ) {
 
             $DepartmentObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Department,$InstitutionObj,$mapper);
             if( !$DepartmentObj ) {
@@ -954,7 +989,7 @@ class UserGenerator {
         }
 
         //division
-        if( $Division && strtolower($Division) != 'null' && $DepartmentObj ) {
+        if( $Institution && $Department && $Division && strtolower($Division) != 'null' && $DepartmentObj ) {
 
             $DivisionObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Division,$DepartmentObj,$mapper);
             if( !$DivisionObj ) {
@@ -986,7 +1021,7 @@ class UserGenerator {
         }
 
         //service
-        if( $Service && strtolower($Service) != 'null' && $DivisionObj ) {
+        if( $Institution && $Department && $Division && $Service && strtolower($Service) != 'null' && $DivisionObj ) {
 
             $ServiceObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Service,$DivisionObj,$mapper);
             if( !$ServiceObj ) {
