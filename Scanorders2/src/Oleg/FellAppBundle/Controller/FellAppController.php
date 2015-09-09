@@ -46,7 +46,6 @@ class FellAppController extends Controller {
         $searchFlag = false;
         $currentYear = date("Y")+2;
 
-
         //create fellapp filter
         $params = array(
             'fellTypes' => $fellappUtil->getFellowshipTypesWithSpecials(),
@@ -60,7 +59,7 @@ class FellAppController extends Controller {
         $startDate = $filterform['startDate']->getData();
         $hidden = $filterform['hidden']->getData();
         $archived = $filterform['archived']->getData();
-        $completed = $filterform['completed']->getData();
+        $complete = $filterform['complete']->getData();
         $interviewee = $filterform['interviewee']->getData();
         $active = $filterform['active']->getData();
         //$page = $request->get('page');
@@ -73,7 +72,7 @@ class FellAppController extends Controller {
                 array(
                     'filter[startDate]' => $currentYear,
                     'filter[active]' => 1,
-                    'filter[completed]' => 1,
+                    'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
                 )
             ) );
@@ -120,7 +119,7 @@ class FellAppController extends Controller {
             //$searchFlag = true;
         }
 
-        if( $completed ) {
+        if( $complete ) {
             //$dql->orWhere("fellapp.applicationStatus = 'complete'");
             $orWhere[] = "fellapp.applicationStatus = 'complete'";
             $searchFlag = true;
@@ -189,8 +188,8 @@ class FellAppController extends Controller {
 
         $accessreqs = $fellappUtil->getActiveAccessReq();
 
-        $completed = $fellappUtil->getFellAppByStatusAndYear('complete',$currentYear);
-        $completedTotal = $fellappUtil->getFellAppByStatusAndYear('complete');
+        $complete = $fellappUtil->getFellAppByStatusAndYear('complete',$currentYear);
+        $completeTotal = $fellappUtil->getFellAppByStatusAndYear('complete');
 
         $hidden = $fellappUtil->getFellAppByStatusAndYear('hide',$currentYear);
         $hiddenTotal = $fellappUtil->getFellAppByStatusAndYear('hide');
@@ -220,8 +219,8 @@ class FellAppController extends Controller {
             'archived' => count($archived),
             'active' => count($active),
             'activeTotal' => count($activeTotal),
-            'completed' => count($completed),
-            'completedTotal' => count($completedTotal),
+            'complete' => count($complete),
+            'completeTotal' => count($completeTotal),
             'interviewee' => count($interviewee),
             'intervieweeTotal' => count($intervieweeTotal),
             'searchFlag' => $searchFlag,
@@ -402,7 +401,7 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('login') );
         }
 
-        echo "update <br>";
+        //echo "update <br>";
         //exit('update');
 
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
@@ -428,17 +427,17 @@ class FellAppController extends Controller {
         $form->handleRequest($request);
 
         if( !$form->isSubmitted() ) {
-            echo "form is not submitted<br>";
+            //echo "form is not submitted<br>";
             $form->submit($request);
         }
 
 
-        if ($form->isDisabled()) {
-            echo "form is disabled<br>";
-        }
-        if (count($form->getErrors(true)) > 0) {
-            echo "form has errors<br>";
-        }
+//        if ($form->isDisabled()) {
+//            echo "form is disabled<br>";
+//        }
+//        if (count($form->getErrors(true)) > 0) {
+//            echo "form has errors<br>";
+//        }
 //        echo "errors:<br>";
 //        $string = (string) $form->getErrors(true);
 //        echo "string errors=".$string."<br>";
@@ -474,14 +473,14 @@ class FellAppController extends Controller {
             $em->flush();
 
             //update report if report does not exists
-            if( count($entity->getReports()) == 0 ) {
+            //if( count($entity->getReports()) == 0 ) {
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
                 $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     'A new Complete Fellowship Application PDF will be generated.'
                 );
-            }
+            //}
 
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
@@ -489,13 +488,8 @@ class FellAppController extends Controller {
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Updated');
 
-            //$response = new Response($id);
-            //$this->container->get('kernel')->terminate($request,$response);
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
-
-            //$args = $this->getShowParameters($id,"fellapp_show");
-            //return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
         }
 
         //echo 'form invalid <br>';
@@ -712,7 +706,7 @@ class FellAppController extends Controller {
     /**
      * Import and populate applicants from Google
      *
-     * @Route("/populate_import", name="fellapp_import_populate")
+     * @Route("/populate-import", name="fellapp_import_populate")
      */
     public function importAndPopulateAction(Request $request) {
 
@@ -938,49 +932,28 @@ class FellAppController extends Controller {
 
         } else {
 
-            //TODO: implement report generator manager
-            if(1) {
-                //create report
-                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-                $argument = 'asap';
-                //if( $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
-                    //$argument = 'overwrite';
-                //}
-                $fellappRepGen->addFellAppReportToQueue( $id, $argument );
+            //create report
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $argument = 'asap';
+            //if( $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
+                //$argument = 'overwrite';
+            //}
+            $fellappRepGen->addFellAppReportToQueue( $id, $argument );
 
-                //exit('fellapp_download_pdf exit');
+            //exit('fellapp_download_pdf exit');
 
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    'Complete Application PDF is not ready yet. Please try again later.'
-                );
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Complete Application PDF is not ready yet. Please try again later.'
+            );
 
-                return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
-            }
-
+            return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
         }
 
-//        //create report
-//        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-//        $res = $fellappRepGen->addFellAppReportToQueue( $id, true ); //create report on download click
-//        $filename = $res['filename'];
-//        $report = $res['report'];
-//        $size = $res['size'];
-//
-//        //render report
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/pdf');
-//        $response->headers->set('Content-Description', 'File Transfer');
-//        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
-//        $response->headers->set('Content-Length', $size);
-//        $response->headers->set('Content-Transfer-Encoding', 'binary');
-//        $response->setContent(file_get_contents($report));
-//
-//        return $response;
     }
 
     /**
-     * @Route("/regenerate_all_reports/", name="fellapp_regenerate_reports")
+     * @Route("/regenerate-all-complete-application-pdfs/", name="fellapp_regenerate_reports")
      *
      * @Template("OlegFellAppBundle:Form:new.html.twig")
      */

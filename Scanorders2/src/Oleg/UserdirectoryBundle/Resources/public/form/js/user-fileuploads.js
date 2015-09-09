@@ -85,8 +85,9 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     }
     //console.log('_dz_maxFiles='+_dz_maxFiles);
 
+
     var previewHtml =
-        '<div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">'+
+        '<div class="dz-preview dz-file-preview" style="width:100%; height:220px; margin-left:1px; margin-right:0px;">'+
             '<div class="dz-details">'+
             //'<div class="dz-filename"><span data-dz-name></span></div>'+
             '<div class="dz-size" data-dz-size></div>'+
@@ -149,7 +150,8 @@ function initFileUpload( holder, data, addRemoveLinks ) {
                 //file.previewTemplate.appendChild(document.createTextNode(responseText));
 
                 //parent function
-                if (file.previewElement) {
+                if( file.previewElement ) {
+                    alert("You must press the 'Update' button to save your uploaded file.");
                     return file.previewElement.classList.add("dz-success");
                 }
             },
@@ -336,6 +338,10 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
             }
 
             adjustHolderHeight(holderTop);
+
+            //update form
+            $('#fellapp-applicant-form').submit();
+
             //}
         }).fail(function(data) {
             //console.log('remove failed, data='+data);
@@ -407,13 +413,9 @@ function mapperHolderDocument(holderTop) {
         fieldname = 'documents';
     }
 
-    if( holderTop.hasClass('user-CurriculumVitae') ) {
-        holdertype = "OlegUserdirectoryBundle:CurriculumVitae";
-        fieldname = 'documents';
-    }
     if( holderTop.hasClass('user-FellowshipApplication') ) {
         holdertype = "OlegFellAppBundle:FellowshipApplication";
-        fieldname = ['coverLetters','lawsuitDocuments','reprimandDocuments'];
+        fieldname = ['avatars','cvs','coverLetters','lawsuitDocuments','reprimandDocuments'];
     }
     if( holderTop.hasClass('user-Examination') ) {
         holdertype = "OlegUserdirectoryBundle:Examination";
@@ -426,6 +428,7 @@ function mapperHolderDocument(holderTop) {
 
     return holdertype;
 }
+
 
 
 //output example:

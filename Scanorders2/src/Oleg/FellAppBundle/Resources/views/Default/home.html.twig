@@ -24,7 +24,7 @@
     {% endif %}
 
     <p>
-        Completed:{{ completedTotal }} ({{ completed }} for {{ currentYear }})
+        Complete:{{ completeTotal }} ({{ complete }} for {{ currentYear }})
         Interviewee:{{ intervieweeTotal }} ({{ interviewee }} for {{ currentYear }})
         Active:{{ activeTotal }} ({{ active }} for {{ currentYear }})
         Hidden:{{ hiddenTotal }} ({{ hidden }} for {{ currentYear }})
@@ -92,7 +92,7 @@
                     {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }}
                 </div>
                 <div class="col-xs-2">
-                    {{ form_widget(fellappfilter.completed) }}   {{ form_label(fellappfilter.completed) }}
+                    {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }}
                 </div>
                 <div class="col-xs-2">
                     {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }}
@@ -138,11 +138,11 @@
                 <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
 
-                {% if is_granted('ROLE_FELLAPP_COORDINATOR') %}
+                {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') %}#}
                 <th>
                     Actions
                 </th>
-                {% endif %}
+                {#{% endif %}#}
 
             </tr>
             </thead>
@@ -153,7 +153,7 @@
                 {% set trclassname = "" %}
 
                 {% if entity.applicationStatus == 'archive' %}
-                    {#No attention required - plain completed order#}
+                    {#No attention required - plain complete order#}
                     {#{% set trclassname = "action-cancel-status" %}#}
                     {% set trclassname = "info" %}
                 {% endif %}
@@ -168,6 +168,12 @@
                     {#urgent attention required#}
                     {#{% set trclassname = "order-neutral-status" %}#}
                     {% set trclassname = "order-neutral-status" %}
+                {% endif %}
+
+                {% if entity.applicationStatus == 'interviewee' %}
+                    {#urgent attention required#}
+                    {% set trclassname = "order-interviewee-status" %}
+                    {#{% set trclassname = "success" %}#}
                 {% endif %}
 
                 {% set u1 = "" %}
@@ -193,7 +199,7 @@
                     </td>
 
                     <td>
-                        {{ entity.startDate|date('m/d/Y') }}
+                        {{ entity.startDate|date('m/d/Y','UTC') }}
                     </td>
 
                     <td>
@@ -283,12 +289,34 @@
 
                                 <ul class="dropdown-menu dropdown-menu-right">
 
-                                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') %}
+                                    {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') %}#}
+                                        <li>
+                                            <a
+                                                href="{{ path('fellapp_show', { 'id': entity.id}) }}">View Application and Documents
+                                            </a>
+                                        </li>
+
+                                        {% if entity.itinerarys|length > 0 %}
+                                        <li>
+                                            <a
+                                                href="{{ path('employees_file_download', { 'id': entity.itinerarys|last.id}) }}">Download Itinerary
+                                            </a>
+                                        </li>
+                                        {% endif %}
+
+                                        {% if entity.applicationStatus != 'active' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }) }}">Mark as Active
+                                                </a>
+                                            </li>
+                                        {% endif %}
 
                                         {% if entity.applicationStatus != 'complete' %}
                                             <li>
                                                 <a
-                                                    general-data-confirm="Are you sure you want to mark this Application as Complete?"
+                                                    general-data-confirm="Are you sure you want to mark this Application as 'Complete'?"
                                                     href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }) }}">Mark as Complete
                                                 </a>
                                             </li>
@@ -297,8 +325,8 @@
                                         {% if entity.applicationStatus != 'interviewee' %}
                                             <li>
                                                 <a
-                                                        general-data-confirm="Are you sure you want to mark this Application as Interviewee?"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }) }}">Mark as Interviewee
+                                                        general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }) }}">Mark as an Interviewee
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -312,19 +340,10 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.applicationStatus != 'active' %}
-                                            <li>
-                                                <a
-                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }) }}">Active
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
                                         {% if entity.applicationStatus != 'archive' %}
                                             <li>
                                                 <a
-                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Archive'?"
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Archived'?"
                                                     href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'archive' }) }}">Archive
                                                 </a>
                                             </li>
@@ -345,7 +364,7 @@
                                             </a>
                                         </li>
 
-                                    {% endif %}
+                                    {#{% endif %}#}
 
                                     {#{% if is_granted('ROLE_PLATFORM_ADMIN') %}#}
                                     {#<li>#}

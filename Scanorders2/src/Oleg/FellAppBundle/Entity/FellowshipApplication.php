@@ -166,6 +166,16 @@ class FellowshipApplication extends BaseUserAttributes {
     private $reports;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellApp_oldReport",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="oldReport_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $oldReports;
+
+    /**
      * Other Documents
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
@@ -285,6 +295,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->lawsuitDocuments = new ArrayCollection();
         $this->references = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->oldReports = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->itinerarys = new ArrayCollection();
 
@@ -667,6 +678,23 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getReports()
     {
         return $this->reports;
+    }
+
+
+    public function addOldReport($item)
+    {
+        if( $item && !$this->oldReports->contains($item) ) {
+            $this->oldReports->add($item);
+        }
+        return $this;
+    }
+    public function removeOldReport($item)
+    {
+        $this->oldReports->removeElement($item);
+    }
+    public function getOldReports()
+    {
+        return $this->oldReports;
     }
 
 

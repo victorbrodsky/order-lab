@@ -52,7 +52,8 @@ class ReportGenerator {
 
         $this->runningGenerationReport = false;
 
-        //$this->WshShell = new \COM("WScript.Shell");
+        //TODO: check if user's time zones are still correct
+        date_default_timezone_set('America/New_York');
     }
 
 
@@ -118,6 +119,14 @@ class ReportGenerator {
             $queue->addProcess($process);
             $this->em->flush();
         }
+
+        //move all reports to OldReports
+        $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        foreach( $fellapp->getReports() as $report ) {
+            $fellapp->removeReport($report);
+            $fellapp->addOldReport($report);
+        }
+        $this->em->flush();
 
         //$resArr->set(0,$service);
         
@@ -386,7 +395,7 @@ class ReportGenerator {
             "-ID".$id.
             "-".$subjectUser->getLastNameUppercase().
             "-".$subjectUser->getFirstNameUppercase().
-            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-a').
+            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-s-a').'_EDT'.
             ".pdf";
 
         $logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
@@ -478,8 +487,8 @@ class ReportGenerator {
         $logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
 
         //3) merge all pdfs
-        $uniqueid = "report_ID" . $id;
-        $fileUniqueName = $uniqueid . ".pdf";
+        $uniqueid = $filename;  //"report_ID" . $id;
+        $fileUniqueName = $filename;    //$uniqueid . ".pdf";
         $filenameMerged = $reportPath . $fileUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
         $logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
@@ -523,10 +532,11 @@ class ReportGenerator {
     //http://wkhtmltopdf.org must be installed on server
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
-        if( file_exists($applicationOutputFilePath) ) {
-            $logger->notice("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
-            unlink($applicationOutputFilePath);
-        }
+
+//        if( file_exists($applicationOutputFilePath) ) {
+//            $logger->notice("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
+//            unlink($applicationOutputFilePath);
+//        }
 
         ini_set('max_execution_time', 300); //300 sec
 

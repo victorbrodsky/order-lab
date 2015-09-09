@@ -19,13 +19,14 @@
     {% set trclassname = "alert alert-danger" %}
 {% endif %}
 {% if entity.applicationStatus == 'complete' %}
-    {% set fellappStatus = "Completed" %}
+    {% set fellappStatus = "Complete" %}
     {% set trclassname = "alert order-neutral-status" %}
 {% endif %}
 {% if entity.applicationStatus == 'active' %}
     {% set fellappStatus = "Active" %}
     {#{% set trclassname = "alert order-neutral-status" %}#}
 {% endif %}
+
 
 <h4 class="text-info" align="center">
 
@@ -105,6 +106,11 @@
 
 <!-- Honors and Awards -->
 {% include 'OlegFellAppBundle:Form:Honors.html.twig' %}
+
+<!-- PDF Reports -->
+{% if cycle != "download" %}
+    {% include 'OlegFellAppBundle:Form:reportsPDF.html.twig' %}
+{% endif %}
 
 <!-- Signature -->
 {% include 'OlegFellAppBundle:Form:Signature.html.twig' %}

@@ -39,6 +39,10 @@ class UploadListener {
         $request = $event->getRequest();
         $userid = $request->get('userid');
         $originalfilename = $request->get('filename');
+
+        //$holdername = $request->get('holdername');
+        //$holderid = $request->get('holderid');
+        //$docfieldname = $request->get('docfieldname');
         //echo "userid=".$userid."<br>";
 
         $file = $event->getFile();
@@ -58,6 +62,8 @@ class UploadListener {
         $object->setUniquename($uniquefilename);
         $object->setUploadDirectory($path);
         $object->setSize($size);
+
+        //$this->processHolder($object,$holdername,$holderid,$docfieldname);
 
         $this->em->persist($object);
         $this->em->flush();
@@ -79,5 +85,15 @@ class UploadListener {
         $filebasename = $file->getBasename();
         //echo "preupload filebasename=".$filebasename."<br>";
     }
+
+
+
+//    public function processHolder($object,$holdername,$holderid,$docfieldname) {
+//        if( $holdername && $holderid && $docfieldname ) {
+//            $holder = $this->em->getRepository($holdername)->find($holderid);
+//            $addMethod = "add".$docfieldname;
+//            $holder->$addMethod($object);
+//        }
+//    }
 
 } 

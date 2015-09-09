@@ -9,7 +9,6 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\UserdirectoryBundle\Entity\CurriculumVitae;
 use Oleg\UserdirectoryBundle\Entity\Examination;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
@@ -114,9 +113,6 @@ class UploadController extends Controller {
     public function setHolderDocumentsDql($dql,$commentclass) {
 
         switch( $commentclass ) {
-            case "OlegUserdirectoryBundle:CurriculumVitae":
-                $str = "comment.documents";
-                break;
             case "OlegFellAppBundle:FellowshipApplication":
                 $str = "comment.coverLetters";
                 break;

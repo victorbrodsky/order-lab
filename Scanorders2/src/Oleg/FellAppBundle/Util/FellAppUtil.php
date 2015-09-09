@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityNotFoundException;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
 use Oleg\UserdirectoryBundle\Entity\Citizenship;
-use Oleg\UserdirectoryBundle\Entity\CurriculumVitae;
 use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
 use Oleg\UserdirectoryBundle\Entity\Examination;
@@ -1157,6 +1156,7 @@ class FellAppUtil {
         $dql->leftJoin("list.parent","parent");
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("parent.name LIKE '%Pathology%' OR parent.name LIKE '%Clinical Molecular Genetics%' OR parent IS NULL");
+        //$dql->andWhere("parent.name LIKE '%Pathology%'");
         $dql->orderBy("list.orderinlist","ASC");
 
         $query = $em->createQuery($dql);

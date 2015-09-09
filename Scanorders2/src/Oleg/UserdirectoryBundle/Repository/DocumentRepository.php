@@ -102,8 +102,7 @@ class DocumentRepository extends EntityRepository {
                 break;
             case 'User':
                 $doctypeStr = 'Avatar Image';
-                break;
-            case 'CurriculumVitae':
+                break;           
             case 'FellowshipApplication':
             case 'Examination':
                 $doctypeStr = 'Fellowship Application Upload';
