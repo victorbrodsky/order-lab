@@ -24,11 +24,26 @@
     {% endif %}
 
     <p>
-        Complete:{{ completeTotal }} ({{ complete }} for {{ currentYear }})
-        Interviewee:{{ intervieweeTotal }} ({{ interviewee }} for {{ currentYear }})
-        Active:{{ activeTotal }} ({{ active }} for {{ currentYear }})
-        Hidden:{{ hiddenTotal }} ({{ hidden }} for {{ currentYear }})
-        Archived:{{ archivedTotal }} ({{ archived }} for {{ currentYear }})
+        <a href="{{ path('fellapp_home',{'filter[complete]':1,'filter[startDate]':currentYear}) }}">
+            Complete:{{ completeTotal }} ({{ complete }} for {{ currentYear }})
+        </a>
+
+        <a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[startDate]':currentYear}) }}">
+            Interviewee:{{ intervieweeTotal }} ({{ interviewee }} for {{ currentYear }})
+        </a>
+
+        <a href="{{ path('fellapp_home',{'filter[active]':1,'filter[startDate]':currentYear}) }}">
+            Active:{{ activeTotal }} ({{ active }} for {{ currentYear }})
+        </a>
+
+        <a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[startDate]':currentYear}) }}">
+            Hidden:{{ hiddenTotal }} ({{ hidden }} for {{ currentYear }})
+        </a>
+
+        <a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[startDate]':currentYear}) }}">
+            Archived:{{ archivedTotal }} ({{ archived }} for {{ currentYear }})
+        </a>
+
         <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }}</i>
     </p>
 
