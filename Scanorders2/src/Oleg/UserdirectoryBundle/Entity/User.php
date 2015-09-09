@@ -1506,9 +1506,10 @@ class User extends BaseUser {
         //echo "inst=".$institution."<br>";
         //echo "count=".count($headInfo)."<br>";
 
-        if( $institution && $institution->getParent() && $institution->getParent()->getParent() && $institution->getParent()->getParent()->getParent() ) {
+        //service
+        if( $institution ) {
 
-            $institutionThis = $institution->getParent()->getParent()->getParent();
+            $institutionThis = $institution;
             //echo "inst=".$institutionThis."<br>";
 
             $name = $institutionThis->getName()."";
@@ -1521,21 +1522,7 @@ class User extends BaseUser {
 
         }
 
-        if( $institution && $institution->getParent() && $institution->getParent()->getParent() ) {
-
-            $institutionThis = $institution->getParent()->getParent();
-            //echo "inst=".$institutionThis."<br>";
-
-            $name = $institutionThis->getName()."";
-            $titleId = null;
-            if( $institutionThis->getId() ) {
-                $titleId = $institutionThis->getId();
-            }
-            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-            $headInfo[] = $elementInfo;
-
-        }
-
+        //division
         if( $institution && $institution->getParent() ) {
 
             $institutionThis = $institution->getParent();
@@ -1551,9 +1538,26 @@ class User extends BaseUser {
 
         }
 
-        if( $institution ) {
+        //department
+        if( $institution && $institution->getParent() && $institution->getParent()->getParent() ) {
 
-            $institutionThis = $institution;
+            $institutionThis = $institution->getParent()->getParent();
+            //echo "inst=".$institutionThis."<br>";
+
+            $name = $institutionThis->getName()."";
+            $titleId = null;
+            if( $institutionThis->getId() ) {
+                $titleId = $institutionThis->getId();
+            }
+            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+            $headInfo[] = $elementInfo;
+
+        }
+
+        //institution
+        if( $institution && $institution->getParent() && $institution->getParent()->getParent() && $institution->getParent()->getParent()->getParent() ) {
+
+            $institutionThis = $institution->getParent()->getParent()->getParent();
             //echo "inst=".$institutionThis."<br>";
 
             $name = $institutionThis->getName()."";
@@ -1567,33 +1571,39 @@ class User extends BaseUser {
             $headInfo[] = 'break';
         }
 
+
+
+
+
+
+
         return $headInfo;
     }
 
-    public function getHeadInstitutionInfo_Rec($headInfo, $institution) {
-
-        echo "inst=".$institution."<br>";
-        echo "count=".count($headInfo)."<br>";
-
-        if( $institution->getParent() ) {
-            $this->getHeadInstitutionInfo($headInfo, $institution->getParent());
-            //array_merge($headInfo, $headInfoNew);
-            //return $headInfo;
-        } else {
-
-            $name = $institution->getName()."";
-            $titleId = null;
-            if( $institution->getId() ) {
-                $titleId = $institution->getId();
-            }
-            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
-            $headInfo[] = $elementInfo;
-
-            //return $headInfo;
-            //return $headInfo;
-        }
-
-    }
+//    public function getHeadInstitutionInfo_Rec($headInfo, $institution) {
+//
+//        echo "inst=".$institution."<br>";
+//        echo "count=".count($headInfo)."<br>";
+//
+//        if( $institution->getParent() ) {
+//            $this->getHeadInstitutionInfo($headInfo, $institution->getParent());
+//            //array_merge($headInfo, $headInfoNew);
+//            //return $headInfo;
+//        } else {
+//
+//            $name = $institution->getName()."";
+//            $titleId = null;
+//            if( $institution->getId() ) {
+//                $titleId = $institution->getId();
+//            }
+//            $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
+//            $headInfo[] = $elementInfo;
+//
+//            //return $headInfo;
+//            //return $headInfo;
+//        }
+//
+//    }
 
 
 }
