@@ -1891,32 +1891,32 @@
 
     {% if '.pdf' in documentEntity.getAbsoluteUploadFullPath %}
         {#pdf!!!#}
-        <a href="{{ documentEntity.getAbsoluteUploadFullPath }}">
+        {#<a href="{{ documentEntity.getAbsoluteUploadFullPath }}">#}
         <object {{ atr }} alt="{{ documentEntity.getOriginalname }}"
                 data="{{ documentEntity.getAbsoluteUploadFullPath }}"
                 type="application/pdf"
                 style="display:block; max-width:100%; max-height:100%;"
         >
         </object>
-        </a>
+        {#</a>#}
     {% elseif '.doc' in documentEntity.getAbsoluteUploadFullPath %}
         {#doc!!!#}
-        <a href="{{ documentEntity.getAbsoluteUploadFullPath }}">
+        {#<a href="{{ documentEntity.getAbsoluteUploadFullPath }}">#}
         <object {{ atr }} alt="{{ documentEntity.getOriginalname }}"
                 data="{{ documentEntity.getAbsoluteUploadFullPath }}"
                 type="application/msword"
                 style="display:block; max-width:100%; max-height:100%;"
         >
         </object>
-        </a>
+        {#</a>#}
     {% else %}
-        <a href="{{ documentEntity.getAbsoluteUploadFullPath }}">
+        {#<a href="{{ documentEntity.getAbsoluteUploadFullPath }}">#}
         <img {{ atr }} alt="{{ documentEntity.getOriginalname }}"
              src="{{ documentEntity.getAbsoluteUploadFullPath }}"
              alt="{{ alt }}"
              style="display:block; max-width:100%; max-height:100%;"
         />
-        </a>
+        {#</a>#}
     {% endif %}
 
 {% endmacro %}

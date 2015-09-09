@@ -732,51 +732,33 @@
                         <h4>
                             {#{{ headInfo|raw }}#}
                             {% for headInfoArr in headInfos %}
-                                <a href="{{
-                                        path( employees_sitename~'_search_same_object',{
-                                            'tablename':headInfoArr['tablename'],
-                                            'id': headInfoArr['id'],
-                                            'name': headInfoArr['name']
-                                        })
-                                    }}">{{ headInfoArr['name'] }}</a>
-                                <br>
+                                {% if headInfoArr != 'break' %}
+                                    <a href="{{
+                                            path( employees_sitename~'_search_same_object',{
+                                                'tablename':headInfoArr['tablename'],
+                                                'id': headInfoArr['id'],
+                                                'name': headInfoArr['name']
+                                            })
+                                        }}">{{ headInfoArr['name'] }}
+                                    </a>
+                                    <br>
+                                {% else %}
+                                    <hr>
+                                {% endif %}
                             {% endfor %}
                         </h4>
                     {% endif %}
 
                     {#services#}
-                    <div class="service">
-                        <p>
-                            {#services#}
-                            {#{% for service in user.getServices %}#}
-                                {#&#123;&#35;Eyebrow Pathology<br>&#35;&#125;#}
-                                {#&#123;&#35;Anatomic Pathology<br>&#35;&#125;#}
-                                {#&#123;&#35;Department of Pathology and Laboratory Medicine<br>&#35;&#125;#}
-                                {#&#123;&#35;Weill Cornell Medical College&#35;&#125;#}
-                                {#&#123;&#35;{{ service.name }}<br>&#35;&#125;#}
-                                {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'service','id': service.id, 'name': service.__toString() }) }}">{{ service }}</a>#}
+                    {#<div class="service">#}
+                        {#<p>#}
+                            {#{% for institution in user.getInstitutions %}#}
+                                {#&#123;&#35;{{ institution.name }}&#35;&#125;#}
+                                {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a>#}
                                 {#<br>#}
                             {#{% endfor %}#}
-                            {#&#123;&#35;divisions&#35;&#125;#}
-                            {#{% for division in user.getDivisions %}#}
-                                {#&#123;&#35;{{ division.name }}<br>&#35;&#125;#}
-                                {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'division','id': division.id, 'name': division.__toString() }) }}">{{ division }}</a>#}
-                                {#<br>#}
-                            {#{% endfor %}#}
-                            {#&#123;&#35;departments&#35;&#125;#}
-                            {#{% for department in user.getDepartments %}#}
-                                {#&#123;&#35;{{ department.name }}<br>&#35;&#125;#}
-                                {#<a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'department','id': department.id, 'name': department.__toString() }) }}">{{ department }}</a>#}
-                                {#<br>#}
-                            {#{% endfor %}#}
-                            {#institutions#}
-                            {% for institution in user.getInstitutions %}
-                                {#{{ institution.name }}#}
-                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a>
-                                <br>
-                            {% endfor %}
-                        </p>
-                    </div>
+                        {#</p>#}
+                    {#</div>#}
 
                 </div>
             </div>
