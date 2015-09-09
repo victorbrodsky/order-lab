@@ -547,10 +547,10 @@
         </div>
     {% endif %}
 
-    {#show list properties#}
-    {% if standAloneLocation %}
-        {{ usermacros.listProperties(formfield) }}
-    {% endif %}
+    {#show list properties: it's empty for location#}
+    {#{% if standAloneLocation %}#}
+        {#{{ usermacros.listProperties(formfield) }}#}
+    {#{% endif %}#}
 
     {% do formfield.setRendered %}
 
