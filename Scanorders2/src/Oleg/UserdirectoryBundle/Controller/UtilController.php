@@ -267,7 +267,7 @@ class UtilController extends Controller {
             ->leftJoin("list.infos", "infos")
             ->leftJoin("list.employmentStatus", "employmentStatus")
             ->leftJoin("employmentStatus.employmentType", "employmentType")
-            ->where("employmentType.name != 'Pathology Fellowship Applicant'")
+            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL")
             ->orderBy("infos.displayName","ASC");
 
         $locationusers = $query->getQuery()->getResult();
@@ -942,7 +942,7 @@ class UtilController extends Controller {
         }
 
         //filter out Pathology Fellowship Applicants
-        $criteriastr = "(".$criteriastr . ") AND employmentType.name != 'Pathology Fellowship Applicant'";
+        $criteriastr = "(".$criteriastr . ") AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)";
 
         //echo "criteriastr=".$criteriastr."<br>";
 

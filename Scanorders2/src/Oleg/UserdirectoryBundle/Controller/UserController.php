@@ -469,7 +469,7 @@ class UserController extends Controller
             $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
 
             //filter out Pathology Fellowship Applicants
-            $totalcriteriastr = $totalcriteriastr . " AND employmentType.name != 'Pathology Fellowship Applicant'";
+            $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)";
 
             if( $criteriastr ) {
                 $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
