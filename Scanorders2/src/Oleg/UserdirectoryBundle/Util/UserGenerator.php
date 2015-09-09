@@ -564,9 +564,9 @@ class UserGenerator {
 
 
 
-
-            //add scanorder Roles
+            //add lowest roles for scanorder and userdirectory
             $user->addRole('ROLE_SCANORDER_SUBMITTER');
+            $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
 
             //add Platform Admin role and WCMC Institution for specific users
             //TODO: remove in prod
@@ -575,6 +575,7 @@ class UserGenerator {
             }
 
             if( $user->getUsername() == "jep2018_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_USERDIRECTORY_EDITOR');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');
@@ -584,6 +585,43 @@ class UserGenerator {
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY');
             }
+
+
+            //GI-Rhonda Yantiss: rhy2001
+            if( $user->getUsername() == "rhy2001_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
+
+            //Cyto-Rana Hoda: rhoda
+            if( $user->getUsername() == "rhoda_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
+
+            //Heme-Attilio Orazi: ato9002
+            if( $user->getUsername() == "ato9002_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
+
+            //Heme-Scott Ely: sae2001
+            if( $user->getUsername() == "sae2001_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
+
+            //Mol Gen- Michael Kluk: mik9095
+            if( $user->getUsername() == "mik9095_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
+
+            //Gyn- Lora Ellenson lhellens
+            if( $user->getUsername() == "lhellens_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
+
+            //Breast- Sandra Shin: sjshin
+            if( $user->getUsername() == "sjshin_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
+
 
             //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             //TODO: this should be located on scanorder site

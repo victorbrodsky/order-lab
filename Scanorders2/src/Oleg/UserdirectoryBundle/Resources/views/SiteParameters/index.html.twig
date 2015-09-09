@@ -59,8 +59,15 @@
             {#AllowPopulateFellApp#}
             <tr>
                 <td>Allow to populate Fellowship Applications from Google Form by cron job</td>
-                <td>{{ entity.allowPopulateFellApp }}</td>
+                <td>
+                    {% set allowPopulateFellAppStr = 'No' %}
+                    {% if entity.allowPopulateFellApp == true %}
+                        {% set allowPopulateFellAppStr = 'Yes' %}
+                    {% endif %}
+                    {{ allowPopulateFellAppStr }}
+                </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'allowPopulateFellApp'}) }}">Edit</a></td>
+
             </tr>
 
 

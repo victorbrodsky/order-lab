@@ -424,6 +424,7 @@ class AdminController extends Controller
             "ROLE_FELLAPP_BANNED" => array("Fellowship Applications Banned User","Does not allow to visit Fellowship Applications site"),
             "ROLE_FELLAPP_UNAPPROVED" => array("Fellowship Applications Unapproved User","Does not allow to visit Fellowship Applications site"),
             //Directors
+            "ROLE_FELLAPP_DIRECTOR" => array("Fellowship Program General Director Role","Access to Fellowship Application type as Director (edit application,upload new documents)"),
             "ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY" => array("Fellowship Program Director WCMC FELLOWSHIP Breast Pathology","Access to specific Fellowship Application type as Director"),
             "ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY" => array("Fellowship Program Director WCMC Cytopathology","Access to specific Fellowship Application type as Director"),
             "ROLE_FELLAPP_DIRECTOR_WCMC_GYNECOLOGICPATHOLOGY" => array("Fellowship Program Director WCMC Gynecologic Pathology","Access to specific Fellowship Application type as Director"),
@@ -432,7 +433,7 @@ class AdminController extends Controller
             "ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY" => array("Fellowship Program Director WCMC Hematopathology","Access to specific Fellowship Application type as Director"),
             "ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY" => array("Fellowship Program Director WCMC Molecular Genetic Pathology","Access to specific Fellowship Application type as Director"),
             //Program-Coordinator
-            "ROLE_FELLAPP_COORDINATOR" => array("Fellowship Program General Coordinator Role","Access to Fellowship Application type as Coordinator (upload new documents)"),
+            "ROLE_FELLAPP_COORDINATOR" => array("Fellowship Program General Coordinator Role","Access to Fellowship Application type as Coordinator (edit application,upload new documents)"),
             "ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY" => array("Fellowship Program Coordinator WCMC FELLOWSHIP Breast Pathology","Access to specific Fellowship Application type as Coordinator"),
             "ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY" => array("Fellowship Program Coordinator WCMC Cytopathology","Access to specific Fellowship Application type as Coordinator"),
             "ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY" => array("Fellowship Program Coordinator WCMC Gynecologic Pathology","Access to specific Fellowship Application type as Coordinator"),

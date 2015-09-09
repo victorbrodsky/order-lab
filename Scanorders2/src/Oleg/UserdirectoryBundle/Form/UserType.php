@@ -162,7 +162,9 @@ class UserType extends AbstractType
             'mapped' => false,
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('user')
-                        ->where("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
+                        ->leftJoin("user.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->where("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND employmentType.name != 'Pathology Fellowship Applicant'")
                         ->orderBy("user.primaryPublicUserId","ASC");
                 },
         );

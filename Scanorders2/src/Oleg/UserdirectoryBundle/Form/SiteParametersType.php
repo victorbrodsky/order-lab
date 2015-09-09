@@ -315,7 +315,7 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'allowPopulateFellApp' )
             $builder->add('allowPopulateFellApp',null,array(
                 'label'=>'Allow to populate Fellowship Applications from Google Form by cron job:',
-                'attr' => array('class'=>'form-control')
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
     }

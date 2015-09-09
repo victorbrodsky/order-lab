@@ -265,6 +265,9 @@ class UtilController extends Controller {
             ->select("list")
             //->select("list.id as id, infos.displayName as text")
             ->leftJoin("list.infos", "infos")
+            ->leftJoin("list.employmentStatus", "employmentStatus")
+            ->leftJoin("employmentStatus.employmentType", "employmentType")
+            ->where("employmentType.name != 'Pathology Fellowship Applicant'")
             ->orderBy("infos.displayName","ASC");
 
         $locationusers = $query->getQuery()->getResult();
@@ -838,6 +841,10 @@ class UtilController extends Controller {
         $dql->select("user.id as id, infos.displayName as text, user.username as username, keytype.id as keytypeid");
         $dql->leftJoin("user.keytype", "keytype");
         $dql->leftJoin("user.infos", "infos");
+
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+
         //$dql->leftJoin("user.researchLabs", "researchLabs");
         $dql->groupBy('user');
         $dql->addGroupBy('keytype');
@@ -933,6 +940,9 @@ class UtilController extends Controller {
             //time
             $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
+
+        //filter out Pathology Fellowship Applicants
+        $criteriastr = "(".$criteriastr . ") AND employmentType.name != 'Pathology Fellowship Applicant'";
 
         //echo "criteriastr=".$criteriastr."<br>";
 
