@@ -754,8 +754,8 @@ class UserController extends Controller
 
         //As Faculty + Residents == Academic Appointment Title exists + position=Fellow
         if( $filter && $filter == "WCMC Pathology Fellows" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
             $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Fellow')";
@@ -763,8 +763,8 @@ class UserController extends Controller
 
         //As Faculty + Residents == Academic Appointment Title exists + position=Resident
         if( $filter && $filter == "WCMC Pathology Residents" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
             $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
@@ -772,8 +772,8 @@ class UserController extends Controller
 
         //the same as "WCMC Pathology Residents" except they have "AP/CP" in their "Residency Type" field.
         if( $filter && $filter == "WCMC AP/CP Residents" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
             $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
@@ -784,8 +784,8 @@ class UserController extends Controller
 
         //the same as "WCMC Pathology Residents" except they have "AP" or "AP/CP" in their "Residency Type" field.
         if( $filter && $filter == "WCMC AP Residents" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
             $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
@@ -808,8 +808,8 @@ class UserController extends Controller
 
         //the same as "WCMC Pathology Residents" except they have "CP" or "AP/CP" in their "Residency Type" field.
         if( $filter && $filter == "WCMC CP Residents" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
             $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
@@ -820,8 +820,8 @@ class UserController extends Controller
 
         //the same as "WCMC Pathology Residents" except they have "CP" in their "Residency Type" field.
         if( $filter && $filter == "WCMC CP Only Residents" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
             $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
@@ -833,8 +833,8 @@ class UserController extends Controller
         // the same as "WCMC Pathology Faculty" except they have at least one non-empty "Research Lab Title:" + a checkmark in
         //"Principal Investigator of this Lab:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
         if( $filter && $filter == "WCMC Pathology Principal Investigators of Research Labs" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
             $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
@@ -847,8 +847,8 @@ class UserController extends Controller
         // "WCMC Pathology Faculty in Research Labs" - the same as "WCMC Pathology Faculty"
         //except they have at least one non-empty "Research Lab Title:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
         if( $filter && $filter == "WCMC Pathology Faculty in Research Labs" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
             $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";

@@ -38,7 +38,7 @@
 
 {% if cycle == "show" %}
     <p>
-        <a class="btn btn-info" href="{{ path('fellapp_download_pdf', { 'id': entity.id}) }}">Download Application as PDF</a>
+        <a class="btn btn-info" href="{{ path('fellapp_download_pdf', { 'id': entity.id}) }}">Download Application as a PDF</a>
     </p>
 {% endif %}
 
@@ -110,6 +110,11 @@
 <!-- PDF Reports -->
 {% if cycle != "download" %}
     {% include 'OlegFellAppBundle:Form:reportsPDF.html.twig' %}
+{% endif %}
+
+<!-- Itinerary -->
+{% if cycle != "download" %}
+    {% include 'OlegFellAppBundle:Form:Itinerary.html.twig' %}
 {% endif %}
 
 <!-- Signature -->

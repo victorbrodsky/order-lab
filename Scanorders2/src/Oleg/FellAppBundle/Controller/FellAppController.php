@@ -978,7 +978,7 @@ class FellAppController extends Controller {
     }
 
     /**
-     * @Route("/reset_queue_run/", name="fellapp_reset_queue_run")
+     * @Route("/reset-queue-and-run/", name="fellapp_reset_queue_run")
      *
      * @Template("OlegFellAppBundle:Form:new.html.twig")
      */

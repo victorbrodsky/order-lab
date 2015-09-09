@@ -48,7 +48,7 @@ class UserGenerator {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
-        $inputFileName = __DIR__ . '/../Util/UsersFull.xlsx';
+        $inputFileName = __DIR__ . '/../Util/UsersFullShort.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -158,15 +158,22 @@ class UserGenerator {
 
             echo "new user=".$user."<br>";
 
-            //Degree: TrainingDegreeList
-            $degree = $this->getValueByHeaderName('Degree', $rowData, $headers);
-            if( $degree ) {
-                $training = new Training($systemuser);
-                $training->setStatus($training::STATUS_VERIFIED);
-                $degreeObj = $this->getObjectByNameTransformer('TrainingDegreeList',$degree,$systemuser);
-                $training->setDegree($degreeObj);
-                $training->setAppendDegreeToName(true);
-                $user->addTraining($training);
+            //Degree: TrainingDegreeList - Multi
+            $degreeStr = $this->getValueByHeaderName('Degree', $rowData, $headers);
+            if( $degreeStr ) {
+
+                $degreeArr = explode(";",$degreeStr);
+                foreach( $degreeArr as $degree ) {
+                    $degree = trim($degree);
+                    if( $degree ) {
+                        $training = new Training($systemuser);
+                        $training->setStatus($training::STATUS_VERIFIED);
+                        $degreeObj = $this->getObjectByNameTransformer('TrainingDegreeList',$degree,$systemuser);
+                        $training->setDegree($degreeObj);
+                        $training->setAppendDegreeToName(true);
+                        $user->addTraining($training);
+                    }
+                }
             }
 
             //Employee Type: user_employmentStatus_0_employmentType: EmploymentType
@@ -296,12 +303,13 @@ class UserGenerator {
                     $academicTitles[] = new AppointmentTitle();
                 }
 
-                //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_position
+                //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_positions
                 //faculty Track can be multiple but the rest of title singular
                 $facultyTrackObjArr = array();
                 $facultyTrackStrMulti = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
                 $facultyTrackStrArr = explode(";",$facultyTrackStrMulti);
                 foreach( $facultyTrackStrArr as $facultyTrackStr ) {
+                    $facultyTrackStr = trim($facultyTrackStr);
                     $facultyTrackObj = $this->getObjectByNameTransformer('PositionTrackTypeList',$facultyTrackStr,$systemuser);
                     $facultyTrackObjArr[] = $facultyTrackObj;
                 }
@@ -383,6 +391,8 @@ class UserGenerator {
             //Administrative Comment - Category
             $AdministrativeCommentCategory = $this->getValueByHeaderName('Administrative Comment - Category', $rowData, $headers);
             if( $AdministrativeCommentCategory ) {
+
+                $AdministrativeCommentCategory = trim($AdministrativeCommentCategory);
 
                 $comment = new AdminComment($systemuser);
 
@@ -467,6 +477,10 @@ class UserGenerator {
 
                     $Identifier = new Identifier();
                     $Identifier->setStatus($Identifier::STATUS_VERIFIED);
+
+                    $IdentifierTypeStr = trim($IdentifierTypeStr);
+                    $IdentifierLinkStr = trim($IdentifierLinkStr);
+                    $IdentifierStr = trim($IdentifierStr);
 
                     //Identifier
                     $Identifier->setField($IdentifierStr);
@@ -797,6 +811,7 @@ class UserGenerator {
     public function getObjectByNameTransformer($className,$nameStr,$systemuser,$params=null) {
         $bundleName = null;
         $transformer = new GenericTreeTransformer($this->em, $systemuser, $className, $bundleName, $params);
+        $nameStr = trim($nameStr);
         return $transformer->reverseTransform($nameStr);
     }
 
@@ -924,6 +939,8 @@ class UserGenerator {
 
                 $holders[] = $holder;
 
+                //$setMethod = "setName";
+
                 //set title object: Administrative Title
                 if( $holderClassName == 'AdministrativeTitle' ) {
                     $titleClassName = 'AdminTitleList';
@@ -933,8 +950,11 @@ class UserGenerator {
                 }
                 if( $holderClassName == 'AppointmentTitle' ) {
                     $titleClassName = 'AppTitleList';
+                    //$setMethod = "addPosition";
                 }
+
                 $titleObj = $this->getObjectByNameTransformer($titleClassName,$titleStr,$systemuser);
+                //$holder->$setMethod($titleObj);
                 $holder->setName($titleObj);
                 $addMethod = "add".$holderClassName;
                 $subjectUser->$addMethod($holder);
