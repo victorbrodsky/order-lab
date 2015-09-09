@@ -48,7 +48,7 @@ class UserGenerator {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
-        $inputFileName = __DIR__ . '/../Util/UsersFull.xlsx';
+        $inputFileName = __DIR__ . '/../Util/UsersFullTest.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -788,6 +788,9 @@ class UserGenerator {
         }
 
         $lastInstitutionStr = null;
+        $lastDepartmentStr = null;
+        $lastDivisionStr = null;
+        $lastServiceStr = null;
         $lastTitleStr = null;
 
         $index = 0;
@@ -824,12 +827,23 @@ class UserGenerator {
 
             if( array_key_exists($index, $DepartmentArr) ) {
                 $DepartmentStr = trim($DepartmentArr[$index]);
+                $lastDepartmentStr = $DepartmentStr;
+            } else {
+                $DepartmentStr = $lastDepartmentStr;
             }
+
             if( array_key_exists($index, $DivisionArr) ) {
                 $DivisionStr = trim($DivisionArr[$index]);
+                $lastDivisionStr = $DivisionStr;
+            } else {
+                $DivisionStr = $lastDivisionStr;
             }
+
             if( array_key_exists($index, $ServiceArr) ) {
                 $ServiceStr = trim($ServiceArr[$index]);
+                $lastServiceStr = $ServiceStr;
+            } else {
+                $ServiceStr = $lastServiceStr;
             }
 
             if( array_key_exists($index, $HeadDepartmentArr) ) {

@@ -948,12 +948,12 @@ class AdminController extends Controller
         $wcmcDep = array(
             'Anesthesiology',
             'Biochemistry',
-            'Feil Family Brain and Mind Research Institute',
             'Cardiothoracic Surgery' => array(
                 'Thoracic Surgery'
             ),
             'Cell and Developmental Biology' => null,
             'Dermatology' => null,
+            'Feil Family Brain and Mind Research Institute',
             'Genetic Medicine' => null,
             'Healthcare Policy and Research' => array(
                 'Biostatistics and Epidemiology',
@@ -961,11 +961,6 @@ class AdminController extends Controller
                 'Health Informatics',
                 'Health Policy and Economics',
                 'Health Systems Innovation and Implementation Science'
-            ),
-            'Weill Department of Medicine' => array(
-                'Cardiology',
-                'Clinical Epidemiology and Evaluative Sciences Research',
-                'Clinical Pharmacology'                                                     //continue  dep
             ),
             'Microbiology and Immunology' => null,
             'Neurological Surgery' => null,
@@ -1043,12 +1038,12 @@ class AdminController extends Controller
             ),
             'Pharmacology' => null,
             'Physiology and Biophysics' => null,
+            'Primary Care' => null,
             'Psychiatry' => array(
                 'Sackler Institute for Developmental Psychobiology'
             ),
-            'Primary Care' => null,
-            'Radiology' => null,
             'Radiation Oncology' => null,
+            'Radiology' => null,
             'Rehabilitation Medicine' => null,
             'Reproductive Medicine' => array(
                 'Center for Reproductive Medicine and Infertility (CRMI)',
@@ -1061,6 +1056,11 @@ class AdminController extends Controller
             ),
             'Urology' => array(
                 'Brady Urologic Health Center'
+            ),
+            'Weill Department of Medicine' => array(
+                'Cardiology',
+                'Clinical Epidemiology and Evaluative Sciences Research',
+                'Clinical Pharmacology'                                                     //continue  dep
             ),
             'Other Centers' => array(
                 'Ansary Stem Cell Institute',
@@ -2731,6 +2731,8 @@ class AdminController extends Controller
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
+        $lastResidencySpecialtyEntity = null;
+
         $count = 10;
         $subcount = 1;
 
@@ -2754,51 +2756,62 @@ class AdminController extends Controller
             //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
             //echo "boardCertificationAvailable=".$boardCertificationAvailable."<br>";
 
-            $listEntity = null;
+            $residencySpecialtyEntity = null;
 
             if( $residencySpecialty ) {
 
+                $residencySpecialty = trim($residencySpecialty);
                 //echo "residencySpecialty=".$residencySpecialty."<br>";
 
-                if( $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
-                    continue;
+                $residencySpecialtyEntity = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
+
+                //if( $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
+                //    continue;
+                //}
+
+                if( !$residencySpecialtyEntity ) {
+                    $residencySpecialtyEntity = new ResidencySpecialty();
+                    $this->setDefaultList($residencySpecialtyEntity,$count,$username,$residencySpecialty);
                 }
-
-
-                $listEntity = new ResidencySpecialty();
-                $this->setDefaultList($listEntity,$count,$username,$residencySpecialty);
-
 
                 if( $boardCertificationAvailable && $boardCertificationAvailable == "Yes" ) {
-                    $listEntity->setBoardCertificateAvailable(true);
+                    $residencySpecialtyEntity->setBoardCertificateAvailable(true);
                 }
 
-                $em->persist($listEntity);
+                $em->persist($residencySpecialtyEntity);
                 $em->flush();
+
+                $lastResidencySpecialtyEntity = $residencySpecialtyEntity;
 
                 $count = $count + 10;
             }
 
             if( $fellowshipSubspecialty ) {
 
+                $fellowshipSubspecialty = trim($fellowshipSubspecialty);
                 //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
-                if( $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."") ) {
-                    continue;
-                }
+                $fellowshipSubspecialtyEntity = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
 
-                $subEntity = new FellowshipSubspecialty();
-                $this->setDefaultList($subEntity,$subcount,$username,$fellowshipSubspecialty);
+                //if( $fellowshipSubspecialtyEntity ) {
+                //    continue;
+                //}
+
+                if( !$fellowshipSubspecialtyEntity ) {
+                    $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
+                    $this->setDefaultList($fellowshipSubspecialtyEntity,$subcount,$username,$fellowshipSubspecialty);
+                }
 
 
                 if( $boardCertificationAvailable && $boardCertificationAvailable == "Yes" ) {
-                    $subEntity->setBoardCertificateAvailable(true);
+                    $fellowshipSubspecialtyEntity->setBoardCertificateAvailable(true);
                 }
 
-                if( $listEntity ) {
-                    $listEntity->addChild($subEntity);
+                if( $lastResidencySpecialtyEntity ) {
+                    $lastResidencySpecialtyEntity->addChild($fellowshipSubspecialtyEntity);
                 }
 
-                $em->persist($subEntity);
+                $em->persist($lastResidencySpecialtyEntity);
+                $em->persist($fellowshipSubspecialtyEntity);
                 $em->flush();
 
                 $subcount = $subcount + 10;

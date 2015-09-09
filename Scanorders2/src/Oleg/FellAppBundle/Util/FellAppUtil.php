@@ -38,6 +38,9 @@ class FellAppUtil {
     protected $container;
     protected $uploadDir;
 
+    protected $disableImport = true;
+
+
     public function __construct( $em, $sc, $container ) {
         $this->em = $em;
         $this->sc = $sc;
@@ -45,10 +48,17 @@ class FellAppUtil {
 
         //fellapp.uploadpath = fellapp
         $this->uploadDir = 'Uploaded/'.$this->container->getParameter('fellapp.uploadpath');
+
+
     }
+
 
     //1) Import google form spreadsheet and download it on the server; create Document object
     public function importFellApp() {
+
+        if( $this->disableImport ) {
+            return;
+        }
 
         echo "fellapp import <br>";
 
@@ -95,6 +105,10 @@ class FellAppUtil {
 
     //2) populate fellowship applications from spreadsheet to DB (using uploaded files from Google Drive)
     public function populateFellApp( $path=null ) {
+
+        if( $this->disableImport ) {
+            return;
+        }
 
         echo "fellapp populate Spreadsheet <br>";
 
@@ -459,6 +473,8 @@ class FellAppUtil {
             //fellowshipType
             $fellowshipType = $this->getValueByHeaderName('fellowshipType',$rowData,$headers);
             if( $fellowshipType ) {
+                $fellowshipType = trim($fellowshipType);
+                $fellowshipType = $this->capitalizeIfNotAllCapital($fellowshipType);
                 $transformer = new GenericTreeTransformer($em, $systemUser, 'FellowshipSubspecialty');
                 $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
                 $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
@@ -567,6 +583,7 @@ class FellAppUtil {
             //citizenshipCountry
             $citizenshipCountry = $this->getValueByHeaderName('citizenshipCountry',$rowData,$headers);
             if( $citizenshipCountry ) {
+                $citizenshipCountry = trim($citizenshipCountry);
                 $transformer = new GenericTreeTransformer($em, $systemUser, 'Countries');
                 $citizenshipCountryEntity = $transformer->reverseTransform($citizenshipCountry);
                 $citizenship->setCountry($citizenshipCountryEntity);
@@ -777,6 +794,8 @@ class FellAppUtil {
         $instStr = $this->getValueByHeaderName($typeStr."Institution",$rowData,$headers);
         if( $instStr ) {
             $params = array('type'=>'Educational');
+            $instStr = trim($instStr);
+            $instStr = $this->capitalizeIfNotAllCapital($instStr);
             $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
             $instEntity = $transformer->reverseTransform($instStr);
             $reference->setInstitution($instEntity);
@@ -810,6 +829,7 @@ class FellAppUtil {
         //presentAddressCity
         $presentAddressCity = $this->getValueByHeaderName($typeStr.'City',$rowData,$headers);
         if( $presentAddressCity ) {
+            $presentAddressCity = trim($presentAddressCity);
             $transformer = new GenericTreeTransformer($em, $author, 'CityList');
             $presentAddressCityEntity = $transformer->reverseTransform($presentAddressCity);
             $geoLocation->setCity($presentAddressCityEntity);
@@ -817,6 +837,7 @@ class FellAppUtil {
         //presentAddressState
         $presentAddressState = $this->getValueByHeaderName($typeStr.'State',$rowData,$headers);
         if( $presentAddressState ) {
+            $presentAddressState = trim($presentAddressState);
             $transformer = new GenericTreeTransformer($em, $author, 'States');
             $presentAddressStateEntity = $transformer->reverseTransform($presentAddressState);
             $geoLocation->setState($presentAddressStateEntity);
@@ -824,6 +845,7 @@ class FellAppUtil {
         //presentAddressCountry
         $presentAddressCountry = $this->getValueByHeaderName($typeStr.'Country',$rowData,$headers);
         if( $presentAddressCountry ) {
+            $presentAddressCountry = trim($presentAddressCountry);
             $transformer = new GenericTreeTransformer($em, $author, 'Countries');
             $presentAddressCountryEntity = $transformer->reverseTransform($presentAddressCountry);
             $geoLocation->setCountry($presentAddressCountryEntity);
@@ -894,6 +916,7 @@ class FellAppUtil {
         //boardCertification1Board
         $boardCertificationBoard = $this->getValueByHeaderName($typeStr.'Board',$rowData,$headers);
         if( $boardCertificationBoard ) {
+            $boardCertificationBoard = trim($boardCertificationBoard);
             $transformer = new GenericTreeTransformer($em, $author, 'CertifyingBoardOrganization');
             $CertifyingBoardOrganizationEntity = $transformer->reverseTransform($boardCertificationBoard);
             $boardCertification->setCertifyingBoardOrganization($CertifyingBoardOrganizationEntity);
@@ -902,6 +925,7 @@ class FellAppUtil {
         //boardCertification1Area => BoardCertifiedSpecialties
         $boardCertificationArea = $this->getValueByHeaderName($typeStr.'Area',$rowData,$headers);
         if( $boardCertificationArea ) {
+            $boardCertificationArea = trim($boardCertificationArea);
             $transformer = new GenericTreeTransformer($em, $author, 'BoardCertifiedSpecialties');
             $boardCertificationAreaEntity = $transformer->reverseTransform($boardCertificationArea);
             $boardCertification->setSpecialty($boardCertificationAreaEntity);
@@ -942,6 +966,7 @@ class FellAppUtil {
         //medicalLicensure1Country
         $medicalLicensureCountry = $this->getValueByHeaderName($typeStr.'Country',$rowData,$headers);
         if( $medicalLicensureCountry ) {
+            $medicalLicensureCountry = trim($medicalLicensureCountry);
             $transformer = new GenericTreeTransformer($em, $author, 'Countries');
             $medicalLicensureCountryEntity = $transformer->reverseTransform($medicalLicensureCountry);
             //echo "MedCountry=".$medicalLicensureCountryEntity.", ID+".$medicalLicensureCountryEntity->getId()."<br>";
@@ -951,6 +976,7 @@ class FellAppUtil {
         //medicalLicensure1State
         $medicalLicensureState = $this->getValueByHeaderName($typeStr.'State',$rowData,$headers);
         if( $medicalLicensureState ) {
+            $medicalLicensureState = trim($medicalLicensureState);
             $transformer = new GenericTreeTransformer($em, $author, 'States');
             $medicalLicensureStateEntity = $transformer->reverseTransform($medicalLicensureState);
             //echo "MedState=".$medicalLicensureStateEntity."<br>";
@@ -1013,6 +1039,7 @@ class FellAppUtil {
             $nameMatchString = null;
             $majorMatchString = null;
             $jobTitle = $this->getValueByHeaderName($typeStr.'Name',$rowData,$headers);
+            $jobTitle = trim($jobTitle);
             $transformer = new GenericTreeTransformer($em, $author, 'JobTitleList');
             $jobTitleEntity = $transformer->reverseTransform($jobTitle);
             $training->setJobTitle($jobTitleEntity);
@@ -1029,6 +1056,7 @@ class FellAppUtil {
             //residencyArea => ResidencySpecialty
             $residencyArea = $this->getValueByHeaderName('residencyArea',$rowData,$headers);
             $transformer = new GenericTreeTransformer($em, $author, 'ResidencySpecialty');
+            $residencyArea = trim($residencyArea);
             $residencyAreaEntity = $transformer->reverseTransform($residencyArea);
             $training->setResidencySpecialty($residencyAreaEntity);
         }
@@ -1043,6 +1071,8 @@ class FellAppUtil {
         $schoolName = $this->getValueByHeaderName($nameMatchString,$rowData,$headers);
         if( $schoolName ) {
             $params = array('type'=>'Educational');
+            $schoolName = trim($schoolName);
+            $schoolName = $this->capitalizeIfNotAllCapital($schoolName);
             $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
             $schoolNameEntity = $transformer->reverseTransform($schoolName);
             $training->setInstitution($schoolNameEntity);
@@ -1051,6 +1081,7 @@ class FellAppUtil {
         //Major
         $schoolMajor = $this->getValueByHeaderName($majorMatchString,$rowData,$headers);
         if( $schoolMajor ) {
+            $schoolMajor = trim($schoolMajor);
             $transformer = new GenericTreeTransformer($em, $author, 'MajorTrainingList');
             $schoolMajorEntity = $transformer->reverseTransform($schoolMajor);
             $training->addMajor($schoolMajorEntity);
@@ -1059,6 +1090,7 @@ class FellAppUtil {
         //Degree
         $schoolDegree = $this->getValueByHeaderName($typeStr.'Degree',$rowData,$headers);
         if( $schoolDegree ) {
+            $schoolDegree = trim($schoolDegree);
             $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
             $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
             $training->setDegree($schoolDegreeEntity);

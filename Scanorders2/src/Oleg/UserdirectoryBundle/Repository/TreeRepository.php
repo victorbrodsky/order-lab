@@ -35,17 +35,19 @@ class TreeRepository extends NestedTreeRepository {
 //        $className = $fullClassName->getShortName();
 //        //echo "<br><br>find Category className=".$className."<br>";
 
-        echo "rep=".$mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']."<br>";
+        //echo "childName=(".$childName.")<br>";
+        //echo "rep=".$mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']."<br>";
 
         $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.parent","parent");
         $dql->where('parent.id = :parentid AND list.name = :childname');
+        //$dql->where("parent.id = ".$parent->getId()." AND list.name = '".$childName."'");
 
         $query = $this->_em->createQuery($dql);
 
-        $params = array('parentid' => $parent->getId(), 'childname' => "'".$childName."'");
+        $params = array('parentid' => $parent->getId(), 'childname' => $childName);
 
         $query->setParameters($params);
 
@@ -54,6 +56,10 @@ class TreeRepository extends NestedTreeRepository {
        if( count($results) > 0 ) {
            $foundChildEntity = $results[0];
        }
+
+
+        //echo "foundChildEntity=".$foundChildEntity."<br>";
+        //exit('tree rep');
 
         return $foundChildEntity;
     }

@@ -71,7 +71,8 @@ class TreeController extends Controller {
         $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
         $dql =  $treeRepository->createQueryBuilder("list");
-        $dql->orderBy("list.lft","ASC");
+        //$dql->orderBy("list.lft","ASC");
+        $dql->orderBy("list.orderinlist","ASC");
 
         //init where and params
         $where = "";
