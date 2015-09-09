@@ -165,6 +165,7 @@ class UserGenerator {
                 $training->setStatus($training::STATUS_VERIFIED);
                 $degreeObj = $this->getObjectByNameTransformer('TrainingDegreeList',$degree,$systemuser);
                 $training->setDegree($degreeObj);
+                $training->setAppendDegreeToName(true);
                 $user->addTraining($training);
             }
 
@@ -182,13 +183,33 @@ class UserGenerator {
                 $user = $this->addDefaultLocations($user,$systemuser);
             }
 
-            //phone, fax, office are stored in Location object
+            //fax, office are stored in Location object
             $mainLocation = $user->getMainLocation();
             $mainLocation->setStatus($mainLocation::STATUS_VERIFIED);
-            $mainLocation->setPhone($this->getValueByHeaderName('Business Phone', $rowData, $headers));
             $mainLocation->setFax($this->getValueByHeaderName('Fax Number', $rowData, $headers));
             $mainLocation->setIc($this->getValueByHeaderName('Intercom', $rowData, $headers));
             $mainLocation->setPager($this->getValueByHeaderName('Pager', $rowData, $headers));
+
+
+            //phone(s)
+            $BusinessPhones = $this->getValueByHeaderName('Business Phone', $rowData, $headers);
+            $BusinessPhonesArr = explode(";",$BusinessPhones);
+
+            if( count($BusinessPhonesArr) > 0 ) {
+                $BusinessPhone = array_shift($BusinessPhonesArr);
+                $mainLocation->setPhone($BusinessPhone);
+            }
+
+            foreach( $BusinessPhonesArr as $BusinessPhone ) {
+                $location = new Location();
+                $location->setStatus($location::STATUS_VERIFIED);
+                $location->setRemovable(true);
+                $location->setName('Other Location');
+                $otherLocType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+                $location->addLocationType($otherLocType);
+                $location->setPhone($BusinessPhone);
+                $user->addLocation($location);
+            }
 
 
             //set room object
@@ -209,19 +230,19 @@ class UserGenerator {
                 $HeadDivision = $this->getValueByHeaderName('Administrative - Head of this Division', $rowData, $headers);
                 $HeadService = $this->getValueByHeaderName('Administrative - Head of this Service', $rowData, $headers);
                 //set institutional hierarchys
-                $administrativeTitles = $this->addInstitutinalTree('AdministrativeTitle',$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+                $administrativeTitles = $this->addInstitutinalTree('AdministrativeTitle',$user,$systemuser,$administrativeTitleStr,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
 
-                if( count($administrativeTitles) == 0 ) {
-                    $administrativeTitles[] = new AdministrativeTitle();
-                }
-
-                foreach( $administrativeTitles as $administrativeTitle ) {
-                    //set title object: Administrative Title
-                    $titleObj = $this->getObjectByNameTransformer('AdminTitleList',$administrativeTitleStr,$systemuser);
-                    $administrativeTitle->setName($titleObj);
-
-                    $user->addAdministrativeTitle($administrativeTitle);
-                }
+//                if( count($administrativeTitles) == 0 ) {
+//                    $administrativeTitles[] = new AdministrativeTitle();
+//                }
+//
+//                foreach( $administrativeTitles as $administrativeTitle ) {
+//                    //set title object: Administrative Title
+//                    $titleObj = $this->getObjectByNameTransformer('AdminTitleList',$administrativeTitleStr,$systemuser);
+//                    $administrativeTitle->setName($titleObj);
+//
+//                    $user->addAdministrativeTitle($administrativeTitle);
+//                }
             }//if admin title
 
             //Medical Staff Appointment (MSA) Title
@@ -238,18 +259,18 @@ class UserGenerator {
                 $HeadDivision = $this->getValueByHeaderName('MSA - Head of Division', $rowData, $headers);
                 $HeadService = $this->getValueByHeaderName('MSA - Head of Service', $rowData, $headers);
                 //set institutional hierarchys
-                $msaTitles = $this->addInstitutinalTree('MedicalTitle',$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+                $msaTitles = $this->addInstitutinalTree('MedicalTitle',$user,$systemuser,$msaTitleStr,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
 
-                if( count($msaTitles) == 0 ) {
-                    $msaTitles[] = new MedicalTitle();
-                }
-
-                foreach( $msaTitles as $msaTitle ) {
-                    $titleObj = $this->getObjectByNameTransformer('MedicalTitleList',$msaTitleStr,$systemuser);
-                    $msaTitle->setName($titleObj);
-
-                    $user->addMedicalTitle($msaTitle);
-                }
+//                if( count($msaTitles) == 0 ) {
+//                    $msaTitles[] = new MedicalTitle();
+//                }
+//
+//                foreach( $msaTitles as $msaTitle ) {
+//                    $titleObj = $this->getObjectByNameTransformer('MedicalTitleList',$msaTitleStr,$systemuser);
+//                    $msaTitle->setName($titleObj);
+//
+//                    $user->addMedicalTitle($msaTitle);
+//                }
 
             }
 
@@ -267,48 +288,33 @@ class UserGenerator {
                 $HeadDivision = $this->getValueByHeaderName('Academic Appt - Head of Division', $rowData, $headers);
                 $HeadService = $this->getValueByHeaderName('Academic Appt - Head of Service', $rowData, $headers);
                 //set institutional hierarchys
-                $academicTitles = $this->addInstitutinalTree('AppointmentTitle',$systemuser,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
+                $academicTitles = $this->addInstitutinalTree('AppointmentTitle',$user,$systemuser,$academicTitleStr,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
 
                 if( count($academicTitles) == 0 ) {
                     $academicTitles[] = new AppointmentTitle();
                 }
 
                 //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_position
+                //faculty Track can be multiple but the rest of title singular
+                $facultyTrackObjArr = array();
                 $facultyTrackStrMulti = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
                 $facultyTrackStrArr = explode(";",$facultyTrackStrMulti);
+                foreach( $facultyTrackStrArr as $facultyTrackStr ) {
+                    $facultyTrackObj = $this->getObjectByNameTransformer('PositionTrackTypeList',$facultyTrackStr,$systemuser);
+                    $facultyTrackObjArr[] = $facultyTrackObj;
+                }
 
-                $index = 0;
 
                 foreach( $academicTitles as $academicTitle ) {
 
-                    $titleObj = $this->getObjectByNameTransformer('AppTitleList',$academicTitleStr,$systemuser);
-                    $academicTitle->setName($titleObj);
-
-                    $user->addAppointmentTitle($academicTitle);
-
-                    $facultyTrackStr = null;
-
-                    if( array_key_exists($index, $facultyTrackStrArr) ) {
-                        $facultyTrackStr = $facultyTrackStrArr[$index];
+                    foreach( $facultyTrackObjArr as $facultyTrackObj ) {
+                        $academicTitle->addPosition($facultyTrackObj);
                     }
-
-                    if( strpos($facultyTrackStr,'Clinical') !== false ) {
-                        $facultyTrackStr = 'Clinical Faculty';
-                    }
-                    if( strpos($facultyTrackStr,'Research') !== false ) {
-                        $facultyTrackStr = 'Research Faculty';
-                    }
-//                    if( strpos($facultyTrackStr,'Clinical') !== false && strpos($facultyTrackStr,'Research') !== false ) {
-//                        $facultyTrackStr = 'Clinical Faculty, Research Faculty';
-//                    }
-                    $academicTitle->setPosition($facultyTrackStr);
 
                     //Academic Appointment start date
                     $academicAppointmentStartDateStr = $this->getValueByHeaderName('Academic Appointment start date', $rowData, $headers);
                     $academicAppointmentStartDate = $this->transformDatestrToDate($academicAppointmentStartDateStr);
                     $academicTitle->setStartDate($academicAppointmentStartDate);
-
-                    $index++;
                 }
 
             }
@@ -332,8 +338,11 @@ class UserGenerator {
             $boardCertSpec = $this->getValueByHeaderName('Board Certification - Specialty', $rowData, $headers);
             $nyphCodeStr = $this->getValueByHeaderName('NYPH Code', $rowData, $headers);
             $licenseNumberStr = $this->getValueByHeaderName('License number', $rowData, $headers);
+            $PFI = $this->getValueByHeaderName('PFI', $rowData, $headers);
+            $CLIAStr = $this->getValueByHeaderName('CLIA - Number', $rowData, $headers);
+            $IdentifierNumberStr = $this->getValueByHeaderName('Identifier', $rowData, $headers);
 
-            if( $boardCertSpec || $nyphCodeStr || $licenseNumberStr ) {
+            if( $boardCertSpec || $nyphCodeStr || $licenseNumberStr || $PFI || $CLIAStr || $IdentifierNumberStr ) {
                 $addobjects = false;
                 $credentials = new Credentials($systemuser,$addobjects);
                 $user->setCredentials($credentials);
@@ -430,7 +439,6 @@ class UserGenerator {
 
 
             //Identifier: Multi
-            $IdentifierNumberStr = $this->getValueByHeaderName('Identifier', $rowData, $headers);
             if( $IdentifierNumberStr ) {
 
                 $IdentifierNumberArr = explode(";", $IdentifierNumberStr);
@@ -494,7 +502,6 @@ class UserGenerator {
             }
 
             //CLIA - Number
-            $CLIAStr = $this->getValueByHeaderName('CLIA - Number', $rowData, $headers);
             if( $CLIAStr ) {
                 $credentials->setNumberCLIA($CLIAStr);
             }
@@ -507,7 +514,6 @@ class UserGenerator {
             }
 
             //PFI
-            $PFI = $this->getValueByHeaderName('PFI', $rowData, $headers);
             if( $PFI ) {
                 $credentials->setNumberPFI($PFI);
             }
@@ -516,7 +522,7 @@ class UserGenerator {
             $POPS = $this->getValueByHeaderName('POPS Link', $rowData, $headers);
             if( $POPS ) {
                 $popsIdentifier = new Identifier();
-                $Identifier->setStatus($Identifier::STATUS_VERIFIED);
+                $popsIdentifier->setStatus($popsIdentifier::STATUS_VERIFIED);
 
                 $popsIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','POPS',$systemuser);
                 $popsIdentifier->setKeytype($popsIdentifierTypeObj);
@@ -530,7 +536,7 @@ class UserGenerator {
             $Pubmed = $this->getValueByHeaderName('Pubmed Link', $rowData, $headers);
             if( $Pubmed ) {
                 $PubmedIdentifier = new Identifier();
-                $PubmedIdentifier->setStatus($Identifier::STATUS_VERIFIED);
+                $PubmedIdentifier->setStatus($PubmedIdentifier::STATUS_VERIFIED);
 
                 $PubmedIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','Pubmed',$systemuser);
                 $PubmedIdentifier->setKeytype($PubmedIdentifierTypeObj);
@@ -544,7 +550,7 @@ class UserGenerator {
             $VIVO = $this->getValueByHeaderName('VIVO link', $rowData, $headers);
             if( $VIVO ) {
                 $VIVOIdentifier = new Identifier();
-                $VIVOIdentifier->setStatus($Identifier::STATUS_VERIFIED);
+                $VIVOIdentifier->setStatus($VIVOIdentifier::STATUS_VERIFIED);
 
                 $VIVOIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','VIVO',$systemuser);
                 $VIVOIdentifier->setKeytype($VIVOIdentifierTypeObj);
@@ -564,6 +570,17 @@ class UserGenerator {
             //TODO: remove in prod
             if( $user->getUsername() == "oli2002_@_wcmc-cwid" || $user->getUsername() == "vib9020_@_wcmc-cwid" ) {
                 $user->addRole('ROLE_PLATFORM_ADMIN');
+            }
+
+            if( $user->getUsername() == "jep2018_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_COORDINATOR');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY');
             }
 
             //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
@@ -745,9 +762,11 @@ class UserGenerator {
 
 
     //$Institution, $Department, $HeadDepartment, $Division, $HeadDivision, $Service, $HeadService can be separated by ";"
-    public function addInstitutinalTree( $holderClassName, $systemuser, $Institution, $Department, $HeadDepartment, $Division, $HeadDivision, $Service, $HeadService ) {
+    public function addInstitutinalTree( $holderClassName, $subjectUser, $systemuser, $titles, $Institution, $Department, $HeadDepartment, $Division, $HeadDivision, $Service, $HeadService ) {
 
         $holders = array();
+
+        $titleArr = explode(";", $titles);
 
         $InstitutionArr = explode(";", $Institution);
         $DepartmentArr = explode(";", $Department);
@@ -758,8 +777,41 @@ class UserGenerator {
         $HeadDivisionArr = explode(";", $HeadDivision);
         $HeadServiceArr = explode(";", $HeadService);
 
+        //lead can be title or institution
+        if( count($InstitutionArr) > count($titleArr) ) {
+            //lead inst
+            $leadArr = $InstitutionArr;
+            $leadInst = true;
+        } else {
+            $leadArr = $titleArr;
+            $leadInst = false;
+        }
+
+        $lastInstitutionStr = null;
+        $lastTitleStr = null;
+
         $index = 0;
-        foreach( $InstitutionArr as $InstitutionStr ) {
+        foreach( $leadArr as $leadStr ) {
+
+            $InstitutionStr = null;
+            $titleStr = null;
+            if( $leadInst ) {
+                if( array_key_exists($index, $titleArr) ) {
+                    $titleStr = trim($titleArr[$index]);
+                    $lastTitleStr = $titleStr;
+                } else {
+                    $titleStr = $lastTitleStr;
+                }
+                $InstitutionStr = $leadStr;
+            } else {
+                if( array_key_exists($index, $InstitutionArr) ) {
+                    $InstitutionStr = trim($InstitutionArr[$index]);
+                    $lastInstitutionStr = $InstitutionStr;
+                } else {
+                    $InstitutionStr = $lastInstitutionStr;
+                }
+                $titleStr = $leadStr;
+            }
 
             $DepartmentStr = null;
             $DivisionStr = null;
@@ -769,7 +821,7 @@ class UserGenerator {
             $HeadDivisionStr = null;
             $HeadServiceStr = null;
 
-            $InstitutionStr = trim($InstitutionStr);
+
             if( array_key_exists($index, $DepartmentArr) ) {
                 $DepartmentStr = trim($DepartmentArr[$index]);
             }
@@ -791,9 +843,30 @@ class UserGenerator {
             }
 
             $holder = $this->addSingleInstitutinalTree( $holderClassName,$systemuser,$InstitutionStr,$DepartmentStr,$HeadDepartmentStr,$DivisionStr,$HeadDivisionStr,$ServiceStr,$HeadServiceStr );
-            if( $holder ) {
-                $holders[] = $holder;
+
+            if( !$holder ) {
+                $entityClass = "Oleg\\UserdirectoryBundle\\Entity\\".$holderClassName;
+                $holder = new $entityClass($systemuser);
+                $holder->setStatus($holder::STATUS_VERIFIED);
             }
+
+            $holders[] = $holder;
+
+            //set title object: Administrative Title
+            if( $holderClassName == 'AdministrativeTitle' ) {
+                $titleClassName = 'AdminTitleList';
+            }
+            if( $holderClassName == 'MedicalTitle' ) {
+                $titleClassName = 'MedicalTitleList';
+            }
+            if( $holderClassName == 'AppointmentTitle' ) {
+                $titleClassName = 'AppTitleList';
+            }
+            $titleObj = $this->getObjectByNameTransformer($titleClassName,$titleStr,$systemuser);
+            $holder->setName($titleObj);
+            $addMethod = "add".$holderClassName;
+            $subjectUser->$addMethod($holder);
+
 
             $index++;
 

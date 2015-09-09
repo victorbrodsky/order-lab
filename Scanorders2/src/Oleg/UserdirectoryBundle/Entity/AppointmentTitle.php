@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,10 +24,15 @@ class AppointmentTitle extends BaseTitle
      */
     protected $user;
 
+//    /**
+//     * @ORM\Column(name="position", type="string", nullable=true)
+//     */
+//    protected $position;
     /**
-     * @ORM\Column(name="position", type="string", nullable=true)
-     */
-    protected $position;
+     * @ORM\ManyToMany(targetEntity="PositionTrackTypeList", inversedBy="appointmentTitles")
+     * @ORM\JoinTable(name="user_appointmenttitle_position")
+     **/
+    private $positions;
 
     /**
      * @ORM\ManyToOne(targetEntity="ResidencyTrackList")
@@ -39,6 +45,12 @@ class AppointmentTitle extends BaseTitle
      * @ORM\JoinColumn(name="fellowshipType_id", referencedColumnName="id")
      **/
     private $fellowshipType;
+
+
+    public function __construct($creator=null) {
+        $this->positions = new ArrayCollection();
+    }
+
 
     /**
      * @param mixed $name
@@ -73,22 +85,6 @@ class AppointmentTitle extends BaseTitle
     }
 
     /**
-     * @param mixed $position
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
      * @param mixed $fellowshipType
      */
     public function setFellowshipType($fellowshipType)
@@ -118,6 +114,24 @@ class AppointmentTitle extends BaseTitle
     public function getResidencyTrack()
     {
         return $this->residencyTrack;
+    }
+
+
+
+    public function addPosition($item)
+    {
+        if( $item && !$this->positions->contains($item) ) {
+            $this->positions->add($item);
+        }
+        return $this;
+    }
+    public function removePosition($item)
+    {
+        $this->positions->removeElement($item);
+    }
+    public function getPositions()
+    {
+        return $this->positions;
     }
 
 

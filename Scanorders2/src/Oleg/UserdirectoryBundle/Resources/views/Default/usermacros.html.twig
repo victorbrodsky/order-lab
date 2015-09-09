@@ -165,7 +165,7 @@
 
         {#document:{{ document.vars.value.id }}#}
 
-        <div class="dz-preview dz-file-preview" style="width:32%; height:220px; margin-left:1px; margin-right:0px;">
+        <div class="dz-preview dz-file-preview" style="width:100%; height:220px; margin-left:1px; margin-right:0px;">
             <div class="dz-details">
                 {#<div class="dz-filename"><span data-dz-name>{{ document.vars.value.uniquename }}</span></div>#}
                 <div class="dz-size" data-dz-size><strong>{{ document.vars.value.getSizeStr() }}</strong></div>
@@ -180,7 +180,7 @@
             <div class="file-upload-showlink">
                 <div style="overflow:hidden; white-space:nowrap;">
                     {% if document.vars.value.id %}
-                        <a target="_blank" href="{{ path(sitename~'_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }}</a>
+                        <a target="_blank" href="{{ path(sitename~'_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }} ({{ document.vars.value.createdate|date('m/d/Y') }})</a>
                     {% endif %}
                 </div>
             </div>

@@ -20,6 +20,11 @@ use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
 class FellowshipApplication extends BaseUserAttributes {
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $googleFormId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User", inversedBy="fellowshipApplications", cascade={"remove"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
@@ -56,6 +61,16 @@ class FellowshipApplication extends BaseUserAttributes {
      * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $coverLetters;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellApp_cv",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="cv_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $cvs;
 
 
     //Reprimands
@@ -163,7 +178,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $documents;
 
     /**
-     * Other Documents
+     * Itinerarys
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_itinerary",
@@ -180,9 +195,91 @@ class FellowshipApplication extends BaseUserAttributes {
     private $interviewDate;
 
 
+
+    /////////// user objects /////////////
+//    /**
+//     * @ORM\ManyToMany(targetEntity="EmploymentStatus")
+//     * @ORM\JoinTable(name="fellapp_fellowshipApplication_employmentStatus",
+//     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="employmentStatus_id", referencedColumnName="id", unique=true)}
+//     *      )
+//     **/
+//    private $employmentStatuses;
+
+    /**
+     * Other Documents
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellApp_avatar",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="avatar_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $avatars;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Training", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellowshipApplication_training",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id", unique=true)}
+     *      )
+     * @ORM\OrderBy({"completionDate" = "DESC", "orderinlist" = "ASC"})
+     **/
+    private $trainings;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Examination", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellowshipApplication_examination",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="examination_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $examinations;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\JoinTable(name="fellapp_fellowshipApplication_location",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $locations;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Citizenship", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellowshipApplication_citizenship",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="citizenship_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $citizenships;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\StateLicense")
+     * @ORM\JoinTable(name="fellapp_fellowshipApplication_stateLicense",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="stateLicense_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $stateLicenses;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\BoardCertification")
+     * @ORM\JoinTable(name="fellapp_fellowshipApplication_boardCertification",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="boardCertification_id", referencedColumnName="id", unique=true)}
+     *      )
+     **/
+    private $boardCertifications;
+
+    /////////// EOF user objects /////////////
+
+
     public function __construct($author=null) {
         parent::__construct($author);
 
+        $this->cvs = new ArrayCollection();
         $this->coverLetters = new ArrayCollection();
         $this->reprimandDocuments = new ArrayCollection();
         $this->lawsuitDocuments = new ArrayCollection();
@@ -191,9 +288,173 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->documents = new ArrayCollection();
         $this->itinerarys = new ArrayCollection();
 
+        //$this->employmentStatuses = new ArrayCollection();
+        $this->trainings = new ArrayCollection();
+        $this->avatars = new ArrayCollection();
+        $this->examinations = new ArrayCollection();
+        $this->locations = new ArrayCollection();
+        $this->citizenships = new ArrayCollection();
+        $this->stateLicenses = new ArrayCollection();
+        $this->boardCertifications = new ArrayCollection();
+
         $this->setApplicationStatus('active');
     }
 
+
+
+
+    //////////////// user object //////////////////////
+//    public function addEmploymentStatus($item)
+//    {
+//        if( $item && !$this->employmentStatuses->contains($item) ) {
+//            $this->employmentStatuses->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeEmploymentStatus($item)
+//    {
+//        $this->employmentStatuses->removeElement($item);
+//    }
+//    public function getEmploymentStatuses()
+//    {
+//        return $this->employmentStatuses;
+//    }
+
+    public function addTraining($item)
+    {
+        if( $item && !$this->trainings->contains($item) ) {
+            $this->trainings->add($item);
+        }
+        return $this;
+    }
+    public function removeTraining($item)
+    {
+        $this->trainings->removeElement($item);
+    }
+    public function getTrainings()
+    {
+        return $this->trainings;
+    }
+
+
+    public function addAvatar($item)
+    {
+        if( $item && !$this->avatars->contains($item) ) {
+            $this->avatars->add($item);
+        }
+        return $this;
+    }
+    public function removeAvatar($item)
+    {
+        $this->avatars->removeElement($item);
+    }
+    public function getAvatars()
+    {
+        return $this->avatars;
+    }
+
+
+    public function addExamination($item)
+    {
+        if( $item && !$this->examinations->contains($item) ) {
+            $this->examinations->add($item);
+        }
+        return $this;
+    }
+    public function removeExamination($item)
+    {
+        $this->examinations->removeElement($item);
+    }
+    public function getExaminations()
+    {
+        return $this->examinations;
+    }
+
+    public function addLocation($location)
+    {
+        if( $location && !$this->locations->contains($location) ) {
+            $this->locations->add($location);
+        }
+
+        return $this;
+    }
+    public function removeLocation($locations)
+    {
+        $this->locations->removeElement($locations);
+    }
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+    public function addCitizenship($item)
+    {
+        if( $item && !$this->citizenships->contains($item) ) {
+            $this->citizenships->add($item);
+        }
+        return $this;
+    }
+    public function removeCitizenship($item)
+    {
+        $this->citizenships->removeElement($item);
+    }
+    public function getCitizenships()
+    {
+        return $this->citizenships;
+    }
+
+    public function getStateLicenses()
+    {
+        return $this->stateLicenses;
+    }
+    public function addStateLicense($item)
+    {
+        if( $item && !$this->stateLicenses->contains($item) ) {
+            $this->stateLicenses->add($item);
+        }
+
+    }
+    public function removeStateLicense($item)
+    {
+        $this->stateLicenses->removeElement($item);
+    }
+
+    public function getBoardCertifications()
+    {
+        return $this->boardCertifications;
+    }
+    public function addBoardCertification($item)
+    {
+        if( $item && !$this->boardCertifications->contains($item) ) {
+            $this->boardCertifications->add($item);
+        }
+
+    }
+    public function removeBoardCertification($item)
+    {
+        $this->boardCertifications->removeElement($item);
+    }
+
+    //////////////// EOF user object //////////////////////
+
+
+
+
+    /**
+     * @param mixed $googleFormId
+     */
+    public function setGoogleFormId($googleFormId)
+    {
+        $this->googleFormId = $googleFormId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleFormId()
+    {
+        return $this->googleFormId;
+    }
 
 
     /**
@@ -277,6 +538,22 @@ class FellowshipApplication extends BaseUserAttributes {
     }
 
 
+
+    public function getCvs()
+    {
+        return $this->cvs;
+    }
+    public function addCv($item)
+    {
+        if( $item && !$this->cvs->contains($item) ) {
+            $this->cvs->add($item);
+        }
+
+    }
+    public function removeCv($item)
+    {
+        $this->cvs->removeElement($item);
+    }
 
     public function addCoverLetter($item)
     {
@@ -586,17 +863,20 @@ class FellowshipApplication extends BaseUserAttributes {
     }
 
     public function getRecentCv() {
-        $recentCv = $this->getUser()->getCredentials()->getOneRecentCv();
-        return $recentCv->getDocuments()->last();
+        return $this->getCvs()->last();
     }
 
-    public function getRecentExaminationScores() {
-        $recentExamination = $this->getUser()->getCredentials()->getOneRecentExamination();
-        return $recentExamination->getScores();
+    public function getRecentAvatar() {
+        return $this->getAvatars()->last();
     }
+
+//    public function getRecentExaminationScores() {
+//        $recentExamination = $this->getUser()->getCredentials()->getOneRecentExamination();
+//        return $recentExamination->getScores();
+//    }
     public function getExaminationScores() {
         $scores = new ArrayCollection();
-        foreach( $this->getUser()->getCredentials()->getExaminations() as $examination ) {
+        foreach( $this->getExaminations() as $examination ) {
             foreach( $examination->getScores() as $score ) {
                 if( $score && !$scores->contains($score) ) {
                     $scores->add($score);

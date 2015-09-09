@@ -397,6 +397,7 @@ class UserController extends Controller
         $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
         $dql->leftJoin("appointmentTitles.name", "appointmentName");
         $dql->leftJoin("appointmentTitles.institution", "appointmentInstitution");
+        $dql->leftJoin("appointmentTitles.positions", "appointmentTitlesPositions");
         //$dql->leftJoin("appointmentTitles.department", "appointmentDepartment");
         //$dql->leftJoin("appointmentTitles.division", "appointmentDivision");
         //$dql->leftJoin("appointmentTitles.service", "appointmentService");
@@ -615,7 +616,8 @@ class UserController extends Controller
         }
 
         //Position Type
-        $criteriastr .= " appointmentTitles.position LIKE '%".$search."%' ";
+        //$dql->leftJoin("appointmentTitles.positions", "appointmentTitlesPositions");
+        $criteriastr .= " appointmentTitlesPositions.name LIKE '%".$search."%' ";
 
         //Specialties
         $dql->leftJoin("medicalTitles.specialties", "medicalSpecialties");
@@ -676,7 +678,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty' OR appointmentTitles.position = 'Research Faculty')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
         }
 
         //Academic Appointment Title exists + Clinical Faculty
@@ -685,7 +687,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty')";
         }
 
         //list all people with MD, MBBS, and DO degrees (using all current synonym links) and only with Administrative or Academic title in institution "WCMC" and department of "Pathology"
@@ -706,7 +708,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Research Faculty')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Research Faculty')";
         }
 
         //Academic Appointment Title not exists + Admin Title exists
@@ -751,7 +753,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Fellow')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Fellow')";
         }
 
         //As Faculty + Residents == Academic Appointment Title exists + position=Resident
@@ -760,7 +762,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
         }
 
         //the same as "WCMC Pathology Residents" except they have "AP/CP" in their "Residency Type" field.
@@ -769,7 +771,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
             $criteriastr .= " AND ";
             $criteriastr .= "(residencyTrack.name = 'AP/CP')";
@@ -781,7 +783,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
             $criteriastr .= " AND ";
             $criteriastr .= "(residencyTrack.name = 'AP' OR residencyTrack.name = 'AP/CP')";
@@ -793,7 +795,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
             $criteriastr .= " AND ";
             $criteriastr .= "(residencyTrack.name = 'AP')";
@@ -805,7 +807,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
             $criteriastr .= " AND ";
             $criteriastr .= "(residencyTrack.name = 'CP' OR residencyTrack.name = 'AP/CP')";
@@ -817,7 +819,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
             $criteriastr .= " AND ";
             $criteriastr .= "(residencyTrack.name = 'CP')";
@@ -830,7 +832,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty' OR appointmentTitles.position = 'Research Faculty')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
 
             //a checkmark in "Principal Investigator of this Lab:"
             $criteriastr .= " AND ";
@@ -844,7 +846,7 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty' OR appointmentTitles.position = 'Research Faculty')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
         }
 
 

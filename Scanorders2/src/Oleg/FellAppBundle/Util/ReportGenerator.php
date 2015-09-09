@@ -411,11 +411,13 @@ class ReportGenerator {
         $filePathsArr = array();
 
         //check if photo is not image
-        $photo = $entity->getUser()->getAvatar();
-        $ext = pathinfo($photo->getOriginalName(), PATHINFO_EXTENSION);
-        $photoUrl = null;
-        if( $ext == 'pdf' ) {
-            $filePathsArr[] = $photo->getFileSystemPath();
+        $photo = $entity->getRecentAvatar();
+        if( $photo ) {
+            $ext = pathinfo($photo->getOriginalName(), PATHINFO_EXTENSION);
+            $photoUrl = null;
+            if( $ext == 'pdf' ) {
+                $filePathsArr[] = $photo->getFileSystemPath();
+            }
         }
 
         //application form

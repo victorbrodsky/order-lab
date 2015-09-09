@@ -122,23 +122,24 @@ function updateExpectedPgyListener( element ) {
     holder.find('.pgylevelexpected-field').val(expectedPgyLevel);
 }
 
+//TODO: fix for multi
 //In the section "Academic Appointment Title(s)", if "Resident" is selected in the "Position Type" dropdown menu,
 // unfold a second drop down under it with a field called "Residency Track:" and show three choices: "AP", "CP", and "AP/CP".
 function positionTypeAction(element) {
     var fieldEl = $(element);
-    //console.log(fieldEl);
+    console.log(fieldEl);
 
     var holder = fieldEl.closest('.user-collection-holder');
-    //console.log(holder);
+    console.log(holder);
 
     if( !holder.hasClass('user-appointmentTitles') ) {
         return;
     }
 
-    //printF(fieldEl,'field el:');
+    printF(fieldEl,'field el:');
 
     var value = fieldEl.select2('val');
-    //console.log('value='+value);
+    console.log('value='+value);
 
     holder.find('.appointmenttitle-residencytrack-field').hide();
     holder.find('.appointmenttitle-fellowshiptype-field').hide();

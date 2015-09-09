@@ -3,8 +3,13 @@
 namespace Oleg\FellAppBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\BoardCertificationType;
+use Oleg\UserdirectoryBundle\Form\CitizenshipType;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\StringToBooleanTransformer;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
+use Oleg\UserdirectoryBundle\Form\ExaminationType;
+use Oleg\UserdirectoryBundle\Form\LocationType;
+use Oleg\UserdirectoryBundle\Form\StateLicenseType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -77,6 +82,17 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__documents__',
         ));
 
+        $builder->add('cvs', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => 'Curriculum Vitae (CV):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documents__',
+        ));
+
 
 //        $builder->add('reprimand','choice', array(
 //            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
@@ -108,7 +124,7 @@ class FellowshipApplicationType extends AbstractType
 //            'attr' => array('class' => 'combobox'),
 //        ));
         $builder->add('lawsuit','checkbox', array(
-            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+            'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
             'required' => false,
             'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick'=>'showHideWell(this)'),
         ));
@@ -216,6 +232,81 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
+
+
+        /////////////////// user objects ////////////////////////////
+
+        $builder->add('avatars', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'label' => 'Applicant Photo(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documents__',
+        ));
+
+        $builder->add('trainings', 'collection', array(
+            'type' => new FellAppTrainingType(),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__trainings__',
+        ));
+
+        $this->userLocations($builder);
+
+        $builder->add('citizenships', 'collection', array(
+            'type' => new CitizenshipType($this->params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__citizenships__',
+        ));
+
+        $builder->add('examinations', 'collection', array(
+            'type' => new ExaminationType($this->params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__examinations__',
+        ));
+
+        $builder->add('stateLicenses', 'collection', array(
+            'type' => new StateLicenseType($this->params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__statelicenses__',
+        ));
+
+        $builder->add('boardCertifications', 'collection', array(
+            'type' => new BoardCertificationType(),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__boardcertifications__',
+        ));
+
+        //////////////////////////////////////////////////////////////
+
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -230,4 +321,44 @@ class FellowshipApplicationType extends AbstractType
     {
         return 'oleg_fellappbundle_fellowshipapplication';
     }
+
+
+
+    public function userLocations($builder) {
+
+
+        if( $this->params['sc']->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
+            $roleAdmin = true;
+            $readonly = true;
+        } else {
+            $roleAdmin = false;
+            $readonly = false;
+        }
+        //echo "readonly=".$readonly."<br>";
+        $readonly = false;
+
+        $currentUser = false;
+        $user = $this->params['sc']->getToken()->getUser();
+        if( $user->getId() === $this->params['user']->getId() ) {
+            $currentUser = true;
+        }
+        //echo "currentUser=".$currentUser."<br>";
+
+
+        $params = array('read_only'=>$readonly,'admin'=>$roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->params['cycle'],'em'=>$this->params['em'],'subjectUser'=>$this->params['user']);
+
+        $builder->add('locations', 'collection', array(
+            'type' => new FellAppLocationType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__locations__',
+        ));
+
+        return $builder;
+    }
+
 }

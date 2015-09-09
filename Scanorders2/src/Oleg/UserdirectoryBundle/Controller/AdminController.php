@@ -12,6 +12,7 @@ use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
 use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
 use Oleg\UserdirectoryBundle\Entity\LocaleList;
+use Oleg\UserdirectoryBundle\Entity\PositionTrackTypeList;
 use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
 use Oleg\UserdirectoryBundle\Entity\SexList;
 use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
@@ -151,6 +152,7 @@ class AdminController extends Controller
         $count_institutiontypes = $this->generateInstitutionTypes();         //must be first
         $count_OrganizationalGroupType = $this->generateOrganizationalGroupType();                  //must be first
         $count_institution = $this->generateInstitutions();                  //must be first
+        $count_appTitlePositions = $this->generateAppTitlePositions();
 
         $count_CommentGroupType = $this->generateCommentGroupType();
 
@@ -231,6 +233,7 @@ class AdminController extends Controller
             'Institution Types='.$count_institutiontypes.', '.
             'Organizational Group Types='.$count_OrganizationalGroupType.', '.
             'Institutions='.$count_institution.', '.
+            'Appointment Title Positions='.$count_appTitlePositions.', '.
             //'Users='.$count_users.', '.
             'Test Users='.$count_testusers.', '.
             'Board Specialties='.$count_boardSpecialties.', '.
@@ -429,13 +432,14 @@ class AdminController extends Controller
             "ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY" => array("Fellowship Program Director WCMC Hematopathology","Access to specific Fellowship Application type as Director"),
             "ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY" => array("Fellowship Program Director WCMC Molecular Genetic Pathology","Access to specific Fellowship Application type as Director"),
             //Program-Coordinator
-            "ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC FELLOWSHIP Breast Pathology","Access to specific Fellowship Application type as Coordinator"),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Cytopathology","Access to specific Fellowship Application type as Coordinator"),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Gynecologic Pathology","Access to specific Fellowship Application type as Coordinator"),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Gastrointestinal Pathology","Access to specific Fellowship Application type as Coordinator"),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Genitourinary Pathology","Access to specific Fellowship Application type as Coordinator"),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Hematopathology","Access to specific Fellowship Application type as Coordinator"),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY" => array("Fellowship Program Program Coordinator WCMC Molecular Genetic Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR" => array("Fellowship Program General Coordinator Role","Access to Fellowship Application type as Coordinator (upload new documents)"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY" => array("Fellowship Program Coordinator WCMC FELLOWSHIP Breast Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY" => array("Fellowship Program Coordinator WCMC Cytopathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY" => array("Fellowship Program Coordinator WCMC Gynecologic Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY" => array("Fellowship Program Coordinator WCMC Gastrointestinal Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY" => array("Fellowship Program Coordinator WCMC Genitourinary Pathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY" => array("Fellowship Program Coordinator WCMC Hematopathology","Access to specific Fellowship Application type as Coordinator"),
+            "ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY" => array("Fellowship Program Coordinator WCMC Molecular Genetic Pathology","Access to specific Fellowship Application type as Coordinator"),
 
 
 
@@ -3287,6 +3291,41 @@ class AdminController extends Controller
         foreach( $elements as $name ) {
 
             $entity = new TrainingTypeList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateAppTitlePositions() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:PositionTrackTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Resident',
+            'Fellow',
+            'Clinical Faculty',
+            'Research Faculty'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new PositionTrackTypeList();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);

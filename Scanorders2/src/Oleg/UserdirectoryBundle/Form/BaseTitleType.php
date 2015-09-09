@@ -130,17 +130,34 @@ class BaseTitleType extends AbstractType
         //position, residencyTrack, fellowshipType, pgy for AppointmentTitle (Academic Appointment Title)
         if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle" ) {
 
-            $builder->add('position', 'choice', array(
-                'choices'   => array(
-                    'Resident'   => 'Resident',
-                    'Fellow' => 'Fellow',
-                    'Clinical Faculty' => 'Clinical Faculty',
-                    'Research Faculty' => 'Research Faculty'
-                    //'Clinical Faculty, Research Faculty' => 'Clinical Faculty, Research Faculty'
-                ),
-                'label' => "Position Track Type:",
-                'required' => false,
+//            $builder->add('position', 'choice', array(
+//                'choices'   => array(
+//                    'Resident'   => 'Resident',
+//                    'Fellow' => 'Fellow',
+//                    'Clinical Faculty' => 'Clinical Faculty',
+//                    'Research Faculty' => 'Research Faculty'
+//                    //'Clinical Faculty, Research Faculty' => 'Clinical Faculty, Research Faculty'
+//                ),
+//                'label' => "Position Track Type:",
+//                'required' => false,
+//                'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeAction(this)'),
+//            ));
+            $builder->add( 'positions', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:PositionTrackTypeList',
+                'property' => 'name',
+                'label'=>'Position Track Type(s):',
+                'required'=> false,
+                'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeAction(this)'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
             ));
 
             $builder->add( 'residencyTrack', 'entity', array(

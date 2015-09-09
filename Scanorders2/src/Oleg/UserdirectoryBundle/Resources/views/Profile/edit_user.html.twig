@@ -78,8 +78,8 @@
 
         {#position type#}
         <p>
-        {% if formfield.position is defined %}
-            {{ formmacros.field(formfield.position) }}
+        {% if formfield.positions is defined %}
+            {{ formmacros.field(formfield.positions) }}
         {% endif %}
 
         {% if formfield.residencyTrack is defined %}
@@ -98,10 +98,19 @@
             </p>
         {% endif %}
 
+        {% set ResidentOrFellowPosition = false %}
+        {% if formfield.positions is defined %}
+            {% for position in formfield.positions %}
+                {% if position.name == "Resident" or position.name == "Fellow" %}
+                    {% set ResidentOrFellowPosition = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
         {#pgy#}
         {% if formfield.pgystart is defined and formfield.pgylevel is defined %}
             {#On the user profile page, always hide the entire PGY well if the Position Type is not equal to either Resident or Fellow#}
-            {% if formfield.position is defined and formfield.vars.value and (formfield.vars.value.position == "Resident" or formfield.vars.value.position == "Fellow") or cycle == 'create_user' or cycle == 'edit_user' %}
+            {% if formfield.positions is defined and formfield.vars.value and ResidentOrFellowPosition or cycle == 'create_user' or cycle == 'edit_user' %}
                 <p>
                 <div class="well appointmenttitle-pgy-field" style="display:none">
                     {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
@@ -203,30 +212,6 @@
         {{ formmacros.fieldDateLabel(formfield.issueDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.expirationDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.recertificationDate,'allow-future-date') }}
-
-    </div>
-{% endmacro %}
-
-{% macro cvsForm( field, cycle, classname, prototype ) %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-
-    {% if prototype == "prototype" %}
-        {% set formfield = field.vars.prototype %}
-    {% else %}
-        {% set formfield = field %}
-    {% endif %}
-
-    <div class="well {{ classname }}">
-
-        {% if cycle != 'show_user' %}
-            <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
-        {% endif %}
-
-        {% if formfield.documents is defined or prototype == 'prototype' %}
-            {{ usermacros.fileuploadLabelField( formfield, formfield.documents, cycle, classname, prototype ) }}
-        {% endif %}
 
     </div>
 {% endmacro %}
@@ -1105,9 +1090,7 @@
         {% if form.credentials is defined and form.credentials.codeNYPH is defined %}
             {% set codeNYPHPrototype = userform.codenyphs(form.credentials.codeNYPH,cycle,'user-codenyph','prototype') %}
         {% endif %}
-        {#{% if form.credentials is defined and form.credentials.cvs is defined %}#}
-            {#{% set cvsPrototype = userform.cvsForm(form.credentials.cvs,cycle,'user-cvs','prototype') %}#}
-        {#{% endif %}#}
+
 
         {#{% if form.administrativeTitles is defined %}#}
             {#{% set userPositionPrototype = treemacros.userPositionField(form.administrativeTitles.vars.prototype.institution.userPositions,cycle,'prototype') %}#}
@@ -1130,7 +1113,6 @@
              data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
              data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
              data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
-             {#data-prototype-user-cvs = "{{ cvsPrototype|e }}"#}
              data-prototype-user-employmentstatus = "{{ employmentStatusPrototype|e }}"
              data-prototype-user-identifiers = "{{ identifiersPrototype|e }}"
              data-prototype-user-publiccomments = "{{ publicCommentsPrototype|e }}"
@@ -1947,30 +1929,6 @@
                             </div>
 
 
-                            {#&#123;&#35;cvs&#35;&#125;#}
-                            {#<div class="panel panel-info">#}
-                                {#<div class="panel-heading">#}
-                                    {#<h4 class="panel-title text-left">#}
-                                        {#<a data-toggle="collapse" href="#cvs">#}
-                                            {#Curriculum Vitae(s)#}
-                                        {#</a>#}
-                                    {#</h4>#}
-                                {#</div>#}
-                                {#<div id="cvs" class="panel-collapse collapse in">#}
-                                    {#<div class="panel-body">#}
-
-                                        {#<div class="user-cvs-holder">#}
-
-                                            {#{% for cv in form.credentials.cvs %}#}
-                                                {#{{ userform.cvsForm(cv,cycle,'user-cvs','noprototype') }}#}
-                                            {#{% endfor %}#}
-                                            {#{{ usermacros.addNewObjectBtn(cycle,'user-cvs','Add Curriculum Vitae') }}#}
-
-                                        {#</div>#}
-
-                                    {#</div>#}
-                                {#</div>#}
-                            {#</div>#}
 
                         </div>
 

@@ -27,7 +27,7 @@
             </p>
 
 
-            {% for location in form.user.locations %}
+            {% for location in form.locations %}
 
                 {#location.name.vars.value=({{ location.vars.value.name }})<br>#}
                 {#location.id.vars.value=({{ location.vars.value.id }})<br>#}
@@ -155,7 +155,7 @@
                         <div class="col-xs-6">
                             {#<label for="telephoneHome" class="control-label">Home</label>#}
                             {#<input type="text" class="form-control" id="telephoneHome" name="telephoneHome" placeholder="Home">#}
-                            {% for location in form.user.locations %}
+                            {% for location in form.locations %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Present Address' %}
                                         {% if cycle != "show" %}
@@ -173,7 +173,7 @@
                         <div class="col-xs-6">
                             {#<label for="telephoneWork" class="control-label">Work</label>#}
                             {#<input type="text" class="form-control" id="telephoneWork" name="telephoneWork" placeholder="Work">#}
-                            {% for location in form.user.locations %}
+                            {% for location in form.locations %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Work Address' %}
                                         {% if cycle != "show" %}
@@ -193,7 +193,7 @@
                         <div class="col-xs-6 withpaddingtop">
                             {#<label for="telephoneMobile" class="control-label">Mobile</label>#}
                             {#<input type="text" class="form-control" id="telephoneMobile" name="telephoneMobile" placeholder="Mobile">#}
-                            {% for location in form.user.locations %}
+                            {% for location in form.locations %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Present Address' %}
                                         {% if cycle != "show" %}
@@ -211,7 +211,7 @@
                         <div class="col-xs-6 withpaddingtop">
                             {#<label for="telephoneFax" class="control-label">Fax</label>#}
                             {#<input type="text" class="form-control" id="telephoneFax" name="telephoneFax" placeholder="Fax">#}
-                            {% for location in form.user.locations %}
+                            {% for location in form.locations %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Present Address' %}
                                         {{ form_row(location.fax) }}
@@ -222,7 +222,7 @@
                     </div>
                 </div>
 
-            {% for citizenship in form.user.credentials.citizenships %}
+            {% for citizenship in form.citizenships %}
                 <div class="well">
                     <label class="col-xs-12 control-label">Citizenship:</label>
                     <div class="row withpaddingtop">

@@ -92,20 +92,22 @@
     {#{{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default') }}#}
     {#</p>#}
 
-    <p>
-    <div class="well form-element-holder user-Reference">
-        <label class="col-xs-12 control-label">Reference Letters</label>
-        <div class="row withpaddingtop">
-            <div class="col-xs-12">
+    {% if cycle != "download" %}
+        <p>
+        <div class="well form-element-holder user-Reference">
+            <label class="col-xs-12 control-label">Reference Letters (All documents will be added to the Complete Application PDF)</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
 
-                {% if reference is defined %}
-                    {{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default') }}
-                {% endif %}
+                    {% if reference is defined %}
+                        {{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default') }}
+                    {% endif %}
 
+                </div>
             </div>
         </div>
-    </div>
-    </p>
+        </p>
+    {% endif %}
 
 
 </div> <!-- well -->

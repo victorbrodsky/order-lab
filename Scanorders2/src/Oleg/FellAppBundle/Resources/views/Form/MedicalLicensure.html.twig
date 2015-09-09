@@ -18,7 +18,7 @@
             </p>
 
 
-            {% for stateLicense in form.user.credentials.stateLicense %}
+            {% for stateLicense in form.stateLicenses %}
 
 
             <div class="well">
@@ -77,6 +77,11 @@
                     {{ form_row(form.reprimand) }}
 
                     <div class="wellcollapsable" style="display:none">
+
+                        <p>
+                            Only the last documents will be added to the Complete Application PDF
+                        </p>
+
                         {{ usermacros.documentsContainer(null,form.reprimandDocuments,cycle, 'noprototype',8,'default') }}
                     </div>
 
@@ -89,6 +94,10 @@
                     {{ form_row(form.lawsuit) }}
 
                     <div class="wellcollapsable" style="display:none">
+
+                        <p>
+                            Only the last documents will be added to the Complete Application PDF
+                        </p>
 
                         {{ usermacros.documentsContainer(null,form.lawsuitDocuments,cycle, 'noprototype',8,'default') }}
                     </div>

@@ -1,7 +1,7 @@
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegUserdirectoryBundle::Profile/edit_user.html.twig" as userform %}
+{% import _self as fellapp %}
 
 
 {#On Medium devices (Desktops (≥992px)) limit the width#}
@@ -43,7 +43,7 @@
 
 
 {#user's snapshot#}
-{{ userform.snapshot(entity.user,sitename,cycle) }}
+{{ fellapp.snapshot(entity,sitename,cycle) }}
 <br>
 
 
@@ -151,3 +151,24 @@
 <div class="col-md-1"></div>
 
 
+
+
+{% macro snapshot( fellapp, sitename, cycle ) %}
+
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <h1>{{ fellapp.user.getUsernameOptimal }}</h1>
+
+    {#avatar#}
+    <div align="center" style="height: 160px;">
+        {#avatar form modal#}
+        {% if fellapp.avatars|length > 0 %}
+            {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
+        {% else %}
+            {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+        {% endif %}
+    </div>
+
+
+{% endmacro %}

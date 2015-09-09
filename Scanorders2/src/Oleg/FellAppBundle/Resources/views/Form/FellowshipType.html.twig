@@ -10,8 +10,6 @@
     <div id="fellowshipTypePanel" class="panel-collapse collapse in">
         <div class="panel-body">
 
-            {#{{ formmacros.field(form.fellowshipSubspecialty) }}#}
-            {#{{ form_label(form.fellowshipSubspecialty) }}#}
             {{ form_row(form.fellowshipSubspecialty) }}
 
         </div> <!-- panel-body -->
@@ -31,13 +29,9 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-6">
-                    {#<label for="trainingPeriodStart" class="col-xs-12 control-label">Start Date</label>#}
-                    {#<input type="text" class="datepicker form-control" id="trainingPeriodStart" name="trainingPeriodStart" placeholder="Start Date" value="07/01/2015">#}
                     {{ formmacros.fieldDateLabel_vertical(form.startDate,'allow-future-date') }}
                 </div>
                 <div class="col-xs-6">
-                    {#<label for="trainingPeriodEnd" class="col-xs-12 control-label">End Date</label>#}
-                    {#<input type="text" class="datepicker form-control" id="trainingPeriodEnd" name="trainingPeriodEnd" placeholder="End Date" value="06/01/2016">#}
                     {{ formmacros.fieldDateLabel_vertical(form.endDate,'allow-future-date') }}
                 </div>
             </div> <!-- row -->
@@ -62,30 +56,15 @@
     <div id="applicantName" class="panel-collapse collapse in">
         <div class="panel-body">
             {% for info in form.user.infos %}
-                {#{{ formmacros.field(info.displayName) }}#}
-                {#{{ formmacros.field(info.salutation) }}#}
-                {#{{ formmacros.field(info.firstName) }}#}
-                {#{{ formmacros.field_notempty(info.middleName,cycle) }}#}
-                {#{{ formmacros.field(info.lastName) }}#}
-                {#{{ formmacros.field_notempty(info.suffix,cycle) }}#}
-                {#{{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}#}
-                {#{{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}#}
-                {#{{ formmacros.field_notempty(info.initials,cycle) }}#}
 
             <div class="row">
                 <div class="col-xs-4">
-                    {#<label for="lastName" class="col-xs-12 control-label required">Last Name</label>#}
-                    {#<input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name">#}
                     {{ form_row(info.lastName) }}
                 </div>
                 <div class="col-xs-4">
-                    {#<label for="firstName" class="col-xs-12 control-label required">First Name</label>#}
-                    {#<input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">#}
                     {{ form_row(info.firstName) }}
                 </div>
                 <div class="col-xs-4">
-                    {#<label for="middleName" class="col-xs-12 control-label">Middle Name</label>#}
-                    {#<input type="text" class="form-control" id="middleName" name="middleName" placeholder="Middle Name">#}
                     {{ form_row(info.middleName) }}
                 </div>
             </div> <!-- row -->

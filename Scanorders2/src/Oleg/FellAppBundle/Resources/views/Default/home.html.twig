@@ -15,7 +15,7 @@
 
 <p>
 
-    {% if is_granted('ROLE_FELLAPP_ADMIN') %}
+    {% if is_granted('ROLE_FELLAPP_COORDINATOR') %}
         {% if accessreqs and accessreqs > 0 %}
             <div class="alert alert-warning">
                 There are <a href="{{ path(fellapp_sitename~'_accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s)</a>
@@ -138,7 +138,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
 
-                {% if is_granted('ROLE_FELLAPP_ADMIN') %}
+                {% if is_granted('ROLE_FELLAPP_COORDINATOR') %}
                 <th>
                     Actions
                 </th>
@@ -176,7 +176,7 @@
                 {% set c1 = "" %}
                 {% set c2 = "" %}
                 {% set c3 = "" %}
-                {% for examination in entity.user.credentials.examinations %}
+                {% for examination in entity.examinations %}
                     {% set u1 = examination.USMLEStep1Score %}
                     {% set u2 = examination.USMLEStep2CKScore %}
                     {% set u3 = examination.USMLEStep3Score %}
@@ -201,7 +201,7 @@
                     </td>
 
                     <td>
-                        {% if entity.user.avatar %}
+                        {% if entity.avatars|length > 0 %}
                             {#height="60" width="60"#}
                             <div style="height: 60px; width: 60px;">
                                 {#{% if '.pdf' in entity.user.avatar.getAbsoluteUploadFullPath %}#}
@@ -210,7 +210,7 @@
                                 {#{% else %}#}
                                 {#<img src="{{ entity.user.avatar.getAbsoluteUploadFullPath }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
                                 {#{% endif %}#}
-                                {{ usermacros.showDocumentAsImage(entity.user.avatar,'Avatar','') }}
+                                {{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar','') }}
                             </div>
                         {% endif %}
                     </td>
@@ -283,7 +283,7 @@
 
                                 <ul class="dropdown-menu dropdown-menu-right">
 
-                                    {% if is_granted('ROLE_FELLAPP_ADMIN') %}
+                                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') %}
 
                                         {% if entity.applicationStatus != 'complete' %}
                                             <li>

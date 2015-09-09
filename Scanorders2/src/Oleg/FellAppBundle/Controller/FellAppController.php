@@ -88,8 +88,8 @@ class FellAppController extends Controller {
         $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
         $dql->leftJoin("fellapp.user", "applicant");
         $dql->leftJoin("applicant.infos", "applicantinfos");
-        $dql->leftJoin("applicant.credentials", "credentials");
-        $dql->leftJoin("credentials.examinations", "examinations");
+        //$dql->leftJoin("applicant.credentials", "credentials");
+        $dql->leftJoin("fellapp.examinations", "examinations");
 
         if( $search ) {
             $dql->leftJoin("applicant.infos", "userinfos");
@@ -261,7 +261,7 @@ class FellAppController extends Controller {
 
         //admin can edit
         if( $routeName == "fellapp_edit" ) {
-            if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -433,18 +433,18 @@ class FellAppController extends Controller {
         }
 
 
-//        if ($form->isDisabled()) {
-//            echo "form is disabled<br>";
-//        }
-//        if (count($form->getErrors(true)) > 0) {
-//            echo "form has errors<br>";
-//        }
+        if ($form->isDisabled()) {
+            echo "form is disabled<br>";
+        }
+        if (count($form->getErrors(true)) > 0) {
+            echo "form has errors<br>";
+        }
 //        echo "errors:<br>";
 //        $string = (string) $form->getErrors(true);
 //        echo "string errors=".$string."<br>";
 //        echo "getErrors count=".count($form->getErrors())."<br>";
 //        echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
-        //print_r($form->getErrors());
+//        print_r($form->getErrors());
 //        echo "<br>string errors:<br>";
 //        print_r($form->getErrorsAsString());
 //        echo "<br>";
@@ -516,15 +516,11 @@ class FellAppController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $userUtil = new UserUtil();
-        $sc = $this->get('security.context');
-
-        $subjectUser = $application->getUser();
+        //Avatar
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'avatar' );
 
         //CurriculumVitae
-        foreach( $subjectUser->getCredentials()->getCvs() as $cv ) {
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $cv );
-        }
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'cv' );
 
         //FellowshipApplication(coverLetters)
         $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'coverLetter' );
@@ -532,7 +528,7 @@ class FellAppController extends Controller {
         $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'reprimandDocument' );
 
         //Examination
-        foreach( $subjectUser->getCredentials()->getExaminations() as $examination ) {
+        foreach( $application->getExaminations() as $examination ) {
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $examination );
         }
 
@@ -546,7 +542,6 @@ class FellAppController extends Controller {
 
         //.itinerarys
         $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'itinerary' );
-
 
     }
 
@@ -643,7 +638,7 @@ class FellAppController extends Controller {
      */
     public function removeAction($id) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ){
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -948,7 +943,7 @@ class FellAppController extends Controller {
                 //create report
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
                 $argument = 'asap';
-                //if( $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+                //if( $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
                     //$argument = 'overwrite';
                 //}
                 $fellappRepGen->addFellAppReportToQueue( $id, $argument );

@@ -25,7 +25,7 @@ class FellAppAccessRequestController extends AccessRequestController
         $this->roleBanned = 'ROLE_FELLAPP_BANNED';
         $this->roleUser = 'ROLE_FELLAPP_USER';
         $this->roleUnapproved = 'ROLE_FELLAPP_UNAPPROVED';
-        $this->roleEditor = 'ROLE_FELLAPP_ADMIN';
+        $this->roleEditor = 'ROLE_FELLAPP_COORDINATOR';
     }
 
     /**

@@ -35,12 +35,24 @@ class MedicalTitle extends BaseTitle
 
 
 
+    /**
+     * @ORM\ManyToMany(targetEntity="PositionTypeList")
+     * @ORM\JoinTable(name="user_medicalTitle_userPosition",
+     *      joinColumns={@ORM\JoinColumn(name="medicalTitle_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="userPosition_id", referencedColumnName="id")}
+     * )
+     **/
+    private $userPositions;
+
+
 
     function __construct($author=null)
     {
         parent::__construct($author);
 
         $this->specialties = new ArrayCollection();
+
+        $this->userPositions = new ArrayCollection();
     }
 
 
@@ -93,7 +105,21 @@ class MedicalTitle extends BaseTitle
         $this->specialties->removeElement($specialty);
     }
 
-
+    public function addUserPosition($item)
+    {
+        if( !$this->userPositions->contains($item) ) {
+            $this->userPositions->add($item);
+        }
+        return $this;
+    }
+    public function removeUserPosition($item)
+    {
+        $this->userPositions->removeElement($item);
+    }
+    public function getUserPositions()
+    {
+        return $this->userPositions;
+    }
 
 
     public function __toString() {

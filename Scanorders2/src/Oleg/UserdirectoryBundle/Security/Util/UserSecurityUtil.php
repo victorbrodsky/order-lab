@@ -230,7 +230,7 @@ class UserSecurityUtil {
             }
 
             if( $sitename == $this->container->getParameter('fellapp.sitename') ) {
-                $roles = array("ROLE_FELLAPP_ADMIN");
+                $roles = array("ROLE_FELLAPP_COORDINATOR");
             }
 
         } else {

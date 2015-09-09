@@ -16,7 +16,7 @@
     {#form.user.id:{{ form.user.vars.value.id }}<br>#}
     {#form.user.trainings|length:{{ form.user.trainings|length }}<br>#}
 
-    {% for training in form.user.trainings %}
+    {% for training in form.trainings %}
 
             {#training.vars.value.trainingType.name:{{ training.vars.value.trainingType.name }}<br>#}
 
@@ -139,7 +139,7 @@
 
             <p>In chronological order, list other educational experiences, jobs, military service or training that is not accounted for above.</p>
 
-            {% for training in form.user.trainings %}
+            {% for training in form.trainings %}
 
             {#training.vars.value.trainingType.name={{ training.vars.value.trainingType.name }}<br>#}
 

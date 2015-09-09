@@ -101,11 +101,6 @@ class Credentials extends BaseUserAttributes
     private $identifiers;
 
     /**
-     * @ORM\OneToMany(targetEntity="CurriculumVitae", mappedBy="credentials", cascade={"persist"})
-     */
-    private $cvs;
-
-    /**
      * @ORM\OneToMany(targetEntity="Examination", mappedBy="credentials", cascade={"persist"})
      */
     private $examinations;
@@ -124,7 +119,6 @@ class Credentials extends BaseUserAttributes
         $this->boardCertification = new ArrayCollection();
         $this->codeNYPH = new ArrayCollection();
         $this->identifiers = new ArrayCollection();
-        $this->cvs = new ArrayCollection();
         $this->examinations = new ArrayCollection();
         $this->citizenships = new ArrayCollection();
 
@@ -436,22 +430,6 @@ class Credentials extends BaseUserAttributes
         $this->identifiers->removeElement($identifier);
     }
 
-    public function getCvs()
-    {
-        return $this->cvs;
-    }
-    public function addCv($item)
-    {
-        if( $item && !$this->cvs->contains($item) ) {
-            $item->setCredentials($this);
-            $this->cvs->add($item);
-        }
-
-    }
-    public function removeCv($item)
-    {
-        $this->cvs->removeElement($item);
-    }
 
     public function addExamination($item)
     {
@@ -487,17 +465,6 @@ class Credentials extends BaseUserAttributes
         return $this->citizenships;
     }
 
-
-    public function getOneRecentCv() {
-        $items = $this->getCvs();
-        $criteria = Criteria::create()
-            //->where(Criteria::expr()->eq("user", $user))
-            ->orderBy(array("creationDate" => Criteria::DESC))
-        ;
-        $itemsFiltered = $items->matching($criteria);
-
-        return $itemsFiltered[0];
-    }
 
     public function getOneRecentExamination() {
         $items = $this->getExaminations();
