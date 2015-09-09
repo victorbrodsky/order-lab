@@ -398,6 +398,9 @@ class ReportGenerator {
             "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-s-a').'_EDT'.
             ".pdf";
 
+        //replace all white spaces to _
+        $filename = str_replace(" ","_",$filename);
+
         $logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
 
         //check and create Report and temp folders
