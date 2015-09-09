@@ -80,6 +80,11 @@ security:
                 target: /scan/login
             anonymous:  true
             access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
+            remember_me:
+                key:      "%secret%"
+                lifetime: 604800 # 1 week in seconds
+                path:     /scan
+                #always_remember_me: true
 
         ldap_employees_firewall:
             pattern: ^/directory
@@ -102,7 +107,12 @@ security:
                 path:   /directory/logout
                 target: /directory/login
             anonymous:  true
-            access_denied_url: /directory/access-requests/new/create        
+            access_denied_url: /directory/access-requests/new/create
+            remember_me:
+                key:      "%secret%"
+                lifetime: 604800 # 1 week in seconds
+                path:     /directory
+                #always_remember_me: true
 
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications
@@ -121,6 +131,11 @@ security:
                 target: /fellowship-applications/login
             anonymous:  true
             access_denied_url: /fellowship-applications/access-requests/new/create
+            remember_me:
+                key:      "%secret%"
+                lifetime: 604800 # 1 week in seconds
+                path:     /fellowship-applications
+                #always_remember_me: true
         
 
     #Note: first match is used, the later would be ignored
