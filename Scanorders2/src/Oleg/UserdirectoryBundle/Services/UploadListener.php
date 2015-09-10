@@ -51,7 +51,7 @@ class UploadListener {
         $path = $file->getPath();
         //echo "path=".$path."<br>";
         $uniquefilename = $file->getFilename();
-        //echo "filename=".$filename."<br>";
+        //echo "uniquefilename=".$uniquefilename."<br>";
         $size = $file->getSize();
 
         //creator: subjectUser

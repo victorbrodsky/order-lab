@@ -213,12 +213,27 @@ class BaseTitleType extends AbstractType
         //boss
         if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle" ) {
 
-            $builder->add('boss','entity',array(
+//            $builder->add('boss','entity',array(
+//                'class' => 'OlegUserdirectoryBundle:User',
+//                'label' => "Reports to:",
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'required' => false
+//            ));
+            $builder->add( 'boss', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'label' => "Reports to:",
+                'label'=>'Reports to:',
+                'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
-                'required' => false
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.infos", "infos")
+                            ->leftJoin("list.employmentStatus", "employmentStatus")
+                            ->leftJoin("employmentStatus.employmentType", "employmentType")
+                            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL")
+                            ->orderBy("infos.displayName","ASC");
+                    },
             ));
 
             $builder->add('userPositions','entity',array(

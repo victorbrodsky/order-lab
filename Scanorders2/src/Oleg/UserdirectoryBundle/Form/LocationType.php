@@ -167,7 +167,9 @@ class LocationType extends AbstractType
                 'query_builder' => function(EntityRepository $er) {
                         if( array_key_exists('subjectUser', $this->params) ) {
                             return $er->createQueryBuilder('list')
-                                ->where("list.id != :userid")
+                                ->leftJoin("list.employmentStatus", "employmentStatus")
+                                ->leftJoin("employmentStatus.employmentType", "employmentType")
+                                ->where("list.id != :userid AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)")
                                 ->leftJoin("list.infos", "infos")
                                 ->orderBy("infos.displayName","ASC")
                                 ->setParameters( array('userid' => $this->params['subjectUser']->getId()) );

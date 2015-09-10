@@ -1462,6 +1462,7 @@ class User extends BaseUser {
                 $elementInfo = array('tablename'=>'administrativeTitle','id'=>$titleId,'name'=>$name);
                 $headInfo[] = $elementInfo;
             }
+            $headInfo[] = 'break-br';
             $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
             //$headInfo[] = 'break';
         }
@@ -1475,6 +1476,7 @@ class User extends BaseUser {
                 $elementInfo = array('tablename'=>'appointmentTitle','id'=>$titleId,'name'=>$name);
                 $headInfo[] = $elementInfo;
             }
+            $headInfo[] = 'break-br';
             $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
             //$headInfo[] = 'break';
         }
@@ -1489,6 +1491,7 @@ class User extends BaseUser {
                 $headInfo[] = $elementInfo;
                 //$headInfo[] = $title->getName()->getName()."";
             }
+            $headInfo[] = 'break-br';
             $headInfo = $this->getHeadInstitutionInfo($headInfo, $title->getInstitution());
             //$headInfo[] = 'break';
         }
@@ -1568,7 +1571,7 @@ class User extends BaseUser {
             $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
             $headInfo[] = $elementInfo;
 
-            $headInfo[] = 'break';
+            $headInfo[] = 'break-hr';
         }
 
 

@@ -732,18 +732,26 @@
                         <h4>
                             {#{{ headInfo|raw }}#}
                             {% for headInfoArr in headInfos %}
-                                {% if headInfoArr != 'break' %}
+                                {% if 'break' not in headInfoArr %}
+                                    {% set hrefname = headInfoArr['name'] %}
+                                    {% if headInfoArr['tablename'] == 'Institution' %}
+                                        {% set hrefname = '<small>'~headInfoArr['name']~'</small>' %}
+                                    {% endif %}
                                     <a href="{{
                                             path( employees_sitename~'_search_same_object',{
                                                 'tablename':headInfoArr['tablename'],
                                                 'id': headInfoArr['id'],
                                                 'name': headInfoArr['name']
                                             })
-                                        }}">{{ headInfoArr['name'] }}
+                                        }}">{{ hrefname|raw }}
                                     </a>
                                     <br>
-                                {% else %}
+                                {% elseif headInfoArr == 'break-hr' %}
                                     <hr>
+                                {% elseif headInfoArr == 'break-br' %}
+                                    {#<br>#}
+                                {% else %}
+
                                 {% endif %}
                             {% endfor %}
                         </h4>

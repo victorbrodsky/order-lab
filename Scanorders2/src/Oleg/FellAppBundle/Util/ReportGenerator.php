@@ -213,8 +213,8 @@ class ReportGenerator {
             $starttime = $process->getStartTimestamp()->format('Y-m-d H:i:s');
         }
 
-        echo "Echo: try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."<br>";
-        $logger->notice("Try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."; process starttime=".$starttime);
+        //echo "Echo: try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."<br>";
+        //$logger->notice("Try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."; process starttime=".$starttime);
 
         if( !$this->runningGenerationReport && $process && !$queue->getRunningProcess() ) {
 
@@ -244,8 +244,8 @@ class ReportGenerator {
             $this->em->flush();
 
             //logger start event
-            echo "Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . (count($processes)-1) ."<br>";
-            $logger->notice("Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . count($processes)-1 );
+            //echo "Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . (count($processes)-1) ."<br>";
+            //$logger->notice("Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . count($processes)-1 );
 
             $time_start = microtime(true);
 
@@ -257,7 +257,7 @@ class ReportGenerator {
 
             //logger finish event
             //self::$logger->notice("Finished running fell report fellappid=" . $currentQueueElement['id'] . "; executed in " . $execution_time . " sec" . "; report path=" . $res['report'] );
-            $logger->notice("Finished running fell report fellappid=" . $process->getFellappId() . "; executed in " . $execution_time . " sec" . "; res=" . $res['report'] );
+            //$logger->notice("Finished running fell report fellappid=" . $process->getFellappId() . "; executed in " . $execution_time . " sec" . "; res=" . $res['report'] );
 
             
             //reset all queue related parameters
@@ -282,7 +282,7 @@ class ReportGenerator {
         $now = new \DateTime();
         $nowtime = $now->getTimestamp();
         $started = $process->getStartTimestamp()->getTimestamp();
-        if( round(abs($nowtime - $started)) > 600 ) { //10*60sec=600 minuts limit
+        if( round(abs($nowtime - $started)) > 600 ) { //10min*60sec=600sec minutes limit
             return true;
         }
         return false;
@@ -303,7 +303,7 @@ class ReportGenerator {
             {
                 echo "=> Detected: ".$out[1]."\n";
                 $logger->warning("Task Detected: ".$out[1]);
-                $logger->warning(print_r($out));
+                //$logger->warning(print_r($out));
                 //exec("taskkill /F /IM ".$out[1].".exe 2>NUL");
                 return true;
             }
@@ -401,7 +401,7 @@ class ReportGenerator {
         //replace all white spaces to _
         $filename = str_replace(" ","_",$filename);
 
-        $logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
+        //$logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
 
         //check and create Report and temp folders
         $uploadReportPath = 'Uploaded/' . $this->container->getParameter('fellapp.uploadpath').'/Reports';
@@ -413,11 +413,11 @@ class ReportGenerator {
 
         $outdir = $reportPath.'temp_'.$id.'/';
 
-        echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+        //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
         $this->generateApplicationPdf($id,$applicationFilePath);
-        $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+        //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
         //1) get all upload documents
         $filePathsArr = array();
@@ -487,14 +487,14 @@ class ReportGenerator {
 
         //2) convert all uploads to pdf using LibreOffice
         $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
-        $logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
+        //$logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
 
         //3) merge all pdfs
         $uniqueid = $filename;  //"report_ID" . $id;
         $fileUniqueName = $filename;    //$uniqueid . ".pdf";
         $filenameMerged = $reportPath . $fileUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged );
-        $logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
+        //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
         if( count($entity->getReports()) > 0 ) {
             $createFlag = false;
@@ -512,7 +512,7 @@ class ReportGenerator {
         }
         $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $filename;
         //echo $event."<br>";
-        $logger->notice($event);
+        //$logger->notice($event);
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,null,'Fellowship Application Updated');
 
 
@@ -554,7 +554,7 @@ class ReportGenerator {
         
         $env = $this->container->get('kernel')->getEnvironment();
         //echo "env=".$env."<br>";
-        $logger->notice("env=".$env."<br>");
+        //$logger->notice("env=".$env."<br>");
 
         //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
         $context->setHost('localhost');
@@ -777,7 +777,7 @@ class ReportGenerator {
 
                 if( $shellout ) {
                     //echo "shellout=".$shellout."<br>";
-                    $logger->notice("LibreOffice converted input file=" . $filePath);
+                    //$logger->notice("LibreOffice converted input file=" . $filePath);
                 }
 
             } else {
@@ -806,7 +806,7 @@ class ReportGenerator {
             }
 
 
-            $logger->debug("convertToPdf: " . $shellout);
+            //$logger->debug("convertToPdf: " . $shellout);
 
         }
 
@@ -823,9 +823,9 @@ class ReportGenerator {
 //            echo "add merge: filepath=(".$file.") => ";
             if( file_exists($file) ) {
                 $pdf->addPDF($file, 'all');
-                $logger->notice("PDFMerger: merged file path=" . $file );
+                //$logger->notice("PDFMerger: merged file path=" . $file );
             } else {
-                $logger->warning("PDFMerger: pdf file does not exists path=" . $file );
+                //$logger->warning("PDFMerger: pdf file does not exists path=" . $file );
                 //new \Exception("PDFMerger: pdf file does not exists path=" . $file);
             }
         }
@@ -879,10 +879,10 @@ class ReportGenerator {
             $filesInArr = $this->processFilesGostscript($filesArr);
 
             $filesInStr = $this->convertFilesArrToString($filesInArr, false);
-            $logger->notice('pdftk encrypted filesInStr='.$filesInStr);
+            //$logger->notice('pdftk encrypted filesInStr='.$filesInStr);
 
             $cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
-            $logger->notice('pdftk encrypted: cmd='.$cmd);
+            //$logger->notice('pdftk encrypted: cmd='.$cmd);
 
             $output = null;
             $return = null;
