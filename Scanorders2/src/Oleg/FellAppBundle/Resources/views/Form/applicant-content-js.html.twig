@@ -8,8 +8,6 @@
         showHideWell('.fellapp-reprimand-field');
         showHideWell('.fellapp-lawsuit-field');
 
-
-
         $('.textarea').bind('keydown keyup keypress cut copy past blur change', function(){
             copy_to_print_helper(this); // consider debouncing this to avoid slowdowns!
         });
@@ -29,13 +27,21 @@
     }
 
     function hideWell(element) {
-        $(element).closest('.form-element-holder').find('.wellcollapsable').hide(500);
+        var delaytime = 500;
+        if( cycle == 'download' ) {
+            delaytime = 0;
+        }
+        $(element).closest('.form-element-holder').find('.wellcollapsable').hide(delaytime); //500
         $(element).closest('.form-element-holder').find('.wellcollapsable').find('input,textarea').val('');
         //resetUploadBtn($(element).closest('.form-element-holder').find('.wellcollapsable'));
     }
 
     function showWell(element) {
-        $(element).closest('.form-element-holder').find('.wellcollapsable').show(500);
+        var delaytime = 500;
+        if( cycle == 'download' ) {
+            delaytime = 0;
+        }
+        $(element).closest('.form-element-holder').find('.wellcollapsable').show(delaytime); //500
     }
 
     function showHideWell(element) {
@@ -43,8 +49,10 @@
         //console.log('showHideWell');
 
         if( $(element).is(':checked') ) {
+            //console.log('checked');
             showWell(element);
         } else {
+            //console.log('not checked');
             hideWell(element);
         }
 
