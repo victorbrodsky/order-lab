@@ -2,6 +2,7 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
+use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
@@ -242,6 +243,7 @@ class FellAppController extends Controller {
 
 
     /**
+     * @Route("/new/", name="fellapp_new")
      * @Route("/show/{id}", name="fellapp_show")
      * @Route("/edit/{id}", name="fellapp_edit")
      * @Route("/download/{id}", name="fellapp_download")
@@ -259,7 +261,7 @@ class FellAppController extends Controller {
         $userSecUtil = $this->container->get('user_security_utility');
 
         //admin can edit
-        if( $routeName == "fellapp_edit" ) {
+        if( $routeName == "fellapp_edit" || $routeName == "fellapp_new" ) {
             if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
@@ -341,6 +343,13 @@ class FellAppController extends Controller {
             $disabled = true;
             $method = "GET";
             $action = $this->generateUrl('fellapp_edit', array('id' => $entity->getId()));
+        }
+
+        if( $routeName == "fellapp_new" ) {
+            $cycle = 'new';
+            $disabled = false;
+            $method = "POST";
+            $action = $this->generateUrl('fellapp_create_applicant');
         }
 
         if( $routeName == "fellapp_edit" ) {
@@ -501,9 +510,95 @@ class FellAppController extends Controller {
             'pathbase' => 'fellapp',
             'cycle' => $cycle
         );
+    }
 
+    /**
+     * @Route("/applicant/new", name="fellapp_create_applicant")
+     * @Method("POST")
+     */
+    public function createApplicantAction( Request $request )
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //$user = new User();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $applicant = $userManager->createUser();
+
+        $applicant->setPassword("");
+        $applicant->setCreatedby('manual');
+
+        $fellowshipApplication = new FellowshipApplication($user);
+
+        $applicant->addFellowshipApplication($fellowshipApplication);
+
+        $params = array(
+            'cycle' => 'new',
+            'sc' => $this->get('security.context'),
+            'em' => $this->getDoctrine()->getManager(),
+            'user' => $fellowshipApplication->getUser(),
+            'cloneuser' => null,
+            'roles' => $user->getRoles()
+        );
+
+        $form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
+
+        $form->handleRequest($request);
+
+        if( !$form->isSubmitted() ) {
+            //echo "form is not submitted<br>";
+            $form->submit($request);
+        }
+
+        if( $form->isValid() ) {
+
+            //exit('form valid');
+
+            $this->processDocuments($fellowshipApplication);
+
+            //set update author application
+            $em = $this->getDoctrine()->getManager();
+            $userUtil = new UserUtil();
+            $sc = $this->get('security.context');
+            $userUtil->setUpdateInfo($fellowshipApplication,$em,$sc);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($fellowshipApplication);
+            $em->flush();
+
+            //update report if report does not exists
+            //if( count($entity->getReports()) == 0 ) {
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId(), 'overwrite' );
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'A new Complete Fellowship Application PDF will be generated.'
+            );
+            //}
+
+            //set logger for update
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+            $event = "Fellowship Application with ID " . $fellowshipApplication->getId() . " has been created by " . $user;
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,$request,'Fellowship Application Updated');
+
+
+            return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
+        }
+
+        //echo 'form invalid <br>';
+        //exit('form invalid');
+
+        return array(
+            'form' => $form->createView(),
+            'entity' => $entity,
+            'pathbase' => 'fellapp',
+            'cycle' => $cycle
+        );
 
     }
+
+
 
     //process upload documents: CurriculumVitae(documents), FellowshipApplication(coverLetters), Examination(scores), FellowshipApplication(lawsuitDocuments), FellowshipApplication(reprimandDocuments)
     public function processDocuments($application) {
