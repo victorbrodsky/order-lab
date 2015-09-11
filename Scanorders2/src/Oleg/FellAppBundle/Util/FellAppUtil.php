@@ -18,6 +18,7 @@ use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
 use Oleg\UserdirectoryBundle\Entity\Examination;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
+use Oleg\UserdirectoryBundle\Entity\JobTitleList;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\FellAppBundle\Entity\Reference;
 use Oleg\UserdirectoryBundle\Entity\StateLicense;
@@ -1236,10 +1237,153 @@ class FellAppUtil {
 
 
 
+    public function addEmptyFellAppFields($fellowshipApplication) {
+
+        $em = $this->em;
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$systemUser = $userSecUtil->findSystemUser();
+        $user = $fellowshipApplication->getUser();
+        $author = $this->sc->getToken()->getUser();
+
+        //Pathology Fellowship Applicant in EmploymentStatus
+        $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
+        if( !$employmentType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
+        }
+        if( count($user->getEmploymentStatus()) == 0 ) {
+            $employmentStatus = new EmploymentStatus($author);
+            $employmentStatus->setEmploymentType($employmentType);
+            $user->addEmploymentStatus($employmentStatus);
+        }
+
+        //locations
+        $this->addEmptyLocations($fellowshipApplication);
+
+        //Education
+        $this->addEmptyTrainings($fellowshipApplication);
+
+        return $fellowshipApplication;
+    }
+
+    public function addEmptyLocations($fellowshipApplication) {
+
+        $this->addLocationByType($fellowshipApplication,"Present Address");
+        $this->addLocationByType($fellowshipApplication,"Permanent Address");
+        $this->addLocationByType($fellowshipApplication,"Work Address");
+
+    }
+    public function addLocationByType($fellowshipApplication,$typeName) {
+
+        $user = $fellowshipApplication->getUser();
+
+        $specificLocation = null;
+
+        foreach( $user->getLocations() as $location ) {
+            if( $location->hasLocationTypeName($typeName) ) {
+                $specificLocation = $location;
+                break;
+            }
+        }
+
+        if( !$specificLocation ) {
+
+            $locationType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName($typeName);
+            if( !$locationType ) {
+                throw new EntityNotFoundException('Unable to find entity by name='.$typeName);
+            }
+
+            $specificLocation = new Location();
+            $specificLocation->setName('Fellowship Applicant '.$typeName);
+            $specificLocation->addLocationType($locationType);
+            $user->addLocation($specificLocation);
+            $fellowshipApplication->addLocation($specificLocation);
+        }
+
+    }
+
+    public function addEmptyTrainings($fellowshipApplication) {
+
+        //set TrainingType
+        $this->addTrainingByType($fellowshipApplication,"Undergraduate",1);
+        $this->addTrainingByType($fellowshipApplication,"Graduate",2);
+        $this->addTrainingByType($fellowshipApplication,"Medical",3);
+        $this->addTrainingByType($fellowshipApplication,"Residency",4);
+
+        $maxNumber = 2;
+        $this->addTrainingByType($fellowshipApplication,"GME",5,$maxNumber);
+        //$this->addTrainingByType($fellowshipApplication,"GME",6,$maxNumber);
+
+        $maxNumber = 3;
+        $fellowshipApplication = $this->addTrainingByType($fellowshipApplication,"Other",7,$maxNumber);
+        //$this->addTrainingByType($fellowshipApplication,"Other",8,$maxNumber);
+        //$this->addTrainingByType($fellowshipApplication,"Other",9,$maxNumber);
+
+        return $fellowshipApplication;
+    }
+    public function addTrainingByType($fellowshipApplication,$typeName,$orderinlist,$maxNumber=1) {
+
+        $user = $fellowshipApplication->getUser();
+
+        $specificTraining = null;
+
+        $trainings = $user->getTrainings();
+
+        $count = 0;
+
+        foreach( $trainings as $training ) {
+            //echo "Training typename=".$training->getTrainingType()->getName()."?=".$typeName."<br>";
+            if( $training->getTrainingType()->getName()."" == $typeName ) {
+                echo "Training typename=".$typeName."<br>";
+                //if( $maxNumber ) {
+                    $count++;
+                //} else {
+                //    $specificTraining = $training;
+                    //break;
+                //}
+            }
+        }
 
 
+        //if( !$maxNumber && !$specificTraining ) {
+        //    $this->addSingleTraining($fellowshipApplication,$typeName,$orderinlist);
+        //    return;
+        //}
 
+        //add up to maxNumber
+        //if( $maxNumber ) {
+            for( $count; $count < $maxNumber; $count++ ) {
+                echo "maxNumber=".$maxNumber.", count=".$count."<br>";
+                $fellowshipApplication = $this->addSingleTraining($fellowshipApplication,$typeName,$orderinlist);
+            }
+        //}
 
+        return $fellowshipApplication;
+    }
+    public function addSingleTraining($fellowshipApplication,$typeName,$orderinlist) {
+
+        echo "!!!!!!!!!! add single training with type=".$typeName."<br>";
+
+        $author = $this->sc->getToken()->getUser();
+        $training = new Training($author);
+        $training->setOrderinlist($orderinlist);
+
+        $trainingType = $this->em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName($typeName);
+        $training->setTrainingType($trainingType);
+
+        //s2id_oleg_fellappbundle_fellowshipapplication_trainings_1_jobTitle
+        if( $typeName == 'Other' ) {
+            //otherExperience1Name => jobTitle
+            if( !$training->getJobTitle() ) {
+                $jobTitleEntity = new JobTitleList();
+                $training->setJobTitle($jobTitleEntity);
+            }
+        }
+
+        $fellowshipApplication->addTraining($training);
+        $fellowshipApplication->getUser()->addTraining($training);
+
+        return $fellowshipApplication;
+    }
 
 
 

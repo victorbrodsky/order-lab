@@ -407,6 +407,7 @@ class User extends BaseUser {
         return null;
     }
 
+
     public function hasRole($role)
     {
         return in_array(strtoupper($role), $this->roles, true);
@@ -1573,12 +1574,6 @@ class User extends BaseUser {
 
             $headInfo[] = 'break-hr';
         }
-
-
-
-
-
-
 
         return $headInfo;
     }

@@ -17,6 +17,7 @@
                 {#<input type="text" class="form-control" id="email" name="email" placeholder="E-mail">#}
                 {% for info in form.user.infos %}
                     {% if cycle != "show" %}
+                        {{ form_errors(info.email, {'attr': {'class': 'alert alert-danger'}}) }}
                         {{ form_row(info.email) }}
                     {% else %}
                         <div class="form-control form-control-modif" disabled>
@@ -65,7 +66,7 @@
                                 {#location.geoLocation.vars.value.street1={{ location.vars.value.geoLocation.street1 }}#}
                                 {{ form_row(location.geoLocation.street1) }}
                             </div>
-                            <br>
+                            {#<br>#}
                             <div class="col-xs-6">
                                 {#<label for="presentAddressStreet2" class="control-label">Street</label>#}
                                 {#<input type="text" class="form-control" id="presentAddressStreet2" name="presentAddressStreet2" placeholder="Street">#}

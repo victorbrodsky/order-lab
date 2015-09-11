@@ -36,9 +36,9 @@ class FellowshipApplicationType extends AbstractType
     {
 
         $builder->add('fellowshipSubspecialty',null, array(
-            'label' => 'Fellowship Type:',
+            'label' => '* Fellowship Type:',
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
         ));
 
 //        $builder->add('timestamp','date',array(
@@ -53,7 +53,7 @@ class FellowshipApplicationType extends AbstractType
             'widget' => 'single_text',
             'label' => "Start Date:",
             'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
-            'attr' => array('class' => 'datepicker form-control'),
+            'attr' => array('class' => 'datepicker form-control fellapp-startDate'),
             'required' => false,
         ));
 
@@ -61,7 +61,7 @@ class FellowshipApplicationType extends AbstractType
             'widget' => 'single_text',
             'label' => "End Date:",
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
+            'attr' => array('class' => 'datepicker form-control fellapp-endDate'),
             'required' => false,
         ));
 

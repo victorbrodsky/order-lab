@@ -14,7 +14,7 @@ $(document).ready(function() {
 
     $(this).scrollTop(0);
 
-    setNavBar("employees");
+    setNavBar();
 
     fieldInputMask();
 

@@ -27,14 +27,14 @@
     {#{% set trclassname = "alert order-neutral-status" %}#}
 {% endif %}
 
-
-<h4 class="text-info" align="center">
-
-    <div class="{{ trclassname }}">
-        <p>{{ fellappStatus }}</p>
-        Fellowship Application ID {{ entity.id }}, submitted on {{ entity.timestamp|date('m/d/Y H:i') }}, imported on {{ entity.createdate|date('m/d/Y H:i') }}
-    </div>
-</h4>
+{% if cycle != "new" %}
+    <h4 class="text-info" align="center">
+        <div class="{{ trclassname }}">
+            <p>{{ fellappStatus }}</p>
+            Fellowship Application ID {{ entity.id }}, submitted on {{ entity.timestamp|date('m/d/Y H:i') }}, imported on {{ entity.createdate|date('m/d/Y H:i') }}
+        </div>
+    </h4>
+{% endif %}
 
 {% if cycle == "show" %}
     <p>
@@ -127,6 +127,8 @@
 {#{{ form_row(form.submit) }}#}
 {#{{ form_widget(form.update) }}#}
 
+<div id="error-box" class="alert alert-danger" style="display: none"></div>
+
 {% if cycle == "edit" %}
     <p>
         <button class="btn btn-warning" type="submit">Update</button>
@@ -134,6 +136,13 @@
         {#<button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>#}
 
         <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
+    </p>
+{% endif %}
+
+{% if cycle == "new" %}
+    <p>
+        {#<button class="btn btn-warning" type="submit">Add Applicant</button>#}
+        <button class="btn btn-warning" name="btnSubmit" type="button" form="fellapp-applicant-form" onclick="validateFellapp()">Add Applicant</button>
     </p>
 {% endif %}
 

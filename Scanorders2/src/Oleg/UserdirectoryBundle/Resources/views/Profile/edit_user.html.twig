@@ -729,8 +729,10 @@
                     {#Chief, Eyebrow Pathology, Assistant Professor of Pathology and Laboratory Medicine#}
                     {% set headInfos = user.getHeadInfo %}
                     {% if headInfos|length > 0 %}
+                        <div style="padding-bottom: 10px;">
                         <h4>
                             {#{{ headInfo|raw }}#}
+                            {% set index=1 %}
                             {% for headInfoArr in headInfos %}
                                 {% if 'break' not in headInfoArr %}
                                     {% set hrefname = headInfoArr['name'] %}
@@ -747,14 +749,18 @@
                                     </a>
                                     <br>
                                 {% elseif headInfoArr == 'break-hr' %}
-                                    <hr>
+                                    {#{% if totalCount > index %}#}
+                                        <hr>
+                                    {#{% endif %}#}
                                 {% elseif headInfoArr == 'break-br' %}
                                     {#<br>#}
                                 {% else %}
 
                                 {% endif %}
+                                {% set index=index+1 %}
                             {% endfor %}
                         </h4>
+                        </div>
                     {% endif %}
 
                     {#services#}

@@ -71,7 +71,7 @@ function setSearchtypeAction(searchType) {
 
 function setNavBar(sitename) {
 
-    //console.log('sitename='+sitename);
+
 
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
@@ -81,13 +81,43 @@ function setNavBar(sitename) {
         sitename = "directory";
     }
 
+    //console.log('sitename='+sitename);
+
     if( sitename == "scan" ) {
         setScanNavBar();
-    } else {
+    }
+    else if( sitename == "fellowship-applications" ){
+        setFellappNavBar();
+    }
+    else {
         setDirectoryNavBar();
     }
 }
 
+
+function setFellappNavBar() {
+
+    var id = 'fellapphome';
+
+    var full = window.location.pathname;
+
+    if( full.indexOf("/fellowship-applications/new") !== -1 ) {
+        id = 'fellappnew';
+    }
+    if( full.indexOf("/fellowship-applications/show") !== -1 ) {
+        id = 'fellappnew';
+    }
+    if( full.indexOf("/fellowship-applications/edit") !== -1 ) {
+        id = 'fellappnew';
+    }
+
+    var commonid = commonNavBar(full)
+    if( commonid ) {
+        id = commonid;
+    }
+
+    $('#nav-bar-'+id).addClass('active');
+}
 
 function setScanNavBar() {
 
@@ -129,39 +159,45 @@ function setScanNavBar() {
     }
 
     //Admin
-    if( full.indexOf("/user/listusers") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/admin/") !== -1 ) {
-        id = 'admin';
-    }
+//    if( full.indexOf("/user/listusers") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/admin/") !== -1 ) {
+//        id = 'admin';
+//    }
     if( full.indexOf("/incoming-scan-orders") !== -1 ) {
         id = 'admin';
     }
     if( full.indexOf("/incoming-slide-return-requests") !== -1 ) {
         id = 'admin';
     }
-    if( full.indexOf("/access-requests") !== -1 ) {
-        id = 'admin';
+//    if( full.indexOf("/access-requests") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/account-requests") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/listusers") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/users") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/event-log") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/settings") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/about") !== -1 ) {
+//        id = 'user';
+//    }
+
+    var commonid = commonNavBar(full)
+    if( commonid ) {
+        id = commonid;
     }
-    if( full.indexOf("/account-requests") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/listusers") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/users") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/event-log") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/settings") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/about") !== -1 ) {
-        id = 'user';
-    }
+
 
     if( full.indexOf("/user/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
@@ -188,48 +224,53 @@ function setDirectoryNavBar() {
     var id = 'userhome';
 
     //Admin
-    if( full.indexOf("/user/listusers") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/admin/") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/access-requests") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/account-requests") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/listusers") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/user/") !== -1 ) {
-        id = 'user';
-    }
-    if( full.indexOf("/event-log") !== -1 ) {
-        id = 'admin';
-    }
-    if( full.indexOf("/settings") !== -1 ) {
-        id = 'admin';
-    }
+//    if( full.indexOf("/user/listusers") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/admin/") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/access-requests") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/account-requests") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/listusers") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/user/") !== -1 ) {
+//        id = 'user';
+//    }
+//    if( full.indexOf("/event-log") !== -1 ) {
+//        id = 'admin';
+//    }
+//    if( full.indexOf("/settings") !== -1 ) {
+//        id = 'admin';
+//    }
 
     if( full.indexOf("/user/new") !== -1 ) {
         id = 'add';
     }
-    if( full.indexOf("/locations/new") !== -1 ) {
+    if( full.indexOf("/location/new") !== -1 ) {
         id = 'add';
     }
 
-    if( full.indexOf("/users") !== -1 ) {
-        id = 'userlist';
-    }
+//    if( full.indexOf("/users") !== -1 ) {
+//        id = 'userlist';
+//    }
 
     if( full.indexOf("/users/previous") !== -1 ) {
         id = 'userlist-previous';
     }
 
-    if( full.indexOf("/about") !== -1 ) {
-        id = 'user';
+//    if( full.indexOf("/about") !== -1 ) {
+//        id = 'user';
+//    }
+
+    var commonid = commonNavBar(full)
+    if( commonid ) {
+        id = commonid;
     }
 
     if( full.indexOf("scan/user/") !== -1 || full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
@@ -246,3 +287,40 @@ function setDirectoryNavBar() {
     $('#nav-bar-'+id).addClass('active');
 }
 
+//common nav menues - mainly admin menue
+function commonNavBar(full) {
+    var id = null;
+    //Admin
+    if( full.indexOf("/user/listusers") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/admin/") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/access-requests") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/account-requests") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/listusers") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/user/") !== -1 && full.indexOf("/user/new") === -1 ) {
+        id = 'user';
+    }
+    if( full.indexOf("/event-log") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/settings") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/users") !== -1 ) {
+        id = 'userlist';
+    }
+    if( full.indexOf("/about") !== -1 ) {
+        id = 'user';
+    }
+
+    return id;
+}

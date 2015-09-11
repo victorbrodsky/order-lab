@@ -62,6 +62,76 @@
         });
     }
 
+
+    function validateFellapp() {
+
+        $('#error-box').hide();
+
+        var error = null;
+
+        //required: fellowshipSubspecialty
+        var fellowshipSubspecialty = $('.fellapp-fellowshipSubspecialty').first().select2('val');
+        //console.log('fellowshipSubspecialty=('+fellowshipSubspecialty+')');
+        if( !error && !fellowshipSubspecialty ) {
+            error = "Please select in the Fellowship Type before uploading";
+        }
+
+
+        //required: user-firstName
+//        var startDate0 = $('.user-startDate').first().val();
+//        console.log('startDate0=('+startDate0+')');
+//
+//        var startDate = $('.user-startDate').first().datepicker("getDate").valueOf();
+//        console.log('startDate=('+startDate+')');
+//
+//        var startDate2 = $('.user-startDate').first().datepicker('getDate').getFormattedDate('yyyy-mm-dd');;
+//        console.log('startDate2=('+startDate2+')');
+//
+//        var startDate3 = $('.user-startDate').datepicker({dateFormat: 'MM/dd/yyyy'}).val();
+//        console.log('startDate3=('+startDate3+')');
+
+        var startDate = $('.user-startDate').first().val();
+        //console.log('startDate=('+startDate+')');
+        if( !error && !startDate ) {
+            //error = "Please fill in the Start Date before uploading";
+        }
+
+        //required: user-firstName
+        var endDate = $('.user-endDate').first().datepicker({dateFormat: 'MM/dd/yyyy'}).val();
+        if( !error && !endDate ) {
+            //error = "Please fill in the End Date before uploading";
+        }
+
+        //required: user-firstName
+        var firstName = $('.user-firstName').first().val();
+        if( !error && !firstName ) {
+            error = "Please fill in the First Name before uploading";
+        }
+
+        //required: user-lastName
+        var lastName = $('.user-lastName').first().val();
+        if( !error && !lastName ) {
+            error = "Please fill in the Last Name before uploading";
+        }
+
+        //required: user-email
+        var email = $('.user-email').first().val();
+        if( !error && !email ) {
+            error = "Please fill in the email before uploading";
+        }
+
+        //console.log('error='+error);
+
+        if( error ) {
+            $('#error-box').html(error);
+            $('#error-box').show();
+            return false;
+        }
+
+        $('#fellapp-applicant-form').submit();
+    }
+
+
 //    function updateFellapp(fellappId) {
 //
 //        //first update report

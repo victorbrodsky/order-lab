@@ -13,6 +13,7 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -243,7 +244,6 @@ class FellAppController extends Controller {
 
 
     /**
-     * @Route("/new/", name="fellapp_new")
      * @Route("/show/{id}", name="fellapp_show")
      * @Route("/edit/{id}", name="fellapp_edit")
      * @Route("/download/{id}", name="fellapp_download")
@@ -261,7 +261,7 @@ class FellAppController extends Controller {
         $userSecUtil = $this->container->get('user_security_utility');
 
         //admin can edit
-        if( $routeName == "fellapp_edit" || $routeName == "fellapp_new" ) {
+        if( $routeName == "fellapp_edit" ) {
             if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
@@ -298,7 +298,14 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        $args = $this->getShowParameters($id,$routeName);
+        $fellappUtil = $this->container->get('fellapp_util');
+        $entity = $fellappUtil->addEmptyFellAppFields($entity);
+
+        //clear em, because createUserEditEvent will flush em
+        $em = $this->getDoctrine()->getManager();
+        $em->clear();
+
+        $args = $this->getShowParameters($routeName,$id);
 
         if( $routeName == 'fellapp_download' ) {
             return $this->render('OlegFellAppBundle:Form:download.html.twig', $args);
@@ -308,14 +315,54 @@ class FellAppController extends Controller {
         $actionStr = "viewed";
         $eventType = 'Fellowship Applicant Page Viewed';
         $user = $this->get('security.context')->getToken()->getUser();
+        $userEntity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
         //$userSecUtil = $this->container->get('user_security_utility');
         $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$userEntity,$entity,$request,$eventType);
         
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }
 
-    public function getShowParameters($id,$routeName) {
+
+    /**
+     * @Route("/new/", name="fellapp_new")
+     *
+     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     */
+    public function newAction(Request $request) {
+
+        //admin can edit
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //$user = new User();
+        $addobjects = true;
+        $applicant = new User($addobjects);
+        $applicant->setPassword("");
+        $applicant->setCreatedby('manual');
+
+        $fellowshipApplication = new FellowshipApplication($user);
+
+        $applicant->addFellowshipApplication($fellowshipApplication);
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $fellowshipApplication = $fellappUtil->addEmptyFellAppFields($fellowshipApplication);
+
+        //clear em, because createUserEditEvent will flush em
+        $em = $this->getDoctrine()->getManager();
+        $em->clear();
+
+        $routeName = $request->get('_route');
+        $args = $this->getShowParameters($routeName,null,$fellowshipApplication);
+
+        return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
+    }
+
+
+    public function getShowParameters($routeName, $id=null, $entity=null) {
              
         $user = $this->get('security.context')->getToken()->getUser(); 
 
@@ -328,13 +375,18 @@ class FellAppController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
 
-        //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
-        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        if( $id ) {
+            //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+            $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
-        if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+            if( !$entity ) {
+                throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+            }
+        } else {
+            if( !$entity ) {
+                throw $this->createNotFoundException('Fellowship Application entity was not provided: id='.$id.", entity=".$entity);
+            }
         }
-
 
         //$routeName = $request->get('_route');
 
@@ -508,13 +560,15 @@ class FellAppController extends Controller {
             'form' => $form->createView(),
             'entity' => $entity,
             'pathbase' => 'fellapp',
-            'cycle' => $cycle
+            'cycle' => $cycle,
+            'sitename' => $this->container->getParameter('fellapp.sitename')
         );
     }
 
     /**
      * @Route("/applicant/new", name="fellapp_create_applicant")
      * @Method("POST")
+     * @Template("OlegFellAppBundle:Form:new.html.twig")
      */
     public function createApplicantAction( Request $request )
     {
@@ -522,13 +576,14 @@ class FellAppController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         //$user = new User();
-        $userManager = $this->container->get('fos_user.user_manager');
-        $applicant = $userManager->createUser();
-
-        $applicant->setPassword("");
-        $applicant->setCreatedby('manual');
+        $addobjects = false;
+        $applicant = new User($addobjects);
+        //$applicant->setPassword("");
+        //$applicant->setCreatedby('manual');
 
         $fellowshipApplication = new FellowshipApplication($user);
+        $fellowshipApplication->setApplicationStatus('active');
+        $fellowshipApplication->setTimestamp(new \DateTime());
 
         $applicant->addFellowshipApplication($fellowshipApplication);
 
@@ -550,20 +605,61 @@ class FellAppController extends Controller {
             $form->submit($request);
         }
 
+        if( !$fellowshipApplication->getFellowshipSubspecialty() ) {
+            $form['fellowshipSubspecialty']->addError(new FormError('Please select in the Fellowship Type before uploading'));
+        }
+        if( !$applicant->getEmail() ) {
+            $form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before uploading'));
+        }
+        if( !$applicant->getFirstName() ) {
+            $form['user']['infos'][0]['firstName']->addError(new FormError('Please fill in the First Name before uploading'));
+        }
+        if( !$applicant->getLastName() ) {
+            $form['user']['infos'][0]['lastName']->addError(new FormError('Please fill in the Last Name before uploading'));
+        }
+
         if( $form->isValid() ) {
+
+            //set user
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userkeytype = $userSecUtil->getUsernameType('local-user');
+            if( !$userkeytype ) {
+                throw new EntityNotFoundException('Unable to find local user keytype');
+            }
+            $applicant->setKeytype($userkeytype);
+
+            //Last Name + First Name + Email
+            $applicantname = $applicant->getLastName()."_".$applicant->getFirstName()."_".$applicant->getEmail();
+            $applicant->setPrimaryPublicUserId($applicantname);
+
+            //set unique username
+            $applicantnameUnique = $applicant->createUniqueUsername();
+            $applicant->setUsername($applicantnameUnique);
+            $applicant->setUsernameCanonical($applicantnameUnique);
+
+            $applicant->setEmailCanonical($applicant->getEmail());
+            $applicant->setPassword("");
+            $applicant->setCreatedby('manual');
+
+            $default_time_zone = $this->container->getParameter('default_time_zone');
+            $applicant->getPreferences()->setTimezone($default_time_zone);
+            $applicant->setLocked(true);
 
             //exit('form valid');
 
             $this->processDocuments($fellowshipApplication);
 
             //set update author application
-            $em = $this->getDoctrine()->getManager();
-            $userUtil = new UserUtil();
-            $sc = $this->get('security.context');
-            $userUtil->setUpdateInfo($fellowshipApplication,$em,$sc);
+//            $em = $this->getDoctrine()->getManager();
+//            $userUtil = new UserUtil();
+//            $sc = $this->get('security.context');
+//            $userUtil->setUpdateInfo($fellowshipApplication,$em,$sc);
+
+            exit('eof new applicant');
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($fellowshipApplication);
+            $em->persist($applicant);
             $em->flush();
 
             //update report if report does not exists
@@ -591,9 +687,10 @@ class FellAppController extends Controller {
 
         return array(
             'form' => $form->createView(),
-            'entity' => $entity,
+            'entity' => $fellowshipApplication,
             'pathbase' => 'fellapp',
-            'cycle' => $cycle
+            'cycle' => 'new',
+            'sitename' => $this->container->getParameter('fellapp.sitename')
         );
 
     }
