@@ -739,18 +739,23 @@
                                     {% if headInfoArr['tablename'] == 'Institution' %}
                                         {% set hrefname = '<small>'~headInfoArr['name']~'</small>' %}
                                     {% endif %}
-                                    <a href="{{
-                                            path( employees_sitename~'_search_same_object',{
-                                                'tablename':headInfoArr['tablename'],
-                                                'id': headInfoArr['id'],
-                                                'name': headInfoArr['name']
-                                            })
-                                        }}">{{ hrefname|raw }}
-                                    </a>
+                                    {% if headInfoArr['tablename'] != "Institution"  %}
+                                        <a href="{{
+                                                path( employees_sitename~'_search_same_object',{
+                                                    'tablename':headInfoArr['tablename'],
+                                                    'id': headInfoArr['id'],
+                                                    'name': headInfoArr['name']
+                                                })
+                                            }}">{{ hrefname|raw }}
+                                        </a>
+                                    {% else %}
+                                        {{ hrefname|raw }}
+                                    {% endif %}
                                     <br>
                                 {% elseif headInfoArr == 'break-hr' %}
                                     {#{% if totalCount > index %}#}
-                                        <hr>
+                                        {#<hr>#}
+                                        <br>
                                     {#{% endif %}#}
                                 {% elseif headInfoArr == 'break-br' %}
                                     {#<br>#}

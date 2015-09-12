@@ -1572,8 +1572,10 @@ class User extends BaseUser {
             $elementInfo = array('tablename'=>'Institution','id'=>$titleId,'name'=>$name);
             $headInfo[] = $elementInfo;
 
-            $headInfo[] = 'break-hr';
+            //$headInfo[] = 'break-hr';
         }
+
+        $headInfo[] = 'break-hr';
 
         return $headInfo;
     }
