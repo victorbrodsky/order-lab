@@ -16,6 +16,13 @@
             copy_to_print_helper(this); // on initial page load
         });
 
+
+        //Training period for which applying
+        var now = new Date();
+        $(".fellapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear()+2,6,1));
+        $(".fellapp-endDate").datepicker().datepicker("setDate", new Date(now.getFullYear()+3,5,30 ));
+
+
     });
 
     //http://stackoverflow.com/questions/4435906/print-when-textarea-has-overflow
@@ -76,30 +83,16 @@
             error = "Please select in the Fellowship Type before uploading";
         }
 
-
-        //required: user-firstName
-//        var startDate0 = $('.user-startDate').first().val();
-//        console.log('startDate0=('+startDate0+')');
-//
-//        var startDate = $('.user-startDate').first().datepicker("getDate").valueOf();
-//        console.log('startDate=('+startDate+')');
-//
-//        var startDate2 = $('.user-startDate').first().datepicker('getDate').getFormattedDate('yyyy-mm-dd');;
-//        console.log('startDate2=('+startDate2+')');
-//
-//        var startDate3 = $('.user-startDate').datepicker({dateFormat: 'MM/dd/yyyy'}).val();
-//        console.log('startDate3=('+startDate3+')');
-
-        var startDate = $('.user-startDate').first().val();
+        var startDate = $('.fellapp-startDate').first().val();
         //console.log('startDate=('+startDate+')');
         if( !error && !startDate ) {
-            //error = "Please fill in the Start Date before uploading";
+            error = "Please fill in the Start Date before uploading";
         }
 
         //required: user-firstName
-        var endDate = $('.user-endDate').first().datepicker({dateFormat: 'MM/dd/yyyy'}).val();
+        var endDate = $('.fellapp-endDate').first().first().val();
         if( !error && !endDate ) {
-            //error = "Please fill in the End Date before uploading";
+            error = "Please fill in the End Date before uploading";
         }
 
         //required: user-firstName

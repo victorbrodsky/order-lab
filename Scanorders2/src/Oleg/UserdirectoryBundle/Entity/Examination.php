@@ -137,8 +137,10 @@ class Examination
     private $COMLEXLevel3DatePassed;
 
 
-    public function __construct( $user ) {
-        $this->setCreatedBy($user);
+    public function __construct( $user=null ) {
+        if( $user ) {
+            $this->setCreatedBy($user);
+        }
         $this->setCreationDate( new \DateTime());
 
         $this->scores = new ArrayCollection();

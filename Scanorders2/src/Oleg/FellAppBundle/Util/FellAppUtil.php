@@ -1262,8 +1262,90 @@ class FellAppUtil {
         //Education
         $this->addEmptyTrainings($fellowshipApplication);
 
-        return $fellowshipApplication;
+        //National Boards: oleg_fellappbundle_fellowshipapplication_examinations_0_USMLEStep1DatePassed
+        $this->addEmptyNationalBoards($fellowshipApplication);
+
+        //Medical Licensure: oleg_fellappbundle_fellowshipapplication[stateLicenses][0][licenseNumber]
+        $this->addEmptyStateLicenses($fellowshipApplication);
+
+        //Board Certification
+        $this->addEmptyBoardCertifications($fellowshipApplication);
+
+        //References
+        $this->addEmptyReferences($fellowshipApplication);
+
     }
+
+
+    //oleg_fellappbundle_fellowshipapplication_references_0_name
+    public function addEmptyReferences($fellowshipApplication) {
+
+        $author = $this->sc->getToken()->getUser();
+        $references = $fellowshipApplication->getReferences();
+        $count = count($references);
+
+        //must be 4
+        for( $count; $count < 4; $count++  ) {
+
+            $reference = new Reference($author);
+            $fellowshipApplication->addReference($reference);
+
+        }
+
+    }
+
+    public function addEmptyBoardCertifications($fellowshipApplication) {
+
+        $author = $this->sc->getToken()->getUser();
+        $boardCertifications = $fellowshipApplication->getBoardCertifications();
+        $count = count($boardCertifications);
+
+        //must be 3
+        for( $count; $count < 3; $count++  ) {
+
+            $boardCertification = new BoardCertification($author);
+            $fellowshipApplication->addBoardCertification($boardCertification);
+            $fellowshipApplication->getUser()->getCredentials()->addBoardCertification($boardCertification);
+
+        }
+
+    }
+
+    //oleg_fellappbundle_fellowshipapplication[stateLicenses][0][licenseNumber]
+    public function addEmptyStateLicenses($fellowshipApplication) {
+
+        $author = $this->sc->getToken()->getUser();
+
+        $stateLicenses = $fellowshipApplication->getStateLicenses();
+
+        $count = count($stateLicenses);
+
+        //must be 2
+        for( $count; $count < 2; $count++  ) {
+
+            $license = new StateLicense($author);
+            $fellowshipApplication->addStateLicense($license);
+            $fellowshipApplication->getUser()->getCredentials()->addStateLicense($license);
+
+        }
+
+    }
+
+    public function addEmptyNationalBoards($fellowshipApplication) {
+
+        $author = $this->sc->getToken()->getUser();
+
+        $examinations = $fellowshipApplication->getExaminations();
+
+        if( count($examinations) == 0 ) {
+            $examination = new Examination($author);
+            $fellowshipApplication->addExamination($examination);
+        } else {
+            //$examination = $examinations[0];
+        }
+
+    }
+
 
     public function addEmptyLocations($fellowshipApplication) {
 
@@ -1314,11 +1396,10 @@ class FellAppUtil {
         //$this->addTrainingByType($fellowshipApplication,"GME",6,$maxNumber);
 
         $maxNumber = 3;
-        $fellowshipApplication = $this->addTrainingByType($fellowshipApplication,"Other",7,$maxNumber);
+        $this->addTrainingByType($fellowshipApplication,"Other",7,$maxNumber);
         //$this->addTrainingByType($fellowshipApplication,"Other",8,$maxNumber);
         //$this->addTrainingByType($fellowshipApplication,"Other",9,$maxNumber);
 
-        return $fellowshipApplication;
     }
     public function addTrainingByType($fellowshipApplication,$typeName,$orderinlist,$maxNumber=1) {
 
@@ -1331,37 +1412,21 @@ class FellAppUtil {
         $count = 0;
 
         foreach( $trainings as $training ) {
-            //echo "Training typename=".$training->getTrainingType()->getName()."?=".$typeName."<br>";
             if( $training->getTrainingType()->getName()."" == $typeName ) {
-                echo "Training typename=".$typeName."<br>";
-                //if( $maxNumber ) {
-                    $count++;
-                //} else {
-                //    $specificTraining = $training;
-                    //break;
-                //}
+                $count++;
             }
         }
 
-
-        //if( !$maxNumber && !$specificTraining ) {
-        //    $this->addSingleTraining($fellowshipApplication,$typeName,$orderinlist);
-        //    return;
-        //}
-
         //add up to maxNumber
-        //if( $maxNumber ) {
-            for( $count; $count < $maxNumber; $count++ ) {
-                echo "maxNumber=".$maxNumber.", count=".$count."<br>";
-                $fellowshipApplication = $this->addSingleTraining($fellowshipApplication,$typeName,$orderinlist);
-            }
-        //}
+        for( $count; $count < $maxNumber; $count++ ) {
+            //echo "maxNumber=".$maxNumber.", count=".$count."<br>";
+            $this->addSingleTraining($fellowshipApplication,$typeName,$orderinlist);
+        }
 
-        return $fellowshipApplication;
     }
     public function addSingleTraining($fellowshipApplication,$typeName,$orderinlist) {
 
-        echo "!!!!!!!!!! add single training with type=".$typeName."<br>";
+        //echo "!!!!!!!!!! add single training with type=".$typeName."<br>";
 
         $author = $this->sc->getToken()->getUser();
         $training = new Training($author);
@@ -1373,16 +1438,15 @@ class FellAppUtil {
         //s2id_oleg_fellappbundle_fellowshipapplication_trainings_1_jobTitle
         if( $typeName == 'Other' ) {
             //otherExperience1Name => jobTitle
-            if( !$training->getJobTitle() ) {
+            //if( !$training->getJobTitle() ) {
                 $jobTitleEntity = new JobTitleList();
                 $training->setJobTitle($jobTitleEntity);
-            }
+            //}
         }
 
         $fellowshipApplication->addTraining($training);
         $fellowshipApplication->getUser()->addTraining($training);
 
-        return $fellowshipApplication;
     }
 
 

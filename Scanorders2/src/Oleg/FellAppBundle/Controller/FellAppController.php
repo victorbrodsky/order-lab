@@ -298,18 +298,12 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        $fellappUtil = $this->container->get('fellapp_util');
-        $entity = $fellappUtil->addEmptyFellAppFields($entity);
-
-        //clear em, because createUserEditEvent will flush em
-        $em = $this->getDoctrine()->getManager();
-        $em->clear();
-
         $args = $this->getShowParameters($routeName,$id);
 
         if( $routeName == 'fellapp_download' ) {
             return $this->render('OlegFellAppBundle:Form:download.html.twig', $args);
         }
+
 
         //event log
         $actionStr = "viewed";
@@ -348,13 +342,6 @@ class FellAppController extends Controller {
 
         $applicant->addFellowshipApplication($fellowshipApplication);
 
-        $fellappUtil = $this->container->get('fellapp_util');
-        $fellowshipApplication = $fellappUtil->addEmptyFellAppFields($fellowshipApplication);
-
-        //clear em, because createUserEditEvent will flush em
-        $em = $this->getDoctrine()->getManager();
-        $em->clear();
-
         $routeName = $request->get('_route');
         $args = $this->getShowParameters($routeName,null,$fellowshipApplication);
 
@@ -387,6 +374,10 @@ class FellAppController extends Controller {
                 throw $this->createNotFoundException('Fellowship Application entity was not provided: id='.$id.", entity=".$entity);
             }
         }
+
+        //add empty fields if they are not exist
+        $fellappUtil = $this->container->get('fellapp_util');
+        $fellappUtil->addEmptyFellAppFields($entity);
 
         //$routeName = $request->get('_route');
 
@@ -437,6 +428,10 @@ class FellAppController extends Controller {
             )
         );
 
+
+        //clear em, because createUserEditEvent will flush em
+        $em = $this->getDoctrine()->getManager();
+        $em->clear();
 
         return array(
             'form' => $form->createView(),
@@ -572,20 +567,25 @@ class FellAppController extends Controller {
      */
     public function createApplicantAction( Request $request )
     {
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
-
-        //$user = new User();
-        $addobjects = false;
-        $applicant = new User($addobjects);
-        //$applicant->setPassword("");
-        //$applicant->setCreatedby('manual');
 
         $fellowshipApplication = new FellowshipApplication($user);
         $fellowshipApplication->setApplicationStatus('active');
         $fellowshipApplication->setTimestamp(new \DateTime());
 
-        $applicant->addFellowshipApplication($fellowshipApplication);
+        if( !$fellowshipApplication->getUser() ) {
+            //new applicant
+            $addobjects = false;
+            $applicant = new User($addobjects);
+            $applicant->setPassword("");
+            $applicant->setCreatedby('manual');
+            $applicant->addFellowshipApplication($fellowshipApplication);
+        }
+
+        //add empty fields if they are not exist
+        $fellappUtil = $this->container->get('fellapp_util');
+        $fellappUtil->addEmptyFellAppFields($fellowshipApplication);
 
         $params = array(
             'cycle' => 'new',
@@ -595,7 +595,6 @@ class FellAppController extends Controller {
             'cloneuser' => null,
             'roles' => $user->getRoles()
         );
-
         $form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
 
         $form->handleRequest($request);
@@ -604,6 +603,8 @@ class FellAppController extends Controller {
             //echo "form is not submitted<br>";
             $form->submit($request);
         }
+
+        $applicant = $fellowshipApplication->getUser();
 
         if( !$fellowshipApplication->getFellowshipSubspecialty() ) {
             $form['fellowshipSubspecialty']->addError(new FormError('Please select in the Fellowship Type before uploading'));
@@ -628,8 +629,11 @@ class FellAppController extends Controller {
             }
             $applicant->setKeytype($userkeytype);
 
+            $currentDateTime = new \DateTime();
+            $currentDateTimeStr = $currentDateTime->format('m-d-Y-h-i-s');
+
             //Last Name + First Name + Email
-            $applicantname = $applicant->getLastName()."_".$applicant->getFirstName()."_".$applicant->getEmail();
+            $applicantname = $applicant->getLastName()."_".$applicant->getFirstName()."_".$applicant->getEmail()."_".$currentDateTimeStr;
             $applicant->setPrimaryPublicUserId($applicantname);
 
             //set unique username
@@ -655,7 +659,7 @@ class FellAppController extends Controller {
 //            $sc = $this->get('security.context');
 //            $userUtil->setUpdateInfo($fellowshipApplication,$em,$sc);
 
-            exit('eof new applicant');
+            //exit('eof new applicant');
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($fellowshipApplication);

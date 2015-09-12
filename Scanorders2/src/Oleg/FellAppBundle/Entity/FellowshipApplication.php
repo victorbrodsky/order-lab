@@ -248,7 +248,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $examinations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Location", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_location",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id", unique=true)}
@@ -266,7 +266,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $citizenships;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\StateLicense")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\StateLicense", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_stateLicense",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="stateLicense_id", referencedColumnName="id", unique=true)}
@@ -275,7 +275,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $stateLicenses;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\BoardCertification")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\BoardCertification", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_boardCertification",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="boardCertification_id", referencedColumnName="id", unique=true)}

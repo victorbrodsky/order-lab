@@ -178,6 +178,7 @@ class Location extends ListAbstract
         $this->setType('user-added');
         $this->setCreatedate(new \DateTime());
         $this->setOrderinlist(-1);
+        //$this->setName("");
 
         if( $creator ) {
             $this->setCreator($creator);
