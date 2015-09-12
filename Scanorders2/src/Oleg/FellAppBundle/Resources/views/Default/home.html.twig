@@ -49,18 +49,18 @@
         </a>
 
 
-        <a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">
-            Rejected:{{ rejectTotal }}
-        </a>
-        <a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-            ({{ reject }} for {{ currentYear }})
-        </a>
-
         <a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">
             On Hold:{{ onholdTotal }}
         </a>
         <a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
             ({{ onhold }} for {{ currentYear }})
+        </a>
+
+        <a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">
+            Rejected:{{ rejectTotal }}
+        </a>
+        <a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            ({{ reject }} for {{ currentYear }})
         </a>
 
 
@@ -147,10 +147,10 @@
                     {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }} &nbsp;&nbsp;
                 {#</div>#}
                 {#<div class="col-xs-1">#}
-                    {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }} &nbsp;&nbsp;
+                    {{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }} &nbsp;&nbsp;
                 {#</div>#}
                 {#<div class="col-xs-1">#}
-                    {{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }} &nbsp;&nbsp;
+                    {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }} &nbsp;&nbsp;
                 {#</div>#}
                 {#<div class="col-xs-1">#}
                     {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }} &nbsp;&nbsp;

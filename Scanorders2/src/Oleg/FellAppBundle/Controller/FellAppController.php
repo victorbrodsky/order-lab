@@ -80,6 +80,7 @@ class FellAppController extends Controller {
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
+                    'filter[onhold]' => 1,
                 )
             ) );
         }
