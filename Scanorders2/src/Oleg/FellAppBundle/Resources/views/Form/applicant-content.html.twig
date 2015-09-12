@@ -23,6 +23,18 @@
     {% set fellappStatus = "Active" %}
     {#{% set trclassname = "alert order-neutral-status" %}#}
 {% endif %}
+{% if entity.applicationStatus == 'interviewee' %}
+    {% set fellappStatus = "Interviewee" %}
+    {#{% set trclassname = "alert order-neutral-status" %}#}
+{% endif %}
+{% if entity.applicationStatus == 'reject' %}
+    {% set fellappStatus = "Rejected" %}
+    {% set trclassname = "alert alert-danger" %}
+{% endif %}
+{% if entity.applicationStatus == 'onhold' %}
+    {% set fellappStatus = "On Hold" %}
+    {% set trclassname = "alert alert-danger" %}
+{% endif %}
 
 {% if cycle != "new" %}
     <h4 class="text-info" align="center">
