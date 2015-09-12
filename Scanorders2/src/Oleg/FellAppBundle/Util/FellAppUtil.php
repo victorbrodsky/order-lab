@@ -1161,12 +1161,17 @@ class FellAppUtil {
         return $accessreqs;
     }
 
-    public function getFellAppByStatusAndYear($status,$year=null) {
+    public function getFellAppByStatusAndYear($status,$fellSubspecId,$year=null) {
 
         $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
         $dql->where("fellapp.applicationStatus = '" . $status . "'");
+
+        if( $fellSubspecId ) {
+            $dql->leftJoin("fellapp.fellowshipSubspecialty","fellowshipSubspecialty");
+            $dql->andWhere("fellowshipSubspecialty.id=".$fellSubspecId);
+        }
 
         $ldap = false;
         if($ldap) 

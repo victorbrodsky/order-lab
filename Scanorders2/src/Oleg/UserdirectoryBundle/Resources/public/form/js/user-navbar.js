@@ -158,40 +158,12 @@ function setScanNavBar() {
         id = 'patients';
     }
 
-    //Admin
-//    if( full.indexOf("/user/listusers") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/admin/") !== -1 ) {
-//        id = 'admin';
-//    }
     if( full.indexOf("/incoming-scan-orders") !== -1 ) {
         id = 'admin';
     }
     if( full.indexOf("/incoming-slide-return-requests") !== -1 ) {
         id = 'admin';
     }
-//    if( full.indexOf("/access-requests") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/account-requests") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/listusers") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/users") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/event-log") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/settings") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/about") !== -1 ) {
-//        id = 'user';
-//    }
 
     var commonid = commonNavBar(full)
     if( commonid ) {
@@ -223,32 +195,6 @@ function setDirectoryNavBar() {
 
     var id = 'userhome';
 
-    //Admin
-//    if( full.indexOf("/user/listusers") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/admin/") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/access-requests") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/account-requests") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/listusers") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/user/") !== -1 ) {
-//        id = 'user';
-//    }
-//    if( full.indexOf("/event-log") !== -1 ) {
-//        id = 'admin';
-//    }
-//    if( full.indexOf("/settings") !== -1 ) {
-//        id = 'admin';
-//    }
-
     if( full.indexOf("/user/new") !== -1 ) {
         id = 'add';
     }
@@ -256,17 +202,9 @@ function setDirectoryNavBar() {
         id = 'add';
     }
 
-//    if( full.indexOf("/users") !== -1 ) {
-//        id = 'userlist';
-//    }
-
     if( full.indexOf("/users/previous") !== -1 ) {
         id = 'userlist-previous';
     }
-
-//    if( full.indexOf("/about") !== -1 ) {
-//        id = 'user';
-//    }
 
     var commonid = commonNavBar(full)
     if( commonid ) {

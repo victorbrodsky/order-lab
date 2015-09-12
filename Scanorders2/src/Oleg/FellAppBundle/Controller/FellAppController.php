@@ -64,12 +64,16 @@ class FellAppController extends Controller {
         $complete = $filterform['complete']->getData();
         $interviewee = $filterform['interviewee']->getData();
         $active = $filterform['active']->getData();
+        $reject = $filterform['reject']->getData();
+        $onhold = $filterform['onhold']->getData();
         //$page = $request->get('page');
         //echo "<br>startDate=".$startDate."<br>";
         //echo "<br>filter=".$filter."<br>";
         //echo "<br>search=".$search."<br>";
 
-        if( !$startDate ) {
+        $filterParams = $request->query->all();
+
+        if( count($filterParams) == 0 ) {
             return $this->redirect( $this->generateUrl('fellapp_home',
                 array(
                     'filter[startDate]' => $currentYear,
@@ -98,15 +102,16 @@ class FellAppController extends Controller {
             $searchFlag = true;
         }
 
+        $fellSubspecId = null;
         if( $filter && $filter != "ALL" ) {
             $dql->andWhere("fellowshipSubspecialty.id = ".$filter);
             $searchFlag = true;
+            $fellSubspecId = $filter;
         }
 
         $orWhere = array();
 
         if( $hidden ) {
-            //$dql->orWhere("fellapp.applicationStatus = 'hide'");
             $orWhere[] = "fellapp.applicationStatus = 'hide'";
             $searchFlag = true;
         } else {
@@ -114,7 +119,6 @@ class FellAppController extends Controller {
         }
 
         if( $archived ) {
-            //$dql->orWhere("fellapp.applicationStatus = 'archive'");
             $orWhere[] = "fellapp.applicationStatus = 'archive'";
             $searchFlag = true;
         } else {
@@ -122,7 +126,6 @@ class FellAppController extends Controller {
         }
 
         if( $complete ) {
-            //$dql->orWhere("fellapp.applicationStatus = 'complete'");
             $orWhere[] = "fellapp.applicationStatus = 'complete'";
             $searchFlag = true;
         } else {
@@ -130,7 +133,6 @@ class FellAppController extends Controller {
         }
 
         if( $interviewee ) {
-            //$dql->orWhere("fellapp.applicationStatus = 'interviewee'");
             $orWhere[] = "fellapp.applicationStatus = 'interviewee'";
             $searchFlag = true;
         } else {
@@ -138,11 +140,20 @@ class FellAppController extends Controller {
         }
 
         if( $active ) {
-            //$dql->orWhere("fellapp.applicationStatus = 'active'");
             $orWhere[] = "fellapp.applicationStatus = 'active'";
             $searchFlag = true;
         } else {
             //$searchFlag = true;
+        }
+
+        if( $reject ) {
+            $orWhere[] = "fellapp.applicationStatus = 'reject'";
+            $searchFlag = true;
+        }
+
+        if( $onhold ) {
+            $orWhere[] = "fellapp.applicationStatus = 'onhold'";
+            $searchFlag = true;
         }
 
         if( count($orWhere) > 0 ) {
@@ -190,20 +201,26 @@ class FellAppController extends Controller {
 
         $accessreqs = $fellappUtil->getActiveAccessReq();
 
-        $complete = $fellappUtil->getFellAppByStatusAndYear('complete',$currentYear);
-        $completeTotal = $fellappUtil->getFellAppByStatusAndYear('complete');
+        $complete = $fellappUtil->getFellAppByStatusAndYear('complete',$fellSubspecId,$currentYear);
+        $completeTotal = $fellappUtil->getFellAppByStatusAndYear('complete',$fellSubspecId);
 
-        $hidden = $fellappUtil->getFellAppByStatusAndYear('hide',$currentYear);
-        $hiddenTotal = $fellappUtil->getFellAppByStatusAndYear('hide');
+        $hidden = $fellappUtil->getFellAppByStatusAndYear('hide',$fellSubspecId,$currentYear);
+        $hiddenTotal = $fellappUtil->getFellAppByStatusAndYear('hide',$fellSubspecId);
 
-        $archived = $fellappUtil->getFellAppByStatusAndYear('archive',$currentYear);
-        $archivedTotal = $fellappUtil->getFellAppByStatusAndYear('archive');
+        $archived = $fellappUtil->getFellAppByStatusAndYear('archive',$fellSubspecId,$currentYear);
+        $archivedTotal = $fellappUtil->getFellAppByStatusAndYear('archive',$fellSubspecId);
 
-        $active = $fellappUtil->getFellAppByStatusAndYear('active',$currentYear);
-        $activeTotal = $fellappUtil->getFellAppByStatusAndYear('active');
+        $active = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId,$currentYear);
+        $activeTotal = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId);
 
-        $interviewee = $fellappUtil->getFellAppByStatusAndYear('interviewee',$currentYear);
-        $intervieweeTotal = $fellappUtil->getFellAppByStatusAndYear('interviewee');
+        $interviewee = $fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecId,$currentYear);
+        $intervieweeTotal = $fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecId);
+
+        $reject = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId,$currentYear);
+        $rejectTotal = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId);
+
+        $onhold = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId,$currentYear);
+        $onholdTotal = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId);
 
         //echo "timezone=".date_default_timezone_get()."<br>";
 
@@ -213,6 +230,7 @@ class FellAppController extends Controller {
             'lastImportTimestamp' => $lastImportTimestamp,
             'fellappfilter' => $filterform->createView(),
             'startDate' => $startDate,
+            'filter' => $fellSubspecId,
             'accessreqs' => count($accessreqs),
             'currentYear' => $currentYear,
             'hiddenTotal' => count($hiddenTotal),
@@ -221,6 +239,10 @@ class FellAppController extends Controller {
             'archived' => count($archived),
             'active' => count($active),
             'activeTotal' => count($activeTotal),
+            'reject' => count($reject),
+            'rejectTotal' => count($rejectTotal),
+            'onhold' => count($onhold),
+            'onholdTotal' => count($onholdTotal),
             'complete' => count($complete),
             'completeTotal' => count($completeTotal),
             'interviewee' => count($interviewee),
@@ -778,8 +800,17 @@ class FellAppController extends Controller {
             case 'complete':
                 $eventType = 'Fellowship Application Status changed to Complete';
                 break;
+            case 'interviewee':
+                $eventType = 'Fellowship Application Status changed to Interviewee';
+                break;
+            case 'reject':
+                $eventType = 'Fellowship Application Status changed to Rejected';
+                break;
+            case 'onhold':
+                $eventType = 'Fellowship Application Status changed to On Hold';
+                break;
             default:
-                $eventType = 'Fellowship Application Status changed to Active';
+                $eventType = 'Warning: Fellowship Application Status changed to '.$status;
         }
 
         $userSecUtil = $this->container->get('user_security_utility');

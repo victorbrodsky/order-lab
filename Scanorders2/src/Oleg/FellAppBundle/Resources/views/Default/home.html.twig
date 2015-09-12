@@ -23,25 +23,59 @@
         {% endif %}
     {% endif %}
 
+
+
     <p>
-        <a href="{{ path('fellapp_home',{'filter[complete]':1,'filter[startDate]':currentYear}) }}">
-            Complete:{{ completeTotal }} ({{ complete }} for {{ currentYear }})
+
+        <a href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter}) }}">
+            Active:{{ activeTotal }}
+        </a>
+        <a href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            ({{ active }} for {{ currentYear }})
         </a>
 
-        <a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[startDate]':currentYear}) }}">
-            Interviewee:{{ intervieweeTotal }} ({{ interviewee }} for {{ currentYear }})
+        <a href="{{ path('fellapp_home',{'filter[complete]':1, 'filter[filter]':filter}) }}">
+            Complete:{{ completeTotal }}
+        </a>
+        <a href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+           ({{ complete }} for {{ currentYear }})
         </a>
 
-        <a href="{{ path('fellapp_home',{'filter[active]':1,'filter[startDate]':currentYear}) }}">
-            Active:{{ activeTotal }} ({{ active }} for {{ currentYear }})
+        <a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter}) }}">
+            Interviewee:{{ intervieweeTotal }}
+        </a>
+        <a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            ({{ interviewee }} for {{ currentYear }})
         </a>
 
-        <a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[startDate]':currentYear}) }}">
-            Hidden:{{ hiddenTotal }} ({{ hidden }} for {{ currentYear }})
+
+        <a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">
+            Rejected:{{ rejectTotal }}
+        </a>
+        <a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            ({{ reject }} for {{ currentYear }})
         </a>
 
-        <a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[startDate]':currentYear}) }}">
-            Archived:{{ archivedTotal }} ({{ archived }} for {{ currentYear }})
+        <a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">
+            On Hold:{{ onholdTotal }}
+        </a>
+        <a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            ({{ onhold }} for {{ currentYear }})
+        </a>
+
+
+        <a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter}) }}">
+            Hidden:{{ hiddenTotal }}
+        </a>
+        <a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            ({{ hidden }} for {{ currentYear }})
+        </a>
+
+        <a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter}) }}">
+            Archived:{{ archivedTotal }}
+        </a>
+        <a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            ({{ archived }} for {{ currentYear }})
         </a>
 
         <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }}</i>
@@ -103,19 +137,25 @@
 
             <br>
             <div class="row text-center">
-                <div class="col-xs-2">
-                    {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }}
-                </div>
-                <div class="col-xs-2">
-                    {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }}
-                </div>
-                <div class="col-xs-2">
-                    {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }}
-                </div>
-                <div class="col-xs-2">
-                    {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }}
-                </div>
-                <div class="col-xs-2">
+                <div class="col-xs-12">
+                    {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }} &nbsp;&nbsp;
+                {#</div>#}
+                {#<div class="col-xs-1">#}
+                    {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }} &nbsp;&nbsp;
+                {#</div>#}
+                {#<div class="col-xs-1">#}
+                    {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }} &nbsp;&nbsp;
+                {#</div>#}
+                {#<div class="col-xs-1">#}
+                    {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }} &nbsp;&nbsp;
+                {#</div>#}
+                {#<div class="col-xs-1">#}
+                    {{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }} &nbsp;&nbsp;
+                {#</div>#}
+                {#<div class="col-xs-1">#}
+                    {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }} &nbsp;&nbsp;
+                {#</div>#}
+                {#<div class="col-xs-1">#}
                     {{ form_widget(fellappfilter.archived) }}   {{ form_label(fellappfilter.archived) }}
                 </div>
             </div>
@@ -210,7 +250,9 @@
                 <tr class="{{ trclassname }}">
 
                     <td>
-                        {{  entity.fellowshipSubspecialty.name }}
+                        {% if entity.fellowshipSubspecialty %}
+                            {{  entity.fellowshipSubspecialty.name }}
+                        {% endif %}
                     </td>
 
                     <td>
@@ -346,6 +388,28 @@
                                             </li>
                                         {% endif %}
 
+
+
+                                        {% if entity.applicationStatus != 'reject' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }) }}">Mark as Rejected
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+
+                                        {% if entity.applicationStatus != 'onhold' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'On Hold'?"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'onhold' }) }}">Put On Hold
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+
                                         {% if entity.applicationStatus != 'hide' %}
                                             <li>
                                                 <a
@@ -426,9 +490,6 @@
 
             $('[data-toggle="tooltip"]').tooltip();
 
-
-            var year = parseInt(new Date().getFullYear()) + 2;
-            //var target = "#filter_startDate";
             var target = ".datepicker-only-year";
 
             var datefilter = $(target).datepicker( {
@@ -439,21 +500,33 @@
                 orientation: 'auto top'
             });
 
-            var datas = [
-                new Date(year,1,1) //remember months in javascript starts with 0 for january
-            ];
-
+            /////////// set default year by JS ///////////
+            //var year = parseInt(new Date().getFullYear()) + 2;
+            //var datas = [
+            //    new Date(year,1,1) //remember months in javascript starts with 0 for january
+            //];
             //console.log('datepicker val='+datefilter.val());
+            //if( !datefilter.val() ) {
+            //    datefilter.datepicker('setDate', datas);
+            //}
 
-            if( !datefilter.val() ) {
-                datefilter.datepicker('setDate', datas);
-            }
+            //var url = window.location.href;
+            //console.log('url='+url);
+            //var year = getParameterByName('filter%5BstartDate%5D');
+            //console.log('year='+year);
 
         });
+
+
+//        function getParameterByName(name) {
+//            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+//            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+//                    results = regex.exec(location.search);
+//            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+//        }
 
     </script>
 
 {% endblock %}
-
 
 
