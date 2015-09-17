@@ -1,0 +1,36 @@
+{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+{% endblock %}
+
+
+{% block content %}
+
+    pdfdocument.id={{ pdfdocument.id }}<br>
+    {% if pdfdocument %}
+        pdfdocument ok<br>
+        {#<object#}
+                {#alt="{{ pdfdocument.getOriginalname }}"#}
+                {#data="{{ pdfdocument.getAbsoluteUploadFullPath }}"#}
+                {#type="application/pdf"#}
+                {#style="display:block; max-width:100%; max-height:100%;"#}
+                {#>#}
+        {#</object>#}
+
+
+        <div id="pdf">
+            <object type="application/pdf" data="{{ pdfdocument.getAbsoluteUploadFullPath }}" id="pdf_content">
+                <p>PDF cannot be displayed</p>
+            </object>
+        </div>
+
+
+        <a href="{{ pdfdocument.getAbsoluteUploadFullPath }}" target="_blank">Link</a>
+
+    {% endif %}
+
+{% endblock %}
+
+
+

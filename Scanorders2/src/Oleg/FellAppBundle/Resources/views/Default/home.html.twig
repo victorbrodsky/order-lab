@@ -194,6 +194,12 @@
                 <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
 
+                <th>
+                    <div data-toggle="tooltip" title="View Complete Application PDF">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                    </div>
+                </th>
+
                 {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') %}#}
                 <th>
                     Actions
@@ -336,144 +342,156 @@
                         {{ entity.interviewScore }}
                     </td>
 
+                    <td class="rowlink-skip">
 
+                        {#<a#}
+                            {#href="{{ path('employees_file_pdf-preview', { 'id': entity.id}) }}" target="_blank">#}
+                            {#<span class="glyphicon glyphicon-file" aria-hidden="true"></span>#}
+                        {#</a>#}
+                        {% if entity.getRecentReport() %}
+                            <a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank">
+                                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                            </a>
+                        {% endif %}
 
-                        <td class="rowlink-skip">
+                    </td>
 
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    Action <span class="caret"></span>
-                                </button>
+                    <td class="rowlink-skip">
 
-                                <ul class="dropdown-menu dropdown-menu-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Action <span class="caret"></span>
+                            </button>
 
-                                    {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') %}#}
+                            <ul class="dropdown-menu dropdown-menu-right">
+
+                                {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') %}#}
+                                    <li>
+                                        <a
+                                            href="{{ path('fellapp_show', { 'id': entity.id}) }}">View Application and Documents
+                                        </a>
+                                    </li>
+
+                                    {% if entity.itinerarys|length > 0 %}
+                                    <li>
+                                        <a
+                                            href="{{ path('employees_file_download', { 'id': entity.itinerarys|last.id}) }}">Download Itinerary
+                                        </a>
+                                    </li>
+                                    {% endif %}
+
+                                    {% if entity.applicationStatus != 'active' %}
                                         <li>
                                             <a
-                                                href="{{ path('fellapp_show', { 'id': entity.id}) }}">View Application and Documents
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }, true) }}">Mark as Active
                                             </a>
                                         </li>
+                                    {% endif %}
 
-                                        {% if entity.itinerarys|length > 0 %}
+                                    {% if entity.applicationStatus != 'complete' %}
+                                        {% set filter = app.request.get('filter') %}
                                         <li>
                                             <a
-                                                href="{{ path('employees_file_download', { 'id': entity.itinerarys|last.id}) }}">Download Itinerary
+                                                general-data-confirm="Are you sure you want to mark this Application as 'Complete'?"
+                                                general-data-callback="refreshpage"
+                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }, true) }}">Mark as Complete
                                             </a>
                                         </li>
-                                        {% endif %}
+                                    {% endif %}
 
-                                        {% if entity.applicationStatus != 'active' %}
-                                            <li>
-                                                <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }, true) }}">Mark as Active
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-                                        {% if entity.applicationStatus != 'complete' %}
-                                            {% set filter = app.request.get('filter') %}
-                                            <li>
-                                                <a
-                                                    general-data-confirm="Are you sure you want to mark this Application as 'Complete'?"
-                                                    general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'complete' }, true) }}">Mark as Complete
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-                                        {% if entity.applicationStatus != 'interviewee' %}
-                                            <li>
-                                                <a
-                                                        general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-
-
-                                        {% if entity.applicationStatus != 'reject' %}
-                                            <li>
-                                                <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-
-                                        {% if entity.applicationStatus != 'onhold' %}
-                                            <li>
-                                                <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'On Hold'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'onhold' }, true) }}">Put On Hold
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-
-                                        {% if entity.applicationStatus != 'hide' %}
-                                            <li>
-                                                <a
-                                                    general-data-confirm="Are you sure you want to hide this Application?"
-                                                    general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'hide' }, true) }}">Hide
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-                                        {% if entity.applicationStatus != 'archive' %}
-                                            <li>
-                                                <a
-                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Archived'?"
-                                                    general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'archive' }, true) }}">Archive
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-                                        {#{% if entity.applicationStatus == 'active' %}#}
-                                            {#<li>#}
-                                                {#<a#}
-                                                    {#general-data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"#}
-                                                    {#href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Send Email to Interviewers#}
-                                                {#</a>#}
-                                            {#</li>#}
-                                        {#{% endif %}#}
-
+                                    {% if entity.applicationStatus != 'interviewee' %}
                                         <li>
                                             <a
-                                                href="{{ path('fellapp_edit', { 'id': entity.id}) }}">Edit
+                                                    general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
                                             </a>
                                         </li>
+                                    {% endif %}
 
-                                    {#{% endif %}#}
 
-                                    {#{% if is_granted('ROLE_PLATFORM_ADMIN') %}#}
-                                    {#<li>#}
-                                        {#<a#}
-                                            {#general-data-confirm="Are you sure you want to completely remove this Applicant and all related documents?"#}
-                                            {#href="{{ path('fellapp_remove', { 'id': entity.id}) }}">Remove Applicant and all related documents#}
-                                        {#</a>#}
-                                    {#</li>#}
+
+                                    {% if entity.applicationStatus != 'reject' %}
+                                        <li>
+                                            <a
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+
+                                    {% if entity.applicationStatus != 'onhold' %}
+                                        <li>
+                                            <a
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'On Hold'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'onhold' }, true) }}">Put On Hold
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+
+                                    {% if entity.applicationStatus != 'hide' %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to hide this Application?"
+                                                general-data-callback="refreshpage"
+                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'hide' }, true) }}">Hide
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if entity.applicationStatus != 'archive' %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to change status of this Application to 'Archived'?"
+                                                general-data-callback="refreshpage"
+                                                href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'archive' }, true) }}">Archive
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    {#{% if entity.applicationStatus == 'active' %}#}
+                                        {#<li>#}
+                                            {#<a#}
+                                                {#general-data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"#}
+                                                {#href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Send Email to Interviewers#}
+                                            {#</a>#}
+                                        {#</li>#}
                                     {#{% endif %}#}
 
                                     <li>
                                         <a
-                                            href="{{ path('fellapp_download_pdf', { 'id': entity.id}) }}">Download Application
+                                            href="{{ path('fellapp_edit', { 'id': entity.id}) }}">Edit
                                         </a>
                                     </li>
 
-                                </ul>
+                                {#{% endif %}#}
 
-                            </div>
+                                {#{% if is_granted('ROLE_PLATFORM_ADMIN') %}#}
+                                {#<li>#}
+                                    {#<a#}
+                                        {#general-data-confirm="Are you sure you want to completely remove this Applicant and all related documents?"#}
+                                        {#href="{{ path('fellapp_remove', { 'id': entity.id}) }}">Remove Applicant and all related documents#}
+                                    {#</a>#}
+                                {#</li>#}
+                                {#{% endif %}#}
 
-                        </td>
+                                <li>
+                                    <a
+                                        href="{{ path('fellapp_download_pdf', { 'id': entity.id}) }}">Download Application
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </td>
 
 
                 </tr>

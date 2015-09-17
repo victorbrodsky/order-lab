@@ -1186,6 +1186,64 @@ class FellAppController extends Controller {
 
     }
 
+//    /**
+//     * @Route("/preview-application-as-pdf/{id}", name="employees_file_pdf-preview")
+//     * @Template("OlegFellAppBundle:Form:preview.html.twig")
+//     * @Method("GET")
+//     */
+//    public function previewReportAction(Request $request, $id) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+//
+//        if( !$entity ) {
+//            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+//        }
+//
+//        //event log
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $event = "Report for Fellowship Application with ID".$id." has been previewed by ".$user;
+//        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application Downloaded');
+//
+//        $reportDocument = $entity->getRecentReport();
+//        //echo "report=".$reportDocument."<br>";
+//        //exit();
+//
+//        if( $reportDocument ) {
+//
+//            return array(
+//                'entity' => $entity,
+//                'pdfdocument' => $reportDocument,
+//                'pathbase' => 'fellapp',
+//                'cycle' => 'preview',
+//                'sitename' => $this->container->getParameter('fellapp.sitename')
+//            );
+//
+//        } else {
+//
+//            //create report
+//            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+//            $argument = 'asap';
+//            //if( $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
+//            //$argument = 'overwrite';
+//            //}
+//            $fellappRepGen->addFellAppReportToQueue( $id, $argument );
+//
+//            //exit('fellapp_download_pdf exit');
+//
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                'Complete Application PDF is not ready yet. Please try again later.'
+//            );
+//
+//            return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
+//        }
+//
+//    }
+
+
     /**
      * @Route("/regenerate-all-complete-application-pdfs/", name="fellapp_regenerate_reports")
      *
