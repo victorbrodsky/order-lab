@@ -1173,8 +1173,6 @@ class FellAppUtil {
             $dql->andWhere("fellowshipSubspecialty.id=".$fellSubspecId);
         }
 
-        $ldap = false;
-        if($ldap) 
         if( $year ) {
             $bottomDate = "01-01-".$year;
             $topDate = "12-31-".$year;
