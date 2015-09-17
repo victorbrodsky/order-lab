@@ -721,7 +721,18 @@ function generalConfirmAction() {
 
 
         $('#generalDataConfirmModal').find('.modal-body').text( $(this).attr('general-data-confirm') );
-        $('#dataConfirmOK').attr('href', href); //testing
+
+        var callbackfn = $(this).attr('general-data-callback');
+
+        if( callbackfn ) {
+            //console.log('callbackfn='+callbackfn);
+            var onclickStr = callbackfn+'("'+href+'")';
+            //console.log('onclickStr='+onclickStr);
+            $('#dataConfirmOK').attr('onclick',onclickStr);
+        } else {
+            //console.log('callbackfn is not defined = ' + callbackfn );
+            $('#dataConfirmOK').attr('href', href);
+        }
 
 //        /////////////// add comment /////////////////////
 //        if( $(this).hasClass("status-with-comment") ) {
