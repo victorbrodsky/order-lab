@@ -725,12 +725,9 @@ function generalConfirmAction() {
         var callbackfn = $(this).attr('general-data-callback');
 
         if( callbackfn ) {
-            //console.log('callbackfn='+callbackfn);
             var onclickStr = callbackfn+'("'+href+'")';
-            //console.log('onclickStr='+onclickStr);
             $('#dataConfirmOK').attr('onclick',onclickStr);
         } else {
-            //console.log('callbackfn is not defined = ' + callbackfn );
             $('#dataConfirmOK').attr('href', href);
         }
 

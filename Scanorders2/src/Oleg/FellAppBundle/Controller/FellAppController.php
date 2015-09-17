@@ -820,27 +820,12 @@ class FellAppController extends Controller {
         $event = $eventType . '; application ID ' . $id . ' by user ' . $user;
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
 
-        //return $this->forward('AcmeBundle:Forward:new', array('request' => $request));
-
         //return $this->redirect( $this->generateUrl('fellapp_home'));
-
-
-//        return $this->redirect( $this->generateUrl('fellapp_home',
-//            array(
-//                'filter[filter]' => $filter['filter'],
-//                'filter[startDate]' => $filter['startDate'],
-//                'filter[active]' => $filter['active'],
-//                'filter[complete]' => $filter['complete'],
-//                'filter[interviewee]' => $filter['interviewee'],
-//                'filter[onhold]' => $filter['onhold'],
-//            )
-//        ) );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode("ok"));
         return $response;
-
     }
 
 

@@ -175,6 +175,7 @@
                 {#<th {% if entities.isSorted('fellapp.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'Status', 'fellapp.applicationStatus') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'Created', 'fellapp.timestamp') }}</th>#}
+
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'fellapp.startDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>
@@ -183,7 +184,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicantinfos.firstName') }}</th>
 
                 <th>{{ knp_pagination_sortable(entities, 'U1', 'examinations.USMLEStep1Score') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'U2', 'examinations.USMLEStep2CKScore') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'U2', 'examinations.USMLEStep2CKScore')}}</th>
                 <th>{{ knp_pagination_sortable(entities, 'U3', 'examinations.USMLEStep3Score') }}</th>
 
                 <th>{{ knp_pagination_sortable(entities, 'C1', 'examinations.COMLEXLevel1Score') }}</th>
@@ -508,6 +509,8 @@
                 orientation: 'auto top'
             });
 
+            attachTitleToScores();
+
             /////////// set default year by JS ///////////
             //var year = parseInt(new Date().getFullYear()) + 2;
             //var datas = [
@@ -553,6 +556,41 @@
                 }
             });
         }
+
+
+        function attachTitleToScores() {
+            $('.sortable').each( function() {
+                var title = this.title;
+                //console.log("title="+title);
+                var tooltipStr = null;
+                switch( this.title ) {
+                    case 'U1':
+                        tooltipStr = 'USMLE Step 1 Score';
+                        break;
+                    case 'U2':
+                        tooltipStr = 'USMLE Step 2 CK Score';
+                        break;
+                    case 'U3':
+                        tooltipStr = 'USMLE Step 3 Score';
+                        break;
+                    case 'C1':
+                        tooltipStr = 'COMLEX 1 Score';
+                        break;
+                    case 'C2':
+                        tooltipStr = 'COMLEX 2 Score';
+                        break;
+                    case 'C3':
+                        tooltipStr = 'COMLEX 3 Score';
+                        break;
+                }
+
+                if( tooltipStr ) {
+                    this.title = tooltipStr;
+                    $(this).tooltip();
+                }
+            });
+        }
+
 
     </script>
 
