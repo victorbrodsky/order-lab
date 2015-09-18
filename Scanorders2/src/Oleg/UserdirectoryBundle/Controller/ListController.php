@@ -82,6 +82,7 @@ class ListController extends Controller
      * @Route("/certifying-board-organizations/", name="certifyingboardorganizations-list")
      * @Route("/training-types/", name="trainingtypes-list")
      * @Route("/job-titles/", name="joblists-list")
+     * @Route("/fellowship-application-statuses/", name="fellappstatuses-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -251,6 +252,7 @@ class ListController extends Controller
      * @Route("/certifying-board-organizations/", name="certifyingboardorganizations_create")
      * @Route("/training-types/", name="trainingtypes_create")
      * @Route("/job-titles/", name="joblists_create")
+     * @Route("/fellowship-application-statuses/", name="fellappstatuses_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -394,6 +396,7 @@ class ListController extends Controller
      * @Route("/certifying-board-organizations/new", name="certifyingboardorganizations_new")
      * @Route("/training-types/new", name="trainingtypes_new")
      * @Route("/job-titles/new", name="joblists_new")
+     * @Route("/fellowship-application-statuses/new", name="fellappstatuses_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -508,6 +511,7 @@ class ListController extends Controller
      * @Route("/certifying-board-organizations/{id}", name="certifyingboardorganizations_show")
      * @Route("/training-types/{id}", name="trainingtypes_show")
      * @Route("/job-titles/{id}", name="joblists_show")
+     * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -612,6 +616,7 @@ class ListController extends Controller
      * @Route("/certifying-board-organizations/{id}/edit", name="certifyingboardorganizations_edit")
      * @Route("/training-types/{id}/edit", name="trainingtypes_edit")
      * @Route("/job-titles/{id}/edit", name="joblists_edit")
+     * @Route("/fellowship-application-statuses/{id}/edit", name="fellappstatuses_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -748,6 +753,7 @@ class ListController extends Controller
      * @Route("/certifying-board-organizations/{id}", name="certifyingboardorganizations_update")
      * @Route("/training-types/{id}", name="trainingtypes_update")
      * @Route("/job-titles/{id}", name="joblists_update")
+     * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -890,6 +896,8 @@ class ListController extends Controller
     public function classListMapper( $route ) {
 
         $labels = null;
+
+        $bundleName = "UserdirectoryBundle";
 
         switch( $route ) {
 
@@ -1127,6 +1135,11 @@ class ListController extends Controller
                 $className = "JobTitleList";
                 $displayName = "Job or Experience Title";
                 break;
+            case "fellappstatuses":
+                $className = "FellAppStatus";
+                $displayName = "Fellowship Application Statuses";
+                $bundleName = "FellAppBundle";
+                break;
 
             default:
                 $className = null;
@@ -1138,8 +1151,8 @@ class ListController extends Controller
 
         $res = array();
         $res['className'] = $className;
-        $res['fullClassName'] = "Oleg\\UserdirectoryBundle\\Entity\\".$className;
-        $res['bundleName'] = "OlegUserdirectoryBundle";
+        $res['fullClassName'] = "Oleg\\".$bundleName."\\Entity\\".$className;
+        $res['bundleName'] = "Oleg".$bundleName;
         $res['displayName'] = $displayName;
         //$res['labels'] = $labels;
 
@@ -1216,6 +1229,7 @@ class ListController extends Controller
      * @Route("/certifying-board-organizations/{id}", name="certifyingboardorganizations_delete")
      * @Route("/training-types/{id}", name="trainingtypes_delete")
      * @Route("/job-titles/{id}", name="joblists_delete")
+     * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_delete")
      *
      * @Method("DELETE")
      */

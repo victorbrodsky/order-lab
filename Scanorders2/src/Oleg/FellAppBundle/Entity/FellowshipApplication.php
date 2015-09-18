@@ -148,6 +148,12 @@ class FellowshipApplication extends BaseUserAttributes {
     private $applicationStatus;
 
     /**
+     * application status as a list
+     * @ORM\ManyToOne(targetEntity="FellAppStatus")
+     */
+    private $appStatus;
+
+    /**
      * timestamp when google form is opened
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -308,7 +314,6 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->stateLicenses = new ArrayCollection();
         $this->boardCertifications = new ArrayCollection();
 
-        $this->setApplicationStatus('active');
     }
 
 
@@ -811,13 +816,13 @@ class FellowshipApplication extends BaseUserAttributes {
         return $this->interviewScore;
     }
 
-    /**
-     * @param mixed $applicationStatus
-     */
-    public function setApplicationStatus($applicationStatus)
-    {
-        $this->applicationStatus = $applicationStatus;
-    }
+//    /**
+//     * @param mixed $applicationStatus
+//     */
+//    public function setApplicationStatus($applicationStatus)
+//    {
+//        $this->applicationStatus = $applicationStatus;
+//    }
 
     /**
      * @return mixed
@@ -874,6 +879,24 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         return $this->interviewDate;
     }
+
+    /**
+     * @param mixed $appStatus
+     */
+    public function setAppStatus($appStatus)
+    {
+        $this->appStatus = $appStatus;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppStatus()
+    {
+        return $this->appStatus;
+    }
+
+
 
 
 

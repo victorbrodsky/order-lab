@@ -5,42 +5,38 @@
 
 
 
-{% set fellappStatus = "" %}
 {% set trclassname = "well well-sm" %}
-{% if entity.applicationStatus == 'archive' %}
-    {% set fellappStatus = "Archived" %}
+{% if entity.appStatus %}
+{% if entity.appStatus.name == 'archive' %}
     {% set trclassname = "alert alert-info" %}
 {% endif %}
-{% if entity.applicationStatus == 'hide' %}
-    {% set fellappStatus = "Hidden" %}
+{% if entity.appStatus.name == 'hide' %}
     {% set trclassname = "alert alert-danger" %}
 {% endif %}
-{% if entity.applicationStatus == 'complete' %}
-    {% set fellappStatus = "Complete" %}
+{% if entity.appStatus.name == 'complete' %}
     {% set trclassname = "alert order-neutral-status" %}
 {% endif %}
-{% if entity.applicationStatus == 'active' %}
-    {% set fellappStatus = "Active" %}
+{% if entity.appStatus.name == 'active' %}
     {#{% set trclassname = "alert order-neutral-status" %}#}
 {% endif %}
-{% if entity.applicationStatus == 'interviewee' %}
-    {% set fellappStatus = "Interviewee" %}
-    {#{% set trclassname = "alert order-neutral-status" %}#}
+{% if entity.appStatus.name == 'interviewee' %}
+    {% set trclassname = "order-interviewee-status" %}
 {% endif %}
-{% if entity.applicationStatus == 'reject' %}
-    {% set fellappStatus = "Rejected" %}
-    {% set trclassname = "alert alert-danger" %}
+{% if entity.appStatus.name == 'reject' %}
+    {% set trclassname = "order-reject-status" %}
 {% endif %}
-{% if entity.applicationStatus == 'onhold' %}
-    {% set fellappStatus = "On Hold" %}
-    {% set trclassname = "alert alert-danger" %}
+{% if entity.appStatus.name == 'onhold' %}
+    {% set trclassname = "order-onhold-status" %}
+{% endif %}
 {% endif %}
 
 {% if cycle != "new" %}
     <h4 class="text-info" align="center">
         <div class="{{ trclassname }}">
-            <p>{{ fellappStatus }}</p>
-            Fellowship Application ID {{ entity.id }}, submitted on {{ entity.timestamp|date('m/d/Y H:i') }}, imported on {{ entity.createdate|date('m/d/Y H:i') }}
+            {% if entity.appStatus %}
+                <p>{{ entity.appStatus.action }}</p>
+            {% endif %}
+            Fellowship Application ID {{ entity.id }}, submitted on {{ entity.timestamp|date('m/d/Y H:i','UTC') }}, imported on {{ entity.createdate|date('m/d/Y H:i','UTC') }}
         </div>
     </h4>
 {% endif %}
@@ -84,8 +80,15 @@
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
-
-{#{{ formmacros.fieldDateLabel(form.timestamp,'allow-future-date') }}#}
+{% if form.timestamp is defined %}
+    <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            {{ formmacros.fieldDateLabel_vertical(form.timestamp,'allow-future-date') }}
+        </div>
+        <div class="col-xs-4"></div>
+    </div>
+{% endif %}
 
 <!-- Fellowship Type, Training period, Applicant Name -->
 {% include 'OlegFellAppBundle:Form:FellowshipType.html.twig' %}
@@ -117,7 +120,7 @@
 {% include 'OlegFellAppBundle:Form:Honors.html.twig' %}
 
 <!-- PDF Reports -->
-{% if cycle != "download" %}
+{% if cycle != "download" and cycle != "new" %}
     {% include 'OlegFellAppBundle:Form:reportsPDF.html.twig' %}
 {% endif %}
 

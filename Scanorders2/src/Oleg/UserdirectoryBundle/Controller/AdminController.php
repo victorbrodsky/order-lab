@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
@@ -224,6 +225,9 @@ class AdminController extends Controller
         $count_generateCertifyingBoardOrganization = $this->generateCertifyingBoardOrganization();
         $count_TrainingTypeList = $this->generateTrainingTypeList();
 
+        $count_FellAppStatus = $this->generateFellAppStatus();
+
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
@@ -275,7 +279,8 @@ class AdminController extends Controller
             'Spot Purposes='.$count_SpotPurpose.', '.
             'Medical License Statuses='.$count_generateMedicalLicenseStatus.', '.
             'Certifying Board Organizations='.$count_generateCertifyingBoardOrganization.', '.
-            'Training Types='.$count_TrainingTypeList.' '.
+            'Training Types='.$count_TrainingTypeList.', '.
+            'FellApp Statuses='.$count_FellAppStatus.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -3359,6 +3364,46 @@ class AdminController extends Controller
 
             $entity = new PositionTrackTypeList();
             $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+
+    public function generateFellAppStatus() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'active'=>'Active',
+            'complete'=>'Complete',
+            'interviewee'=>'Interviewee',
+            'onhold'=>'On Hold',
+            'reject'=>'Rejected',
+            'hide'=>'Hidden',
+            'archive'=>'Archived',
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name=>$action ) {
+
+            $entity = new FellAppStatus();
+            $this->setDefaultList($entity,$count,$username,$name);
+            $entity->setAction($action);
 
             $em->persist($entity);
             $em->flush();

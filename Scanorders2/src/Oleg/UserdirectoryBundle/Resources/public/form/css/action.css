@@ -27,3 +27,11 @@
     background: rgba(217, 247, 218, 0.38);
 }
 
+.order-reject-status {
+    background: #D0D0D0;
+}
+
+.order-onhold-status {
+    background: #ffffe6;
+}
+

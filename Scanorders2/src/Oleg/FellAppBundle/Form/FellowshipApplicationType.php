@@ -41,13 +41,16 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
         ));
 
-//        $builder->add('timestamp','date',array(
-//            'widget' => 'single_text',
-//            'label' => "Creation Date:",
-//            'format' => 'MM/dd/yyyy, H:mm:ss',
-//            'attr' => array('class' => 'datepicker form-control'),
-//            'required' => false,
-//        ));
+        if( $this->params['cycle'] == "new" ) {
+            $builder->add('timestamp','date',array(
+                'widget' => 'single_text',
+                'label' => "Application Receipt Date:",
+                //'format' => 'MM/dd/yyyy, H:mm:ss',
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control'),
+                'required' => false,
+            ));
+        }
 
         $builder->add('startDate','date',array(
             'widget' => 'single_text',

@@ -91,6 +91,7 @@ class FellAppController extends Controller {
         $dql->select('fellapp');
         //$dql->groupBy('fellapp');
         $dql->orderBy("fellapp.timestamp","DESC");
+        $dql->leftJoin("fellapp.appStatus", "appStatus");
         $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
         $dql->leftJoin("fellapp.user", "applicant");
         $dql->leftJoin("applicant.infos", "applicantinfos");
@@ -113,47 +114,47 @@ class FellAppController extends Controller {
         $orWhere = array();
 
         if( $hidden ) {
-            $orWhere[] = "fellapp.applicationStatus = 'hide'";
+            $orWhere[] = "appStatus.name = 'hide'";
             $searchFlag = true;
         } else {
             //$searchFlag = true;
         }
 
         if( $archived ) {
-            $orWhere[] = "fellapp.applicationStatus = 'archive'";
+            $orWhere[] = "appStatus.name = 'archive'";
             $searchFlag = true;
         } else {
             //$searchFlag = true;
         }
 
         if( $complete ) {
-            $orWhere[] = "fellapp.applicationStatus = 'complete'";
+            $orWhere[] = "appStatus.name = 'complete'";
             $searchFlag = true;
         } else {
             //$searchFlag = true;
         }
 
         if( $interviewee ) {
-            $orWhere[] = "fellapp.applicationStatus = 'interviewee'";
+            $orWhere[] = "appStatus.name = 'interviewee'";
             $searchFlag = true;
         } else {
             //$searchFlag = true;
         }
 
         if( $active ) {
-            $orWhere[] = "fellapp.applicationStatus = 'active'";
+            $orWhere[] = "appStatus.name = 'active'";
             $searchFlag = true;
         } else {
             //$searchFlag = true;
         }
 
         if( $reject ) {
-            $orWhere[] = "fellapp.applicationStatus = 'reject'";
+            $orWhere[] = "appStatus.name = 'reject'";
             $searchFlag = true;
         }
 
         if( $onhold ) {
-            $orWhere[] = "fellapp.applicationStatus = 'onhold'";
+            $orWhere[] = "appStatus.name = 'onhold'";
             $searchFlag = true;
         }
 
@@ -362,6 +363,7 @@ class FellAppController extends Controller {
         $applicant->setCreatedby('manual');
 
         $fellowshipApplication = new FellowshipApplication($user);
+        $fellowshipApplication->setTimestamp(new \DateTime());
 
         $applicant->addFellowshipApplication($fellowshipApplication);
 
@@ -590,12 +592,16 @@ class FellAppController extends Controller {
      */
     public function createApplicantAction( Request $request )
     {
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
         $fellowshipApplication = new FellowshipApplication($user);
-        $fellowshipApplication->setApplicationStatus('active');
-        $fellowshipApplication->setTimestamp(new \DateTime());
+
+        $activeStatus = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName("active");
+        if( !$activeStatus ) {
+            throw new EntityNotFoundException('Unable to find FellAppStatus by name='."active");
+        }
+        $fellowshipApplication->setAppStatus($activeStatus);
 
         if( !$fellowshipApplication->getUser() ) {
             //new applicant
@@ -760,17 +766,10 @@ class FellAppController extends Controller {
 
 
     /**
-     * @Route("/status/{id}/{status}/{fullfilter}", name="fellapp_status")
+     * @Route("/status/{id}/{status}", name="fellapp_status")
      * @Method("GET")
      */
-    public function statusAction( Request $request, $id, $status, $fullfilter=null ) {
-
-//        if(
-//            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-//            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-//        ){
-//            return $this->redirect( $this->generateUrl('login') );
-//        }
+    public function statusAction( Request $request, $id, $status ) {
 
         //echo "status <br>";
 
@@ -784,36 +783,20 @@ class FellAppController extends Controller {
         }
 
 
-        $entity->setApplicationStatus($status);
+        //get status object
+        //$entity->setApplicationStatus($status);
+        $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
+        if( !$statusObj ) {
+            throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);
+        }
+
+        //change status
+        $entity->setAppStatus($statusObj);
 
         $em->persist($entity);
         $em->flush();
 
-        switch($status) {
-            case 'active':
-                $eventType = 'Fellowship Application Status changed to Active';
-                break;
-            case 'archive':
-                $eventType = 'Fellowship Application Status changed to Archived';
-                break;
-            case 'hide':
-                $eventType = 'Fellowship Application Status changed to Hidden';
-                break;
-            case 'complete':
-                $eventType = 'Fellowship Application Status changed to Complete';
-                break;
-            case 'interviewee':
-                $eventType = 'Fellowship Application Status changed to Interviewee';
-                break;
-            case 'reject':
-                $eventType = 'Fellowship Application Status changed to Rejected';
-                break;
-            case 'onhold':
-                $eventType = 'Fellowship Application Status changed to On Hold';
-                break;
-            default:
-                $eventType = 'Warning: Fellowship Application Status changed to '.$status;
-        }
+        $eventType = 'Fellowship Application Status changed to ' . $statusObj->getAction();
 
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -828,6 +811,30 @@ class FellAppController extends Controller {
         return $response;
     }
 
+
+    /**
+     * @Route("/status-sync/", name="fellapp_sincstatus")
+     * @Method("GET")
+     */
+    public function syncStatusAction( Request $request ) {
+
+        $em = $this->getDoctrine()->getManager();
+        $applications = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+
+        foreach( $applications as $application ) {
+            $status = $application->getApplicationStatus();
+            $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
+            if( !$statusObj ) {
+                throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);
+            }
+            $application->setAppStatus($statusObj);
+            //$application->setApplicationStatus(NULL);
+        }
+
+        $em->flush();
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
 
     /**
      * @Route("/resend-emails/{id}", name="fellapp_resendemails")
@@ -870,66 +877,8 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        echo "remove <br>";
-        exit('not supported');
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
-
-        if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
-        }
-
-        if(0) {
-            $user = $entity->getUser();
-
-            $entity->setApplicationStatus('archive');
-
-            $user->setUsernameForce($user->getUsername()."-deleted");
-
-            $user->setPrimaryPublicUserId($user->getPrimaryPublicUserId()."-deleted");
-
-            $avatar = $user->getAvatar();
-            $em->persist($avatar);
-            $em->remove($avatar);
-            $user->setAvatar(NULL);
-
-            //$em->remove($entity);
-
-            $em->flush();
-        }
-
-        return $this->redirect( $this->generateUrl('fellapp_home') );
-
-
-
-        $credentials = $user->getCredentials();
-
-        echo "training count=".count($user->getTrainings())."<br>";
-        foreach( $user->getTrainings() as $training  ) {
-            echo "remove training<br>";
-            $user->remove($training);
-            $em->remove($training);
-            //$em->flush();
-        }
-
-        foreach( $entity->getCoverLetters() as $item ) {
-            $entity->removeCoverLetter($item);
-            $em->remove($item);
-        }
-
-        //$em->remove($credentials);
-        //$em->flush();
-
-        //exit('ok');
-
-        //$em->remove($user);
-        //$em->flush();
-
-        $em->remove($entity);
-        $em->flush();
-
+        //echo "remove <br>";
+        exit('remove not supported');
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
     }

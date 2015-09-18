@@ -1671,7 +1671,7 @@
             <div class="avatar-view" title="Change the photo" style="height:126px; width:116px;">
                 {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">                #}
                 {% if user.avatar %}
-                    {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
+                    {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','','objectFull') }}
                 {% else %}
                     {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                     <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
@@ -1887,7 +1887,11 @@
 {% endmacro %}
 
 
-{% macro showDocumentAsImage( documentEntity, alt, atr ) %}
+{% macro showDocumentAsImage( documentEntity, alt, atr, objectClass ) %}
+
+    {% if not objectClass or objectClass is not defined %}
+        {% set objectClass = "objectMaxFull" %}
+    {% endif %}
 
     {% if '.pdf' in documentEntity.getAbsoluteUploadFullPath %}
         {#pdf!!!#}
@@ -1895,7 +1899,9 @@
         <object {{ atr }} alt="{{ documentEntity.getOriginalname }}"
                 data="{{ documentEntity.getAbsoluteUploadFullPath }}"
                 type="application/pdf"
-                style="display:block; max-width:100%; max-height:100%;"
+                class="{{ objectClass }}"
+                {#style="display:block; max-width:100%; max-height:100%;"#}
+                {#style="display:block; width:100%; height:100%;"#}
         >
         </object>
         {#</a>#}
@@ -1905,7 +1911,8 @@
         <object {{ atr }} alt="{{ documentEntity.getOriginalname }}"
                 data="{{ documentEntity.getAbsoluteUploadFullPath }}"
                 type="application/msword"
-                style="display:block; max-width:100%; max-height:100%;"
+                {#style="display:block; max-width:100%; max-height:100%;"#}
+                class="{{ objectClass }}"
         >
         </object>
         {#</a>#}
@@ -1914,7 +1921,8 @@
         <img {{ atr }} alt="{{ documentEntity.getOriginalname }}"
              src="{{ documentEntity.getAbsoluteUploadFullPath }}"
              alt="{{ alt }}"
-             style="display:block; max-width:100%; max-height:100%;"
+             {#style="display:block; max-width:100%; max-height:100%;"#}
+             class="{{ objectClass }}"
         />
         {#</a>#}
     {% endif %}

@@ -173,7 +173,7 @@
             <tr>
 
                 {#<th {% if entities.isSorted('fellapp.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(entities, 'Status', 'fellapp.applicationStatus') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Status', 'fellapp.appStatus.name') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'Created', 'fellapp.timestamp') }}</th>#}
 
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
@@ -214,28 +214,36 @@
 
                 {% set trclassname = "" %}
 
-                {% if entity.applicationStatus == 'archive' %}
+                {% if entity.appStatus.name == 'archive' %}
                     {#No attention required - plain complete order#}
                     {#{% set trclassname = "action-cancel-status" %}#}
                     {% set trclassname = "info" %}
                 {% endif %}
 
-                {% if entity.applicationStatus == 'hide' %}
+                {% if entity.appStatus.name == 'hide' %}
                     {#urgent attention required#}
                     {#{% set trclassname = "order-urgent-status" %}#}
                     {% set trclassname = "danger" %}
                 {% endif %}
 
-                {% if entity.applicationStatus == 'complete' %}
+                {% if entity.appStatus.name == 'complete' %}
                     {#urgent attention required#}
                     {#{% set trclassname = "order-neutral-status" %}#}
                     {% set trclassname = "order-neutral-status" %}
                 {% endif %}
 
-                {% if entity.applicationStatus == 'interviewee' %}
+                {% if entity.appStatus.name == 'interviewee' %}
                     {#urgent attention required#}
                     {% set trclassname = "order-interviewee-status" %}
                     {#{% set trclassname = "success" %}#}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'reject' %}
+                    {% set trclassname = "order-reject-status" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'onhold' %}
+                    {% set trclassname = "order-onhold-status" %}
                 {% endif %}
 
                 {% set u1 = "" %}
@@ -286,7 +294,7 @@
                     </td>
 
                     {#<td>#}
-                        {#{{  entity.applicationStatus }}#}
+                        {#{{  entity.appStatus }}#}
                     {#</td>#}
 
                     {#<td>#}
@@ -380,7 +388,7 @@
                                     </li>
                                     {% endif %}
 
-                                    {% if entity.applicationStatus != 'active' %}
+                                    {% if entity.appStatus.name != 'active' %}
                                         <li>
                                             <a
                                                     general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
@@ -390,7 +398,7 @@
                                         </li>
                                     {% endif %}
 
-                                    {% if entity.applicationStatus != 'complete' %}
+                                    {% if entity.appStatus.name != 'complete' %}
                                         {% set filter = app.request.get('filter') %}
                                         <li>
                                             <a
@@ -401,7 +409,7 @@
                                         </li>
                                     {% endif %}
 
-                                    {% if entity.applicationStatus != 'interviewee' %}
+                                    {% if entity.appStatus.name != 'interviewee' %}
                                         <li>
                                             <a
                                                     general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
@@ -413,7 +421,7 @@
 
 
 
-                                    {% if entity.applicationStatus != 'reject' %}
+                                    {% if entity.appStatus.name != 'reject' %}
                                         <li>
                                             <a
                                                     general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
@@ -424,7 +432,7 @@
                                     {% endif %}
 
 
-                                    {% if entity.applicationStatus != 'onhold' %}
+                                    {% if entity.appStatus.name != 'onhold' %}
                                         <li>
                                             <a
                                                     general-data-confirm="Are you sure you want to change status of this Application to 'On Hold'?"
@@ -435,7 +443,7 @@
                                     {% endif %}
 
 
-                                    {% if entity.applicationStatus != 'hide' %}
+                                    {% if entity.appStatus.name != 'hide' %}
                                         <li>
                                             <a
                                                 general-data-confirm="Are you sure you want to hide this Application?"
@@ -445,7 +453,7 @@
                                         </li>
                                     {% endif %}
 
-                                    {% if entity.applicationStatus != 'archive' %}
+                                    {% if entity.appStatus.name != 'archive' %}
                                         <li>
                                             <a
                                                 general-data-confirm="Are you sure you want to change status of this Application to 'Archived'?"
@@ -455,7 +463,7 @@
                                         </li>
                                     {% endif %}
 
-                                    {#{% if entity.applicationStatus == 'active' %}#}
+                                    {#{% if entity.appStatus.name == 'active' %}#}
                                         {#<li>#}
                                             {#<a#}
                                                 {#general-data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"#}
