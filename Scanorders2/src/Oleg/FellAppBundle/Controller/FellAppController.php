@@ -813,29 +813,29 @@ class FellAppController extends Controller {
     }
 
 
-    /**
-     * @Route("/status-sync/", name="fellapp_sincstatus")
-     * @Method("GET")
-     */
-    public function syncStatusAction( Request $request ) {
-
-        $em = $this->getDoctrine()->getManager();
-        $applications = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
-
-        foreach( $applications as $application ) {
-            $status = $application->getApplicationStatus();
-            $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
-            if( !$statusObj ) {
-                throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);
-            }
-            $application->setAppStatus($statusObj);
-            //$application->setApplicationStatus(NULL);
-        }
-
-        $em->flush();
-
-        return $this->redirect( $this->generateUrl('fellapp_home') );
-    }
+//    /**
+//     * @Route("/status-sync/", name="fellapp_sincstatus")
+//     * @Method("GET")
+//     */
+//    public function syncStatusAction( Request $request ) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $applications = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+//
+//        foreach( $applications as $application ) {
+//            $status = $application->getApplicationStatus();
+//            $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
+//            if( !$statusObj ) {
+//                throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);
+//            }
+//            $application->setAppStatus($statusObj);
+//            //$application->setApplicationStatus(NULL);
+//        }
+//
+//        $em->flush();
+//
+//        return $this->redirect( $this->generateUrl('fellapp_home') );
+//    }
 
     /**
      * @Route("/resend-emails/{id}", name="fellapp_resendemails")

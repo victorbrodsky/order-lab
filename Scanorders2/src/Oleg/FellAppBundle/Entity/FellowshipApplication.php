@@ -142,10 +142,10 @@ class FellowshipApplication extends BaseUserAttributes {
      */
     private $interviewScore;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $applicationStatus;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $applicationStatus;
 
     /**
      * application status as a list
@@ -823,14 +823,14 @@ class FellowshipApplication extends BaseUserAttributes {
 //    {
 //        $this->applicationStatus = $applicationStatus;
 //    }
-
-    /**
-     * @return mixed
-     */
-    public function getApplicationStatus()
-    {
-        return $this->applicationStatus;
-    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getApplicationStatus()
+//    {
+//        return $this->applicationStatus;
+//    }
 
     /**
      * @param mixed $timestamp
