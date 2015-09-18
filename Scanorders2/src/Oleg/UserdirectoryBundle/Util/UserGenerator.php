@@ -120,11 +120,8 @@ class UserGenerator {
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
             //echo "DB user=".$user."<br>";
 
-            //$updateUsers = true;
             if( $user ) {
-                //if( !$updateUsers ) {
-                    continue; //ignore existing users to prevent overwrite
-                //}
+                continue; //ignore existing users to prevent overwrite
             }
 
             if( !$user ) {
@@ -371,14 +368,14 @@ class UserGenerator {
             }
 
             //License number
-            $licenseNumberStr = $this->getValueByHeaderName('License number', $rowData, $headers);
             if( $licenseNumberStr ) {
                 $licenseState = new StateLicense();
 
                 $licenseState->setLicenseNumber($licenseNumberStr);
 
                 $licenseStateStr = $this->getValueByHeaderName('License state', $rowData, $headers);
-                $licenseState->setLicenseNumber($licenseStateStr);
+                $licenseStateObj = $this->getObjectByNameTransformer('States',$licenseStateStr,$systemuser);
+                $licenseState->setState($licenseStateObj);
 
                 //License expiration
                 $expDateStr = $this->getValueByHeaderName('License expiration', $rowData, $headers);
@@ -636,6 +633,15 @@ class UserGenerator {
                 $user->addRole('ROLE_FELLAPP_DIRECTOR');
             }
 
+            //Timothy D'Alfonso <tid9007@med.cornell.edu>
+            if( $user->getUsername() == "tid9007_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
+
+            //Syed A F Hoda <sahoda@med.cornell.edu>
+            if( $user->getUsername() == "sahoda_@_wcmc-cwid" ) {
+                $user->addRole('ROLE_FELLAPP_DIRECTOR');
+            }
 
             //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             //TODO: this should be located on scanorder site

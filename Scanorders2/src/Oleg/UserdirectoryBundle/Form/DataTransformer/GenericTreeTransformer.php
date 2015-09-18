@@ -158,6 +158,10 @@ class GenericTreeTransformer implements DataTransformerInterface
         //check if it is already exists in db
         //echo "className=".$this->className."<br>";
         $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name."");
+
+        if( null === $entity ) {
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($name."");
+        }
         
         if( null === $entity ) {
 
