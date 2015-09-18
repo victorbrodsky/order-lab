@@ -175,37 +175,37 @@ class UserController extends Controller
 
         $title = "Current employees: ".$tablename." ".$objectname;
 
-        if( $tablename == "room" ) {
+        if( strtolower($tablename) == "room" ) {
             $title = "Current employees in ".$tablename." ".$objectname;
         }
 
-        if( $tablename == "administrativeTitles" ) {
+        if( strtolower($tablename) == "administrativetitle" ) {
             $title = 'Current employees with the administrative title of "'.$objectname.'"';
         }
 
-        if( $tablename == "appointmentTitles" ) {
+        if( strtolower($tablename) == "appointmenttitle" ) {
             $title = 'Current employees with the academic title of "'.$objectname.'"';
         }
 
-        if( $tablename == "medicalTitles" ) {
+        if( strtolower($tablename) == "medicaltitle" ) {
             $title = 'Current employees with the medical title of "'.$objectname.'"';
         }
 
-        if( $tablename == "service" ) {
-            $title = 'Current employees of the '.$objectname.' service';
-        }
+//        if( $tablename == "service" ) {
+//            $title = 'Current employees of the '.$objectname.' service';
+//        }
 
-        if( $tablename == "institution" ) {
+        if( strtolower($tablename) == "institution" ) {
             $title = 'Current employees of the '.$objectname;
         }
 
-        if( $tablename == "division" ) {
-            $title = 'Current employees of the '.$objectname.' division';
-        }
-
-        if( $tablename == "department" ) {
-            $title = 'Current employees of the '.$objectname.' department';
-        }
+//        if( $tablename == "division" ) {
+//            $title = 'Current employees of the '.$objectname.' division';
+//        }
+//
+//        if( $tablename == "department" ) {
+//            $title = 'Current employees of the '.$objectname.' department';
+//        }
 
 
 
@@ -938,29 +938,66 @@ class UserController extends Controller
 
         $criteriastr = "";
 
-        if( $objectname && $objectname == "institution" ) {
+        if( $objectname && strtolower($objectname) == "institution" ) {
             if( !$objectid || $objectid != "" ) {
-                $criteriastr .= "administrativeInstitution.id = " . $objectid;
-                $criteriastr .= " OR ";
-                $criteriastr .= "appointmentInstitution.id = " . $objectid;
-            } else {
-                $criteriastr = "1=0";
-            }
-        }
+//                $criteriastr .= "administrativeInstitution.id = " . $objectid;
+//                $criteriastr .= " OR ";
+//                $criteriastr .= "appointmentInstitution.id = " . $objectid;
+//                $criteriastr .= " OR ";
+//                $criteriastr .= "medicalInstitution.id = " . $objectid;
 
-        if( $objectname && $objectname == "service" ) {
-            if( !$objectid || $objectid != "" ) {
+                $em = $this->getDoctrine()->getManager();
+                $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($objectid);
+
+                //administrativeInstitution
+                $criteriastr .= " ( ";
+                $criteriastr .= "administrativeInstitution.lft > " . $node->getLft();
+                $criteriastr .= " AND ";
+                $criteriastr .= "administrativeInstitution.rgt < " . $node->getRgt();
+                $criteriastr .= " OR ";
                 $criteriastr .= "administrativeInstitution.id = " . $objectid;
+                $criteriastr .= " ) ";
+
+                $criteriastr .= " OR ";
+
+                //appointmentInstitution
+                $criteriastr .= " ( ";
+                $criteriastr .= "appointmentInstitution.lft > " . $node->getLft();
+                $criteriastr .= " AND ";
+                $criteriastr .= "appointmentInstitution.rgt < " . $node->getRgt();
                 $criteriastr .= " OR ";
                 $criteriastr .= "appointmentInstitution.id = " . $objectid;
+                $criteriastr .= " ) ";
+
+                $criteriastr .= " OR ";
+
+                //medicalInstitution
+                $criteriastr .= " ( ";
+                $criteriastr .= "medicalInstitution.lft > " . $node->getLft();
+                $criteriastr .= " AND ";
+                $criteriastr .= "medicalInstitution.rgt < " . $node->getRgt();
                 $criteriastr .= " OR ";
                 $criteriastr .= "medicalInstitution.id = " . $objectid;
+                $criteriastr .= " ) ";
+
             } else {
                 $criteriastr = "1=0";
             }
         }
 
-        if( $objectname && $objectname == "administrativeTitle" ) {
+//        if( $objectname && $objectname == "service" ) {
+//            if( !$objectid || $objectid != "" ) {
+//                $criteriastr .= "administrativeInstitution.id = " . $objectid;
+//                $criteriastr .= " OR ";
+//                $criteriastr .= "appointmentInstitution.id = " . $objectid;
+//                $criteriastr .= " OR ";
+//                $criteriastr .= "medicalInstitution.id = " . $objectid;
+//            } else {
+//                $criteriastr = "1=0";
+//            }
+//        }
+
+        if( $objectname && strtolower($objectname) == "administrativetitle" ) {
             if( !$objectid || $objectid != "" ) {
                 $criteriastr .= "administrativeTitles.name = '" . $objectid . "'";
             } else {
@@ -968,7 +1005,7 @@ class UserController extends Controller
             }
         }
 
-        if( $objectname && $objectname == "appointmentTitle" ) {
+        if( $objectname && strtolower($objectname) == "appointmenttitle" ) {
             if( !$objectid || $objectid != "" ) {
                 $criteriastr .= "appointmentTitles.name = '" . $objectid . "'";
             } else {
@@ -976,7 +1013,7 @@ class UserController extends Controller
             }
         }
 
-        if( $objectname && $objectname == "medicalTitle" ) {
+        if( $objectname && strtolower($objectname) == "medicaltitle" ) {
             if( !$objectid || $objectid != "" ) {
                 $criteriastr .= "medicalTitles.name = '" . $objectid . "'";
             } else {
@@ -984,7 +1021,7 @@ class UserController extends Controller
             }
         }
 
-        if( $objectname && $objectname == "room" ) {
+        if( $objectname && strtolower($objectname) == "room" ) {
             if( !$objectid || $objectid != "" ) {
                 $criteriastr .= "locations.room = '" . $objectid . "'";
             } else {
@@ -992,29 +1029,29 @@ class UserController extends Controller
             }
         }
 
-        if( $objectname && $objectname == "department" ) {
-            if( !$objectid || $objectid != "" ) {
-                $criteriastr .= "administrativeInstitution.id = " . $objectid;
-                $criteriastr .= " OR ";
-                $criteriastr .= "appointmentInstitution.id = " . $objectid;
-                $criteriastr .= " OR ";
-                $criteriastr .= "medicalInstitution.id = " . $objectid;
-            } else {
-                $criteriastr = "1=0";
-            }
-        }
-
-        if( $objectname && $objectname == "division" ) {
-            if( !$objectid || $objectid != "" ) {
-                $criteriastr .= "administrativeDivision.id = " . $objectid;
-                $criteriastr .= " OR ";
-                $criteriastr .= "appointmentInstitution.id = " . $objectid;
-                $criteriastr .= " OR ";
-                $criteriastr .= "medicalDivision.id = " . $objectid;
-            } else {
-                $criteriastr = "1=0";
-            }
-        }
+//        if( $objectname && $objectname == "department" ) {
+//            if( !$objectid || $objectid != "" ) {
+//                $criteriastr .= "administrativeInstitution.id = " . $objectid;
+//                $criteriastr .= " OR ";
+//                $criteriastr .= "appointmentInstitution.id = " . $objectid;
+//                $criteriastr .= " OR ";
+//                $criteriastr .= "medicalInstitution.id = " . $objectid;
+//            } else {
+//                $criteriastr = "1=0";
+//            }
+//        }
+//
+//        if( $objectname && $objectname == "division" ) {
+//            if( !$objectid || $objectid != "" ) {
+//                $criteriastr .= "administrativeDivision.id = " . $objectid;
+//                $criteriastr .= " OR ";
+//                $criteriastr .= "appointmentInstitution.id = " . $objectid;
+//                $criteriastr .= " OR ";
+//                $criteriastr .= "medicalDivision.id = " . $objectid;
+//            } else {
+//                $criteriastr = "1=0";
+//            }
+//        }
 
         if( $objectname && $objectname == "myboss" ) {
             if( !$objectid || $objectid != "" ) {

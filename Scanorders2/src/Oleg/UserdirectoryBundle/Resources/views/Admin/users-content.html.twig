@@ -93,7 +93,7 @@
                 <td style="display:none"><a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td class="rowlink-skip">
                     {% for institution in entity.getInstitutions %}
-                        <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a></p>
+                        <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'Institution','id': institution.id, 'name': institution.__toString() }) }}">{{ institution }}</a></p>
                     {% endfor %}
                 </td>
                 {#<td class="rowlink-skip">#}

@@ -739,7 +739,7 @@
                                     {% if headInfoArr['tablename'] == 'Institution' %}
                                         {% set hrefname = '<small>'~headInfoArr['name']~'</small>' %}
                                     {% endif %}
-                                    {% if headInfoArr['tablename'] != "Institution"  %}
+                                    {#{% if headInfoArr['tablename'] != "Institution"  %}#}
                                         <a href="{{
                                                 path( employees_sitename~'_search_same_object',{
                                                     'tablename':headInfoArr['tablename'],
@@ -748,9 +748,9 @@
                                                 })
                                             }}">{{ hrefname|raw }}
                                         </a>
-                                    {% else %}
-                                        {{ hrefname|raw }}
-                                    {% endif %}
+                                    {#{% else %}#}
+                                        {#{{ hrefname|raw }}#}
+                                    {#{% endif %}#}
                                     <br>
                                 {% elseif headInfoArr == 'break-hr' %}
                                     {#{% if totalCount > index %}#}
