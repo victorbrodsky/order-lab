@@ -2,6 +2,7 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
