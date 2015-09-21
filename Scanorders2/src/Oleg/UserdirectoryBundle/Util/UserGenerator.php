@@ -544,6 +544,7 @@ class UserGenerator {
             if( $POPS ) {
                 $popsIdentifier = new Identifier();
                 $popsIdentifier->setStatus($popsIdentifier::STATUS_VERIFIED);
+                $popsIdentifier->setPubliclyVisible(true);
 
                 $popsIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','POPS',$systemuser);
                 $popsIdentifier->setKeytype($popsIdentifierTypeObj);
@@ -558,6 +559,7 @@ class UserGenerator {
             if( $Pubmed ) {
                 $PubmedIdentifier = new Identifier();
                 $PubmedIdentifier->setStatus($PubmedIdentifier::STATUS_VERIFIED);
+                $PubmedIdentifier->setPubliclyVisible(true);
 
                 $PubmedIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','Pubmed',$systemuser);
                 $PubmedIdentifier->setKeytype($PubmedIdentifierTypeObj);
@@ -572,6 +574,7 @@ class UserGenerator {
             if( $VIVO ) {
                 $VIVOIdentifier = new Identifier();
                 $VIVOIdentifier->setStatus($VIVOIdentifier::STATUS_VERIFIED);
+                $VIVOIdentifier->setPubliclyVisible(true);
 
                 $VIVOIdentifierTypeObj = $this->getObjectByNameTransformer('IdentifierTypeList','VIVO',$systemuser);
                 $VIVOIdentifier->setKeytype($VIVOIdentifierTypeObj);
