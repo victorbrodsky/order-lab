@@ -37,7 +37,7 @@ class CronCommand extends ContainerAwareCommand {
         $fileDb = $fellappUtil->importFellApp();
         if( $fileDb ) {
             $eventImport = 'FellApp Imported: '.$fileDb;
-            $logger->warning($eventImport);
+            $logger->notice($eventImport);
         } else {
             $eventImport = 'FellApp Imported Failed';
             $logger->error($eventImport);
@@ -50,7 +50,7 @@ class CronCommand extends ContainerAwareCommand {
         $populatedCount = $fellappUtil->populateFellApp($path);
         if( $populatedCount >= 0 ) {
             $eventPopulate = "Populated ".$populatedCount." Fellowship Applicantions.";
-            $logger->warning($eventPopulate);
+            $logger->notice($eventPopulate);
         } else {
             $eventPopulate = "Google API service failed!";
             $logger->error($eventPopulate);

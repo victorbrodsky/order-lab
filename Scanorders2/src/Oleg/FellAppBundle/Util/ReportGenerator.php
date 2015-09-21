@@ -83,7 +83,7 @@ class ReportGenerator {
         $queue = $this->getQueue();
 
         //reset queue
-        $this->resetQueue($queue);
+        $numUpdated = $this->resetQueue($queue);
 
         //reset processes
 //        $repository = $this->em->getRepository('OlegFellAppBundle:Process');
@@ -91,8 +91,8 @@ class ReportGenerator {
 //        $dql->select('process');
 //        $dql->where("process.startTimestamp IS NOT NULL");
 
-        $query = $this->em->createQuery('UPDATE OlegFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
-        $numUpdated = $query->execute();
+//        $query = $this->em->createQuery('UPDATE OlegFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+//        $numUpdated = $query->execute();
 
         $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
         $this->windowsCmdRunAsync($cmd);
@@ -180,13 +180,15 @@ class ReportGenerator {
         //reset old running process in queue
         if( $queue->getRunningProcess() ) {
 
+            //$logger->notice("Try Run queue: queue has running process id= " . $queue->getRunningProcess()->getId() );
             if( $this->isProcessHang($queue->getRunningProcess()) ) { //10*60sec=600 minuts limit
+                $logger->warning("Try Run queue: reset queue because queue has HANG running process id= " . $queue->getRunningProcess()->getId() );
                 //reset queue
                 $this->resetQueue($queue);
             }
         }
 
-
+        //get processes with asap flag
         $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
             array(
                 'startTimestamp' => NULL,
@@ -195,9 +197,18 @@ class ReportGenerator {
             array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
         );
 
+        //get processes with NULL timestamp
         if( count($processes) == 0 ) {
             $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
                 array('startTimestamp' => NULL),
+                array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
+            );
+        }
+
+        //get all other processes in queue
+        if( count($processes) == 0 ) {
+            $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
+                array(),
                 array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
             );
         }
@@ -211,14 +222,19 @@ class ReportGenerator {
         $starttime = 'not started yet';
         if( $process && $process->getStartTimestamp() ) {
             $starttime = $process->getStartTimestamp()->format('Y-m-d H:i:s');
+            //$logger->notice("Try Run queue: next process to run id=".$process->getId());
         }
 
+//        if( $this->runningGenerationReport ) {
+//            $logger->notice("Try Run queue: runningGenerationReport is true");
+//        } else {
+//            $logger->notice("Try Run queue: runningGenerationReport is false");
+//        }
+
         //echo "Echo: try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."<br>";
-        //$logger->notice("Try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."; process starttime=".$starttime);
+        $logger->notice("Try Run queue: processes count=" . count($processes) . "; running process id=".$queue->getRunningProcess()."; process starttime=".$starttime);
 
         if( !$this->runningGenerationReport && $process && !$queue->getRunningProcess() ) {
-
-            $this->runningGenerationReport = true;
 
             //make sure libreoffice is not running
             //soffice.bin
@@ -229,23 +245,34 @@ class ReportGenerator {
                 $logger->warning("libreoffice task is running!");
                 if( $this->isProcessHang($process) ) {
                     $this->killTaskByName("soffice");
+                    $logger->warning("libreoffice is running and hang => kill task; fellapp id=" . $process->getFellappId() );
                 } else {
-                    $this->killTaskByName("soffice");
+                    //$this->killTaskByName("soffice");
+                    //wait and try run again?
+                    $logger->warning("libreoffice is running but not hang => return (wait until next try run); fellapp id=" . $process->getFellappId() );
                     return;
                 }
             } else {
-                //echo 'task is not running <br>';
+                //task is not running => continue
             }
 
-            //set running flag
+            //1) prepare to run
+            //1a) reset queue
+            $this->resetQueue($queue);
+
+            //1b) set running flag
+            $this->runningGenerationReport = true;
             $queue->setRunningProcess($process);
             $queue->setRunning(true);
             $process->setStartTimestamp(new \DateTime());
             $this->em->flush();
 
+            //echo "count processes=".count($processes)."<br>";
+            //$logger->notice("5 Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . count($processes) );
+
             //logger start event
             //echo "Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . (count($processes)-1) ."<br>";
-            //$logger->notice("Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . count($processes)-1 );
+            $logger->notice("Start running fell report id=" . $process->getFellappId());
 
             $time_start = microtime(true);
 
@@ -301,7 +328,7 @@ class ReportGenerator {
             //$logger->warning('taskline='.$task_line);
             if (preg_match($kill_pattern, $task_line, $out))
             {
-                echo "=> Detected: ".$out[1]."\n";
+                //echo "=> Detected: ".$out[1]."\n";
                 $logger->warning("Task Detected: ".$out[1]);
                 //$logger->warning(print_r($out));
                 //exec("taskkill /F /IM ".$out[1].".exe 2>NUL");
@@ -317,9 +344,9 @@ class ReportGenerator {
         exec("taskkill /F /IM ".$taskname.".* 2>NUL");
         $task_pattern = '~(soffice.bin|soffice.exe)~i';
         if( !$this->isTaskRunning($task_pattern) ) {
-            $logger->notice('Deleted task='.$taskname);
+            $logger->warning('Deleted task='.$taskname);
         } else {
-            $logger->notice('Failed to delete task='.$taskname);
+            $logger->warning('Failed to delete task='.$taskname);
         }
     }
 
@@ -355,6 +382,12 @@ class ReportGenerator {
 
         $this->em->flush();
         $this->runningGenerationReport = false;
+
+        //clear start timestamp for all processes
+        $query = $this->em->createQuery('UPDATE OlegFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+        $numUpdated = $query->execute();
+
+        return $numUpdated;
     }
 
 
@@ -387,7 +420,12 @@ class ReportGenerator {
 //            "_".$entity->getStartDate()->format('Y').
 //            ".pdf";
         //Cytopathology-Fellowship-Application-2017-ID47-Smith-John-generated-on-12-25-2015-at-02-13-pm.pdf
-        $fellappType = $entity->getFellowshipSubspecialty()->getName();
+        if( $entity->getFellowshipSubspecialty() ) {
+            $fellappType = $entity->getFellowshipSubspecialty()->getName();
+        } else {
+            $fellappType = "Unknown";
+            $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());
+        }
         $fellappType = str_replace(" ","-",$fellappType);
         $filename =
             $fellappType."-Fellowship-Application".
@@ -401,7 +439,7 @@ class ReportGenerator {
         //replace all white spaces to _
         $filename = str_replace(" ","_",$filename);
 
-        //$logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
+        $logger->notice("Start to generate report for ID=".$id."; filename=".$filename);
 
         //check and create Report and temp folders
         $uploadReportPath = 'Uploaded/' . $this->container->getParameter('fellapp.uploadpath').'/Reports';
@@ -456,13 +494,13 @@ class ReportGenerator {
         //Reprimand
         $reprimand = $entity->getRecentReprimand();
         if( $reprimand ) {
-            $filePathsArr[] = $reprimand;
+            $filePathsArr[] = $reprimand->getFileSystemPath();
         }
 
         //Legal Explanation
         $legalExplanation = $entity->getRecentLegalExplanation();
         if( $legalExplanation ) {
-            $filePathsArr[] = $legalExplanation;
+            $filePathsArr[] = $legalExplanation->getFileSystemPath();
         }
 
         //references
@@ -525,6 +563,8 @@ class ReportGenerator {
             'size' => $filesize
         );
 
+        $logger->notice($event);
+
         return $res;
     }
     ////////////////// EOF generate Fellowship Application Report //////////////////////////////
@@ -536,10 +576,10 @@ class ReportGenerator {
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
 
-//        if( file_exists($applicationOutputFilePath) ) {
-//            $logger->notice("generateApplicationPdf: file already exists path=" . $applicationOutputFilePath );
-//            unlink($applicationOutputFilePath);
-//        }
+        if( file_exists($applicationOutputFilePath) ) {
+            $logger->notice("generateApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
+            unlink($applicationOutputFilePath);
+        }
 
         ini_set('max_execution_time', 300); //300 sec
 
@@ -592,6 +632,8 @@ class ReportGenerator {
         //$session->save();
         //session_write_close();
         //echo "seesion name=".$session->getName().", id=".$session->getId()."<br>";       
+
+        //$logger->notice("before knp_snappy generate: pageUrl=".$pageUrl);
 
         //$application =
         $this->container->get('knp_snappy.pdf')->generate(
@@ -868,7 +910,7 @@ class ReportGenerator {
         if( $return == 1 ) {
 
             //event log
-            $event = "Probably encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
+            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
             //echo $event."<br>";
             $logger->notice($event);
             $userSecUtil = $this->container->get('user_security_utility');
@@ -894,7 +936,7 @@ class ReportGenerator {
 
             if( $return == 1 ) { //error
                 //event log
-                $event = "ERROR: 'Complete Application PDF' will no be generated! pdftk failed: " . $cmd;
+                $event = "ERROR: 'Complete Application PDF' will not be generated! pdftk failed: " . $cmd;
                 $logger->error($event);
                 $userSecUtil = $this->container->get('user_security_utility');
                 $systemUser = $userSecUtil->findSystemUser();
