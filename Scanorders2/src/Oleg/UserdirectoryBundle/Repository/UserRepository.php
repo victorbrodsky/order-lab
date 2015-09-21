@@ -76,7 +76,7 @@ class UserRepository extends EntityRepository {
 
 
     //Castro Martinez, Mario A: lastName, firstName
-    public function findOneByNameStr( $nameStr ) {
+    public function findOneByNameStr( $nameStr, $orAnd="OR" ) {
 
         $user = null;
 
@@ -91,7 +91,7 @@ class UserRepository extends EntityRepository {
 
         $query->leftJoin("user.infos", "infos");
 
-        $query->where("infos.firstName = :firstName OR infos.lastName = :lastName");
+        $query->where("infos.firstName = :firstName ".$orAnd." infos.lastName = :lastName");
         $query->setParameters( array("firstName"=>$firstName, "lastName"=>$lastName) );
 
         $users = $query->getQuery()->getResult();

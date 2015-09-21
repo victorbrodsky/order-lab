@@ -122,40 +122,47 @@ function updateExpectedPgyListener( element ) {
     holder.find('.pgylevelexpected-field').val(expectedPgyLevel);
 }
 
-//TODO: fix for multi
 //In the section "Academic Appointment Title(s)", if "Resident" is selected in the "Position Type" dropdown menu,
 // unfold a second drop down under it with a field called "Residency Track:" and show three choices: "AP", "CP", and "AP/CP".
 function positionTypeAction(element) {
     var fieldEl = $(element);
-    console.log(fieldEl);
+    //console.log(fieldEl);
 
     var holder = fieldEl.closest('.user-collection-holder');
-    console.log(holder);
+    //console.log(holder);
 
     if( !holder.hasClass('user-appointmentTitles') ) {
         return;
     }
 
-    printF(fieldEl,'field el:');
+    //printF(fieldEl,'field el:');
 
-    var value = fieldEl.select2('val');
-    console.log('value='+value);
+    var positionDataArr = fieldEl.select2('data');
 
     holder.find('.appointmenttitle-residencytrack-field').hide();
     holder.find('.appointmenttitle-fellowshiptype-field').hide();
     holder.find('.appointmenttitle-pgy-field').hide();
 
-    if( value == 'Resident' ) {
+    if( isContainPositionTypeText( positionDataArr, 'Resident') ) {
         holder.find('.appointmenttitle-residencytrack-field').show();
         holder.find('.appointmenttitle-pgy-field').show();
     }
 
-    if( value == 'Fellow' ) {
+    if( isContainPositionTypeText( positionDataArr, 'Fellow') ) {
         holder.find('.appointmenttitle-fellowshiptype-field').show();
         holder.find('.appointmenttitle-pgy-field').show();
     }
 }
 
+function isContainPositionTypeText(positionDataArr, positionTypeText) {
+    for( var i=0; i<positionDataArr.length; i++ ) {
+        //console.log('text='+positionDataArr[i].text);
+        if( positionTypeText == positionDataArr[i].text ) {
+            return true;
+        }
+    }
+    return false;
+}
 
 function initUpdateExpectedPgy() {
     $('.update-pgy-btn').each( function() {

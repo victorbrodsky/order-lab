@@ -13,6 +13,9 @@ var cycle = $("#formcycle").val();
 var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
 
+if( !user_id ) {
+    user_id = 'undefined';
+}
 
 function setCicleShow() {
     //console.log("setCicleShow: cycle="+cycle);

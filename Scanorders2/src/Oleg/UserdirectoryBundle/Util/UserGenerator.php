@@ -48,7 +48,7 @@ class UserGenerator {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
-        $inputFileName = __DIR__ . '/../Util/UsersFullShort.xlsx';
+        $inputFileName = __DIR__ . '/../Util/UsersFullNew.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -121,6 +121,13 @@ class UserGenerator {
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
+
+                //Assistants : s2id_oleg_userdirectorybundle_user_locations_0_assistant
+                $assistants = $this->getValueByHeaderName('Assistants', $rowData, $headers);
+                if( $assistants ) {
+                    $assistantsArr[$user->getId()] = $assistants;
+                }
+
                 continue; //ignore existing users to prevent overwrite
             }
 
@@ -221,6 +228,7 @@ class UserGenerator {
             $roomObj = $this->getObjectByNameTransformer('RoomList',$office,$systemuser);
             $mainLocation->setRoom($roomObj);
 
+
             //title is stored in Administrative Title
             $administrativeTitleStr = $this->getValueByHeaderName('Administrative Title', $rowData, $headers);
             if( $administrativeTitleStr ) {
@@ -248,7 +256,7 @@ class UserGenerator {
 //                    $user->addAdministrativeTitle($administrativeTitle);
 //                }
                 //echo "count admin titles=".count($administrativeTitles)."<br>";
-                //exit('admin title exit');
+                //exit('admin title end');
             }//if admin title
 
             //Medical Staff Appointment (MSA) Title
@@ -296,9 +304,9 @@ class UserGenerator {
                 //set institutional hierarchys
                 $academicTitles = $this->addInstitutinalTree('AppointmentTitle',$user,$systemuser,$academicTitleStr,$Institution,$Department,$HeadDepartment,$Division,$HeadDivision,$Service,$HeadService);
 
-                if( count($academicTitles) == 0 ) {
-                    $academicTitles[] = new AppointmentTitle();
-                }
+                //if( count($academicTitles) == 0 ) {
+                //    $academicTitles[] = new AppointmentTitle();
+                //}
 
                 //Academic Appointment - Faculty Track => oleg_userdirectorybundle_user_appointmentTitles_0_positions
                 //faculty Track can be multiple but the rest of title singular
@@ -717,7 +725,11 @@ class UserGenerator {
 
                 foreach( $assistantsStrArr as $assistantsStr ) {
                     if( strtolower($assistantsStr) != 'null' ) {
-                        $assistant = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByNameStr($assistantsStr);
+                        $assistant = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"AND");
+                        if( !$assistant ) {
+                            //try again with "last name OR first name"
+                            $assistant = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"OR");
+                        }
                         echo "found assistant=".$assistant."<br>";
                         if( $assistant ) {
                             $mainLocation = $user->getMainLocation();
@@ -841,57 +853,79 @@ class UserGenerator {
         $HeadDivisionArr = explode(";", $HeadDivision);
         $HeadServiceArr = explode(";", $HeadService);
 
-        //lead can be title or institution
-        if( count($InstitutionArr) > count($titleArr) ) {
-            //lead inst
-            $leadArr = $InstitutionArr;
-            $leadInst = true;
-            //echo "leadArr Inst<br>";
-        } else {
-            $leadArr = $titleArr;
-            $leadInst = false;
-            //echo "leadArr Title<br>";
+        //remove empty from array
+        for( $i=0; $i<count($titleArr); $i++ ) {
+            echo "el=".$titleArr[$i]."<br>";
+            if( trim($titleArr[$i]) == "" ) {
+                unset($titleArr[$i]);
+            }
         }
+        for( $i=0; $i<count($InstitutionArr); $i++ ) {
+            echo "el=(".$InstitutionArr[$i].")<br>";
+            if( trim($InstitutionArr[$i]) == "" ) {
+                //echo "remove el=".$InstitutionArr[$i]."<br>";
+                unset($InstitutionArr[$i]);
+            }
+        }
+        //exit('1');
+
+        if( count($InstitutionArr) != 0 && count($InstitutionArr) != count($titleArr) ) {
+            throw new \Exception('Title count='.count($titleArr).' is not equal to Institution count=' . count($InstitutionArr));
+        }
+
+//        //lead can be title or institution
+//        if( count($InstitutionArr) > count($titleArr) ) {
+//            //lead inst
+//            $leadArr = $InstitutionArr;
+//            $leadInst = true;
+//            //echo "leadArr Inst<br>";
+//        } else {
+//            $leadArr = $titleArr;
+//            $leadInst = false;
+//            //echo "leadArr Title<br>";
+//        }
 
         //echo "leadArr count=".count($leadArr)."<br>";
 
-        $lastInstitutionStr = null;
+        //$lastInstitutionStr = null;
         //$lastDepartmentStr = null;
         //$lastDivisionStr = null;
         //$lastServiceStr = null;
-        $lastTitleStr = null;
+        //$lastTitleStr = null;
 
         $index = 0;
-        foreach( $leadArr as $leadStr ) {
+        foreach( $titleArr as $titleStr ) {
 
             //echo "index=".$index."<br>";
 
-            $leadStr = trim($leadStr);
+            $titleStr = trim($titleStr);
 
-            if( !$leadStr ) {
+            if( !$titleStr ) {
                 continue;
             }
 
-            $InstitutionStr = null;
-            $titleStr = null;
-            if( $leadInst ) {
-                if( array_key_exists($index, $titleArr) ) {
-                    $titleStr = trim($titleArr[$index]);
-                    $lastTitleStr = $titleStr;
-                } else {
-                    $titleStr = $lastTitleStr;
-                }
-                $InstitutionStr = $leadStr;
-            } else {
-                if( array_key_exists($index, $InstitutionArr) ) {
-                    $InstitutionStr = trim($InstitutionArr[$index]);
-                    $lastInstitutionStr = $InstitutionStr;
-                } else {
-                    $InstitutionStr = $lastInstitutionStr;
-                }
-                $titleStr = $leadStr;
-            }
+//            $InstitutionStr = null;
+//            $titleStr = null;
+//            if( $leadInst ) {
+//                if( array_key_exists($index, $titleArr) ) {
+//                    $titleStr = trim($titleArr[$index]);
+//                    $lastTitleStr = $titleStr;
+//                } else {
+//                    $titleStr = $lastTitleStr;
+//                }
+//                $InstitutionStr = $leadStr;
+//            } else {
+//                if( array_key_exists($index, $InstitutionArr) ) {
+//                    $InstitutionStr = trim($InstitutionArr[$index]);
+//                    $lastInstitutionStr = $InstitutionStr;
+//                } else {
+//                    $InstitutionStr = $lastInstitutionStr;
+//                }
+//                $titleStr = $leadStr;
+//            }
 
+
+            $InstitutionStr = null;
             $DepartmentStr = null;
             $DivisionStr = null;
             $ServiceStr = null;
@@ -900,6 +934,10 @@ class UserGenerator {
             $HeadDivisionStr = null;
             $HeadServiceStr = null;
 
+
+            if( array_key_exists($index, $InstitutionArr) ) {
+                $InstitutionStr = trim($InstitutionArr[$index]);
+            }
 
             if( array_key_exists($index, $DepartmentArr) ) {
                 $DepartmentStr = trim($DepartmentArr[$index]);
@@ -935,7 +973,7 @@ class UserGenerator {
             $holder = $this->addSingleInstitutinalTree( $holderClassName,$systemuser,$InstitutionStr,$DepartmentStr,$HeadDepartmentStr,$DivisionStr,$HeadDivisionStr,$ServiceStr,$HeadServiceStr );
 
             //echo "holders < leadArr=".count($holders)." < ".count($leadArr)."<br>";
-            if( !$holder && count($holders) < count($leadArr)-1 ) {
+            if( !$holder && count($holders) < count($titleArr)-1 ) {
                 $entityClass = "Oleg\\UserdirectoryBundle\\Entity\\".$holderClassName;
                 $holder = new $entityClass($systemuser);
                 $holder->setStatus($holder::STATUS_VERIFIED);
@@ -1124,7 +1162,7 @@ class UserGenerator {
 //        echo "dep level title=".$DepartmentObj->getOrganizationalGroupType().", level=".$DepartmentObj->getLevel()."<br>";
 //        echo "div level title=".$DivisionObj->getOrganizationalGroupType().", level=".$DivisionObj->getLevel()."<br>";
 //        echo "ser level title=".$ServiceObj->getOrganizationalGroupType().", level=".$ServiceObj->getLevel()."<br>";
-//        exit();
+//        //exit();
 
         return $holder;
     }

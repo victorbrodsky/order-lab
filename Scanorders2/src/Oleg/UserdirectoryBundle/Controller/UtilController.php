@@ -431,9 +431,9 @@ class UtilController extends Controller {
      * @Route("/common/researchlab/{id}/{subjectUser}", name="employees_get_researchlab")
      * @Method("GET")
      */
-    public function getResearchlabByIdAction( $id, $subjectUser ) {
+    public function getResearchlabByIdAction( $id, $subjectUser=null ) {
 
-        if( !is_numeric($id) ) {
+        if( !is_numeric($id) || !$subjectUser || $subjectUser == 'undefined' ) {
             //echo "return null";
             $output = array();
             $response = new Response();
@@ -503,7 +503,14 @@ class UtilController extends Controller {
      * @Route("/common/researchlab/deletefromuser/{id}/{subjectUser}", name="employees_researchlab_deletefromuser")
      * @Method("DELETE")
      */
-    public function researchLabDeleteAction($id, $subjectUser) {
+    public function researchLabDeleteAction($id, $subjectUser=null) {
+
+        if( !$subjectUser || $subjectUser == 'undefined' ) {
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode('no subject user'));
+            return $response;
+        }
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
@@ -543,9 +550,9 @@ class UtilController extends Controller {
      * @Route("/common/grant/{id}/{subjectUser}", name="employees_get_grant")
      * @Method("GET")
      */
-    public function getGrantByIdAction( $id, $subjectUser ) {
+    public function getGrantByIdAction( $id, $subjectUser=null ) {
 
-        if( !is_numeric($id) ) {
+        if( !is_numeric($id) || !$subjectUser || $subjectUser == 'undefined' ) {
             //echo "return null";
             $output = array();
             $response = new Response();
@@ -650,7 +657,14 @@ class UtilController extends Controller {
      * @Route("/common/grant/deletefromuser/{id}/{subjectUser}", name="employees_grant_deletefromuser")
      * @Method("DELETE")
      */
-    public function grantDeleteAction($id, $subjectUser) {
+    public function grantDeleteAction($id, $subjectUser=null) {
+
+        if( !$subjectUser || $subjectUser == 'undefined' ) {
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode('no subject user'));
+            return $response;
+        }
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
