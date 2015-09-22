@@ -247,6 +247,16 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
+        $builder->add('interviews', 'collection', array(
+            'type' => new InterviewType($this->params),
+            'label' => 'Interview(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__interviews__',
+        ));
 
 
         /////////////////// user objects ////////////////////////////

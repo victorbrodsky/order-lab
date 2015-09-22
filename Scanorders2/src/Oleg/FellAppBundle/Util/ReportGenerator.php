@@ -460,6 +460,10 @@ class ReportGenerator {
         //1) get all upload documents
         $filePathsArr = array();
 
+        //itinerarys
+        $itineraryDocument = $entity->getRecentItinerary();
+        $filePathsArr[] = $itineraryDocument->getFileSystemPath();
+
         //check if photo is not image
         $photo = $entity->getRecentAvatar();
         if( $photo ) {
@@ -513,12 +517,6 @@ class ReportGenerator {
         $otherDocuments = $entity->getDocuments();
         foreach( $otherDocuments as $otherDocument ) {
             $filePathsArr[] = $otherDocument->getFileSystemPath();
-        }
-
-        //itinerarys
-        $itineraryDocuments = $entity->getItinerarys();
-        foreach( $itineraryDocuments as $itineraryDocument ) {
-            $filePathsArr[] = $itineraryDocument->getFileSystemPath();
         }
 
         $createFlag = true;

@@ -92,7 +92,7 @@ class GenericListType extends AbstractType
         }
 
         //Role Attributes
-        if( strtolower($this->mapper['className']) == strtolower("RoleAttributeList") ) {
+        if( strtolower($this->mapper['className']) == strtolower("RoleAttributeList") || strtolower($this->mapper['className']) == strtolower("FellAppRank") ) {
             $builder->add('value',null,array(
                 'label'=>'Value:',
                 'attr' => array('class' => 'form-control')

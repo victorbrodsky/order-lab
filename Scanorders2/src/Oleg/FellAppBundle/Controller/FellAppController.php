@@ -4,6 +4,7 @@ namespace Oleg\FellAppBundle\Controller;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
+use Oleg\FellAppBundle\Entity\Interview;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
@@ -32,13 +33,10 @@ class FellAppController extends Controller {
      * @Route("/", name="fellapp_home")
      * @Template("OlegFellAppBundle:Default:home.html.twig")
      */
-    public function indexAction(Request $request) {        
-        
-        if(
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-        ){
-            return $this->redirect( $this->generateUrl('login') );
+    public function indexAction(Request $request) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
         //echo "fellapp home <br>";
@@ -285,8 +283,13 @@ class FellAppController extends Controller {
         $routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $actionStr = "viewed";
+        $eventType = 'Fellowship Applicant Page Viewed';
+
         //admin can edit
         if( $routeName == "fellapp_edit" ) {
+            $actionStr = "updated";
+            $eventType = 'Fellowship Application Updated';
             if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
@@ -331,8 +334,6 @@ class FellAppController extends Controller {
 
 
         //event log
-        $actionStr = "viewed";
-        $eventType = 'Fellowship Applicant Page Viewed';
         $user = $this->get('security.context')->getToken()->getUser();
         $userEntity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -405,8 +406,6 @@ class FellAppController extends Controller {
         $fellappUtil = $this->container->get('fellapp_util');
         $fellappUtil->addEmptyFellAppFields($entity);
 
-        //$routeName = $request->get('_route');
-
         if( $routeName == "fellapp_show" ) {
             $cycle = 'show';
             $disabled = true;
@@ -476,11 +475,8 @@ class FellAppController extends Controller {
      */
     public function updateAction(Request $request, $id) {
 
-        if(
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-        ){
-            return $this->redirect( $this->generateUrl('login') );
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
         //echo "update <br>";
@@ -593,6 +589,11 @@ class FellAppController extends Controller {
      */
     public function createApplicantAction( Request $request )
     {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -774,6 +775,10 @@ class FellAppController extends Controller {
 
         //echo "status <br>";
 
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
@@ -837,6 +842,98 @@ class FellAppController extends Controller {
 //        return $this->redirect( $this->generateUrl('fellapp_home') );
 //    }
 
+
+    /**
+     * @Route("/interview/show/{id}", name="fellapp_interview_show")
+     * @Route("/interview/edit/{id}", name="fellapp_interview_edit")
+     * @Method("GET")
+     * @Template("OlegFellAppBundle:Interview:new.html.twig")
+     */
+    public function interviewAction( Request $request, $id ) {
+
+        //echo "status <br>";
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $interview = $em->getRepository('OlegFellAppBundle:Interview')->find($id);
+
+        if( !$interview ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
+        }
+
+        $routeName = $request->get('_route');
+
+        if( $routeName == "fellapp_interview_show" ) {
+           $cycle = "show";
+        }
+
+        if( $routeName == "fellapp_interview_edit" ) {
+            $cycle = "edit";
+        }
+
+        $params = array(
+            'cycle' => $cycle,
+            'sc' => $this->get('security.context'),
+            'em' => $em,
+            'interviewer' => $interview->getInterviewer()
+        );
+        $form = $this->createForm( new InterviewType($params), $interview );
+
+        return array(
+            'form' => $form->createView(),
+            'entity' => $interview,
+            'pathbase' => 'fellapp',
+            'cycle' => $cycle,
+            'sitename' => $this->container->getParameter('fellapp.sitename')
+        );
+
+    }
+
+//    /**
+//     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
+//     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
+//     * @Method("GET")
+//     * @Template("OlegFellAppBundle:Interview:new.html.twig")
+//     */
+//    public function createInterviewAction( Request $request ) {
+//
+//        //echo "status <br>";
+//
+//        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $interview = $this->getDoctrine()->getRepository('OlegFellAppBundle:Interview')->find($id);
+//
+//        if( !$interview ) {
+//            throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
+//        }
+//
+//        $cycle = "new";
+//
+//        $params = array(
+//            'cycle' => $cycle,
+//            'sc' => $this->get('security.context'),
+//            'em' => $this->getDoctrine()->getManager(),
+//        );
+//        $form = $this->createForm( new InterviewType($params), $interview );
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'entity' => $interview,
+//            'pathbase' => 'fellapp',
+//            'cycle' => $cycle,
+//            'sitename' => $this->container->getParameter('fellapp.sitename')
+//        );
+//
+//    }
+
     /**
      * @Route("/resend-emails/{id}", name="fellapp_resendemails")
      */
@@ -894,6 +991,10 @@ class FellAppController extends Controller {
      */
     public function importAndPopulateAction(Request $request) {
 
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         $fellappUtil = $this->container->get('fellapp_util');
         $error = false;
 
@@ -944,6 +1045,10 @@ class FellAppController extends Controller {
      */
     public function populateSpreadsheetAction(Request $request) {
 
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         $fellappUtil = $this->container->get('fellapp_util');
         $populatedCount = $fellappUtil->populateFellApp();
 
@@ -970,6 +1075,10 @@ class FellAppController extends Controller {
      * @Route("/import", name="fellapp_import")
      */
     public function importAction(Request $request) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
 
         $fellappUtil = $this->container->get('fellapp_util');
         $fileDb = $fellappUtil->importFellApp();

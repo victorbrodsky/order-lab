@@ -73,6 +73,8 @@ function initBaseAdd(newForm) {
 //get input field only
 function getBaseTitleForm( elclass ) {
 
+    //console.log('elclass='+elclass);
+
     var dataholder = "#form-prototype-data"; //fixed data holder
 
     var holderClass = elclass+'-holder';

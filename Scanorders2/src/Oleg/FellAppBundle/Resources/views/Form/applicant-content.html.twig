@@ -1,6 +1,7 @@
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as interviewmacros %}
 {% import _self as fellapp %}
 
 
@@ -69,6 +70,7 @@
 
 
 <div id="form-prototype-data"
+     data-prototype-fellapp-interviews = "{{ interviewmacros.interviewForm(form.interviews,cycle,'fellapp-interviews','prototype', sitename,1)|e }}"
      data-userurllink = "{{ usermacros.userUrlLink()|e }}"
      data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
      data-userid = "{{ entity.user.id }}"
@@ -128,6 +130,9 @@
 {% if cycle != "download" %}
     {% include 'OlegFellAppBundle:Form:Itinerary.html.twig' %}
 {% endif %}
+
+<!-- Interviews -->
+{% include 'OlegFellAppBundle:Form:Interviews.html.twig' %}
 
 <!-- Signature -->
 {% include 'OlegFellAppBundle:Form:Signature.html.twig' %}

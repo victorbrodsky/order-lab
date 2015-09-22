@@ -1,0 +1,48 @@
+
+
+{% macro interviewForm( interview, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set forminterview = interview.vars.prototype %}
+    {% else %}
+        {% set forminterview = interview %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+        {% if cycle != "show" and showAddDeleteBtn %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+            <br>
+        {% endif %}
+
+        {{ formmacros.field(forminterview.interviewer) }}
+
+        {{ formmacros.fieldDateLabel(forminterview.interviewDate,'allow-future-date') }}
+
+        {{ formmacros.field(forminterview.academicRank) }}
+        {#{{ form_row(interview.academicRank) }}#}
+
+        {{ formmacros.field(forminterview.personalityRank) }}
+
+        {{ formmacros.field(forminterview.potentialRank) }}
+
+        {{ formmacros.field(forminterview.totalRank) }}
+
+        {{ formmacros.field(forminterview.comment) }}
+
+        {{ formmacros.field(forminterview.languageProficiency) }}
+
+    </div>
+
+{% endmacro %}
+
+

@@ -106,7 +106,6 @@ class FellowshipApplication extends BaseUserAttributes {
     private $lawsuitDocuments;
 
     /**
-     * Accession Number
      * @ORM\OneToMany(targetEntity="Reference", mappedBy="fellapp", cascade={"persist"})
      */
     private $references;
@@ -210,6 +209,10 @@ class FellowshipApplication extends BaseUserAttributes {
      */
     private $interviewDate;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Interview", mappedBy="fellapp", cascade={"persist","remove"})
+     */
+    private $interviews;
 
 
     /////////// user objects /////////////
@@ -304,6 +307,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->oldReports = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->itinerarys = new ArrayCollection();
+        $this->interviews = new ArrayCollection();
 
         //$this->employmentStatuses = new ArrayCollection();
         $this->trainings = new ArrayCollection();
@@ -720,6 +724,24 @@ class FellowshipApplication extends BaseUserAttributes {
     }
 
 
+    public function addInterview($item)
+    {
+        if( $item && !$this->interviews->contains($item) ) {
+            $this->interviews->add($item);
+            $item->setFellapp($this);
+        }
+        return $this;
+    }
+    public function removeInterview($item)
+    {
+        $this->interviews->removeElement($item);
+    }
+    public function getInterviews()
+    {
+        return $this->interviews;
+    }
+
+
     /**
      * @param mixed $honors
      */
@@ -906,19 +928,35 @@ class FellowshipApplication extends BaseUserAttributes {
     }
 
     public function getRecentReport() {
-        return $this->getReports()->last();
+        if( count($this->getReports()) > 0 ) {
+            return $this->getReports()->last();
+        } else {
+            return null;
+        }
     }
 
     public function getRecentCoverLetter() {
-        return $this->getCoverLetters()->last();
+        if( count($this->getCoverLetters()) > 0 ) {
+            return $this->getCoverLetters()->last();
+        } else {
+            return null;
+        }
     }
 
     public function getRecentCv() {
-        return $this->getCvs()->last();
+        if( count($this->getCvs()) > 0 ) {
+            return $this->getCvs()->last();
+        } else {
+            return null;
+        }
     }
 
     public function getRecentAvatar() {
-        return $this->getAvatars()->last();
+        if( count($this->getAvatars()) > 0 ) {
+            return $this->getAvatars()->last();
+        } else {
+            return null;
+        }
     }
 
 //    public function getRecentExaminationScores() {
@@ -960,6 +998,14 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getRecentLegalExplanation() {
         if( count($this->getLawsuitDocuments()) > 0 ) {
             return $this->getLawsuitDocuments()->last();
+        } else {
+            return null;
+        }
+    }
+
+    public function getRecentItinerary() {
+        if( count($this->getItinerarys()) > 0 ) {
+            return $this->getItinerarys()->last();
         } else {
             return null;
         }

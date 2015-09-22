@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
@@ -226,6 +227,7 @@ class AdminController extends Controller
         $count_TrainingTypeList = $this->generateTrainingTypeList();
 
         $count_FellAppStatus = $this->generateFellAppStatus();
+        $count_FellAppRank = $this->generateFellAppRank();
 
 
         $this->get('session')->getFlashBag()->add(
@@ -280,7 +282,8 @@ class AdminController extends Controller
             'Medical License Statuses='.$count_generateMedicalLicenseStatus.', '.
             'Certifying Board Organizations='.$count_generateCertifyingBoardOrganization.', '.
             'Training Types='.$count_TrainingTypeList.', '.
-            'FellApp Statuses='.$count_FellAppStatus.' '.
+            'FellApp Statuses='.$count_FellAppStatus.', '.
+            'FellApp Ranks='.$count_FellAppRank.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -446,7 +449,8 @@ class AdminController extends Controller
             "ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY" => array("Fellowship Program Coordinator WCMC Genitourinary Pathology","Access to specific Fellowship Application type as Coordinator"),
             "ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY" => array("Fellowship Program Coordinator WCMC Hematopathology","Access to specific Fellowship Application type as Coordinator"),
             "ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY" => array("Fellowship Program Coordinator WCMC Molecular Genetic Pathology","Access to specific Fellowship Application type as Coordinator"),
-
+            //Fellowship Interviewer
+            "ROLE_FELLAPP_INTERVIEWER" => array("Fellowship Program General Interviewer Role","Access to Fellowship Application type as Interviewer (able to create and update the interview form)"),
 
 
         );
@@ -3404,6 +3408,43 @@ class AdminController extends Controller
             $entity = new FellAppStatus();
             $this->setDefaultList($entity,$count,$username,$name);
             $entity->setAction($action);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateFellAppRank() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegFellAppBundle:FellAppRank')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            '1 (Excellent)'=>1,
+            '1.5'=>1.5,
+            '2 (Average)'=>2,
+            '2.5'=>2.5,
+            '3 (Below Average)'=>3
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name=>$value ) {
+
+            $entity = new FellAppRank();
+            $this->setDefaultList($entity,$count,$username,$name);
+            $entity->setValue($value);
 
             $em->persist($entity);
             $em->flush();
