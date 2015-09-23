@@ -31,8 +31,8 @@ class Interview {
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="FellowshipApplication", inversedBy="interviews", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="fellapp_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="FellowshipApplication", inversedBy="interviews")
+     * @ORM\JoinColumn(name="fellapp_id", referencedColumnName="id", nullable=true)
      */
     private $fellapp;
 
@@ -59,19 +59,19 @@ class Interview {
     private $endTime;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FellAppRank", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="FellAppRank")
      * @ORM\JoinColumn(name="academicRank_id", referencedColumnName="id", nullable=true)
      */
     private $academicRank;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FellAppRank", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="FellAppRank")
      * @ORM\JoinColumn(name="personalityRank_id", referencedColumnName="id", nullable=true)
      */
     private $personalityRank;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FellAppRank", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="FellAppRank")
      * @ORM\JoinColumn(name="potentialRank_id", referencedColumnName="id", nullable=true)
      */
     private $potentialRank;
@@ -89,13 +89,13 @@ class Interview {
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="LanguageProficiency", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="LanguageProficiency")
      * @ORM\JoinColumn(name="languageProficiency_id", referencedColumnName="id", nullable=true)
      */
     private $languageProficiency;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
      * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
      */
     private $location;
@@ -313,7 +313,13 @@ class Interview {
     }
 
 
-
+    public function __toString() {
+        $res = "Interview";
+        if( $this->getInterviewer() ) {
+            $res = $res . " Interviewer: ".$this->getInterviewer();
+        }
+        return $res;
+    }
 
 
 } 

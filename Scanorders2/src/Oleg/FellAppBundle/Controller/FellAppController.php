@@ -2,6 +2,7 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\FellAppBundle\Entity\Interview;
@@ -15,6 +16,7 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -489,6 +491,12 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
+        // Create an ArrayCollection of the current interviews
+        $originalInterviews = new ArrayCollection();
+        foreach( $entity->getInterviews() as $interview) {
+            $originalInterviews->add($interview);
+        }
+
         $cycle = 'edit';
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -539,6 +547,17 @@ class FellAppController extends Controller {
 
             //exit('form valid');
 
+            /////////////// Process Removed Collections ///////////////
+            $removedCollections = array();
+
+            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+            /////////////// EOF Process Removed Collections ///////////////
+
+            $this->calculateScore($entity);
+
             $this->processDocuments($entity);
 
             //set update author application
@@ -546,6 +565,22 @@ class FellAppController extends Controller {
             $userUtil = new UserUtil();
             $sc = $this->get('security.context');
             $userUtil->setUpdateInfo($entity,$em,$sc);
+
+
+            /////////////// Add event log on edit (edit or add collection) ///////////////
+            /////////////// Must run before removeCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+            $changedInfoArr = $this->setEventLogChanges($entity);
+
+            //set Edit event log for removed collection and changed fields or added collection
+            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 ) {
+                $user = $this->get('security.context')->getToken()->getUser();
+                $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
+                $event = $event . implode("<br>", $changedInfoArr);
+                $event = $event . "<br>" . implode("<br>", $removedCollections);
+                $userSecUtil = $this->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request);
+            }
+
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -581,6 +616,123 @@ class FellAppController extends Controller {
             'cycle' => $cycle,
             'sitename' => $this->container->getParameter('fellapp.sitename')
         );
+    }
+
+    public function calculateScore($entity) {
+        $count = 0;
+        $score = 0;
+        foreach( $entity->getInterviews() as $interview ) {
+            $totalRank = $interview->getTotalRank();
+            if( $totalRank ) {
+                $score = $score + $totalRank;
+                $count++;
+            }
+        }
+        if( $count > 0 ) {
+            $score = $score/$count;
+        }
+
+        $entity->setInterviewScore($score);
+    }
+
+    public function setEventLogChanges($entity) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $uow = $em->getUnitOfWork();
+        $uow->computeChangeSets(); // do not compute changes if inside a listener
+
+        $eventArr = array();
+
+        //log simple fields
+        $changeset = $uow->getEntityChangeSet($entity);
+        $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
+
+        //interviews
+        foreach( $entity->getInterviews() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."interview ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        return $eventArr;
+    }
+    public function removeCollection($originalArr,$currentArr,$entity) {
+        $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
+
+        foreach( $originalArr as $element ) {
+            if( false === $currentArr->contains($element) ) {
+                $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
+
+                if( $element instanceof Interview ) {
+                    $entity->removeInterview($element);
+                    //$element->setInterviewer(NULL);
+                    $em->remove($element);
+                }
+            }
+        } //foreach
+
+        return implode("<br>", $removeArr);
+    }
+    public function addChangesToEventLog( $eventArr, $changeset, $text="" ) {
+
+        $changeArr = array();
+
+        //process $changeset: author, subjectuser, oldvalue, newvalue
+        foreach( $changeset as $key => $value ) {
+            if( $value[0] != $value[1] ) {
+
+                if( is_object($key) ) {
+                    //if $key is object then skip it, because we don't want to have non-informative record such as: credentials(stateLicense New): old value=, new value=Credentials
+                    continue;
+                }
+
+                $field = $key;
+
+                $oldValue = $value[0];
+                $newValue = $value[1];
+
+                if( $oldValue instanceof \DateTime ) {
+                    $oldValue = $this->convertDateTimeToStr($value[0]);
+                }
+                if( $newValue instanceof \DateTime ) {
+                    $newValue = $this->convertDateTimeToStr($value[1]);
+                }
+
+                if( is_array($oldValue) ) {
+                    $oldValue = implode(",",$oldValue);
+                }
+                if( is_array($newValue) ) {
+                    $newValue = implode(",",$newValue);
+                }
+
+                $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;
+                //echo "event=".$event."<br>";
+                //exit();
+
+                $changeArr[] = $event;
+            }
+        }
+
+        if( count($changeArr) > 0 ) {
+            $eventArr[] = implode("<br>", $changeArr);
+        }
+
+        return $eventArr;
+
+    }
+
+    public function convertDateTimeToStr($datetime) {
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        $dateStr = $transformer->transform($datetime);
+        return $dateStr;
+    }
+    public function getEntityId($entity) {
+        if( $entity->getId() ) {
+            return "ID=".$entity->getId();
+        }
+        return "New";
     }
 
     /**

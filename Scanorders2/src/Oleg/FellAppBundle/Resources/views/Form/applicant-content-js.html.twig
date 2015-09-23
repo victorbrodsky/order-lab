@@ -47,19 +47,6 @@
     }
     function updateFellAppTotalRank(holder) {
         var totalRank = 0;
-//        holder.find('.interview-rank').each( function() {
-//            //console.log($(this));
-//            if( $(this).select2('data') ) {
-//                var rankStr = $(this).select2('data').text;
-//                var rankArr = rankStr.split(" ");
-//                var rank = rankArr[0];
-//                console.log("rank="+rank+" => Number(rank)="+Number(rank));
-//                console.log("Number(totalRank)="+Number(totalRank));
-//                //totalRank = parseFloat(totalRank).toFixed(1) + parseFloat(rank).toFixed(1);
-//                totalRank = Number(totalRank) + Number(rank);
-//                count++;
-//            }
-//        });
 
         var academicRank = getValueFromRankString(holder,'.interview-academicRank');
         var personalityRank = getValueFromRankString(holder,'.interview-personalityRank');
