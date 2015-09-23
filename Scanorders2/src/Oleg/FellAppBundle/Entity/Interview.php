@@ -77,8 +77,12 @@ class Interview {
      */
     private $comment;
 
+//    /**
+//     * @ORM\Column(name="languageProficiency", type="string", nullable=true)
+//     */
     /**
-     * @ORM\Column(name="languageProficiency", type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="LanguageProficiency", cascade={"persist"})
+     * @ORM\JoinColumn(name="languageProficiency_id", referencedColumnName="id", nullable=true)
      */
     private $languageProficiency;
 

@@ -5,6 +5,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
+use Oleg\FellAppBundle\Entity\LanguageProficiency;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
@@ -228,6 +229,7 @@ class AdminController extends Controller
 
         $count_FellAppStatus = $this->generateFellAppStatus();
         $count_FellAppRank = $this->generateFellAppRank();
+        $count_LanguageProficiency = $this->generateLanguageProficiency();
 
 
         $this->get('session')->getFlashBag()->add(
@@ -283,7 +285,8 @@ class AdminController extends Controller
             'Certifying Board Organizations='.$count_generateCertifyingBoardOrganization.', '.
             'Training Types='.$count_TrainingTypeList.', '.
             'FellApp Statuses='.$count_FellAppStatus.', '.
-            'FellApp Ranks='.$count_FellAppRank.' '.
+            'FellApp Ranks='.$count_FellAppRank.', '.
+            'Language Proficiency='.$count_LanguageProficiency.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -3445,6 +3448,41 @@ class AdminController extends Controller
             $entity = new FellAppRank();
             $this->setDefaultList($entity,$count,$username,$name);
             $entity->setValue($value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateLanguageProficiency() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegFellAppBundle:LanguageProficiency')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "Excellent",
+            "Adequate",
+            "Inadequate",
+            "N/A"
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new LanguageProficiency();
+            $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);
             $em->flush();

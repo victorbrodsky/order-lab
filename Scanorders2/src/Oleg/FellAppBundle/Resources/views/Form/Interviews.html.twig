@@ -22,7 +22,10 @@
                     {{ interviewmacros.interviewForm(interview, cycle, 'fellapp-interviews', 'noprototype', sitename, 1) }}
 
                 {% endfor %}
-                {{ usermacros.addNewObjectBtn(cycle,'fellapp-interviews','Add Interviewer') }}
+
+                {% if cycle != "show" %}
+                    {{ usermacros.addNewObjectBtn(cycle,'fellapp-interviews','Add Interviewer') }}
+                {% endif %}
             </div>
 
 

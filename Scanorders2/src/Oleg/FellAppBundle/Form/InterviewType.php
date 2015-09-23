@@ -71,13 +71,12 @@ class InterviewType extends AbstractType
 
         $builder->add('comment',null,array(
             'required' => false,
-            'label'=>false,
+            'label'=>"Comments:",
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('languageProficiency','choice', array(
+        $builder->add('languageProficiency',null, array(
             'label' => 'Language Proficiency:',
-            'choices' => array("Excellent","Adequate","Inadequate","N/A"),
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width interview-languageProficiency'),
         ));

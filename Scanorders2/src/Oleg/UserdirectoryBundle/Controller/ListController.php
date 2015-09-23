@@ -84,6 +84,7 @@ class ListController extends Controller
      * @Route("/job-titles/", name="joblists-list")
      * @Route("/fellowship-application-statuses/", name="fellappstatuses-list")
      * @Route("/fellowship-application-ranks/", name="fellappranks-list")
+     * @Route("/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -255,6 +256,7 @@ class ListController extends Controller
      * @Route("/job-titles/", name="joblists_create")
      * @Route("/fellowship-application-statuses/", name="fellappstatuses_create")
      * @Route("/fellowship-application-ranks/", name="fellappranks_create")
+     * @Route("/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -400,6 +402,7 @@ class ListController extends Controller
      * @Route("/job-titles/new", name="joblists_new")
      * @Route("/fellowship-application-statuses/new", name="fellappstatuses_new")
      * @Route("/fellowship-application-ranks/new", name="fellappranks_new")
+     * @Route("/fellowship-application-language-proficiencies/new", name="fellapplanguageproficiency_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -516,6 +519,7 @@ class ListController extends Controller
      * @Route("/job-titles/{id}", name="joblists_show")
      * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_show")
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_show")
+     * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -622,6 +626,7 @@ class ListController extends Controller
      * @Route("/job-titles/{id}/edit", name="joblists_edit")
      * @Route("/fellowship-application-statuses/{id}/edit", name="fellappstatuses_edit")
      * @Route("/fellowship-application-ranks/{id}/edit", name="fellappranks_edit")
+     * @Route("/fellowship-application-language-proficiencies/{id}/edit", name="fellapplanguageproficiency_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -760,6 +765,7 @@ class ListController extends Controller
      * @Route("/job-titles/{id}", name="joblists_update")
      * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_update")
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_update")
+     * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1151,6 +1157,11 @@ class ListController extends Controller
                 $displayName = "Fellowship Application Ranks";
                 $bundleName = "FellAppBundle";
                 break;
+            case "fellapplanguageproficiency":
+                $className = "LanguageProficiency";
+                $displayName = "Fellowship Application Language Proficiencies";
+                $bundleName = "FellAppBundle";
+                break;
 
             default:
                 $className = null;
@@ -1242,6 +1253,8 @@ class ListController extends Controller
      * @Route("/job-titles/{id}", name="joblists_delete")
      * @Route("/fellowship-application-statuses/{id}", name="fellappstatuses_delete")
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_delete")
+     * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_delete")
+     *
      *
      * @Method("DELETE")
      */
