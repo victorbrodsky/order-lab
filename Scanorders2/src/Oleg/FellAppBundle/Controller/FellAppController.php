@@ -279,6 +279,7 @@ class FellAppController extends Controller {
         //$ip = $this->container->get('request')->getClientIp();
         //echo "ip=".$ip."<br>";
 
+        $em = $this->getDoctrine()->getManager();
         $logger = $this->container->get('logger');
         $routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -320,7 +321,7 @@ class FellAppController extends Controller {
         
         //echo "fellapp download!!!!!!!!!!!!!!! <br>";       
 
-        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -335,10 +336,10 @@ class FellAppController extends Controller {
 
         //event log
         $user = $this->get('security.context')->getToken()->getUser();
-        $userEntity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+        //$userEntity = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
         //$userSecUtil = $this->container->get('user_security_utility');
         $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$userEntity,$entity,$request,$eventType);
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }

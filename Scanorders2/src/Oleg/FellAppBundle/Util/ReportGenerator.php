@@ -462,7 +462,9 @@ class ReportGenerator {
 
         //itinerarys
         $itineraryDocument = $entity->getRecentItinerary();
-        $filePathsArr[] = $itineraryDocument->getFileSystemPath();
+        if( $itineraryDocument ) {
+            $filePathsArr[] = $itineraryDocument->getFileSystemPath();
+        }
 
         //check if photo is not image
         $photo = $entity->getRecentAvatar();

@@ -30,9 +30,14 @@ class InterviewType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
-                        ->setParameters(array('role1' => '%' . 'ROLE_FELLAPP_DIRECTOR' . '%', 'role2' => '%' . 'ROLE_FELLAPP_INTERVIEWER' . '%'));
+                    return $er->createQueryBuilder('user')
+                        ->leftJoin("user.infos", "infos")
+                        ->leftJoin("user.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType");
+                        //->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)");
+
+                        //->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
+                        //->setParameters(array('role1' => '%' . 'ROLE_FELLAPP_DIRECTOR' . '%', 'role2' => '%' . 'ROLE_FELLAPP_INTERVIEWER' . '%'));
                 },
         ));
 

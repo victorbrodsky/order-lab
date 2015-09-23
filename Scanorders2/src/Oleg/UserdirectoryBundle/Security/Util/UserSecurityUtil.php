@@ -294,11 +294,19 @@ class UserSecurityUtil {
 
 
     public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='User Updated') {
+
+        if( !$user ) {
+            return null;
+        }
+
+        $em = $this->em;
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+
         $eventLog = $this->constructEventLog($sitename,$user,$request);
         $eventLog->setEvent($event);
 
         //set Event Type
-        $em = $this->em;
+
         $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
         $eventLog->setEventType($eventtype);
 
@@ -315,7 +323,7 @@ class UserSecurityUtil {
         }
 
         $em->persist($eventLog);
-        $em->flush();
+        $em->flush($eventLog);
 
         return $eventLog;
     }
