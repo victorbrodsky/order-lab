@@ -68,6 +68,8 @@ function initBaseAdd(newForm) {
     grantListener(newForm);
 
     degreeListener(newForm);
+
+    listenerFellAppRank(newForm);
 }
 
 //get input field only

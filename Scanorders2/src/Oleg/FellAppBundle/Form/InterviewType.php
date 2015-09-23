@@ -2,13 +2,13 @@
 
 namespace Oleg\FellAppBundle\Form;
 
-use Oleg\UserdirectoryBundle\Entity\Identifier;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 class InterviewType extends AbstractType
 {
@@ -33,9 +33,8 @@ class InterviewType extends AbstractType
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos", "infos")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType");
-                        //->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)");
-
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)");
                         //->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
                         //->setParameters(array('role1' => '%' . 'ROLE_FELLAPP_DIRECTOR' . '%', 'role2' => '%' . 'ROLE_FELLAPP_INTERVIEWER' . '%'));
                 },
@@ -49,22 +48,34 @@ class InterviewType extends AbstractType
             'required' => false,
         ));
 
+        $builder->add('startTime', 'time', array(
+            'input'  => 'datetime',
+            'widget' => 'choice',
+            'label'=>'Start Time:'
+        ));
+
+        $builder->add('endTime', 'time', array(
+            'input'  => 'datetime',
+            'widget' => 'choice',
+            'label'=>'End Time:'
+        ));
+
         $builder->add('academicRank',null, array(
             'label' => 'Academic Rank:',
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width interview-academicRank'),
+            'attr' => array('class' => 'combobox combobox-width interview-rank interview-academicRank'),
         ));
 
         $builder->add('personalityRank',null, array(
             'label' => 'Personality Rank:',
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width interview-personalityRank'),
+            'attr' => array('class' => 'combobox combobox-width interview-rank interview-personalityRank'),
         ));
 
         $builder->add('potentialRank',null, array(
             'label' => 'Potential Rank:',
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width interview-potentialRank'),
+            'attr' => array('class' => 'combobox combobox-width interview-rank interview-potentialRank'),
         ));
 
         $builder->add('totalRank','text', array(
@@ -86,6 +97,43 @@ class InterviewType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width interview-languageProficiency'),
         ));
 
+//        $builder->add('location',null, array(
+//            'label' => 'Location:',
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width interview-location'),
+//        ));
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $interview = $event->getData();
+            $form = $event->getForm();
+
+            $options = array(
+                'label' => 'Interview Location:',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width interview-location'),
+            );
+
+            //$officeLocation = null;
+            if( $interview && $interview->getInterviewer() ) {
+
+                $officeLocation = $interview->getInterviewer()->getMainLocation();
+
+                if( $officeLocation ) {
+                    $options['data'] = $officeLocation;
+                }
+
+            }
+            //echo "officeLocation=".$officeLocation."<br>";
+
+            $form->add('location',null,$options);
+
+//            $form->add('location',null, array(
+//                'label' => 'Location:',
+//                'required' => false,
+//                'data' => $officeLocation,
+//                'attr' => array('class' => 'combobox combobox-width interview-location'),
+//            ));
+
+        });
 
     }
 

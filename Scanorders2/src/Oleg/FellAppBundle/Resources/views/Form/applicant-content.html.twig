@@ -132,7 +132,11 @@
 {% endif %}
 
 <!-- Interviews -->
-{% include 'OlegFellAppBundle:Form:Interviews.html.twig' %}
+{% if cycle != "download" %}
+    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_INTERVIEWER') %}
+        {% include 'OlegFellAppBundle:Form:Interviews.html.twig' %}
+    {% endif %}
+{% endif %}
 
 <!-- Signature -->
 {% include 'OlegFellAppBundle:Form:Signature.html.twig' %}
@@ -169,9 +173,11 @@
 <br>
 
 {% if cycle == "show" %}
-    <p>
-        <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
-    </p>
+    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+        <p>
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
+        </p>
+    {% endif %}
 {% endif %}
 
 {#{% if cycle == "edit" %}#}

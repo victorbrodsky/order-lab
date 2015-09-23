@@ -22,8 +22,81 @@
         $(".fellapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear()+2,6,1));
         $(".fellapp-endDate").datepicker().datepicker("setDate", new Date(now.getFullYear()+3,5,30 ));
 
+        //add listener on rank change
+        listenerFellAppRank(null);
 
     });
+
+
+    function listenerFellAppRank(holder) {
+
+        var rankHolder = $('.interview-rank');
+        if( !rankHolder ) {
+            return;
+        }
+
+        if( holder ) {
+            rankHolder = holder.find('.interview-rank');
+        }
+
+        rankHolder.on("change", function(e) {
+            //console.log("interview-rank on change");
+            var holder = $(this).closest('.user-collection-holder');
+            updateFellAppTotalRank(holder);
+        });
+    }
+    function updateFellAppTotalRank(holder) {
+        var totalRank = 0;
+//        holder.find('.interview-rank').each( function() {
+//            //console.log($(this));
+//            if( $(this).select2('data') ) {
+//                var rankStr = $(this).select2('data').text;
+//                var rankArr = rankStr.split(" ");
+//                var rank = rankArr[0];
+//                console.log("rank="+rank+" => Number(rank)="+Number(rank));
+//                console.log("Number(totalRank)="+Number(totalRank));
+//                //totalRank = parseFloat(totalRank).toFixed(1) + parseFloat(rank).toFixed(1);
+//                totalRank = Number(totalRank) + Number(rank);
+//                count++;
+//            }
+//        });
+
+        var academicRank = getValueFromRankString(holder,'.interview-academicRank');
+        var personalityRank = getValueFromRankString(holder,'.interview-personalityRank');
+        var potentialRank = getValueFromRankString(holder,'.interview-potentialRank');
+
+        if( academicRank ) {
+            totalRank = totalRank + academicRank;
+        }
+
+        if( personalityRank ) {
+            totalRank = totalRank + personalityRank;
+        }
+
+        if( potentialRank ) {
+            totalRank = totalRank + potentialRank;
+        }
+
+        holder.find('.interview-totalRank').val(totalRank);
+
+    }
+    function getValueFromRankString(holder,identifierName) {
+
+        var rankEl = holder.find(identifierName);
+        if( !rankEl ) {
+            return null;
+        }
+
+        var rankData = rankEl.select2('data');
+        if( !rankData || !rankData.text ) {
+            return null;
+        }
+
+        var rank = rankData.text.split(" ")[0];
+        //console.log("rank="+rank+" => Number(rank)="+Number(rank));
+        return Number(rank);
+    }
+
 
     //http://stackoverflow.com/questions/4435906/print-when-textarea-has-overflow
     function copy_to_print_helper(element){

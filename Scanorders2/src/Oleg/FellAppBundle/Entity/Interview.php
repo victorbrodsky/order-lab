@@ -49,6 +49,16 @@ class Interview {
     private $interviewDate;
 
     /**
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $startTime;
+
+    /**
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $endTime;
+
+    /**
      * @ORM\ManyToOne(targetEntity="FellAppRank", cascade={"persist"})
      * @ORM\JoinColumn(name="academicRank_id", referencedColumnName="id", nullable=true)
      */
@@ -77,14 +87,18 @@ class Interview {
      */
     private $comment;
 
-//    /**
-//     * @ORM\Column(name="languageProficiency", type="string", nullable=true)
-//     */
+
     /**
      * @ORM\ManyToOne(targetEntity="LanguageProficiency", cascade={"persist"})
      * @ORM\JoinColumn(name="languageProficiency_id", referencedColumnName="id", nullable=true)
      */
     private $languageProficiency;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location", cascade={"persist"})
+     * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
+     */
+    private $location;
 
 
 
@@ -250,8 +264,53 @@ class Interview {
         return $this->totalRank;
     }
 
+    /**
+     * @param mixed $location
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
 
+    /**
+     * @param mixed $endTime
+     */
+    public function setEndTime($endTime)
+    {
+        $this->endTime = $endTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndTime()
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * @param mixed $startTime
+     */
+    public function setStartTime($startTime)
+    {
+        $this->startTime = $startTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
 
 
 

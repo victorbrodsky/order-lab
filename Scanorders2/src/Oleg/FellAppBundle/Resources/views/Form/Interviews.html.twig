@@ -19,12 +19,29 @@
             <div class="fellapp-interviews-holder">
                 {% for interview in form.interviews %}
 
-                    {{ interviewmacros.interviewForm(interview, cycle, 'fellapp-interviews', 'noprototype', sitename, 1) }}
+                    {% set showInterview = false %}
+                    {% if interview.interviewer and interview.vars.value.interviewer.id %}
+                        {#interview.interviewer.id=({{ interview.vars.value.interviewer.id }}) ?=#}
+                        {#app.user.id=({{ app.user.id }})<br>#}
+                        {% if interview.vars.value.interviewer.id == app.user.id %}
+                            {% set showInterview = true %}
+                        {% endif %}
+                    {% else %}
+                        {% set showInterview = true %}
+                    {% endif %}
+
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or showInterview  %}
+
+                        {{ interviewmacros.interviewForm(interview, cycle, 'fellapp-interviews', 'noprototype', sitename, 1) }}
+
+                    {% endif %}
 
                 {% endfor %}
 
                 {% if cycle != "show" %}
-                    {{ usermacros.addNewObjectBtn(cycle,'fellapp-interviews','Add Interviewer') }}
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        {{ usermacros.addNewObjectBtn(cycle,'fellapp-interviews','Add Interviewer') }}
+                    {% endif %}
                 {% endif %}
             </div>
 

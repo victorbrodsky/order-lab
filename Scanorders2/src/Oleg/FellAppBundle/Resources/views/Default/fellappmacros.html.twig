@@ -26,10 +26,13 @@
 
         {{ formmacros.field(forminterview.interviewer) }}
 
+        {{ formmacros.field(forminterview.location) }}
+
         {{ formmacros.fieldDateLabel(forminterview.interviewDate,'allow-future-date') }}
+        {{ formmacros.field(forminterview.startTime) }}
+        {{ formmacros.field(forminterview.endTime) }}
 
         {{ formmacros.field(forminterview.academicRank) }}
-        {#{{ form_row(interview.academicRank) }}#}
 
         {{ formmacros.field(forminterview.personalityRank) }}
 
