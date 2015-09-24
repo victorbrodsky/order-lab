@@ -50,7 +50,7 @@ class UserRepository extends EntityRepository {
                 $phoneArr[] = $phone['prefix'] . $phone['phone'];
             }
             if( count($phoneArr) > 0 ) {
-                $userStr = $userStr . " " . implode(",", $phoneArr);
+                $userStr = $userStr . " " . implode(", ", $phoneArr);
             }
 
             $emailArr = array();
@@ -58,7 +58,7 @@ class UserRepository extends EntityRepository {
                 $emailArr[] = $email['prefix'] . $email['email'];
             }
             if( count($emailArr) > 0 ) {
-                $userStr = $userStr . " " . implode(",", $emailArr);
+                $userStr = $userStr . " " . implode(", ", $emailArr);
             }
 
             $element = array(

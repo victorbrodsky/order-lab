@@ -6,12 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\FellAppBundle\Entity\Interview;
+use Oleg\FellAppBundle\Form\InterviewType;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\Reference;
 use Oleg\FellAppBundle\Form\FellAppFilterType;
 use Oleg\FellAppBundle\Form\FellowshipApplicationType;
+use Oleg\UserdirectoryBundle\Util\EmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -560,6 +562,8 @@ class FellAppController extends Controller {
 
             $this->processDocuments($entity);
 
+            $this->assignInterviewerRole($entity);
+
             //set update author application
             $em = $this->getDoctrine()->getManager();
             $userUtil = new UserUtil();
@@ -835,7 +839,11 @@ class FellAppController extends Controller {
 
             //exit('form valid');
 
+            $this->calculateScore($fellowshipApplication);
+
             $this->processDocuments($fellowshipApplication);
+
+            $this->assignInterviewerRole($fellowshipApplication);
 
             //set update author application
 //            $em = $this->getDoctrine()->getManager();
@@ -883,6 +891,18 @@ class FellAppController extends Controller {
 
     }
 
+
+    //assign ROLE_FELLAPP_INTERVIEWER
+    public function assignInterviewerRole($application) {
+
+        foreach( $application->getInterviews() as $interview ) {
+            $interviewer = $interview->getInterviewer();
+            if( $interviewer && !$interviewer->hasRole('ROLE_FELLAPP_INTERVIEWER') ) {
+                $interviewer->addRole('ROLE_FELLAPP_INTERVIEWER');
+            }
+        }
+
+    }
 
 
     //process upload documents: CurriculumVitae(documents), FellowshipApplication(coverLetters), Examination(scores), FellowshipApplication(lawsuitDocuments), FellowshipApplication(reprimandDocuments)
@@ -964,6 +984,11 @@ class FellAppController extends Controller {
 
         //return $this->redirect( $this->generateUrl('fellapp_home'));
 
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $event
+        );
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode("ok"));
@@ -1011,6 +1036,7 @@ class FellAppController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
 
         $interview = $em->getRepository('OlegFellAppBundle:Interview')->find($id);
 
@@ -1018,23 +1044,56 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
         }
 
-        $routeName = $request->get('_route');
+        //check if the interviewer is the same as current user
+        $user = $this->get('security.context')->getToken()->getUser();
+        $interviewer = $interview->getInterviewer();
+        //echo "interviewer=".$interviewer."<br>";
+        $interviewId = null;
+        if( $interviewer ) {
+            $interviewId = $interview->getInterviewer()->getId();
+        } else {
+            throw $this->createNotFoundException('Interviewer is undefined');
+        }
+
+        if( $user->getId() != $interviewId ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        if( $routeName == "fellapp_interview_edit" && $interview->getTotalRank() && $interview->getTotalRank() > 0 ) {
+            return $this->redirect( $this->generateUrl('fellapp_interview_show',array('id' => $interview->getId())) );
+        }
 
         if( $routeName == "fellapp_interview_show" ) {
-           $cycle = "show";
+            $cycle = "show";
+            $method = "GET";
+            $action = null;
+            $disabled = true;
         }
 
         if( $routeName == "fellapp_interview_edit" ) {
             $cycle = "edit";
+            $method = "POST";
+            $action = $this->generateUrl('fellapp_interview_update', array('id' => $interview->getId()));
+            $disabled = false;
         }
 
         $params = array(
             'cycle' => $cycle,
             'sc' => $this->get('security.context'),
             'em' => $em,
-            'interviewer' => $interview->getInterviewer()
+            'interviewer' => $interview->getInterviewer(),
+            'showFull' => false
         );
-        $form = $this->createForm( new InterviewType($params), $interview );
+
+        $form = $this->createForm(
+            new InterviewType($params),
+            $interview,
+            array(
+                'disabled' => $disabled,
+                'method' => $method,
+                'action' => $action
+            )
+        );
 
         return array(
             'form' => $form->createView(),
@@ -1045,6 +1104,109 @@ class FellAppController extends Controller {
         );
 
     }
+
+    /**
+     * @Route("/interview/update/{id}", name="fellapp_interview_update")
+     * @Method("POST")
+     * @Template("OlegFellAppBundle:Interview:new.html.twig")
+     */
+    public function interviewUpdateAction( Request $request, $id ) {
+
+        //echo "status <br>";
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $interview = $em->getRepository('OlegFellAppBundle:Interview')->find($id);
+
+        if( !$interview ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
+        }
+
+        //check if the interviewer is the same as current user
+        $user = $this->get('security.context')->getToken()->getUser();
+        if( $user->getId() != $interview->getInterviewer()->getId() ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $cycle = 'edit';
+        $method = "POST";
+        $action = $this->generateUrl('fellapp_interview_update', array('id' => $interview->getId()));
+        $disabled = false;
+
+        $params = array(
+            'cycle' => $cycle,
+            'sc' => $this->get('security.context'),
+            'em' => $em,
+            'interviewer' => $interview->getInterviewer(),
+            'showFull' => false
+        );
+        $form = $this->createForm(
+            new InterviewType($params),
+            $interview,
+            array(
+                'disabled' => $disabled,
+                'method' => $method,
+                'action' => $action
+            )
+        );
+
+        $form->handleRequest($request);
+
+        $formCompleted = false;
+        if( $interview->getTotalRank() && $interview->getTotalRank() > 0 ) {
+            $formCompleted = true;
+        }
+
+        if( $form->isValid() && $formCompleted ) {
+
+//            $interviewer = $interview->getInterviewer();
+//            echo "interviewer=".$interviewer."<br>";
+//            if( !$interviewer ) {
+//                exit('no interviewer');
+//            }
+//            exit('1');
+
+            $fellapp = $interview->getFellapp();
+
+            $this->calculateScore($fellapp);
+
+            $em->persist($interview);
+            $em->flush();
+
+
+            $applicant = $fellapp->getUser();
+            $eventType = 'Fellowship Application Interview for applicant '.$applicant.' has been submitted by ' . $user;
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $user = $this->get('security.context')->getToken()->getUser();
+            $event = $eventType . '; application ID ' . $fellapp->getId();
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
+
+            //return $this->redirect( $this->generateUrl('fellapp_home'));
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+
+            return $this->redirect( $this->generateUrl('fellapp_interview_show',array('id' => $interview->getId())) );
+        }
+
+
+        return array(
+            'form' => $form->createView(),
+            'entity' => $interview,
+            'pathbase' => 'fellapp',
+            'cycle' => $cycle,
+            'sitename' => $this->container->getParameter('fellapp.sitename')
+        );
+
+    }
+
 
 //    /**
 //     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
@@ -1088,36 +1250,112 @@ class FellAppController extends Controller {
 //    }
 
     /**
-     * @Route("/resend-emails/{id}", name="fellapp_resendemails")
+     * @Route("/invite-interviewers-to-rate/{id}", name="fellapp_inviteinterviewerstorate")
+     * @Method("GET")
      */
-    public function resendemailsAction(Request $request, $id) {
+    public function inviteInterviewersToRateAction(Request $request, $id) {
 
-        if(
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-        ){
-            return $this->redirect( $this->generateUrl('login') );
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        echo "resendemails <br>";
+        //echo "invite interviewers to rate <br>";
+        //exit();
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
+        $emails = array();
+
+        //get all interviews
+        foreach( $entity->getInterviews() as $interview ) {
+            if( !$interview->getTotalRank() || $interview->getTotalRank() <= 0 ) {
+                //send email to interviewer with links to PDF and Interview object to fill out.
+                $email = $this->sendInvitationEmail($interview);
+                if( $email ) {
+                    $emails[] = $email;
+                }
+            }
+        }
+
+        $emailStr = "";
+        if( $emails && count($emails) > 0 ) {
+            $emailStr = " Emails have been sent to the following:".implode(",",$emails);
+        }
 
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
-        $event = "Resend emails for fellowship application ID " . $id;
+        $event = "Invited interviewers to rate fellowship application ID " . $id . "." . $emailStr;
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Resend Emails');
 
-        return $this->redirect( $this->generateUrl('fellapp_home') );
+        //return $this->redirect( $this->generateUrl('fellapp_home') );
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $event
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode("ok"));
+        return $response;
     }
 
+    public function sendInvitationEmail($interview) {
+
+        $em = $this->getDoctrine()->getManager();
+        $fellapp = $interview->getFellapp();
+        $applicant = $fellapp->getUser();
+        $interviewer = $interview->getInterviewer();
+
+        if( !$interviewer ) {
+            return null;
+        }
+
+        if( !$fellapp->getRecentItinerary() ) {
+            return null;
+        }
+
+        //get email
+        $email = $interviewer->getEmail();
+
+        //$userutil = new UserUtil();
+        //$adminemail = $userutil->getSiteSetting($em,'siteEmail');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $senderEmail = $user->getEmail();
+
+        //employees_file_download
+        $scheduleDocumentId = $fellapp->getRecentItinerary()->getId();
+        $scheduleLink = $this->generateUrl( 'employees_file_download', array("id"=>$scheduleDocumentId), true );
+
+        //fellapp_interview_edit
+        $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), true );
+
+        $pdfLink = $this->generateUrl( 'employees_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
+
+        $break = "\r\n";
+
+        $text = "Dear " . $interviewer->getUsernameOptimal().",".$break.$break;
+        $text .= "Please review the FELLOWSHIP INTERVIEW SCHEDULE for the candidate ".$applicant->getUsernameOptimal()." and submit your evaluation after the interview.".$break.$break;
+
+        $text .= "The INTERVIEW SCHEDULE URL link:" . $break . $scheduleLink . $break.$break;
+
+        $text .= "The ONLINE EVALUATION FORM URL link:" . $break . $interviewFormLink . $break.$break;
+
+        $text .= "The COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
+
+        $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
+
+        $emailUtil = new EmailUtil();
+        $emailUtil->sendEmail( $email, "Fellowship Candidate Interview Application and Evaluation Form", $text, $em );
+
+        return $email;
+    }
 
     /**
      * @Route("/remove/{id}", name="fellapp_remove")

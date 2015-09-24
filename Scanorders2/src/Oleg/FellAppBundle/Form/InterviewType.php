@@ -19,46 +19,76 @@ class InterviewType extends AbstractType
     public function __construct( $params=null )
     {
         $this->params = $params;
+
+        if( !array_key_exists('showFull', $this->params) ) {
+            $this->params['showFull'] = true;
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('interviewer', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label' => "Interviewer:",
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('user')
-                        ->leftJoin("user.infos", "infos")
-                        ->leftJoin("user.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)");
-                        //->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
-                        //->setParameters(array('role1' => '%' . 'ROLE_FELLAPP_DIRECTOR' . '%', 'role2' => '%' . 'ROLE_FELLAPP_INTERVIEWER' . '%'));
-                },
-        ));
+        if( $this->params['showFull'] ) {
 
-        $builder->add('interviewDate','date',array(
-            'widget' => 'single_text',
-            'label' => "Interview Date:",
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control interview-interviewDate'),
-            'required' => false,
-        ));
+            $builder->add('interviewer', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Interviewer:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('user')
+                            ->leftJoin("user.infos", "infos")
+                            ->leftJoin("user.employmentStatus", "employmentStatus")
+                            ->leftJoin("employmentStatus.employmentType", "employmentType")
+                            ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)");
+                            //->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
+                            //->setParameters(array('role1' => '%' . 'ROLE_FELLAPP_DIRECTOR' . '%', 'role2' => '%' . 'ROLE_FELLAPP_INTERVIEWER' . '%'));
+                    },
+            ));
 
-        $builder->add('startTime', 'time', array(
-            'input'  => 'datetime',
-            'widget' => 'choice',
-            'label'=>'Start Time:'
-        ));
+            $builder->add('interviewDate','date',array(
+                'widget' => 'single_text',
+                'label' => "Interview Date:",
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control interview-interviewDate'),
+                'required' => false,
+            ));
 
-        $builder->add('endTime', 'time', array(
-            'input'  => 'datetime',
-            'widget' => 'choice',
-            'label'=>'End Time:'
-        ));
+            $builder->add('startTime', 'time', array(
+                'input'  => 'datetime',
+                'widget' => 'choice',
+                'label'=>'Start Time:'
+            ));
+
+            $builder->add('endTime', 'time', array(
+                'input'  => 'datetime',
+                'widget' => 'choice',
+                'label'=>'End Time:'
+            ));
+
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $interview = $event->getData();
+                $form = $event->getForm();
+
+                $options = array(
+                    'label' => 'Interview Location:',
+                    'required' => false,
+                    'attr' => array('class' => 'combobox combobox-width interview-location'),
+                );
+
+                if( $interview && $interview->getInterviewer() ) {
+
+                    $officeLocation = $interview->getInterviewer()->getMainLocation();
+
+                    if( $officeLocation ) {
+                        $options['data'] = $officeLocation;
+                    }
+
+                }
+                $form->add('location',null,$options);
+            });
+
+        } //if showFull
 
         $builder->add('academicRank',null, array(
             'label' => 'Academic Rank:',
@@ -88,7 +118,7 @@ class InterviewType extends AbstractType
         $builder->add('comment',null,array(
             'required' => false,
             'label'=>"Comments:",
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class'=>'textarea form-control interview-comment')
         ));
 
         $builder->add('languageProficiency',null, array(
@@ -97,50 +127,13 @@ class InterviewType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width interview-languageProficiency'),
         ));
 
-//        $builder->add('location',null, array(
-//            'label' => 'Location:',
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width interview-location'),
-//        ));
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $interview = $event->getData();
-            $form = $event->getForm();
-
-            $options = array(
-                'label' => 'Interview Location:',
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width interview-location'),
-            );
-
-            //$officeLocation = null;
-            if( $interview && $interview->getInterviewer() ) {
-
-                $officeLocation = $interview->getInterviewer()->getMainLocation();
-
-                if( $officeLocation ) {
-                    $options['data'] = $officeLocation;
-                }
-
-            }
-            //echo "officeLocation=".$officeLocation."<br>";
-
-            $form->add('location',null,$options);
-
-//            $form->add('location',null, array(
-//                'label' => 'Location:',
-//                'required' => false,
-//                'data' => $officeLocation,
-//                'attr' => array('class' => 'combobox combobox-width interview-location'),
-//            ));
-
-        });
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\FellAppBundle\Entity\Interview',
+            //'csrf_protection' => false,
         ));
     }
 

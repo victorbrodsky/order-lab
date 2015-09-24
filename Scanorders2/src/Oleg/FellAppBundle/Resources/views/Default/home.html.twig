@@ -4,6 +4,7 @@
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 
 
 {% block title %}
@@ -27,56 +28,56 @@
 
     <p>
 
-        <a href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter}) }}">
-            Active:{{ activeTotal }}
-        </a>
-        <a href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-            ({{ active }} for {{ currentYear }})
-        </a>
+        {#<a href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter}) }}">#}
+            {#Active:{{ activeTotal }}#}
+        {#</a>#}
+        {#<a href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+            {#({{ active }} for {{ currentYear }})#}
+        {#</a>#}
 
-        <a href="{{ path('fellapp_home',{'filter[complete]':1, 'filter[filter]':filter}) }}">
-            Complete:{{ completeTotal }}
-        </a>
-        <a href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-           ({{ complete }} for {{ currentYear }})
-        </a>
+        {#<a href="{{ path('fellapp_home',{'filter[complete]':1, 'filter[filter]':filter}) }}">#}
+            {#Complete:{{ completeTotal }}#}
+        {#</a>#}
+        {#<a href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+           {#({{ complete }} for {{ currentYear }})#}
+        {#</a>#}
 
-        <a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter}) }}">
-            Interviewee:{{ intervieweeTotal }}
-        </a>
-        <a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-            ({{ interviewee }} for {{ currentYear }})
-        </a>
-
-
-        <a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">
-            On Hold:{{ onholdTotal }}
-        </a>
-        <a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-            ({{ onhold }} for {{ currentYear }})
-        </a>
-
-        <a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">
-            Rejected:{{ rejectTotal }}
-        </a>
-        <a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-            ({{ reject }} for {{ currentYear }})
-        </a>
+        {#<a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter}) }}">#}
+            {#Interviewee:{{ intervieweeTotal }}#}
+        {#</a>#}
+        {#<a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+            {#({{ interviewee }} for {{ currentYear }})#}
+        {#</a>#}
 
 
-        <a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter}) }}">
-            Hidden:{{ hiddenTotal }}
-        </a>
-        <a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-            ({{ hidden }} for {{ currentYear }})
-        </a>
+        {#<a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">#}
+            {#On Hold:{{ onholdTotal }}#}
+        {#</a>#}
+        {#<a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+            {#({{ onhold }} for {{ currentYear }})#}
+        {#</a>#}
 
-        <a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter}) }}">
-            Archived:{{ archivedTotal }}
-        </a>
-        <a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
-            ({{ archived }} for {{ currentYear }})
-        </a>
+        {#<a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">#}
+            {#Rejected:{{ rejectTotal }}#}
+        {#</a>#}
+        {#<a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+            {#({{ reject }} for {{ currentYear }})#}
+        {#</a>#}
+
+
+        {#<a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter}) }}">#}
+            {#Hidden:{{ hiddenTotal }}#}
+        {#</a>#}
+        {#<a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+            {#({{ hidden }} for {{ currentYear }})#}
+        {#</a>#}
+
+        {#<a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter}) }}">#}
+            {#Archived:{{ archivedTotal }}#}
+        {#</a>#}
+        {#<a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+            {#({{ archived }} for {{ currentYear }})#}
+        {#</a>#}
 
         <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }}</i>
     </p>
@@ -138,25 +139,97 @@
             <br>
             <div class="row text-center">
                 <div class="col-xs-12">
-                    {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }} &nbsp;&nbsp;
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                    {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }} &nbsp;&nbsp;
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                    {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }} &nbsp;&nbsp;
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                    {{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }} &nbsp;&nbsp;
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                    {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }} &nbsp;&nbsp;
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                    {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }} &nbsp;&nbsp;
-                {#</div>#}
-                {#<div class="col-xs-1">#}
+
+                    {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }}
+                    {#{{ fellappmacros.addBadge( filter, currentYear, active, activeTotal, 'active' ) }}#}
+                    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                    {{ active }}
+                    </a>
+                    </span>
+                    {{ fellappmacros.addSlush() }}
+                    <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter}) }}">{{ activeTotal }}</a>
+                    </span>
+                    &nbsp;&nbsp;
+
+                    {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }}
+                    {#{{ fellappmacros.addBadge( filter, currentYear, complete, completeTotal, 'complete' ) }}#}
+                    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                    {{ complete }}
+                    </a>
+                    </span>
+                    {{ fellappmacros.addSlush() }}
+                    <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter}) }}">{{ completeTotal }}</a>
+                    </span>
+                    &nbsp;&nbsp;
+
+                    {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }}
+                    {#{{ fellappmacros.addBadge( filter, currentYear, interviewee, intervieweeTotal, 'interviewee' ) }}#}
+                    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ interviewee }}
+                    </a>
+                    </span>
+                    {{ fellappmacros.addSlush() }}
+                    <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter}) }}">{{ intervieweeTotal }}</a>
+                    </span>
+                    &nbsp;&nbsp;
+
+                    {{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }}
+                    {#{{ fellappmacros.addBadge( filter, currentYear, onhold, onholdTotal, 'onhold' ) }}#}
+                    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ onhold }}
+                    </a>
+                    </span>
+                    {{ fellappmacros.addSlush() }}
+                    <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">{{ onholdTotal }}</a>
+                    </span>
+                    &nbsp;&nbsp;
+
+                    {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }}
+                    {#{{ fellappmacros.addBadge( filter, currentYear, reject, rejectTotal, 'reject' ) }}#}
+                    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ reject }}
+                    </a>
+                    </span>
+                    {{ fellappmacros.addSlush() }}
+                    <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">{{ rejectTotal }}</a>
+                    </span>
+                    &nbsp;&nbsp;
+
+                    {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }}
+                    {#{{ fellappmacros.addBadge( filter, currentYear, hidden, hiddenTotal, 'hidden' ) }}#}
+                    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ hidden }}
+                    </a>
+                    </span>
+                    {{ fellappmacros.addSlush() }}
+                    <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter}) }}">{{ hiddenTotal }}</a>
+                    </span>
+                    &nbsp;&nbsp;
+
                     {{ form_widget(fellappfilter.archived) }}   {{ form_label(fellappfilter.archived) }}
+                    {#{{ fellappmacros.addBadge( filter, currentYear, archived, archivedTotal, 'archived' ) }}#}
+                    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ archived }}
+                    </a>
+                    </span>
+                    {{ fellappmacros.addSlush() }}
+                    <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter}) }}">{{ archivedTotal }}</a>
+                    </span>
+
                 </div>
             </div>
 
@@ -229,7 +302,7 @@
                 {% if entity.appStatus.name == 'complete' %}
                     {#urgent attention required#}
                     {#{% set trclassname = "order-neutral-status" %}#}
-                    {% set trclassname = "order-neutral-status" %}
+                    {% set trclassname = "order-complete-status" %}
                 {% endif %}
 
                 {% if entity.appStatus.name == 'interviewee' %}
@@ -465,24 +538,16 @@
                                         </li>
                                     {% endif %}
 
-                                    {#{% if entity.appStatus.name == 'active' %}#}
-                                        {#<li>#}
-                                            {#<a#}
-                                                {#general-data-confirm="Are you sure you want to resend emails to Interviewers who have not submitted interview score yet?"#}
-                                                {#href="{{ path('fellapp_resendemails', { 'id': entity.id }) }}">Send Email to Interviewers#}
-                                            {#</a>#}
-                                        {#</li>#}
-                                    {#{% endif %}#}
-
-
                                     {#Invite Interviewers to Rate#}
-                                    {#<li>#}
-                                        {#<a#}
-                                            {#general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be send to the interviewers who still have not submitted their scores."#}
-                                            {#general-data-callback="refreshpage"#}
-                                            {#href="{{ path('fellapp_sendemailtointerviewers', { 'id': entity.id}) }}">Invite Interviewers to Rate#}
-                                        {#</a>#}
-                                    {#</li>#}
+                                    {% if entity.interviews|length > 0 %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be send to the interviewers who still have not submitted their scores."
+                                                general-data-callback="refreshpage"
+                                                href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite Interviewers to Rate
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
                                     <li>
                                         <a

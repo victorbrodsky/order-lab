@@ -3,6 +3,7 @@
 {% macro interviewForm( interview, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
@@ -32,20 +33,97 @@
         {{ formmacros.field(forminterview.startTime) }}
         {{ formmacros.field(forminterview.endTime) }}
 
-        {{ formmacros.field(forminterview.academicRank) }}
+        {#{{ formmacros.field(forminterview.academicRank) }}#}
 
-        {{ formmacros.field(forminterview.personalityRank) }}
+        {#{{ formmacros.field(forminterview.personalityRank) }}#}
 
-        {{ formmacros.field(forminterview.potentialRank) }}
+        {#{{ formmacros.field(forminterview.potentialRank) }}#}
 
-        {{ formmacros.field(forminterview.totalRank) }}
+        {#{{ formmacros.field(forminterview.totalRank) }}#}
 
-        {{ formmacros.field(forminterview.comment) }}
+        {#{{ formmacros.field(forminterview.comment) }}#}
 
-        {{ formmacros.field(forminterview.languageProficiency) }}
+        {#{{ formmacros.field(forminterview.languageProficiency) }}#}
+        {{ fellappmacros.interviewMainForm( forminterview ) }}
 
     </div>
 
 {% endmacro %}
 
+{% macro interviewMainForm( forminterview ) %}
 
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {{ formmacros.field(forminterview.academicRank) }}
+
+    {{ formmacros.field(forminterview.personalityRank) }}
+
+    {{ formmacros.field(forminterview.potentialRank) }}
+
+    {{ formmacros.field(forminterview.totalRank) }}
+
+    {{ formmacros.field(forminterview.comment) }}
+
+    {{ formmacros.field(forminterview.languageProficiency) }}
+
+{% endmacro %}
+
+
+{% macro snapshot( fellapp, sitename, cycle ) %}
+
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <h1>{{ fellapp.user.getUsernameOptimal }}</h1>
+
+    {#avatar#}
+    <div align="center" style="height: 160px;">
+        {#avatar form modal#}
+        {% if fellapp.avatars|length > 0 %}
+            {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
+        {% else %}
+            {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+        {% endif %}
+    </div>
+
+
+{% endmacro %}
+
+
+
+{#It is not used and it does not work: fix it#}
+{% macro addBadge( filter, currentYear, currentYearCount, totalCount, statusName ) %}
+
+    {% set filterStatus = "'filter["~statusName~"]'" %}
+    {% set paramsCurrentYear = "'filter["~statusName~"]':1, 'filter[filter]':"~filter~",'filter[startDate]':"~currentYear %}
+    {% set paramsCurrentYear = "'filter["~statusName~"]':1, 'filter[startDate]':"~currentYear %}
+
+    {% set paramsCurrentYear = [] %}
+    {% set paramsCurrentYear = paramsCurrentYear|merge(["'filter["~statusName~"]':1"])  %}
+
+    paramsCurrentYear={{ paramsCurrentYear }}<br>
+    {% set paramsTotal = "'filter["~statusName~"]':1, 'filter[filter]':filter,'filter[startDate]':"~currentYear %}
+
+    {#href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}"#}
+
+    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+        <a style="color: white;" href="{{ path('fellapp_home',{filterStatus:1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            {{ currentYearCount }}
+        </a>
+    </span>
+
+    {#&nbsp;/&nbsp;#}
+    /
+
+    <span class="badge" data-toggle="tooltip" title="Total">
+        <a style="color: white;" href="{{ path('fellapp_home',{ filterStatus:1,'filter[filter]':filter}) }}">
+            {{ totalCount }}
+        </a>
+    </span>
+
+{% endmacro %}
+
+{% macro addSlush() %}
+    {#&nbsp;/&nbsp;#}
+    /
+{% endmacro %}

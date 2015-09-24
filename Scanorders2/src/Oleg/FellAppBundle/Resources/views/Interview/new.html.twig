@@ -1,8 +1,10 @@
 {% extends "OlegFellAppBundle::Default/base.html.twig" %}
 
-{#{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
-{#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as interviewmacros %}
+{% block header %}
+    {#no navbar#}
+{% endblock %}
+
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 
 {% block title %}
     Interview Form for Fellowship Application {{ entity.fellapp.id }}
@@ -11,13 +13,47 @@
 
 {% block content %}
 
-    {{ form_start(form) }}
+    <br>
+
+    <h4 class="text-info" align="center">
+        <div>
+            {% if entity.fellapp.appStatus %}
+                <p>{{ entity.fellapp.appStatus.action }}</p>
+            {% endif %}
+            Fellowship Application ID {{ entity.fellapp.id }}, submitted on {{ entity.fellapp.timestamp|date('m/d/Y H:i','UTC') }}, imported on {{ entity.fellapp.createdate|date('m/d/Y H:i','UTC') }}
+        </div>
+    </h4>
+
+    {#applicant's snapshot#}
+    {{ fellappmacros.snapshot(entity.fellapp,sitename,cycle) }}
+    <br>
+
+    {{ form_start(form,{'attr': {'id': 'fellapp-interview-form'}}) }}
 
     {{ form_errors(form) }}
 
+    <div class="user-collection-holder">
+        {{ fellappmacros.interviewMainForm( form ) }}
+    </div>
 
-    {{ interviewmacros.interviewForm(form, cycle, 'fellapp-interview', 'noprototype', sitename, 0) }}
+    {#{% do form.interviewer.setRendered %}#}
+    {#{% do form.location.setRendered %}#}
+    {#{% do form.interviewDate.setRendered %}#}
+    {#{% do form.startTime.setRendered %}#}
+    {#{% do form.endTime.setRendered %}#}
 
+
+    <div id="error-div" class="alert alert-danger" role="alert" style="display:none;">
+
+    </div>
+
+    {% if cycle == "edit" %}
+        <br>
+        <p>
+            <button class="btn btn-warning" type="button" onclick="validateInterviewForm();">Submit</button>
+            {#<a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>#}
+        </p>
+    {% endif %}
 
     {{ form_end(form) }}
 
@@ -25,6 +61,67 @@
 
 
 {% block additionaljs %}
+
+<script language="Javascript">
+
+
+    $(document).ready(function() {
+
+        //add listener on rank change
+        listenerFellAppRank(null);
+
+    });
+
+
+    function validateInterviewForm() {
+
+        $('#error-div').html("");
+        $('#error-div').hide();
+
+        var errorArr = [];
+
+        var holder = $('.user-collection-holder');
+
+        var academicRank = getValueFromRankString(holder,'.interview-academicRank');
+        var personalityRank = getValueFromRankString(holder,'.interview-personalityRank');
+        var potentialRank = getValueFromRankString(holder,'.interview-potentialRank');
+
+
+        if( !academicRank ) {
+            errorArr.push("Please select Academic Rank");
+        }
+
+        if( !personalityRank ) {
+            errorArr.push("Please select Personality Rank");
+        }
+
+        if( !potentialRank ) {
+            errorArr.push("Please select Potential Rank");
+        }
+
+        var comment = $('.interview-comment').val();
+        if( !comment ) {
+            errorArr.push("Please provide a comment");
+        }
+
+        var languageProficiency = null;
+        if( $('.interview-languageProficiency').select2('data') ) {
+            languageProficiency = $('.interview-languageProficiency').select2('data').text;
+        }
+        if( !languageProficiency ) {
+            errorArr.push("Please select Language Proficiency");
+        }
+
+        if( errorArr.length > 0 ) {
+            $('#error-div').html( errorArr.join("<br>") );
+            $('#error-div').show();
+            return false;
+        }
+
+        $('#fellapp-interview-form').submit();
+    }
+
+</script>
 
 {% endblock %}
 

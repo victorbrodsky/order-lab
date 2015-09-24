@@ -1,5 +1,5 @@
 
-{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as interviewmacros %}
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 <div class="panel panel-info">
@@ -32,7 +32,7 @@
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or showInterview  %}
 
-                        {{ interviewmacros.interviewForm(interview, cycle, 'fellapp-interviews', 'noprototype', sitename, 1) }}
+                        {{ fellappmacros.interviewForm(interview, cycle, 'fellapp-interviews', 'noprototype', sitename, 1) }}
 
                     {% endif %}
 

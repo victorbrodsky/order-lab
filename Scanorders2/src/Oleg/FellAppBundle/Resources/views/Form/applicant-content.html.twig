@@ -1,7 +1,7 @@
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as interviewmacros %}
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 {% import _self as fellapp %}
 
 
@@ -49,8 +49,8 @@
 {% endif %}
 
 
-{#user's snapshot#}
-{{ fellapp.snapshot(entity,sitename,cycle) }}
+{#applicant's snapshot#}
+{{ fellappmacros.snapshot(entity,sitename,cycle) }}
 <br>
 
 
@@ -70,7 +70,7 @@
 
 
 <div id="form-prototype-data"
-     data-prototype-fellapp-interviews = "{{ interviewmacros.interviewForm(form.interviews,cycle,'fellapp-interviews','prototype', sitename,1)|e }}"
+     data-prototype-fellapp-interviews = "{{ fellappmacros.interviewForm(form.interviews,cycle,'fellapp-interviews','prototype', sitename,1)|e }}"
      data-userurllink = "{{ usermacros.userUrlLink()|e }}"
      data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
      data-userid = "{{ entity.user.id }}"
@@ -194,22 +194,3 @@
 
 
 
-{% macro snapshot( fellapp, sitename, cycle ) %}
-
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-
-    <h1>{{ fellapp.user.getUsernameOptimal }}</h1>
-
-    {#avatar#}
-    <div align="center" style="height: 160px;">
-        {#avatar form modal#}
-        {% if fellapp.avatars|length > 0 %}
-            {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
-        {% else %}
-            {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
-            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
-        {% endif %}
-    </div>
-
-
-{% endmacro %}

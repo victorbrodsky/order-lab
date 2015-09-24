@@ -777,3 +777,58 @@ function generalConfirmAction() {
 }
 
 
+function listenerFellAppRank(holder) {
+
+    var rankHolder = $('.interview-rank');
+    if( !rankHolder ) {
+        return;
+    }
+
+    if( holder ) {
+        rankHolder = holder.find('.interview-rank');
+    }
+
+    rankHolder.on("change", function(e) {
+        //console.log("interview-rank on change");
+        var holder = $(this).closest('.user-collection-holder');
+        updateFellAppTotalRank(holder);
+    });
+}
+function updateFellAppTotalRank(holder) {
+    var totalRank = 0;
+
+    var academicRank = getValueFromRankString(holder,'.interview-academicRank');
+    var personalityRank = getValueFromRankString(holder,'.interview-personalityRank');
+    var potentialRank = getValueFromRankString(holder,'.interview-potentialRank');
+
+    if( academicRank ) {
+        totalRank = totalRank + academicRank;
+    }
+
+    if( personalityRank ) {
+        totalRank = totalRank + personalityRank;
+    }
+
+    if( potentialRank ) {
+        totalRank = totalRank + potentialRank;
+    }
+
+    holder.find('.interview-totalRank').val(totalRank);
+
+}
+function getValueFromRankString(holder,identifierName) {
+
+    var rankEl = holder.find(identifierName);
+    if( !rankEl ) {
+        return null;
+    }
+
+    var rankData = rankEl.select2('data');
+    if( !rankData || !rankData.text ) {
+        return null;
+    }
+
+    var rank = rankData.text.split(" ")[0];
+    //console.log("rank="+rank+" => Number(rank)="+Number(rank));
+    return Number(rank);
+}
