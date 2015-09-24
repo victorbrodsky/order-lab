@@ -1295,10 +1295,12 @@ class FellAppController extends Controller {
 
         //return $this->redirect( $this->generateUrl('fellapp_home') );
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            $event
-        );
+        if( $emails && count($emails) > 0 ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1318,6 +1320,10 @@ class FellAppController extends Controller {
         }
 
         if( !$fellapp->getRecentItinerary() ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Email invitations have not been sent. Please upload Itinerary and try again.'
+            );
             return null;
         }
 
