@@ -1022,8 +1022,8 @@ class FellAppController extends Controller {
 
 
     /**
-     * @Route("/interview/show/{id}", name="fellapp_interview_show")
-     * @Route("/interview/edit/{id}", name="fellapp_interview_edit")
+     * @Route("/interview-evaluation/show/{id}", name="fellapp_interview_show")
+     * @Route("/interview-evaluation/{id}", name="fellapp_interview_edit")
      * @Method("GET")
      * @Template("OlegFellAppBundle:Interview:new.html.twig")
      */
