@@ -103,21 +103,25 @@ class ReportGenerator {
     
     
     //starting entry to generate report request
+    //$argument: asap, overwrite
     public function addFellAppReportToQueue( $id, $argument='overwrite' ) {
 
+        $logger = $this->container->get('logger');
         $queue = $this->getQueue();
 
         $processesDb = null;
         if( $argument != 'overwrite' ) {
+            //$argument == asap
             $processesDb = $this->em->getRepository('OlegFellAppBundle:Process')->findOneByFellappId($id);
         }
 
         //add as a new process only if argument is 'overwrite'
-        if( !$processesDb ) {
+        if( $processesDb == null ) {
             $process = new Process($id);
             $process->setArgument($argument);
             $queue->addProcess($process);
             $this->em->flush();
+            $logger->notice("Added new process to queue: Fellowship Application ID=".$id);
         }
 
         //move all reports to OldReports
@@ -128,25 +132,9 @@ class ReportGenerator {
         }
         $this->em->flush();
 
-        //$resArr->set(0,$service);
-        
-        //try to run in command console by process component
-        //$this->tryRun();
-        //return;
-        
-        //'php ../app/console fellapp:generatereportrun'
-        //$cwd = @getcwd();
-        //echo "cwd=".$cwd."<br>";
-        //@chdir($cwd);
-        //$WshShell = new \COM("WScript.Shell");
-        //$WshShell->CurrentDirectory = str_replace('/', '\\', $cwd);
-        //$oExec = $WshShell->Run('php ../app/console fellapp:generatereportrun', 0, false);
-        //$oExec = $WshShell->Run('php ..\\app\\console fellapp:generatereportrun', 1, true);
-        //$oExec = $this->WshShell->Run('php ../app/console fellapp:generatereportrun',0,true);
-        //$oExec = exec('php ../app/console fellapp:generatereportrun');
-        //echo "oExec=".$oExec."<br>";
+        $logger->notice("call tryRun() asynchronous");
 
-        //$this->env = $env;
+        //call tryRun() asynchronous
         //$cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
         $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
         $this->windowsCmdRunAsync($cmd);
@@ -174,6 +162,7 @@ class ReportGenerator {
     public function tryRun() {
 
         $logger = $this->container->get('logger');
+        $logger->notice("tryRun() started");
 
         $queue = $this->getQueue();
 

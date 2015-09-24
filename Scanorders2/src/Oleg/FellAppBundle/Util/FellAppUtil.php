@@ -59,10 +59,10 @@ class FellAppUtil {
         $userUtil = new UserUtil();
         $allowPopulateFellApp = $userUtil->getSiteSetting($this->em,'AllowPopulateFellApp');
         if( !$allowPopulateFellApp ) {
-            return;
+            return null;
         }
 
-        echo "fellapp import <br>";
+        //echo "fellapp import <br>";
 
         $res = null;
         $logger = $this->container->get('logger');
@@ -76,7 +76,7 @@ class FellAppUtil {
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
         }
 
-        echo "service ok <br>";
+        //echo "service ok <br>";
 
         if( $service ) {
 
@@ -100,7 +100,7 @@ class FellAppUtil {
 
         }
 
-        echo "import ok <br>";
+        //echo "import ok <br>";
 
         return $fileDb;
     }
@@ -114,7 +114,7 @@ class FellAppUtil {
             return;
         }
 
-        echo "fellapp populate Spreadsheet <br>";
+        //echo "fellapp populate Spreadsheet <br>";
 
         //1) get latest spreadsheet file from Uploaded/fellapp/Spreadsheets
         $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
@@ -128,19 +128,24 @@ class FellAppUtil {
             $document = $documents[0];
         }
 
-        //2) populate applicants
+        //2a) get spreadsheet path
         $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
 
         if( $path ) {
             $inputFileName = $path . "/" . $inputFileName;
         }
 
+        //2b) populate applicants
         $populatedCount = $this->populateSpreadsheet($inputFileName);
 
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = "Populated ".$populatedCount." Fellowship Applications.";
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Populate of Fellowship Applications');
+
+        //call tryRun() asynchronous
+        $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
+        $this->windowsCmdRunAsync($cmd);
 
         return $populatedCount;
     }
@@ -314,13 +319,12 @@ class FellAppUtil {
     /////////////// populate methods /////////////////
     public function populateSpreadsheet( $inputFileName ) {
 
-        echo "inputFileName=".$inputFileName."<br>";
-
+        //echo "inputFileName=".$inputFileName."<br>";
+        $logger = $this->container->get('logger');
         ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
 
         $service = $this->getGoogleService();
         if( !$service ) {
-            $logger = $this->container->get('logger');
             $logger->warning("Google API service failed!");
             return -1;
         }
@@ -403,7 +407,7 @@ class FellAppUtil {
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
 
-            echo "row=".$row.": id=".$googleFormId."<br>";
+            //echo "row=".$row.": id=".$googleFormId."<br>";
 
             $googleForm = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
             if( $googleForm ) {
@@ -732,7 +736,6 @@ class FellAppUtil {
             if( !$fellowshipApplication->getSignatureName() ) {
                 $event = "Error: Applicant signature is null after populating Fellowship Applicant " . $displayName . " with Google Applicant ID=".$googleFormId."; Application ID " . $fellowshipApplication->getId();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Creation Failed');
-                $logger = $this->container->get('logger');
                 $logger->error($event);
 
                 //send email
@@ -756,12 +759,14 @@ class FellAppUtil {
             $em->remove($eventLogAttempt);
             $em->flush();
 
-            //update report => it is done by postPersist in DoctrineListener
+            $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Created');
+
+            //add application pdf generation to queue
             $fellappRepGen = $this->container->get('fellapp_reportgenerator');
             $fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId() );
 
-            $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Created');
+            $logger->notice($event);
 
             $count++;
 
