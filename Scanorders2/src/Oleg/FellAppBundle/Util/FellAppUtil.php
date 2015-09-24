@@ -144,8 +144,9 @@ class FellAppUtil {
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Populate of Fellowship Applications');
 
         //call tryRun() asynchronous
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
-        $this->windowsCmdRunAsync($cmd);
+        $fellappRepGen->windowsCmdRunAsync($cmd);
 
         return $populatedCount;
     }

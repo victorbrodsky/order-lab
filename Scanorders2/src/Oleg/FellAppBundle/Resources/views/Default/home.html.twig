@@ -474,6 +474,16 @@
                                         {#</li>#}
                                     {#{% endif %}#}
 
+
+                                    {#Invite Interviewers to Rate#}
+                                    {#<li>#}
+                                        {#<a#}
+                                            {#general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be send to the interviewers who still have not submitted their scores."#}
+                                            {#general-data-callback="refreshpage"#}
+                                            {#href="{{ path('fellapp_sendemailtointerviewers', { 'id': entity.id}) }}">Invite Interviewers to Rate#}
+                                        {#</a>#}
+                                    {#</li>#}
+
                                     <li>
                                         <a
                                             href="{{ path('fellapp_edit', { 'id': entity.id}) }}">Edit
