@@ -56,9 +56,12 @@
 
     {% if cycle == 'edit' %}
 
-        <a href="{{ path('fellapp_download_pdf',{'id':entity.fellapp.id}) }}">{{ entity.fellapp.user.getUsernameOptimal() }}'s Complete Application PDF</a>.
+        <br>
+        <a href="{{ path('fellapp_download_pdf',{'id':entity.fellapp.id}) }}">{{ entity.fellapp.user.getUsernameOptimal() }}'s Complete Application PDF</a>
+        <br>
         <br>
         Thank you for your feedback, {{ app.user.getUsernameOptimal() }}
+        <br>
 
     {% endif %}
 
@@ -66,7 +69,6 @@
         <br>
         <p>
             <button class="btn btn-warning" type="button" onclick="validateInterviewForm();">Submit</button>
-            {#<a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>#}
         </p>
     {% endif %}
 
