@@ -6,15 +6,15 @@
 
 {% block content %}
 
-    Thank you for downloading
 
     {#<input type="hidden" id="fileid" value="{{fileid}}" />#}
 
-    <br>
+    <br><br><br>
 
-    <a id="downloadlink" href="{{ path('employees_file_download',{'id':fileid}) }}">Please click here if your download has not been started</a>
+    Your download should start automatically. If not, click
+    <a id="downloadlink" href="{{ path('employees_file_download',{'id':fileid}) }}">here</a>.
 
-    <br>
+    <br><br><br>
 
 
 {% endblock %}

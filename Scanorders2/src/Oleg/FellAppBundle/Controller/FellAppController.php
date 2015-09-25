@@ -270,6 +270,7 @@ class FellAppController extends Controller {
 
 
 
+
     /**
      * @Route("/show/{id}", name="fellapp_show")
      * @Route("/edit/{id}", name="fellapp_edit")
@@ -1336,14 +1337,14 @@ class FellAppController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
         $senderEmail = $user->getEmail();
 
-        //employees_file_download
+        //fellapp_file_download
         $scheduleDocumentId = $fellapp->getRecentItinerary()->getId();
-        $scheduleLink = $this->generateUrl( 'employees_file_download', array("id"=>$scheduleDocumentId), true );
+        $scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
 
         //fellapp_interview_edit
         $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), true );
 
-        $pdfLink = $this->generateUrl( 'employees_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
+        $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
 
         $break = "\r\n";
 
@@ -1619,7 +1620,7 @@ class FellAppController extends Controller {
 
         if( $reportDocument ) {
 
-            return $this->redirect( $this->generateUrl('employees_file_download',array('id' => $reportDocument->getId())) );
+            return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $reportDocument->getId())) );
 
         } else {
 
