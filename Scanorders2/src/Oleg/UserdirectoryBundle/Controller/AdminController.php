@@ -3218,13 +3218,13 @@ class AdminController extends Controller
         }
 
         $elements = array(
-            'Patient',
-            'Encounter',
-            'Procedure',
-            'Accession',
-            'Part',
-            'Block',
-            'Slide'
+            'Initial Patient Encounter - Address Entry',
+//            'Encounter',
+//            'Procedure',
+//            'Accession',
+//            'Part',
+//            'Block',
+//            'Slide'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
