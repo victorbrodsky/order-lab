@@ -62,7 +62,8 @@ class ScanOrderType extends AbstractType
             }
 
             $form->add('scanOrderInstitutionScope', 'employees_custom_selector', array(
-                'label' => 'ScanOrder' . ' ' . $label . ' Scope' . ':',
+                //'label' => 'ScanOrder' . ' ' . $label . ' Scope' . ':',
+                'label' => $label,
                 'required' => false,
 
                 'attr' => array(

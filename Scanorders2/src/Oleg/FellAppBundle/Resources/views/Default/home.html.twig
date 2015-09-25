@@ -432,13 +432,14 @@
                         {% endfor %}
 
                         {% if scoreStyle %}
-                            {#{% set tooltip = "data-toggle='tooltip' title='only "~scoreCount~" of "~entity.interviews|length~" interviews are submitted" %}#}
+                            {#{% set tooltip = 'data-toggle="tooltip" title="only '~scoreCount~' of '~entity.interviews|length~' interviews are submitted"' %}#}
+                            {% set tooltip = 'only '~scoreCount~' of '~entity.interviews|length~' interviews are submitted' %}
                         {% endif %}
                     {% endif %}
 
                     <td class="rowlink-skip">
                         {% if entity.interviewScore %}
-                            <div {{ scoreStyle }} {{ tooltip }}>
+                            <div {{ scoreStyle }} data-toggle="tooltip" title="{{ tooltip }}">
                                 <a href="{{ path('fellapp_show', { 'id': entity.id}) }}#interviews" target="_blank" style="color:black;">{{ entity.interviewScore }}</a>
                             </div>
                         {% endif %}
