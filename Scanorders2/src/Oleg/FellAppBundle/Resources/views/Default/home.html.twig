@@ -151,6 +151,7 @@
                     <span class="badge" data-toggle="tooltip" title="Total">
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter}) }}">{{ activeTotal }}</a>
                     </span>
+                    {{ fellappmacros.addLegend('active') }}
                     &nbsp;&nbsp;
 
                     {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }}
@@ -164,6 +165,7 @@
                     <span class="badge" data-toggle="tooltip" title="Total">
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter}) }}">{{ completeTotal }}</a>
                     </span>
+                    {{ fellappmacros.addLegend('complete') }}
                     &nbsp;&nbsp;
 
                     {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }}
@@ -177,6 +179,7 @@
                     <span class="badge" data-toggle="tooltip" title="Total">
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter}) }}">{{ intervieweeTotal }}</a>
                     </span>
+                    {{ fellappmacros.addLegend('interviewee') }}
                     &nbsp;&nbsp;
 
                     {{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }}
@@ -190,6 +193,7 @@
                     <span class="badge" data-toggle="tooltip" title="Total">
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">{{ onholdTotal }}</a>
                     </span>
+                    {{ fellappmacros.addLegend('onhold') }}
                     &nbsp;&nbsp;
 
                     {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }}
@@ -203,6 +207,7 @@
                     <span class="badge" data-toggle="tooltip" title="Total">
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">{{ rejectTotal }}</a>
                     </span>
+                    {{ fellappmacros.addLegend('reject') }}
                     &nbsp;&nbsp;
 
                     {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }}
@@ -216,6 +221,7 @@
                     <span class="badge" data-toggle="tooltip" title="Total">
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter}) }}">{{ hiddenTotal }}</a>
                     </span>
+                    {{ fellappmacros.addLegend('hidden') }}
                     &nbsp;&nbsp;
 
                     {{ form_widget(fellappfilter.archived) }}   {{ form_label(fellappfilter.archived) }}
@@ -229,6 +235,7 @@
                     <span class="badge" data-toggle="tooltip" title="Total">
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter}) }}">{{ archivedTotal }}</a>
                     </span>
+                    {{ fellappmacros.addLegend('archived') }}
 
                 </div>
             </div>

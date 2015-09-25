@@ -123,7 +123,14 @@
 
 {% endmacro %}
 
+
 {% macro addSlush() %}
     {#&nbsp;/&nbsp;#}
     /
+{% endmacro %}
+
+{% macro addLegend(status) %}
+    {#&nbsp;/&nbsp;#}
+    {#/#}
+    <div class="fell-app-status-legend fell-app-status-legend-{{ status }}">&nbsp&nbsp</div>
 {% endmacro %}
