@@ -7,12 +7,10 @@
 {% block content %}
 
 
-    {#<input type="hidden" id="fileid" value="{{fileid}}" />#}
-
     <br><br><br>
 
     Your download should start automatically. If not, click
-    <a id="downloadlink" href="{{ path('employees_file_download',{'id':fileid}) }}">here</a>.
+    <a id="downloadlink" href="{{ path(sitename~'_file_download',{'id':fileid}) }}">here</a>.
 
     <br><br><br>
 
@@ -27,11 +25,6 @@
 
         $(document).ready(function() {
 
-            //var fileid = $('#fileid');
-            //var url = getCommonBaseUrl("file-download/"+fileid,'employees');
-            //window.location.href = url;
-
-            //$("#downloadlink").click();
             document.getElementById('downloadlink').click();
 
         });

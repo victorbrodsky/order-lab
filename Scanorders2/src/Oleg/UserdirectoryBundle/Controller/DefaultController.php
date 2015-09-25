@@ -16,14 +16,14 @@ class DefaultController extends Controller
 {
 
     /**
-     * @Route("/thanks-for-downloading/{id}", name="common_thankfordownloading")
+     * @Route("/thanks-for-downloading/{id}/{sitename}", name="common_thankfordownloading")
      * @Template("OlegUserdirectoryBundle:Default:thanksfordownloading.html.twig")
      * @Method("GET")
      */
-    public function thankfordownloadingAction(Request $request, $id) {
-        //return $this->redirect( $this->generateUrl('employees_file_download',array('id'=>$id)) );
+    public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(
-            'fileid' => $id
+            'fileid' => $id,
+            'sitename' => $sitename
         );
     }
 

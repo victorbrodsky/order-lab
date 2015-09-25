@@ -114,7 +114,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         if( $filedownload ) {
             $lastRouteArr = explode("/", $lastRoute);
             $fileid = $lastRouteArr[count($lastRouteArr)-1];
-            $referer_url = $this->router->generate('common_thankfordownloading',array('id'=>$fileid));
+            $referer_url = $this->router->generate('common_thankfordownloading',array('id'=>$fileid,'sitename'=>$this->siteName));
             $response = new RedirectResponse($referer_url);
             return $response;
         }
