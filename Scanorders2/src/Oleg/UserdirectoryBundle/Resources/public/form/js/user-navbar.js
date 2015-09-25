@@ -111,10 +111,10 @@ function setFellappNavBar() {
         id = 'fellappnew';
     }
 
-    var commonid = commonNavBar(full)
-    if( commonid ) {
-        id = commonid;
-    }
+    var commonid = commonNavBar(full,id)
+//    if( commonid ) {
+//        id = commonid;
+//    }
 
     $('#nav-bar-'+id).addClass('active');
 }
@@ -165,10 +165,10 @@ function setScanNavBar() {
         id = 'admin';
     }
 
-    var commonid = commonNavBar(full)
-    if( commonid ) {
-        id = commonid;
-    }
+    var commonid = commonNavBar(full,id)
+//    if( commonid ) {
+//        id = commonid;
+//    }
 
 
     if( full.indexOf("/user/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
@@ -206,10 +206,10 @@ function setDirectoryNavBar() {
         id = 'userlist-previous';
     }
 
-    var commonid = commonNavBar(full)
-    if( commonid ) {
-        id = commonid;
-    }
+    var commonid = commonNavBar(full,id)
+//    if( commonid ) {
+//        id = commonid;
+//    }
 
     if( full.indexOf("scan/user/") !== -1 || full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
@@ -226,8 +226,8 @@ function setDirectoryNavBar() {
 }
 
 //common nav menues - mainly admin menue
-function commonNavBar(full) {
-    var id = null;
+function commonNavBar(full,id) {
+    //var id = null;
     //Admin
     if( full.indexOf("/user/listusers") !== -1 ) {
         id = 'admin';
@@ -259,7 +259,6 @@ function commonNavBar(full) {
     if( full.indexOf("/about") !== -1 ) {
         id = 'user';
     }
-
     if( full.indexOf("/thanks-for-downloading/") !== -1 ) {
         id = null;
     }
