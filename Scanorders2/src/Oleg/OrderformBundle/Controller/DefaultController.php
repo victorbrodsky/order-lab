@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\FellAppBundle\Controller;
+namespace Oleg\OrderformBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,18 +12,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class DefaultController extends Controller
 {
 
-//    /**
-//     * @Route("/hello/{name}")
-//     * @Template()
-//     */
-//    public function indexAction($name)
-//    {
-//        return array('name' => $name);
-//    }
-
-
     /**
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="fellapp_thankfordownloading")
+     * @Route("/thanks-for-downloading/{id}/{sitename}", name="scan_thankfordownloading")
      * @Template("OlegUserdirectoryBundle:Default:thanksfordownloading.html.twig")
      * @Method("GET")
      */
@@ -34,5 +24,5 @@ class DefaultController extends Controller
         );
     }
 
-
+    
 }
