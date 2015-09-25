@@ -1904,6 +1904,7 @@ class AdminController extends Controller
             'Fellowship Application Status changed to Interviewee',
             'Fellowship Application Status changed to Rejected',
             'Fellowship Application Status changed to On Hold',
+            'Fellowship Interview Evaluation Updated',
 
             'Warning',
             'Error'

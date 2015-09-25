@@ -582,7 +582,7 @@ class FellAppController extends Controller {
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
                 $userSecUtil = $this->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request);
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             }
 
 
@@ -1179,11 +1179,11 @@ class FellAppController extends Controller {
 
 
             $applicant = $fellapp->getUser();
-            $eventType = 'Fellowship Application Interview for applicant '.$applicant.' has been submitted by ' . $user;
-
+            $eventType = 'Fellowship Interview Evaluation Updated';
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->get('security.context')->getToken()->getUser();
-            $event = $eventType . '; application ID ' . $fellapp->getId();
+            //$event = $eventType . '; application ID ' . $fellapp->getId();
+            $event = 'Fellowship Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID'.$fellapp->getId().') has been submitted by ' . $user->getUsernameOptimal();
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
 
             //return $this->redirect( $this->generateUrl('fellapp_home'));
