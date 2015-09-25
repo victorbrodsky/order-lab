@@ -419,25 +419,29 @@
                         {% endif %}
                     </td>
 
-                    {% set scoreCount = 0 %}
-                    {% set tooltip = "" %}
-                    {% set scoreStyle = "" %}
-                    {% for interview in entity.interviews %}
-                        {% if not interview.totalRank or interview.totalRank|number_format <= 0 %}
-                            {% set scoreStyle = 'style=font-weight:bold;' %}
-                        {% else %}
-                            {% set scoreCount = scoreCount + 1 %}
-                        {% endif %}
-                    {% endfor %}
+                    {% if entity.interviewScore %}
+                        {% set scoreCount = 0 %}
+                        {% set tooltip = "" %}
+                        {% set scoreStyle = "" %}
+                        {% for interview in entity.interviews %}
+                            {% if not interview.totalRank %}
+                                {% set scoreStyle = 'style=font-weight:bold;' %}
+                            {% else %}
+                                {% set scoreCount = scoreCount + 1 %}
+                            {% endif %}
+                        {% endfor %}
 
-                    {% if scoreStyle %}
-                        {#{% set tooltip = "data-toggle='tooltip' title='only "~scoreCount~" of "~entity.interviews|length~" interviews are submitted" %}#}
+                        {% if scoreStyle %}
+                            {#{% set tooltip = "data-toggle='tooltip' title='only "~scoreCount~" of "~entity.interviews|length~" interviews are submitted" %}#}
+                        {% endif %}
                     {% endif %}
 
-                    <td>
-                        <div {{ scoreStyle }} {{ tooltip }}>
-                            {{ entity.interviewScore }}
-                        </div>
+                    <td class="rowlink-skip">
+                        {% if entity.interviewScore %}
+                            <div {{ scoreStyle }} {{ tooltip }}>
+                                <a href="{{ path('fellapp_show', { 'id': entity.id}) }}#interviews">{{ entity.interviewScore }}</a>
+                            </div>
+                        {% endif %}
                     </td>
 
                     <td class="rowlink-skip">
