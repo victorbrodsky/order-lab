@@ -17,10 +17,11 @@
 
     <h4 class="text-info" align="center">
         <div>
-            {% if entity.fellapp.appStatus %}
-                <p>{{ entity.fellapp.appStatus.action }}</p>
-            {% endif %}
-            Fellowship Application ID {{ entity.fellapp.id }}, submitted on {{ entity.fellapp.timestamp|date('m/d/Y H:i','UTC') }}, imported on {{ entity.fellapp.createdate|date('m/d/Y H:i','UTC') }}
+            {#{% if entity.fellapp.appStatus %}#}
+                {#<p>{{ entity.fellapp.appStatus.action }}</p>#}
+            {#{% endif %}#}
+            Fellowship Application ID {{ entity.fellapp.id }}
+            {#, submitted on {{ entity.fellapp.timestamp|date('m/d/Y H:i','UTC') }}, imported on {{ entity.fellapp.createdate|date('m/d/Y H:i','UTC') }}#}
         </div>
     </h4>
 
