@@ -634,6 +634,7 @@ class FellAppController extends Controller {
         }
         if( $count > 0 ) {
             $score = $score/$count;
+            $score = round($score,1);
         }
 
         $entity->setInterviewScore($score);

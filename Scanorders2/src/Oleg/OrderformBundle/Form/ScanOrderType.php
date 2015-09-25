@@ -71,8 +71,10 @@ class ScanOrderType extends AbstractType
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'UserdirectoryBundle',
                     'data-compositetree-classname' => 'Institution',
-                    'data-label-prefix' => 'ScanOrder',
-                    'data-label-postfix' => 'Scope'
+                    //'data-label-prefix' => 'ScanOrder',
+                    //'data-label-postfix' => 'Scope'
+                    'data-label-prefix' => '',
+                    'data-label-postfix' => ''
                 ),
                 'classtype' => 'institution'
             ));

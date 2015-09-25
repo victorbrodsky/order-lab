@@ -33,7 +33,7 @@ class PerSiteSettingsType extends AbstractType
             $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 'property' => 'name',
-                'label'=>'Institutional PHI Scope:',
+                'label'=>'Order data visible to members of (Institutional PHI Scope):',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),

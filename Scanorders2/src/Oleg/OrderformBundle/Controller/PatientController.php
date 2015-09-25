@@ -241,7 +241,7 @@ class PatientController extends Controller
         $time_post = microtime(true);
         $exec_time = $time_post - $time_pre;
         //exit('form created: exec_time='.round($exec_time));
-        echo 'form created: exec_time='.round($exec_time)."<br>";
+        //echo 'form created: exec_time='.round($exec_time)."<br>";
         //phpinfo();
 
         return array(

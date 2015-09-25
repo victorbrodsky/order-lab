@@ -244,7 +244,7 @@ class MessageObjectType extends AbstractType
             $institutions = null;
         }
         $builder->add('institution', 'entity', array(
-            'label' => 'Institutional PHI Scope:',
+            'label' => 'Order data visible to members of (Institutional PHI Scope):',
             'required'=> true,
             'multiple' => false,
             'empty_value' => false,
