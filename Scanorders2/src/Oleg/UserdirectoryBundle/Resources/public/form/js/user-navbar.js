@@ -260,5 +260,9 @@ function commonNavBar(full) {
         id = 'user';
     }
 
+    if( full.indexOf("/thanks-for-downloading/") !== -1 ) {
+        id = null;
+    }
+
     return id;
 }
