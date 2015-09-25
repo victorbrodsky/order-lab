@@ -34,8 +34,8 @@ class ScanUploadController extends UploadController {
      * @Route("/file-download/{id}", name="scan_file_download", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function downloadFileAction($id) {
-        return $this->downloadFileMethod($id);
+    public function downloadFileAction(Request $request,$id) {
+        return $this->downloadFileMethod($request,$id);
     }
 
 

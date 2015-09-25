@@ -7,13 +7,25 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Form\SearchType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 
 class DefaultController extends Controller
 {
+
+    /**
+     * @Route("/thanks-for-downloading/{id}", name="common_thankfordownloading")
+     * @Template("OlegUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Method("GET")
+     */
+    public function thankfordownloadingAction(Request $request, $id) {
+        //return $this->redirect( $this->generateUrl('employees_file_download',array('id'=>$id)) );
+        return array(
+            'fileid' => $id
+        );
+    }
 
 //    /**
 //     * @Route("/", name="employees_home")

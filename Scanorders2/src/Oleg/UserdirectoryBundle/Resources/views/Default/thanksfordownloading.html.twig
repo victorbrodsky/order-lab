@@ -1,0 +1,44 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Thank you for downloading
+{% endblock %}
+
+{% block content %}
+
+    Thank you for downloading
+
+    {#<input type="hidden" id="fileid" value="{{fileid}}" />#}
+
+    <br>
+
+    <a id="downloadlink" href="{{ path('employees_file_download',{'id':fileid}) }}">Please click here if your download has not been started</a>
+
+    <br>
+
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script language="Javascript">
+
+
+        $(document).ready(function() {
+
+            //var fileid = $('#fileid');
+            //var url = getCommonBaseUrl("file-download/"+fileid,'employees');
+            //window.location.href = url;
+
+            //$("#downloadlink").click();
+            document.getElementById('downloadlink').click();
+
+        });
+
+
+    </script>
+
+{% endblock %}
+
+

@@ -138,11 +138,11 @@ class UploadController extends Controller {
      * @Route("/file-download/{id}", name="employees_file_download", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function downloadFileAction($id) {
-        return $this->downloadFileMethod($id);
+    public function downloadFileAction(Request $request, $id) {
+        return $this->downloadFileMethod($request,$id);
     }
 
-    public function downloadFileMethod($id) {
+    public function downloadFileMethod($request,$id) {
         $em = $this->getDoctrine()->getManager();
         $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
 
@@ -158,6 +158,13 @@ class UploadController extends Controller {
             $downloader->downloadLargeFile($abspath,$originalname,$size);
 
             exit;
+//            $referer = $request->headers->get('referer');
+//            echo "referer=".$referer."<br>";
+//            if( strpos($referer, '/login') ) {
+//                return $this->redirect( $this->generateUrl('main_common_home') );
+//            } else {
+//                exit;
+//            }
 
             if(0) {
                 $response->headers->set('Content-Type', 'application/unknown');

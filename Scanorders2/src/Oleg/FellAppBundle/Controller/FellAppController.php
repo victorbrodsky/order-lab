@@ -348,8 +348,7 @@ class FellAppController extends Controller {
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }
 
-
-    /**
+        /**
      * @Route("/new/", name="fellapp_new")
      *
      * @Template("OlegFellAppBundle:Form:new.html.twig")
@@ -1286,6 +1285,8 @@ class FellAppController extends Controller {
         $emailStr = "";
         if( $emails && count($emails) > 0 ) {
             $emailStr = " Emails have been sent to the following:".implode(",",$emails);
+        } else {
+            $emailStr = " Emails have not been sent.";
         }
 
         $userSecUtil = $this->container->get('user_security_utility');

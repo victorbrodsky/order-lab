@@ -110,6 +110,16 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $keepalive = strpos($lastRoute, '/keepalive');
         $idlelogout = strpos($lastRoute, '/idlelogout');
 
+        $filedownload = strpos($lastRoute, '/file-download');
+        if( $filedownload ) {
+            $lastRouteArr = explode("/", $lastRoute);
+            $fileid = $lastRouteArr[count($lastRouteArr)-1];
+            $referer_url = $this->router->generate('common_thankfordownloading',array('id'=>$fileid));
+            $response = new RedirectResponse($referer_url);
+            return $response;
+        }
+
+
         //echo "keepalive=".$keepalive."<br>";
         echo "lastRoute=".$lastRoute."<br>";
 
