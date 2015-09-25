@@ -44,9 +44,23 @@
     {#{% do form.endTime.setRendered %}#}
 
 
-    <div id="error-div" class="alert alert-danger" role="alert" style="display:none;">
+    <div id="error-div" class="alert alert-danger" role="alert" style="display:none;"></div>
 
-    </div>
+    {% if cycle == 'show' %}
+        <br><br>
+        <div class="alert alert-info">
+            Your evaluation was received and is shown above. <br>
+            If you have any questions or would like to make any changes, please email the fellowship coordinator.
+        </div>
+    {% endif %}
+
+    {% if cycle == 'edit' %}
+
+        <a href="{{ path('fellapp_download_pdf',{'id':entity.fellapp.id}) }}">{{ entity.fellapp.user.getUsernameOptimal() }}'s Complete Application PDF</a>.
+        <br>
+        Thank you for your feedback, {{ app.user.getUsernameOptimal() }}
+
+    {% endif %}
 
     {% if cycle == "edit" %}
         <br>
