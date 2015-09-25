@@ -1360,7 +1360,7 @@ class FellAppController extends Controller {
         $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
         $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $email, "Fellowship Candidate Interview Application and Evaluation Form", $text, $em );
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em );
 
         return $email;
     }

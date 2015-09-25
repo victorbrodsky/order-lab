@@ -424,7 +424,7 @@
                     {% set scoreStyle = "" %}
                     {% for interview in entity.interviews %}
                         {% if not interview.totalRank or interview.totalRank|number_format <= 0 %}
-                            {% set scoreStyle = 'style=color:#980000' %
+                            {% set scoreStyle = 'style=color:#980000' %}
                         {% else %}
                             {% set scoreCount = scoreCount + 1 %}
                         {% endif %}
