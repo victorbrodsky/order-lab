@@ -480,13 +480,14 @@ class FellAppController extends Controller {
             $action = null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
 
+
         $params = array(
             'cycle' => $cycle,
             'sc' => $this->get('security.context'),
             'em' => $em,
             'user' => $entity->getUser(),
             'cloneuser' => null,
-            'roles' => $user->getRoles()
+            'roles' => $user->getRoles(),
         );
 
         $form = $this->createForm(

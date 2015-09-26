@@ -23,6 +23,7 @@ class InterviewType extends AbstractType
         if( !array_key_exists('showFull', $this->params) ) {
             $this->params['showFull'] = true;
         }
+
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -71,7 +72,7 @@ class InterviewType extends AbstractType
                 $form = $event->getForm();
 
                 $options = array(
-                    'label' => 'Interview Location:',
+                    'label' => "Interview Location:",
                     'required' => false,
                     'attr' => array('class' => 'combobox combobox-width interview-location'),
                 );
