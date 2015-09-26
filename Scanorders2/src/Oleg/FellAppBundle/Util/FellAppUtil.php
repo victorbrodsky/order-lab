@@ -1197,6 +1197,38 @@ class FellAppUtil {
         return $applicants;
     }
 
+    //get fellowship types based on the user roles
+    public function getFellowshipTypesByUser( $user ) {
+        $em = $this->em;
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        if( $userSecUtil->hasGlobalUserRole( "ROLE_FELLAPP_ADMIN", $user ) ) {
+            return $this->getFellowshipTypesWithSpecials();
+        }
+
+        $filterTypes = array();
+        $filterTypeIds = array();
+
+        foreach( $user->getRoles() as $rolename ) {
+            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($rolename);
+            if( $roleObject ) {
+                $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
+                if( $fellowshipSubspecialty ) {
+                    $filterTypes[$fellowshipSubspecialty->getId()] = $fellowshipSubspecialty->getName();
+                    $filterTypeIds[] = $fellowshipSubspecialty->getId();
+                }
+            }
+        }
+
+//        if( count($filterTypes) > 1 ) {
+//            $filterTypes[implode(";",$filterTypeIds)] = "ALL";
+//        }
+
+        //$filterTypes = array_reverse($filterTypes);
+
+        return $filterTypes;
+    }
+
     public function getFellowshipTypesWithSpecials() {
         $em = $this->em;
 
@@ -1237,6 +1269,105 @@ class FellAppUtil {
         }
 
         return $filterType;
+    }
+
+
+    //check if the user can view this fellapp application
+    public function hasFellappPermission( $user, $fellapp ) {
+
+        $res = false;
+
+        //if user is observer of this fellapp
+        if( !$fellapp->getObservers()->contains($user) ) {
+            $res = true;
+        }
+
+        //echo "res=".$res."<br>";
+
+        //if user has the same fellapp type as this fellapp
+        if( $this->hasSameFellowshipTypeId($user, $fellapp->getFellowshipSubspecialty()->getId()) ) {
+            $res = true;
+        }
+
+        //echo "res=".$res."<br>";
+        //exit('1');
+
+        return $res;
+    }
+
+    //check fellowship types based on the user roles
+    public function hasSameFellowshipTypeId( $user, $felltypeid ) {
+        $em = $this->em;
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        if( $userSecUtil->hasGlobalUserRole( "ROLE_FELLAPP_ADMIN", $user ) ) {
+            return true;
+        }
+
+        //echo "felltypeid=".$felltypeid."<br>";
+
+        foreach( $user->getRoles() as $rolename ) {
+            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($rolename);
+            if( $roleObject ) {
+                $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
+                if( $fellowshipSubspecialty ) {
+                    if( $felltypeid == $fellowshipSubspecialty->getId() ) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //get coordinator of given fellapp
+    public function getCoordinatorsOfFellApp( $fellapp ) {
+
+        if( !$fellapp ) {
+            return null;
+        }
+
+        $em = $this->em;
+
+        $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
+        //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
+
+        if( !$fellowshipSubspecialty ) {
+            return null;
+        }
+
+        $coordinatorFellTypeRole = null;
+
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        foreach( $roles as $role ) {
+            if( strpos($role,'_COORDINATOR_') !== false ) {
+                $coordinatorFellTypeRole = $role;
+                break;
+            }
+        }
+
+        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
+
+        return $users;
+    }
+
+    public function getCoordinatorsOfFellAppEmails($fellapp) {
+
+        $coordinators = $this->getCoordinatorsOfFellApp( $fellapp );
+
+        $emails = array();
+        if( $coordinators && count($coordinators) > 0 ) {
+            foreach( $coordinators as $coordinator ) {
+                $emails[] = $coordinator->getEmail();
+            }
+        }
+
+        //echo "coordinator emails<br>";
+        //print_r($emails);
+        //exit('1');
+
+        return $emails;
     }
 
 

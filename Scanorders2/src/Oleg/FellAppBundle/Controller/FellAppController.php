@@ -39,28 +39,37 @@ class FellAppController extends Controller {
      */
     public function indexAction(Request $request) {
 
+        //echo "fellapp home <br>";
+
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        //echo "fellapp home <br>";
+        //echo "fellapp user ok <br>";
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
         $searchFlag = false;
         $currentYear = date("Y")+2;
 
+        $fellowshipTypes = $fellappUtil->getFellowshipTypesByUser($user);
+
+        if( count($fellowshipTypes) == 0 ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         //create fellapp filter
         $params = array(
-            'fellTypes' => $fellappUtil->getFellowshipTypesWithSpecials(),
+            'fellTypes' => $fellowshipTypes,
         );
         $filterform = $this->createForm(new FellAppFilterType($params), null);
 
         $filterform->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 
-        $search = $filterform['search']->getData();
         $filter = $filterform['filter']->getData();
+        $search = $filterform['search']->getData();
         $startDate = $filterform['startDate']->getData();
         $hidden = $filterform['hidden']->getData();
         $archived = $filterform['archived']->getData();
@@ -70,13 +79,22 @@ class FellAppController extends Controller {
         $reject = $filterform['reject']->getData();
         $onhold = $filterform['onhold']->getData();
         //$page = $request->get('page');
-        //echo "<br>startDate=".$startDate."<br>";
-        //echo "<br>filter=".$filter."<br>";
+        //echo "active=".$active."<br>";
+        //echo "filter=".$filter."<br>";
         //echo "<br>search=".$search."<br>";
+        //exit('1');
+
 
         $filterParams = $request->query->all();
 
         if( count($filterParams) == 0 ) {
+            $fellowshipTypeId = null;
+            if( count($fellowshipTypes) == 1 ) {
+                $firstFellType = reset($fellowshipTypes);
+                //echo "firstFellType id=".key($fellowshipTypes)."";
+                //exit();
+                $fellowshipTypeId = key($fellowshipTypes);
+            }
             return $this->redirect( $this->generateUrl('fellapp_home',
                 array(
                     'filter[startDate]' => $currentYear,
@@ -84,8 +102,15 @@ class FellAppController extends Controller {
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
                     'filter[onhold]' => 1,
+                    'filter[filter]' => $fellowshipTypeId,
                 )
             ) );
+        }
+
+        //force check: check user role. Change filter according to the user roles
+        if( $filter && $fellappUtil->hasSameFellowshipTypeId($user,$filter) == false ) {
+            //exit('no permission');
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
@@ -112,6 +137,18 @@ class FellAppController extends Controller {
             $dql->andWhere("fellowshipSubspecialty.id = ".$filter);
             $searchFlag = true;
             $fellSubspecId = $filter;
+        }
+
+        //if( $filter == "ALL" ) {
+        if( !$filter ) {
+            foreach( $fellowshipTypes as $fellowshipTypeID => $fellowshipTypeName ) {
+                if( $fellowshipTypeID != "ALL" ) {
+                    //echo "fellowshipType=".$fellowshipTypeID."<br>";
+                    $dql->orWhere("fellowshipSubspecialty.id = ".$fellowshipTypeID);
+                }
+            }
+            $searchFlag = true;
+            //$fellSubspecId = $filter;
         }
 
         $orWhere = array();
@@ -285,6 +322,7 @@ class FellAppController extends Controller {
         //echo "ip=".$ip."<br>";
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
         $logger = $this->container->get('logger');
         $routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -296,7 +334,7 @@ class FellAppController extends Controller {
         if( $routeName == "fellapp_edit" ) {
             $actionStr = "updated";
             $eventType = 'Fellowship Application Updated';
-            if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') ){
+            if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -319,10 +357,6 @@ class FellAppController extends Controller {
             }
         }
 
-        //user can view
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-        }
         
         //echo "fellapp download!!!!!!!!!!!!!!! <br>";       
 
@@ -332,6 +366,14 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
+
+        //user who has the same fell type can view or edit
+        $fellappUtil = $this->container->get('fellapp_util');
+        if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+
         $args = $this->getShowParameters($routeName,$id);
 
         if( $routeName == 'fellapp_download' ) {
@@ -340,7 +382,6 @@ class FellAppController extends Controller {
 
 
         //event log
-        $user = $this->get('security.context')->getToken()->getUser();
         //$userEntity = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
         //$userSecUtil = $this->container->get('user_security_utility');
         $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
@@ -487,10 +528,18 @@ class FellAppController extends Controller {
         //echo "update <br>";
         //exit('update');
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+
+        //user who has the same fell type can view or edit
+        $fellappUtil = $this->container->get('fellapp_util');
+        if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
         // Create an ArrayCollection of the current interviews
@@ -562,7 +611,7 @@ class FellAppController extends Controller {
 
             $this->processDocuments($entity);
 
-            $this->assignInterviewerRole($entity);
+            $this->assignFellAppAccessRoles($entity);
 
             //set update author application
             $em = $this->getDoctrine()->getManager();
@@ -577,7 +626,6 @@ class FellAppController extends Controller {
 
             //set Edit event log for removed collection and changed fields or added collection
             if( count($changedInfoArr) > 0 || count($removedCollections) > 0 ) {
-                $user = $this->get('security.context')->getToken()->getUser();
                 $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
@@ -844,7 +892,8 @@ class FellAppController extends Controller {
 
             $this->processDocuments($fellowshipApplication);
 
-            $this->assignInterviewerRole($fellowshipApplication);
+            $this->assignFellAppAccessRoles($fellowshipApplication);
+
 
             //set update author application
 //            $em = $this->getDoctrine()->getManager();
@@ -893,13 +942,36 @@ class FellAppController extends Controller {
     }
 
 
-    //assign ROLE_FELLAPP_INTERVIEWER
-    public function assignInterviewerRole($application) {
+    //assign ROLE_FELLAPP_INTERVIEWER corresponding to application
+    public function assignFellAppAccessRoles($application) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fellowshipSubspecialty = $application->getFellowshipSubspecialty();
+
+        $interviewerRoleFellType = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByFellowshipSubspecialty($fellowshipSubspecialty);
+        if( !$interviewerRoleFellType ) {
+            throw new EntityNotFoundException('Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
+        }
 
         foreach( $application->getInterviews() as $interview ) {
             $interviewer = $interview->getInterviewer();
             if( $interviewer && !$interviewer->hasRole('ROLE_FELLAPP_INTERVIEWER') ) {
+
+                //add general interviewer role
                 $interviewer->addRole('ROLE_FELLAPP_INTERVIEWER');
+
+                //add specific interviewer role
+                $interviewer->addRole($interviewerRoleFellType->getName());
+
+            }
+        }
+
+
+        foreach( $application->getObservers() as $observer ) {
+            if( $observer && !$observer->hasRole('ROLE_FELLAPP_OBSERVER') ) {
+                //add general interviewer role
+                $observer->addRole('ROLE_FELLAPP_OBSERVER');
             }
         }
 
@@ -961,7 +1033,6 @@ class FellAppController extends Controller {
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
-
 
         //get status object
         //$entity->setApplicationStatus($status);
@@ -1045,8 +1116,9 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
         }
 
-        //check if the interviewer is the same as current user
         $user = $this->get('security.context')->getToken()->getUser();
+
+        //check if the interviewer is the same as current user
         $interviewer = $interview->getInterviewer();
         //echo "interviewer=".$interviewer."<br>";
         $interviewId = null;
@@ -1055,7 +1127,6 @@ class FellAppController extends Controller {
         } else {
             throw $this->createNotFoundException('Interviewer is undefined');
         }
-
         if( $user->getId() != $interviewId ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -1184,7 +1255,7 @@ class FellAppController extends Controller {
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->get('security.context')->getToken()->getUser();
             //$event = $eventType . '; application ID ' . $fellapp->getId();
-            $event = 'Fellowship Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID'.$fellapp->getId().') has been submitted by ' . $user->getUsernameOptimal();
+            $event = 'Fellowship Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID: '.$fellapp->getId().') has been submitted by ' . $user->getUsernameOptimal();
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
 
             //return $this->redirect( $this->generateUrl('fellapp_home'));
@@ -1271,13 +1342,19 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
+        $emailUtil = new EmailUtil();
         $emails = array();
+
+        //get coordinator emails
+        $coordinatorEmails = null;
+        $fellappUtil = $this->container->get('fellapp_util');
+        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
 
         //get all interviews
         foreach( $entity->getInterviews() as $interview ) {
             if( !$interview->getTotalRank() || $interview->getTotalRank() <= 0 ) {
                 //send email to interviewer with links to PDF and Interview object to fill out.
-                $email = $this->sendInvitationEmail($interview);
+                $email = $this->sendInvitationEmail($interview,$emailUtil,$coordinatorEmails);
                 if( $email ) {
                     $emails[] = $email;
                 }
@@ -1311,7 +1388,96 @@ class FellAppController extends Controller {
         return $response;
     }
 
-    public function sendInvitationEmail($interview) {
+    /**
+     * @Route("/invite-observers-to-view/{id}", name="fellapp_inviteobservers")
+     * @Method("GET")
+     */
+    public function inviteObserversToRateAction(Request $request, $id) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        //echo "invite interviewers to rate <br>";
+        //exit();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+
+        $emails = array();
+        $emailUtil = new EmailUtil();
+
+        //get coordinator emails
+        $coordinatorEmails = null;
+        $fellappUtil = $this->container->get('fellapp_util');
+        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
+
+        //get all interviews
+        $user = $this->get('security.context')->getToken()->getUser();
+        $senderEmail = $user->getEmail();
+        foreach( $entity->getObservers() as $observer ) {
+            $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$entity->getRecentReport()->getId()), true );
+
+            //fellapp_file_download
+            $scheduleLink = null;
+            if( $entity->getRecentItinerary() ) {
+                $scheduleDocumentId = $entity->getRecentItinerary()->getId();
+                $scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
+            }
+
+            //get email
+            $email = $observer->getEmail();
+            $emails[] = $email;
+
+            $applicant = $entity->getUser();
+
+            $break = "\r\n";
+
+            $text = "Dear " . $observer->getUsernameOptimal().",".$break.$break;
+            $text .= "Please review the FELLOWSHIP APPLICATION for the candidate ".$applicant->getUsernameOptimal() . " (ID: ".$entity->getId().")".$break.$break;
+
+            $text .= "The COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
+
+            if( $scheduleLink ) {
+                $text .= "The INTERVIEW SCHEDULE URL link:" . $break . $scheduleLink . $break.$break;
+            }
+
+            $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
+
+            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, $em, $coordinatorEmails );
+        }
+
+        $emailStr = "";
+        if( $emails && count($emails) > 0 ) {
+            $emailStr = " Emails have been sent to the following:".implode(",",$emails);
+        } else {
+            $emailStr = " Emails have not been sent.";
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        $event = "Invited observers to view fellowship application ID " . $id . "." . $emailStr;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Resend Emails');
+
+        if( $emails && count($emails) > 0 ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode("ok"));
+        return $response;
+    }
+
+    public function sendInvitationEmail( $interview, $emailUtil, $coordinatorEmails) {
 
         $em = $this->getDoctrine()->getManager();
         $fellapp = $interview->getFellapp();
@@ -1323,9 +1489,11 @@ class FellAppController extends Controller {
         }
 
         if( !$fellapp->getRecentItinerary() ) {
+            $appLink = $this->generateUrl( 'fellapp_show', array("id"=>$fellapp->getId()), true );
+            $appHref = '<a href="'.$appLink.'">'.$applicant->getUsernameOptimal().' (ID: '.$fellapp->getId().')'.'</a>';
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                'Email invitations have not been sent. Please upload Itinerary and try again.'
+                'Email invitations to evaluate '.$appHref.' have not been sent. Please upload Itinerary and try again.'
             );
             return null;
         }
@@ -1360,8 +1528,7 @@ class FellAppController extends Controller {
 
         $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
-        $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em );
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, $coordinatorEmails );
 
         return $email;
     }
@@ -1601,6 +1768,7 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
@@ -1609,8 +1777,13 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
+        //user who has the same fell type can view or edit
+        $fellappUtil = $this->container->get('fellapp_util');
+        if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         //event log
-        $user = $this->get('security.context')->getToken()->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
         $event = "Report for Fellowship Application with ID".$id." has been downloaded by ".$user;
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application Downloaded');

@@ -36,6 +36,20 @@ class Roles extends ListAbstract {
     protected $original;
 
 
+    //institution
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    private $institution;
+
+    //fellowship type
+    /**
+     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty")
+     */
+    private $fellowshipSubspecialty;
+
+
+
     public function __construct() {
         $this->attributes = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
@@ -73,6 +87,43 @@ class Roles extends ListAbstract {
     {
         return $this->attributes;
     }
+
+
+
+
+    /**
+     * @param mixed $fellowshipSubspecialty
+     */
+    public function setFellowshipSubspecialty($fellowshipSubspecialty)
+    {
+        $this->fellowshipSubspecialty = $fellowshipSubspecialty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellowshipSubspecialty()
+    {
+        return $this->fellowshipSubspecialty;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+
 
 
 

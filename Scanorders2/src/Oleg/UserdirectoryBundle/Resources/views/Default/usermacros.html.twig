@@ -435,7 +435,7 @@
                     {% endif %}
                 {% endif %}
 
-                {% if standAloneLocation %}
+                {% if standAloneLocation and formfield.removable is defined %}
                     {{ formmacros.field(formfield.removable) }}
                 {% endif %}
 

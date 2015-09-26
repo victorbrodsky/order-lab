@@ -290,9 +290,9 @@ class LocationType extends AbstractType
 //                    },
 //            ));
 
-            $builder->add('removable','checkbox',array(
-                'label' => "Removable:",
-            ));
+//            $builder->add('removable','checkbox',array(
+//                'label' => "Removable:",
+//            ));
         }
 
         //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page

@@ -258,6 +258,22 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__interviews__',
         ));
 
+        $builder->add( 'observers', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Observer(s):",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
 
         /////////////////// user objects ////////////////////////////
 

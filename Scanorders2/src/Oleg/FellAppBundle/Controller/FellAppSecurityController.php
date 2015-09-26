@@ -43,11 +43,14 @@ class FellAppSecurityController extends SecurityController
     /**
      * @Route("/no-permission", name="fellapp-nopermission")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
+     * @Template("OlegFellAppBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {
-        return parent::actionNoPermission($request);
+        //return parent::actionNoPermission($request);
+        return array(
+            //'returnpage' => '',
+        );
     }
 
 

@@ -125,7 +125,7 @@
                     {{ form_row(fellappfilter.filter,{'attr': {'placeholder': 'Fellowship Type'}}) }}
                 </div>
                 <div class="col-xs-4">
-                    {{ form_row(fellappfilter.search, {'attr': {'placeholder': 'Search'}}) }}
+                    {{ form_row(fellappfilter.search, {'attr': {'placeholder': 'Search by Name'}}) }}
                 </div>
                 <div class="col-xs-2">
                     <div class="btn-group btn-group-justified">
@@ -140,6 +140,7 @@
             <div class="row text-center">
                 <div class="col-xs-12">
 
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, active, activeTotal, 'active' ) }}#}
                     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
@@ -152,8 +153,10 @@
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter}) }}">{{ activeTotal }}</a>
                     </span>
                     {{ fellappmacros.addLegend('active') }}
+                    </div>
                     &nbsp;&nbsp;
 
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, complete, completeTotal, 'complete' ) }}#}
                     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
@@ -166,8 +169,10 @@
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter}) }}">{{ completeTotal }}</a>
                     </span>
                     {{ fellappmacros.addLegend('complete') }}
+                    </div>
                     &nbsp;&nbsp;
 
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.interviewee) }}   {{ form_label(fellappfilter.interviewee) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, interviewee, intervieweeTotal, 'interviewee' ) }}#}
                     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
@@ -180,8 +185,10 @@
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter}) }}">{{ intervieweeTotal }}</a>
                     </span>
                     {{ fellappmacros.addLegend('interviewee') }}
+                    </div>
                     &nbsp;&nbsp;
 
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.onhold) }}   {{ form_label(fellappfilter.onhold) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, onhold, onholdTotal, 'onhold' ) }}#}
                     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
@@ -194,8 +201,10 @@
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">{{ onholdTotal }}</a>
                     </span>
                     {{ fellappmacros.addLegend('onhold') }}
+                    </div>
                     &nbsp;&nbsp;
 
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, reject, rejectTotal, 'reject' ) }}#}
                     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
@@ -208,8 +217,10 @@
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">{{ rejectTotal }}</a>
                     </span>
                     {{ fellappmacros.addLegend('reject') }}
+                    </div>
                     &nbsp;&nbsp;
 
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.hidden) }}   {{ form_label(fellappfilter.hidden) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, hidden, hiddenTotal, 'hidden' ) }}#}
                     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
@@ -222,8 +233,10 @@
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter}) }}">{{ hiddenTotal }}</a>
                     </span>
                     {{ fellappmacros.addLegend('hidden') }}
+                    </div>
                     &nbsp;&nbsp;
 
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.archived) }}   {{ form_label(fellappfilter.archived) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, archived, archivedTotal, 'archived' ) }}#}
                     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
@@ -236,6 +249,7 @@
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter}) }}">{{ archivedTotal }}</a>
                     </span>
                     {{ fellappmacros.addLegend('archived') }}
+                    </div>
 
                 </div>
             </div>
@@ -429,10 +443,10 @@
                     {% if entity.interviewScore %}
                         {% set scoreCount = 0 %}
                         {% set tooltip = "" %}
-                        {% set scoreStyle = "" %}
+                        {% set scoreStyle = 'style=font-weight:bold;' %}
                         {% for interview in entity.interviews %}
                             {% if not interview.totalRank %}
-                                {% set scoreStyle = 'style=font-weight:bold;' %}
+                                {% set scoreStyle = "" %}
                             {% else %}
                                 {% set scoreCount = scoreCount + 1 %}
                             {% endif %}
@@ -440,7 +454,7 @@
 
                         {% if scoreStyle %}
                             {#{% set tooltip = 'data-toggle="tooltip" title="only '~scoreCount~' of '~entity.interviews|length~' interviews are submitted"' %}#}
-                            {% set tooltip = 'only '~scoreCount~' of '~entity.interviews|length~' interviews are submitted' %}
+                            {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received' %}
                         {% endif %}
                     {% endif %}
 
@@ -490,6 +504,11 @@
                                     </li>
                                 {% endif %}
 
+                                {% if entity.interviews|length > 0 %}
+                                    <li>
+                                        <a href="{{ path('fellapp_show', { 'id': entity.id}) }}#interviews" target="_blank">View Interview Evaluations</a>
+                                    </li>
+                                {% endif %}
 
                                 {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
                                     {% if entity.appStatus.name != 'active' %}
@@ -574,6 +593,17 @@
                                                 general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be send to the interviewers who still have not submitted their scores."
                                                 general-data-callback="refreshpage"
                                                 href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite Interviewers to Rate
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    {#Invite observers to view#}
+                                    {% if entity.observers|length > 0 %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to Invite Observers to view this Applicant? Email will be send to all observers."
+                                                general-data-callback="refreshpage"
+                                                href="{{ path('fellapp_inviteobservers', { 'id': entity.id}, true) }}">Invite Observers to View
                                             </a>
                                         </li>
                                     {% endif %}

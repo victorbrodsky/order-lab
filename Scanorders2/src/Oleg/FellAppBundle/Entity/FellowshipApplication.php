@@ -214,6 +214,15 @@ class FellowshipApplication extends BaseUserAttributes {
      */
     private $interviews;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinTable(name="fellapp_fellApp_observer",
+     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="observer_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $observers;
+
 
     /////////// user objects /////////////
 //    /**
@@ -308,6 +317,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->documents = new ArrayCollection();
         $this->itinerarys = new ArrayCollection();
         $this->interviews = new ArrayCollection();
+        $this->observers = new ArrayCollection();
 
         //$this->employmentStatuses = new ArrayCollection();
         $this->trainings = new ArrayCollection();
@@ -739,6 +749,23 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getInterviews()
     {
         return $this->interviews;
+    }
+
+
+    public function addObserver($item)
+    {
+        if( $item && !$this->observers->contains($item) ) {
+            $this->observers->add($item);
+        }
+        return $this;
+    }
+    public function removeObserver($item)
+    {
+        $this->observers->removeElement($item);
+    }
+    public function getObservers()
+    {
+        return $this->observers;
     }
 
 

@@ -53,7 +53,7 @@ class FellAppFilterType extends AbstractType
 
         $builder->add('filter', 'choice', array(
             'label' => false,
-            'required'=> true,
+            'required'=> false,
             //'multiple' => false,
             'choices' => $this->params['fellTypes'],
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty-filter'),

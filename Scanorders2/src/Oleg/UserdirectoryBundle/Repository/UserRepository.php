@@ -104,5 +104,33 @@ class UserRepository extends EntityRepository {
     }
 
 
+
+    public function findOneUserByRole($role) {
+
+        $user = null;
+
+        $users = $this->findUserByRole($role);
+
+        if( count($users) > 0 ) {
+            $user = $users[0];
+        }
+
+        return $user;
+    }
+
+    public function findUserByRole($role) {
+
+        $user = null;
+
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->select("list")
+            ->where("list.roles LIKE :role")
+            ->orderBy("list.id","ASC")
+            ->setParameter('role', '%"' . $role . '"%');
+
+        return $query->getQuery()->getResult();
+    }
+
 }
 

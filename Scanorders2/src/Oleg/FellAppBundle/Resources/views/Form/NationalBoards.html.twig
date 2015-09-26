@@ -78,34 +78,43 @@
             </div>
 
 
+
             <div class="form-element-holder">
-                <div class="row withpaddingtop">
-                    <div class="col-xs-12">
-                        <label for="ECFMGCertificate" class="control-label">For graduates of international medical schools, are you ECFMG-certified? </label>
-                    </div>
-                    <div class="col-xs-12">
-                        {#<input type="radio" name="ECFMGCertificate" onclick="showWell(this)" value="Yes">&nbsp;Yes#}
-                        {#&nbsp;#}
-                        {#<input type="radio" name="ECFMGCertificate" onclick="hideWell(this)" value="No">&nbsp;No#}
-                        {{ form_row(examination.ECFMGCertificate) }}
-                    </div>
-                </div>
-                <br>
-                <div class="well wellcollapsable" style="display:none">
-                    <label class="col-xs-12 control-label">ECFMG Certificate</label>
+                <div class="well">
+
                     <div class="row">
-                        <div class="col-xs-6">
-                            {#<label for="ECFMGCertificateNumber" class="control-label">ECFMG Certificate Number</label>#}
-                            {#<input type="text" class="form-control" id="ECFMGCertificateNumber" name="ECFMGCertificateNumber" placeholder="ECFMG Certificate Number">#}
-                            {{ form_row(examination.ECFMGCertificateNumber) }}
-                        </div>
-                        <div class="col-xs-6">
-                            {#<label for="ECFMGCertificateDate" class="control-label">Date ECFMG Certificate Granted</label>#}
-                            {#<input type="text" class="datepicker form-control allow-future-date" id="ECFMGCertificateDate" name="ECFMGCertificateDate" placeholder="Date ECFMG Certificate Granted">#}
-                            {#{{ form_row(examination.ECFMGCertificateDate) }}#}
-                            {{ formmacros.fieldDateLabel_vertical(examination.ECFMGCertificateDate,'allow-future-date') }}
+                        <div class="col-xs-12">
+                            <label for="ECFMGCertificate" class="control-label">For graduates of international medical schools, are you ECFMG-certified? </label>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            {#<input type="radio" name="ECFMGCertificate" onclick="showWell(this)" value="Yes">&nbsp;Yes#}
+                            {#&nbsp;#}
+                            {#<input type="radio" name="ECFMGCertificate" onclick="hideWell(this)" value="No">&nbsp;No#}
+                            {{ form_row(examination.ECFMGCertificate) }}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="well wellcollapsable" style="display:none">
+                        <label class="col-xs-12 control-label">ECFMG Certificate</label>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                {#<label for="ECFMGCertificateNumber" class="control-label">ECFMG Certificate Number</label>#}
+                                {#<input type="text" class="form-control" id="ECFMGCertificateNumber" name="ECFMGCertificateNumber" placeholder="ECFMG Certificate Number">#}
+                                {{ form_row(examination.ECFMGCertificateNumber) }}
+                            </div>
+                            <div class="col-xs-6">
+                                {#<label for="ECFMGCertificateDate" class="control-label">Date ECFMG Certificate Granted</label>#}
+                                {#<input type="text" class="datepicker form-control allow-future-date" id="ECFMGCertificateDate" name="ECFMGCertificateDate" placeholder="Date ECFMG Certificate Granted">#}
+                                {#{{ form_row(examination.ECFMGCertificateDate) }}#}
+                                {{ formmacros.fieldDateLabel_vertical(examination.ECFMGCertificateDate,'allow-future-date') }}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

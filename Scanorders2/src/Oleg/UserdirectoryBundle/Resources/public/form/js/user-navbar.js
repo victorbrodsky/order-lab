@@ -105,10 +105,10 @@ function setFellappNavBar() {
         id = 'fellappnew';
     }
     if( full.indexOf("/fellowship-applications/show") !== -1 ) {
-        id = 'fellappnew';
+        id = null;
     }
     if( full.indexOf("/fellowship-applications/edit") !== -1 ) {
-        id = 'fellappnew';
+        id = null;
     }
 
     id = commonNavBar(full,id)
