@@ -58,6 +58,7 @@ class GenericListType extends AbstractType
         }
 
         //FellowshipSubspecialty
+        //TODO: make it as institutional tree
         //if( method_exists($this->params['entity'],'getInstitution') ) {
         if( strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty") ) {
 
