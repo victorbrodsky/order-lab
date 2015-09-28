@@ -44,7 +44,7 @@ class Examination
      * @ORM\ManyToMany(targetEntity="Document")
      * @ORM\JoinTable(name="user_examination_score",
      *      joinColumns={@ORM\JoinColumn(name="examination_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="score_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="score_id", referencedColumnName="id", onDelete="CASCADE")}
      *      )
      * @ORM\OrderBy({"createdate" = "ASC"})
      **/

@@ -42,6 +42,12 @@ class FellowshipSubspecialty extends ListAbstract
 
 
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $institution;
+
 
     /**
      * @param mixed $parent
@@ -74,6 +80,27 @@ class FellowshipSubspecialty extends ListAbstract
     {
         return $this->boardCertificateAvailable;
     }
+
+
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+
+
 
     public function getClassName()
     {

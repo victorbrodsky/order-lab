@@ -35,7 +35,7 @@ class FellAppManagement extends Controller {
      * Show home page
      *
      * @Route("/fellowship-types-settings", name="fellapp_settings")
-     * @Template("OlegFellAppBundle:Default:home.html.twig")
+     * @Template("OlegFellAppBundle:Management:management.html.twig")
      */
     public function indexAction(Request $request) {
 
@@ -44,6 +44,7 @@ class FellAppManagement extends Controller {
         }
 
 
+        //get all fellowship types using role
 
 
     }

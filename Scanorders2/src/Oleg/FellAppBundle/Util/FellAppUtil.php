@@ -25,6 +25,7 @@ use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Util\EmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 
@@ -734,14 +735,15 @@ class FellAppUtil {
             $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
             $fellowshipApplication->setSignatureDate($signatureDate);
 
-            if( !$fellowshipApplication->getSignatureName() ) {
-                $event = "Error: Applicant signature is null after populating Fellowship Applicant " . $displayName . " with Google Applicant ID=".$googleFormId."; Application ID " . $fellowshipApplication->getId();
+            //getFellowshipSubspecialty
+            if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+                $event = "Error: Fellowship Type is null after populating Fellowship Applicant " . $displayName . " with Google Applicant ID=".$googleFormId."; Application ID " . $fellowshipApplication->getId();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Creation Failed');
                 $logger->error($event);
 
                 //send email
                 $emailUtil = new EmailUtil();
-                $userSecUtil = $this->get('user_security_utility');
+                $userSecUtil = $this->container->get('user_security_utility');
                 $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
                 $headers = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
                 if( !$emails ) {
@@ -1227,6 +1229,50 @@ class FellAppUtil {
         //$filterTypes = array_reverse($filterTypes);
 
         return $filterTypes;
+    }
+
+    //get all fellowship application types using role
+    public function getFellowshipTypesWithSpecials_new() {
+        $em = $this->em;
+
+        $fellTypes = array();
+
+        //get list of fellowship type with extra "ALL"
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Roles');
+        $dql = $repository->createQueryBuilder('list');
+        $dql->leftJoin("list.fellowshipSubspecialty","fellowshipSubspecialty");
+        $dql->where("fellowshipSubspecialty.name LIKE '%ROLE_FELLAPP_DIRECTOR_WCMC_%'");
+        //$dql->andWhere("parent.name LIKE '%Pathology%' OR parent.name LIKE '%Clinical Molecular Genetics%' OR parent IS NULL");
+        //$dql->andWhere("parent.name LIKE '%Pathology%'");
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $em->createQuery($dql);
+
+//        $query->setParameters( array(
+//            'typedef' => 'default',
+//            'typeadd' => 'user-added',
+//            //'parentName' => 'Pathology'
+//        ));
+
+        $fellTypes = $query->getResult();
+
+        //add special cases
+//        $specials = array(
+//            "ALL" => "ALL",
+//        );
+
+//        $filterType = array();
+//        foreach( $specials as $key => $value ) {
+//            $filterType[$key] = $value;
+//        }
+
+        //add statuses
+        foreach( $fellTypes as $type ) {
+            //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
+            $filterType[$type->getId()] = $type->getName();
+        }
+
+        return $filterType;
     }
 
     public function getFellowshipTypesWithSpecials() {
