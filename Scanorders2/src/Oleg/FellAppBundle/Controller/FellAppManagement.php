@@ -44,7 +44,7 @@ class FellAppManagement extends Controller {
         }
 
 
-        //get all fellowship types using role
+        //get all fellowship types using institution
 
 
     }

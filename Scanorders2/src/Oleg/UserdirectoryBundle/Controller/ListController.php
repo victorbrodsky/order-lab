@@ -153,6 +153,11 @@ class ListController extends Controller
             $dql->addGroupBy('attributes');
         }
 
+        if( method_exists($entityClass,'getInstitution') ) {
+            $dql->leftJoin("ent.institution", "institution");
+            $dql->addGroupBy('institution');
+        }
+
         //$dql->orderBy("ent.createdate","DESC");
 		
 		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       		
@@ -324,8 +329,8 @@ class ListController extends Controller
         //use $timezone = $user->getTimezone(); ?
         $user = $this->get('security.context')->getToken()->getUser();
         $options['user'] = $user;
-
         $options['entity'] = $entity;
+        $options['em'] = $this->getDoctrine()->getManager();
 
         $newForm = new GenericListType($options,$mapper);
 
@@ -685,8 +690,8 @@ class ListController extends Controller
         //use $timezone = $user->getTimezone(); ?
         $user = $this->get('security.context')->getToken()->getUser();
         $options['user'] = $user;
-
         $options['entity'] = $entity;
+        $options['em'] = $this->getDoctrine()->getManager();
 
         $newForm = new GenericListType($options,$mapper);
 

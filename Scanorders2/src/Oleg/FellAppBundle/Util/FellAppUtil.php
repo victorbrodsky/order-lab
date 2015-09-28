@@ -1205,7 +1205,7 @@ class FellAppUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         if( $userSecUtil->hasGlobalUserRole( "ROLE_FELLAPP_ADMIN", $user ) ) {
-            return $this->getFellowshipTypesWithSpecials();
+            return $this->getFellowshipTypesByInstitution();
         }
 
         $filterTypes = array();
@@ -1232,16 +1232,30 @@ class FellAppUtil {
     }
 
     //get all fellowship application types using role
-    public function getFellowshipTypesWithSpecials_new() {
+    public function getFellowshipTypesByInstitution() {
         $em = $this->em;
+
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
 
         $fellTypes = array();
 
         //get list of fellowship type with extra "ALL"
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Roles');
+        $repository = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
         $dql = $repository->createQueryBuilder('list');
-        $dql->leftJoin("list.fellowshipSubspecialty","fellowshipSubspecialty");
-        $dql->where("fellowshipSubspecialty.name LIKE '%ROLE_FELLAPP_DIRECTOR_WCMC_%'");
+        $dql->leftJoin("list.institution","institution");
+        $dql->where("institution.id = ".$pathology->getId());
+        //$dql->where("institution.name = '%ROLE_FELLAPP_DIRECTOR_WCMC_%'");
         //$dql->andWhere("parent.name LIKE '%Pathology%' OR parent.name LIKE '%Clinical Molecular Genetics%' OR parent IS NULL");
         //$dql->andWhere("parent.name LIKE '%Pathology%'");
         $dql->orderBy("list.orderinlist","ASC");
@@ -1275,47 +1289,47 @@ class FellAppUtil {
         return $filterType;
     }
 
-    public function getFellowshipTypesWithSpecials() {
-        $em = $this->em;
-
-        //get list of fellowship type with extra "ALL"
-        $repository = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
-        $dql = $repository->createQueryBuilder('list');
-        //$dql->select("list.id as id, list.name as text")
-        $dql->leftJoin("list.parent","parent");
-        $dql->where("list.type = :typedef OR list.type = :typeadd");
-        $dql->andWhere("parent.name LIKE '%Pathology%' OR parent.name LIKE '%Clinical Molecular Genetics%' OR parent IS NULL");
-        //$dql->andWhere("parent.name LIKE '%Pathology%'");
-        $dql->orderBy("list.orderinlist","ASC");
-
-        $query = $em->createQuery($dql);
-
-        $query->setParameters( array(
-            'typedef' => 'default',
-            'typeadd' => 'user-added',
-            //'parentName' => 'Pathology'
-        ));
-
-        $fellTypes = $query->getResult();
-
-        //add special cases
-//        $specials = array(
-//            "ALL" => "ALL",
-//        );
-
-//        $filterType = array();
-//        foreach( $specials as $key => $value ) {
-//            $filterType[$key] = $value;
+//    public function getFellowshipTypesWithSpecials_OLD() {
+//        $em = $this->em;
+//
+//        //get list of fellowship type with extra "ALL"
+//        $repository = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
+//        $dql = $repository->createQueryBuilder('list');
+//        //$dql->select("list.id as id, list.name as text")
+//        $dql->leftJoin("list.parent","parent");
+//        $dql->where("list.type = :typedef OR list.type = :typeadd");
+//        $dql->andWhere("parent.name LIKE '%Pathology%' OR parent.name LIKE '%Clinical Molecular Genetics%' OR parent IS NULL");
+//        //$dql->andWhere("parent.name LIKE '%Pathology%'");
+//        $dql->orderBy("list.orderinlist","ASC");
+//
+//        $query = $em->createQuery($dql);
+//
+//        $query->setParameters( array(
+//            'typedef' => 'default',
+//            'typeadd' => 'user-added',
+//            //'parentName' => 'Pathology'
+//        ));
+//
+//        $fellTypes = $query->getResult();
+//
+//        //add special cases
+////        $specials = array(
+////            "ALL" => "ALL",
+////        );
+//
+////        $filterType = array();
+////        foreach( $specials as $key => $value ) {
+////            $filterType[$key] = $value;
+////        }
+//
+//        //add statuses
+//        foreach( $fellTypes as $type ) {
+//            //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
+//            $filterType[$type->getId()] = $type->getName();
 //        }
-
-        //add statuses
-        foreach( $fellTypes as $type ) {
-            //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
-            $filterType[$type->getId()] = $type->getName();
-        }
-
-        return $filterType;
-    }
+//
+//        return $filterType;
+//    }
 
 
     //check if the user can view this fellapp application

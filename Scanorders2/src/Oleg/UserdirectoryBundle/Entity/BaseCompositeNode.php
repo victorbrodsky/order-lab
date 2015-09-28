@@ -181,6 +181,13 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         //print_r($breadcrumbsArr);
         return $breadcrumbsArr;
     }
+    public function getIdBreadcrumbsStr() {
+        $breadcrumbsArr = array();
+        $breadcrumbsArr = $this->getIdBreadcrumbsIter($this,$breadcrumbsArr,true);
+        $breadcrumbsArr = array_reverse($breadcrumbsArr);
+        //print_r($breadcrumbsArr);
+        return implode(",",$breadcrumbsArr);
+    }
     public function getIdBreadcrumbsIter($node,$breadcrumbsArr,$byId) {
         if( $byId ) {
             $breadcrumbsArr[] = $node->getId();
@@ -210,6 +217,39 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         }
 
     }
+
+    //TODO: rewrite it using recursive
+    public function getTreeName() {
+
+        $treeName = array($this."");
+        $department = null;
+        $division = null;
+        $inst = null;
+        if( $this->getParent() ) {
+            $department = $this->getParent();
+            $treeName[] = $department."";
+        }
+        if( $department ) {
+            $division = $department->getParent();
+            $treeName[] = $division."";
+        }
+        if( $division ) {
+            $inst = $division->getParent();
+            $treeName[] = $inst."";
+        }
+
+        return implode(" => ",$treeName);
+    }
+//    public function getTreeNameRecursive($treeName) {
+//        $parent = $this->getParent();
+//        if( $parent ) {
+//            $parent->getTreeNameRecursive($treeName);
+//        } else {
+//            //$treeName[] = $this."";
+//            $treeName .= $this."";
+//            return $treeName;
+//        }
+//    }
 
     public function __toString()
     {

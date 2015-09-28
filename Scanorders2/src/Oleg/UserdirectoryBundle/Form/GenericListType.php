@@ -2,10 +2,13 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GenericListType extends AbstractType
@@ -22,6 +25,7 @@ class GenericListType extends AbstractType
         if( !array_key_exists('parentClassName', $this->mapper) ) {
             $this->mapper['parentClassName'] = $this->mapper['className'];
         }
+
     }
 
         /**
@@ -51,6 +55,75 @@ class GenericListType extends AbstractType
                 'attr' => $attr
             ));
 
+        }
+
+        //FellowshipSubspecialty
+        //if( method_exists($this->params['entity'],'getInstitution') ) {
+        if( strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty") ) {
+
+            //echo "show institution<br>";
+
+//            $builder->add('institution','entity',array(
+//                'class' => 'OlegUserdirectoryBundle:Institution',
+//                'label' => "Institution:",
+//                'property' => "getTreeName",
+//                'multiple' => false,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'required' => false,
+//            ));
+
+            $builder->add( 'institution', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                'property' => 'getTreeName',
+                'label'=>'Institution:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.children","children")
+                            ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
+            ));
+
+//            ///////////////////////// tree node /////////////////////////
+//            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//                $title = $event->getData();
+//                $form = $event->getForm();
+//
+//                echo "2 show institution<br>";
+//
+//                $label = null;
+//                if( $title ) {
+//                    $institution = $title->getInstitution();
+//                    if( $institution ) {
+//                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+//                    }
+//                }
+//                if( !$label ) {
+//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+//                }
+//                echo "label=".$label."<br>";
+//
+//                $form->add('institution', 'employees_custom_selector', array(
+//                    'label' => $label,
+//                    'required' => false,
+//                    //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+//                    'attr' => array(
+//                        'class' => 'ajax-combobox-compositetree',
+//                        'type' => 'hidden',
+//                        'data-compositetree-bundlename' => 'UserdirectoryBundle',
+//                        'data-compositetree-classname' => 'Institution'
+//                    ),
+//                    'classtype' => 'institution'
+//                ));
+//            });
+//            ///////////////////////// EOF tree node /////////////////////////
 
         }
 

@@ -15,6 +15,10 @@
             <th>{{ knp_pagination_sortable(entities, 'Short Name', 'ent.shortname') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
 
+            {% if entities|first.institution is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Institution', 'institution.name') }}</th>
+            {% endif %}
+
             {% if entities|first.level is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Level', 'ent.level') }}</th>
             {% endif %}
@@ -86,6 +90,12 @@
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.shortname }}</td>
                 <td>{{ entity.abbreviation }}</td>
+
+                {% if entity.institution is defined %}
+                    <td>
+                        {{ entity.institution }}
+                    </td>
+                {% endif %}
 
                 {% if entity.level is defined %}
                     <td>
@@ -231,6 +241,11 @@
     {{ formmacros.field(form.list.name) }}
     {{ formmacros.field(form.list.shortname) }}
     {{ formmacros.field(form.list.abbreviation) }}
+
+    {% if form.institution is defined %}
+        {{ formmacros.field(form.institution) }}
+        {#{{ treemacros.compositeTreeNode(form.institution,'','') }}#}
+    {% endif %}
 
     {% if form.level is defined %}
         {{ formmacros.field(form.level) }}
