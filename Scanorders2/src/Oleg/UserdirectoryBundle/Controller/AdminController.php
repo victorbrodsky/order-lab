@@ -437,7 +437,7 @@ class AdminController extends Controller
             //Directors (7 types)
             "ROLE_FELLAPP_DIRECTOR" => array("Fellowship Program General Director Role","Access to Fellowship Application type as Director (edit application,upload new documents)"),
             "ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY" => array(
-                "Fellowship Program Director WCMC FELLOWSHIP Breast Pathology",
+                "Fellowship Program Director WCMC Breast Pathology",
                 "Access to specific Fellowship Application type as Director"
             ),
             "ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY" => array(

@@ -434,9 +434,16 @@
                     </td>
 
 
-                    <td>
+                    <td class="rowlink-skip">
                         {% if entity.interviewDate is not empty %}
-                            {{ entity.interviewDate|date('m/d/Y','UTC') }}
+                            {% if entity.itinerarys|length > 0 %}
+                                <a href="{{ path('fellapp_file_download', { 'id': entity.itinerarys|last.id}) }}" target="_blank" style="color:black;">
+                                    {{ entity.interviewDate|date('m/d/Y','UTC') }}
+                                </a>
+                            {% else %}
+                                {{ entity.interviewDate|date('m/d/Y','UTC') }}
+                            {% endif %}
+
                         {% endif %}
                     </td>
 
@@ -468,12 +475,24 @@
 
                     <td class="rowlink-skip">
 
+                        {#X of Y reference letters received#}
+                        {#count all reference letters and upload documents#}
+                        {% set letterCount = 0 %}
+                        {% for refLetter in entity.references %}
+                            {% set letterCount = letterCount + refLetter.documents|length %}
+                        {% endfor %}
+                        {% set letterCount = letterCount + entity.documents|length %}
+                        {% set letterCountStr = "" %}
+                        {% if letterCount > 0 %}
+                            {% set letterCountStr = letterCount ~  " reference letters received" %}
+                        {% endif %}
+
                         {#<a#}
                             {#href="{{ path('employees_file_pdf-preview', { 'id': entity.id}) }}" target="_blank">#}
                             {#<span class="glyphicon glyphicon-file" aria-hidden="true"></span>#}
                         {#</a>#}
                         {% if entity.getRecentReport() %}
-                            <a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank">
+                            <a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">
                                 <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                             </a>
                         {% endif %}

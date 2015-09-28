@@ -1253,14 +1253,14 @@ class FellAppUtil {
         $fellTypes = $query->getResult();
 
         //add special cases
-        $specials = array(
-            "ALL" => "ALL",
-        );
+//        $specials = array(
+//            "ALL" => "ALL",
+//        );
 
-        $filterType = array();
-        foreach( $specials as $key => $value ) {
-            $filterType[$key] = $value;
-        }
+//        $filterType = array();
+//        foreach( $specials as $key => $value ) {
+//            $filterType[$key] = $value;
+//        }
 
         //add statuses
         foreach( $fellTypes as $type ) {
