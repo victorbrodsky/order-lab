@@ -459,8 +459,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        {% if scoreStyle %}
-                            {#{% set tooltip = 'data-toggle="tooltip" title="only '~scoreCount~' of '~entity.interviews|length~' interviews are submitted"' %}#}
+                        {% if entity.interviewScore %}
                             {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received' %}
                         {% endif %}
                     {% endif %}

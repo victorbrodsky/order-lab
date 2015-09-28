@@ -38,10 +38,19 @@
                     </li>
 
 
-                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') %}
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
                         <li id="nav-bar-fellappnew" class="hidden-xs divider-vertical">
                             <a href="{{ path('fellapp_new') }}">
                                 Add Application
+                            </a>
+                        </li>
+                    {% endif %}
+
+
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        <li id="nav-bar-fellappnew" class="hidden-xs divider-vertical">
+                            <a href="{{ path('fellapp_settings') }}">
+                                Fellowship Types Settings
                             </a>
                         </li>
                     {% endif %}

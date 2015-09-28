@@ -1357,6 +1357,9 @@ class FellAppController extends Controller {
         $coordinatorEmails = null;
         $fellappUtil = $this->container->get('fellapp_util');
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
+        $coordinatorEmails = implode(";",$coordinatorEmails);
+        //print_r($coordinatorEmails);
+        //exit('1');
 
         //get all interviews
         foreach( $entity->getInterviews() as $interview ) {
@@ -1424,6 +1427,7 @@ class FellAppController extends Controller {
         $coordinatorEmails = null;
         $fellappUtil = $this->container->get('fellapp_util');
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
+        $coordinatorEmails = implode(";",$coordinatorEmails);
 
         //get all interviews
         $user = $this->get('security.context')->getToken()->getUser();
