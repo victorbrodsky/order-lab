@@ -483,8 +483,10 @@
                         {% endfor %}
                         {% set letterCount = letterCount + entity.documents|length %}
                         {% set letterCountStr = "" %}
+                        {% set styleStr = "color:#707070;" %}
                         {% if letterCount > 0 %}
                             {% set letterCountStr = letterCount ~  " reference letters received" %}
+                            {% set styleStr = "" %}
                         {% endif %}
 
                         {#<a#}
@@ -493,7 +495,7 @@
                         {#</a>#}
                         {% if entity.getRecentReport() %}
                             <a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">
-                                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>
                             </a>
                         {% endif %}
 
