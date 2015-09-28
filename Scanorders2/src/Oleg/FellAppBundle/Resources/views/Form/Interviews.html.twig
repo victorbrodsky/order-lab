@@ -58,6 +58,8 @@
 </div> <!-- panel panel-info -->
 
 
+{% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+
 {#observers#}
 <div class="panel panel-info">
 
@@ -85,4 +87,6 @@
     </div> <!-- panel-collapse -->
 
 </div> <!-- panel panel-info -->
+
+{% endif %}
 

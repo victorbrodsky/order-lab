@@ -24,6 +24,11 @@ class FellAppUploadController extends UploadController {
      * @Method("DELETE")
      */
     public function deleteFileAction(Request $request) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
         return $this->deleteFileMethod($request);
     }
 

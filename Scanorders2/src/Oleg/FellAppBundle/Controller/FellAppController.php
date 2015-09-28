@@ -950,7 +950,14 @@ class FellAppController extends Controller {
 
         $fellowshipSubspecialty = $application->getFellowshipSubspecialty();
 
-        $interviewerRoleFellType = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByFellowshipSubspecialty($fellowshipSubspecialty);
+        $interviewerRoleFellType = null;
+        $interviewerFellTypeRoles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        foreach( $interviewerFellTypeRoles as $role ) {
+            if( strpos($role,'INTERVIEWER') !== false ) {
+                $interviewerRoleFellType = $role;
+                break;
+            }
+        }
         if( !$interviewerRoleFellType ) {
             throw new EntityNotFoundException('Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
         }
