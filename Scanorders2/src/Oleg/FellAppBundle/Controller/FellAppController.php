@@ -141,12 +141,15 @@ class FellAppController extends Controller {
 
         //if( $filter == "ALL" ) {
         if( !$filter ) {
+            $felltypeArr = array();
             foreach( $fellowshipTypes as $fellowshipTypeID => $fellowshipTypeName ) {
                 //if( $fellowshipTypeID != "ALL" ) {
                     //echo "fellowshipType=".$fellowshipTypeID."<br>";
-                    $dql->orWhere("fellowshipSubspecialty.id = ".$fellowshipTypeID);
+                    //$dql->orWhere("fellowshipSubspecialty.id = ".$fellowshipTypeID);
+                $felltypeArr[] = "fellowshipSubspecialty.id = ".$fellowshipTypeID;
                 //}
             }
+            $dql->andWhere(implode(" OR ", $felltypeArr));
             $searchFlag = true;
             //$fellSubspecId = $filter;
         }
