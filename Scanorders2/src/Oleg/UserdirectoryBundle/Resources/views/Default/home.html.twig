@@ -34,7 +34,7 @@
 
 
         {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
-        <a role="button" data-toggle="collapse" href="#collapseInstitutionUserTree" onclick="displayInstitutionUserTree();">Organizational Tree</a>
+        <a role="button" data-toggle="collapse" href="#collapseInstitutionUserTree" onclick="displayInstitutionUserTree('default');">Organizational Tree</a>
         <div id="collapseInstitutionUserTree" class="panel-collapse collapse">
             {{ treemacros.jstreemacros('composite-tree','UserdirectoryBundle','Institution_User','employees_showuser','nosearch') }}
         </div>

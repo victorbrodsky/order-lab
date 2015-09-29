@@ -34,6 +34,7 @@ class FellAppManagement extends Controller {
 
     /**
      * @Route("/fellowship-types-settings", name="fellapp_fellowshiptype_settings")
+     * @Method("GET")
      * @Template("OlegFellAppBundle:Management:management.html.twig")
      */
     public function felltypeSettingsAction(Request $request) {
@@ -61,6 +62,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/fellowship-type/{id}", name="fellapp_fellowshiptype_setting_show")
      * @Route("/fellowship-type/edit/{id}", name="fellapp_fellowshiptype_setting_edit")
+     * @Method("GET")
      * @Template("OlegFellAppBundle:Management:new.html.twig")
      */
     public function showAction(Request $request, $id) {
@@ -212,6 +214,34 @@ class FellAppManagement extends Controller {
             }
         }
 
+
+    }
+
+
+
+
+    /**
+     * @Route("/populate-default", name="fellapp_populate_default")
+     * @Method("GET")
+     * @Template("OlegFellAppBundle:Management:management.html.twig")
+     */
+    public function populateDefaultAction(Request $request) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        //get all fellowship types using institution
+        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+
+
+        return array(
+            'entities' => $fellowshipTypes
+        );
 
     }
 

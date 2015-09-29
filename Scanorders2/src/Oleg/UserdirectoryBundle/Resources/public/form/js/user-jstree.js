@@ -5,7 +5,7 @@
 
 
 //used by admin page
-function getJstree(bundleName,entityName,menu,search,closeall) {
+function getJstree(bundleName,entityName,menu,search,closeall,type) {
 
     //console.log('cycle='+cycle);
 
@@ -55,8 +55,13 @@ function getJstree(bundleName,entityName,menu,search,closeall) {
 
         var withlazy = "lazy&";
 
+        var withtype = '&type='+type;
+        if( typeof type === 'undefined' ) {
+            withtype = '';
+        }
+
         var treeUrl = Routing.generate('employees_get_composition_tree');
-        treeUrl = treeUrl + '?'+withlazy+'$opt=none&classname='+entityName+'&bundlename='+bundleName;
+        treeUrl = treeUrl + '?'+withlazy+'$opt=none&classname='+entityName+'&bundlename='+bundleName+withtype;
         //console.log('treeUrl='+treeUrl);
 
         //js tree
@@ -307,9 +312,9 @@ function failedOperation(jstreeObj,operation) {
 }
 
 //home page institution with user leafs
-function displayInstitutionUserTree() {
+function displayInstitutionUserTree(type) {
     //$('#displayInstitutionUserTree').show();
-    getJstree('UserdirectoryBundle','Institution_User','nomenu','nosearch','closeall');
+    getJstree('UserdirectoryBundle','Institution_User','nomenu','nosearch','closeall',type);
 }
 
 

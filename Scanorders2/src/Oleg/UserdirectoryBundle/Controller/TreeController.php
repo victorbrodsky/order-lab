@@ -36,6 +36,7 @@ class TreeController extends Controller {
         $pid = trim( $request->get('id') );
         $className = trim( $request->get('classname') );
         $bundleName = trim( $request->get('bundlename') );
+        $type = trim( $request->get('type') ); //user-added or default or undefined
         //$level = trim( $request->get('pid') );
         //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
@@ -133,6 +134,11 @@ class TreeController extends Controller {
                 $where = $this->addToWhere($where,"parent.id is NULL");
             }
             $addwhere = true;
+        }
+
+        //echo "type=".$type."<br>";
+        if( $type ) {
+            $where = $this->addToWhere($where,"list.type='".$type."'");
         }
 
         //$query->where($where)->setParameters($params);
