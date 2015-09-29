@@ -1366,19 +1366,11 @@ class FellAppController extends Controller {
         $emailUtil = new EmailUtil();
         $emails = array();
 
-        //get coordinator emails
-        $coordinatorEmails = null;
-        $fellappUtil = $this->container->get('fellapp_util');
-        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
-        $coordinatorEmails = implode(";",$coordinatorEmails);
-        //print_r($coordinatorEmails);
-        //exit('1');
-
         //get all interviews
         foreach( $entity->getInterviews() as $interview ) {
             if( !$interview->getTotalRank() || $interview->getTotalRank() <= 0 ) {
                 //send email to interviewer with links to PDF and Interview object to fill out.
-                $email = $this->sendInvitationEmail($interview,$emailUtil,$coordinatorEmails);
+                $email = $this->sendInvitationEmail($interview,$emailUtil);
                 if( $email ) {
                     $emails[] = $email;
                 }
@@ -1405,6 +1397,17 @@ class FellAppController extends Controller {
                 $event
             );
         }
+
+        //send only 1 email to coordinator
+        //get coordinator emails
+        $coordinatorEmails = null;
+        $fellappUtil = $this->container->get('fellapp_util');
+        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
+        $coordinatorEmails = implode(";",$coordinatorEmails);
+        //print_r($coordinatorEmails);
+        //exit('1');
+        $applicant = $entity->getUser();
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1502,14 +1505,16 @@ class FellAppController extends Controller {
         return $response;
     }
 
-    public function sendInvitationEmail( $interview, $emailUtil, $coordinatorEmails) {
+    public function sendInvitationEmail( $interview, $emailUtil) {
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $fellapp = $interview->getFellapp();
         $applicant = $fellapp->getUser();
         $interviewer = $interview->getInterviewer();
 
         if( !$interviewer ) {
+            $logger->error("No interviewer exists for interview=" . $interview );
             return null;
         }
 
@@ -1520,6 +1525,8 @@ class FellAppController extends Controller {
                 'warning',
                 'Email invitations to evaluate '.$appHref.' have not been sent. Please upload Itinerary and try again.'
             );
+
+            $logger->error("No recent itinerary found for fellapp ID=" . $fellapp->getId() );
             return null;
         }
 
@@ -1553,7 +1560,11 @@ class FellAppController extends Controller {
 
         $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, $coordinatorEmails );
+        $logger->notice("Send email to " . $email);
+
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em );
+
+        $logger->notice("Email has been sent to " . $email);
 
         return $email;
     }

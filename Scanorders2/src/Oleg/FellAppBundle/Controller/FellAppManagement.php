@@ -227,7 +227,7 @@ class FellAppManagement extends Controller {
      */
     public function populateDefaultAction(Request $request) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

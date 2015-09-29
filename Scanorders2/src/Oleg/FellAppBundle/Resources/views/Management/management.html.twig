@@ -19,11 +19,11 @@
 
     {% for entity in entities %}
 
-        <p>
+        <h4>
             <a
                 href="{{ path('fellapp_fellowshiptype_setting_edit', { 'id': entity.id}) }}">{{ entity.name }}
             </a>
-        </p>
+        </h4>
 
         <p>
             <h4>Default Interviewers:</h4>
