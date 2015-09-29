@@ -19,7 +19,7 @@ class IdentifierType extends AbstractType
         $this->params = $params;
 
         //only the "Platform Administrator" and "Deputy Platform Administrator" should be able to confirm the MRN by setting the Status of the MRN identifier as "Reviewed by Administration"
-        if( $this->params['sc']->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->params['sc']->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             $this->rolePlatformAdmin = true;
         } else {
             $this->rolePlatformAdmin = false;
