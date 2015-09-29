@@ -15,16 +15,24 @@
             <p>
                 {#<label for="email" class="control-label required">E-mail</label>#}
                 {#<input type="text" class="form-control" id="email" name="email" placeholder="E-mail">#}
-                {% for info in form.user.infos %}
-                    {% if cycle != "show" %}
-                        {{ form_errors(info.email, {'attr': {'class': 'alert alert-danger'}}) }}
-                        {{ form_row(info.email) }}
-                    {% else %}
-                        <div class="form-control form-control-modif" disabled>
-                            <a href="mailto:{{ info.email.vars.value }}" target="_top">{{ info.email.vars.value }}</a>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+
+                {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                    applicantemail
+                {% else %}
+
+                    {% for info in form.user.infos %}
+                        {% if cycle != "show" %}
+                            {{ form_errors(info.email, {'attr': {'class': 'alert alert-danger'}}) }}
+                            {{ form_row(info.email) }}
+                        {% else %}
+                            <div class="form-control form-control-modif" disabled>
+                                <a href="mailto:{{ info.email.vars.value }}" target="_top">{{ info.email.vars.value }}</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                {% endif %}
+
             </p>
 
 
