@@ -1482,7 +1482,7 @@ class FellAppController extends Controller {
 
         $emailStr = "";
         if( $emails && count($emails) > 0 ) {
-            $emailStr = " Emails have been sent to the following:".implode(",",$emails);
+            $emailStr = " Emails have been sent to the following: ".implode("; ",$emails);
         } else {
             $emailStr = " Emails have not been sent.";
         }
