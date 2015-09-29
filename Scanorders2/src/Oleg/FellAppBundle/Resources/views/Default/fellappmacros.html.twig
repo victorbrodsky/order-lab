@@ -73,7 +73,13 @@
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    <h1>{{ fellapp.user.getUsernameOptimal }}</h1>
+    <h1>
+        {% if is_granted('ROLE_PLATFORM_DEMO') %}
+            Demo Applicant
+        {% else %}
+            {{ fellapp.user.getUsernameOptimal }}
+        {% endif %}
+    </h1>
 
     {#avatar#}
     <div align="center" style="height: 160px;">
