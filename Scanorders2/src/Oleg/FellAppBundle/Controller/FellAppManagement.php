@@ -288,12 +288,9 @@ class FellAppManagement extends Controller {
         //directors
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('rhy2001'), "GASTROINTESTINALPATHOLOGY", "DIRECTOR" );
 
-        //get all fellowship types using institution
-        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-
 
         //GENITOURINARYPATHOLOGY
-        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
+        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
         $users = array(
             'rubinma',
             'jmm9018',
@@ -301,8 +298,7 @@ class FellAppManagement extends Controller {
             'nan9030',
             'ytchen',
             'pet9017',
-            //Francesca Khani
-
+            'frk9007' //new: Francesca Khani
         );
         //interviewers
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "GENITOURINARYPATHOLOGY", "INTERVIEWER" );
@@ -310,10 +306,6 @@ class FellAppManagement extends Controller {
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "GENITOURINARYPATHOLOGY", "COORDINATOR" );
         //directors
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('rubinma'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
-
-        //get all fellowship types using institution
-        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-
 
         //GYNECOLOGICPATHOLOGY
         $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
@@ -350,6 +342,32 @@ class FellAppManagement extends Controller {
         //directors
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('ato9002'), "HEMATOPATHOLOGY", "DIRECTOR" );
 
+
+        //MOLECULARGENETICPATHOLOGY
+        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
+        $users = array(
+            'mik9095',
+            'har2006',
+            'hef9020',
+            'ecesarm',
+            'wtam',
+            'ytchen',
+            'ans9112',
+            'jos9015', //new: John Sipley,
+            'pcr9004',
+            'sum2001',
+            'hmz9001'
+        );
+        //interviewers
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "MOLECULARGENETICPATHOLOGY", "INTERVIEWER" );
+        //coordinators
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "MOLECULARGENETICPATHOLOGY", "COORDINATOR" );
+        //directors
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('mik9095'), "MOLECULARGENETICPATHOLOGY", "DIRECTOR" );
+
+
+        //get all fellowship types using institution
+        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
 
         //exit('1');
         return array(
