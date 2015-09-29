@@ -447,22 +447,24 @@
                         {% endif %}
                     </td>
 
-                    {% if entity.interviewScore %}
-                        {% set scoreCount = 0 %}
-                        {% set tooltip = "" %}
-                        {% set scoreStyle = 'style=font-weight:bold;' %}
-                        {% for interview in entity.interviews %}
-                            {% if not interview.totalRank %}
-                                {% set scoreStyle = "" %}
-                            {% else %}
-                                {% set scoreCount = scoreCount + 1 %}
-                            {% endif %}
-                        {% endfor %}
+                    {% set scoreStyle = "" %}
+                    {% set tooltip = "" %}
+                    {#{% if entity.interviewScore %}#}
+                        {#{% set scoreCount = 0 %}#}
+                        {#{% set tooltip = "" %}#}
+                        {#{% set scoreStyle = 'style=font-weight:bold;' %}#}
+                        {#{% for interview in entity.interviews %}#}
+                            {#{% if not interview.totalRank %}#}
+                                {#{% set scoreStyle = "" %}#}
+                            {#{% else %}#}
+                                {#{% set scoreCount = scoreCount + 1 %}#}
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
 
-                        {% if entity.interviewScore %}
-                            {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received' %}
-                        {% endif %}
-                    {% endif %}
+                        {#{% if entity.interviewScore %}#}
+                            {#{% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received' %}#}
+                        {#{% endif %}#}
+                    {#{% endif %}#}
 
                     <td class="rowlink-skip">
                         {% if entity.interviewScore %}
