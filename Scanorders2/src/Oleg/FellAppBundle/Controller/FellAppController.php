@@ -1406,8 +1406,10 @@ class FellAppController extends Controller {
         $coordinatorEmails = implode(";",$coordinatorEmails);
         //print_r($coordinatorEmails);
         //exit('1');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $senderEmail = $user->getEmail();
         $applicant = $entity->getUser();
-        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em );
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, $senderEmail );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1439,15 +1441,10 @@ class FellAppController extends Controller {
         $emails = array();
         $emailUtil = new EmailUtil();
 
-        //get coordinator emails
-        $coordinatorEmails = null;
-        $fellappUtil = $this->container->get('fellapp_util');
-        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
-        $coordinatorEmails = implode(";",$coordinatorEmails);
-
         //get all interviews
         $user = $this->get('security.context')->getToken()->getUser();
         $senderEmail = $user->getEmail();
+
         foreach( $entity->getObservers() as $observer ) {
             $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$entity->getRecentReport()->getId()), true );
 
@@ -1477,7 +1474,7 @@ class FellAppController extends Controller {
 
             $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
-            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, $em, $coordinatorEmails );
+            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, $em, $senderEmail );
         }
 
         $emailStr = "";
@@ -1498,6 +1495,17 @@ class FellAppController extends Controller {
                 $event
             );
         }
+
+        //send only 1 email to coordinator
+        //get coordinator emails
+        $coordinatorEmails = null;
+        $fellappUtil = $this->container->get('fellapp_util');
+        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
+        $coordinatorEmails = implode(";",$coordinatorEmails);
+        //print_r($coordinatorEmails);
+        //exit('1');
+        $applicant = $entity->getUser();
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, $senderEmail );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1562,7 +1570,7 @@ class FellAppController extends Controller {
 
         $logger->notice("Send email to " . $email);
 
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em );
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, $senderEmail );
 
         $logger->notice("Email has been sent to " . $email);
 
