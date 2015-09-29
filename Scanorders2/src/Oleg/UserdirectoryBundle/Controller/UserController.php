@@ -649,6 +649,30 @@ class UserController extends Controller
 
         $criteriastr = "";
 
+        $em = $this->getDoctrine()->getManager();
+
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+
+        //$wcmcpathology
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $wcmcpathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+
+        //$nyppathology
+        $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        $nyppathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $nyp,
+            $mapper
+        );
+
         //$curdate = date("Y-m-d", time());
 
         //Pending Administrative Review
@@ -664,33 +688,41 @@ class UserController extends Controller
 
         //WCMC + Pathology
         if( $filter && $filter == "WCMC Pathology Employees" ) {
-            $criteriastr .= "(".
-                "administrativeInstitution.name = 'Weill Cornell Medical College'".
-                " OR appointmentInstitution.name = 'Weill Cornell Medical College'".
-                " OR medicalInstitution.name = 'Weill Cornell Medical College'".
-            ")";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(".
-                "administrativeInstitution.name = 'Pathology and Laboratory Medicine'".
-                " OR appointmentInstitution.name = 'Pathology and Laboratory Medicine'".
-                " OR medicalInstitution.name = 'Pathology and Laboratory Medicine'".
-            ")";
+//            $criteriastr .= "(".
+//                "administrativeInstitution.name = 'Weill Cornell Medical College'".
+//                " OR appointmentInstitution.name = 'Weill Cornell Medical College'".
+//                " OR medicalInstitution.name = 'Weill Cornell Medical College'".
+//            ")";
+//            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$wcmcpathology);
+//            $criteriastr .= " OR ";
+//            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+//            $criteriastr .= " OR ";
+//            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("medicalInstitution", $criteriastr,$wcmcpathology);
+            $criteriastr .= $this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology);
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(".
+//                "administrativeInstitution.name = 'Pathology and Laboratory Medicine'".
+//                " OR appointmentInstitution.name = 'Pathology and Laboratory Medicine'".
+//                " OR medicalInstitution.name = 'Pathology and Laboratory Medicine'".
+//            ")";
         }
 
         //Academic Appointment Title exists + Clinical Faculty + Research Faculty
         if( $filter && $filter == "WCMC Pathology Faculty" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+//            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
         }
 
         //Academic Appointment Title exists + Clinical Faculty
         if( $filter && $filter == "WCMC Pathology Clinical Faculty" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+//            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty')";
         }
@@ -700,18 +732,21 @@ class UserController extends Controller
             $dql->leftJoin("user.trainings", "trainings");
             $dql->leftJoin("trainings.degree", "degree");
             $dql->leftJoin("degree.original", "original");
-            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College' OR appointmentInstitution.name = 'Weill Cornell Medical College' OR medicalInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College' OR appointmentInstitution.name = 'Weill Cornell Medical College' OR medicalInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= $this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
-            $criteriastr .= "(administrativeInstitution.name = 'Pathology and Laboratory Medicine' OR appointmentInstitution.name = 'Pathology and Laboratory Medicine' OR medicalInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(administrativeInstitution.name = 'Pathology and Laboratory Medicine' OR appointmentInstitution.name = 'Pathology and Laboratory Medicine' OR medicalInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(original.name = 'MD')";
         }
 
         //Academic Appointment Title exists + Research Faculty
         if( $filter && $filter == "WCMC Pathology Research Faculty" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+//            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Research Faculty')";
         }
@@ -720,43 +755,58 @@ class UserController extends Controller
         if( $filter && $filter == "WCMC Pathology Staff" ) {
             $criteriastr .= "(appointmentInstitution IS NULL AND appointmentInstitution IS NULL)";
             $criteriastr .= " AND ";
-            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(administrativeInstitution.name = 'Pathology and Laboratory Medicine')";
+//            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College')";
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(administrativeInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$wcmcpathology);
         }
 
         //Academic Appointment Title not exists + Admin Title exists
         if( $filter && $filter == "NYP Pathology Staff" ) {
             $criteriastr .= "(appointmentInstitution IS NULL AND appointmentInstitution IS NULL)";
             $criteriastr .= " AND ";
-            $criteriastr .= "(administrativeInstitution.name = 'New York Hospital')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(administrativeInstitution.name = 'Pathology')";
+//            $criteriastr .= "(administrativeInstitution.name = 'New York Hospital')";
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(administrativeInstitution.name = 'Pathology')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$nyppathology);
         }
 
         //Academic Appointment Title exists + division=Anatomic Pathology
         if( $filter && $filter == "WCMC Anatomic Pathology Faculty" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Anatomic Pathology')";
+//            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $wcmcAnatomicPathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Anatomic Pathology",
+                $wcmcpathology,
+                $mapper
+            );
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcAnatomicPathology);
+            //$criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Anatomic Pathology')";
         }
 
         //Academic Appointment Title exists + division=Laboratory Medicine
         if( $filter && $filter == "WCMC Laboratory Medicine Faculty" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Laboratory Medicine')";
+//            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $wcmcLaboratoryMedicinePathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Laboratory Medicine",
+                $wcmcpathology,
+                $mapper
+            );
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcLaboratoryMedicinePathology);
+            //$criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Laboratory Medicine')";
         }
 
         //As Faculty + Residents == Academic Appointment Title exists + position=Fellow
         if( $filter && $filter == "WCMC Pathology Fellows" ) {
             //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
             //$criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Fellow')";
         }
@@ -765,7 +815,8 @@ class UserController extends Controller
         if( $filter && $filter == "WCMC Pathology Residents" ) {
             //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
             //$criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
         }
@@ -774,7 +825,8 @@ class UserController extends Controller
         if( $filter && $filter == "WCMC AP/CP Residents" ) {
             //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
             //$criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -786,7 +838,8 @@ class UserController extends Controller
         if( $filter && $filter == "WCMC AP Residents" ) {
             //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
             //$criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -796,9 +849,10 @@ class UserController extends Controller
 
         //the same as "WCMC Pathology Residents" except they have "AP" in their "Residency Type" field.
         if( $filter && $filter == "WCMC AP Only Residents" ) {
-            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            //$criteriastr .= " AND ";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -810,7 +864,8 @@ class UserController extends Controller
         if( $filter && $filter == "WCMC CP Residents" ) {
             //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
             //$criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -822,7 +877,8 @@ class UserController extends Controller
         if( $filter && $filter == "WCMC CP Only Residents" ) {
             //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
             //$criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -835,7 +891,8 @@ class UserController extends Controller
         if( $filter && $filter == "WCMC Pathology Principal Investigators of Research Labs" ) {
             //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
             //$criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
 
@@ -849,7 +906,8 @@ class UserController extends Controller
         if( $filter && $filter == "WCMC Pathology Faculty in Research Labs" ) {
             //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
             //$criteriastr .= " AND ";
-            $criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
         }
@@ -859,11 +917,13 @@ class UserController extends Controller
         //except they have at least one non-empty "Research Lab Title:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
         if( $filter && $filter == "WCMC or NYP Pathology Staff in Research Labs" ) {
             $criteriastr .= "(appointmentInstitution IS NULL AND appointmentInstitution IS NULL)";
-            $criteriastr .= " AND (";
-            $criteriastr .= "administrativeInstitution.name = 'Weill Cornell Medical College' AND administrativeInstitution.name = 'Pathology and Laboratory Medicine'";
+            $criteriastr .= " AND ";
+            //$criteriastr .= "administrativeInstitution.name = 'Weill Cornell Medical College' AND administrativeInstitution.name = 'Pathology and Laboratory Medicine'";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " OR ";
-            $criteriastr .= "administrativeInstitution.name = 'New York Hospital' AND administrativeInstitution.name = 'Pathology'";
-            $criteriastr .= ") ";
+            //$criteriastr .= "administrativeInstitution.name = 'New York Hospital' AND administrativeInstitution.name = 'Pathology'";
+            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$nyppathology);
+            $criteriastr .= "";
         }
 
 
@@ -886,6 +946,31 @@ class UserController extends Controller
         return $inputCriteriastr;
     }
 
+
+    public function getCriteriaForAllChildrenUnderNode($fieldstr, $criteriastr,$node) {
+        if( !$node ) {
+            //echo "node=".$node."<br>";
+            return $criteriastr;
+            //new \Exception('Tree node does not exists');
+        }
+        $criteriastr .= " ( ";
+        $criteriastr .= $fieldstr.".lft > " . $node->getLft();
+        $criteriastr .= " AND ";
+        $criteriastr .= $fieldstr.".rgt < " . $node->getRgt();
+        $criteriastr .= " OR ";
+        $criteriastr .= $fieldstr.".id = " . $node->getId();
+        $criteriastr .= " ) ";
+        return $criteriastr;
+    }
+
+    public function getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology) {
+        $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$wcmcpathology);
+        $criteriastr .= " OR ";
+        $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        $criteriastr .= " OR ";
+        $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("medicalInstitution", $criteriastr,$wcmcpathology);
+        return $criteriastr;
+    }
 
 //    public function getMyTeam( $dql, $myteam, $myboss, $inputCriteriastr ) {
 //
