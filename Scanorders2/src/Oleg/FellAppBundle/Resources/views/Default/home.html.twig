@@ -613,7 +613,7 @@
                                         {% if entity.interviews|length > 0 %}
                                             <li>
                                                 <a
-                                                    general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be send to the interviewers who still have not submitted their scores."
+                                                    general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
                                                     general-data-callback="refreshpage"
                                                     href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite Interviewers to Rate
                                                 </a>
@@ -624,7 +624,7 @@
                                         {% if entity.observers|length > 0 %}
                                             <li>
                                                 <a
-                                                    general-data-confirm="Are you sure you want to Invite Observers to view this Applicant? Email will be send to all observers."
+                                                    general-data-confirm="Are you sure you want to Invite Observers to view this Applicant? Email will be sent to all observers."
                                                     general-data-callback="refreshpage"
                                                     href="{{ path('fellapp_inviteobservers', { 'id': entity.id}, true) }}">Invite Observers to View
                                                 </a>
