@@ -493,8 +493,9 @@
                         {#count all reference letters and upload documents#}
                         {% set notEmptyRef = 0 %}
                         {% set letterCount = 0 %}
+                        {% set totalDocCount = 0 %}
                         {% for refLetter in entity.references %}
-                            {#{% set letterCount = letterCount + refLetter.documents|length %}#}
+                            {% set totalDocCount = totalDocCount + refLetter.documents|length %}
                             {% if refLetter.name %}
                                 {% set notEmptyRef = notEmptyRef + 1 %}
                                 {% if refLetter.documents|length > 0 %}
@@ -502,7 +503,6 @@
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
-                        {#{% set letterCount = letterCount + entity.documents|length %}#}
                         {% set letterCountStr = "" %}
                         {% set styleStr = "color:#707070;" %}
 
@@ -517,7 +517,7 @@
                             {% set letterCountStr = "Interviewee" %}
                         {% else %}
                             {#X of Y reference letters received#}
-                            {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters received" %}
+                            {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" docs) received" %}
                             {% set styleStr = "" %}
                         {% endif %}
 

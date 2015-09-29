@@ -26,7 +26,7 @@ class FellowshipSubspecialtyType extends AbstractType
 
         $builder->add('coordinators', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label' => "Default Coordinator(s):",
+            'label' => "Coordinator(s):",
             'required' => false,
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -43,7 +43,7 @@ class FellowshipSubspecialtyType extends AbstractType
 
         $builder->add('directors', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label' => "Default Director(s):",
+            'label' => "Director(s):",
             'required' => false,
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
