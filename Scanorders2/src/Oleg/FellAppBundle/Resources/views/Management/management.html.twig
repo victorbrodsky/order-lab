@@ -14,8 +14,8 @@
 {% block content %}
 
 
-<br><br>
-
+    <br><br>
+    <hr>
 
     {% for entity in entities %}
 
@@ -24,6 +24,28 @@
                 href="{{ path('fellapp_fellowshiptype_setting_edit', { 'id': entity.id}) }}">{{ entity.name }}
             </a>
         </p>
+
+        <p>
+            <h4>Default Interviewers:</h4>
+            {% for user in entity.interviewers %}
+                {{ user.getUsernameOptimal() }}<br>
+            {% endfor %}
+
+        </p>
+        <p>
+            <h4>Default Coordinators:</h4>
+            {% for user in entity.coordinators %}
+                {{ user.getUsernameOptimal() }}<br>
+            {% endfor %}
+        </p>
+        <p>
+            <h4>Default Directors:</h4>
+            {% for user in entity.directors %}
+                {{ user.getUsernameOptimal() }}<br>
+            {% endfor %}
+        </p>
+
+        <hr>
 
     {% endfor %}
 

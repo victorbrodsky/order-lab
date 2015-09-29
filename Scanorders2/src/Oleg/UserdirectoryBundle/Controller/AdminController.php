@@ -587,6 +587,8 @@ class AdminController extends Controller
         return round($count/10);
     }
 
+    //entity - role object
+    //role - role string
     public function setInstitutionFellowship($entity,$role) {
 
         if( strpos($role,'_WCMC_') === false ) {

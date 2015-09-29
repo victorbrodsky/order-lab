@@ -235,14 +235,190 @@ class FellAppManagement extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
+
+        //populate default directors, coordinators, interviewers
+
+        //BREASTPATHOLOGY
+        $BREASTPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
+        $users = array(
+            'sjshin',
+            'tid9007',
+            'sahoda',
+            'min9031'
+        );
+        //interviewers
+        $this->addUsersToFellowshipSubspecialty( $BREASTPATHOLOGY, $users, "BREASTPATHOLOGY", "INTERVIEWER" );
+        //coordinators
+        $this->addUsersToFellowshipSubspecialty( $BREASTPATHOLOGY, array('jep2018'), "BREASTPATHOLOGY", "COORDINATOR" );
+        //directors
+        $this->addUsersToFellowshipSubspecialty( $BREASTPATHOLOGY, array('sjshin'), "BREASTPATHOLOGY", "DIRECTOR" );
+
+
+        //CYTOPATHOLOGY
+        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
+        $users = array(
+            'rhoda',
+            'rer9052',
+            'jhkoizum',
+            'sua9036',
+            'tag9056',
+            'gry2001',
+            'asm9041'
+        );
+        //interviewers
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "CYTOPATHOLOGY", "INTERVIEWER" );
+        //coordinators
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "CYTOPATHOLOGY", "COORDINATOR" );
+        //directors
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('rhoda'), "CYTOPATHOLOGY", "DIRECTOR" );
+
+        //GASTROINTESTINALPATHOLOGY
+        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
+        $users = array(
+            'rhy2001',
+            'joj9034',
+            'dmb2007',
+            'ytchen',
+            'anr9142'
+        );
+        //interviewers
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "GASTROINTESTINALPATHOLOGY", "INTERVIEWER" );
+        //coordinators
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "GASTROINTESTINALPATHOLOGY", "COORDINATOR" );
+        //directors
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('rhy2001'), "GASTROINTESTINALPATHOLOGY", "DIRECTOR" );
+
         //get all fellowship types using institution
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
 
 
+        //GENITOURINARYPATHOLOGY
+        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
+        $users = array(
+            'rubinma',
+            'jmm9018',
+            'brr2006',
+            'nan9030',
+            'ytchen',
+            'pet9017',
+            //Francesca Khani
+
+        );
+        //interviewers
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "GENITOURINARYPATHOLOGY", "INTERVIEWER" );
+        //coordinators
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "GENITOURINARYPATHOLOGY", "COORDINATOR" );
+        //directors
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('rubinma'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
+
+        //get all fellowship types using institution
+        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+
+
+        //GYNECOLOGICPATHOLOGY
+        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
+        $users = array(
+            'lhellens',
+            'rbaergen',
+            'ecpirog',
+            'cam9118'
+        );
+        //interviewers
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "GYNECOLOGICPATHOLOGY", "INTERVIEWER" );
+        //coordinators
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "GYNECOLOGICPATHOLOGY", "COORDINATOR" );
+        //directors
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('lhellens'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
+
+        //HEMATOPATHOLOGY
+        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
+        $users = array(
+            'ato9002',
+            'sae2001',
+            'achadbur',
+            'ggi9001',
+            'jut9021',
+            'wtam',
+            'yel9011',
+            'ksp9004',
+            'emm9030'
+        );
+        //interviewers
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, $users, "HEMATOPATHOLOGY", "INTERVIEWER" );
+        //coordinators
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('jep2018'), "HEMATOPATHOLOGY", "COORDINATOR" );
+        //directors
+        $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('ato9002'), "HEMATOPATHOLOGY", "DIRECTOR" );
+
+
+        //exit('1');
         return array(
             'entities' => $fellowshipTypes
         );
 
+    }
+
+    //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCMC_BREASTPATHOLOGY
+    public function addUsersToFellowshipSubspecialty( $fellowshipSubspecialty, $users, $roleName, $bossType ) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCMC_BREASTPATHOLOGY
+        $roleStr = "ROLE_FELLAPP_".$bossType."_WCMC_".$roleName;
+
+        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
+        if( !$role ) {
+            exit('no role found by name='.$roleStr);
+        }
+
+        //$userObjects = array();
+
+        foreach( $users as $userCwid ) {
+
+            //cwidstr_@_wcmc-cwid
+            $username = $userCwid."_@_wcmc-cwid";
+
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+            if( !$user ) {
+                exit('no user found by username='.$username);
+            }
+
+            //$userObjects[] = $user;
+
+            if( strpos($roleStr,'INTERVIEWER') !== false ) {
+                if( !$fellowshipSubspecialty->isUserExistByMethodStr($user, 'getInterviewers') ) {
+                    $fellowshipSubspecialty->addInterviewer($user);
+                }
+            }
+
+            if( strpos($roleStr,'COORDINATOR') !== false ) {
+                if( !$fellowshipSubspecialty->isUserExistByMethodStr($user, 'getCoordinators') ) {
+                    $fellowshipSubspecialty->addCoordinator($user);
+                    //$this->assignFellAppAccessRoles($fellowshipSubspecialty,$fellowshipSubspecialty->getCoordinators(),"COORDINATOR");
+                    //$this->assignFellAppAccessRoles($fellowshipSubspecialty,array($user),"COORDINATOR");
+                }
+            }
+
+            if( strpos($roleStr,'DIRECTOR') !== false ) {
+                if( !$fellowshipSubspecialty->isUserExistByMethodStr($user, 'getDirectors') ) {
+                    $fellowshipSubspecialty->addDirector($user);
+                    //$this->assignFellAppAccessRoles($fellowshipSubspecialty,$fellowshipSubspecialty->getDirectors(),"DIRECTOR");
+                    //$this->assignFellAppAccessRoles($fellowshipSubspecialty,array($user),"DIRECTOR");
+                }
+            }
+
+        } //foreach
+
+
+        if( strpos($roleStr,'COORDINATOR') !== false ) {
+            $this->assignFellAppAccessRoles($fellowshipSubspecialty,$fellowshipSubspecialty->getCoordinators(),"COORDINATOR");
+        }
+
+        if( strpos($roleStr,'DIRECTOR') !== false ) {
+            $this->assignFellAppAccessRoles($fellowshipSubspecialty,$fellowshipSubspecialty->getDirectors(),"DIRECTOR");
+        }
+
+        $em->flush();
     }
 
 }

@@ -188,6 +188,16 @@ class FellowshipSubspecialty extends ListAbstract
         return $this->interviewers;
     }
 
+    //$methodStr: getInterviewers
+    public function isUserExistByMethodStr( $user, $methodStr ) {
+        foreach( $this->$methodStr() as $thisUser ) {
+            if( $thisUser->getId() == $user->getId() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
     public function getClassName()
