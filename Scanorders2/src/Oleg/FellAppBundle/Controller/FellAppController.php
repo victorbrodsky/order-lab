@@ -1501,9 +1501,7 @@ class FellAppController extends Controller {
         $coordinatorEmails = null;
         $fellappUtil = $this->container->get('fellapp_util');
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
-        $coordinatorEmails = implode(";",$coordinatorEmails);
-        //print_r($coordinatorEmails);
-        //exit('1');
+        $coordinatorEmails = implode("; ",$coordinatorEmails);
         $applicant = $entity->getUser();
         $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, $senderEmail );
 

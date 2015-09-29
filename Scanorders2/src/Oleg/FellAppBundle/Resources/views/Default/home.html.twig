@@ -608,26 +608,28 @@
                                         </li>
                                     {% endif %}
 
-                                    {#Invite Interviewers to Rate#}
-                                    {% if entity.interviews|length > 0 %}
-                                        <li>
-                                            <a
-                                                general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be send to the interviewers who still have not submitted their scores."
-                                                general-data-callback="refreshpage"
-                                                href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite Interviewers to Rate
-                                            </a>
-                                        </li>
-                                    {% endif %}
+                                    {% if entity.getRecentReport() %}
+                                        {#Invite Interviewers to Rate#}
+                                        {% if entity.interviews|length > 0 %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be send to the interviewers who still have not submitted their scores."
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite Interviewers to Rate
+                                                </a>
+                                            </li>
+                                        {% endif %}
 
-                                    {#Invite observers to view#}
-                                    {% if entity.observers|length > 0 %}
-                                        <li>
-                                            <a
-                                                general-data-confirm="Are you sure you want to Invite Observers to view this Applicant? Email will be send to all observers."
-                                                general-data-callback="refreshpage"
-                                                href="{{ path('fellapp_inviteobservers', { 'id': entity.id}, true) }}">Invite Observers to View
-                                            </a>
-                                        </li>
+                                        {#Invite observers to view#}
+                                        {% if entity.observers|length > 0 %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to Invite Observers to view this Applicant? Email will be send to all observers."
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_inviteobservers', { 'id': entity.id}, true) }}">Invite Observers to View
+                                                </a>
+                                            </li>
+                                        {% endif %}
                                     {% endif %}
 
                                     <li>
