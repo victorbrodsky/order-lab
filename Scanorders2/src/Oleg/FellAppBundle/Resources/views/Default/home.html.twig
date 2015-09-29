@@ -447,24 +447,22 @@
                         {% endif %}
                     </td>
 
-                    {% set scoreStyle = "" %}
-                    {% set tooltip = "" %}
-                    {#{% if entity.interviewScore %}#}
-                        {#{% set scoreCount = 0 %}#}
-                        {#{% set tooltip = "" %}#}
-                        {#{% set scoreStyle = 'style=font-weight:bold;' %}#}
-                        {#{% for interview in entity.interviews %}#}
-                            {#{% if not interview.totalRank %}#}
-                                {#{% set scoreStyle = "" %}#}
-                            {#{% else %}#}
-                                {#{% set scoreCount = scoreCount + 1 %}#}
-                            {#{% endif %}#}
-                        {#{% endfor %}#}
+                    {% if entity.interviewScore %}
+                        {% set scoreCount = 0 %}
+                        {% set tooltip = "" %}
+                        {% set scoreStyle = 'style=font-weight:bold;' %}
+                        {% for interview in entity.interviews %}
+                            {% if not interview.totalRank %}
+                                {% set scoreStyle = "" %}
+                            {% else %}
+                                {% set scoreCount = scoreCount + 1 %}
+                            {% endif %}
+                        {% endfor %}
 
-                        {#{% if entity.interviewScore %}#}
-                            {#{% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received' %}#}
-                        {#{% endif %}#}
-                    {#{% endif %}#}
+                        {% if entity.interviewScore %}
+                            {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received' %}
+                        {% endif %}
+                    {% endif %}
 
                     <td class="rowlink-skip">
                         {% if entity.interviewScore %}
@@ -476,19 +474,21 @@
 
                     <td class="rowlink-skip">
 
+                        {% set styleStr = "" %}
+                        {% set letterCountStr = "" %}
                         {#X of Y reference letters received#}
                         {#count all reference letters and upload documents#}
-                        {% set letterCount = 0 %}
-                        {% for refLetter in entity.references %}
-                            {% set letterCount = letterCount + refLetter.documents|length %}
-                        {% endfor %}
-                        {% set letterCount = letterCount + entity.documents|length %}
-                        {% set letterCountStr = "" %}
-                        {% set styleStr = "color:#707070;" %}
-                        {% if letterCount > 0 %}
-                            {% set letterCountStr = letterCount ~  " reference letters received" %}
-                            {% set styleStr = "" %}
-                        {% endif %}
+                        {#{% set letterCount = 0 %}#}
+                        {#{% for refLetter in entity.references %}#}
+                            {#{% set letterCount = letterCount + refLetter.documents|length %}#}
+                        {#{% endfor %}#}
+                        {#{% set letterCount = letterCount + entity.documents|length %}#}
+                        {#{% set letterCountStr = "" %}#}
+                        {#{% set styleStr = "color:#707070;" %}#}
+                        {#{% if letterCount > 0 %}#}
+                            {#{% set letterCountStr = letterCount ~  " reference letters received" %}#}
+                            {#{% set styleStr = "" %}#}
+                        {#{% endif %}#}
 
                         {#<a#}
                             {#href="{{ path('employees_file_pdf-preview', { 'id': entity.id}) }}" target="_blank">#}
