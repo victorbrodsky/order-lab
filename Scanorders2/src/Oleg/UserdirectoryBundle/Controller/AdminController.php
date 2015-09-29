@@ -404,6 +404,8 @@ class AdminController extends Controller
 
             "ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST" => array("ScanOrder Data Quality Assurance Specialist","Allow to make data quality modification"),
 
+            "ROLE_PLATFORM_DEMO" => array("Platform Demo","The same as ROLE_PLATFORM_DEPUTY_ADMIN but names are replaced by Demo Applicant for Fellowship Application Site"),
+
             //"ROLE_USER" => "User", //this role must be always assigned to the authenticated user. Required by fos user bundle.
 
             "ROLE_SCANORDER_SUBMITTER" => array("ScanOrder Submitter","Allow submit new orders, amend own order"),

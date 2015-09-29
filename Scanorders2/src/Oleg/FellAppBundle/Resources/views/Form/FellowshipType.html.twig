@@ -59,13 +59,25 @@
 
             <div class="row">
                 <div class="col-xs-4">
-                    {{ form_row(info.lastName) }}
+                    {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                        Applicant
+                    {% else %}
+                        {{ form_row(info.lastName) }}
+                    {% endif %}
                 </div>
                 <div class="col-xs-4">
-                    {{ form_row(info.firstName) }}
+                    {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                        Demo
+                    {% else %}
+                        {{ form_row(info.firstName) }}
+                    {% endif %}
                 </div>
                 <div class="col-xs-4">
-                    {{ form_row(info.middleName) }}
+                    {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                        The
+                    {% else %}
+                        {{ form_row(info.middleName) }}
+                    {% endif %}
                 </div>
             </div> <!-- row -->
 
