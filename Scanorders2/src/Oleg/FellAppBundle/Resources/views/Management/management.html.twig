@@ -7,13 +7,28 @@
 
 
 {% block title %}
-    Fellowship Types Settings
+    Fellowship Settings
 {% endblock %}
 
 
 {% block content %}
 
-Under constraction
+
+<br><br>
+
+
+    {% for entity in entities %}
+
+        <p>
+            <a
+                href="{{ path('fellapp_fellowshiptype_setting_edit', { 'id': entity.id}) }}">{{ entity.name }}
+            </a>
+        </p>
+
+    {% endfor %}
+
+
+
 
 {% endblock %}
 

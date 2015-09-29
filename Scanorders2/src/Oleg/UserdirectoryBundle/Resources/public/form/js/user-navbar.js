@@ -111,6 +111,13 @@ function setFellappNavBar() {
         id = null;
     }
 
+    if( full.indexOf("/fellowship-applications/fellowship-types-settings") !== -1 ) {
+        id = 'fellappsettings';
+    }
+    if( full.indexOf("/fellowship-applications/fellowship-type") !== -1 ) {
+        id = 'fellappsettings';
+    }
+
     id = commonNavBar(full,id)
 
 

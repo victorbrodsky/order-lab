@@ -48,8 +48,8 @@
 
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
-                        <li id="nav-bar-fellappnew" class="hidden-xs divider-vertical">
-                            <a href="{{ path('fellapp_settings') }}">
+                        <li id="nav-bar-fellappsettings" class="hidden-xs divider-vertical">
+                            <a href="{{ path('fellapp_fellowshiptype_settings') }}">
                                 Fellowship Settings
                             </a>
                         </li>

@@ -42,11 +42,50 @@ class FellowshipSubspecialty extends ListAbstract
 
 
 
+    //Fellowship application fields
+
     /**
      * @ORM\ManyToOne(targetEntity="Institution")
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
      **/
     protected $institution;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_fellowshipSubspecialty_coordinator",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipSubspecialty_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="coordinator_id", referencedColumnName="id")}
+     * )
+     **/
+    private $coordinators;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_fellowshipSubspecialty_director",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipSubspecialty_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="director_id", referencedColumnName="id")}
+     * )
+     **/
+    private $directors;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_fellowshipSubspecialty_interviewer",
+     *      joinColumns={@ORM\JoinColumn(name="fellowshipSubspecialty_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="interviewer_id", referencedColumnName="id")}
+     * )
+     **/
+    private $interviewers;
+
+
+
+    public function __construct($author=null) {
+
+        $this->coordinators = new ArrayCollection();
+        $this->directors = new ArrayCollection();
+        $this->interviewers = new ArrayCollection();
+
+    }
 
 
     /**
@@ -99,6 +138,55 @@ class FellowshipSubspecialty extends ListAbstract
         return $this->institution;
     }
 
+
+
+    public function addCoordinator($item)
+    {
+        if( $item && !$this->coordinators->contains($item) ) {
+            $this->coordinators->add($item);
+        }
+        return $this;
+    }
+    public function removeCoordinator($item)
+    {
+        $this->coordinators->removeElement($item);
+    }
+    public function getCoordinators()
+    {
+        return $this->coordinators;
+    }
+
+    public function addDirector($item)
+    {
+        if( $item && !$this->directors->contains($item) ) {
+            $this->directors->add($item);
+        }
+        return $this;
+    }
+    public function removeDirector($item)
+    {
+        $this->directors->removeElement($item);
+    }
+    public function getDirectors()
+    {
+        return $this->directors;
+    }
+
+    public function addInterviewer($item)
+    {
+        if( $item && !$this->interviewers->contains($item) ) {
+            $this->interviewers->add($item);
+        }
+        return $this;
+    }
+    public function removeInterviewer($item)
+    {
+        $this->interviewers->removeElement($item);
+    }
+    public function getInterviewers()
+    {
+        return $this->interviewers;
+    }
 
 
 

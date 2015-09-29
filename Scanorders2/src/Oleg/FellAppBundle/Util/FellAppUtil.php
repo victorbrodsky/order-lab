@@ -10,6 +10,7 @@ namespace Oleg\FellAppBundle\Util;
 
 
 use Doctrine\ORM\EntityNotFoundException;
+use Oleg\FellAppBundle\Entity\Interview;
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
 use Oleg\UserdirectoryBundle\Entity\Citizenship;
@@ -1232,7 +1233,7 @@ class FellAppUtil {
     }
 
     //get all fellowship application types using role
-    public function getFellowshipTypesByInstitution() {
+    public function getFellowshipTypesByInstitution($asEntities=false) {
         $em = $this->em;
 
         $mapper = array(
@@ -1248,37 +1249,20 @@ class FellAppUtil {
             $mapper
         );
 
-        $fellTypes = array();
-
         //get list of fellowship type with extra "ALL"
         $repository = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
         $dql = $repository->createQueryBuilder('list');
         $dql->leftJoin("list.institution","institution");
         $dql->where("institution.id = ".$pathology->getId());
-        //$dql->where("institution.name = '%ROLE_FELLAPP_DIRECTOR_WCMC_%'");
-        //$dql->andWhere("parent.name LIKE '%Pathology%' OR parent.name LIKE '%Clinical Molecular Genetics%' OR parent IS NULL");
-        //$dql->andWhere("parent.name LIKE '%Pathology%'");
         $dql->orderBy("list.orderinlist","ASC");
 
         $query = $em->createQuery($dql);
 
-//        $query->setParameters( array(
-//            'typedef' => 'default',
-//            'typeadd' => 'user-added',
-//            //'parentName' => 'Pathology'
-//        ));
-
         $fellTypes = $query->getResult();
 
-        //add special cases
-//        $specials = array(
-//            "ALL" => "ALL",
-//        );
-
-//        $filterType = array();
-//        foreach( $specials as $key => $value ) {
-//            $filterType[$key] = $value;
-//        }
+        if( $asEntities ) {
+            return $fellTypes;
+        }
 
         //add statuses
         foreach( $fellTypes as $type ) {
@@ -1428,6 +1412,33 @@ class FellAppUtil {
         //exit('1');
 
         return $emails;
+    }
+
+    public function addDefaultInterviewers( $fellapp ) {
+
+        $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
+
+        foreach( $fellowshipSubspecialty->getInterviewers() as $interviewer ) {
+
+            if( $this->isInterviewerExist($fellapp,$interviewer) == false ) {
+                $interview = new Interview();
+                $interview->setInterviewer($interviewer);
+                $interview->setLocation($interviewer->getMainLocation());
+                $interview->setInterviewDate($fellapp->getInterviewDate());
+                $fellapp->addInterview($interview);
+            }
+
+        }
+
+    }
+
+    public function isInterviewerExist( $fellapp, $interviewer ) {
+        foreach( $fellapp->getInterviews() as $interview ) {
+            if( $interview->getInterviewer()->getId() == $interviewer->getId() ) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -1654,6 +1665,8 @@ class FellAppUtil {
         $fellowshipApplication->getUser()->addTraining($training);
 
     }
+
+
 
 
 } 

@@ -14,6 +14,9 @@
                 <a href="{{ path('employees_new_user') }}" target="_blank">Add new Interviewer if unlisted</a>
                 &nbsp;&nbsp;
                 <a href="{{ path('employees_locations_pathaction_new_standalone') }}" target="_blank">Add new Location if unlisted</a>
+                <div style="float: right;">
+                    <a href="{{ path('fellapp_edit_default_interviewers',{'id':entity.id}) }}" target="_blank">Add Default Interviewers</a>
+                </div>
             {% endif %}
         </h4>
     </div>

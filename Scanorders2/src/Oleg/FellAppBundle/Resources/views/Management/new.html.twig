@@ -1,0 +1,70 @@
+{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
+{% block title %}
+    Fellowship Type Default Setting for {{ entity.name }}
+{% endblock %}
+
+
+
+{% block content %}
+
+    <br>
+
+    <h4 class="text-info" align="center">
+        <div>
+            Fellowship Type Default Setting for "{{ entity.name }}"
+        </div>
+    </h4>
+
+
+    <br><br>
+
+    {{ form_start(form,{'attr': {'id': 'fellapp-interview-form'}}) }}
+
+    {{ form_errors(form) }}
+
+
+    {{ formmacros.field(form.coordinators)}}
+
+    {{ formmacros.field(form.directors)}}
+
+    {{ formmacros.field(form.interviewers)}}
+
+
+    <br><br>
+
+    {% if cycle == "edit" %}
+        <p>
+            {#<a class="btn_margin_top btn btn-primary btn-success" href="{{ path('fellapp_fellowshiptype_setting_update',{'id':entity.id}) }}">Edit</a>#}
+            <button class="btn btn-warning" type="submit">Update</button>
+
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path('fellapp_fellowshiptype_setting_show',{'id':entity.id}) }}">Cancel</a>
+        </p>
+    {% endif %}
+
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path('fellapp_fellowshiptype_setting_edit',{'id':entity.id}) }}">Edit</a>
+        </p>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+    <br><br>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -311,6 +311,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/show/{id}", name="fellapp_show")
      * @Route("/edit/{id}", name="fellapp_edit")
+     * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
      * @Route("/download/{id}", name="fellapp_download")
      *
      * @Template("OlegFellAppBundle:Form:new.html.twig")
@@ -471,6 +472,14 @@ class FellAppController extends Controller {
             $disabled = false;
             $method = "PUT";
             $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
+        }
+
+        if( $routeName == "fellapp_edit_default_interviewers" ) {
+            $cycle = 'edit';
+            $disabled = false;
+            $method = "PUT";
+            $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
+            $fellappUtil->addDefaultInterviewers($entity);
         }
 
         if( $routeName == "fellapp_download" ) {
@@ -950,6 +959,7 @@ class FellAppController extends Controller {
 
         $fellowshipSubspecialty = $application->getFellowshipSubspecialty();
 
+        //////////////////////// INTERVIEWER ///////////////////////////
         $interviewerRoleFellType = null;
         $interviewerFellTypeRoles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
@@ -974,14 +984,17 @@ class FellAppController extends Controller {
 
             }
         }
+        //////////////////////// EOF INTERVIEWER ///////////////////////////
 
 
+        //////////////////////// OBSERVER ///////////////////////////
         foreach( $application->getObservers() as $observer ) {
             if( $observer && !$observer->hasRole('ROLE_FELLAPP_OBSERVER') ) {
                 //add general interviewer role
                 $observer->addRole('ROLE_FELLAPP_OBSERVER');
             }
         }
+        //////////////////////// EOF OBSERVER ///////////////////////////
 
     }
 
