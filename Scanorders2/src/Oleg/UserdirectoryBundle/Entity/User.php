@@ -1038,7 +1038,7 @@ class User extends BaseUser {
         if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
             $s = ucfirst(strtolower($s));
         }
-        return $s;
+        return ucwords($s);
     }
 //    function isAllCapital($s) {
 //        if( $this->count_capitals($s) == strlen($s) ) {

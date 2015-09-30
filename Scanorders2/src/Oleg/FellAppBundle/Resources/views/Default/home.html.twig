@@ -517,7 +517,11 @@
                             {% set letterCountStr = "Interviewee" %}
                         {% else %}
                             {#X of Y reference letters received#}
-                            {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" docs) received" %}
+                            {% set docNumberStr = "doc" %}
+                            {% if totalDocCount > 1 %}
+                                {% set docNumberStr = "docs" %}
+                            {% endif %}
+                            {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}
                             {% set styleStr = "" %}
                         {% endif %}
 
