@@ -492,7 +492,7 @@ class UserController extends Controller
             $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
         }
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
