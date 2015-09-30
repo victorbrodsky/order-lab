@@ -149,7 +149,7 @@ class FellAppController extends Controller {
                 $felltypeArr[] = "fellowshipSubspecialty.id = ".$fellowshipTypeID;
                 //}
             }
-            $dql->andWhere(implode(" OR ", $felltypeArr));
+            $dql->andWhere( implode(" OR ", $felltypeArr) );
             $searchFlag = true;
             //$fellSubspecId = $filter;
         }
