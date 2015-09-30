@@ -738,7 +738,7 @@ class UserController extends Controller
             //$criteriastr .= "(administrativeInstitution.name = 'Pathology and Laboratory Medicine' OR appointmentInstitution.name = 'Pathology and Laboratory Medicine' OR medicalInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= "(".$this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology).")";
             $criteriastr .= " AND ";
-            $criteriastr .= "(original.name = 'MD')";
+            $criteriastr .= "(original.name = 'MD' OR degree.name = 'MD')";
         }
 
         //Academic Appointment Title exists + Research Faculty
