@@ -492,7 +492,7 @@ class UserController extends Controller
             $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
         }
 
-        //echo "dql=".$dql."<br>";
+        echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
@@ -733,10 +733,10 @@ class UserController extends Controller
             $dql->leftJoin("trainings.degree", "degree");
             $dql->leftJoin("degree.original", "original");
             //$criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College' OR appointmentInstitution.name = 'Weill Cornell Medical College' OR medicalInstitution.name = 'Weill Cornell Medical College')";
-            $criteriastr .= $this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology);
-            $criteriastr .= " AND ";
+            //$criteriastr .= $this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology);
+            //$criteriastr .= " AND ";
             //$criteriastr .= "(administrativeInstitution.name = 'Pathology and Laboratory Medicine' OR appointmentInstitution.name = 'Pathology and Laboratory Medicine' OR medicalInstitution.name = 'Pathology and Laboratory Medicine')";
-            $criteriastr .= $this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology);
+            $criteriastr .= "(".$this->getCriteriaForAllWcmcPath($criteriastr,$wcmcpathology).")";
             $criteriastr .= " AND ";
             $criteriastr .= "(original.name = 'MD')";
         }

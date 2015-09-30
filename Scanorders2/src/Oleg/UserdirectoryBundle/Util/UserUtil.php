@@ -499,26 +499,27 @@ class UserUtil {
         switch( $time ) {
             case "current_only":
                 //with an empty or future 'end date'
+                //echo "current_only<br>";
 
                 //titles: endDate
-                if( $searchField == null || $searchField == 'administrativeTitles' ) {
-                    $criteriastr .= "(administrativeTitles.endDate IS NULL OR administrativeTitles.endDate > '".$curdate."')";
-                    $criteriastr .= " OR ";
-                }
-                if( $searchField && $searchField == 'appointmentTitles' ) {
-                    $criteriastr .= "(appointmentTitles.endDate IS NULL OR appointmentTitles.endDate > '".$curdate."')";
-                    $criteriastr .= " OR ";
-                }
-                if( $searchField && $searchField == 'medicalTitles' ) {
-                    $criteriastr .= "(medicalTitles.endDate IS NULL OR medicalTitles.endDate > '".$curdate."')";
-                    $criteriastr .= " OR ";
-                }
-
-                //research lab: dissolvedDate
-                if( $searchField == null || $searchField == 'researchLabs' ) {
-                    $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
-                    $criteriastr .= " OR ";
-                }
+//                if( $searchField == null || $searchField == 'administrativeTitles' ) {
+//                    $criteriastr .= "(administrativeTitles.endDate IS NULL OR administrativeTitles.endDate > '".$curdate."')";
+//                    $criteriastr .= " OR ";
+//                }
+//                if( $searchField && $searchField == 'appointmentTitles' ) {
+//                    $criteriastr .= "(appointmentTitles.endDate IS NULL OR appointmentTitles.endDate > '".$curdate."')";
+//                    $criteriastr .= " OR ";
+//                }
+//                if( $searchField && $searchField == 'medicalTitles' ) {
+//                    $criteriastr .= "(medicalTitles.endDate IS NULL OR medicalTitles.endDate > '".$curdate."')";
+//                    $criteriastr .= " OR ";
+//                }
+//
+//                //research lab: dissolvedDate
+//                if( $searchField == null || $searchField == 'researchLabs' ) {
+//                    $criteriastr .= "(researchLabs.dissolvedDate IS NULL OR researchLabs.dissolvedDate > '".$curdate."')";
+//                    $criteriastr .= " OR ";
+//                }
 
                 //Employment Status should have at least one group where Date of Termination is empty
                 if( $searchField == null || $searchField == 'employmentStatus' ) {
@@ -528,12 +529,14 @@ class UserUtil {
                     $criteriastr .= "(employmentStatus.terminationDate IS NULL)";
                     $criteriastr .= " OR ";
                     $criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."') )";
+                    //$criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
                     $criteriastr .= ")";
                 }
 
                 break;
             case "past_only":
                 //past or empty or future 'end date'
+                //echo "past_only<br>";
 
                 //titles: endDate
                 if( $searchField == null || $searchField == 'administrativeTitles' ) {
@@ -562,6 +565,7 @@ class UserUtil {
                     $criteriastr .= "(employmentStatus IS NOT NULL)";
                     $criteriastr .= " AND ";
                     $criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
+                    //$criteriastr .= "(employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
                     $criteriastr .= ")";
                 }
 
@@ -572,7 +576,7 @@ class UserUtil {
 
         if( $inputCriteriastr && $inputCriteriastr != "" ) {
             if( $criteriastr != "" ) {
-                $inputCriteriastr = $inputCriteriastr . " AND (" . $criteriastr . ")";
+                $inputCriteriastr = "(" . $inputCriteriastr . ") AND (" . $criteriastr . ")";
             }
         } else {
             $inputCriteriastr = $criteriastr;
