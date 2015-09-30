@@ -471,11 +471,6 @@ class UserController extends Controller
             //filter out Pathology Fellowship Applicants
             $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)";
 
-            //employmentStatus.terminationDate IS NOT NULL
-            if( $time == 'past_only' ) {
-                $totalcriteriastr = $totalcriteriastr . " AND employmentStatus.terminationDate IS NOT NULL";
-            }
-
             if( $criteriastr ) {
                 $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
             } else {
