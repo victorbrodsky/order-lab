@@ -1151,7 +1151,7 @@ class FellAppController extends Controller {
         } else {
             throw $this->createNotFoundException('Interviewer is undefined');
         }
-        echo $user->getId()."?=".$interviewId."<br>";
+        //echo $user->getId()."?=".$interviewId."<br>";
         if( $user->getId() != $interviewId  
             && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR')  
             && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') 
