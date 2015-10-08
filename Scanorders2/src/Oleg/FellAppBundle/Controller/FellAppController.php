@@ -1147,11 +1147,15 @@ class FellAppController extends Controller {
         //echo "interviewer=".$interviewer."<br>";
         $interviewId = null;
         if( $interviewer ) {
-            $interviewId = $interview->getInterviewer()->getId();
+            $interviewId = $interviewer->getId();
         } else {
             throw $this->createNotFoundException('Interviewer is undefined');
         }
-        if( $user->getId() != $interviewId ) {
+        echo $user->getId()."?=".$interviewId."<br>";
+        if( $user->getId() != $interviewId  
+            && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR')  
+            && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') 
+        ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
