@@ -863,16 +863,35 @@ function getValueFromRankString(holder,identifierName) {
     var rankText = rankData.text;   
 
     //var rank = rankText.split(" ")[0];
-    var rank = mySplit(rankText," ")[0];
+    var rank = rankText.xSplit(" ")[0];
     //console.log("rank="+rank+" => Number(rank)="+Number(rank));
     return Number(rank);
 }
-function mySplit(str, ch) {
-    var pos, start = 0, result = [];
-    while ((pos = str.indexOf(ch, start)) != -1) {
-        result.push(str.substring(start, pos));
-        start = pos + 1;
-    }
-    result.push(str.substr(start));
-    return(result);    
+String.prototype.xSplit = function(_regEx)
+{
+   // Most browsers can do this properly, so let them -- they'll do it faster
+   if ('a~b'.split(/(~)/).length === 3) { return this.split(_regEx); }
+
+   if (!_regEx.global)
+      { _regEx = new RegExp(_regEx.source, 'g' + (_regEx.ignoreCase ? 'i' : '')); }
+
+   // IE (and any other browser that can't capture the delimiter)
+   // will, unfortunately, have to be slowed down
+   var m, str = '', arr = [];
+   var i, len = this.length;
+   for (i = 0; i < len; i++)
+   {
+      str += this.charAt(i);
+      m = str.match(_regEx);
+      if (m)
+      {
+         arr.push(str.replace(m[0], ''));
+         arr.push(m[0]);
+         str = '';
+      }
+   }
+
+   if (str != '') arr.push(str);
+
+   return arr;
 }
