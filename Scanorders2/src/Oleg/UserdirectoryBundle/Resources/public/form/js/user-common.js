@@ -34,9 +34,9 @@ function isIE() {
 }
 
 function checkBrowserComptability() {
-    //console.log('0 IE='+isIE());
+    console.log('0 IE='+isIE());
     if( isIE() && isIE() <= 7 ) {
-        //console.log('1 IE='+isIE());
+        console.log('1 IE='+isIE());
         // is IE version equal or less than 7
         var msg = "Warning! You are using an old version of browser Internet Explorer 7 or lower. \n\
                     Please upgrade the browser or use the modern browsers such as \n\
