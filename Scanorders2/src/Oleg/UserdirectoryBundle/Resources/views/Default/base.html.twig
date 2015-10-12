@@ -137,7 +137,7 @@
                     {#{{ flashMessage }}#}
                 {#</div>#}
                 <div style="height: 1%;">&nbsp;</div>
-                <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ flashMessage }}</p>
+                <p class="alert alert-info center-block flash-notice" align="middle" style="width: 70%;">{{ flashMessage }}</p>
             {% endfor %}
 
             {% for flashMessage in app.session.flashbag.get('status-changed') %}
