@@ -850,6 +850,35 @@ function updateFellAppTotalRank(holder) {
 }
 function getValueFromRankString(holder,identifierName) {
 
+    String.prototype.xSplit = function(_regEx)
+    {
+       // Most browsers can do this properly, so let them -- they'll do it faster
+       if ('a~b'.split(/(~)/).length === 3) { return this.split(_regEx); }
+
+       if (!_regEx.global)
+          { _regEx = new RegExp(_regEx.source, 'g' + (_regEx.ignoreCase ? 'i' : '')); }
+
+       // IE (and any other browser that can't capture the delimiter)
+       // will, unfortunately, have to be slowed down
+       var m, str = '', arr = [];
+       var i, len = this.length;
+       for (i = 0; i < len; i++)
+       {
+          str += this.charAt(i);
+          m = str.match(_regEx);
+          if (m)
+          {
+             arr.push(str.replace(m[0], ''));
+             arr.push(m[0]);
+             str = '';
+          }
+       }
+
+       if (str != '') arr.push(str);
+
+       return arr;
+    }
+
     var rankEl = holder.find(identifierName);
     if( !rankEl ) {
         return null;
@@ -866,32 +895,4 @@ function getValueFromRankString(holder,identifierName) {
     var rank = rankText.xSplit(" ")[0];
     //console.log("rank="+rank+" => Number(rank)="+Number(rank));
     return Number(rank);
-}
-String.prototype.xSplit = function(_regEx)
-{
-   // Most browsers can do this properly, so let them -- they'll do it faster
-   if ('a~b'.split(/(~)/).length === 3) { return this.split(_regEx); }
-
-   if (!_regEx.global)
-      { _regEx = new RegExp(_regEx.source, 'g' + (_regEx.ignoreCase ? 'i' : '')); }
-
-   // IE (and any other browser that can't capture the delimiter)
-   // will, unfortunately, have to be slowed down
-   var m, str = '', arr = [];
-   var i, len = this.length;
-   for (i = 0; i < len; i++)
-   {
-      str += this.charAt(i);
-      m = str.match(_regEx);
-      if (m)
-      {
-         arr.push(str.replace(m[0], ''));
-         arr.push(m[0]);
-         str = '';
-      }
-   }
-
-   if (str != '') arr.push(str);
-
-   return arr;
 }
