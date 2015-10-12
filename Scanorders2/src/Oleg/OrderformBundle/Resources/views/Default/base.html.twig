@@ -111,7 +111,7 @@
 
             {% include 'OlegUserdirectoryBundle::Security/idle_timeout.html.twig' %}
             
-            <div class="browser-notice alert alert-info center-block" align="middle" style="width: 70%;"></div>
+            <div class="browser-notice alert alert-info center-block" align="middle" style="width: 70%; display:none;"></div>
 
             {% for flashMessage in app.session.flashbag.get('notice') %}
                 {#<div class="flash-notice">#}
