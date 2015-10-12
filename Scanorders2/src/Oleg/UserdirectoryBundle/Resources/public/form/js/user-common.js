@@ -33,6 +33,19 @@ function isIE() {
   return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
 }
 
+function checkBrowserComptability() {
+    //console.log('0 IE='+isIE());
+    if( isIE() && isIE() <= 7 ) {
+        //console.log('1 IE='+isIE());
+        // is IE version equal or less than 7
+        var msg = "Warning! You are using an old version of browser Internet Explorer 7 or lower. \n\
+                    Please upgrade the browser or use the modern browsers such as \n\
+                    Firefox or Google Chrome to have a full features of this system.";
+        $('.browser-notice').html(msg);
+        $('.browser-notice').show();           
+    } 
+}
+
 function initTooltips() {
 
     //tooltip always
@@ -79,7 +92,7 @@ function attachTooltipToSelectCombobox( comboboxSelector, comboboxEl ) {
 
 function regularCombobox(holder) {
     
-    console.log('IE='+isIE());
+    //console.log('IE='+isIE());
     
     if( isIE() && isIE() <= 7 ) {
         // is IE version equal or less than 7

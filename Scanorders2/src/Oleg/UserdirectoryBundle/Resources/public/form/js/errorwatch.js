@@ -7,14 +7,7 @@ function isIE () {
 window.onerror = function( msg, url, linenumber ){
 
     if( isIE() ) {
-        if( isIE() <= 7 ) {
-            // is IE version equal or less than 7
-            var msg = "Warning! You are using an old version of browser Internet Explorer 7 or lower. \n\
-                        Please upgrade the browser or use the modern browsers such as \n\
-                        Firefox or Google Chrome to have a full features of this system.";
-            $('.browser-notice').html(msg);
-            $('.browser-notice').show();           
-        } 
+        //
     } else {
 
         var newline = "\n";
