@@ -96,6 +96,7 @@ function regularCombobox(holder) {
     
     if( isIE() && isIE() <= 7 ) {
         // is IE version equal or less than 7
+        checkBrowserComptability();
 //        var msg = "Warning! You are using an old version of browser Internet Explorer 7 or lower. \n\
 //                    Please upgrade the browser or use the modern browsers such as \n\
 //                    Firefox or Google Chrome to have a full features of this system.";

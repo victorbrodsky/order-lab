@@ -9,6 +9,8 @@
 $(document).ready(function() {
 
     //console.log('user form ready');
+    
+    //checkBrowserComptability();
 
     setCicleShow();
 

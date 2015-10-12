@@ -15,7 +15,7 @@ $(document).ready(function() {
         Dropzone.autoDiscover = false;
     }
     
-    checkBrowserComptability();
+    //checkBrowserComptability();
 
     initFileUpload();
 
