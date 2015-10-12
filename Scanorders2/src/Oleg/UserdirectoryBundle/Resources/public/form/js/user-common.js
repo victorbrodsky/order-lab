@@ -860,14 +860,19 @@ function getValueFromRankString(holder,identifierName) {
         return null;
     }
 
-    var rankText = rankData.text;
-    if( rankText.textContent ) {
-      rankText = rankText.textContent;
-    } else {
-      rankText = rankText.innerText;
-    }
+    var rankText = rankData.text;   
 
-    var rank = rankText.split(" ")[0];
+    //var rank = rankText.split(" ")[0];
+    var rank = mySplit(rankText," ")[0];
     //console.log("rank="+rank+" => Number(rank)="+Number(rank));
     return Number(rank);
+}
+function mySplit(str, ch) {
+    var pos, start = 0, result = [];
+    while ((pos = str.indexOf(ch, start)) != -1) {
+        result.push(str.substring(start, pos));
+        start = pos + 1;
+    }
+    result.push(str.substr(start));
+    return(result);    
 }
