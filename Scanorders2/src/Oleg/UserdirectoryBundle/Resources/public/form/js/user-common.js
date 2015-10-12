@@ -86,7 +86,8 @@ function regularCombobox(holder) {
         var msg = "Warning! You are using an old version of browser Internet Explorer 7 or lower. \n\
                     Please upgrade the browser or use the modern browsers such as \n\
                     Firefox or Google Chrome to have a full features of this system.";
-        $('.flash-notice').html(msg);
+        $('.browser-notice').html(msg);
+        $('.browser-notice').show();
         return;
     } 
     
