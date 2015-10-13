@@ -862,7 +862,7 @@ function getValueFromRankString(holder,identifierName) {
 
     //var rankText = String(rankData.text)+""; 
     var rankText = rankData.text + "";  
-    console.log("rankText="+rankText);
+    console.log("rankText ="+rankText);
 
     //var rank = rankText.split(" ")[0];
     var rank = rankText.xSplit(" ")[0];
