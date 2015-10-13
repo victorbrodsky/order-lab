@@ -879,7 +879,7 @@ function getValueFromRankString(holder,identifierName) {
 function getSelect2Text(element) {
     var res = null;
     if( isIE() && isIE() <= 7 ) {
-        res = element.options[element.selectedIndex].text;
+        res = element.options[element.selectedIndex].text+"";
     } else {
         var elementData = element.select2('data');
         if( elementData && elementData.text ) {
