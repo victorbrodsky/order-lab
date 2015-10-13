@@ -34,13 +34,12 @@ function isIE() {
 }
 
 function checkBrowserComptability() {
-    console.log('0 IE='+isIE());
-    if( isIE() && isIE() <= 7 ) {
-        console.log('1 IE='+isIE());
+    //console.log('IE='+isIE());
+    if( isIE() && isIE() <= 7 ) {        
         // is IE version equal or less than 7
         var msg = "Warning! You are using an old version of browser Internet Explorer 7 or lower. \n\
                     Please upgrade the browser or use the modern browsers such as \n\
-                    Firefox or Google Chrome to have a full features of this system.";
+                    Firefox or Google Chrome to have full features of this system.";
         $('.browser-notice').html(msg);
         $('.browser-notice').show();           
     } 
@@ -97,11 +96,6 @@ function regularCombobox(holder) {
     if( isIE() && isIE() <= 7 ) {
         // is IE version equal or less than 7
         checkBrowserComptability();
-//        var msg = "Warning! You are using an old version of browser Internet Explorer 7 or lower. \n\
-//                    Please upgrade the browser or use the modern browsers such as \n\
-//                    Firefox or Google Chrome to have a full features of this system.";
-//        $('.browser-notice').html(msg);
-//        $('.browser-notice').show();
         return;
     } 
     
@@ -862,24 +856,49 @@ function getValueFromRankString(holder,identifierName) {
     //var rankText = String(rankData.text)+""; 
     //var rankText = rankData.text + ""; 
     
+    if( isIE() && isIE() <= 7 ) {
+        //id=oleg_fellappbundle_interview_academicRank
+        identifierName = identifierName.replace("-","_");
+        identifierName = identifierName.replace(".","");
+        identifierName = "oleg_fellappbundle_" + identifierName.replace("-","_");
+        //console.log("identifierName="+identifierName);
+        rankEl = document.getElementById(identifierName);
+    }
     var rankText = getSelect2Text(rankEl);
     if( !rankText ) {
+        //console.log("rankText is null => return");
         return null;
-    }
-    
-    console.log("rankText ="+rankText);
+    } 
+    //console.log("rankText="+rankText);
 
     //var rank = rankText.split(" ")[0];
-    var rank = rankText.xSplit(" ")[0];
-    console.log("rank="+rank+" => Number(rank)="+Number(rank));
+    var rank = rankText;
+    if( rankText.indexOf(" ") != -1 ) {
+        var rankArr = rankText.xSplit(" ");
+        //console.log("rankArr.length="+rankArr.length);
+        if( rankArr.length > 1 ) {
+            rank = rankArr[0];
+        }
+    }
+    //console.log("rank="+rank+" => Number(rank)="+Number(rank));
     
-    return Number(rank);
+    rank = Number(rank);
+    //console.log("rank="+rank);
+    
+    return rank;
 }
 
 function getSelect2Text(element) {
     var res = null;
+    if( !element ) {
+        //console.log("element is null => return");
+        return null;
+    }
+    
     if( isIE() && isIE() <= 7 ) {
-        res = element.options[element.selectedIndex].text+"";
+        if( element.selectedIndex ) {
+            res = element.options[element.selectedIndex].text+"";
+        }
     } else {
         var elementData = element.select2('data');
         if( elementData && elementData.text ) {
@@ -888,6 +907,7 @@ function getSelect2Text(element) {
     }
     return res;
 }
+
 String.prototype.xSplit = function(_regEx)
 {
    // Most browsers can do this properly, so let them -- they'll do it faster

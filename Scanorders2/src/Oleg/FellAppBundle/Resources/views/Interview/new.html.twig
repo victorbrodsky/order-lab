@@ -43,7 +43,7 @@
     {#{% do form.startTime.setRendered %}#}
     {#{% do form.endTime.setRendered %}#}
 
-
+    <br>
     <div id="error-div" class="alert alert-danger" role="alert" style="display:none;"></div>
 
     {% if cycle == 'show' %}
@@ -121,10 +121,7 @@
 //            errorArr.push("Please provide a comment");
 //        }
 
-        var languageProficiency = null;
-        if( $('.interview-languageProficiency').select2('data') ) {
-            languageProficiency = $('.interview-languageProficiency').select2('data').text;
-        }
+        var languageProficiency = getLanguageProficiencyRank();       
         if( !languageProficiency ) {
             errorArr.push("Please select Language Proficiency");
         }
@@ -136,6 +133,20 @@
         }
 
         $('#fellapp-interview-form').submit();
+    }
+
+    function getLanguageProficiencyRank() {
+        var languageProficiency = null;       
+        if( isIE() && isIE() <= 7 ) {
+            //id=oleg_fellappbundle_interview_languageProficiency
+            var element = document.getElementById("oleg_fellappbundle_interview_languageProficiency");           
+            languageProficiency = getSelect2Text(element);
+        } else {
+            if( $('.interview-languageProficiency').select2('data') ) {
+                languageProficiency = $('.interview-languageProficiency').select2('data').text;
+            }
+        }
+        return languageProficiency;
     }
 
 </script>
