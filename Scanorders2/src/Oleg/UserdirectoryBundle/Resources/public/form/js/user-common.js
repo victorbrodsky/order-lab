@@ -855,13 +855,18 @@ function getValueFromRankString(holder,identifierName) {
         return null;
     }
 
-    var rankData = rankEl.select2('data');
-    if( !rankData || !rankData.text ) {
+//    var rankData = rankEl.select2('data');
+//    if( !rankData || !rankData.text ) {
+//        return null;
+//    }
+    //var rankText = String(rankData.text)+""; 
+    //var rankText = rankData.text + ""; 
+    
+    var rankText = getSelect2Text(rankEl);
+    if( !rankText ) {
         return null;
     }
-
-    //var rankText = String(rankData.text)+""; 
-    var rankText = rankData.text + "";  
+    
     console.log("rankText ="+rankText);
 
     //var rank = rankText.split(" ")[0];
@@ -871,6 +876,18 @@ function getValueFromRankString(holder,identifierName) {
     return Number(rank);
 }
 
+function getSelect2Text(element) {
+    var res = null;
+    if( isIE() && isIE() <= 7 ) {
+        res = element.options[element.selectedIndex].text;
+    } else {
+        var elementData = element.select2('data');
+        if( elementData && elementData.text ) {
+            res = elementData.text;
+        }
+    }
+    return res;
+}
 String.prototype.xSplit = function(_regEx)
 {
    // Most browsers can do this properly, so let them -- they'll do it faster
@@ -899,3 +916,4 @@ String.prototype.xSplit = function(_regEx)
 
    return arr;
 }
+
