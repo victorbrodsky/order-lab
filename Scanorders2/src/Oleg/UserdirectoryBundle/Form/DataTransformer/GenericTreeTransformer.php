@@ -154,6 +154,13 @@ class GenericTreeTransformer implements DataTransformerInterface
             //exit('child name is NULL');
             return null;
         }
+        
+        //trancate length to 255 char
+        $origName = null;
+        if( strlen($name) > 255 ) {
+            $origName = $name;
+            $name = substr($name,0,252).'...';         
+        }
 
         //check if it is already exists in db
         //echo "className=".$this->className."<br>";
@@ -174,6 +181,10 @@ class GenericTreeTransformer implements DataTransformerInterface
             }
 
             $newEntity = $this->createNewEntity($name."",$this->className,$this->user);
+            
+            if( $origName ) {
+                $newEntity->setDescription($origName);
+            }
 
             if( method_exists($newEntity,'getParent') && !($newEntity instanceof BaseCompositeNode) ) {
                 //don't flush this entity because it has parent and parent can not be set here

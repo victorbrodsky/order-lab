@@ -397,6 +397,9 @@ class FellAppUtil {
         //for each user in excel
         for ($row = 3; $row <= $highestRow; $row++){
 
+            
+    
+            
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
                 NULL,
@@ -409,7 +412,29 @@ class FellAppUtil {
 
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
+            
+        try {
 
+//            //reopen em after DBALException
+//            if( !$em->isOpen() ) {
+//                echo 'em is closed; ID=' . $googleFormId."<br>";
+//                $em = $em->create(
+//                $em->getConnection(), $em->getConfiguration());
+//                $this->em = $em; 
+//                // reset the EM and all aias
+////                $container = $this->container;
+////                $container->set('doctrine.orm.entity_manager', null);
+////                $container->set('doctrine.orm.default_entity_manager', null);
+////                // get a fresh EM
+////                $em = $this->container->getDoctrine()->getManager();
+////                $this->em = $em;
+//            }
+            
+            
+//            if( !$em->isOpen() ) {
+//                exit('em is still closed; ID=' . $googleFormId);            
+//            }
+            
             //echo "row=".$row.": id=".$googleFormId."<br>";
 
             $googleForm = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
@@ -775,6 +800,40 @@ class FellAppUtil {
             $count++;
 
             //exit( 'Test: end of fellowship applicant id='.$fellowshipApplication->getId() );
+            
+    } catch( \Doctrine\DBAL\DBALException $e ) {
+    //} catch( \Exception $e ) {
+        
+//        //reopen em after DBALException
+//        if( !$em->isOpen() ) {
+//            echo 'em is closed; ID=' . $googleFormId."<br>";
+//            $em = $em->create( $em->getConnection(), $em->getConfiguration() );
+//            $this->em = $em; 
+//            // reset the EM and all aias
+////                $container = $this->container;
+////                $container->set('doctrine.orm.entity_manager', null);
+////                $container->set('doctrine.orm.default_entity_manager', null);
+////                // get a fresh EM
+////                $em = $this->container->getDoctrine()->getManager();
+////                $this->em = $em;
+//        }
+        
+        //email
+        $emailUtil = new EmailUtil();      
+        $emails = "oli2002@med.cornell.edu";
+        $event = "Error creating fellowship applicant with unique Google Applicant ID=".$googleFormId."; Exception=".$e->getMessage();
+        $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event, $em );
+        
+        //logger
+        $logger->error($event);
+        
+        //flash
+        $this->container->get('session')->getFlashBag()->add(
+            'warning',
+            $event
+        );             
+    }
+            
 
         } //for
 
