@@ -517,9 +517,9 @@
                             {% set letterCountStr = "Interviewee" %}
                         {% else %}
                             {#X of Y reference letters received#}
-                            {% set docNumberStr = "doc" %}
-                            {% if totalDocCount > 1 %}
-                                {% set docNumberStr = "docs" %}
+                            {% set docNumberStr = "docs" %}
+                            {% if totalDocCount == 1 %}
+                                {% set docNumberStr = "doc" %}
                             {% endif %}
                             {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}
                             {% set styleStr = "" %}
@@ -683,6 +683,22 @@
                                     {#</a>#}
                                 {#</li>#}
                                 {#{% endif %}#}
+                                    
+                                {#This link should only appear if the logged in user is one of the interviewers.#}
+                                {% if is_granted('ROLE_FELLAPP_INTERVIEWER') %}
+                                    
+                                    {% set userInterviewId = entity.getUserInterviewId( app.security.getToken().getUser() ) %}                                  
+                                    
+                                    {% if userInterviewId %}
+                                        <li>
+                                            <a
+                                                href="{{ path('fellapp_interview_edit', { 'id': userInterviewId}) }}">Submit My Evaluation
+                                            </a>
+                                        </li>
+                                    {% endif %} 
+                                    
+                                {% endif %}   
+                                    
 
                                 <li>
                                     <a

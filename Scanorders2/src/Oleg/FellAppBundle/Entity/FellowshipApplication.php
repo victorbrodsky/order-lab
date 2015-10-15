@@ -9,6 +9,7 @@
 namespace Oleg\FellAppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
 
@@ -1036,6 +1037,27 @@ class FellowshipApplication extends BaseUserAttributes {
         } else {
             return null;
         }
+    }
+    
+    public function getUserInterviewId( $interviewer ) {
+        $interviewId = null;
+        $items = $this->getInterviews();
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("interviewer", $interviewer))
+            //->orderBy(array("creationDate" => Criteria::DESC))
+        ;
+        $itemsFiltered = $items->matching($criteria);
+        
+        //if( count($itemsFiltered) > 1 ) {
+        //    exit('You have more than 1 interview for the same applicant!');
+        //}
+        
+        if( count($itemsFiltered) > 0 ) {
+            $itemFiltered = $itemsFiltered[0];
+            $interviewId = $itemFiltered->getId();
+        }
+ 
+        return $interviewId;
     }
 
 //    //interface methods
