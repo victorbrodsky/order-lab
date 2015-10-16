@@ -1055,7 +1055,7 @@ class FellowshipApplication extends BaseUserAttributes {
 //        }
 //        $interviewId = null;
         
-        echo "interviewer=".$interviewer."<br>";
+        //echo "interviewer=".$interviewer."<br>";
         
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("interviewer", $interviewer))
@@ -1065,19 +1065,14 @@ class FellowshipApplication extends BaseUserAttributes {
         
         //if( count($itemsFiltered) > 1 ) {
         //    exit('You have more than 1 interview for the same applicant!');
-        //}
-        
-        echo "itemsFiltered count=".count($itemsFiltered)."<br>";
+        //}               
         
         if( count($itemsFiltered) > 0 ) {
-            $itemFiltered = $itemsFiltered[0];
-            echo "itemFiltered=".$itemFiltered."<br>";
+            $itemFiltered = $itemsFiltered->first();           
             if( $itemFiltered && $itemFiltered->getId() ) {
-                $interviewId = $itemFiltered->getId();
-                echo "itemFiltered id=".$itemFiltered->getId()."<br>";
+                $interviewId = $itemFiltered->getId();              
             }
-        }
-        echo "1 interviewId=".$interviewId."<br>";
+        }      
  
         return $interviewId;
     }

@@ -549,7 +549,7 @@
 
                                 <li>
                                     <a
-                                        href="{{ path('fellapp_show', { 'id': entity.id}) }}">View Application and Documents
+                                        href="{{ path('fellapp_show', { 'id': entity.id}) }}" target="_blank">View Application and Documents
                                     </a>
                                 </li>
 
@@ -669,7 +669,7 @@
 
                                     <li>
                                         <a
-                                            href="{{ path('fellapp_edit', { 'id': entity.id}) }}">Edit
+                                            href="{{ path('fellapp_edit', { 'id': entity.id}) }}" target="_blank">Edit
                                         </a>
                                     </li>
 
@@ -685,20 +685,20 @@
                                 {#{% endif %}#}
                                     
                                 {#This link should only appear if the logged in user is one of the interviewers.#}
-{#                                {% if is_granted('ROLE_FELLAPP_INTERVIEWER') %}
+                                {% if is_granted('ROLE_FELLAPP_INTERVIEWER') %}
                                     
                                     {% set userInterviewId = entity.getUserInterviewId( app.security.getToken().getUser() ) %}                                  
                                     
                                     {% if userInterviewId %}
                                         <li>
                                             <a
-                                                href="{{ path('fellapp_interview_edit', { 'id': userInterviewId}) }}">Submit My Evaluation
+                                                href="{{ path('fellapp_interview_edit', { 'id': userInterviewId}) }}" target="_blank">Submit My Evaluation
                                             </a>
                                         </li>
                                     {% endif %} 
                                     
                                 {% endif %}   
-#}                                    
+                                    
 
                                 <li>
                                     <a
