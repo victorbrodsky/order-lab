@@ -1041,7 +1041,22 @@ class FellowshipApplication extends BaseUserAttributes {
     
     public function getUserInterviewId( $interviewer ) {
         $interviewId = null;
-        $items = $this->getInterviews();
+        
+        $items = $this->getInterviews();  
+        
+//        foreach( $items as $item ) {
+//            if( $item && $item->getId() && $item->getInterviewer() ) {
+//                if( $item->getInterviewer()->getId() == $interviewer->getId() ) {
+//                    $interviewId = $item->getId();
+//                    echo "0 interviewId=".$interviewId."<br>";
+//                    break;
+//                }
+//            }
+//        }
+//        $interviewId = null;
+        
+        echo "interviewer=".$interviewer."<br>";
+        
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("interviewer", $interviewer))
             //->orderBy(array("creationDate" => Criteria::DESC))
@@ -1052,10 +1067,17 @@ class FellowshipApplication extends BaseUserAttributes {
         //    exit('You have more than 1 interview for the same applicant!');
         //}
         
+        echo "itemsFiltered count=".count($itemsFiltered)."<br>";
+        
         if( count($itemsFiltered) > 0 ) {
             $itemFiltered = $itemsFiltered[0];
-            $interviewId = $itemFiltered->getId();
+            echo "itemFiltered=".$itemFiltered."<br>";
+            if( $itemFiltered && $itemFiltered->getId() ) {
+                $interviewId = $itemFiltered->getId();
+                echo "itemFiltered id=".$itemFiltered->getId()."<br>";
+            }
         }
+        echo "1 interviewId=".$interviewId."<br>";
  
         return $interviewId;
     }

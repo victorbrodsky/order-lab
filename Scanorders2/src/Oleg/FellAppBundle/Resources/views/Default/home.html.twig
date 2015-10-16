@@ -685,7 +685,7 @@
                                 {#{% endif %}#}
                                     
                                 {#This link should only appear if the logged in user is one of the interviewers.#}
-                                {% if is_granted('ROLE_FELLAPP_INTERVIEWER') %}
+{#                                {% if is_granted('ROLE_FELLAPP_INTERVIEWER') %}
                                     
                                     {% set userInterviewId = entity.getUserInterviewId( app.security.getToken().getUser() ) %}                                  
                                     
@@ -698,7 +698,7 @@
                                     {% endif %} 
                                     
                                 {% endif %}   
-                                    
+#}                                    
 
                                 <li>
                                     <a

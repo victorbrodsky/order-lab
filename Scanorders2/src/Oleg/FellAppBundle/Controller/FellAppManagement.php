@@ -203,8 +203,11 @@ class FellAppManagement extends Controller {
 
         foreach( $users as $user ) {
 
-            if( $user && !$user->hasRole('ROLE_FELLAPP_'.$roleSubstr) ) {
+            if( $user ) {
 
+                //$user->addRole('ROLE_USERDIRECTORY_OBSERVER');
+                $user->addRole('ROLE_FELLAPP_USER');
+                
                 //add general role
                 $user->addRole('ROLE_FELLAPP_'.$roleSubstr);
 
