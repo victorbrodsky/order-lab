@@ -1381,7 +1381,7 @@ class FellAppUtil {
         $res = false;
 
         //if user is observer of this fellapp
-        if( !$fellapp->getObservers()->contains($user) ) {
+        if( $fellapp->getObservers()->contains($user) ) {
             $res = true;
         }
 
