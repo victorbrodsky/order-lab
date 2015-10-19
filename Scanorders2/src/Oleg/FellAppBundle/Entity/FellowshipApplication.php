@@ -1042,18 +1042,7 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getUserInterviewId( $interviewer ) {
         $interviewId = null;
         
-        $items = $this->getInterviews();  
-        
-//        foreach( $items as $item ) {
-//            if( $item && $item->getId() && $item->getInterviewer() ) {
-//                if( $item->getInterviewer()->getId() == $interviewer->getId() ) {
-//                    $interviewId = $item->getId();
-//                    echo "0 interviewId=".$interviewId."<br>";
-//                    break;
-//                }
-//            }
-//        }
-//        $interviewId = null;
+        $items = $this->getInterviews();
         
         //echo "interviewer=".$interviewer."<br>";
         

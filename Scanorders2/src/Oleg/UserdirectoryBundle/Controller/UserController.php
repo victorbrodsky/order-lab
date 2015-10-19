@@ -810,6 +810,16 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Fellow')";
         }
+        
+        //As Faculty + Residents == Academic Appointment Title exists + position=Resident
+//        if( $filter && $filter == "NYP Pathology Residents" ) {
+//            //$criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+//            //$criteriastr .= " AND ";
+//            //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
+//            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')"; //OR administrativeName.name = 'Resident' OR medicalName.name = 'Resident')";
+//        }
 
         //As Faculty + Residents == Academic Appointment Title exists + position=Resident
         if( $filter && $filter == "WCMC Pathology Residents" ) {
@@ -818,7 +828,7 @@ class UserController extends Controller
             //$criteriastr .= "(appointmentInstitution.name = 'Pathology and Laboratory Medicine')";
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
-            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
+            $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')"; //OR administrativeName.name = 'Resident' OR medicalName.name = 'Resident')";
         }
 
         //the same as "WCMC Pathology Residents" except they have "AP/CP" in their "Residency Type" field.
