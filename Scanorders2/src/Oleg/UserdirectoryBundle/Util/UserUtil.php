@@ -526,49 +526,50 @@ class UserUtil {
                     $criteriastr .= "(";
                     $criteriastr .= "(employmentStatus IS NULL)";
                     $criteriastr .= " OR ";
-                    $criteriastr .= "(employmentStatus.terminationDate IS NULL)";
-                    $criteriastr .= " OR ";
-                    $criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."') )";
-                    //$criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+                    //$criteriastr .= "(employmentStatus.terminationDate IS NULL)";
+                    //$criteriastr .= " OR ";
+                    //$criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."') )";
+                    $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
                     $criteriastr .= ")";
                 }
 
                 break;
+                
             case "past_only":
                 //past or empty or future 'end date'
-                //echo "past_only<br>";
-
+                //echo "past_only<br>";                
+                
                 //titles: endDate
-                if( $searchField == null || $searchField == 'administrativeTitles' ) {
-                    $criteriastr .= "(administrativeTitles.endDate IS NOT NULL AND administrativeTitles.endDate < '".$curdate."')";
-                    $criteriastr .= " OR ";
-                }
-                if( $searchField && $searchField == 'appointmentTitles' ) {
-                    $criteriastr .= "(appointmentTitles.endDate IS NOT NULL AND appointmentTitles.endDate < '".$curdate."')";
-                    $criteriastr .= " OR ";
-                }
-                if( $searchField && $searchField == 'medicalTitles' ) {
-                    $criteriastr .= "(medicalTitles.endDate IS NOT NULL AND medicalTitles.endDate < '".$curdate."')";
-                    $criteriastr .= " OR ";
-                }
-
-                //research lab: dissolvedDate
-                if( $searchField == null || $searchField == 'researchLabs' ) {
-                    $criteriastr .= "(researchLabs.dissolvedDate IS NOT NULL AND researchLabs.dissolvedDate < '".$curdate."')";
-                    $criteriastr .= " OR ";
-                }
+//                if( $searchField == null || $searchField == 'administrativeTitles' ) {
+//                    $criteriastr .= "(administrativeTitles.endDate IS NOT NULL AND administrativeTitles.endDate < '".$curdate."')";
+//                    $criteriastr .= " OR ";
+//                }
+//                if( $searchField && $searchField == 'appointmentTitles' ) {
+//                    $criteriastr .= "(appointmentTitles.endDate IS NOT NULL AND appointmentTitles.endDate < '".$curdate."')";
+//                    $criteriastr .= " OR ";
+//                }
+//                if( $searchField && $searchField == 'medicalTitles' ) {
+//                    $criteriastr .= "(medicalTitles.endDate IS NOT NULL AND medicalTitles.endDate < '".$curdate."')";
+//                    $criteriastr .= " OR ";
+//                }
+//
+//                //research lab: dissolvedDate
+//                if( $searchField == null || $searchField == 'researchLabs' ) {
+//                    $criteriastr .= "(researchLabs.dissolvedDate IS NOT NULL AND researchLabs.dissolvedDate < '".$curdate."')";
+//                    $criteriastr .= " OR ";
+//                }
 
                 //Each group of fields in the employment status should have a non-empty Date of Termination.
                 if( $searchField == null || $searchField == 'employmentStatus' ) {
                     //TODO: should the search result display only users with all employment status have a non-empty Date of Termination?
                     $criteriastr .= "(";
-                    $criteriastr .= "(employmentStatus IS NOT NULL)";
+                    $criteriastr .= "employmentStatus IS NOT NULL";
                     $criteriastr .= " AND ";
-                    $criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
-                    //$criteriastr .= "(employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
+                    //$criteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
+                    $criteriastr .= "(employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
                     $criteriastr .= ")";
                 }
-
+                
                 break;
             default:
                 //do nothing

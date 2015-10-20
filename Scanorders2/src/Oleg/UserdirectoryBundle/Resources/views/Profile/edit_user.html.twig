@@ -1254,7 +1254,7 @@
         {% set showEmploymentStatus = false %}
         {% if form.employmentStatus is defined or form.employmentType is defined %}
             {% for employmentStatus in form.employmentStatus %}
-                {% if employmentStatus.employmentType.vars.value or employmentStatus.hireDate.vars.value or cycle != 'show_user' %}
+                {% if employmentStatus.employmentType.vars.value or employmentStatus.hireDate.vars.value or employmentStatus.terminationDate.vars.value or cycle != 'show_user' %}
                     {% set showEmploymentStatus = true %}
                 {% endif %}
             {% endfor %}

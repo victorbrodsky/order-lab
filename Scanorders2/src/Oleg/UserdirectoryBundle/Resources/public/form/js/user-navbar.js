@@ -195,27 +195,33 @@ function setDirectoryNavBar() {
 
     var full = window.location.pathname;
 
-    var id = 'userhome';
+    var id = null;
 
     if( full.indexOf("/user/new") !== -1 ) {
         id = 'add';
     }
     if( full.indexOf("/location/new") !== -1 ) {
         id = 'add';
-    }
+    }   
 
+    id = commonNavBar(full,id)
+    
     if( full.indexOf("/users/previous") !== -1 ) {
         id = 'userlist-previous';
     }
 
-    id = commonNavBar(full,id)
-
-    if( full.indexOf("scan/user/") !== -1 || full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
-        if( $('#nav-bar-admin').length > 0 ) {
-            id = 'admin';
-        } else {
-            id = 'user';
+    if( !id ) {
+        if( full.indexOf("scan/user/") !== -1 || full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
+            if( $('#nav-bar-admin').length > 0 ) {
+                id = 'admin';
+            } else {
+                id = 'user';
+            }
         }
+    }
+    
+    if( !id ) {
+        id = 'userhome';
     }
 
     //console.log("user id="+id);

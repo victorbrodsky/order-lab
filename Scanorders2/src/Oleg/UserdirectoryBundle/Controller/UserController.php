@@ -325,10 +325,12 @@ class UserController extends Controller
 
         $filter = trim( $request->get('filter') );
 
+        $prefix =  "";
         $time = 'current_only';
         $routeName = $request->get('_route');
         if( $routeName == "employees_listusers_previous" ) {
             $time = 'past_only';
+            $prefix =  "Previous ";
         }
 
         $params = array('filter'=>$filter,'time'=>$time);
@@ -340,6 +342,8 @@ class UserController extends Controller
             } else {
                 $filter = "All Current Employees";
             }
+        } else {
+            $filter = $prefix . $filter;
         }
 
         $res['filter'] = $filter;
@@ -452,14 +456,14 @@ class UserController extends Controller
             //echo "filter=".$criteriastr."<br>";
 
             //search
-            $criteriastr = $this->getCriteriaStrBySearch( $dql, $search, $criteriastr );
+///            $criteriastr = $this->getCriteriaStrBySearch( $dql, $search, $criteriastr );
             //echo "search=".$criteriastr."<br>";
 
             //myteam
             //$criteriastr = $this->getMyTeam( $dql, $myteam, $myboss, $criteriastr );
 
             //same object
-            $criteriastr = $this->getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $criteriastr );
+///            $criteriastr = $this->getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $criteriastr );
 
             //time
             $userutil = new UserUtil();
@@ -484,6 +488,8 @@ class UserController extends Controller
 //            }
 
         }
+        
+        //echo "totalcriteriastr=".$totalcriteriastr."<br>";
 
         $dql->where($totalcriteriastr);
 
@@ -747,7 +753,8 @@ class UserController extends Controller
 
         //Academic Appointment Title not exists + Admin Title exists
         if( $filter && $filter == "WCMC Pathology Staff" ) {
-            $criteriastr .= "(appointmentInstitution IS NULL AND appointmentInstitution IS NULL)";
+            //echo "wcmc filter=".$filter."<br>";
+            $criteriastr .= "(appointmentInstitution IS NULL)";
             $criteriastr .= " AND ";
 //            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College')";
 //            $criteriastr .= " AND ";
@@ -757,12 +764,12 @@ class UserController extends Controller
 
         //Academic Appointment Title not exists + Admin Title exists
         if( $filter && $filter == "NYP Pathology Staff" ) {
-            $criteriastr .= "(appointmentInstitution IS NULL AND appointmentInstitution IS NULL)";
+            //echo "nyp filter=".$filter."<br>";
+            //$criteriastr .= "("; 
+            $criteriastr .= "(appointmentInstitution IS NULL)";
             $criteriastr .= " AND ";
-//            $criteriastr .= "(administrativeInstitution.name = 'New York Hospital')";
-//            $criteriastr .= " AND ";
-//            $criteriastr .= "(administrativeInstitution.name = 'Pathology')";
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$nyppathology);
+            //$criteriastr .= ")"; 
         }
 
         //Academic Appointment Title exists + division=Anatomic Pathology
@@ -882,7 +889,8 @@ class UserController extends Controller
         // "WCMC or NYP Pathology Staff in Research Labs" - the same as "WCMC Pathology Staff" OR "NYP Pathology Staff"
         //except they have at least one non-empty "Research Lab Title:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
         if( $filter && $filter == "WCMC or NYP Pathology Staff in Research Labs" ) {
-            $criteriastr .= "(appointmentInstitution IS NULL AND appointmentInstitution IS NULL)";
+            //echo "wcmc or nyp filter=".$filter."<br>";
+            $criteriastr .= "(appointmentInstitution IS NULL)";
             $criteriastr .= " AND ";
             //$criteriastr .= "administrativeInstitution.name = 'Weill Cornell Medical College' AND administrativeInstitution.name = 'Pathology and Laboratory Medicine'";
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$wcmcpathology);
@@ -924,6 +932,8 @@ class UserController extends Controller
             $criteriastr .= " ( ";
         }
         
+        $criteriastr .= $fieldstr.".root = " . $node->getRoot();
+        $criteriastr .= " AND ";
         $criteriastr .= $fieldstr.".lft > " . $node->getLft();
         $criteriastr .= " AND ";
         $criteriastr .= $fieldstr.".rgt < " . $node->getRgt();
@@ -956,6 +966,8 @@ class UserController extends Controller
         
         //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);    
         $criteriastr .= "(";
+        $criteriastr .= $fieldstr.".root = " . $wcmcpathology->getRoot();
+        $criteriastr .= " AND ";
         $criteriastr .= $fieldstr.".lft > " . $wcmcpathology->getLft();
         $criteriastr .= " AND ";
         $criteriastr .= $fieldstr.".rgt < " . $wcmcpathology->getRgt();
@@ -967,6 +979,8 @@ class UserController extends Controller
         
         //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$nyppathology);
         $criteriastr .= "(";
+        $criteriastr .= $fieldstr.".root = " . $nyppathology->getRoot();
+        $criteriastr .= " AND ";
         $criteriastr .= $fieldstr.".lft > " . $nyppathology->getLft();
         $criteriastr .= " AND ";
         $criteriastr .= $fieldstr.".rgt < " . $nyppathology->getRgt();
@@ -1885,14 +1899,14 @@ class UserController extends Controller
         $form->handleRequest($request);
 
 
-        if( $form->isValid() ) {
-            echo "form is valid <br>";
-        } else {
-            echo "form has error <br>";
-        }
-        echo "<br>loc string errors:<br>";
-        print_r($form->getErrorsAsString());
-        echo "<br>";
+//        if( $form->isValid() ) {
+//            echo "form is valid <br>";
+//        } else {
+//            echo "form has error <br>";
+//        }
+//        echo "<br>loc string errors:<br>";
+//        print_r($form->getErrorsAsString());
+//        echo "<br>";
 
 
         if( $form->isValid() ) {
