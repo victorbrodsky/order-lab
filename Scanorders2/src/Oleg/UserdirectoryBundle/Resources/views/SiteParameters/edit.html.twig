@@ -73,6 +73,18 @@
         {% if edit_form.allowPopulateFellApp is defined %}
             {{ formmacros.checkbox(edit_form.allowPopulateFellApp) }}
         {% endif %}
+            
+        {% if edit_form.confirmationEmailFellApp is defined %}
+            {{ formmacros.field(edit_form.confirmationEmailFellApp) }}
+        {% endif %}
+            
+        {% if edit_form.confirmationSubjectFellApp is defined %}
+            {{ formmacros.field(edit_form.confirmationSubjectFellApp) }}
+        {% endif %}
+            
+        {% if edit_form.confirmationBodyFellApp is defined %}
+            {{ formmacros.field(edit_form.confirmationBodyFellApp) }}
+        {% endif %}    
 
     {% if cycle == 'show' %}
         <hr>

@@ -317,6 +317,24 @@ class SiteParametersType extends AbstractType
                 'label'=>'Allow to populate Fellowship Applications from Google Form by cron job:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
+        
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationSubjectFellApp' )
+            $builder->add('confirmationSubjectFellApp',null,array(
+                'label'=>'Confirmation Email Subject:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationBodyFellApp' )
+            $builder->add('confirmationBodyFellApp',null,array(
+                'label'=>'Confirmation Email Body:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationEmailFellApp' )
+            $builder->add('confirmationEmailFellApp',null,array(
+                'label'=>'Confirmation Email:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
 
     }
     

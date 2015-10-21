@@ -212,7 +212,7 @@ class UserSecurityUtil {
         return $user->usernameIsValid($username);
     }
 
-
+    //comma separated emails for Admin users
     public function getUserEmailsByRole($sitename,$userRole) {
 
         if( $userRole == "Platform Administrator" ) {

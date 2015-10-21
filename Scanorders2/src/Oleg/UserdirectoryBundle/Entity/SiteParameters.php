@@ -263,8 +263,23 @@ class SiteParameters {
      */
     private $allowPopulateFellApp;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $confirmationSubjectFellApp;
+    
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $confirmationBodyFellApp;
 
-
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $confirmationEmailFellApp;
+    
+    
+    
 
     /**
      * @param mixed $maxIdleTime
@@ -1068,6 +1083,30 @@ class SiteParameters {
     public function getAllowPopulateFellApp()
     {
         return $this->allowPopulateFellApp;
+    }
+
+    public function getConfirmationSubjectFellApp() {
+        return $this->confirmationSubjectFellApp;
+    }
+
+    public function setConfirmationSubjectFellApp($confirmationSubjectFellApp) {
+        $this->confirmationSubjectFellApp = $confirmationSubjectFellApp;
+    }
+    
+    public function getConfirmationBodyFellApp() {
+        return $this->confirmationBodyFellApp;
+    }
+
+    public function setConfirmationBodyFellApp($confirmationBodyFellApp) {
+        $this->confirmationBodyFellApp = $confirmationBodyFellApp;
+    }
+
+    public function getConfirmationEmailFellApp() {
+        return $this->confirmationEmailFellApp;
+    }
+
+    public function setConfirmationEmailFellApp($confirmationEmailFellApp) {
+        $this->confirmationEmailFellApp = $confirmationEmailFellApp;
     }
 
 

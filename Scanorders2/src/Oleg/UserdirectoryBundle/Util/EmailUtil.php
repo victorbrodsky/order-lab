@@ -11,7 +11,7 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 class EmailUtil {
 
 
-    public function sendEmail( $email, $subject, $message, $em, $ccs=null, $adminemail=null ) {
+    public function sendEmail( $email, $subject, $message, $em, $ccs=null, $fromEmail=null ) {
 
         if( !$email || $email == "" ) {
             return false;
@@ -21,7 +21,7 @@ class EmailUtil {
             return false;
         }
 
-        $this->initEmail($em,$adminemail);
+        $this->initEmail($em,$fromEmail);
 
         $headers = null;
         if( $ccs ) {
@@ -34,17 +34,17 @@ class EmailUtil {
         return true;
     }
 
-    public function initEmail($em,$adminemail=null) {
+    public function initEmail($em,$fromEmail=null) {
         $userutil = new UserUtil();
         $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
 
-        if( !$adminemail ) {
-            $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+        if( !$fromEmail ) {
+            $fromEmail = $userutil->getSiteSetting($em,'siteEmail');
         }
 
         //exit("smtp=".$smtp);
 
-        ini_set( 'sendmail_from', $adminemail );
+        ini_set( 'sendmail_from', $fromEmail );
         ini_set( "SMTP", $smtp );
     }
     

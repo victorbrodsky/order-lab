@@ -1418,7 +1418,7 @@ class FellAppController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
         $senderEmail = $user->getEmail();
         $applicant = $entity->getUser();
-        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, $senderEmail );
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, null, $senderEmail );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1483,7 +1483,7 @@ class FellAppController extends Controller {
 
             $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
-            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, $em, $senderEmail );
+            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, $em, null, $senderEmail );
         }
 
         $emailStr = "";
@@ -1512,7 +1512,7 @@ class FellAppController extends Controller {
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
         $coordinatorEmails = implode("; ",$coordinatorEmails);
         $applicant = $entity->getUser();
-        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, $senderEmail );
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, null, $senderEmail );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1577,7 +1577,7 @@ class FellAppController extends Controller {
 
         $logger->notice("Send email to " . $email);
 
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, $senderEmail );
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, null, $senderEmail );
 
         $logger->notice("Email has been sent to " . $email);
 

@@ -680,6 +680,13 @@ class AdminController extends Controller
             "departmenturl" => "http://www.cornellpathology.com",
             "departmentname" => "Pathology and Laboratory Medicine Department",
 
+            "confirmationEmailFellApp" => "jep2018@med.cornell.edu",
+            "confirmationSubjectFellApp" => "Your WCMC/NYP fellowship application has been succesfully received",
+            "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital.\r\n ".
+                                         "Once we receive the associated recommendation letters, your application will be reviewed and considered.\r\n ". 
+                                         "If You have any questions, please do not hesitate to contact me by phone or via email.\r\n ".
+                                         "Sincerely,\r\n Jessica Misner\r\n Fellowship Program Coordinator\r\n Weill Cornell Medicine Pathology and Laboratory Medicine\r\n 1300 York Avenue, Room C-302\r\n T 212.746.6464\r\n F 212.746.8192",
+            
             "maintenance" => false,
             //"maintenanceenddate" => null,
             "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.
