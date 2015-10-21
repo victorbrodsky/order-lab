@@ -816,8 +816,9 @@ class UserController extends Controller
         }
 
         //the same as "WCMC Pathology Residents" except they have "AP/CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC AP/CP Residents" ) {           
-            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        if( $filter && $filter == "WCMC or NYP AP/CP Residents" ) {           
+            //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+            $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -826,8 +827,9 @@ class UserController extends Controller
         }
 
         //the same as "WCMC Pathology Residents" except they have "AP" or "AP/CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC AP Residents" ) {            
-            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        if( $filter && $filter == "WCMC or NYP AP Residents" ) {            
+            //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+            $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -836,8 +838,9 @@ class UserController extends Controller
         }
 
         //the same as "WCMC Pathology Residents" except they have "AP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC AP Only Residents" ) {           
-            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        if( $filter && $filter == "WCMC or NYP AP Only Residents" ) {           
+            //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+            $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -846,8 +849,9 @@ class UserController extends Controller
         }
 
         //the same as "WCMC Pathology Residents" except they have "CP" or "AP/CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC CP Residents" ) {           
-            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        if( $filter && $filter == "WCMC or NYP CP Residents" ) {           
+            //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+            $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -856,8 +860,9 @@ class UserController extends Controller
         }
 
         //the same as "WCMC Pathology Residents" except they have "CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC CP Only Residents" ) {           
-            $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        if( $filter && $filter == "WCMC or NYP CP Only Residents" ) {           
+            //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+            $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
             $dql->leftJoin("appointmentTitles.residencyTrack", "residencyTrack");
@@ -1408,7 +1413,7 @@ class UserController extends Controller
             $form->get('primaryPublicUserId')->addError($error);
         }
 
-//        echo "loc errors:<br>";
+//        echo "loc errors:<br>";or NYP 
 //        print_r($form->getErrors());
 //        echo "<br>loc string errors:<br>";
 //        print_r($form->getErrorsAsString());
