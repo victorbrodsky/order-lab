@@ -912,6 +912,10 @@ class UserController extends Controller
             //$criteriastr .= "administrativeInstitution.name = 'New York Hospital' AND administrativeInstitution.name = 'Pathology'";
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("administrativeInstitution", $criteriastr,$nyppathology);
             $criteriastr .= "";
+            
+            //have Research Lab
+            $criteriastr .= " AND ";
+            $criteriastr .= "(researchLabs IS NOT NULL)";
         }
 
 
