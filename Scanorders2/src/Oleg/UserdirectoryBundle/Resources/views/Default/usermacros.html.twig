@@ -1224,15 +1224,15 @@
     {% set myassistancesShow = false %}
 
     {#Reports#}
-    {% set myreports = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myreports','id':null,'name':null} ) %}
+    {% set myreports = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'myreports','id':null,'name':null} ) %}
     {% if render(myreports)|length > threshold %}
-        {% set myreportsShow = true %}
+        {% set myreportsShow = true %}     
     {% endif %}
 
     {#Assistants#}
-    {% set myassistants = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'assistances','id':null,'name':null} ) %}
+    {% set myassistants = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'assistances','id':null,'name':null} ) %}
     {% if render(myassistants)|length > threshold %}
-        {% set myassistancesShow = true %}
+        {% set myassistancesShow = true %} 
     {% endif %}
 
     {#Group#}
@@ -1242,45 +1242,17 @@
     {% for title in titleBosses %}
         {% for myboss in title['bosses'] %}
             {% if myboss and myboss.getId() %}
-                {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
+                {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
                 {% set element = {'table': table, 'element':myboss} %}
                 {% set mygroupsArr = mygroupsArr|merge({ (loop.index0): element}) %}
                 {% if render(table)|length > threshold %}
-                    {% set mygroupsShow = true %}
+                    {% set mygroupsShow = true %} 
                 {% endif %}
             {% endif %}
         {% endfor %}
         {% set element = {'title':title['titleobject'],'bosses': title['bosses']} %}
         {% set myTitleBossesArr = myTitleBossesArr|merge({ (loop.index0): element}) %}
-    {% endfor %}
-
-    {#Department if head#}
-    {#{% set departments = user.getDepartments(true) %}#}
-    {#{% set mydepartmentsArr = {} %}#}
-    {#{% for department in departments %}#}
-        {#{% if department and department.getId() %}#}
-            {#{% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'department','id':department.getId(),'name':department} ) %}#}
-            {#{% set element = {'table': table, 'element':department} %}#}
-            {#{% set mydepartmentsArr = mydepartmentsArr|merge({ (loop.index0): element}) %}#}
-            {#{% if render(table)|length > threshold %}#}
-                {#{% set mydepartmentsShow = true %}#}
-            {#{% endif %}#}
-        {#{% endif %}#}
-    {#{% endfor %}#}
-
-    {#Division if head or service is empty#}
-    {#{% set divisions = user.getDivisions(true,true) %}#}
-    {#{% set mydivisionsArr = {} %}#}
-    {#{% for division in divisions %}#}
-        {#{% if division and division.getId() %}#}
-            {#{% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'division','id':division.getId(),'name':division} ) %}#}
-            {#{% set element = {'table': table, 'element':division} %}#}
-            {#{% set mydivisionsArr = mydivisionsArr|merge({ (loop.index0): element}) %}#}
-            {#{% if render(table)|length > threshold %}#}
-                {#{% set mydivisionsShow = true %}#}
-            {#{% endif %}#}
-        {#{% endif %}#}
-    {#{% endfor %}#}
+    {% endfor %}  
 
     {#Service#}
     {#{% set services = user.getServices() %}#}
@@ -1318,7 +1290,7 @@
     {#myservicesArr|length:{{ myservicesArr|length }}#}
 
     {#Team#} {#render(myreports)|length should be more than sitename#}
-    {% if myreportsShow or mygroupsShow or myservicesShow or mydepartmentsShow or mydivisionsShow or mylabsShow or myassistancesShow %}
+    {% if myreportsShow or mygroupsShow or myservicesShow or mylabsShow or myassistancesShow %}
         <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">

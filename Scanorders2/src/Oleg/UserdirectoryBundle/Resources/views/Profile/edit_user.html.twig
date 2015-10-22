@@ -2140,7 +2140,8 @@
 
 
         {#Team#}
-        {% if userEditor == true and cycle == "show_user" %}
+        {#userEditor == true and #}
+        {% if cycle == "show_user" %}
             {{ usermacros.userTeam(entity,'profile',sitename,postData,"") }}
         {% endif %}
 

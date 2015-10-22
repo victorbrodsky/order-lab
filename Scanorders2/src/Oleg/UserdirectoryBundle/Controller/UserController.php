@@ -99,9 +99,10 @@ class UserController extends Controller
         $objectid = $request->get('id');
         $objectname = $request->get('name');
         $postData = $request->get('postData');
+        $subjectUserId = $request->get('subjectUserId');
 
         //user search
-        $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid,'excludeCurrentUser'=>false);
+        $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid,'excludeCurrentUser'=>false,'subjectUserId'=>$subjectUserId);
         $res = $this->indexUser( $params ); //use function getTheSameObject
         $pagination = $res['entities'];
 
@@ -366,6 +367,7 @@ class UserController extends Controller
         $objectname = ( array_key_exists('objectname', $params) ? $params['objectname'] : null);
         $objectid = ( array_key_exists('objectid', $params) ? $params['objectid'] : null);
         $excludeCurrentUser = ( array_key_exists('excludeCurrentUser', $params) ? $params['excludeCurrentUser'] : null);
+        $subjectUserId = ( array_key_exists('subjectUserId', $params) ? $params['subjectUserId'] : null);
 
         //echo "filter=".$filter."<br>";
         //echo "search=".$search."<br>";
@@ -463,7 +465,7 @@ class UserController extends Controller
             //$criteriastr = $this->getMyTeam( $dql, $myteam, $myboss, $criteriastr );
 
             //same object
-            $criteriastr = $this->getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $criteriastr );
+            $criteriastr = $this->getTheSameObject( $dql, $subjectUserId, $objectname, $objectid, $excludeCurrentUser, $criteriastr );
 
             //time
             $userutil = new UserUtil();
@@ -1040,12 +1042,18 @@ class UserController extends Controller
 //    }
 
 
-    public function getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $inputCriteriastr ) {
+    public function getTheSameObject( $dql, $subjectUserId, $objectname, $objectid, $excludeCurrentUser, $inputCriteriastr ) {
 
         //echo "objectname=".$objectname.", objectid=".$objectid."<br>";
         //exit();
+        
+        $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        if( $subjectUserId ) {
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUserId);
+        } else {
+            $user = $this->get('security.context')->getToken()->getUser();
+        }
 
         $criteriastr = "";
 
@@ -1056,8 +1064,7 @@ class UserController extends Controller
 //                $criteriastr .= "appointmentInstitution.id = " . $objectid;
 //                $criteriastr .= " OR ";
 //                $criteriastr .= "medicalInstitution.id = " . $objectid;
-
-                $em = $this->getDoctrine()->getManager();
+              
                 $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($objectid);
 
                 //administrativeInstitution
