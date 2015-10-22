@@ -883,8 +883,8 @@ class UserController extends Controller
             $criteriastr .= "(researchLabsPis IS NOT NULL)";
             
             //researchLabsPis.pi = this user
-            //$criteriastr .= " AND ";
-            //$criteriastr .= "(researchLabsPis.pi =  IS NOT NULL)";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(researchLabsPis.pi =  user)";
         }
 
         // "WCMC Pathology Faculty in Research Labs" - the same as "WCMC Pathology Faculty"
