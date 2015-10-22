@@ -874,7 +874,7 @@ class UserController extends Controller
 
         // the same as "WCMC Pathology Faculty" except they have at least one non-empty "Research Lab Title:" + a checkmark in
         //"Principal Investigator of this Lab:" with an empty or future "Dissolved on: [Date]" for Current / past or empty or future "Dissolved on: [Date]" for Previous
-        if( $filter && $filter == "WCMC Pathology Principal Investigators of Research Labs" ) {          
+        if( $filter && $filter == "WCMC Pathology Principal Investigators of Research Labs" ) {                     
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";

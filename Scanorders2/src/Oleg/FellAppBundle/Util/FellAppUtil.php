@@ -809,14 +809,17 @@ class FellAppUtil {
 
                 $logger->notice($event);
                 
-                //send confirmation email to this applicant                
-                $confirmationEmailFellApp = $userUtil->getSiteSetting($this->em,'confirmationEmailFellApp');
-                $confirmationSubjectFellApp = $userUtil->getSiteSetting($this->em,'confirmationSubjectFellApp');
-                $confirmationBodyFellApp = $userUtil->getSiteSetting($this->em,'confirmationBodyFellApp');
-                //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
-                if( $email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp ) {
-                    $logger->notice("Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
-                    $emailUtil->sendEmail( $email, $confirmationSubjectFellApp, $confirmationBodyFellApp, $em, null, $confirmationEmailFellApp );
+                //send confirmation email to this applicant for prod server
+                $environment = $userUtil->getSiteSetting($this->em,'environment');
+                if( $environment == "live" ) {
+                    $confirmationEmailFellApp = $userUtil->getSiteSetting($this->em,'confirmationEmailFellApp');
+                    $confirmationSubjectFellApp = $userUtil->getSiteSetting($this->em,'confirmationSubjectFellApp');
+                    $confirmationBodyFellApp = $userUtil->getSiteSetting($this->em,'confirmationBodyFellApp');
+                    //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
+                    if( $email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp ) {
+                        $logger->notice("Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
+                        $emailUtil->sendEmail( $email, $confirmationSubjectFellApp, $confirmationBodyFellApp, $em, null, $confirmationEmailFellApp );
+                    }
                 }
 
                 $count++;
