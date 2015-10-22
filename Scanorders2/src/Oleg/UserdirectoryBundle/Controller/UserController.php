@@ -878,11 +878,11 @@ class UserController extends Controller
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
 
-            //a checkmark in "Principal Investigator of this Lab:"
+            //have Research Lab
             $criteriastr .= " AND ";
-            $criteriastr .= "(researchLabsPis IS NOT NULL)";
+            $criteriastr .= "(researchLabs IS NOT NULL)";
             
-            //researchLabsPis.pi = this user
+            //a checkmark in "Principal Investigator of this Lab:" researchLabsPis.pi = this user
             $criteriastr .= " AND ";
             $criteriastr .= "(researchLabsPis.pi =  user)";
         }
@@ -893,6 +893,10 @@ class UserController extends Controller
             $criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty' OR appointmentTitlesPositions.name = 'Research Faculty')";
+            
+            //have Research Lab
+            $criteriastr .= " AND ";
+            $criteriastr .= "(researchLabs IS NOT NULL)";
         }
 
 
