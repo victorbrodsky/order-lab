@@ -958,6 +958,10 @@ class UtilController extends Controller {
         //filter out Pathology Fellowship Applicants
         $criteriastr = "(".$criteriastr . ") AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)";
 
+        //filter out previous users
+        $curdate = date("Y-m-d", time());
+        $criteriastr .= " AND (employmentStatus IS NULL OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')";
+        
         //echo "criteriastr=".$criteriastr."<br>";
 
         $dql->where($criteriastr);
