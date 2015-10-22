@@ -49,7 +49,11 @@ class MaintenanceListener {
 
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
-        if( strpos($controller,'Oleg\UserdirectoryBundle') !== false || strpos($controller,'Oleg\OrderformBundle') !== false ) {
+        if( 
+                strpos($controller,'Oleg\UserdirectoryBundle') !== false || 
+                strpos($controller,'Oleg\OrderformBundle') !== false ||
+                strpos($controller,'Oleg\FellAppBundle') !== false 
+        ) {
             // fire custom event e.g. My.db.lookup
             //echo "Sites controller! <br>";
         } else {

@@ -862,8 +862,7 @@ class UserController extends Controller
         }
 
         //the same as "WCMC Pathology Residents" except they have "CP" in their "Residency Type" field.
-        if( $filter && $filter == "WCMC or NYP CP Only Residents" ) {           
-            //$criteriastr .= $this->getCriteriaForAllChildrenUnderNode("appointmentInstitution", $criteriastr,$wcmcpathology);
+        if( $filter && $filter == "WCMC or NYP CP Only Residents" ) {                      
             $criteriastr .= $this->getCriteriaForWcmcNypPathology("appointmentInstitution",$criteriastr,$wcmcpathology,$nyppathology);
             $criteriastr .= " AND ";
             $criteriastr .= "(appointmentTitlesPositions.name = 'Resident')";
@@ -882,6 +881,10 @@ class UserController extends Controller
             //a checkmark in "Principal Investigator of this Lab:"
             $criteriastr .= " AND ";
             $criteriastr .= "(researchLabsPis IS NOT NULL)";
+            
+            //researchLabsPis.pi = this user
+            //$criteriastr .= " AND ";
+            //$criteriastr .= "(researchLabsPis.pi =  IS NOT NULL)";
         }
 
         // "WCMC Pathology Faculty in Research Labs" - the same as "WCMC Pathology Faculty"
