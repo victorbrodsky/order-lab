@@ -456,14 +456,14 @@ class UserController extends Controller
             //echo "filter=".$criteriastr."<br>";
 
             //search
-///            $criteriastr = $this->getCriteriaStrBySearch( $dql, $search, $criteriastr );
+            $criteriastr = $this->getCriteriaStrBySearch( $dql, $search, $criteriastr );
             //echo "search=".$criteriastr."<br>";
 
             //myteam
             //$criteriastr = $this->getMyTeam( $dql, $myteam, $myboss, $criteriastr );
 
             //same object
-///            $criteriastr = $this->getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $criteriastr );
+            $criteriastr = $this->getTheSameObject( $dql, $objectname, $objectid, $excludeCurrentUser, $criteriastr );
 
             //time
             $userutil = new UserUtil();

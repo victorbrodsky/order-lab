@@ -35,7 +35,16 @@
 
 
     <br><br>
-
+    
+    <p>
+        If you do not see the intended person in the drop down menus above, 
+        please add this person by visiting        
+        <a href="{{ path('employees_new_user') }}" target="_blank">this page</a>
+        first, and then return to this page.
+    </p>
+    
+    <br><br>
+    
     {% if cycle == "edit" %}
         <p>
             {#<a class="btn_margin_top btn btn-primary btn-success" href="{{ path('fellapp_fellowshiptype_setting_update',{'id':entity.id}) }}">Edit</a>#}

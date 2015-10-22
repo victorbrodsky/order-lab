@@ -463,17 +463,19 @@
                     {% if entity.interviewScore %}
                         {% set scoreCount = 0 %}
                         {% set tooltip = "" %}
+                        {% set interviewDescrStr = "" %}
                         {% set scoreStyle = 'style=font-weight:bold;' %}
                         {% for interview in entity.interviews %}
                             {% if not interview.totalRank %}
                                 {% set scoreStyle = "" %}
                             {% else %}
                                 {% set scoreCount = scoreCount + 1 %}
+                                {% set interviewDescrStr = interviewDescrStr~"<br>"~interview.interviewer.getUsernameOptimal()~": "~"Academic Rank - "~interview.academicRank~", Personality Rank - "~interview.personalityRank~", Potential Rank - "~interview.potentialRank~", Comment: "~interview.comment %}
                             {% endif %}
                         {% endfor %}
 
                         {% if entity.interviewScore %}
-                            {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received' %}
+                            {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received.' ~ " " ~ interviewDescrStr %}
                         {% endif %}
                     {% endif %}
 
@@ -734,7 +736,7 @@
 
         $(document).ready(function() {
 
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip({html: true});
 
             var target = ".datepicker-only-year";
 
