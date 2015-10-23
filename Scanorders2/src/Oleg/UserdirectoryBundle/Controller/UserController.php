@@ -1873,6 +1873,7 @@ class UserController extends Controller
             $oldAvatarId = NULL;
         }
 
+        $originalPrimaryPublicUsername = $entity->getPrimaryPublicUserId();
         //echo "count=".count($originalAdminTitles)."<br>";
         //exit();
 
@@ -1963,7 +1964,19 @@ class UserController extends Controller
                 }
             }
 
-
+            
+            $currentPrimaryPublicUsername = $entity->getPrimaryPublicUserId();
+            if( $currentPrimaryPublicUsername != $originalPrimaryPublicUsername ) {
+                if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+                    $this->setSessionForbiddenNote("You don't have permission to change Primary Public User ID");                   
+                    return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
+                } else {
+                    $uniqueUsername = $entity->createUniqueUsername();
+                    $entity->setUsernameForce($uniqueUsername);
+                }
+            }
+            
+            
             //exit('before processing');
 
             //set parents for institution tree for Administrative and Academical Titles

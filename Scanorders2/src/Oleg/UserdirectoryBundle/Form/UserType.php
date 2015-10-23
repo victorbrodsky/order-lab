@@ -181,9 +181,15 @@ class UserType extends AbstractType
 
 
     public function userNamePreferredContactInfo($builder) {
+        
+        $readOnly = true;
+        if( $this->sc->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            $readOnly = false;
+        }
+        
         $builder->add('primaryPublicUserId', null, array(
             'label' => '* Primary Public User ID:',
-            'read_only' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            'read_only' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
