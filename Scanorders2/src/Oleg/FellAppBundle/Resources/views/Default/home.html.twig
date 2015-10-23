@@ -470,7 +470,7 @@
                                 {% set scoreStyle = "" %}
                             {% else %}
                                 {% set scoreCount = scoreCount + 1 %}
-                                {% set interviewDescrStr = interviewDescrStr~"<br>"~interview.interviewer.getUsernameOptimal()~": "~"Academic Rank - "~interview.academicRank~", Personality Rank - "~interview.personalityRank~", Potential Rank - "~interview.potentialRank~", Comment: "~interview.comment %}
+                                {% set interviewDescrStr = interviewDescrStr~"<br>"~interview.interviewer.getUsernameOptimal()~": "~"Academic Rank - "~interview.academicRank~", Personality Rank - "~interview.personalityRank~", Potential Rank - "~interview.potentialRank %}
                             {% endif %}
                         {% endfor %}
 
@@ -736,7 +736,7 @@
 
         $(document).ready(function() {
 
-            $('[data-toggle="tooltip"]').tooltip({html: true});
+            $('[data-toggle="tooltip"]').tooltip({html: true});           
 
             var target = ".datepicker-only-year";
 
