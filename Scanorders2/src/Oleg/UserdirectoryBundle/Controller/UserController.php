@@ -884,7 +884,7 @@ class UserController extends Controller
             
             //a checkmark in "Principal Investigator of this Lab:" researchLabsPis.pi = this user
             $criteriastr .= " AND ";
-            $criteriastr .= "(researchLabsPis.pi =  user)";
+            $criteriastr .= "(researchLabsPis.pi = user)";
         }
 
         // "WCMC Pathology Faculty in Research Labs" - the same as "WCMC Pathology Faculty"

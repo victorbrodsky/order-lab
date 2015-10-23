@@ -58,8 +58,12 @@ class ResearchLabRepository extends EntityRepository {
             //echo "pis1=".count($labFinal->getPis())."<br>";
 
             //check if pi=$user for this lab already exists
-            $piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$user, 'researchLab'=>$labFinal->getId() ) );
-
+            if( $user->getId() ) {
+                $piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$user, 'researchLab'=>$labFinal->getId() ) );
+            } else {
+                $piDb = null;
+            }
+            
             if( $labFinal->getPiDummy() && $labFinal->getPiDummy() == true ) {
                 //echo "lab pi=".$labFinal->getPiDummy()."<br>";
 
@@ -86,8 +90,12 @@ class ResearchLabRepository extends EntityRepository {
             //echo "comments 1=".count($labFinal->getComments())."<br>";
 
             //check if comment authored by $user for this lab already exists
-            $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'researchLab'=>$labFinal->getId() ) );
-
+            if( $user->getId() ) {
+                $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'researchLab'=>$labFinal->getId() ) );
+            } else {
+                $commentDb = null;
+            }
+            
             if( $labFinal->getCommentDummy() && $labFinal->getCommentDummy() != "" ) {
                 //echo "lab comment=".$labFinal->getCommentDummy()."<br>";
 

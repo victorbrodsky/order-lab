@@ -53,8 +53,12 @@ class GrantRepository extends EntityRepository {
             //echo "grantFinal: ".$grantFinal."<br>";
 
             //check if effort already exists
-            $grantEffortDb = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$user, 'grant'=>$grantFinal->getId() ) );
-
+            if( $user->getId() ) {
+                $grantEffortDb = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$user, 'grant'=>$grantFinal->getId() ) );
+            } else {
+                $grantEffortDb = null;
+            }
+            
             if( $grantFinal->getEffortDummy() ) {
                 //echo "grant effort=".$grantFinal->getEffortDummy()."<br>";
 
@@ -78,8 +82,12 @@ class GrantRepository extends EntityRepository {
 
 
             //check if comment authored by $user for this grant already exists
-            $commentDb = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $user, 'grant'=>$grantFinal->getId() ) );
-
+            if( $user->getId() ) {
+                $commentDb = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $user, 'grant'=>$grantFinal->getId() ) );
+            } else {
+                $commentDb = null;
+            } 
+                
             if( $grantFinal->getCommentDummy() && $grantFinal->getCommentDummy() != '' ) {
 
                 if( $commentDb ) {
