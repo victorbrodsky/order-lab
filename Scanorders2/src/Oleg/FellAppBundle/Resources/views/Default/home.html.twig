@@ -460,22 +460,29 @@
                         {% endif %}
                     </td>
 
+                    {% set interviewDescrStr = "" %}
+                    {% set interviewsArr = [] %}
                     {% if entity.interviewScore %}
                         {% set scoreCount = 0 %}
-                        {% set tooltip = "" %}
-                        {% set interviewDescrStr = "" %}
+                        {% set tooltip = "" %}                      
                         {% set scoreStyle = 'style=font-weight:bold;' %}
                         {% for interview in entity.interviews %}
                             {% if not interview.totalRank %}
-                                {% set scoreStyle = "" %}
+                                {% set scoreStyle = "" %}                                
                             {% else %}
-                                {% set scoreCount = scoreCount + 1 %}
-                                {% set interviewDescrStr = interviewDescrStr~"<br>"~interview.interviewer.getUsernameOptimal()~": "~"Academic Rank - "~interview.academicRank~", Personality Rank - "~interview.personalityRank~", Potential Rank - "~interview.potentialRank %}
-                            {% endif %}
+                                {% set scoreCount = scoreCount + 1 %} 
+                                {% set interviewDescrStr = "<strong>"~interview.interviewer.getUsernameOptimal()~"</strong>:<br>"~
+                                        "Academic Rank - "~interview.academicRank~
+                                        "<br>Personality Rank - "~interview.personalityRank~
+                                        "<br>Potential Rank - "~interview.potentialRank~
+                                        "<br>Language Proficiency - "~interview.languageProficiency~
+                                        "<br>Comment: "~interview.comment %}
+                                {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}                              
+                            {% endif %}                                                                 
                         {% endfor %}
 
                         {% if entity.interviewScore %}
-                            {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received.' ~ " " ~ interviewDescrStr %}
+                            {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received.' %}
                         {% endif %}
                     {% endif %}
 
@@ -531,11 +538,21 @@
                             {#href="{{ path('employees_file_pdf-preview', { 'id': entity.id}) }}" target="_blank">#}
                             {#<span class="glyphicon glyphicon-file" aria-hidden="true"></span>#}
                         {#</a>#}
+                        <div class="row">
                         {% if entity.getRecentReport() %}
                             <a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">
                                 <span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>
-                            </a>
+                            </a>                            
                         {% endif %}
+                        
+                        {% if interviewsArr is defined and interviewsArr|length > 0 %}                                                                                                         
+                            <a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}">
+                                <span class="glyphicon glyphicon-list"></span>
+                            </a>
+                        
+                            {{ fellappmacros.addInterviewsModal(entity,interviewsArr) }}
+                        {% endif %}
+                        </div>
 
                     </td>
 

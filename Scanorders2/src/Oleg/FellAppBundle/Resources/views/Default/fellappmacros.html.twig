@@ -140,3 +140,48 @@
     {#/#}
     <div class="fell-app-status-legend fell-app-status-legend-{{ status }}">&nbsp&nbsp</div>
 {% endmacro %}
+    
+    
+{% macro addInterviewsModal(fellapp,interviewsArr) %}
+    
+    <!-- Modal -->
+    <div class="modal fade" id="interview-info-{{fellapp.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">
+                 
+                Interview Evaluation for
+                {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                    Applicant Demo
+                {% else %}
+                    {{ fellapp.user.getLastNameUppercase() }}
+                    {{ fellapp.user.getFirstNameUppercase() }}
+                {% endif %}
+                    
+                {% if fellapp.fellowshipSubspecialty %}
+                    ({{  fellapp.fellowshipSubspecialty.name }})
+                {% endif %}                                 
+                
+            </h4>
+          </div>
+          <div class="modal-body">
+            
+              {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                    Interview Evaluation Scores and Comments
+              {% else %}
+                    {% for interview in interviewsArr %}
+                         {{ interview|raw }} <br><br>
+                    {% endfor %}     
+              {% endif %}     
+              
+          </div>
+          <div class="modal-footer">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+{% endmacro %}    
