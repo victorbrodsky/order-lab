@@ -183,7 +183,7 @@ class UserType extends AbstractType
     public function userNamePreferredContactInfo($builder) {
         
         $readOnly = true;
-        if( $this->sc->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( $this->cycle == 'create' || $this->sc->isGranted('ROLE_PLATFORM_ADMIN') ) {
             $readOnly = false;
         }
         
