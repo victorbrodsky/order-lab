@@ -152,12 +152,11 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">
                  
-                Interview Evaluation for
+                Interview Evaluation<br>
                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                     Applicant Demo
                 {% else %}
-                    {{ fellapp.user.getLastNameUppercase() }}
-                    {{ fellapp.user.getFirstNameUppercase() }}
+                    ID {{ fellapp.id }}: {{ fellapp.user.getLastNameUppercase() }} {{ fellapp.user.getFirstNameUppercase() }}
                 {% endif %}
                     
                 {% if fellapp.fellowshipSubspecialty %}

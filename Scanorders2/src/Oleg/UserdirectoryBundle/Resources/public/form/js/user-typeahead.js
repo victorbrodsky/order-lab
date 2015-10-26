@@ -5,7 +5,7 @@
 
 function initTypeaheadUserSiteSearch() {
 
-    if( $('#multiple-datasets-typeahead-search').length == 0 ) {
+    if( $('.multiple-datasets-typeahead-search').length == 0 ) {
         return;
     }
 
@@ -74,7 +74,7 @@ function initTypeaheadUserSiteSearch() {
     //academictitleDB.initialize();
     //medicaltitleDB.initialize();
 
-    var myTypeahead = $('#multiple-datasets-typeahead-search .typeahead').typeahead({
+    var myTypeahead = $('.multiple-datasets-typeahead-search .typeahead').typeahead({
             highlight: true
         },
         {
@@ -126,26 +126,48 @@ function initTypeaheadUserSiteSearch() {
             }
         }
     );
+        
+    //var _typeaheadSearchInput = $('#user-typeahead-search-form input');
 
     // Attach initialized event to it
-    myTypeahead.on('typeahead:selected',function(event, suggestion, dataset){
+    myTypeahead.on('typeahead:selected',function(event, suggestion) {
         //show user by id
+        //console.log('selected event');
         if( suggestion.id != "" ) {
-            console.log('user shoosen with id='+suggestion.id);
+            
+            //stop default event
+            event.preventDefault();
+            //remove attached listeners by replacing the element with its clone
+            var el = document.getElementById('user-typeahead-search-form');
+            if( el ) {
+                var elClone = el.cloneNode(true);
+                el.parentNode.replaceChild(elClone, el);
+            }          
+            var el = document.getElementById('navbar-user-typeahead-search-form');
+            if( el ) {
+                var elClone = el.cloneNode(true);
+                el.parentNode.replaceChild(elClone, el);
+            }            
+            
+            //console.log('user chosen with id='+suggestion.id);
             //var url = 'user/'+suggestion.id;
             var url = getCommonBaseUrl('user/'+suggestion.id,"employees");
             window.open(url,"_self");
-            return;
-        }
+                                              
+            return false;
+            
+        } 
+        
     });
+    
 
-
-    $('#user-typeahead-search-form input').keydown(function(event){
+    //navbar search on enter keydown: typeahead submit-on-enter-field form-control
+    $('.user-typeahead-search-form input').keydown(function(event) {
         if(event.keyCode == 13) {
             event.preventDefault();
             if( $(this).val() != "" ) {
                 //console.log('enter pressed => submit form');
-                $('#user-typeahead-search-form').submit();
+                $('.user-typeahead-search-form').submit();
             }
         }
     });
