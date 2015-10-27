@@ -1869,6 +1869,11 @@ class FellAppUtil {
             
             } //for each interview
             
+            //space in case if there is no interviewers 
+            if( count($fellapp->getInterviews()) == 0 ) {
+                $row++;
+            }
+            
             //All Total Ranks:           
             $ews->setCellValue('A'.$row, "All Total Ranks:");
             $ews->setCellValue('B'.$row, $allTotalRanks);
