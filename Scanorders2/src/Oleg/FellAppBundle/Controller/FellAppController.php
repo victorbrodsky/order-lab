@@ -1940,11 +1940,12 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
        
+        $em = $this->getDoctrine()->getManager();
         $fellowshipSubspecialty = null;
         $institutionNameFellappName = "";
         
         if( $fellappTypeId && $fellappTypeId > 0 ) {
-            $fellowshipSubspecialty = $this->em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+            $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
         }
         
         if( $fellowshipSubspecialty ) {
