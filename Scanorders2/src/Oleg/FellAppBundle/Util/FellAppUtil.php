@@ -1831,7 +1831,9 @@ class FellAppUtil {
             foreach( $fellapp->getInterviews() as $interview ) {
             
                 //Interviewer
-                $ews->setCellValue('J'.$row, $interview->getInterviewer()->getUsernameOptimal());
+                if( $interview->getInterviewer() ) {
+                    $ews->setCellValue('J'.$row, $interview->getInterviewer()->getUsernameOptimal());
+                }
                 
                 //Date
                 $ews->setCellValue('K'.$row, $transformer->transform($interview->getInterviewDate()));
