@@ -1065,6 +1065,54 @@ class FellowshipApplication extends BaseUserAttributes {
  
         return $interviewId;
     }
+    
+    //$trainingTypeName: Medical, Residency, GME
+    public function getDegreeByTrainingTypeName( $trainingTypeName ) {
+        $degree = "";
+        
+        $items = $this->getTrainings();
+        
+        foreach( $items as $item ) {
+            if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
+                $degree = $item->getDegree().""; 
+                break;
+            }
+        }               
+ 
+        return $degree;
+    }
+    
+    //$trainingTypeName: Medical, Residency, GME
+    public function getSchoolByTrainingTypeName( $trainingTypeName ) {
+        $schoolName = "";
+        
+        $items = $this->getTrainings();
+        
+        foreach( $items as $item ) {
+            if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
+                $schoolName = $item->getInstitution()."";
+                break;
+            }
+        }                    
+ 
+        return $schoolName;
+    }
+    
+    public function getAllReferences() {
+        $references = "";
+        
+        $items = $this->getReferences();
+        
+        $refNameArr = array();
+        
+        foreach( $items as $item ) {
+            if( $item->getName() ) {
+                $refNameArr[] = $item->getName();
+            }
+        }                    
+ 
+        return implode("; ",$refNameArr);
+    }
 
 //    //interface methods
 //    public function addDocument($item)

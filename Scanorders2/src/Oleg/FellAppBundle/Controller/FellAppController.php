@@ -269,6 +269,11 @@ class FellAppController extends Controller {
 
         //echo "timezone=".date_default_timezone_get()."<br>";
 
+        $idsArr = array();
+        foreach( $fellApps as $fellApp ) {
+            $idsArr[] = $fellApp->getId();
+        }
+        
         return array(
             'entities' => $fellApps,
             'pathbase' => 'fellapp',
@@ -293,7 +298,8 @@ class FellAppController extends Controller {
             'interviewee' => count($interviewee),
             'intervieweeTotal' => count($intervieweeTotal),
             'searchFlag' => $searchFlag,
-            'serverTimeZone' => "" //date_default_timezone_get()
+            'serverTimeZone' => "", //date_default_timezone_get(),
+            'fellappids' => implode(",",$idsArr)
         );
     }
 
@@ -1577,7 +1583,8 @@ class FellAppController extends Controller {
 
         $logger->notice("Send email to " . $email);
 
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, null, $senderEmail );
+        $cc = null; //"oli2002@med.cornell.edu";
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, $cc, $senderEmail );
 
         $logger->notice("Email has been sent to " . $email);
 
@@ -1921,6 +1928,53 @@ class FellAppController extends Controller {
     }
 
 
+    
+    /**
+     * @Route("/download-applicants-list-excel/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_applicants_list_excel")
+     */
+    public function downloadApplicantListExcelAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && 
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') 
+        ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+       
+        $fellowshipSubspecialty = null;
+        $institutionNameFellappName = "";
+        
+        if( $fellappTypeId && $fellappTypeId > 0 ) {
+            $fellowshipSubspecialty = $this->em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+        }
+        
+        if( $fellowshipSubspecialty ) {
+            $institution = $fellowshipSubspecialty->getInstitution();
+            $institutionNameFellappName = $institution." ".$fellowshipSubspecialty." ";
+        }
+        
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        $fileName = $currentYear." ".$institutionNameFellappName."Fellowship Candidate Data generated on ".date('m/d/Y H:i').".xlsx";
+        $fileName = str_replace("  ", " ", $fileName);
+        $fileName = str_replace(" ", "-", $fileName);
+        
+        $fellappUtil = $this->container->get('fellapp_util');
+        $excelBlob = $fellappUtil->createApplicantListExcel($fellappIds);
+        
+        $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
+        //ob_end_clean();
+        //$writer->setIncludeCharts(true);
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+        // Write file to the browser
+        $writer->save('php://output');
+
+        exit();      
+    }
+    
 
 
     ///////////////////// un used methods //////////////////////////

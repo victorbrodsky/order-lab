@@ -133,30 +133,21 @@ function initTypeaheadUserSiteSearch() {
     myTypeahead.on('typeahead:selected',function(event, suggestion) {
         //show user by id
         //console.log('selected event');
-        if( suggestion.id != "" ) {
+        if( suggestion.id != "" ) {            
             
             //stop default event
             event.preventDefault();
-            //remove attached listeners by replacing the element with its clone
-            var el = document.getElementById('user-typeahead-search-form');
-            if( el ) {
-                var elClone = el.cloneNode(true);
-                el.parentNode.replaceChild(elClone, el);
-            }          
-            var el = document.getElementById('navbar-user-typeahead-search-form');
-            if( el ) {
-                var elClone = el.cloneNode(true);
-                el.parentNode.replaceChild(elClone, el);
-            }            
+            //remove attached listeners by removing the element            
+            $('.user-typeahead-search-form').remove();
             
             //console.log('user chosen with id='+suggestion.id);
             //var url = 'user/'+suggestion.id;
             var url = getCommonBaseUrl('user/'+suggestion.id,"employees");
             window.open(url,"_self");
                                               
-            return false;
+            return;
             
-        } 
+        }//if 
         
     });
     
@@ -178,14 +169,14 @@ function initTypeaheadUserSiteSearch() {
 
 
 
-function initTypeaheadOrderSiteSearch() {
-    if( $('#multiple-datasets-typeahead-ordersearch').length == 0 ) {
-        return;
-    }
-
-
-
-}
+//function initTypeaheadOrderSiteSearch() {
+//    if( $('.multiple-datasets-typeahead-ordersearch').length == 0 ) {
+//        return;
+//    }
+//
+//
+//
+//}
 
 
 

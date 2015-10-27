@@ -88,11 +88,20 @@
         {#{% set resStr = "Total" %}#}
     {#{% endif %}#}
 
+    {% set fellappTypeId = -1 %}
+    {% if filter %}
+        {% set fellappTypeId = filter %}
+    {% endif %}
+    
     {% set resStr = "Applications matching search criteria" %}
 
     {% if lastImportTimestamp %}
         <p>
             <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
+            <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}" 
+                   data-toggle="tooltip" title="Download Fellowship Candidate Data in Excel Format">
+                   <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+            </a>  
         </p>
     {% endif %}
 
@@ -476,6 +485,7 @@
                                         "<br>Personality Rank - "~interview.personalityRank~
                                         "<br>Potential Rank - "~interview.potentialRank~
                                         "<br>Language Proficiency - "~interview.languageProficiency~
+                                        "<br>Total Rank - "~interview.totalRank~
                                         "<br>Comment: "~interview.comment %}
                                 {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}                              
                             {% endif %}                                                                 

@@ -29,6 +29,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Util\EmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
 /*
@@ -1750,6 +1751,137 @@ class FellAppUtil {
     }
 
 
+    public function createApplicantListExcel( $fellappids ) {
+        
+        $author = $this->sc->getToken()->getUser();
+        $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+        
+        $ea = new \PHPExcel(); // ea is short for Excel Application
+               
+        $ea->getProperties()
+            ->setCreator($author."")
+            ->setTitle('Fellowship Applicants')
+            ->setLastModifiedBy($author."")
+            ->setDescription('Fellowship Applicants list in Excel format')
+            ->setSubject('PHP Excel manipulation')
+            ->setKeywords('excel php office phpexcel lakers')
+            ->setCategory('programming')
+            ;
+        
+        $ews = $ea->getSheet(0);
+        $ews->setTitle('Fellowship Applicants');
+        
+        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID 
+        $ews->setCellValue('B1', 'Last Name');
+        $ews->setCellValue('C1', 'First Name');
+        $ews->setCellValue('D1', 'Medical Degree');
+        $ews->setCellValue('E1', 'Medical School');
+        $ews->setCellValue('F1', 'Residency Institution');
+        $ews->setCellValue('G1', 'References');
+        $ews->setCellValue('H1', 'Interview Score');
+        $ews->setCellValue('I1', 'Interview Date');
+        
+        $ews->setCellValue('J1', 'Interviewer');
+        $ews->setCellValue('K1', 'Date');
+        $ews->setCellValue('L1', 'Academic Rank');
+        $ews->setCellValue('M1', 'Personality Rank');
+        $ews->setCellValue('N1', 'Potential Rank');
+        $ews->setCellValue('O1', 'Total Rank');
+        $ews->setCellValue('P1', 'Language Proficiency');
+        $ews->setCellValue('Q1', 'Comments');
+        
 
+        
+        $row = 2;
+        foreach( explode(",",$fellappids) as $fellappId ) {
+        
+            $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappId);
+            if( !$fellapp ) {
+                continue;
+            }
+            
+            $ews->setCellValue('A'.$row, $fellapp->getId());  
+            $ews->setCellValue('B'.$row, $fellapp->getUser()->getLastNameUppercase());
+            $ews->setCellValue('C'.$row, $fellapp->getUser()->getFirstNameUppercase());
+            
+            //Medical Degree
+            $ews->setCellValue('D'.$row, $fellapp->getDegreeByTrainingTypeName('Medical'));
+            
+            //Medical School
+            $ews->setCellValue('E'.$row, $fellapp->getSchoolByTrainingTypeName('Medical'));
+            
+            //Residency Institution
+            $ews->setCellValue('F'.$row, $fellapp->getSchoolByTrainingTypeName('Residency'));
+            
+            //References
+            $ews->setCellValue('G'.$row, $fellapp->getAllReferences());
+            
+            //Interview Score
+            $totalScore = "";
+            if( $fellapp->getInterviewScore() ) {
+                $totalScore = $fellapp->getInterviewScore();
+            }
+            $ews->setCellValue('H'.$row, $totalScore );
+	       
+            //Interview Date                   
+            $ews->setCellValue('I'.$row, $transformer->transform($fellapp->getInterviewDate()));
+            
+            $allTotalRanks = 0;
+            
+            foreach( $fellapp->getInterviews() as $interview ) {
+            
+                //Interviewer
+                $ews->setCellValue('J'.$row, $interview->getInterviewer()->getUsernameOptimal());
+                
+                //Date
+                $ews->setCellValue('K'.$row, $transformer->transform($interview->getInterviewDate()));
+                
+                //Academic Rank
+                if( $interview->getAcademicRank() ) {
+                    $ews->setCellValue('L'.$row, $interview->getAcademicRank()->getValue());
+                }
+                
+                //Personality Rank
+                if( $interview->getPersonalityRank() ) {
+                    $ews->setCellValue('M'.$row, $interview->getPersonalityRank()->getValue());
+                }
+                
+                //Potential Rank
+                if( $interview->getPotentialRank() ) {
+                    $ews->setCellValue('N'.$row, $interview->getPotentialRank()->getValue());
+                }
+                
+                //Total Rank
+                $ews->setCellValue('O'.$row, $interview->getTotalRank());
+                $allTotalRanks = $allTotalRanks + $interview->getTotalRank();
+                
+                //Language Proficiency
+                if( $interview->getLanguageProficiency() ) {
+                    $ews->setCellValue('P'.$row, $interview->getLanguageProficiency()->getName());
+                }
+                
+                //Comments
+                $ews->setCellValue('Q'.$row, $interview->getComment());   
+                
+                $row++;
+            
+            } //for each interview
+            
+            //All Total Ranks:           
+            $ews->setCellValue('A'.$row, "All Total Ranks:");
+            $ews->setCellValue('B'.$row, $allTotalRanks);
+            
+            //Avg Rank:
+            $row++;
+            $ews->setCellValue('A'.$row, "Avg Rank:");
+            $ews->setCellValue('B'.$row, $totalScore);
+            
+            $row = $row + 2;
+        }
+        
+        //exit("ids=".$fellappids);
+        
+        return $ea;
+    }
 
 } 

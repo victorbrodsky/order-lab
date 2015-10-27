@@ -133,6 +133,7 @@
                         {% if search is not defined %}
                             {% set search = "" %}
                         {% endif %}
+                        <div>    
                         <form class="navbar-form navbar-left user-typeahead-search-form" role="search" id="navbar-user-typeahead-search-form" name="usertypeaheadsearchform" action="{{ path(employees_sitename~'_home') }}" method="get">
                             <div class="form-group">
                                 <div id="navbar-multiple-datasets-typeahead-search" class="multiple-datasets-typeahead-search">
@@ -183,6 +184,7 @@
                             {#</button>#}
                             {#<button type="submit" class="btn btn-default">Search</button>#}
                         </form>
+                        </div>    
                         </li>
                     {% endif %}
                 {% endif %}
