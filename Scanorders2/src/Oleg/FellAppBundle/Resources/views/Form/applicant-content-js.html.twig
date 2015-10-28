@@ -138,6 +138,10 @@
     //disable upload itinerary if interview date is not set
     function setUploadItineraryAndListener() {
         
+        if( cycle == 'show' ) {
+            return;
+        }
+        
         var itineraryPanel = $('#Itinerary');
         var dropzone = itineraryPanel.find('.file-upload-dropzone');
         
@@ -145,8 +149,8 @@
         var dateField = itineraryPanel.find('.datepicker');
         var dateValue = dateField.val();
         //console.log('dateValue='+dateValue);
-        
-        setItineraryUploadFile( dropzone,dateValue );
+              
+        setItineraryUploadFile( dropzone,dateValue );     
         
         //add listener to date field
         dateField.change(function() {
@@ -167,7 +171,9 @@
             //console.log('in active dropzone');
             //disable
             dropzone.removeClass('dz-clickable'); // remove cursor
-            dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);          
+            if( myDropzone.listeners[1] ) {
+                dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);   
+            }
             
             dropzone.parent().tooltip({
                 title: function() {
