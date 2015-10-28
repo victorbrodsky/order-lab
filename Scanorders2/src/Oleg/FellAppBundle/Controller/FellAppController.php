@@ -299,7 +299,7 @@ class FellAppController extends Controller {
             'intervieweeTotal' => count($intervieweeTotal),
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "", //date_default_timezone_get(),
-            'fellappids' => implode(",",$idsArr)
+            'fellappids' => implode("-",$idsArr)
         );
     }
 
@@ -1935,7 +1935,9 @@ class FellAppController extends Controller {
     public function downloadApplicantListExcelAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && 
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') 
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_OBSERVER')    
         ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }

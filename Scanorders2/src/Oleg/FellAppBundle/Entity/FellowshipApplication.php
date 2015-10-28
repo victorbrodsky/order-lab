@@ -1113,6 +1113,43 @@ class FellowshipApplication extends BaseUserAttributes {
  
         return implode("; ",$refNameArr);
     }
+    
+    
+    public function getUsmleArr() {
+        $usmleArr = array();
+        
+        foreach( $this->getExaminations() as $examination ) {
+            if( $examination->getUSMLEStep1Score() ) {
+                $usmleArr[] = $examination->getUSMLEStep1Score();
+            }
+            if( $examination->getUSMLEStep2CKScore() ) {
+                $usmleArr[] = $examination->getUSMLEStep2CKScore();
+            }
+            if( $examination->getUSMLEStep3Score() ) {
+                $usmleArr[] = $examination->getUSMLEStep3Score();
+            }
+        }
+        
+        return $usmleArr;
+    }
+    
+    public function getComlexArr() {
+        $comlexArr = array();
+        
+        foreach( $this->getExaminations() as $examination ) {
+            if( $examination->getCOMLEXLevel1Score() ) {
+                $comlexArr[] = $examination->getCOMLEXLevel1Score();
+            }
+            if( $examination->getCOMLEXLevel2Score() ) {
+                $comlexArr[] = $examination->getCOMLEXLevel2Score();
+            }
+            if( $examination->getCOMLEXLevel3Score() ) {
+                $comlexArr[] = $examination->getCOMLEXLevel3Score();
+            }
+        }
+        
+        return $comlexArr;
+    }
 
 //    //interface methods
 //    public function addDocument($item)

@@ -82,14 +82,16 @@
     </h1>
 
     {#avatar#}
-    <div align="center" style="height: 160px;">
-        {#avatar form modal#}
-        {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
-            {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
-        {% else %}
-            {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
-            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
-        {% endif %}
+    <div class="row">
+        <div class="text-center col-md-2 col-md-offset-5">
+            {#avatar form modal#}
+            {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
+                {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
+            {% else %}
+                {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+            {% endif %}
+        </div>
     </div>
 
 
@@ -142,7 +144,9 @@
 {% endmacro %}
     
     
-{% macro addInterviewsModal(fellapp,interviewsArr) %}
+{% macro addInterviewsModal(fellapp,interviewsArr,interviewsAwaitingArr) %}
+    
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     
     <!-- Modal -->
     <div class="modal fade" id="interview-info-{{fellapp.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -152,16 +156,61 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">
                  
-                Interview Evaluation<br>
+                {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                    {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                    <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                {% else %}
+                    {% if fellapp.avatars|length > 0 %}                       
+                        <div style="height: 120px; width: 120px;">                           
+                            {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
+                        </div>
+{#                        <a href="{{ fellapp.avatars.getAbsoluteUploadFullPath }}">#}
+{#                            <div style="height: 120px; width: 120px;">                           #}
+{#                            {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}#}
+{#                            </div>#}
+{#                        </a>#}
+                    {% endif %}
+                {% endif %}
+                
+                Interview Evaluations<br>
                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                     Applicant Demo
                 {% else %}
-                    ID {{ fellapp.id }}: {{ fellapp.user.getLastNameUppercase() }} {{ fellapp.user.getFirstNameUppercase() }}
-                {% endif %}
                     
-                {% if fellapp.fellowshipSubspecialty %}
-                    ({{  fellapp.fellowshipSubspecialty.name }})
-                {% endif %}                                 
+                    <a href="{{ path('fellapp_show', { 'id': fellapp.id }) }}" target="_blank">
+                        ID {{ fellapp.id }}: {{ fellapp.user.getLastNameUppercase() }} {{ fellapp.user.getFirstNameUppercase() }}
+                    </a>
+                    
+                    {% if fellapp.fellowshipSubspecialty %}
+                        ({{  fellapp.fellowshipSubspecialty.name }})
+                    {% endif %}  
+                    
+                    {% set degree = fellapp.getDegreeByTrainingTypeName('Medical') %}
+                    {% if degree %}
+                        , {{ degree }}
+                    {% endif %}
+                        
+                    {% set medschool = fellapp.getSchoolByTrainingTypeName('Medical') %}
+                    {% if medschool %}
+                        <br>Medical School: {{ medschool }}
+                    {% endif %}
+                        
+                    {% set resschool = fellapp.getSchoolByTrainingTypeName('Residency') %}
+                    {% if resschool %}
+                        <br>Residency: {{ resschool }}
+                    {% endif %} 
+                          
+                    {% set usmleArr = fellapp.getUsmleArr() %}
+                    {% if usmleArr|length > 0 %}
+                        <br>USMLE: {{ usmleArr|join('/') }}
+                    {% endif %} 
+                        
+                    {% set comlexArr = fellapp.getComlexArr() %}
+                    {% if comlexArr|length > 0 %}                       
+                        <br>COMLEX: {{ comlexArr|join('/') }}
+                    {% endif %}     
+                        
+                {% endif %}                                                                
                 
             </h4>
           </div>
@@ -172,7 +221,21 @@
               {% else %}
                     {% for interview in interviewsArr %}
                          {{ interview|raw }} <br><br>
-                    {% endfor %}     
+                    {% endfor %} 
+                         
+                    <br>
+                    {% if interviewsAwaitingArr|length > 0 %}
+                        <p>
+                            Awaiting evaluations from {{ interviewsAwaitingArr|join('; ') }}
+                        </p>
+                                               
+                        <p>
+                            <a href="{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}, true) }}" target="_blank">
+                                Invite these interviewers to submit evaluations
+                            </a>
+                        </p>
+                    {% endif %}  
+                         
               {% endif %}     
               
           </div>

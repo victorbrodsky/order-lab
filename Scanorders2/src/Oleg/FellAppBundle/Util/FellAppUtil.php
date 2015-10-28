@@ -1801,11 +1801,18 @@ class FellAppUtil {
 
         
         $row = 2;
-        foreach( explode(",",$fellappids) as $fellappId ) {
+        foreach( explode("-",$fellappids) as $fellappId ) {
         
             $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappId);
             if( !$fellapp ) {
                 continue;
+            }
+            
+            //check if author can have access to view this applicant
+            //user who has the same fell type can view or edit
+            $fellappUtil = $this->container->get('fellapp_util');
+            if( $fellappUtil->hasFellappPermission($author,$fellapp) == false ) {
+                continue; //skip this applicant because the current user does not permission to view this applicant
             }
             
             $ews->setCellValue('A'.$row, $fellapp->getId());  
