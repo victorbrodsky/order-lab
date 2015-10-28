@@ -1771,6 +1771,14 @@ class FellAppUtil {
         $ews = $ea->getSheet(0);
         $ews->setTitle('Fellowship Applicants');
         
+        //align all cells to left
+        $style = array(
+            'alignment' => array(
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+        $ews->getDefaultStyle()->applyFromArray($style);
+        
         $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID 
         $ews->setCellValue('B1', 'Last Name');
         $ews->setCellValue('C1', 'First Name');
@@ -1887,6 +1895,23 @@ class FellAppUtil {
         }
         
         //exit("ids=".$fellappids);
+        
+        
+        // Auto size columns for each worksheet
+        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        foreach ($ea->getWorksheetIterator() as $worksheet) {
+
+            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
+
+            $sheet = $ea->getActiveSheet();
+            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
+            /** @var PHPExcel_Cell $cell */
+            foreach ($cellIterator as $cell) {
+                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+            }
+        }
+               
         
         return $ea;
     }
