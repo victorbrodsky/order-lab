@@ -26,6 +26,8 @@
         listenerFellAppRank(null);
 
         //$('[data-toggle="tooltip"]').tooltip();
+        
+        setUploadItineraryAndListener();
 
     });
 
@@ -132,6 +134,57 @@
         $('#fellapp-applicant-form').submit();
     }
 
+
+    //disable upload itinerary if interview date is not set
+    function setUploadItineraryAndListener() {
+        
+        var itineraryPanel = $('#Itinerary');
+        var dropzone = itineraryPanel.find('.file-upload-dropzone');
+        
+        //make inactive if interview date is not set
+        var dateField = itineraryPanel.find('.datepicker');
+        var dateValue = dateField.val();
+        //console.log('dateValue='+dateValue);
+        
+        setItineraryUploadFile( dropzone,dateValue );
+        
+        //add listener to date field
+        dateField.change(function() {
+            //console.log( "new date=" + $(this).val() );
+            setItineraryUploadFile( dropzone, $(this).val() );
+        });
+        
+    }
+    
+    function setItineraryUploadFile( dropzone, dateValue ) {
+        //console.log('set itinerary: dateValue='+dateValue);      
+        
+         var dropzoneDom = dropzone.get(0);
+        //console.log('disable/enable dropzone className='+dropzoneDom.className);
+        var myDropzone = dropzoneDom.dropzone;
+        
+        if( !dateValue ) {
+            //console.log('in active dropzone');
+            //disable
+            dropzone.removeClass('dz-clickable'); // remove cursor
+            dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);          
+            
+            dropzone.parent().tooltip({
+                title: function() {
+                    var titleText = "Please enter the interview date in order to upload the itinerary file";
+                    return titleText;
+                }
+            });
+            
+        } else {
+            //console.log('active dropzone');
+            //enable
+            dropzone.addClass('dz-clickable'); // add cursor
+            dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+            dropzone.parent().tooltip('destroy');
+        }
+        
+    }
 
 //    function updateFellapp(fellappId) {
 //
