@@ -50,11 +50,14 @@ class LargeFileDownloader {
         if( $ext == 'pdf' ) {
             $mimeType = 'application/pdf';
         }
-        if( $ext == 'doc' ) {
+        if( $ext == 'doc' || $ext == 'docx' ) {
             $mimeType = 'application/msword';
         }
         if( $ext == 'xlc' || $ext == 'xls' ) {
             $mimeType = 'application/vnd.ms-excel';
+        }
+        if( $ext == 'xlsx' ) {
+            $mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         }
         if( $ext == 'jpe' || $ext == 'jpeg' || $ext == 'jpg' ) {
             $mimeType = 'image/jpeg';
