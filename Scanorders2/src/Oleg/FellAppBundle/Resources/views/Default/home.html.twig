@@ -897,11 +897,13 @@
                 //Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])
                 //Combined Interview Score: 3.3 (2nd highest of 6 available in Cytopathology for 2017)
                                
-                var fellappId = $('.data-fellapp-id').data("fellapp-id");
+                var fellappId = $(this).find('.data-fellapp-id').data("fellapp-id");
                 console.log('modal show fellappId='+fellappId);
                 
                 var url = getCommonBaseUrl("interview-score-rank/"+fellappId,"fellowship-applications");
                 //console.log('url='+url);
+
+                $('.interview-score-rank').html('Calculation score rank ...');
 
                 $.ajax({
                     type: "GET",

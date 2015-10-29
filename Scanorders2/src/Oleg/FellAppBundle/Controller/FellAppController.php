@@ -2015,6 +2015,8 @@ class FellAppController extends Controller {
 
         //echo "invite interviewers to rate <br>";
         //exit();
+        $res = "";
+        
         $logger = $this->container->get('logger');
 
         $em = $this->getDoctrine()->getManager();
@@ -2025,22 +2027,85 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
         
+        if( $entity->getInterviewScore() == null || $entity->getInterviewScore() <= 0 ) {
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
+        }
+        
         $fellappType = $entity->getFellowshipSubspecialty();
-        $fellappYear = $entity->getStartDate();
+        
+        $startDate = $entity->getStartDate();
+        $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+        //$startDateStr = $transformer->transform($startDate);
 
-        $rank = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+//        $applicants = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $repository = $em->getRepository('OlegFellAppBundle:FellowshipApplication');
+        $dql = $repository->createQueryBuilder("fellapp");
+        //TODO: optimize this by a single query without foreach loop
+//        ->select('((SELECT COUNT(1) AS num FROM stats  WHERE stats.marks  > s.marks ) + 1)  AS rank')
+//        ->from('Stats s')
+//        ->where('s.user_id = ?', $user_id )
+//        ->orderBy('rank');
+        //$dql->select('((SELECT COUNT(1) AS num FROM stats  WHERE stats.marks  > s.marks ) + 1)  AS rank');
+        $dql->select('fellapp');
+        $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");   
         
-        //Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])
-        //Combined Interview Score: 3.3 (1st highest of 6 available in Cytopathology for 2017)     
+        $dql->where("fellowshipSubspecialty.id = " . $fellappType->getId() );
         
-        $res = "Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])";
+        $startDateStr = $startDate->format('Y');
+        $bottomDate = "01-01-".$startDateStr;
+        $topDate = "12-31-".$startDateStr;
+        $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+        
+        $dql->andWhere("fellapp.interviewScore IS NOT NULL");
+        
+        $dql->orderBy("fellapp.interviewScore","DESC");
+        
+        $query = $em->createQuery($dql);
+        $applicantions = $query->getResult();
+        
+        //echo "applicants=".count($applicantions)."<br>";               
+        
+        if( count($applicantions) > 0 ) {
+        
+            $rank = 1;
+            foreach( $applicantions as $applicantion ) {
+                if( $applicantion->getId() == $id ) {          
+                   continue; 
+                }
+                $rank++;
+            }
+
+            //Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])
+            //Combined Interview Score: 3.3 (1st highest of 6 available in Cytopathology for 2017)                  
+
+            $rankStr = $rank."th";
+            
+            if( $rank == 1 ) {
+                $rankStr = $rank."st";
+            }
+            if( $rank == 2 ) {
+                $rankStr = $rank."nd";
+            }
+            if( $rank == 3 ) {
+                $rankStr = $rank."rd";
+            }
+            
+            $res = "Combined Interview Score: ".
+                    $entity->getInterviewScore().
+                    " (".$rankStr." highest of ".count($applicantions).
+                    " available in ".$fellappType." for ".$startDateStr.")";
+        
+        } 
         
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($res));
         return $response;
     }
-    
+        
 
     ///////////////////// un used methods //////////////////////////
     /**

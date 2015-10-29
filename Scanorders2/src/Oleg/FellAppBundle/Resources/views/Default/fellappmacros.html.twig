@@ -178,9 +178,7 @@
                     Applicant Demo
                 {% else %}
                     
-                    <a href="{{ path('fellapp_show', { 'id': fellapp.id }) }}" target="_blank">
-                        ID {{ fellapp.id }}: {{ fellapp.user.getLastNameUppercase() }} {{ fellapp.user.getFirstNameUppercase() }}
-                    </a>
+                    <a href="{{ path('fellapp_show', { 'id': fellapp.id }) }}" target="_blank">ID {{ fellapp.id }}: {{ fellapp.user.getLastNameUppercase() }} {{ fellapp.user.getFirstNameUppercase() }}</a>
                     
                     {% set degree = fellapp.getDegreeByTrainingTypeName('Medical') %}
                     {% if degree %}
@@ -211,7 +209,7 @@
                         <br>COMLEX: {{ comlexArr|join(' / ') }}
                     {% endif %}   
                         
-                    <div class="interview-score-rank"></div>    
+                    <div class="interview-score-rank">Calculation score rank ...</div>    
                         
                 {% endif %}                                                                
                 
