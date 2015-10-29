@@ -2061,7 +2061,7 @@ class FellAppController extends Controller {
         
         $dql->andWhere("fellapp.interviewScore IS NOT NULL");
         
-        $dql->orderBy("fellapp.interviewScore","DESC");
+        $dql->orderBy("fellapp.interviewScore","ASC");
         
         $query = $em->createQuery($dql);
         $applicantions = $query->getResult();
