@@ -1150,6 +1150,18 @@ class FellowshipApplication extends BaseUserAttributes {
         
         return $comlexArr;
     }
+    
+    public function daysAfterInterviewDate() {
+        $interviewDate = $this->getInterviewDate();
+        if( $interviewDate ) {
+            $now = new \DateTime();      
+            $diff = $interviewDate->diff($now)->format("%R%a");
+        } else {
+            $diff = null;
+        }
+        //echo "diff=",$diff."<br>";
+        return $diff;
+    }
 
 //    //interface methods
 //    public function addDocument($item)

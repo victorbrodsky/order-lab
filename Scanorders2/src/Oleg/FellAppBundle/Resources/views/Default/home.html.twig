@@ -373,17 +373,20 @@
                 {% set interviewDescrStr = "" %}
                 {% set interviewsArr = [] %}
                 {% set interviewsAwaitingArr = [] %}
-                {% if entity.interviewScore %}
+{#                {% if entity.interviewScore %}#}
                     {% set scoreCount = 0 %}
                     {% set tooltip = "" %}                      
                     {% set scoreStyle = 'style=font-weight:bold;' %}
                     {% for interview in entity.interviews %}
                         {% if not interview.totalRank %}
                             {% set scoreStyle = "" %}                             
-                            {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview.interviewer.getUsernameOptimal()]) %}
+                            {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview.interviewer]) %}
                         {% else %}
                             {% set scoreCount = scoreCount + 1 %} 
-                            {% set interviewDescrStr = "<strong>"~interview.interviewer.getUsernameOptimal()~"</strong>:<br>"~
+                            {% set interviewerUrl = '<a href="'~path('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %} 
+{#"<strong>"~interview.interviewer.getUsernameOptimal()~"</strong>:<br>"~                            #}
+                            {% set interviewDescrStr =                                    
+                                    interviewerUrl~":<br>"~       
                                     "Academic Rank - "~interview.academicRank~
                                     "<br>Personality Rank - "~interview.personalityRank~
                                     "<br>Potential Rank - "~interview.potentialRank~
@@ -397,7 +400,7 @@
                     {% if entity.interviewScore %}
                         {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received.' %}
                     {% endif %}
-                {% endif %}
+{#                {% endif %}#}
                 {#EOF Calculating evaluation received and evaluation modal#}
 
                 <tr class="{{ trclassname }}">

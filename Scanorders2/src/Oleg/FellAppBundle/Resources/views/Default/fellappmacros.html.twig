@@ -181,14 +181,14 @@
                         ID {{ fellapp.id }}: {{ fellapp.user.getLastNameUppercase() }} {{ fellapp.user.getFirstNameUppercase() }}
                     </a>
                     
-                    {% if fellapp.fellowshipSubspecialty %}
-                        ({{  fellapp.fellowshipSubspecialty.name }})
-                    {% endif %}  
-                    
                     {% set degree = fellapp.getDegreeByTrainingTypeName('Medical') %}
                     {% if degree %}
                         , {{ degree }}
                     {% endif %}
+                    
+                    {% if fellapp.fellowshipSubspecialty %}
+                        ({{  fellapp.fellowshipSubspecialty.name }})
+                    {% endif %}                                         
                         
                     {% set medschool = fellapp.getSchoolByTrainingTypeName('Medical') %}
                     {% if medschool %}
@@ -202,12 +202,12 @@
                           
                     {% set usmleArr = fellapp.getUsmleArr() %}
                     {% if usmleArr|length > 0 %}
-                        <br>USMLE: {{ usmleArr|join('/') }}
+                        <br>USMLE: {{ usmleArr|join(' / ') }}
                     {% endif %} 
                         
                     {% set comlexArr = fellapp.getComlexArr() %}
                     {% if comlexArr|length > 0 %}                       
-                        <br>COMLEX: {{ comlexArr|join('/') }}
+                        <br>COMLEX: {{ comlexArr|join(' / ') }}
                     {% endif %}     
                         
                 {% endif %}                                                                
@@ -225,16 +225,29 @@
                          
                     <br>
                     {% if interviewsAwaitingArr|length > 0 %}
+                        {% set interviewerCounter = 1 %}
                         <p>
-                            Awaiting evaluations from {{ interviewsAwaitingArr|join('; ') }}
+                            Awaiting evaluations from 
+                            {% for interviewer in interviewsAwaitingArr %}                               
+                                <a href="{{ path('employees_showuser', { 'id': interviewer.id }) }}" target="_blank">
+                                    {{ interviewer.getUsernameOptimal() }}
+                                </a>
+                                {% if interviewsAwaitingArr|length > interviewerCounter %}
+                                    , 
+                                {% endif %}
+                                {% set interviewerCounter = interviewerCounter + 1 %}
+                            {% endfor %}
                         </p>
                                                
                         <p>
                             <a
                                 general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
                                 general-data-callback="refreshpage"
-                                href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite these interviewers to submit evaluations
+                                href="{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}, true) }}">Invite these interviewers to submit evaluations
                             </a>
+                            {% if fellapp.daysAfterInterviewDate() and fellapp.daysAfterInterviewDate() > 0 %}
+                                <b>(Interview date was {{ fellapp.interviewDate|date('m/d/Y','UTC') }}, {{ fellapp.daysAfterInterviewDate()|abs }} days ago).</b>
+                            {% endif %}
                         </p>
                     {% endif %}  
                          
