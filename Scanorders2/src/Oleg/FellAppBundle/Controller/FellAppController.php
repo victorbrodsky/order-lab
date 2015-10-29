@@ -1369,6 +1369,7 @@ class FellAppController extends Controller {
 
         //echo "invite interviewers to rate <br>";
         //exit();
+        $logger = $this->container->get('logger');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1394,7 +1395,7 @@ class FellAppController extends Controller {
 
         $emailStr = "";
         if( $emails && count($emails) > 0 ) {
-            $emailStr = " Emails have been sent to the following:".implode(",",$emails);
+            $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
         } else {
             $emailStr = " Emails have not been sent.";
         }
@@ -1414,18 +1415,28 @@ class FellAppController extends Controller {
         }
 
         //send only 1 email to coordinator
+        $user = $this->get('security.context')->getToken()->getUser();
+        $senderEmail = $user->getEmail();
+        
         //get coordinator emails
         $coordinatorEmails = null;
         $fellappUtil = $this->container->get('fellapp_util');
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
-        $coordinatorEmails = implode(";",$coordinatorEmails);
+        
+        //make sure current user get confirmation email too: insert it to coordinator emails 
+        if( $coordinatorEmails == null || !in_array($senderEmail, $coordinatorEmails) ) {
+            $coordinatorEmails[] = $senderEmail;
+        }
+        
+        $coordinatorEmails = implode(", ",$coordinatorEmails);
         //print_r($coordinatorEmails);
         //exit('1');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $senderEmail = $user->getEmail();
+        
         $applicant = $entity->getUser();
         $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, null, $senderEmail );
-
+        
+        $logger->notice("inviteInterviewersToRateAction: Send confirmation email from " . $senderEmail . " to coordinators:".$coordinatorEmails);
+        
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode("ok"));
@@ -1444,6 +1455,7 @@ class FellAppController extends Controller {
 
         //echo "invite interviewers to rate <br>";
         //exit();
+        $logger = $this->container->get('logger');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1490,11 +1502,13 @@ class FellAppController extends Controller {
             $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
             $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, $em, null, $senderEmail );
+            
+            $logger->notice("inviteObserversToRateAction: Send observer invitation email from " . $senderEmail . " to :".$email);
         }
 
         $emailStr = "";
         if( $emails && count($emails) > 0 ) {
-            $emailStr = " Emails have been sent to the following: ".implode("; ",$emails);
+            $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
         } else {
             $emailStr = " Emails have not been sent.";
         }
@@ -1516,10 +1530,18 @@ class FellAppController extends Controller {
         $coordinatorEmails = null;
         $fellappUtil = $this->container->get('fellapp_util');
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
-        $coordinatorEmails = implode("; ",$coordinatorEmails);
+        
+        //make sure current user get confirmation email too: insert it to coordinator emails 
+        if( $coordinatorEmails == null || !in_array($senderEmail, $coordinatorEmails) ) {
+            $coordinatorEmails[] = $senderEmail;
+        }
+        
+        $coordinatorEmails = implode(", ",$coordinatorEmails);
         $applicant = $entity->getUser();
         $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, null, $senderEmail );
 
+        $logger->notice("inviteObserversToRateAction: Send observer invitation confirmation email from " . $senderEmail . " to coordinators:".$coordinatorEmails);
+        
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode("ok"));
@@ -1535,7 +1557,7 @@ class FellAppController extends Controller {
         $interviewer = $interview->getInterviewer();
 
         if( !$interviewer ) {
-            $logger->error("No interviewer exists for interview=" . $interview );
+            $logger->error("sendInvitationEmail: No interviewer exists for interview=" . $interview );
             return null;
         }
 
@@ -1547,7 +1569,7 @@ class FellAppController extends Controller {
                 'Email invitations to evaluate '.$appHref.' have not been sent. Please upload Itinerary and try again.'
             );
 
-            $logger->error("No recent itinerary found for fellapp ID=" . $fellapp->getId() );
+            $logger->error("sendInvitationEmail: No recent itinerary found for fellapp ID=" . $fellapp->getId() );
             return null;
         }
 
@@ -1581,12 +1603,12 @@ class FellAppController extends Controller {
 
         $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
-        $logger->notice("Send email to " . $email);
+        $logger->notice("sendInvitationEmail: Before send email to " . $email);
 
         $cc = null; //"oli2002@med.cornell.edu";
         $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $em, $cc, $senderEmail );
 
-        $logger->notice("Email has been sent to " . $email);
+        $logger->notice("sendInvitationEmail: Email has been sent to " . $email);
 
         return $email;
     }
