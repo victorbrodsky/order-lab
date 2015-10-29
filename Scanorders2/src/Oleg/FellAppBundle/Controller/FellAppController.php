@@ -224,7 +224,7 @@ class FellAppController extends Controller {
 
         //echo "dql=".$dql."<br>";
 
-        $limit = 100;
+        $limit = 200;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $fellApps = $paginator->paginate(
@@ -1057,6 +1057,7 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
         //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
@@ -1070,7 +1071,8 @@ class FellAppController extends Controller {
         //$entity->setApplicationStatus($status);
         $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
         if( !$statusObj ) {
-            throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);
+            $logger->error('statusAction: Unable to find FellAppStatus by name='.$status);
+            throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);           
         }
 
         //change status

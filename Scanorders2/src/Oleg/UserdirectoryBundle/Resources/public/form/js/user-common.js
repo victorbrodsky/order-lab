@@ -754,6 +754,7 @@ function generalConfirmAction() {
         var callbackfn = $(this).attr('general-data-callback');
 
         if( callbackfn ) {
+            //var onclickStr = callbackfn+'("'+href+''+$(this)+'")';
             var onclickStr = callbackfn+'("'+href+'")';
             $('#dataConfirmOK').attr('onclick',onclickStr);
         } else {
@@ -793,12 +794,19 @@ function generalConfirmAction() {
         } else {
             $('.general-data-confirm-ok').hide();
         }
-        ////////// EOF of assigning text //////////
+        ////////// EOF of assigning text //////////       
 
         $('#generalDataConfirmModal').modal({show:true});
 
+        //add listnere to ok button to "Please wait ..." and disable button on click
+        $('.general-data-confirm-ok').on('click', function(event){
+            //alert("on modal js: dataConfirmOK clicked");
+            var footer = $(this).closest('.modal-footer');
+            footer.html('Please wait ...');
+        });
+
         return false;
-    });
+    }); //general-data-confirm click
 
 }
 
