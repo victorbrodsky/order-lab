@@ -2073,7 +2073,7 @@ class FellAppController extends Controller {
             $rank = 1;
             foreach( $applicantions as $applicantion ) {
                 if( $applicantion->getId() == $id ) {          
-                   continue; 
+                   break; 
                 }
                 $rank++;
             }
