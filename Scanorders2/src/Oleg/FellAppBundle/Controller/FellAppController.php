@@ -2059,7 +2059,7 @@ class FellAppController extends Controller {
         $topDate = "12-31-".$startDateStr;
         $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
         
-        $dql->andWhere("fellapp.interviewScore IS NOT NULL");
+        $dql->andWhere("fellapp.interviewScore IS NOT NULL AND fellapp.interviewScore != '0'");
         
         $dql->orderBy("fellapp.interviewScore","ASC");
         
