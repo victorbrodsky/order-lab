@@ -149,10 +149,11 @@
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     
     <!-- Modal -->
-    <div class="modal fade" id="interview-info-{{fellapp.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade interview-info-modal" id="interview-info-{{fellapp.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
+            <div class="data-fellapp-id" style="display:none;" data-fellapp-id="{{fellapp.id}}"></div>  
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">
                  
@@ -208,7 +209,9 @@
                     {% set comlexArr = fellapp.getComlexArr() %}
                     {% if comlexArr|length > 0 %}                       
                         <br>COMLEX: {{ comlexArr|join(' / ') }}
-                    {% endif %}     
+                    {% endif %}   
+                        
+                    <div class="interview-score-rank"></div>    
                         
                 {% endif %}                                                                
                 

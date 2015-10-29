@@ -2003,6 +2003,44 @@ class FellAppController extends Controller {
     }
     
 
+    /**
+     * @Route("/interview-score-rank/{id}", name="fellapp_interviewe_score_rank")
+     * @Method("GET")
+     */
+    public function intervieweScoreRankAction(Request $request, $id) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        //echo "invite interviewers to rate <br>";
+        //exit();
+        $logger = $this->container->get('logger');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+        
+        $fellappType = $entity->getFellowshipSubspecialty();
+        $fellappYear = $entity->getStartDate();
+
+        $rank = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        
+        //Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])
+        //Combined Interview Score: 3.3 (1st highest of 6 available in Cytopathology for 2017)     
+        
+        $res = "Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])";
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+    
 
     ///////////////////// un used methods //////////////////////////
     /**

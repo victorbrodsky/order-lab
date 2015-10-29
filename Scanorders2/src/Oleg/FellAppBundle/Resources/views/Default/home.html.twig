@@ -800,6 +800,8 @@
             });
 
             attachTitleToScores();
+            
+            onInterviewModalShow();
 
             /////////// set default year by JS ///////////
             //var year = parseInt(new Date().getFullYear()) + 2;
@@ -827,15 +829,20 @@
 //        }
 
 
-        function refreshpage(href) {
+        function refreshpage(href,btnEl) {
             //console.log('refreshpage href='+href);
 
             if( !href ) {
                 return;
             }
+            
+            //add listnere to ok button to "Please wait ..." and disable button on click
+            var footer = btnEl.closest('.modal-footer');
+            footer.html('Please wait ...');
 
             var url = getCommonBaseUrl(href,"fellowship-applications");
             //console.log('url='+url);
+            
 
             $.ajax({
                 type: "GET",
@@ -882,6 +889,32 @@
                 }
             });
         }
+        
+        function onInterviewModalShow() {
+            
+            $('.interview-info-modal').on('shown.bs.modal', function () {
+                
+                //Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])
+                //Combined Interview Score: 3.3 (2nd highest of 6 available in Cytopathology for 2017)
+                               
+                var fellappId = $('.data-fellapp-id').data("fellapp-id");
+                console.log('modal show fellappId='+fellappId);
+                
+                var url = getCommonBaseUrl("interview-score-rank/"+fellappId,"fellowship-applications");
+                //console.log('url='+url);
+
+                $.ajax({
+                    type: "GET",
+                    url: url,                   
+                    success: function(resHtml) {
+                        $('.interview-score-rank').html(resHtml);
+                    }
+                });
+                
+            })
+
+        }
+        
 
 
     </script>
