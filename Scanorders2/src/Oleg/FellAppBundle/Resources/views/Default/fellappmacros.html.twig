@@ -196,14 +196,16 @@
                           
                     {% set usmleArr = fellapp.getUsmleArr() %}
                     {% if usmleArr|length > 0 %}
+                        show usmle<br>
                         <br>USMLE: {{ usmleArr|join(' / ') }}
                     {% endif %} 
                         
                     {% set comlexArr = fellapp.getComlexArr() %}
-                    {% if comlexArr|length > 0 %}                       
+                    {% if comlexArr|length > 0 %} 
+                        show comlex<br>
                         <br>COMLEX: {{ comlexArr|join(' / ') }}
                     {% endif %} 
-                        
+                    before letters<br>    
                         
                     {#lists letters of recommendation authors with links to the uploaded letter under the name if one is uploaded#}   
                     {% set refcount = 1 %}  
@@ -226,7 +228,7 @@
                             {% set manyDocArr = [] %}
                             {% for document in ref.documents %}
                                 {#letters of recommendation#}                       
-                                {% set docHref = '<a href="'~path('fellapp_file_download', { 'id': document.id})~'">Letter '~docCount~'</a>' %}{% if ref.documents|length > docCount %}, {% endif %}   
+                                {% set docHref = '<a href="'~path('fellapp_file_download', { 'id': document.id})~'">Letter '~docCount~'</a>' %}   
                                 {% set manyDocArr = manyDocArr|merge([docHref]) %}
                                 {% set docCount = docCount + 1 %}
                             {% endfor %}
