@@ -1177,6 +1177,7 @@ class FellowshipApplication extends BaseUserAttributes {
                 $comlexArr[] = "-";
             }
         }
+        print_r($comlexArr);
         
         return $comlexArr;
     }

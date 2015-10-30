@@ -17,17 +17,17 @@
 </p>
 
 
-{% set refcount = 0 %}
+{% set refcount = 1 %}
 
 {% for reference in form.references %}
 
 <a name="reference{{refcount}}"></a>
 <div class="well" id="reference{{refcount}}">
-
-    {% set refcount = refcount + 1 %}
-
+  
     <label class="control-label">Reference #{{ refcount }}</label>
 
+    {% set refcount = refcount + 1 %}
+    
     <div class="row withpaddingtop">
         <div class="col-xs-6">
             {#&#123;&#35;<label for="recommendation1Name" class="control-label">Name</label>&#35;&#125;#}
