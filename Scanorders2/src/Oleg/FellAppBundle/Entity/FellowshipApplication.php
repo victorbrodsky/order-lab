@@ -1144,7 +1144,7 @@ class FellowshipApplication extends BaseUserAttributes {
                 $usmleArr[] = "-";
             }
         }
-        print_r($usmleArr);
+        //print_r($usmleArr);
         
         return $usmleArr;
     }
@@ -1178,7 +1178,7 @@ class FellowshipApplication extends BaseUserAttributes {
                 $comlexArr[] = "-";
             }
         }
-        print_r($comlexArr);
+        //print_r($comlexArr);
         
         return $comlexArr;
     }
