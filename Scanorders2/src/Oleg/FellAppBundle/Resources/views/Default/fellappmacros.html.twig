@@ -173,21 +173,18 @@
                     {% endif %}
                 {% endif %}
                 
-                Interview Evaluations<br>
+                Interview Evaluations: {% if fellapp.fellowshipSubspecialty %} ({{fellapp.fellowshipSubspecialty.name}}){% endif %} {{fellapp.startDate|date('Y','UTC')}}<br>
                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                     Applicant Demo
                 {% else %}
                     
-                    <a href="{{ path('fellapp_show', { 'id': fellapp.id }) }}" target="_blank">ID {{ fellapp.id }}: {{ fellapp.user.getLastNameUppercase() }} {{ fellapp.user.getFirstNameUppercase() }}</a>
-                    
                     {% set degree = fellapp.getDegreeByTrainingTypeName('Medical') %}
-                    {% if degree %}
-                        , {{ degree }}
-                    {% endif %}
+                    <a href="{{ path('fellapp_show', { 'id': fellapp.id }) }}" target="_blank">ID {{fellapp.id}}: {{fellapp.user.getLastNameUppercase()}} {{fellapp.user.getFirstNameUppercase()}}</a>
+                    <a data-toggle="tooltip" title="Download Complete Application in PDF"
+                        href="{{ path('fellapp_download_pdf', { 'id': fellapp.id}) }}"
+                    ><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>{% if degree %}, {{ degree }}{% endif %}
                     
-                    {% if fellapp.fellowshipSubspecialty %}
-                        ({{  fellapp.fellowshipSubspecialty.name }})
-                    {% endif %}                                         
+                    {% if fellapp.fellowshipSubspecialty %} ({{  fellapp.fellowshipSubspecialty.name }}){% endif %}                
                         
                     {% set medschool = fellapp.getSchoolByTrainingTypeName('Medical') %}
                     {% if medschool %}
@@ -207,9 +204,58 @@
                     {% set comlexArr = fellapp.getComlexArr() %}
                     {% if comlexArr|length > 0 %}                       
                         <br>COMLEX: {{ comlexArr|join(' / ') }}
-                    {% endif %}   
+                    {% endif %} 
                         
-                    <div class="interview-score-rank">Calculation score rank ...</div>    
+                        
+                    {#lists letters of recommendation authors with links to the uploaded letter under the name if one is uploaded#}   
+                    {% set refcount = 0 %}  
+                    {% set refArr = [] %}      
+                    {% for ref in fellapp.references if ref.name is not null %}
+                        
+                        {% set refStr = null %}  
+                        
+                        {#Case 1: single doc: href with referee name#}
+                        {% if ref.documents|length == 1 %}
+                            {% set refStr = '<a href="'~path('fellapp_file_download', { 'id': ref.documents|first.id})~'">'~ref.name~'</a>' %}
+                        {% endif %}
+                        
+                        {#Case 2: many docs: referee name with href1, href2 ...#}
+                        {% if ref.documents|length > 1 %}
+{#                            {% set refStr = ref.name~"(" %}#}
+                            {% set docCount = 1 %}
+                            {% set manyDocArr = [] %}
+                            {% for document in ref.documents %}
+                                {#letters of recommendation#}                       
+                                {% set docHref = '<a href="'~path('fellapp_file_download', { 'id': document.id})~'">Letter '~docCount~'</a>' %}{% if ref.documents|length > docCount %}, {% endif %}   
+                                {% set manyDocArr = manyDocArr|merge([docHref]) %}
+                                {% set docCount = docCount + 1 %}
+                            {% endfor %}
+                            {% set refStr = ref.name~" ("~manyDocArr|join(', ')~")" %}
+                        {% endif %}                                              
+                          
+                        {#Case 2: no docs: referee name with href #anchor to ref div#}
+                        {#If the letter itself has not been uploaded, link to the anchor (add the anchors first) in the application page for that specific letter author:#}    
+                        {% if ref.documents|length == 0 %}
+                            {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~ref.name~'</a>' %}
+                        {% endif %} 
+                        
+                        {% set refArr = refArr|merge([refStr]) %}  
+                        
+                        {% set refcount = refcount + 1 %}
+                            
+                    {% endfor %}  
+                        
+                    {%if refArr|length > 0 %}
+                        <br>
+                        <p>
+                            Letters from: {{refArr|join(', ')|raw}}
+                        </p>    
+                    {% endif %}  
+                    
+                     
+                    <p>    
+                        <div class="interview-score-rank">Calculating score rank...</div>  
+                    </p>
                         
                 {% endif %}                                                                
                 
@@ -222,42 +268,34 @@
               {% else %}
                     {% for interview in interviewsArr %}
                          {{ interview|raw }} <br><br>
-                    {% endfor %} 
+                    {% endfor %}  
                          
-                    <br>
                     {% if interviewsAwaitingArr|length > 0 %}
-                        {% set interviewerCounter = 1 %}
-                        <p>
-                            Awaiting evaluations from 
-                            {% for interviewer in interviewsAwaitingArr %}                               
-                                <a href="{{ path('employees_showuser', { 'id': interviewer.id }) }}" target="_blank">
-                                    {{ interviewer.getUsernameOptimal() }}
-                                </a>
-                                {% if interviewsAwaitingArr|length > interviewerCounter %}
-                                    , 
-                                {% endif %}
-                                {% set interviewerCounter = interviewerCounter + 1 %}
-                            {% endfor %}
-                        </p>
-                                               
-                        <p>
-                            <a
-                                general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
-                                general-data-callback="refreshpage"
-                                href="{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}, true) }}">Invite these interviewers to submit evaluations
-                            </a>
-                            {% if fellapp.daysAfterInterviewDate() and fellapp.daysAfterInterviewDate() > 0 %}
-                                <b>(Interview date was {{ fellapp.interviewDate|date('m/d/Y','UTC') }}, {{ fellapp.daysAfterInterviewDate()|abs }} days ago).</b>
-                            {% endif %}
-                        </p>
-                    {% endif %}  
+                    {% set interviewerCounter = 1 %}
+                    <p>
+                        Awaiting evaluations from 
+                        {% for interviewer in interviewsAwaitingArr %}                               
+                            <a href="{{ path('employees_showuser', { 'id': interviewer.id }) }}" target="_blank">{{interviewer.getUsernameOptimal()}}</a>{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
+                            {% set interviewerCounter = interviewerCounter + 1 %}
+                        {% endfor %}
+                    </p>
+
+                    <p>
+                        <a
+                            general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
+                            general-data-callback="refreshpage"
+                            href="{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}, true) }}">Invite these interviewers to submit evaluations</a>
+                        {% if fellapp.daysAfterInterviewDate() and fellapp.daysAfterInterviewDate() > 0 %}
+                            <b>(Interview date was {{ fellapp.interviewDate|date('m/d/Y','UTC') }}, {{ fellapp.daysAfterInterviewDate()|abs }} days ago).</b>
+                        {% endif %}
+                    </p>
+                {% endif %}       
                          
               {% endif %}     
               
           </div>
-          <div class="modal-footer">
-            
-          </div>
+{#          <div class="modal-footer">            #}
+{#          </div>#}
         </div>
       </div>
     </div>

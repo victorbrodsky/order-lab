@@ -1060,35 +1060,13 @@ class FellAppController extends Controller {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
-        //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
-
-        //get status object
-        //$entity->setApplicationStatus($status);
-        $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
-        if( !$statusObj ) {
-            $logger->error('statusAction: Unable to find FellAppStatus by name='.$status);
-            throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);           
-        }
-
-        //change status
-        $entity->setAppStatus($statusObj);
-
-        $em->persist($entity);
-        $em->flush();
-
-        $eventType = 'Fellowship Application Status changed to ' . $statusObj->getAction();
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $event = $eventType . '; application ID ' . $id . ' by user ' . $user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
-
-        //return $this->redirect( $this->generateUrl('fellapp_home'));
+        
+        $event = $this->changeFellAppStatus($entity, $status, $request);
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -1099,6 +1077,34 @@ class FellAppController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode("ok"));
         return $response;
+    }
+    
+    public function changeFellAppStatus($fellapp, $status, $request) {
+        
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        
+        //get status object
+        $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
+        if( !$statusObj ) {
+            $logger->error('statusAction: Unable to find FellAppStatus by name='.$status);
+            throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);           
+        }
+
+        //change status
+        $fellapp->setAppStatus($statusObj);
+
+        $em->persist($fellapp);
+        $em->flush();
+
+        $eventType = 'Fellowship Application Status changed to ' . $statusObj->getAction();
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $event = $eventType . '; application ID ' . $fellapp->getID() . ' by user ' . $user;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
+        
+        return $event;
     }
 
 
@@ -1283,7 +1289,13 @@ class FellAppController extends Controller {
             $fellapp = $interview->getFellapp();
 
             $this->calculateScore($fellapp);
-
+            
+            //Upon submitting the first interview evaluation form for a given application, 
+            //if the current application status is not "Interviewee", automatically switch it to "Interviewee".
+            if( $fellapp->getAppStatus()->getName()."" != "interviewee" ) {
+                $this->changeFellAppStatus($fellapp, "interviewee", $request);
+            }
+            
             $em->persist($interview);
             $em->flush();
 
@@ -2093,7 +2105,7 @@ class FellAppController extends Controller {
                 $rankStr = $rank."rd";
             }
             
-            $res = "Combined Interview Score: ".
+            $res = "Interview Score: ".
                     $entity->getInterviewScore().
                     " (".$rankStr." highest of ".count($applicantions).
                     " available in ".$fellappType." for ".$startDateStr.")";

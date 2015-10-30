@@ -377,14 +377,13 @@
                     {% set scoreCount = 0 %}
                     {% set tooltip = "" %}                      
                     {% set scoreStyle = 'style=font-weight:bold;' %}
-                    {% for interview in entity.interviews %}
+                    {% for interview in entity.interviews if interview.interviewer %}
                         {% if not interview.totalRank %}
                             {% set scoreStyle = "" %}                             
                             {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview.interviewer]) %}
                         {% else %}
                             {% set scoreCount = scoreCount + 1 %} 
                             {% set interviewerUrl = '<a href="'~path('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %} 
-{#"<strong>"~interview.interviewer.getUsernameOptimal()~"</strong>:<br>"~                            #}
                             {% set interviewDescrStr =                                    
                                     interviewerUrl~":<br>"~       
                                     "Academic Rank - "~interview.academicRank~
@@ -523,7 +522,7 @@
                                 </div>
                                 <div style="float:left;">
                         {% if interviewsArr|length > 0 or interviewsAwaitingArr|length > 0 %}                                                                                                         
-                            <a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}">
+                            <a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}" data-toggle="tooltip" title="View Interview Evaluations">
                                 <span class="glyphicon glyphicon-list"></span>
                             </a>
                         
@@ -837,7 +836,7 @@
             }
             
             //add listnere to ok button to "Please wait ..." and disable button on click
-            var footer = btnEl.closest('.modal-footer');
+            var footer = $(btnEl).closest('.modal-footer');
             footer.html('Please wait ...');
 
             var url = getCommonBaseUrl(href,"fellowship-applications");

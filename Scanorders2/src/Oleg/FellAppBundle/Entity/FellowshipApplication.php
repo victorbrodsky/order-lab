@@ -1119,6 +1119,15 @@ class FellowshipApplication extends BaseUserAttributes {
         $usmleArr = array();
         
         foreach( $this->getExaminations() as $examination ) {
+            
+            if( 
+                !$examination->getUSMLEStep1Score() &&
+                !$examination->getUSMLEStep2CKScore() &&
+                !$examination->getUSMLEStep3Score()    
+            ) {
+                continue;
+            }
+            
             if( $examination->getUSMLEStep1Score() ) {
                 $usmleArr[] = $examination->getUSMLEStep1Score();
             } else {
@@ -1143,6 +1152,15 @@ class FellowshipApplication extends BaseUserAttributes {
         $comlexArr = array();
         
         foreach( $this->getExaminations() as $examination ) {
+            
+            if( 
+                !$examination->getCOMLEXLevel1Score() &&
+                !$examination->getCOMLEXLevel2Score() &&
+                !$examination->getCOMLEXLevel3Score()    
+            ) {
+                continue;
+            }
+            
             if( $examination->getCOMLEXLevel1Score() ) {
                 $comlexArr[] = $examination->getCOMLEXLevel1Score();
             } else {

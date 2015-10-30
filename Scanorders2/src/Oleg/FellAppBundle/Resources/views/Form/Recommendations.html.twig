@@ -21,7 +21,8 @@
 
 {% for reference in form.references %}
 
-<div class="well">
+<a name="reference{{refcount}}"></a>
+<div class="well" id="reference{{refcount}}">
 
     {% set refcount = refcount + 1 %}
 
