@@ -271,9 +271,12 @@
                          <br>{{ interview|raw }}<br>
                     {% endfor %}  
                          
+                    {% if interviewsArr|length > 0 and interviewsAwaitingArr|length > 0 %}
+                         <hr>
+                    {% endif %}     
+                         
                     {% if interviewsAwaitingArr|length > 0 %}
-                        {% set interviewerCounter = 1 %}
-                        <hr> 
+                        {% set interviewerCounter = 1 %}                       
                         <p>
                             Awaiting evaluations from 
                             {% for interviewer in interviewsAwaitingArr %}                               
