@@ -522,8 +522,8 @@
                                 </div>
                                 <div style="float:left;">
                         {% if interviewsArr|length > 0 or interviewsAwaitingArr|length > 0 %}                                                                                                         
-                            <a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}" data-toggle="tooltip" title="View Interview Evaluations">
-                                <span class="glyphicon glyphicon-list"></span>
+                            <a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}">
+                                <span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>
                             </a>
                         
                             {{ fellappmacros.addInterviewsModal(entity,interviewsArr,interviewsAwaitingArr) }}
