@@ -442,6 +442,17 @@ function researchLabListener( holder ) {
             return;
         }
     }
+    
+    //console.log('_cycleShow='+_cycleShow);
+    if( !_cycleShow ) {
+        //research lab list url: employees_researchlabs_pathaction_list      * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list")
+        //var researchlabUrl = getCommonBaseUrl("list/research-labs/","employees");
+        //console.log("researchlabUrl="+researchlabUrl);
+        //var tooltipStr = 'This field can be edited in the '+'<a href="'+researchlabUrl+'">Research Lab</a>'+' of the List Manager';
+        var tooltipStr = 'This field can be edited in the Research Lab of the List Manager';
+        //attach tooltip for all locked fields
+        attachTooltipForAllFields($('.user-researchlabs-holder'),tooltipStr);
+    }
 
     labs.on("change", function(e) {
 
@@ -449,10 +460,10 @@ function researchLabListener( holder ) {
 
         var labObject = labName.select2('data');
 
-        //console.log(labObject);
+        console.log(labObject);
 
         if( labObject ) {
-            //console.log("id="+labObject.id+", text="+labObject.text+', user_id='+user_id);
+            console.log("id="+labObject.id+", text="+labObject.text+', user_id='+user_id);
 
             var url = getCommonBaseUrl("util/common/researchlab/"+labObject.id+"/"+user_id,"employees");
 
@@ -500,6 +511,12 @@ function populateResearchlabData( data, elementName ) {
     if( data && data.length > 1 ) {
         throw new Error('More than 1 object found. count='+data.length);
     }
+    
+    //research lab list url: employees_researchlabs_pathaction_list      * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list")
+    //var researchlabUrl = getCommonBaseUrl("list/research-labs/","employees");
+    //console.log("researchlabUrl="+researchlabUrl);
+    //var tooltipStr = 'This field can be edited in the '+'<a href="'+researchlabUrl+'">Research Lab</a>'+' of the List Manager';
+    var tooltipStr = 'This field can be edited in the Research Lab of the List Manager';
 
     if( !data ) {
         //console.log("data is null => empty lab");
@@ -527,6 +544,9 @@ function populateResearchlabData( data, elementName ) {
         initDatepicker(holder);
         //initSingleDatepicker(foundedDateDatepicker);
         //initSingleDatepicker(dissolvedDateDatepicker);
+        
+        //attach tooltip for all locked fields
+        attachTooltipForAllFields(holder,tooltipStr);
 
         return;
     }
@@ -552,6 +572,9 @@ function populateResearchlabData( data, elementName ) {
         disableCheckbox(piDummy,false);
 
         initDatepicker(holder);
+        
+        //remove tooltip for all locked fields
+        removeTooltipForAllFields(holder);
 
         return;
     }
@@ -585,6 +608,9 @@ function populateResearchlabData( data, elementName ) {
         disableCheckbox(piDummy,false);
 
         initDatepicker(holder);
+        
+        //attach tooltip for all locked fields
+        attachTooltipForAllFields(holder,tooltipStr);
 
         return;
     }
@@ -595,9 +621,25 @@ function populateResearchlabData( data, elementName ) {
         } else {
             checkboxEl.prop("disabled", false);
         }
-    }
+    }       
 
     return;
+}
+
+function attachTooltipForAllFields(holder,tooltipStr) {
+    holder.find('input,select,textarea').each(function( index ) {
+        //console.log( index + ": " + $( this ).text() );
+        if( $(this).is('[readonly]') ) {
+            $(this).tooltip({
+                'title':tooltipStr
+            });
+        }
+    });
+}
+function removeTooltipForAllFields(holder) {
+    holder.find('input,select,textarea').each(function( index ) {       
+        $(this).tooltip('destroy');
+    });
 }
 
 //delete research lab from user in DB
@@ -660,6 +702,10 @@ function grantListener( holder ) {
             return;
         }
     }
+    
+    //attach tooltip for all locked fields
+    var tooltipStr = 'This field can be edited in the Grants of the List Manager';       
+    attachTooltipForAllFields($('.user-grants-holder'),tooltipStr);
 
     grants.on("change", function(e) {
 
@@ -718,6 +764,8 @@ function populateGrantData( data, elementName ) {
     if( data && data.length > 1 ) {
         throw new Error('More than 1 object found. count='+data.length);
     }
+    
+    var tooltipStr = 'This field can be edited in the Grants of the List Manager';
 
     if( !data ) {
         //console.log("data is null => empty lab");
@@ -756,6 +804,9 @@ function populateGrantData( data, elementName ) {
         disableEnableDropzone( dropzoneElement, true, null, true );
 
         initDatepicker(holder);
+
+        //attach tooltip for all locked fields
+        attachTooltipForAllFields(holder,tooltipStr);
 
         return;
     }
@@ -796,6 +847,9 @@ function populateGrantData( data, elementName ) {
         disableEnableDropzone( dropzoneElement, false, null, true );
 
         initDatepicker(holder);
+        
+        //remove tooltip for all locked fields
+        removeTooltipForAllFields(holder);
 
         return;
     }
@@ -845,6 +899,9 @@ function populateGrantData( data, elementName ) {
         disableEnableDropzone( dropzoneElement, true, null, true );
 
         initDatepicker(holder);
+        
+        //attach tooltip for all locked fields
+        attachTooltipForAllFields(holder,tooltipStr);
 
         return;
     }

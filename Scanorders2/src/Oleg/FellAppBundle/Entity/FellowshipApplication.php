@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
-
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 /**
  * @ORM\Entity
@@ -1091,6 +1091,10 @@ class FellowshipApplication extends BaseUserAttributes {
         foreach( $items as $item ) {
             if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
                 $schoolName = $item->getInstitution()."";
+                if( $item->getCompletionDate() ) {
+                    $transformer = new DateTimeToStringTransformer(null,null,'Y');                            
+                    $schoolName = $schoolName . ", " . $transformer->transform($item->getCompletionDate());
+                }
                 break;
             }
         }                    
