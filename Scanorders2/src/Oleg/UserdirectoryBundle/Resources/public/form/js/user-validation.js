@@ -28,7 +28,7 @@ function validateUser(btnEl,origuserid) {
     var primaryPublicUserId = $('#oleg_userdirectorybundle_user_primaryPublicUserId').val();
     primaryPublicUserId = trimWithCheck(primaryPublicUserId);
     
-    var preferredEmail = $('.user-email').val('val'); 
+    var preferredEmail = $('.user-email').val(); 
     preferredEmail = trimWithCheck(preferredEmail);
 
     if( userType == "" ) {
