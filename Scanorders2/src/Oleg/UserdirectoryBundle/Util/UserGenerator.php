@@ -336,9 +336,8 @@ class UserGenerator {
 
             //Research Lab Title : s2id_oleg_userdirectorybundle_user_researchLabs_0_name
             $researchLabTitleStr = $this->getValueByHeaderName('Research Lab Title', $rowData, $headers);
-            if( $researchLabTitleStr ) {
-                $researchLab = new ResearchLab($systemuser);
-                $researchLab->setName($researchLabTitleStr);
+            if( $researchLabTitleStr ) {               
+                $researchLab = $this->getObjectByNameTransformer('ResearchLab',$researchLabTitleStr,$systemuser);
                 $user->addResearchLab($researchLab);
 
                 //Principle Investigator of this Lab
