@@ -434,7 +434,7 @@ class UtilController extends Controller {
      */
     public function getResearchlabByIdAction( $id, $subjectUser=null ) {
 
-        if( !is_numeric($id) || !$subjectUser || $subjectUser == 'undefined' ) {
+        if( !is_numeric($id) ) {
             //echo "return null";
             $output = array();
             $response = new Response();
@@ -474,6 +474,12 @@ class UtilController extends Controller {
 
         foreach( $labs as $lab ) {
 
+            if( $subjectUser && is_numeric($subjectUser) ) {
+                $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+            } else {
+                $subjectUserDB = null;
+            }
+            
             //$commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUserDB, 'researchLab'=>$researchLabDB ) );
             //$piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUserDB, 'researchLab'=>$researchLabDB ) );
 
@@ -552,8 +558,7 @@ class UtilController extends Controller {
      * @Method("GET")
      */
     public function getGrantByIdAction( $id, $subjectUser=null ) {
-
-        //if( !is_numeric($id) || !$subjectUser || $subjectUser == 'undefined' ) {
+       
         if( !is_numeric($id) ) {
             //echo "return null";
             $output = array();

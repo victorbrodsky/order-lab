@@ -196,7 +196,7 @@ class GrantRepository extends EntityRepository {
                 $em->flush();
 
             }
-        }
+        } //if
 
         //exit('remove grant');
 
