@@ -553,7 +553,8 @@ class UtilController extends Controller {
      */
     public function getGrantByIdAction( $id, $subjectUser=null ) {
 
-        if( !is_numeric($id) || !$subjectUser || $subjectUser == 'undefined' ) {
+        //if( !is_numeric($id) || !$subjectUser || $subjectUser == 'undefined' ) {
+        if( !is_numeric($id) ) {
             //echo "return null";
             $output = array();
             $response = new Response();
@@ -562,9 +563,7 @@ class UtilController extends Controller {
             return $response;
         }
 
-        $em = $this->getDoctrine()->getManager();
-
-        $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+        $em = $this->getDoctrine()->getManager();       
 
         $query = $em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Grant', 'list')
@@ -594,6 +593,12 @@ class UtilController extends Controller {
         $output = array();
 
         if( $grant ) {
+            
+            if( $subjectUser && is_numeric($subjectUser) ) {
+                $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+            } else {
+                $subjectUserDB = null;
+            }
 
             $userComment = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUserDB, 'grant'=>$grant ) );
             $userEffort = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUserDB, 'grant'=>$grant ) );
