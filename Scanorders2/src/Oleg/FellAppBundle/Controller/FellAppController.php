@@ -118,7 +118,7 @@ class FellAppController extends Controller {
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
         //$dql->groupBy('fellapp');
-        $dql->orderBy("fellapp.timestamp","DESC");
+        $dql->orderBy("fellapp.id","DESC");
         $dql->leftJoin("fellapp.appStatus", "appStatus");
         $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
         $dql->leftJoin("fellapp.user", "applicant");
@@ -2090,8 +2090,8 @@ class FellAppController extends Controller {
                 $rank++;
             }
 
-            //Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])
-            //Combined Interview Score: 3.3 (1st highest of 6 available in Cytopathology for 2017)                  
+            //Combined Interview Score: X (Nth best of M available in [Fellowship specialty] for [Year])
+            //Combined Interview Score: 3.3 (1st best of 6 available in Cytopathology for 2017)                  
 
             $rankStr = $rank."th";
             
@@ -2107,7 +2107,7 @@ class FellAppController extends Controller {
             
             $res = "Interview Score: ".
                     $entity->getInterviewScore().
-                    " (".$rankStr." highest of ".count($applicantions).
+                    " (".$rankStr." best of ".count($applicantions).
                     " available in ".$fellappType." for ".$startDateStr.")";
         
         } 
