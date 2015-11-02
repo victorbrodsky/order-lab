@@ -208,20 +208,25 @@
                     {#lists letters of recommendation authors with links to the uploaded letter under the name if one is uploaded#}   
                     {% set refcount = 1 %}  
                     {% set refArr = [] %}      
-                    {% for ref in fellapp.references if ref.name is not null %}
+                    {% for ref in fellapp.references if ref.name is not null or ref.documents|length > 0 %}
+                        
+                        {% set refereeNameStr = ref.name %}
+                        {% if ref.name is null %}
+                            {% set refereeNameStr = "Unnamed" %}
+                        {% endif %}
                         
                         {% set refStr = null %}  
                         
                         {#Case 1: single doc: href with referee name#}
                         {% if ref.documents|length == 1 %}
-                            {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~ref.name~'</a>' %}
+                            {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
                             {% set refStr = refStr~' <a href="'~path('fellapp_file_download', { 'id': ref.documents|first.id})~'"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>' %}
-{#                            {% set refStr = '<a href="'~path('fellapp_file_download', { 'id': ref.documents|first.id})~'">'~ref.name~'</a>' %}#}
+{#                            {% set refStr = '<a href="'~path('fellapp_file_download', { 'id': ref.documents|first.id})~'">'~refereeNameStr~'</a>' %}#}
                         {% endif %}
                         
                         {#Case 2: many docs: referee name with href1, href2 ...#}
                         {% if ref.documents|length > 1 %}
-{#                            {% set refStr = ref.name~"(" %}#}
+{#                            {% set refStr = refereeNameStr~"(" %}#}
                             {% set docCount = 1 %}
                             {% set manyDocArr = [] %}
                             {% for document in ref.documents %}
@@ -230,14 +235,14 @@
                                 {% set manyDocArr = manyDocArr|merge([docHref]) %}
                                 {% set docCount = docCount + 1 %}
                             {% endfor %}
-                            {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~ref.name~'</a>' %}    
+                            {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}    
                             {% set refStr = refStr~" ("~manyDocArr|join(', ')~")" %}
                         {% endif %}                                              
                           
                         {#Case 2: no docs: referee name with href #anchor to ref div#}
                         {#If the letter itself has not been uploaded, link to the anchor (add the anchors first) in the application page for that specific letter author:#}    
                         {% if ref.documents|length == 0 %}
-                            {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~ref.name~'</a>' %}
+                            {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
                         {% endif %} 
                         
                         {% set refArr = refArr|merge([refStr]) %}  
@@ -252,6 +257,24 @@
                             Letters from: {{refArr|join(', ')|raw}}
                         </p>    
                     {% endif %}  
+                        
+                    {#                    Other Documents    #}
+                    {% set otherDocStr = null %}
+                    {% if fellapp.documents|length == 1 %}
+                        {% set otherDocStr = "Other Documents:" %}
+                        {% set otherDocStr = otherDocStr~' <a href="'~path('fellapp_file_download', { 'id': fellapp.documents|first.id})~'"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>' %}
+                        {{ otherDocStr|raw }}
+                    {% endif %}     
+                    {% if fellapp.documents|length > 0 %}
+                        {% set docCount = 1 %}
+                        {% set manyDocArr = [] %}
+                        {% for document in fellapp.documents %}                     
+                            {% set docHref = '<a href="'~path('fellapp_file_download', { 'id': document.id})~'">Document '~docCount~'</a>' %}   
+                            {% set manyDocArr = manyDocArr|merge([docHref]) %}
+                            {% set docCount = docCount + 1 %}
+                        {% endfor %}                     
+                        {{ "Other Documents:"~" "~manyDocArr|join(', ') }}
+                    {% endif %}    
                     
                      
                     <p>    
