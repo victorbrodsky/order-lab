@@ -2210,7 +2210,7 @@
         {% if cycle != "show_user" and cycle != "create_user" %}
             <p>
                 <div>
-                    <button class="btn btn-warning" name="btnSubmit" type="button" onclick="validateUser({{entity.id}})">Update</button>
+                    <button class="btn btn-warning" name="btnSubmit" type="button" onclick="validateUser(this,{{entity.id}})">Update</button>
                     <a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>
                 </div>
             </p>
@@ -2218,7 +2218,7 @@
 
         {% if cycle == "create_user" %}
             <p>
-                <button class="btn btn-success" name="btnSubmit" type="button" onclick="validateUser()">Add Employee</button>
+                <button class="btn btn-success" name="btnSubmit" type="button" onclick="validateUser(this)">Add Employee</button>
             </p>
         {% endif %}
 

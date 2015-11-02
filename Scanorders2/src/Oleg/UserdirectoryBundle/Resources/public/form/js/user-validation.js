@@ -2,7 +2,10 @@
  * Created by oli2002 on 9/25/14.
  */
 
-function validateUser(origuserid) {
+function validateUser(btnEl,origuserid) {
+
+    var lbtn = Ladda.create(btnEl);
+    lbtn.start();
 
     var actionFlag = 'new';
 
@@ -13,20 +16,26 @@ function validateUser(origuserid) {
 
     removeAllErrorAlerts();
 
-    var firstName = $('#oleg_userdirectorybundle_user_firstName').val();
+    var firstName = $('.user-firstName').val();
     firstName = trimWithCheck(firstName);
-    var lastName = $('#oleg_userdirectorybundle_user_lastName').val();
+    
+    var lastName = $('.user-lastName').val();
     lastName = trimWithCheck(lastName);
 
     var userType = $('.user-keytype-field').select2('val');
     userType = trimWithCheck(userType);
+    
     var primaryPublicUserId = $('#oleg_userdirectorybundle_user_primaryPublicUserId').val();
     primaryPublicUserId = trimWithCheck(primaryPublicUserId);
+    
+    var preferredEmail = $('.user-email').val('val'); 
+    preferredEmail = trimWithCheck(preferredEmail);
 
     if( userType == "" ) {
         $('#userinfo').collapse('show');
         addErrorAlert("Primary Public User ID Type is empty");
         $('.user-keytype-field').parent().addClass("has-error");
+        lbtn.stop();
         return false;
     }
 
@@ -34,26 +43,55 @@ function validateUser(origuserid) {
         $('#userinfo').collapse('show');
         addErrorAlert("Primary Public User ID is empty");
         $('#oleg_userdirectorybundle_user_primaryPublicUserId').parent().addClass("has-error");
+        lbtn.stop();
         return false;
-    }
+    }        
 
+    //console.log("firstName="+firstName);
     if( firstName == "" ) {
         $('#userinfo').collapse('show');
         addErrorAlert("First Name is empty");
-        $('#oleg_userdirectorybundle_user_firstName').parent().addClass("has-error");
+        $('.user-firstName').parent().addClass("has-error");
+        lbtn.stop();
         return false;
     }
 
+    //console.log("lastName="+lastName);
     if( lastName == "" ) {
         $('#userinfo').collapse('show');
         addErrorAlert("Last Name is empty");
-        $('#oleg_userdirectorybundle_user_lastName').parent().addClass("has-error");
+        $('.user-lastName').parent().addClass("has-error");
+        lbtn.stop();
+        return false;
+    }
+    
+    if( preferredEmail == "" ) {
+        $('#userinfo').collapse('show');
+        addErrorAlert("Preferred Email is empty");
+        $('.user-email').parent().addClass("has-error");
+        lbtn.stop();
         return false;
     }
 
     //field with required attributes (location Name can not be empty)
     if( validateSimpleRequiredAttrFields() == false ) {
+        lbtn.stop();
         return false;
+    }
+
+    //check if CWID exists in LDAP active directory
+    var userTypeText = $('.user-keytype-field').select2('data').text;
+    if( userTypeText == "WCMC CWID" ) {
+        if( isValidCWID(primaryPublicUserId) == false ) {
+            $('#userinfo').collapse('show');
+            $('#oleg_userdirectorybundle_user_primaryPublicUserId').parent().addClass("has-error");        
+
+            var alert = 'An employee with the provided User ID Type "'+userTypeText+'" and User ID "'+primaryPublicUserId+'" does not exists in WCMC LDAP directory.' +          
+                "Please correct the new employee's User ID Type and User ID.";
+            addErrorAlert(alert);
+            lbtn.stop();
+            return false;
+        }
     }
 
     //check usertype + userid combination
@@ -71,8 +109,9 @@ function validateUser(origuserid) {
             getUserUrl(userid,user.firstName+" "+user.lastName) +
             "Please correct the new employee's User ID Type and User ID or edit the existing employee's information.";
         addErrorAlert(alert);
+        lbtn.stop();
         return false;
-    }
+    }      
 
 
     //check duplicate SSN
@@ -92,12 +131,14 @@ function validateUser(origuserid) {
 
         addErrorAlert(alert);
 
+        lbtn.stop();
         return false;
     }
 
     //check existing MRN identifier
     if( validateMrntypeIdentifier() == false ) {
         console.log('Validation Mrntype Identifier failed');
+        lbtn.stop();
         return false;
     }
 
@@ -163,6 +204,22 @@ function checkUsertypeUserid(userType,userId) {
     return user;
 }
 
+function isValidCWID(userId) {
+    var valid = false;
+    var url = getCommonBaseUrl("util/"+"cwid-usertype-userid","employees");
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: {userId: userId},
+        timeout: _ajaxTimeout,
+        async: false
+    }).success(function(data) {
+        if( data == "ok" ) {
+            valid = true;
+        } 
+    });
+    return valid;
+}
 
 function validateSimpleRequiredAttrFields() {
 

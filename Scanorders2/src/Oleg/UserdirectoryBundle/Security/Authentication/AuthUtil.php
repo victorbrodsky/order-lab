@@ -13,8 +13,8 @@ use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 class AuthUtil {
 
-    private $sc;
-    private $em;
+    private $sc;        //container
+    private $em;        //entity manager
     private $logger;
 
     private $supportedUsertypesAperio = array('aperio');

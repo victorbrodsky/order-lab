@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
 
 //TODO: optimise by removing foreach loops:
 //create optimalShortName: return abbr, or return short, or return name
@@ -824,6 +825,38 @@ class UtilController extends Controller {
             $element = array('id'=>$user->getId(), 'firstName'=>$user->getFirstName(), 'lastName'=>$user->getLastName() );
             $output[] = $element;
         }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+    
+    
+    /**
+     * Check if this cwid exists in LDAP active directory
+     * @Route("/cwid-usertype-userid", name="employees_check_cwid-usertype-userid")
+     * @Method("GET")
+     */
+    public function checkCWIDUsertypeUseridAction(Request $request) {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+       
+        $userId = trim( $request->get('userId') );
+
+        $output = "ok";
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $authUtil = new AuthUtil($this->container,$em);
+        
+        //search this user if exists in ldap directory
+        $searchRes = $authUtil->searchLdap($userId);
+        if( $searchRes == NULL || count($searchRes) == 0 ) {
+            $output = "notok";
+        }       
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

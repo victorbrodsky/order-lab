@@ -31,7 +31,7 @@ class UserInfoType extends AbstractType
             'attr' => array('class'=>'form-control user-lastName') //'required'=>'required'
         ));
         $builder->add('email', 'email', array(
-            'label' => 'Preferred Email:',
+            'label' => '* Preferred Email:',
             'attr' => array('class'=>'form-control user-email')
         ));
         $builder->add('displayName', null, array(
