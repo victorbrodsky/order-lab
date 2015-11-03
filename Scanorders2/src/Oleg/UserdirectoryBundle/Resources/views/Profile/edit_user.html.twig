@@ -1,7 +1,12 @@
+
 {% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+
+{% if fulluser == false %} 
+    {% block header %}{% endblock %}
+{% endif %}
 
 {#Snapshot css#}
 {% block additionalcss %}
@@ -1015,13 +1020,15 @@
 
 
     {#user's snapshot#}
-    {% if showFlag %}
-        {{ userform.snapshot_steve(entity,sitename,cycle) }}
-        {#<br>#}
-        {#{{ userform.snapshot(entity,sitename,cycle) }}#}
-    {% else %}
-        {#avatar form modal#}
-        {{ usermacros.avatarForm(entity,cycle) }}
+    {% if fulluser == true %}     
+        {% if showFlag %}
+            {{ userform.snapshot_steve(entity,sitename,cycle) }}
+            {#<br>#}
+            {#{{ userform.snapshot(entity,sitename,cycle) }}#}
+        {% else %}
+            {#avatar form modal#}
+            {{ usermacros.avatarForm(entity,cycle) }}
+        {% endif %}
     {% endif %}
 
     <br>
@@ -1104,13 +1111,19 @@
             {% set userEditor = false %}
         {% endif %}
 
+        {#testing to remove sections#}
+        {% if form.locations is defined %}
+            {% set locationSections = form.locations %}
+        {% else %}
+            {% set locationSections = null %}
+        {% endif %}
 
         <div id="form-prototype-data"
              data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cycle,'user-administrativeTitles','prototype', sitename)|e }}"
              data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cycle,'user-appointmentTitles','prototype', sitename)|e }}"
              data-prototype-user-medicaltitles = "{{ userform.baseTitle(form.medicalTitles,cycle,'user-medicalTitles','prototype', sitename)|e }}"
              data-prototype-user-trainings = "{{ usermacros.trainingObject(form.trainings,cycle,'user-trainings','prototype',sitename,entity)|e }}"
-             data-prototype-user-locations = "{{ usermacros.locationObject(form.locations,cycle,'user-locations','prototype',sitename,entity)|e }}"
+             data-prototype-user-locations = "{{ usermacros.locationObject(locationSections,cycle,'user-locations','prototype',sitename,entity)|e }}"
              data-prototype-user-statelicense = "{{ statelicensePrototype|e }}"
              data-prototype-user-boardcertification = "{{ boardcertificationPrototype|e }}"
              data-prototype-user-codenyph = "{{ codeNYPHPrototype|e }}"
@@ -1419,10 +1432,12 @@
                 <div class="panel-body">
 
                     <div class="user-locations-holder">
-                        {% for location in form.locations %}
-                            {{ usermacros.locationObject(location,cycle,'user-locations','noprototype',sitename,entity) }}
-                        {% endfor %}
-                        {{ usermacros.addNewObjectBtn( cycle, 'user-locations', 'Add Location' ) }}
+                        {% if form.locations is defined %}
+                            {% for location in form.locations %}
+                                {{ usermacros.locationObject(location,cycle,'user-locations','noprototype',sitename,entity) }}
+                            {% endfor %}
+                            {{ usermacros.addNewObjectBtn( cycle, 'user-locations', 'Add Location' ) }}
+                        {% endif %}
                     </div>
 
                 </div>
@@ -1455,6 +1470,7 @@
 
         {#Research Lab(s)#}
         {#If the user has no Research Labs (no array members with a research lab title), hide the whole Research Lab(s) section on the profile page.#}
+    {% if form.researchLabs is defined %}
         {% set showResearchLabs = false %}
         {% for researchLabs in form.researchLabs %}
             {% if researchLabs.vars.value or researchLabs.weblink.vars.value or researchLabs.foundedDate.vars.value or cycle != 'show_user' %}
@@ -1499,8 +1515,10 @@
         {% else %}
             {% do form.researchLabs.setRendered %}
         {% endif %}
+    {% endif %}
 
         {#Grants#}
+    {% if form.grants is defined %}    
         {% set showGrants = false %}
         {% for grant in form.grants %}
             {% if grant.vars.value or grant.grantid.vars.value or grant.amount.vars.value or grant.startDate.vars.value %}
@@ -1543,6 +1561,7 @@
         {% else %}
             {% do form.grants.setRendered %}
         {% endif %}
+    {% endif %}
 
 
         {#Publications#}

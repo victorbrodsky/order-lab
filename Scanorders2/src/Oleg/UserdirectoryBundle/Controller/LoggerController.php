@@ -27,7 +27,8 @@ class LoggerController extends Controller
      * @Template("OlegUserdirectoryBundle:Logger:logger_object.html.twig")
      */
     public function getAuditLogAction(Request $request)
-    {
+    {       
+        
         $postData = $request->get('postData');
         $userid = $request->get('id');
         $onlyheader = $request->get('onlyheader');

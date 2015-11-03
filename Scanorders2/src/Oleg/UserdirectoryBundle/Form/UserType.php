@@ -375,6 +375,9 @@ class UserType extends AbstractType
     }
 
     public function researchUser($builder) {
+        
+if(1){    
+        //it takes 4 seconds to load
         $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
         $builder->add('researchLabs', 'collection', array(
             'type' => new ResearchLabType($params),
@@ -386,7 +389,9 @@ class UserType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__researchlabs__',
         ));
-
+}
+if(1){ 
+        //it takes 7 seconds to load
         $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
         $builder->add('grants', 'collection', array(
             'type' => new GrantType($params),
@@ -398,7 +403,9 @@ class UserType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__grants__',
         ));
+}
 
+if(1){        
         $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
         $builder->add('publications', 'collection', array(
             'type' => new PublicationType($params),
@@ -434,6 +441,7 @@ class UserType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__lectures__',
         ));
+}
 
         return $builder;
     }

@@ -29,7 +29,8 @@ class TreeController extends Controller {
      * @Method({"GET", "POST"})
      */
     public function getTreeByParentAction(Request $request) {
-
+       
+        
         $userid = trim( $request->get('userid') );
         $opt = trim( $request->get('opt') );
         $thisid = trim( $request->get('thisid') );

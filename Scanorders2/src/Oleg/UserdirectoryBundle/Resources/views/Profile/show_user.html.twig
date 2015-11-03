@@ -1,0 +1,60 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::Profile/edit_user.html.twig" as userform %}
+
+{#Snapshot css#}
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/oleguserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+        
+{% block title %}
+    {{ title }}
+{% endblock %}
+        
+        
+{% block content %}
+
+        
+    <h4 class="text-info" align="center">{{ title }}</h4>
+
+    {{ userform.snapshot_steve(entity,sitename,cycle) }}
+    
+    <br>
+    
+    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% set userEditor = true %}
+    {% else %}
+        {% set userEditor = false %}
+    {% endif %}
+    
+    {% if userEditor == true or entity.id == app.security.getToken().getUser().getId() %}     
+        <p><a class="btn btn-success" href="{{ path(sitename~'_user_edit',{'id':entity.id}) }}">Edit</a></p>
+    {% endif %}
+    
+    {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}
+{#    {{ render_hinclude( url('employees_showuser_only',{'id':entity.id}), {'default': 'Loading...'} ) }}#}
+    {{ render_hinclude( url('employees_showuser_only',{'id':entity.id}) ) }}
+        
+{#    render(controller("OlegUserdirectoryBundle:User:pendingAdminReview"))#}
+{#    {{ render_hinclude( controller('OlegUserdirectoryBundle:User:showOnlyUser',{'id':user_id}) ) }}    #}
+       
+    
+    
+{% endblock %}    
+
+    
+    
+{% block additionaljs %}
+
+    {% javascripts
+        '@OlegUserdirectoryBundle/Resources/public/hinclude/hinclude.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    
+{% endblock %}    
+    

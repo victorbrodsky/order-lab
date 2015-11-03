@@ -93,8 +93,8 @@ class UserController extends Controller
      *
      * @Route("/my-objects", name="employees_my_objects")
      */
-    public function myObjectsAction(Request $request) {
-
+    public function myObjectsAction(Request $request) {        
+        
         $tablename = $request->get('tablename');
         $objectid = $request->get('id');
         $objectname = $request->get('name');
@@ -1491,8 +1491,71 @@ class UserController extends Controller
     ////////////////////// EOF Create New User //////////////////////
 
 
+    /**
+     * @Route("/user/show/ee", name="employees_showuser_notstrict")
+     * @Route("/user/optimized/{id}", name="employees_showuser_optimized", requirements={"id" = "\d+"}, options={"expose"=true})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     */
+    public function showUserOptimizedAction($id)
+    {
+        //$secUtil = $this->get('user_security_utility');
+        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+               
+        
+//        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+//        $dql =  $repository->createQueryBuilder("user");
+//        $dql->select('user','infos','avatar');
+//        $dql->leftJoin("user.infos", "infos");
+//        $dql->leftJoin("user.avatar", "avatar");
+//        $dql->where('user.id = '.$id);
+//        $query = $em->createQuery($dql);
+        //$entity = $query->getArrayResult();
+        //$entity = $query->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        //$entity = $query->getSingleResult();   
+        
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
 
+        //print_r($entity);
+        //echo "<br><br>";
+        //print_r($entity[0]['infos']);
+        
+        //echo "displayName" . $entity[0]['infos'][0]['displayName'] . "<br>";
+        
+        return array(
+            'entity' => $entity,           
+            'cycle' => 'show_user',
+            'user_id' => $id,
+            'sitename' => $this->container->getParameter('employees.sitename'),          
+            'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
+            //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName']    
+        );
+    }
 
+    /**
+     * @Route("/user/only/{id}", name="employees_showuser_only", requirements={"id" = "\d+"}, options={"expose"=true})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     */
+    public function showOnlyUserAction($id)
+    {
+        //$secUtil = $this->get('user_security_utility');
+        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        return $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
+    }
 
     /**
      * @Route("/user/show/ee", name="employees_showuser_notstrict")
@@ -1509,7 +1572,7 @@ class UserController extends Controller
 
         return $this->showUser($id,$this->container->getParameter('employees.sitename'));
     }
-    public function showUser($id, $sitename=null) {
+    public function showUser($id, $sitename=null, $fulluser=true) {
 
         $request = $this->container->get('request');
         $em = $this->getDoctrine()->getManager();
@@ -1566,7 +1629,8 @@ class UserController extends Controller
             'sitename' => $sitename,
             'roleobjects' => $roleobjects,
             'postData' => $request->query->all(),
-            'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
+            'title' => 'Employee Profile ' . $entity->getUsernameOptimal(),
+            'fulluser' => $fulluser
         );
     }
 
