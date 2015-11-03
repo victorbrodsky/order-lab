@@ -1469,6 +1469,18 @@
                         <a data-toggle="collapse" href="#ResearchLabs">
                             Research Lab(s)
                         </a>
+                        
+                        {% if not showFlag %}
+                            <a style="float:right;" href="{{ path('employees_researchlabs_pathaction_list') }}" 
+                               class="element-with-tooltip-always"
+                               data-toggle="tooltip" 
+                               title="The fields in this section can be edited in the Research Labs of the List Manager"
+                               target="_blank"
+                            >
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </a>                       
+                        {% endif %}
+                        
                     </h4>
                 </div>
                 <div id="ResearchLabs" class="panel-collapse collapse {{ collapsein }}">
@@ -1503,6 +1515,16 @@
                         <a data-toggle="collapse" href="#Grants">
                             Grant(s)
                         </a>
+                        {% if not showFlag %}
+                            <a style="float:right;" href="{{ path('employees_grants_pathaction_list') }}" 
+                               data-toggle="tooltip" 
+                               class="element-with-tooltip-always"
+                               title="The fields in this section can be edited in the Grants of the List Manager"
+                               target="_blank"
+                            >
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </a>                       
+                        {% endif %}
                     </h4>
                 </div>
                 <div id="Grants" class="panel-collapse collapse {{ collapsein }}">
