@@ -223,11 +223,17 @@ class ReportGenerator {
 //        }
 
         //echo "Echo: try Run queue count " . count($processes) . ": running process id=".$queue->getRunningProcess()."<br>";
-        $logger->notice("Try Run queue: processes count=" . count($processes) . "; running process id=".$queue->getRunningProcess()."; process starttime=".$starttime);
+        $logger->notice("Try Run queue: runningGenerationReport=".$this->runningGenerationReport."; processes count=" . count($processes) . "; running process id=".$queue->getRunningProcess()."; process starttime=".$starttime);
 
         if( !$this->runningGenerationReport && $process && !$queue->getRunningProcess() ) {
 
-            //make sure libreoffice is not running
+            $logger->notice("Conditions allow to run process getFellappId=".$process->getFellappId());
+            
+            //1) prepare to run
+            //1a) reset queue
+            $this->resetQueue($queue);
+            
+            //1b) make sure libreoffice is not running
             //soffice.bin
             //$task_pattern = '~(helpctr|jqs|javaw?|iexplore|acrord32)\.exe~i';
             $task_pattern = '~(soffice.bin|soffice.exe)~i';
@@ -246,12 +252,9 @@ class ReportGenerator {
             } else {
                 //task is not running => continue
             }
+           
 
-            //1) prepare to run
-            //1a) reset queue
-            $this->resetQueue($queue);
-
-            //1b) set running flag
+            //1c) set running flag
             $this->runningGenerationReport = true;
             $queue->setRunningProcess($process);
             $queue->setRunning(true);
@@ -265,30 +268,29 @@ class ReportGenerator {
             //echo "Start running fell report id=" . $process->getFellappId() . "; remaining in queue " . (count($processes)-1) ."<br>";
             $logger->notice("Start running fell report id=" . $process->getFellappId());
 
-            $time_start = microtime(true);
+            //$time_start = microtime(true);
 
+            //2) generate pdf report
             $fellappRepGen = $this->container->get('fellapp_reportgenerator');
             $res = $fellappRepGen->generateFellAppReport( $process->getFellappId() );
 
-            $time_end = microtime(true);
-            $execution_time = ($time_end - $time_start);
-
-            $reportFileName = $res['filename'];
+            //$time_end = microtime(true);
+            //$execution_time = ($time_end - $time_start);           
             
             //logger finish event
             //self::$logger->notice("Finished running fell report fellappid=" . $currentQueueElement['id'] . "; executed in " . $execution_time . " sec" . "; report path=" . $res['report'] );
             //$logger->notice("Finished running fell report fellappid=" . $process->getFellappId() . "; executed in " . $execution_time . " sec" . "; res=" . $res['report'] );
-
             
-            //reset all queue related parameters
+            //3) reset all queue related parameters
             $this->resetQueue($queue,$process);
 
-            //run next in queue
+            //4) run next in queue
             //$this->tryRun();
             //$cmd = 'php ../app/console fellapp:generatereportrun --env=' . $this->env;
             $cmd = 'php ../app/console fellapp:generatereportrun --env=prod';
             $this->windowsCmdRunAsync($cmd);
 
+            $reportFileName = $res['filename'];
         }
 
         return $reportFileName;
