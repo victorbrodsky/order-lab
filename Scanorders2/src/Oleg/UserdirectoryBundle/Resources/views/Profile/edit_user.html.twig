@@ -4,7 +4,8 @@
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 
-{% if not fulluser %} 
+{% if fulluser %} 
+{% else %}
     {% block header %}{% endblock %}
 {% endif %}
 
