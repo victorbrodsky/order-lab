@@ -1545,7 +1545,7 @@ class UserController extends Controller
     /**
      * @Route("/user/only/{id}", name="employees_showuser_only", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("OlegUserdirectoryBundle:Profile:edit_user_only.html.twig")
      */
     public function showOnlyUserAction($id)
     {
@@ -1554,7 +1554,11 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        return $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
+        $result = $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
+        
+        //$result[] = 
+        
+        return $result;
     }
 
     /**
