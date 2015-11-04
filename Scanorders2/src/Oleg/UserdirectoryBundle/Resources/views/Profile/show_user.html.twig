@@ -67,7 +67,7 @@
 
             //alert("yay!");
 
-            regularCombobox();
+            //regularCombobox();
             
             //$("#user-profile-form").load( function(){
             //    alert('user-profile-form is loaded');
@@ -77,8 +77,77 @@
                 //alert("Hello"); 
                 regularCombobox();
             }, 10000);
+            
+            //var timesRun = 0;
+            //var interval = setInterval(function(){
+                //console.log("timesRun="+timesRun);
+                //timesRun += 1;
+                //if(timesRun === 60){
+                //if( $("#user-profile-form") || timesRun > 30 ) {
+                    
+                    //initUserForm();
+                    
+                    //clearInterval(interval);
+                //}
+                //do whatever here..
+            //}, 2000); 
 
         });
+        
+        
+        function initUserForm() {
+            setCicleShow();          
+
+            initDatepicker();
+
+            expandTextarea();
+
+            $('.panel-collapse').collapse({'toggle': false});
+
+            regularCombobox();
+
+            initTreeSelect();
+
+            //composite tree as combobox select2 view
+            getComboboxCompositetree();
+
+            //jstree in admin page for Institution tree
+            getJstree('UserdirectoryBundle','Institution');
+            getJstree('UserdirectoryBundle','CommentTypeList');
+
+            getComboboxResidencyspecialty();
+
+            //init generic comboboxes
+            initAllComboboxGeneric();
+
+            processEmploymentStatusRemoveButtons();
+
+            positionTypeListener();
+
+            initUpdateExpectedPgy();
+
+            initFileUpload();
+
+            windowCloseAlert();
+
+            confirmDeleteWithExpired();
+
+            initDatetimepicker();
+
+            userCloneListener();
+
+            identifierTypeListener();
+
+            researchLabListener();
+
+            grantListener();
+
+            initTypeaheadUserSiteSearch();
+
+            degreeListener();
+
+            generalConfirmAction();
+        }
 
     </script>    
     
