@@ -36,25 +36,51 @@
     {% endif %}
     
     {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}
-{#    {{ render_hinclude( url('employees_showuser_only',{'id':entity.id}), {'default': 'Loading...'} ) }}#}
-    {{ render_hinclude( url('employees_showuser_only',{'id':entity.id}) ) }}
+    {{ render_hinclude( url('employees_showuser_only',{'id':entity.id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
+{#        {{ render( url('employees_showuser_only',{'id':entity.id}) ) }}#}
         
 {#    render(controller("OlegUserdirectoryBundle:User:pendingAdminReview"))#}
-{#    {{ render_hinclude( controller('OlegUserdirectoryBundle:User:showOnlyUser',{'id':user_id}) ) }}    #}
-       
-    
+{#    {{ render_hinclude( controller("OlegUserdirectoryBundle:User:showOnlyUser",{"id":user_id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}#}
+{#    {{ render( controller('OlegUserdirectoryBundle:User:showOnlyUser',{'id':user_id}) ) }}#}
+          
+{#     <hx:include src="{{ path('employees_showuser_only',{'id':entity.id}) }}"></hx:include>   #}
+        
+{#        <link rel="import" href="{{ path('employees_showuser_only',{'id':entity.id}) }}" async data-target="this" data-source="#selector" />#}
     
 {% endblock %}    
 
-    
+ 
+{#{% block mainjs %}{% endblock %}#}
     
 {% block additionaljs %}
 
+{#        '@OlegUserdirectoryBundle/Resources/public/webcomponents/webcomponents.js'#}
     {% javascripts
-        '@OlegUserdirectoryBundle/Resources/public/hinclude/hinclude.js'
+        '@OlegUserdirectoryBundle/Resources/public/hinclude/hinclude.js'      
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+        
+    <script>
+    
+        $(document).ready(function() {
+
+            //alert("yay!");
+
+            regularCombobox();
+            
+            //$("#user-profile-form").load( function(){
+            //    alert('user-profile-form is loaded');
+            //});
+            
+            setTimeout(function(){ 
+                //alert("Hello"); 
+                regularCombobox();
+            }, 10000);
+
+        });
+
+    </script>    
     
 {% endblock %}    
     

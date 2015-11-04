@@ -5,6 +5,211 @@
 
 {% block content %}
 
+
+
     {% include 'OlegUserdirectoryBundle:Profile:edit_user_form.html.twig' %}
 
+
+
+    {% if fffffff is defined %}
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+    
+    
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    
+    {% if "show" in cycle %}
+    {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if showFlag %}
+        {% set collapsein = "" %}
+    {% else %}
+        {% set collapsein = "in" %}
+    {% endif %}
+    
+    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% set userEditor = true %}
+    {% else %}
+        {% set userEditor = false %}
+    {% endif %}
+    
+    <div id="user-profile-form"></div>
+    
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#userinfo">
+                    Name and Preferred Contact Info
+                </a>
+            </h4>
+        </div>
+        <div id="userinfo" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div id="user-avatar-id">
+                    {{ formmacros.field(form.avatar.id) }}
+                </div>
+
+                {{ formmacros.field(form.keytype) }}
+                {{ formmacros.field(form.primaryPublicUserId) }}
+
+                {% if form.username is defined %}
+                    {{ formmacros.field(form.username) }}
+                {% endif %}
+
+                {% for info in form.infos %}
+                    {{ formmacros.field(info.displayName) }}
+                    {{ formmacros.field(info.salutation) }}
+                    {{ formmacros.field(info.firstName) }}
+                    {{ formmacros.field_notempty(info.middleName,cycle) }}
+                    {{ formmacros.field(info.lastName) }}
+                    {{ formmacros.field_notempty(info.suffix,cycle) }}
+                    {{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}
+                    {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+                    {{ formmacros.field_notempty(info.initials,cycle) }}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+
+
+    {#Global User Preferences#}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#userprefrences">
+                    Global User Preferences
+                </a>
+            </h4>
+        </div>
+        <div id="userprefrences" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                {% if form.roles is defined and (cycle == "show_user" or userEditor == true) %}
+                    {{ formmacros.field(form.roles) }}
+                {% endif %}
+
+                {{ formmacros.field(form.preferences.timezone) }}
+
+                {{ formmacros.field(form.preferences.languages) }}
+                {{ formmacros.field(form.preferences.locale) }}
+
+                {% if form.locked is defined and userEditor == true %}
+                    {% if app.security.getToken().getUser().getId() != entity.id %}
+                        {{ formmacros.checkbox(form.locked) }}
+                    {% else %}
+                        {% do form.locked.setRendered %}
+                    {% endif %}
+                {% endif %}
+
+                {% if cycle == "show_user" %}
+                    {{ formmacros.simplefield( "Current time in user's time zone:", "now"|date('Y-m-d H:i:s', entity.preferences.timezone), "", "disabled" ) }}
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    {% endif %} 
+
 {% endblock %}
+
+ {% block mainjs %}{% endblock %}
+    
+ {% block headeradditionaljs %}
+
+    {% javascripts
+        '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'      
+        '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'  
+        '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'        
+    %}
+        <script async type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}  
+
+        
+{#       <img src="/images/1x1-transparent.png" onload="alert('testing'); this.parentNode.removeChild(this);" /> #}
+        
+        
+    <script async language="Javascript">
+
+
+        $(document).ready(function() {
+
+            alert("yay!");
+
+            regularCombobox();
+
+        });
+
+        function regularCombobox(holder) {
+
+            var targetid = "select.combobox";
+
+            targetid = getElementTargetByHolder(holder,targetid);
+
+            if( $(targetid).length == 0 ) {
+                return;
+            }
+
+            $(targetid).each( function() {
+                specificRegularCombobox( $(this) )
+            });
+        }
+        function specificRegularCombobox( comboboxEl ) {
+            comboboxEl.select2({
+                width: combobox_width,
+                dropdownAutoWidth: true,
+                placeholder: "Select an option",
+                allowClear: true,
+                selectOnBlur: false
+                //containerCssClass: 'combobox-width'
+            });
+
+            if( comboboxEl.attr("readonly") ) {
+                comboboxEl.select2("readonly", true);
+            }
+        }
+
+        function getElementTargetByHolder(holder,target) {
+            if( holder && typeof holder !== 'undefined' && holder.length > 0 ) {
+                target = holder.find(target);
+            }
+            return target;
+        }
+
+
+        function collapseAll(holder) {
+            //console.log('collapse All');
+            if( typeof holder === 'undefined' ) {
+                $('.panel-collapse').collapse('hide');
+            } else {
+                $(holder).find('.panel-collapse').collapse('hide');
+            }   
+        }
+
+        function extendAll(holder) {
+            //console.log('extend All');
+            if( typeof holder === 'undefined' ) {
+                $('.panel-collapse').collapse('show');
+            } else {
+                $(holder).find('.panel-collapse').collapse('show');
+            }
+
+            if( !$(holder).is(":visible") ) {
+                $(holder).collapse('show');
+            }
+        }
+
+    </script>    
+
+{% endblock %}   
+    
+    
