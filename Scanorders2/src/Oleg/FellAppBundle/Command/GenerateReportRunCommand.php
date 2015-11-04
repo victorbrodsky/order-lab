@@ -36,8 +36,8 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
     //php app/console fellapp:generatereportrun
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        //$logger = $this->getContainer()->get('logger');
-        //$logger->notice("Run Command: try run");
+        $logger = $this->getContainer()->get('logger');
+        $logger->notice("Run Command: try run");
         
         //$result = ReportGeneratorManager::getInstance($this->getContainer())->tryRun();
 
@@ -46,6 +46,8 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
 
         $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
         $result = $fellappRepGen->tryRun();
+        
+        $logger->notice("Run Command: result report filename=".$result);
 
         $output->writeln($result);
         //$output->writeln('run finished');

@@ -164,6 +164,8 @@ class ReportGenerator {
         $logger = $this->container->get('logger');
         $logger->notice("tryRun() started");
 
+        $reportFileName = 'noFileName';
+        
         $queue = $this->getQueue();
 
         //reset old running process in queue
@@ -271,6 +273,8 @@ class ReportGenerator {
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
 
+            $reportFileName = $res['filename'];
+            
             //logger finish event
             //self::$logger->notice("Finished running fell report fellappid=" . $currentQueueElement['id'] . "; executed in " . $execution_time . " sec" . "; report path=" . $res['report'] );
             //$logger->notice("Finished running fell report fellappid=" . $process->getFellappId() . "; executed in " . $execution_time . " sec" . "; res=" . $res['report'] );
@@ -287,7 +291,7 @@ class ReportGenerator {
 
         }
 
-        return;
+        return $reportFileName;
     }
 
     //check if the process has been running for 10 minutes
