@@ -1554,7 +1554,7 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        return $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
+        return $this->showUser($id,$this->container->getParameter('employees.sitename'),0);
     }
 
     /**
@@ -1572,7 +1572,7 @@ class UserController extends Controller
 
         return $this->showUser($id,$this->container->getParameter('employees.sitename'));
     }
-    public function showUser($id, $sitename=null, $fulluser=true) {
+    public function showUser($id, $sitename=null, $fulluser=1) {
 
         $request = $this->container->get('request');
         $em = $this->getDoctrine()->getManager();
