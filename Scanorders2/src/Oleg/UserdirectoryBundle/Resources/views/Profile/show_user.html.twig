@@ -18,6 +18,8 @@
         
 {% block content %}
 
+{% if entity is defined %}         
+        
     {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% set userEditor = true %}
     {% else %}
@@ -30,7 +32,7 @@
             <a class="btn btn-sm btn-success" href="{{ path(sitename~'_user_edit',{'id':user_id}) }}">Edit</a>
         {% endif %}
     </h4>
-
+        
     {% if customh is defined %}
         {% import _self as showusermacros %}
         {{ showusermacros.snapshotcustomh(entity,sitename,cycle,getOriginalname,getAbsoluteUploadFullPath,getUsernameOptimal,getHeadInfo) }}
@@ -53,6 +55,8 @@
 {#     <hx:include src="{{ path('employees_showuser_only',{'id':entity.id}) }}"></hx:include>   #}
         
 {#        <link rel="import" href="{{ path('employees_showuser_only',{'id':entity.id}) }}" async data-target="this" data-source="#selector" />#}
+    
+    {% endif %}
     
 {% endblock %}    
 

@@ -1618,6 +1618,13 @@ class UserController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
+        //testing
+//        return array(
+//            'title' => 'empty',
+//            'sitename' => $this->container->getParameter('employees.sitename'),
+//            'user_id' => 1           
+//        );
+        
         //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
                
         
@@ -1641,13 +1648,14 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        print_r($entity);
+        //print_r($entity);
         //echo "<br><br>";
         //print_r($entity[0]['infos']);
         
         //echo "displayName" . $entity[0]['infos'][0]['displayName'] . "<br>";
         
         $getUniquename = $entity['uniquename38'];
+        $getAbsoluteUploadFullPath = null;
         
         $uploadDirectory = $entity['uploadDirectory39'];
         if( $getUniquename && $uploadDirectory ) {
