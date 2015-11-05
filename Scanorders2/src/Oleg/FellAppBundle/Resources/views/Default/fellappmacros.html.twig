@@ -258,12 +258,14 @@
                         </p>    
                     {% endif %}  
                         
-                    {#                    Other Documents    #}
+                    {# Other Documents #}
                     {% set otherDocStr = null %}
                     {% if fellapp.documents|length == 1 %}
                         {% set otherDocStr = "Other Documents:" %}
                         {% set otherDocStr = otherDocStr~' <a href="'~path('fellapp_file_download', { 'id': fellapp.documents|first.id})~'"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>' %}
-                        {{ otherDocStr|raw }}
+{#                        <p>#}
+                            {{ otherDocStr|raw }}
+{#                        </p> #}
                     {% endif %}     
                     {% if fellapp.documents|length > 1 %}
                         {% set docCount = 1 %}
@@ -272,8 +274,10 @@
                             {% set docHref = '<a href="'~path('fellapp_file_download', { 'id': document.id})~'">Document '~docCount~'</a>' %}   
                             {% set manyDocArr = manyDocArr|merge([docHref]) %}
                             {% set docCount = docCount + 1 %}
-                        {% endfor %}                     
-                        {{ "Other Documents:"~" "~manyDocArr|join(', ')|raw }}
+                        {% endfor %} 
+{#                        <p>#}
+                            Other Documents: {{ manyDocArr|join(', ')|raw }}
+{#                        </p> #}
                     {% endif %}    
                     
                      
