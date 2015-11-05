@@ -214,7 +214,6 @@ class User extends BaseUser {
 
     /**
      * @ORM\OneToOne(targetEntity="Document")
-     * @ORM\OneToOne(targetEntity="Document")
      * @ORM\JoinColumn(name="avatar_id", referencedColumnName="id")
      **/
     private $avatar;

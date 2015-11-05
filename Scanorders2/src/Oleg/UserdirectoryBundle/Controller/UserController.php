@@ -1339,7 +1339,9 @@ class UserController extends Controller
         $dql->where($totalcriteriastr);
         $query = $em->createQuery($dql);      
 
-        $pending = $query->getSingleScalarResult();    
+        $pending = $query->getSingleScalarResult();       
+        //$pending = $query->getResult(\Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
+        
         //echo "pending=".$pending."<br>";
         
         $response = new Response();
@@ -1565,7 +1567,6 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/user/show/ee", name="employees_showuser_notstrict")
      * @Route("/user/optimized/{id}", name="employees_showuser_optimized", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
@@ -1579,20 +1580,7 @@ class UserController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
-        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
-               
-        
-//        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
-//        $dql =  $repository->createQueryBuilder("user");
-//        $dql->select('user','infos','avatar');
-//        $dql->leftJoin("user.infos", "infos");
-//        $dql->leftJoin("user.avatar", "avatar");
-//        $dql->where('user.id = '.$id);
-//        $query = $em->createQuery($dql);
-        //$entity = $query->getArrayResult();
-        //$entity = $query->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        //$entity = $query->getSingleResult();   
-        
+        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);                                   
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
         
         if( !$entity ) {
@@ -1611,9 +1599,81 @@ class UserController extends Controller
             'user_id' => $id,
             'sitename' => $this->container->getParameter('employees.sitename'),          
             'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
-            //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName']    
+            //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName'] 
+            //'title' => 'Employee Profile ' . $entity['displayName23']     
         );
     }
+    
+    /**
+     * @Route("/user/optimized/customh/{id}", name="employees_showuser_optimized_customh", requirements={"id" = "\d+"}, options={"expose"=true})
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     */
+    public function showUserOptimizedCustomhAction($id)
+    {
+        //$secUtil = $this->get('user_security_utility');
+        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+               
+        
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user','infos','avatar');
+        $dql->leftJoin("user.infos", "infos");
+        $dql->leftJoin("user.avatar", "avatar");
+        $dql->leftJoin("user.locations", "locations");
+        $dql->where('user.id = '.$id);
+        $query = $em->createQuery($dql);
+        //$entity = $query->getArrayResult();
+        //$entity = $query->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        //$entity = $query->getSingleResult();
+        
+        $entity = $query->getSingleResult('SimpleHydrator');
+        
+        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        print_r($entity);
+        //echo "<br><br>";
+        //print_r($entity[0]['infos']);
+        
+        //echo "displayName" . $entity[0]['infos'][0]['displayName'] . "<br>";
+        
+        $getUniquename = $entity['uniquename38'];
+        
+        $uploadDirectory = $entity['uploadDirectory39'];
+        if( $getUniquename && $uploadDirectory ) {
+            $getAbsoluteUploadFullPath = "http://" . $_SERVER['SERVER_NAME'] . "/order/" . $uploadDirectory.'/'.$getUniquename;
+        }
+
+        $getUsernameOptimal = $entity['displayName23'];
+        
+        $getHeadInfo = array();
+        
+        return array(
+            'entity' => $entity,           
+            'cycle' => 'show_user',
+            'user_id' => $id,
+            'sitename' => $this->container->getParameter('employees.sitename'),          
+            //'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
+            //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName'] 
+            'title' => 'Employee Profile ' . $entity['displayName23'],           
+            'customh' => true,
+            'getOriginalname' => $getUniquename,
+            'getAbsoluteUploadFullPath' => $getAbsoluteUploadFullPath,
+            'getUsernameOptimal' => $getUsernameOptimal,
+            'getHeadInfo' => $getHeadInfo
+        );
+    }
+    
 
     /**
      * @Route("/user/only/{id}", name="employees_showuser_only")
