@@ -1253,6 +1253,12 @@ class UserController extends Controller
 
 
     public function pendingAdminReviewAction() {
+        
+        //testing
+        //$response = new Response();
+        //$response->setContent(null);
+        //return $response;
+        
         $pending = null;
 
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -1264,11 +1270,78 @@ class UserController extends Controller
         $limitFlag = false;
 
         //$filter=null, $time='all', $limitFlag=true, $search=null, $userid=null
-        $params = array('filter'=>'Pending Administrative Review','time'=>'current_only','limitFlag'=>$limitFlag);
-        $res = $this->indexUser( $params );
+//        $params = array('filter'=>'Pending Administrative Review','time'=>'current_only','limitFlag'=>$limitFlag);
+//        $res = $this->indexUser( $params );
+//        $pendingOld = count($res['entities']);
+//        echo "pendingOld=".$pendingOld."<br>";
+        
+        
+        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+        $criteriastr = "(".
+            "administrativeTitles.status = ".$pendingStatus.
+            " OR appointmentTitles.status = ".$pendingStatus.
+            " OR medicalTitles.status = ".$pendingStatus.
+            " OR locations.status = ".$pendingStatus.
+            ")";
+        
+        //current_only
+        $curdate = date("Y-m-d", time());
+        $criteriastr .= " AND (";
+        $criteriastr .= "employmentStatus IS NULL";
+        $criteriastr .= " OR ";     
+        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        $criteriastr .= ")";
+           
+        //filter out system user
+        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
 
-        $pending = count($res['entities']);
+        //filter out Pathology Fellowship Applicants
+        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)";
 
+        if( $criteriastr ) {
+            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+        } 
+        
+        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
+        
+        $em = $this->getDoctrine()->getManager();  
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $dql = $repository->createQueryBuilder('user');
+        $dql->select('COUNT(DISTINCT user.id)');
+        //$dql->select('COUNT(user.id)');
+        
+        $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+        $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+        $dql->leftJoin("user.medicalTitles", "medicalTitles");
+        $dql->leftJoin("user.locations", "locations");
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");   
+        //$dql->orderBy('user.id');
+
+        
+//        $qb = $em->createQueryBuilder();
+//        $qb->select($qb->expr()->countDistinct('user.id'));
+//        $qb->from('OlegUserdirectoryBundle:User','user');
+//        $qb->where($totalcriteriastr);
+//        //$qb->groupBy('user');
+//        $qb->leftJoin("user.administrativeTitles", "administrativeTitles");
+//        $qb->leftJoin("user.appointmentTitles", "appointmentTitles");
+//        $qb->leftJoin("user.medicalTitles", "medicalTitles");
+//        $qb->leftJoin("user.locations", "locations");
+//        $qb->leftJoin("user.employmentStatus", "employmentStatus");
+//        $qb->leftJoin("employmentStatus.employmentType", "employmentType");
+//        $count = $qb->getQuery()->getSingleScalarResult();
+//        echo "count=".$count."<br>";
+        //print_r($count);
+        
+        //echo "totalcriteriastr=".$totalcriteriastr."<br>";
+        
+        $dql->where($totalcriteriastr);
+        $query = $em->createQuery($dql);      
+
+        $pending = $query->getSingleScalarResult();    
+        //echo "pending=".$pending."<br>";
+        
         $response = new Response();
         $response->setContent($pending);
 
