@@ -75,7 +75,7 @@
             
             setTimeout(function(){ 
                 //alert("Hello"); 
-                regularCombobox();
+                initUserForm();
             }, 10000);
             
             //var timesRun = 0;
@@ -96,7 +96,19 @@
         
         
         function initUserForm() {
-            setCicleShow();          
+            //setCicleShow();
+
+            //$(this).scrollTop(0);
+
+            //setNavBar();
+
+            //fieldInputMask();
+
+            //tooltip
+            //$(".element-with-tooltip").tooltip();
+            //initTooltips();
+
+            //initConvertEnterToTab();
 
             initDatepicker();
 
@@ -106,7 +118,7 @@
 
             regularCombobox();
 
-            initTreeSelect();
+            //initTreeSelect();
 
             //composite tree as combobox select2 view
             getComboboxCompositetree();
@@ -115,7 +127,13 @@
             getJstree('UserdirectoryBundle','Institution');
             getJstree('UserdirectoryBundle','CommentTypeList');
 
+            //home page institution with user leafs
+            //displayInstitutionUserTree();
+            //getJstree('UserdirectoryBundle','Institution_User','nomenu','nosearch','closeall');
+
             getComboboxResidencyspecialty();
+
+            //getComboboxCommentType();
 
             //init generic comboboxes
             initAllComboboxGeneric();
@@ -128,13 +146,13 @@
 
             initFileUpload();
 
-            windowCloseAlert();
+            //windowCloseAlert();
 
-            confirmDeleteWithExpired();
+            //confirmDeleteWithExpired();
 
             initDatetimepicker();
 
-            userCloneListener();
+            //userCloneListener();
 
             identifierTypeListener();
 
@@ -142,11 +160,11 @@
 
             grantListener();
 
-            initTypeaheadUserSiteSearch();
+            //initTypeaheadUserSiteSearch();
 
             degreeListener();
 
-            generalConfirmAction();
+            //generalConfirmAction();
         }
 
     </script>    
