@@ -1567,7 +1567,8 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/user/optimized/{id}", name="employees_showuser_optimized", requirements={"id" = "\d+"}, options={"expose"=true})
+     * Optimized show user
+     * @Route("/user/{id}", name="employees_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
      */
@@ -1704,7 +1705,7 @@ class UserController extends Controller
 
     /**
      * @Route("/user/show/ee", name="employees_showuser_notstrict")
-     * @Route("/user/{id}", name="employees_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
+     * @Route("/user/object/{id}", name="employees_showuser_object", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
