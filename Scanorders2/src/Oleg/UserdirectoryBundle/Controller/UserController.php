@@ -1606,6 +1606,8 @@ class UserController extends Controller
     }
     
     /**
+     * This is testing custom hydration: not effective for a single entity
+     * 
      * @Route("/user/optimized/customh/{id}", name="employees_showuser_optimized_customh", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
@@ -1685,6 +1687,8 @@ class UserController extends Controller
     
 
     /**
+     * Second part of the user view profile
+     * 
      * @Route("/user/only/{id}", name="employees_showuser_only")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user_only.html.twig")
@@ -1704,6 +1708,8 @@ class UserController extends Controller
     }
 
     /**
+     * route "employees_showuser_object" is the old user profile view (slow)
+     * 
      * @Route("/user/show/ee", name="employees_showuser_notstrict")
      * @Route("/user/object/{id}", name="employees_showuser_object", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
