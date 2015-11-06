@@ -62,91 +62,6 @@
 
     
     
- {% block maincss %}
-
-    {#jasny is used for clickable rows#}
-
-    {% stylesheets
-    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
-    'bundles/oleguserdirectory/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'    
-    'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-    {% stylesheets
-    'bundles/oleguserdirectory/dropzone/css/dropzone.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-    {% stylesheets
-    'bundles/oleguserdirectory/datepicker/css/datepicker3.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-
-    {% stylesheets
-    'bundles/oleguserdirectory/jquery-ui-1.11.2/themes/smoothness/jquery-ui.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-    {#<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">#}
-
-
-    {% stylesheets
-    'bundles/oleguserdirectory/form/css/typeahead.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}   
-
-    {% stylesheets
-    'bundles/oleguserdirectory/vakata-jstree/themes/default/style.min.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-{% endblock %}   
- 
-{% block mainjs %}
-
-    {% javascripts
-                '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-                '@OlegUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'
-                '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'              
-                '@OlegUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
-                '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
-
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-form.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'                              
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
-               
-                '@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'               
-
-                '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-                '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'   
-
-                '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'                      
-            %}
-                <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}
-
-
-            {#dropzone#}
-            {% javascripts
-                '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
-            %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}
-
-{% endblock %}
-    
 {% block additionaljs %}
 
 {#        '@OlegUserdirectoryBundle/Resources/public/webcomponents/webcomponents.js'#}
@@ -192,19 +107,23 @@
         
         
         function initUserForm() {
-            //setCicleShow();
+            //console.log('user form ready');
+    
+            //checkBrowserComptability();
+
+            setCicleShow();
 
             //$(this).scrollTop(0);
 
-            //setNavBar();
+            setNavBar();
 
-            //fieldInputMask();
+            fieldInputMask();
 
             //tooltip
             //$(".element-with-tooltip").tooltip();
-            //initTooltips();
+            initTooltips();
 
-            //initConvertEnterToTab();
+            initConvertEnterToTab();
 
             initDatepicker();
 
@@ -214,14 +133,14 @@
 
             regularCombobox();
 
-            //initTreeSelect();
+            initTreeSelect();
 
             //composite tree as combobox select2 view
             getComboboxCompositetree();
 
             //jstree in admin page for Institution tree
-            //getJstree('UserdirectoryBundle','Institution');
-            //getJstree('UserdirectoryBundle','CommentTypeList');
+            getJstree('UserdirectoryBundle','Institution');
+            getJstree('UserdirectoryBundle','CommentTypeList');
 
             //home page institution with user leafs
             //displayInstitutionUserTree();
@@ -242,13 +161,13 @@
 
             initFileUpload();
 
-            //windowCloseAlert();
+            windowCloseAlert();
 
-            //confirmDeleteWithExpired();
+            confirmDeleteWithExpired();
 
             initDatetimepicker();
 
-            //userCloneListener();
+            userCloneListener();
 
             identifierTypeListener();
 
@@ -256,11 +175,11 @@
 
             grantListener();
 
-            //initTypeaheadUserSiteSearch();
+            initTypeaheadUserSiteSearch();
 
             degreeListener();
 
-            //generalConfirmAction();
+            generalConfirmAction();
         }
 
     </script>    
