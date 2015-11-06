@@ -90,7 +90,7 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
             //this.countdownDialog.html(counter); // update the counter
         },
         onAbort: function(){
-            console.log("onAbort: logout");
+            console.log("onAbort: logout");           
             idleTimeoutClass.prototype.onAbort();
         }
     });
@@ -103,6 +103,7 @@ idleTimeoutClass.prototype.onTimeout = function () {
 
 idleTimeoutClass.prototype.onAbort = function () {
     console.log("onAbort: user");
+    //getAjaxTimeoutMsg();
     idlelogout();
 };
 

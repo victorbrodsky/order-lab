@@ -208,16 +208,23 @@ class SecurityController extends Controller
         if( $maxIdleTime > 0 ) {
 
             $session = $request->getSession();
-            //$this->session->start();
-            $lapse = time() - $session->getMetadataBag()->getLastUsed();
+            
+            //Don't use getLastUsed(). But it is the same until page is closed.
+            //$lapse = time() - $session->getMetadataBag()->getLastUsed();
+            
+            //get lapse from the lastRequest in session
+            $lapse = time() - $session->get('lastRequest');
+            $session->set('lastRequest',time());
 
+            //created=2015-11-06T19:50:36Z<br>OK
+            //echo "created=".gmdate("Y-m-d H:i:s", $session->getMetadataBag()->getCreated())."<br>";
             //$msg = "'lapse=".$lapse.", max idle time=".$maxIdleTime."'";
             //echo "console.log(".$msg.")";
             //echo $msg;
             //$this->logoutUser($event);
             //exit();
 
-            if( $lapse > $maxIdleTime ) {
+            if( $lapse > $maxIdleTime ) {               
                 $response->setContent('over lapse = '.($lapse-$maxIdleTime));
             } else {
                 $response->setContent('OK');

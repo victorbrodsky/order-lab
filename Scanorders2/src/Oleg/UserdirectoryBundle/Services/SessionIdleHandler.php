@@ -54,11 +54,21 @@ class SessionIdleHandler
         if( $this->maxIdleTime > 0 ) {
 
             $this->session->start();
-            $lapse = time() - $this->session->getMetadataBag()->getLastUsed();
+            
+            //Don't use getLastUsed(). But it is the same until page is closed.
+            //$lapse = time() - $this->session->getMetadataBag()->getLastUsed();
 
             //$msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
             //echo $msg;
             //exit();
+            
+            //set lastRequest timestamp
+            if( !$this->session->has("lastRequest") ) {
+                $this->session->set('lastRequest',time());
+            }
+            
+            $lapse = time() - $this->session->get('lastRequest'); 
+            $this->session->set('lastRequest',time());
 
             if ($lapse > $this->maxIdleTime) {
 
