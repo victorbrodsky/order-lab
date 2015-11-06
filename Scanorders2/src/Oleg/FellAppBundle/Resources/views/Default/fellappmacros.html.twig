@@ -263,9 +263,9 @@
                     {% if fellapp.documents|length == 1 %}
                         {% set otherDocStr = "Other Documents:" %}
                         {% set otherDocStr = otherDocStr~' <a href="'~path('fellapp_file_download', { 'id': fellapp.documents|first.id})~'"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>' %}
-{#                        <p>#}
-                            {{ otherDocStr|raw }}
-{#                        </p> #}
+                            <p>
+                                {{ otherDocStr|raw }}
+                            </p>
                     {% endif %}     
                     {% if fellapp.documents|length > 1 %}
                         {% set docCount = 1 %}
@@ -275,9 +275,9 @@
                             {% set manyDocArr = manyDocArr|merge([docHref]) %}
                             {% set docCount = docCount + 1 %}
                         {% endfor %} 
-{#                        <p>#}
-                            Other Documents: {{ manyDocArr|join(', ')|raw }}
-{#                        </p> #}
+                            <p>
+                                Other Documents: {{ manyDocArr|join(', ')|raw }}
+                            </p>
                     {% endif %}    
                     
                      
