@@ -213,7 +213,8 @@ class SecurityController extends Controller
             //$lapse = time() - $session->getMetadataBag()->getLastUsed();
             
             //get lapse from the lastRequest in session
-            $lapse = time() - $session->get('lastRequest');
+            $lastRequest = $session->get('lastRequest');
+            $lapse = time() - $lastRequest;
             $session->set('lastRequest',time());
 
             //created=2015-11-06T19:50:36Z<br>OK

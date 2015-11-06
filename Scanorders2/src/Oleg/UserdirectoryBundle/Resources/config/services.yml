@@ -118,7 +118,7 @@ services:
     #idle time out handler (can pass %session_max_idle_time%. Now use DB)
     oleg.handler.session_idle:
         class: Oleg\UserdirectoryBundle\Services\SessionIdleHandler
-        arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
+        arguments: ["@service_container", "@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

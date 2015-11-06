@@ -23,14 +23,16 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 class SessionIdleHandler
 {
 
+    protected $container;
     protected $session;
     protected $securityContext;
     protected $router;
     protected $maxIdleTime;
     protected $em;
 
-    public function __construct(SessionInterface $session, SecurityContextInterface $securityContext, RouterInterface $router, $em )
+    public function __construct($container, SessionInterface $session, SecurityContextInterface $securityContext, RouterInterface $router, $em )
     {
+        $this->container = $container;
         $this->session = $session;
         $this->securityContext = $securityContext;
         $this->router = $router;
@@ -62,8 +64,9 @@ class SessionIdleHandler
             //echo $msg;
             //exit();
             
-            //set lastRequest timestamp
-            if( !$this->session->has("lastRequest") ) {
+            //set lastRequest timestamp $this->getUser()->getAttribute('lastRequest');
+            $lastRequest = $this->session->get('lastRequest');
+            if( !$lastRequest ) {
                 $this->session->set('lastRequest',time());
             }
             
