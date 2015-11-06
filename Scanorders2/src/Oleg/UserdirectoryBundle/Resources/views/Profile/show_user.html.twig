@@ -8,7 +8,7 @@
         'bundles/oleguserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {% endstylesheets %}       
 {% endblock %}
         
 {% block title %}
@@ -46,6 +46,7 @@
     
     {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}
     {{ render_hinclude( url('employees_showuser_only',{'id':user_id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
+
 {#        {{ render( url('employees_showuser_only',{'id':entity.id}) ) }}#}
         
 {#    render(controller("OlegUserdirectoryBundle:User:pendingAdminReview"))#}
@@ -78,13 +79,7 @@
         $(document).ready(function() {           
 
             //alert("yay!");
-            //console.log("show_user.html ready");
-
-            initUserForm();
-            
-            //$("#user-profile-form").load( function(){
-            //    alert('user-profile-form is loaded');
-            //});
+            //console.log("show_user.html ready");                
             
             //setTimeout(function(){ 
                 //alert("Hello"); 
@@ -106,24 +101,25 @@
         });
         
         
+        //init only js related to the attached user form
         function initUserForm() {
             //console.log('user form ready');
     
             //checkBrowserComptability();
 
-            setCicleShow();
+            //setCicleShow();
 
             //$(this).scrollTop(0);
 
-            setNavBar();
+            //setNavBar();
 
-            fieldInputMask();
+            //fieldInputMask();
 
             //tooltip
             //$(".element-with-tooltip").tooltip();
-            initTooltips();
+            //initTooltips();
 
-            initConvertEnterToTab();
+            //initConvertEnterToTab();
 
             initDatepicker();
 
@@ -139,8 +135,8 @@
             getComboboxCompositetree();
 
             //jstree in admin page for Institution tree
-            getJstree('UserdirectoryBundle','Institution');
-            getJstree('UserdirectoryBundle','CommentTypeList');
+            //getJstree('UserdirectoryBundle','Institution');
+            //getJstree('UserdirectoryBundle','CommentTypeList');
 
             //home page institution with user leafs
             //displayInstitutionUserTree();
@@ -153,21 +149,21 @@
             //init generic comboboxes
             initAllComboboxGeneric();
 
-            processEmploymentStatusRemoveButtons();
+            //processEmploymentStatusRemoveButtons();
 
             positionTypeListener();
 
             initUpdateExpectedPgy();
 
-            initFileUpload();
+            //initFileUpload();
 
-            windowCloseAlert();
+            //windowCloseAlert();
 
-            confirmDeleteWithExpired();
+            //confirmDeleteWithExpired();
 
             initDatetimepicker();
 
-            userCloneListener();
+            //userCloneListener();
 
             identifierTypeListener();
 
@@ -175,11 +171,11 @@
 
             grantListener();
 
-            initTypeaheadUserSiteSearch();
+            //initTypeaheadUserSiteSearch();
 
             degreeListener();
 
-            generalConfirmAction();
+            //generalConfirmAction();
         }
 
     </script>    

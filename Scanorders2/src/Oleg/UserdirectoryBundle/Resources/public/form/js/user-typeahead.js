@@ -7,7 +7,7 @@ function initTypeaheadUserSiteSearch() {
 
     if( $('.multiple-datasets-typeahead-search').length == 0 ) {
         return;
-    }
+    }       
 
     //console.log('typeahead search');
 
@@ -73,7 +73,7 @@ function initTypeaheadUserSiteSearch() {
     admintitleDB.initialize();
     //academictitleDB.initialize();
     //medicaltitleDB.initialize();
-
+ 
     var myTypeahead = $('.multiple-datasets-typeahead-search .typeahead').typeahead({
             highlight: true
         },
@@ -126,6 +126,7 @@ function initTypeaheadUserSiteSearch() {
             }
         }
     );
+             
         
     //var _typeaheadSearchInput = $('#user-typeahead-search-form input');
 
