@@ -214,20 +214,32 @@ class SecurityController extends Controller
             
             //get lapse from the lastRequest in session
             $lastRequest = $session->get('lastRequest');
+            //echo "lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
+            //echo "pingCheck=".$session->get('pingCheck')."<br>";
+            
+            if( !$lastRequest ) { 
+                $session->set('lastRequest',time());
+                $lastRequest = $session->get('lastRequest');
+            }
+            
+            //echo "time=".time()."; lastRequest=".$lastRequest."<br>";
             $lapse = time() - $lastRequest;
-            $session->set('lastRequest',time());
+            //$session->set('lastRequest',time());
 
             //created=2015-11-06T19:50:36Z<br>OK
             //echo "created=".gmdate("Y-m-d H:i:s", $session->getMetadataBag()->getCreated())."<br>";
-            //$msg = "'lapse=".$lapse.", max idle time=".$maxIdleTime."'";
+            $msg = "'lapse=".$lapse.", max idle time=".$maxIdleTime."'";
             //echo "console.log(".$msg.")";
             //echo $msg;
             //$this->logoutUser($event);
             //exit();
 
-            if( $lapse > $maxIdleTime ) {               
+            if( $lapse > $maxIdleTime ) { 
+                $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime);
+                //echo $overlapseMsg."<br>";
                 $response->setContent('over lapse = '.($lapse-$maxIdleTime));
             } else {
+                //echo "OK<br>";
                 $response->setContent('OK');
             }
 
@@ -235,6 +247,77 @@ class SecurityController extends Controller
             $response->setContent('NOTOK');
         }
 
+        return $response;
+    }
+    
+    /**
+     * @Route("/common/isserveractive", name="isserveractive")
+     * @Method("GET")
+     */
+    public function isServerActiveAction( Request $request )
+    {
+        //echo "keep Alive Action! <br>";
+
+        $response = new Response();
+        
+        $userUtil = new UserUtil();
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
+        $maxIdleTime = $res['maxIdleTime'];
+        $maintenance = $res['maintenance'];
+        
+        if( $maintenance ) {
+            $response->setContent(json_encode('NOTOK'));
+            return $response;
+        }
+
+        $session = $request->getSession();
+        
+        $lastRequest = $session->get('lastRequest');
+        //echo "lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
+        //echo "pingCheck=".$session->get('pingCheck')."<br>";
+
+        if( !$lastRequest ) { 
+            $session->set('lastRequest',time());
+            $lastRequest = $session->get('lastRequest');
+        }
+
+        //echo "time=".time()."; lastRequest=".$lastRequest."<br>";
+        $lapse = time() - $lastRequest;
+        
+        if( $lapse > $maxIdleTime ) {
+            $response->setContent(json_encode('NOTOK'));
+        } else {
+            $response->setContent(json_encode('OK'));
+        }
+
+        return $response;
+    }
+    
+    /**
+     * @Route("/common/setserveractive", name="setserveractive")
+     * @Method("GET")
+     */
+    public function setServerActiveAction( Request $request )
+    {
+        //echo "keep Alive Action! <br>";
+
+        $response = new Response();
+        
+//        $userUtil = new UserUtil();
+//        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
+//        $maxIdleTime = $res['maxIdleTime'];
+//        $maintenance = $res['maintenance'];
+//        
+//        if( $maintenance ) {
+//            $response->setContent(json_encode('NOTOK'));
+//            return $response;
+//        }
+
+        $session = $request->getSession();            
+        $session->set('lastRequest',time());
+            
+    
+        $response->setContent(json_encode('OK'));     
         return $response;
     }
 

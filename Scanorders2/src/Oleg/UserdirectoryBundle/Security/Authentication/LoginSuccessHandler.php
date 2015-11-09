@@ -66,6 +66,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //echo "roleBanned=".$this->roleBanned."<br>";
         //echo "siteName=".$this->siteName."<br>";
+        
+        ////////// set session variables: maxIdleTime ////////       
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);
+        $maxIdleTime = $res['maxIdleTime'];
+        $session = $request->getSession();
+        $session->set('maxIdleTime',$maxIdleTime);
+        //////// EOF session //////////////////////////////
 
         if( $this->security->isGranted($this->roleBanned) ) {
             $options['eventtype'] = 'Banned User Login Attempt';

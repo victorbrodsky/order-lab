@@ -152,6 +152,7 @@
             {% endfor %}
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+            <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
 
         </div>
 
@@ -207,6 +208,7 @@
 
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+                '@OlegUserdirectoryBundle/Resources/public/idletimer/idle-timer.min.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
                 '@OlegUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
                 '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'              

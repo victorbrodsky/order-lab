@@ -133,6 +133,7 @@
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
             <input type="hidden" id="user-preferences-tooltip" value="{{ order_security_utility.getTooltip(app.security.getToken().getUser()) }}" />
+            <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
 
         </div>
 
