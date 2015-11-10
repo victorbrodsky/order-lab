@@ -42,40 +42,73 @@ idleTimeoutClass.prototype.init = function () {
     
     this.setMaxIdletime();
     
+    this.setActive();
+    
     //Centralize Idle Timeout Logout for multiple tabs/browser windows via setInterval js function that sets the activity variable on the server to 1 every minute if there was any activity
     //https://github.com/thorst/jquery-idletimer
     // timeout is in milliseconds
-    var timerIdleTime = 60000; //1 min = 60000 milliseconds
-    console.debug("event active idleTimer timerIdleTime="+timerIdleTime);
-    $( document ).idleTimer( timerIdleTime );
+//    var timerIdleTime = 10000; //1 min = 60000 milliseconds
+//    console.debug("event active idleTimer timerIdleTime="+timerIdleTime);
+    
+    //$( document ).idleTimer( timerIdleTime );
      
     //$( document ).on( "idle.idleTimer", function(event, elem, obj){
         // function you want to fire when the user goes idle
     //});
 
-    $( document ).on( "active.idleTimer", function(event, elem, obj, triggerevent){
-        // function you want to fire when the user becomes active again
-        console.debug("event active idleTimer _idleAfter="+_idleAfter);
-        $.ajax({
-            url: getCommonBaseUrl("common/setserveractive",this.employees_sitename),
-            type: 'GET',
-            //contentType: 'application/json',
-            dataType: 'json',
-            async: false,
-            timeout: _ajaxTimeout,
-            success: function (data) {
-                console.debug("data="+data+"; _idleAfter="+_idleAfter);               
-            },
-            //success: this.maxIdleTimeMethod,
-            error: function ( x, t, m ) {
-                if( t === "timeout" ) {
-                    getAjaxTimeoutMsg();
-                }
-                //console.debug("get max idletime: error data="+data);
-                _idleAfter = 0;
-            }
-        });
-    });
+//    $( document ).on( "active.idleTimer", function(event, elem, obj, triggerevent){
+//        // function you want to fire when the user becomes active again
+//        console.debug("event active idleTimer _idleAfter="+_idleAfter);
+//        $.ajax({
+//            url: getCommonBaseUrl("common/setserveractive",this.employees_sitename),
+//            type: 'GET',
+//            //contentType: 'application/json',
+//            dataType: 'json',
+//            async: false,
+//            timeout: _ajaxTimeout,
+//            success: function (data) {
+//                console.debug("data="+data+"; _idleAfter="+_idleAfter);               
+//            },
+//            //success: this.maxIdleTimeMethod,
+//            error: function ( x, t, m ) {
+//                if( t === "timeout" ) {
+//                    getAjaxTimeoutMsg();
+//                }
+//                //console.debug("get max idletime: error data="+data);
+//                _idleAfter = 0;
+//            }
+//        });
+//    });
+    
+    //sets the activity variable on the server to 1 every minute if there was any activity
+//    setInterval(function(){ 
+//        
+//        //alert("Hello"); 
+//        var getLastActiveTimeDiff = Date.now() - $( document ).idleTimer("getLastActiveTime"); //in milliseconds
+//        console.log("getLastActiveTimeDiff="+getLastActiveTimeDiff);
+//        
+//        if( getLastActiveTimeDiff <= timerIdleTime ) {
+//            console.debug("event setserveractive:  getLastActiveTimeDiff="+getLastActiveTimeDiff/1000+" sec");
+//            $.ajax({
+//                url: getCommonBaseUrl("common/setserveractive",this.employees_sitename),
+//                type: 'GET',
+//                //contentType: 'application/json',
+//                dataType: 'json',
+//                async: false,
+//                timeout: _ajaxTimeout,
+//                success: function (data) {
+//                    console.debug("data="+data+"; _idleAfter="+_idleAfter);               
+//                },
+//                //success: this.maxIdleTimeMethod,
+//                error: function ( x, t, m ) {
+//                    if( t === "timeout" ) {
+//                        getAjaxTimeoutMsg();
+//                    }                  
+//                }
+//            });
+//        }
+//        
+//    }, timerIdleTime);
     
     //how to notify the server on activity every 1 minutes:
     // get time last active event fired
@@ -87,7 +120,7 @@ idleTimeoutClass.prototype.init = function () {
 idleTimeoutClass.prototype.setMaxIdletime = function () {
     
     if( _maxIdleTime ) {
-        console.log("_maxIdleTime is set = " + _maxIdleTime);
+        //console.log("_maxIdleTime is set = " + _maxIdleTime);
         _idleAfter = _maxIdleTime;
         return;
     }
@@ -121,6 +154,7 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //console.log( "############# checkIdleTimeout, testvar="+this.testvar );
     // start the idle timer plugin    
+    var idleTimeout =
     $.idleTimeout('#idle-timeout', '#idle-timeout-keepworking', {
         AJAXTimeout: null,
         failedRequests: 1,
@@ -131,86 +165,73 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
         serverResponseEquals: 'OK',
         onTimeout: function(){
             //fired on idle timeout from server: server response is not equal to the expected
-            console.log("onTimeout: logout");
+            //console.log("onTimeout: logout");
             idleTimeoutClass.prototype.onTimeout();
         },
         onIdle: function(){
             //fired on no activity on the page
-            console.log("on idle");
-//            _serverActive = idleTimeoutClass.prototype.isServerActive();
-            $('#idle-timeout').modal('show');
-//            if( _serverActive ) {              
-//                //$(this).dialog('close');
-//                //$(this).data('idletimeout').resume.trigger('click');              
-//                //keepWorking();                              
-//                return false;
-//            } else {
-//                $('#idle-timeout').modal('show');
-//            }                
-
+            //console.log("on idle");
+            $('#idle-timeout').modal('show');     
+            
+            idleTimeoutClass.prototype.isServerActive();
         },
         onCountdown: function(counter){
-            console.log("on Countdown");
-            
-            //theoretically this shoud not have happened, but just in case check the server before start counter
-//            _serverActive = idleTimeoutClass.prototype.isServerActive();
-//            if( _serverActive ) {
-//                $("#idle-timeout-keepworking").trigger('click');
-//                return;
-//            }
-                       
-            //$("#dialog-countdown").html(counter); // update the counter
-            _countdownDialog.html(counter); // update the counter
-            //this.countdownDialog.html(counter); // update the counter                      
+            //console.log("on Countdown");                                                                                                  
+            _countdownDialog.html(counter); // update the counter             
         },
         onAbort: function(){
-            console.log("onAbort: logout");           
+            //console.log("onAbort: logout");           
             idleTimeoutClass.prototype.onAbort();
         }
     });
+    
+      
 };
 
 idleTimeoutClass.prototype.isServerActive = function () {
     //check if the other page is active
-    var active = false;
+    _serverActive = false;
     $.ajax({
         url: getCommonBaseUrl("common/isserveractive",this.employees_sitename),
         type: 'GET',
         //contentType: 'application/json',
         dataType: 'json',
-        async: false,
+        async: true,
         timeout: _ajaxTimeout,
         success: function (data) {
-            console.debug("data="+data);
+            //console.debug("data="+data);
             if( data == "OK" ) {
-                console.debug("OK data="+data);
-                active = true;
+                //console.debug("OK data="+data);
+                $("#idle-timeout-keepworking").trigger('click');
+                //keepWorking();
+                //active = true;
+                _serverActive = true;
             }
         },
         //success: this.maxIdleTimeMethod,
         error: function ( x, t, m ) {
-            console.debug("isserveractive error???");
+            //console.debug("isserveractive error???");
             if( t === "timeout" ) {
-                console.debug("isserveractive timeout???");
+                //console.debug("isserveractive timeout???");
                 getAjaxTimeoutMsg();
             }
             //console.debug("get max idletime: error data="+data);
-            _idleAfter = 0;
+            //_idleAfter = 0;
         }
     });
     
-    console.debug("active="+active);
-    return active;
+    //console.debug("active="+active);
+    //return active;
 };
 
 
 idleTimeoutClass.prototype.onTimeout = function () {
-    console.log("onTimeout: user");
+    //console.log("onTimeout: user");
     idlelogout();
 };
 
 idleTimeoutClass.prototype.onAbort = function () {
-    console.log("onAbort: user");
+    //console.log("onAbort: user");
     //getAjaxTimeoutMsg();
     idlelogout();
 };
@@ -220,7 +241,60 @@ idleTimeoutClass.prototype.onAbort = function () {
 //    //alert("testfunc: user test!");
 //}
 
-
+idleTimeoutClass.prototype.setActive = function () {
+    //console.log("setActive:");
+    var timerIdleTime = 60 * 1000; //1 min = 60000 milliseconds
+    //console.log("event active idleTimer timerIdleTime="+timerIdleTime);
+    
+    var lastActiveTime = Date.now();
+    
+    //sets the activity variable on the server to 1 every minute if there was any activity
+    setInterval(function(){ 
+        
+        //alert("Hello"); 
+        var getLastActiveTimeDiff = Date.now() - lastActiveTime; //in milliseconds
+        //console.log("getLastActiveTimeDiff="+getLastActiveTimeDiff/1000+" sec");
+        
+        if( getLastActiveTimeDiff < timerIdleTime ) {
+            //console.log("event setserveractive:  getLastActiveTimeDiff="+getLastActiveTimeDiff/1000+" sec");
+            $.ajax({
+                url: getCommonBaseUrl("common/setserveractive",this.employees_sitename),
+                type: 'GET',
+                //contentType: 'application/json',
+                dataType: 'json',
+                async: true,
+                timeout: _ajaxTimeout,
+                success: function (data) {
+                    console.debug("data="+data+"; timerIdleTime="+timerIdleTime);               
+                },
+                //success: this.maxIdleTimeMethod,
+                error: function ( x, t, m ) {
+                    if( t === "timeout" ) {
+                        getAjaxTimeoutMsg();
+                    }                  
+                }
+            });
+        }
+        
+    }, timerIdleTime);
+    
+    function resetTimer(){
+        //console.log('reset lastActiveTime');
+        lastActiveTime = Date.now();
+    }    
+//    $( document ).on( "mousemove, keydown, click", function( event ) {       
+//        resetTimer();
+//    });
+    $(document).mousemove(function (e) {
+        resetTimer();
+    });
+    $(document).keypress(function (e) {
+       resetTimer();
+    });
+    $(document).click(function (e) {
+       resetTimer();
+    });
+};
 
 
 //////////////////// Common Timeout Function //////////////////////////

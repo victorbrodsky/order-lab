@@ -50,14 +50,17 @@ class SessionIdleHandler
         }
 
         //*************** set url for redirection ***************//
-        $this->setSessionLastRoute( $event );
+        $dontSetRedirect = $this->setSessionLastRoute( $event );
+        if( $dontSetRedirect > 0 ) {
+            return;
+        }
         //*************** end of set url for redirection ***************//
 
         if( $this->maxIdleTime > 0 ) {
 
             $this->session->start();
             
-    if( 1 ) {
+    if( 0 ) {
             //Don't use getLastUsed(). But it is the same until page is closed.
             $lapse = time() - $this->session->getMetadataBag()->getLastUsed();
 
@@ -70,18 +73,20 @@ class SessionIdleHandler
             $lastRequest = $this->session->get('lastRequest');
             //echo "Handler: lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
             //echo "Handler: pingCheck=".$this->session->get('pingCheck')."<br>";
-            if( !$lastRequest ) {
+            if( !$lastRequest ) {  
+                $logger = $this->container->get('logger');
+                $logger->notice("onKernelRequest: set lastRequest to ".time());
                 $this->session->set('lastRequest',time());
-                $this->session->set('pingCheck','Yes!');
+                //$this->session->set('pingCheck','Yes!');
             }
             
             $lapse = time() - $this->session->get('lastRequest'); 
-            //$this->session->set('lastRequest',time());
+            $this->session->set('lastRequest',time());
     }    
 
             if ($lapse > $this->maxIdleTime) {
 
-                //$event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
+                $event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
 
             }
         }
@@ -123,15 +128,21 @@ class SessionIdleHandler
 
         if(
             //$thisRoute == $routeData['name'] ||
-            $routeName == 'login' ||
+            //$routeName == 'login' ||
             //$routeName == 'scan-nopermission' ||
-            $routeName == 'scan_setloginvisit' ||
-            $routeName == 'employees_setloginvisit' ||
-            $routeName == 'logout' ||
+            //$routeName == 'scan_setloginvisit' ||
+            //$routeName == 'employees_setloginvisit' ||
+            strpos( $routeName, "login" ) === false ||    
+            strpos( $routeName, "_setloginvisit" ) === false ||
+            //$routeName == 'logout' ||
             $routeName == 'getmaxidletime' ||
+            $routeName == 'isserveractive' ||
+            $routeName == 'setserveractive' ||
             $routeName == '_wdt' ||
             $routeName == 'keepalive' ||
-            $routeName == 'idlelogout'
+            $routeName == 'idlelogout' ||
+            strpos( $routeName, "logout" ) === false
+            
         ) {
             $dontSetRedirect++;
         }
@@ -166,6 +177,8 @@ class SessionIdleHandler
 //        echo "referer_url=".$referer_url."<br>";
 //        print_r($session);
 //        exit();
+        
+        return $dontSetRedirect;
     }
 
 

@@ -192,10 +192,12 @@ class SecurityController extends Controller
         //echo "keep Alive Action! <br>";
 
         $response = new Response();
+        
+        $logger = $this->container->get('logger');
 
         $userUtil = new UserUtil();
         $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
-        $maxIdleTime = $res['maxIdleTime'];
+        $maxIdleTime = $res['maxIdleTime']+500;
         $maintenance = $res['maintenance'];
 
         /////////////////// check if maintenance is on ////////////////////
@@ -218,6 +220,7 @@ class SecurityController extends Controller
             //echo "pingCheck=".$session->get('pingCheck')."<br>";
             
             if( !$lastRequest ) { 
+                $logger->notice("keepAliveAction: set lastRequest to ".time());
                 $session->set('lastRequest',time());
                 $lastRequest = $session->get('lastRequest');
             }
@@ -237,7 +240,7 @@ class SecurityController extends Controller
             if( $lapse > $maxIdleTime ) { 
                 $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime);
                 //echo $overlapseMsg."<br>";
-                $response->setContent('over lapse = '.($lapse-$maxIdleTime));
+                $response->setContent($overlapseMsg);
             } else {
                 //echo "OK<br>";
                 $response->setContent('OK');
@@ -260,10 +263,14 @@ class SecurityController extends Controller
 
         $response = new Response();
         
+        $logger = $this->container->get('logger');
+        
         $userUtil = new UserUtil();
         $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
+        
+        $maxIdleTime = (60000-5000)/1000;
         
         if( $maintenance ) {
             $response->setContent(json_encode('NOTOK'));
@@ -277,15 +284,20 @@ class SecurityController extends Controller
         //echo "pingCheck=".$session->get('pingCheck')."<br>";
 
         if( !$lastRequest ) { 
+            //echo "init set lastRequest=".gmdate("Y-m-d H:i:s",time())."<br>";            
+            $logger->notice("isServerActiveAction: set lastRequest to ".time());
             $session->set('lastRequest',time());
             $lastRequest = $session->get('lastRequest');
         }
 
         //echo "time=".time()."; lastRequest=".$lastRequest."<br>";
-        $lapse = time() - $lastRequest;
+        $lapse = time() - $lastRequest; //time() in seconds
+        
+        //echo "lapse=".$lapse."; maxIdleTime=".$maxIdleTime."<br>";
         
         if( $lapse > $maxIdleTime ) {
-            $response->setContent(json_encode('NOTOK'));
+            $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime);
+            $response->setContent(json_encode($overlapseMsg));
         } else {
             $response->setContent(json_encode('OK'));
         }

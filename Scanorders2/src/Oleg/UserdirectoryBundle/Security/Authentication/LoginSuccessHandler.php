@@ -76,7 +76,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $session->set('maxIdleTime',$maxIdleTime);
         
         //set site email
-        $siteEmail = $res['siteEmail'];
+        $siteEmail = $userUtil->getSiteSetting($em,'siteEmail');       
         $session->set('siteEmail',$siteEmail);
         //////// EOF session //////////////////////////////
 
