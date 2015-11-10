@@ -77,6 +77,11 @@ idleTimeoutClass.prototype.init = function () {
         });
     });
     
+    //how to notify the server on activity every 1 minutes:
+    // get time last active event fired
+    // returns: number
+    // $( document ).idleTimer("getLastActiveTime");
+    
 };
 
 idleTimeoutClass.prototype.setMaxIdletime = function () {
