@@ -68,10 +68,16 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //echo "siteName=".$this->siteName."<br>";
         
         ////////// set session variables: maxIdleTime ////////       
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);
-        $maxIdleTime = $res['maxIdleTime'];
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);       
         $session = $request->getSession();
+        
+        //set max idle time
+        $maxIdleTime = $res['maxIdleTime'];
         $session->set('maxIdleTime',$maxIdleTime);
+        
+        //set site email
+        $siteEmail = $res['siteEmail'];
+        $session->set('siteEmail',$siteEmail);
         //////// EOF session //////////////////////////////
 
         if( $this->security->isGranted($this->roleBanned) ) {
@@ -116,6 +122,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $nocheck = strpos($lastRoute, '/check/');
         $keepalive = strpos($lastRoute, '/keepalive');
         $idlelogout = strpos($lastRoute, '/idlelogout');
+        $common = strpos($lastRoute, '/common/');
 
         $filedownload = strpos($lastRoute, '/file-download');
         if( $filedownload ) {
@@ -131,7 +138,12 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         echo "lastRoute=".$lastRoute."<br>";
 
 
-        if( $lastRoute && $lastRoute != '' && $loginpos === false && $nopermpos === false && $nocheck === false && $keepalive === false && $idlelogout === false ) {
+        if( 
+            $lastRoute && $lastRoute != '' && 
+            $loginpos === false && $nopermpos === false && 
+            $nocheck === false && $keepalive === false && 
+            $idlelogout === false && $common === false 
+        ) {
             $referer_url = $lastRoute;
         } else {
             $referer_url = $this->router->generate($this->siteName.'_home');

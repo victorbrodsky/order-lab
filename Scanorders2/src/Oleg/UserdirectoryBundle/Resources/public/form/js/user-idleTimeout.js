@@ -9,6 +9,7 @@
 var _idleAfter = 0;
 var _ajaxTimeout = 20000;  //15000 => 15 sec
 var _maxIdleTime = $("#maxIdleTime").val();
+var _siteEmail = $("#siteEmail").val();
 var _serverActive = false;
 _countdownDialog = $("#dialog-countdown");
 
@@ -23,7 +24,7 @@ $(document).ready(function() {
     var idleTimeout = new idleTimeoutClass();
 
     idleTimeout.init();
-    idleTimeout.setMaxIdletime();
+    //idleTimeout.setMaxIdletime();
     idleTimeout.checkIdleTimeout();
 
 });
@@ -39,18 +40,22 @@ idleTimeoutClass.prototype.init = function () {
     this.urlCommonIdleTimeout = getCommonBaseUrl("common/keepalive",this.employees_sitename);
     
     
+    this.setMaxIdletime();
     
+    //Centralize Idle Timeout Logout for multiple tabs/browser windows via setInterval js function that sets the activity variable on the server to 1 every minute if there was any activity
     //https://github.com/thorst/jquery-idletimer
     // timeout is in milliseconds
-    $( document ).idleTimer( _idleAfter );
-    
-    $( document ).on( "idle.idleTimer", function(event, elem, obj){
+    var timerIdleTime = 60000; //1 min = 60000 milliseconds
+    console.debug("event active idleTimer timerIdleTime="+timerIdleTime);
+    $( document ).idleTimer( timerIdleTime );
+     
+    //$( document ).on( "idle.idleTimer", function(event, elem, obj){
         // function you want to fire when the user goes idle
-    });
+    //});
 
     $( document ).on( "active.idleTimer", function(event, elem, obj, triggerevent){
         // function you want to fire when the user becomes active again
-        console.debug("event active idleTimer");
+        console.debug("event active idleTimer _idleAfter="+_idleAfter);
         $.ajax({
             url: getCommonBaseUrl("common/setserveractive",this.employees_sitename),
             type: 'GET',
@@ -59,7 +64,7 @@ idleTimeoutClass.prototype.init = function () {
             async: false,
             timeout: _ajaxTimeout,
             success: function (data) {
-                console.debug("data="+data);               
+                console.debug("data="+data+"; _idleAfter="+_idleAfter);               
             },
             //success: this.maxIdleTimeMethod,
             error: function ( x, t, m ) {
@@ -143,11 +148,11 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
             console.log("on Countdown");
             
             //theoretically this shoud not have happened, but just in case check the server before start counter
-            _serverActive = idleTimeoutClass.prototype.isServerActive();
-            if( _serverActive ) {
-                $("#idle-timeout-keepworking").trigger('click');
-                return;
-            }
+//            _serverActive = idleTimeoutClass.prototype.isServerActive();
+//            if( _serverActive ) {
+//                $("#idle-timeout-keepworking").trigger('click');
+//                return;
+//            }
                        
             //$("#dialog-countdown").html(counter); // update the counter
             _countdownDialog.html(counter); // update the counter
@@ -216,7 +221,13 @@ idleTimeoutClass.prototype.onAbort = function () {
 //////////////////// Common Timeout Function //////////////////////////
 
 function getAjaxTimeoutMsg() {
-    alert("Could not communicate with server: no answer after " + _ajaxTimeout/1000 + " seconds.");
+    //alert("Could not communicate with server: no answer after " + _ajaxTimeout/1000 + " seconds.");   
+    var msg = "The server appears unreachable. Please check your Internet connection, VPN connection (if applicable), "+
+            "or contact the system administrator "+_siteEmail+". "+
+            "You may be logged out in "+_ajaxTimeout/60+" minutes and entered data may be lost if the connection is not restored.";
+    
+    alert(msg);
+    
     return false;
 }
 

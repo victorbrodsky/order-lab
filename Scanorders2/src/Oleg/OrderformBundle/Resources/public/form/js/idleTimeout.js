@@ -38,7 +38,7 @@ $(document).ready(function() {
     var idleTimeout = new idleTimeoutClass();
 
     idleTimeout.init();
-    idleTimeout.setMaxIdletime();
+    //idleTimeout.setMaxIdletime();
     idleTimeout.checkIdleTimeout();
 
 });

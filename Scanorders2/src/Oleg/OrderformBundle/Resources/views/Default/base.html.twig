@@ -134,6 +134,7 @@
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
             <input type="hidden" id="user-preferences-tooltip" value="{{ order_security_utility.getTooltip(app.security.getToken().getUser()) }}" />
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
+			<input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
 
         </div>
 
@@ -169,6 +170,7 @@
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
 
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+                '@OlegUserdirectoryBundle/Resources/public/idletimer/idle-timer.min.js'
                 '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
                 '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
 
