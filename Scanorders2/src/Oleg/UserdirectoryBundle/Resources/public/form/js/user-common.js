@@ -369,6 +369,8 @@ function initConvertEnterToTab() {
 
 function getCommonBaseUrl(link,sitename) {
 
+    //console.log('getCommonBaseUrl: sitename='+sitename);
+
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
     }

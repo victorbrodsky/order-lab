@@ -270,7 +270,7 @@ class SecurityController extends Controller
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
         
-        $maxIdleTime = (60000-5000)/1000;
+        $maxIdleTime = 55;  //(60000-5000)/1000;
         
         if( $maintenance ) {
             $response->setContent(json_encode('NOTOK'));

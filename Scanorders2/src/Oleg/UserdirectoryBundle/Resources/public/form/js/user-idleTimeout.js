@@ -191,8 +191,10 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
 idleTimeoutClass.prototype.isServerActive = function () {
     //check if the other page is active
     _serverActive = false;
+    var url = getCommonBaseUrl("common/isserveractive","employees");
+    //console.log("url="+url);
     $.ajax({
-        url: getCommonBaseUrl("common/isserveractive",this.employees_sitename),
+        url: url,
         type: 'GET',
         //contentType: 'application/json',
         dataType: 'json',
@@ -257,15 +259,17 @@ idleTimeoutClass.prototype.setActive = function () {
         
         if( getLastActiveTimeDiff < timerIdleTime ) {
             //console.log("event setserveractive:  getLastActiveTimeDiff="+getLastActiveTimeDiff/1000+" sec");
+            var url = getCommonBaseUrl("common/setserveractive","employees");
+            //console.log("url="+url);
             $.ajax({
-                url: getCommonBaseUrl("common/setserveractive",this.employees_sitename),
+                url: url,
                 type: 'GET',
                 //contentType: 'application/json',
                 dataType: 'json',
                 async: true,
                 timeout: _ajaxTimeout,
                 success: function (data) {
-                    console.debug("data="+data+"; timerIdleTime="+timerIdleTime);               
+                    //console.debug("data="+data+"; timerIdleTime="+timerIdleTime);               
                 },
                 //success: this.maxIdleTimeMethod,
                 error: function ( x, t, m ) {
