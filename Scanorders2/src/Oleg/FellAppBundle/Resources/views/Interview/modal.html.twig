@@ -1,0 +1,12 @@
+{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+
+{#{% block header %}{% endblock %}#}
+
+
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+
+{% set interviewsArr = [] %}
+{% set interviewsAwaitingArr = [] %}
+
+{{ fellappmacros.addInterviewsModal(entity,interviewsArr,interviewsAwaitingArr) }}
+
