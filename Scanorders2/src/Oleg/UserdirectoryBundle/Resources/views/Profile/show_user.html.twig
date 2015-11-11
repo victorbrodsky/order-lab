@@ -20,18 +20,18 @@
 
 {% if entity is defined %}         
         
-    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% set userEditor = true %}
-    {% else %}
-        {% set userEditor = false %}
-    {% endif %}
+    {#{% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+        {#{% set userEditor = true %}#}
+    {#{% else %}#}
+        {#{% set userEditor = false %}#}
+    {#{% endif %}#}
         
-    <h4 class="text-info" align="center">
-        {{ title }}
-        {% if userEditor == true or user_id == app.security.getToken().getUser().getId() %}     
-            <a class="btn btn-sm btn-success" href="{{ path(sitename~'_user_edit',{'id':user_id}) }}">Edit</a>
-        {% endif %}
-    </h4>
+    {#<h4 class="text-info" align="center">#}
+        {#{{ title }}#}
+        {#{% if userEditor == true or user_id == app.security.getToken().getUser().getId() %}     #}
+            {#<a class="btn btn-sm btn-success" href="{{ path(sitename~'_user_edit',{'id':user_id}) }}">Edit</a>#}
+        {#{% endif %}#}
+    {#</h4>#}
         
     {% if customh is defined %}
         {% import _self as showusermacros %}

@@ -882,11 +882,9 @@
                                             <tr>
                                                 <td class="left-column" valign="top">ph:</td>
                                                 <td>
-                                                    <p>
                                                     {% for phone in assistant.getAllPhones() %}
                                                         {{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}<br>
                                                     {% endfor %}
-                                                    </p>
                                                 </td>
                                             </tr>
 
@@ -912,9 +910,22 @@
 
                     {% endfor %}
 
+                    {#edit button glyphicon#}
+                    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                        {% set userEditor = true %}
+                    {% else %}
+                        {% set userEditor = false %}
+                    {% endif %}
+                    {% if userEditor == true or user.id == app.security.getToken().getUser().getId() %}
+                        <p>
+                        <a style="color:black;" href="{{ path(sitename~'_user_edit',{'id':user.id}) }}">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        </a>
+                        </p>
+                    {% endif %}
 
-                </div>
-            </div>
+                </div>{#right-text#}
+            </div> {#right#}
         </div>
     </div>
 
