@@ -113,6 +113,9 @@
         {#<a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a>#}
     {#</p>#}
 
+    <div id="#interview-info-modal"></div>
+
+
     <p>
         <form action="{{ path('fellapp_home') }}" method="get" {{ form_enctype(fellappfilter) }} class="well form-search">
 
@@ -535,15 +538,15 @@
                                 {#<span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>#}
                             {#</div>#}
 
-                            {#<a href="#" class="btn btn-info btn-lg" onclick="interviewModalAction( {{entity.id}} );" data-toggle="tooltip" title="View Interview Evaluations">#}
-                                {#<span class="glyphicon glyphicon-list"></span>#}
-                            {#</a>#}
+                            <a href="#" onclick="interviewModalAction( {{entity.id}} );" data-toggle="modal" data-target="#interview-info-modal">
+                                <span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>
+                            </a>
 
                             {#Remote modal: This option is deprecated since v3.3.0 and will be removed in v4.#}
-                            <a data-toggle="modal" href="{{ path('fellapp_interview_modal',{'id':entity.id}) }}" data-target="#interview-info-{{entity.id}}">
-                                <span class="glyphicon glyphicon-list"></span>
-                            </a>
-                            <div id="#interview-info-{{entity.id}}"></div>
+                            {#<a data-toggle="modal" href="{{ path('fellapp_interview_modal',{'id':entity.id}) }}" data-target="#interview-info-{{entity.id}}">#}
+                                {#<span class="glyphicon glyphicon-list"></span>#}
+                            {#</a>#}
+                            {#<div id="#interview-info-{{entity.id}}"></div>#}
 
                         {% endif %}
                             </div>

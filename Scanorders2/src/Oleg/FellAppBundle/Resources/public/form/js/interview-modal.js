@@ -6,6 +6,16 @@
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
 function interviewModalAction( fellappId ) {
 
+    console.log('interviewModalAction fellappId='+fellappId);
+    var url = getCommonBaseUrl("interview-modal/"+fellappId);
+    console.log('url='+url);
+
+    $( "#interview-info-modal" ).load( url, function() {
+        console.log( "Load was performed. fellappId="+fellappId );
+    });
+
+    return;
+
     $('a[fellapp-interview-modal]').click(function(ev) {
 
         console.log('interviewModalAction fellappId='+fellappId);
