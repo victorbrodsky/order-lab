@@ -526,14 +526,24 @@
                             {#<a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}">#}
                                 {#<span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>#}
                             {#</a>#}
-                        {##}
+
                             {#{{ fellappmacros.addInterviewsModal(entity,interviewsArr,interviewsAwaitingArr) }}#}
 
-                            <a
-                                href="#"
-                                onclick="interviewModalAction( {{entity.id}} );"
-                                <span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>
+                            {#<div#}
+                                {#class="btn btn-sm"#}
+                                {#onclick="interviewModalAction( {{entity.id}} );"#}
+                                {#<span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>#}
+                            {#</div>#}
+
+                            {#<a href="#" class="btn btn-info btn-lg" onclick="interviewModalAction( {{entity.id}} );" data-toggle="tooltip" title="View Interview Evaluations">#}
+                                {#<span class="glyphicon glyphicon-list"></span>#}
+                            {#</a>#}
+
+                            {#Remote modal: This option is deprecated since v3.3.0 and will be removed in v4.#}
+                            <a data-toggle="modal" href="{{ path('fellapp_interview_modal',{'id':entity.id}) }}" data-target="#interview-info-{{entity.id}}">
+                                <span class="glyphicon glyphicon-list"></span>
                             </a>
+                            <div id="#interview-info-{{entity.id}}"></div>
 
                         {% endif %}
                             </div>

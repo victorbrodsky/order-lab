@@ -8,6 +8,10 @@ function interviewModalAction( fellappId ) {
 
     $('a[fellapp-interview-modal]').click(function(ev) {
 
+        console.log('interviewModalAction fellappId='+fellappId);
+
+        ev.preventDefault();
+
         var href = $(this).attr('href');
 
         if( !$('#generalDataConfirmModal').length ) {
