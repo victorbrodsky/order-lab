@@ -113,7 +113,7 @@
         {#<a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a>#}
     {#</p>#}
 
-    <div id="#interview-info-modal"></div>
+    {#<div id="#interview-info-modal"></div>#}
 
 
     <p>
@@ -375,7 +375,7 @@
                 {#Calculating evaluation received, score css and evaluation modal#}
                 {% set interviewDescrStr = "" %}
                 {% set interviewsArr = [] %}
-                {% set interviewsAwaitingArr = [] %}
+                {#{% set interviewsAwaitingArr = [] %}#}
 {#                {% if entity.interviewScore %}#}
                     {% set scoreCount = 0 %}
                     {% set tooltip = "" %}                      
@@ -383,19 +383,19 @@
                     {% for interview in entity.interviews if interview.interviewer %}
                         {% if not interview.totalRank %}
                             {% set scoreStyle = "" %}                             
-                            {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview.interviewer]) %}
+                            {#{% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview.interviewer]) %}#}
                         {% else %}
                             {% set scoreCount = scoreCount + 1 %} 
-                            {% set interviewerUrl = '<a href="'~path('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %} 
-                            {% set interviewDescrStr =                                    
-                                    interviewerUrl~":<br>"~       
-                                    "Academic Rank - "~interview.academicRank~
-                                    "<br>Personality Rank - "~interview.personalityRank~
-                                    "<br>Potential Rank - "~interview.potentialRank~
-                                    "<br>Language Proficiency - "~interview.languageProficiency~
-                                    "<br>Total Rank - "~interview.totalRank~
-                                    "<br>Comment: "~interview.comment %}
-                            {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}                              
+                            {#{% set interviewerUrl = '<a href="'~path('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %} #}
+                            {#{% set interviewDescrStr =                                    #}
+                                    {#interviewerUrl~":<br>"~       #}
+                                    {#"Academic Rank - "~interview.academicRank~#}
+                                    {#"<br>Personality Rank - "~interview.personalityRank~#}
+                                    {#"<br>Potential Rank - "~interview.potentialRank~#}
+                                    {#"<br>Language Proficiency - "~interview.languageProficiency~#}
+                                    {#"<br>Total Rank - "~interview.totalRank~#}
+                                    {#"<br>Comment: "~interview.comment %}#}
+                            {#{% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}                              #}
                         {% endif %}                                                                 
                     {% endfor %}                                   
 
@@ -524,7 +524,8 @@
                         {% endif %} 
                                 </div>
                                 <div style="float:left;">
-                        {% if interviewsArr|length > 0 or interviewsAwaitingArr|length > 0 %}
+                        {#{% if interviewsArr|length > 0 or interviewsAwaitingArr|length > 0 %}#}
+                        {% if scoreCount > 0 %}
 
                             {#<a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}">#}
                                 {#<span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>#}
@@ -538,9 +539,15 @@
                                 {#<span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>#}
                             {#</div>#}
 
-                            <a href="#" onclick="interviewModalAction( {{entity.id}} );" data-toggle="modal" data-target="#interview-info-modal">
+                            {#<a href="#" onclick="interviewModalAction( {{entity.id}} );" data-toggle="modal" data-target="#interview-info-modal">#}
+                                {#<span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>#}
+                            {#</a>#}
+                            {#<div class="btn btn-sm" type="button" style="padding:0px;" onclick="interviewModalCreation(this,{{ entity.id }});">#}
+                                {#<span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>#}
+                            {#</div>#}
+                            <div class="btn btn-sm btn-interview-info-modal" type="button" style="padding:0px;" data-id="{{ entity.id }}">
                                 <span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>
-                            </a>
+                            </div>
 
                             {#Remote modal: This option is deprecated since v3.3.0 and will be removed in v4.#}
                             {#<a data-toggle="modal" href="{{ path('fellapp_interview_modal',{'id':entity.id}) }}" data-target="#interview-info-{{entity.id}}">#}
@@ -632,7 +639,7 @@
                                 {% if entity.interviews|length > 0 %}
                                     <li>
 {#                                        <a href="{{ path('fellapp_show', { 'id': entity.id}) }}#interviews" target="_blank">View Interview Evaluations</a>#}
-                                        {% if interviewsArr|length > 0 or interviewsAwaitingArr|length > 0 %}                                                                                                         
+                                        {% if scoreCount > 0 %}
                                             <a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}">
                                                 View Interview Evaluations <span class="glyphicon glyphicon-list"></span>
                                             </a>                                                  
@@ -816,7 +823,6 @@
             $('[data-toggle="tooltip"]').tooltip({html: true});           
 
             var target = ".datepicker-only-year";
-
             var datefilter = $(target).datepicker( {
                 autoclose: true,
                 format: " yyyy",
@@ -826,8 +832,10 @@
             });
 
             attachTitleToScores();
-            
-            onInterviewModalShow();
+
+            initInterviewModal();
+
+            //onInterviewModalShow();
 
             /////////// set default year by JS ///////////
             //var year = parseInt(new Date().getFullYear()) + 2;
@@ -916,33 +924,32 @@
             });
         }
         
-        function onInterviewModalShow() {
-            
-            $('.interview-info-modal').on('shown.bs.modal', function () {
-                
-                //Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])
-                //Combined Interview Score: 3.3 (2nd highest of 6 available in Cytopathology for 2017)
-                               
-                var fellappId = $(this).find('.data-fellapp-id').data("fellapp-id");
-                console.log('modal show fellappId='+fellappId);
-                
-                var url = getCommonBaseUrl("interview-score-rank/"+fellappId,"fellowship-applications");
-                //console.log('url='+url);
-
-                $('.interview-score-rank').html('Calculating score rank ...');
-
-                $.ajax({
-                    type: "GET",
-                    url: url,                   
-                    success: function(resHtml) {
-                        $('.interview-score-rank').html(resHtml);
-                    }
-                });
-                
-            })
-
-        }
-
+//        function onInterviewModalShow() {
+//
+//            $('.interview-info-modal').on('shown.bs.modal', function () {
+//
+//                //Combined Interview Score: X (Nth highest of M available in [Fellowship specialty] for [Year])
+//                //Combined Interview Score: 3.3 (2nd highest of 6 available in Cytopathology for 2017)
+//
+//                var fellappId = $(this).find('.data-fellapp-id').data("fellapp-id");
+//                console.log('modal show fellappId='+fellappId);
+//
+//                var url = getCommonBaseUrl("interview-score-rank/"+fellappId,"fellowship-applications");
+//                //console.log('url='+url);
+//
+//                $('.interview-score-rank').html('Calculating score rank ...');
+//
+//                $.ajax({
+//                    type: "GET",
+//                    url: url,
+//                    success: function(resHtml) {
+//                        $('.interview-score-rank').html(resHtml);
+//                    }
+//                });
+//
+//            })
+//
+//        }
 
 
 

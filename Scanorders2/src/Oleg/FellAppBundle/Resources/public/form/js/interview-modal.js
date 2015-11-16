@@ -2,109 +2,95 @@
  * Created by oli2002 on 11/11/15.
  */
 
+console.log('include interview-modal.js');
+
+function initInterviewModal() {
+    $('.btn-interview-info-modal').click(function(ev) {
+        var fellappId = $(this).data('id');
+        interviewModalCreation( this, fellappId )
+    });
+}
+
 
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
-function interviewModalAction( fellappId ) {
+function interviewModalCreation( btnEl, fellappId ) {
 
     console.log('interviewModalAction fellappId='+fellappId);
+
     var url = getCommonBaseUrl("interview-modal/"+fellappId);
     console.log('url='+url);
 
-    $( "#interview-info-modal" ).load( url, function() {
-        console.log( "Load was performed. fellappId="+fellappId );
-    });
-
-    return;
-
-    $('a[fellapp-interview-modal]').click(function(ev) {
-
-        console.log('interviewModalAction fellappId='+fellappId);
-
-        ev.preventDefault();
-
-        var href = $(this).attr('href');
-
-        if( !$('#generalDataConfirmModal').length ) {
-            var modalHtml =
-                '<div id="generalDataConfirmModal" class="modal fade general-data-confirm-modal">' +
-                    '<div class="modal-dialog">' +
-                    '<div class="modal-content">' +
-                    '<div class="modal-header text-center">' +
-                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                    '<h3 id="dataConfirmLabel">Confirmation</h3>' +
-                    '</div>' +
-                    '<div class="modal-body text-center">' +
-                    '</div>' +
-                    '<div class="modal-footer">' +
-                    '<button class="btn btn-primary general-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                    '<a class="btn btn-primary general-data-confirm-ok" id="dataConfirmOK">OK</a>' +
-                    '<button style="display: none;" class="btn btn-primary data-comment-ok">OK</button>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-
-            $('body').append(modalHtml);
-        }
+//    $( "#interview-info-modal" ).load( url, function() {
+//        console.log( "Load was performed. fellappId="+fellappId );
+//        $("#interview-info-modal").find('#interview-info-'+fellappId).modal({show:true});
+//    });
+//    return;
+    var waitModal = true;
+    if( waitModal ) {
+        var waitHtml =
+            '<div class="modal fade" id="wait-modal" tabindex="-1" role="dialog" aria-labelledby="myWaitModalLabel">'+
+            '<div class="modal-dialog">'+
+            '<div class="modal-content text-center col-xs-12">'+
+            '<br><br><br><h4>Please wait ...</h4>' +
+            '<br><br><br>'+
+            '</div>'+
+            '</div>'+
+            '</div>';
+        $('#wait-modal').remove();
+        $('body').append(waitHtml);
+        $('#wait-modal').modal({show:true});
+    } else {
+        var lbtn = Ladda.create( btnEl );
+        lbtn.start();
+    }
 
 
-        $('#generalDataConfirmModal').find('.modal-body').text( $(this).attr('general-data-confirm') );
-
-        var callbackfn = $(this).attr('general-data-callback');
-
-        if( callbackfn ) {
-            var onclickStr = callbackfn+'("'+href+'"'+',this'+')';
-            $('#dataConfirmOK').attr('onclick',onclickStr);
-        } else {
-            $('#dataConfirmOK').attr('href', href);
-        }
-
-//        /////////////// add comment /////////////////////
-//        if( $(this).hasClass("status-with-comment") ) {
-//            //do it by listening .general-data-confirm-ok
-//            //console.log('add comment!');
-//            var commentHtml = '<br><br>Please provide a comment:' +
-//                '<p><textarea id="'+$(this).attr('id')+'" name="addcomment" type="textarea" class="textarea form-control addcomment_text" maxlength="5000" required></textarea></p>';
-//            $('#generalDataConfirmModal').find('.modal-body').append(commentHtml);
-//            //replace href link <a> with button
-//            $('.general-data-confirm-ok').hide();
-//            $('.data-comment-ok').show();
-//        } else {
-//            //$('#dataConfirmOK').attr('href', href); //do it automatically
+    //    $.ajax({
+//        type: 'GET',
+//        url: url,
+//        success: function(response){
+//            console.log('response ok');
+//            $('body').append(response);
+//            $('#interview-info-'+fellappId).modal({show:true});
 //        }
-//        /////////////// EOF add comment /////////////////////
+//    });
+//    return;
 
-        ////////// assign correct confirmation text and button's text //////////
-        var okText = $(this).attr('data-ok');
-        var cancelText = $(this).attr('data-cancel');
-        if( typeof okText === 'undefined' ){
-            okText = 'OK';
+    var success = false; //open modal only if success=true
+    $.ajax({
+        type: 'GET',
+        url: url,
+        //dataType:'json',//type of data you are returning from server
+        //data: data, //better to pass it with data
+        success: function(response){
+
+            //remove wait modal
+            if( waitModal ) {
+                var $modal2 = $("#wait-modal").detach().modal();
+                $modal2.modal("hide");
+            } else {
+                lbtn.stop();
+            }
+
+            $('body').append(response);
+            //$('#interview-info-'+fellappId).replaceWith( response );
+            success = true;
+        },
+        error: function(){
+            //handle error
+            if( waitModal ) {
+                $('#wait-modal').find('h4').html('Failed to load applicant information');
+            } else {
+                lbtn.stop();
+            }
         }
-        if( typeof cancelText === 'undefined' ){
-            cancelText = 'Cancel';
+    })
+    .then( function() {
+        if(success)
+        {
+            $('#interview-info-'+fellappId).modal({show:true});
         }
-        $('#generalDataConfirmModal').find('.general-data-confirm-cancel').text( cancelText );
-
-        //console.log('okText='+okText);
-        if( okText != 'hideOkButton' ) {
-            $('#generalDataConfirmModal').find('.general-data-confirm-ok').text( okText );
-            $('.general-data-confirm-ok').show();
-        } else {
-            $('.general-data-confirm-ok').hide();
-        }
-        ////////// EOF of assigning text //////////
-
-        $('#generalDataConfirmModal').modal({show:true});
-
-        //add listnere to ok button to "Please wait ..." and disable button on click
-        $('.general-data-confirm-ok').on('click', function(event){
-            //alert("on modal js: dataConfirmOK clicked");
-            var footer = $(this).closest('.modal-footer');
-            footer.html('Please wait ...');
-        });
-
-        return false;
-    }); //general-data-confirm click
+    });
 
 }
 

@@ -156,7 +156,7 @@
             <div class="data-fellapp-id" style="display:none;" data-fellapp-id="{{fellapp.id}}"></div>  
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">
-                 
+
                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                     {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                     <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
@@ -282,7 +282,8 @@
                     
                      
                     <p>    
-                        <div class="interview-score-rank">Calculating score rank...</div>  
+                        {#<div class="interview-score-rank">Calculating score rank...</div>#}
+                        {{ render(controller('OlegFellAppBundle:FellAppApplicant:intervieweScoreRank', { 'id': fellapp.id })) }}
                     </p>
                         
                 {% endif %}                                                                
@@ -290,7 +291,7 @@
             </h4>
           </div>
           <div class="modal-body">
-            
+
               {% if is_granted('ROLE_PLATFORM_DEMO') %}
                     Interview Evaluation Scores and Comments
               {% else %}
@@ -306,8 +307,11 @@
                         {% set interviewerCounter = 1 %}                       
                         <p>
                             Awaiting evaluations from 
-                            {% for interviewer in interviewsAwaitingArr %}                               
-                                <a href="{{ path('employees_showuser', { 'id': interviewer.id }) }}" target="_blank">{{interviewer.getUsernameOptimal()}}</a>{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
+                            {% for interview in interviewsAwaitingArr %}
+                                {% set emailSpan = '<span class="glyphicon glyphicon-envelope"></span>' %}
+                                {% set sendEmail = '<a data-toggle="tooltip" title="Resend Evaluation Invitation to '~interview.interviewer.displayName~'" href="'~path('fellapp_inviteinterviewerstorate', { 'id': interview.interviewer.id })~'" target="_blank">'~emailSpan~'</a>' %}
+                                <a href="{{ path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id }) }}">{{interview.interviewer.getUsernameOptimal()}}</a>
+                                {{ sendEmail|raw }}{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
                                 {% set interviewerCounter = interviewerCounter + 1 %}
                             {% endfor %}
                         </p>

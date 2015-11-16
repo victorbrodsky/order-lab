@@ -1,21 +1,43 @@
 {#{% extends "OlegFellAppBundle::Default/base.html.twig" %}#}
 
-{% block header %}{% endblock %}
+{#{% block header %}{% endblock %}#}
+
+
+{#{% block content %}#}
+
+
 
 
 {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 
-{% block content %}
 
-
-
+{#Calculating evaluation received, score css and evaluation modal#}
+{% set interviewDescrStr = "" %}
 {% set interviewsArr = [] %}
 {% set interviewsAwaitingArr = [] %}
+
+{% for interview in entity.interviews if interview.interviewer %}
+    {% if not interview.totalRank %}
+        {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview]) %}
+    {% else %}
+        {% set interviewerUrl = '<a href="'~path('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %}
+        {% set interviewDescrStr =
+        interviewerUrl~":<br>"~
+        "Academic Rank - "~interview.academicRank~
+        "<br>Personality Rank - "~interview.personalityRank~
+        "<br>Potential Rank - "~interview.potentialRank~
+        "<br>Language Proficiency - "~interview.languageProficiency~
+        "<br>Total Rank - "~interview.totalRank~
+        "<br>Comment: "~interview.comment %}
+        {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
+    {% endif %}
+{% endfor %}
+{#EOF Calculating evaluation received and evaluation modal#}
+
 
 {{ fellappmacros.addInterviewsModal(entity,interviewsArr,interviewsAwaitingArr) }}
 
 
 
 
-
-{% endblock %}
+{#{% endblock %}#}
