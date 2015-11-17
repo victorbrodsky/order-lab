@@ -17,6 +17,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use PhpOffice\PhpWord\PhpWord;
+
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\EmailUtil;
@@ -204,50 +206,6 @@ class FellAppApplicantController extends Controller {
             }
         }
 
-//        $emailStr = "";
-//        if( $emails && count($emails) > 0 ) {
-//            $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
-//        } else {
-//            $emailStr = " Emails have not been sent.";
-//        }
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $systemUser = $userSecUtil->findSystemUser();
-//        $event = "Invited interviewers to rate fellowship application ID " . $id . "." . $emailStr;
-//        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Resend Emails');
-//
-//        //return $this->redirect( $this->generateUrl('fellapp_home') );
-//
-//        if( $emails && count($emails) > 0 ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                $event
-//            );
-//        }
-//
-//        //send only 1 email to coordinator
-//        $user = $this->get('security.context')->getToken()->getUser();
-//        $senderEmail = $user->getEmail();
-//
-//        //get coordinator emails
-//        $coordinatorEmails = null;
-//        $fellappUtil = $this->container->get('fellapp_util');
-//        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
-//
-//        //make sure current user get confirmation email too: insert it to coordinator emails
-//        if( $coordinatorEmails == null || !in_array($senderEmail, $coordinatorEmails) ) {
-//            $coordinatorEmails[] = $senderEmail;
-//        }
-//
-//        $coordinatorEmails = implode(", ",$coordinatorEmails);
-//        //print_r($coordinatorEmails);
-//        //exit('1');
-//
-//        $applicant = $entity->getUser();
-//        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, null, $senderEmail );
-//
-//        $logger->notice("inviteInterviewersToRateAction: Send confirmation email from " . $senderEmail . " to coordinators:".$coordinatorEmails);
-
         $event = "Invited interviewers to rate fellowship application ID " . $id . ".";
         $this->sendConfirmationEmail($emails,$entity,$event,$emailUtil,$request);
 
@@ -422,9 +380,9 @@ class FellAppApplicantController extends Controller {
 
 
     /**
-     * @Route("/invite-observers-to-view/{id}", name="fellapp_inviteobservers")
-     * @Method("GET")
-     */
+ * @Route("/invite-observers-to-view/{id}", name="fellapp_inviteobservers")
+ * @Method("GET")
+ */
     public function inviteObserversToRateAction(Request $request, $id) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -484,42 +442,6 @@ class FellAppApplicantController extends Controller {
             $logger->notice("inviteObserversToRateAction: Send observer invitation email from " . $senderEmail . " to :".$email);
         }
 
-//        $emailStr = "";
-//        if( $emails && count($emails) > 0 ) {
-//            $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
-//        } else {
-//            $emailStr = " Emails have not been sent.";
-//        }
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $systemUser = $userSecUtil->findSystemUser();
-//        $event = "Invited observers to view fellowship application ID " . $id . "." . $emailStr;
-//        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,$request,'Fellowship Application Resend Emails');
-//
-//        if( $emails && count($emails) > 0 ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                $event
-//            );
-//        }
-//
-//        //send only 1 email to coordinator
-//        //get coordinator emails
-//        $coordinatorEmails = null;
-//        $fellappUtil = $this->container->get('fellapp_util');
-//        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($entity);
-//
-//        //make sure current user get confirmation email too: insert it to coordinator emails
-//        if( $coordinatorEmails == null || !in_array($senderEmail, $coordinatorEmails) ) {
-//            $coordinatorEmails[] = $senderEmail;
-//        }
-//
-//        $coordinatorEmails = implode(", ",$coordinatorEmails);
-//        $applicant = $entity->getUser();
-//        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, null, $senderEmail );
-//
-//        $logger->notice("inviteObserversToRateAction: Send observer invitation confirmation email from " . $senderEmail . " to coordinators:".$coordinatorEmails);
-
         $event = "Invited observers to view fellowship application ID " . $id . ".";
         $this->sendConfirmationEmail($emails,$entity,$event,$emailUtil,$request);
 
@@ -527,6 +449,63 @@ class FellAppApplicantController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode("ok"));
         return $response;
+    }
+
+
+    /**
+     * @Route("/download-interview-applicants-list-docx/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_docx")
+     * @Method("GET")
+     */
+    public function downloadInterviewDocxAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_OBSERVER')
+        ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $fellowshipSubspecialty = null;
+        $institutionNameFellappName = "";
+
+        if( $fellappTypeId && $fellappTypeId > 0 ) {
+            $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+        }
+
+        if( $fellowshipSubspecialty ) {
+            $institution = $fellowshipSubspecialty->getInstitution();
+            $institutionNameFellappName = $institution." ".$fellowshipSubspecialty." ";
+        }
+
+        //url=http://collage.med.cornell.edu/order/fellowship-applications/show/2
+        //$url = $this->generateUrl('fellapp_show',array('id' => 2),true);
+        //echo "url=".$url."<br>";
+        //exit();
+
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        //"Interview Evaluations for FELLOWSHIP-TYPE YEAR generated for LoggedInUserFirstName LoggedInUserLastName on DATE TIME EST.docx
+        $fileName = $currentYear." ".$institutionNameFellappName."Interview Evaluations generated on ".date('m/d/Y H:i');//.".docx";
+        $fileName = str_replace("  ", " ", $fileName);
+        $fileName = str_replace(" ", "-", $fileName);
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $docxBlob = $fellappUtil->createInterviewApplicantListDocx($fellappIds);
+
+        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'HTML');
+
+        //application/msword
+        //application/vnd.openxmlformats-officedocument.wordprocessingml.document
+        //header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        header('Content-Type: application/msword');
+
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+
+        // Write file to the browser
+        $writer->save('php://output');
+
+        exit();
     }
 
 } 

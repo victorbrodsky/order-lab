@@ -27,66 +27,9 @@
 
 
     <p>
-
-        {#<a href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter}) }}">#}
-            {#Active:{{ activeTotal }}#}
-        {#</a>#}
-        {#<a href="{{ path('fellapp_home',{'filter[active]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
-            {#({{ active }} for {{ currentYear }})#}
-        {#</a>#}
-
-        {#<a href="{{ path('fellapp_home',{'filter[complete]':1, 'filter[filter]':filter}) }}">#}
-            {#Complete:{{ completeTotal }}#}
-        {#</a>#}
-        {#<a href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
-           {#({{ complete }} for {{ currentYear }})#}
-        {#</a>#}
-
-        {#<a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter}) }}">#}
-            {#Interviewee:{{ intervieweeTotal }}#}
-        {#</a>#}
-        {#<a href="{{ path('fellapp_home',{'filter[interviewee]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
-            {#({{ interviewee }} for {{ currentYear }})#}
-        {#</a>#}
-
-
-        {#<a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">#}
-            {#On Hold:{{ onholdTotal }}#}
-        {#</a>#}
-        {#<a href="{{ path('fellapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
-            {#({{ onhold }} for {{ currentYear }})#}
-        {#</a>#}
-
-        {#<a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">#}
-            {#Rejected:{{ rejectTotal }}#}
-        {#</a>#}
-        {#<a href="{{ path('fellapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
-            {#({{ reject }} for {{ currentYear }})#}
-        {#</a>#}
-
-
-        {#<a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter}) }}">#}
-            {#Hidden:{{ hiddenTotal }}#}
-        {#</a>#}
-        {#<a href="{{ path('fellapp_home',{'filter[hidden]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
-            {#({{ hidden }} for {{ currentYear }})#}
-        {#</a>#}
-
-        {#<a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter}) }}">#}
-            {#Archived:{{ archivedTotal }}#}
-        {#</a>#}
-        {#<a href="{{ path('fellapp_home',{'filter[archived]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
-            {#({{ archived }} for {{ currentYear }})#}
-        {#</a>#}
-
         <i>Last succesful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }}</i>
     </p>
 
-    {#{% if searchFlag %}#}
-        {#{% set resStr = "Applications matching search criteria" %}#}
-    {#{% else %}#}
-        {#{% set resStr = "Total" %}#}
-    {#{% endif %}#}
 
     {% set fellappTypeId = -1 %}
     {% if filter %}
@@ -101,7 +44,11 @@
             <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}" 
                    data-toggle="tooltip" title="Download Fellowship Candidate Data in Excel Format">
                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-            </a>  
+            </a>
+            <a href="{{ path('fellapp_download_interview_applicants_list_docx', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
+               data-toggle="tooltip" title="Download Evaluations for Displayed Interviewees">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+            </a>
         </p>
     {% endif %}
 

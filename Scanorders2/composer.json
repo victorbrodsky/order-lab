@@ -24,6 +24,7 @@
         "knplabs/knp-components": "1.2.5",
         "knplabs/knp-paginator-bundle": "2.4.2",
         "phpexcel/phpexcel": "dev-master",
+        "phpoffice/phpword": "v0.12.1",
         "phpunit/phpunit": "4.1.*",
         "oneup/uploader-bundle": "~1.3",
         "friendsofsymfony/jsrouting-bundle": "@stable",

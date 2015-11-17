@@ -31,6 +31,8 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
+use PhpOffice\PhpWord\PhpWord;
+
 
 /*
  * 1) importFellApp
@@ -1921,6 +1923,108 @@ class FellAppUtil {
                
         
         return $ea;
+    }
+
+
+    public function createInterviewApplicantListDocx( $fellappids ) {
+
+        $author = $this->sc->getToken()->getUser();
+        $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+
+        // Creating the new document...
+        $phpWord = new PhpWord();
+
+//        $phpWord->getProperties()
+//            ->setCreator($author."")
+//            ->setTitle('Fellowship Applicants')
+//            ->setLastModifiedBy($author."")
+//            ->setDescription('Fellowship Interview Applicants list in Docx format')
+//            ->setSubject('PHP Docx manipulation')
+//            ->setKeywords('docx php phpword phpoffice')
+//            ->setCategory('programming')
+//        ;
+
+        // Adding an empty Section to the document...
+        $section = $phpWord->addSection();
+
+//        $section->addText(
+//            htmlspecialchars(
+//                '"Learn from yesterday, live for today, hope for tomorrow. '
+//                . 'The important thing is not to stop questioning." '
+//                . '(Albert Einstein)'
+//            )
+//        );
+
+        //align all cells to left
+        $style = array(
+            'alignment' => array(
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+
+        foreach( explode("-",$fellappids) as $fellappId ) {
+
+            $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappId);
+            if( !$fellapp ) {
+                continue;
+            }
+
+            //check if author can have access to view this applicant
+            //user who has the same fell type can view or edit
+            $fellappUtil = $this->container->get('fellapp_util');
+            if( $fellappUtil->hasFellappPermission($author,$fellapp) == false ) {
+                continue; //skip this applicant because the current user does not permission to view this applicant
+            }
+
+            //only include the people who have an interview date (not the status of the interviewer)
+            if( !$fellapp->getInterviewDate() ) {
+                continue;
+            }
+
+            $fellappId = $fellapp->getId();
+            $lastName = $fellapp->getUser()->getLastNameUppercase();
+            $firstName = $fellapp->getUser()->getFirstNameUppercase();
+
+            $section->addText(
+                htmlspecialchars(
+                    $fellappId . ' ' .
+                    $lastName . ' ' .
+                    $firstName
+                )
+            );
+
+            //$section->addLink( $this->container->get('router')->generate('fellapp_show',array('id'=>$fellappId),true), htmlspecialchars($lastName.' '.$lastName, ENT_COMPAT, 'UTF-8'));
+
+            //http://collage.med.cornell.edu/order/fellowship-applications/show/144
+            //http://collage.med.cornell.edu/order/fellowship-applications/show/144
+            $url = $this->container->get('router')->generate('fellapp_show',array('id'=>$fellappId),true);
+            //echo "url=".$url."<br>";
+            //exit();
+
+            //$section->addLink($url, null, 'myOwnLinkStyle');
+
+            $section->addLink( $url, htmlspecialchars($lastName.' '.$lastName, ENT_COMPAT, 'UTF-8'));
+
+//            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:modal.html.twig',
+//                array(
+//                    'entity' => $fellapp,
+//                    'pathbase' => 'fellapp',
+//                    'sitename' => $this->container->getParameter('fellapp.sitename')
+//                )
+//            );
+
+            //echo "interviewModalHtml=".$interviewModalHtml."<br>";
+
+
+            //$section->addText( htmlspecialchars($interviewModalHtml) );
+            //$section->addText( $interviewModalHtml );
+
+            //$section->addTextBreak();
+            $section->addPageBreak();
+        }
+
+        //exit("ids=".$fellappids);
+        return $phpWord;
     }
 
 } 
