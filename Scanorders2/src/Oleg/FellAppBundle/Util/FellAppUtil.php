@@ -1985,42 +1985,58 @@ class FellAppUtil {
             $lastName = $fellapp->getUser()->getLastNameUppercase();
             $firstName = $fellapp->getUser()->getFirstNameUppercase();
 
-            $section->addText(
-                htmlspecialchars(
-                    $fellappId . ' ' .
-                    $lastName . ' ' .
-                    $firstName
-                )
-            );
+//            $section->addText(
+//                htmlspecialchars(
+//                    $fellappId . ' ' .
+//                    $lastName . ' ' .
+//                    $firstName
+//                )
+//            );
 
             //$section->addLink( $this->container->get('router')->generate('fellapp_show',array('id'=>$fellappId),true), htmlspecialchars($lastName.' '.$lastName, ENT_COMPAT, 'UTF-8'));
 
             //http://collage.med.cornell.edu/order/fellowship-applications/show/144
             //http://collage.med.cornell.edu/order/fellowship-applications/show/144
-            $url = $this->container->get('router')->generate('fellapp_show',array('id'=>$fellappId),true);
+            //$url = $this->container->get('router')->generate('fellapp_show',array('id'=>$fellappId),true);
             //echo "url=".$url."<br>";
             //exit();
 
             //$section->addLink($url, null, 'myOwnLinkStyle');
 
-            $section->addLink( $url, htmlspecialchars($lastName.' '.$lastName, ENT_COMPAT, 'UTF-8'));
+//            $section->addLink( $url, htmlspecialchars($lastName.' '.$lastName, ENT_COMPAT, 'UTF-8'));
+//            $section->addTextBreak();
+//
+//            $section->addLink( "http://collage.med.cornell.edu/order/", htmlspecialchars($lastName.' '.$lastName.' Test 1', ENT_COMPAT, 'UTF-8'));
+//            $section->addTextBreak();
+//
+//            $section->addLink( "http://collage.med.cornell.edu/order/fellowship-applications/?filter[startDate]=2016&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[onhold]=1", htmlspecialchars($lastName.' '.$lastName.' Test', ENT_COMPAT, 'UTF-8'));
 
-//            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:modal.html.twig',
-//                array(
-//                    'entity' => $fellapp,
-//                    'pathbase' => 'fellapp',
-//                    'sitename' => $this->container->getParameter('fellapp.sitename')
-//                )
-//            );
+
+            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:modal.html.twig',
+                array(
+                    'entity' => $fellapp,
+                    'pathbase' => 'fellapp',
+                    'sitename' => $this->container->getParameter('fellapp.sitename')
+                )
+            );
+
+//            $interviewModalHtml = '<h1>Adding element via HTML</h1>';
+//            $interviewModalHtml .= '<p>Some well formed HTML snippet needs to be used</p>';
+//            $interviewModalHtml .= '<p>With for example <strong>some<sup>1</sup> <em>inline</em> formatting</strong><sub>1</sub></p>';
+//            $interviewModalHtml .= '<p>Unordered (bulleted) list:</p>';
+//            $interviewModalHtml .= '<ul><li>Item 1</li><li>Item 2</li><ul><li>Item 2.1</li><li>Item 2.1</li></ul></ul>';
+//            $interviewModalHtml .= '<p>Ordered (numbered) list:</p>';
+//            $interviewModalHtml .= '<ol><li>Item 1</li><li>Item 2</li></ol>';
 
             //echo "interviewModalHtml=".$interviewModalHtml."<br>";
 
-
-            //$section->addText( htmlspecialchars($interviewModalHtml) );
+            $section->addText( htmlspecialchars($interviewModalHtml) );
             //$section->addText( $interviewModalHtml );
 
+            //\PhpOffice\PhpWord\Shared\Html::addHtml($section, $interviewModalHtml);
+
             //$section->addTextBreak();
-            $section->addPageBreak();
+            //$section->addPageBreak();
         }
 
         //exit("ids=".$fellappids);
