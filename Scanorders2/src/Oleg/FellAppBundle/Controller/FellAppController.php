@@ -223,8 +223,8 @@ class FellAppController extends Controller {
 
         //echo "dql=".$dql."<br>";
 
-        //$limit = 200;
-        $limit = 10; //testing
+        $limit = 200;
+        //$limit = 10; //testing
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $fellApps = $paginator->paginate(
