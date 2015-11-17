@@ -400,7 +400,7 @@ class FellAppController extends Controller {
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }
 
-        /**
+    /**
      * @Route("/new/", name="fellapp_new")
      *
      * @Template("OlegFellAppBundle:Form:new.html.twig")

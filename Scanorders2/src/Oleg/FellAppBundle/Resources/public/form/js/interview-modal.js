@@ -88,9 +88,28 @@ function interviewModalCreation( btnEl, fellappId ) {
     .then( function() {
         if(success)
         {
+            $('[data-toggle="tooltip"]').tooltip({html: true});
             $('#interview-info-'+fellappId).modal({show:true});
         }
     });
 
+}
+
+function sendInviteInterviewersToRate(url,confirmMsg) {
+    console.log("inviteinterviewerstorate: url="+url);
+    var r = confirm(confirmMsg);
+    if( r == false ) {
+        return;
+    }
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function(response){
+            console.log('response ok');
+            if( response == "ok" ) {
+                alert("Invitation email(s) have been successfully sent.");
+            }
+        }
+    });
 }
 

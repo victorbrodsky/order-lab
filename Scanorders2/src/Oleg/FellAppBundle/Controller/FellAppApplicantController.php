@@ -21,6 +21,9 @@ use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\EmailUtil;
 
+
+
+
 class FellAppApplicantController extends Controller {
 
 
@@ -354,7 +357,7 @@ class FellAppApplicantController extends Controller {
 
         $logger->notice("sendInvitationEmail: Before send email to " . $email);
 
-        if( $emailUtil = null ) {
+        if( $emailUtil == null ) {
             $emailUtil = new EmailUtil();
         }
 
@@ -367,7 +370,7 @@ class FellAppApplicantController extends Controller {
     }
 
     public function sendConfirmationEmail( $emails, $fellapp, $event, $emailUtil, $request ) {
-        $emailStr = "";
+
         if( $emails && count($emails) > 0 ) {
             $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
         } else {
@@ -407,6 +410,10 @@ class FellAppApplicantController extends Controller {
         $coordinatorEmails = implode(", ",$coordinatorEmails);
         //print_r($coordinatorEmails);
         //exit('1');
+
+        if( $emailUtil == null ) {
+            $emailUtil = new EmailUtil();
+        }
 
         $applicant = $fellapp->getUser();
         $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, $em, null, $senderEmail );

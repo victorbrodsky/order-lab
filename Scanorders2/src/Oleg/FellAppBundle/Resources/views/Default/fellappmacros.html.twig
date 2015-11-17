@@ -149,13 +149,13 @@
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     
     <!-- Modal -->
-    <div class="modal fade interview-info-modal" id="interview-info-{{fellapp.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade interview-info-modal" id="interview-info-{{fellapp.id}}" tabindex="-1" role="dialog" aria-labelledby="myInterviewModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <div class="data-fellapp-id" style="display:none;" data-fellapp-id="{{fellapp.id}}"></div>  
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">
+            <h4 class="modal-title" id="myInterviewModalLabel">
 
                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                     {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
@@ -308,19 +308,27 @@
                         <p>
                             Awaiting evaluations from 
                             {% for interview in interviewsAwaitingArr %}
-                                {% set emailSpan = '<span class="glyphicon glyphicon-envelope"></span>' %}
-                                {% set sendEmail = '<a data-toggle="tooltip" title="Resend Evaluation Invitation to '~interview.interviewer.displayName~'" href="'~path('fellapp_inviteinterviewerstorate', { 'id': interview.interviewer.id })~'" target="_blank">'~emailSpan~'</a>' %}
-                                <a href="{{ path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id }) }}">{{interview.interviewer.getUsernameOptimal()}}</a>
-                                {{ sendEmail|raw }}{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
+                                {% set inviteTooltip = 'data-toggle="tooltip" title="Resend Evaluation Invitation to '~interview.interviewer.displayName~'"' %}
+                                {% set emailSpan = '<span class="glyphicon glyphicon-envelope" '~inviteTooltip~'></span>' %}
+                                {#{% set sendEmail = ' <a '~inviteTooltip~' href="'~path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id })~'">'~emailSpan~'</a>' %}#}
+                                {% set sendEmail = ' <a '~inviteTooltip~' onclick="sendInviteInterviewersToRate(\''~path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id})~'\',\'Are you sure you want to Invite Interviewer '~interview.interviewer.displayName~' to Rate this Applicant?\');" href="#">'~emailSpan~'</a>' %}
+                                <a href="{{ path('fellapp_show', { 'id': interview.interviewer.id }) }}" target="_blank">{{interview.interviewer.getUsernameOptimal()}}</a>{% if fellapp.itinerarys|length > 0 %}{{ sendEmail|raw }}{% endif %}{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
                                 {% set interviewerCounter = interviewerCounter + 1 %}
                             {% endfor %}
                         </p>
 
                         <p>
-                            <a
-                                general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
-                                general-data-callback="refreshpage"
-                                href="{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}, true) }}">Invite these interviewers to submit evaluations</a>
+                            {% if fellapp.itinerarys|length > 0 %}
+                                {#<a#}
+                                    {#general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."#}
+                                    {#general-data-callback="refreshpage"#}
+                                    {#href="{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}">Invite these interviewers to submit evaluations</a>#}
+                                <a
+                                    onclick="sendInviteInterviewersToRate('{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}','Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores.');"
+                                    href="#">Invite these interviewers to submit evaluations</a>
+                            {% else %}
+                                <div class="alert alert-danger" role="alert">Please upload Itinerary in order to invite interviewer(s) to rate</div>
+                            {% endif %}
                             {% if fellapp.daysAfterInterviewDate() and fellapp.daysAfterInterviewDate() > 0 %}
                                 <b>(Interview date was {{ fellapp.interviewDate|date('m/d/Y','UTC') }}, {{ fellapp.daysAfterInterviewDate()|abs }} days ago).</b>
                             {% endif %}
