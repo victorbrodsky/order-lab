@@ -312,7 +312,7 @@
                                 {% set emailSpan = '<span class="glyphicon glyphicon-envelope" '~inviteTooltip~'></span>' %}
                                 {#{% set sendEmail = ' <a '~inviteTooltip~' href="'~path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id })~'">'~emailSpan~'</a>' %}#}
                                 {% set sendEmail = ' <a '~inviteTooltip~' onclick="sendInviteInterviewersToRate(\''~path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id})~'\',\'Are you sure you want to Invite Interviewer '~interview.interviewer.displayName~' to Rate this Applicant?\');" href="#">'~emailSpan~'</a>' %}
-                                <a href="{{ path('fellapp_show', { 'id': interview.interviewer.id }) }}" target="_blank">{{interview.interviewer.getUsernameOptimal()}}</a>{% if fellapp.itinerarys|length > 0 %}{{ sendEmail|raw }}{% endif %}{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
+                                <a href="{{ path('employees_showuser', { 'id': interview.interviewer.id }) }}" target="_blank">{{interview.interviewer.getUsernameOptimal()}}</a>{% if fellapp.itinerarys|length > 0 %}{{ sendEmail|raw }}{% endif %}{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
                                 {% set interviewerCounter = interviewerCounter + 1 %}
                             {% endfor %}
                         </p>

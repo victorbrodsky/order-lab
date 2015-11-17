@@ -91,8 +91,7 @@ class FellAppApplicantController extends Controller {
 
         if( $entity->getInterviewScore() == null || $entity->getInterviewScore() <= 0 ) {
             $response = new Response();
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setContent(json_encode($res));
+            $response->setContent($res);
             return $response;
         }
 
@@ -163,8 +162,7 @@ class FellAppApplicantController extends Controller {
         }
 
         $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($res));
+        $response->setContent($res);
         return $response;
     }
 
