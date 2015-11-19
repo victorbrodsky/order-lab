@@ -486,23 +486,29 @@ class FellAppApplicantController extends Controller {
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
         //"Interview Evaluations for FELLOWSHIP-TYPE YEAR generated for LoggedInUserFirstName LoggedInUserLastName on DATE TIME EST.docx
-        $fileName = $currentYear." ".$institutionNameFellappName."Interview Evaluations generated on ".date('m/d/Y H:i').".docx";
+        $fileName = $currentYear." ".$institutionNameFellappName."Interview Evaluations generated on ".date('m/d/Y H:i').".doc";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
 
         $fellappUtil = $this->container->get('fellapp_util');
         $docxBlob = $fellappUtil->createInterviewApplicantListDocx($fellappIds);
 
-        //$writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'HTML');
-        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'Word2007');
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/vnd.ms-word');
+//        $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+//        $response->setContent($docxBlob);
+//        return $response;
+
+        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'HTML');
+        //$writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'Word2007');
 
         header("Content-Description: File Transfer");
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
 
         //application/msword
         //application/vnd.openxmlformats-officedocument.wordprocessingml.document
-        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        //header('Content-Type: application/msword');
+        //header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        header('Content-Type: application/msword');
 
         //header('Content-Transfer-Encoding: binary');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

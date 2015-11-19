@@ -1,0 +1,45 @@
+
+{% if fullpage is defined and fullpage %}
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
+
+<head>
+    <title>Interview</title>
+
+    <xml>
+        <w:worddocument xmlns:w="#unknown">
+            <w:view>Print</w:view>
+            <w:zoom>90</w:zoom>
+            <w:donotoptimizeforbrowser />
+        </w:worddocument>
+    </xml>
+
+    <style>
+        @page Section1
+        {size:8.5in 11.0in;
+            margin:1.0in 1.25in 1.0in 1.25in ;
+            mso-header-margin:.5in;
+            mso-footer-margin:.5in; mso-paper-source:0;}
+        div.Section1
+        {page:Section1;}
+    </style>
+
+</head>
+
+<body>
+{% endif %}
+
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+
+<h4>
+{{ fellappmacros.applicantInterviewsInfo(entity,true) }}
+</h4>
+
+{{ fellappmacros.interviewsDetails(entity,true) }}
+
+{% if fullpage is defined and fullpage %}
+</body>
+</html>
+{% endif %}

@@ -1981,10 +1981,12 @@ class FellAppUtil {
                 continue;
             }
 
-            $fellappId = $fellapp->getId();
-            $lastName = $fellapp->getUser()->getLastNameUppercase();
-            $firstName = $fellapp->getUser()->getFirstNameUppercase();
+            // Adding an empty Section to the document...
+            //$section = $phpWord->addSection();
 
+//            $fellappId = $fellapp->getId();
+//            $lastName = $fellapp->getUser()->getLastNameUppercase();
+//            $firstName = $fellapp->getUser()->getFirstNameUppercase();
 //            $section->addText(
 //                htmlspecialchars(
 //                    $fellappId . ' ' .
@@ -2012,13 +2014,22 @@ class FellAppUtil {
 //            $section->addLink( "http://collage.med.cornell.edu/order/fellowship-applications/?filter[startDate]=2016&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[onhold]=1", htmlspecialchars($lastName.' '.$lastName.' Test', ENT_COMPAT, 'UTF-8'));
 
 
-            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:modal.html.twig',
+//            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:modal.html.twig',
+//                array(
+//                    'entity' => $fellapp,
+//                    'pathbase' => 'fellapp',
+//                    'sitename' => $this->container->getParameter('fellapp.sitename')
+//                )
+//            );
+
+            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
                 array(
                     'entity' => $fellapp,
                     'pathbase' => 'fellapp',
                     'sitename' => $this->container->getParameter('fellapp.sitename')
                 )
             );
+            //return $interviewModalHtml;
 
 //            $interviewModalHtml = '<h1>Adding element via HTML</h1>';
 //            $interviewModalHtml .= '<p>Some well formed HTML snippet needs to be used</p>';
@@ -2030,13 +2041,13 @@ class FellAppUtil {
 
             //echo "interviewModalHtml=".$interviewModalHtml."<br>";
 
-            $section->addText( htmlspecialchars($interviewModalHtml) );
-            //$section->addText( $interviewModalHtml );
+            //$section->addText( htmlspecialchars($interviewModalHtml) );
+            $section->addText( $interviewModalHtml );
 
             //\PhpOffice\PhpWord\Shared\Html::addHtml($section, $interviewModalHtml);
 
-            //$section->addTextBreak();
-            //$section->addPageBreak();
+            $section->addTextBreak();
+            $section->addPageBreak();
         }
 
         //exit("ids=".$fellappids);
