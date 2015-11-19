@@ -453,10 +453,10 @@ class FellAppApplicantController extends Controller {
 
 
     /**
-     * @Route("/download-interview-applicants-list-docx/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_docx")
+     * @Route("/download-interview-applicants-list/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list")
      * @Method("GET")
      */
-    public function downloadInterviewDocxAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+    public function downloadInterviewApplicantsListAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
             false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
@@ -486,7 +486,7 @@ class FellAppApplicantController extends Controller {
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
         //"Interview Evaluations for FELLOWSHIP-TYPE YEAR generated for LoggedInUserFirstName LoggedInUserLastName on DATE TIME EST.docx
-        $fileName = $currentYear." ".$institutionNameFellappName."Interview Evaluations generated on ".date('m/d/Y H:i').".doc";
+        $fileName = $currentYear." ".$institutionNameFellappName."Interview Evaluations generated on ".date('m/d/Y H:i').".pdf";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
 
@@ -499,8 +499,8 @@ class FellAppApplicantController extends Controller {
 //        $response->setContent($docxBlob);
 //        return $response;
 
-        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'HTML');
-        //$writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'Word2007');
+        //$writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'HTML');
+        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'Word2007');
 
         header("Content-Description: File Transfer");
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
@@ -508,7 +508,8 @@ class FellAppApplicantController extends Controller {
         //application/msword
         //application/vnd.openxmlformats-officedocument.wordprocessingml.document
         //header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        header('Content-Type: application/msword');
+        //header('Content-Type: application/msword');
+        header('Content-Type: application/pdf');
 
         //header('Content-Transfer-Encoding: binary');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

@@ -45,6 +45,39 @@ class SessionIdleHandler
     public function onKernelRequest(GetResponseEvent $event)
     {
 
+        ////// testing /////
+        if(0) {
+            $fullUrl = $_SERVER['REQUEST_URI'];
+            echo "fullUrl=".$fullUrl."<br>";
+
+            /** @var \Symfony\Component\HttpFoundation\Request $request  */
+            $request = $event->getRequest();
+            /** @var \Symfony\Component\HttpFoundation\Session $session  */
+            $session = $request->getSession();
+            //print_r($session);
+
+            $routeParams = $this->router->match($request->getPathInfo());
+            //print_r($routeParams);
+
+            $fullUrl = $_SERVER['REQUEST_URI'];
+
+            $routeName = $routeParams['_route'];
+            //echo "<br> kernel routeName=".$routeName."<br>";
+
+            if( $this->securityContext->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') ) {
+                echo 'IS_AUTHENTICATED_ANONYMOUSLY <br>';
+            }
+            if( $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED ') ) {
+                echo 'IS_AUTHENTICATED_REMEMBERED  <br>';
+            }
+            if( $this->securityContext->isGranted('IS_AUTHENTICATED_FULLY ') ) {
+                echo 'IS_AUTHENTICATED_FULLY <br>';
+            }
+
+            //exit('onKernelRequest');
+        }//if
+        //////////////////////////
+
         if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
             return;
         }

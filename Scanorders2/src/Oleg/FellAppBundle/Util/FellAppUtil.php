@@ -1932,7 +1932,7 @@ class FellAppUtil {
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         // Creating the new document...
-        $phpWord = new PhpWord();
+        //$phpWord = new PhpWord();
 
 //        $phpWord->getProperties()
 //            ->setCreator($author."")
@@ -1945,7 +1945,7 @@ class FellAppUtil {
 //        ;
 
         // Adding an empty Section to the document...
-        $section = $phpWord->addSection();
+        //$section = $phpWord->addSection();
 
 //        $section->addText(
 //            htmlspecialchars(
@@ -1956,11 +1956,13 @@ class FellAppUtil {
 //        );
 
         //align all cells to left
-        $style = array(
-            'alignment' => array(
-                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-            )
-        );
+//        $style = array(
+//            'alignment' => array(
+//                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+//            )
+//        );
+
+        $count = 0;
 
         foreach( explode("-",$fellappids) as $fellappId ) {
 
@@ -1981,12 +1983,17 @@ class FellAppUtil {
                 continue;
             }
 
+//            if( $count != 0 ) {
+//                $section->addPageBreak();
+//            }
+
             // Adding an empty Section to the document...
             //$section = $phpWord->addSection();
 
-//            $fellappId = $fellapp->getId();
-//            $lastName = $fellapp->getUser()->getLastNameUppercase();
-//            $firstName = $fellapp->getUser()->getFirstNameUppercase();
+            $fellappId = $fellapp->getId();
+            $lastName = $fellapp->getUser()->getLastNameUppercase();
+            $firstName = $fellapp->getUser()->getFirstNameUppercase();
+
 //            $section->addText(
 //                htmlspecialchars(
 //                    $fellappId . ' ' .
@@ -1994,8 +2001,7 @@ class FellAppUtil {
 //                    $firstName
 //                )
 //            );
-
-            //$section->addLink( $this->container->get('router')->generate('fellapp_show',array('id'=>$fellappId),true), htmlspecialchars($lastName.' '.$lastName, ENT_COMPAT, 'UTF-8'));
+//            $section->addLink( $this->container->get('router')->generate('fellapp_show',array('id'=>$fellappId),true), htmlspecialchars($lastName.' '.$lastName, ENT_COMPAT, 'UTF-8'));
 
             //http://collage.med.cornell.edu/order/fellowship-applications/show/144
             //http://collage.med.cornell.edu/order/fellowship-applications/show/144
@@ -2022,13 +2028,13 @@ class FellAppUtil {
 //                )
 //            );
 
-            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
-                array(
-                    'entity' => $fellapp,
-                    'pathbase' => 'fellapp',
-                    'sitename' => $this->container->getParameter('fellapp.sitename')
-                )
-            );
+//            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
+//                array(
+//                    'entity' => $fellapp,
+//                    'pathbase' => 'fellapp',
+//                    'sitename' => $this->container->getParameter('fellapp.sitename')
+//                )
+//            );
             //return $interviewModalHtml;
 
 //            $interviewModalHtml = '<h1>Adding element via HTML</h1>';
@@ -2042,12 +2048,15 @@ class FellAppUtil {
             //echo "interviewModalHtml=".$interviewModalHtml."<br>";
 
             //$section->addText( htmlspecialchars($interviewModalHtml) );
-            $section->addText( $interviewModalHtml );
+            //$section->addText( $interviewModalHtml );
 
             //\PhpOffice\PhpWord\Shared\Html::addHtml($section, $interviewModalHtml);
 
-            $section->addTextBreak();
-            $section->addPageBreak();
+
+            //$section->addTextBreak();
+            //$section->addPageBreak();
+
+            $count++;
         }
 
         //exit("ids=".$fellappids);

@@ -86,7 +86,7 @@ security:
                 key:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /scan
-                #always_remember_me: true
+                always_remember_me: true
 
         ldap_employees_firewall:
             pattern: ^/directory
@@ -114,7 +114,7 @@ security:
                 key:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /directory
-                #always_remember_me: true
+                always_remember_me: true
 
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications
@@ -136,8 +136,8 @@ security:
             remember_me:
                 key:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
-                path:     /fellowship-applications
-                #always_remember_me: true
+                path:     / #fellowship-applications
+                always_remember_me: true
         
 
     #Note: first match is used, the later would be ignored
