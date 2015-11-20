@@ -31,8 +31,6 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use PhpOffice\PhpWord\PhpWord;
-
 
 /*
  * 1) importFellApp

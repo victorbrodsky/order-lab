@@ -17,12 +17,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use PhpOffice\PhpWord\PhpWord;
-
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\EmailUtil;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
 class FellAppApplicantController extends Controller {
