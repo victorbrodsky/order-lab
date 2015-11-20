@@ -1,7 +1,6 @@
-{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+{#{% extends "OlegFellAppBundle::Default/base.html.twig" %}#}
 
 {% block header %}
-    {#no navbar#}
 {% endblock %}
 
 
@@ -10,6 +9,9 @@
 
 {% block content %}
 
+{% if withIconHref is not defined %}
+    {% set withIconHref = true %}
+{% endif %}
 
 {% for entity in entities %}
 
@@ -19,10 +21,10 @@
         <div class="pdf-page">
 
             <h4>
-            {{ fellappmacros.applicantInterviewsInfo(entity,false) }}
+            {{ fellappmacros.applicantInterviewsInfo(entity,withIconHref) }}
             </h4>
 
-            {{ fellappmacros.interviewsDetails(entity,false) }}
+            {{ fellappmacros.interviewsDetails(entity,withIconHref) }}
 
         </div>
 

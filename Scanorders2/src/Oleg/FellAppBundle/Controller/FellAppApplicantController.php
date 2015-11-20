@@ -489,26 +489,59 @@ class FellAppApplicantController extends Controller {
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
 
-        $fellappUtil = $this->container->get('fellapp_util');
-
-        //$docxBlob = $fellappUtil->createInterviewApplicantListDocx($fellappIds);
-
-    if( 1 ) {
-
-
-        $pageUrl = $this->generateUrl('fellapp_interview_applicants_list', array('fellappIds'=>$fellappIds), true); // use absolute path!
-
-
+        //take care of authentication
         $session = $this->get('session');
         $session->save();
         session_write_close();
-
         $PHPSESSID = $session->getId();
+
+    if( 0 ) {
+
+        $pageUrl = $this->generateUrl('fellapp_interview_applicants_list', array('fellappIds'=>$fellappIds), true); // use absolute path!
 
         $output = $this->get('knp_snappy.pdf')->getOutput($pageUrl, array(
             'cookie' => array(
                 'PHPSESSID' => $PHPSESSID
             )));
+
+
+    } else {
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
+        //exit("entity count=".count($entities)."<br>");
+
+//        $html = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicants-interview-info.html.twig', array(
+//            'entities' => $entities,
+//            'pathbase' => 'fellapp',
+//            'cycle' => 'show',
+//            'sitename' => $this->container->getParameter('fellapp.sitename')
+//        ));
+
+        $html = "";
+        foreach( $entities as $fellapp ) {
+            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
+                array(
+                    'entity' => $fellapp,
+                    'withIconHref' => false,
+                    'pathbase' => 'fellapp',
+                    'sitename' => $this->container->getParameter('fellapp.sitename')
+                )
+            );
+
+            $html = $html . '<div style="overflow: hidden; page-break-after:always;">'.
+                    $interviewModalHtml.
+                    '</div>';
+        }
+
+        $output = $this->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
+            'cookie' => array(
+                'PHPSESSID' => $PHPSESSID
+            )));
+
+
+    }
+
 
         return new Response(
             $output,
@@ -519,64 +552,6 @@ class FellAppApplicantController extends Controller {
             )
         );
 
-        return new Response(
-            $this->get('knp_snappy.pdf')->getOutput($pageUrl),
-            200,
-            array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
-            )
-        );
-
-    } else {
-
-        $fellappUtil = $this->container->get('fellapp_util');
-        $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
-
-        $html = $this->renderView('OlegFellAppBundle:Interview:applicants-interview-info.html.twig', array(
-            'entities' => $entities,
-            'pathbase' => 'fellapp',
-            'cycle' => 'show',
-            'sitename' => $this->container->getParameter('fellapp.sitename')
-        ));
-
-        return new Response(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            200,
-            array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
-            )
-        );
-    }
-
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/vnd.ms-word');
-//        $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
-//        $response->setContent($docxBlob);
-//        return $response;
-//
-//        //$writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'HTML');
-//        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'Word2007');
-//
-//        header("Content-Description: File Transfer");
-//        header('Content-Disposition: attachment; filename="' . $fileName . '"');
-//
-//        //application/msword
-//        //application/vnd.openxmlformats-officedocument.wordprocessingml.document
-//        //header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-//        //header('Content-Type: application/msword');
-//        header('Content-Type: application/pdf');
-//
-//        //header('Content-Transfer-Encoding: binary');
-//        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-//        header('Expires: 0');
-//
-//
-//        // Write file to the browser
-//        $writer->save('php://output');
-//
-//        exit();
     }
 
 

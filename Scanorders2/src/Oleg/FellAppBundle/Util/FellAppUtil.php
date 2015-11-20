@@ -1929,41 +1929,6 @@ class FellAppUtil {
     public function createInterviewApplicantList( $fellappids ) {
 
         $author = $this->sc->getToken()->getUser();
-        //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
-
-        // Creating the new document...
-        //$phpWord = new PhpWord();
-
-//        $phpWord->getProperties()
-//            ->setCreator($author."")
-//            ->setTitle('Fellowship Applicants')
-//            ->setLastModifiedBy($author."")
-//            ->setDescription('Fellowship Interview Applicants list in Docx format')
-//            ->setSubject('PHP Docx manipulation')
-//            ->setKeywords('docx php phpword phpoffice')
-//            ->setCategory('programming')
-//        ;
-
-        // Adding an empty Section to the document...
-        //$section = $phpWord->addSection();
-
-//        $section->addText(
-//            htmlspecialchars(
-//                '"Learn from yesterday, live for today, hope for tomorrow. '
-//                . 'The important thing is not to stop questioning." '
-//                . '(Albert Einstein)'
-//            )
-//        );
-
-        //align all cells to left
-//        $style = array(
-//            'alignment' => array(
-//                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-//            )
-//        );
-
-        $interviewsHtml = "";
-        $count = 0;
 
         $fellapps = array();
 
