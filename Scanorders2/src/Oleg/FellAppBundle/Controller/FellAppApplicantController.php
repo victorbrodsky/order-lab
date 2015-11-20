@@ -495,7 +495,7 @@ class FellAppApplicantController extends Controller {
         session_write_close();
         $PHPSESSID = $session->getId();
 
-    if( 0 ) {
+    if( 1 ) {
 
         $pageUrl = $this->generateUrl('fellapp_interview_applicants_list', array('fellappIds'=>$fellappIds), true); // use absolute path!
 
@@ -523,7 +523,7 @@ class FellAppApplicantController extends Controller {
             $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
                 array(
                     'entity' => $fellapp,
-                    'withIconHref' => false,
+                    'reallinks' => false,
                     'pathbase' => 'fellapp',
                     'sitename' => $this->container->getParameter('fellapp.sitename')
                 )
@@ -596,6 +596,7 @@ class FellAppApplicantController extends Controller {
 
         return array(
             'entities' => $entities,
+            'reallinks' => false,
             'pathbase' => 'fellapp',
             'cycle' => 'show',
             'sitename' => $this->container->getParameter('fellapp.sitename')

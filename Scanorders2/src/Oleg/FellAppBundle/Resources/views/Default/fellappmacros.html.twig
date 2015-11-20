@@ -179,9 +179,11 @@
     
 {% endmacro %}
 
-{% macro applicantInterviewsInfo(fellapp,reallinks) %}
+{% macro applicantInterviewsInfo(fellapp) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% set noGlyphicon = false %}
 
     {% if is_granted('ROLE_PLATFORM_DEMO') %}
         {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
@@ -199,7 +201,7 @@
         Applicant Demo
     {% else %}
 
-        {% if reallinks %}
+        {% if noGlyphicon %}
             {% set downloadTitleStr = "Download Complete Application in PDF" %}
         {% else %}
             {% set downloadTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>' %}
@@ -247,7 +249,7 @@
             {#Case 1: single doc: href with referee name#}
             {% if ref.documents|length == 1 %}
                 {% set refStr = '<a href="'~url('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
-                {% if reallinks %}
+                {% if noGlyphicon %}
                     {% set hrefTitleStr = 'Letter'  %}
                 {% else %}
                     {% set hrefTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
@@ -294,7 +296,7 @@
         {% set otherDocStr = null %}
         {% if fellapp.documents|length == 1 %}
             {% set otherDocStr = "Other Documents:" %}
-            {% if reallinks %}
+            {% if noGlyphicon %}
                 {% set hrefDocTitleStr = 'Document'  %}
             {% else %}
                 {% set hrefDocTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
