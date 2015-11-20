@@ -504,26 +504,16 @@ class FellAppApplicantController extends Controller {
                 'PHPSESSID' => $PHPSESSID
             )));
 
-
     } else {
 
         $fellappUtil = $this->container->get('fellapp_util');
         $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
-        //exit("entity count=".count($entities)."<br>");
-
-//        $html = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicants-interview-info.html.twig', array(
-//            'entities' => $entities,
-//            'pathbase' => 'fellapp',
-//            'cycle' => 'show',
-//            'sitename' => $this->container->getParameter('fellapp.sitename')
-//        ));
 
         $html = "";
         foreach( $entities as $fellapp ) {
             $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
                 array(
                     'entity' => $fellapp,
-                    'reallinks' => false,
                     'pathbase' => 'fellapp',
                     'sitename' => $this->container->getParameter('fellapp.sitename')
                 )
@@ -570,33 +560,11 @@ class FellAppApplicantController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $logger = $this->container->get('logger');
-
-        if(0){
-        $user = $this->get('security.context')->getToken()->getUser();
-        //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually
-        if( !($user instanceof User) ) {
-            $firewall = 'ldap_fellapp_firewall';
-            $systemUser = $userSecUtil->findSystemUser();
-            if( $systemUser ) {
-                $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                $this->get('security.context')->setToken($token);
-                //$this->get('security.token_storage')->setToken($token);
-            }
-            $logger->notice("showInterviewApplicantsListAction: Logged in as systemUser=".$systemUser);
-        } else {
-            $logger->notice("showInterviewApplicantsListAction: Token user is valid security.context user=".$user);
-        }
-        }//if
-
         $fellappUtil = $this->container->get('fellapp_util');
-
         $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
 
         return array(
             'entities' => $entities,
-            'reallinks' => false,
             'pathbase' => 'fellapp',
             'cycle' => 'show',
             'sitename' => $this->container->getParameter('fellapp.sitename')

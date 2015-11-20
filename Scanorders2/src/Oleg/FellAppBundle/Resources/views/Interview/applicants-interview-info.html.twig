@@ -15,32 +15,20 @@
 
 {% block content %}
 
-{#{% if reallinks is not defined %}#}
-    {#{% set reallinks = false %}#}
-{#{% endif %}#}
 
 {% for entity in entities %}
 
-    {#<p><!-- pagebreak --></p>#}
     <div style="page-break-before:always">&nbsp;</div>
 
     <div class="text-left col-xs-12">
 
-        {#page-break-after: always;#}
-        {#<div class="pdf-page">#}
+        <h4>
+        {{ fellappmacros.applicantInterviewsInfo(entity) }}
+        </h4>
 
-            <h4>
-            {{ fellappmacros.applicantInterviewsInfo(entity) }}
-            </h4>
-
-            {{ fellappmacros.interviewsDetails(entity,true) }}
-
-        {#</div>#}
+        {{ fellappmacros.interviewsDetails(entity,true) }}
 
     </div>
-
-    {#<p><!-- pagebreak --></p>#}
-    {#<div style="page-break-before:always">&nbsp;</div>#}
 
 {% endfor %}
 

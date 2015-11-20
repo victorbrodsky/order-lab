@@ -217,9 +217,6 @@ security:
      - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
      - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
 
-#     - { path: ^/fellowship-applications/interview-applicants-list/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
-#     - { path: ^/fellowship-applications/interview-applicants-list/, roles: ROLE_FELLAPP_USER }
-
      - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
 
 
