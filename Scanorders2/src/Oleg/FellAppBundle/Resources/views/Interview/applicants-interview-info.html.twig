@@ -1,0 +1,37 @@
+{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+
+{% block header %}
+    {#no navbar#}
+{% endblock %}
+
+
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+
+
+{% block content %}
+
+
+{% for entity in entities %}
+
+    <div class="text-left col-xs-12">
+
+        {#page-break-after: always;#}
+        <div class="pdf-page">
+
+            <h4>
+            {{ fellappmacros.applicantInterviewsInfo(entity,false) }}
+            </h4>
+
+            {{ fellappmacros.interviewsDetails(entity,false) }}
+
+        </div>
+
+    </div>
+
+    <p><!-- pagebreak --></p>
+    <div style="page-break-before:always">&nbsp;</div>
+
+{% endfor %}
+
+
+{% endblock %}

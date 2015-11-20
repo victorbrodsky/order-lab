@@ -22,8 +22,7 @@ use PhpOffice\PhpWord\PhpWord;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\EmailUtil;
-
-
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
 class FellAppApplicantController extends Controller {
@@ -491,35 +490,141 @@ class FellAppApplicantController extends Controller {
         $fileName = str_replace(" ", "-", $fileName);
 
         $fellappUtil = $this->container->get('fellapp_util');
-        $docxBlob = $fellappUtil->createInterviewApplicantListDocx($fellappIds);
+
+        //$docxBlob = $fellappUtil->createInterviewApplicantListDocx($fellappIds);
+
+    if( 1 ) {
+
+
+        $pageUrl = $this->generateUrl('fellapp_interview_applicants_list', array('fellappIds'=>$fellappIds), true); // use absolute path!
+
+
+        $session = $this->get('session');
+        $session->save();
+        session_write_close();
+
+        $PHPSESSID = $session->getId();
+
+        $output = $this->get('knp_snappy.pdf')->getOutput($pageUrl, array(
+            'cookie' => array(
+                'PHPSESSID' => $PHPSESSID
+            )));
+
+        return new Response(
+            $output,
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
+            )
+        );
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutput($pageUrl),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
+            )
+        );
+
+    } else {
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
+
+        $html = $this->renderView('OlegFellAppBundle:Interview:applicants-interview-info.html.twig', array(
+            'entities' => $entities,
+            'pathbase' => 'fellapp',
+            'cycle' => 'show',
+            'sitename' => $this->container->getParameter('fellapp.sitename')
+        ));
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
+            )
+        );
+    }
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/vnd.ms-word');
 //        $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
 //        $response->setContent($docxBlob);
 //        return $response;
+//
+//        //$writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'HTML');
+//        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'Word2007');
+//
+//        header("Content-Description: File Transfer");
+//        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+//
+//        //application/msword
+//        //application/vnd.openxmlformats-officedocument.wordprocessingml.document
+//        //header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+//        //header('Content-Type: application/msword');
+//        header('Content-Type: application/pdf');
+//
+//        //header('Content-Transfer-Encoding: binary');
+//        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+//        header('Expires: 0');
+//
+//
+//        // Write file to the browser
+//        $writer->save('php://output');
+//
+//        exit();
+    }
 
-        //$writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'HTML');
-        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($docxBlob, 'Word2007');
 
-        header("Content-Description: File Transfer");
-        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+    /**
+     * @Route("/interview-applicants-list/{fellappIds}", name="fellapp_interview_applicants_list")
+     * @Method("GET")
+     * @Template("OlegFellAppBundle:Interview:applicants-interview-info.html.twig")
+     */
+    public function showInterviewApplicantsListAction(Request $request, $fellappIds) {
 
-        //application/msword
-        //application/vnd.openxmlformats-officedocument.wordprocessingml.document
-        //header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        //header('Content-Type: application/msword');
-        header('Content-Type: application/pdf');
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_OBSERVER')
+        ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
 
-        //header('Content-Transfer-Encoding: binary');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Expires: 0');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
 
+        if(0){
+        $user = $this->get('security.context')->getToken()->getUser();
+        //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually
+        if( !($user instanceof User) ) {
+            $firewall = 'ldap_fellapp_firewall';
+            $systemUser = $userSecUtil->findSystemUser();
+            if( $systemUser ) {
+                $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
+                $this->get('security.context')->setToken($token);
+                //$this->get('security.token_storage')->setToken($token);
+            }
+            $logger->notice("showInterviewApplicantsListAction: Logged in as systemUser=".$systemUser);
+        } else {
+            $logger->notice("showInterviewApplicantsListAction: Token user is valid security.context user=".$user);
+        }
+        }//if
 
-        // Write file to the browser
-        $writer->save('php://output');
+        $fellappUtil = $this->container->get('fellapp_util');
 
-        exit();
+        $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
+
+        return array(
+            'entities' => $entities,
+            'pathbase' => 'fellapp',
+            'cycle' => 'show',
+            'sitename' => $this->container->getParameter('fellapp.sitename')
+        );
     }
 
 } 

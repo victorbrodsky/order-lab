@@ -1926,10 +1926,10 @@ class FellAppUtil {
     }
 
 
-    public function createInterviewApplicantListDocx( $fellappids ) {
+    public function createInterviewApplicantList( $fellappids ) {
 
         $author = $this->sc->getToken()->getUser();
-        $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+        //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         // Creating the new document...
         //$phpWord = new PhpWord();
@@ -1962,7 +1962,10 @@ class FellAppUtil {
 //            )
 //        );
 
+        $interviewsHtml = "";
         $count = 0;
+
+        $fellapps = array();
 
         foreach( explode("-",$fellappids) as $fellappId ) {
 
@@ -1982,6 +1985,10 @@ class FellAppUtil {
             if( !$fellapp->getInterviewDate() ) {
                 continue;
             }
+
+            $fellapps[] = $fellapp;
+
+if(0){
 
 //            if( $count != 0 ) {
 //                $section->addPageBreak();
@@ -2019,6 +2026,8 @@ class FellAppUtil {
 //
 //            $section->addLink( "http://collage.med.cornell.edu/order/fellowship-applications/?filter[startDate]=2016&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[onhold]=1", htmlspecialchars($lastName.' '.$lastName.' Test', ENT_COMPAT, 'UTF-8'));
 
+            $pageUrl = $this->container->get('router')->generate('fellapp_interview_modal', array('id'=>$fellapp->getId()), true); // use absolute path!
+            return $pageUrl;
 
 //            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:modal.html.twig',
 //                array(
@@ -2028,13 +2037,13 @@ class FellAppUtil {
 //                )
 //            );
 
-//            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
-//                array(
-//                    'entity' => $fellapp,
-//                    'pathbase' => 'fellapp',
-//                    'sitename' => $this->container->getParameter('fellapp.sitename')
-//                )
-//            );
+            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
+                array(
+                    'entity' => $fellapp,
+                    'pathbase' => 'fellapp',
+                    'sitename' => $this->container->getParameter('fellapp.sitename')
+                )
+            );
             //return $interviewModalHtml;
 
 //            $interviewModalHtml = '<h1>Adding element via HTML</h1>';
@@ -2056,11 +2065,16 @@ class FellAppUtil {
             //$section->addTextBreak();
             //$section->addPageBreak();
 
+            $interviewsHtml = $interviewsHtml . "<br><br><br>" . $interviewModalHtml;
+
+
             $count++;
+
+}//if(0)
         }
 
         //exit("ids=".$fellappids);
-        return $phpWord;
+        return $fellapps;
     }
 
 } 

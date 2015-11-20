@@ -640,16 +640,16 @@ class ReportGenerator {
         //echo "generated ok! <br>";
     }
 
-    public function generateFromTwig($applicationId,$applicationOutputFilePath) {
-        $args = $this->getShowParameters($applicationId,'fellapp_home'); //fellapp_download
-        $this->container->get('knp_snappy.pdf')->generateFromHtml(
-            $this->renderView(
-                'OlegFellAppBundle:Form:download.html.twig',
-                $args
-            ),
-            $applicationOutputFilePath
-        );
-    }
+//    public function generateFromTwig($applicationId,$applicationOutputFilePath) {
+//        $args = $this->getShowParameters($applicationId,'fellapp_home'); //fellapp_download
+//        $this->container->get('knp_snappy.pdf')->generateFromHtml(
+//            $this->renderView(
+//                'OlegFellAppBundle:Form:download.html.twig',
+//                $args
+//            ),
+//            $applicationOutputFilePath
+//        );
+//    }
 
 
   
