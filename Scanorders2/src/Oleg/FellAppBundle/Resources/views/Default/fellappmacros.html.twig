@@ -348,7 +348,7 @@
             "<br>Potential Rank - "~interview.potentialRank~
             "<br>Language Proficiency - "~interview.languageProficiency~
             "<br>Total Rank - "~interview.totalRank~
-            "<br>Comment: "~interview.comment %}
+            "<br>Comment: "~interview.comment|e %}
             {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
         {% endif %}
     {% endfor %}
