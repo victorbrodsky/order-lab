@@ -46,36 +46,59 @@ class SessionIdleHandler
     {
 
         ////// testing /////
-//        if(0) {
-//            $fullUrl = $_SERVER['REQUEST_URI'];
-//            echo "fullUrl=".$fullUrl."<br>";
-//
-//            /** @var \Symfony\Component\HttpFoundation\Request $request  */
-//            $request = $event->getRequest();
-//            /** @var \Symfony\Component\HttpFoundation\Session $session  */
-//            $session = $request->getSession();
-//            //print_r($session);
-//
-//            $routeParams = $this->router->match($request->getPathInfo());
-//            //print_r($routeParams);
-//
-//            $fullUrl = $_SERVER['REQUEST_URI'];
-//
-//            $routeName = $routeParams['_route'];
-//            //echo "<br> kernel routeName=".$routeName."<br>";
-//
-//            if( $this->securityContext->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') ) {
-//                echo 'IS_AUTHENTICATED_ANONYMOUSLY <br>';
-//            }
-//            if( $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED ') ) {
-//                echo 'IS_AUTHENTICATED_REMEMBERED  <br>';
-//            }
-//            if( $this->securityContext->isGranted('IS_AUTHENTICATED_FULLY ') ) {
-//                echo 'IS_AUTHENTICATED_FULLY <br>';
-//            }
-//
-//            //exit('onKernelRequest');
-//        }//if
+        if(0) {
+            $request = $event->getRequest();
+            $http_user_agent = $request->headers->get('User-Agent');
+            echo "http_user_agent=".$http_user_agent."<br>";
+            if( $http_user_agent )
+            {
+                //$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+                if (preg_match('/Word|Excel|PowerPoint|ms-office/i', $http_user_agent))
+                {
+                    // Prevent MS office products detecting the upcoming re-direct .. forces them to launch the browser to this link
+                    die();
+                }
+            }
+            exit('111');
+        }
+        if(0) {
+            $fullUrl = $_SERVER['REQUEST_URI'];
+            echo "fullUrl=".$fullUrl."<br>";
+
+            /** @var \Symfony\Component\HttpFoundation\Request $request  */
+            $request = $event->getRequest();
+            /** @var \Symfony\Component\HttpFoundation\Session $session  */
+            $session = $request->getSession();
+            //print_r($session);
+
+            $routeParams = $this->router->match($request->getPathInfo());
+            //print_r($routeParams);
+
+            $fullUrl = $_SERVER['REQUEST_URI'];
+
+            $routeName = $routeParams['_route'];
+            echo "<br> kernel routeName=".$routeName."<br>";
+
+            if( $this->securityContext->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') ) {
+                echo 'IS_AUTHENTICATED_ANONYMOUSLY <br>';
+            }
+            if( $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED ') ) {
+                echo 'IS_AUTHENTICATED_REMEMBERED  <br>';
+            }
+            if( $this->securityContext->isGranted('IS_AUTHENTICATED_FULLY ') ) {
+                echo 'IS_AUTHENTICATED_FULLY <br>';
+            }
+
+            $target_path = $session->get('_security.aperio_ldap_firewall.target_path');
+            echo "target_path=".$target_path."<br>";
+
+            $fullUrl = $_SERVER['REQUEST_URI'];
+
+            $referer = $request->headers->get('referer');
+            echo "referer=".$referer."<br>";
+
+            exit('onKernelRequest');
+        }//if
         //////////////////////////
 
         if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {

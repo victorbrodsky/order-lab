@@ -44,6 +44,12 @@ class SecurityController extends Controller
         $routename = $request->get('_route');
         //echo "routename=".$routename."<br>";
 
+        //testing
+//        $session = $request->getSession();
+//        $target_path = $session->get('_security.ldap_fellapp_firewall.target_path');
+//        echo "target_path=".$target_path."<br>";
+//        exit('111');
+
         if( $routename == "employees_login" ) {
             $sitename = $this->container->getParameter('employees.sitename');
         }
