@@ -47,21 +47,6 @@ class SessionIdleHandler
 
         ////// testing /////
         if(0) {
-            $request = $event->getRequest();
-            $http_user_agent = $request->headers->get('User-Agent');
-            echo "http_user_agent=".$http_user_agent."<br>";
-            if( $http_user_agent )
-            {
-                //$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
-                if (preg_match('/Word|Excel|PowerPoint|ms-office/i', $http_user_agent))
-                {
-                    // Prevent MS office products detecting the upcoming re-direct .. forces them to launch the browser to this link
-                    die();
-                }
-            }
-            exit('111');
-        }
-        if(0) {
             $fullUrl = $_SERVER['REQUEST_URI'];
             echo "fullUrl=".$fullUrl."<br>";
 
