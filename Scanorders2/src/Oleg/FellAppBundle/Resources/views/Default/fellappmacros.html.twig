@@ -145,7 +145,7 @@
     
 
 
-
+{#used for interview's modal#}
 {% macro addInterviewsModal(fellapp) %}
     
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
@@ -179,6 +179,7 @@
     
 {% endmacro %}
 
+{#used for interview's modal and download in excel/word. noGlyphicon is used when it is called for generation a download pdf/doc#}
 {% macro applicantInterviewsInfo(fellapp,noGlyphicon) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
@@ -352,6 +353,7 @@
 
 {% endmacro %}
 
+{#used for interview's modal and download in excel/word. reallinks is used when it is called for generation a download doc when css is not used#}
 {% macro interviewsDetails(fellapp, reallinks) %}
 
     {#Calculating evaluation received, score css and evaluation modal#}

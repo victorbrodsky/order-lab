@@ -42,16 +42,19 @@
         <p>
             <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
             <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}" 
-                   data-toggle="tooltip" title="Download Fellowship Candidate Data in Excel Format">
-                   <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-            </a>
-            <a href="{{ path('fellapp_download_interview_applicants_list', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-               data-toggle="tooltip" title="Download Evaluations for Displayed Interviewees">
-                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                   data-toggle="tooltip" title="Download Displayed Application Summaries in Excel">
+                   {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
+                    <i class="fa fa-file-excel-o"></i>
             </a>
             <a href="{{ path('fellapp_download_interview_applicants_list_doc', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-               data-toggle="tooltip" title="Download Evaluations for Displayed Interviewees">
-                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+               data-toggle="tooltip" title="Download Displayed Interviewee Summaries in Word">
+                {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
+                <i class="fa fa-file-word-o"></i>
+            </a>
+            <a href="{{ path('fellapp_download_interview_applicants_list', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
+               data-toggle="tooltip" title="Download Displayed Interviewee Summaries in PDF">
+                {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
+                <i class="fa fa-file-pdf-o"></i>
             </a>
         </p>
     {% endif %}
@@ -909,4 +912,7 @@
 
 {% endblock %}
 
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
+{% endblock %}
 

@@ -30,6 +30,8 @@ class AppKernel extends Kernel
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
             new Oleg\FellAppBundle\OlegFellAppBundle(),
+
+            new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
         );
 
 		//echo "environment:<br>";

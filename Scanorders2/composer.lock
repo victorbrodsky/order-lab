@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a730b903349b41c8075525d33ea32141",
-    "content-hash": "e6361a1ace72c4486f23f1c6456efe10",
+    "hash": "f8760c51d4bd7b5e7ffb39b23b8927ca",
+    "content-hash": "b87be795f53a981bdea572ff1d000034",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -46,6 +46,53 @@
                 "transliterator"
             ],
             "time": "2015-09-28 16:26:35"
+        },
+        {
+            "name": "bmatzner/fontawesome-bundle",
+            "version": "4.4.0",
+            "target-dir": "Bmatzner/FontAwesomeBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bmatzner/BmatznerFontAwesomeBundle.git",
+                "reference": "2ff4fc0fbcfab38428c0458f310f1b6e00cabd1e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bmatzner/BmatznerFontAwesomeBundle/zipball/2ff4fc0fbcfab38428c0458f310f1b6e00cabd1e",
+                "reference": "2ff4fc0fbcfab38428c0458f310f1b6e00cabd1e",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/framework-bundle": ">=2.1"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Bmatzner\\FontAwesomeBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "CC BY 3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Bernd Matzner",
+                    "email": "bernd@matznermatzner.de",
+                    "homepage": "http://berndmatzner.de"
+                }
+            ],
+            "description": "FontAwesome Bundle for Symfony2",
+            "homepage": "http://fortawesome.github.com/Font-Awesome/",
+            "keywords": [
+                "css",
+                "graphics",
+                "symfony",
+                "typography",
+                "webfonts"
+            ],
+            "time": "2015-08-11 17:29:13"
         },
         {
             "name": "clegginabox/pdf-merger",
@@ -2674,12 +2721,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stof/StofDoctrineExtensionsBundle.git",
-                "reference": "7b3144572617b0555f9a443317dbc2f9cf5b524e"
+                "reference": "12df2454bd3840d94892fe932eadc0138bf36922"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stof/StofDoctrineExtensionsBundle/zipball/7b3144572617b0555f9a443317dbc2f9cf5b524e",
-                "reference": "7b3144572617b0555f9a443317dbc2f9cf5b524e",
+                "url": "https://api.github.com/repos/stof/StofDoctrineExtensionsBundle/zipball/12df2454bd3840d94892fe932eadc0138bf36922",
+                "reference": "12df2454bd3840d94892fe932eadc0138bf36922",
                 "shasum": ""
             },
             "require": {
@@ -2727,7 +2774,7 @@
                 "translatable",
                 "tree"
             ],
-            "time": "2015-08-12 16:23:48"
+            "time": "2015-11-24 09:48:35"
         },
         {
             "name": "swiftmailer/swiftmailer",

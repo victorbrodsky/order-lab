@@ -33,7 +33,8 @@
         "spraed/pdf-generator-bundle": "v1.0",
         "knplabs/knp-snappy-bundle": "v1.3",
         "itbz/fpdi": "dev-master",
-        "clegginabox/pdf-merger": "dev-master"
+        "clegginabox/pdf-merger": "dev-master",
+        "bmatzner/fontawesome-bundle": "~4.4"
     },
     "scripts": {
         "post-install-cmd": [
