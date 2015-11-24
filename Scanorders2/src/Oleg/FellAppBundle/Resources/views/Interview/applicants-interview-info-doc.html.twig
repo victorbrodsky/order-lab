@@ -1,7 +1,6 @@
 
-<!DOCTYPE HTML PUBLIC>
+<!DOCTYPE HTML>
 <html
-      xmlns:v='urn:schemas-microsoft-com:vml'
       xmlns:o='urn:schemas-microsoft-com:office:office'
       xmlns:w='urn:schemas-microsoft-com:office:word'
       xmlns='http://www.w3.org/TR/REC-html40'>
@@ -9,23 +8,34 @@
 <head>
     <title>Interview</title>
 
-    <xml>
-        <w:worddocument xmlns:w="#unknown">
-            <w:view>Print</w:view>
-            <w:zoom>90</w:zoom>
-            <w:donotoptimizeforbrowser />
-        </w:worddocument>
-    </xml>
+    {#<xml>#}
+        {#<w:worddocument xmlns:w="#unknown">#}
+            {#<w:view>Print</w:view>#}
+            {#<w:zoom>90</w:zoom>#}
+            {#<w:donotoptimizeforbrowser />#}
+        {#</w:worddocument>#}
+    {#</xml>#}
 
-    <style>
-        @page Section1
-        {size:8.5in 11.0in;
-            margin:1.0in 1.25in 1.0in 1.25in ;
-            mso-header-margin:.5in;
-            mso-footer-margin:.5in; mso-paper-source:0;}
-        div.Section1
-        {page:Section1;}
-    </style>
+    {#<style>#}
+        {#@page Section1#}
+        {#{size:8.5in 11.0in;#}
+            {#margin:1.0in 1.25in 1.0in 1.25in ;#}
+            {#mso-header-margin:.5in;#}
+            {#mso-footer-margin:.5in; mso-paper-source:0;}#}
+        {#div.Section1#}
+        {#{page:Section1;}#}
+    {#</style>#}
+
+    <style><!--
+        @page
+        {
+            size:21cm 29.7cmt;  /* A4 */
+            margin:1cm 1cm 1cm 1cm; /* Margins: 2.5 cm on each side */
+            mso-page-orientation: portrait;
+        }
+        @page Section1 { }
+        div.Section1 { page:Section1; }
+    --></style>
 
     {#{% stylesheets#}
     {#'/bundles/oleguserdirectory/bootstrap/css/*'#}
@@ -47,9 +57,10 @@
 <body>
 
 
+
 {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 
-<div class="container">
+<div class=Section1>
 
 {% for entity in entities %}
 
@@ -58,30 +69,22 @@
     <div class="text-left col-xs-12">
 
         <h4>
-            {{ fellappmacros.applicantInterviewsInfo(entity) }}
+            {{ fellappmacros.applicantInterviewsInfo(entity,true) }}
         </h4>
 
-        {{ fellappmacros.interviewsDetails(entity,true) }}
+        {{ fellappmacros.interviewsDetails(entity,false) }}
 
     </div>
 
     <div style="page-break-after:always">&nbsp;</div>
+    {#<br clear=all style='mso-special-character:line-break;page-break-before:always'>#}
 
 {% endfor %}
 
 </div>
 
 
-{#{% javascripts#}
-{#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
-{#'@OlegUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
-{#'@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
-{#%}#}
-{#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-{#{% endjavascripts %}#}
 
 </body>
-
-
 </html>
 

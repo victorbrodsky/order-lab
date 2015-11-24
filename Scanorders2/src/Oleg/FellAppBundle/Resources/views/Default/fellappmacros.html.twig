@@ -179,20 +179,43 @@
     
 {% endmacro %}
 
-{% macro applicantInterviewsInfo(fellapp) %}
+{% macro applicantInterviewsInfo(fellapp,noGlyphicon) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    {% set noGlyphicon = false %}
+    {% if noGlyphicon is not defined %}
+        {% set noGlyphicon = false %}
+    {% endif %}
 
     {% if is_granted('ROLE_PLATFORM_DEMO') %}
         {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
         <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
     {% else %}
         {% if fellapp.avatars|length > 0 %}
-            <div style="height: 120px; width: 120px;">
-                {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
-            </div>
+            {% if noGlyphicon %}
+                <p>
+                {% if '.pdf' in fellapp.avatars|last.getAbsoluteUploadFullPath %}
+                    {#{% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
+                    {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
+                {% elseif '.doc' in fellapp.avatars|last.getAbsoluteUploadFullPath %}
+                    {#{% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
+                    {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
+                {% else %}
+                    {#<a href="{{ fellapp.avatars|last.getAbsoluteUploadFullPath }}" target="_blank">#}
+                    <img
+                        alt="{{ fellapp.avatars|last.getOriginalname }}"
+                        src="{{ fellapp.avatars|last.getAbsoluteUploadFullPath }}"
+                        height="120"
+                        width="{{ fellapp.avatars|last.getWidthByHeight(120) }}"
+                    />
+                    {#</a>#}
+                {% endif %}
+                </p>
+            {% else %}
+                <div style="height: 120px; width: 120px;">
+                    {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
+                </div>
+            {% endif %}
         {% endif %}
     {% endif %}
 
@@ -202,7 +225,7 @@
     {% else %}
 
         {% if noGlyphicon %}
-            {% set downloadTitleStr = "Download Complete Application in PDF" %}
+            {% set downloadTitleStr = "(Download Complete Application in PDF)" %}
         {% else %}
             {% set downloadTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>' %}
         {% endif %}
@@ -250,7 +273,7 @@
             {% if ref.documents|length == 1 %}
                 {% set refStr = '<a href="'~url('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
                 {% if noGlyphicon %}
-                    {% set hrefTitleStr = 'Letter'  %}
+                    {% set hrefTitleStr = '(Letter)'  %}
                 {% else %}
                     {% set hrefTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
                 {% endif %}

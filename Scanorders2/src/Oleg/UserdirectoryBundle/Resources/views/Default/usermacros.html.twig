@@ -1872,7 +1872,7 @@
     {% if '.pdf' in documentEntity.getAbsoluteUploadFullPath %}
         {#pdf!!!#}
         <a href="{{ documentEntity.getAbsoluteUploadFullPath }}" target="_blank">
-        <object {{ atr }} alt="{{ documentEntity.getOriginalname }}"
+        <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalname }}"
                 data="{{ documentEntity.getAbsoluteUploadFullPath }}"
                 type="application/pdf"
                 class="{{ objectClass }}"
@@ -1884,7 +1884,7 @@
     {% elseif '.doc' in documentEntity.getAbsoluteUploadFullPath %}
         {#doc!!!#}
         <a href="{{ documentEntity.getAbsoluteUploadFullPath }}" target="_blank">
-        <object {{ atr }} alt="{{ documentEntity.getOriginalname }}"
+        <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalname }}"
                 data="{{ documentEntity.getAbsoluteUploadFullPath }}"
                 type="application/msword"
                 {#style="display:block; max-width:100%; max-height:100%;"#}
@@ -1894,9 +1894,10 @@
         </a>
     {% else %}
         <a href="{{ documentEntity.getAbsoluteUploadFullPath }}" target="_blank">
-        <img {{ atr }} alt="{{ documentEntity.getOriginalname }}"
+        <img {{ atr }}
              src="{{ documentEntity.getAbsoluteUploadFullPath }}"
-             alt="{{ alt }}"
+             {#alt="{{ alt }}"#}
+             alt="{{ alt~" "~documentEntity.getOriginalname }}"
              {#style="display:block; max-width:100%; max-height:100%;"#}
              class="{{ objectClass }}"
         />

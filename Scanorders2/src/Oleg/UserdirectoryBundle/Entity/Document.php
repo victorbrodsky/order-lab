@@ -343,6 +343,17 @@ class Document {
         return $bytes;
     }
 
+    public function getWidthByHeight($newHeight) {
+        list($originalWidth, $originalHeight) = getimagesize($this->getServerPath());
+        if( $originalHeight ) {
+            $ratio = $originalWidth / $originalHeight;
+        } else {
+            $ratio = 1;
+        }
+        $newWidth = $newHeight * $ratio;
+        return $newWidth;
+    }
+
     public function getFullDescriptionStr() {
         return "Document: id=".$this->getId().", originalname=".$this->getOriginalname().", uniquename=".$this->getUniquename()."<br>";
     }
