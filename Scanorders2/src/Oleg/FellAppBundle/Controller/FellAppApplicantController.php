@@ -543,6 +543,65 @@ class FellAppApplicantController extends Controller {
 
 
     /**
+     * @Route("/download-interview-applicants-list-doc/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_doc")
+     * @Method("GET")
+     */
+    public function downloadInterviewApplicantsListDocAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
+            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_OBSERVER')
+        ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $fellowshipSubspecialty = null;
+        $institutionNameFellappName = "";
+
+        if( $fellappTypeId && $fellappTypeId > 0 ) {
+            $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+        }
+
+        if( $fellowshipSubspecialty ) {
+            $institution = $fellowshipSubspecialty->getInstitution();
+            $institutionNameFellappName = $institution." ".$fellowshipSubspecialty." ";
+        }
+
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        //"Interview Evaluations for FELLOWSHIP-TYPE YEAR generated for LoggedInUserFirstName LoggedInUserLastName on DATE TIME EST.docx
+        $fileName = $currentYear." ".$institutionNameFellappName."Interview Evaluations generated on ".date('m/d/Y H:i').".doc";
+        $fileName = str_replace("  ", " ", $fileName);
+        $fileName = str_replace(" ", "-", $fileName);
+
+        //get filtered fell applications
+        $fellappUtil = $this->container->get('fellapp_util');
+        $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
+
+        $interviewsDocHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicants-interview-info-doc.html.twig',
+            array(
+                'entities' => $entities,
+                'pathbase' => 'fellapp',
+                'cycle' => 'show',
+                'sitename' => $this->container->getParameter('fellapp.sitename')
+            )
+        );
+
+        return new Response(
+            $interviewsDocHtml,
+            200,
+            array(
+                'Content-Type'          => 'application/msword',    //doc
+                //'Content-Type'          => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', //docx
+                //'Content-Type'          => 'application/vnd.ms-word',    //docx
+                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
+            )
+        );
+
+    }
+
+    /**
      * @Route("/interview-applicants-list/{fellappIds}", name="fellapp_interview_applicants_list")
      * @Method("GET")
      * @Template("OlegFellAppBundle:Interview:applicants-interview-info.html.twig")

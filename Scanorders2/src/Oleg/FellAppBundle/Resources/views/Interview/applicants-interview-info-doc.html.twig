@@ -1,0 +1,87 @@
+
+<!DOCTYPE HTML PUBLIC>
+<html
+      xmlns:v='urn:schemas-microsoft-com:vml'
+      xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
+
+<head>
+    <title>Interview</title>
+
+    <xml>
+        <w:worddocument xmlns:w="#unknown">
+            <w:view>Print</w:view>
+            <w:zoom>90</w:zoom>
+            <w:donotoptimizeforbrowser />
+        </w:worddocument>
+    </xml>
+
+    <style>
+        @page Section1
+        {size:8.5in 11.0in;
+            margin:1.0in 1.25in 1.0in 1.25in ;
+            mso-header-margin:.5in;
+            mso-footer-margin:.5in; mso-paper-source:0;}
+        div.Section1
+        {page:Section1;}
+    </style>
+
+    {#{% stylesheets#}
+    {#'/bundles/oleguserdirectory/bootstrap/css/*'#}
+    {#'/bundles/oleguserdirectory/form/css/form.css'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    {#E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\bundles\oleguserdirectory\bootstrap\css#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/bootstrap/css/*') }}" />#}
+    {#<link href="{{ asset( '../../Resources/bootstrap/css/*' ) }}" rel="stylesheet" type="text/css" />#}
+    {#<link href="{{ asset( '../src/Oleg/UserdirectoryBundle/Resources/public/form/css/form.css' ) }}" rel="stylesheet" type="text/css" />#}
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+</head>
+
+
+
+<body>
+
+
+{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+
+<div class="container">
+
+{% for entity in entities %}
+
+    <div style="page-break-before:always">&nbsp;</div>
+
+    <div class="text-left col-xs-12">
+
+        <h4>
+            {{ fellappmacros.applicantInterviewsInfo(entity) }}
+        </h4>
+
+        {{ fellappmacros.interviewsDetails(entity,true) }}
+
+    </div>
+
+    <div style="page-break-after:always">&nbsp;</div>
+
+{% endfor %}
+
+</div>
+
+
+{#{% javascripts#}
+{#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+{#'@OlegUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
+{#'@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+{#%}#}
+{#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+{#{% endjavascripts %}#}
+
+</body>
+
+
+</html>
+

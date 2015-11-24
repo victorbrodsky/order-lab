@@ -49,6 +49,10 @@
                data-toggle="tooltip" title="Download Evaluations for Displayed Interviewees">
                 <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
             </a>
+            <a href="{{ path('fellapp_download_interview_applicants_list_doc', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
+               data-toggle="tooltip" title="Download Evaluations for Displayed Interviewees">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+            </a>
         </p>
     {% endif %}
 
