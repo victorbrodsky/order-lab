@@ -449,7 +449,7 @@ class FellAppApplicantController extends Controller {
 
 
     /**
-     * @Route("/download-interview-applicants-list/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list")
+     * @Route("/download-interview-applicants-list-pdf/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_pdf")
      * @Method("GET")
      */
     public function downloadInterviewApplicantsListAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
