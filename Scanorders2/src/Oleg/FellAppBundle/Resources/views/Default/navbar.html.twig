@@ -55,6 +55,19 @@
                         </li>
                     {% endif %}
 
+                    {#Downloads menu#}
+                    {% set fellappTypeId = -1 %}
+                    {% if filter %}
+                        {% set fellappTypeId = filter %}
+                    {% endif %}
+                    {% if currentYear is not defined or not currentYear %}
+                        {% set currentYear = "now"|date("Y") %}
+                        {% set currentYear = currentYear + 3 %}
+                    {% endif %}
+                    {#fellappids: {{ fellappids }}<br>#}
+                    {#currentYear: {{ currentYear }}<br>#}
+                    {#fellappTypeId: {{ fellappTypeId }}<br>#}
+
                     {% if fellappids is defined and currentYear is defined and fellappTypeId is defined %}
                         <li id="nav-bar-fellappdownload" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Download<b class="caret"></b></a>
