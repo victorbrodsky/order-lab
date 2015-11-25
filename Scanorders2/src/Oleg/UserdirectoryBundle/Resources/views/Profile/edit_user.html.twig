@@ -68,8 +68,8 @@
 
     <br>
 
-    
-    {% include 'OlegUserdirectoryBundle:Profile:edit_user_form.html.twig' %}
-    
+
+    {% include 'OlegUserdirectoryBundle:Profile:edit_user_form.html.twig' with {addcontent: block('addcontent')} %}
+
 
 {% endblock %}

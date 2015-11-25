@@ -247,7 +247,11 @@
         </div>
 
 
-        {% block addcontent %}{% endblock %}
+        {#{% block addcontent %}{% endblock %}#}
+        {% if addcontent %}
+            {{ addcontent|raw }}
+        {% endif %}
+
 
         {#Employment Status#}
         {% set showEmploymentStatus = false %}
