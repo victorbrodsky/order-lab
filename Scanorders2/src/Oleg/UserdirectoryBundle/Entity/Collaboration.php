@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,63 +10,52 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_collaboration")
+ * @ORM\Table(name="user_collaboration")
  */
 class Collaboration extends ListAbstract
 {
     /**
-     * @ORM\OneToMany(targetEntity="Account", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="Collaboration", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Account", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="Collaboration", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="Message", mappedBy="account")
+     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\JoinTable(name="user_collaboration_institution",
+     *      joinColumns={@ORM\JoinColumn(name="collaboration_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+     *      )
      */
-    protected $message;
+    private $institutions;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->message = new ArrayCollection();
+        $this->institutions = new ArrayCollection();
     }
 
 
-    /**
-     * Add message
-     *
-     * @param \Oleg\OrderformBundle\Entity\Message $message
-     * @return Account
-     */
-    public function addMessage(\Oleg\OrderformBundle\Entity\Message $message)
+    public function addInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
     {
-        if( !$this->message->contains($message) ) {
-            $this->message->add($message);
+        if( !$this->institutions->contains($institution) ) {
+            $this->institutions->add($institution);
         }
     }
 
-    /**
-     * Remove message
-     *
-     * @param \Oleg\OrderformBundle\Entity\Message $message
-     */
-    public function removeMessage(\Oleg\OrderformBundle\Entity\Message $message)
+    public function removeInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
     {
-        $this->message->removeElement($message);
+        $this->institutions->removeElement($institution);
     }
 
-    /**
-     * Get message
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getMessage()
+    public function getInstitutions()
     {
-        return $this->message;
+        return $this->institutions;
     }
+
 }

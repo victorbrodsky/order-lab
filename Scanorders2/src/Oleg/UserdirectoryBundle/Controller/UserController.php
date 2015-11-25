@@ -1702,8 +1702,6 @@ class UserController extends Controller
 
         $result = $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
         
-        //$result[] = 
-        
         return $result;
     }
 

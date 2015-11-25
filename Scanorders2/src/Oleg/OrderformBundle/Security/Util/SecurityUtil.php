@@ -21,6 +21,8 @@ use Oleg\OrderformBundle\Entity\PerSiteSettings;
 class SecurityUtil extends UserSecurityUtil {
 
     //user has permission to perform the view/edit the valid field, created by someone else, if he/she is submitter or ROLE_SCANORDER_PROCESSOR or service chief or division chief
+    //Added 25Nov2015: If user A submits a scan order with WCMC as the Institutional PHI Scope in Order Info and user B belongs to the institution NYP,
+    // they can not see each other's orders/patient data/etc.
     //$entity is object: message or patient, accession, part ...
     public function hasUserPermission( $entity, $user ) {
 
@@ -39,10 +41,16 @@ class SecurityUtil extends UserSecurityUtil {
         ///////////////// 1) check if the user belongs to the same institution /////////////////
         $hasInst = false;
 
+        //permittedInstitutionalPHIScope - institutions
         $allowedInstitutions = $this->getUserPermittedInstitutions($user);
+
+        //TODO: add check for all children too: check if entity's institution within allowed institutions or its children.
         if( $allowedInstitutions->contains($entity->getInstitution()) ) {
             $hasInst = true;
         }
+
+        //TODO: add check for collaboration: check if the user belongs to an institution that is in collaboration with an institution to which the patient/order/etc belongs
+        //Check if the entity's institution within the user's permittedInstitutionalPHIScope or its children.
 
 //        foreach( $allowedInstitutions as $inst ) {
 //            //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";
@@ -189,8 +197,9 @@ class SecurityUtil extends UserSecurityUtil {
 
         $entity = $this->getUserPerSiteSettings($user);
 
-        if( !$entity )
+        if( !$entity ) {
             return $institutions;
+        }
 
         $institutions = $entity->getPermittedInstitutionalPHIScope();
 

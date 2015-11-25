@@ -62,7 +62,6 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-
         $userViewArr = $this->showUser($id,$this->container->getParameter('scan.sitename'));
 
         //add scan user site setting form
