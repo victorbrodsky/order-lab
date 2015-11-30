@@ -20,7 +20,7 @@
             {% endif %}
 
             {% if entities|first.institutions is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Institutions', 'institution.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Institutions', 'institutions.name') }}</th>
             {% endif %}
 
             {% if entities|first.level is defined %}

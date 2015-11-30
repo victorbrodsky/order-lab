@@ -648,6 +648,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message');
         $dql =  $repository->createQueryBuilder("message");
         $dql->innerJoin("message.status", "status");
+        $dql->leftJoin("message.institution", "institution");
         //$dql->innerJoin("message.institution", "institution");
 
         $dql->where("status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'" . $instStr);
@@ -696,6 +697,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("req");
         $dql->innerJoin("req.message", "message");
+        $dql->leftJoin("message.institution", "institution");
         $dql->where("req.status='active'" . $instStr);
         //echo "dql=".$dql;
         $query = $em->createQuery($dql);
@@ -1596,10 +1598,11 @@ class ScanOrderController extends Controller {
 
         /////////// institution ///////////
         $orderUtil = $this->get('scanorder_utility');
+        $dql->leftJoin("message.institution", "institution");
         $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);
         /////////// EOF institution ///////////
 
-        //echo "<br>criteriastr=".$criteriastr."<br>";
+        echo "<br>criteriastr=".$criteriastr."<br>";
 
         $res = array();
         $res['dql'] = $dql;

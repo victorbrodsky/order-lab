@@ -9,7 +9,50 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
 class TreeRepository extends NestedTreeRepository {
 
+    //check if node belongs to the parentNode tree. For example, 1wcmc6->2path5->3inf4 => if inf.lft > wcmc.lft AND inf.rgt < wcmc.rgt => return true.
+    public function isNodeUnderParentnode( $parentNode, $node, $className="Institution" ) {
 
+        //the node is the parentNode
+        if( $parentNode->getId() == $node->getId() ) {
+            echo "parentNode and node are the same <br>";
+            return true;
+        }
+
+        if( $node->getLft() > $parentNode->getLft() && $node->getRgt() < $parentNode->getRgt() ) {
+            echo "parentNode has a node <br>";
+            return true;
+        }
+
+        return false;
+
+//        $res = false;
+//
+//        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:'.$className);
+//        $dql = $repository->createQueryBuilder($className);
+//        $dql->select($className);
+//        $criteriastr = "";
+//        $criteriastr .= $className.".root = " . $parentNode->getRoot();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= $className.".lft > " . $parentNode->getLft();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= $className.".rgt < " . $parentNode->getRgt();
+//        $criteriastr .= " OR ";
+//        $criteriastr .= $className.".id = " . $parentNode->getId();
+//
+//        echo "criteriastr=".$criteriastr."<br>";
+//
+//        $dql->where($criteriastr);
+//        $query = $this->_em->createQuery($dql);
+//        $institutions = $query->getResults();
+//
+//        echo "count(institutions)=".count($institutions)."<br>";
+//
+//        if( count($institutions) > 0 ) {
+//            $res = true;
+//        }
+//
+//        return $res;
+    }
 
     public function findChildAtPosition($parent,$position) {
         //$children = $this->children($parent);

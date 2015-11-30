@@ -32,20 +32,22 @@ class PerSiteSettingsType extends AbstractType
 
             $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
-                'property' => 'name',
+                //'property' => 'name',
+                'property' => 'getTreeName',
                 'label'=>'Order data visible to members of (Institutional PHI Scope):',
-                'required'=> false,
+                'required' => false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->leftJoin("list.types","institutiontype")
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
+                        //->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
+                        ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
-                            'medicalInstitution' => 'Medical'
+                            //'medicalInstitution' => 'Medical'
                         ));
                 },
             ));
@@ -90,7 +92,8 @@ class PerSiteSettingsType extends AbstractType
         //ScanOrdersServicesScope
         $builder->add( 'scanOrdersServicesScope', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
-            'property' => 'name',
+            //'property' => 'name',
+            'property' => 'getTreeName',
             'label'=>'Service(s) Scope:',
             'required'=> false,
             'multiple' => true,
@@ -115,7 +118,8 @@ class PerSiteSettingsType extends AbstractType
         //chiefServices
         $builder->add( 'chiefServices', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
-            'property' => 'name',
+            //'property' => 'name',
+            'property' => 'getTreeName',
             'label'=>'Chief of the following Service(s) for Scope:',
             'required'=> false,
             'multiple' => true,

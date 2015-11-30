@@ -159,6 +159,11 @@ class ListController extends Controller
             $dql->addGroupBy('institution');
         }
 
+        if( method_exists($entityClass,'getInstitutions') ) {
+            $dql->leftJoin("ent.institutions", "institutions");
+            $dql->addGroupBy('institutions');
+        }
+
         //$dql->orderBy("ent.createdate","DESC");
 		
 		//pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters       		

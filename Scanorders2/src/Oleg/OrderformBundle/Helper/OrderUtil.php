@@ -442,6 +442,7 @@ class OrderUtil {
         //$dql->leftJoin("history.orderProxyuser", "proxyuser");
         //$dql->leftJoin("history.orderInstitution", "institution");
 
+        $dql->leftJoin("message.institution", "institution");
         $criteriastr = $this->getCommentsCriteriaStr(null, $flag);
 
         if( $criteriastr == "" ) {
@@ -515,7 +516,33 @@ class OrderUtil {
         return $criteriastr;
     }
 
+    //check if node belongs to the parentNode tree. For example, 1wcmc6->2path5->3inf4 => if inf.lft > wcmc.lft AND inf.rgt < wcmc.rgt => return true.
     public function getInstitutionQueryCriterion($user) {
+        $securityUtil = $this->container->get('order_security_utility');
+        $institutions = $securityUtil->getUserPermittedInstitutions($user);
+        $instStr = "";
+        foreach( $institutions as $inst ) {
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR ";
+            }
+            //$instStr = $instStr . 'message.institution='.$inst->getId();
+            //$instStr = $instStr . 'institution='.$inst->getId();
+            $fieldstr = "institution";
+            $instStr .= $fieldstr.".root = " . $inst->getRoot();
+            $instStr .= " AND ";
+            $instStr .= $fieldstr.".lft > " . $inst->getLft();
+            $instStr .= " AND ";
+            $instStr .= $fieldstr.".rgt < " . $inst->getRgt();
+            $instStr .= " OR ";
+            $instStr .= $fieldstr.".id = " . $inst->getId();
+
+        }
+        if( $instStr == "" ) {
+            $instStr = "1=0";
+        }
+        return $instStr;
+    }
+    public function getInstitutionQueryCriterion_SingleMatch($user) {
         $securityUtil = $this->container->get('order_security_utility');
         $institutions = $securityUtil->getUserPermittedInstitutions($user);
         $instStr = "";
@@ -531,6 +558,7 @@ class OrderUtil {
         }
         return $instStr;
     }
+
 
     public function addInstitutionQueryCriterion($user,$criteriastr) {
         $instStr = $this->getInstitutionQueryCriterion($user);

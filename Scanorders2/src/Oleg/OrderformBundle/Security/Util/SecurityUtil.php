@@ -25,7 +25,7 @@ class SecurityUtil extends UserSecurityUtil {
     // they can not see each other's orders/patient data/etc.
     //$entity is object: message or patient, accession, part ...
     public function hasUserPermission( $entity, $user ) {
-
+        //echo "hasUserPermission <br>";
         if( $entity == null ) {
             return true;
         }
@@ -44,13 +44,35 @@ class SecurityUtil extends UserSecurityUtil {
         //permittedInstitutionalPHIScope - institutions
         $allowedInstitutions = $this->getUserPermittedInstitutions($user);
 
-        //TODO: add check for all children too: check if entity's institution within allowed institutions or its children.
-        if( $allowedInstitutions->contains($entity->getInstitution()) ) {
-            $hasInst = true;
+        $parentNode = $entity->getInstitution();
+        foreach( $allowedInstitutions as $allowedInstitution ) {
+            $node = $allowedInstitution;
+            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentNode, $node) ) {
+                //echo "parentNode=".$parentNode." has a node".$node." <br>";
+                $hasInst = true;
+                //return true;
+                break;
+            }
         }
 
-        //TODO: add check for collaboration: check if the user belongs to an institution that is in collaboration with an institution to which the patient/order/etc belongs
-        //Check if the entity's institution within the user's permittedInstitutionalPHIScope or its children.
+//        //TODO: add check for all children too: check if entity's institution within allowed institutions or its children.
+//        if( $allowedInstitutions->contains($entity->getInstitution()) ) {
+//            echo "parentNode has a node <br>";
+//            $hasInst = true;
+//            //return true; //testing
+//        }
+//
+//        //TODO: add check for collaboration: check if the user belongs to an institution that is in collaboration with an institution to which the patient/order/etc belongs
+//        //Check if the entity's institution within the user's permittedInstitutionalPHIScope or its children.
+//        //Check if user's institution has entity's institution as one of the parent up to root (go up and check if user's institution under the tree of entity's institution).
+//        //OR user's institution is under entity's institution tree
+//
+//        $parentNode = $entity->getInstitution();
+//        $node = $allowedInstitutions;
+//        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentNode, $node) ) {
+//            $hasInst = true;
+//            return true;
+//        }
 
 //        foreach( $allowedInstitutions as $inst ) {
 //            //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";
@@ -60,6 +82,7 @@ class SecurityUtil extends UserSecurityUtil {
 //        }
 
         if( $hasInst == false ) {
+            echo "hasInst == false <br>";
             return false;
         }
         ///////////////// EOF 1) /////////////////
@@ -95,6 +118,8 @@ class SecurityUtil extends UserSecurityUtil {
         return false;
 
     }
+
+
 
 //    //wrapper for hasUserPermission
 //    public function hasPermission( $entity, $security_content ) {
@@ -206,14 +231,14 @@ class SecurityUtil extends UserSecurityUtil {
         return $institutions;
     }
 
-    public function getUserDefaultService($user) {
-        $entity = $this->getUserPerSiteSettings($user);
-
-        if( !$entity )
-            return null;
-
-        return $entity->getDefaultService();
-    }
+//    public function getUserDefaultService($user) {
+//        $entity = $this->getUserPerSiteSettings($user);
+//
+//        if( !$entity )
+//            return null;
+//
+//        return $entity->getDefaultService();
+//    }
 
     public function getScanOrdersServicesScope($user) {
 
