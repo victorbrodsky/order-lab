@@ -57,10 +57,16 @@ class GenericListType extends AbstractType
 
         }
 
-        //FellowshipSubspecialty
-        //TODO: make it as institutional tree
-        //if( method_exists($this->params['entity'],'getInstitution') ) {
-        if( strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty") ) {
+
+        //TODO: make it as institutional tree?
+        if( method_exists($this->params['entity'],'getInstitution') ) {
+
+            $this->where = "list.type = :typedef OR list.type = :typeadd";
+
+            //FellowshipSubspecialty
+            if( strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty") ) {
+                $this->where = "(list.type = :typedef OR list.type = :typeadd) AND list.level=1";
+            }
 
             //echo "show institution<br>";
 
@@ -83,7 +89,8 @@ class GenericListType extends AbstractType
                 'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('list')
                             ->leftJoin("list.children","children")
-                            ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
+                            //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
+                            ->where($this->where)
                             ->orderBy("list.orderinlist","ASC")
                             ->setParameters( array(
                                 'typedef' => 'default',
@@ -126,6 +133,28 @@ class GenericListType extends AbstractType
 //            });
 //            ///////////////////////// EOF tree node /////////////////////////
 
+        } //getInstitution
+
+        if( method_exists($this->params['entity'],'getInstitutions') ) {
+            //echo "add institutions <br>";
+            $builder->add( 'institutions', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                'property' => 'getTreeName',
+                'label'=>'Institutions:',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.children","children")
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
+            ));
         }
 
         //tree: add group title

@@ -229,20 +229,19 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 
         if( $this."" ) {
             $treeName[] = $this."";
-        }
-
-        if( $this->getParent() ) {
             $department = $this->getParent();
         }
+
         if( $department ) {
             $treeName[] = $department."";
-            $division = $department->getParent();
+            if( $department && $department->getParent() ) {
+                $division = $department->getParent();
+            }
 
         }
         if( $division ) {
             $treeName[] = $division."";
             $inst = $division->getParent();
-            $treeName[] = $inst."";
         }
 
         if( $inst ) {
@@ -251,7 +250,13 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 
         $treeName = array_reverse($treeName);
 
-        return implode(" => ",$treeName);
+        if( count($treeName) == 1 ) {
+            $treeNameStr = $treeName[0];
+        } else {
+            $treeNameStr = implode(" => ",$treeName);
+        }
+
+        return $treeNameStr;
     }
 //    public function getTreeNameRecursive($treeName) {
 //        $parent = $this->getParent();

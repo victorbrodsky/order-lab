@@ -19,6 +19,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Institution', 'institution.name') }}</th>
             {% endif %}
 
+            {% if entities|first.institutions is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Institutions', 'institution.name') }}</th>
+            {% endif %}
+
             {% if entities|first.level is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Level', 'ent.level') }}</th>
             {% endif %}
@@ -94,6 +98,14 @@
                 {% if entity.institution is defined %}
                     <td>
                         {{ entity.institution }}
+                    </td>
+                {% endif %}
+
+                {% if entity.institutions is defined %}
+                    <td>
+                        {% for institution in entity.institutions %}
+                            {{ institution }}
+                        {% endfor %}
                     </td>
                 {% endif %}
 
@@ -245,6 +257,12 @@
     {% if form.institution is defined %}
         {{ formmacros.field(form.institution) }}
         {#{{ treemacros.compositeTreeNode(form.institution,'','') }}#}
+    {% endif %}
+
+    {% if form.institutions is defined %}
+        {#{% for institution in form.institutions %}#}
+            {{ formmacros.field(form.institutions) }}
+        {#{% endfor %}#}
     {% endif %}
 
     {% if form.level is defined %}
