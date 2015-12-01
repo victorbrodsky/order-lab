@@ -1602,7 +1602,7 @@ class ScanOrderController extends Controller {
         $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);
         /////////// EOF institution ///////////
 
-        echo "<br>criteriastr=".$criteriastr."<br>";
+        //echo "<br>criteriastr=".$criteriastr."<br>";
 
         $res = array();
         $res['dql'] = $dql;

@@ -14,12 +14,12 @@ class TreeRepository extends NestedTreeRepository {
 
         //the node is the parentNode
         if( $parentNode->getId() == $node->getId() ) {
-            echo "parentNode:".$parentNode."(".$parentNode->getId().") and node:".$node."(".$node->getId().") are the same <br>";
+            //echo "parentNode:".$parentNode."(".$parentNode->getId().") and node:".$node."(".$node->getId().") are the same <br>";
             return true;
         }
 
         if( $node->getRoot() == $parentNode->getRoot() && $node->getLft() > $parentNode->getLft() && $node->getRgt() < $parentNode->getRgt() ) {
-            echo "parentNode:".$parentNode."(".$parentNode->getId().") has the node:".$node."(".$node->getId().") <br>";
+            //echo "parentNode:".$parentNode."(".$parentNode->getId().") has the node:".$node."(".$node->getId().") <br>";
             return true;
         }
 
@@ -48,13 +48,13 @@ class TreeRepository extends NestedTreeRepository {
         $criteriastr .= " OR ";
         $criteriastr .= "institutions.id = " . $node->getId();
 
-        echo "criteriastr=".$criteriastr."<br>";
+        //echo "criteriastr=".$criteriastr."<br>";
 
         $dql->where($criteriastr);
         $query = $this->_em->createQuery($dql);
         $institutions = $query->getResults();
 
-        echo "count(institutions)=".count($institutions)."<br>";
+        //echo "count(institutions)=".count($institutions)."<br>";
 
         if( count($institutions) > 0 ) {
             $res = true;

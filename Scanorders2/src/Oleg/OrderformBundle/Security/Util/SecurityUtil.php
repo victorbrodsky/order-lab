@@ -67,7 +67,7 @@ class SecurityUtil extends UserSecurityUtil {
         //Check if user's institution has entity's institution as one of the parent up to root (go up and check if user's institution under the tree of entity's institution).
         //OR user's institution is under entity's institution tree
         if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderCollaborationParentnode($entity->getInstitution(), $user) ) {
-            echo "Collaboration: true <br>";
+            //echo "Collaboration: true <br>";
             $hasInst = true;
         }
 //
@@ -86,7 +86,7 @@ class SecurityUtil extends UserSecurityUtil {
 //        }
 
         if( $hasInst == false ) {
-            echo "hasInst == false <br>";
+            //echo "hasInst == false <br>";
             return false;
         }
         ///////////////// EOF 1) /////////////////
