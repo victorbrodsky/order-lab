@@ -182,7 +182,7 @@ class ScanOrderController extends Controller {
             $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
         }
 
-        //echo "dql=".$dql;
+        echo "dql=".$dql;
 
         if( $increaseMaxExecTime ) {
             $max_exec_time = ini_get('max_execution_time');

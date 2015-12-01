@@ -63,6 +63,33 @@ class TreeRepository extends NestedTreeRepository {
         return $res;
     }
 
+    //check collaboration with given node
+    public function findCollaborationsByNode( $node ) {
+
+        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
+        $dql = $repository->createQueryBuilder("collaboration");
+        $dql->select("collaboration");
+        $dql->leftJoin("collaboration.institutions","institutions");
+        $criteriastr = "";
+        $criteriastr .= "institutions.root = " . $node->getRoot();
+        $criteriastr .= " AND ";
+        $criteriastr .= "institutions.lft < " . $node->getLft();
+        $criteriastr .= " AND ";
+        $criteriastr .= "institutions.rgt > " . $node->getRgt();
+        $criteriastr .= " OR ";
+        $criteriastr .= "institutions.id = " . $node->getId();
+
+        //echo "criteriastr=".$criteriastr."<br>";
+
+        $dql->where($criteriastr);
+        $query = $this->_em->createQuery($dql);
+        $collaborations = $query->getResult();
+
+        echo "count(collaborations)=".count($collaborations)."<br>";
+
+        return $collaborations;
+    }
+
     public function findChildAtPosition($parent,$position) {
         //$children = $this->children($parent);
         $children = $parent->getChildren();

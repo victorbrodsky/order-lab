@@ -293,6 +293,7 @@ class MessageType extends AbstractType
         }
         $builder->add('institution', 'entity', array(
             'label' => 'Order data visible to members of (Institutional PHI Scope):',
+            'property' => 'getNodeNameWithRoot',
             'required'=> true,
             'multiple' => false,
             'empty_value' => false,

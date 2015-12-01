@@ -516,6 +516,8 @@ class OrderUtil {
         return $criteriastr;
     }
 
+    //Used by addInstitutionQueryCriterion() here in getCommentsCriteriaStr() and in ScanOrderController in getDql()
+    //Used by getUnporcesseOrders and getUnprocessedSlideRequests
     //check if node belongs to the parentNode tree. For example, 1wcmc6->2path5->3inf4 => if inf.lft > wcmc.lft AND inf.rgt < wcmc.rgt => return true.
     //check if user's institution is under message's institution node
     public function getInstitutionQueryCriterion($user) {
@@ -542,7 +544,26 @@ class OrderUtil {
         }
 
         //Collaboration check:
-
+        //1) find collaboration for user's institution if exists
+        //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
+        $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $inst );
+        foreach( $collaborations as $collaboration ) {
+            foreach( $collaboration->getInstitutions() as $inst ) {
+                if( $instStr != "" ) {
+                    $instStr = $instStr . " OR ";
+                }
+                $fieldstr = "institution";
+                $instStr .= "(";
+                $instStr .= $fieldstr.".root = " . $inst->getRoot();
+                $instStr .= " AND ";
+                $instStr .= $fieldstr.".lft < " . $inst->getLft();
+                $instStr .= " AND ";
+                $instStr .= $fieldstr.".rgt > " . $inst->getRgt();
+                $instStr .= " OR ";
+                $instStr .= $fieldstr.".id = " . $inst->getId();
+                $instStr .= ")";
+            }
+        }
 
         if( $instStr == "" ) {
             $instStr = "1=0";
