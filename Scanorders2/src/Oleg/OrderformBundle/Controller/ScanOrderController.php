@@ -182,7 +182,7 @@ class ScanOrderController extends Controller {
             $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
         }
 
-        echo "dql=".$dql;
+        echo "order List Action: dql=".$dql;
 
         if( $increaseMaxExecTime ) {
             $max_exec_time = ini_get('max_execution_time');
@@ -199,6 +199,15 @@ class ScanOrderController extends Controller {
             $limit                                          /*limit per page*/
         );
 
+        //testing
+        echo "<br>";
+        foreach( $pagination as $page ) {
+            echo "Order ID:".$page[0]->getId()." has Institution Scope ".$page[0]->getInstitution()."(ID ".$page[0]->getInstitution()->getId().")<br>";
+            //echo "inst name=".$page[0]->getInstitution()."<br>";
+            //echo "inst=".$pag[0]."<br>";
+            //print_r($pag[0]);
+            //echo "inst=".$pag->getInstitution()->getId()."<br>";
+        }
 //        $postData = $request->query->all();
 //        $pagination->setParam('sort', $postData['sort']);
 //        $pagination->setParam('direction', $postData['direction']);

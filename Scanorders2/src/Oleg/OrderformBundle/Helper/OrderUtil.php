@@ -524,7 +524,9 @@ class OrderUtil {
         $securityUtil = $this->container->get('order_security_utility');
 
         $instStr = "";
+        return $instStr;
 
+    if(1) {
         //User's PermittedInstitutions
         $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
         foreach( $permittedInstitutions as $inst ) {
@@ -542,7 +544,9 @@ class OrderUtil {
             $instStr .= $fieldstr.".id = " . $inst->getId();
             $instStr .= ")";
         }
+    }
 
+    if(1) {
         //Collaboration check:
         //1) find collaboration for user's institution if exists
         //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
@@ -564,6 +568,7 @@ class OrderUtil {
                 $instStr .= ")";
             }
         }
+    }//if
 
         if( $instStr == "" ) {
             $instStr = "1=0";

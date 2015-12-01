@@ -757,6 +757,11 @@ class MultiScanOrderController extends Controller {
             $single_multy = 'multy';
         }
 
+        //include current message institution to the $permittedInstitutions
+        if( $entity->getInstitution() && !$permittedInstitutions->contains($entity->getInstitution()) ) {
+            $permittedInstitutions->add($entity->getInstitution());
+        }
+
         //echo "route=".$routeName.", type=".$type."<br>";
 
         //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
@@ -767,11 +772,11 @@ class MultiScanOrderController extends Controller {
         //$division = $defaultsDepDiv['division'];
 
         $params = array(
-            'type'=>$single_multy,
-            'cycle'=>$type,
-            'institutions'=>$permittedInstitutions,
+            'type' => $single_multy,
+            'cycle' => $type,
+            'institutions' => $permittedInstitutions,
             //'scanOrderInstitutionScope'=>$scanOrderInstitutionScope,
-            'user'=>$user,
+            'user' => $user,
             'em' => $em,
             'serviceContainer' => $this->container,
             //'division'=>$division,
