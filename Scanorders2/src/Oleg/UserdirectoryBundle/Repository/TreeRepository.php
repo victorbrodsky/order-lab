@@ -26,37 +26,54 @@ class TreeRepository extends NestedTreeRepository {
         return false;
     }
 
-    //check if all parents of the parentNode belongs to the same collaboration as all parents of the node
-    public function isNodeUnderCollaborationParentnode( $node, $user ) {
-        return true; //testing
+    //check if a node belongs to the same collaboration as user's permitted institutions
+    //select collaboration table to find existing collaborations similarly as in findCollaborationsByNode with join
+    public function isNodeHasCollaborationWithUserPermittedInstitutions( $node, $permittedInstitutions ) {
+        //return true; //testing
 
         $res = false;
-
-        //permittedInstitutionalPHIScope - institutions
-        $allowedInstitutions = $this->getUserPermittedInstitutions($user);
 
         $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
         $dql = $repository->createQueryBuilder("collaboration");
         $dql->select("collaboration");
         $dql->leftJoin("collaboration.institutions","institutions");
         $criteriastr = "";
+
+        foreach( $permittedInstitutions as $permittedInstitution ) {
+            if( $criteriastr != "" ) {
+                $criteriastr = $criteriastr . " OR ";
+            }
+            $criteriastr .= "(";
+            $criteriastr .= "institutions.root = " . $permittedInstitution->getRoot();
+            $criteriastr .= " AND ";
+            $criteriastr .= "institutions.lft < " . $permittedInstitution->getLft();
+            $criteriastr .= " AND ";
+            $criteriastr .= "institutions.rgt > " . $permittedInstitution->getRgt();
+            $criteriastr .= " OR ";
+            $criteriastr .= "institutions.id = " . $permittedInstitution->getId();
+            $criteriastr .= ")";
+        }
+
+        $criteriastr .= " AND (";
         $criteriastr .= "institutions.root = " . $node->getRoot();
         $criteriastr .= " AND ";
-        $criteriastr .= "institutions.lft > " . $node->getLft();
+        $criteriastr .= "institutions.lft < " . $node->getLft();
         $criteriastr .= " AND ";
-        $criteriastr .= "institutions.rgt < " . $node->getRgt();
+        $criteriastr .= "institutions.rgt > " . $node->getRgt();
         $criteriastr .= " OR ";
         $criteriastr .= "institutions.id = " . $node->getId();
+        $criteriastr .= ")";
 
         //echo "criteriastr=".$criteriastr."<br>";
 
         $dql->where($criteriastr);
         $query = $this->_em->createQuery($dql);
-        $institutions = $query->getResults();
+        $collaborations = $query->getResult();
 
-        //echo "count(institutions)=".count($institutions)."<br>";
+        //echo "single query count(collaborations)=".count($collaborations)."<br>";
+        //exit();
 
-        if( count($institutions) > 0 ) {
+        if( count($collaborations) > 0 ) {
             $res = true;
         }
 
@@ -85,7 +102,7 @@ class TreeRepository extends NestedTreeRepository {
         $query = $this->_em->createQuery($dql);
         $collaborations = $query->getResult();
 
-        echo "count(collaborations)=".count($collaborations)."<br>";
+        //echo "count(collaborations)=".count($collaborations)."<br>";
 
         return $collaborations;
     }
