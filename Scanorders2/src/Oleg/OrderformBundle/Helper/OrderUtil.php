@@ -517,47 +517,55 @@ class OrderUtil {
     }
 
     //check if node belongs to the parentNode tree. For example, 1wcmc6->2path5->3inf4 => if inf.lft > wcmc.lft AND inf.rgt < wcmc.rgt => return true.
+    //check if user's institution is under message's institution node
     public function getInstitutionQueryCriterion($user) {
         $securityUtil = $this->container->get('order_security_utility');
-        $institutions = $securityUtil->getUserPermittedInstitutions($user);
+
         $instStr = "";
-        foreach( $institutions as $inst ) {
+
+        //User's PermittedInstitutions
+        $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
+        foreach( $permittedInstitutions as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }
-            //$instStr = $instStr . 'message.institution='.$inst->getId();
-            //$instStr = $instStr . 'institution='.$inst->getId();
             $fieldstr = "institution";
+            $instStr .= "(";
             $instStr .= $fieldstr.".root = " . $inst->getRoot();
             $instStr .= " AND ";
-            $instStr .= $fieldstr.".lft > " . $inst->getLft();
+            $instStr .= $fieldstr.".lft < " . $inst->getLft();
             $instStr .= " AND ";
-            $instStr .= $fieldstr.".rgt < " . $inst->getRgt();
+            $instStr .= $fieldstr.".rgt > " . $inst->getRgt();
             $instStr .= " OR ";
             $instStr .= $fieldstr.".id = " . $inst->getId();
+            $instStr .= ")";
+        }
 
-        }
+        //Collaboration check:
+
+
         if( $instStr == "" ) {
             $instStr = "1=0";
         }
+
         return $instStr;
     }
-    public function getInstitutionQueryCriterion_SingleMatch($user) {
-        $securityUtil = $this->container->get('order_security_utility');
-        $institutions = $securityUtil->getUserPermittedInstitutions($user);
-        $instStr = "";
-        foreach( $institutions as $inst ) {
-            if( $instStr != "" ) {
-                $instStr = $instStr . " OR ";
-            }
-            $instStr = $instStr . 'message.institution='.$inst->getId();
-            //$instStr = $instStr . 'institution='.$inst->getId();
-        }
-        if( $instStr == "" ) {
-            $instStr = "1=0";
-        }
-        return $instStr;
-    }
+//    public function getInstitutionQuerySingleMatchCriterion($user) {
+//        $securityUtil = $this->container->get('order_security_utility');
+//        $institutions = $securityUtil->getUserPermittedInstitutions($user);
+//        $instStr = "";
+//        foreach( $institutions as $inst ) {
+//            if( $instStr != "" ) {
+//                $instStr = $instStr . " OR ";
+//            }
+//            $instStr = $instStr . 'message.institution='.$inst->getId();
+//            //$instStr = $instStr . 'institution='.$inst->getId();
+//        }
+//        if( $instStr == "" ) {
+//            $instStr = "1=0";
+//        }
+//        return $instStr;
+//    }
 
 
     public function addInstitutionQueryCriterion($user,$criteriastr) {

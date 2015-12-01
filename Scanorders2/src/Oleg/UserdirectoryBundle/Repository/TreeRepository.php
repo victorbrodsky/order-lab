@@ -14,44 +14,53 @@ class TreeRepository extends NestedTreeRepository {
 
         //the node is the parentNode
         if( $parentNode->getId() == $node->getId() ) {
-            echo "parentNode and node are the same <br>";
+            echo "parentNode:".$parentNode."(".$parentNode->getId().") and node:".$node."(".$node->getId().") are the same <br>";
             return true;
         }
 
-        if( $node->getLft() > $parentNode->getLft() && $node->getRgt() < $parentNode->getRgt() ) {
-            echo "parentNode has a node <br>";
+        if( $node->getRoot() == $parentNode->getRoot() && $node->getLft() > $parentNode->getLft() && $node->getRgt() < $parentNode->getRgt() ) {
+            echo "parentNode:".$parentNode."(".$parentNode->getId().") has the node:".$node."(".$node->getId().") <br>";
             return true;
         }
 
         return false;
+    }
 
-//        $res = false;
-//
-//        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:'.$className);
-//        $dql = $repository->createQueryBuilder($className);
-//        $dql->select($className);
-//        $criteriastr = "";
-//        $criteriastr .= $className.".root = " . $parentNode->getRoot();
-//        $criteriastr .= " AND ";
-//        $criteriastr .= $className.".lft > " . $parentNode->getLft();
-//        $criteriastr .= " AND ";
-//        $criteriastr .= $className.".rgt < " . $parentNode->getRgt();
-//        $criteriastr .= " OR ";
-//        $criteriastr .= $className.".id = " . $parentNode->getId();
-//
-//        echo "criteriastr=".$criteriastr."<br>";
-//
-//        $dql->where($criteriastr);
-//        $query = $this->_em->createQuery($dql);
-//        $institutions = $query->getResults();
-//
-//        echo "count(institutions)=".count($institutions)."<br>";
-//
-//        if( count($institutions) > 0 ) {
-//            $res = true;
-//        }
-//
-//        return $res;
+    //check if all parents of the parentNode belongs to the same collaboration as all parents of the node
+    public function isNodeUnderCollaborationParentnode( $node, $user ) {
+        return true; //testing
+
+        $res = false;
+
+        //permittedInstitutionalPHIScope - institutions
+        $allowedInstitutions = $this->getUserPermittedInstitutions($user);
+
+        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
+        $dql = $repository->createQueryBuilder("collaboration");
+        $dql->select("collaboration");
+        $dql->leftJoin("collaboration.institutions","institutions");
+        $criteriastr = "";
+        $criteriastr .= "institutions.root = " . $node->getRoot();
+        $criteriastr .= " AND ";
+        $criteriastr .= "institutions.lft > " . $node->getLft();
+        $criteriastr .= " AND ";
+        $criteriastr .= "institutions.rgt < " . $node->getRgt();
+        $criteriastr .= " OR ";
+        $criteriastr .= "institutions.id = " . $node->getId();
+
+        echo "criteriastr=".$criteriastr."<br>";
+
+        $dql->where($criteriastr);
+        $query = $this->_em->createQuery($dql);
+        $institutions = $query->getResults();
+
+        echo "count(institutions)=".count($institutions)."<br>";
+
+        if( count($institutions) > 0 ) {
+            $res = true;
+        }
+
+        return $res;
     }
 
     public function findChildAtPosition($parent,$position) {

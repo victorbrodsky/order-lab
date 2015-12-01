@@ -61,11 +61,15 @@ class SecurityUtil extends UserSecurityUtil {
 //            $hasInst = true;
 //            //return true; //testing
 //        }
-//
-//        //TODO: add check for collaboration: check if the user belongs to an institution that is in collaboration with an institution to which the patient/order/etc belongs
-//        //Check if the entity's institution within the user's permittedInstitutionalPHIScope or its children.
-//        //Check if user's institution has entity's institution as one of the parent up to root (go up and check if user's institution under the tree of entity's institution).
-//        //OR user's institution is under entity's institution tree
+
+        //TODO: add check for collaboration: check if the user belongs to an institution that is in collaboration with an institution to which the patient/order/etc belongs
+        //Check if the entity's institution within the user's permittedInstitutionalPHIScope or its children.
+        //Check if user's institution has entity's institution as one of the parent up to root (go up and check if user's institution under the tree of entity's institution).
+        //OR user's institution is under entity's institution tree
+        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderCollaborationParentnode($entity->getInstitution(), $user) ) {
+            echo "Collaboration: true <br>";
+            $hasInst = true;
+        }
 //
 //        $parentNode = $entity->getInstitution();
 //        $node = $allowedInstitutions;

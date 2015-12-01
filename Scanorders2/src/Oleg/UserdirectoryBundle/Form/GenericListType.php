@@ -51,6 +51,7 @@ class GenericListType extends AbstractType
             }
             $builder->add('parent',null,array(
                 'label' => $this->mapper['parentClassName'].' (Parent):',
+                'property' => 'getTreeName',
                 //'attr' => array('class' => 'combobox combobox-width')
                 'attr' => $attr
             ));
@@ -134,6 +135,29 @@ class GenericListType extends AbstractType
 //            ///////////////////////// EOF tree node /////////////////////////
 
         } //getInstitution
+
+        if( method_exists($this->params['entity'],'getRoot') ) {
+            $builder->add( 'root', null, array(
+                'label'=>'Root:',
+                'read_only' => true,
+                'attr' => array('class'=>'form-control'),
+            ));
+        }
+        if( method_exists($this->params['entity'],'getLft') ) {
+            $builder->add( 'lft', null, array(
+                'label'=>'Left:',
+                'read_only' => true,
+                'attr' => array('class'=>'form-control'),
+            ));
+        }
+        if( method_exists($this->params['entity'],'getRgt') ) {
+            $builder->add( 'rgt', null, array(
+                'label'=>'Right:',
+                'read_only' => true,
+                'attr' => array('class'=>'form-control'),
+            ));
+        }
+
 
         if( method_exists($this->params['entity'],'getInstitutions') ) {
             //echo "add institutions <br>";
@@ -234,6 +258,7 @@ class GenericListType extends AbstractType
             //always read only - do not allow to change parent
             $builder->add('parent',null,array(
                 'label' => $this->mapper['parentClassName'].' (Parent):',
+                'property' => 'getTreeName',
                 'attr' => array('class' => 'combobox combobox-width', 'readonly'=>'readonly')
             ));
         }
