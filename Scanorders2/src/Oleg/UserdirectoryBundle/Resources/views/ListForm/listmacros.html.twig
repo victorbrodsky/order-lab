@@ -254,16 +254,14 @@
     {{ formmacros.field(form.list.shortname) }}
     {{ formmacros.field(form.list.abbreviation) }}
 
-    {% if form.institution is defined %}
-        {{ formmacros.field(form.institution) }}
-        {#{{ treemacros.compositeTreeNode(form.institution,'','') }}#}
-    {% endif %}
+    {#{% if form.institution is defined %}#}
+        {#{{ formmacros.field(form.institution) }}#}
+        {#&#123;&#35;{{ treemacros.compositeTreeNode(form.institution,'','') }}&#35;&#125;#}
+    {#{% endif %}#}
 
-    {% if form.institutions is defined %}
-        {#{% for institution in form.institutions %}#}
-            {{ formmacros.field(form.institutions) }}
-        {#{% endfor %}#}
-    {% endif %}
+    {#{% if form.institutions is defined %}#}
+        {#{{ formmacros.field(form.institutions) }}#}
+    {#{% endif %}#}
 
     {% if form.level is defined %}
         {{ formmacros.field(form.level) }}
@@ -501,4 +499,25 @@
     {% if form.departments is defined %}
         {{ formmacros.field(form.departments) }}
     {% endif %}
+
+
+    {% if form.institution is defined %}
+        {{ formmacros.field(form.institution) }}
+        {#{{ treemacros.compositeTreeNode(form.institution,'','') }}#}
+    {% endif %}
+
+    {% if form.institutions is defined %}
+        {{ formmacros.field(form.institutions) }}
+    {% endif %}
+
+    {% if form.root is defined %}
+        {{ formmacros.field(form.root) }}
+    {% endif %}
+    {% if form.lft is defined %}
+        {{ formmacros.field(form.lft) }}
+    {% endif %}
+    {% if form.rgt is defined %}
+        {{ formmacros.field(form.rgt) }}
+    {% endif %}
+
 {% endmacro %}
