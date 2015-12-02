@@ -57,7 +57,7 @@
 
                     {#Downloads menu#}
                     {% set fellappTypeId = -1 %}
-                    {% if filter %}
+                    {% if filter is defined and filter %}
                         {% set fellappTypeId = filter %}
                     {% endif %}
                     {% if currentYear is not defined or not currentYear %}
