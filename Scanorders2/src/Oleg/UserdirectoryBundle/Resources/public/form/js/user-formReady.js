@@ -70,6 +70,8 @@ $(document).ready(function() {
 
     userCloneListener();
 
+    userTypeListener();
+
     identifierTypeListener();
 
     researchLabListener();

@@ -55,7 +55,7 @@
 
 
     {#user's snapshot#}
-    {% if fulluser %}     
+    {% if fulluser is defined and fulluser %}
         {% if showFlag %}
             {{ userform.snapshot_steve(entity,sitename,cycle) }}
             {#<br>#}

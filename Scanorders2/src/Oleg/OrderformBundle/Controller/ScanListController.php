@@ -35,32 +35,6 @@ class ScanListController extends ListController
 
         $listArr = $this->getList($request,1000000);
 
-//        header('Content-Description: File Transfer');
-//        header('Content-Type: '.$mimeType);
-//        header('Content-Disposition: attachment; filename='.$filename);
-//        header('Expires: 0');
-//        header('Cache-Control: must-revalidate');
-//        header('Pragma: public');
-//        header('Content-Length: ' . $size);
-//        $this->readfile_chunked($filenameClean);
-//
-//        return;
-
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $entities = $this->em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneBy(
-//            array(
-//                'type' => array('default', 'user-added')
-//            ),
-//            array('orderinlist' => 'ASC')
-//        );
-
-//        return array(
-//            'entities' => $entities,
-//            'displayName' => $mapper['displayName'],
-//            'pathbase' => $pathbase,
-//            'withCreateNewEntityLink' => $createNew
-//        );
 
         $listExcelHtml = $this->container->get('templating')->render('OlegOrderformBundle:ListForm:list-excel.html.twig',
             $listArr
@@ -78,10 +52,64 @@ class ScanListController extends ListController
             200,
             array(
                 'Content-Type'          => 'application/vnd.ms-excel',
+                //'Content-Type'          => 'application/msexcel',
                 'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
             )
         );
     }
+
+    /**
+     * @Route("/stains-update-fulltitle/", name="stain_update_fulltitle")
+     * @Method("GET")
+     * @Template()
+     */
+    public function updateFullTitleListAction(Request $request)
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+        }
+
+        $routeName = $request->get('_route');
+        $pieces = explode("_", $routeName);
+        $pathbase = $pieces[0];
+        //echo "pathbase=".$pathbase."<br>";
+        //exit();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+
+        //echo "count=".count($entities)."<br>";
+        //exit();
+
+        $batchSize = 20;
+        $count = 0;
+
+        foreach( $entities as $entity ) {
+            $entity->createFullTitle();
+
+            $em->flush();
+
+//            $em->persist($entity);
+//            if( ($count % $batchSize) === 0 ) {
+//                $em->flush();
+//                $em->clear(); // Detaches all objects from Doctrine!
+//            }
+
+            $count++;
+        }
+
+        //$em->flush(); // Persist objects that did not make up an entire batch
+        $em->clear();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'StainList - Full Title updated: ' . $count
+        );
+
+        return $this->redirect($this->generateUrl($pathbase.'-list'));
+    }
+
 
 //* @Route("/principal-investigators/", name="principalinvestigators-list")
 //* @Route("/course-directors/", name="coursedirectors-list")

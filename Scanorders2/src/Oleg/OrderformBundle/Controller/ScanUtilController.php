@@ -69,7 +69,7 @@ class ScanUtilController extends UtilController {
      * @Method("GET")
      */
     public function getStainsAction() {
-        
+
         $em = $this->getDoctrine()->getManager();
         //$addwhere = "";
 
@@ -86,12 +86,14 @@ class ScanUtilController extends UtilController {
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:StainList', 'list')
-            ->select("list.id as id, list.name as text")
+            ->select("list.id as id, list.fulltitle as text")
             //->select("list")
+            //->leftJoin("list.synonyms","synonyms")
             //->where("list.type = 'default' OR list.creator = ".$user." ".$addwhere)
-            ->groupBy("list.id")
-            ->addGroupBy("list.orderinlist")
-            ->addGroupBy("list.name")
+            ->groupBy("list")
+//            ->groupBy("list.id")
+//            ->addGroupBy("list.orderinlist")
+//            ->addGroupBy("list.fulltitle")
             ->orderBy("list.orderinlist","ASC"); //ASC DESC
 
         if( $opt ) {
@@ -101,6 +103,7 @@ class ScanUtilController extends UtilController {
 
         //echo "query=".$query." ";
 
+        //$output = $query->getQuery()->getResult('StainHydrator');
         $output = $query->getQuery()->getResult();
 
         $response = new Response();

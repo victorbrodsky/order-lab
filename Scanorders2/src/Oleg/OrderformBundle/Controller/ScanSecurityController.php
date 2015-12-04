@@ -40,7 +40,7 @@ class ScanSecurityController extends SecurityController
         $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
             array(
                 'type' => array('default', 'user-added'),
-                'abbreviation' => array('wcmc-cwid', 'aperio')
+                'abbreviation' => array('wcmc-cwid', 'aperio', 'local-user')
             ),
             array('orderinlist' => 'ASC')
         );

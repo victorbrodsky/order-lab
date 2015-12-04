@@ -1385,6 +1385,8 @@ class UserController extends Controller
         $userkeytype = $userSecUtil->getDefaultUsernameType();
         $user->setKeytype($userkeytype);
 
+        $user->setPassword("");
+
         //clone user
         $subjectUser = null;
         if( $id && $id != "" ) {
@@ -1465,7 +1467,6 @@ class UserController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $user->setPassword("");
         $user->setCreatedby('manual');
 
         //$this->addEmptyCollections($user);
@@ -1520,6 +1521,9 @@ class UserController extends Controller
 
             //set unique username
             $user->setUniqueUsername();
+
+            //encrypt password
+            $this->encryptPassword($user);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setDocumentForCommentType($user);
@@ -2196,6 +2200,9 @@ class UserController extends Controller
             //set parents for institution tree for Administrative and Academical Titles
             //$this->setCompositeTreeNode($entity);
 
+            //encrypt password
+            $this->encryptPassword($entity);
+
             //set parents for institution tree for Administrative and Academical Titles
             $this->setDocumentForCommentType($entity);
 
@@ -2533,6 +2540,13 @@ class UserController extends Controller
 //    public function processBooks($subjectUser) {
 //
 //    }
+
+    public function encryptPassword( $user ) {
+        return; //testing
+        // 3) Encode the password (you could also do this via Doctrine listener)
+        $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($password);
+    }
 
     //explicitly set a new avatar
     public function processSetAvatar($subjectUser) {

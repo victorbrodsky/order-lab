@@ -348,7 +348,26 @@ function userCloneListener() {
     });
 }
 
+function userTypeListener() {
 
+    function showHidePasswordBox(userType) {
+        if( userType && userType == "Local User" ) {
+            $('#user-password-box').show();
+        } else {
+            $('#user-password-box').hide();
+        }
+    }
+
+    var userType = $('.user-keytype-field').select2('data').text;
+    console.log('init userType='+userType);
+    showHidePasswordBox(userType);
+
+    $('.user-keytype-field').on("change", function(e) {
+        var userType = $(this).select2('data').text;
+        console.log('onchange userType='+userType);
+        showHidePasswordBox(userType);
+    });
+}
 
 //identifier type listener
 function identifierTypeListener( holder ) {

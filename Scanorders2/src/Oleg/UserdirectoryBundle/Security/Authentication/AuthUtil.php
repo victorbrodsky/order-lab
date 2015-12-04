@@ -34,7 +34,6 @@ class AuthUtil {
 
         //echo "LocalAuthentication<br>";
         //exit();
-
         return NULL;
 
         //get clean username

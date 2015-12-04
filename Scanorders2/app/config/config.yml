@@ -120,7 +120,8 @@ doctrine:
                         alias: GedmoTree # this one is optional and will default to the name set for the mapping
                         is_bundle: false
                 hydrators:
-                     SimpleHydrator: \Oleg\UserdirectoryBundle\Hydrator\SimpleHydrator      
+                     SimpleHydrator: \Oleg\UserdirectoryBundle\Hydrator\SimpleHydrator
+                     StainHydrator: \Oleg\OrderformBundle\Hydrator\StainHydrator
             aperio:
                 connection: aperio
 #                mappings:

@@ -47,6 +47,18 @@ function validateUser(btnEl,origuserid) {
         return false;
     }        
 
+    //password
+    var passwordFirst = $('#oleg_userdirectorybundle_user_password_first').val();
+    var passwordSecond = $('#oleg_userdirectorybundle_user_password_second').val();
+    if( passwordFirst != passwordSecond ) {
+        $('#userinfo').collapse('show');
+        addErrorAlert("Please make sure the passwords match");
+        $('#oleg_userdirectorybundle_user_password_first').parent().addClass("has-error");
+        $('#oleg_userdirectorybundle_user_password_second').parent().addClass("has-error");
+        lbtn.stop();
+        return false;
+    }
+
     //console.log("firstName="+firstName);
     if( firstName == "" ) {
         $('#userinfo').collapse('show');

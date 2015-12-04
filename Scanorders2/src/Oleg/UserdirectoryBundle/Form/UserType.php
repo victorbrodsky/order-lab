@@ -209,7 +209,7 @@ class UserType extends AbstractType
         if( $this->cycle != "show" ) {
             $builder->add('password', 'repeated', array(
                 'type' => 'password',
-                'invalid_message' => 'Please make sure the password.',
+                'invalid_message' => 'Please make sure the passwords match',
                 'options' => array('attr' => array('class' => 'password-field form-control')),
                 'required' => true,
                 'first_options'  => array('label' => 'Password:'),
