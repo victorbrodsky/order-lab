@@ -10,8 +10,12 @@ $driver = $container->getParameter('database_driver');
 $dbname = $container->getParameter('database_name');
 $user = $container->getParameter('database_user');
 $password = $container->getParameter('database_password');
-//echo "host=".$host."<br>";
 
+//echo "driver=".$driver."<br>";
+//echo "host=".$host."<br>";
+//echo "dbname=".$dbname."<br>";
+//echo "user=".$user."<br>";
+//echo "password=".$password."<br>";
 
 $config = new \Doctrine\DBAL\Configuration();
 
@@ -37,11 +41,18 @@ $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
 
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
+//testing
+//$connected = $conn->connect();
+//echo "connected=".$connected."<br>";
+//echo "conn name=".$conn->getName()."<br>"; // connection 1
+
 $table = 'user_siteParameters';
 
 $schemaManager = $conn->getSchemaManager();
 
 if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
+
+    //exit("connected!");
     //echo("table true<br>");
 
     $sql = "SELECT * FROM ".$table;

@@ -63,7 +63,7 @@ class SecurityController extends Controller
         $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
             array(
                 'type' => array('default', 'user-added'),
-                'abbreviation' => array('wcmc-cwid')
+                'abbreviation' => array('wcmc-cwid','local-user')
             ),
             array('orderinlist' => 'ASC')
         );
@@ -72,6 +72,8 @@ class SecurityController extends Controller
             $usernametypes = array();
             $option = array('abbreviation'=>'wcmc-cwid', 'name'=>'WCMC CWID');
             $usernametypes[] = $option;
+            $option_localuser = array('abbreviation'=>'local-user', 'name'=>'Local User');
+            $usernametypes[] = $option_localuser;
         }
 
         $formArr['usernametypes'] = $usernametypes;

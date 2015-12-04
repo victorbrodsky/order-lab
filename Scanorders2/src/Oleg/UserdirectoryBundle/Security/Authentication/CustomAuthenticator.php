@@ -34,10 +34,20 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
 
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
-        echo "CustomAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
+        //echo "CustomAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();
 
         $authUtil = new AuthUtil($this->sc,$this->em);
+
+        //////////////////////////////////////////////////////////////////////
+        //                       1) local authentication                   //
+        //////////////////////////////////////////////////////////////////////
+        $user = $authUtil->LocalAuthentication($token, $userProvider);
+        if( $user ) {
+            return $this->getUsernamePasswordToken($user,$providerKey);
+        }
+        ////////////////////EOF first aperio authentication //////////////////
+
 
 
         //////////////////////////////////////////////////////////////////////

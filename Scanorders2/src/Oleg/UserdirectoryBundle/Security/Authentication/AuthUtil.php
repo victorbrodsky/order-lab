@@ -19,12 +19,82 @@ class AuthUtil {
 
     private $supportedUsertypesAperio = array('aperio');
     private $supportedUsertypesLdap = array('wcmc-cwid');
+    private $supportedUsertypesLocal = array('local-user');
 
     public function __construct($sc,$em)
     {
         $this->sc = $sc;
         $this->em = $em;
         $this->logger = $sc->get('logger');
+    }
+
+
+
+    public function LocalAuthentication($token, $userProvider) {
+
+        echo "LocalAuthentication<br>";
+        //exit();
+
+        //get clean username
+        $userSecUtil = $this->sc->get('user_security_utility');
+        $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
+
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
+        if( in_array($usernamePrefix, $this->supportedUsertypesLocal) == false ) {
+            $this->logger->notice('Local Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesLocal));
+            return NULL;
+        }
+
+        //check if user already exists in DB
+        $user = $this->findUserByUsername($token->getUsername());
+        //echo "Ldap user =".$user."<br>";
+
+        if( $user ) {
+            //echo "DB user found=".$user->getUsername()."<br>";
+            //exit();
+            return $user;
+        }
+
+        //////////////////// constract a new user ////////////////////
+        $user = $userSecUtil->constractNewUser($token->getUsername());
+        echo "user=".$user->getUsername()."<br>";
+
+        $user->setCreatedby('local');
+
+        //modify user: set keytype and primary public user id
+        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+
+        if( !$userkeytype ) {
+            $userUtil = new UserUtil();
+            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
+            $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
+            //echo "userkeytype=".$userkeytype."<br>";
+        }
+
+        $user->setKeytype($userkeytype);
+        $user->setPrimaryPublicUserId($usernameClean);
+        //exit('1');
+
+//        if( $searchRes ) {
+//            $user->setEmail($searchRes['mail']);
+//            $user->setFirstName($searchRes['givenName']);
+//            $user->setLastName($searchRes['lastName']);
+//            $user->setDisplayName($searchRes['displayName']);
+//            $user->setPreferredPhone($searchRes['telephoneNumber']);
+//        }
+
+        //TODO: remove this on production!
+        if( $user->getUsername() == "oli2002_@_local-user" ) {
+            $user->addRole('ROLE_PLATFORM_ADMIN');
+        }
+
+        exit('local ok');
+
+        //////////////////// save user to DB ////////////////////
+        $userManager = $this->sc->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+
+        return $user;
     }
 
 
@@ -139,9 +209,6 @@ class AuthUtil {
         $userManager->updateUser($user);
 
         return $user;
-
-
-        return NULL;
     }
 
 
