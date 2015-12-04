@@ -98,7 +98,7 @@ class ListController extends Controller
 
         return $this->getList($request);
     }
-    public function getList($request) {
+    public function getList($request, $limit=30) {
 
         $type = $request->get('_route');
 
@@ -175,7 +175,7 @@ class ListController extends Controller
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $limit = 30;
+        //$limit = 30;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $entities = $paginator->paginate(

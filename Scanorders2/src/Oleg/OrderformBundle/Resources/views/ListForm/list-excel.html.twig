@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+
+{#<html xmlns:x="urn:schemas-microsoft-com:office:excel">#}
+<html>
+
+<head>
+    <title>List in Excel</title>
+
+    {#E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\bundles\oleguserdirectory\bootstrap\css#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/bootstrap/css/*') }}" />#}
+    {#<link href="{{ asset( '../../Resources/bootstrap/css/*' ) }}" rel="stylesheet" type="text/css" />#}
+    {#<link href="{{ asset( '../src/Oleg/UserdirectoryBundle/Resources/public/form/css/form.css' ) }}" rel="stylesheet" type="text/css" />#}
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+</head>
+
+
+
+<body>
+
+{% import "OlegUserdirectoryBundle::ListForm/listmacros.html.twig" as listmacros %}
+
+
+<h3 class="text-info">{{ displayName }}</h3>
+
+<br />
+
+{{ listmacros.listIndex( entities, pathbase, withCreateNewEntityLink ) }}
+
+
+</body>
+</html>
+

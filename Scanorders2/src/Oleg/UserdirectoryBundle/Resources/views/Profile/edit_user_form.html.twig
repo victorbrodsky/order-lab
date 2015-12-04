@@ -162,6 +162,12 @@
                         {{ formmacros.field(form.username) }}
                     {% endif %}
 
+                    {% if form.password is defined %}
+                        {#{{ form_row(form.password) }}#}
+                        {{ formmacros.field(form.password.first) }}
+                        {{ formmacros.field(form.password.second) }}
+                    {% endif %}
+
                     {% for info in form.infos %}
                         {{ formmacros.field(info.displayName) }}
                         {{ formmacros.field(info.salutation) }}

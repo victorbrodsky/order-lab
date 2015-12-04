@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 //use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 
@@ -96,6 +98,8 @@ class UserType extends AbstractType
 
         //Name and Preferred Contact Info
         $this->userNamePreferredContactInfo($builder);
+
+        $this->userPassword($builder);
 
         $this->addUserInfos($builder);
 
@@ -199,6 +203,19 @@ class UserType extends AbstractType
         ));
 
         return $builder;
+    }
+
+    public function userPassword($builder) {
+        if( $this->cycle != "show" ) {
+            $builder->add('password', 'repeated', array(
+                'type' => 'password',
+                'invalid_message' => 'Please make sure the password.',
+                'options' => array('attr' => array('class' => 'password-field form-control')),
+                'required' => true,
+                'first_options'  => array('label' => 'Password:'),
+                'second_options' => array('label' => 'Repeat Password:'),
+            ));
+        }
     }
 
 

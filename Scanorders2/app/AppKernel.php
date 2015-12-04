@@ -34,8 +34,9 @@ class AppKernel extends Kernel
             new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
         );
 
-		//echo "environment:<br>";
-		//print_r($this->getEnvironment());
+//		echo "environment:<br>";
+//		print_r($this->getEnvironment());
+//        echo "<br>";
 		
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
 

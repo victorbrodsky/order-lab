@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,6 +20,68 @@ use Oleg\UserdirectoryBundle\Controller\ListController;
  */
 class ScanListController extends ListController
 {
+
+    /**
+     * @Route("/stains-excel/", name="stain-list-excel")
+     * @Method("GET")
+     * @Template()
+     */
+    public function downloadStainExcelAction(Request $request)
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+        }
+
+        $listArr = $this->getList($request,1000000);
+
+//        header('Content-Description: File Transfer');
+//        header('Content-Type: '.$mimeType);
+//        header('Content-Disposition: attachment; filename='.$filename);
+//        header('Expires: 0');
+//        header('Cache-Control: must-revalidate');
+//        header('Pragma: public');
+//        header('Content-Length: ' . $size);
+//        $this->readfile_chunked($filenameClean);
+//
+//        return;
+
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entities = $this->em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneBy(
+//            array(
+//                'type' => array('default', 'user-added')
+//            ),
+//            array('orderinlist' => 'ASC')
+//        );
+
+//        return array(
+//            'entities' => $entities,
+//            'displayName' => $mapper['displayName'],
+//            'pathbase' => $pathbase,
+//            'withCreateNewEntityLink' => $createNew
+//        );
+
+        $listExcelHtml = $this->container->get('templating')->render('OlegOrderformBundle:ListForm:list-excel.html.twig',
+            $listArr
+        );
+
+        //generate file name
+        $fileName = $listArr['displayName'].".xls";
+        $fileName = preg_replace('!\s+!', '-', $fileName);
+
+        //echo "count=".count($listArr['entities'])."<br>";
+        //exit('1');
+
+        return new Response(
+            $listExcelHtml,
+            200,
+            array(
+                'Content-Type'          => 'application/vnd.ms-excel',
+                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
+            )
+        );
+    }
 
 //* @Route("/principal-investigators/", name="principalinvestigators-list")
 //* @Route("/course-directors/", name="coursedirectors-list")

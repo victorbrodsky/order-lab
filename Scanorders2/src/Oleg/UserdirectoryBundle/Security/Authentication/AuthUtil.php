@@ -32,8 +32,10 @@ class AuthUtil {
 
     public function LocalAuthentication($token, $userProvider) {
 
-        echo "LocalAuthentication<br>";
+        //echo "LocalAuthentication<br>";
         //exit();
+
+        return NULL;
 
         //get clean username
         $userSecUtil = $this->sc->get('user_security_utility');
@@ -47,7 +49,7 @@ class AuthUtil {
 
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
-        //echo "Ldap user =".$user."<br>";
+        echo "Local DB user =".$user."<br>";
 
         if( $user ) {
             //echo "DB user found=".$user->getUsername()."<br>";
@@ -55,7 +57,11 @@ class AuthUtil {
             return $user;
         }
 
-        //////////////////// constract a new user ////////////////////
+        //Local user can not created by login process
+        //return NULL;
+
+        //TODO: remove the code below on testing and production!
+        //////////////////// Testing: constract a new user ////////////////////
         $user = $userSecUtil->constractNewUser($token->getUsername());
         echo "user=".$user->getUsername()."<br>";
 
@@ -73,28 +79,21 @@ class AuthUtil {
 
         $user->setKeytype($userkeytype);
         $user->setPrimaryPublicUserId($usernameClean);
-        //exit('1');
 
-//        if( $searchRes ) {
-//            $user->setEmail($searchRes['mail']);
-//            $user->setFirstName($searchRes['givenName']);
-//            $user->setLastName($searchRes['lastName']);
-//            $user->setDisplayName($searchRes['displayName']);
-//            $user->setPreferredPhone($searchRes['telephoneNumber']);
-//        }
-
-        //TODO: remove this on production!
         if( $user->getUsername() == "oli2002_@_local-user" ) {
             $user->addRole('ROLE_PLATFORM_ADMIN');
+        } else {
+            return NULL;
         }
 
-        exit('local ok');
+        //exit('local ok');
 
         //////////////////// save user to DB ////////////////////
         $userManager = $this->sc->get('fos_user.user_manager');
         $userManager->updateUser($user);
 
         return $user;
+        //////////////////// EOF Testing: constract a new user ////////////////////
     }
 
 
