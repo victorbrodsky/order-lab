@@ -59,7 +59,7 @@ class ScanListController extends ListController
     }
 
     /**
-     * @Route("/stains-update-fulltitle/", name="stain_update_fulltitle")
+     * @Route("/stains-update-full-title/", name="stain_update_fulltitle")
      * @Method("GET")
      * @Template()
      */
@@ -104,7 +104,7 @@ class ScanListController extends ListController
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'StainList - Full Title updated: ' . $count
+            "Stain's Full Title updated: " . $count
         );
 
         return $this->redirect($this->generateUrl($pathbase.'-list'));
