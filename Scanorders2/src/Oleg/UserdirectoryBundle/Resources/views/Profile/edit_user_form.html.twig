@@ -190,9 +190,18 @@
                                 {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
                                     {#reset password button#}
                                     <div id="user-change-password-box">
-                                        <p>
-                                            <button class="btn btn-success" name="btn-user-change-password-box" type="button" onclick="resetUserPassword(this)">Reset Password</button>
-                                        </p>
+                                        {#{{ formmacros.simplefield("Password:",'<button class="btn btn-sm btn-success" name="btn-user-change-password-box" type="button" onclick="resetUserPassword(this)">Reset Password</button>') }}#}
+                                        <div class="row">
+                                            <div class="col-xs-6" align="right">
+                                                <strong>Password:</strong>
+                                            </div>
+                                            <div class="col-xs-6" align="left">
+                                                <button class="btn btn-success" name="btn-user-change-password-box" type="button" onclick="resetUserPassword(this)">Reset Password</button>
+                                            </div>
+                                        </div>
+                                        {#<p>#}
+                                            {#<button class="btn btn-success" name="btn-user-change-password-box" type="button" onclick="resetUserPassword(this)">Reset Password</button>#}
+                                        {#</p>#}
                                     </div>
                                 {% endif %}
                             {% endif %}

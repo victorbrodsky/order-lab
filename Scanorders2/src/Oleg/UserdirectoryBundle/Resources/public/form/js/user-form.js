@@ -373,7 +373,8 @@ function userTypeListener() {
     });
 }
 function resetUserPassword( btn ) {
-    $(btn).remove();
+    //$("#user-change-password-box").remove();
+    $(btn).closest("#user-change-password-box").remove();
     var newpassword = generatePassword(8, true);
     //console.log('newpassword='+newpassword);
     $('#oleg_userdirectorybundle_user_password_first').val(newpassword);
