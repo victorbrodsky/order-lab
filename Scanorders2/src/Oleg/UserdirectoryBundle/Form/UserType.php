@@ -56,7 +56,7 @@ class UserType extends AbstractType
             $this->roles = null;
         }
 
-        echo "cycle=".$this->cycle."<br>";
+        //echo "cycle=".$this->cycle."<br>";
         if( $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //echo "role ADMIN<br>";
             $this->roleAdmin = true;
@@ -213,7 +213,7 @@ class UserType extends AbstractType
                 $fieldType = null;
             }
             $builder->add('password', 'repeated', array(
-                'type' => $fieldType,
+                //'type' => $fieldType,
                 'invalid_message' => 'Please make sure the passwords match',
                 'options' => array('attr' => array('class' => 'password-field form-control')),
                 'required' => true,

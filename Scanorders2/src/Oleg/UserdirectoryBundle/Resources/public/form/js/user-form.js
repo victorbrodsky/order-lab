@@ -358,14 +358,65 @@ function userTypeListener() {
         }
     }
 
-    var userType = $('.user-keytype-field').select2('data').text;
-    console.log('init userType='+userType);
-    showHidePasswordBox(userType);
+    //var userType = $('.user-keytype-field').select2('data').text;
+    //console.log('init userType='+userType);
+    //showHidePasswordBox(userType);
 
     $('.user-keytype-field').on("change", function(e) {
         var userType = $(this).select2('data').text;
         console.log('onchange userType='+userType);
         showHidePasswordBox(userType);
+        var newpassword = generatePassword(8, true);
+        console.log('newpassword='+newpassword);
+        $('#oleg_userdirectorybundle_user_password_first').val(newpassword);
+        $('#oleg_userdirectorybundle_user_password_second').val(newpassword);
+    });
+}
+function resetUserPassword( btn ) {
+    $(btn).remove();
+    var newpassword = generatePassword(8, true);
+    //console.log('newpassword='+newpassword);
+    $('#oleg_userdirectorybundle_user_password_first').val(newpassword);
+    $('#oleg_userdirectorybundle_user_password_second').val(newpassword);
+    $('#user-password-box').show();
+}
+function checkCurrentUserPassword( span ) {
+    console.log('check Current UserPassword');
+    var currentPasswordField = $(span).parent().find('input');
+    var currentPasswordValue = currentPasswordField.val();
+    console.log('currentPasswordValue='+currentPasswordValue);
+
+    if( !currentPasswordValue ) {
+        alert('Current password is not provided');
+        return;
+    }
+
+    if( !user_id ) {
+        throw new Error('Unknown user');
+        //return;
+    }
+
+    var url = Routing.generate('employees_check_user_password');
+    url = url + "/" + user_id + "/" + currentPasswordValue
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: asyncflag
+    }).success(function(data) {
+        if( data == 'ok' ) {
+            var newpassword = generatePassword(8, true);
+            console.log('newpassword='+newpassword);
+            $('#oleg_userdirectorybundle_user_password_first').val(newpassword);
+            $('#oleg_userdirectorybundle_user_password_second').val(newpassword);
+            $('#user-password-box').show();
+            $(span).remove();
+            currentPasswordField.removeClass('alert-danger');
+            currentPasswordField.addClass('alert-success');
+        } else {
+            currentPasswordField.removeClass('alert-success');
+            currentPasswordField.addClass('alert-danger');
+        }
     });
 }
 

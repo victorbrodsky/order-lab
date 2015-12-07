@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
+use Symfony\Component\Security\Core\Util\StringUtils;
 
 //TODO: optimise by removing foreach loops:
 //create optimalShortName: return abbr, or return short, or return name
@@ -1065,6 +1066,41 @@ class UtilController extends Controller {
             $output = "OK";
         } else {
             $output = "Invalid";
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/common/check-user-password/{userid}/{userpassword}", name="employees_check_user_password", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function checkUserPasswordAction( Request $request, $userid, $userpassword ) {
+
+        if( false === $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        if( $userid != $user->getId() ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $output = 'notok';
+
+        $em = $this->getDoctrine()->getManager();
+
+        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+
+        $encoder = $this->container->get('security.password_encoder');
+        $encoded = $encoder->encodePassword($subjectUser, $userpassword);
+        $bool = StringUtils::equals($subjectUser->getPassword(), $encoded);
+
+        if( $bool ) {
+            $output = 'ok';
         }
 
         $response = new Response();

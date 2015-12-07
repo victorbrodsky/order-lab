@@ -162,13 +162,49 @@
                         {{ formmacros.field(form.username) }}
                     {% endif %}
 
-                    <div id="user-password-box" style="display:none;">
-                        {% if form.password is defined %}
-                            {#{{ form_row(form.password) }}#}
-                            {{ formmacros.field(form.password.first) }}
-                            {{ formmacros.field(form.password.second) }}
+                    {% if form.password is defined %}
+                        {#password defined: cycle={{ cycle }}#}
+                        {% if cycle == 'edit_user' %}
+                            {#{{ form.vars.value.id }} ?= {{ app.user.id }}#}
+                            {% if form.vars.value.id == app.user.id %}
+                                {#current password#}
+                                <div id="user-current-password-box">
+                                    <div class="row">
+                                        <div class="col-xs-6" align="right">
+                                            <strong>To change your password, please enter your current password:</strong>
+                                        </div>
+                                        <div class="col-xs-6" align="left">
+                                            <div class="form-group has-feedback" style="margin-bottom:0;">
+                                                <input
+                                                    type="password"
+                                                    class="form-control"
+                                                    value=""
+                                                    placeholder="Current Password"
+                                                >
+                                                <span style="top:0;" class="glyphicon glyphicon-check form-control-feedback btn" onclick="checkCurrentUserPassword(this)" aria-hidden="true"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
+                                    {#reset password button#}
+                                    <div id="user-change-password-box">
+                                        <p>
+                                            <button class="btn btn-success" name="btn-user-change-password-box" type="button" onclick="resetUserPassword(this)">Reset Password</button>
+                                        </p>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
-                    </div>
+                        {% if cycle == 'edit_user' or cycle == 'create_user' %}
+                            {#show two password fields#}
+                            <div id="user-password-box" style="display:none;">
+                                {{ formmacros.field(form.password.first) }}
+                                {{ formmacros.field(form.password.second) }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
 
                     {% for info in form.infos %}
                         {{ formmacros.field(info.displayName) }}

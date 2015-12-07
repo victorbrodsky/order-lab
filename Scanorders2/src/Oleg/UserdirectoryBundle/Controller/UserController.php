@@ -2547,6 +2547,13 @@ class UserController extends Controller
 
     public function encryptPassword( $user, $originalPassword ) {
         //return; //testing
+
+        //password is the same as original one
+        if( StringUtils::equals($originalPassword, $user->getPassword()) ) {
+            exit('password is the same');
+            return;
+        }
+
         $encoder = $this->container->get('security.password_encoder');
         $encoded = $encoder->encodePassword($user, $user->getPassword());
         $bool = StringUtils::equals($originalPassword, $encoded);
@@ -2556,7 +2563,7 @@ class UserController extends Controller
         echo "getPlainPassword=".$user->getPlainPassword()."<br>";
         echo "encoded=".$encoded."<br>";
 
-        if( !$bool ) {
+        if( !$bool && $user->getPassword() != "" ) {
             // 3) Encode the password (you could also do this via Doctrine listener)
             echo "new password<br>";
             //$password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());

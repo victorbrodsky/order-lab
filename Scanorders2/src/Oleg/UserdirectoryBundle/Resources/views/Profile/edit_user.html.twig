@@ -16,7 +16,13 @@
     {% endstylesheets %}
 {% endblock %}
 
-
+{% block additionaljs %}
+    {% javascripts
+        '@OlegUserdirectoryBundle/Resources/public/password-generator/password-generator.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
         
 {% if "show" in cycle %}
     {% set showFlag = true %}
