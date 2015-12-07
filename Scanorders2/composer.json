@@ -34,7 +34,8 @@
         "knplabs/knp-snappy-bundle": "v1.3",
         "itbz/fpdi": "dev-master",
         "clegginabox/pdf-merger": "dev-master",
-        "bmatzner/fontawesome-bundle": "~4.4"
+        "bmatzner/fontawesome-bundle": "~4.4",
+        "usu/scrypt-password-encoder-bundle": "v1.0.0"
     },
     "scripts": {
         "post-install-cmd": [

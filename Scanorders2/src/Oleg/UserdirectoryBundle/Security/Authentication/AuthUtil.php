@@ -10,6 +10,7 @@ namespace Oleg\UserdirectoryBundle\Security\Authentication;
 
 
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
+use Symfony\Component\Security\Core\Util\StringUtils;
 
 class AuthUtil {
 
@@ -34,7 +35,7 @@ class AuthUtil {
 
         //echo "LocalAuthentication<br>";
         //exit();
-        return NULL;
+        //return NULL;
 
         //get clean username
         $userSecUtil = $this->sc->get('user_security_utility');
@@ -48,13 +49,30 @@ class AuthUtil {
 
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
-        echo "Local DB user =".$user."<br>";
+        //echo "Local DB user =".$user."<br>";
 
         if( $user ) {
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
-            return $user;
+
+            //check password
+            $encoder = $this->sc->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($user, $token->getCredentials());
+            //echo "token getPassword=".$token->getCredentials()."<br>";
+            //echo "getPassword=".$user->getPassword()."<br>";
+            //echo "encoded=".$encoded."<br>";
+            //exit();
+            if( StringUtils::equals($user->getPassword(), $encoded) ) {
+                return $user;
+            } else {
+                return NULL;
+            }
+
         }
+
+        return NULL;
+
+
 
         //Local user can not created by login process
         //return NULL;

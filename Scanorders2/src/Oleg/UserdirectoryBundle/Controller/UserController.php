@@ -51,7 +51,7 @@ use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Util\CropAvatar;
 use Oleg\UserdirectoryBundle\Entity\Grant;
-
+use Symfony\Component\Security\Core\Util\StringUtils;
 
 
 class UserController extends Controller
@@ -1523,7 +1523,7 @@ class UserController extends Controller
             $user->setUniqueUsername();
 
             //encrypt password
-            $this->encryptPassword($user);
+            $this->encryptPassword($user,null);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setDocumentForCommentType($user);
@@ -1983,6 +1983,10 @@ class UserController extends Controller
         //$oldEntity = clone $entity;
         //$oldUserArr = get_object_vars($oldEntity);
 
+        //echo "getPassword=".$entity->getPassword()."<br>";
+        //echo "getPlainPassword=".$entity->getPlainPassword()."<br>";
+        $originalPassword = $entity->getPassword();
+
         //Create original roles
         $originalRoles = array();
         foreach( $entity->getRoles() as $role) {
@@ -2201,7 +2205,7 @@ class UserController extends Controller
             //$this->setCompositeTreeNode($entity);
 
             //encrypt password
-            $this->encryptPassword($entity);
+            $this->encryptPassword($entity,$originalPassword);
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setDocumentForCommentType($entity);
@@ -2541,11 +2545,26 @@ class UserController extends Controller
 //
 //    }
 
-    public function encryptPassword( $user ) {
-        return; //testing
-        // 3) Encode the password (you could also do this via Doctrine listener)
-        $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
-        $user->setPassword($password);
+    public function encryptPassword( $user, $originalPassword ) {
+        //return; //testing
+        $encoder = $this->container->get('security.password_encoder');
+        $encoded = $encoder->encodePassword($user, $user->getPassword());
+        $bool = StringUtils::equals($originalPassword, $encoded);
+
+        echo "originalPassword=".$originalPassword."<br>";
+        echo "getPassword=".$user->getPassword()."<br>";
+        echo "getPlainPassword=".$user->getPlainPassword()."<br>";
+        echo "encoded=".$encoded."<br>";
+
+        if( !$bool ) {
+            // 3) Encode the password (you could also do this via Doctrine listener)
+            echo "new password<br>";
+            //$password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($encoded);
+        } else {
+            echo "old password<br>";
+        }
+        exit();
     }
 
     //explicitly set a new avatar

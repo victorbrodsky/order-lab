@@ -32,6 +32,9 @@ class AppKernel extends Kernel
             new Oleg\FellAppBundle\OlegFellAppBundle(),
 
             new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
+
+            //password encoder
+            new Usu\ScryptPasswordEncoderBundle\UsuScryptPasswordEncoderBundle(),
         );
 
 //		echo "environment:<br>";
