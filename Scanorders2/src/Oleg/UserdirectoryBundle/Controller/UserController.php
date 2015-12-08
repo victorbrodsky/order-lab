@@ -2548,9 +2548,13 @@ class UserController extends Controller
     public function encryptPassword( $user, $originalPassword ) {
         //return; //testing
 
+        //echo "originalPassword=".$originalPassword."<br>";
+        //echo "getPassword=".$user->getPassword()."<br>";
+        //echo "getPlainPassword=".$user->getPlainPassword()."<br>";
+
         //password is the same as original one
         if( StringUtils::equals($originalPassword, $user->getPassword()) ) {
-            exit('password is the same');
+            //exit('password is the same');
             return;
         }
 
@@ -2558,20 +2562,17 @@ class UserController extends Controller
         $encoded = $encoder->encodePassword($user, $user->getPassword());
         $bool = StringUtils::equals($originalPassword, $encoded);
 
-        echo "originalPassword=".$originalPassword."<br>";
-        echo "getPassword=".$user->getPassword()."<br>";
-        echo "getPlainPassword=".$user->getPlainPassword()."<br>";
-        echo "encoded=".$encoded."<br>";
+        //echo "encoded=".$encoded."<br>";
 
         if( !$bool && $user->getPassword() != "" ) {
             // 3) Encode the password (you could also do this via Doctrine listener)
-            echo "new password<br>";
+            //echo "new password<br>";
             //$password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($encoded);
         } else {
-            echo "old password<br>";
+            //echo "old password<br>";
         }
-        exit();
+        //exit();
     }
 
     //explicitly set a new avatar
@@ -2981,6 +2982,12 @@ class UserController extends Controller
                 }
 
                 $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;
+
+                //don't record values for password
+                if( $field == 'password' ) {
+                    $event = "<strong>".$field.$text."</strong>";
+                }
+
                 //echo "event=".$event."<br>";
                 //exit();
 
