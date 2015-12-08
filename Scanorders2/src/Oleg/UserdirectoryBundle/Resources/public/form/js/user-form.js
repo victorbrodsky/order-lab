@@ -364,10 +364,10 @@ function userTypeListener() {
 
     $('.user-keytype-field').on("change", function(e) {
         var userType = $(this).select2('data').text;
-        console.log('onchange userType='+userType);
+        //console.log('onchange userType='+userType);
         showHidePasswordBox(userType);
         var newpassword = generatePassword(8, true);
-        console.log('newpassword='+newpassword);
+        //console.log('newpassword='+newpassword);
         $('#oleg_userdirectorybundle_user_password_first').val(newpassword);
         $('#oleg_userdirectorybundle_user_password_second').val(newpassword);
     });
@@ -382,10 +382,10 @@ function resetUserPassword( btn ) {
     $('#user-password-box').show();
 }
 function checkCurrentUserPassword( spanbtn ) {
-    console.log('check Current UserPassword');
+    //console.log('check Current UserPassword');
     var currentPasswordField = $(spanbtn).parent().find('input');
     var currentPasswordValue = currentPasswordField.val();
-    console.log('currentPasswordValue='+currentPasswordValue);
+    //console.log('currentPasswordValue='+currentPasswordValue);
 
     if( !currentPasswordValue ) {
         alert('Current password is not provided');
@@ -411,7 +411,7 @@ function checkCurrentUserPassword( spanbtn ) {
     }).success(function(data) {
         if( data == 'ok' ) {
             var newpassword = generatePassword(8, true);
-            console.log('newpassword='+newpassword);
+            //console.log('newpassword='+newpassword);
             $('#oleg_userdirectorybundle_user_password_first').val(newpassword);
             $('#oleg_userdirectorybundle_user_password_second').val(newpassword);
             $('#user-password-box').show();
