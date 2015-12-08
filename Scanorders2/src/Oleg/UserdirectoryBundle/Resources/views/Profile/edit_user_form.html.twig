@@ -292,6 +292,11 @@
                     {{ formmacros.field(form.preferences.languages) }}
                     {{ formmacros.field(form.preferences.locale) }}
 
+                    {{ formmacros.checkbox(form.preferences.excludeFromSearch) }}
+                    {{ formmacros.checkbox(form.preferences.hide) }}
+                    {{ formmacros.field(form.preferences.showToInstitutions) }}
+                    {{ formmacros.field(form.preferences.showToRoles) }}
+
                     {% if form.locked is defined and userEditor == true %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}
                             {{ formmacros.checkbox(form.locked) }}

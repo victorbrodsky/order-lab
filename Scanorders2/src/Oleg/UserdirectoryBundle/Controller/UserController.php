@@ -1387,6 +1387,13 @@ class UserController extends Controller
 
         $user->setPassword("");
 
+        //Only show this profile to members of the following institution(s): default preset choices WCMC, NYP
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //echo "add inst:".$wcmc."; ".$nyp."<br>";
+        $user->getPreferences()->addShowToInstitution($wcmc);
+        $user->getPreferences()->addShowToInstitution($nyp);
+
         //clone user
         $subjectUser = null;
         if( $id && $id != "" ) {
@@ -2095,6 +2102,11 @@ class UserController extends Controller
             $oldAvatarId = NULL;
         }
 
+        $originalShowToInstitutions = new ArrayCollection();
+        foreach( $entity->getPreferences()->getShowToInstitutions() as $inst) {
+            $originalShowToInstitutions->add($inst);
+        }
+
         $originalPrimaryPublicUsername = $entity->getPrimaryPublicUserId();
         //echo "count=".count($originalAdminTitles)."<br>";
         //exit();
@@ -2332,6 +2344,11 @@ class UserController extends Controller
             }
 
             $removedInfo = $this->removeCollection($originalGrants,$entity->getGrants(),$entity);
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->recordToEvenLogDiffCollection($originalShowToInstitutions,$entity->getPreferences()->getShowToInstitutions(),"ShowToInstitutions");
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
@@ -2706,6 +2723,29 @@ class UserController extends Controller
         return implode("<br>", $removeArr);
     }
 
+    //record if different: old values, new values
+    public function recordToEvenLogDiffCollection($originalArr,$currentArr,$text) {
+        $removeArr = array();
+
+        $original = $this->listToArray($originalArr);
+        $new = $this->listToArray($currentArr);
+
+        $diff = array_diff($original, $new);
+
+        if( count($original) != count($new) || count($diff) != 0 ) {
+            $removeArr[] = "<strong>"."Original ".$text.": ".implode(",",$original)."</strong>";
+            $removeArr[] = "<strong>"."New ".$text.": ".implode(",",$new)."</strong>";
+        }
+
+        return implode("<br>", $removeArr);
+    }
+    public function listToArray($collection) {
+        $resArr = array();
+        foreach( $collection as $item ) {
+            $resArr[] = $item."";
+        }
+        return $resArr;
+    }
 
 
     /**
@@ -2818,6 +2858,28 @@ class UserController extends Controller
         $changeset = $uow->getEntityChangeSet($subjectuser->getPreferences());
         $text = "("."Preferences ".$this->getEntityId($subjectuser->getPreferences()).")";
         $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        //preferences: languages
+        foreach( $subjectuser->getPreferences()->getLanguages() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."Language ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+//        //preferences: showToInstitutions
+//        foreach( $subjectuser->getPreferences()->getShowToInstitutions() as $subentity ) {
+//            echo "inst=".$subentity."<br>";
+//            $changeset = $uow->getEntityChangeSet($subentity);
+//            $text = "("."Show To Institutions ".$this->getEntityId($subentity).")";
+//            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+//        }
+//        exit();
+        //preferences: showToRoles
+        foreach( $subjectuser->getPreferences()->getShowToRoles() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            //echo "role=".$subentity."<br>";
+            //exit();
+            $text = "("."Show To Roles ".$subentity.")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
 
         //log credentials
         $credentials = $subjectuser->getCredentials();
@@ -2953,6 +3015,8 @@ class UserController extends Controller
 
         $changeArr = array();
 
+        //echo "count changeset=".count($changeset)."<br>";
+
         //process $changeset: author, subjectuser, oldvalue, newvalue
         foreach( $changeset as $key => $value ) {
             if( $value[0] != $value[1] ) {
@@ -3010,7 +3074,8 @@ class UserController extends Controller
     }
 
     public function getEntityId($entity) {
-        if( $entity->getId() ) {
+        //echo "entity=".$entity."<br>";
+        if( $entity && $entity->getId() ) {
             return "ID=".$entity->getId();
         }
 

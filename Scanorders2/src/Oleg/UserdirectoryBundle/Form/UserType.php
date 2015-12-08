@@ -283,7 +283,7 @@ class UserType extends AbstractType
 
     public function globalUserPreferences($builder) {
 
-        $builder->add('preferences', new UserPreferencesType(), array(
+        $builder->add('preferences', new UserPreferencesType($this->params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
             'label' => false,
             'required' => false,

@@ -47,6 +47,34 @@ class UserPreferences {
      **/
     private $locale;
 
+    /**
+     * Exclude from Employee Directory search results
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $excludeFromSearch;
+
+    /**
+     * Hide this profile
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $hide;
+
+    /**
+     * Only show this profile to members of the following institution(s)
+     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\JoinTable(name="user_preferences_institutions",
+     *      joinColumns={@ORM\JoinColumn(name="preferences_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+     *      )
+     */
+    private $showToInstitutions;
+
+    /**
+     * Only show this profile to users with the following roles
+     * @var array
+     * @ORM\Column(type="array", nullable=true)
+     */
+    protected $showToRoles = array();
 
 //    /**
 //     * @ORM\Column(type="boolean", nullable=true)
@@ -55,6 +83,8 @@ class UserPreferences {
 
     public function __construct() {
         $this->languages = new ArrayCollection();
+        $this->showToInstitutions = new ArrayCollection();
+        $this->roles = array();
     }
 
     /**
@@ -155,6 +185,91 @@ class UserPreferences {
     public function getLanguages()
     {
         return $this->languages;
+    }
+
+    public function addShowToInstitution($item)
+    {
+        if( $item && !$this->showToInstitutions->contains($item) ) {
+            $this->showToInstitutions->add($item);
+        }
+        return $this;
+    }
+    public function removeShowToInstitution($item)
+    {
+        $this->showToInstitutions->removeElement($item);
+    }
+    public function getShowToInstitutions()
+    {
+        return $this->showToInstitutions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowToRoles()
+    {
+        return $this->showToRoles;
+    }
+    public function addShowToRole($role) {
+        $role = strtoupper($role);
+        if( !in_array($role, $this->showToRoles, true) ) {
+            $this->showToRoles[] = $role;
+        }
+    }
+    public function removeShowToRole($role)
+    {
+        if (false !== $key = array_search(strtoupper($role), $this->showToRoles, true)) {
+            unset($this->showToRoles[$key]);
+            $this->showToRoles = array_values($this->showToRoles);
+        }
+
+        return $this;
+    }
+    public function setShowToRoles($roles) {
+        $this->showToRoles = array();
+        foreach( $roles as $role ) {
+            $this->addShowToRole($role."");
+        }
+    }
+
+    /**
+     * @param mixed $hide
+     */
+    public function setHide($hide)
+    {
+        $this->hide = $hide;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHide()
+    {
+        return $this->hide;
+    }
+
+    /**
+     * @param mixed $excludeFromSearch
+     */
+    public function setExcludeFromSearch($excludeFromSearch)
+    {
+        $this->excludeFromSearch = $excludeFromSearch;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExcludeFromSearch()
+    {
+        return $this->excludeFromSearch;
+    }
+
+    public function __toString() {
+        $res = "UserPreferences";
+        if( $this->getId() ) {
+            $res = $res . " ID:" . $this->getId();
+        }
+        return $res;
     }
 
 }
