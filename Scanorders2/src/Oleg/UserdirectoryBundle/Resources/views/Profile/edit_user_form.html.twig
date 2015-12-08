@@ -164,7 +164,7 @@
 
                     {% if form.password is defined %}
                         {#password defined: cycle={{ cycle }}#}
-                        {% if cycle == 'edit_user' and form.vars.value.keytype and form.vars.value.keytype != 'local-user' %}
+                        {% if cycle == 'edit_user' %}
                             {#{{ form.vars.value.id }} ?= {{ app.user.id }}#}
                             {% if form.vars.value.id == app.user.id %}
                                 {#current password#}

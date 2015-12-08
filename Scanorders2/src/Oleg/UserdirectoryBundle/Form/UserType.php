@@ -206,21 +206,33 @@ class UserType extends AbstractType
     }
 
     public function userPassword($builder) {
-        if( $this->cycle != "show" ) {
-            if( $this->cycle != "create" ) {
-                $fieldType = 'password';
-            } else {
-                $fieldType = null;
-            }
-            $builder->add('password', 'repeated', array(
-                //'type' => $fieldType,
-                'invalid_message' => 'Please make sure the passwords match',
-                'options' => array('attr' => array('class' => 'password-field form-control')),
-                'required' => true,
-                'first_options'  => array('label' => 'Password:'),
-                'second_options' => array('label' => 'Repeat Password:'),
-            ));
+
+        //show password only for a new user or for an existing user with keytype 'local-user'
+        if( !$this->subjectUser->getId() || ($this->subjectUser->getId() && $this->subjectUser->getKeytype()->getAbbreviation() == 'local-user') ) {
+            //continue
+        } else {
+            //echo "no password";
+            return;
         }
+
+        if( $this->cycle == "show" ) {
+            return;
+        }
+
+//        if( $this->cycle != "create" ) {
+//            $fieldType = 'password';
+//        } else {
+//            $fieldType = null;
+//        }
+
+        $builder->add('password', 'repeated', array(
+            //'type' => $fieldType,
+            'invalid_message' => 'Please make sure the passwords match',
+            'options' => array('attr' => array('class' => 'password-field form-control')),
+            'required' => true,
+            'first_options'  => array('label' => 'Password:'),
+            'second_options' => array('label' => 'Repeat Password:'),
+        ));
     }
 
 
