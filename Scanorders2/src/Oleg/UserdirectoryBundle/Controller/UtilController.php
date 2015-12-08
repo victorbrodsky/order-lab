@@ -1075,14 +1075,17 @@ class UtilController extends Controller {
     }
 
     /**
-     * @Route("/common/check-user-password/{userid}/{userpassword}", name="employees_check_user_password", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/common/check-user-password", name="employees_check_user_password", options={"expose"=true})
+     * @Method("POST")
      */
-    public function checkUserPasswordAction( Request $request, $userid, $userpassword ) {
+    public function checkUserPasswordAction( Request $request ) {
 
         if( false === $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
+
+        $userid = trim( $request->get('userid') );
+        $userpassword = trim( $request->get('userpassword') );
 
         $user = $this->get('security.context')->getToken()->getUser();
         if( $userid != $user->getId() ) {

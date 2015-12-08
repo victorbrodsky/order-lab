@@ -164,7 +164,7 @@
 
                     {% if form.password is defined %}
                         {#password defined: cycle={{ cycle }}#}
-                        {% if cycle == 'edit_user' %}
+                        {% if cycle == 'edit_user' and form.vars.value.keytype and form.vars.value.keytype != 'local-user' %}
                             {#{{ form.vars.value.id }} ?= {{ app.user.id }}#}
                             {% if form.vars.value.id == app.user.id %}
                                 {#current password#}
@@ -181,7 +181,16 @@
                                                     value=""
                                                     placeholder="Current Password"
                                                 >
-                                                <span style="top:0;" class="glyphicon glyphicon-check form-control-feedback btn" onclick="checkCurrentUserPassword(this)" aria-hidden="true"></span>
+                                                <span
+                                                        style="top:0;"
+                                                        class="glyphicon glyphicon-check form-control-feedback btn"
+                                                        onclick="checkCurrentUserPassword(this)"
+                                                        aria-hidden="true"
+                                                        data-spinner-color="#1E90FF"
+                                                        data-style="expand-up"
+                                                        data-size="xs"
+                                                >
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

@@ -381,9 +381,9 @@ function resetUserPassword( btn ) {
     $('#oleg_userdirectorybundle_user_password_second').val(newpassword);
     $('#user-password-box').show();
 }
-function checkCurrentUserPassword( span ) {
+function checkCurrentUserPassword( spanbtn ) {
     console.log('check Current UserPassword');
-    var currentPasswordField = $(span).parent().find('input');
+    var currentPasswordField = $(spanbtn).parent().find('input');
     var currentPasswordValue = currentPasswordField.val();
     console.log('currentPasswordValue='+currentPasswordValue);
 
@@ -397,12 +397,16 @@ function checkCurrentUserPassword( span ) {
         //return;
     }
 
+    var lbtn = Ladda.create( spanbtn );
+    lbtn.start();
+
     var url = Routing.generate('employees_check_user_password');
-    url = url + "/" + user_id + "/" + currentPasswordValue
 
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
+        type: "POST",
+        data: {userid: user_id, userpassword: currentPasswordValue },
         async: asyncflag
     }).success(function(data) {
         if( data == 'ok' ) {
@@ -411,13 +415,23 @@ function checkCurrentUserPassword( span ) {
             $('#oleg_userdirectorybundle_user_password_first').val(newpassword);
             $('#oleg_userdirectorybundle_user_password_second').val(newpassword);
             $('#user-password-box').show();
-            $(span).remove();
+            $(spanbtn).remove();
             currentPasswordField.removeClass('alert-danger');
             currentPasswordField.addClass('alert-success');
+            currentPasswordField.tooltip('destroy');
+            currentPasswordField.prop('readonly', true);
+            currentPasswordField.tooltip({
+                'title':'Current password is correct'
+            });
         } else {
             currentPasswordField.removeClass('alert-success');
             currentPasswordField.addClass('alert-danger');
+            currentPasswordField.tooltip({
+                'title':'Current password is incorrect'
+            });
         }
+    }).done(function() {
+        lbtn.stop();
     });
 }
 
