@@ -915,9 +915,13 @@ class AdminController extends Controller
                         <a href="http://www.ghostscript.com/">Ghostscript</a>
                     </li>
 
+                    <br>
+
                     <li>
                         <a href="https://github.com/bermi/password-generator">Password Generator</a>
                     </li>
+
+                    <br>
 
                     <li>
                         <a href="https://github.com/andreausu/UsuScryptPasswordEncoderBundle">Password Encoder</a>
