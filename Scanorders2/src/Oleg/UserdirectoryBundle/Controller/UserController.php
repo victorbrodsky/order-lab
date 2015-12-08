@@ -391,6 +391,7 @@ class UserController extends Controller
         $dql->select('user');
 
         $dql->leftJoin("user.infos", "infos");
+        $dql->leftJoin("user.preferences", "preferences");
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
 
@@ -476,6 +477,9 @@ class UserController extends Controller
 
             //filter out Pathology Fellowship Applicants
             $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)";
+
+            //filter out users with excludeFromSearch set to true
+            $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
 
             if( $criteriastr ) {
                 $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";

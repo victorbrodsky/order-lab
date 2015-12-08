@@ -899,6 +899,7 @@ class UtilController extends Controller {
         $dql->select("user.id as id, infos.displayName as text, user.username as username, keytype.id as keytypeid");
         $dql->leftJoin("user.keytype", "keytype");
         $dql->leftJoin("user.infos", "infos");
+        $dql->leftJoin("user.preferences", "preferences");
 
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
@@ -1005,7 +1006,10 @@ class UtilController extends Controller {
         //filter out previous users
         $curdate = date("Y-m-d", time());
         $criteriastr .= " AND (employmentStatus IS NULL OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')";
-        
+
+        //filter out users with excludeFromSearch set to true
+        $criteriastr .= " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+
         //echo "criteriastr=".$criteriastr."<br>";
 
         $dql->where($criteriastr);
