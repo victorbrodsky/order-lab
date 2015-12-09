@@ -64,6 +64,10 @@ class ScanUserController extends UserController
 
         $userViewArr = $this->showUser($id,$this->container->getParameter('scan.sitename'));
 
+        if( $userViewArr === false ) {
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        }
+
         //add scan user site setting form
         $res = $this->getScanSettingsForm($id,'show');
         $form = $res['form'];
@@ -93,6 +97,10 @@ class ScanUserController extends UserController
         }
 
         $userViewArr = $this->editUser($id,$this->container->getParameter('scan.sitename'));
+
+        if( $userViewArr === false ) {
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        }
 
         //add scan user site setting form
         $res = $this->getScanSettingsForm($id,'edit');

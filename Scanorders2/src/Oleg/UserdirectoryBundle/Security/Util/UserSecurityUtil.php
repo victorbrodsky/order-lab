@@ -43,6 +43,82 @@ class UserSecurityUtil {
         return false;
     }
 
+    //check for user preferences:
+    //hide - Hide this profile
+    //showToInstitutions - Only show this profile to members of the following institution(s)
+    //showToRoles - Only show this profile to users with the following roles
+    public function isUserVisible( $subjectUser, $currentUser ) {
+
+        if( $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return true;
+        }
+
+        $preferences = $subjectUser->getPreferences();
+
+        //hide - Hide this profile
+        $hide = false;
+        //If checked, profile View page should only show this profile to the user "owner" of the profile
+        //and to users with Platform Administrator and Deputy Platform Administrator roles
+        if( $preferences->getHide() ) {
+            $hide = true;
+            //visible to current user
+            if( $currentUser->getId() == $subjectUser->getId() ) {
+                $hide = false;
+            }
+            //visible to Platform Administrator and Deputy Platform Administrator
+            if( $this->sc->isGranted('ROLE_PLATFORM_ADMIN') || $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                $hide = false;
+            }
+        }
+
+        //hide overwrite the two other checks below
+        if( $hide ) {
+            return false; //not visible
+        }
+
+        //showToInstitutions: false - if empty or check institutions if not empty
+        $hideInstitution = false;
+        $showToInstitutions = $preferences->getShowToInstitutions();
+        if( count($showToInstitutions) > 0 ) {
+            $hideInstitution = true;
+            //check if $currentUser has one of the verified Institutions
+            $type = null; //all types: AdministrativeTitle, AppointmentTitle, MedicalTitle
+            $status = 1;  //1-verified
+            foreach( $showToInstitutions as $showToInstitution ) {
+                if( $currentUser->getInstitutions($type,$status)->contains($showToInstitution) ) {
+                    $hideInstitution = false;
+                    break;
+                }
+            }
+        }
+
+
+        //showToRoles
+        $hideRole = false;
+        $showToRoles = $preferences->getShowToRoles();
+        if( count($showToRoles) > 0 ) {
+            $hideRole = true;
+            //check if current user has one of the role
+            foreach( $showToRoles as $role ) {
+                //echo "role=".$role."<br>";
+                if( $this->sc->isGranted($role."") ) {
+                    $hideRole = false;
+                    break;
+                }
+            }
+        }
+
+        //echo "hideInstitution=".$hideInstitution."<br>";
+        //echo "hideRole=".$hideRole."<br>";
+        //exit();
+
+        if( $hide || $hideInstitution || $hideRole ) {
+            return false; //not visible
+        } else {
+            return true; //visible
+        }
+    }
+
 
     //used by login success handler to get user has access request
     public function getUserAccessRequest($user,$sitename) {

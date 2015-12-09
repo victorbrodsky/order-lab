@@ -1271,21 +1271,36 @@ class User extends BaseUser {
 
 
     //get all institutions from administrative and appointment titles.
-    public function getInstitutions($type=null) {
+    //status: 0-unverified, 1-verified
+    public function getInstitutions($type=null,$status=null) {
         $institutions = new ArrayCollection();
-        if( $type == null or $type == "AdministrativeTitle" ) {
+        if( $type == null || $type == "AdministrativeTitle" ) {
             foreach( $this->getAdministrativeTitles() as $adminTitles ) {
                 if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getId() && $adminTitles->getInstitution()->getName() != "" )
                     if( !$institutions->contains($adminTitles->getInstitution()) ) {
-                        $institutions->add($adminTitles->getInstitution());
+                        if( $status == null || $adminTitles->getStatus() == $status ) {
+                            $institutions->add($adminTitles->getInstitution());
+                        }
                     }
             }
         }
-        if( $type == null or $type == "AppointmentTitle" ) {
+        if( $type == null || $type == "AppointmentTitle" ) {
             foreach( $this->getAppointmentTitles() as $appTitles ) {
                 if( $appTitles->getInstitution() && $appTitles->getInstitution()->getId() && $appTitles->getInstitution()->getName() != "" )
                     if( !$institutions->contains($appTitles->getInstitution()) ) {
-                        $institutions->add($appTitles->getInstitution());
+                        if( $status == null || $appTitles->getStatus() == $status ) {
+                            $institutions->add($appTitles->getInstitution());
+                        }
+                    }
+            }
+        }
+        if( $type == null || $type == "MedicalTitle" ) {
+            foreach( $this->getMedicalTitles() as $medicalTitles ) {
+                if( $medicalTitles->getInstitution() && $medicalTitles->getInstitution()->getId() && $medicalTitles->getInstitution()->getName() != "" )
+                    if( !$institutions->contains($appTitles->getInstitution()) ) {
+                        if( $status == null || $medicalTitles->getStatus() == $status ) {
+                            $institutions->add($medicalTitles->getInstitution());
+                        }
                     }
             }
         }

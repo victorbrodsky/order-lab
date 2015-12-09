@@ -1589,7 +1589,7 @@ class UserController extends Controller
      */
     public function showUserOptimizedAction($id)
     {
-        //$secUtil = $this->get('user_security_utility');
+
         if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -1601,6 +1601,13 @@ class UserController extends Controller
         
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        //check if this subject user is visible according to the subject user's preferences
+        $user = $this->get('security.context')->getToken()->getUser();
+        $secUtil = $this->get('user_security_utility');
+        if( !$secUtil->isUserVisible($entity,$user) ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         //print_r($entity);
@@ -1715,9 +1722,13 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $result = $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
-        
-        return $result;
+        $showUser = $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
+
+        if( $showUser === false ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        return $showUser;
     }
 
     /**
@@ -1735,7 +1746,13 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        return $this->showUser($id,$this->container->getParameter('employees.sitename'));
+        $showUser = $this->showUser($id,$this->container->getParameter('employees.sitename'));
+
+        if( $showUser === false ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        return $showUser;
     }
     public function showUser($id, $sitename=null, $fulluser=true) {
 
@@ -1748,6 +1765,13 @@ class UserController extends Controller
             $entity = new User();
         } else {
             $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+            //check if this subject user is visible according to the subject user's preferences
+            $user = $this->get('security.context')->getToken()->getUser();
+            $secUtil = $this->get('user_security_utility');
+            if( !$secUtil->isUserVisible($entity,$user) ) {
+                return false;
+            }
         }
 
         if( !$entity ) {
@@ -1811,7 +1835,13 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        return $this->editUser($id, $this->container->getParameter('employees.sitename'));
+        $editUser = $this->editUser($id, $this->container->getParameter('employees.sitename'));
+
+        if( $editUser === false ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        return $editUser;
     }
 
     public function editUser($id,$sitename=null) {
@@ -1824,6 +1854,13 @@ class UserController extends Controller
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        //check if this subject user is visible according to the subject user's preferences
+        $user = $this->get('security.context')->getToken()->getUser();
+        $secUtil = $this->get('user_security_utility');
+        if( !$secUtil->isUserVisible($entity,$user) ) {
+            return false;
         }
 
         $this->addEmptyCollections($entity);
