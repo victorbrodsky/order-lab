@@ -13,10 +13,14 @@ function initTypeaheadUserSiteSearch() {
 
     var suggestions_limit = 5;
 
+    //Bloodhound: Prefetched data is fetched and processed on initialization.
+    //If the browser supports local storage, the processed data will be cached there to prevent additional network requests on subsequent page loads.
+    //Don't use prefetch because the results will be stored in the browser cache and will not be updated on the user search
+
     var userDB = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/min","employees"),
+        //prefetch: getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/min","employees"),
         remote: getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/%QUERY","employees"),
         dupDetector: duplicationDetector,
         limit: suggestions_limit

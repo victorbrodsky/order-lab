@@ -435,6 +435,35 @@ function checkCurrentUserPassword( spanbtn ) {
     });
 }
 
+//Clear and lock the other fields below if this field is checked.
+function userPreferencesHideListener() {
+
+    function clearLockOtherPreferencesBox(hide) {
+        if( hide ) {
+            //console.log('lock and clear');
+            $('.user-preferences-showToInstitutions').select2("readonly", true);
+            $('.user-preferences-showToRoles').select2("readonly", true);
+            //clear fields
+            $('.user-preferences-showToInstitutions').select2("val", "");
+            $('.user-preferences-showToRoles').select2("val", "");
+        } else {
+            //console.log('un-lock');
+            $('.user-preferences-showToInstitutions').select2("readonly", false);
+            $('.user-preferences-showToRoles').select2("readonly", false);
+        }
+    }
+
+    var hide = $('.user-preferences-hide').is(':checked');
+    //console.log('init hide='+hide);
+    clearLockOtherPreferencesBox(hide);
+
+    $('.user-preferences-hide').on("change", function(e) {
+        var hide = $('.user-preferences-hide').is(':checked');
+        //console.log('onchange hide='+hide);
+        clearLockOtherPreferencesBox(hide);
+    });
+}
+
 //identifier type listener
 function identifierTypeListener( holder ) {
 

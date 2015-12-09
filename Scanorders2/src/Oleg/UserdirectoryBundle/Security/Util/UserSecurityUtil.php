@@ -54,6 +54,11 @@ class UserSecurityUtil {
             return true;
         }
 
+        //always visible to current user
+        if( $currentUser->getId() == $subjectUser->getId() ) {
+            return true;
+        }
+
         $preferences = $subjectUser->getPreferences();
 
         //hide - Hide this profile
@@ -62,10 +67,6 @@ class UserSecurityUtil {
         //and to users with Platform Administrator and Deputy Platform Administrator roles
         if( $preferences->getHide() ) {
             $hide = true;
-            //visible to current user
-            if( $currentUser->getId() == $subjectUser->getId() ) {
-                $hide = false;
-            }
         }
 
         //hide overwrite the two other checks below

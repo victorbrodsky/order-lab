@@ -877,6 +877,7 @@ class UtilController extends Controller {
 
 
     /**
+     * Used by typeahead js
      * @Route("/common/user-data-search/{type}/{limit}/{search}", name="employees_user-data-search")
      * @Method("GET")
      */
@@ -1010,9 +1011,11 @@ class UtilController extends Controller {
         //filter out users with excludeFromSearch set to true
         if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             $criteriastr .= " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+            //$criteriastr .= " AND (preferences.excludeFromSearch = TRUE)";
         }
 
         //echo "criteriastr=".$criteriastr."<br>";
+        //exit();
 
         $dql->where($criteriastr);
 

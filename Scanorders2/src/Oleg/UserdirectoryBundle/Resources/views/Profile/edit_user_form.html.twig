@@ -292,7 +292,9 @@
                     {{ formmacros.field(form.preferences.languages) }}
                     {{ formmacros.field(form.preferences.locale) }}
 
+                    {#hiding options#}
                     {{ formmacros.checkbox(form.preferences.excludeFromSearch) }}
+                    {#Clear and lock the three fields below if this field is checked.#}
                     {{ formmacros.checkbox(form.preferences.hide) }}
                     {{ formmacros.field(form.preferences.showToInstitutions) }}
                     {{ formmacros.field(form.preferences.showToRoles) }}

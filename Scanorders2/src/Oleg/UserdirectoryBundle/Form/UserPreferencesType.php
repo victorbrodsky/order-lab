@@ -112,7 +112,7 @@ class UserPreferencesType extends AbstractType
         $builder->add('hide', 'checkbox', array(
             'required' => false,
             'label' => 'Hide this profile:',
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            'attr' => array('class'=>'form-control form-control-modif user-preferences-hide', 'style'=>'margin:0')
         ));
 
         $builder->add( 'showToInstitutions', 'entity', array(
@@ -123,7 +123,7 @@ class UserPreferencesType extends AbstractType
             'required'=> false,
             'multiple' => true,
             //'empty_value' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width user-preferences-showToInstitutions'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")
@@ -139,7 +139,7 @@ class UserPreferencesType extends AbstractType
         $builder->add('showToRoles', 'choice', array(
             'choices' => $this->roles,
             'label' => 'Only show this profile to users with the following roles:',
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width user-preferences-showToRoles'),
             'multiple' => true,
         ));
 
