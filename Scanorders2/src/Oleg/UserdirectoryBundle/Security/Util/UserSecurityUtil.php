@@ -49,6 +49,7 @@ class UserSecurityUtil {
     //showToRoles - Only show this profile to users with the following roles
     public function isUserVisible( $subjectUser, $currentUser ) {
 
+        //always visible to Platform Administrator and Deputy Platform Administrator
         if( $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return true;
         }
@@ -63,10 +64,6 @@ class UserSecurityUtil {
             $hide = true;
             //visible to current user
             if( $currentUser->getId() == $subjectUser->getId() ) {
-                $hide = false;
-            }
-            //visible to Platform Administrator and Deputy Platform Administrator
-            if( $this->sc->isGranted('ROLE_PLATFORM_ADMIN') || $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 $hide = false;
             }
         }

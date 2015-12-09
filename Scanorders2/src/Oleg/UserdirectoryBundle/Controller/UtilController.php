@@ -1008,7 +1008,9 @@ class UtilController extends Controller {
         $criteriastr .= " AND (employmentStatus IS NULL OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')";
 
         //filter out users with excludeFromSearch set to true
-        $criteriastr .= " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $criteriastr .= " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+        }
 
         //echo "criteriastr=".$criteriastr."<br>";
 

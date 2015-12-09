@@ -479,7 +479,9 @@ class UserController extends Controller
             $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType IS NULL)";
 
             //filter out users with excludeFromSearch set to true
-            $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+            if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+            }
 
             if( $criteriastr ) {
                 $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
