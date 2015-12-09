@@ -54,8 +54,13 @@ class FellAppController extends Controller {
         $currentYear = date("Y")+2;
 
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByUser($user);
+        //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
 
         if( count($fellowshipTypes) == 0 ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department.'
+            );
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

@@ -1343,6 +1343,7 @@ class FellAppUtil {
         $query = $em->createQuery($dql);
 
         $fellTypes = $query->getResult();
+        //echo "fellTypes count=".count($fellTypes)."<br>";
 
         if( $asEntities ) {
             return $fellTypes;

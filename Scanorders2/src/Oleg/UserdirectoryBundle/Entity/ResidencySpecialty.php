@@ -89,6 +89,10 @@ class ResidencySpecialty extends ListAbstract
         return $this->boardCertificateAvailable;
     }
 
+    public function getTreeName() {
+        return $this->getName();
+    }
+
     public function getClassName()
     {
         return "ResidencySpecialty";
