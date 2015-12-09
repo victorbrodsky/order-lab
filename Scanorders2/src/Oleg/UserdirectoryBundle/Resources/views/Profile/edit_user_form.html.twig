@@ -169,6 +169,7 @@
                             {% if form.vars.value.id == app.user.id %}
                                 {#current password#}
                                 <div id="user-current-password-box">
+                                    <input style="display:none" type="password" name="foilautofill"/>
                                     <div class="row">
                                         <div class="col-xs-6" align="right">
                                             <strong>To change your password, please enter your current password:</strong>
@@ -176,8 +177,10 @@
                                         <div class="col-xs-6" align="left">
                                             <div class="form-group has-feedback" style="margin-bottom:0;">
                                                 <input
+                                                    id="user-dummy-current-password" name="user-dummy-current-password"
                                                     type="password"
                                                     class="form-control"
+                                                    autocomplete="off"
                                                     value=""
                                                     placeholder="Current Password"
                                                 >
