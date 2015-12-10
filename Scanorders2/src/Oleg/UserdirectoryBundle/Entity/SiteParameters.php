@@ -20,6 +20,7 @@ class SiteParameters {
     private $id;
 
     /**
+     * Max idle time in minutes
      * @ORM\Column(type="string", nullable=true)
      */
     private $maxIdleTime;

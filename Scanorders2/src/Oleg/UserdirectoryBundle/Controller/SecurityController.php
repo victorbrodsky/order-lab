@@ -186,6 +186,9 @@ class SecurityController extends Controller
     //////////////// Idle Time Out - Common Functions ////////////////////
 
     /**
+     * Check the server every 30 min (maxIdleTime) if the server timeout is ok ($lapse > $maxIdleTime).
+     * If not, the server returns NOTOK flag and js open a dialog modal to continue.
+     *
      * @Route("/common/keepalive", name="keepalive")
      * @Method("GET")
      */
@@ -199,7 +202,7 @@ class SecurityController extends Controller
 
         $userUtil = new UserUtil();
         $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
-        $maxIdleTime = $res['maxIdleTime']+500;
+        $maxIdleTime = $res['maxIdleTime']+20; //in seconds; add 20 seconds as a safety delay.
         $maintenance = $res['maintenance'];
 
         /////////////////// check if maintenance is on ////////////////////
@@ -233,14 +236,14 @@ class SecurityController extends Controller
 
             //created=2015-11-06T19:50:36Z<br>OK
             //echo "created=".gmdate("Y-m-d H:i:s", $session->getMetadataBag()->getCreated())."<br>";
-            $msg = "'lapse=".$lapse.", max idle time=".$maxIdleTime."'";
+            //$msg = "'lapse=".$lapse.", max idle time=".$maxIdleTime."'";
             //echo "console.log(".$msg.")";
             //echo $msg;
             //$this->logoutUser($event);
             //exit();
 
-            if( $lapse > $maxIdleTime ) { 
-                $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime);
+            if( $lapse > $maxIdleTime ) {
+                $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime) . "seconds.";
                 //echo $overlapseMsg."<br>";
                 $response->setContent($overlapseMsg);
             } else {
@@ -269,7 +272,7 @@ class SecurityController extends Controller
         
         $userUtil = new UserUtil();
         $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
-        $maxIdleTime = $res['maxIdleTime'];
+        //$maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
         
         $maxIdleTime = 55;  //(60000-5000)/1000;
@@ -308,6 +311,8 @@ class SecurityController extends Controller
     }
     
     /**
+     *
+     *
      * @Route("/common/setserveractive", name="setserveractive")
      * @Method("GET")
      */
@@ -349,7 +354,7 @@ class SecurityController extends Controller
 
         $userUtil = new UserUtil();
         $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
-        $maxIdleTime = $res['maxIdleTime'];
+        $maxIdleTime = $res['maxIdleTime']; //in seconds
         $maintenance = $res['maintenance'];
 
         if( $maintenance ) {
