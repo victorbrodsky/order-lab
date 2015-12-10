@@ -443,16 +443,13 @@ class ScanAdminController extends AdminController
 
         $count = 10;
 
+        //0       1                         2           3               4          5           6
+        //ID	Name	                Short Name	Abbreviation	Description	Original	Synonyms	Type	 ////Display Order	Creator	Creation Date	Updated By	Updated On
+        //1 	Hematoxylin and Eosin		            H&E				                                default	 ////10	            oli2002 (WCMC CWID) - Oleg Ivanov	42,256.68	hat9010 (WCMC CWID) - Hamilton Tsang	42,342.79
+
+
         //for each row in excel
         for( $row = 2; $row <= $highestRow; $row++ ){
-
-            $color = $objPHPExcel->getActiveSheet()->getStyle('A'.$row)->getFill()->getStartColor()->getRGB();
-
-            if( $color != '000000' ) {
-                continue;
-            }
-
-            //echo "A cell color=".$color."<br>";
 
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -464,13 +461,10 @@ class ScanAdminController extends AdminController
             //var_dump($rowData);
             //echo "<br>";
 
-            //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
-            //$oldStainName = trim($rowData[0][0]);
             $stainName = trim($rowData[0][1]);
             $stainShortName = trim($rowData[0][2]);
             $stainAbbr = trim($rowData[0][3]);
-            //$stainCopathName = $rowData[0][4];
-            //$stainCopathAbbr = $rowData[0][5];
+            $stainDescription = trim($rowData[0][4]);
             $synonyms = trim($rowData[0][6]);
 
 
@@ -496,6 +490,10 @@ class ScanAdminController extends AdminController
 
             if( $stainAbbr ) {
                 $entity->setAbbreviation($stainAbbr);
+            }
+
+            if( $stainDescription ) {
+                $entity->setDescription($stainDescription);
             }
 
             //echo "stain=".$entity.", ShortName=".$entity->getShortname().", Abbr=".$entity->getAbbreviation()."<br>";

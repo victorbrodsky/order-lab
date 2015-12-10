@@ -262,53 +262,53 @@ class SecurityController extends Controller
      * @Route("/common/isserveractive", name="isserveractive")
      * @Method("GET")
      */
-    public function isServerActiveAction( Request $request )
-    {
-        //echo "keep Alive Action! <br>";
-
-        $response = new Response();
-        
-        $logger = $this->container->get('logger');
-        
-        $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
-        $maxIdleTime = $res['maxIdleTime'];   //in seconds
-        $maintenance = $res['maintenance'];
-        
-        //$maxIdleTime = 55;  //(60000-5000)/1000;
-        
-        if( $maintenance ) {
-            $response->setContent(json_encode('NOTOK'));
-            return $response;
-        }
-
-        $session = $request->getSession();
-        
-        $lastRequest = $session->get('lastRequest');
-        //echo "lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
-        //echo "pingCheck=".$session->get('pingCheck')."<br>";
-
-        if( !$lastRequest ) { 
-            //echo "init set lastRequest=".gmdate("Y-m-d H:i:s",time())."<br>";            
-            $logger->notice("isServerActiveAction: set lastRequest to ".time());
-            $session->set('lastRequest',time());
-            $lastRequest = $session->get('lastRequest');
-        }
-
-        //echo "time=".time()."; lastRequest=".$lastRequest."<br>";
-        $lapse = time() - $lastRequest; //time() in seconds
-        
-        //echo "lapse=".$lapse."; maxIdleTime=".$maxIdleTime."<br>";
-        
-        if( $lapse > $maxIdleTime ) {
-            $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime);
-            $response->setContent(json_encode($overlapseMsg));
-        } else {
-            $response->setContent(json_encode('OK'));
-        }
-
-        return $response;
-    }
+//    public function isServerActiveAction( Request $request )
+//    {
+//        //echo "keep Alive Action! <br>";
+//
+//        $response = new Response();
+//
+//        $logger = $this->container->get('logger');
+//
+//        $userUtil = new UserUtil();
+//        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
+//        $maxIdleTime = $res['maxIdleTime'];   //in seconds
+//        $maintenance = $res['maintenance'];
+//
+//        //$maxIdleTime = 55;  //(60000-5000)/1000;
+//
+//        if( $maintenance ) {
+//            $response->setContent(json_encode('NOTOK'));
+//            return $response;
+//        }
+//
+//        $session = $request->getSession();
+//
+//        $lastRequest = $session->get('lastRequest');
+//        //echo "lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
+//        //echo "pingCheck=".$session->get('pingCheck')."<br>";
+//
+//        if( !$lastRequest ) {
+//            //echo "init set lastRequest=".gmdate("Y-m-d H:i:s",time())."<br>";
+//            $logger->notice("isServerActiveAction: set lastRequest to ".time());
+//            $session->set('lastRequest',time());
+//            $lastRequest = $session->get('lastRequest');
+//        }
+//
+//        //echo "time=".time()."; lastRequest=".$lastRequest."<br>";
+//        $lapse = time() - $lastRequest; //time() in seconds
+//
+//        //echo "lapse=".$lapse."; maxIdleTime=".$maxIdleTime."<br>";
+//
+//        if( $lapse > $maxIdleTime ) {
+//            $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime);
+//            $response->setContent(json_encode($overlapseMsg));
+//        } else {
+//            $response->setContent(json_encode('OK'));
+//        }
+//
+//        return $response;
+//    }
     
     /**
      *
@@ -319,18 +319,7 @@ class SecurityController extends Controller
     public function setServerActiveAction( Request $request )
     {
         //echo "keep Alive Action! <br>";
-
         $response = new Response();
-        
-//        $userUtil = new UserUtil();
-//        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
-//        $maxIdleTime = $res['maxIdleTime'];
-//        $maintenance = $res['maintenance'];
-//        
-//        if( $maintenance ) {
-//            $response->setContent(json_encode('NOTOK'));
-//            return $response;
-//        }
 
         $session = $request->getSession();            
         $session->set('lastRequest',time());
