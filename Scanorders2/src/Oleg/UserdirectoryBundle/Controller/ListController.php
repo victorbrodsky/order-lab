@@ -181,7 +181,7 @@ class ListController extends Controller
         $entities = $paginator->paginate(
             $query,
             $this->get('request')->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
+            $limit /*limit per page*/
         );
 
         ///////////// check if show "create a new entity" link //////////////

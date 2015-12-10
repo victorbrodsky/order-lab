@@ -420,7 +420,7 @@ class ScanAdminController extends AdminController
 //        return round($count/10);
 //    }
 
-    //populate stains from Excel sheet
+    //populate stains from Excel sheet downloaded from the system
     public function generateStains() {
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -428,6 +428,124 @@ class ScanAdminController extends AdminController
         $em = $this->getDoctrine()->getManager();
 
         $inputFileName = __DIR__ . '/../Resources/Stains.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $count = 10;
+
+        //for each row in excel
+        for( $row = 2; $row <= $highestRow; $row++ ){
+
+            $color = $objPHPExcel->getActiveSheet()->getStyle('A'.$row)->getFill()->getStartColor()->getRGB();
+
+            if( $color != '000000' ) {
+                continue;
+            }
+
+            //echo "A cell color=".$color."<br>";
+
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
+
+            //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
+            //$oldStainName = trim($rowData[0][0]);
+            $stainName = trim($rowData[0][1]);
+            $stainShortName = trim($rowData[0][2]);
+            $stainAbbr = trim($rowData[0][3]);
+            //$stainCopathName = $rowData[0][4];
+            //$stainCopathAbbr = $rowData[0][5];
+            $synonyms = trim($rowData[0][6]);
+
+
+            //echo "stainName=".$stainName."<br>";
+            //echo "synonyms=".$synonyms."<br>";
+
+            if( !$stainName || $stainName == "" ) {
+                continue;
+            }
+
+            if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
+                continue;
+            }
+
+            //exit('stain exit');
+
+            $entity = new StainList();
+            $this->setDefaultList($entity,$count,$username,$stainName);
+
+            if( $stainShortName ) {
+                $entity->setShortname($stainShortName);
+            }
+
+            if( $stainAbbr ) {
+                $entity->setAbbreviation($stainAbbr);
+            }
+
+            //echo "stain=".$entity.", ShortName=".$entity->getShortname().", Abbr=".$entity->getAbbreviation()."<br>";
+
+            //synonyms
+            $synonymsArr = explode(",", $synonyms);
+            foreach( $synonymsArr as $synonym ) {
+                $synonym = trim($synonym);
+
+                if( !$synonym || $synonym == "" ) {
+                    continue;
+                }
+
+                $synonymEntity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($synonym);
+                if( !$synonymEntity ) {
+
+                    $count = $count + 10;
+                    $synonymEntity = new StainList();
+                    $this->setDefaultList($synonymEntity,$count,$username,$synonym);
+
+                    $em->persist($entity);
+                    $em->persist($synonymEntity);
+                    $em->flush();
+
+                }
+
+                $entity->addSynonym($synonymEntity);
+                //echo "synonym=".$synonymEntity."<br>";
+                //exit();
+            }
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        }
+
+        //exit('stain exit, count='.$count);
+        return round($count/10);
+    }
+
+    //populate stains from Excel sheet
+    public function generateStainsV1() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $inputFileName = __DIR__ . '/../Resources/Stains_v1.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
