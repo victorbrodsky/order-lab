@@ -117,6 +117,10 @@ class ScanAdminController extends AdminController
     public function generateAllAction()
     {
 
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+        }
+
         $max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
@@ -195,15 +199,19 @@ class ScanAdminController extends AdminController
     public function generateStainAction()
     {
 
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+        }
+
         $count = $this->generateStains();
         if( $count >= 0 ) {
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'Created '.$count. ' stain records'
+                'Updated '.$count. ' stain records'
             );
 
-            return $this->redirect($this->generateUrl('stainlist'));
+            return $this->redirect($this->generateUrl('stain-list'));
 
         } else {
 
@@ -423,8 +431,6 @@ class ScanAdminController extends AdminController
     //populate stains from Excel sheet downloaded from the system
     public function generateStains() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
-
         $em = $this->getDoctrine()->getManager();
 
         $inputFileName = __DIR__ . '/../Resources/Stains.xlsx';
@@ -441,11 +447,11 @@ class ScanAdminController extends AdminController
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
-        $count = 10;
+        $count = 0;
 
-        //0       1                         2           3               4          5           6
-        //ID	Name	                Short Name	Abbreviation	Description	Original	Synonyms	Type	 ////Display Order	Creator	Creation Date	Updated By	Updated On
-        //1 	Hematoxylin and Eosin		            H&E				                                default	 ////10	            oli2002 (WCMC CWID) - Oleg Ivanov	42,256.68	hat9010 (WCMC CWID) - Hamilton Tsang	42,342.79
+        //0       1                         2           3               4          5           6         7
+        //ID	Name	                Short Name	Abbreviation	Description	Original	Synonyms	Type	 Display Order	///Creator	Creation Date	Updated By	Updated On
+        //1 	Hematoxylin and Eosin		            H&E				                                default	   10	        ///oli2002 (WCMC CWID) - Oleg Ivanov	42,256.68	hat9010 (WCMC CWID) - Hamilton Tsang	42,342.79
 
 
         //for each row in excel
@@ -461,28 +467,49 @@ class ScanAdminController extends AdminController
             //var_dump($rowData);
             //echo "<br>";
 
+            $stainId = trim($rowData[0][0]);
             $stainName = trim($rowData[0][1]);
             $stainShortName = trim($rowData[0][2]);
             $stainAbbr = trim($rowData[0][3]);
             $stainDescription = trim($rowData[0][4]);
+            //Original 5
             $synonyms = trim($rowData[0][6]);
+            $type = trim($rowData[0][7]);
+            $order = trim($rowData[0][8]);
 
-
+            echo "stainId=".$stainId."<br>";
             //echo "stainName=".$stainName."<br>";
             //echo "synonyms=".$synonyms."<br>";
+            //echo "order=".$order."<br>";
+            //exit('import stains');
+
+            if( $type == 'disabled' ) {
+                echo "Don't update: type=".$type." !!!!!!!!!!!!!!!<br>";
+                continue;
+            }
 
             if( !$stainName || $stainName == "" ) {
+                //echo "Don't update: stainName=".$stainName." !!!!!!!!!!!!!!<br>";
                 continue;
             }
 
-            if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
-                continue;
-            }
+            //if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
+            //    continue;
+            //}
 
             //exit('stain exit');
 
-            $entity = new StainList();
-            $this->setDefaultList($entity,$count,$username,$stainName);
+            $entity = $em->getRepository('OlegOrderformBundle:StainList')->find($stainId);
+
+            if( !$entity ) {
+                exit("Stain not found!!!!!!!!!! ID=".$stainId);
+                //$entity = new StainList();
+                //$this->setDefaultList($entity,$count,$username,$stainName);
+            }
+
+            if( $stainName ) {
+                $entity->setName($stainName);
+            }
 
             if( $stainShortName ) {
                 $entity->setShortname($stainShortName);
@@ -496,7 +523,9 @@ class ScanAdminController extends AdminController
                 $entity->setDescription($stainDescription);
             }
 
-            //echo "stain=".$entity.", ShortName=".$entity->getShortname().", Abbr=".$entity->getAbbreviation()."<br>";
+            if( $order ) {
+                $entity->setOrderinlist($order);
+            }
 
             //synonyms
             $synonymsArr = explode(",", $synonyms);
@@ -509,31 +538,103 @@ class ScanAdminController extends AdminController
 
                 $synonymEntity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($synonym);
                 if( !$synonymEntity ) {
-
-                    $count = $count + 10;
-                    $synonymEntity = new StainList();
-                    $this->setDefaultList($synonymEntity,$count,$username,$synonym);
-
-                    $em->persist($entity);
-                    $em->persist($synonymEntity);
-                    $em->flush();
-
+                    exit("Synonim not found!!!!!!!!!!!!!! Name=".$synonym);
+                    //$count = $count + 10;
+                    //$synonymEntity = new StainList();
+                    //$this->setDefaultList($synonymEntity,$count,$username,$synonym);
+                    //$em->persist($entity);
+                    //$em->persist($synonymEntity);
+                    //$em->flush();
                 }
 
                 $entity->addSynonym($synonymEntity);
-                //echo "synonym=".$synonymEntity."<br>";
+                echo "########### synonym=".$synonymEntity."<br>";
                 //exit();
             }
 
-            $em->persist($entity);
+            echo "Update stain=".$entity."<br>";
+
+            //$em->persist($entity);
             $em->flush();
 
-            $count = $count + 10;
-
+            $count++;
         }
 
-        //exit('stain exit, count='.$count);
-        return round($count/10);
+        exit('stain exit, count='.$count);
+        return $count;
+    }
+
+    /**
+     * Remove disabled stains
+     *
+     * @Route("/remove-disabled-stains", name="remove-disabled-stains")
+     * @Method("GET")
+     * @Template()
+     */
+    public function removeDeactivatedStainsAction() {
+
+        exit('disabled');
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $stains = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+
+        $count = 0;
+
+        foreach( $stains as $stain ) {
+            if( $stain->getType() == "disabled" ) {
+                echo "remove disabled stain ".$stain."<br>";
+                //$em->remove($stain);
+                //$em->flush();
+                $count++;
+            }
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Removed disabled '.$count. ' stains.'
+        );
+
+        return $this->redirect($this->generateUrl('stain-list'));
+    }
+
+    /**
+     * Remove all stains
+     *
+     * @Route("/remove-all-stains", name="remove-all-stains")
+     * @Method("GET")
+     * @Template()
+     */
+    public function removeAllStainsAction() {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $stains = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+
+        $count = 0;
+
+        foreach( $stains as $stain ) {
+
+            $orderUtil = $this->get('scanorder_utility');
+            $res = $orderUtil->removeStain($stain);
+
+            if( $res ) {
+                $count++;
+            }
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Removed '.$count. ' stains.'
+        );
+
+        return $this->redirect($this->generateUrl('stain-list'));
     }
 
     //populate stains from Excel sheet

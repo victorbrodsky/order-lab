@@ -50,11 +50,9 @@
     <p>
         <a href="{{ path('stain-list') }}">Stains</a>
         (
-            <a href="{{ path('stain-list-excel',{'sort':'ent.type','direction':'asc'}) }}">Download Stains in Excel</a>
-            {#&nbsp;#}
-            <a href="{{ path('stain_update_fulltitle') }}">Update stain's full titles</a>
-            <a href="{{ path('generate_stain') }}">Generate Stains</a>
+            <a href="{{ path('stain-list-excel',{'sort':'ent.type','direction':'asc'}) }}">Download Stains in Excel</a> | <a href="{{ path('stain_update_fulltitle') }}">Update stain's full titles</a> | <a href="{{ path('generate_stain') }}">Update Stains</a>
         )
+        <a href="{{ path('remove-all-stains') }}">Remove All Stains</a>
     </p>
     {#<p>#}
         {#<a href="{{ path('generate_stain') }}">Generate Stains</a>#}

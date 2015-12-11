@@ -910,6 +910,74 @@ class OrderUtil {
     }
 
 
+    public function removeStain( $stain ) {
 
+        $em = $this->em;
+
+        //find slides using this stain: slide(1)->(n)stain(n)->(1)stainList
+        //$stains = $this->em->getRepository('OlegOrderformBundle:Stain')->findAll();
+        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $dql =  $repository->createQueryBuilder("message");
+        $dql->select('message');
+        $dql->leftJoin("message.slide","slide");
+        $dql->leftJoin("slide.stain","stain");
+        $dql->leftJoin("stain.field","stainList");
+        $dql->where('stainList.id = :stainid');
+
+        $query = $em->createQuery($dql)->setParameter('stainid', $stain->getId());
+
+        $messages = $query->getResult();
+
+        foreach( $messages as $message ) {
+
+            foreach( $message->getPatient() as $item ) {
+                $em->remove($item);
+            }
+
+            foreach( $message->getEncounter() as $item ) {
+                $em->remove($item);
+            }
+
+            foreach( $message->getProcedure() as $item ) {
+                $em->remove($item);
+            }
+
+            foreach( $message->getAccession() as $item ) {
+                $em->remove($item);
+            }
+
+            foreach( $message->getPart() as $item ) {
+                $em->remove($item);
+            }
+
+            foreach( $message->getBlock() as $item ) {
+                $em->remove($item);
+            }
+
+            foreach( $message->getSlide() as $slide ) {
+
+                foreach( $slide->getStain() as $stain ) {
+                    $em->remove($stain);
+                }
+
+                foreach( $slide->getScan() as $scan ) {
+                    $em->remove($scan);
+                }
+
+                foreach( $slide->getRelevantscan() as $relevantscan ) {
+                    $em->remove($relevantscan);
+                }
+
+                $em->remove($slide);
+            }
+
+
+
+            $em->remove($message);
+        }
+
+        //$em->remove($stain);
+        $em->flush();
+    }
 
 }
