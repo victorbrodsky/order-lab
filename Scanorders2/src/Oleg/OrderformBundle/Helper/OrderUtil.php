@@ -1051,6 +1051,7 @@ class OrderUtil {
 
         $count = 0;
 
+        //stain depenedencies: scan_stain and scan_blockSpecialStain
         foreach( $stains as $stain ) {
             //echo "stain=".$stain->getId()." ".$stain."<br>";
             //$em->persist($stain);

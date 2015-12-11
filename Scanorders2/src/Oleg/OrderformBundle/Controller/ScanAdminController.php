@@ -466,7 +466,7 @@ class ScanAdminController extends AdminController
                 FALSE);
 
             //echo $row.": ";
-            //var_dump($rowData);
+            //print_r($rowData);
             //echo "<br>";
 
             $stainId = trim($rowData[0][0]);
@@ -475,25 +475,25 @@ class ScanAdminController extends AdminController
             $stainAbbr = trim($rowData[0][3]);
             $stainDescription = trim($rowData[0][4]);
             //Original 5
-            $synonyms = trim($rowData[0][6]);
+            $synonym = trim($rowData[0][6]);
             $type = trim($rowData[0][7]);
             $order = trim($rowData[0][8]);
 
-            echo "stainId=".$stainId."<br>";
+            //echo "stainId=".$stainId."<br>";
             //echo "stainName=".$stainName."<br>";
-            //echo "synonyms=".$synonyms."<br>";
+            //echo "synonym=".$synonym."<br>";
             //echo "order=".$order."<br>";
             //exit('import stains');
 
             if( $type == 'disabled' ) {
-                echo "Don't update: type=".$type." !!!!!!!!!!!!!!!<br>";
+                //echo "Don't update: type=".$type." !!!!!!!!!!!!!!!<br>";
                 continue;
             }
 
-            if( !$stainName || $stainName == "" ) {
-                //echo "Don't update: stainName=".$stainName." !!!!!!!!!!!!!!<br>";
-                continue;
-            }
+            //if( !$stainName || $stainName == "" ) {
+            //    echo "Don't update: stainName=".$stainName." !!!!!!!!!!!!!!<br>";
+            //    continue;
+            //}
 
             //if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
             //    continue;
@@ -501,12 +501,15 @@ class ScanAdminController extends AdminController
 
             //exit('stain exit');
 
-            $entity = $em->getRepository('OlegOrderformBundle:StainList')->find($stainId);
+            if( $stainName ) {
+                $entity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName);
+            }
 
             if( !$entity ) {
                 //exit("Stain not found!!!!!!!!!! ID=".$stainId);
                 $entity = new StainList();
                 $this->setDefaultList($entity,$order,$username,$stainName);
+                $em->persist($entity);
             }
 
             if( $stainName ) {
@@ -529,35 +532,29 @@ class ScanAdminController extends AdminController
                 $entity->setOrderinlist($order);
             }
 
-            //synonyms
-            $synonymsArr = explode(",", $synonyms);
-            foreach( $synonymsArr as $synonym ) {
-                $synonym = trim($synonym);
-
-                if( !$synonym || $synonym == "" ) {
-                    continue;
-                }
-
+            if( $synonym ) {
+                //echo "synonym=".$synonym."<br>";
                 $synonymEntity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($synonym);
                 if( !$synonymEntity ) {
                     //exit("Synonim not found!!!!!!!!!!!!!! Name=".$synonym);
                     //$count = $count + 10;
                     $synonymEntity = new StainList();
                     $this->setDefaultList($synonymEntity,$count,$username,$synonym);
-                    $em->persist($entity);
+                    //$em->persist($entity);
                     $em->persist($synonymEntity);
-                    $em->flush();
+                    //$em->flush();
                 }
 
                 $entity->addSynonym($synonymEntity);
-                echo "########### synonym=".$synonymEntity."<br>";
-                //exit();
+                //echo $entity.": add synonym=".$synonymEntity."<br>";
             }
 
-            echo "Update stain=".$entity."<br>";
+            //echo "Update stain=".$entity."<br>";
+            //exit();
 
             //$em->persist($entity);
             $em->flush();
+            //exit();
 
             $count = $count + 10;
         }
