@@ -616,7 +616,7 @@ class ScanAdminController extends AdminController
             return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        //remove messages with patients: danger !!!
+        //1) remove messages with patients: danger !!!
         $orderUtil = $this->get('scanorder_utility');
         $removedMessagesCount = $orderUtil->removeAllOrdersPatients();
 
@@ -625,13 +625,15 @@ class ScanAdminController extends AdminController
             'Removed '.$removedMessagesCount. ' messages.'
         );
 
-        //remove stains
-        $count = $orderUtil->removeAllStains();
+        if(0) {
+            //2) remove stains
+            $count = $orderUtil->removeAllStains();
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Removed '.$count. ' stains.'
-        );
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Removed '.$count. ' stains.'
+            );
+        }
 
         return $this->redirect($this->generateUrl('stain-list'));
     }
