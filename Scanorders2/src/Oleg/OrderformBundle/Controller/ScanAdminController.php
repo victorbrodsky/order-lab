@@ -563,42 +563,42 @@ class ScanAdminController extends AdminController
         return round($count/10);
     }
 
-    /**
-     * Remove disabled stains
-     *
-     * @Route("/remove-disabled-stains", name="remove-disabled-stains")
-     * @Method("GET")
-     * @Template()
-     */
-    public function removeDeactivatedStainsAction() {
-
-        exit('disabled');
-
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $stains = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
-
-        $count = 0;
-
-        foreach( $stains as $stain ) {
-            if( $stain->getType() == "disabled" ) {
-                echo "remove disabled stain ".$stain."<br>";
-                //$em->remove($stain);
-                //$em->flush();
-                $count++;
-            }
-        }
-
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Removed disabled '.$count. ' stains.'
-        );
-
-        return $this->redirect($this->generateUrl('stain-list'));
-    }
+//    /**
+//     * Remove disabled stains
+//     *
+//     * @Route("/remove-disabled-stains", name="remove-disabled-stains")
+//     * @Method("GET")
+//     * @Template()
+//     */
+//    public function removeDeactivatedStainsAction() {
+//
+//        exit('disabled');
+//
+//        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $stains = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+//
+//        $count = 0;
+//
+//        foreach( $stains as $stain ) {
+//            if( $stain->getType() == "disabled" ) {
+//                echo "remove disabled stain ".$stain."<br>";
+//                //$em->remove($stain);
+//                //$em->flush();
+//                $count++;
+//            }
+//        }
+//
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            'Removed disabled '.$count. ' stains.'
+//        );
+//
+//        return $this->redirect($this->generateUrl('stain-list'));
+//    }
 
     /**
      * Remove all stains: Danger function: will remove all orders (patients) and stains
@@ -622,6 +622,8 @@ class ScanAdminController extends AdminController
             'Removed '.$removedMessagesCount. ' messages.'
         );
 
+        //Do it manually by dropping tables.
+        //Stain list has two dependencies: scan_stain and scan_blockSpecialStain tables which have to be dropped first before dropping scan_stainList table
         if(0) {
             //2) remove stains
             $count = $orderUtil->removeAllStains();
