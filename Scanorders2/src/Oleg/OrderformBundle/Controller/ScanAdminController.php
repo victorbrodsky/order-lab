@@ -131,7 +131,7 @@ class ScanAdminController extends AdminController
         $count_enctype = $this->generateEncounterType();
         $count_proceduretype = $this->generateProcedureType();
         $count_orderCategory = $this->generateOrderCategory();
-        $count_stain = $this->generateStains();
+        //$count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
         $count_procedure = $this->generateProcedures();
         $count_status = $this->generateStatuses();
@@ -160,7 +160,7 @@ class ScanAdminController extends AdminController
             'Encounter Types='.$count_proceduretype.', '.
             'Procedure Types='.$count_enctype.', '.
             'Message Category='.$count_orderCategory.', '.
-            'Stains='.$count_stain.', '.
+            //'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
             'DiseaseTypes='.$count_DiseaseTypeList.', '.
@@ -208,7 +208,7 @@ class ScanAdminController extends AdminController
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'Updated '.$count. ' stain records'
+                'Generated '.$count. ' stain records.'
             );
 
             return $this->redirect($this->generateUrl('stain-list'));
@@ -431,6 +431,8 @@ class ScanAdminController extends AdminController
     //populate stains from Excel sheet downloaded from the system
     public function generateStains() {
 
+        $username = $this->get('security.context')->getToken()->getUser();
+
         $em = $this->getDoctrine()->getManager();
 
         $inputFileName = __DIR__ . '/../Resources/Stains.xlsx';
@@ -447,7 +449,7 @@ class ScanAdminController extends AdminController
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
-        $count = 0;
+        $count = 10;
 
         //0       1                         2           3               4          5           6         7
         //ID	Name	                Short Name	Abbreviation	Description	Original	Synonyms	Type	 Display Order	///Creator	Creation Date	Updated By	Updated On
@@ -502,9 +504,9 @@ class ScanAdminController extends AdminController
             $entity = $em->getRepository('OlegOrderformBundle:StainList')->find($stainId);
 
             if( !$entity ) {
-                exit("Stain not found!!!!!!!!!! ID=".$stainId);
-                //$entity = new StainList();
-                //$this->setDefaultList($entity,$count,$username,$stainName);
+                //exit("Stain not found!!!!!!!!!! ID=".$stainId);
+                $entity = new StainList();
+                $this->setDefaultList($entity,$order,$username,$stainName);
             }
 
             if( $stainName ) {
@@ -538,13 +540,13 @@ class ScanAdminController extends AdminController
 
                 $synonymEntity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($synonym);
                 if( !$synonymEntity ) {
-                    exit("Synonim not found!!!!!!!!!!!!!! Name=".$synonym);
+                    //exit("Synonim not found!!!!!!!!!!!!!! Name=".$synonym);
                     //$count = $count + 10;
-                    //$synonymEntity = new StainList();
-                    //$this->setDefaultList($synonymEntity,$count,$username,$synonym);
-                    //$em->persist($entity);
-                    //$em->persist($synonymEntity);
-                    //$em->flush();
+                    $synonymEntity = new StainList();
+                    $this->setDefaultList($synonymEntity,$count,$username,$synonym);
+                    $em->persist($entity);
+                    $em->persist($synonymEntity);
+                    $em->flush();
                 }
 
                 $entity->addSynonym($synonymEntity);
@@ -557,11 +559,11 @@ class ScanAdminController extends AdminController
             //$em->persist($entity);
             $em->flush();
 
-            $count++;
+            $count = $count + 10;
         }
 
-        exit('stain exit, count='.$count);
-        return $count;
+        //exit('stain exit, count='.$count);
+        return round($count/10);
     }
 
     /**
@@ -602,32 +604,29 @@ class ScanAdminController extends AdminController
     }
 
     /**
-     * Remove all stains
+     * Remove all stains: Danger function: will remove all orders (patients) and stains
      *
      * @Route("/remove-all-stains", name="remove-all-stains")
      * @Method("GET")
      * @Template()
      */
-    public function removeAllStainsAction() {
+    public function removeAllOrdersStainsAction() {
 
         if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $stains = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+        //remove messages with patients: danger !!!
+        $orderUtil = $this->get('scanorder_utility');
+        $removedMessagesCount = $orderUtil->removeAllOrdersPatients();
 
-        $count = 0;
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Removed '.$removedMessagesCount. ' messages.'
+        );
 
-        foreach( $stains as $stain ) {
-
-            $orderUtil = $this->get('scanorder_utility');
-            $res = $orderUtil->removeStain($stain);
-
-            if( $res ) {
-                $count++;
-            }
-        }
+        //remove stains
+        $count = $orderUtil->removeAllStains();
 
         $this->get('session')->getFlashBag()->add(
             'notice',

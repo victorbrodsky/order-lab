@@ -910,44 +910,101 @@ class OrderUtil {
     }
 
 
-    public function removeStain( $stain ) {
+    public function removeAllOrdersPatients() {
 
         $em = $this->em;
 
         //find slides using this stain: slide(1)->(n)stain(n)->(1)stainList
-        //$stains = $this->em->getRepository('OlegOrderformBundle:Stain')->findAll();
-        $repository = $em->getRepository('OlegOrderformBundle:Message');
-        $dql =  $repository->createQueryBuilder("message");
-        $dql->select('message');
-        $dql->leftJoin("message.slide","slide");
-        $dql->leftJoin("slide.stain","stain");
-        $dql->leftJoin("stain.field","stainList");
-        $dql->where('stainList.id = :stainid');
+//        $repository = $em->getRepository('OlegOrderformBundle:Message');
+//        $dql =  $repository->createQueryBuilder("message");
+//        $dql->select('message');
+//        $dql->leftJoin("message.slide","slide");
+//        $dql->leftJoin("slide.stain","stain");
+//        $dql->leftJoin("stain.field","stainList");
+//        $dql->where('stainList.id = :stainid');
+//        $query = $em->createQuery($dql)->setParameter('stainid', $stain->getId());
+//        $messages = $query->getResult();
 
-        $query = $em->createQuery($dql)->setParameter('stainid', $stain->getId());
+        if(1) {
+            $patientTypes = $this->em->getRepository('OlegOrderformBundle:PatientType')->findAll();
+            foreach( $patientTypes as $patientType ) {
+                $em->remove($patientType);
+            }
+            $em->flush();
+        }
 
-        $messages = $query->getResult();
+        $messages = $this->em->getRepository('OlegOrderformBundle:Message')->findAll();
 
         foreach( $messages as $message ) {
 
-            foreach( $message->getPatient() as $item ) {
-                $em->remove($item);
+            foreach( $message->getPatient() as $patient ) {
+
+                foreach( $patient->getDeceased() as $item ) {
+                    //$patient->removeDeceased($item);
+                    $em->remove($item);
+                }
+
+                foreach( $patient->getRace() as $item ) {
+                    //$patient->removeRace($item);
+                    $em->remove($item);
+                }
+
+                foreach( $patient->getType() as $patientType ) {
+
+//                    $patientType->setProvider(null);
+//                    $patientType->setSource(null);
+//                    $patientType->setMessage(null);
+//                    $patientType->setPatient(null);
+//                    $patientType->setField(null);
+
+                    //foreach( $patientType->getSources() as $item ) {
+                        //$em->remove($item);
+                    //}
+
+                    $patient->removeType($patientType);
+                    $em->remove($patientType);
+                }
+
+                $em->remove($patient);
             }
 
-            foreach( $message->getEncounter() as $item ) {
-                $em->remove($item);
+            foreach( $message->getEncounter() as $encounter ) {
+
+                foreach( $encounter->getInpatientinfo() as $item ) {
+                    //$encounter->removeInpatientinfo($item);
+                    $em->remove($item);
+                }
+
+                foreach( $encounter->getLocation() as $item ) {
+                    //$encounter->removeLocation($item);
+                    $em->remove($item);
+                }
+
+                $em->remove($encounter);
             }
 
-            foreach( $message->getProcedure() as $item ) {
-                $em->remove($item);
+            foreach( $message->getProcedure() as $procedure ) {
+
+                foreach( $procedure->getLocation() as $item ) {
+                    //$procedure->removeLocation($item);
+                    $em->remove($item);
+                }
+
+                $em->remove($procedure);
             }
 
             foreach( $message->getAccession() as $item ) {
                 $em->remove($item);
             }
 
-            foreach( $message->getPart() as $item ) {
-                $em->remove($item);
+            foreach( $message->getPart() as $part ) {
+
+                foreach( $part->getDiseaseType() as $item ) {
+                    //$part->removeDiseaseType($item);
+                    $em->remove($item);
+                }
+
+                $em->remove($part);
             }
 
             foreach( $message->getBlock() as $item ) {
@@ -957,14 +1014,19 @@ class OrderUtil {
             foreach( $message->getSlide() as $slide ) {
 
                 foreach( $slide->getStain() as $stain ) {
+                    //$slide->removeStain($stain);
+                    //$stain->setSlide(null);
                     $em->remove($stain);
                 }
 
                 foreach( $slide->getScan() as $scan ) {
+                    //$slide->removeScan($scan);
                     $em->remove($scan);
                 }
 
                 foreach( $slide->getRelevantscan() as $relevantscan ) {
+                    //$slide->removeRelevantscan($relevantscan);
+                    //$relevantscan->setSlide(null);
                     $em->remove($relevantscan);
                 }
 
@@ -974,10 +1036,52 @@ class OrderUtil {
 
 
             $em->remove($message);
-        }
+        } //message
 
         //$em->remove($stain);
         $em->flush();
+
+        return count($messages);
     }
+
+    public function removeAllStains() {
+
+        $em = $this->em;
+        $stains = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+
+        $count = 0;
+
+        foreach( $stains as $stain ) {
+            //echo "stain=".$stain->getId()." ".$stain."<br>";
+            //$em->persist($stain);
+
+//            $original = $stain->getOriginal();
+//            if( $original ) {
+//                echo "original stain=".$original."<br>";
+//                $em->persist($original);
+//                $original->removeSynonym($stain);
+//                $stain->setOriginal(null);
+//                //$em->remove($original);
+//                //$em->flush();
+//            }
+//
+//            foreach( $stain->getSynonyms() as $synonim ) {
+//                $stain->removeSynonym($synonim);
+//                $synonim->setOriginal(null);
+//                $stain->setOriginal(null);
+//                $em->persist($synonim);
+//                $em->remove($synonim);
+//            }
+
+            $em->remove($stain);
+            //$em->flush($stain);
+
+            $count++;
+        }
+        $em->flush();
+
+        return $count;
+    }
+
 
 }
