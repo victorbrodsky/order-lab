@@ -26,7 +26,7 @@ class StainList extends ListAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="StainList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
 
