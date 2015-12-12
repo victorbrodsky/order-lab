@@ -7,7 +7,7 @@
  */
 
 var _idleAfter = 0; //in seconds
-var _ajaxTimeout = 20000;  //15000 => 15 sec
+var _ajaxTimeout = 60000;  //15000 => 15 sec
 var _maxIdleTime = $("#maxIdleTime").val(); //in seconds
 var _siteEmail = $("#siteEmail").val();
 //var _serverActive = false;
