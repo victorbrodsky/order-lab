@@ -87,9 +87,8 @@ class ScanUtilController extends UtilController {
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:StainList', 'list')
             ->select("list.id as id, list.fulltitle as text")
-            //->select("list")
-            //->leftJoin("list.synonyms","synonyms")
-            //->where("list.type = 'default' OR list.creator = ".$user." ".$addwhere)
+            ->leftJoin("list.original","original")
+            ->where("original IS NULL")
             ->groupBy("list")
 //            ->groupBy("list.id")
 //            ->addGroupBy("list.orderinlist")
@@ -98,7 +97,7 @@ class ScanUtilController extends UtilController {
 
         if( $opt ) {
             $user = $this->get('security.context')->getToken()->getUser();
-            $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+            $query->andWhere("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
         }
 
         //echo "query=".$query." ";
