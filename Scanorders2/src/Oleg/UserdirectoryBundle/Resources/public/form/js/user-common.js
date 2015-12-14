@@ -117,7 +117,8 @@ function specificRegularCombobox( comboboxEl ) {
         dropdownAutoWidth: true,
         placeholder: "Select an option",
         allowClear: true,
-        selectOnBlur: false
+        selectOnBlur: false,
+        matcher: select2Matcher
         //containerCssClass: 'combobox-width'
     });
 
@@ -225,8 +226,11 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         //if( term.match(/^[0-9]+$/) != null ) {
         //    //console.log("term is digit");
         //}
+        //console.log("term="+term);
         return {id:term, text:term};
     };
+
+
 
     if( $(target).hasClass('combobox-without-add') ) {
         createSearchChoice = null;
@@ -245,13 +249,22 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         quietMillis: 100,
         multiple: multiple,
         data: data,
-        createSearchChoice:createSearchChoice
+        createSearchChoice: createSearchChoice,
+        matcher: select2Matcher
     });
 
     if( $(target).attr("readonly") ) {
         $(this).select2("readonly", true);
     }
 
+}
+
+var select2Matcher = function(term, text, opt) {
+    //console.log("term="+term);
+    //console.log("text="+text);
+    var textStr = text.toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+    var termStr = term.toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+    return textStr.indexOf(termStr)>=0;
 }
 
 var filterDisabledOptions = function(data,target) {
