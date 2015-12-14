@@ -150,11 +150,11 @@ class PerSiteSettingsType extends AbstractType
             if( $title ) {
                 $institution = $title->getDefaultInstitution();
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution);
                 }
             }
 			if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null);
             }						
 
             $form->add('defaultInstitution', 'employees_custom_selector', array(

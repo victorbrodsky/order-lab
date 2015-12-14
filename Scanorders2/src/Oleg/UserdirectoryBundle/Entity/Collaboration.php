@@ -34,6 +34,12 @@ class Collaboration extends ListAbstract
      */
     private $institutions;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="CollaborationTypeList")
+     * @ORM\JoinColumn(name="collaborationType_id", referencedColumnName="id", nullable=true)
+     */
+    private $collaborationType;
+
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
@@ -57,5 +63,23 @@ class Collaboration extends ListAbstract
     {
         return $this->institutions;
     }
+
+    /**
+     * @param mixed $collaborationType
+     */
+    public function setCollaborationType($collaborationType)
+    {
+        $this->collaborationType = $collaborationType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollaborationType()
+    {
+        return $this->collaborationType;
+    }
+
+
 
 }

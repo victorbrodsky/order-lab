@@ -81,7 +81,8 @@ class TreeRepository extends NestedTreeRepository {
     }
 
     //check collaboration with given node
-    public function findCollaborationsByNode( $node ) {
+    //$collaborationTypesStrArr: array("Bidirectional", "Unidirectional Trusted")
+    public function findCollaborationsByNode( $node, $collaborationTypesStrArr = null ) {
 
         $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
         $dql = $repository->createQueryBuilder("collaboration");
@@ -95,6 +96,16 @@ class TreeRepository extends NestedTreeRepository {
         $criteriastr .= "institutions.rgt > " . $node->getRgt();
         $criteriastr .= " OR ";
         $criteriastr .= "institutions.id = " . $node->getId();
+
+        if( $collaborationTypesStrArr && count($collaborationTypesStrArr) > 0 ) {
+            $dql->leftJoin("collaboration.collaborationType","collaborationType");
+            $collaborationTypeCriterionArr = array();
+            foreach( $collaborationTypesStrArr as $collaborationTypesStr ) {
+                $collaborationTypeCriterionArr[] = "collaborationType.name = '" . $collaborationTypesStr . "'";
+            }
+
+            $criteriastr .= " AND " . implode( " OR ", $collaborationTypeCriterionArr );
+        }
 
         //echo "criteriastr=".$criteriastr."<br>";
 

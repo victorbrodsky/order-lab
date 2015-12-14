@@ -332,6 +332,8 @@ class SlideReturnRequestController extends Controller
         $securityUtil = $this->get('order_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
+        $permittedInst = $orderUtil->addPhiScopeInstitutions($permittedInst,$message);
+
         $orderUtil = $this->get('scanorder_utility');
 
         $params['em'] = $this->getDoctrine()->getManager();

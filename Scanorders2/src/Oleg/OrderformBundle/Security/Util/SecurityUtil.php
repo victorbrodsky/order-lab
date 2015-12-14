@@ -18,12 +18,45 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 
+
+// Note for institution permissions:
+
+//OrderUtil.php
+// addInstitutionQueryCriterion($user,$criteriastr)
+//  -> getInstitutionQueryCriterion($user) {
+//     1) User's PermittedInstitutions
+//        $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
+//     2) Collaboration check
+//        $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode($permittedInstitution);
+//        foreach( $collaborations as $collaboration ) {
+//          foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
+//          }
+//        }
+
+//SecurityUtil.php
+// hasUserPermission( $entity, $user )
+//  -> getUserPermittedInstitutions($user) {
+//    1) check if the user belongs to the same institution
+//        $permittedInstitutions = $this->getUserPermittedInstitutions($user);
+//    2) Check for collaboration
+//        $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode($permittedInstitution);
+//        foreach( $collaborations as $collaboration ) {
+//            foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
+//                if(getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($collaborationInstitution,$entity->getInstitution()) ) {
+//                    $hasCollaborationInst = true;
+//                    break;
+//                }
+//            }
+//        }
+
+
 class SecurityUtil extends UserSecurityUtil {
 
     //user has permission to perform the view/edit the valid field, created by someone else, if he/she is submitter or ROLE_SCANORDER_PROCESSOR or service chief or division chief
     //Added 25Nov2015: If user A submits a scan order with WCMC as the Institutional PHI Scope in Order Info and user B belongs to the institution NYP,
     // they can not see each other's orders/patient data/etc.
     //$entity is object: message or patient, accession, part ...
+    //Used by: CheckController (check button on patient hierarchy), MultiScanOrderController (show patient hierarchy in the order)
     public function hasUserPermission( $entity, $user ) {
         //echo "hasUserPermission <br>";
         if( $entity == null ) {
@@ -83,7 +116,7 @@ class SecurityUtil extends UserSecurityUtil {
                     //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
                     foreach( $permittedInstitutions as $permittedInstitution ) {
                         if( $hasCollaborationInst == false ) {
-                            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution );
+                            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution, array("Bidirectional") );
                             foreach( $collaborations as $collaboration ) {
                                 if( $hasCollaborationInst == false ) {
                                     foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {

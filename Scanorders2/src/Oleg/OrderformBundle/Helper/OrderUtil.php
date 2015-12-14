@@ -552,7 +552,7 @@ class OrderUtil {
             //1) find collaboration for each user's permitted institution
             //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
             foreach( $permittedInstitutions as $permittedInstitution ) {
-                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution );
+                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution, array("Bidirectional") );
                 foreach( $collaborations as $collaboration ) {
                     foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
                         if( $instStr != "" ) {
@@ -1084,5 +1084,35 @@ class OrderUtil {
         return $count;
     }
 
+    public function addPhiScopeInstitutions( $permittedInstitutions, $message ) {
+        //include collaboration (any type) institutions by user
+        //permittedInstitutionalPHIScope - institutions
+        foreach( $permittedInstitutions as $permittedInstitution ) {
+            //echo "permittedInstitution=".$permittedInstitution."<br>";
+            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution, null );
+            foreach( $collaborations as $collaboration ) {
+                foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
+                    //echo "collaboration inst=".$collaboration->getInstitutions()->getName()."<br>";
+                    if( $collaborationInstitution && !$permittedInstitutions->contains($collaborationInstitution) ) {
+                        $permittedInstitutions->add($collaborationInstitution);
+                    }
+                }
+            }
+        }//foreach
+
+        //include current message institution to the $permittedInstitutions
+        $permittedInstitutions = $this->addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message);
+
+        return $permittedInstitutions;
+    }
+
+    public function addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message) {
+        //include current message institution to the $permittedInstitutions
+        if( $message->getInstitution() && !$permittedInstitutions->contains($message->getInstitution()) ) {
+            $permittedInstitutions->add($message->getInstitution());
+        }
+
+        return $permittedInstitutions;
+    }
 
 }

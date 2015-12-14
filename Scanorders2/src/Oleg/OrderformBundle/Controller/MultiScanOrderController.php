@@ -109,13 +109,16 @@ class MultiScanOrderController extends Controller {
 
         //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 
+        $orderUtil = $this->get('scanorder_utility');
+        $permittedInstitutions = $orderUtil->addPhiScopeInstitutions($permittedInstitutions,$entity);
+
         $params = array(
             'type'=>$type,  //category
             'cycle'=>'create',
             'user'=>$user,
             'em' => $em,
             'serviceContainer' => $this->container,
-            'institutions'=>$permittedInstitutions,
+            'institutions' => $permittedInstitutions,
             //'scanOrderInstitutionScope'=>$scanOrderInstitutionScope,
             'datastructure'=>$this->datastructure
         );
@@ -437,6 +440,8 @@ class MultiScanOrderController extends Controller {
         //set Institutional PHI Scope
         $entity->setInstitution($permittedInstitutions->first());
 
+        $permittedInstitutions = $orderUtil->addPhiScopeInstitutions($permittedInstitutions,$entity);
+
         //set default department and division
         //TODO: implement it
 //        $defaultsDepDiv = $securityUtil->getDefaultDepartmentDivision($entity,$userSiteSettings);
@@ -447,7 +452,7 @@ class MultiScanOrderController extends Controller {
         $params = array(
             'type'=>$type,
             'cycle'=>'new',
-            'institutions'=>$permittedInstitutions,
+            'institutions' => $permittedInstitutions,
             //'scanOrderInstitutionScope'=>$scanOrderInstitutionScope,
             'user'=>$user,
             'em' => $em,
@@ -758,9 +763,10 @@ class MultiScanOrderController extends Controller {
         }
 
         //include current message institution to the $permittedInstitutions
-        if( $entity->getInstitution() && !$permittedInstitutions->contains($entity->getInstitution()) ) {
-            $permittedInstitutions->add($entity->getInstitution());
-        }
+//        if( $entity->getInstitution() && !$permittedInstitutions->contains($entity->getInstitution()) ) {
+//            $permittedInstitutions->add($entity->getInstitution());
+//        }
+        $permittedInstitutions = $orderUtil->addPhiScopeInstitutions($permittedInstitutions,$entity);
 
         //echo "route=".$routeName.", type=".$type."<br>";
 
