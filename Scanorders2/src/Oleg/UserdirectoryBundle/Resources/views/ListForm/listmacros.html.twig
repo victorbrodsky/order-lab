@@ -23,6 +23,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Institutions', 'institutions.name') }}</th>
             {% endif %}
 
+            {% if entities|first.collaborationType is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Collaboration Type', 'collaborationType.name') }}</th>
+            {% endif %}
+
             {% if entities|first.level is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Level', 'ent.level') }}</th>
             {% endif %}
@@ -508,6 +512,10 @@
 
     {% if form.institutions is defined %}
         {{ formmacros.field(form.institutions) }}
+    {% endif %}
+
+    {% if form.collaborationType is defined %}
+        {{ formmacros.field(form.collaborationType) }}
     {% endif %}
 
     {% if form.root is defined %}

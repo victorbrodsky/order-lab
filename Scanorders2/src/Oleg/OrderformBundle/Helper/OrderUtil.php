@@ -552,7 +552,7 @@ class OrderUtil {
             //1) find collaboration for each user's permitted institution
             //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
             foreach( $permittedInstitutions as $permittedInstitution ) {
-                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution, array("Bidirectional") );
+                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution, array("Union") );
                 foreach( $collaborations as $collaboration ) {
                     foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
                         if( $instStr != "" ) {

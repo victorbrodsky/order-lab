@@ -181,6 +181,27 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( method_exists($this->params['entity'],'getCollaborationType') ) {
+            //echo "add institutions <br>";
+            $builder->add( 'collaborationType', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:CollaborationTypeList',
+                'property' => 'name',
+                'label'=>'Collaboration Type:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
+            ));
+        }
+
         //tree: add group title
         if( method_exists($this->params['entity'],'getOrganizationalGroupType') ) {
             $builder->add('organizationalGroupType',null,array(

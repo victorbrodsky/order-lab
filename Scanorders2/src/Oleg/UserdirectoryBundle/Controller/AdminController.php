@@ -9,6 +9,7 @@ use Oleg\FellAppBundle\Entity\LanguageProficiency;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use Oleg\UserdirectoryBundle\Entity\CityList;
+use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
 use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
 use Oleg\UserdirectoryBundle\Entity\ImportanceList;
 use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
@@ -231,6 +232,7 @@ class AdminController extends Controller
         $count_FellAppRank = $this->generateFellAppRank();
         $count_LanguageProficiency = $this->generateLanguageProficiency();
 
+        $collaborationtypes = $this->generateCollaborationtypes();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -286,7 +288,8 @@ class AdminController extends Controller
             'Training Types='.$count_TrainingTypeList.', '.
             'FellApp Statuses='.$count_FellAppStatus.', '.
             'FellApp Ranks='.$count_FellAppRank.', '.
-            'Language Proficiency='.$count_LanguageProficiency.' '.
+            'Language Proficiency='.$count_LanguageProficiency.', '.
+            'Collaboration Types='.$collaborationtypes.' '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -3641,6 +3644,49 @@ class AdminController extends Controller
 
     }
 
+    public function generateCollaborationtypes() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+//        "Menu Search Action" - "Search patients data and orders within collaboration institutions on the top search"
+//        "Check Button Retrieve Action" - "Retrieve patients data within collaboration institutions on the check button click"
+//        "View Action" - "View patient data on check button pressed in order form and view orders within collaboration institutions"
+//        "Submit Action" - "Submit orders for collaboration institution"
+
+        $elements = array(
+            "Union" => 'Bidirectional collaboration: Users withini this type of collaboration have full access to the patient data.'.
+                       'Supported actions: "Menu Search Action", "Check Button Retrieve Action", "View Action", "Submit Action""',
+            "Intersection" => 'Unidirectional trusted collaboration: Users withini this type of collaboration can view and submit new orders in the same way as bidirectional collaboration.'.
+                              'Supported actions: "Check Button Retrieve Action", "View Action", "Submit Action"',
+            "Untrusted Intersection" => 'Unidirectional untrusted: Supported actions: "Submit Action".'.
+                                        'If the user enters an existing MRN number and click check button it will retrieve empty data, so the user can enter a new data which will marked as "invalid".'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name => $description ) {
+
+            $entity = new CollaborationTypeList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $entity->setDescription($description);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
     ////////////////// Employee Tree Util //////////////////////
     /**

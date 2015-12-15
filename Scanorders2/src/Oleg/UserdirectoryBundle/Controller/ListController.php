@@ -86,6 +86,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-ranks/", name="fellappranks-list")
      * @Route("/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency-list")
      * @Route("/collaborations/", name="collaborations-list")
+     * @Route("/collaboration-types/", name="collaborationtypes-list")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -162,6 +163,11 @@ class ListController extends Controller
         if( method_exists($entityClass,'getInstitutions') ) {
             $dql->leftJoin("ent.institutions", "institutions");
             $dql->addGroupBy('institutions');
+        }
+
+        if( method_exists($entityClass,'getCollaborationType') ) {
+            $dql->leftJoin("ent.collaborationType", "collaborationType");
+            $dql->addGroupBy('collaborationType');
         }
 
         //$dql->orderBy("ent.createdate","DESC");
@@ -269,6 +275,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-ranks/", name="fellappranks_create")
      * @Route("/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency_create")
      * @Route("/collaborations/", name="collaborations_create")
+     * @Route("/collaboration-types/", name="collaborationtypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -416,6 +423,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-ranks/new", name="fellappranks_new")
      * @Route("/fellowship-application-language-proficiencies/new", name="fellapplanguageproficiency_new")
      * @Route("/collaborations/new", name="collaborations_new")
+     * @Route("/collaboration-types/new", name="collaborationtypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -534,6 +542,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_show")
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_show")
      * @Route("/collaborations/{id}", name="collaborations_show")
+     * @Route("/collaboration-types/{id}", name="collaborationtypes_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -642,6 +651,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-ranks/{id}/edit", name="fellappranks_edit")
      * @Route("/fellowship-application-language-proficiencies/{id}/edit", name="fellapplanguageproficiency_edit")
      * @Route("/collaborations/{id}/edit", name="collaborations_edit")
+     * @Route("/collaboration-types/{id}/edit", name="collaborationtypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -782,6 +792,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_update")
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_update")
      * @Route("/collaborations/{id}", name="collaborations_update")
+     * @Route("/collaboration-types/{id}", name="collaborationtypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1182,6 +1193,10 @@ class ListController extends Controller
                 $className = "Collaboration";
                 $displayName = "Collaborations";
                 break;
+            case "collaborationtypes":
+                $className = "CollaborationTypeList";
+                $displayName = "Collaboration Types";
+                break;
 
 
             default:
@@ -1276,6 +1291,7 @@ class ListController extends Controller
      * @Route("/fellowship-application-ranks/{id}", name="fellappranks_delete")
      * @Route("/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_delete")
      * @Route("/collaborations/{id}", name="collaborations_delete")
+     * @Route("/collaboration-types/{id}", name="collaborationtypes_delete")
      *
      *
      * @Method("DELETE")
