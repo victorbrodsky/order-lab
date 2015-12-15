@@ -435,7 +435,7 @@ class ScanAdminController extends AdminController
 
         $em = $this->getDoctrine()->getManager();
 
-        $inputFileName = __DIR__ . '/../Resources/Stains.xlsx';
+        $inputFileName = __DIR__ . '/../Resources/Stains.xlsm';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -455,9 +455,10 @@ class ScanAdminController extends AdminController
         //ID	Name	                Short Name	Abbreviation	Description	Original	Synonyms	Type	 Display Order	///Creator	Creation Date	Updated By	Updated On
         //1 	Hematoxylin and Eosin		            H&E				                                default	   10	        ///oli2002 (WCMC CWID) - Oleg Ivanov	42,256.68	hat9010 (WCMC CWID) - Hamilton Tsang	42,342.79
 
+        $firstRowWithData = 5; //2
 
         //for each row in excel
-        for( $row = 2; $row <= $highestRow; $row++ ){
+        for( $row = $firstRowWithData; $row <= $highestRow; $row++ ) {
 
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -476,8 +477,9 @@ class ScanAdminController extends AdminController
             $stainDescription = trim($rowData[0][4]);
             //Original 5
             $synonym = trim($rowData[0][6]);
-            $type = trim($rowData[0][7]);
-            $order = trim($rowData[0][8]);
+            //CoPath Name 7
+            $type = trim($rowData[0][8]);
+            $order = trim($rowData[0][9]);
 
             //echo "stainId=".$stainId."<br>";
             //echo "stainName=".$stainName."<br>";
@@ -548,6 +550,9 @@ class ScanAdminController extends AdminController
                 $entity->addSynonym($synonymEntity);
                 //echo $entity.": add synonym=".$synonymEntity."<br>";
             }
+
+            //Create full title according to name, abbreviation, short name and synonyms
+            $entity->createFullTitle();
 
             //echo "Update stain=".$entity."<br>";
             //exit();
