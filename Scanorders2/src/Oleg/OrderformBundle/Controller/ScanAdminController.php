@@ -435,7 +435,7 @@ class ScanAdminController extends AdminController
 
         $em = $this->getDoctrine()->getManager();
 
-        $inputFileName = __DIR__ . '/../Resources/Stains.xlsx';
+        $inputFileName = __DIR__ . '/../Resources/Stains.xlsm';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -478,8 +478,8 @@ class ScanAdminController extends AdminController
             //Original 5
             $synonym = trim($rowData[0][6]);
             //CoPath Name 7
-            $type = trim($rowData[0][7]);
-            $order = trim($rowData[0][8]);
+            $type = trim($rowData[0][8]);
+            $order = trim($rowData[0][9]);
 
 //            echo "stainId=".$stainId."<br>";
 //            echo "stainName=".$stainName."<br>";
