@@ -435,7 +435,7 @@ class ScanAdminController extends AdminController
 
         $em = $this->getDoctrine()->getManager();
 
-        $inputFileName = __DIR__ . '/../Resources/Stains.xlsm';
+        $inputFileName = __DIR__ . '/../Resources/Stains.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -455,7 +455,7 @@ class ScanAdminController extends AdminController
         //ID	Name	                Short Name	Abbreviation	Description	Original	Synonyms	Type	 Display Order	///Creator	Creation Date	Updated By	Updated On
         //1 	Hematoxylin and Eosin		            H&E				                                default	   10	        ///oli2002 (WCMC CWID) - Oleg Ivanov	42,256.68	hat9010 (WCMC CWID) - Hamilton Tsang	42,342.79
 
-        $firstRowWithData = 5; //2
+        $firstRowWithData = 2; //2
 
         //for each row in excel
         for( $row = $firstRowWithData; $row <= $highestRow; $row++ ) {
@@ -486,6 +486,11 @@ class ScanAdminController extends AdminController
             //echo "synonym=".$synonym."<br>";
             //echo "order=".$order."<br>";
             //exit('import stains');
+
+            if( !$order || ($order && !is_int($order)) ) {
+                //echo "Don't update (display order exists but it's not an integer): order=".$order." !!!!!!!!!!!!!!!<br>";
+                continue;
+            }
 
             if( $type == 'disabled' ) {
                 //echo "Don't update: type=".$type." !!!!!!!!!!!!!!!<br>";
