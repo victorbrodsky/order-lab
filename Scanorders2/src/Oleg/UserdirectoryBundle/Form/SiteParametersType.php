@@ -171,6 +171,18 @@ class SiteParametersType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'LISName' )
+            $builder->add('LISName',null,array(
+                'label'=>'LIS Name:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'LISVersion' )
+            $builder->add('LISVersion',null,array(
+                'label'=>'LIS Version:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         //Aperio DB
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerAddress' )
         $builder->add('aperioeSlideManagerDBServerAddress',null,array(

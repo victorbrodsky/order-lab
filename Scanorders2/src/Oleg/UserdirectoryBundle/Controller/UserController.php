@@ -2916,12 +2916,14 @@ class UserController extends Controller
 //        }
 //        exit();
         //preferences: showToRoles
-        foreach( $subjectuser->getPreferences()->getShowToRoles() as $subentity ) {
-            $changeset = $uow->getEntityChangeSet($subentity);
-            //echo "role=".$subentity."<br>";
-            //exit();
-            $text = "("."Show To Roles ".$subentity.")";
-            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        if( $subjectuser->getPreferences()->getShowToRoles() && count($subjectuser->getPreferences()->getShowToRoles()) > 0 ) {
+            foreach( $subjectuser->getPreferences()->getShowToRoles() as $subentity ) {
+                $changeset = $uow->getEntityChangeSet($subentity);
+                //echo "role=".$subentity."<br>";
+                //exit();
+                $text = "("."Show To Roles ".$subentity.")";
+                $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+            }
         }
 
         //log credentials

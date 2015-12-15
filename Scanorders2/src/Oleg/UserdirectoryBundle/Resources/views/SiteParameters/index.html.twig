@@ -177,6 +177,16 @@
                 <td>{{ entity.coPathDBName }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBName'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>LIS Name</td>
+                <td>{{ entity.LISName }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'LISName'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LIS Version</td>
+                <td>{{ entity.LISVersion }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'LISVersion'}) }}">Edit</a></td>
+            </tr>
 
             {#Aperio#}
             <tr>

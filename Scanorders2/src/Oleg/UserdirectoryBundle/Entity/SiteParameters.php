@@ -135,6 +135,16 @@ class SiteParameters {
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    private $LISName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $LISVersion;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     private $aperioeSlideManagerDBServerAddress;
 
     /**
@@ -561,6 +571,40 @@ class SiteParameters {
     {
         return $this->coPathDBServerPort;
     }
+
+    /**
+     * @param mixed $LISName
+     */
+    public function setLISName($LISName)
+    {
+        $this->LISName = $LISName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLISName()
+    {
+        return $this->LISName;
+    }
+
+    /**
+     * @param mixed $LISVersion
+     */
+    public function setLISVersion($LISVersion)
+    {
+        $this->LISVersion = $LISVersion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLISVersion()
+    {
+        return $this->LISVersion;
+    }
+
+
 
     /**
      * @param mixed $dbDatabaseName

@@ -113,6 +113,12 @@
                     </td>
                 {% endif %}
 
+                {% if entity.collaborationType is defined %}
+                    <td>
+                        {{ entity.collaborationType }}
+                    </td>
+                {% endif %}
+
                 {% if entity.level is defined %}
                     <td>
                         {{ entity.level }}
