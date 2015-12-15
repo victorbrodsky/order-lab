@@ -478,17 +478,23 @@ class ScanAdminController extends AdminController
             //Original 5
             $synonym = trim($rowData[0][6]);
             //CoPath Name 7
-            $type = trim($rowData[0][8]);
-            $order = trim($rowData[0][9]);
+            $type = trim($rowData[0][7]);
+            $order = trim($rowData[0][8]);
 
-            //echo "stainId=".$stainId."<br>";
-            //echo "stainName=".$stainName."<br>";
-            //echo "synonym=".$synonym."<br>";
-            //echo "order=".$order."<br>";
+//            echo "stainId=".$stainId."<br>";
+//            echo "stainName=".$stainName."<br>";
+//            echo "synonym=".$synonym."<br>";
+//            echo "type=".$type."<br>";
+//            echo "order=".$order."<br>";
             //exit('import stains');
 
-            if( !$order || ($order && !is_int($order)) ) {
-                //echo "Don't update (display order exists but it's not an integer): order=".$order." !!!!!!!!!!!!!!!<br>";
+            if( !$order ) {
+                //echo "Don't update (display order does not exists): order=".$order."<br>";
+                continue;
+            }
+
+            if( $order && !is_numeric($order) ) {
+                //echo "Don't update (display order is not an integer): order=".$order." ???!!!<br>";
                 continue;
             }
 
