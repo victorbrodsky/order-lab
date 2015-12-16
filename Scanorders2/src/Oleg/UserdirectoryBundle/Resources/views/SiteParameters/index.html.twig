@@ -147,9 +147,10 @@
             </tr>
 
             {#CoPath#}
+            {#Production#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>CoPath DB:</h3>
+                    <h3>CoPath DB (Live AP LIS Environment):</h3>
                 </td>
             </tr>
             <tr>
@@ -186,6 +187,88 @@
                 <td>LIS Version</td>
                 <td>{{ entity.LISVersion }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'LISVersion'}) }}">Edit</a></td>
+            </tr>
+            {#Test#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>CoPath DB (Test AP LIS Environment):</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Address</td>
+                <td>{{ entity.coPathDBServerAddressTest }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBServerAddressTest'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Port</td>
+                <td>{{ entity.coPathDBServerPortTest }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBServerPortTest'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Account User Name</td>
+                <td>{{ entity.coPathDBAccountUserNameTest }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBAccountUserNameTest'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Account Password</td>
+                <td>{{ entity.coPathDBAccountPasswordTest }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBAccountPasswordTest'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath Database Name</td>
+                <td>{{ entity.coPathDBNameTest }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBNameTest'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LIS Name</td>
+                <td>{{ entity.LISNameTest }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'LISNameTest'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LIS Version</td>
+                <td>{{ entity.LISVersionTest }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'LISVersionTest'}) }}">Edit</a></td>
+            </tr>
+            {#Development#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>CoPath DB (Development AP LIS Environment):</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Address</td>
+                <td>{{ entity.coPathDBServerAddressDevelopment }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBServerAddressDevelopment'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Port</td>
+                <td>{{ entity.coPathDBServerPortDevelopment }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBServerPortDevelopment'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Account User Name</td>
+                <td>{{ entity.coPathDBAccountUserNameDevelopment }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBAccountUserNameDevelopment'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Account Password</td>
+                <td>{{ entity.coPathDBAccountPasswordDevelopment }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBAccountPasswordDevelopment'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath Database Name</td>
+                <td>{{ entity.coPathDBNameDevelopment }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBNameDevelopment'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LIS Name</td>
+                <td>{{ entity.LISNameDevelopment }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'LISNameDevelopment'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LIS Version</td>
+                <td>{{ entity.LISVersionDevelopment }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'LISVersionDevelopment'}) }}">Edit</a></td>
             </tr>
 
             {#Aperio#}

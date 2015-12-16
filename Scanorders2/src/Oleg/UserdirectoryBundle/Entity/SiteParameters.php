@@ -110,41 +110,6 @@ class SiteParameters {
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $coPathDBServerAddress;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $coPathDBServerPort;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $coPathDBAccountUserName;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $coPathDBAccountPassword;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $coPathDBName;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $LISName;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $LISVersion;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
     private $aperioeSlideManagerDBServerAddress;
 
     /**
@@ -289,7 +254,117 @@ class SiteParameters {
      */
     private $confirmationEmailFellApp;
     
-    
+
+    // Co-Path //
+    //Production
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBServerAddress;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBServerPort;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBAccountUserName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBAccountPassword;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $LISName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $LISVersion;
+
+
+    //Testing
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBServerAddressTest;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBServerPortTest;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBAccountUserNameTest;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBAccountPasswordTest;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBNameTest;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $LISNameTest;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $LISVersionTest;
+
+
+    //Development
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBServerAddressDevelopment;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBServerPortDevelopment;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBAccountUserNameDevelopment;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBAccountPasswordDevelopment;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $coPathDBNameDevelopment;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $LISNameDevelopment;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $LISVersionDevelopment;
     
 
     /**
@@ -1152,6 +1227,230 @@ class SiteParameters {
 
     public function setConfirmationEmailFellApp($confirmationEmailFellApp) {
         $this->confirmationEmailFellApp = $confirmationEmailFellApp;
+    }
+
+    /**
+     * @param mixed $LISNameDevelopment
+     */
+    public function setLISNameDevelopment($LISNameDevelopment)
+    {
+        $this->LISNameDevelopment = $LISNameDevelopment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLISNameDevelopment()
+    {
+        return $this->LISNameDevelopment;
+    }
+
+    /**
+     * @param mixed $LISNameTest
+     */
+    public function setLISNameTest($LISNameTest)
+    {
+        $this->LISNameTest = $LISNameTest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLISNameTest()
+    {
+        return $this->LISNameTest;
+    }
+
+    /**
+     * @param mixed $LISVersionDevelopment
+     */
+    public function setLISVersionDevelopment($LISVersionDevelopment)
+    {
+        $this->LISVersionDevelopment = $LISVersionDevelopment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLISVersionDevelopment()
+    {
+        return $this->LISVersionDevelopment;
+    }
+
+    /**
+     * @param mixed $LISVersionTest
+     */
+    public function setLISVersionTest($LISVersionTest)
+    {
+        $this->LISVersionTest = $LISVersionTest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLISVersionTest()
+    {
+        return $this->LISVersionTest;
+    }
+
+    /**
+     * @param mixed $coPathDBAccountPasswordDevelopment
+     */
+    public function setCoPathDBAccountPasswordDevelopment($coPathDBAccountPasswordDevelopment)
+    {
+        $this->coPathDBAccountPasswordDevelopment = $coPathDBAccountPasswordDevelopment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBAccountPasswordDevelopment()
+    {
+        return $this->coPathDBAccountPasswordDevelopment;
+    }
+
+    /**
+     * @param mixed $coPathDBAccountPasswordTest
+     */
+    public function setCoPathDBAccountPasswordTest($coPathDBAccountPasswordTest)
+    {
+        $this->coPathDBAccountPasswordTest = $coPathDBAccountPasswordTest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBAccountPasswordTest()
+    {
+        return $this->coPathDBAccountPasswordTest;
+    }
+
+    /**
+     * @param mixed $coPathDBAccountUserNameDevelopment
+     */
+    public function setCoPathDBAccountUserNameDevelopment($coPathDBAccountUserNameDevelopment)
+    {
+        $this->coPathDBAccountUserNameDevelopment = $coPathDBAccountUserNameDevelopment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBAccountUserNameDevelopment()
+    {
+        return $this->coPathDBAccountUserNameDevelopment;
+    }
+
+    /**
+     * @param mixed $coPathDBAccountUserNameTest
+     */
+    public function setCoPathDBAccountUserNameTest($coPathDBAccountUserNameTest)
+    {
+        $this->coPathDBAccountUserNameTest = $coPathDBAccountUserNameTest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBAccountUserNameTest()
+    {
+        return $this->coPathDBAccountUserNameTest;
+    }
+
+    /**
+     * @param mixed $coPathDBNameDevelopment
+     */
+    public function setCoPathDBNameDevelopment($coPathDBNameDevelopment)
+    {
+        $this->coPathDBNameDevelopment = $coPathDBNameDevelopment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBNameDevelopment()
+    {
+        return $this->coPathDBNameDevelopment;
+    }
+
+    /**
+     * @param mixed $coPathDBNameTest
+     */
+    public function setCoPathDBNameTest($coPathDBNameTest)
+    {
+        $this->coPathDBNameTest = $coPathDBNameTest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBNameTest()
+    {
+        return $this->coPathDBNameTest;
+    }
+
+    /**
+     * @param mixed $coPathDBServerAddressDevelopment
+     */
+    public function setCoPathDBServerAddressDevelopment($coPathDBServerAddressDevelopment)
+    {
+        $this->coPathDBServerAddressDevelopment = $coPathDBServerAddressDevelopment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBServerAddressDevelopment()
+    {
+        return $this->coPathDBServerAddressDevelopment;
+    }
+
+    /**
+     * @param mixed $coPathDBServerAddressTest
+     */
+    public function setCoPathDBServerAddressTest($coPathDBServerAddressTest)
+    {
+        $this->coPathDBServerAddressTest = $coPathDBServerAddressTest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBServerAddressTest()
+    {
+        return $this->coPathDBServerAddressTest;
+    }
+
+    /**
+     * @param mixed $coPathDBServerPortDevelopment
+     */
+    public function setCoPathDBServerPortDevelopment($coPathDBServerPortDevelopment)
+    {
+        $this->coPathDBServerPortDevelopment = $coPathDBServerPortDevelopment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBServerPortDevelopment()
+    {
+        return $this->coPathDBServerPortDevelopment;
+    }
+
+    /**
+     * @param mixed $coPathDBServerPortTest
+     */
+    public function setCoPathDBServerPortTest($coPathDBServerPortTest)
+    {
+        $this->coPathDBServerPortTest = $coPathDBServerPortTest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoPathDBServerPortTest()
+    {
+        return $this->coPathDBServerPortTest;
     }
 
 
