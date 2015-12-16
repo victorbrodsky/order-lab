@@ -204,6 +204,7 @@ class SecurityUtil extends UserSecurityUtil {
     public function isUserAllowOrderActions( $order, $user, $actions=null ) {
 
         if( !$this->hasUserPermission( $order, $user ) ) {
+            //exit('has permission false');
             return false;
         }
 
@@ -264,6 +265,9 @@ class SecurityUtil extends UserSecurityUtil {
         }
 
         //At this point we have only regular users
+        //print_r($actions);
+
+        $actionAllowed = false;
 
         //for each action
         foreach( $actions as $action ) {
@@ -287,17 +291,19 @@ class SecurityUtil extends UserSecurityUtil {
 
             //show is allowed if the user belongs to the same service
             if( $action == 'show' ) {
-                //echo "action: show <br>";
-                $userServices = $userSiteSettings->getScanOrderInstitutionScope();
-                //if( $userServices->contains($orderInstitution) ) {
-                //    return true;
-                //}
-                foreach( $userServices as $userService ) {
-                    if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($userService, $orderInstitution) ) {
-                        return true;
-                    }
-                }
+                $actionAllowed = true;
+                //show action is allowed to all users which passed hasUserPermission and reached this point, so disable the code below.
+//                $userServices = $userSiteSettings->getScanOrderInstitutionScope();
+//                foreach( $userServices as $userService ) {
+//                    if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($userService, $orderInstitution) ) {
+//                        return true;
+//                    }
+//                }
             }
+        }
+
+        if( $actionAllowed ) {
+            return true;
         }
 
         //exit('is User Allow Order Actions: no permission');

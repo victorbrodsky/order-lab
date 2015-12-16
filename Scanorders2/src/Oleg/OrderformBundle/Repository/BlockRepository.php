@@ -138,6 +138,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
 
         //add institution conditions
+        //TODO: change institution hierarchy and add collaboration
         $instStr = "";
         if( $institutions && is_array($institutions) && count($institutions)>0 ) {
             $instStr = " AND (";
@@ -276,6 +277,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $name = $reflBlock->obtainNoprovidedKeyPrefix();
 
         //institution
+        //TODO: change institution hierarchy and add collaboration
         $inst = " AND p.institution=".$institution;
 
         $query = $this->getEntityManager()

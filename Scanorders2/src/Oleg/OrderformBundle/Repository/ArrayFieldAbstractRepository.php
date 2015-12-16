@@ -888,6 +888,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "extraStr=".$extraStr." ,onlyValid=".$onlyValid." <br> ";
 
         //add institution conditions
+        //TODO: change institution hierarchy and add collaboration
         $instStr = "";
         if( $institutions && is_array($institutions) && count($institutions)>0 ) {
             $instStr = " AND (";
@@ -1160,6 +1161,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $entity->setInstitution( $message->getInstitution() );
         }
 
+        //TODO: change institution hierarchy and add collaboration
         $inst = " AND c.institution=".$entity->getInstitution()->getId();
 
         $queryStr = 'SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.

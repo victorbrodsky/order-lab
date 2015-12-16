@@ -223,7 +223,7 @@ class SecurityController extends Controller
         //echo "pingCheck=".$session->get('pingCheck')."<br>";
 
         if( !$lastRequest ) {
-            $logger->notice("keepAliveAction: lastRequest is not set! Set lastRequest to ".time());
+            //$logger->notice("keepAliveAction: lastRequest is not set! Set lastRequest to ".time());
             $session->set('lastRequest',time());
             $lastRequest = $session->get('lastRequest');
         }
@@ -242,11 +242,11 @@ class SecurityController extends Controller
         //$this->logoutUser($event);
         //exit();
 
-        $logger->notice("keepAliveAction: lapse=".$lapse." > "."maxIdleTime=".$maxIdleTime);
+        //$logger->notice("keepAliveAction: lapse=".$lapse." > "."maxIdleTime=".$maxIdleTime);
 
         if( $lapse > $maxIdleTime ) {
             $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime) . "seconds.";
-            $logger->notice("keepAliveAction: ".$overlapseMsg);
+            //$logger->notice("keepAliveAction: ".$overlapseMsg);
             //echo $overlapseMsg."<br>";
             $response->setContent($overlapseMsg);
         } else {
@@ -324,8 +324,8 @@ class SecurityController extends Controller
         $session = $request->getSession();            
         $session->set('lastRequest',time());
 
-        $logger = $this->container->get('logger');
-        $logger->notice("setServerActiveAction: reset lastRequest");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("setServerActiveAction: reset lastRequest");
     
         $response->setContent('OK');
         return $response;
