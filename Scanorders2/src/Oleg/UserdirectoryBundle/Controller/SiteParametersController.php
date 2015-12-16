@@ -35,6 +35,10 @@ class SiteParametersController extends Controller
 
     public function indexParameters($request) {
 
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
@@ -94,6 +98,10 @@ class SiteParametersController extends Controller
 
     public function editParameters(Request $request,$id)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
         $param = trim( $request->get('param') );
 
         $routeName = $request->get('_route');
@@ -135,6 +143,11 @@ class SiteParametersController extends Controller
 
     public function updateParameters(Request $request, $id)
     {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);

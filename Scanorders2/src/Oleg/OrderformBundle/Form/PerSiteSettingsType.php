@@ -101,9 +101,7 @@ class PerSiteSettingsType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        //->leftJoin("list.types","institutiontype")
-                        ->leftJoin("list.parent","division")
-                        ->leftJoin("division.parent","department")
+                        ->leftJoin("list.parent","department")
                         ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
@@ -127,9 +125,7 @@ class PerSiteSettingsType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        //->leftJoin("list.types","institutiontype")
-                        ->leftJoin("list.parent","division")
-                        ->leftJoin("division.parent","department")
+                        ->leftJoin("list.parent","department")
                         ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(

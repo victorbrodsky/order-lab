@@ -219,6 +219,8 @@ class SecurityUtil extends UserSecurityUtil {
         }
 
         //at this point, actions array has list of actions to performed by this user
+        //echo "order=".$order->getId()."<br>";
+        //print_r($actions);
 
         //processor and division chief can perform any actions
         if(
@@ -243,15 +245,22 @@ class SecurityUtil extends UserSecurityUtil {
             return true;
         }
 
-        //order's service
-        $service = $order->getService();
+        //order's institution
+        $orderInstitution = $order->getInstitution();
 
         $userSiteSettings = $this->getUserPerSiteSettings($user);
+        $userChiefServices = $userSiteSettings->getChiefServices();
 
         //service chief can perform any actions
-        $userChiefServices = $userSiteSettings->getChiefServices();
-        if( $userChiefServices->contains($service) ) {
-            return true;
+        //if( $userChiefServices->contains($service) ) {
+        //    return true;
+        //}
+
+        //service chief can perform any actions for all orders under his/her service scope
+        foreach( $userChiefServices as $userChiefService ) {
+            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($userChiefService, $orderInstitution) ) {
+                return true;
+            }
         }
 
         //At this point we have only regular users
@@ -280,8 +289,13 @@ class SecurityUtil extends UserSecurityUtil {
             if( $action == 'show' ) {
                 //echo "action: show <br>";
                 $userServices = $userSiteSettings->getScanOrderInstitutionScope();
-                if( $userServices->contains($service) ) {
-                    return true;
+                //if( $userServices->contains($orderInstitution) ) {
+                //    return true;
+                //}
+                foreach( $userServices as $userService ) {
+                    if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($userService, $orderInstitution) ) {
+                        return true;
+                    }
                 }
             }
         }

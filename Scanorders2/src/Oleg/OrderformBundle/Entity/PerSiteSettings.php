@@ -32,6 +32,7 @@ class PerSiteSettings extends BaseUserAttributes
 
     /**
      * Service scope: service means one of the node of the institutional tree.
+     * This scope allows to view only an existing order by url
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinTable(name="scan_perSiteSettings_service",
@@ -42,6 +43,8 @@ class PerSiteSettings extends BaseUserAttributes
     private $scanOrdersServicesScope;
 
     /**
+     * This scope allows to view, cancel or amend an existing order by order url.
+     *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinTable(name="scan_chiefServices_service",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
