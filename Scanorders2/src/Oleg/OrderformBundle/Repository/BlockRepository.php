@@ -144,7 +144,10 @@ class BlockRepository extends ArrayFieldAbstractRepository
             $instStr = " AND (";
             $count = 1;
             foreach( $institutions as $inst ) {
-                $instStr .= "b.institution=".$inst."";
+                //$instStr .= "b.institution=".$inst."";
+                $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($inst);
+                $instStr .= $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                 if( $count < count($institutions) ) {
                     $instStr .= " OR ";
                 }
@@ -157,6 +160,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT b FROM OlegOrderformBundle:Block b
+                JOIN b.institution institution
                 JOIN b.blockname bfield
                 JOIN b.part p
                 JOIN p.partname pp
@@ -278,11 +282,17 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         //institution
         //TODO: change institution hierarchy and add collaboration
-        $inst = " AND p.institution=".$institution;
+        //$inst = " AND p.institution=".$institution;
+        $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution);
+        $inst = " AND (" .
+                $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection")) .
+                ")";
 
         $query = $this->getEntityManager()
             ->createQuery('
             SELECT MAX(bblockname.field) as max'.'blockname'.' FROM OlegOrderformBundle:Block b
+            JOIN b.institution institution
             JOIN b.blockname bblockname  
             JOIN b.part p
             JOIN p.partname pp

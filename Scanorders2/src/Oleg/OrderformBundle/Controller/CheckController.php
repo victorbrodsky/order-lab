@@ -145,8 +145,8 @@ class CheckController extends Controller {
 
         $element = array();
         
-        $security_content = $this->get('security.context');
-        $user = $this->get('security.context')->getToken()->getUser();
+        //$security_content = $this->get('security.context');
+        //$user = $this->get('security.context')->getToken()->getUser();
         //$userUtil = new UserUtil();
         $securityUtil = $this->get('order_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {

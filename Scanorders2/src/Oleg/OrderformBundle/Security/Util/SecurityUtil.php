@@ -116,7 +116,8 @@ class SecurityUtil extends UserSecurityUtil {
                     //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
                     foreach( $permittedInstitutions as $permittedInstitution ) {
                         if( $hasCollaborationInst == false ) {
-                            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution, array("Union") );
+                            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                                findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
                             foreach( $collaborations as $collaboration ) {
                                 if( $hasCollaborationInst == false ) {
                                     foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {

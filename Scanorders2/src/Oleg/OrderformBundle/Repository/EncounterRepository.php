@@ -292,8 +292,8 @@ class EncounterRepository extends ArrayFieldAbstractRepository
     //find similar child and return the first one
     //return accession or false if no similar children are found
     public function findSimilarChild($parent,$newChild) {
-        echo "Encounter: find similar parent: ".$parent." <br>";
-        echo "Encounter: find similar Child to: ".$newChild." <br>";
+        //echo "Encounter: find similar parent: ".$parent." <br>";
+        //echo "Encounter: find similar Child to: ".$newChild." <br>";
 
         $encounters = $parent->getChildren();
 

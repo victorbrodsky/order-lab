@@ -129,11 +129,17 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //institution
         //TODO: change institution hierarchy and add collaboration
-        $inst = " AND p.institution=".$institution;
+        //$inst = " AND p.institution=".$institution;
+        $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution);
+        $inst = " AND (" .
+                $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection")) .
+                ")";
 
         $query = $this->getEntityManager()
             ->createQuery('
             SELECT MAX(ppartname.field) as max'.'partname'.' FROM OlegOrderformBundle:Part p
+            JOIN p.institution institution
             JOIN p.partname ppartname
             JOIN p.accession a
             JOIN a.accession aa
@@ -297,7 +303,10 @@ class PartRepository extends ArrayFieldAbstractRepository
             $instStr = " AND (";
             $count = 1;
             foreach( $institutions as $inst ) {
-                $instStr .= "p.institution=".$inst."";
+                //$instStr .= "p.institution=".$inst."";
+                $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($inst);
+                $instStr .= $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                 if( $count < count($institutions) ) {
                     $instStr .= " OR ";
                 }
@@ -309,6 +318,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         $dql = '
                 SELECT p FROM OlegOrderformBundle:Part p
+                JOIN p.institution institution
                 JOIN p.partname pfield
                 JOIN p.accession a
                 JOIN a.accession aa

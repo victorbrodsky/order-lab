@@ -5,6 +5,7 @@ namespace Oleg\UserdirectoryBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
 class TreeRepository extends NestedTreeRepository {
@@ -26,6 +27,19 @@ class TreeRepository extends NestedTreeRepository {
         return false;
     }
 
+    public function selectNodesUnderParentNode( Institution $parentNode, $field ) {
+        $criteriastr = "";
+        $criteriastr .= $field.".root = " . $parentNode->getRoot();
+        $criteriastr .= " AND ";
+        $criteriastr .= $field.".lft < " . $parentNode->getLft();
+        $criteriastr .= " AND ";
+        $criteriastr .= $field.".rgt > " . $parentNode->getRgt();
+        $criteriastr .= " OR ";
+        $criteriastr .= $field.".id = " . $parentNode->getId();
+
+        return $criteriastr;
+    }
+
     //check if a node belongs to the same collaboration as user's permitted institutions
     //select collaboration table to find existing collaborations similarly as in findCollaborationsByNode with join
     public function isNodeHasCollaborationWithUserPermittedInstitutions( $node, $permittedInstitutions ) {
@@ -44,24 +58,26 @@ class TreeRepository extends NestedTreeRepository {
                 $criteriastr = $criteriastr . " OR ";
             }
             $criteriastr .= "(";
-            $criteriastr .= "institutions.root = " . $permittedInstitution->getRoot();
-            $criteriastr .= " AND ";
-            $criteriastr .= "institutions.lft < " . $permittedInstitution->getLft();
-            $criteriastr .= " AND ";
-            $criteriastr .= "institutions.rgt > " . $permittedInstitution->getRgt();
-            $criteriastr .= " OR ";
-            $criteriastr .= "institutions.id = " . $permittedInstitution->getId();
+//            $criteriastr .= "institutions.root = " . $permittedInstitution->getRoot();
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "institutions.lft < " . $permittedInstitution->getLft();
+//            $criteriastr .= " AND ";
+//            $criteriastr .= "institutions.rgt > " . $permittedInstitution->getRgt();
+//            $criteriastr .= " OR ";
+//            $criteriastr .= "institutions.id = " . $permittedInstitution->getId();
+            $criteriastr .= $this->selectNodesUnderParentNode( $permittedInstitution, "institutions" );
             $criteriastr .= ")";
         }
 
         $criteriastr .= " AND (";
-        $criteriastr .= "institutions.root = " . $node->getRoot();
-        $criteriastr .= " AND ";
-        $criteriastr .= "institutions.lft < " . $node->getLft();
-        $criteriastr .= " AND ";
-        $criteriastr .= "institutions.rgt > " . $node->getRgt();
-        $criteriastr .= " OR ";
-        $criteriastr .= "institutions.id = " . $node->getId();
+//        $criteriastr .= "institutions.root = " . $node->getRoot();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= "institutions.lft < " . $node->getLft();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= "institutions.rgt > " . $node->getRgt();
+//        $criteriastr .= " OR ";
+//        $criteriastr .= "institutions.id = " . $node->getId();
+        $criteriastr .= $this->selectNodesUnderParentNode( $node, "institutions" );
         $criteriastr .= ")";
 
         //echo "criteriastr=".$criteriastr."<br>";
@@ -81,24 +97,28 @@ class TreeRepository extends NestedTreeRepository {
     }
 
     //check collaboration with given node
-    //$collaborationTypesStrArr: array("Bidirectional", "Unidirectional Trusted")
+    //$collaborationTypesStrArr: array("Union","Intersection"), if null all collaborations
     public function findCollaborationsByNode( $node, $collaborationTypesStrArr = null ) {
 
         $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
         $dql = $repository->createQueryBuilder("collaboration");
         $dql->select("collaboration");
         $dql->leftJoin("collaboration.institutions","institutions");
-        $criteriastr = "";
-        $criteriastr .= "institutions.root = " . $node->getRoot();
-        $criteriastr .= " AND ";
-        $criteriastr .= "institutions.lft < " . $node->getLft();
-        $criteriastr .= " AND ";
-        $criteriastr .= "institutions.rgt > " . $node->getRgt();
-        $criteriastr .= " OR ";
-        $criteriastr .= "institutions.id = " . $node->getId();
+        $dql->leftJoin("collaboration.collaborationType","collaborationType");
+
+        ///// replaced by getCriterionStrForCollaborationsByNode /////
+        $criteriastr = "collaboration.type != 'disabled' AND collaboration.type != 'draft' AND "; //->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
+
+//        $criteriastr .= "institutions.root = " . $node->getRoot();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= "institutions.lft < " . $node->getLft();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= "institutions.rgt > " . $node->getRgt();
+//        $criteriastr .= " OR ";
+//        $criteriastr .= "institutions.id = " . $node->getId();
+        $criteriastr .= $this->selectNodesUnderParentNode( $node, "institutions" );
 
         if( $collaborationTypesStrArr && count($collaborationTypesStrArr) > 0 ) {
-            $dql->leftJoin("collaboration.collaborationType","collaborationType");
             $collaborationTypeCriterionArr = array();
             foreach( $collaborationTypesStrArr as $collaborationTypesStr ) {
                 $collaborationTypeCriterionArr[] = "collaborationType.name = '" . $collaborationTypesStr . "'";
@@ -106,6 +126,7 @@ class TreeRepository extends NestedTreeRepository {
 
             $criteriastr .= " AND " . implode( " OR ", $collaborationTypeCriterionArr );
         }
+        ///// EOF replaced by getCriterionStrForCollaborationsByNode /////
 
         //echo "criteriastr=".$criteriastr."<br>";
 
@@ -117,6 +138,38 @@ class TreeRepository extends NestedTreeRepository {
 
         return $collaborations;
     }
+
+    //$field = "institutions"
+    public function getCriterionStrForCollaborationsByNode( $node, $field, $collaborationTypesStrArr = null ) {
+
+        //institutional scope
+//        $criteriastr = "";
+//        $criteriastr .= $field.".root = " . $node->getRoot();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= $field.".lft < " . $node->getLft();
+//        $criteriastr .= " AND ";
+//        $criteriastr .= $field.".rgt > " . $node->getRgt();
+//        $criteriastr .= " OR ";
+//        $criteriastr .= $field.".id = " . $node->getId();
+        $criteriastr = $this->selectNodesUnderParentNode( $node, $field );
+
+        //collaborations
+        $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
+        $collaborationCriterionArr = array();
+        foreach( $collaborations as $collaboration ) {
+            foreach( $collaboration->getInstitutions() as $collaborationNode ) {
+                $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field );
+            }
+        }
+
+        if( count($collaborationCriterionArr) > 0 ) {
+            $criteriastr .= " OR " . implode(" OR ",$collaborationCriterionArr) . "";
+        }
+
+        return $criteriastr;
+    }
+
+
 
     public function findChildAtPosition($parent,$position) {
         //$children = $this->children($parent);

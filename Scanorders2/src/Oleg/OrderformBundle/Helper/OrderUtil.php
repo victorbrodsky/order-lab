@@ -552,7 +552,8 @@ class OrderUtil {
             //1) find collaboration for each user's permitted institution
             //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
             foreach( $permittedInstitutions as $permittedInstitution ) {
-                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution, array("Union") );
+                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
                 foreach( $collaborations as $collaboration ) {
                     foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
                         if( $instStr != "" ) {
@@ -1089,7 +1090,9 @@ class OrderUtil {
         //permittedInstitutionalPHIScope - institutions
         foreach( $permittedInstitutions as $permittedInstitution ) {
             //echo "permittedInstitution=".$permittedInstitution."<br>";
-            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode( $permittedInstitution, null );
+            //get all collaboration to show them in the Order's Institutional PHI Scope
+            $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                findCollaborationsByNode( $permittedInstitution, null );
             foreach( $collaborations as $collaboration ) {
                 foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
                     //echo "collaboration inst=".$collaboration->getInstitutions()->getName()."<br>";

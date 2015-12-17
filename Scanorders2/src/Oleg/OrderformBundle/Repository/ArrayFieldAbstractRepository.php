@@ -849,6 +849,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //$fieldName: search field name by $fieldStr (i.e.: search for S11-12 in accession)
     //$validity - status of the object specified by $className
+    //$institutions - Order institutional scope
     public function findOneByIdJoinedToField( $institutions, $fieldStr, $className, $fieldName, $validities=null, $single=true, $extra=null )
     {
         //echo "fieldStr=(".$fieldStr.")<br> ";
@@ -887,14 +888,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo "extraStr=".$extraStr." ,onlyValid=".$onlyValid." <br> ";
 
-        //add institution conditions
-        //TODO: change institution hierarchy and add collaboration
+        //add institution conditions: institutions are order ids
+        //the object must be under provided institutional scope or under collaboration scope
         $instStr = "";
         if( $institutions && is_array($institutions) && count($institutions)>0 ) {
             $instStr = " AND (";
             $count = 1;
             foreach( $institutions as $inst ) {
-                $instStr .= "c.institution=".$inst."";
+                //$instStr .= "c.institution=".$inst."";
+                $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($inst);
+                $instStr .= $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                 if( $count < count($institutions) ) {
                     $instStr .= " OR ";
                 }
@@ -902,16 +906,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
             $instStr .= ")";
         }
-        //echo "instStr=".$instStr." <br> ";
+        //echo "instStr=".$instStr." ==> ";
 
         $dql = 'SELECT c FROM OlegOrderformBundle:'.$className.' c
                 JOIN c.'.$fieldName.' cfield
+                JOIN c.institution institution
                 WHERE cfield.field = :field'.$validityStr.$extraStr.$instStr;
 
         $query = $this->getEntityManager()
             ->createQuery($dql)->setParameter('field', $fieldStr."");
 
-        //echo "dql=".$dql."<br>";
+        //echo "dql=".$dql." ==> ";
         //echo "field=".$fieldStr." <br> ";
 
         try {
@@ -1162,11 +1167,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //TODO: change institution hierarchy and add collaboration
-        $inst = " AND c.institution=".$entity->getInstitution()->getId();
+        //$inst = " AND c.institution=".$entity->getInstitution()->getId();
+        $inst = " AND (" .
+                $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    getCriterionStrForCollaborationsByNode($entity->getInstitution(),"institution",array("Union","Intersection")) .
+                ")";
 
         $queryStr = 'SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.
-                    ' c JOIN c.'.$fieldName.
-                    ' cfield WHERE '.$extraStr.'cfield.field LIKE :field'.$inst;
+                    ' c'.
+                    ' JOIN c.'.$fieldName.' cfield'.
+                    ' JOIN c.institution institution'.
+                    ' WHERE '.$extraStr.'cfield.field LIKE :field'.$inst;
 
         //echo "queryStr=".$queryStr."<br>";
 
@@ -1199,6 +1210,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
         //echo "maxKey=".$maxKey."<br>";
+        //exit();
         //if( $className == 'Encounter') {
         //    exit();
         //}
