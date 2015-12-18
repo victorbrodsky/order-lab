@@ -80,9 +80,9 @@ class PatientController extends Controller
         $res = $searchUtil->searchAction($params);
         $entities = $res[$object];
 
-        return array(
-            'entities' => $entities,
-        );
+        return $this->render('OlegOrderformBundle:Patient:index.html.twig', array(
+            'patiententities' => $entities,
+        ));
     }
 
     /**
@@ -209,6 +209,11 @@ class PatientController extends Controller
             throw $this->createNotFoundException('Unable to find Patient entity.');
         }
 
+        $securityUtil = $this->get('order_security_utility');
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        }
+
         $params = array(
             'type' => 'multy',
             'cycle' => "show",
@@ -270,6 +275,12 @@ class PatientController extends Controller
             throw $this->createNotFoundException('Unable to find Patient entity.');
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        }
+
         $editForm = $this->createForm(new PatientType(), $entity);
         //$deleteForm = $this->createDeleteForm($id);
 
@@ -295,6 +306,12 @@ class PatientController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Patient entity.');
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         //$deleteForm = $this->createDeleteForm($id);

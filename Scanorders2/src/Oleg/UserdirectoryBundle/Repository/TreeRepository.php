@@ -37,6 +37,8 @@ class TreeRepository extends NestedTreeRepository {
         $criteriastr .= " OR ";
         $criteriastr .= $field.".id = " . $parentNode->getId();
 
+        $criteriastr = "(".$criteriastr.")";
+
         return $criteriastr;
     }
 
@@ -57,7 +59,7 @@ class TreeRepository extends NestedTreeRepository {
             if( $criteriastr != "" ) {
                 $criteriastr = $criteriastr . " OR ";
             }
-            $criteriastr .= "(";
+//            $criteriastr .= "(";
 //            $criteriastr .= "institutions.root = " . $permittedInstitution->getRoot();
 //            $criteriastr .= " AND ";
 //            $criteriastr .= "institutions.lft < " . $permittedInstitution->getLft();
@@ -66,10 +68,10 @@ class TreeRepository extends NestedTreeRepository {
 //            $criteriastr .= " OR ";
 //            $criteriastr .= "institutions.id = " . $permittedInstitution->getId();
             $criteriastr .= $this->selectNodesUnderParentNode( $permittedInstitution, "institutions" );
-            $criteriastr .= ")";
+//            $criteriastr .= ")";
         }
 
-        $criteriastr .= " AND (";
+//        $criteriastr .= " AND ";
 //        $criteriastr .= "institutions.root = " . $node->getRoot();
 //        $criteriastr .= " AND ";
 //        $criteriastr .= "institutions.lft < " . $node->getLft();
@@ -77,8 +79,8 @@ class TreeRepository extends NestedTreeRepository {
 //        $criteriastr .= "institutions.rgt > " . $node->getRgt();
 //        $criteriastr .= " OR ";
 //        $criteriastr .= "institutions.id = " . $node->getId();
-        $criteriastr .= $this->selectNodesUnderParentNode( $node, "institutions" );
-        $criteriastr .= ")";
+        $criteriastr .= " AND " . $this->selectNodesUnderParentNode( $node, "institutions" );
+
 
         //echo "criteriastr=".$criteriastr."<br>";
 
@@ -107,7 +109,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->leftJoin("collaboration.collaborationType","collaborationType");
 
         ///// replaced by getCriterionStrForCollaborationsByNode /////
-        $criteriastr = "collaboration.type != 'disabled' AND collaboration.type != 'draft' AND "; //->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
+        $criteriastr = "collaboration.type != 'disabled' AND collaboration.type != 'draft'"; //->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
 
 //        $criteriastr .= "institutions.root = " . $node->getRoot();
 //        $criteriastr .= " AND ";
@@ -116,7 +118,7 @@ class TreeRepository extends NestedTreeRepository {
 //        $criteriastr .= "institutions.rgt > " . $node->getRgt();
 //        $criteriastr .= " OR ";
 //        $criteriastr .= "institutions.id = " . $node->getId();
-        $criteriastr .= $this->selectNodesUnderParentNode( $node, "institutions" );
+        $criteriastr = $criteriastr . " AND " . $this->selectNodesUnderParentNode( $node, "institutions" );
 
         if( $collaborationTypesStrArr && count($collaborationTypesStrArr) > 0 ) {
             $collaborationTypeCriterionArr = array();
@@ -140,6 +142,7 @@ class TreeRepository extends NestedTreeRepository {
     }
 
     //$field = "institutions"
+    //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"). If null => all collaboration
     public function getCriterionStrForCollaborationsByNode( $node, $field, $collaborationTypesStrArr = null ) {
 
         //institutional scope
@@ -151,7 +154,7 @@ class TreeRepository extends NestedTreeRepository {
 //        $criteriastr .= $field.".rgt > " . $node->getRgt();
 //        $criteriastr .= " OR ";
 //        $criteriastr .= $field.".id = " . $node->getId();
-        $criteriastr = $this->selectNodesUnderParentNode( $node, $field );
+        $institutionalCriteriaStr = $this->selectNodesUnderParentNode( $node, $field );
 
         //collaborations
         $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
@@ -163,8 +166,10 @@ class TreeRepository extends NestedTreeRepository {
         }
 
         if( count($collaborationCriterionArr) > 0 ) {
-            $criteriastr .= " OR " . implode(" OR ",$collaborationCriterionArr) . "";
+            $collaborationCriteriaStr = " OR " . implode(" OR ",$collaborationCriterionArr);
         }
+
+        $criteriastr = $institutionalCriteriaStr . $collaborationCriteriaStr;
 
         return $criteriastr;
     }

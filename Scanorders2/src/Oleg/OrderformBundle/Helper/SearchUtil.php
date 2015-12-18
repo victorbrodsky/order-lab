@@ -59,16 +59,19 @@ class SearchUtil {
         $repository = $this->em->getRepository('OlegOrderformBundle:'.$object);
         $dql =  $repository->createQueryBuilder($object);
         $dql->select($object);
+        $dql->leftJoin($object.".institution", "institution");
 
         $criteriastr = "";
 
         switch( $searchtype ) {
             case 'MRN':
                 $dql->leftJoin("patient.mrn", "mrn");
+                //$dql->leftJoin("patient.institution", "institution");
                 $criteriastr = $this->getSearchStr('mrn.field',$search,$exactmatch);
                 break;
             case 'Patient Name':
                 //echo "searchtype=".$searchtype."<br>";
+                //$dql->leftJoin("patient.institution", "institution");
                 $dql->leftJoin("patient.lastname", "lastname");
                 $dql->leftJoin("patient.firstname", "firstname");
                 $dql->leftJoin("patient.middlename", "middlename");
@@ -93,6 +96,16 @@ class SearchUtil {
                 $criteriastr = "";
         }
 
+        //check for institution and collaboration (only union)
+        $user = $this->sc->getToken()->getUser();
+        $orderUtil = $this->container->get('scanorder_utility');
+        $institutionAndCollaborationStr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr,array("Union"));
+        if( $criteriastr ) {
+            $criteriastr = $criteriastr . " AND " . $institutionAndCollaborationStr;
+        } else {
+            $criteriastr = $institutionAndCollaborationStr;
+        }
+
         if( $criteriastr ) {
             $dql->where($criteriastr);
         }
@@ -103,7 +116,7 @@ class SearchUtil {
             $dql->orderBy($object.".id","DESC");
         }
 
-        //echo "dql=".$dql."<br>";
+        echo "dql=".$dql."<br>";
 
         $query = $this->em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
@@ -126,9 +139,7 @@ class SearchUtil {
 
         //echo "pagination count=".count($pagination)."<br>";
 
-        if( count($pagination) > 0 ) {
-            $returnArr[$object] = $pagination;
-        }
+        $returnArr[$object] = $pagination;
 
         return $returnArr;
     }

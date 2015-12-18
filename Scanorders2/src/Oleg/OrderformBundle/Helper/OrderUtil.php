@@ -520,7 +520,7 @@ class OrderUtil {
     //Used by getUnporcesseOrders and getUnprocessedSlideRequests
     //check if node belongs to the parentNode tree. For example, 1wcmc6->2path5->3inf4 => if inf.lft > wcmc.lft AND inf.rgt < wcmc.rgt => return true.
     //check if user's institution is under message's institution node
-    public function getInstitutionQueryCriterion($user) {
+    public function getInstitutionQueryCriterion( $user, $collaborationTypesStrArr=array("Union","Intersection") ) {
         $securityUtil = $this->container->get('order_security_utility');
 
         $instStr = "";
@@ -528,51 +528,65 @@ class OrderUtil {
 
         //User's PermittedInstitutions
         $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
+        //echo "permittedInstitutions=".count($permittedInstitutions)."<br>";
 
-        if(1) {
-            foreach( $permittedInstitutions as $permittedInstitution ) {
-                if( $instStr != "" ) {
-                    $instStr = $instStr . " OR ";
-                }
-                $fieldstr = "institution";
-                $instStr .= "(";
-                $instStr .= $fieldstr.".root = " . $permittedInstitution->getRoot();
-                $instStr .= " AND ";
-                $instStr .= $fieldstr.".lft < " . $permittedInstitution->getLft();
-                $instStr .= " AND ";
-                $instStr .= $fieldstr.".rgt > " . $permittedInstitution->getRgt();
-                $instStr .= " OR ";
-                $instStr .= $fieldstr.".id = " . $permittedInstitution->getId();
-                $instStr .= ")";
+        foreach( $permittedInstitutions as $permittedInstitution ) {
+
+            $institutionAndCollaborationStr = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",$collaborationTypesStrArr);
+
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR (" . $institutionAndCollaborationStr . ")";
+            } else {
+                $instStr = $institutionAndCollaborationStr;
             }
+
         }
 
-        if(1) {
-            //Collaboration check:
-            //1) find collaboration for each user's permitted institution
-            //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
-            foreach( $permittedInstitutions as $permittedInstitution ) {
-                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
-                    findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
-                foreach( $collaborations as $collaboration ) {
-                    foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
-                        if( $instStr != "" ) {
-                            $instStr = $instStr . " OR ";
-                        }
-                        $fieldstr = "institution";
-                        $instStr .= "(";
-                        $instStr .= $fieldstr.".root = " . $collaborationInstitution->getRoot();
-                        $instStr .= " AND ";
-                        $instStr .= $fieldstr.".lft > " . $collaborationInstitution->getLft();
-                        $instStr .= " AND ";
-                        $instStr .= $fieldstr.".rgt < " . $collaborationInstitution->getRgt();
-                        $instStr .= " OR ";
-                        $instStr .= $fieldstr.".id = " . $collaborationInstitution->getId();
-                        $instStr .= ")";
-                    }
-                }
-            }
-        }//if
+//        if(1) {
+//            foreach( $permittedInstitutions as $permittedInstitution ) {
+//                if( $instStr != "" ) {
+//                    $instStr = $instStr . " OR ";
+//                }
+//                $fieldstr = "institution";
+//                $instStr .= "(";
+//                $instStr .= $fieldstr.".root = " . $permittedInstitution->getRoot();
+//                $instStr .= " AND ";
+//                $instStr .= $fieldstr.".lft < " . $permittedInstitution->getLft();
+//                $instStr .= " AND ";
+//                $instStr .= $fieldstr.".rgt > " . $permittedInstitution->getRgt();
+//                $instStr .= " OR ";
+//                $instStr .= $fieldstr.".id = " . $permittedInstitution->getId();
+//                $instStr .= ")";
+//            }
+//        }
+//
+//        if(1) {
+//            //Collaboration check:
+//            //1) find collaboration for each user's permitted institution
+//            //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
+//            foreach( $permittedInstitutions as $permittedInstitution ) {
+//                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+//                    findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
+//                foreach( $collaborations as $collaboration ) {
+//                    foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
+//                        if( $instStr != "" ) {
+//                            $instStr = $instStr . " OR ";
+//                        }
+//                        $fieldstr = "institution";
+//                        $instStr .= "(";
+//                        $instStr .= $fieldstr.".root = " . $collaborationInstitution->getRoot();
+//                        $instStr .= " AND ";
+//                        $instStr .= $fieldstr.".lft > " . $collaborationInstitution->getLft();
+//                        $instStr .= " AND ";
+//                        $instStr .= $fieldstr.".rgt < " . $collaborationInstitution->getRgt();
+//                        $instStr .= " OR ";
+//                        $instStr .= $fieldstr.".id = " . $collaborationInstitution->getId();
+//                        $instStr .= ")";
+//                    }
+//                }
+//            }
+//        }//if
 
         if( $instStr == "" ) {
             $instStr = "1=0";
@@ -597,14 +611,15 @@ class OrderUtil {
 //        return $instStr;
 //    }
 
-
-    public function addInstitutionQueryCriterion($user,$criteriastr) {
-        $instStr = $this->getInstitutionQueryCriterion($user);
+    //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"). If null => all collaboration. Default: array("Union","Intersection")
+    public function addInstitutionQueryCriterion( $user, $criteriastr, $collaborationTypesStrArr=array("Union","Intersection") ) {
+        $instStr = $this->getInstitutionQueryCriterion($user,$collaborationTypesStrArr);
         if( $instStr != "" ) {
-            if( $criteriastr != "" ) {
+            if( $criteriastr && $criteriastr != "" ) {
                 $criteriastr = $criteriastr . " AND (" . $instStr . ") ";
             } else {
-                $criteriastr = $criteriastr . " (" . $instStr . ") ";
+                //$criteriastr = $criteriastr . " (" . $instStr . ") ";
+                $criteriastr = $instStr;
             }
         }
         return $criteriastr;
