@@ -189,6 +189,7 @@ class TreeRepository extends NestedTreeRepository {
             }
         }
 
+        $collaborationCriteriaStr = "";
         if( count($collaborationCriterionArr) > 0 ) {
             $collaborationCriteriaStr = " OR " . implode(" OR ",$collaborationCriterionArr);
         }
