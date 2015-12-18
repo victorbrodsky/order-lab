@@ -520,7 +520,8 @@ class OrderUtil {
     //Used by getUnporcesseOrders and getUnprocessedSlideRequests
     //check if node belongs to the parentNode tree. For example, 1wcmc6->2path5->3inf4 => if inf.lft > wcmc.lft AND inf.rgt < wcmc.rgt => return true.
     //check if user's institution is under message's institution node
-    public function getInstitutionQueryCriterion( $user, $collaborationTypesStrArr=array("Union","Intersection") ) {
+    //$collaborationTypesStrArr - array of collaboration types; if null - ignore collaboration
+    public function getInstitutionQueryCriterion( $user, $collaborationTypesStrArr=array("Union") ) {
         $securityUtil = $this->container->get('order_security_utility');
 
         $instStr = "";
@@ -530,19 +531,25 @@ class OrderUtil {
         $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
         //echo "permittedInstitutions=".count($permittedInstitutions)."<br>";
 
-        foreach( $permittedInstitutions as $permittedInstitution ) {
+        if( $collaborationTypesStrArr && count($collaborationTypesStrArr) > 0 ) {
+            $instComparatorDefault = true;  //lft < getId
+            $collComparatorDefault = false; //lft > getId
 
-            $institutionAndCollaborationStr = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
-                getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",$collaborationTypesStrArr);
+            foreach( $permittedInstitutions as $permittedInstitution ) {
 
-            if( $instStr != "" ) {
-                $instStr = $instStr . " OR (" . $institutionAndCollaborationStr . ")";
-            } else {
-                $instStr = $institutionAndCollaborationStr;
+                $institutionAndCollaborationStr = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",$collaborationTypesStrArr, $instComparatorDefault, $collComparatorDefault );
+
+                if( $instStr != "" ) {
+                    $instStr = $instStr . " OR (" . $institutionAndCollaborationStr . ")";
+                } else {
+                    $instStr = $institutionAndCollaborationStr;
+                }
+
             }
-
         }
 
+//if(0){
 //        if(1) {
 //            foreach( $permittedInstitutions as $permittedInstitution ) {
 //                if( $instStr != "" ) {
@@ -587,6 +594,7 @@ class OrderUtil {
 //                }
 //            }
 //        }//if
+//}
 
         if( $instStr == "" ) {
             $instStr = "1=0";
@@ -611,8 +619,8 @@ class OrderUtil {
 //        return $instStr;
 //    }
 
-    //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"). If null => all collaboration. Default: array("Union","Intersection")
-    public function addInstitutionQueryCriterion( $user, $criteriastr, $collaborationTypesStrArr=array("Union","Intersection") ) {
+    //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"). If null => ignore collaboration. Default: array("Union","Intersection")
+    public function addInstitutionQueryCriterion( $user, $criteriastr, $collaborationTypesStrArr=array("Union") ) {
         $instStr = $this->getInstitutionQueryCriterion($user,$collaborationTypesStrArr);
         if( $instStr != "" ) {
             if( $criteriastr && $criteriastr != "" ) {
@@ -745,6 +753,24 @@ class OrderUtil {
                 //echo "inst=".$institution->getName().'<br>';
                 $choicesInst[$userService->getId()] = "All ".$userService->getName()." Orders";
             }
+
+            //add all collaboration institutions
+            $collaborationInstArr = array();
+            $securityUtil = $this->container->get('order_security_utility');
+            $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
+            foreach( $permittedInstitutions as $permittedInstitution ) {
+                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                    findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
+                foreach( $collaborations as $collaboration ) {
+                    foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
+                        $key = "collaboration-".$collaborationInstitution->getId();
+                        if( !array_key_exists($key,$collaborationInstArr) ) {
+                            //$collaborationInstArr[] = $collaborationInstitution->getId();
+                            $choicesInst[$key] = "All ".$collaborationInstitution." Orders";
+                        }
+                    }
+                }
+            }//foreach
 
         }
 
@@ -1100,6 +1126,7 @@ class OrderUtil {
         return $count;
     }
 
+    //Used in new order field: "Order data visible to members of (Institutional PHI Scope)"
     public function addPhiScopeInstitutions( $permittedInstitutions, $message ) {
         //include collaboration (any type) institutions by user
         //permittedInstitutionalPHIScope - institutions
@@ -1107,7 +1134,7 @@ class OrderUtil {
             //echo "permittedInstitution=".$permittedInstitution."<br>";
             //get all collaboration to show them in the Order's Institutional PHI Scope
             $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
-                findCollaborationsByNode( $permittedInstitution, null );
+                findCollaborationsByNode( $permittedInstitution, array("Union","Intersection","Untrusted Intersection") );
             foreach( $collaborations as $collaboration ) {
                 foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
                     //echo "collaboration inst=".$collaboration->getInstitutions()->getName()."<br>";

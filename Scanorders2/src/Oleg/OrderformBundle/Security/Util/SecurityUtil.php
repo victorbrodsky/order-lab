@@ -56,8 +56,9 @@ class SecurityUtil extends UserSecurityUtil {
     //Added 25Nov2015: If user A submits a scan order with WCMC as the Institutional PHI Scope in Order Info and user B belongs to the institution NYP,
     // they can not see each other's orders/patient data/etc.
     //$entity is object: message or patient, accession, part ...
+    //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"); if null - ignore collaboration.
     //Used by: CheckController (check button on patient hierarchy), MultiScanOrderController (show patient hierarchy in the order)
-    public function hasUserPermission( $entity, $user ) {
+    public function hasUserPermission( $entity, $user, $collaborationTypesStrArr=array("Union") ) {
         //echo "hasUserPermission <br>";
         if( $entity == null ) {
             return true;
@@ -117,7 +118,7 @@ class SecurityUtil extends UserSecurityUtil {
                     foreach( $permittedInstitutions as $permittedInstitution ) {
                         if( $hasCollaborationInst == false ) {
                             $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
-                                findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
+                                findCollaborationsByNode( $permittedInstitution, $collaborationTypesStrArr ); //array("Union","Intersection")
                             foreach( $collaborations as $collaboration ) {
                                 if( $hasCollaborationInst == false ) {
                                     foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {

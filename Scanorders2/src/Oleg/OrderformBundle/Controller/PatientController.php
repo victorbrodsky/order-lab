@@ -210,7 +210,7 @@ class PatientController extends Controller
         }
 
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -277,7 +277,7 @@ class PatientController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -310,7 +310,7 @@ class PatientController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -360,6 +360,10 @@ class PatientController extends Controller
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
     public function newTestPatientAction() {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        }
 
         $securityUtil = $this->get('order_security_utility');
         $status = 'valid';

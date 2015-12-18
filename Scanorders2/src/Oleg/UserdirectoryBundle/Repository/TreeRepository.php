@@ -27,13 +27,22 @@ class TreeRepository extends NestedTreeRepository {
         return false;
     }
 
-    public function selectNodesUnderParentNode( Institution $parentNode, $field ) {
+    public function selectNodesUnderParentNode( Institution $parentNode, $field, $default=true ) {
+
+        if( $default ) {
+            $comparatorLft = "<";
+            $comparatorRgt = ">";
+        } else {
+            $comparatorLft = ">";
+            $comparatorRgt = "<";
+        }
+
         $criteriastr = "";
         $criteriastr .= $field.".root = " . $parentNode->getRoot();
         $criteriastr .= " AND ";
-        $criteriastr .= $field.".lft < " . $parentNode->getLft();
+        $criteriastr .= $field.".lft $comparatorLft " . $parentNode->getLft(); //Default: lft < getLft
         $criteriastr .= " AND ";
-        $criteriastr .= $field.".rgt > " . $parentNode->getRgt();
+        $criteriastr .= $field.".rgt $comparatorRgt " . $parentNode->getRgt(); //Default: rgt > getRgt
         $criteriastr .= " OR ";
         $criteriastr .= $field.".id = " . $parentNode->getId();
 
@@ -42,8 +51,9 @@ class TreeRepository extends NestedTreeRepository {
         return $criteriastr;
     }
 
-    //check if a node belongs to the same collaboration as user's permitted institutions
+    //check if an institution node belongs to the same collaboration as user's permitted institutions
     //select collaboration table to find existing collaborations similarly as in findCollaborationsByNode with join
+    //$node - institution of the entity being verified
     public function isNodeHasCollaborationWithUserPermittedInstitutions( $node, $permittedInstitutions ) {
         //return true; //testing
 
@@ -99,8 +109,21 @@ class TreeRepository extends NestedTreeRepository {
     }
 
     //check collaboration with given node
-    //$collaborationTypesStrArr: array("Union","Intersection"), if null all collaborations
-    public function findCollaborationsByNode( $node, $collaborationTypesStrArr = null ) {
+    //$collaborationTypesStrArr: array("Union","Intersection"), if null - ignore collaborations
+    public function findCollaborationsByNode( $node, $collaborationTypesStrArr=array("Union") ) {
+
+        if( !$collaborationTypesStrArr ) {
+            $msg = "Collaboration is ignored. Collaboration type is null.";
+            //exit($msg);
+            throw new \Exception($msg);
+            return array();
+        }
+        if( count($collaborationTypesStrArr) == 0 ) {
+            $msg = "Collaboration is ignored. Collaboration type is invalid ".print_r($collaborationTypesStrArr);
+            //exit($msg);
+            throw new \Exception($msg);
+            return array();
+        }
 
         $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
         $dql = $repository->createQueryBuilder("collaboration");
@@ -141,9 +164,10 @@ class TreeRepository extends NestedTreeRepository {
         return $collaborations;
     }
 
+    //$node - institution of the search entity
     //$field = "institutions"
-    //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"). If null => all collaboration
-    public function getCriterionStrForCollaborationsByNode( $node, $field, $collaborationTypesStrArr = null ) {
+    //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"). If null => ignore collaboration
+    public function getCriterionStrForCollaborationsByNode( $node, $field, $collaborationTypesStrArr=array("Union"), $instDefault=true, $collDefault=true ) {
 
         //institutional scope
 //        $criteriastr = "";
@@ -154,14 +178,14 @@ class TreeRepository extends NestedTreeRepository {
 //        $criteriastr .= $field.".rgt > " . $node->getRgt();
 //        $criteriastr .= " OR ";
 //        $criteriastr .= $field.".id = " . $node->getId();
-        $institutionalCriteriaStr = $this->selectNodesUnderParentNode( $node, $field );
+        $institutionalCriteriaStr = $this->selectNodesUnderParentNode( $node, $field, $instDefault );
 
         //collaborations
         $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
         $collaborationCriterionArr = array();
         foreach( $collaborations as $collaboration ) {
             foreach( $collaboration->getInstitutions() as $collaborationNode ) {
-                $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field );
+                $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );
             }
         }
 

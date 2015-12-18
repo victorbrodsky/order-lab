@@ -99,14 +99,10 @@ class SearchUtil {
         //check for institution and collaboration (only union)
         $user = $this->sc->getToken()->getUser();
         $orderUtil = $this->container->get('scanorder_utility');
-        $institutionAndCollaborationStr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr,array("Union"));
-        if( $criteriastr ) {
-            $criteriastr = $criteriastr . " AND " . $institutionAndCollaborationStr;
-        } else {
-            $criteriastr = $institutionAndCollaborationStr;
-        }
+        $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr,array("Union"));
 
         if( $criteriastr ) {
+            //echo "criteriastr=".$criteriastr."<br>";
             $dql->where($criteriastr);
         }
 
@@ -116,7 +112,7 @@ class SearchUtil {
             $dql->orderBy($object.".id","DESC");
         }
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         $query = $this->em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
@@ -137,7 +133,10 @@ class SearchUtil {
             $pagination = $query->getResult();
         }
 
-        //echo "pagination count=".count($pagination)."<br>";
+//        echo "pagination count=".count($pagination)."<br>";
+//        foreach( $pagination as $item ) {
+//            echo $object." ID=".$item->getId().", inst=".$item->getInstitution()."<br>";
+//        }
 
         $returnArr[$object] = $pagination;
 
@@ -159,7 +158,10 @@ class SearchUtil {
             $equal = ' LIKE ';
         }
 
-        return $field . $equal . $prefix . $search . $postfix;
+        $searchStr = $field . $equal . $prefix . $search . $postfix;
+        //echo "searchStr=".$searchStr."<br>";
+
+        return $searchStr;
     }
 
 } 

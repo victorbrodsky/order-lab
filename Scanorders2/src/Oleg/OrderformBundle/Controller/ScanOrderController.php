@@ -1223,6 +1223,8 @@ class ScanOrderController extends Controller {
         $dql->leftJoin("message.scanorder", "scanorder");
         //$dql->leftJoin("destinations.location", "destinationlocation");
 
+        $dql->leftJoin("message.institution", "institution");
+
         $dql->select('message, COUNT(slides.id) AS slidecount');
 
         $dql->groupBy('message');
@@ -1437,6 +1439,29 @@ class ScanOrderController extends Controller {
                 $crituser .= "scanorder.scanOrderInstitutionScope=".$service;
             }
 
+            //show chosen collaboration institution
+            $institution = false;
+            if( strpos($service,'collaboration') !== false ) {
+                $pieces = explode("-", $service);
+                $institutionId = $pieces[1];
+                //echo "collaboration institutionId=".$institutionId."<br>";
+
+                $em = $this->getDoctrine()->getManager();
+                $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
+                //echo "inst=".$node."<br>";
+
+                $institutionalCriteriaStr = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $node, "institution", false );
+
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= $institutionalCriteriaStr;
+                //echo "crituser=".$crituser."<br>";
+
+                $institution = true;
+            }
+            //exit("1");
+
             if( $criteriastr != "" && $crituser != "" ) {
                 $criteriastr = $criteriastr." AND ".$crituser;
             } else {
@@ -1602,9 +1627,11 @@ class ScanOrderController extends Controller {
         }
 
         /////////// institution ///////////
-        $orderUtil = $this->get('scanorder_utility');
-        $dql->leftJoin("message.institution", "institution");
-        $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);
+        if( $institution === false ) {
+            $orderUtil = $this->get('scanorder_utility');
+            //$dql->leftJoin("message.institution", "institution");
+            $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);
+        }
         /////////// EOF institution ///////////
 
         //echo "<br>criteriastr=".$criteriastr."<br>";
