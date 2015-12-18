@@ -314,7 +314,8 @@
     {% endif %}
 
     <!--show this only for dev. Don't show for live-->
-    {% if (is_granted('ROLE_SCANORDER_ADMIN') or is_granted('ROLE_USERDIRECTORY_ADMIN')) and environment == 'dev' %}
+    {#and environment == 'dev'#}
+    {% if (is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         <p>
             <a  general-data-confirm="Are you sure? This action will overwrite all values on all lists with defaults."
                href="{{ path('user_generate_all') }}">2) Populate All Lists With Default Values</a>
