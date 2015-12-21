@@ -291,6 +291,9 @@ class MessageType extends AbstractType
         } else {
             $institutions = null;
         }
+        //foreach( $institutions as $inst ) {
+        //    echo "form inst=".$inst."<br>";
+        //}
         $builder->add('institution', 'entity', array(
             'label' => 'Order data visible to members of (Institutional PHI Scope):',
             'property' => 'getNodeNameWithRoot',

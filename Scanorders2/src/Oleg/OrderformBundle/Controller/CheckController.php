@@ -149,14 +149,14 @@ class CheckController extends Controller {
         //$user = $this->get('security.context')->getToken()->getUser();
         //$userUtil = new UserUtil();
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
             //echo "no permission ";
+            $entity = null;
             //$entity->filterArrayFields($user,true);
+        }
 
-            if( $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
-                $entity = null;
-            }
-
+        if( $entity && $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
+            $entity = null;
         }
 
         if( !is_numeric ( $originalKeytype ) ) {
@@ -307,10 +307,12 @@ class CheckController extends Controller {
         $element = array();
 
         $securityUtil = $this->get('order_security_utility');
-        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
-            if( $entity->obtainExistingFields(true) == 0 && $entity->getParent()->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
-                $entity = null;
-            }
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
+            $entity = null;
+        }
+
+        if( $entity && $entity->obtainExistingFields(true) == 0 && $entity->getParent()->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
+            $entity = null;
         }
 
         if( !is_numeric ( $originalKeytype ) ) {
@@ -557,11 +559,13 @@ class CheckController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        if( !$securityUtil->hasUserPermission($entity,$user) ) {
-            if( $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
-                $entity = null;
-            }
-        }     
+        if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
+            $entity = null;
+        }
+
+        if( $entity && $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
+            $entity = null;
+        }
 
         if( $entity ) {
 
@@ -694,10 +698,12 @@ class CheckController extends Controller {
 
             $user = $this->get('security.context')->getToken()->getUser();
             $securityUtil = $this->get('order_security_utility');
-            if( !$securityUtil->hasUserPermission($entity,$user) ) {
-                if( $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
-                    $entity = null;
-                }
+            if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection")) ) {
+                $entity = null;
+            }
+
+            if( $entity && $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
+                $entity = null;
             }
 
             if( $entity ) {

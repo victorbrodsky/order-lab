@@ -184,6 +184,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $mrnKeytype = $mrnKey->getKeytype()->getId();
 
             if( !$accession->getInstitution() ) {
+                //echo "message inst=".$message->getInstitution()."<br>";
                 $accession->setInstitution($message->getInstitution());
             }
             $institutions = array($accession->getInstitution()->getId());

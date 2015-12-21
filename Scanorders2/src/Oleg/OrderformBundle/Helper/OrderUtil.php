@@ -1131,14 +1131,15 @@ class OrderUtil {
         //include collaboration (any type) institutions by user
         //permittedInstitutionalPHIScope - institutions
         foreach( $permittedInstitutions as $permittedInstitution ) {
-            //echo "permittedInstitution=".$permittedInstitution."<br>";
+            //echo "### permittedInstitution=".$permittedInstitution->getId().":".$permittedInstitution->getName()."<br>";
             //get all collaboration to show them in the Order's Institutional PHI Scope
             $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
                 findCollaborationsByNode( $permittedInstitution, array("Union","Intersection","Untrusted Intersection") );
             foreach( $collaborations as $collaboration ) {
                 foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
-                    //echo "collaboration inst=".$collaboration->getInstitutions()->getName()."<br>";
+                    //echo "collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";
                     if( $collaborationInstitution && !$permittedInstitutions->contains($collaborationInstitution) ) {
+                        //echo "add collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";
                         $permittedInstitutions->add($collaborationInstitution);
                     }
                 }
@@ -1147,6 +1148,9 @@ class OrderUtil {
 
         //include current message institution to the $permittedInstitutions
         $permittedInstitutions = $this->addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message);
+//        foreach( $permittedInstitutions as $permittedInstitution ) {
+//            echo "permittedInstitution=".$permittedInstitution->getId().":".$permittedInstitution->getName()."<br>";
+//        }
 
         return $permittedInstitutions;
     }
@@ -1154,6 +1158,7 @@ class OrderUtil {
     public function addPhiScopeCurrentMessageInstitution($permittedInstitutions,$message) {
         //include current message institution to the $permittedInstitutions
         if( $message->getInstitution() && !$permittedInstitutions->contains($message->getInstitution()) ) {
+            //echo "add permittedInstitutions=".$message->getInstitution()->getName()."<br>";
             $permittedInstitutions->add($message->getInstitution());
         }
 

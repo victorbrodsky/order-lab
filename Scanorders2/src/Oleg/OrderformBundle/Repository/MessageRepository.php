@@ -44,6 +44,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         //echo "laborder=".$entity->getLaborder()."<br>";
         //echo "slideReturnRequest=".$entity->getSlideReturnRequest()."<br>";
         //exit('exit');
+        //echo "message inst=".$entity->getInstitution()."<br>";
+        //exit('1');
 
         
         if( $entity->getPriority() == "Routine" ) {      
