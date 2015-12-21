@@ -1127,14 +1127,16 @@ class OrderUtil {
     }
 
     //Used in new order field: "Order data visible to members of (Institutional PHI Scope)"
-    public function addPhiScopeInstitutions( $permittedInstitutions, $message ) {
+    public function getAllScopeInstitutions( $originalPermittedInstitutions, $message ) {
+        $permittedInstitutions = new ArrayCollection();
         //include collaboration (any type) institutions by user
         //permittedInstitutionalPHIScope - institutions
-        foreach( $permittedInstitutions as $permittedInstitution ) {
+        foreach( $originalPermittedInstitutions as $originalPermittedInstitution ) {
+            $permittedInstitutions->add($originalPermittedInstitution);
             //echo "### permittedInstitution=".$permittedInstitution->getId().":".$permittedInstitution->getName()."<br>";
             //get all collaboration to show them in the Order's Institutional PHI Scope
             $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
-                findCollaborationsByNode( $permittedInstitution, array("Union","Intersection","Untrusted Intersection") );
+                findCollaborationsByNode( $originalPermittedInstitution, array("Union","Intersection","Untrusted Intersection") );
             foreach( $collaborations as $collaboration ) {
                 foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
                     //echo "collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";

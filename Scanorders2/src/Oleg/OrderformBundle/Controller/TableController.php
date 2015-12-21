@@ -197,7 +197,7 @@ class TableController extends Controller {
         //$department = $defaultsDepDiv['department'];
         //$division = $defaultsDepDiv['division'];
 
-        $permittedInstitutions = $orderUtil->addPhiScopeInstitutions($permittedInstitutions,$message);
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$message);
 
         $params = array(
             'type' => $message->getMessageCategory()->getName(),
@@ -545,7 +545,7 @@ class TableController extends Controller {
         $entity->setMessageCategory($category);
 
         //$permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
-        $permittedInstitutions = $orderUtil->addPhiScopeInstitutions($permittedInstitutions,$entity);
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$entity);
 
         $params = array(
             'type'=>$type,

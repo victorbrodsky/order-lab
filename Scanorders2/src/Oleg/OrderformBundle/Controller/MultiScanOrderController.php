@@ -110,7 +110,7 @@ class MultiScanOrderController extends Controller {
         //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 
         $orderUtil = $this->get('scanorder_utility');
-        $permittedInstitutions = $orderUtil->addPhiScopeInstitutions($permittedInstitutions,$entity);
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$entity);
 
         $params = array(
             'type'=>$type,  //category
@@ -447,7 +447,7 @@ class MultiScanOrderController extends Controller {
         //set Institutional PHI Scope
         $entity->setInstitution($permittedInstitutions->first());
 
-        $permittedInstitutions = $orderUtil->addPhiScopeInstitutions($permittedInstitutions,$entity);
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$entity);
 
         //set default department and division
         //TODO: implement it
@@ -780,7 +780,7 @@ class MultiScanOrderController extends Controller {
 //        if( $entity->getInstitution() && !$permittedInstitutions->contains($entity->getInstitution()) ) {
 //            $permittedInstitutions->add($entity->getInstitution());
 //        }
-        $permittedInstitutions = $orderUtil->addPhiScopeInstitutions($permittedInstitutions,$entity);
+        $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$entity);
 
         //echo "route=".$routeName.", type=".$type."<br>";
 
